@@ -11,7 +11,7 @@
  * - Multimoneda con FX
  */
 
-import { FgoHealthStatus } from './fgo.model';
+import { FgoHealthStatus, centsToUsd } from './fgo.model';
 
 // ============================================================================
 // TIPOS ADICIONALES v1.1
@@ -392,20 +392,7 @@ export interface UpdateParametersParams {
 // HELPERS Y UTILIDADES
 // ============================================================================
 
-/**
- * Convierte número a USD con 2 decimales
- */
-export function centsToUsd(cents: number | null | undefined): number {
-  if (cents === null || cents === undefined) return 0;
-  return parseFloat((cents / 100).toFixed(2));
-}
-
-/**
- * Convierte USD a centavos
- */
-export function usdToCents(usd: number): number {
-  return Math.round(usd * 100);
-}
+// (Funciones centsToUsd y usdToCents eliminadas para evitar ambigüedad en el máster barrel, importadas arriba)
 
 /**
  * Formatea alpha como porcentaje

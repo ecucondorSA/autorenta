@@ -15,7 +15,7 @@ import {
   BookingInspection,
   InspectionPhoto,
   InspectionStage,
-} from '../../../core/models/fgo-v1-1.model';
+} from '@core/models/fgo-v1-1.model';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import {
@@ -23,7 +23,7 @@ import {
   allFilesValid,
   getFirstError,
   logFileUpload,
-} from '../../../core/utils/file-validation.util';
+} from '@core/utils/file-validation.util';
 
 // Window extension for inspection callback
 interface WindowWithInspectionCallback extends Window {

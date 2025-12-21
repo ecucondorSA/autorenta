@@ -22,7 +22,7 @@ import {
   RiskSnapshot,
   PaymentAuthorization,
   PaymentMode,
-} from '../../../core/models/booking-detail-payment.model';
+} from '@core/models/booking-detail-payment.model';
 
 // Components
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';

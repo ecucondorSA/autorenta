@@ -2,8 +2,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, catchError, filter, from, switchMap, take, throwError } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { AuthService } from '../services/auth.service';
+import { environment } from '@environment';
+import { AuthService } from '@core/services/auth/auth.service';
 
 // Global state for the interceptor (module-level to persist across requests)
 let isRefreshing = false;

@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { SUCCESS_MESSAGE_DURATION_MS } from '../../../core/constants/timing.constants';
+import { SUCCESS_MESSAGE_DURATION_MS } from '@core/constants/timing.constants';
 import { PhoneVerificationService } from '@core/services/auth/phone-verification.service';
 
 @Component({

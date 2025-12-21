@@ -7,8 +7,8 @@ import type {
   LocationCoords,
   SortOption,
   ViewMode,
-} from '../models/marketplace.model';
-import type { Car } from '../models';
+} from '@core/models';
+import type { Car } from '@core/models';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
 
 /**

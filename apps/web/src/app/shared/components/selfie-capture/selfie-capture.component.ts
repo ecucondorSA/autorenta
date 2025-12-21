@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FaceVerificationService } from '@core/services/verification/face-verification.service';
-import { IdentityLevelService } from '@core/services/auth/identity-level.service';
+import { IdentityLevelService } from '@core/services/verification/identity-level.service';
 
 @Component({
   standalone: true,

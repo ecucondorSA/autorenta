@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
-import { ProfileStore } from '../../../core/stores/profile.store';
+import { ProfileStore } from '@core/stores/profile.store';
 import { SectionCardComponent } from '../components/shared/section-card/section-card.component';
 import type { UserProfile, Role } from '../../../core/models';
 

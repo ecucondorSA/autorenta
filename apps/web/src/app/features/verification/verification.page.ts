@@ -7,9 +7,9 @@ import { VerificationService } from '@core/services/verification/verification.se
 import {
   DocumentTypeConfig,
   getDocumentsByCategory,
-} from '../../core/config/document-types.config';
+} from '@core/config/document-types.config';
 import type { UserProfile, VerificationStatus, UserDocument } from '../../core/models';
-import { ProfileStore } from '../../core/stores/profile.store';
+import { ProfileStore } from '@core/stores/profile.store';
 
 interface PrefilledFieldHint {
   label: string;

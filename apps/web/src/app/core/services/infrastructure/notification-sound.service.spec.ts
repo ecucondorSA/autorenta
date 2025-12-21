@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { NotificationSoundService } from './notification-sound.service';
+import { NotificationSoundService } from '@core/services/infrastructure/notification-sound.service';
 
 describe('NotificationSoundService', () => {
   let service: NotificationSoundService;

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { TrafficInfraction } from '../../features/admin/traffic-infractions/admin-traffic-infractions.page'; // Re-use the interface
-import { injectSupabase } from './supabase-client.service';
-import { NotificationManagerService } from './notification-manager.service'; // For toasts
+import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service'; // For toasts
 
 @Injectable({
   providedIn: 'root',

@@ -1,15 +1,15 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, from, of } from 'rxjs';
-import { switchMap, catchError, map } from 'rxjs/operators';
-import { SupabaseClient } from '@supabase/supabase-js';
-import { FunctionsResponse } from '@supabase/functions-js';
 import {
-  PaymentAuthorization,
   AuthorizePaymentResult,
   CurrencyCode,
-} from '../models/booking-detail-payment.model';
+} from '@core/models';
+import { PaymentAuthorization } from '@core/models/booking-detail-payment.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { FunctionsResponse } from '@supabase/functions-js';
+import { SupabaseClient } from '@supabase/supabase-js';
+import { Observable, from, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 interface MercadoPagoPreauthResponse {
   success: boolean;

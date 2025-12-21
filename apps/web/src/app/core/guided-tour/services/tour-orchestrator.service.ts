@@ -9,9 +9,9 @@ import {
   TourPriority,
   TourRequestOptions,
   TourState,
-} from '../interfaces/tour-definition.interface';
+} from '@core/guided-tour/interfaces/tour-definition.interface';
 import { TourRegistryService } from '../registry/tour-registry.service';
-import { StepResolverService } from '../resolvers/step-resolver.service';
+import { StepResolverService } from '@core/guided-tour/resolvers/step-resolver.service';
 import { TelemetryBridgeService } from './telemetry-bridge.service';
 
 interface QueuedTour {

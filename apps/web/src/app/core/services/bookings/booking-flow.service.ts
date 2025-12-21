@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import type { Booking, BookingStatus } from '../models';
+import type { Booking, BookingStatus } from '@core/models';
 import { AuthService } from '@core/services/auth/auth.service';
-import { BookingConfirmationService } from './booking-confirmation.service';
-import { isValidStatusTransition } from './booking-flow-helpers';
-import { BookingNotificationsService } from './booking-notifications.service';
-import { BookingsService } from './bookings.service';
+import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
+import { isValidStatusTransition } from '@core/services/bookings/booking-flow-helpers';
+import { BookingNotificationsService } from '@core/services/bookings/booking-notifications.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { NotificationsService } from '@core/services/infrastructure/user-notifications.service';

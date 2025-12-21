@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import type { StepOptions, Tour, TourOptions } from 'shepherd.js';
-import { StepDefinition, TourId } from '../interfaces/tour-definition.interface';
+import { StepDefinition, TourId } from '@core/guided-tour/interfaces/tour-definition.interface';
 
 export interface TourRendererAdapter {
   createTour(tourId: TourId, options?: Record<string, unknown>): Promise<void>;

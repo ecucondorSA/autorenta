@@ -15,7 +15,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import type { WalletBalance } from '../../core/models/wallet.model';
+import type { WalletBalance } from '@core/models/wallet.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
@@ -28,7 +28,7 @@ import {
 } from '@core/services/ai/rentarfast-agent.service';
 import { VerificationService } from '@core/services/verification/verification.service';
 import { WalletService } from '@core/services/payments/wallet.service';
-import { ProfileStore } from '../../core/stores/profile.store';
+import { ProfileStore } from '@core/stores/profile.store';
 
 // Web Speech API types
 interface SpeechRecognitionEvent extends Event {

@@ -2,7 +2,7 @@ import { Injectable, signal, inject, computed, effect, Injector } from '@angular
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { AuthService } from '@core/services/auth/auth.service';
-import { CarOwnerNotificationsService } from './car-owner-notifications.service';
+import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { ProfileService } from '@core/services/auth/profile.service';
 

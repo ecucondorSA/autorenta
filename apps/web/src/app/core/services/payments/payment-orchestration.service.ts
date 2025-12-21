@@ -4,10 +4,10 @@ import { Observable, from, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { PaymentAuthorizationService } from './payment-authorization.service';
-import { PaymentsService } from './payments.service';
-import { SplitPaymentService } from './split-payment.service';
-import { WalletService } from './wallet.service';
+import { PaymentAuthorizationService } from '@core/services/payments/payment-authorization.service';
+import { PaymentsService } from '@core/services/payments/payments.service';
+import { SplitPaymentService } from '@core/services/payments/split-payment.service';
+import { WalletService } from '@core/services/payments/wallet.service';
 
 /**
  * Payment method for a booking

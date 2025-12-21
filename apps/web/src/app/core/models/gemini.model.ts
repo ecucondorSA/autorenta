@@ -12,7 +12,7 @@
  * @since 2025-12-17
  */
 
-import type { BookingStatus, CancelPolicy } from '../types/database.types';
+import type { BookingStatus, CancelPolicy } from '@core/types/database.types';
 
 // ============================================
 // CHAT SUGGESTIONS

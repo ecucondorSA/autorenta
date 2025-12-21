@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 
 /**
  * Distance risk tier based on distance from user to car

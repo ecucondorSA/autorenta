@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
-import { Booking } from '../models';
-import { environment } from '../../../environments/environment';
-import { getErrorMessage } from '../utils/type-guards';
+import { Booking } from '@core/models';
+import { environment } from '@environment';
+import { getErrorMessage } from '@core/utils/type-guards';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { BookingWalletService } from './booking-wallet.service';
-import { BookingValidationService } from './booking-validation.service';
+import { BookingWalletService } from '@core/services/bookings/booking-wallet.service';
+import { BookingValidationService } from '@core/services/bookings/booking-validation.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { WalletService } from '@core/services/payments/wallet.service'; // NUEVO: Importar WalletService
 

@@ -1,7 +1,7 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Injectable, inject } from '@angular/core';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { BonusProgress } from '../../../core/models/organization.model';
+import { BonusProgress } from '@core/models/organization.model';
 
 export interface Organization {
   id: string;

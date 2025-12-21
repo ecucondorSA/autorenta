@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { LocaleManagerService } from './locale-manager.service';
+import { LocaleManagerService } from '@core/services/ui/locale-manager.service';
 
 describe('LocaleManagerService', () => {
   let service: LocaleManagerService;

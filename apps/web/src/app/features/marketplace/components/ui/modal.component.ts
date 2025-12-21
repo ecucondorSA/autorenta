@@ -1,7 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 
 import { ChangeDetectionStrategy, Component, effect, ElementRef, input, output, ViewChild } from '@angular/core';
-import { FocusTrapDirective } from '../../../../core/directives/focus-trap.directive';
+import { FocusTrapDirective } from '@core/directives/focus-trap.directive';
 
 /**
  * Modal Component V2

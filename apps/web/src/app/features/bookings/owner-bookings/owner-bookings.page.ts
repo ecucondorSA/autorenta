@@ -7,9 +7,9 @@ import { Booking } from '../../../core/models';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import {
+  AuthMarketplaceStatus,
   MarketplaceOnboardingService,
-  MarketplaceStatus,
-} from '@core/services/bookings/marketplace-onboarding.service';
+} from '@core/services/auth/marketplace-onboarding.service';
 import { Message, MessagesService } from '@core/services/bookings/messages.service';
 import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
@@ -49,7 +49,7 @@ export class OwnerBookingsPage implements OnInit {
   >({});
   readonly carLeads = signal<CarLead[]>([]);
   readonly leadsLoading = signal(false);
-  readonly marketplaceStatus = signal<MarketplaceStatus | null>(null);
+  readonly marketplaceStatus = signal<AuthMarketplaceStatus | null>(null);
 
   /** Count of bookings pending owner approval */
   readonly pendingApprovalCount = computed(() =>

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { EncryptionService } from '@core/services/infrastructure/encryption.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { environment } from '@environment';
 
 /**
  * Estado de onboarding de Mercado Pago
@@ -43,7 +43,7 @@ export interface MpTokenResponse {
 /**
  * Estado de marketplace del usuario
  */
-export interface MarketplaceStatus {
+export interface AuthMarketplaceStatus {
   isApproved: boolean;
   collectorId?: string;
   completedAt?: string;
@@ -153,7 +153,7 @@ export class MarketplaceOnboardingService {
    * @param userId ID del usuario
    * @returns Estado de marketplace
    */
-  async getMarketplaceStatus(userId: string): Promise<MarketplaceStatus> {
+  async getMarketplaceStatus(userId: string): Promise<AuthMarketplaceStatus> {
     try {
       const { data, error } = await this.supabase
         .from('profiles')

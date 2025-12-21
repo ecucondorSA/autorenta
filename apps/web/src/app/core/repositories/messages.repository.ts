@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { injectSupabase } from '../services/supabase-client.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * DTO para una conversación con datos enriquecidos

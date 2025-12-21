@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, AlertController, ToastController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
-import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.model';
+import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
 
 /**
  * Página para reportar siniestros/accidentes

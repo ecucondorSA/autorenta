@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 import { AuthService } from '@core/services/auth/auth.service';
-import { LoggerService } from './logger.service';
-import { injectSupabase } from './supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * Tipos de eventos de conversión que trackeamos

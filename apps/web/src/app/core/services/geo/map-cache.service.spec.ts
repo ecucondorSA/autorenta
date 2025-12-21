@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { MapCacheService } from './map-cache.service';
+import { MapCacheService } from '@core/services/geo/map-cache.service';
 
 describe('MapCacheService', () => {
   let service: MapCacheService;

@@ -1,6 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
-import type { FAQItem } from '../models/marketplace.model';
+import type { FAQItem } from '@core/models';
 
 /**
  * SEO Schema Service - Manages JSON-LD structured data

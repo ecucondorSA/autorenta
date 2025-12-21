@@ -21,11 +21,11 @@
 export { GuidedTourService } from './guided-tour.service';
 
 // Interfaces & Types
-export * from './interfaces/tour-definition.interface';
+export * from '@core/guided-tour/interfaces/tour-definition.interface';
 
 // Services (for advanced usage)
-export { TourOrchestratorService } from './services/tour-orchestrator.service';
-export { TelemetryBridgeService } from './services/telemetry-bridge.service';
+export { TourOrchestratorService } from '@core/guided-tour/services/tour-orchestrator.service';
+export { TelemetryBridgeService } from '@core/guided-tour/services/telemetry-bridge.service';
 
 // Registry (for custom tour registration)
 export { TourRegistryService } from './registry/tour-registry.service';
@@ -35,4 +35,4 @@ export { ShepherdAdapterService } from './adapters/shepherd-adapter.service';
 export type { TourRendererAdapter } from './adapters/shepherd-adapter.service';
 
 // Resolvers (for custom element waiting logic)
-export { StepResolverService } from './resolvers/step-resolver.service';
+export { StepResolverService } from '@core/guided-tour/resolvers/step-resolver.service';

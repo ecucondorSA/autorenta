@@ -1,8 +1,8 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, computed, inject, PLATFORM_ID, signal } from '@angular/core';
 import {
+  MarketplaceAccountStatus,
   MarketplaceService,
-  MarketplaceStatus,
 } from '@core/services/bookings/marketplace.service';
 
 /**
@@ -21,7 +21,7 @@ export class PublishCarMpOnboardingService {
   private readonly marketplaceService = inject(MarketplaceService);
 
   // State
-  readonly mpStatus = signal<MarketplaceStatus | null>(null);
+  readonly mpStatus = signal<MarketplaceAccountStatus | null>(null);
   readonly mpStatusLoading = signal(false);
   readonly mpStatusError = signal<string | null>(null);
   readonly dismissedOnboarding = signal(false);

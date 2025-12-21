@@ -1,14 +1,14 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, from, map, of } from 'rxjs';
 import {
   CurrencyCode,
   FxSnapshot,
   isFxExpired,
   isFxVariationExceeded,
-} from '../models/booking-detail-payment.model';
-import { ExchangeRateService } from './exchange-rate.service';
+} from '@core/models/booking-detail-payment.model';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
+import { Observable, catchError, from, map, of } from 'rxjs';
 
 /**
  * Servicio para gestionar tipos de cambio (FX)

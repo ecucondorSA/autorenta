@@ -95,7 +95,7 @@ export interface CarWithDistance extends Car {
 
 // CarMapLocation is exported from car-locations.service.ts
 // Re-export for backward compatibility
-export type { CarMapLocation } from '../services/car-locations.service';
+export type { CarMapLocation } from '@core/services/cars/car-locations.service';
 
 // ============================================
 // UI STATE

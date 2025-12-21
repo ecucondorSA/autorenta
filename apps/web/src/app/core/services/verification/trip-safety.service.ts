@@ -3,7 +3,7 @@ import { Injectable, PLATFORM_ID, effect, inject } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { AuthService } from '@core/services/auth/auth.service';
 import { FeatureFlagService } from '@core/services/infrastructure/feature-flag.service';
-import { IncidentDetectorService } from './incident-detector.service';
+import { IncidentDetectorService } from '@core/services/verification/incident-detector.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HapticFeedbackService } from './haptic-feedback.service';
+import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
 
 describe('HapticFeedbackService', () => {
   let service: HapticFeedbackService;

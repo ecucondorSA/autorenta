@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { SupabaseClient } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 export interface MarketplaceConfig {
   marketplaceId: string;
@@ -16,7 +16,7 @@ export interface MarketplaceValidation {
   config?: MarketplaceConfig;
 }
 
-export interface MarketplaceStatus {
+export interface MarketplaceAccountStatus {
   status: 'not_started' | 'pending' | 'completed' | 'error';
   canReceivePayments: boolean;
   onboardingUrl?: string;
@@ -218,7 +218,7 @@ export class MarketplaceService {
   /**
    * Get onboarding status for current user
    */
-  async getOnboardingStatus(): Promise<MarketplaceStatus> {
+  async getOnboardingStatus(): Promise<MarketplaceAccountStatus> {
     try {
       const {
         data: { user },

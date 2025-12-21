@@ -6,7 +6,7 @@ import {
   FxSnapshot,
   formatArs,
   formatUsd,
-} from '../../../../core/models/booking-detail-payment.model';
+} from '@core/models/booking-detail-payment.model';
 
 /**
  * Tabla que muestra la política de riesgo y garantías

@@ -5,7 +5,7 @@ import {
   TourPriority,
   StepDefinition,
   StepContent,
-} from '../interfaces/tour-definition.interface';
+} from '@core/guided-tour/interfaces/tour-definition.interface';
 import { RENTER_TOURS } from '../tours/renter-tours';
 
 @Injectable({

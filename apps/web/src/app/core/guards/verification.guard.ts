@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
-import { VerificationService } from '../services/verification.service';
+import { VerificationService } from '@core/services/verification/verification.service';
 
 /**
  * Guard to check if user is verified (VERIFICADO status)

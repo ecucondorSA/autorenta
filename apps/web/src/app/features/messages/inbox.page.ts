@@ -4,7 +4,7 @@ import {Component, OnDestroy, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
 import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
-import type { ConversationDTO } from '../../core/repositories/messages.repository';
+import type { ConversationDTO } from '@core/repositories/messages.repository';
 import { AuthService } from '@core/services/auth/auth.service';
 import { Message, MessagesService } from '@core/services/bookings/messages.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';

@@ -35,7 +35,7 @@ import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-r
 // import { CarCardV3Component } from '../../../shared/components/marketplace/car-card-v3/car-card-v3.component';
 // import { FiltersDrawerComponent } from '../../../shared/components/marketplace/filters-drawer/filters-drawer.component';
 // import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
-import { getErrorMessage } from '../../../core/utils/type-guards';
+import { getErrorMessage } from '@core/utils/type-guards';
 import { AiCarRecommendationComponent } from '../../../shared/components/ai-car-recommendation/ai-car-recommendation.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 

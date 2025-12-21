@@ -16,7 +16,7 @@ import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import type { Instance } from 'flatpickr/dist/types/instance';
 import { format } from 'date-fns';
-import { FocusTrapDirective } from '../../../core/directives/focus-trap.directive';
+import { FocusTrapDirective } from '@core/directives/focus-trap.directive';
 
 export interface BlockDateRequest {
   startDate: Date;

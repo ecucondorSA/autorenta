@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeConnectionService } from './realtime-connection.service';
+import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 
 const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({

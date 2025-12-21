@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, signal, inject, PLATFORM_ID } from '@angular/core';
-import { Car, CarComparison, ComparisonRow } from '../models';
-import { CarsService } from './cars.service';
+import { Car, CarComparison, ComparisonRow } from '@core/models';
+import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 const STORAGE_KEY = 'autorenta_comparison';

@@ -1,16 +1,16 @@
 import { Injectable, inject } from '@angular/core';
-import { Booking, BookingExtensionRequest } from '../models';
-import { getErrorMessage } from '../utils/type-guards';
-import { BookingApprovalService } from './booking-approval.service';
-import { BookingCancellationService } from './booking-cancellation.service';
-import { BookingCompletionService } from './booking-completion.service';
-import { BookingUtilsService } from './booking-utils.service';
-import { BookingValidationService } from './booking-validation.service';
-import { BookingWalletService } from './booking-wallet.service';
-import { CarOwnerNotificationsService } from './car-owner-notifications.service';
+import { Booking, BookingExtensionRequest } from '@core/models';
+import { getErrorMessage } from '@core/utils/type-guards';
+import { BookingApprovalService } from '@core/services/bookings/booking-approval.service';
+import { BookingCancellationService } from '@core/services/bookings/booking-cancellation.service';
+import { BookingCompletionService } from '@core/services/bookings/booking-completion.service';
+import { BookingUtilsService } from '@core/services/bookings/booking-utils.service';
+import { BookingValidationService } from '@core/services/bookings/booking-validation.service';
+import { BookingWalletService } from '@core/services/bookings/booking-wallet.service';
+import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
-import { BookingNotificationsService } from './booking-notifications.service';
-import { InsuranceService } from './insurance.service';
+import { BookingNotificationsService } from '@core/services/bookings/booking-notifications.service';
+import { InsuranceService } from '@core/services/bookings/insurance.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { PwaService } from '@core/services/infrastructure/pwa.service';
@@ -1444,11 +1444,11 @@ export class BookingsService {
           .filter((url): url is string => Boolean(url));
 
         (booking as Booking).car = {
-          ...(car as Partial<import('../models').Car>),
-          car_photos: photos as unknown as import('../models').CarPhoto[],
-          photos: photos as unknown as import('../models').CarPhoto[],
+          ...(car as Partial<import('@core/models').Car>),
+          car_photos: photos as unknown as import('@core/models').CarPhoto[],
+          photos: photos as unknown as import('@core/models').CarPhoto[],
           images,
-        } as Partial<import('../models').Car>;
+        } as Partial<import('@core/models').Car>;
       } else if (carError) {
         this.logger.error(
           'Car query error',

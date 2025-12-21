@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { VerificationBaseService, VerificationStatus } from '@core/services/verification/verification-base.service';
+import { AuthVerificationStatus, VerificationBaseService } from '@core/services/verification/verification-base.service';
 
 /**
  * Email Verification Status (identical to base VerificationStatus)
  */
-export type EmailVerificationStatus = VerificationStatus;
+export type EmailVerificationStatus = AuthVerificationStatus;
 
 /**
  * Service for managing email verification

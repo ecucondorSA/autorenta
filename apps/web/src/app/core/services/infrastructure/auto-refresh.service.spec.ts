@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { SupabaseClientService } from './supabase-client.service';
-import { AutoRefreshService } from './auto-refresh.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { AutoRefreshService } from '@core/services/infrastructure/auto-refresh.service';
 
 const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({

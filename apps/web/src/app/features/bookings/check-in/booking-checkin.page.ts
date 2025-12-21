@@ -1,23 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonicModule, ToastController } from '@ionic/angular';
 import { VideoDamageAnalysis, VideoDamageDetectionService } from '@core/services/verification/video-damage-detection.service';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { DamageReportComponent } from '../../../shared/components/damage-report/damage-report.component';
 import { VideoInspectionRecorderComponent } from '../../../shared/components/video-inspection-recorder/video-inspection-recorder.component';
 
 /**
  * Booking Check-In Page
- *
- * Página para que el Owner grabe la inspección de check-in
- * antes de entregarle el auto al Renter.
- *
- * Flujo:
- * 1. Owner graba video del auto (90s mínimo)
- * 2. Video se sube automáticamente a GCP
- * 3. Vertex AI analiza el video (30-60s)
- * 4. Se muestran los daños detectados
- * 5. Owner confirma la inspección
  */
 @Component({
   selector: 'app-booking-checkin',
@@ -63,7 +53,7 @@ import { VideoInspectionRecorderComponent } from '../../../shared/components/vid
             [carId]="carId()"
             [inspectionType]="'checkin'"
             (videoUploaded)="onVideoUploaded($event)"
-            (error)="onError($event)">
+            (recorderError)="onError($event)">
           </app-video-inspection-recorder>
         }
 
@@ -232,7 +222,6 @@ export class BookingCheckinPage {
   isSubmitting = signal(false);
 
   ngOnInit() {
-    // Get params from route
     this.bookingId.set(this.route.snapshot.params['id'] || 'booking_123');
     this.carId.set(this.route.snapshot.queryParams['carId'] || 'car_456');
     this.carBrand.set(this.route.snapshot.queryParams['brand'] || 'Tesla');
@@ -242,7 +231,6 @@ export class BookingCheckinPage {
   async onVideoUploaded(videoPath: string) {
     this.videoUploaded.set(true);
 
-    // Show toast
     const toast = await this.toastCtrl.create({
       message: '✅ Video subido. Analizando con IA...',
       duration: 3000,
@@ -250,7 +238,6 @@ export class BookingCheckinPage {
     });
     await toast.present();
 
-    // Subscribe to real-time results
     this.videoService.subscribeToAnalysisResults(
       this.bookingId(),
       (analysis) => {
@@ -286,9 +273,6 @@ export class BookingCheckinPage {
     this.isSubmitting.set(true);
 
     try {
-      // TODO: Call booking service to update status
-      // await this.bookingService.confirmCheckin(this.bookingId());
-
       const toast = await this.toastCtrl.create({
         message: '✅ Check-In confirmado exitosamente',
         duration: 3000,
@@ -296,7 +280,6 @@ export class BookingCheckinPage {
       });
       await toast.present();
 
-      // Navigate back to booking detail
       setTimeout(() => {
         this.router.navigate(['/bookings', this.bookingId()]);
       }, 1000);

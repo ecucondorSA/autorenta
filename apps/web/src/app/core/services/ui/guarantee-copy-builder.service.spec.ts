@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { GuaranteeCopyBuilderService } from './guarantee-copy-builder.service';
+import { GuaranteeCopyBuilderService } from '@core/services/ui/guarantee-copy-builder.service';
 
 describe('GuaranteeCopyBuilderService', () => {
   let service: GuaranteeCopyBuilderService;

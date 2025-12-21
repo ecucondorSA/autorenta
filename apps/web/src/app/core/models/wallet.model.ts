@@ -8,10 +8,8 @@
 
 // Re-export Supabase generated types
 export type {
-  WalletBalance as WalletBalanceDB,
-  WalletTransaction as WalletTransactionDB,
-  WalletLedger as WalletLedgerDB,
-} from '../types/supabase-types';
+  WalletBalance as WalletBalanceDB, WalletLedger as WalletLedgerDB, WalletTransaction as WalletTransactionDB
+} from '@core/types/supabase-types';
 
 /**
  * Balance de wallet del usuario (custom extended type)
@@ -367,6 +365,11 @@ export interface WithdrawalRequest {
   admin_notes?: string;
   created_at: string;
   updated_at: string;
+
+  // Joined fields
+  bank_account?: BankAccount;
+  user_name?: string;
+  user_email?: string;
 }
 
 /**

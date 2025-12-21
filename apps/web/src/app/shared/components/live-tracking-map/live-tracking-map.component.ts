@@ -12,7 +12,7 @@ import {Component,
   ChangeDetectionStrategy} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { TrackingSession } from '@core/services/geo/location-tracking.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environment';
 
 // Lazy load mapbox-gl at runtime to reduce initial bundle size
 type MapboxGL = typeof import('mapbox-gl');

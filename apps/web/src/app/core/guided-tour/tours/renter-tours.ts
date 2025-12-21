@@ -5,7 +5,7 @@
  * Short texts, clean design, non-intrusive
  */
 
-import { TourDefinition, TourId, TourPriority } from '../interfaces/tour-definition.interface';
+import { TourDefinition, TourId, TourPriority } from '@core/guided-tour/interfaces/tour-definition.interface';
 
 /**
  * Become a Renter - Streamlined Onboarding Tour

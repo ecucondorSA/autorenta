@@ -1,10 +1,10 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Injectable, inject, PLATFORM_ID, signal } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
-import { BookingsService } from './bookings.service';
 
-export interface UserLocation {
+export interface UrgentRentalUserLocation {
   lat: number;
   lng: number;
   accuracy?: number;
@@ -15,7 +15,7 @@ export interface UrgentRentalDefaults {
   pickup: 'immediate' | 'user_location';
   extras: string[];
   payment: 'immediate';
-  userLocation?: UserLocation;
+  userLocation?: UrgentRentalUserLocation;
 }
 
 export interface UrgentRentalAvailability {
@@ -44,14 +44,14 @@ export class UrgentRentalService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  readonly userLocation = signal<UserLocation | null>(null);
+  readonly userLocation = signal<UrgentRentalUserLocation | null>(null);
   readonly locationLoading = signal(false);
   readonly locationError = signal<string | null>(null);
 
   /**
    * Obtener ubicación actual del usuario
    */
-  async getCurrentLocation(): Promise<UserLocation> {
+  async getCurrentLocation(): Promise<UrgentRentalUserLocation> {
     return new Promise((resolve, reject) => {
       if (!this.isBrowser || !navigator.geolocation) {
         reject(new Error('Geolocalización no disponible en este navegador'));
@@ -63,7 +63,7 @@ export class UrgentRentalService {
 
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const location: UserLocation = {
+          const location: UrgentRentalUserLocation = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
             accuracy: position.coords.accuracy,
@@ -97,9 +97,9 @@ export class UrgentRentalService {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.toRad(lat1)) *
-        Math.cos(this.toRad(lat2)) *
-        Math.sin(dLng / 2) *
-        Math.sin(dLng / 2);
+      Math.cos(this.toRad(lat2)) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   }
@@ -235,7 +235,7 @@ export class UrgentRentalService {
   async createUrgentBooking(
     carId: string,
     durationHours: number,
-    _userLocation?: UserLocation,
+    _userLocation?: UrgentRentalUserLocation,
   ): Promise<{ success: boolean; bookingId?: string; error?: string }> {
     try {
       const now = new Date();

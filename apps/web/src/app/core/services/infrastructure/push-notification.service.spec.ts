@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { SupabaseClientService } from './supabase-client.service';
-import { PushNotificationService } from './push-notification.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { PushNotificationService } from '@core/services/infrastructure/push-notification.service';
 
 const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({

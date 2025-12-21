@@ -2,7 +2,7 @@
 import {Component, Input, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { EligibilityResult, WaterfallBreakdown } from '../../../core/models/fgo-v1-1.model';
+import { EligibilityResult, WaterfallBreakdown } from '@core/models/fgo-v1-1.model';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { SettlementService } from '@core/services/payments/settlement.service';
 

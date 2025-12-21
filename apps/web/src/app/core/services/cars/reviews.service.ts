@@ -6,9 +6,9 @@ import type {
   ReviewSummary,
   ReviewType,
   UserStats,
-} from '../models';
-import { CarOwnerNotificationsService } from './car-owner-notifications.service';
-import { CarsService } from './cars.service';
+} from '@core/models';
+import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
+import { CarsService } from '@core/services/cars/cars.service';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 

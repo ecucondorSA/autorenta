@@ -23,8 +23,8 @@
  * ```
  */
 
-import { AdminService } from '../services/admin.service';
-import type { AdminActionContext } from '../types/admin.types';
+import { AdminService } from '@core/services/admin/admin.service';
+import type { AdminActionContext } from '@core/types/admin.types';
 
 /**
  * Decorator options

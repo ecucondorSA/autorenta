@@ -1,11 +1,11 @@
-import { Injectable, computed, signal, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, computed, signal } from '@angular/core';
 import type {
   RealtimeChannel,
   RealtimePostgresChangesPayload,
   SupabaseClient,
 } from '@supabase/supabase-js';
+import type { VerificationProgress } from '@core/services/verification/identity-level.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import type { VerificationProgress } from '@core/services/auth/identity-level.service';
 
 type VerificationStatusRow = {
   email_verified_at?: string | null;

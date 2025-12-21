@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import type { BookingStatus } from '../models';
+import type { BookingStatus } from '@core/models';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**

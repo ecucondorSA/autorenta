@@ -7,21 +7,22 @@ import type {
   PaymentStatus,
   Transmission,
   UserRole,
-} from '../types/database.types';
+} from '@core/types/database.types';
+import type { Car } from './car.model';
 
 // Re-export Supabase types for use throughout the app
 export type {
   BankAccount as BankAccountDB,
   Booking as BookingDB,
   Car as CarDB,
-  PaymentAuthorization,
+  PaymentAuthorizationDB,
   Payment as PaymentDB,
   Profile,
   Review as ReviewDB,
-  WalletBalance,
-  WalletLedger,
-  WalletTransaction as WalletTransactionDB,
-} from '../types/supabase-types';
+  WalletBalance as WalletBalanceDB,
+  WalletLedger as WalletLedgerDB,
+  WalletTransaction as WalletTransactionDB
+} from '@core/types/supabase-types';
 export type {
   BookingStatus,
   CancelPolicy,
@@ -29,7 +30,7 @@ export type {
   FuelType,
   PaymentProvider,
   PaymentStatus,
-  Transmission,
+  Transmission
 };
 
 // Re-export for backward compatibility
@@ -50,14 +51,30 @@ export * from './organization.model';
 // Export Dynamic Pricing models
 export * from './dynamic-pricing.model';
 
+// Export Car models
+export * from './car.model';
+
 // Export Marketplace models
 export * from './marketplace.model';
+
+// Export Traffic infractions models
+export * from './traffic-infraction.model';
 
 // Export Gemini AI models
 export * from './gemini.model';
 
+// Export Wallet models
+export * from './wallet.model';
+
+// Export specific Booking Detail Payment models (avoiding conflicts)
+export type {
+  AuthorizePaymentResult, BookingDates,
+  BookingInput, CoverageUpgrade, PaymentAuthorization,
+  PaymentMode
+} from './booking-detail-payment.model';
+
 // Export ProfileService types
-export type { UpdateProfileData } from '../services/profile.service';
+export type { UpdateProfileData } from '@core/services/auth/profile.service';
 
 // Nuevos tipos para perfil expandido
 export type KycStatus = 'not_started' | 'pending' | 'verified' | 'rejected';
@@ -209,194 +226,7 @@ export interface ProfileAudit {
   created_at: string;
 }
 
-export interface CarOwner {
-  id: string;
-  full_name: string;
-  avatar_url?: string | null;
-  rating_avg: number;
-  rating_count: number;
-  created_at: string;
-  email_verified: boolean;
-  phone_verified: boolean;
-}
 
-export interface CarBrand {
-  id: string;
-  name: string;
-  logo_url?: string | null;
-  country?: string | null;
-  created_at: string;
-}
-
-export interface CarModel {
-  id: string;
-  brand_id: string;
-  name: string;
-  category?: string | null;
-  seats: number;
-  doors: number;
-  created_at: string;
-}
-
-export type VehicleDocumentKind =
-  | 'registration' // Cédula verde/título de propiedad
-  | 'insurance' // Póliza de seguro
-  | 'technical_inspection' // Revisión técnica
-  | 'circulation_permit' // Permiso de circulación
-  | 'ownership_proof'; // Comprobante de titularidad
-
-export interface VehicleDocument {
-  id: string;
-  car_id: string;
-  kind: VehicleDocumentKind;
-  storage_path: string;
-  url?: string;
-  status: 'pending' | 'verified' | 'rejected';
-  expiry_date?: string | null;
-  notes?: string | null;
-  created_at: string;
-  verified_by?: string | null;
-  verified_at?: string | null;
-}
-
-export interface Car {
-  id: string;
-  owner_id: string;
-  title: string;
-  description: string;
-
-  // Foreign Keys to normalized tables
-  brand_id: string;
-  model_id: string;
-  region_id?: string | null; // For dynamic pricing
-  organization_id?: string | null; // ✅ Fleet Management
-
-  // Backward compatibility fields (required in database)
-  brand_text_backup: string;
-  model_text_backup: string;
-
-  // Additional backward compatibility (populated via JOIN in views)
-  brand?: string;
-  model?: string;
-  brand_name?: string; // From JOIN
-  model_name?: string; // From JOIN
-
-  year: number;
-  plate?: string | null;
-  vin?: string | null;
-  transmission: Transmission;
-  fuel: FuelType;
-  fuel_type: FuelType; // Alias for fuel
-  seats: number;
-  doors: number;
-  color: string;
-  features: Record<string, boolean>; // {ac: true, abs: true, airbag: true}
-  status: CarStatus;
-  price_per_day: number;
-  currency: string;
-  value_usd?: number; // ✅ NUEVO: Valor real del vehículo en USD (para cálculos de riesgo/seguro)
-  security_deposit_usd?: number; // ✅ NUEVO: Depósito de garantía en USD
-  uses_dynamic_pricing?: boolean; // ✅ DYNAMIC PRICING: Si el auto usa pricing dinámico
-  rating_avg: number;
-  rating_count: number;
-
-  // Location fields
-  location_city: string;
-  location_state: string;
-  location_province: string;
-  location_country: string;
-  location_lat?: number | null;
-  location_lng?: number | null;
-
-  // Address fields (new)
-  location_street?: string | null;
-  location_street_number?: string | null;
-  location_neighborhood?: string | null;
-  location_postal_code?: string | null;
-  location_formatted_address?: string | null;
-
-  // Rental terms (new)
-  payment_methods?: string[];
-  deposit_required?: boolean;
-  deposit_amount?: number;
-  insurance_included?: boolean;
-  auto_approval?: boolean; // ✅ NUEVO: Auto-aprobación de reservas
-  min_rental_days?: number;
-  max_rental_days?: number;
-  terms_and_conditions?: string;
-  delivery_options?: string[];
-
-  // Rules & Preferences (Owner)
-  mileage_limit?: number | null; // 0 = unlimited
-  extra_km_price?: number | null;
-  fuel_policy?: string | null; // 'full_to_full', etc.
-  allow_second_driver?: boolean | null;
-  second_driver_cost?: number | null;
-  max_anticipation_days?: number | null;
-
-  // Restrictions (behavior & geographic)
-  allow_smoking?: boolean;
-  allow_pets?: boolean;
-  allow_rideshare?: boolean;
-  allowed_provinces?: string[];
-  max_distance_km?: number | null;
-
-  // Insurance deductible (franquicia)
-  insurance_deductible_usd?: number | null;
-
-  mileage: number;
-  cancel_policy: CancelPolicy;
-  photos?: CarPhoto[];
-  car_photos?: CarPhoto[];
-  images?: string[]; // Simple array of image URLs (for backward compatibility)
-  owner?: CarOwner; // Owner profile information
-  created_at: string;
-  updated_at: string;
-  vehicle_type?: string | null;
-
-  // Legal & Insurance (from views)
-  insurance_policy_number?: string | null;
-  insurance_company?: string | null;
-  insurance_expiration?: string | null;
-}
-
-export interface CarPhoto {
-  id: string;
-  car_id: string;
-  url: string;
-  stored_path: string;
-  position: number;
-  sort_order: number;
-  created_at: string;
-}
-
-export interface VehicleCategory {
-  id: string;
-  code: string; // 'economy' | 'standard' | 'premium' | 'luxury'
-  name: string;
-  name_es: string;
-  base_daily_rate_pct: number; // 0.0030 = 0.30%
-  depreciation_rate_annual: number; // 0.050 = 5% per year
-  surge_sensitivity: number; // 1.00 = standard
-  description: string;
-  display_order: number;
-  active: boolean;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export interface CarFilters {
-  city?: string;
-  from?: string;
-  to?: string;
-  blockedCarIds?: string[];
-  bounds?: {
-    north: number;
-    south: number;
-    east: number;
-    west: number;
-  };
-}
 
 export interface BookingBreakdown {
   days: number;
@@ -566,37 +396,37 @@ export interface Booking {
   extension_responded_at?: string | null;
 }
 
-  
 
-  export interface BookingExtensionRequest { // NEW
 
-    id: string;
+export interface BookingExtensionRequest { // NEW
 
-    booking_id: string;
+  id: string;
 
-    renter_id: string;
+  booking_id: string;
 
-    owner_id: string;
+  renter_id: string;
 
-    original_end_at: string;
+  owner_id: string;
 
-    new_end_at: string;
+  original_end_at: string;
 
-    request_status: 'pending' | 'approved' | 'rejected' | 'cancelled';
+  new_end_at: string;
 
-    estimated_cost_amount: number | null;
+  request_status: 'pending' | 'approved' | 'rejected' | 'cancelled';
 
-    estimated_cost_currency: string | null;
+  estimated_cost_amount: number | null;
 
-    renter_message: string | null;
+  estimated_cost_currency: string | null;
 
-    owner_response: string | null;
+  renter_message: string | null;
 
-    requested_at: string;
+  owner_response: string | null;
 
-    responded_at: string | null;
+  requested_at: string;
 
-  }
+  responded_at: string | null;
+
+}
 
 export interface PaymentIntent {
   id: string;
@@ -805,81 +635,11 @@ export interface ComparisonRow {
 // WALLET & WITHDRAWALS SYSTEM
 // ============================================
 
-export type AccountType = 'cbu' | 'cvu' | 'alias';
+// (BankAccount and AccountType removed, use definitions from @core/models/wallet.model)
 
-export interface BankAccount {
-  id: string;
-  user_id: string;
-  account_type: AccountType;
-  account_number: string;
-  account_holder_name: string;
-  // DEPRECATED: Use gov_id_number from UserProfile instead
-  account_holder_document?: string;
-  bank_name?: string | null;
-  is_verified: boolean;
-  verified_at?: string | null;
-  verification_method?: string | null;
-  is_active: boolean;
-  is_default: boolean;
-  created_at: string;
-  updated_at: string;
-}
+// (WithdrawalStatus and WithdrawalRequest removed, use definitions from @core/models/wallet.model)
 
-export type WithdrawalStatus =
-  | 'pending'
-  | 'approved'
-  | 'processing'
-  | 'completed'
-  | 'failed'
-  | 'rejected'
-  | 'cancelled';
-
-export interface WithdrawalRequest {
-  id: string;
-  user_id: string;
-  bank_account_id: string;
-  amount: number;
-  currency: string;
-  fee_amount: number;
-  net_amount: number;
-  status: WithdrawalStatus;
-  provider: string;
-  provider_transaction_id?: string | null;
-  provider_metadata?: Record<string, unknown> | null;
-  approved_by?: string | null;
-  approved_at?: string | null;
-  rejection_reason?: string | null;
-  processed_at?: string | null;
-  completed_at?: string | null;
-  failed_at?: string | null;
-  failure_reason?: string | null;
-  wallet_transaction_id?: string | null;
-  user_notes?: string | null;
-  admin_notes?: string | null;
-  created_at: string;
-  updated_at: string;
-
-  // Extended fields from views/joins
-  user_name?: string;
-  user_email?: string;
-  bank_account?: BankAccount;
-}
-
-export interface WalletTransaction {
-  id: string;
-  user_id: string;
-  type: 'deposit' | 'withdrawal' | 'payment' | 'refund' | 'lock' | 'unlock';
-  amount: number;
-  currency: string;
-  status: 'pending' | 'completed' | 'failed' | 'cancelled';
-  description?: string | null;
-  reference_type?: string | null;
-  reference_id?: string | null;
-  provider?: string | null;
-  provider_transaction_id?: string | null;
-  provider_metadata?: Record<string, unknown> | null;
-  created_at: string;
-}
+// (WalletTransaction and related types removed, use definitions from @core/models/wallet.model)
 
 export interface UserWallet {
   user_id: string;
@@ -1039,3 +799,11 @@ export interface ProcessRefundResult {
   wallet_transaction_id?: string | null;
   message: string;
 }
+
+// Auto-added exports
+export * from './feature-flag.model';
+export * from './fgo-v1-1.model';
+export * from './supabase.types.generated';
+export * from './tripo.models';
+export * from './wallet.model';
+

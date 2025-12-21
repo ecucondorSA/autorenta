@@ -2,8 +2,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject, PLATFORM_ID } from '@angular/core';
 import { from, switchMap } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { AuthService } from '../services/auth.service';
+import { environment } from '@environment';
+import { AuthService } from '@core/services/auth/auth.service';
 
 export const SupabaseAuthInterceptor: HttpInterceptorFn = (req, next) => {
   const platformId = inject(PLATFORM_ID);

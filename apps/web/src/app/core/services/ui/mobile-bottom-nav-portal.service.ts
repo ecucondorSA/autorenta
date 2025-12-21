@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MobileBottomNavComponent } from '../../shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
+import { MobileBottomNavComponent } from '@shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
 
 @Injectable({ providedIn: 'root' })
 export class MobileBottomNavPortalService {

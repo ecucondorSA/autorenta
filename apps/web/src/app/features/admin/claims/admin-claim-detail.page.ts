@@ -9,7 +9,7 @@ import {
   ClaimStatus,
   CLAIM_STATUS_LABELS,
   CLAIM_TYPE_LABELS,
-} from '../../../core/models/insurance.model';
+} from '@core/models/insurance.model';
 
 /**
  * Admin Claim Detail Page

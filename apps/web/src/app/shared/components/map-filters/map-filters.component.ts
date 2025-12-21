@@ -15,7 +15,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 import type { CarMapLocation } from '@core/services/cars/car-locations.service';
-import type { FilterState } from '../../../core/models/marketplace.model';
+import type { FilterState } from '@core/models/marketplace.model';
 import {
   BlockedDateRange,
   DateRangePickerComponent,
@@ -23,7 +23,7 @@ import {
 import { IconComponent } from '../icon/icon.component';
 
 // Re-export FilterState for backwards compatibility with existing imports
-export type { FilterState } from '../../../core/models/marketplace.model';
+export type { FilterState } from '@core/models/marketplace.model';
 
 /**
  * Map Filters Component

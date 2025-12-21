@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { PerformanceMonitoringService } from './performance-monitoring.service';
+import { PerformanceMonitoringService } from '@core/services/infrastructure/performance-monitoring.service';
 
 describe('PerformanceMonitoringService', () => {
   let service: PerformanceMonitoringService;

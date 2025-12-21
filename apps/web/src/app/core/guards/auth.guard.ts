@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Router, Route } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { LoggerService } from '../services/logger.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 export const AuthGuard: CanMatchFn = async (route: Route) => {
   const auth = inject(AuthService);

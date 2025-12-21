@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {Component, computed, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { PaymentProvider } from '../../../../core/interfaces/payment-gateway.interface';
+import { PaymentProvider } from '@core/interfaces/payment-gateway.interface';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { DriverProfileService } from '@core/services/auth/driver-profile.service';
 import { PaymentGatewayFactory } from '@core/services/payments/payment-gateway.factory';

@@ -1,11 +1,11 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { Injectable, inject, signal, PLATFORM_ID, NgZone } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, map, of, tap, Subject } from 'rxjs';
-import { io, Socket } from 'socket.io-client';
+import { Injectable, NgZone, PLATFORM_ID, inject, signal } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { Observable, Subject, catchError, map, of, tap } from 'rxjs';
+import { Socket, io } from 'socket.io-client';
 
-export interface UserLocation {
+export interface AIAgentUserLocation {
   lat: number;
   lng: number;
   city?: string;
@@ -27,7 +27,7 @@ export interface UserProfileContext {
 }
 
 export interface ChatContext {
-  userLocation?: UserLocation;
+  userLocation?: AIAgentUserLocation;
   userProfile?: UserProfileContext;
   auth?: {
     userId?: string;

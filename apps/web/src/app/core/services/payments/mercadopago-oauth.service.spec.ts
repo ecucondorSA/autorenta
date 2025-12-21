@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { MercadoPagoOAuthService } from './mercadopago-oauth.service';
+import { MercadoPagoOAuthService } from '@core/services/payments/mercadopago-oauth.service';
 
 const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({

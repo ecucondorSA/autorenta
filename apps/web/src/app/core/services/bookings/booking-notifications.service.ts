@@ -1,7 +1,7 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {Injectable, inject} from '@angular/core';
-import type { Booking } from '../models';
-import { getErrorMessage } from '../utils/type-guards';
+import type { Booking } from '@core/models';
+import { getErrorMessage } from '@core/utils/type-guards';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { PaymentPreferenceResponse, PaymentGateway } from '../interfaces/payment-gateway.interface';
+import { PaymentPreferenceResponse, PaymentGateway } from '@core/interfaces/payment-gateway.interface';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 /**

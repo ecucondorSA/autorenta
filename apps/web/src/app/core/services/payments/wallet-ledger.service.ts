@@ -1,6 +1,6 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { SupabaseClient } from '@supabase/supabase-js';
+import { computed, Injectable, signal } from '@angular/core';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 export type LedgerKind =
   | 'deposit'
@@ -16,7 +16,7 @@ export type LedgerKind =
   | 'bonus'
   | 'fee';
 
-export interface LedgerEntry {
+export interface WalletLedgerEntry {
   id: string;
   ts: string;
   user_id: string;
@@ -75,7 +75,7 @@ export class WalletLedgerService {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
 
-  private readonly ledgerHistoryCache = signal<LedgerEntry[]>([]);
+  private readonly ledgerHistoryCache = signal<WalletLedgerEntry[]>([]);
   readonly ledgerHistory = computed(() => this.ledgerHistoryCache());
 
   private readonly transfersCache = signal<WalletTransfer[]>([]);
@@ -98,7 +98,7 @@ export class WalletLedgerService {
         .limit(limit);
 
       if (error) throw error;
-      this.ledgerHistoryCache.set(data as LedgerEntry[]);
+      this.ledgerHistoryCache.set(data as WalletLedgerEntry[]);
     } catch (err) {
       this.handleError(err, 'Error al cargar historial');
     } finally {

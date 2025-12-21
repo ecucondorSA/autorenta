@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { BreakpointService } from './breakpoint.service';
+import { BreakpointService } from '@core/services/ui/breakpoint.service';
 
 describe('BreakpointService', () => {
   let service: BreakpointService;

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { RentarfastAgentService } from './rentarfast-agent.service';
+import { RentarfastAgentService } from '@core/services/ai/rentarfast-agent.service';
 
 describe('RentarfastAgentService', () => {
   let service: RentarfastAgentService;

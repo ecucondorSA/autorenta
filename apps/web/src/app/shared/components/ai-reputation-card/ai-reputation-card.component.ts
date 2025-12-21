@@ -11,8 +11,8 @@ import { CommonModule } from '@angular/common';
 import { GeminiService } from '@core/services/ai/gemini.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { BonusMalusService } from '@core/services/payments/bonus-malus.service';
-import { ProfileStore } from '../../../core/stores/profile.store';
-import type { ReputationAnalysis } from '../../../core/models/gemini.model';
+import { ProfileStore } from '@core/stores/profile.store';
+import type { ReputationAnalysis } from '@core/models/gemini.model';
 
 const CACHE_KEY_PREFIX = 'ai_reputation_analysis';
 const CACHE_DURATION_HOURS = 24;

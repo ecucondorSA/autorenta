@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { RateLimiterService } from './rate-limiter.service';
+import { RateLimiterService } from '@core/services/infrastructure/rate-limiter.service';
 
 describe('RateLimiterService', () => {
   let service: RateLimiterService;

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { GeocodingService } from './geocoding.service';
+import { GeocodingService } from '@core/services/geo/geocoding.service';
 
 describe('GeocodingService', () => {
   let service: GeocodingService;

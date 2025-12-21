@@ -1,13 +1,17 @@
 import { CommonModule } from '@angular/common';
-import {Component, EventEmitter, Input, OnInit, Output, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component, EventEmitter,
+  inject,
+  Input, OnInit, Output, signal
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { TrafficInfraction } from '@core/models'; // Re-use the interface
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { TrafficInfractionsService } from '@core/services/infrastructure/traffic-infractions.service';
-import { TrafficInfraction } from '../../../features/admin/traffic-infractions/admin-traffic-infractions.page'; // Re-use the interface
+import { IonicModule } from '@ionic/angular';
 import { Booking } from '../../../core/models'; // To get owner_id, renter_id, booking_id
 import { EvidenceUploaderComponent } from '../evidence-uploader/evidence-uploader.component';
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 @Component({
   selector: 'app-report-traffic-fine',

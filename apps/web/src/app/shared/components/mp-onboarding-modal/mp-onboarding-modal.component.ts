@@ -4,9 +4,9 @@ import {Component, inject, OnInit, signal,
 import { IonicModule, ModalController } from '@ionic/angular';
 import { AuthService } from '@core/services/auth/auth.service';
 import {
+  AuthMarketplaceStatus,
   MarketplaceOnboardingService,
-  MarketplaceStatus,
-} from '@core/services/bookings/marketplace-onboarding.service';
+} from '@core/services/auth/marketplace-onboarding.service';
 
 /**
  * Modal para onboarding de plataformas de pago
@@ -515,7 +515,7 @@ export class MpOnboardingModalComponent implements OnInit {
   loading = signal(true);
   processing = signal(false);
   error = signal<string | null>(null);
-  status = signal<MarketplaceStatus | null>(null);
+  status = signal<AuthMarketplaceStatus | null>(null);
 
   async ngOnInit() {
     await this.loadStatus();

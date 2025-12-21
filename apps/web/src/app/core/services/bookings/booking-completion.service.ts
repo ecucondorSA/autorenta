@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom, from } from 'rxjs';
 import { ignoreElements } from 'rxjs/operators';
-import { Booking } from '../models';
-import { getErrorMessage } from '../utils/type-guards';
-import { BookingWalletService } from './booking-wallet.service';
+import { Booking } from '@core/models';
+import { getErrorMessage } from '@core/utils/type-guards';
+import { BookingWalletService } from '@core/services/bookings/booking-wallet.service';
 import { DriverProfileService } from '@core/services/auth/driver-profile.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { PaymentsService } from '@core/services/payments/payments.service'; // NUEVO: Importar PaymentsService

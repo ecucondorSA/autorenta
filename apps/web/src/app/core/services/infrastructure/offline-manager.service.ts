@@ -1,4 +1,4 @@
-import { LoggerService } from './logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Injectable, signal, inject, DestroyRef } from '@angular/core';
 import { fromEvent, merge, map, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

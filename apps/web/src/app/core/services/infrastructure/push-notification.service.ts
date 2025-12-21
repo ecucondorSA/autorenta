@@ -1,12 +1,12 @@
-import { LoggerService } from './logger.service';
 import { isPlatformBrowser } from '@angular/common';
-import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { SwPush } from '@angular/service-worker';
 import { Capacitor } from '@capacitor/core';
-import { PushNotifications, Token, ActionPerformed, PushNotificationSchema } from '@capacitor/push-notifications';
+import { ActionPerformed, PushNotifications, PushNotificationSchema, Token } from '@capacitor/push-notifications';
 import { Subject } from 'rxjs';
-import { injectSupabase } from './supabase-client.service';
 import { AuthService } from '@core/services/auth/auth.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * Push notification message interface

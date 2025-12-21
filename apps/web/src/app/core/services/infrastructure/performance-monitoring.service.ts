@@ -1,6 +1,6 @@
-import { LoggerService } from './logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {Injectable, inject} from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 
 /**
  * Sentry module type for lazy loading

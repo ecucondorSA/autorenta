@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { PwaService } from './pwa.service';
+import { PwaService } from '@core/services/infrastructure/pwa.service';
 
 describe('PwaService', () => {
   let service: PwaService;

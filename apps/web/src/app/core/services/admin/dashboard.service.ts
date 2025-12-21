@@ -1,10 +1,10 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Observable, from, of, throwError } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
-import type { DashboardStats, DashboardStatsCache } from '../models/dashboard.model';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { catchError, map, tap } from 'rxjs/operators';
+import type { DashboardStats, DashboardStatsCache } from '@core/models';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * Dashboard Statistics Service

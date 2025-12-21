@@ -2,7 +2,7 @@
  * @fileoverview Utility functions for wrapping Supabase API calls with a standardized response format.
  */
 
-import { ServiceResponse, ServiceErrorResponse, ServiceSuccessResponse } from '../types/service-response';
+import { ServiceResponse, ServiceErrorResponse, ServiceSuccessResponse } from '@core/types/service-response';
 
 /**
  * Wraps an asynchronous Supabase API call to return a standardized ServiceResponse.

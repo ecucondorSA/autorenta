@@ -59,7 +59,7 @@ export class MyBookingsPage implements OnInit {
       expanded: true, // Always expanded by default
       priority: 1,
       statuses: ['pending'],
-      accentClass: 'border-l-amber-500 bg-amber-50 dark:bg-amber-950/20',
+      accentClass: 'section-accent section-accent--pending',
     },
     {
       id: 'active',
@@ -68,7 +68,7 @@ export class MyBookingsPage implements OnInit {
       expanded: true,
       priority: 2,
       statuses: ['confirmed', 'in_progress'],
-      accentClass: 'border-l-green-500 bg-green-50 dark:bg-green-950/20',
+      accentClass: 'section-accent section-accent--active',
     },
     {
       id: 'history',
@@ -77,7 +77,7 @@ export class MyBookingsPage implements OnInit {
       expanded: false, // Collapsed by default
       priority: 3,
       statuses: ['completed', 'cancelled', 'expired'],
-      accentClass: 'border-l-gray-400 bg-gray-50 dark:bg-gray-900/20',
+      accentClass: 'section-accent section-accent--history',
     },
   ]);
 
@@ -106,12 +106,17 @@ export class MyBookingsPage implements OnInit {
   // Computed: Bookings grouped by section (using effective status)
   readonly bookingsBySection = computed(() => {
     const allBookings = this.bookings();
+    const filter = this.statusFilter();
+    const filteredBookings =
+      filter === 'all'
+        ? allBookings
+        : allBookings.filter((b) => this.getEffectiveStatus(b) === filter);
     const sectionList = this.sections();
 
     return sectionList.map((section) => ({
       ...section,
-      bookings: allBookings.filter((b) => section.statuses.includes(this.getEffectiveStatus(b))),
-      count: allBookings.filter((b) => section.statuses.includes(this.getEffectiveStatus(b))).length,
+      bookings: filteredBookings.filter((b) => section.statuses.includes(this.getEffectiveStatus(b))),
+      count: filteredBookings.filter((b) => section.statuses.includes(this.getEffectiveStatus(b))).length,
     }));
   });
 
@@ -501,6 +506,18 @@ export class MyBookingsPage implements OnInit {
    */
   setStatusFilter(filter: BookingStatusFilter): void {
     this.statusFilter.set(filter);
+  }
+
+  /**
+   * Focus a specific section and clear filters.
+   */
+  focusSection(sectionId: string): void {
+    this.statusFilter.set('all');
+    const updatedSections = this.sections().map((section) => ({
+      ...section,
+      expanded: section.id === sectionId,
+    }));
+    this.sections.set(updatedSections);
   }
 
   /**

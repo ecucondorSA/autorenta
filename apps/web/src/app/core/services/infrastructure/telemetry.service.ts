@@ -2,8 +2,8 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { from, Observable } from 'rxjs';
 import { tap, take } from 'rxjs/operators';
 import { AuthService } from '@core/services/auth/auth.service';
-import { LoggerService } from './logger.service';
-import { injectSupabase } from './supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * TelemetryService

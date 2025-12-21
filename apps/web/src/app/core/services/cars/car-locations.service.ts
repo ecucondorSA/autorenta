@@ -1,9 +1,9 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Injectable, inject } from '@angular/core';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { CarAvailabilityService } from './car-availability.service';
+import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 
 const DEFAULT_CACHE_TTL_MS = 5 * 60 * 1000;
 const DEFAULT_REFRESH_MS = 60 * 1000;

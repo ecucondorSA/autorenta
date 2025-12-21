@@ -1,7 +1,7 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Injectable, inject, OnDestroy } from '@angular/core';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-import { VerificationStateService } from './verification-state.service';
+import { VerificationStateService } from '@core/services/verification/verification-state.service';
 
 /**
  * Service to handle verification event notifications

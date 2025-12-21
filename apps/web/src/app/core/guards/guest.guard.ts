@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { LoggerService } from '../services/logger.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * Guard that prevents authenticated users from accessing guest-only pages

@@ -5,7 +5,7 @@ import {
   MessagesRepository,
   ConversationListOptions,
   PaginatedConversations,
-} from '../repositories/messages.repository';
+} from '@core/repositories/messages.repository';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { RealtimeConnectionService, ConnectionStatus } from '@core/services/infrastructure/realtime-connection.service';
 import { OfflineMessagesService } from '@core/services/infrastructure/offline-messages.service';

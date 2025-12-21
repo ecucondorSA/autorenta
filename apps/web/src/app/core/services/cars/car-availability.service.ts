@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import type { Car } from '../models';
+import type { Car } from '@core/models';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 export interface CarBlackout {

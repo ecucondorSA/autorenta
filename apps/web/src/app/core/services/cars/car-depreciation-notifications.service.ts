@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { CarOwnerNotificationsService } from './car-owner-notifications.service';
-import { CarsService } from './cars.service';
+import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
+import { CarsService } from '@core/services/cars/cars.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { AuthService } from '@core/services/auth/auth.service';
 

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { NotificationManagerService } from './notification-manager.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 describe('NotificationManagerService', () => {
   let service: NotificationManagerService;

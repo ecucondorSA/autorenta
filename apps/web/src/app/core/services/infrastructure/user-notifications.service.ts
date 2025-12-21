@@ -1,7 +1,7 @@
-import { LoggerService } from './logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Injectable, signal, inject, OnDestroy, effect } from '@angular/core';
 import type { RealtimeChannel, RealtimePostgresInsertPayload } from '@supabase/supabase-js';
-import { injectSupabase } from './supabase-client.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { AuthService } from '@core/services/auth/auth.service';
 
 export interface NotificationItem {

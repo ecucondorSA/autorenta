@@ -4,7 +4,7 @@ import {Component, computed, inject, signal,
 import { FormsModule } from '@angular/forms';
 import { TransferResponse, WalletLedgerService } from '@core/services/payments/wallet-ledger.service';
 import { WalletService } from '@core/services/payments/wallet.service';
-import { toSignalOrNull } from '@app/core/utils/signal-helpers';
+import { toSignalOrNull } from '@core/utils/signal-helpers';
 
 interface UserSearchResult {
   id: string;

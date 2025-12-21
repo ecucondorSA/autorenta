@@ -1,8 +1,8 @@
-import { LoggerService } from './logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 import { AuthService } from '@core/services/auth/auth.service';
 
 /**

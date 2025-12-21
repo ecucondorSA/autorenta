@@ -14,8 +14,8 @@ import { VerificationProgressComponent } from '../../../shared/components/verifi
 import { EmailVerificationComponent } from '../../../shared/components/email-verification/email-verification.component';
 import { PhoneVerificationComponent } from '../../../shared/components/phone-verification/phone-verification.component';
 import { SelfieCaptureComponent } from '../../../shared/components/selfie-capture/selfie-capture.component';
-import { ProfileStore } from '../../../core/stores/profile.store';
-import { IdentityLevelService } from '@core/services/auth/identity-level.service';
+import { ProfileStore } from '@core/stores/profile.store';
+import { IdentityLevelService } from '@core/services/verification/identity-level.service';
 import { LicenseUploaderComponent } from './components/license-uploader.component';
 import { DniUploaderComponent } from './components/dni-uploader.component';
 

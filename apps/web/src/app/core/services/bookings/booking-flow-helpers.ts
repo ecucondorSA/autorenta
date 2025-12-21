@@ -1,4 +1,4 @@
-import type { Booking, BookingStatus } from '../models';
+import type { Booking, BookingStatus } from '@core/models';
 
 /**
  * BookingFlowHelpers

@@ -6,7 +6,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
-import { ProfileStore } from '../../../core/stores/profile.store';
+import { ProfileStore } from '@core/stores/profile.store';
 
 /**
  * Profile Preferences Page

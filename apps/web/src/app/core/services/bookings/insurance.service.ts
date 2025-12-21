@@ -13,7 +13,7 @@ import {
   ReportClaimRequest,
   CreateInspectionRequest,
   INSURER_DISPLAY_NAMES,
-} from '../models/insurance.model';
+} from '@core/models';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**

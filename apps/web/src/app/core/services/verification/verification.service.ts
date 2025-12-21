@@ -1,10 +1,10 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Injectable, inject, signal } from '@angular/core';
-import type { UserDocument, UserVerificationStatus, VerificationRole } from '../models';
-import type { Database } from '../types/database.types';
+import type { UserDocument, UserVerificationStatus, VerificationRole } from '@core/models';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import type { Database } from '@core/types/database.types';
 
-export interface VerificationStatus {
+export interface DetailedVerificationStatus {
   status: 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO';
   missing_docs: string[]; // IDs de documentos faltantes (ej: 'license_front', 'license_back')
   notes?: string;
@@ -254,7 +254,7 @@ export class VerificationService {
   /**
    * Obtiene el estado actual
    */
-  async getStatus(role: 'driver' | 'owner' = 'driver'): Promise<VerificationStatus | null> {
+  async getStatus(role: 'driver' | 'owner' = 'driver'): Promise<DetailedVerificationStatus | null> {
     const {
       data: { user },
     } = await this.supabase.auth.getUser();
@@ -269,7 +269,7 @@ export class VerificationService {
 
     if (error && error.code !== 'PGRST116') throw error; // Ignorar "no encontrado"
 
-    return data as VerificationStatus;
+    return data as DetailedVerificationStatus;
   }
 
   /**

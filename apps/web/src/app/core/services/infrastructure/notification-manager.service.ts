@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { ToastController } from '@ionic/angular/standalone';
-import { NotificationSoundService } from './notification-sound.service';
+import { NotificationSoundService } from '@core/services/infrastructure/notification-sound.service';
 
 /**
  * Priority levels for notifications

@@ -1,4 +1,4 @@
-import { LoggerService } from './logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {Injectable, inject} from '@angular/core';
 
 export interface PdfOptions {

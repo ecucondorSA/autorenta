@@ -12,7 +12,7 @@ import {
 } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { BankAccount, RequestWithdrawalParams } from '../../../core/models/wallet.model';
+import type { BankAccount, RequestWithdrawalParams } from '@core/models/wallet.model';
 
 /**
  * Componente para solicitar retiros

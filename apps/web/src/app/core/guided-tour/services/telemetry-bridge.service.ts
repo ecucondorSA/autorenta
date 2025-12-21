@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TourEvent, TourId } from '../interfaces/tour-definition.interface';
+import { TourEvent, TourId } from '@core/guided-tour/interfaces/tour-definition.interface';
 
 @Injectable({
   providedIn: 'root',

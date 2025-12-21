@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { StepTarget } from '../interfaces/tour-definition.interface';
-import { TelemetryBridgeService } from '../services/telemetry-bridge.service';
+import { StepTarget } from '@core/guided-tour/interfaces/tour-definition.interface';
+import { TelemetryBridgeService } from '@core/guided-tour/services/telemetry-bridge.service';
 
 export interface ElementWaitOptions {
   timeout?: number;

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { AiPhotoEnhancerService } from './ai-photo-enhancer.service';
+import { AiPhotoEnhancerService } from '@core/services/ai/ai-photo-enhancer.service';
 
 describe('AiPhotoEnhancerService', () => {
   let service: AiPhotoEnhancerService;

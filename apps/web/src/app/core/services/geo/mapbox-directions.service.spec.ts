@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { MapboxDirectionsService } from './mapbox-directions.service';
+import { MapboxDirectionsService } from '@core/services/geo/mapbox-directions.service';
 
 describe('MapboxDirectionsService', () => {
   let service: MapboxDirectionsService;

@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { Router, type CanMatchFn } from '@angular/router';
-import { ProfileService } from '../services/profile.service';
+import { ProfileService } from '@core/services/auth/profile.service';
 
 /**
  * OnboardingGuard - Protege rutas que requieren onboarding completo

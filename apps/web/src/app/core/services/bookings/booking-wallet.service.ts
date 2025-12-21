@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { Booking } from '../models';
+import { Booking } from '@core/models';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { CarOwnerNotificationsService } from './car-owner-notifications.service';
+import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { PaymentsService } from '@core/services/payments/payments.service'; // NEW: Import PaymentsService
 

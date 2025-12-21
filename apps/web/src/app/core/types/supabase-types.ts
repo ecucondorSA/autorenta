@@ -46,7 +46,7 @@ export type WalletLedger = Tables<'wallet_ledger'>;
 
 // Payments
 export type Payment = Tables<'payments'>;
-export type PaymentAuthorization = Views<'v_payment_authorizations'>;
+export type PaymentAuthorizationDB = Views<'v_payment_authorizations'>;
 
 // Bank Accounts
 export type BankAccount = Tables<'bank_accounts'>;

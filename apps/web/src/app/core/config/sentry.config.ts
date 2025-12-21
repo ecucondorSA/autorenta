@@ -1,8 +1,8 @@
 import * as Sentry from '@sentry/angular';
 import { inject } from '@angular/core';
 import type { Breadcrumb } from '@sentry/types';
-import { environment } from '../../../environments/environment';
-import { LoggerService } from '../services/logger.service';
+import { environment } from '@environment';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * Initialize Sentry for error tracking and performance monitoring

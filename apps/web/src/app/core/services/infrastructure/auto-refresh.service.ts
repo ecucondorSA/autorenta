@@ -4,7 +4,7 @@ import { from, interval, of, Subscription, type Observable } from 'rxjs';
 import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { WalletService } from '@core/services/payments/wallet.service';
-import { LoggerService } from './logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * P1-022 FIX: Auto-Refresh Service

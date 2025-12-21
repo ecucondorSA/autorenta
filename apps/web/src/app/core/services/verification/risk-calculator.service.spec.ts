@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { RiskCalculatorService } from './risk-calculator.service';
+import { RiskCalculatorService } from '@core/services/verification/risk-calculator.service';
 
 const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({

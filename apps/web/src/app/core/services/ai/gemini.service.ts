@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 import type {
   ChatSuggestion,
   ChatSuggestionsParams,
@@ -16,7 +16,7 @@ import type {
   ReputationAnalysis,
   CarRecommendationParams,
   CarRecommendation,
-} from '../models/gemini.model';
+} from '@core/models';
 
 /**
  * Servicio para interactuar con las APIs de IA de Gemini

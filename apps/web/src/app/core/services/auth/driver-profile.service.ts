@@ -1,7 +1,7 @@
-import { Injectable, computed, signal, inject } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { AuthService } from '@core/services/auth/auth.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { AuthService } from './auth.service';
 
 /**
  * DriverProfileService

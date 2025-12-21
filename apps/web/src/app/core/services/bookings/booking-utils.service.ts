@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Booking } from '../models';
+import { Booking } from '@core/models';
 
 /**
  * Service for booking utility methods

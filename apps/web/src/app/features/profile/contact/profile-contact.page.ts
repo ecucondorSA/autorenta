@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ProfileContactSectionComponent } from '../components/sections/contact/profile-contact-section.component';
-import { ProfileStore } from '../../../core/stores/profile.store';
+import { ProfileStore } from '@core/stores/profile.store';
 
 /**
  * Profile Contact Page

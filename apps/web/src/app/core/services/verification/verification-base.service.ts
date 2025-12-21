@@ -1,11 +1,11 @@
 import { signal, Signal } from '@angular/core';
-import type { SupabaseClient, AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import type { AuthChangeEvent, Session, SupabaseClient } from '@supabase/supabase-js';
 
 /**
- * Generic Verification Status
+ * Generic Verification Status for Auth (Email/Phone)
  */
-export interface VerificationStatus {
+export interface AuthVerificationStatus {
   isVerified: boolean;
   value: string | null; // email or phone
   verifiedAt: string | null;
@@ -49,7 +49,7 @@ export type VerificationType = 'email' | 'phone';
  * ```
  */
 export abstract class VerificationBaseService<
-  TStatus extends VerificationStatus = VerificationStatus,
+  TStatus extends AuthVerificationStatus = AuthVerificationStatus,
 > {
   protected readonly supabase: SupabaseClient = injectSupabase();
   protected lastSendTime: number = 0;
@@ -131,7 +131,7 @@ export abstract class VerificationBaseService<
       user[this.confirmedAtField] !== null && user[this.confirmedAtField] !== undefined;
     const cooldownRemaining = this.calculateCooldownRemaining();
 
-    const baseStatus: VerificationStatus = {
+    const baseStatus: AuthVerificationStatus = {
       isVerified,
       value: (user[this.valueField] as string) ?? null,
       verifiedAt: (user[this.confirmedAtField] as string) ?? null,
@@ -147,7 +147,7 @@ export abstract class VerificationBaseService<
    * Extension point for concrete services to add custom fields
    * Override this in concrete service if needed
    */
-  protected extendStatus(baseStatus: VerificationStatus): TStatus {
+  protected extendStatus(baseStatus: AuthVerificationStatus): TStatus {
     return baseStatus as TStatus;
   }
 

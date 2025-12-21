@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, map, catchError, of } from 'rxjs';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { CarOwnerNotificationsService } from './car-owner-notifications.service';
+import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
 
 /**

@@ -1,6 +1,6 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {Injectable, signal, inject} from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 
 /**
  * Mapbox Preloader Service

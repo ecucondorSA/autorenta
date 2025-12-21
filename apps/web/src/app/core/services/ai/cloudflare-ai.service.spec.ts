@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { CloudflareAiService } from './cloudflare-ai.service';
+import { CloudflareAiService } from '@core/services/ai/cloudflare-ai.service';
 
 describe('CloudflareAiService', () => {
   let service: CloudflareAiService;

@@ -12,7 +12,7 @@ import type {
   WithdrawalLoadingState,
   WalletError,
   BankAccountType,
-} from '../models/wallet.model';
+} from '@core/models';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 /**

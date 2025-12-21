@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { RiskMatrixService } from './risk-matrix.service';
+import { RiskMatrixService } from '@core/services/verification/risk-matrix.service';
 
 describe('RiskMatrixService', () => {
   let service: RiskMatrixService;

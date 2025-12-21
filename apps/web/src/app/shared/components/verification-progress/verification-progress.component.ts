@@ -1,6 +1,6 @@
 
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
-import { IdentityLevelService } from '@core/services/auth/identity-level.service';
+import { IdentityLevelService } from '@core/services/verification/identity-level.service';
 
 @Component({
   standalone: true,

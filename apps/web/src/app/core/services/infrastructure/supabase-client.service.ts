@@ -8,7 +8,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 type SupabaseLock = <T>(name: string, acquireTimeout: number, fn: () => Promise<T>) => Promise<T>;
@@ -298,7 +298,7 @@ export const injectSupabase = (): SupabaseClient => {
   if (typeof service.getClient === 'function') {
     try {
       return service.getClient();
-    } catch {
+    } catch (error) {
       // In dev/test we prefer a lazy throwing proxy so services can be constructed
       // without requiring env vars or a fully mocked Supabase client.
       if (isDevMode()) {
@@ -306,7 +306,7 @@ export const injectSupabase = (): SupabaseClient => {
           'Supabase no está configurado (o no fue mockeado en tests). Define NG_APP_SUPABASE_URL y NG_APP_SUPABASE_ANON_KEY, o provee un mock de SupabaseClientService en el spec.',
         );
       }
-      throw;
+      throw error;
     }
   }
 

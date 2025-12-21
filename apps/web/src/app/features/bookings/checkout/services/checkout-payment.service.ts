@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { firstValueFrom, of } from 'rxjs';
 import { catchError, timeout } from 'rxjs/operators';
 import { Booking } from '../../../../core/models';
-import { BookingPaymentMethod } from '../../../../core/models/wallet.model';
+import { BookingPaymentMethod } from '@core/models/wallet.model';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';

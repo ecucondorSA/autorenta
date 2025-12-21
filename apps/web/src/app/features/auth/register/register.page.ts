@@ -5,7 +5,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
 import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environment';
 
 @Component({
   standalone: true,

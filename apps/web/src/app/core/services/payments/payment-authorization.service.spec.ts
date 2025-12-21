@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { PaymentAuthorizationService } from './payment-authorization.service';
+import { PaymentAuthorizationService } from '@core/services/payments/payment-authorization.service';
 
 const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({

@@ -32,7 +32,7 @@ import type {
   AdminPermission,
   AdminActionContext,
   AdminUserWithProfile,
-} from '../types/admin.types';
+} from '@core/types/admin.types';
 import {
   RefundRequest,
   ProcessRefundParams,
@@ -40,7 +40,7 @@ import {
   WithdrawalRequest,
   Car,
   Booking,
-} from '../models';
+} from '@core/models';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 

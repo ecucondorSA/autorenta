@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { computed, inject, Injectable, PLATFORM_ID, signal, DestroyRef } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import {
   CreateFeatureFlagDto,
@@ -11,9 +11,9 @@ import {
   FeatureFlagOverride,
   UpdateFeatureFlagDto,
   UserSegment,
-} from '../models/feature-flag.model';
-import { LoggerService } from './logger.service';
-import { injectSupabase } from './supabase-client.service';
+} from '@core/models';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 @Injectable({
   providedIn: 'root',

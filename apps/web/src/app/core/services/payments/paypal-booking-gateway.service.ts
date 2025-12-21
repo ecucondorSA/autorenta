@@ -5,7 +5,7 @@ import {
   PaymentGateway,
   PaymentPreferenceResponse,
   PaymentProvider,
-} from '../interfaces/payment-gateway.interface';
+} from '@core/interfaces/payment-gateway.interface';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 /**

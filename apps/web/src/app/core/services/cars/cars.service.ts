@@ -1,9 +1,9 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Injectable, inject } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
-import { Car, CarFilters, CarPhoto } from '../models';
-import { optimizeImage } from '../utils/image.utils';
-import { CarAvailabilityService } from './car-availability.service';
+import { Car, CarFilters, CarPhoto } from '@core/models';
+import { optimizeImage } from '@core/utils/image.utils';
+import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 // Type for raw car data from Supabase with photos joined

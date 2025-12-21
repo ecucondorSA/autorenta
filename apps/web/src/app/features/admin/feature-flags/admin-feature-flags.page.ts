@@ -16,7 +16,7 @@ import {
   CreateFeatureFlagDto,
   FeatureFlag,
   FeatureFlagAuditLog,
-} from '../../../core/models/feature-flag.model';
+} from '@core/models/feature-flag.model';
 import { FeatureFlagService } from '@core/services/infrastructure/feature-flag.service';
 
 @Component({

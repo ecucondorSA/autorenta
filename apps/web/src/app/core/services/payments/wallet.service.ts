@@ -12,7 +12,7 @@ import type {
   WalletHistoryEntry as WalletTransaction,
   WalletTransactionFilters,
   WalletUnlockFundsResponse,
-} from '../models/wallet.model';
+} from '@core/models';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 

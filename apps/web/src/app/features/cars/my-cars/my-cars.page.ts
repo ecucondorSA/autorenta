@@ -10,7 +10,7 @@ import { CarsService } from '@core/services/cars/cars.service';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
 
-import { BonusProgress } from '../../../core/models/organization.model';
+import { BonusProgress } from '@core/models/organization.model';
 import { OrganizationService, Organization } from '../../organizations/services/organization.service';
 
 @Component({

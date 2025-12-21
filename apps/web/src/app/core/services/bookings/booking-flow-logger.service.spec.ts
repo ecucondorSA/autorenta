@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { BookingFlowLoggerService } from './booking-flow-logger.service';
+import { BookingFlowLoggerService } from '@core/services/bookings/booking-flow-logger.service';
 
 describe('BookingFlowLoggerService', () => {
   let service: BookingFlowLoggerService;

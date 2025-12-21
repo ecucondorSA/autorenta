@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
-import { MercadoPagoOAuthService } from '../services/mercadopago-oauth.service';
+import { MercadoPagoOAuthService } from '@core/services/payments/mercadopago-oauth.service';
 
 /**
  * Guard que verifica si el usuario tiene MercadoPago conectado

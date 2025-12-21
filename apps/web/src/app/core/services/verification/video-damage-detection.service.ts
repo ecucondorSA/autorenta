@@ -1,8 +1,8 @@
-import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject, signal } from '@angular/core';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { environment } from '@environment';
+import { firstValueFrom } from 'rxjs';
 
 /**
  * Resultado del análisis de video de inspección
@@ -11,7 +11,7 @@ export interface VideoDamageAnalysis {
   success: boolean;
   bookingId: string;
   inspectionType: 'checkin' | 'checkout';
-  damages: DetectedDamage[];
+  damages: VideoDetectedDamage[];
   summary: string;
   confidence: number;
   videoUrl: string;
@@ -22,7 +22,7 @@ export interface VideoDamageAnalysis {
 /**
  * Daño detectado en el video con timestamp
  */
-export interface DetectedDamage {
+export interface VideoDetectedDamage {
   id: string;
   type: 'scratch' | 'dent' | 'broken_light' | 'tire_wear' | 'interior_damage' | 'other';
   description: string;
@@ -56,9 +56,9 @@ export interface SignedUploadUrlResponse {
 
 /**
  * Video Damage Detection Service
- * 
+ *
  * Integración con GCP Video Processing Pipeline:
- * 
+ *
  * FLUJO:
  * 1. Frontend sube video → Cloud Storage (signed URL)
  * 2. Cloud Storage → Pub/Sub notification
@@ -66,7 +66,7 @@ export interface SignedUploadUrlResponse {
  * 4. Cloud Run → Vertex AI (análisis de daños)
  * 5. Cloud Run → Supabase (resultados estructurados)
  * 6. Frontend → Polling/Realtime subscription (resultados)
- * 
+ *
  * ARQUITECTURA GCP:
  * - video-ingestion-service (Cloud Run): Genera signed URLs
  * - video-source-document-bucket (Cloud Storage): Almacena videos
@@ -75,11 +75,11 @@ export interface SignedUploadUrlResponse {
  * - video-vertex-ai-service (Vertex AI): Detección de daños con IA
  * - video-processing-log-db (Cloud SQL): Log de procesamiento
  * - video-summarized-archive-bucket: Resultados procesados
- * 
+ *
  * @example
  * ```typescript
  * const service = inject(VideoDamageDetectionService);
- * 
+ *
  * // 1. Subir video de check-in
  * await service.uploadInspectionVideo({
  *   bookingId: 'booking_123',
@@ -88,12 +88,12 @@ export interface SignedUploadUrlResponse {
  *   carId: 'car_456',
  *   userId: 'user_789'
  * });
- * 
+ *
  * // 2. Esperar resultados (realtime o polling)
  * service.analysisResults$.subscribe(result => {
  *   console.log('Daños detectados:', result.damages);
  * });
- * 
+ *
  * // 3. Comparar check-in vs check-out
  * const comparison = await service.compareInspections(
  *   'booking_123'
@@ -111,7 +111,7 @@ export class VideoDamageDetectionService {
    * URL del servicio de ingesta de videos en GCP Cloud Run
    * Configurable via env: NG_APP_VIDEO_INGESTION_URL
    */
-  private readonly VIDEO_INGESTION_URL = environment.videoIngestionUrl || 
+  private readonly VIDEO_INGESTION_URL = environment.videoIngestionUrl ||
     'https://video-ingestion-service-XXXXX.run.app';
 
   /**
@@ -135,11 +135,11 @@ export class VideoDamageDetectionService {
 
   /**
    * Sube un video de inspección a GCP Cloud Storage
-   * 
+   *
    * PASO 1: Solicita signed URL al servicio de ingesta
    * PASO 2: Sube el video directamente a Cloud Storage
    * PASO 3: Notifica a Supabase que el video está listo
-   * 
+   *
    * @param params - Datos de la inspección y archivo de video
    * @returns Path del video en Cloud Storage
    */
@@ -207,7 +207,7 @@ export class VideoDamageDetectionService {
 
   /**
    * Obtiene una URL firmada para subir el video a Cloud Storage
-   * 
+   *
    * Llama al servicio de ingesta en GCP Cloud Run:
    * POST /api/upload-url
    */
@@ -281,10 +281,10 @@ export class VideoDamageDetectionService {
 
   /**
    * Obtiene los resultados del análisis de un video
-   * 
+   *
    * Los resultados son escritos por el video-processing-service
    * en la tabla `video_damage_analysis`
-   * 
+   *
    * @param bookingId - ID del booking
    * @param inspectionType - Tipo de inspección
    * @returns Análisis de daños o null si aún no está procesado
@@ -330,12 +330,12 @@ export class VideoDamageDetectionService {
   /**
    * Compara los resultados de check-in y check-out
    * para determinar daños nuevos
-   * 
+   *
    * @param bookingId - ID del booking
    * @returns Lista de daños nuevos detectados en check-out
    */
   async compareInspections(bookingId: string): Promise<{
-    newDamages: DetectedDamage[];
+    newDamages: VideoDetectedDamage[];
     summary: string;
     totalEstimatedCost: number;
   }> {
@@ -373,9 +373,9 @@ export class VideoDamageDetectionService {
    * Detecta daños nuevos comparando dos listas
    */
   private detectNewDamages(
-    checkinDamages: DetectedDamage[],
-    checkoutDamages: DetectedDamage[]
-  ): DetectedDamage[] {
+    checkinDamages: VideoDetectedDamage[],
+    checkoutDamages: VideoDetectedDamage[]
+  ): VideoDetectedDamage[] {
     // Simple heurística: buscar daños en checkout que no están en checkin
     // basándose en type + location
     return checkoutDamages.filter(checkoutDamage => {
@@ -390,7 +390,7 @@ export class VideoDamageDetectionService {
   /**
    * Genera un resumen legible de los daños
    */
-  private generateDamageSummary(damages: DetectedDamage[]): string {
+  private generateDamageSummary(damages: VideoDetectedDamage[]): string {
     if (damages.length === 0) {
       return 'No se detectaron daños nuevos.';
     }
@@ -408,7 +408,7 @@ export class VideoDamageDetectionService {
 
   /**
    * Suscribirse a cambios en los análisis de video
-   * 
+   *
    * Útil para mostrar resultados en tiempo real cuando
    * el video-processing-service termina el análisis
    */

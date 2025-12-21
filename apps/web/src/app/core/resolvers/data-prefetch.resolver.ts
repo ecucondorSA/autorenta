@@ -1,10 +1,10 @@
 import { inject } from '@angular/core';
 import { ResolveFn, ActivatedRouteSnapshot } from '@angular/router';
-import { BookingsService } from '../services/bookings.service';
-import { CarsService } from '../services/cars.service';
-import { ProfileService } from '../services/profile.service';
-import { Booking } from '../models';
-import type { Car } from '../models';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { CarsService } from '@core/services/cars/cars.service';
+import { ProfileService } from '@core/services/auth/profile.service';
+import { Booking } from '@core/models';
+import type { Car } from '@core/models';
 
 /**
  * P1-030 FIX: Data Prefetching Resolvers

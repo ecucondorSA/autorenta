@@ -23,7 +23,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environment';
 import type { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { MapboxDirectionsService } from '@core/services/geo/mapbox-directions.service';
 import { MapboxPreloaderService } from '@core/services/geo/mapbox-preloader.service';

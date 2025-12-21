@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BookingPaymentMethod } from '../../../../core/models/wallet.model';
+import { BookingPaymentMethod } from '@core/models/wallet.model';
 import { Booking } from '../../../../core/models';
 import { FranchiseInfo } from './franchise-table.service';
 

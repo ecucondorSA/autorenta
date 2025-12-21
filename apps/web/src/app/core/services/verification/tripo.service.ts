@@ -2,12 +2,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, interval, of, throwError } from 'rxjs';
 import { map, switchMap, takeWhile, timeout } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 import {
   TripoTaskRequest,
   TripoTaskResponse,
   TripoTaskStatusResponse,
-} from '../models/tripo.models';
+} from '@core/models';
 
 @Injectable({
   providedIn: 'root',

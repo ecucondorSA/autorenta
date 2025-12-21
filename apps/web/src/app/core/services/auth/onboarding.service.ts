@@ -1,8 +1,8 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
-import { ProfileStore } from '../stores/profile.store';
+import { environment } from '@environment';
+import { ProfileStore } from '@core/stores/profile.store';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 
 /**

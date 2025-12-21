@@ -25,10 +25,10 @@ import {
   mapBookingRiskSnapshot,
   mapBookingInspection,
   centsToUsd,
-} from '../models/fgo-v1-1.model';
+} from '@core/models';
 
 // Models v1.0 (base)
-import { FgoMovementView } from '../models/fgo.model';
+import { FgoMovementView } from '@core/models';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 /**

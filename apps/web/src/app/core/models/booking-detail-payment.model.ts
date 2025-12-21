@@ -117,7 +117,7 @@ export interface CalculateRiskSnapshotParams {
 /**
  * Versión persistida en DB
  */
-export interface BookingRiskSnapshotDb {
+export interface BookingDetailRiskSnapshotDb {
   id: string;
   booking_id: string;
   country_code: string;
@@ -151,7 +151,7 @@ export interface BookingRiskSnapshotDb {
 /**
  * Desglose de precios de la reserva
  */
-export interface PriceBreakdown {
+export interface BookingPriceBreakdown {
   // Tarifa base
   dailyRateUsd: number;
   totalDays: number;
@@ -281,7 +281,7 @@ export interface BookingDetailPaymentState {
   riskSnapshot: RiskSnapshot | null;
 
   // Pricing
-  priceBreakdown: PriceBreakdown | null;
+  priceBreakdown: BookingPriceBreakdown | null;
 
   // Modalidad de pago
   paymentMode: PaymentMode;

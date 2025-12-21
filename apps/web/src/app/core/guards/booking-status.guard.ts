@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Route, Router, UrlSegment } from '@angular/router';
-import type { BookingStatus } from '../models';
-import { AuthService } from '../services/auth.service';
-import { BookingFlowService } from '../services/booking-flow.service';
-import { BookingsService } from '../services/bookings.service';
+import type { BookingStatus } from '@core/models';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingFlowService } from '@core/services/bookings/booking-flow.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 
 /**
  * BookingStatusGuard

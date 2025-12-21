@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { MapboxPreloaderService } from './mapbox-preloader.service';
+import { MapboxPreloaderService } from '@core/services/geo/mapbox-preloader.service';
 
 describe('MapboxPreloaderService', () => {
   let service: MapboxPreloaderService;

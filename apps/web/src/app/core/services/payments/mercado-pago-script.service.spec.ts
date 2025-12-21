@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { MercadoPagoScriptService } from './mercado-pago-script.service';
+import { MercadoPagoScriptService } from '@core/services/payments/mercado-pago-script.service';
 
 describe('MercadoPagoScriptService', () => {
   let service: MercadoPagoScriptService;

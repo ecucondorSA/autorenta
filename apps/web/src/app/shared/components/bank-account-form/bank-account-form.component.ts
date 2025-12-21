@@ -4,7 +4,7 @@ import {Component, computed, EventEmitter, inject, OnInit, Output, signal, Destr
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { AddBankAccountParams, BankAccountType } from '../../../core/models/wallet.model';
+import type { AddBankAccountParams, BankAccountType } from '@core/models/wallet.model';
 import { ProfileService } from '@core/services/auth/profile.service';
 
 /**

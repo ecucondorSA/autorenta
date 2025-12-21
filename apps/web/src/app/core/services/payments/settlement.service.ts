@@ -12,13 +12,13 @@ import {
   usdToCents,
   calculateWaterfallTotal,
   isInspectionComplete,
-} from '../models/fgo-v1-1.model';
+} from '@core/models';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { RiskMatrixService } from '@core/services/verification/risk-matrix.service';
 import { FgoService } from '@core/services/verification/fgo.service';
 import { DamageDetectionService } from '@core/services/verification/damage-detection.service';
-import { PaymentAuthorizationService } from './payment-authorization.service';
+import { PaymentAuthorizationService } from '@core/services/payments/payment-authorization.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**

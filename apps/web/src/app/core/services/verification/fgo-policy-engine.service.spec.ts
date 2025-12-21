@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { FgoPolicyEngineService } from './fgo-policy-engine.service';
+import { FgoPolicyEngineService } from '@core/services/verification/fgo-policy-engine.service';
 
 describe('FgoPolicyEngineService', () => {
   let service: FgoPolicyEngineService;

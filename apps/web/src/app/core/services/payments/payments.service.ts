@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { PaymentIntent } from '../models';
+import { environment } from '@environment';
+import { PaymentIntent } from '@core/models';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { FxService } from './fx.service';
+import { FxService } from '@core/services/payments/fx.service';
 
 /**
  * PaymentsService

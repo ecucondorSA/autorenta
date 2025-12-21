@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { GeminiService } from './gemini.service';
+import { GeminiService } from '@core/services/ai/gemini.service';
 
 describe('GeminiService', () => {
   let service: GeminiService;

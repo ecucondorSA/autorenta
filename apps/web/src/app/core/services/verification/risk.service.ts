@@ -1,5 +1,4 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, from, map, of } from 'rxjs';
 import {
   BucketType,
   CalculateRiskSnapshotParams,
@@ -7,9 +6,13 @@ import {
   RiskSnapshot,
   applyUpgradeToDeductible,
   calculateDeductibleUsd,
-} from '../models/booking-detail-payment.model';
-import { RiskCalculatorService } from './risk-calculator.service';
+} from '@core/models/booking-detail-payment.model';
+import { Observable, catchError, from, map, of } from 'rxjs';
+
+// Function helpers are in fgo-v1-1.model or should be imported explicitly if not in booking-detail-payment
+
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { RiskCalculatorService } from '@core/services/verification/risk-calculator.service';
 
 /**
  * Servicio para cálculo de riesgos y garantías

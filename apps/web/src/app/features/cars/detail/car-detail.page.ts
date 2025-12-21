@@ -33,8 +33,8 @@ import { WalletService } from '@core/services/payments/wallet.service';
 
 // Models
 import { Car, CarPhoto, CarStats, Review } from '../../../core/models';
-import { calculateCreditSecurityUsd } from '../../../core/models/booking-detail-payment.model';
-import { BookingPaymentMethod } from '../../../core/models/wallet.model';
+import { calculateCreditSecurityUsd } from '@core/models/booking-detail-payment.model';
+import { BookingPaymentMethod } from '@core/models/wallet.model';
 
 // Components
 import { RiskCalculation, RiskCalculatorService } from '@core/services/verification/risk-calculator.service';

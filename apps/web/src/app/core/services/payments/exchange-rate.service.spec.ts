@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ExchangeRateService } from './exchange-rate.service';
+import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
 
 describe('ExchangeRateService', () => {
   let service: ExchangeRateService;

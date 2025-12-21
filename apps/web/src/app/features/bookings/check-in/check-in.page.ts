@@ -8,7 +8,7 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
-import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
+import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**

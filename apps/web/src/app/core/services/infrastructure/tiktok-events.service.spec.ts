@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { TikTokEventsService } from './tiktok-events.service';
+import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
 
 describe('TikTokEventsService', () => {
   let service: TikTokEventsService;

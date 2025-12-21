@@ -7,7 +7,7 @@ import {
   Role,
   UserDocument,
   UserProfile,
-} from '../models';
+} from '@core/models';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 

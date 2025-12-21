@@ -31,7 +31,7 @@ import { MercadopagoCardFormComponent } from '../../../shared/components/mercado
 import { WalletBalanceCardComponent } from '../../../shared/components/wallet-balance-card/wallet-balance-card.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { PaymentModeToggleComponent } from '../booking-detail-payment/components/payment-mode-toggle.component';
-import type { PaymentMode } from '../../../core/models/booking-detail-payment.model';
+import type { PaymentMode } from '@core/models/booking-detail-payment.model';
 
 // Types
 import { Booking, Car } from '../../../core/models';

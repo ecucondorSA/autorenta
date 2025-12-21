@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import type { VehicleCategory } from '../models';
+import { environment } from '@environment';
+import type { VehicleCategory } from '@core/models';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
 

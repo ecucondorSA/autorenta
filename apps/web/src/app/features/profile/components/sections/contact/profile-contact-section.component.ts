@@ -26,7 +26,7 @@ import { IonicModule } from '@ionic/angular';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 
 import { UpdateProfileData, UserProfile } from '../../../../../core/models';
-import { ProfileStore } from '../../../../../core/stores/profile.store';
+import { ProfileStore } from '@core/stores/profile.store';
 import { ProfileValidators } from '../../shared/field-validators';
 import { SectionCardComponent } from '../../shared/section-card';
 

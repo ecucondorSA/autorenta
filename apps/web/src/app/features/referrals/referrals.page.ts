@@ -3,7 +3,7 @@ import {Component, OnInit, inject, signal,
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ReferralsService } from '@core/services/auth/referrals.service';
-import { MEDIUM_TIMEOUT_MS } from '../../core/constants/timing.constants';
+import { MEDIUM_TIMEOUT_MS } from '@core/constants/timing.constants';
 
 @Component({
   selector: 'app-referrals',

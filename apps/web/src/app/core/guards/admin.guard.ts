@@ -37,10 +37,10 @@
 
 import { inject } from '@angular/core';
 import { CanMatchFn, Router, Route } from '@angular/router';
-import { AdminService } from '../services/admin.service';
-import { AuthService } from '../services/auth.service';
-import { LoggerService } from '../services/logger.service';
-import type { AdminRole, AdminPermission } from '../types/admin.types';
+import { AdminService } from '@core/services/admin/admin.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import type { AdminRole, AdminPermission } from '@core/types/admin.types';
 
 /**
  * AdminGuard - Protects admin routes with RBAC

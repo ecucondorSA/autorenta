@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ContractTemplateService } from './contract-template.service';
+import { ContractTemplateService } from '@core/services/bookings/contract-template.service';
 
 describe('ContractTemplateService', () => {
   let service: ContractTemplateService;

@@ -57,7 +57,7 @@ import { VerificationPromptBannerComponent } from './shared/components/verificat
 import { ClickOutsideDirective } from './shared/directives/click-outside.directive';
 import { OfflineBannerComponent } from './shared/components/offline-banner/offline-banner.component';
 
-import { routeAnimations } from './core/animations/route-animations'; // Importar animaciones
+import { routeAnimations } from '@core/animations/route-animations'; // Importar animaciones
 
 @Component({
   selector: 'app-root',

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { AssetPreloaderService } from './asset-preloader.service';
+import { AssetPreloaderService } from '@core/services/ui/asset-preloader.service';
 
 describe('AssetPreloaderService', () => {
   let service: AssetPreloaderService;

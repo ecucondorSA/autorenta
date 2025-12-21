@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { GeminiService } from '@core/services/ai/gemini.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
-import type { CarRecommendation } from '../../../core/models/gemini.model';
+import type { CarRecommendation } from '@core/models/gemini.model';
 
 const CACHE_KEY = 'ai_car_recommendation';
 const CACHE_DURATION_HOURS = 24;

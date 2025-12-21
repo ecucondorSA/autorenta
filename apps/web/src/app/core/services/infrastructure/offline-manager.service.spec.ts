@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { OfflineManagerService } from './offline-manager.service';
+import { OfflineManagerService } from '@core/services/infrastructure/offline-manager.service';
 
 describe('OfflineManagerService', () => {
   let service: OfflineManagerService;

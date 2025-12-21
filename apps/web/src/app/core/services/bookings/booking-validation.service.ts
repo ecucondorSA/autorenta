@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Booking } from '../models';
+import { Booking } from '@core/models';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { ErrorHandlerService } from '@core/services/infrastructure/error-handler.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';

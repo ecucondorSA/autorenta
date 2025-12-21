@@ -1,6 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
-import { ChatMessageInsertSchema } from '../contracts/chat-message.schemas';
+import { ChatMessageInsertSchema } from '@core/contracts/chat-message.schemas';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 // Mock for queueOffline

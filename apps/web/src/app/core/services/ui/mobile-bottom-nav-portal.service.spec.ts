@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { MobileBottomNavPortalService } from './mobile-bottom-nav-portal.service';
+import { MobileBottomNavPortalService } from '@core/services/ui/mobile-bottom-nav-portal.service';
 
 describe('MobileBottomNavPortalService', () => {
   let service: MobileBottomNavPortalService;

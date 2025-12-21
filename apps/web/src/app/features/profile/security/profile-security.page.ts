@@ -4,7 +4,7 @@ import {Component, inject, OnInit, signal,
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
-import { ProfileStore } from '../../../core/stores/profile.store';
+import { ProfileStore } from '@core/stores/profile.store';
 import { AuthService } from '@core/services/auth/auth.service';
 
 /**

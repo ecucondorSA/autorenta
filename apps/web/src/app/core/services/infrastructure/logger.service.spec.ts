@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { LoggerService } from './logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 describe('LoggerService', () => {
   let service: LoggerService;

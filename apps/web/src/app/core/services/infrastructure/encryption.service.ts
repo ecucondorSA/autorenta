@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 
 /**
  * EncryptionService: Secure AES-256-GCM encryption for sensitive tokens

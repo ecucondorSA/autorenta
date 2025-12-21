@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { FranchiseTableService } from './franchise-table.service';
+import { FranchiseTableService } from '@core/services/payments/franchise-table.service';
 
 describe('FranchiseTableService', () => {
   let service: FranchiseTableService;

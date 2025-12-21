@@ -5,7 +5,7 @@ import type {
   BonusMalusDisplay,
   BonusMalusType,
   AutorentaTier,
-} from '../models';
+} from '@core/models';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 export interface TierDisplay {

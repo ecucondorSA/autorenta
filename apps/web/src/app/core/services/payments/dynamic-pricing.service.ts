@@ -4,8 +4,8 @@ import type {
   LockPriceResult,
   LockPriceRpcResponse,
   LockPriceRpcParams,
-} from '../models/dynamic-pricing.model';
-import { PriceLockErrorCode, rpcResponseToPriceLock } from '../models/dynamic-pricing.model';
+} from '@core/models';
+import { PriceLockErrorCode, rpcResponseToPriceLock } from '@core/models';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 export interface PricingRequest {
@@ -560,7 +560,7 @@ export class DynamicPricingService {
       return false;
     }
 
-    const { isPriceLockExpired } = await import('../models/dynamic-pricing.model');
+    const { isPriceLockExpired } = await import('@core/models/dynamic-pricing.model');
     return !isPriceLockExpired(priceLock);
   }
 
@@ -573,7 +573,7 @@ export class DynamicPricingService {
       return 0;
     }
 
-    const { calculateLockExpiresIn } = await import('../models/dynamic-pricing.model');
+    const { calculateLockExpiresIn } = await import('@core/models/dynamic-pricing.model');
     return calculateLockExpiresIn(priceLock);
   }
 
@@ -595,7 +595,7 @@ export class DynamicPricingService {
    * Returns null if valid, error message if invalid
    */
   async validatePriceLockForBooking(priceLock: PriceLock | null): Promise<string | null> {
-    const { validatePriceLock } = await import('../models/dynamic-pricing.model');
+    const { validatePriceLock } = await import('@core/models/dynamic-pricing.model');
     return validatePriceLock(priceLock);
   }
 
@@ -608,7 +608,7 @@ export class DynamicPricingService {
     }
 
     const { calculateLockExpiresIn, formatLockCountdown } =
-      await import('../models/dynamic-pricing.model');
+      await import('@core/models/dynamic-pricing.model');
     const seconds = calculateLockExpiresIn(priceLock);
     return formatLockCountdown(seconds);
   }
@@ -642,7 +642,7 @@ export class DynamicPricingService {
     }
 
     const { calculatePriceComparison, generatePriceComparisonMessage } =
-      await import('../models/dynamic-pricing.model');
+      await import('@core/models/dynamic-pricing.model');
 
     const comparison = calculatePriceComparison(fixedPrice, priceLock.totalPrice);
     const message = generatePriceComparisonMessage(comparison);
@@ -668,7 +668,7 @@ export class DynamicPricingService {
       return null;
     }
 
-    const { generateSurgeInfo } = await import('../models/dynamic-pricing.model');
+    const { generateSurgeInfo } = await import('@core/models/dynamic-pricing.model');
     return generateSurgeInfo(priceLock.priceSnapshot);
   }
 }

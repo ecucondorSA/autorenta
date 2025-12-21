@@ -3,11 +3,11 @@ import {
   PaymentGateway,
   PaymentProvider,
   WalletPaymentGateway,
-} from '../interfaces/payment-gateway.interface';
-import { MercadoPagoBookingGatewayService } from './mercadopago-booking-gateway.service';
-import { MercadoPagoWalletGatewayService } from './mercadopago-wallet-gateway.service';
-import { PayPalBookingGatewayService } from './paypal-booking-gateway.service';
-import { PayPalWalletGatewayService } from './paypal-wallet-gateway.service';
+} from '@core/interfaces/payment-gateway.interface';
+import { MercadoPagoBookingGatewayService } from '@core/services/payments/mercadopago-booking-gateway.service';
+import { MercadoPagoWalletGatewayService } from '@core/services/payments/mercadopago-wallet-gateway.service';
+import { PayPalBookingGatewayService } from '@core/services/payments/paypal-booking-gateway.service';
+import { PayPalWalletGatewayService } from '@core/services/payments/paypal-wallet-gateway.service';
 
 /**
  * Payment Gateway Factory

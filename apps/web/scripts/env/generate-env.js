@@ -53,7 +53,7 @@ const envJsContent = `// Auto-generated environment configuration
 window.__env = ${JSON.stringify(envVars)};
 `;
 
-const outputPath = path.join(__dirname, '../public/env.js');
+const outputPath = path.join(__dirname, '../../public/env.js');
 fs.writeFileSync(outputPath, envJsContent);
 
 console.log('✅ Generated public/env.js with environment configuration');

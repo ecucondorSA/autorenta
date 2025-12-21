@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { VerificationNotificationsService } from './verification-notifications.service';
+import { VerificationNotificationsService } from '@core/services/verification/verification-notifications.service';
 
 describe('VerificationNotificationsService', () => {
   let service: VerificationNotificationsService;

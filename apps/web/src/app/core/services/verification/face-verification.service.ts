@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**

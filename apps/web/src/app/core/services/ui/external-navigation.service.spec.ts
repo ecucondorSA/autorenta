@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ExternalNavigationService } from './external-navigation.service';
+import { ExternalNavigationService } from '@core/services/ui/external-navigation.service';
 
 describe('ExternalNavigationService', () => {
   let service: ExternalNavigationService;

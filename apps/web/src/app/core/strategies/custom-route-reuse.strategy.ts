@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { LoggerService } from '../services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy } from '@angular/router';
 
 /**

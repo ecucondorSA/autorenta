@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { SeoSchemaService } from './seo-schema.service';
+import { SeoSchemaService } from '@core/services/ui/seo-schema.service';
 
 describe('SeoSchemaService', () => {
   let service: SeoSchemaService;

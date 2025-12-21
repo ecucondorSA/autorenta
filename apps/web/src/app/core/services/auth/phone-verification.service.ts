@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
-import type { AuthError } from '@supabase/supabase-js';
-import { VerificationBaseService, VerificationStatus } from '@core/services/verification/verification-base.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { AuthVerificationStatus, VerificationBaseService } from '@core/services/verification/verification-base.service';
+import type { AuthError } from '@supabase/supabase-js';
 
 /**
  * Phone Verification Status (extends base with OTP-specific fields)
  */
-export interface PhoneVerificationStatus extends VerificationStatus {
+export interface PhoneVerificationStatus extends AuthVerificationStatus {
   otpSent: boolean;
 }
 
@@ -63,7 +63,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
   /**
    * Override extendStatus to add phone-specific fields
    */
-  protected override extendStatus(baseStatus: VerificationStatus): PhoneVerificationStatus {
+  protected override extendStatus(baseStatus: AuthVerificationStatus): PhoneVerificationStatus {
     return {
       ...baseStatus,
       otpSent: this.statusSignal().otpSent ?? false,

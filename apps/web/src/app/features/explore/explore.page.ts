@@ -37,7 +37,7 @@ import {
   FilterState,
   MapFiltersComponent,
 } from '../../shared/components/map-filters/map-filters.component';
-import { SORT_OPTIONS, SortOption } from '../../core/models/marketplace.model';
+import { SORT_OPTIONS, SortOption } from '@core/models/marketplace.model';
 import { WazeLiveMapComponent } from '../../shared/components/waze-live-map/waze-live-map.component';
 
 @Component({

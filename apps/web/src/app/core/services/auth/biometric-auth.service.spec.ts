@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { BiometricAuthService } from './biometric-auth.service';
+import { BiometricAuthService } from '@core/services/auth/biometric-auth.service';
 
 describe('BiometricAuthService', () => {
   let service: BiometricAuthService;

@@ -10,7 +10,7 @@ import {AfterViewInit,
   ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import type { AddBankAccountParams, RequestWithdrawalParams } from '../../core/models/wallet.model';
+import type { AddBankAccountParams, RequestWithdrawalParams } from '@core/models/wallet.model';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { MetaService } from '@core/services/ui/meta.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';

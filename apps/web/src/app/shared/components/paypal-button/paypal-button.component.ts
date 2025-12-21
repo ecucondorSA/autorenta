@@ -10,7 +10,7 @@ import {AfterViewInit,
   Output,
   PLATFORM_ID,
   ChangeDetectionStrategy} from '@angular/core';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environment';
 import { PayPalBookingGatewayService } from '@core/services/payments/paypal-booking-gateway.service';
 
 // PayPal SDK types

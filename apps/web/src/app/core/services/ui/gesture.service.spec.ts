@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { GestureService } from './gesture.service';
+import { GestureService } from '@core/services/ui/gesture.service';
 
 describe('GestureService', () => {
   let service: GestureService;

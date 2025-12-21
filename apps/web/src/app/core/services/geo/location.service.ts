@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { GeocodingResult, GeocodingService } from './geocoding.service';
+import { GeocodingResult, GeocodingService } from '@core/services/geo/geocoding.service';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 

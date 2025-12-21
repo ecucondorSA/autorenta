@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { OfflineMessagesService } from './offline-messages.service';
+import { OfflineMessagesService } from '@core/services/infrastructure/offline-messages.service';
 
 describe('OfflineMessagesService', () => {
   let service: OfflineMessagesService;

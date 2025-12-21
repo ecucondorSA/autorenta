@@ -1,10 +1,10 @@
 import { Injectable, computed, inject, signal, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { UserProfile } from '../models';
-import { AuthService } from '../services/auth.service';
-import type { UpdateProfileData } from '../services/profile.service';
-import { ProfileService } from '../services/profile.service';
-import { WalletService } from '../services/wallet.service';
+import type { UserProfile } from '@core/models';
+import { AuthService } from '@core/services/auth/auth.service';
+import type { UpdateProfileData } from '@core/services/auth/profile.service';
+import { ProfileService } from '@core/services/auth/profile.service';
+import { WalletService } from '@core/services/payments/wallet.service';
 
 /**
  * ProfileStore - Centralized state management for user profile

@@ -1,6 +1,6 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 export interface MercadoPagoConnectionStatus {

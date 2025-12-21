@@ -22,7 +22,7 @@ function collectStencilInternalClientDirs() {
   const dirs = new Set();
 
   const repoRoot = findRepoRoot(__dirname);
-  const webRoot = resolve(__dirname, '..');
+  const webRoot = resolve(__dirname, '../..');
 
   // 1) Primary: resolve installed @stencil/core from common lookup points
   try {

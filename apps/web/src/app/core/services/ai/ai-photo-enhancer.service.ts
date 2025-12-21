@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { StockPhotosService, StockPhoto } from './stock-photos.service';
-import { CloudflareAiService } from './cloudflare-ai.service';
+import { StockPhotosService, StockPhoto } from '@core/services/ai/stock-photos.service';
+import { CloudflareAiService } from '@core/services/ai/cloudflare-ai.service';
 
 export interface EnhancedPhoto {
   original: File;

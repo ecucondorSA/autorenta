@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
+import { environment } from '@environment';
 import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 

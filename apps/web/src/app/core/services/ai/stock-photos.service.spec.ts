@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { StockPhotosService } from './stock-photos.service';
+import { StockPhotosService } from '@core/services/ai/stock-photos.service';
 
 describe('StockPhotosService', () => {
   let service: StockPhotosService;

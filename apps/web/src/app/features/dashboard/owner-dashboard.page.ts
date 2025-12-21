@@ -4,7 +4,7 @@ import {Component, computed, inject, OnDestroy, OnInit, signal,
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
-import type { DashboardStats } from '../../core/models/dashboard.model';
+import type { DashboardStats } from '@core/models/dashboard.model';
 import { DashboardService } from '@core/services/admin/dashboard.service';
 import { NotificationsService } from '@core/services/infrastructure/user-notifications.service';
 import { MissingDocumentsWidgetComponent } from '../../shared/components/missing-documents-widget/missing-documents-widget.component';

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { MarketplaceLandingService } from './marketplace-landing.service';
+import { MarketplaceLandingService } from '@core/services/bookings/marketplace-landing.service';
 
 describe('MarketplaceLandingService', () => {
   let service: MarketplaceLandingService;

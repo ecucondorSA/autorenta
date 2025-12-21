@@ -13,7 +13,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const distWebPath = path.join(__dirname, '../dist/web');
+const distWebPath = path.join(__dirname, '../../dist/web');
 const browserPath = path.join(distWebPath, 'browser');
 const distPath = browserPath;
 

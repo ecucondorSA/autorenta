@@ -1,11 +1,11 @@
-import { Component, signal, inject, output, input, ViewChild, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { AfterViewInit, Component, ElementRef, inject, input, OnDestroy, output, signal, ViewChild } from '@angular/core';
 import { VideoDamageDetectionService } from '@core/services/verification/video-damage-detection.service';
+import { IonicModule } from '@ionic/angular';
 
 /**
  * Video Inspection Recorder Component
- * 
+ *
  * Permite grabar video de inspección vehicular con guías visuales
  */
 @Component({
@@ -17,7 +17,7 @@ import { VideoDamageDetectionService } from '@core/services/verification/video-d
       <!-- Video Preview -->
       <div class="video-preview" [class.recording]="isRecording()">
         <video #videoElement autoplay playsinline muted></video>
-        
+
         <!-- Recording indicator -->
         @if (isRecording()) {
           <div class="recording-indicator">
@@ -25,7 +25,7 @@ import { VideoDamageDetectionService } from '@core/services/verification/video-d
             <span>{{ formatTime(recordingDuration()) }}</span>
           </div>
         }
-        
+
         <!-- Inspection guide -->
         @if (isRecording()) {
           <div class="inspection-guide">
@@ -33,7 +33,7 @@ import { VideoDamageDetectionService } from '@core/services/verification/video-d
             <div class="guide-checklist">
               @for (area of inspectionAreas; track area.id) {
                 <div class="area-item" [class.completed]="area.completed">
-                  <ion-icon 
+                  <ion-icon
                     [name]="area.completed ? 'checkmark-circle' : 'ellipse-outline'"
                     [color]="area.completed ? 'success' : 'medium'">
                   </ion-icon>
@@ -43,7 +43,7 @@ import { VideoDamageDetectionService } from '@core/services/verification/video-d
             </div>
           </div>
         }
-        
+
         <!-- Quality warning -->
         @if (qualityWarning()) {
           <div class="quality-warning">
@@ -52,7 +52,7 @@ import { VideoDamageDetectionService } from '@core/services/verification/video-d
           </div>
         }
       </div>
-      
+
       <!-- Controls -->
       <div class="controls">
         @if (!isRecording() && !isProcessing()) {
@@ -61,10 +61,10 @@ import { VideoDamageDetectionService } from '@core/services/verification/video-d
             Iniciar Inspección
           </ion-button>
         }
-        
+
         @if (isRecording()) {
-          <ion-button 
-            expand="block" 
+          <ion-button
+            expand="block"
             color="success"
             [disabled]="recordingDuration() < 90"
             (click)="stopRecording()">
@@ -72,7 +72,7 @@ import { VideoDamageDetectionService } from '@core/services/verification/video-d
             Finalizar (mín. 90s)
           </ion-button>
         }
-        
+
         @if (isProcessing()) {
           <div class="upload-progress">
             <ion-progress-bar [value]="uploadProgress() / 100"></ion-progress-bar>
@@ -80,7 +80,7 @@ import { VideoDamageDetectionService } from '@core/services/verification/video-d
           </div>
         }
       </div>
-      
+
       <!-- Instructions -->
       @if (!isRecording() && !isProcessing()) {
         <ion-card class="instructions">
@@ -202,24 +202,24 @@ import { VideoDamageDetectionService } from '@core/services/verification/video-d
     }
   `]
 })
-export class VideoInspectionRecorderComponent {
+export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestroy {
   private readonly videoService = inject(VideoDamageDetectionService);
-  
+
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
-  
+
   bookingId = input.required<string>();
   carId = input.required<string>();
   inspectionType = input<'checkin' | 'checkout'>('checkin');
-  
+
   videoUploaded = output<string>();
-  error = output<string>();
-  
+  recorderError = output<string>();
+
   readonly isRecording = signal(false);
   readonly isProcessing = signal(false);
   readonly recordingDuration = signal(0);
   readonly uploadProgress = this.videoService.uploadProgress;
   readonly qualityWarning = signal<string | null>(null);
-  
+
   inspectionAreas = [
     { id: 'front', label: 'Frente', completed: false },
     { id: 'left', label: 'Lateral Izq', completed: false },
@@ -229,56 +229,56 @@ export class VideoInspectionRecorderComponent {
     { id: 'roof', label: 'Techo', completed: false },
     { id: 'interior', label: 'Interior', completed: false }
   ];
-  
+
   currentGuide = signal({ text: 'Comienza por el frente del vehículo' });
-  
+
   private mediaRecorder: MediaRecorder | null = null;
   private recordedChunks: Blob[] = [];
   private stream: MediaStream | null = null;
   private recordingTimer: any = null;
-  
+
   async ngAfterViewInit() {
     await this.initCamera();
   }
-  
+
   ngOnDestroy() {
     this.stopCamera();
   }
-  
+
   private async initCamera() {
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } },
         audio: true
       });
-      
+
       if (this.videoElement) {
         this.videoElement.nativeElement.srcObject = this.stream;
       }
     } catch (err) {
-      this.error.emit('No se pudo acceder a la cámara');
+      this.recorderError.emit('No se pudo acceder a la cámara');
     }
   }
-  
+
   async startRecording() {
     if (!this.stream) await this.initCamera();
-    
+
     try {
       this.recordedChunks = [];
       this.mediaRecorder = new MediaRecorder(this.stream!, {
         mimeType: 'video/webm;codecs=vp9',
         videoBitsPerSecond: 2500000
       });
-      
+
       this.mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) this.recordedChunks.push(event.data);
       };
-      
+
       this.mediaRecorder.onstop = () => this.processRecording();
       this.mediaRecorder.start(1000);
       this.isRecording.set(true);
       this.recordingDuration.set(0);
-      
+
       this.recordingTimer = setInterval(() => {
         const duration = this.recordingDuration() + 1;
         this.recordingDuration.set(duration);
@@ -286,10 +286,10 @@ export class VideoInspectionRecorderComponent {
         this.checkQuality();
       }, 1000);
     } catch (err) {
-      this.error.emit('Error al iniciar grabación');
+      this.recorderError.emit('Error al iniciar grabación');
     }
   }
-  
+
   stopRecording() {
     if (this.mediaRecorder && this.isRecording()) {
       this.mediaRecorder.stop();
@@ -297,19 +297,19 @@ export class VideoInspectionRecorderComponent {
       if (this.recordingTimer) clearInterval(this.recordingTimer);
     }
   }
-  
+
   private async processRecording() {
     const blob = new Blob(this.recordedChunks, { type: 'video/webm' });
     const file = new File([blob], `inspection_${Date.now()}.webm`, { type: 'video/webm' });
-    
+
     if (this.recordingDuration() < 90) {
-      this.error.emit('El video debe durar al menos 90 segundos');
+      this.recorderError.emit('El video debe durar al menos 90 segundos');
       return;
     }
-    
+
     try {
       this.isProcessing.set(true);
-      
+
       const videoPath = await this.videoService.uploadInspectionVideo({
         bookingId: this.bookingId(),
         inspectionType: this.inspectionType(),
@@ -317,15 +317,15 @@ export class VideoInspectionRecorderComponent {
         carId: this.carId(),
         userId: 'current-user-id'
       });
-      
+
       this.videoUploaded.emit(videoPath);
     } catch (err) {
-      this.error.emit('Error al subir video');
+      this.recorderError.emit('Error al subir video');
     } finally {
       this.isProcessing.set(false);
     }
   }
-  
+
   private updateGuide(duration: number) {
     const guides = [
       { time: 0, text: 'Comienza por el frente del vehículo', area: 'front' },
@@ -336,7 +336,7 @@ export class VideoInspectionRecorderComponent {
       { time: 75, text: 'Techo del vehículo', area: 'roof' },
       { time: 90, text: 'Interior: asientos y tablero', area: 'interior' }
     ];
-    
+
     const currentGuideItem = [...guides].reverse().find(g => duration >= g.time);
     if (currentGuideItem) {
       this.currentGuide.set({ text: currentGuideItem.text });
@@ -344,7 +344,7 @@ export class VideoInspectionRecorderComponent {
       if (area) area.completed = true;
     }
   }
-  
+
   private checkQuality() {
     if (this.recordingDuration() < 30) {
       this.qualityWarning.set('Asegúrate de grabar al menos 90 segundos');
@@ -352,13 +352,13 @@ export class VideoInspectionRecorderComponent {
       this.qualityWarning.set(null);
     }
   }
-  
+
   private stopCamera() {
     if (this.stream) {
       this.stream.getTracks().forEach(track => track.stop());
     }
   }
-  
+
   formatTime(seconds: number): string {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;

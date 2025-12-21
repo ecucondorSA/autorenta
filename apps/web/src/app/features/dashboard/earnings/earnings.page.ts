@@ -4,7 +4,7 @@ import {Component, computed, inject, OnInit, signal,
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import type { Car } from '../../../core/models';
-import type { DashboardStats } from '../../../core/models/dashboard.model';
+import type { DashboardStats } from '@core/models/dashboard.model';
 import { CarsService } from '@core/services/cars/cars.service';
 import { DashboardService } from '@core/services/admin/dashboard.service';
 import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';

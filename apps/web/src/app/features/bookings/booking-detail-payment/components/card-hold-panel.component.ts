@@ -9,7 +9,7 @@ import {
   RiskSnapshot,
   FxSnapshot,
   PaymentAuthorization,
-} from '../../../../core/models/booking-detail-payment.model';
+} from '@core/models/booking-detail-payment.model';
 import { PaymentAuthorizationService } from '@core/services/payments/payment-authorization.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component';

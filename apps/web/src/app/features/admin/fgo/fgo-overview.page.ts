@@ -16,8 +16,8 @@ import {
   getSubfundName,
   getMovementTypeName,
   formatRatio,
-} from '../../../core/models/fgo.model';
-import { FgoStatusV1_1 } from '../../../core/models/fgo-v1-1.model';
+} from '@core/models/fgo.model';
+import { FgoStatusV1_1 } from '@core/models/fgo-v1-1.model';
 
 /**
  * Componente de vista general del FGO

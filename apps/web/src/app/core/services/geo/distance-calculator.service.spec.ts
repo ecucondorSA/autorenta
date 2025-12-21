@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { DistanceCalculatorService } from './distance-calculator.service';
+import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
 
 describe('DistanceCalculatorService', () => {
   let service: DistanceCalculatorService;

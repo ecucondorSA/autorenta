@@ -1,45 +1,18 @@
 import { CommonModule } from '@angular/common';
-import {Component, OnDestroy, OnInit, computed, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component, OnDestroy, OnInit, computed, inject, signal
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { TranslateModule } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
-import { Booking, BookingExtensionRequest } from '../../../core/models';
-import { TrafficInfraction } from '../../admin/traffic-infractions/admin-traffic-infractions.page'; // NEW
-import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
-import { CLAIM_STATUS_LABELS, InsuranceClaim } from '../../../core/models/insurance.model';
+import { Booking, BookingExtensionRequest, TrafficInfraction } from '@core/models';
+import { BookingInspection } from '@core/models/fgo-v1-1.model';
+import { CLAIM_STATUS_LABELS, InsuranceClaim } from '@core/models/insurance.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import {
   BookingConfirmationService,
   ConfirmAndReleaseResponse,
 } from '@core/services/bookings/booking-confirmation.service';
-import { BookingsService } from '@core/services/bookings/bookings.service';
-import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
-import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
-import { InsuranceService } from '@core/services/bookings/insurance.service';
-import { MetaService } from '@core/services/ui/meta.service';
-import { PaymentsService } from '@core/services/payments/payments.service';
-import { ReviewsService } from '@core/services/cars/reviews.service';
-import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { TrafficInfractionsService } from '@core/services/infrastructure/traffic-infractions.service'; // NEW
 import { BookingFlowService, NextStep } from '@core/services/bookings/booking-flow.service';
-import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
-import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
-import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
-import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
-import { DisputeFormComponent } from '../../../shared/components/dispute-form/dispute-form.component';
-import { DisputesListComponent } from '../../../shared/components/disputes-list/disputes-list.component';
-import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
-import { RefundRequestComponent } from '../../../shared/components/refund-request/refund-request.component';
-import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
-import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
-import { BookingOpsTimelineComponent } from '../../../shared/components/booking-ops-timeline/booking-ops-timeline.component';
-import { BookingTrackingComponent } from '../../../shared/components/booking-tracking/booking-tracking.component';
-import { BookingPricingBreakdownComponent } from '../../../shared/components/booking-pricing-breakdown/booking-pricing-breakdown.component';
-import { BookingInsuranceSummaryComponent } from '../../../shared/components/booking-insurance-summary/booking-insurance-summary.component';
-import { SettlementSimulatorComponent } from '../../../shared/components/settlement-simulator/settlement-simulator.component';
-import { DamageComparisonComponent } from '../../../shared/components/damage-comparison/damage-comparison.component';
 import {
   BookingCancellationRow,
   BookingConfirmationRow,
@@ -48,13 +21,41 @@ import {
   BookingPaymentRow,
   BookingPricingRow,
 } from '@core/services/bookings/booking-ops.service';
-import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component'; // NEW
-import { ReportOwnerNoShowComponent } from '../../../shared/components/report-owner-no-show/report-owner-no-show.component'; // NEW
-import { ReportRenterNoShowComponent } from '../../../shared/components/report-renter-no-show/report-renter-no-show.component'; // NEW
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { InsuranceService } from '@core/services/bookings/insurance.service';
+import { ReviewsService } from '@core/services/cars/reviews.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { TrafficInfractionsService } from '@core/services/infrastructure/traffic-infractions.service'; // NEW
+import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
+import { PaymentsService } from '@core/services/payments/payments.service';
+import { MetaService } from '@core/services/ui/meta.service';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { AlertController } from '@ionic/angular';
+import { TranslateModule } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
 import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
 import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
-import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
+import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
+import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
+import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
+import { BookingInsuranceSummaryComponent } from '../../../shared/components/booking-insurance-summary/booking-insurance-summary.component';
+import { BookingOpsTimelineComponent } from '../../../shared/components/booking-ops-timeline/booking-ops-timeline.component';
+import { BookingPricingBreakdownComponent } from '../../../shared/components/booking-pricing-breakdown/booking-pricing-breakdown.component';
+import { BookingTrackingComponent } from '../../../shared/components/booking-tracking/booking-tracking.component';
+import { DamageComparisonComponent } from '../../../shared/components/damage-comparison/damage-comparison.component';
+import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
+import { DisputeFormComponent } from '../../../shared/components/dispute-form/dispute-form.component';
+import { DisputesListComponent } from '../../../shared/components/disputes-list/disputes-list.component';
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
+import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
+import { RefundRequestComponent } from '../../../shared/components/refund-request/refund-request.component';
+import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
+import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
+import { ReportOwnerNoShowComponent } from '../../../shared/components/report-owner-no-show/report-owner-no-show.component'; // NEW
+import { ReportRenterNoShowComponent } from '../../../shared/components/report-renter-no-show/report-renter-no-show.component'; // NEW
+import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component'; // NEW
+import { SettlementSimulatorComponent } from '../../../shared/components/settlement-simulator/settlement-simulator.component';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
 

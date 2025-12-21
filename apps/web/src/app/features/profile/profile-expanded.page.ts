@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, D
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ProfileStore } from '../../core/stores/profile.store';
+import { ProfileStore } from '@core/stores/profile.store';
 import { DocumentUploadModalComponent } from '../../shared/components/document-upload-modal/document-upload-modal.component';
 import { BonusMalusCardComponent } from '../../shared/components/bonus-malus-card/bonus-malus-card.component';
 import { RenterLevelProgressComponent } from '../../shared/components/renter-level-progress/renter-level-progress.component';

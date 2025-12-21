@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { getErrorMessage } from '../utils/type-guards';
-import { LoggerService } from './logger.service';
-import { NotificationManagerService } from './notification-manager.service';
+import { environment } from '@environment';
+import { getErrorMessage } from '@core/utils/type-guards';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 /**
  * ErrorHandlerService: Centralized error handling

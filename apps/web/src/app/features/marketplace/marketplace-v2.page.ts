@@ -17,7 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { Meta, Title } from '@angular/platform-browser';
 import { Router, RouterModule } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment';
 import { Car } from '../../core/models';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { CarsService } from '@core/services/cars/cars.service';
