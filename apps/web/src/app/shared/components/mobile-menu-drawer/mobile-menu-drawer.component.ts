@@ -116,7 +116,7 @@ export class MobileMenuDrawerComponent {
       iconTextColor: 'text-amber-600',
       items: [
         { label: 'Centro de Ayuda', route: '/help', icon: 'help', badge: 'NEW' },
-        { label: 'Contactar Soporte', route: '/profile/contact', icon: 'phone' },
+        { label: 'Contactar Soporte', route: '/support', icon: 'phone' },
       ],
     },
   ];

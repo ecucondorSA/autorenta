@@ -443,6 +443,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/payouts/payouts.page').then((m) => m.PayoutsPage),
   },
   {
+    path: 'support',
+    canMatch: [AuthGuard],
+    loadComponent: () => import('./features/support/support.page').then((m) => m.SupportPage),
+  },
+  {
     path: 'terminos',
     loadComponent: () => import('./features/legal/terms/terms.page').then((m) => m.TermsPage),
   },

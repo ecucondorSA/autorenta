@@ -65,22 +65,22 @@
         }
 
         <div class="capabilities-list">
-          <div class="capability-item">
+          <button class="capability-item capability-item--clickable" (click)="onCapabilityClick('search_cars')" type="button">
             <span class="capability-icon">🚗</span>
             <span>Buscar autos disponibles</span>
-          </div>
-          <div class="capability-item">
+          </button>
+          <button class="capability-item capability-item--clickable" (click)="onCapabilityClick('calculate_price')" type="button">
             <span class="capability-icon">💰</span>
             <span>Calcular precios</span>
-          </div>
-          <div class="capability-item">
+          </button>
+          <button class="capability-item capability-item--clickable" (click)="onCapabilityClick('stats')" type="button">
             <span class="capability-icon">📊</span>
-            <span>Ver estadisticas</span>
-          </div>
-          <div class="capability-item">
+            <span>Ver estadísticas</span>
+          </button>
+          <button class="capability-item capability-item--clickable" (click)="onCapabilityClick('help')" type="button">
             <span class="capability-icon">❓</span>
             <span>Responder preguntas</span>
-          </div>
+          </button>
         </div>
       </div>
     } @else if (isListening() && messages().length === 0) {

@@ -1782,21 +1782,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           <p class="font-semibold text-slate-800 dark:text-white" style="margin: 0; font-size: 14px;">${modeText}</p>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; padding-left: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 2px; padding-left: 16px;">
           <p class="text-xs text-slate-500 dark:text-slate-500" style="margin: 0;">${accuracyText}</p>
           <p class="text-xs text-gray-500 dark:text-slate-500" style="margin: 0;">${updateTime}</p>
           <p class="text-xs text-cyan-600 dark:text-cyan-400 font-medium" style="margin: 4px 0 0 0;">${carsText}</p>
-        </div>
-
-        <div class="user-location-popup-actions" style="display: flex; gap: 8px; margin-top: 8px;">
-          <button class="user-location-cta" data-action="search-nearby"
-            style="flex: 1; background: var(--cta-default, #06b6d4); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
-            Buscar aquí
-          </button>
-          <button class="user-location-cta" data-action="view-routes"
-            style="flex: 1; background: var(--cta-alpha-10, rgba(6, 182, 212, 0.1)); color: var(--cta-default, #06b6d4); border: 1px solid var(--cta-alpha-20, rgba(6, 182, 212, 0.2)); padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
-            Ver rutas
-          </button>
         </div>
       </div>
     `;
