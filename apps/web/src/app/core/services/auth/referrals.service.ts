@@ -179,7 +179,7 @@ export class ReferralsService {
         .rpc('get_referral_stats_by_user')
         .single();
 
-      const { data, error } = response as { data: ReferralStats | null; error: typeof response.error };
+      const { data, error } = response;
 
       if (error) {
         // Si no tiene estadísticas aún, retornar valores por defecto
@@ -204,8 +204,10 @@ export class ReferralsService {
       if (!data) {
         throw new Error('No stats data returned');
       }
-      this.myStats.set(data);
-      return data;
+
+      const statsData = data as ReferralStats;
+      this.myStats.set(statsData);
+      return statsData;
     } finally {
       this.loading.set(false);
     }

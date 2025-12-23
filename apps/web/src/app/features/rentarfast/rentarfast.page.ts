@@ -564,6 +564,12 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
       return true;
     }
 
+    // Quick booking: "alquilar el primero" uses stored nearest car
+    if (/(alquilar|reservar|rentar).*(primero|primer auto|primera opcion|1)/.test(normalized)) {
+      await this.bookFirstCarCapability(text);
+      return true;
+    }
+
     if (/(mis autos|mis vehículos|mis vehiculos|mis coches)/.test(normalized)) {
       await this.respondWithMyCarsSummary(text);
       return true;
@@ -963,12 +969,48 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
             ? String((err as { error?: string }).error)
             : null;
 
-    if (message?.toLowerCase().includes('recognition has already started')) {
-      // Caso benigno: doble tap o evento duplicado
+    const lowerMessage = message?.toLowerCase() ?? '';
+
+    // Caso benigno: doble tap o evento duplicado
+    if (lowerMessage.includes('recognition has already started')) {
       this.agentService.addLocalAgentMessage('Ya estoy escuchando. Hablame ahora.', ['local_voice']);
       return;
     }
 
+    // Caso benigno: no se detectó habla (silencio o timeout)
+    if (lowerMessage.includes('no-speech')) {
+      this.agentService.addLocalAgentMessage(
+        'No detecté tu voz. Tocá el micrófono y hablá más cerca del dispositivo.',
+        ['local_voice'],
+      );
+      return;
+    }
+
+    // Caso benigno: usuario canceló o se detuvo abruptamente
+    if (lowerMessage.includes('aborted') || lowerMessage.includes('cancelled')) {
+      // Silencioso - no mostrar mensaje
+      return;
+    }
+
+    // Caso benigno: el audio fue inaudible
+    if (lowerMessage.includes('audio-capture') || lowerMessage.includes('not-allowed')) {
+      this.agentService.addLocalAgentMessage(
+        'No tengo acceso al micrófono. Habilitá el permiso en tu navegador y recargá la página.',
+        ['local_voice'],
+      );
+      return;
+    }
+
+    // Caso benigno: red o servicio no disponible
+    if (lowerMessage.includes('network') || lowerMessage.includes('service-not-allowed')) {
+      this.agentService.addLocalAgentMessage(
+        'Error de conexión con el servicio de voz. Verificá tu conexión a internet.',
+        ['local_voice'],
+      );
+      return;
+    }
+
+    // Error desconocido - mostrar hint genérico
     const hint =
       'No pude activar el micrófono. Revisá permisos del navegador y que estés en HTTPS (o localhost).';
 
@@ -1659,5 +1701,423 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
 
   trackByMessageId(index: number, message: ChatMessage): string {
     return message.id;
+  }
+
+  // ============================================
+  // CAPABILITY BUTTONS - Quick Actions
+  // ============================================
+
+  /**
+   * Dispatcher for capability button clicks
+   */
+  onCapabilityClick(action: 'search_cars' | 'calculate_price' | 'stats' | 'help'): void {
+    switch (action) {
+      case 'search_cars':
+        void this.searchNearbyCarsCapability();
+        break;
+      case 'calculate_price':
+        void this.calculatePriceCapability();
+        break;
+      case 'stats':
+        void this.showStatsCapability();
+        break;
+      case 'help':
+        void this.showHelpCapability();
+        break;
+    }
+  }
+
+  /**
+   * Search for the 3 nearest cars with geolocation
+   * Shows car details with option to rent the first one for 3 days
+   */
+  private async searchNearbyCarsCapability(): Promise<void> {
+    this.agentService.addLocalUserMessage('🚗 Buscar autos disponibles cerca de mí');
+    const msgId = this.agentService.addLocalAgentMessage(
+      'Obteniendo tu ubicación...',
+      ['local_nearby'],
+    );
+    this.shouldScrollToBottom = true;
+
+    try {
+      // Try to get current location, request permission if needed
+      let location = this.lastLocation();
+      if (!location) {
+        location = await this.locationService.getLocationByChoice('current');
+      }
+
+      if (!location) {
+        this.agentService.updateMessageContent(
+          msgId,
+          '📍 Necesito tu ubicación para encontrar autos cercanos.\n\n' +
+          'Por favor, permite el acceso a tu ubicación en el navegador o decime una dirección.',
+          ['local_nearby'],
+        );
+        return;
+      }
+
+      this.lastLocation.set(location);
+      this.persistLocationOverride(location);
+
+      this.agentService.updateMessageContent(
+        msgId,
+        `📍 Ubicación: ${location.address || 'Obtenida'}\n🔍 Buscando autos cercanos...`,
+        ['local_nearby'],
+      );
+
+      // Fetch active cars within 50km radius
+      const radiusKm = 50;
+      const latDelta = radiusKm / 111;
+      const lngDelta = radiusKm / (111 * Math.cos((location.lat * Math.PI) / 180));
+
+      const cars = await this.carsService.listActiveCars({
+        bounds: {
+          north: location.lat + latDelta,
+          south: location.lat - latDelta,
+          east: location.lng + lngDelta,
+          west: location.lng - lngDelta,
+        },
+      });
+
+      // Calculate distance and sort by nearest
+      const carsWithDistance = cars
+        .filter((car) => car.location_lat && car.location_lng)
+        .map((car) => ({
+          ...car,
+          distance_km: this.calculateDistanceKm(
+            location!.lat,
+            location!.lng,
+            car.location_lat!,
+            car.location_lng!,
+          ),
+        }))
+        .sort((a, b) => a.distance_km - b.distance_km)
+        .slice(0, 3); // Top 3 nearest
+
+      if (carsWithDistance.length === 0) {
+        this.agentService.updateMessageContent(
+          msgId,
+          '😔 No encontré autos disponibles cerca de tu ubicación.\n\n' +
+          '¿Querés que busque en toda la plataforma?',
+          ['local_nearby'],
+        );
+        return;
+      }
+
+      // Build response with 3 nearest cars
+      const carsList = carsWithDistance.map((car, index) => {
+        const title = car.title || `${car.brand} ${car.model}`;
+        const distance = `${car.distance_km.toFixed(1)} km`;
+        const price = car.price_per_day
+          ? `${car.currency || 'USD'} ${car.price_per_day}/día`
+          : 'Consultar precio';
+        const city = car.location_city || car.location_state || '';
+
+        return `${index + 1}. **${title}**\n   📍 ${distance} - ${city}\n   💰 ${price}`;
+      }).join('\n\n');
+
+      const firstCar = carsWithDistance[0];
+      const today = new Date();
+      const endDate = new Date(today);
+      endDate.setDate(today.getDate() + 3);
+      const startDateStr = today.toISOString().split('T')[0];
+      const endDateStr = endDate.toISOString().split('T')[0];
+
+      const totalPrice3Days = firstCar.price_per_day
+        ? (firstCar.price_per_day * 3).toFixed(0)
+        : null;
+
+      const rentOption = firstCar.price_per_day
+        ? `\n\n💡 **Alquilar el primero por 3 días:**\nDesde hoy (${startDateStr}) hasta ${endDateStr}\nTotal estimado: ${firstCar.currency || 'USD'} ${totalPrice3Days}\n\nDecí "alquilar el primero" o escribí "reservar ${firstCar.id} ${startDateStr} ${endDateStr}"`
+        : '';
+
+      this.agentService.updateMessageContent(
+        msgId,
+        `🚗 **Los 3 autos más cercanos:**\n\n${carsList}${rentOption}`,
+        ['local_nearby', 'search_cars'],
+      );
+
+      // Store first car for quick booking
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem('rentarfast:nearest_car', JSON.stringify({
+          id: firstCar.id,
+          title: firstCar.title || `${firstCar.brand} ${firstCar.model}`,
+          price_per_day: firstCar.price_per_day,
+          currency: firstCar.currency || 'USD',
+        }));
+      }
+
+    } catch (err) {
+      this.agentService.updateMessageContent(
+        msgId,
+        '❌ No pude obtener tu ubicación. Por favor, habilitá los permisos de ubicación o decime una dirección.',
+        ['local_nearby'],
+      );
+    }
+  }
+
+  /**
+   * Calculate rental price for the nearest car for 3 days
+   */
+  private async calculatePriceCapability(): Promise<void> {
+    this.agentService.addLocalUserMessage('💰 Calcular precios de alquiler');
+    const msgId = this.agentService.addLocalAgentMessage(
+      'Calculando precios...',
+      ['local_pricing'],
+    );
+    this.shouldScrollToBottom = true;
+
+    try {
+      // Check if we have a stored nearest car
+      let storedCar: { id: string; title: string; price_per_day: number; currency: string } | null = null;
+      if (typeof sessionStorage !== 'undefined') {
+        const stored = sessionStorage.getItem('rentarfast:nearest_car');
+        if (stored) {
+          storedCar = JSON.parse(stored);
+        }
+      }
+
+      if (!storedCar) {
+        // Need to search first
+        this.agentService.updateMessageContent(
+          msgId,
+          '🔍 Primero necesito buscar autos disponibles.\n\n' +
+          'Tocá "🚗 Buscar autos disponibles" para ver opciones cerca tuyo, o decime qué auto te interesa.',
+          ['local_pricing'],
+        );
+        return;
+      }
+
+      const today = new Date();
+      const pricePerDay = storedCar.price_per_day;
+      const currency = storedCar.currency;
+
+      // Calculate for different periods
+      const prices = [
+        { days: 1, total: pricePerDay },
+        { days: 3, total: pricePerDay * 3 },
+        { days: 7, total: pricePerDay * 7 },
+        { days: 30, total: pricePerDay * 30 },
+      ];
+
+      const priceList = prices.map(p =>
+        `• ${p.days} día${p.days > 1 ? 's' : ''}: **${currency} ${p.total.toFixed(0)}**`
+      ).join('\n');
+
+      const endDate3Days = new Date(today);
+      endDate3Days.setDate(today.getDate() + 3);
+
+      this.agentService.updateMessageContent(
+        msgId,
+        `💰 **Precios para ${storedCar.title}:**\n\n${priceList}\n\n` +
+        `📅 Para reservar por 3 días desde hoy:\nDecí "alquilar el primero" o "reservar ${storedCar.id} ${today.toISOString().split('T')[0]} ${endDate3Days.toISOString().split('T')[0]}"`,
+        ['local_pricing', 'calculate_price'],
+      );
+    } catch {
+      this.agentService.updateMessageContent(
+        msgId,
+        '❌ Error al calcular precios. Probá buscar autos primero.',
+        ['local_pricing'],
+      );
+    }
+  }
+
+  /**
+   * Show user statistics (bookings, earnings, etc.)
+   */
+  private async showStatsCapability(): Promise<void> {
+    this.agentService.addLocalUserMessage('📊 Ver estadísticas');
+    const msgId = this.agentService.addLocalAgentMessage(
+      'Cargando estadísticas...',
+      ['local_stats'],
+    );
+    this.shouldScrollToBottom = true;
+
+    const auth = await this.getAuthSnapshot();
+    if (!auth) {
+      this.agentService.updateMessageContent(
+        msgId,
+        '🔐 Necesitás iniciar sesión para ver tus estadísticas.\n\n¿Querés que abra el login?',
+        ['local_stats'],
+      );
+      return;
+    }
+
+    try {
+      // Get bookings as renter
+      const { bookings: renterBookings } = await this.bookingsService.getMyBookings({ limit: 100 });
+      const completedRentals = renterBookings.filter(b => b.status === 'completed').length;
+      const activeRentals = renterBookings.filter(b => b.status === 'in_progress' || b.status === 'confirmed').length;
+      const pendingRentals = renterBookings.filter(b => b.status === 'pending').length;
+
+      // Get my cars (as owner)
+      const myCars = await this.carsService.listMyCars();
+      const publishedCars = myCars.filter(c => c.status === 'active').length;
+
+      // Get wallet balance
+      let walletInfo = '';
+      try {
+        const balance = await this.walletService.fetchBalance(true);
+        walletInfo = `\n\n💳 **Wallet:**\n• Disponible: ${balance.currency || 'USD'} ${balance.available_balance.toFixed(2)}\n• Bloqueado: ${balance.currency || 'USD'} ${balance.locked_balance.toFixed(2)}`;
+      } catch {
+        walletInfo = '\n\n💳 Wallet: No disponible';
+      }
+
+      const profile = this.profileStore.profile();
+      const userName = profile?.full_name || 'Usuario';
+
+      this.agentService.updateMessageContent(
+        msgId,
+        `📊 **Estadísticas de ${userName}:**\n\n` +
+        `🚗 **Como arrendatario:**\n` +
+        `• Alquileres completados: ${completedRentals}\n` +
+        `• Alquileres activos: ${activeRentals}\n` +
+        `• Pendientes: ${pendingRentals}\n\n` +
+        `🏠 **Como propietario:**\n` +
+        `• Autos publicados: ${publishedCars}/${myCars.length}` +
+        walletInfo,
+        ['local_stats', 'stats'],
+      );
+    } catch {
+      this.agentService.updateMessageContent(
+        msgId,
+        '❌ Error al cargar estadísticas. Intentalo de nuevo.',
+        ['local_stats'],
+      );
+    }
+  }
+
+  /**
+   * Show help/capabilities summary
+   */
+  private async showHelpCapability(): Promise<void> {
+    this.agentService.addLocalUserMessage('❓ ¿Qué puedo hacer?');
+    this.shouldScrollToBottom = true;
+
+    const auth = await this.getAuthSnapshot();
+    const loginStatus = auth
+      ? '✅ Estás logueado'
+      : '❌ No estás logueado (algunas funciones requieren login)';
+
+    this.agentService.addLocalAgentMessage(
+      `🤖 **Soy Rentarfast, tu asistente de AutoRentar**\n\n${loginStatus}\n\n` +
+      `**Puedo ayudarte con:**\n\n` +
+      `🚗 **Buscar autos:**\n• "Buscar autos cerca de mí"\n• "Mostrar el auto más cercano"\n• "Autos en Buenos Aires"\n\n` +
+      `💰 **Precios y reservas:**\n• "Calcular precio por 3 días"\n• "Alquilar el primero"\n• "Reservar [auto] del [fecha] al [fecha]"\n\n` +
+      `📊 **Tu cuenta:**\n• "Mi wallet" / "Mi saldo"\n• "Mis reservas"\n• "Mis autos"\n• "Mi perfil"\n\n` +
+      `🚀 **Acciones rápidas:**\n• "Publicar un auto"\n• "Ver documentos"\n• "Abrir verificación"\n\n` +
+      `💡 También podés hablarme usando el micrófono.`,
+      ['local_help', 'help'],
+    );
+  }
+
+  /**
+   * Book the first/nearest car for 3 days starting today
+   * Creates a real booking and navigates to the payment flow
+   */
+  private async bookFirstCarCapability(originalText: string): Promise<void> {
+    this.agentService.addLocalUserMessage(originalText);
+    const msgId = this.agentService.addLocalAgentMessage(
+      '🚗 Preparando tu reserva...',
+      ['local_booking'],
+    );
+    this.shouldScrollToBottom = true;
+
+    // Check authentication
+    const auth = await this.getAuthSnapshot();
+    if (!auth) {
+      this.agentService.updateMessageContent(
+        msgId,
+        '🔐 Necesitás iniciar sesión para hacer una reserva.\n\n¿Querés que abra el login?',
+        ['local_booking'],
+      );
+      return;
+    }
+
+    // Get stored car from search
+    let storedCar: { id: string; title: string; price_per_day: number; currency: string } | null = null;
+    if (typeof sessionStorage !== 'undefined') {
+      const stored = sessionStorage.getItem('rentarfast:nearest_car');
+      if (stored) {
+        storedCar = JSON.parse(stored);
+      }
+    }
+
+    if (!storedCar) {
+      this.agentService.updateMessageContent(
+        msgId,
+        '🔍 Primero necesito buscar autos disponibles.\n\n' +
+        'Tocá "🚗 Buscar autos disponibles" para ver opciones cerca tuyo.',
+        ['local_booking'],
+      );
+      return;
+    }
+
+    // Calculate dates: today + 3 days
+    const today = new Date();
+    const endDate = new Date(today);
+    endDate.setDate(today.getDate() + 3);
+    const startDateStr = today.toISOString().split('T')[0];
+    const endDateStr = endDate.toISOString().split('T')[0];
+
+    const totalPrice = storedCar.price_per_day * 3;
+
+    this.agentService.updateMessageContent(
+      msgId,
+      `🚗 **Reservando ${storedCar.title}**\n\n` +
+      `📅 Del ${startDateStr} al ${endDateStr} (3 días)\n` +
+      `💰 Total estimado: ${storedCar.currency} ${totalPrice.toFixed(0)}\n\n` +
+      `⏳ Creando reserva...`,
+      ['local_booking'],
+    );
+
+    try {
+      // Create the booking using the existing service
+      const result = await this.bookingsService.createBookingWithValidation(
+        storedCar.id,
+        startDateStr,
+        endDateStr,
+      );
+
+      if (!result.success || !result.booking) {
+        this.agentService.updateMessageContent(
+          msgId,
+          `❌ ${result.error || 'No pude crear la reserva.'}\n\n` +
+          `Posibles causas:\n• El auto no está disponible en esas fechas\n• Ya tenés una reserva activa con este auto\n\n` +
+          `¿Querés buscar otros autos?`,
+          ['local_booking'],
+        );
+        return;
+      }
+
+      // Success! Navigate to payment flow
+      this.agentService.updateMessageContent(
+        msgId,
+        `✅ **Reserva creada exitosamente**\n\n` +
+        `🚗 ${storedCar.title}\n` +
+        `📅 ${startDateStr} → ${endDateStr}\n` +
+        `💰 Total: ${storedCar.currency} ${totalPrice.toFixed(0)}\n\n` +
+        `🎯 Te llevo al pago para confirmar tu reserva...`,
+        ['local_booking', 'booking_created'],
+      );
+
+      // Clear stored car after booking
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.removeItem('rentarfast:nearest_car');
+      }
+
+      // Navigate to booking detail/payment after a short delay
+      setTimeout(() => {
+        this.router.navigate(['/bookings', result.booking!.id, 'detail-payment']);
+      }, 1500);
+
+    } catch (err) {
+      this.agentService.updateMessageContent(
+        msgId,
+        '❌ Error al crear la reserva. El auto puede no estar disponible en esas fechas.\n\n' +
+        '¿Querés buscar otros autos disponibles?',
+        ['local_booking'],
+      );
+    }
   }
 }

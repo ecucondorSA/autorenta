@@ -1,7 +1,7 @@
 <div
-  class="wallet-page min-h-screen bg-surface-base dark:bg-surface-base dark:text-text-secondary py-section-sm"
+  class="wallet-page min-h-screen bg-surface-base dark:bg-surface-base dark:text-text-secondary py-4 sm:py-6 md:py-section-sm"
 >
-  <div class="container-page px-container space-y-10">
+  <div class="container-page px-3 sm:px-4 md:px-container space-y-6 sm:space-y-8 md:space-y-10">
     <!-- ✅ FIX: Error Alert - Show wallet service errors -->
     @if (walletError(); as error) {
       <div
@@ -36,82 +36,99 @@
 
     <!-- Hero Snapshot -->
     <section
-      class="rounded-3xl border border-cta-default/20 dark:border-cta-default/30 bg-gradient-to-br from-cta-default/5 to-surface-raised dark:from-cta-default/10 dark:to-surface-raised p-8 shadow-soft"
+      class="rounded-2xl sm:rounded-3xl border border-cta-default/20 dark:border-cta-default/30 bg-gradient-to-br from-cta-default/5 to-surface-raised dark:from-cta-default/10 dark:to-surface-raised p-4 sm:p-6 md:p-8 shadow-soft"
     >
-      <div class="grid gap-8 lg:grid-cols-5 items-start">
-        <div class="lg:col-span-3 flex flex-col gap-5">
+      <div class="grid gap-4 sm:gap-6 md:gap-8 lg:grid-cols-5 items-start">
+        <div class="lg:col-span-3 flex flex-col gap-3 sm:gap-4 md:gap-5">
           <div>
             <p
-              class="text-xs uppercase tracking-widest text-cta-default dark:text-cta-default/80 font-semibold"
+              class="text-[10px] sm:text-xs uppercase tracking-widest text-cta-default dark:text-cta-default/80 font-semibold"
             >
-              <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg> Mi Billetera
+              <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg> Mi Billetera
             </p>
             <h1
-              class="text-4xl font-bold text-text-primary dark:text-text-primary mt-2"
+              class="text-2xl sm:text-3xl md:text-4xl font-bold text-text-primary dark:text-text-primary mt-1.5 sm:mt-2"
               data-testid="wallet-page-heading"
             >
               Gestiona tu Dinero
             </h1>
-            <p class="text-base text-text-secondary dark:text-text-secondary/80 mt-3 leading-relaxed">
-              Tu espacio seguro para depósitos, transferencias y retiros. Todo en un solo lugar, sin complicaciones.
+            <p class="text-sm sm:text-base text-text-secondary dark:text-text-secondary/80 mt-2 sm:mt-3 leading-relaxed">
+              <span class="sm:hidden">Depósitos, transferencias y retiros en un solo lugar.</span>
+              <span class="hidden sm:inline">Tu espacio seguro para depósitos, transferencias y retiros. Todo en un solo lugar, sin complicaciones.</span>
             </p>
           </div>
-          <div class="space-y-4">
-            <div class="flex flex-wrap gap-3">
+          <div class="space-y-3 sm:space-y-4">
+            <div class="flex flex-wrap gap-1.5 sm:gap-2 md:gap-3">
               <span
-                class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-success-light/15 text-success-700 dark:bg-success-light/20 dark:text-success-400 border border-success-light/30"
+                class="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-[10px] sm:text-xs font-semibold bg-success-light/15 text-success-700 dark:bg-success-light/20 dark:text-success-400 border border-success-light/30"
               >
-                <app-icon name="check-circle" [size]="16" cssClass="inline-block" /> Saldo Actualizado
+                <app-icon name="check-circle" [size]="14" cssClass="inline-block sm:hidden" />
+                <app-icon name="check-circle" [size]="16" cssClass="hidden sm:inline-block" />
+                <span class="sm:hidden">Actualizado</span>
+                <span class="hidden sm:inline">Saldo Actualizado</span>
               </span>
               <span
                 [ngClass]="{
                   'bg-success-light/15 text-success-700 dark:bg-success-light/20 dark:text-success-400 border border-success-light/30': protectedCreditStatus() === 'active',
                   'bg-warning-bg/50 text-warning-strong dark:bg-warning-bg/30 dark:text-warning-300 border border-warning-border': protectedCreditStatus() !== 'active',
                 }"
-                class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold"
+                class="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-[10px] sm:text-xs font-semibold"
               >
-                <app-icon [name]="protectedCreditStatus() === 'active' ? 'lock' : 'lock-open'" [size]="16" />
-                {{
+                <app-icon [name]="protectedCreditStatus() === 'active' ? 'lock' : 'lock-open'" [size]="14" cssClass="sm:hidden" />
+                <app-icon [name]="protectedCreditStatus() === 'active' ? 'lock' : 'lock-open'" [size]="16" cssClass="hidden sm:inline-block" />
+                <span class="sm:hidden">{{ protectedCreditStatus() === 'active' ? 'Activo' : 'Pendiente' }}</span>
+                <span class="hidden sm:inline">{{
                   protectedCreditStatus() === 'active'
                     ? 'Crédito Protegido Activo'
                     : 'Crédito Protegido Pendiente'
-                }}
+                }}</span>
               </span>
               @if (pendingDepositsCount() > 0) {
                 <span
-                  class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-warning-bg/50 text-warning-strong dark:bg-warning-bg/30 dark:text-warning-300 border border-warning-border animate-pulse"
+                  class="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-[10px] sm:text-xs font-semibold bg-warning-bg/50 text-warning-strong dark:bg-warning-bg/30 dark:text-warning-300 border border-warning-border animate-pulse"
                 >
-                  <app-icon name="clock" [size]="16" /> {{ pendingDepositsCount() }} Depósito(s) Pendiente(s)
+                  <app-icon name="clock" [size]="14" cssClass="sm:hidden" />
+                  <app-icon name="clock" [size]="16" cssClass="hidden sm:inline-block" />
+                  <span class="sm:hidden">{{ pendingDepositsCount() }} Pendiente</span>
+                  <span class="hidden sm:inline">{{ pendingDepositsCount() }} Depósito(s) Pendiente(s)</span>
                 </span>
               }
             </div>
-            <div class="flex flex-wrap gap-3 pt-2">
+            <div class="flex flex-wrap gap-2 sm:gap-3 pt-1 sm:pt-2">
               <!-- Primary CTA - Contextual based on protected credit status -->
               <button
                 type="button"
                 (click)="openDepositModal()"
                 [title]="primaryDepositCTATooltip()"
-                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-base transition shadow-lg hover:shadow-xl transform hover:scale-105"
+                class="inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base transition shadow-lg hover:shadow-xl transform hover:scale-105"
                 [ngClass]="primaryDepositCTAClass()"
                 data-testid="deposit-button-hero"
               >
-                <app-icon name="plus" [size]="18" /> {{ primaryDepositCTAText() }}
+                <app-icon name="plus" [size]="16" cssClass="sm:hidden" />
+                <app-icon name="plus" [size]="18" cssClass="hidden sm:inline-block" />
+                <span class="sm:hidden">Depositar</span>
+                <span class="hidden sm:inline">{{ primaryDepositCTAText() }}</span>
               </button>
 
               <!-- Secondary CTAs -->
               <button
                 type="button"
                 (click)="setActiveTab('transactions')"
-                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-cta-default text-cta-default dark:text-cta-default font-semibold hover:bg-cta-default/10 dark:hover:bg-cta-default/10 transition"
+                class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl border-2 border-cta-default text-cta-default dark:text-cta-default font-semibold text-sm sm:text-base hover:bg-cta-default/10 dark:hover:bg-cta-default/10 transition"
               >
-                <app-icon name="list" [size]="18" /> <span class="pr-0.5">Transacciones</span>
+                <app-icon name="list" [size]="16" cssClass="sm:hidden" />
+                <app-icon name="list" [size]="18" cssClass="hidden sm:inline-block" />
+                <span class="sm:hidden">Historial</span>
+                <span class="hidden sm:inline pr-0.5">Transacciones</span>
               </button>
               <button
                 type="button"
                 (click)="setActiveTab('withdrawals')"
-                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-success-light/40 text-success-700 dark:text-success-400 font-semibold hover:bg-success-light/5 dark:hover:bg-success-light/10 transition"
+                class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl border-2 border-success-light/40 text-success-700 dark:text-success-400 font-semibold text-sm sm:text-base hover:bg-success-light/5 dark:hover:bg-success-light/10 transition"
               >
-                <app-icon name="arrow-up" [size]="18" /> <span class="pr-0.5">Retirar</span>
+                <app-icon name="arrow-up" [size]="16" cssClass="sm:hidden" />
+                <app-icon name="arrow-up" [size]="18" cssClass="hidden sm:inline-block" />
+                <span class="pr-0.5">Retirar</span>
               </button>
             </div>
             <p
@@ -266,55 +283,63 @@
     }
 
     <!-- Security & Features Info Section -->
-    <section class="grid gap-4 lg:grid-cols-2">
-      <div class="rounded-2xl border-2 border-success-light/30 dark:border-success-light/20 bg-success-light/5 dark:bg-success-light/10 p-6 shadow-soft">
-        <div class="flex items-start gap-3">
+    <section class="grid gap-3 sm:gap-4 md:grid-cols-2">
+      <div class="rounded-xl sm:rounded-2xl border-2 border-success-light/30 dark:border-success-light/20 bg-success-light/5 dark:bg-success-light/10 p-4 sm:p-5 md:p-6 shadow-soft">
+        <div class="flex items-start gap-2 sm:gap-3">
           <div class="flex-shrink-0">
-            <app-icon name="shield" [size]="24" cssClass="text-success-strong mt-1" />
+            <app-icon name="shield" [size]="20" cssClass="text-success-strong mt-0.5 sm:hidden" />
+            <app-icon name="shield" [size]="24" cssClass="text-success-strong mt-1 hidden sm:block" />
           </div>
-          <div class="flex-1">
-            <h3 class="text-lg font-bold text-text-primary dark:text-text-primary mb-2 font-satoshi">
-              <svg class="w-5 h-5 text-primary-600 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" stroke-width="1.75"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-width="1.75"/></svg> Seguro & Protegido
+          <div class="flex-1 min-w-0">
+            <h3 class="text-sm sm:text-base md:text-lg font-bold text-text-primary dark:text-text-primary mb-1.5 sm:mb-2 font-satoshi">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5 text-primary-600 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" stroke-width="1.75"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-width="1.75"/></svg> Seguro
             </h3>
-            <ul class="space-y-2 text-sm text-text-secondary dark:text-text-secondary/80">
-              <li class="flex items-center gap-2">
-                <app-icon name="check" [size]="16" cssClass="text-success-strong flex-shrink-0" />
+            <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-text-secondary dark:text-text-secondary/80">
+              <li class="flex items-center gap-1.5 sm:gap-2">
+                <app-icon name="check" [size]="14" cssClass="text-success-strong flex-shrink-0 sm:hidden" />
+                <app-icon name="check" [size]="16" cssClass="text-success-strong flex-shrink-0 hidden sm:block" />
                 Encriptación de nivel banco
               </li>
-              <li class="flex items-center gap-2">
-                <app-icon name="check" [size]="16" cssClass="text-success-strong flex-shrink-0" />
-                Garantía bilateral en reservas
+              <li class="flex items-center gap-1.5 sm:gap-2">
+                <app-icon name="check" [size]="14" cssClass="text-success-strong flex-shrink-0 sm:hidden" />
+                <app-icon name="check" [size]="16" cssClass="text-success-strong flex-shrink-0 hidden sm:block" />
+                Garantía bilateral
               </li>
-              <li class="flex items-center gap-2">
-                <app-icon name="check" [size]="16" cssClass="text-success-strong flex-shrink-0" />
-                Verificación de identidad incluida
+              <li class="flex items-center gap-1.5 sm:gap-2">
+                <app-icon name="check" [size]="14" cssClass="text-success-strong flex-shrink-0 sm:hidden" />
+                <app-icon name="check" [size]="16" cssClass="text-success-strong flex-shrink-0 hidden sm:block" />
+                Verificación de identidad
               </li>
             </ul>
           </div>
         </div>
       </div>
 
-      <div class="rounded-2xl border-2 border-cta-default/30 dark:border-cta-default/20 bg-cta-default/5 dark:bg-cta-default/10 p-6 shadow-soft">
-        <div class="flex items-start gap-3">
+      <div class="rounded-xl sm:rounded-2xl border-2 border-cta-default/30 dark:border-cta-default/20 bg-cta-default/5 dark:bg-cta-default/10 p-4 sm:p-5 md:p-6 shadow-soft">
+        <div class="flex items-start gap-2 sm:gap-3">
           <div class="flex-shrink-0">
-            <app-icon name="zap" [size]="24" cssClass="text-cta-default mt-1" />
+            <app-icon name="zap" [size]="20" cssClass="text-cta-default mt-0.5 sm:hidden" />
+            <app-icon name="zap" [size]="24" cssClass="text-cta-default mt-1 hidden sm:block" />
           </div>
-          <div class="flex-1">
-            <h3 class="text-lg font-bold text-text-primary dark:text-text-primary mb-2 font-satoshi">
-              <svg class="w-5 h-5 text-warning-text inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg> Rápido & Flexible
+          <div class="flex-1 min-w-0">
+            <h3 class="text-sm sm:text-base md:text-lg font-bold text-text-primary dark:text-text-primary mb-1.5 sm:mb-2 font-satoshi">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5 text-warning-text inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg> Rápido
             </h3>
-            <ul class="space-y-2 text-sm text-text-secondary dark:text-text-secondary/80">
-              <li class="flex items-center gap-2">
-                <app-icon name="check" [size]="16" cssClass="text-cta-default flex-shrink-0" />
-                Inicio instantáneo en minutos
+            <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-text-secondary dark:text-text-secondary/80">
+              <li class="flex items-center gap-1.5 sm:gap-2">
+                <app-icon name="check" [size]="14" cssClass="text-cta-default flex-shrink-0 sm:hidden" />
+                <app-icon name="check" [size]="16" cssClass="text-cta-default flex-shrink-0 hidden sm:block" />
+                Inicio en minutos
               </li>
-              <li class="flex items-center gap-2">
-                <app-icon name="check" [size]="16" cssClass="text-cta-default flex-shrink-0" />
-                Retira en cualquier momento
+              <li class="flex items-center gap-1.5 sm:gap-2">
+                <app-icon name="check" [size]="14" cssClass="text-cta-default flex-shrink-0 sm:hidden" />
+                <app-icon name="check" [size]="16" cssClass="text-cta-default flex-shrink-0 hidden sm:block" />
+                Retira cuando quieras
               </li>
-              <li class="flex items-center gap-2">
-                <app-icon name="check" [size]="16" cssClass="text-cta-default flex-shrink-0" />
-                Transferencias entre usuarios
+              <li class="flex items-center gap-1.5 sm:gap-2">
+                <app-icon name="check" [size]="14" cssClass="text-cta-default flex-shrink-0 sm:hidden" />
+                <app-icon name="check" [size]="16" cssClass="text-cta-default flex-shrink-0 hidden sm:block" />
+                Transferencias P2P
               </li>
             </ul>
           </div>
@@ -747,33 +772,36 @@
 
     <!-- Transactions & Withdrawals -->
     <section
-      class="rounded-3xl border border-border-default/50 dark:border-border-default/30 bg-surface-raised dark:bg-surface-raised p-8 shadow-soft"
+      class="rounded-2xl sm:rounded-3xl border border-border-default/50 dark:border-border-default/30 bg-surface-raised dark:bg-surface-raised p-4 sm:p-6 md:p-8 shadow-soft"
     >
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-border-default/30">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-6 pb-4 sm:pb-6 border-b border-border-default/30">
         <div>
           <p
-            class="text-xs uppercase tracking-widest text-cta-default dark:text-cta-default/80 font-semibold"
+            class="text-[10px] sm:text-xs uppercase tracking-widest text-cta-default dark:text-cta-default/80 font-semibold"
           >
-            <svg class="w-5 h-5 text-primary-600 inline-block align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 21h18" stroke-width="1.75" stroke-linecap="round"/><rect x="5" y="13" width="3" height="8" rx="0.5" stroke-width="1.5"/><rect x="10.5" y="7" width="3" height="14" rx="0.5" stroke-width="1.5"/><rect x="16" y="3" width="3" height="18" rx="0.5" stroke-width="1.5"/></svg> Historial Completo
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-primary-600 inline-block align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 21h18" stroke-width="1.75" stroke-linecap="round"/><rect x="5" y="13" width="3" height="8" rx="0.5" stroke-width="1.5"/><rect x="10.5" y="7" width="3" height="14" rx="0.5" stroke-width="1.5"/><rect x="16" y="3" width="3" height="18" rx="0.5" stroke-width="1.5"/></svg> Historial
           </p>
-          <h2 class="text-3xl font-bold text-text-primary dark:text-text-primary mt-2 tracking-tight font-satoshi">
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-text-primary dark:text-text-primary mt-1 sm:mt-2 tracking-tight font-satoshi">
             Tus Movimientos
           </h2>
-          <p class="text-base text-text-secondary dark:text-text-secondary/70 mt-2">
-            Visualiza todos tus depósitos, transferencias y retiros en un mismo lugar.
+          <p class="text-xs sm:text-sm md:text-base text-text-secondary dark:text-text-secondary/70 mt-1 sm:mt-2 hidden sm:block">
+            Visualiza todos tus depósitos, transferencias y retiros.
           </p>
         </div>
-          <div class="flex gap-2 flex-wrap lg:flex-nowrap bg-surface-base/60 dark:bg-surface-secondary/40 p-2 rounded-xl border border-border-default/50 dark:border-border-default/30">
+          <div class="flex gap-1.5 sm:gap-2 overflow-x-auto -mx-1 px-1 pb-1 sm:pb-0 scrollbar-hide lg:flex-nowrap bg-surface-base/60 dark:bg-surface-secondary/40 p-1.5 sm:p-2 rounded-lg sm:rounded-xl border border-border-default/50 dark:border-border-default/30">
             <button
               type="button"
               (click)="setActiveTab('transactions')"
             [class.bg-cta-default/20]="activeTab() === 'transactions'"
             [class.border-cta-default]="activeTab() === 'transactions'"
             [class.text-text-primary]="activeTab() === 'transactions'"
-            class="wallet-tab-button px-5 py-2 text-sm font-semibold rounded-lg border text-text-secondary dark:text-text-secondary hover:text-text-primary transition"
+            class="wallet-tab-button px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg border text-text-secondary dark:text-text-secondary hover:text-text-primary transition whitespace-nowrap flex-shrink-0"
             [class.active]="activeTab() === 'transactions'"
             >
-              <app-icon name="list" [size]="16" cssClass="inline-block mr-1" /> Transacciones
+              <app-icon name="list" [size]="14" cssClass="inline-block mr-0.5 sm:mr-1 sm:hidden" />
+              <app-icon name="list" [size]="16" cssClass="hidden sm:inline-block sm:mr-1" />
+              <span class="sm:hidden">Movimientos</span>
+              <span class="hidden sm:inline">Transacciones</span>
             </button>
             <button
               type="button"
@@ -781,10 +809,13 @@
             [class.bg-cta-default/20]="activeTab() === 'transfers'"
             [class.border-cta-default]="activeTab() === 'transfers'"
             [class.text-text-primary]="activeTab() === 'transfers'"
-            class="wallet-tab-button px-5 py-2 text-sm font-semibold rounded-lg border text-text-secondary dark:text-text-secondary hover:text-text-primary transition"
+            class="wallet-tab-button px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg border text-text-secondary dark:text-text-secondary hover:text-text-primary transition whitespace-nowrap flex-shrink-0"
             [class.active]="activeTab() === 'transfers'"
             >
-              <app-icon name="arrow-right-left" [size]="16" cssClass="inline-block mr-1" /> Transferencias
+              <app-icon name="arrow-right-left" [size]="14" cssClass="inline-block mr-0.5 sm:mr-1 sm:hidden" />
+              <app-icon name="arrow-right-left" [size]="16" cssClass="hidden sm:inline-block sm:mr-1" />
+              <span class="sm:hidden">Enviar</span>
+              <span class="hidden sm:inline">Transferencias</span>
             </button>
             <button
               type="button"
@@ -792,10 +823,12 @@
             [class.bg-cta-default/20]="activeTab() === 'withdrawals'"
             [class.border-cta-default]="activeTab() === 'withdrawals'"
             [class.text-text-primary]="activeTab() === 'withdrawals'"
-            class="wallet-tab-button px-5 py-2 text-sm font-semibold rounded-lg border text-text-secondary dark:text-text-secondary hover:text-text-primary transition"
+            class="wallet-tab-button px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg border text-text-secondary dark:text-text-secondary hover:text-text-primary transition whitespace-nowrap flex-shrink-0"
             [class.active]="activeTab() === 'withdrawals'"
             >
-              <app-icon name="arrow-up" [size]="16" cssClass="inline-block mr-1" /> Retiros
+              <app-icon name="arrow-up" [size]="14" cssClass="inline-block mr-0.5 sm:mr-1 sm:hidden" />
+              <app-icon name="arrow-up" [size]="16" cssClass="hidden sm:inline-block sm:mr-1" />
+              Retiros
             </button>
           </div>
         </div>
@@ -914,21 +947,20 @@
 
     <!-- Gradient CTA -->
     <section
-      class="bg-gradient-to-r from-cta-default to-warning-light rounded-2xl shadow-elevated p-6 text-text-primary"
+      class="bg-gradient-to-r from-cta-default to-warning-light rounded-xl sm:rounded-2xl shadow-elevated p-4 sm:p-5 md:p-6 text-text-primary"
     >
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div>
-          <h2 class="text-2xl font-bold mb-2 font-satoshi font-luxury">Gestiona tu dinero fácilmente</h2>
-          <p class="text-sm text-text-secondary">
-            Carga fondos, transfiere a otros usuarios o retira tus ganancias a tu cuenta bancaria
-            cuando lo necesites.
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+        <div class="text-center sm:text-left">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2 font-satoshi font-luxury">Gestiona tu dinero</h2>
+          <p class="text-xs sm:text-sm text-text-secondary hidden sm:block">
+            Carga fondos, transfiere o retira a tu cuenta bancaria.
           </p>
         </div>
-        <div class="flex flex-wrap gap-3 justify-center md:justify-end">
+        <div class="flex flex-wrap gap-2 sm:gap-3 justify-center sm:justify-end w-full sm:w-auto">
           <button
             type="button"
             (click)="openDepositModal()"
-            class="px-5 py-3 bg-surface-raised dark:bg-surface-secondary text-cta-default font-semibold rounded-xl hover:bg-surface-secondary transition"
+            class="px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-3 bg-surface-raised dark:bg-surface-secondary text-cta-default font-semibold text-xs sm:text-sm rounded-lg sm:rounded-xl hover:bg-surface-secondary transition flex-1 sm:flex-initial"
             data-testid="deposit-button-gradient"
           >
             Depositar
@@ -936,14 +968,14 @@
           <button
             type="button"
             (click)="goToTransfer()"
-            class="px-5 py-3 bg-surface-raised dark:bg-surface-secondary/20 border border-border-default text-text-primary font-semibold rounded-xl hover:bg-surface-secondary dark:bg-surface-secondary/30 transition"
+            class="px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-3 bg-surface-raised dark:bg-surface-secondary/20 border border-border-default text-text-primary font-semibold text-xs sm:text-sm rounded-lg sm:rounded-xl hover:bg-surface-secondary dark:bg-surface-secondary/30 transition flex-1 sm:flex-initial"
           >
             Transferir
           </button>
           <button
             type="button"
             (click)="setActiveTab('withdrawals')"
-            class="px-5 py-3 bg-cta-default text-cta-text font-semibold rounded-xl hover:bg-cta-default transition"
+            class="px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-3 bg-cta-default text-cta-text font-semibold text-xs sm:text-sm rounded-lg sm:rounded-xl hover:bg-cta-default transition flex-1 sm:flex-initial"
           >
             Retirar
           </button>

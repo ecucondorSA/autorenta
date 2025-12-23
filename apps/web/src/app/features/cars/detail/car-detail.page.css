@@ -5,7 +5,7 @@
 /* 3-Column Dashboard Layout */
 .dashboard-grid {
   display: grid;
-  gap: 1.5rem;
+  gap: 1rem;
   align-items: start;
 }
 
@@ -13,6 +13,7 @@
 @media (min-width: 1280px) {
   .dashboard-grid {
     grid-template-columns: 320px 1fr 380px;
+    gap: 1.5rem;
   }
 
   .dashboard-left,
@@ -22,10 +23,11 @@
   }
 }
 
-/* Tablet: 2 columns */
-@media (min-width: 768px) and (max-width: 1279px) {
+/* Tablet Large: 2 columns side by side */
+@media (min-width: 900px) and (max-width: 1279px) {
   .dashboard-grid {
     grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
   }
 
   .dashboard-left {
@@ -44,21 +46,46 @@
   }
 }
 
-/* Mobile: single column */
-@media (max-width: 767px) {
+/* Tablet Small: single column with better spacing */
+@media (min-width: 640px) and (max-width: 899px) {
   .dashboard-grid {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+/* Mobile: single column */
+@media (max-width: 639px) {
+  .dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 400px) {
+  .dashboard-grid {
+    gap: 0.5rem;
   }
 }
 
 /* Chat Section */
 .chat-section {
-  min-height: 500px;
-  max-height: 700px;
+  min-height: 400px;
+  max-height: 600px;
   display: flex;
   flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .chat-section {
+    min-height: 500px;
+    max-height: 700px;
+  }
 }
 
 /* Smooth animations */
