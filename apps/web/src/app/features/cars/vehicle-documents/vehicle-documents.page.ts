@@ -234,10 +234,19 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
     }
   }
 
-  async viewDocument(doc: VehicleDocument) {
+  async viewDocument(doc: VehicleDocument, docType: 'green_card' | 'vtv' | 'insurance') {
     try {
-      const url = await this.documentsService.getDocumentUrl(doc.storage_path);
-      window.open(url, '_blank');
+      const urlMap = {
+        green_card: doc.green_card_url,
+        vtv: doc.vtv_url,
+        insurance: doc.insurance_url,
+      };
+      const url = urlMap[docType];
+      if (url) {
+        window.open(url, '_blank');
+      } else {
+        this.toastService.error('Documento no disponible', '');
+      }
     } catch (error) {
       console.error('Error viewing document:', error);
       this.toastService.error('Error al abrir documento', '');
@@ -245,7 +254,19 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
   }
 
   getDocumentByKind(kind: VehicleDocumentKind): VehicleDocument | undefined {
-    return this.documents().find((doc) => doc.kind === kind);
+    const doc = this.documents()[0]; // Single record per vehicle
+    if (!doc) return undefined;
+
+    // Check if the specific document type is uploaded
+    const hasDoc = {
+      registration: !!doc.green_card_url,
+      insurance: !!doc.insurance_url,
+      technical_inspection: !!doc.vtv_url,
+      circulation_permit: false, // Not in current schema
+      ownership_proof: !!doc.blue_card_url,
+    };
+
+    return hasDoc[kind] ? doc : undefined;
   }
 
   hasDocument(kind: VehicleDocumentKind): boolean {
@@ -257,18 +278,24 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
   }
 
   getMissingRequiredDocs(): VehicleDocumentKind[] {
-    return this.requiredKinds.filter(
-      (kind) => !this.documents().some((doc) => doc.kind === kind && doc.status === 'verified'),
-    );
+    const doc = this.documents()[0];
+    if (!doc) return this.requiredKinds;
+
+    const missing: VehicleDocumentKind[] = [];
+    if (!doc.green_card_verified_at) missing.push('registration');
+    if (!doc.insurance_verified_at) missing.push('insurance');
+    if (!doc.vtv_verified_at) missing.push('technical_inspection');
+
+    return missing;
   }
 
   getStatusColor(status: VehicleDocument['status']): string {
-    const colors = {
+    const colors: Record<string, string> = {
       pending: 'status-pending',
       verified: 'status-verified',
       rejected: 'status-rejected',
     };
-    return colors[status];
+    return colors[status || 'pending'];
   }
 
   getDocumentKindLabel(kind: VehicleDocumentKind): string {
@@ -276,7 +303,7 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
   }
 
   getStatusLabel(status: VehicleDocument['status']): string {
-    return this.documentsService.getStatusLabel(status);
+    return this.documentsService.getStatusLabel(status || 'pending');
   }
 
   getDocumentKindIcon(kind: VehicleDocumentKind): string {
@@ -319,14 +346,14 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
         if (!car) return;
 
         const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
-        const documentType = this.documentsService.getDocumentKindLabel(document.kind);
+        const documentType = 'Documentación del vehículo';
         const documentsUrl = `/cars/${this.carId()}/documents`;
 
         this.carOwnerNotifications.notifyDocumentStatusChanged(
           documentType,
           carName,
           document.status as 'verified' | 'rejected',
-          document.notes || undefined,
+          document.manual_review_notes || undefined,
           documentsUrl,
         );
       },
@@ -337,6 +364,7 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
 
   /**
    * Verificar y notificar documentos próximos a vencer
+   * Checks vtv_expiry and insurance_expiry dates
    */
   private async checkExpiringDocuments(): Promise<void> {
     try {
@@ -347,24 +375,32 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
         if (!car) continue;
 
         const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
-        const documentType = this.documentsService.getDocumentKindLabel(doc.kind);
         const documentsUrl = `/cars/${this.carId()}/documents`;
 
-        if (doc.expiry_date) {
-          const expiryDate = new Date(doc.expiry_date);
-          const today = new Date();
-          const daysUntilExpiry = Math.ceil(
-            (expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
-          );
-
+        // Check VTV expiry
+        if (doc.vtv_expiry) {
+          const daysUntilExpiry = this.getDaysUntilExpiry(doc.vtv_expiry);
           if (daysUntilExpiry > 0 && daysUntilExpiry <= 30) {
             this.carOwnerNotifications.notifyDocumentExpiring(
-              documentType,
+              'Revisión Técnica (VTV)',
               carName,
               daysUntilExpiry,
               documentsUrl,
             );
-            // Pequeña pausa entre notificaciones
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
+        }
+
+        // Check insurance expiry
+        if (doc.insurance_expiry) {
+          const daysUntilExpiry = this.getDaysUntilExpiry(doc.insurance_expiry);
+          if (daysUntilExpiry > 0 && daysUntilExpiry <= 30) {
+            this.carOwnerNotifications.notifyDocumentExpiring(
+              'Póliza de Seguro',
+              carName,
+              daysUntilExpiry,
+              documentsUrl,
+            );
             await new Promise((resolve) => setTimeout(resolve, 1000));
           }
         }
@@ -373,6 +409,12 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
       console.error('[VehicleDocuments] Error while checking expiring docs:', error);
       this.toastService.error('No pudimos verificar los vencimientos. Intenta nuevamente.', '');
     }
+  }
+
+  private getDaysUntilExpiry(dateStr: string): number {
+    const expiryDate = new Date(dateStr);
+    const today = new Date();
+    return Math.ceil((expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   }
 
   getMissingDocsLabel(): string {

@@ -37,16 +37,42 @@ export type VehicleDocumentStatus = 'pending' | 'verified' | 'rejected';
 
 export interface VehicleDocument {
   id: string;
-  car_id: string;
-  kind: VehicleDocumentKind;
-  storage_path: string;
-  status: VehicleDocumentStatus;
-  expiry_date?: string;
-  notes?: string;
+  vehicle_id: string;
+  user_id: string;
+  is_owner: boolean;
+  // Green card (cédula verde)
+  green_card_url?: string;
+  green_card_owner_name?: string;
+  green_card_vehicle_domain?: string;
+  green_card_verified_at?: string;
+  green_card_ai_score?: number;
+  green_card_ai_metadata?: Record<string, unknown>;
+  // Blue card (cédula azul)
+  blue_card_url?: string;
+  blue_card_authorized_name?: string;
+  blue_card_verified_at?: string;
+  blue_card_ai_score?: number;
+  blue_card_ai_metadata?: Record<string, unknown>;
+  // VTV
+  vtv_url?: string;
+  vtv_expiry?: string;
+  vtv_verified_at?: string;
+  // Insurance
+  insurance_url?: string;
+  insurance_expiry?: string;
+  insurance_company?: string;
+  insurance_policy_number?: string;
+  insurance_verified_at?: string;
+  // Manual review
+  manual_review_required?: boolean;
+  manual_reviewed_by?: string;
+  manual_reviewed_at?: string;
+  manual_review_notes?: string;
+  manual_review_decision?: string;
+  // Common
+  status?: VehicleDocumentStatus;
   created_at: string;
   updated_at: string;
-  verified_by?: string;
-  verified_at?: string;
 }
 
 export interface UploadDocumentParams {
@@ -74,7 +100,7 @@ export class VehicleDocumentsService {
       this.supabase
         .from('vehicle_documents')
         .select('*')
-        .eq('car_id', carId)
+        .eq('vehicle_id', carId)
         .order('created_at', { ascending: false }),
     ).pipe(
       map(({ data, error }) => {
@@ -133,12 +159,10 @@ export class VehicleDocumentsService {
     const { data, error: dbError } = await this.supabase
       .from('vehicle_documents')
       .insert({
-        car_id,
-        kind,
-        storage_path: storagePath,
+        vehicle_id: car_id,
+        user_id: (await this.supabase.auth.getUser()).data.user?.id,
+        is_owner: true,
         status: 'pending',
-        expiry_date,
-        notes,
       })
       .select()
       .single();
@@ -164,12 +188,12 @@ export class VehicleDocumentsService {
    */
   private async notifyDocumentUploaded(document: VehicleDocument): Promise<void> {
     try {
-      const car = await this.carsService.getCarById(document.car_id);
+      const car = await this.carsService.getCarById(document.vehicle_id);
       if (!car) return;
 
       const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
-      const documentType = this.getDocumentKindLabel(document.kind);
-      const documentsUrl = `/cars/${document.car_id}/documents`;
+      const documentType = 'Documentación del vehículo';
+      const documentsUrl = `/cars/${document.vehicle_id}/documents`;
 
       this.carOwnerNotifications.notifyDocumentStatusChanged(
         documentType,
@@ -261,52 +285,43 @@ export class VehicleDocumentsService {
    * Verificar si un auto tiene todos los documentos requeridos
    */
   async hasRequiredDocuments(carId: string): Promise<boolean> {
-    const requiredKinds: VehicleDocumentKind[] = [
-      'registration',
-      'insurance',
-      'technical_inspection',
-    ];
-
+    // Check if vehicle has verified documents (green_card, vtv, insurance)
     const { data, error } = await this.supabase
       .from('vehicle_documents')
-      .select('kind, status')
-      .eq('car_id', carId)
-      .in('kind', requiredKinds)
-      .eq('status', 'verified');
+      .select('green_card_verified_at, vtv_verified_at, insurance_verified_at')
+      .eq('vehicle_id', carId)
+      .single();
 
     if (error) {
       console.error('Error checking required documents:', error);
       return false;
     }
 
-    const verifiedKinds = new Set((data || []).map((d) => d.kind));
-    return requiredKinds.every((kind) => verifiedKinds.has(kind));
+    // All three must be verified
+    return !!(data?.green_card_verified_at && data?.vtv_verified_at && data?.insurance_verified_at);
   }
 
   /**
    * Obtener lista de documentos faltantes para un auto
    */
   async getMissingDocuments(carId: string): Promise<VehicleDocumentKind[]> {
-    const requiredKinds: VehicleDocumentKind[] = [
-      'registration',
-      'insurance',
-      'technical_inspection',
-    ];
-
     const { data, error } = await this.supabase
       .from('vehicle_documents')
-      .select('kind, status')
-      .eq('car_id', carId)
-      .in('kind', requiredKinds)
-      .eq('status', 'verified');
+      .select('green_card_verified_at, vtv_verified_at, insurance_verified_at')
+      .eq('vehicle_id', carId)
+      .single();
 
     if (error) {
       console.error('Error checking documents:', error);
-      return requiredKinds; // Si hay error, asumir que faltan todos
+      return ['registration', 'insurance', 'technical_inspection']; // All missing
     }
 
-    const verifiedKinds = new Set((data || []).map((d) => d.kind));
-    return requiredKinds.filter((kind) => !verifiedKinds.has(kind));
+    const missing: VehicleDocumentKind[] = [];
+    if (!data?.green_card_verified_at) missing.push('registration');
+    if (!data?.insurance_verified_at) missing.push('insurance');
+    if (!data?.vtv_verified_at) missing.push('technical_inspection');
+
+    return missing;
   }
 
   /**
@@ -327,7 +342,7 @@ export class VehicleDocumentsService {
           event: 'UPDATE',
           schema: 'public',
           table: 'vehicle_documents',
-          filter: `car_id=eq.${carId}`,
+          filter: `vehicle_id=eq.${carId}`,
         },
         async (payload) => {
           const document = payload.new as VehicleDocument;
@@ -351,19 +366,19 @@ export class VehicleDocumentsService {
 
   /**
    * Obtener documentos próximos a vencer (30 días)
+   * Checks vtv_expiry and insurance_expiry dates
    */
   getExpiringDocuments(carId: string): Observable<VehicleDocument[]> {
     const thirtyDaysFromNow = new Date();
     thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+    const dateStr = thirtyDaysFromNow.toISOString().split('T')[0];
 
     return from(
       this.supabase
         .from('vehicle_documents')
         .select('*')
-        .eq('car_id', carId)
-        .eq('status', 'verified')
-        .not('expiry_date', 'is', null)
-        .lte('expiry_date', thirtyDaysFromNow.toISOString().split('T')[0]),
+        .eq('vehicle_id', carId)
+        .or(`vtv_expiry.lte.${dateStr},insurance_expiry.lte.${dateStr}`),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
