@@ -175,9 +175,11 @@ export class ReferralsService {
   async getMyStats(): Promise<ReferralStats> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase
+      const response = await this.supabase
         .rpc('get_referral_stats_by_user')
         .single();
+
+      const { data, error } = response as { data: ReferralStats | null; error: typeof response.error };
 
       if (error) {
         // Si no tiene estadísticas aún, retornar valores por defecto
@@ -199,6 +201,9 @@ export class ReferralsService {
         throw error;
       }
 
+      if (!data) {
+        throw new Error('No stats data returned');
+      }
       this.myStats.set(data);
       return data;
     } finally {

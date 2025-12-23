@@ -210,7 +210,7 @@ export class AppComponent implements OnInit {
   private readonly isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
   readonly isAuthenticatedSig = this.authService.isAuthenticated;
-  readonly unreadNotificationsCount = this.userNotificationsService.unreadCount;
+  readonly unreadNotificationsCount = this.notificationsService.unreadCount;
 
   triggerHapticFeedback(): void {
     this.hapticService.selection();
