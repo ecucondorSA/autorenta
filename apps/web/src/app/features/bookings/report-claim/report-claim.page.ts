@@ -1,11 +1,14 @@
-import {Component, OnInit, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component, OnInit, inject
+} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { IonicModule, AlertController, ToastController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CLAIM_TYPE_LABELS, ClaimType } from '@core/models/insurance.model';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
-import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
+import { LocationService } from '@core/services/geo/location.service';
+import { AlertController, IonicModule, ToastController } from '@ionic/angular';
 
 /**
  * Página para reportar siniestros/accidentes
@@ -25,7 +28,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
         <ion-title>Reportar Siniestro</ion-title>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content>
       <form #claimForm="ngForm" (ngSubmit)="submitClaim()">
         <!-- Advertencia Importante -->
@@ -49,12 +52,12 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
             </div>
           </ion-card-content>
         </ion-card>
-    
+
         <ion-card>
           <ion-card-header>
             <ion-card-title>Información del Siniestro</ion-card-title>
           </ion-card-header>
-    
+
           <ion-card-content>
             <!-- Tipo de Siniestro -->
             <ion-item>
@@ -76,7 +79,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
                 }
               </ion-select>
             </ion-item>
-    
+
             <!-- Fecha y Hora -->
             <ion-item>
               <ion-label position="stacked">
@@ -92,7 +95,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
                 >
               </ion-datetime>
             </ion-item>
-    
+
             <!-- Ubicación -->
             <ion-item>
               <ion-label position="stacked">
@@ -116,7 +119,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
                 </ion-icon>
               </ion-button>
             </ion-item>
-    
+
             <!-- Descripción -->
             <ion-item lines="none">
               <ion-label position="stacked">
@@ -136,7 +139,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
                 >
               </ion-textarea>
             </ion-item>
-    
+
             <!-- Fotos -->
             <div class="photos-section">
               <h3>📸 Fotos del Siniestro</h3>
@@ -144,7 +147,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
                 <ion-icon name="information-circle"></ion-icon>
                 Toma fotos de todos los ángulos del vehículo, especialmente los daños visibles.
               </p>
-    
+
               <input
                 type="file"
                 accept="image/*"
@@ -153,7 +156,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
                 #fileInput
                 style="display: none;"
                 />
-    
+
               <ion-button
                 expand="block"
                 fill="outline"
@@ -170,7 +173,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
                 }}
                 ({{ uploadedPhotoPreviews.length }}/10)
               </ion-button>
-    
+
               @if (uploadedPhotoPreviews.length > 0) {
                 <div class="photo-preview">
                   @for (photo of uploadedPhotoPreviews; track photo; let i = $index) {
@@ -189,7 +192,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
                 </div>
               }
             </div>
-    
+
             <!-- Denuncia Policial -->
             <ion-item>
               <ion-label position="stacked">
@@ -204,14 +207,14 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
                 >
               </ion-input>
             </ion-item>
-    
+
             <!-- Checkbox de confirmación -->
             <ion-item lines="none">
               <ion-checkbox [(ngModel)]="confirmDeclaration" name="confirm" labelPlacement="end">
                 Declaro que la información proporcionada es verdadera y completa
               </ion-checkbox>
             </ion-item>
-    
+
             <!-- Botón Submit -->
             <ion-button
               expand="block"
@@ -229,7 +232,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
               : 'Reportar Siniestro'
               }}
             </ion-button>
-    
+
             <!-- Información Legal -->
             <ion-note color="medium" class="legal-note">
               <ion-icon name="information-circle"></ion-icon>
@@ -239,7 +242,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '@core/models/insurance.model';
             </ion-note>
           </ion-card-content>
         </ion-card>
-    
+
         <!-- Qué hacer después -->
         <ion-card>
           <ion-card-header>
@@ -401,6 +404,7 @@ export class ReportClaimPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly insuranceService = inject(InsuranceService);
+  private readonly locationService = inject(LocationService);
   private readonly alertController = inject(AlertController);
   private readonly toastController = inject(ToastController);
 
@@ -500,11 +504,12 @@ export class ReportClaimPage implements OnInit {
   async useCurrentLocation() {
     this.gettingLocation = true;
     try {
-      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
+      const coords = await this.locationService.getCurrentPosition();
+      if (!coords) {
+        throw new Error('No se pudo obtener la ubicación');
+      }
 
-      const { latitude, longitude } = position.coords;
+      const { lat: latitude, lng: longitude } = coords;
 
       // Reverse geocoding simple (en producción usar API real)
       this.claimData.location = `Lat: ${latitude.toFixed(6)}, Lng: ${longitude.toFixed(6)}`;

@@ -1,8 +1,9 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { GeocodingResult, GeocodingService } from '@core/services/geo/geocoding.service';
 import { ProfileService } from '@core/services/auth/profile.service';
+import { GeocodingResult, GeocodingService } from '@core/services/geo/geocoding.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { environment } from '@environment';
 
 /**
  * Location coordinates
@@ -40,6 +41,7 @@ export class LocationService {
   private readonly supabase = injectSupabase();
   private readonly profileService = inject(ProfileService);
   private readonly geocodingService = inject(GeocodingService);
+  private readonly googleGeolocationApiKey = environment.googleGeolocationApiKey;
 
   /**
    * Get user location with priority:
@@ -109,34 +111,161 @@ export class LocationService {
    * @returns Current position or null if geolocation not available/denied
    */
   async getCurrentPosition(): Promise<LocationCoordinates | null> {
-    // Always use browser geolocation API (works on both web and native via WebView)
-    return new Promise((resolve) => {
-      if (!this.isBrowser || !navigator.geolocation) {
-        console.warn('Geolocation is not supported by this browser');
-        resolve(null);
-        return;
-      }
+    if (!this.isBrowser || !navigator.geolocation) {
+      console.warn('[LocationService] Geolocation is not supported');
+      return null;
+    }
 
-      navigator.geolocation.getCurrentPosition(
+    // Some browsers require a secure context for geolocation.
+    // We don't hard-fail here, but it's useful to log for debugging.
+    try {
+      if (typeof window !== 'undefined' && window.isSecureContext === false) {
+        console.warn('[LocationService] window.isSecureContext=false (geolocation may be blocked)');
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_e) {
+      // ignore
+    }
+
+    // Fast permission pre-check (optional). If denied, don't keep retrying.
+    try {
+      if (navigator.permissions?.query) {
+        const result = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
+        if (result.state === 'denied') {
+          return null;
+        }
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_e) {
+      // Some browsers throw on permissions query; continue.
+    }
+
+    // 1) Best-effort high-accuracy (keeps the best reading within a time window)
+    try {
+      const best = await this.getBestPositionViaWatch({ desiredAccuracyMeters: 25, maxWaitMs: 15000 });
+      return {
+        lat: best.coords.latitude,
+        lng: best.coords.longitude,
+        accuracy: best.coords.accuracy,
+        timestamp: best.timestamp,
+      };
+    } catch {
+      // continue to fallback
+    }
+
+    // 2) Fallback: single low-accuracy reading (often succeeds when GPS is flaky)
+    try {
+      const pos = await this.getSinglePosition({ enableHighAccuracy: false, timeout: 12000, maximumAge: 300000 });
+      return {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+        accuracy: pos.coords.accuracy,
+        timestamp: pos.timestamp,
+      };
+    } catch {
+      // continue
+    }
+
+    // 3) Final fallback: Google Geolocation API (approximate, IP-based if no signals)
+    const googleFallback = await this.getGoogleFallbackPosition();
+    if (googleFallback) {
+      return googleFallback;
+    }
+
+    return null;
+  }
+
+  private getSinglePosition(options: {
+    enableHighAccuracy: boolean;
+    timeout: number;
+    maximumAge: number;
+  }): Promise<GeolocationPosition> {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, options);
+    });
+  }
+
+  private getBestPositionViaWatch(options: {
+    desiredAccuracyMeters: number;
+    maxWaitMs: number;
+  }): Promise<GeolocationPosition> {
+    return new Promise((resolve, reject) => {
+      let bestPosition: GeolocationPosition | null = null;
+      let watchId: number | null = null;
+
+      const cleanup = () => {
+        if (watchId !== null) {
+          navigator.geolocation.clearWatch(watchId);
+          watchId = null;
+        }
+      };
+
+      const timeoutId = window.setTimeout(() => {
+        cleanup();
+        if (bestPosition) {
+          resolve(bestPosition);
+        } else {
+          reject(new Error('Geolocation timeout'));
+        }
+      }, options.maxWaitMs);
+
+      watchId = navigator.geolocation.watchPosition(
         (position) => {
-          resolve({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-            accuracy: position.coords.accuracy,
-            timestamp: position.timestamp,
-          });
+          if (!bestPosition || position.coords.accuracy < bestPosition.coords.accuracy) {
+            bestPosition = position;
+          }
+
+          if (position.coords.accuracy <= options.desiredAccuracyMeters) {
+            window.clearTimeout(timeoutId);
+            cleanup();
+            resolve(position);
+          }
         },
-        (error: GeolocationPositionError) => {
-          console.warn('Error getting current position:', error.message);
-          resolve(null);
+        (error) => {
+          window.clearTimeout(timeoutId);
+          cleanup();
+          reject(error);
         },
         {
           enableHighAccuracy: true,
-          timeout: 10000, // 10 seconds
-          maximumAge: 300000, // 5 minutes cache
+          timeout: options.maxWaitMs,
+          maximumAge: 0,
         },
       );
     });
+  }
+
+  private async getGoogleFallbackPosition(): Promise<LocationCoordinates | null> {
+    if (!this.googleGeolocationApiKey) return null;
+    try {
+      const response = await fetch(
+        `https://www.googleapis.com/geolocation/v1/geolocate?key=${this.googleGeolocationApiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({}),
+        },
+      );
+      if (!response.ok) return null;
+
+      const data = (await response.json()) as {
+        location?: { lat?: number; lng?: number };
+        accuracy?: number;
+      };
+
+      const lat = data.location?.lat;
+      const lng = data.location?.lng;
+      if (typeof lat !== 'number' || typeof lng !== 'number') return null;
+
+      return {
+        lat,
+        lng,
+        accuracy: typeof data.accuracy === 'number' ? data.accuracy : undefined,
+        timestamp: Date.now(),
+      };
+    } catch {
+      return null;
+    }
   }
 
   /**

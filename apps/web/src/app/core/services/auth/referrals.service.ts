@@ -176,8 +176,7 @@ export class ReferralsService {
     this.loading.set(true);
     try {
       const { data, error } = await this.supabase
-        .from('referral_stats_by_user')
-        .select('*')
+        .rpc('get_referral_stats_by_user')
         .single();
 
       if (error) {

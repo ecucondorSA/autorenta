@@ -386,6 +386,6 @@ export class CarPublishLandingPage {
   }
 
   goToForm() {
-    this.router.navigate(['/cars/publish/form']);
+    this.router.navigate(['/cars/publish']);
   }
 }

@@ -103,7 +103,10 @@
         <div class="summary-card__icon">⚠️</div>
         <div class="summary-card__body">
           <p class="summary-card__value">{{ dashboardStats().actionRequired }}</p>
-          <p class="summary-card__label">Requieren acción</p>
+          <p class="summary-card__label">
+            <span class="label-full">Requieren acción</span>
+            <span class="label-short">Acción</span>
+          </p>
         </div>
         @if (dashboardStats().actionRequired > 0) {
           <span class="summary-card__ping" aria-hidden="true"></span>
@@ -123,7 +126,10 @@
         </div>
         <div class="summary-card__body">
           <p class="summary-card__value">{{ dashboardStats().active }}</p>
-          <p class="summary-card__label">Activas hoy</p>
+          <p class="summary-card__label">
+            <span class="label-full">Activas hoy</span>
+            <span class="label-short">Activas</span>
+          </p>
         </div>
       </button>
       <!-- History Card -->
@@ -142,7 +148,10 @@
         </div>
         <div class="summary-card__body">
           <p class="summary-card__value">{{ dashboardStats().history }}</p>
-          <p class="summary-card__label">Historial</p>
+          <p class="summary-card__label">
+            <span class="label-full">Historial</span>
+            <span class="label-short">Historial</span>
+          </p>
         </div>
       </button>
     </div>

@@ -123,19 +123,41 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  overflow: hidden;
+  position: relative;
 }
 
 .filters-scroll {
   display: flex;
-  gap: 0.6rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
+}
+
+/* Fade indicator para mostrar que hay más contenido */
+@media (max-width: 720px) {
+  .filters-bar::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 2rem;
+    background: linear-gradient(to right, transparent, #f7f7f5);
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+
+  :host-context(.dark) .filters-bar::after {
+    background: linear-gradient(to right, transparent, #0b0f1a);
+  }
 }
 
 .filter-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0.45rem 0.9rem;
+  gap: 0.45rem;
+  padding: 0.45rem 0.75rem;
   border-radius: 999px;
   border: 1px solid rgba(15, 23, 42, 0.12);
   background: #ffffff;
@@ -143,6 +165,8 @@
   font-size: 0.82rem;
   font-weight: 600;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .filter-pill:hover {
@@ -228,6 +252,15 @@
   color: #64748b;
   margin-top: 0.15rem;
   font-weight: 600;
+}
+
+/* Labels responsive: full en desktop, short en móvil */
+.label-short {
+  display: none;
+}
+
+.label-full {
+  display: inline;
 }
 
 .summary-card__ping {
@@ -467,18 +500,24 @@
   font-weight: 700;
   color: #0f172a;
   margin: 0;
+  word-break: keep-all;
+  hyphens: none;
 }
 
 .booking-card__range {
   font-size: 0.8rem;
   color: #64748b;
   margin-top: 0.2rem;
+  white-space: nowrap;
 }
 
 .booking-card__location {
   font-size: 0.75rem;
   color: #94a3b8;
   margin-top: 0.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .booking-card__status {
@@ -488,6 +527,8 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .booking-card__meta {
@@ -507,6 +548,8 @@
   font-size: 0.7rem;
   color: #94a3b8;
   font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .booking-card__hint--pending {
@@ -590,10 +633,33 @@
     justify-content: center;
   }
 
+  .filters-bar {
+    margin-inline: -1.25rem;
+    padding-inline: 1.25rem;
+    overflow: visible;
+  }
+
   .filters-scroll {
     overflow-x: auto;
     flex-wrap: nowrap;
-    padding-bottom: 0.4rem;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .filters-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-pill {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.78rem;
+  }
+
+  .filter-count {
+    padding: 0.1rem 0.4rem;
+    font-size: 0.68rem;
   }
 
   .summary-grid {
@@ -607,6 +673,461 @@
   .booking-card__media {
     width: 100%;
     height: 160px;
+  }
+}
+
+/* Pantallas muy pequeñas (< 480px) */
+@media (max-width: 480px) {
+  .bookings-shell {
+    padding: 1rem 1rem 2rem;
+    gap: 1rem;
+  }
+
+  .filters-bar {
+    margin-inline: -1rem;
+    padding-inline: 1rem;
+  }
+
+  .filter-pill {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.75rem;
+    gap: 0.35rem;
+  }
+
+  .filter-count {
+    padding: 0.08rem 0.35rem;
+    font-size: 0.65rem;
+    min-width: 1.25rem;
+    text-align: center;
+  }
+
+  /* Hero compacto */
+  .booking-hero {
+    padding: 1rem;
+    border-radius: 16px;
+    gap: 1rem;
+  }
+
+  .booking-hero::after {
+    width: 140px;
+    height: 140px;
+    top: -40px;
+    right: -50px;
+  }
+
+  .booking-hero__copy {
+    gap: 0.4rem;
+  }
+
+  .booking-hero__eyebrow {
+    font-size: 0.7rem;
+  }
+
+  .hero-pill {
+    padding: 0.2rem 0.5rem;
+  }
+
+  .booking-hero__title {
+    font-size: 1.35rem;
+  }
+
+  .booking-hero__subtitle {
+    font-size: 0.85rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .hero-action {
+    padding: 0.65rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* Summary cards compactas */
+  .summary-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
+  }
+
+  .summary-card {
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem 0.25rem;
+    text-align: center;
+    border-radius: 12px;
+    min-height: auto;
+  }
+
+  .summary-card__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+  }
+
+  .summary-card__icon {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+  }
+
+  .summary-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .summary-card__value {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .summary-card__label {
+    font-size: 0.65rem;
+    line-height: 1.2;
+  }
+
+  /* Mostrar label corto en móvil */
+  .label-short {
+    display: inline;
+  }
+
+  .label-full {
+    display: none;
+  }
+
+  .summary-card__ping {
+    top: 4px;
+    right: 4px;
+    width: 5px;
+    height: 5px;
+  }
+
+  /* Section headers compactos */
+  .section-card {
+    border-radius: 14px;
+  }
+
+  .section-header {
+    padding: 0.85rem 1rem;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.78rem;
+  }
+
+  .section-pill {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.65rem;
+  }
+
+  .section-chevron {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Booking cards compactas */
+  .section-list {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .booking-card {
+    border-radius: 14px;
+    max-width: none;
+  }
+
+  .booking-card__link {
+    padding: 0.75rem;
+    gap: 0.65rem;
+  }
+
+  .booking-card__media {
+    height: 120px;
+    border-radius: 12px;
+  }
+
+  .booking-card__badge {
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
+    border-top-left-radius: 10px;
+  }
+
+  .booking-card__title {
+    font-size: 0.88rem;
+    word-break: keep-all;
+    hyphens: none;
+  }
+
+  .booking-card__range {
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .booking-card__location {
+    font-size: 0.7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+
+  .booking-card__status {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.55rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .booking-card__price {
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+
+  .booking-card__hint {
+    font-size: 0.65rem;
+    white-space: nowrap;
+  }
+
+  .booking-card__top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .booking-card__top > div:first-child {
+    width: 100%;
+  }
+
+  .booking-card__meta {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .booking-card__footer {
+    padding: 0 0.75rem 0.75rem;
+  }
+
+  .booking-cta-btn {
+    padding: 0.55rem 0.75rem;
+    font-size: 0.72rem;
+    border-radius: 10px;
+  }
+
+  .booking-card__notice {
+    padding: 0.55rem 0.65rem;
+    border-radius: 10px;
+    gap: 0.45rem;
+  }
+
+  .booking-card__notice-text {
+    font-size: 0.7rem;
+    line-height: 1.3;
+  }
+
+  /* Hint con flecha - evitar wrap */
+  .booking-card__hint--pending {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+  }
+
+  /* Reset filter button */
+  .reset-filter-btn {
+    padding: 0.65rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* Section stack spacing */
+  .section-stack {
+    gap: 1rem;
+  }
+}
+
+/* Empty state responsive */
+@media (max-width: 480px) {
+  .text-center.py-16 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .text-center.py-16 img {
+    width: 140px;
+    height: 140px;
+    margin-bottom: 1rem;
+  }
+
+  .text-center.py-16 h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .text-center.py-16 p {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .text-center.py-16 a {
+    padding: 0.7rem 1.25rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Loading skeleton responsive */
+@media (max-width: 480px) {
+  .grid.grid-cols-3 {
+    gap: 0.5rem;
+  }
+
+  .grid.grid-cols-3 > div {
+    height: 5rem;
+    border-radius: 14px;
+  }
+
+  .space-y-4 > div {
+    border-radius: 14px;
+  }
+
+  .space-y-4 .h-16 {
+    height: 3rem;
+  }
+
+  .space-y-4 .h-24 {
+    height: 5rem;
+    border-radius: 12px;
+  }
+}
+
+/* Info card (error state) responsive */
+.info-card-warm {
+  border-radius: 16px;
+}
+
+@media (max-width: 480px) {
+  .info-card-warm {
+    padding: 1rem;
+    border-radius: 14px;
+  }
+
+  .info-card-warm p.font-semibold {
+    font-size: 0.9rem;
+  }
+
+  .info-card-warm p.mt-1 {
+    font-size: 0.8rem;
+  }
+
+  .info-card-warm button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Pantallas extremadamente pequeñas (< 360px) */
+@media (max-width: 360px) {
+  .bookings-shell {
+    padding: 0.75rem 0.75rem 1.5rem;
+  }
+
+  .filters-bar {
+    margin-inline: -0.75rem;
+    padding-inline: 0.75rem;
+  }
+
+  .filter-pill {
+    padding: 0.3rem 0.45rem;
+    font-size: 0.7rem;
+  }
+
+  .filter-count {
+    padding: 0.05rem 0.3rem;
+    font-size: 0.6rem;
+  }
+
+  .booking-hero {
+    padding: 0.85rem;
+  }
+
+  .booking-hero__title {
+    font-size: 1.2rem;
+  }
+
+  .booking-hero__subtitle {
+    font-size: 0.78rem;
+    -webkit-line-clamp: 1;
+  }
+
+  .summary-card {
+    padding: 0.5rem 0.3rem;
+  }
+
+  .summary-card__value {
+    font-size: 1.1rem;
+  }
+
+  .summary-card__label {
+    font-size: 0.6rem;
+  }
+
+  .section-header {
+    padding: 0.75rem 0.85rem;
+  }
+
+  .section-list {
+    padding: 0.6rem;
+    gap: 0.6rem;
+  }
+
+  .booking-card__link {
+    padding: 0.6rem;
+  }
+
+  .booking-card__media {
+    height: 100px;
+  }
+}
+
+/* Smooth transitions para scroll horizontal en filtros */
+.filters-scroll {
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+}
+
+.filter-pill {
+  scroll-snap-align: start;
+}
+
+/* Focus states accesibles */
+.filter-pill:focus-visible,
+.summary-card:focus-visible,
+.section-header:focus-visible,
+.booking-card:focus-visible {
+  outline: 2px solid #00d95f;
+  outline-offset: 2px;
+}
+
+/* Reduce motion para usuarios que lo prefieren */
+@media (prefers-reduced-motion: reduce) {
+  .filter-pill,
+  .summary-card,
+  .booking-card,
+  .section-chevron {
+    transition: none;
+  }
+
+  .summary-card__ping {
+    animation: none;
+  }
+
+  .booking-card-compact.border-l-amber-500 {
+    animation: none;
   }
 }
 

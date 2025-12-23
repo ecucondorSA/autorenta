@@ -1,11 +1,11 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
-import type { BookingLocationData } from '@features/bookings/components/booking-location-form/booking-location-form.component';
-import { Booking } from '@core/models';
+import type { Booking } from '@core/models';
 import { AuthService } from '@core/services/auth/auth.service';
-import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
+import type { BookingLocationData } from '@features/bookings/components/booking-location-form/booking-location-form.component';
+import { BookingsService } from './bookings.service';
 
 /**
  * Fachada ligera para centralizar el inicio de una reserva desde la UI.

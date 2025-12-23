@@ -70,7 +70,7 @@ BEGIN
   FROM driver_protection_addons dpa
   WHERE dpa.user_id = p_user_id
     AND dpa.addon_type = 'bonus_protector'
-    AND dpa.used = FALSE
+    AND dpa.is_active = TRUE
     AND dpa.expires_at > NOW()
   ORDER BY dpa.created_at DESC
   LIMIT 1;
@@ -143,8 +143,58 @@ GROUP BY rc.user_id, rc.code;
 
 COMMENT ON VIEW public.referral_stats_by_user IS 'Estadísticas de referidos por usuario';
 
+-- Función RPC para obtener stats de referidos (evita problemas de RLS con la vista)
+CREATE OR REPLACE FUNCTION public.get_referral_stats_by_user(p_user_id UUID DEFAULT NULL)
+RETURNS TABLE (
+  user_id UUID,
+  code TEXT,
+  total_referrals BIGINT,
+  registered_count BIGINT,
+  verified_count BIGINT,
+  first_car_count BIGINT,
+  first_booking_count BIGINT,
+  total_earned_cents BIGINT,
+  pending_cents BIGINT
+)
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_user_id UUID;
+BEGIN
+  v_user_id := COALESCE(p_user_id, auth.uid());
+
+  IF v_user_id IS NULL THEN
+    RETURN;
+  END IF;
+
+  RETURN QUERY
+  SELECT
+    rc.user_id,
+    rc.code,
+    COUNT(r.id)::BIGINT AS total_referrals,
+    COUNT(r.id) FILTER (WHERE r.status = 'registered')::BIGINT AS registered_count,
+    COUNT(r.id) FILTER (WHERE r.status = 'verified')::BIGINT AS verified_count,
+    COUNT(r.id) FILTER (WHERE r.status = 'first_car')::BIGINT AS first_car_count,
+    COUNT(r.id) FILTER (WHERE r.status = 'first_booking')::BIGINT AS first_booking_count,
+    COALESCE(SUM(rw.amount_cents) FILTER (WHERE rw.status = 'paid'), 0)::BIGINT AS total_earned_cents,
+    COALESCE(SUM(rw.amount_cents) FILTER (WHERE rw.status IN ('pending', 'approved')), 0)::BIGINT AS pending_cents
+  FROM referral_codes rc
+  LEFT JOIN referrals r ON r.referral_code_id = rc.id
+  LEFT JOIN referral_rewards rw ON rw.referral_id = r.id AND rw.user_id = rc.user_id
+  WHERE rc.user_id = v_user_id
+    AND rc.is_active = true
+  GROUP BY rc.user_id, rc.code;
+END;
+$$;
+
+COMMENT ON FUNCTION public.get_referral_stats_by_user IS 'Obtiene estadísticas de referidos del usuario (RPC seguro)';
+
 GRANT EXECUTE ON FUNCTION public.list_bonus_protector_options() TO authenticated, anon;
 GRANT EXECUTE ON FUNCTION public.get_active_bonus_protector(UUID) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.get_owner_penalties(UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_referral_stats_by_user(UUID) TO authenticated;
 
 COMMIT;

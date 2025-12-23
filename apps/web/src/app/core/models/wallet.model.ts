@@ -8,7 +8,7 @@
 
 // Re-export Supabase generated types
 export type {
-  WalletBalance as WalletBalanceDB, WalletLedger as WalletLedgerDB, WalletTransaction as WalletTransactionDB
+  WalletBalanceDB, WalletLedger as WalletLedgerDB, WalletTransaction as WalletTransactionDB
 } from '@core/types/supabase-types';
 
 /**
@@ -315,11 +315,11 @@ export interface BankAccount {
   account_type: BankAccountType;
   account_number: string; // CBU/CVU o Alias
   account_holder_name: string;
-  account_holder_document: string; // DNI/CUIT
-  bank_name?: string;
+  account_holder_document?: string; // DNI/CUIT (DEPRECATED: Use gov_id_number from UserProfile)
+  bank_name?: string | null;
   is_verified: boolean;
-  verified_at?: string;
-  verification_method?: string;
+  verified_at?: string | null;
+  verification_method?: string | null;
   is_active: boolean;
   is_default: boolean;
   created_at: string;
@@ -350,19 +350,19 @@ export interface WithdrawalRequest {
   fee_amount: number;
   net_amount: number;
   status: WithdrawalStatus;
-  provider?: string;
-  provider_transaction_id?: string;
-  provider_metadata?: Record<string, unknown>;
-  approved_by?: string;
-  approved_at?: string;
-  rejection_reason?: string;
-  processed_at?: string;
-  completed_at?: string;
-  failed_at?: string;
-  failure_reason?: string;
-  wallet_transaction_id?: string;
-  user_notes?: string;
-  admin_notes?: string;
+  provider?: string | null;
+  provider_transaction_id?: string | null;
+  provider_metadata?: Record<string, unknown> | null;
+  approved_by?: string | null;
+  approved_at?: string | null;
+  rejection_reason?: string | null;
+  processed_at?: string | null;
+  completed_at?: string | null;
+  failed_at?: string | null;
+  failure_reason?: string | null;
+  wallet_transaction_id?: string | null;
+  user_notes?: string | null;
+  admin_notes?: string | null;
   created_at: string;
   updated_at: string;
 

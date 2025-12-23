@@ -123,7 +123,8 @@ export class WalletService {
       if (error) throw error;
       if (!data) throw new Error('No se pudo obtener el balance');
 
-      const balance = data[0] as WalletBalance;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const balance = data[0] as any as WalletBalance;
       this.balance.set(balance);
       return balance;
     } catch (err) {

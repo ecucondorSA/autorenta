@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { LocationService } from '@core/services/geo/location.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
 
@@ -41,6 +42,7 @@ export class UrgentRentalService {
   private readonly supabase = injectSupabase();
   private readonly pricingService = inject(DynamicPricingService);
   private readonly bookingsService = inject(BookingsService);
+  private readonly locationService = inject(LocationService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -52,39 +54,32 @@ export class UrgentRentalService {
    * Obtener ubicación actual del usuario
    */
   async getCurrentLocation(): Promise<UrgentRentalUserLocation> {
-    return new Promise((resolve, reject) => {
-      if (!this.isBrowser || !navigator.geolocation) {
-        reject(new Error('Geolocalización no disponible en este navegador'));
-        return;
+    if (!this.isBrowser) {
+      throw new Error('Geolocalización no disponible en este entorno');
+    }
+
+    this.locationLoading.set(true);
+    this.locationError.set(null);
+
+    try {
+      const coords = await this.locationService.getCurrentPosition();
+      if (!coords) {
+        const msg = 'No se pudo obtener tu ubicación. Revisa permisos de ubicación.';
+        this.locationError.set(msg);
+        throw new Error(msg);
       }
 
-      this.locationLoading.set(true);
-      this.locationError.set(null);
+      const location: UrgentRentalUserLocation = {
+        lat: coords.lat,
+        lng: coords.lng,
+        accuracy: coords.accuracy,
+      };
 
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const location: UrgentRentalUserLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-            accuracy: position.coords.accuracy,
-          };
-          this.userLocation.set(location);
-          this.locationLoading.set(false);
-          resolve(location);
-        },
-        (error) => {
-          const errorMessage = this.getGeolocationErrorMessage(error);
-          this.locationError.set(errorMessage);
-          this.locationLoading.set(false);
-          reject(new Error(errorMessage));
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 60000, // Cache por 1 minuto
-        },
-      );
-    });
+      this.userLocation.set(location);
+      return location;
+    } finally {
+      this.locationLoading.set(false);
+    }
   }
 
   /**

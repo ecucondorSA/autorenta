@@ -382,7 +382,8 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
    * Usa la moneda del balance actual o USD por defecto
    */
   formatCurrency(amount: number): string {
-    const currency = this.balance()?.['currency'] || 'USD';
+    const balance = this.balance() as { currency?: string } | null;
+    const currency = balance?.currency || 'USD';
 
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',

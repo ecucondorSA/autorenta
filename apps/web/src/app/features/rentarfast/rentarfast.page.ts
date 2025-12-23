@@ -16,18 +16,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import type { WalletBalance } from '@core/models/wallet.model';
-import { AuthService } from '@core/services/auth/auth.service';
-import { BookingsService } from '@core/services/bookings/bookings.service';
-import { CarsService } from '@core/services/cars/cars.service';
-import { GeocodingService } from '@core/services/geo/geocoding.service';
-import { LocationData, LocationService } from '@core/services/geo/location.service';
 import {
   ChatContext,
   ChatMessage,
   RentarfastAgentService,
 } from '@core/services/ai/rentarfast-agent.service';
-import { VerificationService } from '@core/services/verification/verification.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { CarsService } from '@core/services/cars/cars.service';
+import { GeocodingService } from '@core/services/geo/geocoding.service';
+import { LocationData, LocationService } from '@core/services/geo/location.service';
 import { WalletService } from '@core/services/payments/wallet.service';
+import { VerificationService } from '@core/services/verification/verification.service';
 import { ProfileStore } from '@core/stores/profile.store';
 
 // Web Speech API types
@@ -138,8 +138,8 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
 
       const replacement = [
         'Gracias por la aclaración.',
-        'En esta app operamos en Buenos Aires, Argentina, y voy a continuar con esa ubicación.',
-        '¿Querés que busque autos cerca de vos y para qué fechas?',
+        'Voy a usar tu ubicación actual (o la última que me diste) para ordenar por distancia.',
+        'Si querés, también podés indicarme fechas para filtrar disponibilidad exacta.',
       ].join(' ');
 
       this.agentService.updateMessageContent(last.id, replacement, [
@@ -436,26 +436,31 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
       const location = await this.locationService.getLocationByChoice('current');
       if (location) {
         this.lastLocation.set(location);
-        const coords =
-          typeof location.lat === 'number' && typeof location.lng === 'number'
-            ? ` (lat ${location.lat.toFixed(5)}, lng ${location.lng.toFixed(5)})`
-            : '';
-        this.agentService.addLocalAgentMessage(
-          location.address
-            ? `Tu ubicación es: ${location.address}.${coords}`
-            : `Tomé tu ubicación.${coords}`,
-          ['local_location'],
-        );
+
+        // Buscar el auto más cercano automáticamente
+        const nearestCarInfo = await this.getNearestCarInfo(location.lat, location.lng);
+
+        const locationText = location.address
+          ? `Tu ubicación es: ${location.address}.`
+          : 'Tomé tu ubicación.';
+
+        const response = nearestCarInfo
+          ? `${locationText} ${nearestCarInfo}`
+          : locationText;
+
+        this.agentService.addLocalAgentMessage(response, ['local_location']);
       } else {
         const home = await this.locationService.getHomeLocation();
         if (home) {
           this.lastLocation.set(home);
-          this.agentService.addLocalAgentMessage(
-            home.address
-              ? `No pude leer tu GPS ahora. Uso tu ubicación guardada: ${home.address}.`
-              : 'No pude leer tu GPS ahora. Uso tu ubicación guardada.',
-            ['local_location'],
-          );
+          const nearestCarInfo = await this.getNearestCarInfo(home.lat, home.lng);
+          const locationText = home.address
+            ? `Uso tu ubicación guardada: ${home.address}.`
+            : 'Uso tu ubicación guardada.';
+          const response = nearestCarInfo
+            ? `${locationText} ${nearestCarInfo}`
+            : locationText;
+          this.agentService.addLocalAgentMessage(response, ['local_location']);
         } else {
           this.agentService.addLocalAgentMessage(
             'No pude acceder a tu ubicación. ¿Podés habilitar permisos o decirme una dirección?',
@@ -482,13 +487,44 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
       }
     }
 
-    if (/(buenos aires|argentina)/.test(normalized)) {
+    if (/(buenos aires)/.test(normalized)) {
       this.agentService.addLocalUserMessage(text);
       this.lastMarket.set({ country: 'AR', city: 'Buenos Aires' });
       this.agentService.addLocalAgentMessage(
         'Perfecto, usaré Buenos Aires, Argentina para las búsquedas.',
         ['local_location'],
       );
+      return true;
+    }
+
+    if (/(argentina)/.test(normalized)) {
+      this.agentService.addLocalUserMessage(text);
+      this.lastMarket.set({ country: 'AR' });
+      this.agentService.addLocalAgentMessage(
+        'Perfecto, uso Argentina como país. Si querés, decime ciudad o uso tu ubicación actual para ordenar por distancia.',
+        ['local_location'],
+      );
+      return true;
+    }
+
+    // Prioridad: preguntas sobre el auto más cercano → responder con detalles específicos
+    // Incluye: "auto mas cerca", "auto mas cerca a mi", "cual es el mas cercano"
+    if (
+      /(cual|dime|diga|indica|indicame|indiqueme).*(mas cercan|cerca)/.test(normalized) ||
+      /(el auto|un auto).*(mas cercan|cerca)/.test(normalized) ||
+      /auto mas cerca/.test(normalized) ||
+      /el mas cercano/.test(normalized)
+    ) {
+      await this.respondWithNearestCar(text);
+      return true;
+    }
+
+    // Follow-up cortos: "cual es?", "indiqueme", "dime cual"
+    // Funciona con o sin contexto de ubicación previo
+    if (
+      /^(cual es|cual|indiqueme|indicame|dime cual|dimelo|muestra|mostrame|cual seria)\??$/.test(normalized.trim())
+    ) {
+      await this.respondWithNearestCar(text);
       return true;
     }
 
@@ -898,13 +934,17 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
     // Evita capturar frases de búsqueda de autos (se manejan con otro intent)
     if (/(auto|autos|vehiculo|vehiculos|coche|coches)/.test(normalized)) return false;
 
-    // Tolerante a typos comunes: "ubicaicon" / "ubication" etc.
-    const mentionsLocationWord = /(ubic|ubica|ubicac|ubicaic|ubicaicon|ubication)/.test(normalized);
+    // Tolerante a typos comunes: "ubicaicon" / "ubication" / "ubicasion" etc.
+    const mentionsLocationWord = /(ubic|ubica|ubicac|ubicaic|ubicaicon|ubication|ubicasion)/.test(normalized);
+    const mentionsUse = /(usar|usa|usemos|dame|dime|quiero)/.test(normalized);
     const mentionsNow = /(actual|ahora|en este momento)/.test(normalized);
     const explicit =
       /ubicacion actual|usar mi ubicacion|usar ubicacion actual|mi ubicacion actual|mi ubicacion|cual es mi ubicacion|donde estoy/.test(
         normalized,
       );
+
+    // "usar mi ubicaicon" → mentionsUse + mentionsLocationWord
+    if (mentionsUse && mentionsLocationWord) return true;
 
     return explicit || (mentionsLocationWord && mentionsNow);
   }
@@ -1321,6 +1361,102 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
     }
   }
 
+  private async respondWithNearestCar(originalText: string): Promise<void> {
+    this.agentService.addLocalUserMessage(originalText);
+    const msgId = this.agentService.addLocalAgentMessage(
+      'Buscando el auto más cercano a tu ubicación...',
+      ['local_nearby'],
+    );
+
+    try {
+      const location = this.lastLocation() ?? (await this.locationService.getUserLocation());
+      if (!location) {
+        this.agentService.updateMessageContent(
+          msgId,
+          'Necesito tu ubicación para decirte cuál es el más cercano. Podés decir "usar ubicación actual" o indicar una dirección.',
+          ['local_nearby'],
+        );
+        return;
+      }
+
+      this.lastLocation.set(location);
+      this.persistLocationOverride(location);
+
+      // Fetch active cars with bounding box filter (~50km radius)
+      const radiusKm = 50;
+      const latDelta = radiusKm / 111; // ~111km per degree of latitude
+      const lngDelta = radiusKm / (111 * Math.cos((location.lat * Math.PI) / 180));
+
+      const cars = await this.carsService.listActiveCars({
+        bounds: {
+          north: location.lat + latDelta,
+          south: location.lat - latDelta,
+          east: location.lng + lngDelta,
+          west: location.lng - lngDelta,
+        },
+      });
+
+      // Calculate distance and sort
+      const carsWithDistance = cars
+        .filter((car) => car.location_lat && car.location_lng)
+        .map((car) => ({
+          ...car,
+          distance_km: this.calculateDistanceKm(
+            location.lat,
+            location.lng,
+            car.location_lat!,
+            car.location_lng!,
+          ),
+        }))
+        .sort((a, b) => a.distance_km - b.distance_km);
+
+      const nearest = carsWithDistance[0];
+      if (!nearest) {
+        this.agentService.updateMessageContent(
+          msgId,
+          'No encontré autos cerca de tu ubicación. Te muestro el listado para que veas más opciones.',
+          ['local_nearby'],
+        );
+        this.router.navigate(['/cars/list']);
+        return;
+      }
+
+      const distanceText = `${nearest.distance_km.toFixed(1)} km`;
+      const carTitle = nearest.title || `${nearest.brand} ${nearest.model}`;
+      const priceText =
+        typeof nearest.price_per_day === 'number' && Number.isFinite(nearest.price_per_day)
+          ? `${nearest.currency || 'USD'} ${nearest.price_per_day}/día`
+          : null;
+
+      const response = [
+        `El auto más cercano es "${carTitle}" a ${distanceText}.`,
+        priceText ? `Precio: ${priceText}.` : '',
+        'Te abro la lista ordenada por distancia.',
+      ]
+        .filter(Boolean)
+        .join(' ');
+
+      this.agentService.updateMessageContent(msgId, response, ['local_nearby']);
+
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('autorenta:list-sort', 'distance');
+      }
+
+      const params = new URLSearchParams();
+      params.set('sort', 'distance');
+      params.set('nearby', '1');
+      params.set('lat', String(location.lat));
+      params.set('lng', String(location.lng));
+      this.router.navigate(['/cars/list'], { queryParams: Object.fromEntries(params.entries()) });
+    } catch {
+      this.agentService.updateMessageContent(
+        msgId,
+        'No pude obtener el auto más cercano en este momento. ¿Querés usar tu ubicación actual o decirme una dirección?',
+        ['local_nearby'],
+      );
+    }
+  }
+
   private persistLocationOverride(location: LocationData): void {
     if (typeof sessionStorage === 'undefined') return;
     const payload = {
@@ -1382,6 +1518,65 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
     }
 
     return null;
+  }
+
+  /**
+   * Get info about the nearest car (without navigating)
+   */
+  private async getNearestCarInfo(lat: number, lng: number): Promise<string | null> {
+    try {
+      const radiusKm = 50;
+      const latDelta = radiusKm / 111;
+      const lngDelta = radiusKm / (111 * Math.cos((lat * Math.PI) / 180));
+
+      const cars = await this.carsService.listActiveCars({
+        bounds: {
+          north: lat + latDelta,
+          south: lat - latDelta,
+          east: lng + lngDelta,
+          west: lng - lngDelta,
+        },
+      });
+
+      const carsWithDistance = cars
+        .filter((car) => car.location_lat && car.location_lng)
+        .map((car) => ({
+          ...car,
+          distance_km: this.calculateDistanceKm(lat, lng, car.location_lat!, car.location_lng!),
+        }))
+        .sort((a, b) => a.distance_km - b.distance_km);
+
+      const nearest = carsWithDistance[0];
+      if (!nearest) return null;
+
+      const carTitle = nearest.title || `${nearest.brand} ${nearest.model}`;
+      const distanceText = `${nearest.distance_km.toFixed(1)} km`;
+      const priceText =
+        typeof nearest.price_per_day === 'number'
+          ? `${nearest.currency || 'USD'} ${nearest.price_per_day}/día`
+          : '';
+
+      return `El auto más cercano a ti es "${carTitle}" a ${distanceText}.${priceText ? ` Precio: ${priceText}.` : ''}`;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Calculate distance between two points using Haversine formula
+   */
+  private calculateDistanceKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    const R = 6371; // Earth radius in km
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLng = ((lng2 - lng1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
   }
 
   private shouldOverrideEcuadorResponse(message: string): boolean {

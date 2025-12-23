@@ -129,6 +129,13 @@ export type Database = {
             foreignKeyName: "accident_reports_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "accident_reports_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -137,6 +144,13 @@ export type Database = {
             columns: ["charge_transaction_id"]
             isOneToOne: false
             referencedRelation: "v_wallet_locks_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accident_reports_charge_transaction_id_fkey"
+            columns: ["charge_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "v_wallet_transfers_summary"
             referencedColumns: ["id"]
           },
           {
@@ -757,6 +771,13 @@ export type Database = {
             foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -988,6 +1009,13 @@ export type Database = {
             foreignKeyName: "booking_claims_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "booking_claims_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -1090,6 +1118,13 @@ export type Database = {
             foreignKeyName: "booking_contracts_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "booking_contracts_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -1175,6 +1210,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "booking_extension_requests_booking_id_fkey"
@@ -1414,6 +1456,13 @@ export type Database = {
             foreignKeyName: "booking_extensions_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "booking_extensions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -1539,6 +1588,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_inspections_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "booking_inspections_booking_id_fkey"
@@ -1680,6 +1736,13 @@ export type Database = {
             foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -1772,6 +1835,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_location_tracking_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "booking_location_tracking_booking_id_fkey"
@@ -1955,6 +2025,13 @@ export type Database = {
             foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: true
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -2044,6 +2121,10 @@ export type Database = {
       }
       bookings: {
         Row: {
+          approval_expires_at: string | null
+          approval_status: string | null
+          approved_at: string | null
+          approved_by: string | null
           authorized_payment_id: string | null
           breakdown: Json | null
           calendar_sync_enabled: boolean | null
@@ -2052,6 +2133,9 @@ export type Database = {
           cancellation_policy_id: number | null
           cancellation_reason: string | null
           cancelled_at: string | null
+          cancelled_by_role:
+            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | null
           car_id: string
           completion_status: string | null
           coverage_upgrade: string | null
@@ -2127,6 +2211,7 @@ export type Database = {
           provider_collector_id: string | null
           provider_split_payment_id: string | null
           reauthorization_count: number | null
+          rejection_reason: string | null
           rental_amount_cents: number | null
           renter_confirmed_payment: boolean | null
           renter_id: string
@@ -2147,6 +2232,10 @@ export type Database = {
           wallet_status: string | null
         }
         Insert: {
+          approval_expires_at?: string | null
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           authorized_payment_id?: string | null
           breakdown?: Json | null
           calendar_sync_enabled?: boolean | null
@@ -2155,6 +2244,9 @@ export type Database = {
           cancellation_policy_id?: number | null
           cancellation_reason?: string | null
           cancelled_at?: string | null
+          cancelled_by_role?:
+            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | null
           car_id: string
           completion_status?: string | null
           coverage_upgrade?: string | null
@@ -2230,6 +2322,7 @@ export type Database = {
           provider_collector_id?: string | null
           provider_split_payment_id?: string | null
           reauthorization_count?: number | null
+          rejection_reason?: string | null
           rental_amount_cents?: number | null
           renter_confirmed_payment?: boolean | null
           renter_id: string
@@ -2250,6 +2343,10 @@ export type Database = {
           wallet_status?: string | null
         }
         Update: {
+          approval_expires_at?: string | null
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           authorized_payment_id?: string | null
           breakdown?: Json | null
           calendar_sync_enabled?: boolean | null
@@ -2258,6 +2355,9 @@ export type Database = {
           cancellation_policy_id?: number | null
           cancellation_reason?: string | null
           cancelled_at?: string | null
+          cancelled_by_role?:
+            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | null
           car_id?: string
           completion_status?: string | null
           coverage_upgrade?: string | null
@@ -2333,6 +2433,7 @@ export type Database = {
           provider_collector_id?: string | null
           provider_split_payment_id?: string | null
           reauthorization_count?: number | null
+          rejection_reason?: string | null
           rental_amount_cents?: number | null
           renter_confirmed_payment?: boolean | null
           renter_id?: string
@@ -2353,6 +2454,55 @@ export type Database = {
           wallet_status?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "bookings_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "bookings_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "bookings_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles_decrypted"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
           {
             foreignKeyName: "bookings_authorized_payment_id_fkey"
             columns: ["authorized_payment_id"]
@@ -2489,6 +2639,9 @@ export type Database = {
           cancellation_reason: string | null
           cancelled_at: string
           cancelled_by: string | null
+          cancelled_by_role:
+            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | null
           created_at: string
         }
         Insert: {
@@ -2498,6 +2651,9 @@ export type Database = {
           cancellation_reason?: string | null
           cancelled_at?: string
           cancelled_by?: string | null
+          cancelled_by_role?:
+            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | null
           created_at?: string
         }
         Update: {
@@ -2507,6 +2663,9 @@ export type Database = {
           cancellation_reason?: string | null
           cancelled_at?: string
           cancelled_by?: string | null
+          cancelled_by_role?:
+            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | null
           created_at?: string
         }
         Relationships: [
@@ -2537,6 +2696,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_cancellation_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "bookings_cancellation_booking_id_fkey"
@@ -2664,6 +2830,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "bookings_confirmation_booking_id_fkey"
@@ -2836,6 +3009,13 @@ export type Database = {
             foreignKeyName: "bookings_insurance_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: true
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "bookings_insurance_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -2903,6 +3083,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_payment_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "bookings_payment_booking_id_fkey"
@@ -2981,6 +3168,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_pricing_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "bookings_pricing_booking_id_fkey"
@@ -3477,8 +3671,85 @@ export type Database = {
             foreignKeyName: "car_tracking_sessions_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
+          },
+        ]
+      }
+      car_views: {
+        Row: {
+          car_id: string
+          id: string
+          session_id: string | null
+          viewed_at: string | null
+          viewer_id: string | null
+          viewer_ip: string | null
+        }
+        Insert: {
+          car_id: string
+          id?: string
+          session_id?: string | null
+          viewed_at?: string | null
+          viewer_id?: string | null
+          viewer_ip?: string | null
+        }
+        Update: {
+          car_id?: string
+          id?: string
+          session_id?: string | null
+          viewed_at?: string | null
+          viewer_id?: string | null
+          viewer_ip?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "car_views_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "bookable_cars"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "car_views_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "car_views_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars_multi_currency"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "car_views_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["car_id"]
+          },
+          {
+            foreignKeyName: "car_views_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["car_id"]
+          },
+          {
+            foreignKeyName: "car_views_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "v_cars_with_main_photo"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -3486,9 +3757,12 @@ export type Database = {
         Row: {
           allow_pets: boolean | null
           allow_rideshare: boolean | null
+          allow_second_driver: boolean | null
           allow_smoking: boolean | null
           allowed_provinces: string[] | null
           auto_approval: boolean | null
+          availability_end_date: string | null
+          availability_start_date: string | null
           brand: string | null
           brand_id: string | null
           brand_text_backup: string | null
@@ -3508,6 +3782,7 @@ export type Database = {
           description: string | null
           doors: number | null
           estimated_value_usd: number | null
+          extra_km_price: number | null
           features: Json | null
           fipe_code: string | null
           fipe_last_sync: string | null
@@ -3533,9 +3808,11 @@ export type Database = {
           location_state: string | null
           location_street: string | null
           location_street_number: string | null
+          max_anticipation_days: number | null
           max_distance_km: number | null
           max_rental_days: number | null
           mileage: number | null
+          mileage_limit: number | null
           min_rental_days: number | null
           model: string | null
           model_id: string | null
@@ -3552,6 +3829,7 @@ export type Database = {
           rating_count: number | null
           region_id: string | null
           seats: number | null
+          second_driver_cost: number | null
           security_deposit_usd: number | null
           status: Database["public"]["Enums"]["car_status"]
           terms_and_conditions: string | null
@@ -3570,9 +3848,12 @@ export type Database = {
         Insert: {
           allow_pets?: boolean | null
           allow_rideshare?: boolean | null
+          allow_second_driver?: boolean | null
           allow_smoking?: boolean | null
           allowed_provinces?: string[] | null
           auto_approval?: boolean | null
+          availability_end_date?: string | null
+          availability_start_date?: string | null
           brand?: string | null
           brand_id?: string | null
           brand_text_backup?: string | null
@@ -3592,6 +3873,7 @@ export type Database = {
           description?: string | null
           doors?: number | null
           estimated_value_usd?: number | null
+          extra_km_price?: number | null
           features?: Json | null
           fipe_code?: string | null
           fipe_last_sync?: string | null
@@ -3617,9 +3899,11 @@ export type Database = {
           location_state?: string | null
           location_street?: string | null
           location_street_number?: string | null
+          max_anticipation_days?: number | null
           max_distance_km?: number | null
           max_rental_days?: number | null
           mileage?: number | null
+          mileage_limit?: number | null
           min_rental_days?: number | null
           model?: string | null
           model_id?: string | null
@@ -3636,6 +3920,7 @@ export type Database = {
           rating_count?: number | null
           region_id?: string | null
           seats?: number | null
+          second_driver_cost?: number | null
           security_deposit_usd?: number | null
           status?: Database["public"]["Enums"]["car_status"]
           terms_and_conditions?: string | null
@@ -3654,9 +3939,12 @@ export type Database = {
         Update: {
           allow_pets?: boolean | null
           allow_rideshare?: boolean | null
+          allow_second_driver?: boolean | null
           allow_smoking?: boolean | null
           allowed_provinces?: string[] | null
           auto_approval?: boolean | null
+          availability_end_date?: string | null
+          availability_start_date?: string | null
           brand?: string | null
           brand_id?: string | null
           brand_text_backup?: string | null
@@ -3676,6 +3964,7 @@ export type Database = {
           description?: string | null
           doors?: number | null
           estimated_value_usd?: number | null
+          extra_km_price?: number | null
           features?: Json | null
           fipe_code?: string | null
           fipe_last_sync?: string | null
@@ -3701,9 +3990,11 @@ export type Database = {
           location_state?: string | null
           location_street?: string | null
           location_street_number?: string | null
+          max_anticipation_days?: number | null
           max_distance_km?: number | null
           max_rental_days?: number | null
           mileage?: number | null
+          mileage_limit?: number | null
           min_rental_days?: number | null
           model?: string | null
           model_id?: string | null
@@ -3720,6 +4011,7 @@ export type Database = {
           rating_count?: number | null
           region_id?: string | null
           seats?: number | null
+          second_driver_cost?: number | null
           security_deposit_usd?: number | null
           status?: Database["public"]["Enums"]["car_status"]
           terms_and_conditions?: string | null
@@ -3890,6 +4182,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "claims_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "claims_booking_id_fkey"
@@ -4096,6 +4395,13 @@ export type Database = {
             foreignKeyName: "disputes_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "disputes_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -4264,6 +4570,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "driver_class_history_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "driver_class_history_booking_id_fkey"
@@ -4475,6 +4788,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "driver_telemetry_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "driver_telemetry_booking_id_fkey"
@@ -4803,6 +5123,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fees_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "fees_booking_id_fkey"
@@ -5248,6 +5575,13 @@ export type Database = {
             foreignKeyName: "insurance_claims_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "insurance_claims_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -5514,6 +5848,13 @@ export type Database = {
             foreignKeyName: "messages_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "messages_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -5633,6 +5974,66 @@ export type Database = {
         }
         Relationships: []
       }
+      mp_onboarding_states: {
+        Row: {
+          access_token: string | null
+          auth_code: string | null
+          collector_id: number | null
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          expires_at: string | null
+          id: string
+          last_sync_at: string | null
+          public_key: string | null
+          redirect_url: string | null
+          refresh_token: string | null
+          state_token: string | null
+          status: string
+          token_expires_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          auth_code?: string | null
+          collector_id?: number | null
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          expires_at?: string | null
+          id?: string
+          last_sync_at?: string | null
+          public_key?: string | null
+          redirect_url?: string | null
+          refresh_token?: string | null
+          state_token?: string | null
+          status?: string
+          token_expires_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          auth_code?: string | null
+          collector_id?: number | null
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          expires_at?: string | null
+          id?: string
+          last_sync_at?: string | null
+          public_key?: string | null
+          redirect_url?: string | null
+          refresh_token?: string | null
+          state_token?: string | null
+          status?: string
+          token_expires_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       mp_webhook_logs: {
         Row: {
           booking_id: string | null
@@ -5713,6 +6114,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "mp_webhook_logs_booking_id_fkey"
@@ -6407,6 +6815,13 @@ export type Database = {
             foreignKeyName: "payment_intents_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "payment_intents_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -6486,6 +6901,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_issues_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "payment_issues_booking_id_fkey"
@@ -6629,6 +7051,13 @@ export type Database = {
             foreignKeyName: "payment_splits_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "payment_splits_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -6738,6 +7167,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "payments_booking_id_fkey"
@@ -6925,6 +7361,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pricing_calculations_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "pricing_calculations_booking_id_fkey"
@@ -7286,12 +7729,16 @@ export type Database = {
           address_line2: string | null
           address_line2_encrypted: string | null
           avatar_url: string | null
+          cancellation_count_90d: number | null
           city: string | null
           country: string | null
           created_at: string | null
           date_of_birth: string | null
           dni_encrypted: string | null
+          driver_license_class: string | null
           driver_license_number_encrypted: string | null
+          driver_license_points: number | null
+          driver_license_professional: boolean | null
           email: string | null
           email_verified: boolean | null
           full_name: string | null
@@ -7303,6 +7750,7 @@ export type Database = {
           id: string
           id_verified: boolean | null
           is_admin: boolean | null
+          last_cancellation_check: string | null
           location_verified_at: string | null
           mercadopago_access_token: string | null
           mercadopago_access_token_expires_at: string | null
@@ -7327,9 +7775,12 @@ export type Database = {
           primary_goal: string | null
           rating_avg: number | null
           rating_count: number | null
+          renter_level: string | null
+          renter_level_updated_at: string | null
           role: string | null
           state: string | null
           updated_at: string | null
+          visibility_penalty_until: string | null
           whatsapp: string | null
           whatsapp_encrypted: string | null
         }
@@ -7339,12 +7790,16 @@ export type Database = {
           address_line2?: string | null
           address_line2_encrypted?: string | null
           avatar_url?: string | null
+          cancellation_count_90d?: number | null
           city?: string | null
           country?: string | null
           created_at?: string | null
           date_of_birth?: string | null
           dni_encrypted?: string | null
+          driver_license_class?: string | null
           driver_license_number_encrypted?: string | null
+          driver_license_points?: number | null
+          driver_license_professional?: boolean | null
           email?: string | null
           email_verified?: boolean | null
           full_name?: string | null
@@ -7356,6 +7811,7 @@ export type Database = {
           id: string
           id_verified?: boolean | null
           is_admin?: boolean | null
+          last_cancellation_check?: string | null
           location_verified_at?: string | null
           mercadopago_access_token?: string | null
           mercadopago_access_token_expires_at?: string | null
@@ -7380,9 +7836,12 @@ export type Database = {
           primary_goal?: string | null
           rating_avg?: number | null
           rating_count?: number | null
+          renter_level?: string | null
+          renter_level_updated_at?: string | null
           role?: string | null
           state?: string | null
           updated_at?: string | null
+          visibility_penalty_until?: string | null
           whatsapp?: string | null
           whatsapp_encrypted?: string | null
         }
@@ -7392,12 +7851,16 @@ export type Database = {
           address_line2?: string | null
           address_line2_encrypted?: string | null
           avatar_url?: string | null
+          cancellation_count_90d?: number | null
           city?: string | null
           country?: string | null
           created_at?: string | null
           date_of_birth?: string | null
           dni_encrypted?: string | null
+          driver_license_class?: string | null
           driver_license_number_encrypted?: string | null
+          driver_license_points?: number | null
+          driver_license_professional?: boolean | null
           email?: string | null
           email_verified?: boolean | null
           full_name?: string | null
@@ -7409,6 +7872,7 @@ export type Database = {
           id?: string
           id_verified?: boolean | null
           is_admin?: boolean | null
+          last_cancellation_check?: string | null
           location_verified_at?: string | null
           mercadopago_access_token?: string | null
           mercadopago_access_token_expires_at?: string | null
@@ -7433,9 +7897,12 @@ export type Database = {
           primary_goal?: string | null
           rating_avg?: number | null
           rating_count?: number | null
+          renter_level?: string | null
+          renter_level_updated_at?: string | null
           role?: string | null
           state?: string | null
           updated_at?: string | null
+          visibility_penalty_until?: string | null
           whatsapp?: string | null
           whatsapp_encrypted?: string | null
         }
@@ -7713,6 +8180,13 @@ export type Database = {
             foreignKeyName: "reviews_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "reviews_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -7854,6 +8328,13 @@ export type Database = {
             foreignKeyName: "traffic_infractions_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "traffic_infractions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -7862,6 +8343,13 @@ export type Database = {
             columns: ["charge_transaction_id"]
             isOneToOne: false
             referencedRelation: "v_wallet_locks_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "traffic_infractions_charge_transaction_id_fkey"
+            columns: ["charge_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "v_wallet_transfers_summary"
             referencedColumns: ["id"]
           },
           {
@@ -8139,6 +8627,39 @@ export type Database = {
           },
         ]
       }
+      user_bonus_malus: {
+        Row: {
+          created_at: string | null
+          id: string
+          metrics: Json | null
+          next_recalculation_at: string | null
+          tier: string | null
+          total_factor: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          metrics?: Json | null
+          next_recalculation_at?: string | null
+          tier?: string | null
+          total_factor?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          metrics?: Json | null
+          next_recalculation_at?: string | null
+          tier?: string | null
+          total_factor?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_documents: {
         Row: {
           analyzed_at: string | null
@@ -8235,6 +8756,70 @@ export type Database = {
           },
           {
             foreignKeyName: "user_favorite_cars_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "v_cars_with_main_photo"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_favorites: {
+        Row: {
+          car_id: string
+          created_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          car_id: string
+          created_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          car_id?: string
+          created_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_favorites_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "bookable_cars"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_favorites_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_favorites_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars_multi_currency"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_favorites_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["car_id"]
+          },
+          {
+            foreignKeyName: "user_favorites_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["car_id"]
+          },
+          {
+            foreignKeyName: "user_favorites_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
             referencedRelation: "v_cars_with_main_photo"
@@ -9695,6 +10280,13 @@ export type Database = {
             foreignKeyName: "messages_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "messages_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
@@ -10176,6 +10768,116 @@ export type Database = {
           },
         ]
       }
+      owner_pending_approvals: {
+        Row: {
+          approval_expires_at: string | null
+          booking_created_at: string | null
+          booking_id: string | null
+          car_id: string | null
+          car_name: string | null
+          car_year: number | null
+          currency: string | null
+          days_count: number | null
+          end_at: string | null
+          hours_remaining: number | null
+          renter_id: string | null
+          start_at: string | null
+          total_amount: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "bookable_cars"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars_multi_currency"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["car_id"]
+          },
+          {
+            foreignKeyName: "bookings_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["car_id"]
+          },
+          {
+            foreignKeyName: "bookings_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "v_cars_with_main_photo"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_renter_profile_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "bookings_renter_profile_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_renter_profile_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "bookings_renter_profile_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_renter_profile_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_decrypted"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_renter_profile_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_renter_profile_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       pending_payouts_critical: {
         Row: {
           booking_id: string | null
@@ -10252,6 +10954,15 @@ export type Database = {
           rating_count?: number | null
           role?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      referral_stats_by_user: {
+        Row: {
+          last_referral_at: string | null
+          referrals_count: number | null
+          rewards_sum_cents: number | null
+          user_id: string | null
         }
         Relationships: []
       }
@@ -10397,6 +11108,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
           },
           {
             foreignKeyName: "reviews_booking_id_fkey"
@@ -10908,6 +11626,48 @@ export type Database = {
         }
         Relationships: []
       }
+      v_wallet_transfers_summary: {
+        Row: {
+          amount: number | null
+          counterparty_user_id: string | null
+          created_at: string | null
+          currency: string | null
+          id: string | null
+          metadata: Json | null
+          reference_id: string | null
+          reference_type: string | null
+          status: string | null
+          type: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          counterparty_user_id?: never
+          created_at?: string | null
+          currency?: string | null
+          id?: string | null
+          metadata?: Json | null
+          reference_id?: string | null
+          reference_type?: string | null
+          status?: string | null
+          type?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          counterparty_user_id?: never
+          created_at?: string | null
+          currency?: string | null
+          id?: string | null
+          metadata?: Json | null
+          reference_id?: string | null
+          reference_type?: string | null
+          status?: string | null
+          type?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       vw_accounting_balance_sheet: {
         Row: {
           account_type: string | null
@@ -11308,6 +12068,7 @@ export type Database = {
         }
         Returns: number
       }
+      calculate_user_bonus_malus: { Args: { p_user_id: string }; Returns: Json }
       can_publish_car: { Args: { p_user_id: string }; Returns: boolean }
       cancel_conflicting_pending_by_renter: {
         Args: {
@@ -11701,6 +12462,13 @@ export type Database = {
           confidence_level: string
           data_source: string
           estimated_value: number
+        }[]
+      }
+      expire_pending_approvals: {
+        Args: never
+        Returns: {
+          expired_bookings: string[]
+          expired_count: number
         }[]
       }
       expire_pending_bookings: {
@@ -12171,6 +12939,11 @@ export type Database = {
         Returns: string
       }
       get_onboarding_status: { Args: never; Returns: Json }
+      get_owner_penalties: { Args: { p_owner_id: string }; Returns: Json }
+      get_owner_visibility_factor: {
+        Args: { p_owner_id: string }
+        Returns: number
+      }
       get_payout_stats: {
         Args: { p_from_date?: string; p_to_date?: string }
         Returns: {
@@ -12183,7 +12956,39 @@ export type Database = {
           total_platform_fees: number
         }[]
       }
+      get_renter_analysis: {
+        Args: { p_booking_id?: string; p_renter_id: string }
+        Returns: Json
+      }
+      get_renter_level: { Args: { p_user_id: string }; Returns: Json }
       get_renter_profile_badge: { Args: { p_renter_id: string }; Returns: Json }
+      get_renter_verification_for_owner: {
+        Args: { p_booking_id: string }
+        Returns: {
+          class_description: string
+          documents: Json
+          driver_class: number
+          driver_license_class: string
+          driver_license_country: string
+          driver_license_expiry: string
+          driver_license_points: number
+          driver_license_professional: boolean
+          driver_license_verified_at: string
+          driver_score: number
+          email_verified: boolean
+          fee_multiplier: number
+          full_name: string
+          gov_id_number: string
+          gov_id_type: string
+          guarantee_multiplier: number
+          id_verified: boolean
+          location_verified_at: string
+          phone: string
+          phone_verified: boolean
+          renter_id: string
+          whatsapp: string
+        }[]
+      }
       get_telemetry_history: {
         Args: { p_limit?: number; p_user_id: string }
         Returns: {
@@ -12345,6 +13150,10 @@ export type Database = {
         }
         Returns: Json
       }
+      owner_cancel_booking: {
+        Args: { p_booking_id: string; p_owner_id: string; p_reason?: string }
+        Returns: Json
+      }
       p2p_get_next_order: {
         Args: {
           p_lock_duration_seconds?: number
@@ -12466,6 +13275,10 @@ export type Database = {
       pricing_recalculate: {
         Args: { p_booking_id: string }
         Returns: {
+          approval_expires_at: string | null
+          approval_status: string | null
+          approved_at: string | null
+          approved_by: string | null
           authorized_payment_id: string | null
           breakdown: Json | null
           calendar_sync_enabled: boolean | null
@@ -12474,6 +13287,9 @@ export type Database = {
           cancellation_policy_id: number | null
           cancellation_reason: string | null
           cancelled_at: string | null
+          cancelled_by_role:
+            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | null
           car_id: string
           completion_status: string | null
           coverage_upgrade: string | null
@@ -12549,6 +13365,7 @@ export type Database = {
           provider_collector_id: string | null
           provider_split_payment_id: string | null
           reauthorization_count: number | null
+          rejection_reason: string | null
           rental_amount_cents: number | null
           renter_confirmed_payment: boolean | null
           renter_id: string
@@ -12697,6 +13514,10 @@ export type Database = {
             }
             Returns: string
           }
+      reject_booking: {
+        Args: { p_booking_id: string; p_rejection_reason?: string }
+        Returns: Json
+      }
       release_expired_card_preauths: {
         Args: never
         Returns: {
@@ -12838,6 +13659,11 @@ export type Database = {
         Returns: Json
       }
       rotate_encryption_key: { Args: never; Returns: string }
+      send_booking_completion_reminders: { Args: never; Returns: undefined }
+      send_booking_reminders: { Args: never; Returns: undefined }
+      send_car_recommendations: { Args: never; Returns: undefined }
+      send_car_views_milestone_notification: { Args: never; Returns: undefined }
+      send_document_expiry_reminders: { Args: never; Returns: undefined }
       send_encrypted_message: {
         Args: {
           p_body?: string
@@ -12847,10 +13673,16 @@ export type Database = {
         }
         Returns: string
       }
+      send_favorite_car_available: { Args: never; Returns: undefined }
+      send_inactive_owner_reminders: { Args: never; Returns: undefined }
       send_monthly_depreciation_notifications: {
         Args: never
         Returns: undefined
       }
+      send_nearby_cars_notifications: { Args: never; Returns: undefined }
+      send_optimization_tips: { Args: never; Returns: undefined }
+      send_pending_requests_reminder: { Args: never; Returns: undefined }
+      send_renter_tips: { Args: never; Returns: undefined }
       set_primary_goal: { Args: { p_goal: string }; Returns: Json }
       st_3dclosestpoint: {
         Args: { geom1: unknown; geom2: unknown }
@@ -13543,6 +14375,10 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: boolean
       }
+      user_is_member_of_org: {
+        Args: { p_org_id: string; p_user_id: string }
+        Returns: boolean
+      }
       validate_and_confirm_split_payment: {
         Args: {
           p_booking_id: string
@@ -13821,9 +14657,11 @@ export type Database = {
         | "resolved"
         | "closed"
       admin_role: "super_admin" | "operations" | "support" | "finance"
+      booking_cancelled_by_role: "renter" | "owner" | "system" | "admin"
       booking_status:
         | "pending_payment"
         | "pending"
+        | "pending_approval"
         | "confirmed"
         | "in_progress"
         | "pending_review"
@@ -13871,6 +14709,7 @@ export type Database = {
         | "license_back"
         | "vehicle_registration"
         | "vehicle_insurance"
+        | "criminal_record"
       infraction_status:
         | "pending"
         | "accepted"
@@ -13888,6 +14727,23 @@ export type Database = {
         | "inspection_reminder"
         | "generic_announcement"
         | "mp_onboarding_required"
+        | "booking_reminder_24h"
+        | "booking_reminder_2h"
+        | "document_expiry_license"
+        | "owner_inactive_reminder"
+        | "optimization_tip"
+        | "booking_ended_review"
+        | "monthly_report"
+        | "welcome"
+        | "verification_approved"
+        | "verification_rejected"
+        | "nearby_cars"
+        | "car_views_milestone"
+        | "car_recommendation"
+        | "renter_tip"
+        | "price_drop_alert"
+        | "favorite_car_available"
+        | "pending_requests_reminder"
       onboarding_status: "incomplete" | "complete" | "skipped"
       payment_provider: "mock" | "mercadopago" | "stripe"
       payment_status:
@@ -14046,9 +14902,11 @@ export const Constants = {
         "closed",
       ],
       admin_role: ["super_admin", "operations", "support", "finance"],
+      booking_cancelled_by_role: ["renter", "owner", "system", "admin"],
       booking_status: [
         "pending_payment",
         "pending",
+        "pending_approval",
         "confirmed",
         "in_progress",
         "pending_review",
@@ -14099,6 +14957,7 @@ export const Constants = {
         "license_back",
         "vehicle_registration",
         "vehicle_insurance",
+        "criminal_record",
       ],
       infraction_status: [
         "pending",
@@ -14118,6 +14977,23 @@ export const Constants = {
         "inspection_reminder",
         "generic_announcement",
         "mp_onboarding_required",
+        "booking_reminder_24h",
+        "booking_reminder_2h",
+        "document_expiry_license",
+        "owner_inactive_reminder",
+        "optimization_tip",
+        "booking_ended_review",
+        "monthly_report",
+        "welcome",
+        "verification_approved",
+        "verification_rejected",
+        "nearby_cars",
+        "car_views_milestone",
+        "car_recommendation",
+        "renter_tip",
+        "price_drop_alert",
+        "favorite_car_available",
+        "pending_requests_reminder",
       ],
       onboarding_status: ["incomplete", "complete", "skipped"],
       payment_provider: ["mock", "mercadopago", "stripe"],
@@ -14139,4 +15015,3 @@ export const Constants = {
     },
   },
 } as const
-

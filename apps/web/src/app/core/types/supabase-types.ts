@@ -40,7 +40,9 @@ export type BookingInsert = TablesInsert<'bookings'>;
 export type BookingUpdate = TablesUpdate<'bookings'>;
 
 // Wallet - Most are VIEWS not tables
-export type WalletBalance = Views<'wallet_user_aggregates'>;
+// NOTE: WalletBalance is now exported from wallet.model.ts, not from the view
+// The view wallet_user_aggregates has different field names than the RPC function
+export type WalletBalanceDB = Views<'wallet_user_aggregates'>;
 export type WalletTransaction = Tables<'wallet_transactions'>;
 export type WalletLedger = Tables<'wallet_ledger'>;
 

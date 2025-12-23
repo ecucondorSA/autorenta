@@ -16,9 +16,13 @@ const ALLOWED_ORIGINS = [
   'https://autorentar.com',
   'https://www.autorentar.com',
   'https://autorenta-web.pages.dev',
+  'https://autorentar.pages.dev',
   'http://localhost:4200',
   'http://localhost:8787', // Worker local
 ];
+
+// Cloudflare Pages generates unique subdomains for each deployment
+const CLOUDFLARE_PAGES_PATTERN = /^https:\/\/[a-z0-9]+\.autorentar\.pages\.dev$/;
 
 /**
  * Get CORS headers based on request Origin
@@ -29,10 +33,12 @@ const ALLOWED_ORIGINS = [
 export function getCorsHeaders(req: Request): HeadersInit {
   const origin = req.headers.get('Origin');
 
-  // Validar que el Origin esté en la whitelist
-  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin)
-    ? origin
-    : ALLOWED_ORIGINS[0]; // Default a producción si no match
+  // Validar que el Origin esté en la whitelist o sea un subdominio de Cloudflare Pages
+  const isAllowed = origin && (
+    ALLOWED_ORIGINS.includes(origin) ||
+    CLOUDFLARE_PAGES_PATTERN.test(origin)
+  );
+  const allowedOrigin = isAllowed ? origin : ALLOWED_ORIGINS[0];
 
   return {
     'Access-Control-Allow-Origin': allowedOrigin,

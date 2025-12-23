@@ -23,6 +23,17 @@ export class CarsService {
     averageRentalDays: 300,
   };
 
+  private parseMissingColumnFromSchemaCacheError(error: unknown): string | null {
+    const anyError = error as { code?: string; message?: string } | null;
+    if (!anyError || anyError.code !== 'PGRST204' || typeof anyError.message !== 'string') {
+      return null;
+    }
+
+    // Example: "Could not find the 'allow_second_driver' column of 'cars' in the schema cache"
+    const match = anyError.message.match(/Could not find the '([^']+)' column of 'cars' in the schema cache/);
+    return match?.[1] ?? null;
+  }
+
   async createCar(input: Partial<Car>): Promise<Car> {
     const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
     if (!userId) {
@@ -95,23 +106,43 @@ export class CarsService {
       owner_id: '***',
     });
 
-    const { data, error } = await this.supabase
-      .from('cars')
-      .insert(carData)
-      .select('*, car_photos(*)')
-      .single();
+    // Resilient insert: if PostgREST schema cache is missing a column (PGRST204),
+    // retry once per missing-column by stripping the offending field.
+    // This avoids blocking publishing right after migrations, or when envs are out-of-sync.
+    let lastError: unknown = null;
+    let insertPayload: Record<string, unknown> = { ...carData } as Record<string, unknown>;
 
-    if (error) {
+    for (let attempt = 0; attempt < 6; attempt++) {
+      const { data, error } = await this.supabase
+        .from('cars')
+        .insert(insertPayload)
+        .select('*, car_photos(*)')
+        .single();
+
+      if (!error) {
+        this.logger.debug('✅ Car created successfully:', data['id']);
+        return {
+          ...data,
+          photos: data.car_photos || [],
+        } as Car;
+      }
+
+      lastError = error;
+      const missingColumn = this.parseMissingColumnFromSchemaCacheError(error);
+      if (missingColumn && Object.prototype.hasOwnProperty.call(insertPayload, missingColumn)) {
+        this.logger.warn(
+          `PostgREST schema cache missing column '${missingColumn}'. Retrying car insert without it.`,
+        );
+        delete insertPayload[missingColumn];
+        continue;
+      }
+
       console.error('❌ Error creating car:', error);
       throw error;
     }
 
-    this.logger.debug('✅ Car created successfully:', data['id']);
-
-    return {
-      ...data,
-      photos: data.car_photos || [],
-    } as Car;
+    console.error('❌ Error creating car after retries:', lastError);
+    throw lastError;
   }
 
   async uploadPhoto(file: File, carId: string, position = 0): Promise<CarPhoto> {

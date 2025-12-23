@@ -12,6 +12,12 @@
 
 ## Reglas de Desarrollo
 
+### REGLA CRÍTICA: Modificar SOLO lo solicitado
+- **SOLO lo pedido:** Modificar ÚNICAMENTE lo que el usuario solicita explícitamente
+- **No tocar código no relacionado:** Si piden cambiar colores de clusters, NO cambiar colores de header, footer, etc.
+- **Cambios quirúrgicos:** Limitar cambios al mínimo necesario para cumplir la solicitud
+- **Preguntar si hay ambigüedad:** Si no está claro el alcance, preguntar antes de modificar
+
 ### Diseño UI
 - **NO WIZARDS:** Prohibidos los step-by-step wizards
 - **NO MODALS:** Prohibidos los modales/dialogs

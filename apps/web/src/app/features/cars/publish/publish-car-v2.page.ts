@@ -1083,13 +1083,20 @@ export class PublishCarV2Page implements OnInit {
     const mpReady = this.mpReady();
 
     if (!mpReady) {
-      this.notificationManager.warning(
-        'Conectá Mercado Pago',
-        'Vinculá tu cuenta para recibir pagos. Podés seguir y publicaremos el auto igual.',
-      );
-
-      // No bloqueamos la publicación: abrimos el flujo de onboarding en background
-      void this.openOnboardingModal();
+      void this.notificationManager.show({
+        type: 'warning',
+        title: 'Conectá Mercado Pago',
+        message:
+          'Vinculá tu cuenta para recibir pagos. Podés publicar ahora y conectar Mercado Pago después.',
+        actions: [
+          {
+            label: 'Conectar',
+            command: () => {
+              void this.openOnboardingModal();
+            },
+          },
+        ],
+      });
     }
 
     // ✅ IMPORTANTE: NO bloqueamos la publicación por documentos faltantes
@@ -1139,9 +1146,10 @@ export class PublishCarV2Page implements OnInit {
         // Location opcional
         location_street: formData['location_street'] || '',
         location_street_number: formData['location_street_number'] || '',
-        location_city: formData['location_city'] || '',
-        location_state: formData['location_state'] || '',
-        location_country: formData['location_country'] || '', // ✅ CHANGED: Removed hardcoded 'AR' default
+        // ✅ FIXED: city/province are NOT NULL in DB, ensure valid defaults
+        location_city: formData['location_city'] || 'Buenos Aires',
+        location_state: formData['location_state'] || 'Buenos Aires',
+        location_country: formData['location_country'] || 'AR'
       };
 
       // Get coordinates (manual or from address)

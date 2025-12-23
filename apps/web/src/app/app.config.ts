@@ -109,8 +109,16 @@ export const appConfig: ApplicationConfig = {
         scrollPositionRestoration: 'enabled',
         anchorScrolling: 'enabled',
       }),
-      // ✅ Native-like Page Transitions
-      withViewTransitions(),
+      // ✅ Native-like Page Transitions (with error handling for unsupported browsers)
+      withViewTransitions({
+        skipInitialTransition: true, // Avoid issues during initial load
+        onViewTransitionCreated: ({ transition }) => {
+          // Gracefully handle transition errors
+          transition.finished.catch(() => {
+            // Silently ignore transition errors (API not supported or DOM changed)
+          });
+        },
+      }),
     ),
     provideHttpClient(
       withFetch(),

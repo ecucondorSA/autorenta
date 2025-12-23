@@ -8,7 +8,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { environment } from '@environment';
+import { environment } from '../../../../environments/environment';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 type SupabaseLock = <T>(name: string, acquireTimeout: number, fn: () => Promise<T>) => Promise<T>;

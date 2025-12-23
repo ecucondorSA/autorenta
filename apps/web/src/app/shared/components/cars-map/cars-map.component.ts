@@ -1,4 +1,3 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
@@ -23,10 +22,11 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { environment } from '@environment';
 import type { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { MapboxDirectionsService } from '@core/services/geo/mapbox-directions.service';
 import { MapboxPreloaderService } from '@core/services/geo/mapbox-preloader.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { environment } from '@environment';
 import { EnhancedMapTooltipComponent } from '../enhanced-map-tooltip/enhanced-map-tooltip.component';
 import type { BookingFormData } from '../map-booking-panel/map-booking-panel.component';
 import { MapBookingPanelComponent } from '../map-booking-panel/map-booking-panel.component';
@@ -197,6 +197,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private readonly logger = inject(LoggerService);
   @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
 
+  private resizeObserver: ResizeObserver | null = null;
+
   @Input() cars: CarMapLocation[] = [];
   @Input() selectedCarId: string | null = null;
   @Input() userLocation: { lat: number; lng: number } | null = null;
@@ -210,6 +212,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @Input() followUserLocation: boolean = false;
   @Input() lockZoomRotation: boolean = false;
   @Input() locationAccuracy?: number; // Precisión GPS en metros
+  @Input() isTrackingUser = false; // True cuando el mapa sigue la ubicación del usuario
   @Input() lastLocationUpdate?: Date; // Última actualización de ubicación
   @Input() markerVariant: 'photo' | 'price' = 'photo'; // Change default to 'photo'
 
@@ -307,7 +310,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private clusterLayerId = 'cars-cluster-layer';
   private clusterCountLayerId = 'cars-cluster-count';
   // Mapbox optimization: Clustering is efficient for 10K+ cars (Supercluster handles 400K)
-  public clusteringThreshold = 50; // Activate clustering at 50+ cars - public for template access
+  public clusteringThreshold = 3; // Activate clustering at 3+ cars (Airbnb style) - public for template access
   private virtualizationThreshold = 1000; // Only virtualize if NOT clustering (10K+ without clustering)
   private viewportBuffer = 0.1; // 10% buffer around viewport for smoother experience
   private maxVisibleMarkers = 500; // Increased for better 10K+ experience when not clustering
@@ -376,12 +379,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    * Returns: 'dawn', 'day', 'dusk', or 'night'
    */
   private getTimeBasedLightPreset(): 'dawn' | 'day' | 'dusk' | 'night' {
-    const hour = new Date().getHours();
-
-    if (hour >= 6 && hour < 11) return 'dawn'; // 6am - 11am: Amanecer
-    if (hour >= 11 && hour < 18) return 'day'; // 11am - 6pm: Día
-    if (hour >= 18 && hour < 21) return 'dusk'; // 6pm - 9pm: Atardecer
-    return 'night'; // 9pm - 6am: Noche
+    // Forzar siempre modo día con colores claros
+    return 'day';
   }
 
   /**
@@ -492,11 +491,11 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       this.map = new this.mapboxgl.Map({
         container: this.mapContainer.nativeElement,
         style: 'mapbox://styles/mapbox/standard', // Modern Standard style with theme support
-        center: [-58.3816, -34.6037], // Buenos Aires center
-        zoom: 14, // Standard zoom level for car marketplace
+        center: [-54.0, -28.0], // Centro entre Argentina, Brasil y Uruguay
+        zoom: 4, // Zoom amplio para ver los 3 países
         maxBounds: [
-          [-58.8, -34.9], // Southwest
-          [-57.9, -34.3], // Northeast
+          [-75, -56], // Southwest: Sur de Argentina
+          [-34, -5],  // Northeast: Norte de Brasil
         ],
         // Mapbox Standard configuration - OPTIMIZED for car marketplace
         config: {
@@ -519,6 +518,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         touchPitch: false, // Disable touch pitch gestures
       });
 
+      this.setupResizeObserver();
+
       // Add navigation controls (zoom + compass)
       this.map.addControl(new this.mapboxgl.NavigationControl(), 'top-right');
 
@@ -526,6 +527,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       this.map.on('load', () => {
         try {
           this.loading.set(false);
+          this.safeResizeMap();
           this.updateMapTheme(); // Apply theme on load
           this.updateMarkersBasedOnCount();
           this.setupViewportChangeListener();
@@ -595,6 +597,32 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }
   }
 
+  private setupResizeObserver(): void {
+    if (!this.isBrowser || !this.mapContainer?.nativeElement) return;
+    if (this.resizeObserver) return;
+    if (typeof ResizeObserver === 'undefined') return;
+
+    this.resizeObserver = new ResizeObserver(() => {
+      this.safeResizeMap();
+    });
+
+    this.resizeObserver.observe(this.mapContainer.nativeElement);
+  }
+
+  private teardownResizeObserver(): void {
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
+  }
+
+  private safeResizeMap(): void {
+    if (!this.map) return;
+    try {
+      this.map.resize();
+    } catch {
+      // ignore resize errors during initialization/teardown
+    }
+  }
+
   /**
    * Setup clustering for car markers
    * Optimized for 10,000+ cars following Mapbox recommendations
@@ -641,12 +669,14 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           features,
         },
         cluster: true,
-        // Mapbox recommendation for 10K+ points
-        clusterMaxZoom: 14, // Don't cluster beyond zoom 14
-        clusterRadius: 50, // 50px radius for optimal clustering
+        // Airbnb-style clustering: more aggressive at low zoom
+        clusterMaxZoom: 12, // Cluster up to zoom 12 for regional view
+        clusterRadius: 80, // Larger radius for better grouping at country level
         clusterProperties: {
           sum: ['+', ['get', 'pricePerDay']],
           count: ['+', 1],
+          minPrice: ['min', ['get', 'pricePerDay']],
+          maxPrice: ['max', ['get', 'pricePerDay']],
         },
         // GeoJSON optimization for points (Mapbox recommendation)
         maxzoom: 12, // Limit tile generation to zoom 12 for points
@@ -662,7 +692,24 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const colorInUse = this.getCssVariableValue('--map-marker-in-use-color', '#4e4e4e'); // Gray
     const colorUnavailable = this.getCssVariableValue('--map-marker-unavailable-color', '#b25e5e'); // Rust
 
-    // Add cluster circles layer
+    // Add cluster circles layer - Neon radioactive style with shadow effect
+    if (!this.map.getLayer(this.clusterLayerId + '-shadow')) {
+      // Background shadow circle for depth (neon glow effect)
+      this.map.addLayer({
+        id: this.clusterLayerId + '-shadow',
+        type: 'circle',
+        source: this.clusterSourceId,
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': 'rgba(57, 255, 20, 0.6)', // Verde radioactivo neón glow
+          'circle-radius': ['step', ['get', 'point_count'], 34, 5, 42, 15, 50, 30, 58],
+          'circle-blur': 0.9,
+          'circle-translate': [0, 0],
+        },
+      });
+    }
+
+    // Main cluster circle - Neon radioactive style (yellow/green)
     if (!this.map.getLayer(this.clusterLayerId)) {
       this.map.addLayer({
         id: this.clusterLayerId,
@@ -670,24 +717,27 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         source: this.clusterSourceId,
         filter: ['has', 'point_count'],
         paint: {
+          // Colores radioactivos neón: verde y amarillo
           'circle-color': [
             'step',
             ['get', 'point_count'],
-            colorAvailable, // Green for available
+            '#39FF14', // Verde radioactivo neón para clusters pequeños (2-4)
             5,
-            colorSoon, // Amber for medium clusters
-            20,
-            colorInUse, // Neutral/Blue for large clusters
+            '#00FF41', // Verde radioactivo intenso para medianos (5-14)
+            15,
+            '#DFFF00', // Amarillo radioactivo neón para grandes (15-29)
+            30,
+            '#FFFF00', // Amarillo radioactivo puro para enormes (30+)
           ],
-          'circle-radius': ['step', ['get', 'point_count'], 20, 5, 30, 20, 40, 50, 50],
-          'circle-stroke-width': 2,
-          'circle-stroke-color': 'var(--surface-primary, #ffffff)',
-          'circle-opacity': 0.8,
+          'circle-radius': ['step', ['get', 'point_count'], 28, 5, 35, 15, 42, 30, 50],
+          'circle-stroke-width': 4,
+          'circle-stroke-color': '#ffffff', // White border for contrast
+          'circle-opacity': 1,
         },
       });
     }
 
-    // Add cluster count labels
+    // Add cluster labels - Dark text for contrast on neon background
     if (!this.map.getLayer(this.clusterCountLayerId)) {
       this.map.addLayer({
         id: this.clusterCountLayerId,
@@ -695,12 +745,24 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         source: this.clusterSourceId,
         filter: ['has', 'point_count'],
         layout: {
-          'text-field': '{point_count_abbreviated}',
-          'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-          'text-size': 12,
+          // Show average price with count: "$45 (5)"
+          'text-field': [
+            'concat',
+            '$',
+            ['to-string', ['round', ['/', ['get', 'sum'], ['get', 'point_count']]]],
+            '\n',
+            ['to-string', ['get', 'point_count']],
+            ' autos'
+          ],
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+          'text-size': 13,
+          'text-line-height': 1.2,
+          'text-anchor': 'center',
         },
         paint: {
-          'text-color': 'var(--surface-primary, #ffffff)',
+          'text-color': '#000000', // Black for contrast on neon
+          'text-halo-color': '#ffffff',
+          'text-halo-width': 1,
         },
       });
     }
@@ -725,7 +787,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           ],
           'circle-radius': 8,
           'circle-stroke-width': 2,
-          'circle-stroke-color': 'var(--surface-primary, #ffffff)',
+          'circle-stroke-color': '#ffffff',
           'circle-opacity': ['case', ['==', ['get', 'availabilityStatus'], 'unavailable'], 0.5, 1],
         },
       });
@@ -1598,14 +1660,48 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     if (this.isDarkMode()) {
       el.classList.add('user-location-marker--dark');
     }
+    // Add entering animation for new markers
+    if (!previousLocation) {
+      el.classList.add('user-location-marker--entering');
+    }
+    // Add tracking state when map follows user
+    if (this.isTrackingUser) {
+      el.classList.add('user-location-marker--tracking');
+    }
 
-    const circleSize = 20 * this.circleSizeMultiplier();
+    const circleSize = 44 * this.circleSizeMultiplier();
     el.style.setProperty('--circle-size', `${circleSize}px`);
 
-    // ✅ P0-005 FIX: Use safe DOM methods instead of innerHTML
+    // Precision ring (shows GPS accuracy)
+    if (this.locationAccuracy && this.locationAccuracy > 0) {
+      const precisionDiv = document.createElement('div');
+      precisionDiv.className = 'user-marker-precision';
+      // Convert meters to pixels (approximate: 1m = 1px at zoom 15)
+      const precisionSize = Math.min(this.locationAccuracy * 2, 200); // Cap at 200px
+      precisionDiv.style.width = `${precisionSize}px`;
+      precisionDiv.style.height = `${precisionSize}px`;
+      el.appendChild(precisionDiv);
+    }
+
+    // Halo background
     const haloDiv = document.createElement('div');
     haloDiv.className = 'user-marker-halo';
+    el.appendChild(haloDiv);
 
+    // Radar waves (3 layers)
+    const wave1 = document.createElement('div');
+    wave1.className = 'user-marker-wave-1';
+    el.appendChild(wave1);
+
+    const wave2 = document.createElement('div');
+    wave2.className = 'user-marker-wave-2';
+    el.appendChild(wave2);
+
+    const wave3 = document.createElement('div');
+    wave3.className = 'user-marker-wave-3';
+    el.appendChild(wave3);
+
+    // Avatar image
     const imgElement = document.createElement('img');
     imgElement.src = this.userAvatarUrl || 'assets/images/default-avatar.svg';
     imgElement.className = 'user-marker-avatar';
@@ -1613,8 +1709,6 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     imgElement.addEventListener('error', function handleImageError(this: HTMLImageElement) {
       this.src = 'assets/images/default-avatar.svg';
     });
-
-    el.appendChild(haloDiv);
     el.appendChild(imgElement);
 
     // Create marker
@@ -2480,6 +2574,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    * Cleanup on destroy
    */
   private cleanup(): void {
+    this.teardownResizeObserver();
     // Cancel any pending updates
     if (this.pendingUpdate) {
       cancelAnimationFrame(this.pendingUpdate);
@@ -2492,6 +2587,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     // Remove clustering layers
     if (this.map) {
       try {
+        if (this.map.getLayer(this.clusterLayerId + '-shadow')) {
+          this.map.removeLayer(this.clusterLayerId + '-shadow');
+        }
         if (this.map.getLayer(this.clusterLayerId)) {
           this.map.removeLayer(this.clusterLayerId);
         }
@@ -2636,6 +2734,14 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }
     if (changes['locationMode'] && !changes['locationMode'].firstChange) {
       this.updateMarkerStyles();
+    }
+    if (changes['isTrackingUser'] && !changes['isTrackingUser'].firstChange && this.map) {
+      // Re-render user location marker with tracking state
+      this.addUserLocationMarker();
+    }
+    if (changes['locationAccuracy'] && !changes['locationAccuracy'].firstChange && this.map) {
+      // Update precision ring when accuracy changes
+      this.addUserLocationMarker();
     }
     if (changes['markerVariant'] && !changes['markerVariant'].firstChange) {
       this.updateMapTheme();

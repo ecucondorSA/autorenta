@@ -37,6 +37,7 @@ import { MobileBottomNavPortalService } from '@core/services/ui/mobile-bottom-na
 import { ProfileService, UserProfile } from '@core/services/auth/profile.service';
 import { PushNotificationService } from '@core/services/infrastructure/push-notification.service';
 import { PwaService } from '@core/services/infrastructure/pwa.service';
+import { NotificationsService } from '@core/services/infrastructure/user-notifications.service';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
 import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
@@ -197,6 +198,7 @@ export class AppComponent implements OnInit {
   private readonly guidedTour = inject(GuidedTourService);
   private readonly localeManager = inject(LocaleManagerService);
   private readonly pushNotificationService = inject(PushNotificationService);
+  private readonly notificationsService = inject(NotificationsService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
@@ -208,7 +210,7 @@ export class AppComponent implements OnInit {
   private readonly isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
   readonly isAuthenticatedSig = this.authService.isAuthenticated;
-  // ... (resto de readonly signals) ...
+  readonly unreadNotificationsCount = this.userNotificationsService.unreadCount;
 
   triggerHapticFeedback(): void {
     this.hapticService.selection();
@@ -281,6 +283,10 @@ export class AppComponent implements OnInit {
 
   closeMobileMenuDrawer(): void {
     this.mobileMenuDrawerOpen.set(false);
+  }
+
+  goToNotifications(): void {
+    this.router.navigate(['/notifications']);
   }
 
   ngOnInit(): void {

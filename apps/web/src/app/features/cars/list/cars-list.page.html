@@ -4,6 +4,7 @@
   <!-- Recompilation trigger 1 -->
   <app-pwa-titlebar />
 
+
   <!-- Desktop Header with View Toggles (hidden on mobile when map view) -->
   <div
     class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50"
@@ -652,10 +653,24 @@
       <!-- Map Controls Overlay -->
       <div class="absolute top-4 left-4 z-10 flex flex-col gap-2">
         <button type="button"
-          class="w-10 h-10 bg-white dark:bg-slate-800 rounded-lg shadow-md flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-          (click)="centerOnUserLocation()" title="Mi ubicación"
-          aria-label="Centrar en mi ubicación">
-          <app-icon name="location" [size]="20" cssClass="text-slate-600 dark:text-slate-500" />
+          class="w-11 h-11 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-300 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
+          [class.ring-2]="isCenteredOnUser()"
+          [class.ring-primary-500]="isCenteredOnUser()"
+          [disabled]="isLocating()"
+          [attr.aria-busy]="isLocating()"
+          [attr.aria-pressed]="isCenteredOnUser()"
+          (click)="centerOnUserLocation()"
+          title="Mi ubicación"
+          aria-label="Centrar mapa en mi ubicación actual">
+          @if (isLocating()) {
+            <svg class="w-5 h-5 animate-spin text-primary-600" viewBox="0 0 24 24" fill="none">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+          } @else {
+            <app-icon name="location" [size]="22"
+              cssClass="text-slate-600 dark:text-slate-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors" />
+          }
         </button>
       </div>
 

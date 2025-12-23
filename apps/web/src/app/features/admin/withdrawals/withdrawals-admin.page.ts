@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component, OnInit, inject, signal
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {Component, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
-import { WithdrawalService } from '@core/services/payments/withdrawal.service';
+import type { WithdrawalRequest } from '@core/models';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-import type { WithdrawalRequest } from '@core/models/wallet.model';
+import { WithdrawalService } from '@core/services/payments/withdrawal.service';
 
 @Component({
   selector: 'app-withdrawals-admin',

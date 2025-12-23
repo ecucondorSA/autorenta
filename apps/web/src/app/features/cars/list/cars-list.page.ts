@@ -14,18 +14,20 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { RealtimeChannel } from '@supabase/supabase-js';
-import { Car } from '../../../core/models';
-import { BreakpointService } from '@core/services/ui/breakpoint.service';
+import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
 import { CarsCompareService } from '@core/services/cars/cars-compare.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
-import { LocationService } from '@core/services/geo/location.service';
+import { GeocodingService } from '@core/services/geo/geocoding.service';
+import { LocationCoordinates, LocationService } from '@core/services/geo/location.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { MetaService } from '@core/services/ui/meta.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
+import { BreakpointService } from '@core/services/ui/breakpoint.service';
+import { MetaService } from '@core/services/ui/meta.service';
+import { ToastService } from '@core/services/ui/toast.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { RealtimeChannel } from '@supabase/supabase-js';
+import { Car } from '../../../core/models';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
 import { DateRange, DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { PullToRefreshComponent } from '../../../shared/components/pull-to-refresh/pull-to-refresh.component';
@@ -126,8 +128,10 @@ export class CarsListPage implements OnInit, OnDestroy {
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly distanceCalculator = inject(DistanceCalculatorService);
   private readonly locationService = inject(LocationService);
+  private readonly geocodingService = inject(GeocodingService);
   private readonly urgentRentalService = inject(UrgentRentalService);
   private readonly breakpoint = inject(BreakpointService);
+  private readonly toastService = inject(ToastService);
   private readonly economyRadiusKm = ECONOMY_RADIUS_KM;
   private sortInitialized = false;
   private locationOverrideApplied = false;
@@ -167,6 +171,8 @@ export class CarsListPage implements OnInit, OnDestroy {
     }),
   );
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
+  readonly isLocating = signal(false);
+  readonly isCenteredOnUser = signal(false);
   readonly hasFilters = computed(
     () =>
       !!this['city']() ||
@@ -815,22 +821,27 @@ export class CarsListPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Initialize user location from profile or GPS
+   * Initialize user location - Uses GPS location automatically to center the map
+   * Priority: 1. URL params, 2. GPS, 3. Home location
    */
   private async initializeUserLocation(): Promise<void> {
     try {
-      if (this.userLocation()) {
-        return;
-      }
+      // Skip if there's an explicit URL override (user clicked a link with location)
       if (this.locationOverrideApplied) {
         return;
       }
-      const locationData = await this.locationService.getUserLocation();
-      if (locationData) {
-        this.userLocation.set({
-          lat: locationData.lat,
-          lng: locationData.lng,
-        });
+
+      // Try GPS first - center map on user's current position
+      const gpsLocation = await this.locationService.getCurrentPosition();
+      if (gpsLocation) {
+        this.userLocation.set({ lat: gpsLocation.lat, lng: gpsLocation.lng });
+        return;
+      }
+
+      // Fallback to home location if GPS not available
+      const homeLocation = await this.locationService.getHomeLocation();
+      if (homeLocation) {
+        this.userLocation.set({ lat: homeLocation.lat, lng: homeLocation.lng });
       }
     } catch (_error) {
       // Silently fail - user location is optional
@@ -840,6 +851,8 @@ export class CarsListPage implements OnInit, OnDestroy {
 
   onUserLocationChange(location: { lat: number; lng: number }): void {
     this.userLocation.set(location);
+    // Reset centered state when user manually moves the map
+    this.isCenteredOnUser.set(false);
     // Open drawer when user location is set and there are cars
     if (this.cars().length > 0 && !this.drawerOpen()) {
       this.drawerOpen.set(true);
@@ -885,38 +898,36 @@ export class CarsListPage implements OnInit, OnDestroy {
   }
 
   private loadLocationOverrideFromStorage(): void {
-    if (!this.isBrowser) return;
-    const raw = sessionStorage.getItem(LOCATION_OVERRIDE_KEY);
-    if (!raw) return;
-    try {
-      const parsed = JSON.parse(raw) as { lat?: number; lng?: number };
-      if (
-        typeof parsed?.lat === 'number' &&
-        typeof parsed?.lng === 'number' &&
-        this.locationService.validateCoordinates(parsed.lat, parsed.lng)
-      ) {
-        this.userLocation.set({ lat: parsed.lat, lng: parsed.lng });
-        this.locationOverrideApplied = true;
-      }
-    } catch {
-      // Ignore parse errors
+    // Session storage location is NOT automatically applied anymore
+    // User must confirm location via the banner
+    // Clear any stale session storage to avoid confusion
+    if (this.isBrowser) {
+      sessionStorage.removeItem(LOCATION_OVERRIDE_KEY);
     }
   }
 
   centerOnUserLocation(): void {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.userLocation.set({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.warn('Error getting user location:', error);
-        },
-      );
-    }
+    if (this.isLocating()) return;
+
+    this.isLocating.set(true);
+
+    void (async () => {
+      try {
+        const gpsLocation = await this.locationService.getCurrentPosition();
+
+        if (!gpsLocation) {
+          this.toastService.warning('Ubicación', 'No se pudo obtener tu ubicación');
+          return;
+        }
+
+        this.userLocation.set({ lat: gpsLocation.lat, lng: gpsLocation.lng });
+        this.isCenteredOnUser.set(true);
+      } catch (error) {
+        this.toastService.error('Error', 'Verifica los permisos de geolocalización');
+      } finally {
+        this.isLocating.set(false);
+      }
+    })();
   }
 
   async loadCars(): Promise<void> {

@@ -1,7 +1,28 @@
 import {Component, computed, inject, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
 
-import { IonicModule, ModalController, AlertController } from '@ionic/angular';
+import {
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonTitle,
+  IonButton,
+  IonIcon,
+  IonContent,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonSpinner,
+  IonProgressBar,
+  IonBadge,
+  IonGrid,
+  IonRow,
+  IonCol,
+  ModalController,
+  AlertController,
+} from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { DriverProfileService } from '@core/services/auth/driver-profile.service';
 import { BonusProtectorService } from '@core/services/payments/bonus-protector.service';
@@ -24,7 +45,27 @@ import { MetaService } from '@core/services/ui/meta.service';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-driver-profile-page',
-  imports: [IonicModule, RouterLink],
+  imports: [
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonBackButton,
+    IonTitle,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardTitle,
+    IonSpinner,
+    IonProgressBar,
+    IonBadge,
+    IonGrid,
+    IonRow,
+    IonCol,
+    RouterLink,
+  ],
   template: `
     <ion-header class="header-primary">
       <ion-toolbar>

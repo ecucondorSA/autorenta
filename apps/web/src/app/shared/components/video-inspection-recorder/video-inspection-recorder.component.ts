@@ -235,7 +235,7 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
   private mediaRecorder: MediaRecorder | null = null;
   private recordedChunks: Blob[] = [];
   private stream: MediaStream | null = null;
-  private recordingTimer: any = null;
+  private recordingTimer: ReturnType<typeof setInterval> | null = null;
 
   async ngAfterViewInit() {
     await this.initCamera();
@@ -255,7 +255,7 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
       if (this.videoElement) {
         this.videoElement.nativeElement.srcObject = this.stream;
       }
-    } catch (err) {
+    } catch {
       this.recorderError.emit('No se pudo acceder a la cámara');
     }
   }
@@ -285,7 +285,7 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
         this.updateGuide(duration);
         this.checkQuality();
       }, 1000);
-    } catch (err) {
+    } catch {
       this.recorderError.emit('Error al iniciar grabación');
     }
   }
@@ -319,7 +319,7 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
       });
 
       this.videoUploaded.emit(videoPath);
-    } catch (err) {
+    } catch {
       this.recorderError.emit('Error al subir video');
     } finally {
       this.isProcessing.set(false);
