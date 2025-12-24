@@ -1,21 +1,21 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { of } from 'rxjs';
-import type { Booking } from '../../../core/models';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
 import { BookingOpsService } from '@core/services/bookings/booking-ops.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
-import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
-import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
-import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { MetaService } from '@core/services/ui/meta.service';
-import { PaymentsService } from '@core/services/payments/payments.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { TrafficInfractionsService } from '@core/services/infrastructure/traffic-infractions.service';
+import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
+import { PaymentsService } from '@core/services/payments/payments.service';
+import { MetaService } from '@core/services/ui/meta.service';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { AlertController } from '@ionic/angular';
+import { of } from 'rxjs';
+import type { Booking } from '../../../core/models';
 import { BookingDetailPage } from './booking-detail.page';
 
 describe('BookingDetailPage - return checklist', () => {
@@ -25,6 +25,12 @@ describe('BookingDetailPage - return checklist', () => {
   let loggerService: jasmine.SpyObj<LoggerService>;
 
   beforeEach(async () => {
+    try {
+      window.localStorage?.clear();
+    } catch {
+      // ignore
+    }
+
     bookingsService = jasmine.createSpyObj('BookingsService', ['updateBooking']);
     const baseBooking: Booking = {
       id: 'booking-1',

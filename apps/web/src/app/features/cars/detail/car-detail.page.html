@@ -16,7 +16,7 @@
         }
       </span>
       @if (distanceKm() !== null && distanceKm() !== undefined) {
-        <span class="px-1.5 sm:px-2 py-0.5 bg-surface-raised border border-border-default rounded text-[10px] sm:text-xs text-text-secondary whitespace-nowrap flex-shrink-0">
+        <span class="px-1.5 sm:px-2 py-0.5 bg-surface-raised border border-border-default rounded text-xs sm:text-xs text-text-secondary whitespace-nowrap flex-shrink-0">
           a {{ distanceKm() | number: '1.1-1' }} km
         </span>
       }
@@ -64,7 +64,7 @@
 
           <!-- Photo Counter Badge -->
           @if (allPhotos().length > 1) {
-            <div class="absolute top-2 right-2 sm:top-3 sm:right-3 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-black/70 backdrop-blur-md text-white rounded-md sm:rounded-lg text-[10px] sm:text-xs font-medium">
+            <div class="absolute top-2 right-2 sm:top-3 sm:right-3 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-black/70 backdrop-blur-md text-white rounded-md sm:rounded-lg text-xs sm:text-xs font-medium">
               {{ currentPhotoIndex() + 1 }} / {{ allPhotos().length }}
             </div>
           }
@@ -103,7 +103,7 @@
                 }
               }
               @if (allPhotos().length > 5) {
-                <span class="text-white/80 text-[10px] sm:text-xs ml-0.5 sm:ml-1">+{{ allPhotos().length - 5 }}</span>
+                <span class="text-white/80 text-xs sm:text-xs ml-0.5 sm:ml-1">+{{ allPhotos().length - 5 }}</span>
               }
             </div>
           }
@@ -129,13 +129,13 @@
           <!-- Badges -->
           <div class="flex flex-wrap gap-1.5 sm:gap-2">
             @if (car()?.fuel_policy === 'full_full') {
-              <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium bg-cta-default/10 text-cta-default">
+              <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-xs font-medium bg-cta-default/10 text-cta-default">
                 <app-icon name="lightning" [size]="10" cssClass="sm:[&>svg]:w-3 sm:[&>svg]:h-3" />
                 Lleno/Lleno
               </span>
             }
             @if (!car()?.mileage_limit || car()?.mileage_limit === 0) {
-              <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium bg-success-default/10 text-success-default">
+              <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-xs font-medium bg-success-default/10 text-success-default">
                 <app-icon name="infinity" [size]="10" cssClass="sm:[&>svg]:w-3 sm:[&>svg]:h-3" />
                 Km Ilimitado
               </span>
@@ -143,7 +143,7 @@
           </div>
 
           <!-- Quick Features -->
-          <div class="grid grid-cols-2 gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-text-secondary">
+          <div class="grid grid-cols-2 gap-1.5 sm:gap-2 text-xs sm:text-xs text-text-secondary">
             <div class="flex items-center gap-1.5 sm:gap-2">
               <app-icon name="users" [size]="12" cssClass="sm:[&>svg]:w-3.5 sm:[&>svg]:h-3.5" />
               <span>{{ car()?.seats }} asientos</span>

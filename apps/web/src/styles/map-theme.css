@@ -89,7 +89,7 @@
   justify-content: center;
   color: white;
   font-weight: 600;
-  font-size: 11px;
+  font-size: 12px;
   transition: all 0.2s ease;
 }
 
@@ -131,7 +131,7 @@
 
 .marker-price-simple {
   color: white;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   text-align: center;
   line-height: 1.2;
@@ -246,7 +246,7 @@
   }
 
   .marker-price {
-    font-size: 11px;
+    font-size: 12px;
     padding: 2px 6px;
   }
 }
@@ -448,7 +448,7 @@
 .mapboxgl-ctrl-attrib {
   background-color: rgba(20, 20, 20, 0.7) !important;
   backdrop-filter: blur(5px);
-  font-size: 10px;
+  font-size: 12px;
   padding: 2px 6px;
   border-radius: 4px;
 }
@@ -533,7 +533,7 @@
   .car-marker {
     width: 36px;
     height: 36px;
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .car-marker-price {
@@ -624,7 +624,7 @@
 }
 
 .pill-subtitle {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   opacity: 0.9;
 }
@@ -647,7 +647,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: bold;
   z-index: 10;
   box-shadow: 0 2px 4px var(--shadow-dark-alpha-20, rgba(0, 0, 0, 0.2));

@@ -110,7 +110,7 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
                   </svg>
                 </div>
               </div>
-              <p class="text-[11px] text-gray-500 text-center mt-2">
+              <p class="text-xs text-gray-500 text-center mt-2">
                 @if (copiedCode()) {
                   <span class="text-emerald-400 font-medium flex items-center justify-center gap-1">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,13 +129,13 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
               <div class="flex items-center justify-center gap-4 mb-5">
                 <div class="flex-1 bg-gray-800/50 rounded-xl p-3 text-center border border-gray-700/50">
                   <div class="text-2xl font-bold text-white">{{ stats()!.total_referrals }}</div>
-                  <div class="text-[10px] text-gray-400 uppercase tracking-wider font-medium">Referidos</div>
+                  <div class="text-xs text-gray-400 uppercase tracking-wider font-medium">Referidos</div>
                 </div>
                 <div class="flex-1 bg-gradient-to-br from-emerald-900/30 to-emerald-800/20 rounded-xl p-3 text-center border border-emerald-700/30">
                   <div class="text-2xl font-bold text-emerald-400">
                     <span class="text-sm">$</span>{{ totalEarned() | number:'1.0-0' }}
                   </div>
-                  <div class="text-[10px] text-emerald-400/70 uppercase tracking-wider font-medium">Ganado</div>
+                  <div class="text-xs text-emerald-400/70 uppercase tracking-wider font-medium">Ganado</div>
                 </div>
               </div>
             }

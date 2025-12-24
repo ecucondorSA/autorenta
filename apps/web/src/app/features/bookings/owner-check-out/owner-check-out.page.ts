@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
-import {Component, OnInit, computed, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component, OnInit, computed, inject, signal
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
-import { Booking } from '../../../core/models';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { IonicModule } from '@ionic/angular';
+import { Booking } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 
 /**
@@ -163,7 +165,7 @@ export class OwnerCheckOutPage implements OnInit {
       }
 
       // Navegar al detalle de la reserva
-      this.router.navigate(['/bookings/detail', booking.id]);
+      this.router.navigate(['/bookings/owner', booking.id]);
     } catch (error) {
       console.error('Error en check-out:', error);
       this.toastService.error(

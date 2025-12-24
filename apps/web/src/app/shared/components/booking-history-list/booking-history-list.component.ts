@@ -113,7 +113,7 @@ import type { Booking } from '../../../core/models';
               <!-- Status Badge & Action -->
               <div class="flex items-center gap-2 flex-shrink-0">
                 <span
-                  class="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase"
+                  class="text-xs font-bold px-2 py-0.5 rounded-full uppercase"
                   [ngClass]="getStatusClasses(booking.status)"
                 >
                   {{ getStatusLabel(booking.status) }}

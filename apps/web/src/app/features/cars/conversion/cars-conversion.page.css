@@ -204,7 +204,7 @@
 
 .cars-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: 1.5rem;
 }
 
@@ -222,6 +222,8 @@
 .car-preview-wrapper {
   position: relative;
   cursor: pointer;
+  width: 100%;
+  min-width: 0;
 }
 
 .car-preview-wrapper::after {
@@ -238,7 +240,7 @@
 .car-preview-overlay {
   position: absolute;
   inset: 0;
-  display: flex;
+  display: none; /* Ocultar en móvil */
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
@@ -247,6 +249,13 @@
   transition: opacity 0.3s ease;
   z-index: 2;
   pointer-events: none;
+}
+
+/* Solo mostrar overlay en desktop con hover */
+@media (min-width: 769px) {
+  .car-preview-overlay {
+    display: flex;
+  }
 }
 
 .overlay-text {
@@ -285,7 +294,7 @@
 /* Skeleton Loading */
 .skeleton-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: 1.5rem;
 }
 

@@ -77,7 +77,7 @@ interface CalendarDay {
           style="display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 2px !important;"
         >
           @for (day of weekDays; track day) {
-            <div class="text-center text-[10px] font-medium text-text-muted py-1">
+            <div class="text-center text-xs font-medium text-text-muted py-1">
               {{ day }}
             </div>
           }
@@ -107,7 +107,7 @@ interface CalendarDay {
       </div>
 
       <!-- Legend -->
-      <div class="flex items-center justify-center gap-4 p-2 border-t border-border-default bg-surface-base text-[10px]">
+      <div class="flex items-center justify-center gap-4 p-2 border-t border-border-default bg-surface-base text-xs">
         <div class="flex items-center gap-1.5">
           <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
           <span class="text-text-primary font-medium">Disponible</span>
@@ -276,7 +276,7 @@ export class AvailabilityMiniCalendarComponent implements OnInit {
 
   getDayClasses(day: CalendarDay): string {
     const base =
-      'flex items-center justify-center text-[10px] sm:text-xs rounded-full transition-colors';
+      'flex items-center justify-center text-xs sm:text-xs rounded-full transition-colors';
 
     if (!day.isCurrentMonth) {
       return `${base} text-text-muted/30`;

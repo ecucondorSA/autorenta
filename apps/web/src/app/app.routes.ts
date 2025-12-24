@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from '@core/guards/auth.guard';
+import { GuestGuard } from '@core/guards/guest.guard';
 import { kycGuard, onboardingGuard } from '@core/guards/onboarding.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    // GuestGuard removido - marketplace debe ser accesible para todos (autenticados y no autenticados)
-    // El GuestGuard solo aplica a rutas de auth (/auth/login, /auth/register)
+    canActivate: [GuestGuard],
     data: { layout: 'full-bleed' },
     loadComponent: () =>
       import('./features/marketplace/marketplace-v2.page').then((m) => m.MarketplaceV2Page),

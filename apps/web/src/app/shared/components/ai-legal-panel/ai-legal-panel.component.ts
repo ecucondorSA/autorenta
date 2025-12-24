@@ -83,7 +83,7 @@ import { GeminiService } from '@core/services/ai/gemini.service';
             <div>
               <h3 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 Asistente Legal
-                <span class="text-[10px] bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                <span class="text-xs bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
                   AI
                 </span>
               </h3>
@@ -215,9 +215,9 @@ import { GeminiService } from '@core/services/ai/gemini.service';
 
                     @if (answer()!.sources.length > 0) {
                       <div class="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-indigo-200/50 dark:border-indigo-700/30">
-                        <span class="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider mr-1">Fuentes:</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider mr-1">Fuentes:</span>
                         @for (source of answer()!.sources; track source) {
-                          <span class="inline-flex items-center gap-1 rounded-full bg-white dark:bg-gray-800 border border-indigo-200 dark:border-indigo-700 px-2 py-0.5 text-[10px] font-medium text-indigo-700 dark:text-indigo-400">
+                          <span class="inline-flex items-center gap-1 rounded-full bg-white dark:bg-gray-800 border border-indigo-200 dark:border-indigo-700 px-2 py-0.5 text-xs font-medium text-indigo-700 dark:text-indigo-400">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
@@ -233,13 +233,13 @@ import { GeminiService } from '@core/services/ai/gemini.service';
                     <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <p class="text-[11px] italic text-gray-400 dark:text-gray-500">{{ answer()!.disclaimer }}</p>
+                    <p class="text-xs italic text-gray-400 dark:text-gray-500">{{ answer()!.disclaimer }}</p>
                   </div>
 
                   <!-- Related questions -->
                   @if (answer()!.relatedQuestions?.length) {
                     <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3">
-                      <p class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                      <p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>

@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
-import {Component, OnInit, computed, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component, OnInit, computed, inject, signal
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
-import { v4 as uuidv4 } from 'uuid';
-import { Booking } from '../../../core/models';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { IonicModule } from '@ionic/angular';
+import { v4 as uuidv4 } from 'uuid';
+import { Booking } from '../../../core/models';
 
 /**
  * Owner Damage Report Page
@@ -109,7 +111,7 @@ export class OwnerDamageReportPage implements OnInit {
       // Validar que no haya reportado daños ya
       if (booking.owner_reported_damages) {
         this.toastService.error('Error', 'Ya has reportado daños para esta reserva');
-        this.router.navigate(['/bookings/detail', bookingId]);
+        this.router.navigate(['/bookings/owner', bookingId]);
         return;
       }
 
@@ -246,7 +248,7 @@ export class OwnerDamageReportPage implements OnInit {
       );
 
       // Navigate to booking detail
-      this.router.navigate(['/bookings/detail', booking.id]);
+      this.router.navigate(['/bookings/owner', booking.id]);
     } catch (error) {
       console.error('Error submitting damage report:', error);
       this.toastService.error(
@@ -266,7 +268,7 @@ export class OwnerDamageReportPage implements OnInit {
       type: 'damage_reported',
       title: 'Reporte de daños en tu reserva',
       body: `El propietario ha reportado daños por $${damageAmountUsd} USD en el vehículo ${booking.car_title}. El monto será deducido de tu depósito de garantía.`,
-      cta_link: `/bookings/detail/${booking.id}`,
+      cta_link: `/bookings/${booking.id}`,
       metadata: {
         booking_id: booking.id,
         damage_amount_cents: damageAmountCents,

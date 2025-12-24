@@ -55,7 +55,7 @@
 
 .label-value {
   fill: var(--text-secondary, #6b7280);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 /* Dark mode support */
@@ -80,7 +80,7 @@
 /* Responsive sizing */
 @media (max-width: 640px) {
   .label-text {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .label-value {

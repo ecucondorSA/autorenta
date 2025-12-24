@@ -175,7 +175,7 @@
 
 .marker-instant-booking-indicator::after {
   content: '⚡';
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.25;
 }
 
@@ -342,7 +342,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-dark, #1a1a1a);
   box-shadow: 0 2px 4px var(--shadow-dark-alpha-20, rgba(0, 0, 0, 0.2));
 }
@@ -806,7 +806,7 @@ img.car-popup-image {
   transform: translateX(-50%);
   background: var(--cta-default); /* Reemplazado gradiente con color sólido */
   color: white;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   padding: 3px 8px;
   border-radius: 12px;
@@ -1151,7 +1151,7 @@ img.car-popup-image {
 }
 
 .user-location-popup .text-text-tertiary {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
   margin-bottom: 8px;
 }

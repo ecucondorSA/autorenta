@@ -2,7 +2,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone, PLATFORM_ID, inject, signal } from '@angular/core';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { Observable, Subject, catchError, map, of, tap } from 'rxjs';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { Observable, Subject, catchError, from, map, of, switchMap, tap } from 'rxjs';
 import { Socket, io } from 'socket.io-client';
 
 export interface AIAgentUserLocation {
@@ -99,8 +100,13 @@ export class RentarfastAgentService {
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly ngZone = inject(NgZone);
+  private readonly supabase = inject(SupabaseClientService);
 
-  private readonly API_URL = 'https://autorenta-agent-1029437966017.us-central1.run.app';
+  // Fallback URL (Cloud Run) - solo se usa si Supabase Edge Function falla
+  private readonly CLOUD_RUN_URL = 'https://autorenta-agent-1029437966017.us-central1.run.app';
+
+  // Flag para usar Edge Function (Gemini 2.0 Flash + Function Calling)
+  private readonly USE_EDGE_FUNCTION = true;
 
   // Socket.IO connection
   private socket: Socket | null = null;
@@ -143,7 +149,7 @@ export class RentarfastAgentService {
    * Initialize Socket.IO connection for real-time communication
    */
   private initializeSocket(): void {
-    this.socket = io(this.API_URL, {
+    this.socket = io(this.CLOUD_RUN_URL, {
       transports: ['websocket', 'polling'],
       autoConnect: true,
       reconnection: true,
@@ -303,6 +309,15 @@ export class RentarfastAgentService {
   }
 
   sendMessageRealtimeWithContext(message: string, context?: ChatContext): void {
+    // ALWAYS use Edge Function when flag is true (Gemini 2.0 Flash + Function Calling)
+    // This provides database access for real user data (wallet, bookings, etc.)
+    if (this.USE_EDGE_FUNCTION) {
+      this.logger.debug('[Rentarfast] Using Edge Function (Gemini 2.0 Flash + Function Calling)');
+      this.sendMessage(message, context).subscribe();
+      return;
+    }
+
+    // Legacy: WebSocket to Cloud Run (no database access)
     if (!this.socket?.connected) {
       console.warn('[Rentarfast] WebSocket not connected, falling back to HTTP');
       this.sendMessage(message, context).subscribe();
@@ -394,7 +409,8 @@ export class RentarfastAgentService {
   }
 
   /**
-   * Send a message via HTTP (fallback)
+   * Send a message via Supabase Edge Function (Gemini 2.0 Flash + Function Calling)
+   * This is the primary method - provides full database access for wallet, bookings, etc.
    */
   sendMessage(message: string, context?: ChatContext): Observable<AgentChatResponse> {
     this._isLoading.set(true);
@@ -408,20 +424,80 @@ export class RentarfastAgentService {
     };
     this._messages.update(msgs => [...msgs, userMessage]);
 
+    if (this.USE_EDGE_FUNCTION) {
+      return this.sendViaEdgeFunction(message, context);
+    } else {
+      return this.sendViaCloudRun(message, context);
+    }
+  }
+
+  /**
+   * Send message via Supabase Edge Function
+   * Uses Gemini 2.0 Flash with Function Calling for database access
+   */
+  private sendViaEdgeFunction(message: string, context?: ChatContext): Observable<AgentChatResponse> {
+    const request = {
+      message,
+      sessionId: this._sessionId() ?? undefined,
+      context,
+    };
+
+    return from(
+      this.supabase.getClient().functions.invoke<AgentChatResponse>('rentarfast-agent', {
+        body: request,
+      })
+    ).pipe(
+      map(result => {
+        if (result.error) {
+          throw new Error(result.error.message || 'Edge Function error');
+        }
+        return result.data as AgentChatResponse;
+      }),
+      tap(response => {
+        if (response.sessionId) {
+          this._sessionId.set(response.sessionId);
+        }
+
+        const agentMessage: ChatMessage = {
+          id: crypto.randomUUID(),
+          role: 'agent',
+          content: response.response,
+          timestamp: new Date(),
+          toolsUsed: response.toolsUsed,
+        };
+        this._messages.update(msgs => [...msgs, agentMessage]);
+
+        this.logger.debug('[Rentarfast] Edge Function response', {
+          toolsUsed: response.toolsUsed,
+          sessionId: response.sessionId,
+        });
+      }),
+      catchError(error => {
+        this.logger.warn('[Rentarfast] Edge Function failed, falling back to Cloud Run', error);
+        // Fallback to Cloud Run if Edge Function fails
+        return this.sendViaCloudRun(message, context);
+      }),
+      tap(() => this._isLoading.set(false))
+    );
+  }
+
+  /**
+   * Send message via Cloud Run (fallback)
+   * Legacy method without database access
+   */
+  private sendViaCloudRun(message: string, context?: ChatContext): Observable<AgentChatResponse> {
     const request: AgentChatRequest = {
       message,
       sessionId: this._sessionId() ?? undefined,
       context,
     };
 
-    return this.http.post<AgentChatResponse>(`${this.API_URL}/api/chat`, request).pipe(
+    return this.http.post<AgentChatResponse>(`${this.CLOUD_RUN_URL}/api/chat`, request).pipe(
       tap(response => {
-        // Update session ID if returned
         if (response.sessionId) {
           this._sessionId.set(response.sessionId);
         }
 
-        // Add agent response to history
         const agentMessage: ChatMessage = {
           id: crypto.randomUUID(),
           role: 'agent',
@@ -434,7 +510,6 @@ export class RentarfastAgentService {
       catchError(error => {
         console.error('Rentarfast agent error:', error);
 
-        // Add error message
         const errorMessage: ChatMessage = {
           id: crypto.randomUUID(),
           role: 'agent',
@@ -469,9 +544,20 @@ export class RentarfastAgentService {
    * Get health status of the agent
    */
   healthCheck(): Observable<boolean> {
-    return this.http.get<{ status: string }>(`${this.API_URL}/health`).pipe(
-      map(response => response.status === 'ok'),
-      catchError(() => of(false))
+    // Check Edge Function health via Supabase
+    return from(
+      this.supabase.getClient().functions.invoke('rentarfast-agent', {
+        body: { healthCheck: true },
+      })
+    ).pipe(
+      map(result => !result.error && result.data?.status === 'ok'),
+      catchError(() => {
+        // Fallback to Cloud Run health check
+        return this.http.get<{ status: string }>(`${this.CLOUD_RUN_URL}/health`).pipe(
+          map(response => response.status === 'ok'),
+          catchError(() => of(false))
+        );
+      })
     );
   }
 

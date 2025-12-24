@@ -4,19 +4,19 @@ import { GuestGuard } from '@core/guards/guest.guard';
 export const AUTH_ROUTES: Routes = [
   {
     path: 'login',
-    canMatch: [GuestGuard],
+    canActivate: [GuestGuard],
     data: { layout: 'full-bleed', hideFooter: true, hideMobileNav: true },
     loadComponent: () => import('./login/login.page').then((m) => m.LoginPage),
   },
   {
     path: 'register',
-    canMatch: [GuestGuard],
+    canActivate: [GuestGuard],
     data: { layout: 'full-bleed', hideFooter: true, hideMobileNav: true },
     loadComponent: () => import('./register/register.page').then((m) => m.RegisterPage),
   },
   {
     path: 'reset-password',
-    canMatch: [GuestGuard],
+    canActivate: [GuestGuard],
     data: { layout: 'full-bleed', hideFooter: true, hideMobileNav: true },
     loadComponent: () =>
       import('./reset-password/reset-password.page').then((m) => m.ResetPasswordPage),

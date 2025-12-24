@@ -65,7 +65,7 @@
               d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
           @if (unreadNotificationsCount() > 0) {
-            <span class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold
+            <span class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs font-bold
                          rounded-full min-w-[18px] h-[18px] flex items-center justify-center
                          shadow-sm animate-pulse">
               {{ unreadNotificationsCount() > 99 ? '99+' : unreadNotificationsCount() }}
@@ -147,7 +147,7 @@
             <div class="py-2">
               <!-- SECCIÓN: MIS ACTIVIDADES -->
               <div class="px-4 py-2">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-blue-600">Mis
+                <p class="text-xs font-bold uppercase tracking-wider text-blue-600">Mis
                   Actividades</p>
               </div>
               <a routerLink="/bookings" (click)="closeProfileMenu()" class="menu-item group"
@@ -205,7 +205,7 @@
               <div class="my-2 mx-3 border-t border-border-subtle"></div>
               <!-- SECCIÓN: COMUNICACIÓN -->
               <div class="px-4 py-2">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-violet-600">
+                <p class="text-xs font-bold uppercase tracking-wider text-violet-600">
                   Comunicación</p>
               </div>
               <a routerLink="/messages" (click)="closeProfileMenu()" class="menu-item group"
@@ -229,7 +229,7 @@
               <div class="my-2 mx-3 border-t border-border-subtle"></div>
               <!-- SECCIÓN: FINANZAS -->
               <div class="px-4 py-2">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Finanzas
+                <p class="text-xs font-bold uppercase tracking-wider text-emerald-600">Finanzas
                 </p>
               </div>
               <a routerLink="/wallet" (click)="closeProfileMenu()" class="menu-item group"
@@ -266,12 +266,12 @@
                 </div>
                 <span class="flex-1 font-luxury">Mis Ganancias</span>
                 <span
-                  class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">NEW</span>
+                  class="text-xs font-semibold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">NEW</span>
               </a>
               <div class="my-2 mx-3 border-t border-border-subtle"></div>
               <!-- SECCIÓN: CONFIGURACIÓN -->
               <div class="px-4 py-2">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                <p class="text-xs font-bold uppercase tracking-wider text-gray-500">
                   Configuración</p>
               </div>
               <a routerLink="/profile" (click)="closeProfileMenu()" class="menu-item group"
@@ -322,7 +322,7 @@
               <!-- SECCIÓN: AYUDA -->
               <div class="px-4 py-2">
                 <p
-                  class="text-[10px] font-bold uppercase tracking-wider text-amber-600 font-friendly">
+                  class="text-xs font-bold uppercase tracking-wider text-amber-600 font-friendly">
                   Ayuda</p>
               </div>
               <a routerLink="/help" (click)="closeProfileMenu()" class="menu-item group"
@@ -332,7 +332,7 @@
                 </div>
                 <span class="flex-1 font-friendly">Centro de Ayuda</span>
                 <span
-                  class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">NEW</span>
+                  class="text-xs font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">NEW</span>
               </a>
               <a routerLink="/profile/contact" (click)="closeProfileMenu()" class="menu-item group"
                 role="menuitem">

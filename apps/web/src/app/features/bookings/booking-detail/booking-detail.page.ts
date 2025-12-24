@@ -227,8 +227,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       }
     }
 
-    // P2P wallet flow: pending + wallet = already paid, waiting for owner approval
-    if (status === 'pending' && booking.payment_mode === 'wallet') {
+    // Request/approval flow: pending + selected guarantee mode = waiting for owner approval
+    if (status === 'pending' && !!booking.payment_mode) {
       return 2; // Step 3: "Esperando aprobación" (0-indexed = 2)
     }
 
@@ -328,13 +328,13 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   });
 
   /**
-   * P2P wallet booking pending owner approval
-   * When true: show "waiting for approval" UI instead of "pay now" UI
+   * Pending booking waiting for owner approval (request flow).
+   * When true: show "waiting for approval" UI instead of "pay now" UI.
    */
   readonly isPendingOwnerApproval = computed(() => {
     const booking = this.booking();
     if (!booking) return false;
-    return booking.status === 'pending' && booking.payment_mode === 'wallet';
+    return booking.status === 'pending' && !!booking.payment_mode;
   });
 
   /**
@@ -344,7 +344,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   readonly needsPayment = computed(() => {
     const booking = this.booking();
     if (!booking) return false;
-    return booking.status === 'pending' && booking.payment_mode !== 'wallet';
+    return booking.status === 'pending' && !booking.payment_mode;
   });
 
   private countdownInterval: number | null = null;

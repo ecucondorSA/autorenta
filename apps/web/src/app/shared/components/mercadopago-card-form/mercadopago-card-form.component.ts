@@ -189,21 +189,69 @@ export interface MercadoPagoCardTokenGeneratedEvent {
   styles: [
     `
       .mp-payment-brick-container {
-        max-width: min(500px, 100%);
+        width: 100%;
+        max-width: 100%;
         margin: 0 auto;
+      }
+
+      @media (min-width: 640px) {
+        .mp-payment-brick-container {
+          max-width: 500px;
+        }
       }
 
       .payment-brick-wrapper {
         min-height: 300px;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
       }
 
       /* Override MercadoPago Brick styles for better integration */
       :host ::ng-deep .mp-bricks-container {
         font-family: inherit !important;
+        max-width: 100% !important;
+        width: 100% !important;
       }
 
       :host ::ng-deep [data-testid="payment-form"] {
         padding: 0 !important;
+      }
+
+      :host ::ng-deep [data-testid="payment-form"] label {
+        white-space: normal !important;
+        line-height: 1.2 !important;
+      }
+
+      :host ::ng-deep [data-testid="payment-form"] input,
+      :host ::ng-deep [data-testid="payment-form"] select,
+      :host ::ng-deep [data-testid="payment-form"] textarea {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      /* Mobile overflow guardrails for Brick internals */
+      :host ::ng-deep .mp-payment-brick-container * {
+        max-width: 100% !important;
+        box-sizing: border-box;
+      }
+
+      :host ::ng-deep .mp-payment-brick-container iframe {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      /* MercadoPago uses Andes UI internally; stack columns on very small screens */
+      @media (max-width: 420px) {
+        :host ::ng-deep .mp-payment-brick-container .andes-form__row {
+          flex-direction: column !important;
+          align-items: stretch !important;
+        }
+
+        :host ::ng-deep .mp-payment-brick-container .andes-form__column {
+          width: 100% !important;
+          flex: 1 1 100% !important;
+        }
       }
     `,
   ],

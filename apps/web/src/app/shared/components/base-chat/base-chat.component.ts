@@ -144,14 +144,14 @@ export interface ChatContext {
                 @if (!isOwnMessage(message)) {
                   <div class="flex items-end gap-2 max-w-[80%]">
                     <!-- Small avatar -->
-                    <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-[10px] font-bold mb-1">
+                    <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-xs font-bold mb-1">
                       {{ getInitials() }}
                     </div>
                     <div class="relative">
                       <div class="rounded-2xl rounded-bl-md bg-white dark:bg-surface-secondary border border-border-default px-4 py-2.5 shadow-sm">
                         <p class="text-sm text-text-primary leading-relaxed whitespace-pre-wrap break-words">{{ message.body }}</p>
                         <div class="mt-1 flex items-center justify-end">
-                          <span class="text-[10px] text-text-muted">{{ formatTime(message.created_at) }}</span>
+                          <span class="text-xs text-text-muted">{{ formatTime(message.created_at) }}</span>
                         </div>
                       </div>
                     </div>
@@ -165,7 +165,7 @@ export interface ChatContext {
                       <div class="rounded-2xl rounded-br-md bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-2.5 shadow-sm">
                         <p class="text-sm text-white leading-relaxed whitespace-pre-wrap break-words">{{ message.body }}</p>
                         <div class="mt-1 flex items-center justify-end gap-1">
-                          <span class="text-[10px] text-white/70">{{ formatTime(message.created_at) }}</span>
+                          <span class="text-xs text-white/70">{{ formatTime(message.created_at) }}</span>
                           <!-- Status indicators -->
                           @if (getMessageStatus(message) === 'sent') {
                             <svg class="h-3.5 w-3.5 text-white/70" fill="currentColor" viewBox="0 0 16 15">
@@ -185,7 +185,7 @@ export interface ChatContext {
                         </div>
                       </div>
                       <!-- "Tú" label -->
-                      <span class="absolute -bottom-4 right-2 text-[10px] text-text-muted font-medium">Tú</span>
+                      <span class="absolute -bottom-4 right-2 text-xs text-text-muted font-medium">Tú</span>
                     </div>
                   </div>
                 }
@@ -196,7 +196,7 @@ export interface ChatContext {
             @if (recipientTyping()) {
               <div class="flex justify-start">
                 <div class="flex items-end gap-2">
-                  <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-[10px] font-bold">
+                  <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-xs font-bold">
                     {{ getInitials() }}
                   </div>
                   <div class="rounded-2xl rounded-bl-md bg-white dark:bg-surface-secondary border border-border-default px-4 py-3 shadow-sm">

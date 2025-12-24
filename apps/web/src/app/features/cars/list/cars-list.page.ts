@@ -922,6 +922,14 @@ export class CarsListPage implements OnInit, OnDestroy {
 
         this.userLocation.set({ lat: gpsLocation.lat, lng: gpsLocation.lng });
         this.isCenteredOnUser.set(true);
+
+        // Move map camera to the user's location (north-up) so the UI matches the intent
+        // of the "Mi ubicación" control.
+        this.carsMapComponent?.flyTo(
+          { lat: gpsLocation.lat, lng: gpsLocation.lng },
+          15,
+          { bearing: 0, pitch: 0 },
+        );
       } catch (error) {
         this.toastService.error('Error', 'Verifica los permisos de geolocalización');
       } finally {

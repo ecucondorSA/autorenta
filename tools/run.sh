@@ -31,8 +31,37 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 WEB_DIR="$PROJECT_ROOT/apps/web"
-WORKER_DIR="$PROJECT_ROOT/functions/workers/payments_webhook"
-AI_WORKER_DIR="$PROJECT_ROOT/functions/workers/ai-car-generator"
+resolve_dir() {
+    # Prints first existing directory from args; prints empty string if none exist.
+    for candidate in "$@"; do
+        if [ -d "$candidate" ]; then
+            echo "$candidate"
+            return 0
+        fi
+    done
+    echo ""
+}
+
+WORKER_DIR="$(resolve_dir \
+    "$PROJECT_ROOT/functions/workers/payments_webhook" \
+    "$PROJECT_ROOT/functions/workers/payments-webhook" \
+    "$PROJECT_ROOT/workers/payments_webhook" \
+    "$PROJECT_ROOT/workers/payments-webhook" \
+)"
+
+AI_WORKER_DIR="$(resolve_dir \
+    "$PROJECT_ROOT/functions/workers/ai-car-generator" \
+    "$PROJECT_ROOT/functions/workers/ai_car_generator" \
+    "$PROJECT_ROOT/workers/ai-car-generator" \
+    "$PROJECT_ROOT/workers/ai_car_generator" \
+)"
+
+DOC_VERIFIER_WORKER_DIR="$(resolve_dir \
+    "$PROJECT_ROOT/functions/workers/doc-verifier" \
+    "$PROJECT_ROOT/functions/workers/doc_verifier" \
+    "$PROJECT_ROOT/workers/doc-verifier" \
+    "$PROJECT_ROOT/workers/doc_verifier" \
+)"
 E2E_DIR="$WEB_DIR/e2e"
 
 # Configuration
@@ -64,6 +93,15 @@ check_command() {
     fi
 }
 
+require_dir() {
+    local label="$1"
+    local dir="$2"
+
+    if [ -z "$dir" ] || [ ! -d "$dir" ]; then
+        error "$label directory not found. This workspace snapshot may not include Cloudflare Workers source code. Expected under one of: functions/workers/* or workers/*."
+    fi
+}
+
 ###############################################################################
 # DEVELOPMENT COMMANDS
 ###############################################################################
@@ -73,8 +111,12 @@ cmd_dev() {
 
     # Install dependencies if needed
     [ ! -d "$WEB_DIR/node_modules" ] && cmd_install_web
-    [ ! -d "$WORKER_DIR/node_modules" ] && cmd_install_worker
-    [ ! -d "$AI_WORKER_DIR/node_modules" ] && cmd_install_ai_worker
+    if [ -n "$WORKER_DIR" ] && [ -d "$WORKER_DIR" ] && [ ! -d "$WORKER_DIR/node_modules" ]; then
+        cmd_install_worker
+    fi
+    if [ -n "$AI_WORKER_DIR" ] && [ -d "$AI_WORKER_DIR" ] && [ ! -d "$AI_WORKER_DIR/node_modules" ]; then
+        cmd_install_ai_worker
+    fi
 
     log "Starting servers in background..."
 
@@ -87,23 +129,31 @@ cmd_dev() {
     WEB_PID=$!
     echo $WEB_PID > /tmp/autorenta-web.pid
 
-    # Start worker
-    (
-        cd "$WORKER_DIR"
-        log "Starting payment webhook on http://localhost:8787"
-        npm run dev
-    ) &
-    WORKER_PID=$!
-    echo $WORKER_PID > /tmp/autorenta-worker.pid
+    # Start worker (optional in some workspace snapshots)
+    if [ -n "$WORKER_DIR" ] && [ -d "$WORKER_DIR" ]; then
+        (
+            cd "$WORKER_DIR"
+            log "Starting payment webhook on http://localhost:8787"
+            npm run dev
+        ) &
+        WORKER_PID=$!
+        echo $WORKER_PID > /tmp/autorenta-worker.pid
+    else
+        warn "Payment webhook worker source not found; skipping worker dev server"
+    fi
 
-    # Start AI image worker (Gemini)
-    (
-        cd "$AI_WORKER_DIR"
-        log "Starting AI image worker (Gemini) on http://localhost:8788"
-        npm run dev
-    ) &
-    AI_WORKER_PID=$!
-    echo $AI_WORKER_PID > /tmp/autorenta-ai-worker.pid
+    # Start AI image worker (Gemini) (optional)
+    if [ -n "$AI_WORKER_DIR" ] && [ -d "$AI_WORKER_DIR" ]; then
+        (
+            cd "$AI_WORKER_DIR"
+            log "Starting AI image worker (Gemini) on http://localhost:8788"
+            npm run dev
+        ) &
+        AI_WORKER_PID=$!
+        echo $AI_WORKER_PID > /tmp/autorenta-ai-worker.pid
+    else
+        warn "AI worker source not found; skipping AI dev server"
+    fi
 
     success "Development environment started!"
     info "Web:    http://localhost:4200"
@@ -123,12 +173,14 @@ cmd_dev_web() {
 
 cmd_dev_worker() {
     header "⚙️  Starting Worker Only"
+    require_dir "Payment webhook worker" "$WORKER_DIR"
     cd "$WORKER_DIR"
     npm run dev
 }
 
 cmd_dev_ai_worker() {
     header "🧠 Starting AI Image Worker (Gemini) Only"
+    require_dir "AI worker" "$AI_WORKER_DIR"
     cd "$AI_WORKER_DIR"
     npm run dev
 }
@@ -347,6 +399,7 @@ cmd_deploy_worker() {
     header "📦 Deploying Payment Webhook Worker"
     check_command wrangler "npm install -g wrangler"
 
+    require_dir "Payment webhook worker" "$WORKER_DIR"
     cd "$WORKER_DIR"
     npm run build
     wrangler deploy
@@ -358,7 +411,8 @@ cmd_deploy_worker_doc_verifier() {
     header "📦 Deploying Doc Verifier Worker"
     check_command wrangler "npm install -g wrangler"
 
-    cd "$PROJECT_ROOT/functions/workers/doc-verifier"
+    require_dir "Doc verifier worker" "$DOC_VERIFIER_WORKER_DIR"
+    cd "$DOC_VERIFIER_WORKER_DIR"
     wrangler deploy
 
     success "Doc Verifier Worker deployed"
@@ -368,7 +422,8 @@ cmd_deploy_worker_ai_car_generator() {
     header "📦 Deploying AI Car Generator Worker"
     check_command wrangler "npm install -g wrangler"
 
-    cd "$PROJECT_ROOT/functions/workers/ai-car-generator"
+    require_dir "AI car generator worker" "$AI_WORKER_DIR"
+    cd "$AI_WORKER_DIR"
     wrangler deploy
 
     success "AI Car Generator Worker deployed"
@@ -459,6 +514,10 @@ cmd_install_web() {
 
 cmd_install_worker() {
     log "Installing worker dependencies..."
+    if [ -z "$WORKER_DIR" ] || [ ! -d "$WORKER_DIR" ]; then
+        warn "Payment webhook worker source not found; skipping worker dependency install"
+        return 0
+    fi
     cd "$WORKER_DIR"
     pnpm install
     success "Worker dependencies installed"
@@ -466,6 +525,10 @@ cmd_install_worker() {
 
 cmd_install_ai_worker() {
     log "Installing AI worker dependencies..."
+    if [ -z "$AI_WORKER_DIR" ] || [ ! -d "$AI_WORKER_DIR" ]; then
+        warn "AI worker source not found; skipping AI worker dependency install"
+        return 0
+    fi
     cd "$AI_WORKER_DIR"
     pnpm install
     success "AI worker dependencies installed"
@@ -475,7 +538,9 @@ cmd_clean() {
     header "🧹 Cleaning Build Artifacts"
 
     [ -d "$WEB_DIR/dist" ] && rm -rf "$WEB_DIR/dist" && log "Removed web/dist"
-    [ -d "$WORKER_DIR/dist" ] && rm -rf "$WORKER_DIR/dist" && log "Removed worker/dist"
+    if [ -n "$WORKER_DIR" ] && [ -d "$WORKER_DIR/dist" ]; then
+        rm -rf "$WORKER_DIR/dist" && log "Removed worker/dist"
+    fi
     [ -d "$WEB_DIR/.angular" ] && rm -rf "$WEB_DIR/.angular" && log "Removed .angular cache"
 
     success "Clean completed"

@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
-import {Component, OnDestroy, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component, OnDestroy, OnInit, inject, signal
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
-import { Booking } from '../../../core/models';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { AuthService } from '@core/services/auth/auth.service';
-import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BookingNotificationsService } from '@core/services/bookings/booking-notifications.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import {
   LocationTrackingService,
   TrackingSession,
 } from '@core/services/geo/location-tracking.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { IonicModule } from '@ionic/angular';
+import { Booking } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 import { LiveTrackingMapComponent } from '../../../shared/components/live-tracking-map/live-tracking-map.component';
 
@@ -231,7 +233,7 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
       );
 
       // Navegar al detalle de la reserva
-      this.router.navigate(['/bookings/detail', booking.id]);
+      this.router.navigate(['/bookings/owner', booking.id]);
     } catch (error) {
       console.error('Error en check-in:', error);
       this.toastService.error(

@@ -182,6 +182,95 @@ svg[aria-hidden="true"],
   outline: none;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   ♿ WCAG 2.5.5 - MINIMUM TOUCH TARGET SIZE (44x44px)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Global minimum touch target for interactive elements */
+button:not(.no-min-touch),
+a:not(.no-min-touch):not(.sr-only),
+input[type="button"]:not(.no-min-touch),
+input[type="submit"]:not(.no-min-touch),
+input[type="reset"]:not(.no-min-touch),
+[role="button"]:not(.no-min-touch) {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Links with text need min-height but can be narrower */
+a:not(.no-min-touch):not(.sr-only):not([role="button"]) {
+  min-height: 44px;
+  min-width: auto;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Range inputs need special handling */
+input[type="range"] {
+  min-height: 44px;
+  cursor: pointer;
+}
+
+/* Ensure inline links in text don't break layout */
+p a, li a, span a, td a {
+  min-height: auto;
+  min-width: auto;
+  display: inline;
+}
+
+/* Icon-only buttons need explicit sizing */
+.icon-button,
+button[aria-label]:not(:has(*:not(svg))):not(:has(*:not(ion-icon))) {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ♿ FOCUS INDICATORS - Enhanced for all interactive elements
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Default focus ring for all interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--border-focus, #3b82f6);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* High contrast focus for critical actions */
+.btn-primary:focus-visible,
+.cta-button:focus-visible,
+button[type="submit"]:focus-visible {
+  outline: 3px solid var(--border-focus, #3b82f6);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ♿ MINIMUM SPACING BETWEEN INTERACTIVE ELEMENTS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Utility class for proper spacing in button groups */
+.button-group,
+.action-buttons,
+.toolbar-actions {
+  gap: 8px;
+}
+
+/* Navigation links spacing */
+nav a + a,
+.nav-links a + a {
+  margin-left: 8px;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

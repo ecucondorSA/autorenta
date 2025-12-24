@@ -42,7 +42,7 @@
         <div class="lg:col-span-3 flex flex-col gap-3 sm:gap-4 md:gap-5">
           <div>
             <p
-              class="text-[10px] sm:text-xs uppercase tracking-widest text-cta-default dark:text-cta-default/80 font-semibold"
+              class="text-xs sm:text-xs uppercase tracking-widest text-cta-default dark:text-cta-default/80 font-semibold"
             >
               <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg> Mi Billetera
             </p>
@@ -60,7 +60,7 @@
           <div class="space-y-3 sm:space-y-4">
             <div class="flex flex-wrap gap-1.5 sm:gap-2 md:gap-3">
               <span
-                class="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-[10px] sm:text-xs font-semibold bg-success-light/15 text-success-700 dark:bg-success-light/20 dark:text-success-400 border border-success-light/30"
+                class="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-xs sm:text-xs font-semibold bg-success-light/15 text-success-700 dark:bg-success-light/20 dark:text-success-400 border border-success-light/30"
               >
                 <app-icon name="check-circle" [size]="14" cssClass="inline-block sm:hidden" />
                 <app-icon name="check-circle" [size]="16" cssClass="hidden sm:inline-block" />
@@ -72,7 +72,7 @@
                   'bg-success-light/15 text-success-700 dark:bg-success-light/20 dark:text-success-400 border border-success-light/30': protectedCreditStatus() === 'active',
                   'bg-warning-bg/50 text-warning-strong dark:bg-warning-bg/30 dark:text-warning-300 border border-warning-border': protectedCreditStatus() !== 'active',
                 }"
-                class="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-[10px] sm:text-xs font-semibold"
+                class="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-xs sm:text-xs font-semibold"
               >
                 <app-icon [name]="protectedCreditStatus() === 'active' ? 'lock' : 'lock-open'" [size]="14" cssClass="sm:hidden" />
                 <app-icon [name]="protectedCreditStatus() === 'active' ? 'lock' : 'lock-open'" [size]="16" cssClass="hidden sm:inline-block" />
@@ -85,7 +85,7 @@
               </span>
               @if (pendingDepositsCount() > 0) {
                 <span
-                  class="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-[10px] sm:text-xs font-semibold bg-warning-bg/50 text-warning-strong dark:bg-warning-bg/30 dark:text-warning-300 border border-warning-border animate-pulse"
+                  class="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-xs sm:text-xs font-semibold bg-warning-bg/50 text-warning-strong dark:bg-warning-bg/30 dark:text-warning-300 border border-warning-border animate-pulse"
                 >
                   <app-icon name="clock" [size]="14" cssClass="sm:hidden" />
                   <app-icon name="clock" [size]="16" cssClass="hidden sm:inline-block" />
@@ -655,7 +655,7 @@
               >
                 <div class="flex items-center justify-between mb-2">
                   <p
-                    class="text-[11px] uppercase tracking-widest font-bold text-[#b45309] dark:text-[#fbbf24]"
+                    class="text-xs uppercase tracking-widest font-bold text-[#b45309] dark:text-[#fbbf24]"
                   >
                     <svg class="w-4 h-4 text-warning-text inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" stroke-width="1.75"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-width="1.75"/></svg> Protegido
                   </p>
@@ -777,7 +777,7 @@
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-6 pb-4 sm:pb-6 border-b border-border-default/30">
         <div>
           <p
-            class="text-[10px] sm:text-xs uppercase tracking-widest text-cta-default dark:text-cta-default/80 font-semibold"
+            class="text-xs sm:text-xs uppercase tracking-widest text-cta-default dark:text-cta-default/80 font-semibold"
           >
             <svg class="w-4 h-4 sm:w-5 sm:h-5 text-primary-600 inline-block align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 21h18" stroke-width="1.75" stroke-linecap="round"/><rect x="5" y="13" width="3" height="8" rx="0.5" stroke-width="1.5"/><rect x="10.5" y="7" width="3" height="14" rx="0.5" stroke-width="1.5"/><rect x="16" y="3" width="3" height="18" rx="0.5" stroke-width="1.5"/></svg> Historial
           </p>

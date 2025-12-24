@@ -183,7 +183,7 @@ import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service'
 
               <!-- Level Badge -->
               <span
-                class="px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0"
+                class="px-1.5 py-0.5 rounded text-xs font-bold shrink-0"
                 [class]="getLevelBadgeClass(log.level)"
               >
                 {{ log.level }}

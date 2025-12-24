@@ -387,9 +387,8 @@
 
 .section-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
   gap: 1rem;
-  justify-items: start;
   padding: 1rem 1.1rem 1.25rem;
 }
 
@@ -422,7 +421,6 @@
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
-  max-width: 360px;
 }
 
 .booking-card:hover {
@@ -840,7 +838,6 @@
 
   .booking-card {
     border-radius: 14px;
-    max-width: none;
   }
 
   .booking-card__link {

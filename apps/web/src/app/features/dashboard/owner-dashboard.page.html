@@ -92,7 +92,7 @@
           <div class="flex items-start justify-between relative z-10">
             <div class="min-w-0 flex-1">
               <p
-                class="text-[10px] sm:text-xs md:text-sm font-medium text-text-secondary dark:text-text-secondary/70 uppercase tracking-wider"
+                class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary dark:text-text-secondary/70 uppercase tracking-wider"
               >
                 Balance Disponible
               </p>
@@ -101,7 +101,7 @@
               >
                 {{ availableBalance() | money }}
               </p>
-              <p class="text-[10px] sm:text-xs text-success-default font-medium mt-0.5 sm:mt-1 flex items-center gap-1">
+              <p class="text-xs sm:text-xs text-success-default font-medium mt-0.5 sm:mt-1 flex items-center gap-1">
                 <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
@@ -139,7 +139,7 @@
           <div class="flex items-start justify-between relative z-10">
             <div class="min-w-0 flex-1">
               <p
-                class="text-[10px] sm:text-xs md:text-sm font-medium text-text-secondary dark:text-text-secondary/70 uppercase tracking-wider"
+                class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary dark:text-text-secondary/70 uppercase tracking-wider"
               >
                 En Proceso
               </p>
@@ -148,7 +148,7 @@
               >
                 {{ pendingBalance() | money }}
               </p>
-              <p class="text-[10px] sm:text-xs text-warning-default font-medium mt-0.5 sm:mt-1 flex items-center gap-1">
+              <p class="text-xs sm:text-xs text-warning-default font-medium mt-0.5 sm:mt-1 flex items-center gap-1">
                 <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
@@ -186,7 +186,7 @@
           <div class="flex items-start justify-between relative z-10">
             <div class="min-w-0 flex-1">
               <p
-                class="text-[10px] sm:text-xs md:text-sm font-medium text-text-secondary dark:text-text-secondary/70 uppercase tracking-wider"
+                class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary dark:text-text-secondary/70 uppercase tracking-wider"
               >
                 Total Ganado
               </p>
@@ -195,7 +195,7 @@
               >
                 {{ totalEarnings() | money }}
               </p>
-              <p class="text-[10px] sm:text-xs text-text-secondary font-medium mt-0.5 sm:mt-1 flex items-center gap-1">
+              <p class="text-xs sm:text-xs text-text-secondary font-medium mt-0.5 sm:mt-1 flex items-center gap-1">
                 <span class="sm:hidden">Total</span>
                 <span class="hidden sm:inline">Histórico acumulado</span>
               </p>
@@ -264,7 +264,7 @@
               </p>
               @if (isGrowthPositive()) {
                 <span
-                  class="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-success-light/20 text-success-strong rounded-full font-medium"
+                  class="text-xs sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-success-light/20 text-success-strong rounded-full font-medium"
                   >Trending Up</span
                 >
               }
@@ -289,7 +289,7 @@
         >
           <div class="min-w-0">
             <p
-              class="text-[10px] sm:text-xs md:text-sm font-medium text-text-secondary group-hover:text-primary-600 transition-colors"
+              class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary group-hover:text-primary-600 transition-colors"
             >
               Mis Autos
             </p>
@@ -316,7 +316,7 @@
           class="bg-surface-raised dark:bg-surface-raised rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-border-default dark:border-neutral-800/60 flex items-center justify-between"
         >
           <div class="min-w-0">
-            <p class="text-[10px] sm:text-xs md:text-sm font-medium text-text-secondary">Disponibles</p>
+            <p class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary">Disponibles</p>
             <p class="text-lg sm:text-xl md:text-2xl font-bold text-success-strong mt-0.5 sm:mt-1">
               {{ activeCars() }}
             </p>
@@ -342,7 +342,7 @@
         >
           <div class="min-w-0">
             <p
-              class="text-[10px] sm:text-xs md:text-sm font-medium text-text-secondary group-hover:text-cta-default transition-colors"
+              class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary group-hover:text-cta-default transition-colors"
             >
               Próximas
             </p>
@@ -369,7 +369,7 @@
           class="bg-surface-raised dark:bg-surface-raised rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-border-default dark:border-neutral-800/60 flex items-center justify-between"
         >
           <div class="min-w-0">
-            <p class="text-[10px] sm:text-xs md:text-sm font-medium text-text-secondary">En Curso</p>
+            <p class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary">En Curso</p>
             <p class="text-lg sm:text-xl md:text-2xl font-bold text-warning-strong mt-0.5 sm:mt-1">
               {{ activeBookings() }}
             </p>
@@ -463,10 +463,10 @@
                   >
                     {{ notification.title }}
                   </p>
-                  <p class="text-[11px] sm:text-sm text-text-secondary mt-0.5 line-clamp-1">
+                  <p class="text-xs sm:text-sm text-text-secondary mt-0.5 line-clamp-1">
                     {{ notification.message }}
                   </p>
-                  <p class="text-[10px] sm:text-xs text-text-secondary/60 mt-1 sm:mt-1.5 font-mono">
+                  <p class="text-xs sm:text-xs text-text-secondary/60 mt-1 sm:mt-1.5 font-mono">
                     {{ notification.createdAt | date: 'short' }}
                   </p>
                 </div>
@@ -515,7 +515,7 @@
               <span class="sm:hidden">Publicar</span>
               <span class="hidden sm:inline">Publicar Auto</span>
             </p>
-            <p class="text-[10px] sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block">Añadir vehículo</p>
+            <p class="text-xs sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block">Añadir vehículo</p>
           </a>
 
           <a
@@ -538,7 +538,7 @@
               <span class="sm:hidden">Reservas</span>
               <span class="hidden sm:inline">Mis Reservas</span>
             </p>
-            <p class="text-[10px] sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block">Gestionar alquileres</p>
+            <p class="text-xs sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block">Gestionar alquileres</p>
           </a>
 
           <button
@@ -560,7 +560,7 @@
             <p class="text-xs sm:text-sm md:text-base font-bold text-text-primary group-hover:text-purple-600 transition-colors text-center">
               Calendario
             </p>
-            <p class="text-[10px] sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block">Ver disponibilidad</p>
+            <p class="text-xs sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block">Ver disponibilidad</p>
           </button>
 
           <a
@@ -585,7 +585,7 @@
               <span class="sm:hidden">Wallet</span>
               <span class="hidden sm:inline">Retirar Dinero</span>
             </p>
-            <p class="text-[10px] sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block">Ir a Billetera</p>
+            <p class="text-xs sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block">Ir a Billetera</p>
           </a>
         </div>
       </div>

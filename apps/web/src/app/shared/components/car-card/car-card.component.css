@@ -1,5 +1,7 @@
 :host {
   display: block;
+  width: 100%;
+  min-width: 0; /* Permite que flexbox/grid contraiga el elemento */
 }
 
 .cq-card {

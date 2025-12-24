@@ -1,13 +1,13 @@
 import { inject } from '@angular/core';
-import { CanMatchFn, Router } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * Guard that prevents authenticated users from accessing guest-only pages
- * (like login and register). If user is already authenticated, redirects to /cars/list.
+ * (like login, register, and home). If user is already authenticated, redirects to /cars/list.
  */
-export const GuestGuard: CanMatchFn = async () => {
+export const GuestGuard: CanActivateFn = async () => {
   const auth = inject(AuthService);
   const router = inject(Router);
   const logger = inject(LoggerService);

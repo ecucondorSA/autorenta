@@ -85,7 +85,7 @@ import { GeminiService } from '@core/services/ai/gemini.service';
             <div>
               <h3 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 Checklist de {{ inspectionType() === 'check_in' ? 'Recepcion' : 'Devolucion' }}
-                <span class="text-[10px] bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                <span class="text-xs bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
                   AI
                 </span>
               </h3>
@@ -102,7 +102,7 @@ import { GeminiService } from '@core/services/ai/gemini.service';
                     [style.width.%]="totalCount() > 0 ? (completedCount() / totalCount()) * 100 : 0"
                   ></div>
                 </div>
-                <span class="text-[10px] font-medium text-gray-500">{{ completedCount() }}/{{ totalCount() }}</span>
+                <span class="text-xs font-medium text-gray-500">{{ completedCount() }}/{{ totalCount() }}</span>
               </div>
             }
             <svg
@@ -273,7 +273,7 @@ import { GeminiService } from '@core/services/ai/gemini.service';
                                 {{ item.label }}
                               </span>
                               @if (item.critical) {
-                                <span class="inline-flex items-center gap-1 rounded-full bg-red-100 dark:bg-red-900/30 px-2 py-0.5 text-[10px] font-bold text-red-700 dark:text-red-400 uppercase">
+                                <span class="inline-flex items-center gap-1 rounded-full bg-red-100 dark:bg-red-900/30 px-2 py-0.5 text-xs font-bold text-red-700 dark:text-red-400 uppercase">
                                   <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 2L2 22h20L12 2zm0 4l7.53 14H4.47L12 6zm-1 6v4h2v-4h-2zm0 6v2h2v-2h-2z"/>
                                   </svg>
@@ -281,7 +281,7 @@ import { GeminiService } from '@core/services/ai/gemini.service';
                                 </span>
                               }
                               @if (item.modelSpecific) {
-                                <span class="inline-flex items-center gap-1 rounded-full bg-blue-100 dark:bg-blue-900/30 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:text-blue-400 uppercase">
+                                <span class="inline-flex items-center gap-1 rounded-full bg-blue-100 dark:bg-blue-900/30 px-2 py-0.5 text-xs font-bold text-blue-700 dark:text-blue-400 uppercase">
                                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                   </svg>

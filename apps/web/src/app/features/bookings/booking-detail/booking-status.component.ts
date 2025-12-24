@@ -1,8 +1,10 @@
-import {Component, Input, computed,
-  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Booking } from '../../../core/models';
+import {
+  ChangeDetectionStrategy,
+  Component, Input, computed
+} from '@angular/core';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { Booking } from '../../../core/models';
 
 /**
  * BookingStatusComponent
@@ -54,7 +56,7 @@ export class BookingStatusComponent {
   @Input({ required: true }) booking!: Booking;
   @Input() deliveryCountdown: string | null = null;
 
-  constructor(private bookingsService: BookingsService) {}
+  constructor(private bookingsService: BookingsService) { }
 
   isExpired = computed(() => {
     return this.bookingsService.isExpired(this.booking);
@@ -65,10 +67,16 @@ export class BookingStatusComponent {
     return this.booking?.payment_mode === 'wallet';
   });
 
-  /** Check if booking is pending owner approval (P2P flow) */
-  isPendingApproval = computed(() => {
-    return this.booking?.status === 'pending' && this.isWalletBooking();
+  /**
+   * Request/approval flow: a pending booking that already chose a guarantee mode
+   * (card hold or wallet lock) is waiting for owner approval.
+   */
+  isAwaitingOwnerApproval = computed(() => {
+    return this.booking?.status === 'pending' && !!this.booking?.payment_mode;
   });
+
+  /** Legacy alias (kept for template compatibility if referenced elsewhere) */
+  isPendingApproval = computed(() => this.isAwaitingOwnerApproval());
 
   statusClass = computed(() => {
     const status = this.booking?.status;
@@ -82,8 +90,8 @@ export class BookingStatusComponent {
       this.booking?.completion_status === 'pending_renter' ||
       this.booking?.completion_status === 'pending_both';
 
-    // P2P wallet: pending approval (amber, not error)
-    if (this.isPendingApproval()) {
+    // Request flow: pending approval (amber, not error)
+    if (this.isAwaitingOwnerApproval()) {
       return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
     }
 
@@ -91,8 +99,8 @@ export class BookingStatusComponent {
       return 'bg-warning-light/20 text-warning-strong';
     }
 
-    // Traditional: expired payment
-    if (status === 'pending' && this.isExpired()) {
+    // Traditional: expired payment (only when not in approval/request flow)
+    if (status === 'pending' && this.isExpired() && !this.isAwaitingOwnerApproval()) {
       return 'bg-error-bg-hover text-error-strong';
     }
 
@@ -133,8 +141,8 @@ export class BookingStatusComponent {
       this.booking?.completion_status === 'pending_renter' ||
       this.booking?.completion_status === 'pending_both';
 
-    // P2P wallet: waiting for owner approval
-    if (this.isPendingApproval()) {
+    // Request flow: waiting for owner approval
+    if (this.isAwaitingOwnerApproval()) {
       return 'Esperando aprobación';
     }
 
@@ -142,8 +150,8 @@ export class BookingStatusComponent {
       return 'En revisión';
     }
 
-    // Traditional: expired payment (only for non-wallet bookings)
-    if (status === 'pending' && this.isExpired() && !this.isWalletBooking()) {
+    // Traditional: expired payment
+    if (status === 'pending' && this.isExpired() && !this.isAwaitingOwnerApproval()) {
       return 'Pago vencido';
     }
 
@@ -187,8 +195,8 @@ export class BookingStatusComponent {
       this.booking?.completion_status === 'pending_renter' ||
       this.booking?.completion_status === 'pending_both';
 
-    // P2P wallet: clock icon for pending approval
-    if (this.isPendingApproval()) {
+    // Request flow: clock icon for pending approval
+    if (this.isAwaitingOwnerApproval()) {
       return '⏳';
     }
 
@@ -197,7 +205,7 @@ export class BookingStatusComponent {
     }
 
     // Traditional: expired
-    if (this.isExpired() && !this.isWalletBooking()) {
+    if (this.isExpired() && !this.isAwaitingOwnerApproval()) {
       return '⛔';
     }
 

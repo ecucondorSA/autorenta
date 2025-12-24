@@ -55,7 +55,7 @@ const CACHE_DURATION_HOURS = 24;
               </div>
               <div>
                 <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Sugerencia para Vos</h3>
-                <p class="text-[10px] text-gray-500 dark:text-gray-400">Basado en tu historial</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Basado en tu historial</p>
               </div>
             </div>
 

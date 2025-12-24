@@ -267,14 +267,14 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                                 <!-- Metadata -->
                                 @if (notification.metadata) {
                                   <div
-                                    class="mt-1 truncate text-[10px] text-text-secondary dark:text-text-muted sm:mt-2 sm:text-xs"
+                                    class="mt-1 truncate text-xs text-text-secondary dark:text-text-muted sm:mt-2 sm:text-xs"
                                   >
                                     {{ renderMetadata(notification) }}
                                   </div>
                                 }
 
                                 <!-- Timestamp -->
-                                <p class="mt-1 text-[10px] text-text-secondary dark:text-text-muted sm:mt-2 sm:text-xs">
+                                <p class="mt-1 text-xs text-text-secondary dark:text-text-muted sm:mt-2 sm:text-xs">
                                   {{ getTimeAgo(notification.createdAt) }}
                                 </p>
                               </div>
@@ -285,7 +285,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                               @if (notification.actionUrl) {
                                 <button
                                   (click)="handleNotificationClick(notification)"
-                                  class="rounded-lg bg-cta-default px-2.5 py-1 text-[10px] font-medium text-cta-text hover:bg-cta-default sm:px-3 sm:py-1.5 sm:text-xs"
+                                  class="rounded-lg bg-cta-default px-2.5 py-1 text-xs font-medium text-cta-text hover:bg-cta-default sm:px-3 sm:py-1.5 sm:text-xs"
                                   type="button"
                                 >
                                   Ver detalles
@@ -293,7 +293,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                               }
                               <button
                                 (click)="markAsRead(notification.id)"
-                                class="rounded-lg border border-border-muted bg-surface-raised px-2.5 py-1 text-[10px] font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-700 sm:px-3 sm:py-1.5 sm:text-xs"
+                                class="rounded-lg border border-border-muted bg-surface-raised px-2.5 py-1 text-xs font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-700 sm:px-3 sm:py-1.5 sm:text-xs"
                                 type="button"
                               >
                                 <span class="sm:hidden">Leída</span>
@@ -377,14 +377,14 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                                 <!-- Metadata -->
                                 @if (notification.metadata) {
                                   <div
-                                    class="mt-1 truncate text-[10px] text-text-secondary dark:text-text-muted sm:mt-2 sm:text-xs"
+                                    class="mt-1 truncate text-xs text-text-secondary dark:text-text-muted sm:mt-2 sm:text-xs"
                                   >
                                     {{ renderMetadata(notification) }}
                                   </div>
                                 }
 
                                 <!-- Timestamp -->
-                                <p class="mt-1 text-[10px] text-text-secondary dark:text-text-muted sm:mt-2 sm:text-xs">
+                                <p class="mt-1 text-xs text-text-secondary dark:text-text-muted sm:mt-2 sm:text-xs">
                                   {{ getTimeAgo(notification.createdAt) }}
                                 </p>
                               </div>
@@ -395,7 +395,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                               <div class="mt-2 flex flex-wrap gap-1.5 sm:mt-3 sm:gap-2">
                                 <button
                                   (click)="handleNotificationClick(notification)"
-                                  class="rounded-lg bg-surface-raised px-2.5 py-1 text-[10px] font-medium text-text-primary hover:bg-surface-hover dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-600 sm:px-3 sm:py-1.5 sm:text-xs"
+                                  class="rounded-lg bg-surface-raised px-2.5 py-1 text-xs font-medium text-text-primary hover:bg-surface-hover dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-600 sm:px-3 sm:py-1.5 sm:text-xs"
                                   type="button"
                                 >
                                   Ver detalles
@@ -470,13 +470,13 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
 
                             <!-- Metadata -->
                             @if (notification.metadata) {
-                              <div class="mt-1 truncate text-[10px] text-text-secondary dark:text-text-muted sm:mt-2 sm:text-xs">
+                              <div class="mt-1 truncate text-xs text-text-secondary dark:text-text-muted sm:mt-2 sm:text-xs">
                                 {{ renderMetadata(notification) }}
                               </div>
                             }
 
                             <!-- Timestamp -->
-                            <p class="mt-1 text-[10px] text-text-secondary dark:text-text-muted sm:mt-2 sm:text-xs">
+                            <p class="mt-1 text-xs text-text-secondary dark:text-text-muted sm:mt-2 sm:text-xs">
                               {{ getTimeAgo(notification.createdAt) }}
                             </p>
                           </div>
@@ -487,7 +487,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           @if (notification.actionUrl) {
                             <button
                               (click)="handleNotificationClick(notification)"
-                              class="rounded-lg bg-cta-default px-2.5 py-1 text-[10px] font-medium text-cta-text hover:bg-cta-default sm:px-3 sm:py-1.5 sm:text-xs"
+                              class="rounded-lg bg-cta-default px-2.5 py-1 text-xs font-medium text-cta-text hover:bg-cta-default sm:px-3 sm:py-1.5 sm:text-xs"
                               type="button"
                             >
                               Ver detalles
@@ -495,7 +495,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           }
                           <button
                             (click)="markAsRead(notification.id)"
-                            class="rounded-lg border border-border-muted bg-surface-raised px-2.5 py-1 text-[10px] font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-700 sm:px-3 sm:py-1.5 sm:text-xs"
+                            class="rounded-lg border border-border-muted bg-surface-raised px-2.5 py-1 text-xs font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:bg-surface-base dark:text-text-secondary dark:hover:bg-gray-700 sm:px-3 sm:py-1.5 sm:text-xs"
                             type="button"
                           >
                             <span class="sm:hidden">Leída</span>

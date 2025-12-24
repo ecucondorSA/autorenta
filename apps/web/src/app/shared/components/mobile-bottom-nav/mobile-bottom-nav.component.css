@@ -282,7 +282,7 @@
   background: var(--error-default); /* Reemplazado gradiente con color sólido */
   color: #ffffff;
 
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
   line-height: 1.25;
 
@@ -355,7 +355,7 @@
   }
 
   .nav-item__label {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .nav-item {

@@ -1,12 +1,12 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, OnDestroy, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthChangeEvent, Session } from '@supabase/supabase-js';
-import { environment } from '@environment';
-import { getErrorMessage } from '@core/utils/type-guards';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { RateLimiterService } from '@core/services/infrastructure/rate-limiter.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { getErrorMessage } from '@core/utils/type-guards';
+import { environment } from '@environment';
+import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 interface AuthState {
   session: Session | null;
@@ -48,6 +48,7 @@ export class AuthService implements OnDestroy {
   readonly isAuthenticated = computed(() => !!this.state().session);
   readonly loading = computed(() => this.state().loading);
   readonly userEmail = computed(() => this.state().session?.user?.email);
+  readonly userId = computed(() => this.state().session?.user?.id ?? null);
 
   ngOnDestroy(): void {
     this.authSubscription?.data.subscription.unsubscribe();

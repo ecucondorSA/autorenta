@@ -1,6 +1,8 @@
 import { isPlatformBrowser } from '@angular/common';
-import {Component, computed, inject, OnInit, PLATFORM_ID, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component, computed, inject, OnInit, PLATFORM_ID, signal
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -15,12 +17,12 @@ import { BookingReviewStepComponent } from '../../components/booking-review-step
 import { BookingStepIndicatorComponent } from '../../components/booking-step-indicator/booking-step-indicator.component';
 
 // Services
-import { Car } from '../../../../core/models';
+import { EmailVerificationService } from '@core/services/auth/email-verification.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
-import { EmailVerificationService } from '@core/services/auth/email-verification.service';
 import { ErrorHandlerService } from '@core/services/infrastructure/error-handler.service';
+import { Car } from '../../../../core/models';
 
 export interface BookingWizardData {
   // Step 1: Dates & Location
@@ -127,7 +129,7 @@ interface PreparedBookingData {
     BookingDriverStepComponent,
     BookingPaymentStepComponent,
     BookingReviewStepComponent
-],
+  ],
   templateUrl: './booking-wizard.page.html',
   styleUrls: ['./booking-wizard.page.scss'],
 })
@@ -194,14 +196,14 @@ export class BookingWizardPage implements OnInit {
     private errorHandler: ErrorHandlerService,
     private emailVerificationService: EmailVerificationService,
     private distanceCalculator: DistanceCalculatorService,
-  ) {}
+  ) { }
 
   async ngOnInit() {
     // Get car ID from route params
     const carId = this.route.snapshot.queryParamMap.get('carId');
     if (!carId) {
       console.error('No car ID provided');
-      this.router.navigate(['/marketplace']);
+      this.router.navigate(['/']);
       return;
     }
 
@@ -221,7 +223,7 @@ export class BookingWizardPage implements OnInit {
       this.car.set(car);
     } catch (error) {
       console.error('Error loading car:', error);
-      this.router.navigate(['/marketplace']);
+      this.router.navigate(['/']);
     } finally {
       this.isLoading.set(false);
     }
