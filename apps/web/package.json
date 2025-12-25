@@ -105,8 +105,6 @@
     "ionicons": "^8.0.13",
     "mapbox-gl": "^3.17.0",
     "mercadopago": "^2.11.0",
-    "primeicons": "^7.0.0",
-    "primeng": "^20.4.0",
     "rxjs": "~7.8.2",
     "shepherd.js": "^14.5.1",
     "socket.io-client": "^4.8.1",

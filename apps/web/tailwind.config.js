@@ -363,7 +363,7 @@ module.exports = {
         // Masterplan v2.1 - Tech Brutalism & Neon
         'hard': '4px 4px 0px 0px #000000',     // Sombra sólida de alto contraste
         'hard-sm': '2px 2px 0px 0px #000000',  // Para elementos pequeños
-        'neon-glow': '0 0 15px rgba(57, 255, 20, 0.6)', // Resplandor voltaje
+        'neon-glow': '0 0 15px rgba(0, 217, 95, 0.6)', // Resplandor verde neón (#00D95F)
 
         // Elevation System (Design Proposals v2)
         'elevation-1': 'var(--elevation-1)',

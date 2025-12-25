@@ -125,10 +125,10 @@
     "puppeteer": "^24.33.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "uuid": "^13.0.0",
+    "uuid": "^9.0.1",
     "vitest": "^3.1.1",
     "wait-on": "^9.0.3",
-    "zod": "^4.2.0"
+    "zod": "^3.25.76"
   },
   "autorenta": {
     "version": "0.1.0",

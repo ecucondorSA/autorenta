@@ -12,6 +12,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -77,6 +78,7 @@ declare global {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RentarfastPage implements AfterViewChecked, OnDestroy {
+  private readonly logger = inject(LoggerService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly platformId = inject(PLATFORM_ID);
@@ -340,7 +342,7 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
           this.shouldScrollToBottom = true;
         },
         error: (err) => {
-          console.error('Error sending message:', err);
+          this.logger.error('[Rentarfast] Error sending message', err);
         },
       });
   }

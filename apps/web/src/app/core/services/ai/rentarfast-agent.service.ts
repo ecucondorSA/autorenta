@@ -229,7 +229,7 @@ export class RentarfastAgentService {
     });
 
     this.socket.on('error', (error: { type: string; message: string }) => {
-      console.error('[Rentarfast] Error:', error);
+      this.logger.error('[Rentarfast] Socket error', error);
       this.ngZone.run(() => {
         this._isLoading.set(false);
       });
@@ -269,7 +269,7 @@ export class RentarfastAgentService {
 
       // Validate base64 before decoding
       if (!base64Audio || !/^[A-Za-z0-9+/=]+$/.test(base64Audio)) {
-        console.warn('[Rentarfast] Invalid base64 audio data, skipping chunk');
+        this.logger.warn('[Rentarfast] Invalid base64 audio data, skipping chunk');
         this.playNextAudioChunk();
         return;
       }
@@ -290,7 +290,7 @@ export class RentarfastAgentService {
       };
       source.start();
     } catch (error) {
-      console.error('[Rentarfast] Audio playback error:', error);
+      this.logger.error('[Rentarfast] Audio playback error', error);
       this.playNextAudioChunk();
     }
   }
@@ -300,7 +300,7 @@ export class RentarfastAgentService {
    */
   sendMessageRealtime(message: string): void {
     if (!this.socket?.connected) {
-      console.warn('[Rentarfast] WebSocket not connected, falling back to HTTP');
+      this.logger.warn('[Rentarfast] WebSocket not connected, falling back to HTTP');
       this.sendMessage(message).subscribe();
       return;
     }
@@ -334,7 +334,7 @@ export class RentarfastAgentService {
 
     // Legacy: WebSocket to Cloud Run (no database access)
     if (!this.socket?.connected) {
-      console.warn('[Rentarfast] WebSocket not connected, falling back to HTTP');
+      this.logger.warn('[Rentarfast] WebSocket not connected, falling back to HTTP');
       this.sendMessage(message, context).subscribe();
       return;
     }
@@ -400,7 +400,7 @@ export class RentarfastAgentService {
    */
   startRecording(): void {
     if (!this.socket?.connected) {
-      console.warn('[Rentarfast] WebSocket not connected');
+      this.logger.warn('[Rentarfast] WebSocket not connected');
       return;
     }
 
@@ -527,7 +527,7 @@ export class RentarfastAgentService {
         this._messages.update(msgs => [...msgs, agentMessage]);
       }),
       catchError(error => {
-        console.error('Rentarfast agent error:', error);
+        this.logger.error('[Rentarfast] Cloud Run error', error);
 
         const errorMessage: ChatMessage = {
           id: crypto.randomUUID(),

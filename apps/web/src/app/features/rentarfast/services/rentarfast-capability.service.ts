@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChatSuggestion, RentarfastAgentService } from '@core/services/ai/rentarfast-agent.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { LocationData, LocationService } from '@core/services/geo/location.service';
@@ -18,6 +19,7 @@ export type { CapabilityAction } from './rentarfast.models';
  */
 @Injectable({ providedIn: 'root' })
 export class RentarfastCapabilityService {
+  private readonly logger = inject(LoggerService);
   private readonly router = inject(Router);
   private readonly agentService = inject(RentarfastAgentService);
   private readonly locationService = inject(LocationService);
@@ -167,7 +169,7 @@ export class RentarfastCapabilityService {
         currency: firstCar.currency || 'USD',
       });
     } catch (error) {
-      console.error('[RentarfastCapability] Error searching nearby cars:', error);
+      this.logger.error('[RentarfastCapability] Error searching nearby cars', error);
       this.agentService.updateMessageContent(
         msgId,
         'No pude obtener tu ubicación. Por favor, habilitá los permisos de ubicación o decime una dirección.',
@@ -261,7 +263,7 @@ export class RentarfastCapabilityService {
         const balance = await this.walletService.fetchBalance(true);
         walletInfo = `\n\n**Wallet:**\n• Disponible: ${balance.currency || 'USD'} ${balance.available_balance.toFixed(2)}\n• Bloqueado: ${balance.currency || 'USD'} ${balance.locked_balance.toFixed(2)}`;
       } catch (error) {
-        console.warn('[RentarfastCapability] Could not fetch wallet balance:', error);
+        this.logger.warn('[RentarfastCapability] Could not fetch wallet balance', error);
         walletInfo = '\n\nWallet: No disponible';
       }
 
@@ -281,7 +283,7 @@ export class RentarfastCapabilityService {
         ['local_stats', 'stats']
       );
     } catch (error) {
-      console.error('[RentarfastCapability] Error loading stats:', error);
+      this.logger.error('[RentarfastCapability] Error loading stats', error);
       this.agentService.updateMessageContent(
         msgId,
         'Error al cargar estadísticas. Intentalo de nuevo.',
@@ -382,7 +384,7 @@ export class RentarfastCapabilityService {
         this.router.navigate(['/bookings', result.booking!.id, 'detail-payment']);
       }, 1500);
     } catch (error) {
-      console.error('[RentarfastCapability] Error creating booking:', error);
+      this.logger.error('[RentarfastCapability] Error creating booking', error);
       this.agentService.updateMessageContent(
         msgId,
         'Error al crear la reserva. El auto puede no estar disponible en esas fechas.\n\n¿Querés buscar otros autos disponibles?',
@@ -408,7 +410,7 @@ export class RentarfastCapabilityService {
     try {
       return JSON.parse(stored);
     } catch (error) {
-      console.warn('[RentarfastCapability] Failed to parse stored car:', error);
+      this.logger.warn('[RentarfastCapability] Failed to parse stored car', error);
       this.clearStoredNearestCar();
       return null;
     }
