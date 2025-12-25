@@ -114,6 +114,25 @@
           }
           <div class="message-content">
             <p>{{ message.content }}</p>
+
+            <!-- Sugerencias Interactivas (estilo Supabase) -->
+            @if (message.suggestions && message.suggestions.length > 0) {
+              <div class="suggestions-container">
+                @for (suggestion of message.suggestions; track suggestion.action; let i = $index) {
+                  <button
+                    class="suggestion-button"
+                    (click)="onSuggestionClick(suggestion)"
+                    type="button">
+                    <span class="suggestion-number">{{ i + 1 }}</span>
+                    @if (suggestion.icon) {
+                      <span class="suggestion-icon">{{ suggestion.icon }}</span>
+                    }
+                    <span class="suggestion-label">{{ suggestion.label }}</span>
+                  </button>
+                }
+              </div>
+            }
+
             @if (message.toolsUsed && message.toolsUsed.length > 0) {
               <div class="tools-used">
                 @for (tool of message.toolsUsed; track tool) {

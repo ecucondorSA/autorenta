@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { RentarfastAgentService } from '@core/services/ai/rentarfast-agent.service';
+import { ChatSuggestion, RentarfastAgentService } from '@core/services/ai/rentarfast-agent.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { LocationData, LocationService } from '@core/services/geo/location.service';
@@ -141,25 +141,33 @@ export class RentarfastCapabilityService {
       const startDateStr = today.toISOString().split('T')[0];
       const endDateStr = endDate.toISOString().split('T')[0];
 
-      const totalPrice3Days = firstCar.price_per_day ? (firstCar.price_per_day * 3).toFixed(0) : null;
-
-      const rentOption = firstCar.price_per_day
-        ? `\n\n**Alquilar el primero por 3 días:**\nDesde hoy (${startDateStr}) hasta ${endDateStr}\nTotal estimado: ${firstCar.currency || 'USD'} ${totalPrice3Days}\n\nDecí "alquilar el primero" o escribí "reservar ${firstCar.id} ${startDateStr} ${endDateStr}"`
-        : '';
+      // Generate interactive suggestions (Supabase chatbot style)
+      const suggestions: ChatSuggestion[] = carsWithDistance.map((car, index) => {
+        const title = car.title || `${car.brand} ${car.model}`;
+        const price = car.price_per_day ? `$${car.price_per_day}/día` : '';
+        const city = car.location_city ? ` - ${car.location_city}` : '';
+        return {
+          label: `${title} ${price}${city}`,
+          action: `reservar ${car.id} ${startDateStr} ${endDateStr}`,
+          icon: '🚗',
+        };
+      });
 
       this.agentService.updateMessageContent(
         msgId,
-        `**Los 3 autos más cercanos:**\n\n${carsList}${rentOption}`,
-        ['local_nearby', 'search_cars']
+        `**Los ${carsWithDistance.length} autos más cercanos:**\n\n${carsList}\n\nTocá un botón para reservar por 3 días:`,
+        ['local_nearby', 'search_cars'],
+        suggestions
       );
 
       this.storeNearestCar({
         id: firstCar.id,
         title: firstCar.title || `${firstCar.brand} ${firstCar.model}`,
-        price_per_day: firstCar.price_per_day,
+        price_per_day: firstCar.price_per_day ?? 0,
         currency: firstCar.currency || 'USD',
       });
-    } catch {
+    } catch (error) {
+      console.error('[RentarfastCapability] Error searching nearby cars:', error);
       this.agentService.updateMessageContent(
         msgId,
         'No pude obtener tu ubicación. Por favor, habilitá los permisos de ubicación o decime una dirección.',
@@ -187,8 +195,17 @@ export class RentarfastCapabilityService {
     }
 
     const today = new Date();
-    const pricePerDay = storedCar.price_per_day;
-    const currency = storedCar.currency;
+    const pricePerDay = storedCar.price_per_day || 0;
+    const currency = storedCar.currency || 'USD';
+
+    if (pricePerDay === 0) {
+      this.agentService.updateMessageContent(
+        msgId,
+        `No hay precio disponible para **${storedCar.title}**.\n\nContactá al propietario para conocer el precio.`,
+        ['local_pricing']
+      );
+      return;
+    }
 
     const prices = [
       { days: 1, total: pricePerDay },
@@ -243,7 +260,8 @@ export class RentarfastCapabilityService {
       try {
         const balance = await this.walletService.fetchBalance(true);
         walletInfo = `\n\n**Wallet:**\n• Disponible: ${balance.currency || 'USD'} ${balance.available_balance.toFixed(2)}\n• Bloqueado: ${balance.currency || 'USD'} ${balance.locked_balance.toFixed(2)}`;
-      } catch {
+      } catch (error) {
+        console.warn('[RentarfastCapability] Could not fetch wallet balance:', error);
         walletInfo = '\n\nWallet: No disponible';
       }
 
@@ -262,7 +280,8 @@ export class RentarfastCapabilityService {
           walletInfo,
         ['local_stats', 'stats']
       );
-    } catch {
+    } catch (error) {
+      console.error('[RentarfastCapability] Error loading stats:', error);
       this.agentService.updateMessageContent(
         msgId,
         'Error al cargar estadísticas. Intentalo de nuevo.',
@@ -326,7 +345,8 @@ export class RentarfastCapabilityService {
     const startDateStr = today.toISOString().split('T')[0];
     const endDateStr = endDate.toISOString().split('T')[0];
 
-    const totalPrice = storedCar.price_per_day * 3;
+    const pricePerDay = storedCar.price_per_day || 0;
+    const totalPrice = pricePerDay * 3;
 
     this.agentService.updateMessageContent(
       msgId,
@@ -361,7 +381,8 @@ export class RentarfastCapabilityService {
       setTimeout(() => {
         this.router.navigate(['/bookings', result.booking!.id, 'detail-payment']);
       }, 1500);
-    } catch {
+    } catch (error) {
+      console.error('[RentarfastCapability] Error creating booking:', error);
       this.agentService.updateMessageContent(
         msgId,
         'Error al crear la reserva. El auto puede no estar disponible en esas fechas.\n\n¿Querés buscar otros autos disponibles?',
@@ -386,7 +407,9 @@ export class RentarfastCapabilityService {
     if (!stored) return null;
     try {
       return JSON.parse(stored);
-    } catch {
+    } catch (error) {
+      console.warn('[RentarfastCapability] Failed to parse stored car:', error);
+      this.clearStoredNearestCar();
       return null;
     }
   }

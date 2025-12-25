@@ -662,13 +662,13 @@
                   <app-icon name="lock" [size]="16" cssClass="text-warning-strong" />
                 </div>
                 <p class="text-3xl font-extrabold text-text-primary dark:text-warning-50 leading-tight">
-                  USD {{ protectedCreditBalance() / 100 | number: '1.2-2' }}
+                  USD {{ protectedCreditBalance() | number: '1.2-2' }}
                 </p>
                 <div class="mt-3 w-full bg-[#fde68a] dark:bg-[#fbbf24]/30 rounded-full h-2.5">
                   <div class="bg-[#d97706] dark:bg-[#f59e0b] h-2.5 rounded-full transition-all" [style.width.%]="protectedCreditProgress()"></div>
                 </div>
                 <p class="text-sm font-semibold text-[#92400e] dark:text-[#fbbf24] mt-2">
-                  Meta: USD 300 ({{ protectedCreditProgress() | number:'1.0-0' }}%)
+                  Meta: USD {{ protectedCreditTarget }} ({{ protectedCreditProgress() | number:'1.0-0' }}%)
                 </p>
               </div>
               <div
@@ -683,7 +683,7 @@
                   <app-icon name="arrow-right-left" [size]="16" cssClass="text-success-strong" />
                 </div>
                 <p class="text-2xl font-bold text-text-primary dark:text-success-50">
-                  USD {{ transferableBalance() / 100 | number: '1.2-2' }}
+                  USD {{ transferableBalance() | number: '1.2-2' }}
                 </p>
                 <p class="text-xs text-success-strong/80 dark:text-success-100/70 mt-3">
                   Envíalo a otros usuarios dentro de la app
@@ -701,7 +701,7 @@
                   <app-icon name="arrow-up" [size]="16" cssClass="text-cta-default" />
                 </div>
                 <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
-                  USD {{ withdrawableBalance() / 100 | number: '1.2-2' }}
+                  USD {{ withdrawableBalance() | number: '1.2-2' }}
                 </p>
                 <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-3">
                   Retira a tu cuenta bancaria

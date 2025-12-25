@@ -73,7 +73,7 @@
     <!-- Keep in sync with apps/web/public/_headers and apps/web/scripts/create-cloudflare-config.js -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.mlstatic.com https://static.cloudflareinsights.com https://unpkg.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com https://unpkg.com https://*.mlstatic.com https://api.fontshare.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com https://unpkg.com https://*.mlstatic.com https://cdn.fontshare.com; connect-src 'self' blob: https://*.supabase.co https://api.mapbox.com https://events.mapbox.com https://api.mercadopago.com https://events.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.mlstatic.com https://*.workers.dev https://*.run.app wss://*.supabase.co wss://*.run.app https://cloudflareinsights.com https://static.cloudflareinsights.com https://parallelum.com.br https://api.binance.com https://data-api.binance.vision https://unpkg.com https://www.gstatic.com https://api.unsplash.com https://images.unsplash.com https://ui-avatars.com https://ipapi.co https://www.googleapis.com https://placehold.co https://api.fontshare.com https://cdn.fontshare.com; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.ar https://*.mercadolibre.com https://calendar.google.com; worker-src 'self' blob: https://www.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self' https://*.mercadopago.com;"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.mlstatic.com https://static.cloudflareinsights.com https://unpkg.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com https://unpkg.com https://*.mlstatic.com https://api.fontshare.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com https://unpkg.com https://*.mlstatic.com https://cdn.fontshare.com; connect-src 'self' blob: https://*.supabase.co https://api.mapbox.com https://events.mapbox.com https://api.mercadopago.com https://events.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.mlstatic.com https://*.workers.dev https://*.run.app wss://*.supabase.co wss://*.run.app https://cloudflareinsights.com https://static.cloudflareinsights.com https://parallelum.com.br https://api.binance.com https://data-api.binance.vision https://unpkg.com https://www.gstatic.com https://fonts.gstatic.com https://api.unsplash.com https://images.unsplash.com https://ui-avatars.com https://ipapi.co https://www.googleapis.com https://placehold.co https://api.fontshare.com https://cdn.fontshare.com; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.ar https://*.mercadolibre.com https://calendar.google.com; worker-src 'self' blob: https://www.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self' https://*.mercadopago.com;"
     />
 
     <!-- PWA Configuration -->
@@ -141,8 +141,17 @@
     </a>
 
     <!-- Runtime environment configuration (loaded before Angular) -->
-    <!-- Cache buster updated to force reload after env changes -->
-    <script src="env.js?v=20251209"></script>
+    <!-- Inline fetch+eval workaround for Vite dev server script execution bug -->
+    <script>
+      (function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/env.js?v=' + Date.now(), false); // Synchronous
+        xhr.send();
+        if (xhr.status === 200) {
+          eval(xhr.responseText);
+        }
+      })();
+    </script>
 
     <!-- Debug API stub for e2e tests - populated by DebugService -->
     <script>

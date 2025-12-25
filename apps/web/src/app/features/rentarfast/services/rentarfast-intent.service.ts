@@ -155,7 +155,8 @@ export class RentarfastIntentService {
     }
 
     // Navigation: create booking / search cars
-    if (this.matchesBookingSearchIntent(normalized)) {
+    // Pass original text for UUID check (normalization removes hyphens)
+    if (this.matchesBookingSearchIntent(normalized, text)) {
       const command = this.parseBookingCommand(text);
       if (command) {
         await this.createBookingFromCommand(text, command);
@@ -335,7 +336,13 @@ export class RentarfastIntentService {
     return /(no me escuch|no me entiende|no estas escuch|no est[aá]s escuch|microfono|micr[oó]fono|voz no funciona|no anda la voz)/.test(normalized);
   }
 
-  private matchesBookingSearchIntent(normalized: string): boolean {
+  private matchesBookingSearchIntent(normalized: string, originalText?: string): boolean {
+    // If message contains a UUID, let the AI agent handle it (specific booking request)
+    // Check original text because normalization removes hyphens from UUIDs
+    const textToCheckUuid = originalText || normalized;
+    if (/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(textToCheckUuid)) {
+      return false;
+    }
     return /(crear|hacer|iniciar).*(reserva|reservar)/.test(normalized) ||
            /(buscar|alquilar|rentar).*(auto|veh[ií]culo)/.test(normalized);
   }

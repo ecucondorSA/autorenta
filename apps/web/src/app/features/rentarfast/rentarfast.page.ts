@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   ChatMessage,
+  ChatSuggestion,
   RentarfastAgentService,
 } from '@core/services/ai/rentarfast-agent.service';
 import { ProfileStore } from '@core/stores/profile.store';
@@ -350,8 +351,13 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
   }
 
   private isBookFirstCarQuery(text: string): boolean {
+    // If message contains a UUID, it's a specific car request - let AI agent handle it
+    if (/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(text)) {
+      return false;
+    }
     const normalized = this.intentService.normalizeInput(text);
-    return /(alquilar|reservar|rentar).*(primero|primer auto|primera opcion|1)/.test(normalized);
+    // More specific pattern: only match "1" or "1ro" as standalone words for "first"
+    return /(alquilar|reservar|rentar).*(primero|primer auto|primera opcion|el 1\b|el 1ro)/.test(normalized);
   }
 
   private async respondWithVoiceHelp(originalText: string): Promise<void> {
@@ -405,6 +411,17 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
   onCapabilityClick(action: CapabilityAction): void {
     this.shouldScrollToBottom = true;
     void this.capabilityService.onCapabilityClick(action);
+  }
+
+  // ============================================
+  // Suggestion Buttons (estilo Supabase)
+  // ============================================
+
+  onSuggestionClick(suggestion: ChatSuggestion): void {
+    this.shouldScrollToBottom = true;
+    this.inputText.set(suggestion.action);
+    // Ejecutar inmediatamente
+    setTimeout(() => this.sendMessage(), 100);
   }
 
   // ============================================

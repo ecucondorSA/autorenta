@@ -331,12 +331,12 @@
             <div class="flex items-baseline justify-between gap-2">
               <div class="flex items-baseline gap-2">
                 <span class="text-xl font-bold text-cta-default dark:text-cta-default">
-                  USD {{ protectedCreditBalance / 100 | number: '1.2-2' }}
+                  USD {{ protectedCreditBalance | number: '1.2-2' }}
                 </span>
                 <span
                   class="text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
                   >
-                  / USD {{ protectedCreditTarget / 100 | number: '1.0-0' }}
+                  / USD {{ protectedCreditTarget | number: '1.0-0' }}
                 </span>
               </div>
               <span
@@ -357,7 +357,7 @@
               <p class="text-xs font-medium text-text-secondary dark:text-text-secondary/80">
                 <span class="text-warning-strong dark:text-warning-300">
                   Te faltan USD
-                  {{ (protectedCreditTarget - protectedCreditBalance) / 100 | number: '1.2-2' }}
+                  {{ (protectedCreditTarget - protectedCreditBalance) | number: '1.2-2' }}
                 </span>
                 para completar tu crédito protegido
               </p>

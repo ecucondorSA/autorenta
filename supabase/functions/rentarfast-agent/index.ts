@@ -1,6 +1,7 @@
 // ============================================================================
 // RENTARFAST AGENT - Supabase Edge Function
 // Intelligent AI Agent with Gemini 2.0 Flash + Function Calling
+// Using @google/genai SDK for proper function calling support
 // ============================================================================
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
@@ -27,6 +28,7 @@ interface ChatResponse {
   sessionId: string;
   toolsUsed: string[];
   timestamp: string;
+  suggestions?: Array<{ label: string; action: string; icon?: string }>;
 }
 
 interface GeminiMessage {
@@ -39,60 +41,179 @@ interface GeminiMessage {
 // ============================================================================
 
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY') || '';
-// Gemini 3 Flash - Latest model (Dec 2025), Pro-grade reasoning at Flash speed
-const GEMINI_MODEL = 'gemini-3-flash';
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+// Gemini 2.0 Flash Experimental - Best function calling support
+// gemini-2.0-flash-exp tiene mejor function calling autónomo
+const GEMINI_MODEL = 'gemini-2.0-flash-exp';
 
-// System prompt for Rentarfast agent
-const SYSTEM_PROMPT = `Eres Rentarfast, el asistente inteligente de Autorentar, una plataforma de alquiler de autos entre personas (P2P) en Argentina y Brasil.
+// System prompt for Rentarfast agent - AUTONOMOUS MODE
+const SYSTEM_PROMPT = `Eres Rentarfast, un agente AUTÓNOMO de la plataforma Autorentar.
 
-## Tu personalidad:
-- Amigable, profesional y eficiente
-- Respondes en español argentino casual pero profesional
-- Usas emojis moderadamente para hacer la conversación más amena
-- Siempre buscas ayudar al usuario de la mejor manera posible
+## FECHA ACTUAL: ${new Date().toISOString().split('T')[0]}
 
-## REGLA CRÍTICA:
-SIEMPRE que el usuario pregunte sobre su wallet, saldo, fondos bloqueados, reservas o cualquier dato personal, DEBES usar las herramientas (get_wallet_status, get_blocked_funds_details, get_user_bookings) ANTES de responder. NUNCA respondas con información genérica si puedes consultar datos reales.
+## DETECCIÓN AUTOMÁTICA DE IDIOMA (IMPORTANTE)
 
-## Cómo funciona el sistema de pagos de AutoRenta:
+Detecta automáticamente el idioma del usuario y responde SIEMPRE en ese mismo idioma:
 
-### Para el ARRENDATARIO (quien alquila):
-1. **Preautorización con MercadoPago**: Al reservar, se hace una PREAUTORIZACIÓN en la tarjeta de crédito (NO se cobra inmediatamente). Esto aparece como "pendiente" en el resumen bancario.
-2. **Wallet Lock (Rental + Depósito)**: El monto del alquiler + depósito de garantía (USD 250) se bloquean en la wallet de AutoRenta.
-3. **Captura del pago**: Solo cuando el owner confirma que recibió el auto, se CAPTURA el pago real.
-4. **Liberación del depósito**: Si no hay daños, el depósito de USD 250 vuelve a la wallet del arrendatario en 24-48 horas después de que ambas partes confirmen.
+### Español (default):
+- Indicadores: español, castellano, palabras en español
+- Responde en español
 
-### Para el PROPIETARIO (owner):
-1. **Fondos bloqueados durante el alquiler**: El pago del rental queda bloqueado hasta que el arrendatario devuelve el auto.
-2. **Liberación al completar**: Cuando AMBAS partes confirman que todo está bien (confirmación bilateral), el pago se libera:
-   - 85% va al propietario (después de la comisión del 15%)
-   - El depósito vuelve al arrendatario
-3. **Disputas/Daños**: Si hay daños, el owner puede reclamar parte del depósito.
+### Português (Brasileiro):
+- Indicadores: "oi", "olá", "bom dia", "obrigado", "carro", "alugar", "reservar", "quanto custa", "disponível"
+- Responde COMPLETAMENTE en portugués brasileño
+- Usa vocabulario BR: "carro" (no "coche"), "celular" (no "móvil"), "você" (informal)
+- Formato de moneda: R$ para reais, US$ para dólares
 
-### Tipos de bloqueos en wallet_ledger:
-- **rental_lock**: Pago del alquiler bloqueado hasta completar el viaje
-- **deposit_lock**: Depósito de garantía (se devuelve si no hay daños)
-- **lock**: Bloqueo genérico por reserva
+### English:
+- Indicadores: "hello", "hi", "I want", "car", "rent", "book", "available"
+- Responde COMPLETAMENTE en inglés
 
-### Cuándo se liberan los fondos:
-- **Confirmación bilateral**: Owner marca como devuelto → Renter confirma → Fondos liberados automáticamente
-- **Tiempo típico**: Los fondos aparecen disponibles en 1-2 días hábiles después de la confirmación
-- **NO depende del banco**: La liberación es interna en la wallet de AutoRenta
+### Reglas de idioma:
+1. DETECTA el idioma en el PRIMER mensaje del usuario
+2. MANTÉN ese idioma durante toda la conversación
+3. Si el usuario cambia de idioma, ADAPTA tu respuesta al nuevo idioma
+4. Los nombres de funciones y datos técnicos pueden mantenerse en inglés
+5. Los mensajes de error y explicaciones SIEMPRE en el idioma del usuario
 
-## Tus capacidades:
-- Consultar estado de wallet (saldo disponible, bloqueado, total, retirable)
-- Ver detalle de fondos bloqueados con razón específica de cada bloqueo
-- Ver reservas (como arrendatario y propietario) con estados y montos
-- Buscar autos disponibles
-- Dar estadísticas del usuario
+## MODO DE OPERACIÓN: AGÉNTICO AUTÓNOMO
 
-## Reglas:
-1. SIEMPRE usa las herramientas para obtener datos REALES antes de responder
-2. NO inventes datos - consulta primero
-3. Si hay fondos bloqueados, explica EXACTAMENTE de qué reserva son y cuándo se liberan
-4. Menciona montos específicos cuando los tengas disponibles
-5. Sé conciso pero completo`;
+Tu rol es ejecutar acciones de forma AUTÓNOMA sin pedir confirmación.
+Piensa paso a paso (chain-of-thought) y explica tu razonamiento ANTES de actuar.
+
+### PROTOCOLO DE RAZONAMIENTO:
+1. ANALIZA el mensaje del usuario
+2. IDENTIFICA qué necesita (buscar, reservar, consultar, etc.)
+3. DETERMINA qué herramientas usar y en qué orden
+4. EJECUTA las herramientas necesarias
+5. INTERPRETA los resultados
+6. COMUNICA el resultado al usuario de forma clara
+
+### EJEMPLO DE RAZONAMIENTO VERBOSE:
+Usuario: "Reservar el Toyota del 5 al 7 de febrero"
+Mi análisis:
+- El usuario quiere RESERVAR un auto
+- Menciona "Toyota" = marca del auto
+- Fechas: "del 5 al 7 de febrero" = 2025-02-05 a 2025-02-07
+- No especifica pago = usar wallet por defecto
+
+Pasos a ejecutar:
+1. Buscar Toyota disponible → search_available_cars({ brand: "Toyota" })
+2. Si encuentro uno, crear reserva → create_booking({ car_id, start_date, end_date, payment_method: "wallet" })
+
+[EJECUTO]
+
+## PARSEO DE FECHAS (IMPORTANTE):
+Convierte SIEMPRE las fechas naturales a formato YYYY-MM-DD:
+- "mañana" → fecha de mañana
+- "pasado mañana" → fecha +2 días
+- "próximo lunes/martes/etc" → calcular fecha
+- "del 1 al 3 de febrero" → 2025-02-01 a 2025-02-03
+- "por 3 días" → desde hoy hasta hoy+3
+- "fin de semana" → próximo sábado a domingo
+- "la semana que viene" → lunes a viernes próximos
+
+## PARSEO DE AUTOS:
+- "el Toyota" / "un Toyota" → search_available_cars({ brand: "Toyota" })
+- "el Corolla" → search_available_cars({ model: "Corolla" })
+- "Toyota Corolla" → search_available_cars({ brand: "Toyota", model: "Corolla" })
+- "el primero" → usa el primer resultado de la última búsqueda
+- UUID directo → úsalo directamente en create_booking
+
+## MÉTODO DE PAGO:
+- DEFAULT: payment_method: "wallet"
+- "con tarjeta", "card" → payment_method: "card"
+- "con wallet", "con saldo" → payment_method: "wallet"
+
+## EJEMPLOS DE FUNCTION CALLS:
+
+### Ejemplo 1: "Reservar el Toyota del 5 al 7 de febrero"
+1. search_available_cars({ brand: "Toyota" })
+2. Si encuentra un Toyota con id="abc-123", entonces:
+3. create_booking({ car_id: "abc-123", start_date: "2025-02-05", end_date: "2025-02-07", payment_method: "wallet" })
+
+### Ejemplo 2: "Buscar autos"
+- search_available_cars({}) ← sin filtros, devuelve todos
+
+### Ejemplo 3: "Mostrar Fiat en Buenos Aires"
+- search_available_cars({ brand: "Fiat", city: "Buenos Aires" })
+
+## HERRAMIENTAS PRINCIPALES:
+- search_available_cars: { brand?, model?, city?, maxPrice?, transmission? }
+- create_booking: { car_id, start_date, end_date, payment_method }
+- get_wallet_status: Ver saldo
+- get_user_bookings: Ver reservas
+
+## Capacidades COMPLETAS:
+
+### LECTURA (consulta de datos):
+- get_wallet_status: Saldo disponible, bloqueado, total
+- get_blocked_funds_details: Detalle de cada bloqueo con razón
+- get_user_bookings: Reservas como renter y owner
+- get_user_stats: Estadísticas del usuario
+- search_available_cars: Buscar autos disponibles
+- get_booking_details: Detalle completo de una reserva
+
+### ESCRITURA (acciones autónomas):
+- create_booking: Crear reserva (valida disponibilidad y saldo automáticamente)
+- approve_booking: Aprobar reserva pendiente (solo owner)
+- reject_booking: Rechazar reserva con razón (solo owner)
+- cancel_booking: Cancelar con política de reembolso (+48h=100%, 24-48h=90%, <24h=75%)
+- process_wallet_payment: Pagar con fondos de wallet
+- initiate_card_payment: Generar URL para pago con tarjeta
+
+## Sistema de Pagos:
+
+### Para ARRENDATARIO:
+1. Al reservar: preautorización o lock de wallet (rental + USD 250 depósito)
+2. Al completar: rental va al owner, depósito vuelve si no hay daños
+
+### Para PROPIETARIO:
+1. Fondos bloqueados hasta que renter devuelve el auto
+2. Confirmación bilateral libera: 85% al owner, depósito al renter
+
+### Política de Cancelación:
+- +48h antes: 100% reembolso
+- 24-48h antes: 90% reembolso
+- <24h antes: 75% reembolso
+- Owner cancela: 100% reembolso + penalización al owner
+
+## Post-Acción:
+Después de ejecutar SIEMPRE explica:
+- QUÉ hiciste exactamente
+- El resultado (éxito/error)
+- Próximos pasos si aplica
+
+## COMPORTAMIENTO PROACTIVO (MUY IMPORTANTE):
+
+Cuando una acción FALLA, sé PROACTIVO y ofrece alternativas REALES:
+
+### Si create_booking falla por "propio auto":
+1. Informá al usuario: "No podés reservar tu propio auto"
+2. INMEDIATAMENTE llamá search_available_cars({}) para buscar OTROS autos
+3. Mostrá los resultados con precios y ubicación REALES
+4. Ejemplo de respuesta:
+   "No podés reservar tu propio auto. Pero encontré estos otros cerca tuyo:
+   - Toyota Corolla $80/día en Palermo (2.1 km)
+   - Fiat Cronos $65/día en Belgrano (3.5 km)
+   ¿Querés que reserve alguno?"
+
+### Si create_booking falla por "fechas no disponibles":
+1. Informá qué fechas no están disponibles
+2. Llamá get_booking_details o search_available_cars para sugerir alternativas
+3. Mostrá opciones concretas
+
+### Si falla por "saldo insuficiente":
+1. Mostrá cuánto falta
+2. Llamá get_wallet_status para mostrar saldo actual
+3. Sugerí "cargar saldo" o "pagar con tarjeta"
+
+NUNCA respondas solo con el error. SIEMPRE buscá y mostrá alternativas útiles.
+
+## Seguridad:
+- No puedes reservar tu propio auto (validación automática)
+- Pagos con tarjeta: solo generas URL, no manejas tokens
+- Todas las acciones quedan auditadas
+- RLS de Supabase aplica automáticamente`;
 
 // ============================================================================
 // TOOL DEFINITIONS (Function Calling)
@@ -149,10 +270,18 @@ const TOOLS = {
     },
     {
       name: 'search_available_cars',
-      description: 'Busca autos disponibles para alquilar según los criterios especificados.',
+      description: 'Busca autos disponibles para alquilar. Puede buscar por marca, modelo, ciudad, precio.',
       parameters: {
         type: 'object',
         properties: {
+          brand: {
+            type: 'string',
+            description: 'Marca del auto (Toyota, Ford, Fiat, etc.)',
+          },
+          model: {
+            type: 'string',
+            description: 'Modelo del auto (Corolla, Ka, Cronos, etc.)',
+          },
           city: {
             type: 'string',
             description: 'Ciudad donde buscar autos',
@@ -167,7 +296,7 @@ const TOOLS = {
           },
           maxPrice: {
             type: 'number',
-            description: 'Precio máximo por día en ARS',
+            description: 'Precio máximo por día en USD',
           },
           transmission: {
             type: 'string',
@@ -190,6 +319,114 @@ const TOOLS = {
           },
         },
         required: ['bookingId'],
+      },
+    },
+    // ========================================================================
+    // WRITE TOOLS (Autonomous Actions)
+    // ========================================================================
+    {
+      name: 'create_booking',
+      description: 'Crea una reserva de auto. SOLO necesita 4 parámetros. El userId se obtiene automáticamente del token JWT. NO requiere ubicación ni clienteId - esos datos se coordinan después. Llama esta función cuando el usuario diga que quiere reservar/alquilar un auto específico.',
+      parameters: {
+        type: 'object',
+        properties: {
+          car_id: {
+            type: 'string',
+            description: 'UUID del auto a reservar',
+          },
+          start_date: {
+            type: 'string',
+            description: 'Fecha de inicio en formato YYYY-MM-DD',
+          },
+          end_date: {
+            type: 'string',
+            description: 'Fecha de fin en formato YYYY-MM-DD',
+          },
+          payment_method: {
+            type: 'string',
+            enum: ['wallet', 'card'],
+            description: 'Método de pago: wallet para pagar con saldo, card para tarjeta',
+          },
+        },
+        required: ['car_id', 'start_date', 'end_date', 'payment_method'],
+      },
+    },
+    {
+      name: 'approve_booking',
+      description: 'Aprueba una reserva pendiente. Solo el propietario del auto puede aprobar.',
+      parameters: {
+        type: 'object',
+        properties: {
+          booking_id: {
+            type: 'string',
+            description: 'UUID de la reserva a aprobar',
+          },
+        },
+        required: ['booking_id'],
+      },
+    },
+    {
+      name: 'reject_booking',
+      description: 'Rechaza una reserva pendiente. Solo el propietario del auto puede rechazar. Libera fondos bloqueados automáticamente.',
+      parameters: {
+        type: 'object',
+        properties: {
+          booking_id: {
+            type: 'string',
+            description: 'UUID de la reserva a rechazar',
+          },
+          reason: {
+            type: 'string',
+            description: 'Motivo del rechazo',
+          },
+        },
+        required: ['booking_id', 'reason'],
+      },
+    },
+    {
+      name: 'cancel_booking',
+      description: 'Cancela una reserva. Aplica política de reembolso: +48h=100%, 24-48h=90%, <24h=75%. Owner tiene penalización.',
+      parameters: {
+        type: 'object',
+        properties: {
+          booking_id: {
+            type: 'string',
+            description: 'UUID de la reserva a cancelar',
+          },
+          reason: {
+            type: 'string',
+            description: 'Motivo de la cancelación (opcional)',
+          },
+        },
+        required: ['booking_id'],
+      },
+    },
+    {
+      name: 'process_wallet_payment',
+      description: 'Procesa el pago de una reserva usando fondos de wallet. Bloquea rental + depósito.',
+      parameters: {
+        type: 'object',
+        properties: {
+          booking_id: {
+            type: 'string',
+            description: 'UUID de la reserva a pagar',
+          },
+        },
+        required: ['booking_id'],
+      },
+    },
+    {
+      name: 'initiate_card_payment',
+      description: 'Inicia pago con tarjeta. Retorna la URL para completar el pago en la UI (el agente no maneja tokens de tarjeta por seguridad).',
+      parameters: {
+        type: 'object',
+        properties: {
+          booking_id: {
+            type: 'string',
+            description: 'UUID de la reserva a pagar',
+          },
+        },
+        required: ['booking_id'],
       },
     },
   ],
@@ -428,8 +665,11 @@ async function executeGetUserStats(supabase: SupabaseClient, userId: string) {
 
 async function executeSearchCars(
   supabase: SupabaseClient,
-  params: { city?: string; startDate?: string; endDate?: string; maxPrice?: number; transmission?: string }
+  params: { brand?: string; model?: string; city?: string; startDate?: string; endDate?: string; maxPrice?: number; transmission?: string }
 ) {
+  console.log('[SEARCH] Input params:', JSON.stringify(params));
+
+  // Build query - start with basic select
   let query = supabase
     .from('cars')
     .select(`
@@ -438,42 +678,80 @@ async function executeSearchCars(
       model,
       year,
       price_per_day,
+      currency,
       location_city,
+      location_lat,
+      location_lng,
       transmission,
-      seats,
-      photos
+      seats
     `)
     .eq('status', 'active')
     .limit(10);
 
+  // Filter by brand (case-insensitive)
+  if (params.brand) {
+    console.log('[SEARCH] Filtering by brand:', params.brand);
+    query = query.ilike('brand', `%${params.brand}%`);
+  }
+  // Filter by model (case-insensitive)
+  if (params.model) {
+    console.log('[SEARCH] Filtering by model:', params.model);
+    query = query.ilike('model', `%${params.model}%`);
+  }
+  // Filter by city (case-insensitive)
   if (params.city) {
+    console.log('[SEARCH] Filtering by city:', params.city);
     query = query.ilike('location_city', `%${params.city}%`);
   }
   if (params.maxPrice) {
+    console.log('[SEARCH] Filtering by maxPrice:', params.maxPrice);
     query = query.lte('price_per_day', params.maxPrice);
   }
   if (params.transmission) {
+    console.log('[SEARCH] Filtering by transmission:', params.transmission);
     query = query.eq('transmission', params.transmission);
   }
 
+  console.log('[SEARCH] Executing query...');
   const { data, error } = await query;
 
   if (error) {
-    console.error('Cars search error:', error);
-    return { error: 'No se pudieron buscar autos' };
+    console.error('[SEARCH] ERROR:', JSON.stringify(error));
+    return { error: `Error en búsqueda: ${error.message}` };
   }
 
-  return {
-    total_found: data?.length || 0,
-    cars: (data || []).map((car: any) => ({
-      id: car.id,
-      name: `${car.brand} ${car.model} ${car.year}`,
-      price_per_day: car.price_per_day,
-      location: car.location_city,
-      transmission: car.transmission,
-      seats: car.seats,
-    })),
+  console.log('[SEARCH] Raw data count:', data?.length || 0);
+  if (data && data.length > 0) {
+    console.log('[SEARCH] First result:', JSON.stringify(data[0]));
+  }
+
+  const cars = (data || []).map((car: any) => ({
+    id: car.id,
+    name: `${car.brand || ''} ${car.model || ''} ${car.year || ''}`.trim(),
+    brand: car.brand,
+    model: car.model,
+    price_per_day: car.price_per_day,
+    currency: car.currency || 'USD',
+    location: car.location_city || 'Sin ubicación',
+    transmission: car.transmission,
+    seats: car.seats,
+  }));
+
+  // Generar sugerencias interactivas (estilo Supabase)
+  const suggestions = cars.slice(0, 5).map((car, index) => ({
+    label: `${car.name} - $${car.price_per_day}/día${car.location !== 'Sin ubicación' ? ` - ${car.location}` : ''}`,
+    action: `reservar ${car.id} del mañana por 3 días`,
+    icon: '🚗',
+  }));
+
+  const result = {
+    total_found: cars.length,
+    cars,
+    suggestions,  // Para renderizar botones en el frontend
   };
+
+  console.log('[SEARCH] Returning:', result.total_found, 'cars with', suggestions.length, 'suggestions');
+  return result;
 }
 
 async function executeGetBookingDetails(supabase: SupabaseClient, bookingId: string) {
@@ -519,6 +797,483 @@ async function executeGetBookingDetails(supabase: SupabaseClient, bookingId: str
 }
 
 // ============================================================================
+// WRITE TOOL IMPLEMENTATIONS (Autonomous Actions)
+// ============================================================================
+
+async function executeCreateBooking(
+  supabase: SupabaseClient,
+  userId: string,
+  args: { car_id: string; start_date: string; end_date: string; payment_method: 'wallet' | 'card' }
+) {
+  console.log('[AUTONOMOUS] Creating booking:', args);
+
+  // 1. Get car details and validate ownership
+  const { data: car, error: carError } = await supabase
+    .from('cars')
+    .select('id, owner_id, brand, model, price_per_day, status')
+    .eq('id', args.car_id)
+    .single();
+
+  if (carError || !car) {
+    return {
+      error: 'Auto no encontrado',
+      success: false,
+      suggestions: [
+        { label: 'Buscar otros autos', action: 'buscar autos disponibles', icon: '🔍' },
+      ]
+    };
+  }
+
+  // 2. Prevent self-booking
+  if (car.owner_id === userId) {
+    return {
+      error: 'No puedes reservar tu propio auto',
+      success: false,
+      suggestions: [
+        { label: 'Buscar otros autos', action: 'buscar autos disponibles', icon: '🔍' },
+        { label: 'Ver mis autos publicados', action: 'mostrar mis autos', icon: '🚗' },
+      ]
+    };
+  }
+
+  // 3. Check car is active
+  if (car.status !== 'active') {
+    return {
+      error: 'Este auto no está disponible para reservas',
+      success: false,
+      suggestions: [
+        { label: 'Buscar otros autos', action: 'buscar autos disponibles', icon: '🔍' },
+      ]
+    };
+  }
+
+  // 4. Check availability using RPC
+  const { data: isAvailable, error: availError } = await supabase.rpc('is_car_available', {
+    p_car_id: args.car_id,
+    p_start_date: args.start_date,
+    p_end_date: args.end_date,
+  });
+
+  if (availError) {
+    console.error('Availability check error:', availError);
+    return { error: 'Error verificando disponibilidad', success: false };
+  }
+
+  if (!isAvailable) {
+    return { error: 'El auto no está disponible en esas fechas', success: false };
+  }
+
+  // 5. Calculate days and amounts
+  const startDate = new Date(args.start_date);
+  const endDate = new Date(args.end_date);
+  const days = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+  const rentalAmount = days * (car.price_per_day || 0);
+  const depositAmount = 250; // Standard deposit in USD
+  const totalAmount = rentalAmount + depositAmount;
+
+  // 6. If wallet payment, check balance
+  if (args.payment_method === 'wallet') {
+    const { data: walletData, error: walletError } = await supabase.rpc('wallet_get_balance');
+
+    if (walletError) {
+      return { error: 'Error verificando saldo', success: false };
+    }
+
+    const balance = walletData?.[0]?.available_balance || 0;
+    if (balance < totalAmount) {
+      return {
+        error: `Saldo insuficiente. Necesitas USD ${totalAmount.toFixed(2)} pero tienes USD ${balance.toFixed(2)}`,
+        success: false,
+      };
+    }
+  }
+
+  // 7. Create the booking using request_booking RPC
+  // Convert dates to ISO timestamps (RPC expects timestamptz)
+  const startTimestamp = new Date(args.start_date + 'T10:00:00Z').toISOString();
+  const endTimestamp = new Date(args.end_date + 'T10:00:00Z').toISOString();
+
+  const { data: booking, error: bookingError } = await supabase.rpc('request_booking', {
+    p_car_id: args.car_id,
+    p_start: startTimestamp,
+    p_end: endTimestamp,
+  });
+
+  if (bookingError) {
+    console.error('Booking creation error:', bookingError);
+    return { error: `Error creando reserva: ${bookingError.message}`, success: false };
+  }
+
+  const bookingId = booking?.booking_id || booking?.id || booking;
+
+  // 8. If wallet payment, lock the funds
+  if (args.payment_method === 'wallet' && bookingId) {
+    const { data: lockResult, error: lockError } = await supabase.rpc('wallet_lock_rental_and_deposit', {
+      p_booking_id: bookingId,
+      p_rental_amount: rentalAmount,
+      p_deposit_amount: depositAmount,
+    });
+
+    console.log('Wallet lock result:', JSON.stringify(lockResult));
+    console.log('Wallet lock error:', lockError);
+
+    // RPC returns a record with (success, error_message, ...)
+    const lockData = Array.isArray(lockResult) ? lockResult[0] : lockResult;
+
+    if (lockError || !lockData?.success) {
+      const errorMsg = lockError?.message || lockData?.error_message || 'Error desconocido al bloquear fondos';
+      console.error('Wallet lock failed:', errorMsg);
+      return {
+        error: `Reserva creada (ID: ${bookingId}) pero error al bloquear fondos: ${errorMsg}`,
+        booking_id: bookingId,
+        success: false,
+      };
+    }
+  }
+
+  return {
+    success: true,
+    booking_id: bookingId,
+    car: `${car.brand} ${car.model}`,
+    dates: `${args.start_date} - ${args.end_date}`,
+    days,
+    rental_amount: rentalAmount,
+    deposit_amount: depositAmount,
+    total_amount: totalAmount,
+    payment_method: args.payment_method,
+    payment_status: args.payment_method === 'wallet' ? 'funds_locked' : 'pending',
+    next_step: args.payment_method === 'card'
+      ? `Completa el pago en: /bookings/${bookingId}/pay`
+      : 'Esperando aprobación del propietario',
+  };
+}
+
+async function executeApproveBooking(
+  supabase: SupabaseClient,
+  userId: string,
+  args: { booking_id: string }
+) {
+  console.log('[AUTONOMOUS] Approving booking:', args.booking_id);
+
+  // 1. Get booking and verify ownership
+  const { data: booking, error: bookingError } = await supabase
+    .from('bookings')
+    .select(`
+      id, status, renter_id,
+      car:car_id (id, owner_id, brand, model)
+    `)
+    .eq('id', args.booking_id)
+    .single();
+
+  if (bookingError || !booking) {
+    return { error: 'Reserva no encontrada', success: false };
+  }
+
+  // 2. Verify user is the owner
+  if ((booking.car as any)?.owner_id !== userId) {
+    return { error: 'Solo el propietario del auto puede aprobar esta reserva', success: false };
+  }
+
+  // 3. Verify booking is pending
+  if (booking.status !== 'pending') {
+    return { error: `La reserva no está pendiente (estado actual: ${booking.status})`, success: false };
+  }
+
+  // 4. Call approve_booking RPC
+  const { error: approveError } = await supabase.rpc('approve_booking', {
+    p_booking_id: args.booking_id,
+  });
+
+  if (approveError) {
+    console.error('Approve booking error:', approveError);
+    return { error: `Error al aprobar: ${approveError.message}`, success: false };
+  }
+
+  return {
+    success: true,
+    booking_id: args.booking_id,
+    car: `${(booking.car as any)?.brand} ${(booking.car as any)?.model}`,
+    new_status: 'confirmed',
+    message: 'Reserva aprobada exitosamente. El arrendatario ha sido notificado.',
+  };
+}
+
+async function executeRejectBooking(
+  supabase: SupabaseClient,
+  userId: string,
+  args: { booking_id: string; reason: string }
+) {
+  console.log('[AUTONOMOUS] Rejecting booking:', args.booking_id);
+
+  // 1. Get booking and verify ownership
+  const { data: booking, error: bookingError } = await supabase
+    .from('bookings')
+    .select(`
+      id, status, renter_id,
+      car:car_id (id, owner_id, brand, model)
+    `)
+    .eq('id', args.booking_id)
+    .single();
+
+  if (bookingError || !booking) {
+    return { error: 'Reserva no encontrada', success: false };
+  }
+
+  // 2. Verify user is the owner
+  if ((booking.car as any)?.owner_id !== userId) {
+    return { error: 'Solo el propietario del auto puede rechazar esta reserva', success: false };
+  }
+
+  // 3. Verify booking is pending
+  if (booking.status !== 'pending') {
+    return { error: `La reserva no está pendiente (estado actual: ${booking.status})`, success: false };
+  }
+
+  // 4. Call reject_booking RPC
+  const { error: rejectError } = await supabase.rpc('reject_booking', {
+    p_booking_id: args.booking_id,
+    p_reason: args.reason,
+  });
+
+  if (rejectError) {
+    console.error('Reject booking error:', rejectError);
+    return { error: `Error al rechazar: ${rejectError.message}`, success: false };
+  }
+
+  return {
+    success: true,
+    booking_id: args.booking_id,
+    car: `${(booking.car as any)?.brand} ${(booking.car as any)?.model}`,
+    reason: args.reason,
+    new_status: 'rejected',
+    message: 'Reserva rechazada. Los fondos bloqueados han sido liberados al arrendatario.',
+  };
+}
+
+async function executeCancelBooking(
+  supabase: SupabaseClient,
+  userId: string,
+  args: { booking_id: string; reason?: string }
+) {
+  console.log('[AUTONOMOUS] Cancelling booking:', args.booking_id);
+
+  // 1. Get booking details
+  const { data: booking, error: bookingError } = await supabase
+    .from('bookings')
+    .select(`
+      id, status, renter_id, start_at, total_amount,
+      car:car_id (id, owner_id, brand, model)
+    `)
+    .eq('id', args.booking_id)
+    .single();
+
+  if (bookingError || !booking) {
+    return { error: 'Reserva no encontrada', success: false };
+  }
+
+  const isOwner = (booking.car as any)?.owner_id === userId;
+  const isRenter = booking.renter_id === userId;
+
+  if (!isOwner && !isRenter) {
+    return { error: 'No tienes permiso para cancelar esta reserva', success: false };
+  }
+
+  // 2. Check if booking can be cancelled
+  if (!['pending', 'confirmed'].includes(booking.status)) {
+    return { error: `No se puede cancelar una reserva en estado: ${booking.status}`, success: false };
+  }
+
+  // 3. Calculate refund based on policy
+  const startDate = new Date(booking.start_at);
+  const now = new Date();
+  const hoursUntilStart = (startDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+  let refundPercentage = 100;
+  let refundReason = '';
+
+  if (isRenter) {
+    if (hoursUntilStart >= 48) {
+      refundPercentage = 100;
+      refundReason = 'Cancelación con +48h de anticipación: reembolso completo';
+    } else if (hoursUntilStart >= 24) {
+      refundPercentage = 90;
+      refundReason = 'Cancelación 24-48h antes: reembolso 90%';
+    } else {
+      refundPercentage = 75;
+      refundReason = 'Cancelación <24h antes: reembolso 75%';
+    }
+  }
+
+  // 4. Call appropriate RPC based on role
+  let cancelError;
+  if (isOwner) {
+    const { error } = await supabase.rpc('owner_cancel_booking', {
+      p_booking_id: args.booking_id,
+      p_reason: args.reason || 'Cancelado por el propietario',
+    });
+    cancelError = error;
+    refundReason = 'Cancelado por propietario: reembolso completo + penalización al owner';
+    refundPercentage = 100;
+  } else {
+    // Renter cancellation - use generic cancel with refund calculation
+    const { error } = await supabase.rpc('cancel_booking', {
+      p_booking_id: args.booking_id,
+      p_reason: args.reason || 'Cancelado por el arrendatario',
+      p_refund_percentage: refundPercentage,
+    });
+    cancelError = error;
+  }
+
+  if (cancelError) {
+    console.error('Cancel booking error:', cancelError);
+    return { error: `Error al cancelar: ${cancelError.message}`, success: false };
+  }
+
+  return {
+    success: true,
+    booking_id: args.booking_id,
+    car: `${(booking.car as any)?.brand} ${(booking.car as any)?.model}`,
+    cancelled_by: isOwner ? 'owner' : 'renter',
+    reason: args.reason || 'Sin motivo especificado',
+    refund_percentage: refundPercentage,
+    refund_explanation: refundReason,
+    new_status: 'cancelled',
+    message: 'Reserva cancelada. Los fondos se procesan según la política de reembolso.',
+  };
+}
+
+async function executeProcessWalletPayment(
+  supabase: SupabaseClient,
+  userId: string,
+  args: { booking_id: string }
+) {
+  console.log('[AUTONOMOUS] Processing wallet payment:', args.booking_id);
+
+  // 1. Get booking details
+  const { data: booking, error: bookingError } = await supabase
+    .from('bookings')
+    .select(`
+      id, status, renter_id, total_amount, rental_amount, deposit_amount, payment_status,
+      car:car_id (id, owner_id, brand, model)
+    `)
+    .eq('id', args.booking_id)
+    .single();
+
+  if (bookingError || !booking) {
+    return { error: 'Reserva no encontrada', success: false };
+  }
+
+  // 2. Verify user is the renter
+  if (booking.renter_id !== userId) {
+    return { error: 'Solo el arrendatario puede pagar esta reserva', success: false };
+  }
+
+  // 3. Check booking status
+  if (booking.status !== 'pending' && booking.status !== 'confirmed') {
+    return { error: `No se puede pagar una reserva en estado: ${booking.status}`, success: false };
+  }
+
+  // 4. Check if already paid
+  if (booking.payment_status === 'paid' || booking.payment_status === 'funds_locked') {
+    return { error: 'Esta reserva ya está pagada o tiene fondos bloqueados', success: false };
+  }
+
+  const rentalAmount = booking.rental_amount || booking.total_amount;
+  const depositAmount = booking.deposit_amount || 250;
+  const totalNeeded = rentalAmount + depositAmount;
+
+  // 5. Check wallet balance
+  const { data: walletData, error: walletError } = await supabase.rpc('wallet_get_balance');
+
+  if (walletError) {
+    return { error: 'Error verificando saldo', success: false };
+  }
+
+  const balance = walletData?.[0]?.available_balance || 0;
+  if (balance < totalNeeded) {
+    return {
+      error: `Saldo insuficiente. Necesitas USD ${totalNeeded.toFixed(2)} pero tienes USD ${balance.toFixed(2)}`,
+      success: false,
+    };
+  }
+
+  // 6. Lock funds
+  const { error: lockError } = await supabase.rpc('wallet_lock_rental_and_deposit', {
+    p_booking_id: args.booking_id,
+    p_rental_amount: rentalAmount,
+    p_deposit_amount: depositAmount,
+  });
+
+  if (lockError) {
+    console.error('Wallet lock error:', lockError);
+    return { error: `Error al bloquear fondos: ${lockError.message}`, success: false };
+  }
+
+  return {
+    success: true,
+    booking_id: args.booking_id,
+    car: `${(booking.car as any)?.brand} ${(booking.car as any)?.model}`,
+    amount_locked: totalNeeded,
+    rental_locked: rentalAmount,
+    deposit_locked: depositAmount,
+    payment_status: 'funds_locked',
+    message: 'Pago procesado exitosamente. Fondos bloqueados hasta completar el viaje.',
+    next_step: booking.status === 'pending'
+      ? 'Esperando aprobación del propietario'
+      : 'Reserva confirmada - disfruta tu viaje!',
+  };
+}
+
+async function executeInitiateCardPayment(
+  supabase: SupabaseClient,
+  userId: string,
+  args: { booking_id: string }
+) {
+  console.log('[AUTONOMOUS] Initiating card payment:', args.booking_id);
+
+  // 1. Get booking details
+  const { data: booking, error: bookingError } = await supabase
+    .from('bookings')
+    .select(`
+      id, status, renter_id, total_amount, rental_amount, deposit_amount, payment_status,
+      car:car_id (id, brand, model)
+    `)
+    .eq('id', args.booking_id)
+    .single();
+
+  if (bookingError || !booking) {
+    return { error: 'Reserva no encontrada', success: false };
+  }
+
+  // 2. Verify user is the renter
+  if (booking.renter_id !== userId) {
+    return { error: 'Solo el arrendatario puede pagar esta reserva', success: false };
+  }
+
+  // 3. Check booking status
+  if (booking.status !== 'pending' && booking.status !== 'confirmed') {
+    return { error: `No se puede pagar una reserva en estado: ${booking.status}`, success: false };
+  }
+
+  // 4. Check if already paid
+  if (booking.payment_status === 'paid' || booking.payment_status === 'funds_locked') {
+    return { error: 'Esta reserva ya está pagada', success: false };
+  }
+
+  const totalAmount = (booking.rental_amount || booking.total_amount) + (booking.deposit_amount || 250);
+
+  return {
+    success: true,
+    booking_id: args.booking_id,
+    car: `${(booking.car as any)?.brand} ${(booking.car as any)?.model}`,
+    amount_to_pay: totalAmount,
+    payment_url: `/bookings/${args.booking_id}/pay`,
+    message: 'Para pagar con tarjeta, completa el pago en la siguiente URL:',
+    security_note: 'Por seguridad, el agente no procesa datos de tarjeta directamente. Usa la interfaz de pago segura.',
+  };
+}
+
+// ============================================================================
 // TOOL EXECUTOR
 // ============================================================================
 
@@ -531,6 +1286,7 @@ async function executeTool(
   console.log(`Executing tool: ${toolName}`, args);
 
   switch (toolName) {
+    // Read tools
     case 'get_wallet_status':
       return executeGetWalletStatus(supabase, userId);
     case 'get_blocked_funds_details':
@@ -543,45 +1299,68 @@ async function executeTool(
       return executeSearchCars(supabase, args);
     case 'get_booking_details':
       return executeGetBookingDetails(supabase, args.bookingId);
+
+    // Write tools (Autonomous Actions)
+    case 'create_booking':
+      return executeCreateBooking(supabase, userId, args);
+    case 'approve_booking':
+      return executeApproveBooking(supabase, userId, args);
+    case 'reject_booking':
+      return executeRejectBooking(supabase, userId, args);
+    case 'cancel_booking':
+      return executeCancelBooking(supabase, userId, args);
+    case 'process_wallet_payment':
+      return executeProcessWalletPayment(supabase, userId, args);
+    case 'initiate_card_payment':
+      return executeInitiateCardPayment(supabase, userId, args);
+
     default:
       return { error: `Unknown tool: ${toolName}` };
   }
 }
 
 // ============================================================================
-// GEMINI API INTERACTION
+// GEMINI API INTERACTION - REST API with Function Calling
 // ============================================================================
 
 async function callGemini(
   messages: GeminiMessage[],
   tools: any
 ): Promise<{ text?: string; functionCalls?: any[] }> {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+
   const requestBody = {
     contents: messages,
-    tools: [tools],
     systemInstruction: {
       parts: [{ text: SYSTEM_PROMPT }],
     },
+    tools: [tools],
+    toolConfig: {
+      functionCallingConfig: {
+        mode: 'AUTO',
+      },
+    },
     generationConfig: {
-      temperature: 0.7,
-      topK: 40,
-      topP: 0.95,
+      temperature: 0.1,
+      topK: 20,
+      topP: 0.9,
       maxOutputTokens: 2048,
     },
   };
 
-  const response = await fetch(GEMINI_URL, {
+  console.log('[Gemini REST] Calling', GEMINI_MODEL, 'with', tools.functionDeclarations.length, 'tools');
+  console.log('[Gemini REST] Messages:', messages.length);
+
+  const response = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(requestBody),
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error('Gemini API error:', errorText);
-    throw new Error(`Gemini API error: ${response.status}`);
+    console.error('[Gemini REST] Error response:', errorText);
+    throw new Error(`Gemini API error: ${response.status} ${errorText}`);
   }
 
   const data = await response.json();
@@ -592,14 +1371,15 @@ async function callGemini(
     throw new Error('No content in Gemini response');
   }
 
-  // Check for function calls
   const functionCalls = content.parts
     ?.filter((part: any) => part.functionCall)
     .map((part: any) => part.functionCall);
 
-  // Get text response
   const textParts = content.parts?.filter((part: any) => part.text);
   const text = textParts?.map((part: any) => part.text).join('');
+
+  console.log('[Gemini REST] Function calls:', functionCalls?.length || 0);
+  console.log('[Gemini REST] Text response:', text ? text.substring(0, 100) + '...' : 'no');
 
   return {
     text: text || undefined,
@@ -611,18 +1391,31 @@ async function callGemini(
 // MAIN AGENT LOOP
 // ============================================================================
 
+interface AgentSuggestion {
+  label: string;
+  action: string;
+  icon?: string;
+}
+
 async function runAgent(
   userMessage: string,
   supabase: SupabaseClient,
   userId: string
-): Promise<{ response: string; toolsUsed: string[] }> {
+): Promise<{ response: string; toolsUsed: string[]; suggestions?: AgentSuggestion[] }> {
   const messages: GeminiMessage[] = [];
   const toolsUsed: string[] = [];
+  let collectedSuggestions: AgentSuggestion[] = [];
 
-  // Add user message
+  // Add user context as system context in the first message
+  // This informs Gemini that the user is authenticated
+  const userContext = `[CONTEXTO DEL SISTEMA: Usuario autenticado con ID ${userId}. Todas las herramientas de escritura (create_booking, approve_booking, etc.) ya tienen acceso al ID del usuario. NO necesitas pedir el ID del cliente - ya lo tienes. Ejecuta las acciones directamente.]
+
+Mensaje del usuario: ${userMessage}`;
+
+  // Add user message with context
   messages.push({
     role: 'user',
-    parts: [{ text: userMessage }],
+    parts: [{ text: userContext }],
   });
 
   // Agent loop (max 5 iterations to prevent infinite loops)
@@ -642,6 +1435,12 @@ async function runAgent(
       for (const fc of result.functionCalls) {
         toolsUsed.push(fc.name);
         const toolResult = await executeTool(fc.name, fc.args || {}, supabase, userId);
+
+        // Capturar sugerencias de search_available_cars
+        if (fc.name === 'search_available_cars' && toolResult.suggestions) {
+          collectedSuggestions = toolResult.suggestions;
+        }
+
         functionResponses.push({
           functionResponse: {
             name: fc.name,
@@ -664,6 +1463,7 @@ async function runAgent(
       return {
         response: result.text,
         toolsUsed: [...new Set(toolsUsed)], // Remove duplicates
+        suggestions: collectedSuggestions.length > 0 ? collectedSuggestions : undefined,
       };
     }
   }
@@ -671,6 +1471,7 @@ async function runAgent(
   return {
     response: 'Lo siento, no pude procesar tu solicitud. Por favor intenta de nuevo.',
     toolsUsed,
+    suggestions: collectedSuggestions.length > 0 ? collectedSuggestions : undefined,
   };
 }
 
@@ -767,7 +1568,7 @@ serve(async (req) => {
     console.log(`Processing message for user: ${user.id}`);
 
     // Run the agent
-    const { response, toolsUsed } = await runAgent(message, supabase, user.id);
+    const { response, toolsUsed, suggestions } = await runAgent(message, supabase, user.id);
 
     const chatResponse: ChatResponse = {
       success: true,
@@ -775,6 +1576,7 @@ serve(async (req) => {
       sessionId: sessionId || crypto.randomUUID(),
       toolsUsed,
       timestamp: new Date().toISOString(),
+      suggestions,  // Sugerencias clickeables para el frontend
     };
 
     return new Response(

@@ -316,6 +316,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private clusterCountLayerId = 'cars-cluster-count';
   // Mapbox optimization: Clustering is efficient for 10K+ cars (Supercluster handles 400K)
   public clusteringThreshold = 3; // Activate clustering at 3+ cars (Airbnb style) - public for template access
+  private clusterMaxZoom = 12; // Zoom level where clusters stop and individual markers show
+  private isShowingPhotoMarkers = false; // Track if we're showing HTML markers with photos
   private virtualizationThreshold = 1000; // Only virtualize if NOT clustering (10K+ without clustering)
   private viewportBuffer = 0.1; // 10% buffer around viewport for smoother experience
   private maxVisibleMarkers = 500; // Increased for better 10K+ experience when not clustering
@@ -857,6 +859,136 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         this.map.getCanvas().style.cursor = '';
       }
     });
+
+    // Add zoom listener for hybrid mode (clusters vs photo markers)
+    this.map.on('zoomend', () => this.handleZoomForHybridMode());
+
+    // Add move listener to update photo markers when panning at high zoom
+    this.map.on('moveend', () => {
+      if (this.isShowingPhotoMarkers) {
+        this.updatePhotoMarkersInViewport();
+      }
+    });
+
+    // Initial check for current zoom level
+    this.handleZoomForHybridMode();
+  }
+
+  /**
+   * Handle zoom changes to switch between native circles and HTML photo markers
+   * - Zoom <= clusterMaxZoom: Show clusters + native unclustered circles
+   * - Zoom > clusterMaxZoom: Hide native unclustered layer, show HTML markers with photos
+   */
+  private handleZoomForHybridMode(): void {
+    if (!this.map || !this.useClustering) return;
+
+    const currentZoom = this.map.getZoom();
+    const shouldShowPhotoMarkers = currentZoom > this.clusterMaxZoom;
+
+    // Only update if state changed
+    if (shouldShowPhotoMarkers === this.isShowingPhotoMarkers) return;
+
+    this.isShowingPhotoMarkers = shouldShowPhotoMarkers;
+
+    if (shouldShowPhotoMarkers) {
+      // Hide native unclustered layer, show HTML photo markers
+      this.hideNativeUnclusteredLayer();
+      this.renderPhotoMarkersInViewport();
+    } else {
+      // Show native unclustered layer, remove HTML photo markers
+      this.showNativeUnclusteredLayer();
+      this.clearMarkers();
+    }
+  }
+
+  /**
+   * Hide the native Mapbox unclustered circle layer
+   */
+  private hideNativeUnclusteredLayer(): void {
+    if (!this.map) return;
+
+    if (this.map.getLayer('cars-unclustered')) {
+      this.map.setLayoutProperty('cars-unclustered', 'visibility', 'none');
+    }
+  }
+
+  /**
+   * Show the native Mapbox unclustered circle layer
+   */
+  private showNativeUnclusteredLayer(): void {
+    if (!this.map) return;
+
+    if (this.map.getLayer('cars-unclustered')) {
+      this.map.setLayoutProperty('cars-unclustered', 'visibility', 'visible');
+    }
+  }
+
+  /**
+   * Render HTML markers with car photos for cars in viewport
+   */
+  private renderPhotoMarkersInViewport(): void {
+    if (!this.map) return;
+
+    // Clear existing HTML markers
+    this.clearMarkers();
+
+    // Get cars visible in current viewport
+    const visibleCars = this.getVisibleCarsInViewport();
+
+    // Limit markers for performance
+    const carsToRender = visibleCars.slice(0, this.maxVisibleMarkers);
+
+    // Update visible car IDs
+    this.visibleCarIds = new Set(carsToRender.map((car) => car['carId']));
+
+    // Create HTML markers with photos
+    carsToRender.forEach((car) => {
+      const markerData = this.createCarMarker(car);
+      if (markerData) {
+        this.carMarkers.set(car['carId'], markerData);
+      }
+    });
+
+    // Highlight selected car if visible
+    if (this.selectedCarId) {
+      this.highlightSelectedCar(this.selectedCarId);
+    }
+  }
+
+  /**
+   * Update photo markers when panning - incremental update for better performance
+   */
+  private updatePhotoMarkersInViewport(): void {
+    if (!this.map) return;
+
+    const newVisibleCars = this.getVisibleCarsInViewport();
+    const newVisibleCarIds = new Set(newVisibleCars.map((car) => car['carId']));
+
+    // Remove markers for cars no longer visible
+    const carsToRemove = Array.from(this.visibleCarIds).filter((id) => !newVisibleCarIds.has(id));
+    carsToRemove.forEach((carId) => {
+      const markerData = this.carMarkers.get(carId);
+      if (markerData) {
+        markerData.marker.remove();
+        this.returnMarkerComponentToPool(markerData.componentRef);
+        this.carMarkers.delete(carId);
+      }
+    });
+
+    // Add markers for newly visible cars
+    const carsToAdd = newVisibleCars.filter((car) => !this.visibleCarIds.has(car['carId']));
+    const slotsAvailable = this.maxVisibleMarkers - this.carMarkers.size;
+    const carsToRender = carsToAdd.slice(0, Math.max(0, slotsAvailable));
+
+    carsToRender.forEach((car) => {
+      const markerData = this.createCarMarker(car);
+      if (markerData) {
+        this.carMarkers.set(car['carId'], markerData);
+      }
+    });
+
+    // Update visible car IDs
+    this.visibleCarIds = new Set(Array.from(this.carMarkers.keys()));
   }
 
   /**

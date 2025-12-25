@@ -92,21 +92,22 @@ import { TranslateModule } from '@ngx-translate/core';
             </div>
           </div>
           <!-- Tabs -->
-          <div class="border-b border-border-default dark:border-slate-deep">
-            <nav class="flex gap-4" aria-label="Tabs">
+          <div class="border-b border-border-default dark:border-slate-deep overflow-x-auto scrollbar-hide">
+            <nav class="flex gap-2 sm:gap-4 min-w-max" aria-label="Tabs">
               <button
                 type="button"
                 (click)="activeTab.set('tips')"
                 [ngClass]="getTabClasses('tips')"
-                class="py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
+                class="py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap"
                 >
-                📚 Tips y Obligaciones
+                <span class="hidden sm:inline">📚 Tips y Obligaciones</span>
+                <span class="sm:hidden">📚 Tips</span>
               </button>
               <button
                 type="button"
                 (click)="activeTab.set('calculator')"
                 [ngClass]="getTabClasses('calculator')"
-                class="py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
+                class="py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap"
                 >
                 💰 Calculadora
               </button>
@@ -114,9 +115,10 @@ import { TranslateModule } from '@ngx-translate/core';
                 type="button"
                 (click)="activeTab.set('pricing')"
                 [ngClass]="getTabClasses('pricing')"
-                class="py-2 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap"
+                class="py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap"
                 >
-                💵 Precios Sugeridos
+                <span class="hidden sm:inline">💵 Precios Sugeridos</span>
+                <span class="sm:hidden">💵 Precios</span>
               </button>
             </nav>
           </div>

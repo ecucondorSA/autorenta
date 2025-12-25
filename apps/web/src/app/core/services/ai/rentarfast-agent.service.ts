@@ -63,6 +63,13 @@ export interface AgentChatResponse {
   toolsUsed: string[];
   timestamp: string;
   error?: string;
+  suggestions?: ChatSuggestion[];
+}
+
+export interface ChatSuggestion {
+  label: string;        // Texto visible: "1. Toyota Corolla - $74/día"
+  action: string;       // Comando a ejecutar: "reservar 7a895b42..."
+  icon?: string;        // Emoji opcional: "🚗"
 }
 
 export interface ChatMessage {
@@ -72,6 +79,7 @@ export interface ChatMessage {
   timestamp: Date;
   toolsUsed?: string[];
   isStreaming?: boolean;
+  suggestions?: ChatSuggestion[];  // Opciones clickeables
 }
 
 export interface TranscriptionEvent {
@@ -259,6 +267,13 @@ export class RentarfastAgentService {
         this.audioContext = new AudioContext();
       }
 
+      // Validate base64 before decoding
+      if (!base64Audio || !/^[A-Za-z0-9+/=]+$/.test(base64Audio)) {
+        console.warn('[Rentarfast] Invalid base64 audio data, skipping chunk');
+        this.playNextAudioChunk();
+        return;
+      }
+
       const audioData = atob(base64Audio);
       const arrayBuffer = new ArrayBuffer(audioData.length);
       const view = new Uint8Array(arrayBuffer);
@@ -341,13 +356,14 @@ export class RentarfastAgentService {
     });
   }
 
-  addLocalAgentMessage(content: string, toolsUsed: string[] = []): string {
+  addLocalAgentMessage(content: string, toolsUsed: string[] = [], suggestions?: ChatSuggestion[]): string {
     const agentMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: 'agent',
       content,
       timestamp: new Date(),
       toolsUsed,
+      suggestions,
     };
     this._messages.update(msgs => [...msgs, agentMessage]);
     return agentMessage.id;
@@ -364,7 +380,7 @@ export class RentarfastAgentService {
     return userMessage.id;
   }
 
-  updateMessageContent(messageId: string, content: string, toolsUsed?: string[]): void {
+  updateMessageContent(messageId: string, content: string, toolsUsed?: string[], suggestions?: ChatSuggestion[]): void {
     this._messages.update(msgs =>
       msgs.map((msg) =>
         msg.id === messageId
@@ -372,6 +388,7 @@ export class RentarfastAgentService {
             ...msg,
             content,
             toolsUsed: toolsUsed ?? msg.toolsUsed,
+            suggestions: suggestions ?? msg.suggestions,
           }
           : msg,
       ),
@@ -464,12 +481,14 @@ export class RentarfastAgentService {
           content: response.response,
           timestamp: new Date(),
           toolsUsed: response.toolsUsed,
+          suggestions: response.suggestions,
         };
         this._messages.update(msgs => [...msgs, agentMessage]);
 
         this.logger.debug('[Rentarfast] Edge Function response', {
           toolsUsed: response.toolsUsed,
           sessionId: response.sessionId,
+          suggestions: response.suggestions?.length ?? 0,
         });
       }),
       catchError(error => {

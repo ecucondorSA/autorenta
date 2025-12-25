@@ -141,9 +141,9 @@ export class WalletPage implements AfterViewInit, OnInit {
   readonly walletError = computed(() => this.walletService.error());
 
   /**
-   * Target de crédito protegido (USD 300 = 30000 centavos)
+   * Target de crédito protegido (USD 300 en dólares, consistente con SQL)
    */
-  readonly protectedCreditTarget = 30000;
+  readonly protectedCreditTarget = 300;
 
   /**
    * Balance disponible en el wallet

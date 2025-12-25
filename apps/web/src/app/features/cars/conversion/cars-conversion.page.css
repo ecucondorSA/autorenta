@@ -174,6 +174,12 @@
   background: var(--surface-base, #faf4ed);
 }
 
+.featured-cars .container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -204,19 +210,37 @@
 
 .cars-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
   gap: 1.5rem;
+  width: 100%;
+}
+
+/* Desktop: mostrar 3 columnas */
+@media (min-width: 1024px) {
+  .cars-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablet: mostrar 2 columnas */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .cars-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* Cars Grid as Link to Marketplace */
 .cars-grid-link {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   text-decoration: none;
   color: inherit;
 }
 
 .cars-grid-preview {
   position: relative;
+  width: 100%;
 }
 
 .car-preview-wrapper {
@@ -276,26 +300,41 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  width: 100%;
   margin-top: 2rem;
   padding: 1.25rem 2rem;
-  background: linear-gradient(135deg, var(--cta-default, #a7d8f4) 0%, var(--cta-hover, #75bae4) 100%);
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
   color: white;
   font-weight: 600;
   font-size: 1.125rem;
   border-radius: 12px;
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .cars-grid-link:hover .view-marketplace-banner {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(167, 216, 244, 0.4);
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
 }
 
 /* Skeleton Loading */
 .skeleton-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
   gap: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .skeleton-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1023px) {
+  .skeleton-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .skeleton-card {
@@ -395,6 +434,7 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .section-title {
