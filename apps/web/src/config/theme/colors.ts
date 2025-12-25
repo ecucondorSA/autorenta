@@ -111,43 +111,7 @@ export const lightTheme = {
   overlayLight: 'rgba(248, 244, 236, 0.9)', // Overlay claro
 } as const;
 
-/**
- * Tokens semánticos de color - Dark Mode
- */
-export const darkTheme = {
-  // ─── Superficies (Surfaces) ───
-  surfaceBase: '#0F0F0F', // Fondo principal oscuro
-  surfaceRaised: palette.gray.G100, // Tarjetas, modales
-  surfaceSecondary: palette.gray.G80, // Paneles secundarios
-  surfaceElevated: palette.gray.G80, // Superficies con elevación
-
-  // ─── Textos ───
-  textPrimary: palette.neutral.ivory, // Texto principal (marfil)
-  textSecondary: palette.gray.G20, // Texto secundario
-  textMuted: palette.gray.G40, // Texto deshabilitado
-  textInverse: palette.neutral.black, // Texto sobre fondos claros
-
-  // ─── Bordes ───
-  borderDefault: palette.gray.G60, // Bordes por defecto
-  borderMuted: palette.gray.G40, // Bordes sutiles
-  borderFocus: '#6BA8D4', // Borde de focus (ajustado para dark)
-
-  // ─── CTAs y Acciones ───
-  ctaDefault: palette.accent.blue.primary, // Mantener azul pastel
-  ctaHover: palette.accent.blue.hover, // Hover
-  ctaText: palette.neutral.black, // Texto sobre CTAs (negro para contraste)
-
-  // ─── Estados y Feedback ───
-  infoLight: palette.accent.blue.primary, // Badges informativos
-  infoDark: '#6BA8D4', // Info en modo oscuro
-  successLight: palette.feedback.success.olive, // Éxito suave
-  warningLight: '#C4A882', // Advertencia suave
-  errorLight: palette.feedback.error.rust, // Error suave
-
-  // ─── Overlays ───
-  overlayDark: 'rgba(5, 5, 5, 0.85)', // Overlay más oscuro
-  overlayLight: 'rgba(15, 15, 15, 0.9)', // Overlay claro en dark mode
-} as const;
+// Dark mode removed - light mode only
 
 /**
  * Tipo para claves de tokens semánticos
@@ -160,46 +124,22 @@ export type ThemeColorKey = keyof typeof lightTheme;
 export type ColorValue = string;
 
 /**
- * Mapa completo de tokens por tema
+ * Mapa de tokens (light mode only)
  */
 export const themeColors = {
   light: lightTheme,
-  dark: darkTheme,
 } as const;
 
 /**
- * Tipo para el tema actual
+ * Tipo para el tema actual (light only)
  */
-export type ThemeMode = 'light' | 'dark';
+export type ThemeMode = 'light';
 
 /**
- * Obtiene un token de color según el tema
+ * Obtiene un token de color (siempre light mode)
  */
-export function getThemeColor(key: ThemeColorKey, mode: ThemeMode = 'light'): ColorValue {
-  return themeColors[mode][key];
-}
-
-/**
- * Valida que todas las claves críticas existan en ambos temas
- */
-export function validateThemeColors(): boolean {
-  const lightKeys = Object.keys(lightTheme) as ThemeColorKey[];
-  const darkKeys = Object.keys(darkTheme) as ThemeColorKey[];
-
-  const missingInDark = lightKeys.filter((key) => !darkKeys.includes(key));
-  const missingInLight = darkKeys.filter((key) => !lightKeys.includes(key));
-
-  if (missingInDark.length > 0) {
-    console.error('❌ Faltan claves en darkTheme:', missingInDark);
-    return false;
-  }
-
-  if (missingInLight.length > 0) {
-    console.error('❌ Faltan claves en lightTheme:', missingInLight);
-    return false;
-  }
-
-  return true;
+export function getThemeColor(key: ThemeColorKey): ColorValue {
+  return lightTheme[key];
 }
 
 // ═══════════════════════════════════════════════════════════════

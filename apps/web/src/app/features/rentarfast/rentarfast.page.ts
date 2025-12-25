@@ -105,6 +105,10 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
   private shouldScrollToBottom = false;
   private lastSanitizedMessageId: string | null = null;
 
+  // Timeout references for cleanup in ngOnDestroy
+  private pendingVoiceSendTimeout: ReturnType<typeof setTimeout> | null = null;
+  private pendingSuggestionTimeout: ReturnType<typeof setTimeout> | null = null;
+
   constructor() {
     this.initVoiceRecognition();
     void this.profileStore.loadProfile();
@@ -162,7 +166,8 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
 
         if (finalTranscript) {
           this.inputText.set(finalTranscript);
-          setTimeout(() => this.sendMessage(), 300);
+          if (this.pendingVoiceSendTimeout) clearTimeout(this.pendingVoiceSendTimeout);
+          this.pendingVoiceSendTimeout = window.setTimeout(() => this.sendMessage(), 300);
         } else if (interimTranscript) {
           this.inputText.set(interimTranscript);
         }
@@ -422,8 +427,9 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
   onSuggestionClick(suggestion: ChatSuggestion): void {
     this.shouldScrollToBottom = true;
     this.inputText.set(suggestion.action);
-    // Ejecutar inmediatamente
-    setTimeout(() => this.sendMessage(), 100);
+    // Ejecutar inmediatamente con cleanup
+    if (this.pendingSuggestionTimeout) clearTimeout(this.pendingSuggestionTimeout);
+    this.pendingSuggestionTimeout = window.setTimeout(() => this.sendMessage(), 100);
   }
 
   // ============================================
@@ -448,6 +454,9 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopListening();
+    // Cleanup pending timeouts to prevent memory leaks
+    if (this.pendingVoiceSendTimeout) clearTimeout(this.pendingVoiceSendTimeout);
+    if (this.pendingSuggestionTimeout) clearTimeout(this.pendingSuggestionTimeout);
   }
 
   private scrollToBottom(): void {
