@@ -8,5 +8,4 @@ export * from '@core/services/cars/cars-compare.service';
 export * from '@core/services/cars/cars.service';
 export * from '@core/services/cars/favorites.service';
 export * from '@core/services/cars/mock-car.service';
-export * from '@core/services/cars/model-3d-cache.service';
 export * from '@core/services/cars/reviews.service';

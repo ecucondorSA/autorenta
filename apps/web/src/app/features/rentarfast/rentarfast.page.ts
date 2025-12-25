@@ -106,8 +106,8 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
   private lastSanitizedMessageId: string | null = null;
 
   // Timeout references for cleanup in ngOnDestroy
-  private pendingVoiceSendTimeout: ReturnType<typeof setTimeout> | null = null;
-  private pendingSuggestionTimeout: ReturnType<typeof setTimeout> | null = null;
+  private pendingVoiceSendTimeout: number | null = null;
+  private pendingSuggestionTimeout: number | null = null;
 
   constructor() {
     this.initVoiceRecognition();

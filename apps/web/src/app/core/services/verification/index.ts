@@ -9,7 +9,6 @@ export * from '@core/services/verification/risk-calculator.service';
 export * from '@core/services/verification/risk-matrix.service';
 export * from '@core/services/verification/risk.service';
 export * from '@core/services/verification/trip-safety.service';
-export * from '@core/services/verification/tripo.service';
 export * from '@core/services/verification/vehicle-documents.service';
 export * from '@core/services/verification/verification-base.service';
 export * from '@core/services/verification/verification-notifications.service';
