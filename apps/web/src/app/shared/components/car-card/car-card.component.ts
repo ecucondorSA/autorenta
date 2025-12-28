@@ -95,6 +95,29 @@ export class CarCardComponent implements OnInit, OnDestroy {
     return fallback || 'Próximamente';
   });
 
+  /**
+   * Verifica si el auto tiene un título real definido
+   * Usado para mostrar badge "Sin título" a owners
+   */
+  readonly hasRealTitle = computed(() => {
+    const car = this._car();
+    if (!car) return false;
+
+    // Check if title exists and is not empty
+    if (car.title && car.title.trim().length > 0) return true;
+
+    // Check if we can build a fallback from brand/model/year
+    const parts = [
+      car.brand || car.brand_name || '',
+      car.model || car.model_name || '',
+      car.year || '',
+    ]
+      .map((p) => String(p).trim())
+      .filter(Boolean);
+
+    return parts.length > 0;
+  });
+
   readonly showPriceLoader = computed(() => {
     return this.priceLoading() && this.dynamicPrice() === null;
   });

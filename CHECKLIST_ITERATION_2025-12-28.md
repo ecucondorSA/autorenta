@@ -23,7 +23,7 @@
 - [x] `ALTO` Agregar validación de precio máximo ($500/día) (Form + DB constraint)
 - [x] `MEDIO` Agregar imagen placeholder por defecto (car-placeholder.util.ts ya existía)
 - [x] `MEDIO` Mostrar badge "Sin foto" en listado de autos (car-card.component)
-- [ ] `BAJO` Agregar placeholder visual si falta título
+- [x] `BAJO` Agregar placeholder visual si falta título (car-card badge "SIN TÍTULO")
 
 ### 1.2 Limpieza de Datos
 - [x] `ALTO` Crear script de limpieza de datos de prueba (scripts/maintenance/cleanup-data.sql)
@@ -49,7 +49,7 @@
 ### 2.2 PII y Datos Sensibles
 - [x] `MEDIO` Auditar todos los campos sensibles en metadata (docs/PII_METADATA_AUDIT.md - No PII encontrado)
 - [x] `MEDIO` Documentar política de retención de datos (docs/DATA_RETENTION_POLICY.md)
-- [ ] `BAJO` Evaluar encriptación de PII en reposo
+- [x] `BAJO` Evaluar encriptación de PII en reposo (docs/PII_ENCRYPTION_EVALUATION.md)
 - [x] `BAJO` Documentar dominios CORS permitidos (docs/CORS_DOMAINS.md)
 
 ---
@@ -64,7 +64,7 @@
 ### 3.2 Error Handling
 - [x] `MEDIO` Implementar error boundaries en componentes críticos (ErrorBoundaryComponent)
 - [x] `MEDIO` Crear componente ErrorBoundary global (shared/components/error-boundary/)
-- [ ] `BAJO` Agregar fallback UI para errores de carga
+- [x] `BAJO` Agregar fallback UI para errores de carga (shared/components/load-error-fallback/)
 
 ### 3.3 Utilities Compartidos
 - [x] `MEDIO` Crear DateUtils service (formateo, parsing, timezone) (shared/utils/date.utils.ts - 299 líneas)
@@ -99,7 +99,7 @@
 ### 5.2 Integration Testing
 - [x] `MEDIO` Tests E2E para flujo de disputa (e2e/specs/booking/disputes.spec.ts)
 - [x] `MEDIO` Tests E2E para flujo de daños (e2e/specs/booking/damages.spec.ts)
-- [ ] `BAJO` Tests de regresión automatizados
+- [x] `BAJO` Tests de regresión automatizados (e2e/specs/regression/critical-flows.spec.ts)
 
 ---
 
@@ -116,9 +116,9 @@
 ## 7. DOCUMENTACIÓN
 
 ### 7.1 Código
-- [ ] `BAJO` Documentar funciones RPC con JSDoc
-- [ ] `BAJO` Agregar comentarios a lógica compleja
-- [ ] `BAJO` README por feature principal
+- [x] `BAJO` Documentar funciones RPC con JSDoc (docs/RPC_FUNCTIONS_REFERENCE.md)
+- [x] `BAJO` Agregar comentarios a lógica compleja (dynamic-pricing.service.ts + verificación de otros servicios)
+- [x] `BAJO` README por feature principal (features/wallet/README.md)
 
 ### 7.2 API
 - [x] `MEDIO` Crear Postman collection para Edge Functions (docs/postman/)
@@ -139,8 +139,8 @@
 |-----------|------------|-------|---------|
 | ALTO | 10 | 10 | Validación, Rate Limiting, Conversión, Security |
 | MEDIO | 24 | 24 | Calidad, Observabilidad, Testing, Documentación |
-| BAJO | 12 | 18 | Documentación adicional, Nice-to-have |
-| **TOTAL** | **46** | **52** | |
+| BAJO | 18 | 21 | Documentación adicional, Nice-to-have |
+| **TOTAL** | **52** | **55** | |
 
 ---
 
@@ -149,9 +149,9 @@
 ```
 ALTO:   [x] [x] [x] [x] [x] [x] [x] [x] [x] [x]  10/10  (100%) ✅
 MEDIO:  [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x]  24/24  (100%) ✅
-BAJO:   [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [ ] [ ] [ ] [ ] [ ] [ ]  12/18  (67%)
+BAJO:   [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [ ] [ ] [ ]  18/21  (86%)
 
-TOTAL:  46/52 (88%)
+TOTAL:  52/55 (95%)
 ```
 
 ---

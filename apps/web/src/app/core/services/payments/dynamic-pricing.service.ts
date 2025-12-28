@@ -1,3 +1,45 @@
+/**
+ * ============================================================================
+ * DYNAMIC PRICING SERVICE
+ * ============================================================================
+ *
+ * Este servicio maneja el pricing dinámico basado en demanda, horarios y eventos.
+ *
+ * ## Arquitectura de Pricing
+ *
+ * El precio final se calcula así:
+ *
+ *   precio_final = precio_base × (day_factor × hour_factor × user_factor × demand_factor × event_factor)
+ *
+ * Donde cada factor puede ser:
+ *   - day_factor: 0.8 (lunes) a 1.3 (fin de semana)
+ *   - hour_factor: 0.7 (madrugada) a 1.2 (horas pico)
+ *   - user_factor: 0.85 (usuario premium) a 1.15 (usuario nuevo)
+ *   - demand_factor: 1.0 (normal) a 1.5 (alta demanda/surge)
+ *   - event_factor: 1.0 (normal) a 2.0 (evento especial)
+ *
+ * ## Flujo de Price Lock
+ *
+ * 1. Usuario ve precio dinámico en listado (getQuickPrice)
+ * 2. Usuario inicia checkout → se bloquea precio por 15 min (lockPrice)
+ * 3. Si expira, se debe re-bloquear con nuevo precio
+ * 4. Al confirmar pago, se valida que el lock esté vigente
+ *
+ * ## Optimizaciones
+ *
+ * - Caché de regiones: 5 minutos TTL
+ * - Batch pricing: calcula múltiples autos en una sola llamada RPC
+ * - Quick price: pricing simplificado para listados (24h default)
+ *
+ * ## Integración con Booking
+ *
+ * El precio final del booking viene del PriceLock, NO del precio estático del auto.
+ * Esto garantiza que el usuario paga exactamente lo que vio al reservar.
+ *
+ * @see RPC_FUNCTIONS_REFERENCE.md para documentación de calculate_dynamic_price
+ * ============================================================================
+ */
+
 import { Injectable, signal } from '@angular/core';
 import type {
   PriceLock,
