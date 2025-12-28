@@ -31,7 +31,7 @@
 - [x] `MEDIO` Verificar consistencia de estados de reservas (maintenance_get_data_health_report)
 - [x] `MEDIO` Limpiar notificaciones antiguas (> 6 meses) (maintenance_cleanup_old_notifications)
 - [x] `BAJO` Identificar cuentas de prueba para marcar/eliminar (maintenance_identify_test_accounts)
-- [ ] `BAJO` Verificar consistencia de datos de wallet
+- [x] `BAJO` Verificar consistencia de datos de wallet (scripts/maintenance/verify-wallet-consistency.sql - No issues)
 
 ---
 
@@ -85,7 +85,7 @@
 - [x] `ALTO` Fix admin-analytics tabla incorrecta (analytics_events → conversion_events)
 - [x] `MEDIO` Métricas de performance de queries SQL (query_performance_log + RPCs)
 - [x] `MEDIO` Dashboard de circuit breakers (alertas automáticas) (Ya existe en system-monitoring.page.ts)
-- [ ] `BAJO` Métricas de uso de wallet
+- [x] `BAJO` Métricas de uso de wallet (admin_get_wallet_metrics + admin_wallet_health_check RPCs)
 
 ---
 
@@ -94,7 +94,7 @@
 ### 5.1 Load Testing
 - [x] `MEDIO` Load test de Edge Functions principales (scripts/load-tests/edge-functions-load-test.ts)
 - [x] `MEDIO` Benchmark de queries SQL críticas (scripts/load-tests/sql-queries-benchmark.ts)
-- [ ] `BAJO` Stress test de búsqueda de autos
+- [x] `BAJO` Stress test de búsqueda de autos (scripts/load-tests/car-search-stress-test.ts)
 
 ### 5.2 Integration Testing
 - [x] `MEDIO` Tests E2E para flujo de disputa (e2e/specs/booking/disputes.spec.ts)
@@ -122,14 +122,14 @@
 
 ### 7.2 API
 - [x] `MEDIO` Crear Postman collection para Edge Functions (docs/postman/)
-- [ ] `BAJO` Documentar webhooks de MercadoPago
+- [x] `BAJO` Documentar webhooks de MercadoPago (docs/WEBHOOKS.md)
 - [ ] `BAJO` Swagger/OpenAPI para Edge Functions
 
 ### 7.3 Operaciones
 - [x] `MEDIO` Documentar flujo de deploy (CI/CD) (docs/CI_CD_WORKFLOW.md)
 - [x] `MEDIO` Crear runbook de incidentes (docs/INCIDENT_RUNBOOK.md)
-- [ ] `BAJO` Documentar proceso de rollback
-- [ ] `BAJO` Guía de troubleshooting
+- [x] `BAJO` Documentar proceso de rollback (docs/ROLLBACK_GUIDE.md)
+- [x] `BAJO` Guía de troubleshooting (docs/TROUBLESHOOTING.md)
 
 ---
 
@@ -139,8 +139,8 @@
 |-----------|------------|-------|---------|
 | ALTO | 10 | 10 | Validación, Rate Limiting, Conversión, Security |
 | MEDIO | 24 | 24 | Calidad, Observabilidad, Testing, Documentación |
-| BAJO | 6 | 18 | Documentación adicional, Nice-to-have |
-| **TOTAL** | **40** | **52** | |
+| BAJO | 12 | 18 | Documentación adicional, Nice-to-have |
+| **TOTAL** | **46** | **52** | |
 
 ---
 
@@ -149,9 +149,9 @@
 ```
 ALTO:   [x] [x] [x] [x] [x] [x] [x] [x] [x] [x]  10/10  (100%) ✅
 MEDIO:  [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x]  24/24  (100%) ✅
-BAJO:   [x] [x] [x] [x] [x] [x] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]  6/18  (33%)
+BAJO:   [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [x] [ ] [ ] [ ] [ ] [ ] [ ]  12/18  (67%)
 
-TOTAL:  40/52 (77%)
+TOTAL:  46/52 (88%)
 ```
 
 ---
