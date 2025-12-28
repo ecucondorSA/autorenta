@@ -73,7 +73,7 @@ serve(async (req) => {
 
   try {
     // ========================================
-    // RATE LIMITING
+    // RATE LIMITING (fail-closed for security)
     // ========================================
     try {
       await enforceRateLimit(req, {
@@ -84,7 +84,12 @@ serve(async (req) => {
       if (error instanceof RateLimitError) {
         return error.toResponse();
       }
-      console.error('[RateLimit] Error:', error);
+      // SECURITY: Fail-closed - if rate limiter fails, reject request
+      console.error('[RateLimit] Service unavailable:', error);
+      return new Response(
+        JSON.stringify({ error: 'Service temporarily unavailable', code: 'RATE_LIMITER_UNAVAILABLE' }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     // ========================================

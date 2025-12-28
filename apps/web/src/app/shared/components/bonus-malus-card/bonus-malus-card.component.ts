@@ -5,6 +5,8 @@ import { IonicModule } from '@ionic/angular';
 import { BonusMalusService, TierDisplay } from '@core/services/payments/bonus-malus.service';
 import type { UserBonusMalus, BonusMalusDisplay } from '../../../core/models';
 import { BonusProtectorService } from '@core/services/payments/bonus-protector.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 @Component({
   selector: 'app-bonus-malus-card',
@@ -22,11 +24,14 @@ import { BonusProtectorService } from '@core/services/payments/bonus-protector.s
 export class BonusMalusCardComponent implements OnInit {
   private readonly bonusMalusService = inject(BonusMalusService);
   private readonly bonusProtectorService = inject(BonusProtectorService);
+  private readonly notificationService = inject(NotificationManagerService);
+  private readonly logger = inject(LoggerService);
 
   readonly loading = signal(true);
   readonly bonusMalus = signal<UserBonusMalus | null>(null);
   readonly tips = signal<string[]>([]);
   readonly showDetails = signal(false);
+  readonly loadError = signal(false);
 
   readonly display = computed<BonusMalusDisplay | null>(() => {
     const bm = this.bonusMalus();
@@ -76,6 +81,7 @@ export class BonusMalusCardComponent implements OnInit {
 
   async loadBonusMalus(): Promise<void> {
     this.loading.set(true);
+    this.loadError.set(false);
     try {
       const bm = await this.bonusMalusService.getUserBonusMalus();
       this.bonusMalus.set(bm);
@@ -83,7 +89,18 @@ export class BonusMalusCardComponent implements OnInit {
       if (bm) {
         const tips = await this.bonusMalusService.getImprovementTips();
         this.tips.set(tips);
+      } else {
+        // FIX 2025-12-28: Notify user if bonus-malus data couldn't be loaded
+        this.loadError.set(true);
+        this.logger.warn('BonusMalusCard: Could not load bonus-malus data');
       }
+    } catch (error) {
+      this.loadError.set(true);
+      this.logger.error('BonusMalusCard: Error loading bonus-malus', error);
+      this.notificationService.warning(
+        'Aviso',
+        'No pudimos cargar tu información de reputación. Intenta más tarde.'
+      );
     } finally {
       this.loading.set(false);
     }
@@ -92,8 +109,23 @@ export class BonusMalusCardComponent implements OnInit {
   async recalculate(): Promise<void> {
     this.loading.set(true);
     try {
-      await this.bonusMalusService.calculateBonusMalus();
-      await this.loadBonusMalus();
+      const result = await this.bonusMalusService.calculateBonusMalus();
+      if (result) {
+        await this.loadBonusMalus();
+        this.notificationService.success('Actualizado', 'Tu reputación ha sido recalculada');
+      } else {
+        // FIX 2025-12-28: Notify user if recalculation failed
+        this.notificationService.warning(
+          'Aviso',
+          'No pudimos recalcular tu reputación. Intenta más tarde.'
+        );
+      }
+    } catch (error) {
+      this.logger.error('BonusMalusCard: Error recalculating bonus-malus', error);
+      this.notificationService.error(
+        'Error',
+        'Hubo un error al recalcular tu reputación.'
+      );
     } finally {
       this.loading.set(false);
     }

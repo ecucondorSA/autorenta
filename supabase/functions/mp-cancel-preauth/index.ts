@@ -1,6 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { getCorsHeaders } from '../_shared/cors.ts';
+import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
 
 const MERCADOPAGO_ACCESS_TOKEN = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN')!;
 const MP_API_BASE = 'https://api.mercadopago.com/v1';
@@ -41,6 +42,25 @@ serve(async (req) => {
   }
 
   try {
+    // RATE LIMITING (fail-closed for security)
+    try {
+      await enforceRateLimit(req, {
+        endpoint: 'mp-cancel-preauth',
+        windowSeconds: 60,
+        maxRequests: 30,
+      });
+    } catch (error) {
+      if (error instanceof RateLimitError) {
+        return error.toResponse();
+      }
+      // SECURITY: Fail-closed - if rate limiter fails, reject request
+      console.error('[RateLimit] Service unavailable:', error);
+      return new Response(
+        JSON.stringify({ error: 'Service temporarily unavailable', code: 'RATE_LIMITER_UNAVAILABLE' }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Initialize Supabase
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;

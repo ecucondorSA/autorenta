@@ -62,7 +62,7 @@ export class AdminAnalyticsPage implements OnInit {
 
       // Load overview stats
       const { data: events, error: eventsError } = await this.supabase
-        .from('analytics_events')
+        .from('conversion_events')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(1000);

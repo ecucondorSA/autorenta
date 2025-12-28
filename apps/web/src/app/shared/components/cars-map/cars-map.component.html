@@ -21,10 +21,7 @@
 
   <div #mapContainer class="cars-map-canvas" id="map-container" data-testid="map-container"></div>
 
-  <!-- Map Layers Control -->
-  @if (!loading() && !error()) {
-  <app-map-layers-control [layers]="mapLayers()" (layerToggle)="onLayerToggle($event)" />
-  }
+  <!-- Map Layers Control - Removed (incomplete) -->
 
   <!-- Map Feature Controls - All map controls in one place -->
   @if (!loading() && !error()) {

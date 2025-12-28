@@ -22,6 +22,7 @@
 // ============================================================================
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 // ============================================================================
 // CONFIGURATION
@@ -532,16 +533,12 @@ async function getFipeValueRealtime(
 // ============================================================================
 
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   try {
-    // CORS headers
+    // CORS preflight
     if (req.method === 'OPTIONS') {
-      return new Response(null, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-        },
-      });
+      return new Response(null, { headers: corsHeaders });
     }
 
     // Parse request
@@ -557,10 +554,7 @@ Deno.serve(async (req) => {
         }),
         {
           status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         },
       );
     }
@@ -581,25 +575,20 @@ Deno.serve(async (req) => {
       }),
       {
         status: 200, // Always 200 - use success field to indicate errors
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       },
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Error interno del servidor';
     console.error('💥 Edge function error:', error);
     return new Response(
       JSON.stringify({
         success: false,
-        error: error.message || 'Error interno del servidor',
+        error: errorMessage,
       }),
       {
         status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       },
     );
   }

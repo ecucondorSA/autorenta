@@ -97,7 +97,7 @@ export class BookingCancellationService {
 
       return { success: true };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error['message'] : 'Error inesperado al cancelar';
+      const errorMessage = error instanceof Error ? error.message : 'Error inesperado al cancelar';
       return {
         success: false,
         error: errorMessage,
@@ -315,7 +315,7 @@ export class BookingCancellationService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error['message'] : 'Error en proceso de No Show',
+        error: error instanceof Error ? error.message : 'Error en proceso de No Show',
       };
     }
   }

@@ -13,6 +13,12 @@ import type {
   WalletTransactionFilters,
   WalletUnlockFundsResponse,
 } from '@core/models';
+import {
+  WALLET_STALE_TIME_MS,
+  MAX_WALLET_LOCKS_PER_MINUTE,
+  RATE_LIMIT_WINDOW_MS,
+} from '@core/constants';
+import { WalletError } from '@core/errors';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
@@ -51,7 +57,10 @@ export class WalletService {
   // After: 8 components calling fetchBalance() = 1 API request (shared promise)
   private pendingFetchBalance: Promise<WalletBalance> | null = null;
   private lastFetchTimestamp = 0;
-  private readonly STALE_TIME_MS = 5000; // 5 seconds cache
+
+  // 🔒 SECURITY: Rate limiting for lock operations
+  // Prevents abuse by limiting locks to MAX_WALLET_LOCKS_PER_MINUTE per user
+  private lockTimestamps: number[] = [];
 
   constructor() {
     this.supabase.auth.getSession().then(({ data: { session } }) => {
@@ -85,7 +94,7 @@ export class WalletService {
     // 🚀 PERF: Return cached data if still fresh (SWR pattern)
     const now = Date.now();
     const cachedBalance = this.balance();
-    if (!forceRefresh && cachedBalance && (now - this.lastFetchTimestamp) < this.STALE_TIME_MS) {
+    if (!forceRefresh && cachedBalance && (now - this.lastFetchTimestamp) < WALLET_STALE_TIME_MS) {
       return cachedBalance;
     }
 
@@ -165,6 +174,15 @@ export class WalletService {
 
   async refreshBalanceAsync(): Promise<WalletBalance> {
     return this.fetchBalance();
+  }
+
+  /**
+   * Invalidate the wallet balance cache
+   * Call this after any operation that modifies wallet state
+   */
+  invalidateCache(): void {
+    this.lastFetchTimestamp = 0;
+    this.pendingFetchBalance = null;
   }
 
   // ============================================================================
@@ -300,11 +318,40 @@ export class WalletService {
   // LOCK/UNLOCK FUNDS METHODS
   // ============================================================================
 
+  /**
+   * 🔒 SECURITY: Check if rate limit is exceeded for lock operations
+   * Returns true if the user has exceeded MAX_WALLET_LOCKS_PER_MINUTE locks in the last minute
+   */
+  private isLockRateLimited(): boolean {
+    const now = Date.now();
+    // Remove timestamps older than the window
+    this.lockTimestamps = this.lockTimestamps.filter(
+      (ts) => now - ts < RATE_LIMIT_WINDOW_MS
+    );
+    return this.lockTimestamps.length >= MAX_WALLET_LOCKS_PER_MINUTE;
+  }
+
+  /**
+   * 🔒 SECURITY: Record a lock attempt timestamp
+   */
+  private recordLockAttempt(): void {
+    this.lockTimestamps.push(Date.now());
+  }
+
   lockFunds(
     bookingId: string,
     amount: number,
     description?: string,
   ): Observable<WalletLockFundsResponse> {
+    // 🔒 SECURITY: Check rate limit before proceeding
+    if (this.isLockRateLimited()) {
+      this.logger.warn('WalletService.lockFunds rate limited', { bookingId, amount });
+      return throwError(() => WalletError.rateLimited());
+    }
+
+    // Record this attempt
+    this.recordLockAttempt();
+
     return from(
       this.supabase.rpc('wallet_lock_funds', {
         p_booking_id: bookingId,
@@ -314,7 +361,9 @@ export class WalletService {
     ).pipe(
       tap((response) => {
         if (response['error']) throw response['error'];
-        this.fetchBalance().catch(() => { });
+        // FIX 2025-12-27: Invalidate cache and force refresh after lock
+        this.invalidateCache();
+        this.fetchBalance(true).catch(() => { });
       }),
       map((response) => response.data![0] as WalletLockFundsResponse),
     );
@@ -329,7 +378,9 @@ export class WalletService {
     ).pipe(
       tap((response) => {
         if (response['error']) throw response['error'];
-        this.fetchBalance().catch(() => { });
+        // FIX 2025-12-27: Invalidate cache and force refresh after unlock
+        this.invalidateCache();
+        this.fetchBalance(true).catch(() => { });
       }),
       map((response) => response.data![0] as WalletUnlockFundsResponse),
     );
@@ -340,6 +391,19 @@ export class WalletService {
     rentalAmount: number,
     depositAmount: number = 250,
   ): Observable<WalletLockRentalAndDepositResponse> {
+    // 🔒 SECURITY: Check rate limit before proceeding
+    if (this.isLockRateLimited()) {
+      this.logger.warn('WalletService.lockRentalAndDeposit rate limited', {
+        bookingId,
+        rentalAmount,
+        depositAmount,
+      });
+      return throwError(() => WalletError.rateLimited());
+    }
+
+    // Record this attempt
+    this.recordLockAttempt();
+
     return from(
       this.supabase.rpc('wallet_lock_rental_and_deposit', {
         p_booking_id: bookingId,
@@ -349,7 +413,9 @@ export class WalletService {
     ).pipe(
       tap((response) => {
         if (response['error']) throw response['error'];
-        this.fetchBalance().catch(() => { });
+        // FIX 2025-12-27: Invalidate cache and force refresh after lock
+        this.invalidateCache();
+        this.fetchBalance(true).catch(() => { });
       }),
       map((response) => response.data![0] as WalletLockRentalAndDepositResponse),
     );

@@ -282,13 +282,15 @@ export class VehicleDocumentsService {
   }
 
   /**
-   * Verificar si un auto tiene todos los documentos requeridos
+   * Verificar si un auto tiene todos los documentos requeridos y vigentes.
+   *
+   * SEGURIDAD: Valida que VTV y seguro NO estén vencidos.
    */
   async hasRequiredDocuments(carId: string): Promise<boolean> {
     // Check if vehicle has verified documents (green_card, vtv, insurance)
     const { data, error } = await this.supabase
       .from('vehicle_documents')
-      .select('green_card_verified_at, vtv_verified_at, insurance_verified_at')
+      .select('green_card_verified_at, vtv_verified_at, vtv_expiry, insurance_verified_at, insurance_expiry')
       .eq('vehicle_id', carId)
       .single();
 
@@ -297,17 +299,42 @@ export class VehicleDocumentsService {
       return false;
     }
 
-    // All three must be verified
-    return !!(data?.green_card_verified_at && data?.vtv_verified_at && data?.insurance_verified_at);
+    // Verificar que documentos existan
+    if (!data?.green_card_verified_at || !data?.vtv_verified_at || !data?.insurance_verified_at) {
+      return false;
+    }
+
+    // Verificar que VTV y seguro NO estén vencidos
+    const now = new Date();
+
+    if (data.vtv_expiry) {
+      const vtvExpiry = new Date(data.vtv_expiry);
+      if (vtvExpiry < now) {
+        console.warn(`VTV expired for car ${carId}: ${data.vtv_expiry}`);
+        return false;
+      }
+    }
+
+    if (data.insurance_expiry) {
+      const insuranceExpiry = new Date(data.insurance_expiry);
+      if (insuranceExpiry < now) {
+        console.warn(`Insurance expired for car ${carId}: ${data.insurance_expiry}`);
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**
-   * Obtener lista de documentos faltantes para un auto
+   * Obtener lista de documentos faltantes o vencidos para un auto.
+   *
+   * @returns Array de tipos de documento faltantes o expirados
    */
   async getMissingDocuments(carId: string): Promise<VehicleDocumentKind[]> {
     const { data, error } = await this.supabase
       .from('vehicle_documents')
-      .select('green_card_verified_at, vtv_verified_at, insurance_verified_at')
+      .select('green_card_verified_at, vtv_verified_at, vtv_expiry, insurance_verified_at, insurance_expiry')
       .eq('vehicle_id', carId)
       .single();
 
@@ -317,11 +344,68 @@ export class VehicleDocumentsService {
     }
 
     const missing: VehicleDocumentKind[] = [];
-    if (!data?.green_card_verified_at) missing.push('registration');
-    if (!data?.insurance_verified_at) missing.push('insurance');
-    if (!data?.vtv_verified_at) missing.push('technical_inspection');
+    const now = new Date();
+
+    // Cédula verde - solo verificar existencia
+    if (!data?.green_card_verified_at) {
+      missing.push('registration');
+    }
+
+    // Seguro - verificar existencia y vigencia
+    if (!data?.insurance_verified_at) {
+      missing.push('insurance');
+    } else if (data.insurance_expiry && new Date(data.insurance_expiry) < now) {
+      missing.push('insurance'); // Expired counts as missing
+    }
+
+    // VTV - verificar existencia y vigencia
+    if (!data?.vtv_verified_at) {
+      missing.push('technical_inspection');
+    } else if (data.vtv_expiry && new Date(data.vtv_expiry) < now) {
+      missing.push('technical_inspection'); // Expired counts as missing
+    }
 
     return missing;
+  }
+
+  /**
+   * Obtener documentos que vencen pronto (próximos 30 días).
+   *
+   * @param carId - ID del vehículo
+   * @returns Documentos próximos a vencer con días restantes
+   */
+  async getExpiringDocuments(carId: string): Promise<{ type: VehicleDocumentKind; expiryDate: Date; daysLeft: number }[]> {
+    const { data, error } = await this.supabase
+      .from('vehicle_documents')
+      .select('vtv_expiry, insurance_expiry')
+      .eq('vehicle_id', carId)
+      .single();
+
+    if (error || !data) {
+      return [];
+    }
+
+    const expiring: { type: VehicleDocumentKind; expiryDate: Date; daysLeft: number }[] = [];
+    const now = new Date();
+    const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+    if (data.vtv_expiry) {
+      const vtvExpiry = new Date(data.vtv_expiry);
+      if (vtvExpiry > now && vtvExpiry <= thirtyDaysFromNow) {
+        const daysLeft = Math.ceil((vtvExpiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        expiring.push({ type: 'technical_inspection', expiryDate: vtvExpiry, daysLeft });
+      }
+    }
+
+    if (data.insurance_expiry) {
+      const insuranceExpiry = new Date(data.insurance_expiry);
+      if (insuranceExpiry > now && insuranceExpiry <= thirtyDaysFromNow) {
+        const daysLeft = Math.ceil((insuranceExpiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        expiring.push({ type: 'insurance', expiryDate: insuranceExpiry, daysLeft });
+      }
+    }
+
+    return expiring.sort((a, b) => a.daysLeft - b.daysLeft);
   }
 
   /**
@@ -364,29 +448,6 @@ export class VehicleDocumentsService {
     };
   }
 
-  /**
-   * Obtener documentos próximos a vencer (30 días)
-   * Checks vtv_expiry and insurance_expiry dates
-   */
-  getExpiringDocuments(carId: string): Observable<VehicleDocument[]> {
-    const thirtyDaysFromNow = new Date();
-    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-    const dateStr = thirtyDaysFromNow.toISOString().split('T')[0];
-
-    return from(
-      this.supabase
-        .from('vehicle_documents')
-        .select('*')
-        .eq('vehicle_id', carId)
-        .or(`vtv_expiry.lte.${dateStr},insurance_expiry.lte.${dateStr}`),
-    ).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        return (data as VehicleDocument[]) || [];
-      }),
-      catchError(() => of([])),
-    );
-  }
 
   /**
    * Labels para tipos de documentos

@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoRenta - Pitch Deck</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #0f172a;
+            --gray: #64748b;
+            --light: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #1e293b;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            overflow: hidden;
+            position: relative;
+            page-break-after: always;
+        }
+
+        @media print {
+            body { background: white; }
+            .slide {
+                margin: 0;
+                box-shadow: none;
+                border-radius: 0;
+                page-break-after: always;
+            }
+        }
+
+        /* Slide 1 - Cover */
+        .slide-cover {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .slide-cover .logo {
+            font-size: 72px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+        }
+
+        .slide-cover .tagline {
+            font-size: 28px;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 60px;
+        }
+
+        .slide-cover .subtitle {
+            font-size: 18px;
+            opacity: 0.7;
+            position: absolute;
+            bottom: 60px;
+        }
+
+        /* Standard slide layout */
+        .slide-content {
+            padding: 60px 80px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-header {
+            margin-bottom: 40px;
+        }
+
+        .slide-header h2 {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -1px;
+        }
+
+        .slide-header .accent {
+            color: var(--primary);
+        }
+
+        .slide-body {
+            flex: 1;
+            display: flex;
+            gap: 60px;
+        }
+
+        .col-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .col-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--light);
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--dark);
+        }
+
+        .card p {
+            font-size: 15px;
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* Stats */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 30px;
+            background: var(--light);
+            border-radius: 16px;
+        }
+
+        .stat-value {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -2px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Process flow */
+        .process-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .process-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .process-step::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            right: -40px;
+            width: 60px;
+            height: 2px;
+            background: var(--primary);
+            opacity: 0.3;
+        }
+
+        .process-step:last-child::after {
+            display: none;
+        }
+
+        .process-number {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 16px;
+        }
+
+        .process-step h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .process-step p {
+            font-size: 13px;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        /* Lists */
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 12px 0;
+            padding-left: 32px;
+            position: relative;
+            font-size: 16px;
+            color: var(--dark);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        /* Revenue model */
+        .revenue-bar {
+            height: 60px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            display: flex;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .revenue-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .revenue-owner { background: var(--secondary); flex: 75; }
+        .revenue-platform { background: var(--primary); flex: 15; }
+        .revenue-fgo { background: #8b5cf6; flex: 10; }
+
+        /* Two column text */
+        .text-block h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 16px;
+        }
+
+        .text-block p {
+            font-size: 16px;
+            color: var(--gray);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .highlight-box p {
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* Tech stack */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .tech-item {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .tech-item .icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .tech-item span {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            gap: 30px;
+        }
+
+        .timeline-item {
+            flex: 1;
+            padding: 24px;
+            background: var(--light);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .timeline-item.completed {
+            border-left-color: var(--secondary);
+        }
+
+        .timeline-item.future {
+            border-left-color: #e2e8f0;
+            opacity: 0.7;
+        }
+
+        .timeline-item h4 {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        .timeline-item h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+
+        .timeline-item ul {
+            font-size: 13px;
+            color: var(--gray);
+            padding-left: 16px;
+        }
+
+        /* CTA slide */
+        .slide-cta {
+            background: linear-gradient(135deg, var(--dark) 0%, #1e293b 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .slide-cta h2 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .slide-cta p {
+            font-size: 20px;
+            opacity: 0.8;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        .cta-items {
+            display: flex;
+            gap: 60px;
+            margin-top: 20px;
+        }
+
+        .cta-item {
+            text-align: center;
+        }
+
+        .cta-item .value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .cta-item .label {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+
+        .contact-info {
+            position: absolute;
+            bottom: 60px;
+            font-size: 16px;
+            opacity: 0.6;
+        }
+
+        /* Footer */
+        .slide-footer {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            left: 40px;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        /* Market slide specific */
+        .market-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .market-column h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .market-column.solution h3 {
+            color: var(--secondary);
+        }
+
+        .market-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .market-item .icon {
+            font-size: 20px;
+        }
+
+        .market-item p {
+            font-size: 15px;
+            color: var(--dark);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Cover -->
+<div class="slide slide-cover">
+    <div class="logo">AutoRenta</div>
+    <div class="tagline">El marketplace de car-sharing P2P para America Latina</div>
+    <div class="subtitle">Presentacion de Inversi&#243;n | Diciembre 2025</div>
+</div>
+
+<!-- Slide 2: Problema -->
+<div class="slide">
+    <div class="slide-content">
+        <div class="slide-header">
+            <h2>El <span class="accent">Problema</span></h2>
+        </div>
+        <div class="slide-body col-2">
+            <div class="text-block">
+                <h3>Para Conductores</h3>
+                <p>Miles de conductores de apps (Uber, DiDi, Cabify) necesitan vehiculos para trabajar, pero enfrentan:</p>
+                <ul class="feature-list">
+                    <li>Alquileres tradicionales costosos ($800-1500 USD/mes)</li>
+                    <li>Requisitos de garantia inalcanzables</li>
+                    <li>Contratos rigidos sin flexibilidad</li>
+                    <li>Sin cobertura de seguros adecuada</li>
+                    <li>Procesos burocraticos lentos</li>
+                </ul>
+            </div>
+            <div class="text-block">
+                <h3>Para Propietarios</h3>
+                <p>Millones de autos permanecen estacionados 95% del tiempo, mientras sus due&#241;os:</p>
+                <ul class="feature-list">
+                    <li>Pagan seguro, patente e impuestos sin usarlos</li>
+                    <li>No tienen forma segura de monetizarlos</li>
+                    <li>Desconfian de extranjeros usando su vehiculo</li>
+                    <li>No tienen proteccion legal ni financiera</li>
+                    <li>Pierden valor por depreciacion sin retorno</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-number">02</div>
+        <div class="slide-footer">AutoRenta | Confidencial</div>
+    </div>
+</div>
+
+<!-- Slide 3: Solucion -->
+<div class="slide">
+    <div class="slide-content">
+        <div class="slide-header">
+            <h2>Nuestra <span class="accent">Solucion</span></h2>
+        </div>
+        <div class="slide-body">
+            <div class="col-3" style="width: 100%;">
+                <div class="card">
+                    <div class="card-icon">&#128663;</div>
+                    <h3>Marketplace P2P</h3>
+                    <p>Conectamos propietarios de vehiculos con conductores verificados. Busqueda geolocalizada, filtros inteligentes y reservas instantaneas.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">&#128274;</div>
+                    <h3>Confianza Total</h3>
+                    <p>Verificacion biometrica, scoring de riesgo, inspeccion por video con IA, y Fondo de Garantia Operativa que cubre siniestros.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">&#128179;</div>
+                    <h3>Pagos Automaticos</h3>
+                    <p>Split payments: el propietario recibe su dinero automaticamente. Wallet integrado, depositos de garantia, y multi-moneda.</p>
+                </div>
+            </div>
+        </div>
+        <div class="highlight-box" style="margin-top: 30px;">
+            <h3 style="font-size: 20px;">Propuesta de Valor</h3>
+            <p style="font-size: 16px; margin: 0;">AutoRenta elimina la friccion del car-sharing P2P combinando tecnologia financiera (Fintech) con un marketplace de movilidad, todo protegido por un sistema de garantias autorregulado.</p>
+        </div>
+        <div class="slide-number">03</div>
+        <div class="slide-footer">AutoRenta | Confidencial</div>
+    </div>
+</div>
+
+<!-- Slide 4: Como Funciona -->
+<div class="slide">
+    <div class="slide-content">
+        <div class="slide-header">
+            <h2>Como <span class="accent">Funciona</span></h2>
+        </div>
+        <div class="slide-body" style="flex-direction: column; gap: 50px;">
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="process-number">1</div>
+                    <h4>Registro Verificado</h4>
+                    <p>Verificacion biometrica, licencia de conducir, y scoring de riesgo automatico</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">2</div>
+                    <h4>Busqueda & Reserva</h4>
+                    <p>Mapa interactivo, filtros por precio/tipo, disponibilidad en tiempo real</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">3</div>
+                    <h4>Pago Seguro</h4>
+                    <p>Deposito de garantia + pago del alquiler. Split automatico al propietario</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">4</div>
+                    <h4>Check-in Digital</h4>
+                    <p>Inspeccion por video del vehiculo. Deteccion de da&#241;os con IA</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">5</div>
+                    <h4>Uso del Vehiculo</h4>
+                    <p>Cobertura de seguro activa. Soporte 24/7. Mensajeria P2P</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">6</div>
+                    <h4>Check-out & Pago</h4>
+                    <p>Inspeccion final. Liberacion de deposito. Rese&#241;as bidireccionales</p>
+                </div>
+            </div>
+            <div class="stat-grid">
+                <div class="stat">
+                    <div class="stat-value">&lt;5min</div>
+                    <div class="stat-label">Tiempo de Registro</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">24h</div>
+                    <div class="stat-label">Aprobacion Promedio</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Digital, Sin Papeles</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">15%</div>
+                    <div class="stat-label">Comision Plataforma</div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">04</div>
+        <div class="slide-footer">AutoRenta | Confidencial</div>
+    </div>
+</div>
+
+<!-- Slide 5: Mercado -->
+<div class="slide">
+    <div class="slide-content">
+        <div class="slide-header">
+            <h2>Oportunidad de <span class="accent">Mercado</span></h2>
+        </div>
+        <div class="slide-body col-2">
+            <div>
+                <div class="stat" style="margin-bottom: 30px; padding: 40px;">
+                    <div class="stat-value">$12B</div>
+                    <div class="stat-label">Mercado Car-Sharing LATAM 2028</div>
+                </div>
+                <div class="stat" style="margin-bottom: 30px; padding: 40px;">
+                    <div class="stat-value">2.5M+</div>
+                    <div class="stat-label">Conductores de Apps en Argentina</div>
+                </div>
+                <div class="stat" style="padding: 40px;">
+                    <div class="stat-value">95%</div>
+                    <div class="stat-label">Autos Estacionados (Tiempo Promedio)</div>
+                </div>
+            </div>
+            <div class="text-block">
+                <h3>Mercados Objetivo</h3>
+                <p><strong>Fase 1 - Argentina (Actual)</strong><br>
+                Mercado principal. 2.5M conductores de apps, economia informal alta, necesidad de vehiculos para gig economy.</p>
+
+                <p><strong>Fase 2 - Brasil</strong><br>
+                Mayor mercado LATAM. Integracion FIPE lista. 200M+ habitantes, clase media creciente.</p>
+
+                <p><strong>Fase 3 - Ecuador & Uruguay</strong><br>
+                Mercados dolarizados. Menor competencia, alta adopcion digital.</p>
+
+                <div class="highlight-box" style="margin-top: 30px;">
+                    <h3 style="font-size: 16px;">Ventaja Competitiva Regional</h3>
+                    <p style="font-size: 14px; margin: 0;">No existe un Turo o Getaround consolidado en LATAM. Los competidores locales carecen de tecnologia de verificacion y garantias financieras.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">05</div>
+        <div class="slide-footer">AutoRenta | Confidencial</div>
+    </div>
+</div>
+
+<!-- Slide 6: Modelo de Negocio -->
+<div class="slide">
+    <div class="slide-content">
+        <div class="slide-header">
+            <h2>Modelo de <span class="accent">Negocio</span></h2>
+        </div>
+        <div class="slide-body" style="flex-direction: column;">
+            <h3 style="font-size: 20px; margin-bottom: 20px; color: var(--gray);">Distribucion de Ingresos por Reserva</h3>
+            <div class="revenue-bar">
+                <div class="revenue-segment revenue-owner">75% Propietario</div>
+                <div class="revenue-segment revenue-platform">15% Plataforma</div>
+                <div class="revenue-segment revenue-fgo">10% FGO</div>
+            </div>
+
+            <div class="col-3" style="margin-top: 30px;">
+                <div class="card">
+                    <h3>Comision por Reserva</h3>
+                    <p><strong>15% del total</strong><br><br>
+                    Comision sobre cada transaccion. Tiering dinamico: propietarios con alto volumen reciben mejores tasas (hasta 8%).</p>
+                </div>
+                <div class="card">
+                    <h3>Fondo de Garantia (FGO)</h3>
+                    <p><strong>10% contribucion</strong><br><br>
+                    Sistema autorregulado que cubre siniestros y da&#241;os. Coverage ratio monitoreado. Sin seguros tradicionales costosos.</p>
+                </div>
+                <div class="card">
+                    <h3>Servicios Premium</h3>
+                    <p><strong>Roadmap Q2 2026</strong><br><br>
+                    Listings destacados, marketing boost, priority support, add-ons de cobertura extendida.</p>
+                </div>
+            </div>
+
+            <div class="col-2" style="margin-top: 30px;">
+                <div class="stat" style="padding: 30px;">
+                    <div class="stat-value">$150</div>
+                    <div class="stat-label">Ticket Promedio (7 dias)</div>
+                </div>
+                <div class="stat" style="padding: 30px;">
+                    <div class="stat-value">$22.50</div>
+                    <div class="stat-label">Ingreso Promedio por Reserva</div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">06</div>
+        <div class="slide-footer">AutoRenta | Confidencial</div>
+    </div>
+</div>
+
+<!-- Slide 7: Tecnologia -->
+<div class="slide">
+    <div class="slide-content">
+        <div class="slide-header">
+            <h2>Plataforma <span class="accent">Tecnologica</span></h2>
+        </div>
+        <div class="slide-body col-2">
+            <div>
+                <h3 style="font-size: 20px; margin-bottom: 24px;">Stack Moderno & Escalable</h3>
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <div class="icon">&#9001;/&#9002;</div>
+                        <span>Angular 20</span>
+                    </div>
+                    <div class="tech-item">
+                        <div class="icon">&#128241;</div>
+                        <span>Ionic + Capacitor</span>
+                    </div>
+                    <div class="tech-item">
+                        <div class="icon">&#9889;</div>
+                        <span>Supabase</span>
+                    </div>
+                    <div class="tech-item">
+                        <div class="icon">&#9729;</div>
+                        <span>Cloudflare</span>
+                    </div>
+                    <div class="tech-item">
+                        <div class="icon">&#128179;</div>
+                        <span>MercadoPago</span>
+                    </div>
+                    <div class="tech-item">
+                        <div class="icon">&#127758;</div>
+                        <span>Mapbox GL</span>
+                    </div>
+                    <div class="tech-item">
+                        <div class="icon">&#129302;</div>
+                        <span>AI Vision</span>
+                    </div>
+                    <div class="tech-item">
+                        <div class="icon">&#128272;</div>
+                        <span>Biometrics</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 style="font-size: 20px; margin-bottom: 24px;">Capacidades Clave</h3>
+                <ul class="feature-list">
+                    <li>PWA + App Nativa Android (iOS roadmap)</li>
+                    <li>Split Payments automaticos con MercadoPago</li>
+                    <li>Wallet con double-entry accounting</li>
+                    <li>Verificacion biometrica facial</li>
+                    <li>Deteccion de da&#241;os por video con IA</li>
+                    <li>Real-time notifications & messaging</li>
+                    <li>Multi-moneda (ARS, BRL, USD)</li>
+                    <li>Row Level Security (RLS) PostgreSQL</li>
+                    <li>Edge Functions (Deno) zero-latency</li>
+                    <li>Contratos digitales con versionado</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-number">07</div>
+        <div class="slide-footer">AutoRenta | Confidencial</div>
+    </div>
+</div>
+
+<!-- Slide 8: Seguridad y Confianza -->
+<div class="slide">
+    <div class="slide-content">
+        <div class="slide-header">
+            <h2>Seguridad & <span class="accent">Confianza</span></h2>
+        </div>
+        <div class="slide-body">
+            <div class="market-comparison">
+                <div class="market-column">
+                    <h3>&#128308; Riesgos del Car-Sharing</h3>
+                    <div class="market-item">
+                        <div class="icon">&#128100;</div>
+                        <p>Identidad falsa o suplantacion</p>
+                    </div>
+                    <div class="market-item">
+                        <div class="icon">&#128663;</div>
+                        <p>Da&#241;os no reportados al vehiculo</p>
+                    </div>
+                    <div class="market-item">
+                        <div class="icon">&#128176;</div>
+                        <p>Fraude en pagos o chargebacks</p>
+                    </div>
+                    <div class="market-item">
+                        <div class="icon">&#128221;</div>
+                        <p>Disputas sin resolucion legal</p>
+                    </div>
+                    <div class="market-item">
+                        <div class="icon">&#9888;</div>
+                        <p>Accidentes sin cobertura</p>
+                    </div>
+                </div>
+                <div class="market-column solution">
+                    <h3>&#128994; Solucion AutoRenta</h3>
+                    <div class="market-item">
+                        <div class="icon">&#9989;</div>
+                        <p><strong>Verificacion biometrica</strong> + validacion de licencia</p>
+                    </div>
+                    <div class="market-item">
+                        <div class="icon">&#9989;</div>
+                        <p><strong>Inspeccion por video con IA</strong> en check-in/out</p>
+                    </div>
+                    <div class="market-item">
+                        <div class="icon">&#9989;</div>
+                        <p><strong>Deposito bloqueado</strong> + split payments automaticos</p>
+                    </div>
+                    <div class="market-item">
+                        <div class="icon">&#9989;</div>
+                        <p><strong>Contratos digitales</strong> con validez legal</p>
+                    </div>
+                    <div class="market-item">
+                        <div class="icon">&#9989;</div>
+                        <p><strong>FGO (Fondo de Garantia)</strong> cubre siniestros</p>
+                    </div>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 40px;">
+                <h3 style="font-size: 18px;">Fondo de Garantia Operativa (FGO)</h3>
+                <p style="font-size: 15px; margin: 0;">Sistema autorregulado que acumula el 10% de cada reserva. Cubre da&#241;os, siniestros y disputas sin depender de seguros tradicionales. Metricas monitoreadas: Coverage Ratio, Loss Ratio, estados healthy/warning/critical.</p>
+            </div>
+        </div>
+        <div class="slide-number">08</div>
+        <div class="slide-footer">AutoRenta | Confidencial</div>
+    </div>
+</div>
+
+<!-- Slide 9: Status & Traccion -->
+<div class="slide">
+    <div class="slide-content">
+        <div class="slide-header">
+            <h2>Status & <span class="accent">Traccion</span></h2>
+        </div>
+        <div class="slide-body" style="flex-direction: column;">
+            <div class="stat-grid" style="margin-bottom: 40px;">
+                <div class="stat">
+                    <div class="stat-value">34+</div>
+                    <div class="stat-label">Features Implementados</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">50+</div>
+                    <div class="stat-label">Servicios Backend</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">TypeScript</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">MVP</div>
+                    <div class="stat-label">Listo para Beta</div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 20px; margin-bottom: 20px;">Desarrollo Completado</h3>
+            <div class="col-2">
+                <ul class="feature-list">
+                    <li>Sistema de autenticacion y verificacion</li>
+                    <li>Marketplace con busqueda geolocalizada</li>
+                    <li>Flujo completo de reservas (booking)</li>
+                    <li>Pagos con MercadoPago (split payments)</li>
+                    <li>Wallet con depositos y garantias</li>
+                </ul>
+                <ul class="feature-list">
+                    <li>Check-in/out con inspeccion por video</li>
+                    <li>Sistema de rese&#241;as bidireccional</li>
+                    <li>Contratos digitales con PDF</li>
+                    <li>Notificaciones push y email</li>
+                    <li>Panel de administracion</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-number">09</div>
+        <div class="slide-footer">AutoRenta | Confidencial</div>
+    </div>
+</div>
+
+<!-- Slide 10: Roadmap -->
+<div class="slide">
+    <div class="slide-content">
+        <div class="slide-header">
+            <h2><span class="accent">Roadmap</span></h2>
+        </div>
+        <div class="slide-body">
+            <div class="timeline">
+                <div class="timeline-item completed">
+                    <h4>Q4 2025</h4>
+                    <h3>MVP Argentina</h3>
+                    <ul>
+                        <li>Plataforma core completa</li>
+                        <li>Pagos MercadoPago</li>
+                        <li>Verificacion basica</li>
+                        <li>Beta privada</li>
+                    </ul>
+                </div>
+                <div class="timeline-item">
+                    <h4>Q1 2026</h4>
+                    <h3>Beta Publica</h3>
+                    <ul>
+                        <li>Lanzamiento Argentina</li>
+                        <li>App Android en Play Store</li>
+                        <li>Marketing inicial</li>
+                        <li>Primeros 100 usuarios</li>
+                    </ul>
+                </div>
+                <div class="timeline-item">
+                    <h4>Q2 2026</h4>
+                    <h3>Expansion & Features</h3>
+                    <ul>
+                        <li>Dynamic pricing</li>
+                        <li>Servicios premium</li>
+                        <li>App iOS</li>
+                        <li>1,000+ usuarios</li>
+                    </ul>
+                </div>
+                <div class="timeline-item future">
+                    <h4>Q3-Q4 2026</h4>
+                    <h3>LATAM Expansion</h3>
+                    <ul>
+                        <li>Lanzamiento Brasil</li>
+                        <li>Ecuador & Uruguay</li>
+                        <li>Multi-moneda completo</li>
+                        <li>10,000+ usuarios</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">10</div>
+        <div class="slide-footer">AutoRenta | Confidencial</div>
+    </div>
+</div>
+
+<!-- Slide 11: Equipo -->
+<div class="slide">
+    <div class="slide-content">
+        <div class="slide-header">
+            <h2>El <span class="accent">Equipo</span></h2>
+        </div>
+        <div class="slide-body" style="justify-content: center; align-items: center;">
+            <div class="col-2" style="max-width: 900px;">
+                <div class="card" style="text-align: center; padding: 50px;">
+                    <div style="width: 120px; height: 120px; background: var(--primary); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 48px; color: white;">&#128100;</span>
+                    </div>
+                    <h3 style="font-size: 24px; margin-bottom: 8px;">[Tu Nombre]</h3>
+                    <p style="color: var(--primary); font-weight: 600; margin-bottom: 16px;">Founder & CEO</p>
+                    <p style="font-size: 14px;">Experiencia en [tu background]. Vision de construir el Turo de America Latina.</p>
+                </div>
+                <div class="card" style="padding: 40px;">
+                    <h3 style="margin-bottom: 24px;">Por que Ahora</h3>
+                    <ul class="feature-list">
+                        <li>Gig economy en explosion post-pandemia</li>
+                        <li>Adopcion digital acelerada en LATAM</li>
+                        <li>Fintechs maduras (MercadoPago, etc.)</li>
+                        <li>Sin competidor dominante regional</li>
+                        <li>Regulacion favorable P2P</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">11</div>
+        <div class="slide-footer">AutoRenta | Confidencial</div>
+    </div>
+</div>
+
+<!-- Slide 12: The Ask -->
+<div class="slide slide-cta">
+    <h2>Exploremos una Colaboracion</h2>
+    <p>AutoRenta esta listo para escalar. Buscamos socios estrategicos que aporten capital, experiencia operativa, o conexiones en el mercado LATAM.</p>
+    <div class="cta-items">
+        <div class="cta-item">
+            <div class="value">$250K</div>
+            <div class="label">Ronda Seed Objetivo</div>
+        </div>
+        <div class="cta-item">
+            <div class="value">18 meses</div>
+            <div class="label">Runway Proyectado</div>
+        </div>
+        <div class="cta-item">
+            <div class="value">3 paises</div>
+            <div class="label">Expansion 2026</div>
+        </div>
+    </div>
+    <div class="contact-info">
+        [Tu Email] | [Tu Telefono] | autorenta.com
+    </div>
+</div>
+
+</body>
+</html>

@@ -21,6 +21,7 @@ const VALID_DOC_TYPES = [
   'gov_id_front',
   'gov_id_back',
   'driver_license',
+  'driver_license_back',
   'license_front',
   'license_back',
   'vehicle_registration',
@@ -219,17 +220,213 @@ export class VerificationService {
 
   /**
    * Dispara la verificación automática (edge function) y refresca estado/documentos.
+   *
+   * Implementa exponential backoff: 200ms → 400ms → 800ms (max 3 reintentos).
    */
   async triggerVerification(role?: VerificationRole): Promise<void> {
     const body = role ? { role } : {};
 
-    const { error } = await this.supabase.functions.invoke('verify-user-docs', { body });
+    const result = await this.retryWithBackoff(
+      async () => {
+        const { error } = await this.supabase.functions.invoke('verify-user-docs', { body });
+        if (error) throw error;
+        return true;
+      },
+      { maxAttempts: 3, baseDelayMs: 200, operationName: 'triggerVerification' }
+    );
 
-    if (error) {
-      throw error;
+    if (!result) {
+      throw new Error('Verificación fallida después de múltiples intentos');
     }
 
     await Promise.all([this.loadStatuses(), this.loadDocuments()]);
+  }
+
+  /**
+   * Ejecuta una operación con exponential backoff.
+   *
+   * @param operation - Función async a ejecutar
+   * @param options - Configuración del retry
+   * @returns Resultado de la operación o null si falla
+   */
+  private async retryWithBackoff<T>(
+    operation: () => Promise<T>,
+    options: {
+      maxAttempts?: number;
+      baseDelayMs?: number;
+      operationName?: string;
+    } = {}
+  ): Promise<T | null> {
+    const { maxAttempts = 3, baseDelayMs = 200, operationName = 'operation' } = options;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        return await operation();
+      } catch (error) {
+        const isLastAttempt = attempt === maxAttempts;
+
+        if (isLastAttempt) {
+          this.logger.error(`${operationName} failed after ${maxAttempts} attempts`, error);
+          return null;
+        }
+
+        // Exponential backoff: 200 → 400 → 800ms
+        const delayMs = baseDelayMs * Math.pow(2, attempt - 1);
+        this.logger.warn(`${operationName} attempt ${attempt} failed, retrying in ${delayMs}ms`, error);
+        await this.sleep(delayMs);
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Espera un tiempo determinado.
+   */
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  /**
+   * Verifica un documento usando OCR (Google Cloud Vision).
+   * Llama a la edge function verify-document para procesar la imagen.
+   *
+   * @param imageBase64 - Imagen en base64 (sin prefijo data:...)
+   * @param documentType - 'dni' o 'license'
+   * @param side - 'front' o 'back'
+   * @param country - 'AR' (Argentina) o 'EC' (Ecuador)
+   * @returns Resultado de la verificación OCR
+   */
+  async verifyDocumentOcr(
+    imageBase64: string,
+    documentType: 'dni' | 'license',
+    side: 'front' | 'back',
+    country: 'AR' | 'EC'
+  ): Promise<{
+    success: boolean;
+    ocr_confidence: number;
+    validation: {
+      isValid: boolean;
+      confidence: number;
+      extracted: Record<string, unknown>;
+      errors: string[];
+      warnings: string[];
+    };
+    extracted_data: Record<string, unknown>;
+    errors: string[];
+    warnings: string[];
+  }> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
+    if (!user) throw new Error('No autenticado');
+
+    const result = await this.retryWithBackoff(
+      async () => {
+        const { data, error } = await this.supabase.functions.invoke('verify-document', {
+          body: {
+            image_base64: imageBase64,
+            document_type: documentType,
+            side,
+            country,
+            user_id: user.id,
+          },
+        });
+
+        if (error) throw error;
+        return data;
+      },
+      { maxAttempts: 3, baseDelayMs: 200, operationName: 'verifyDocumentOcr' }
+    );
+
+    if (!result) {
+      this.logger.error('verifyDocumentOcr failed after retries');
+      throw new Error('Verificación OCR fallida después de múltiples intentos');
+    }
+
+    return result;
+  }
+
+  /**
+   * Sube un documento y lo verifica con OCR en un solo paso.
+   * Combina uploadDocument() + verifyDocumentOcr() para mejor UX.
+   *
+   * @param file - Archivo de imagen
+   * @param docType - Tipo de documento (gov_id_front, license_front, etc.)
+   * @param country - País del documento
+   * @returns Resultado de la verificación OCR
+   */
+  async uploadAndVerifyDocument(
+    file: File,
+    docType: string,
+    country: 'AR' | 'EC'
+  ): Promise<{
+    storagePath: string;
+    ocrResult: {
+      success: boolean;
+      ocr_confidence: number;
+      validation: {
+        isValid: boolean;
+        confidence: number;
+        extracted: Record<string, unknown>;
+        errors: string[];
+        warnings: string[];
+      };
+      extracted_data: Record<string, unknown>;
+      errors: string[];
+      warnings: string[];
+    } | null;
+  }> {
+    // Determinar tipo de documento y lado
+    const documentType = docType.includes('license') ? 'license' : 'dni';
+    const side = docType.includes('back') ? 'back' : 'front';
+
+    // 1. Convertir archivo a base64 para OCR (antes de subir para mejor UX)
+    const base64 = await this.fileToBase64(file);
+
+    // 2. Subir al storage (en paralelo con OCR)
+    const uploadPromise = this.uploadDocument(file, docType);
+
+    // 3. Llamar a verify-document para OCR con base64
+    let ocrResult = null;
+    try {
+      ocrResult = await this.verifyDocumentOcr(
+        base64,
+        documentType,
+        side,
+        country
+      );
+
+      this.logger.info('Document OCR verification completed', {
+        docType,
+        success: ocrResult.success,
+        confidence: ocrResult.ocr_confidence,
+      });
+    } catch (ocrError) {
+      this.logger.warn('OCR verification failed, document still uploading', ocrError);
+    }
+
+    // 4. Esperar a que termine el upload
+    const storagePath = await uploadPromise;
+
+    return { storagePath, ocrResult };
+  }
+
+  /**
+   * Convierte un File a base64 (sin prefijo data:...)
+   */
+  private fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        // Remover prefijo "data:image/...;base64,"
+        const base64 = result.split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   }
 
   /**

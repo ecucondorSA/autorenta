@@ -9,9 +9,14 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
  */
 export type ConversionEventType =
   | 'search_performed'
+  | 'search_results_view'
   | 'car_viewed'
+  | 'add_to_favorites'
+  | 'remove_from_favorites'
+  | 'contact_owner'
   | 'checkout_started'
   | 'checkout_completed'
+  | 'booking_cancelled'
   | 'sign_up'
   | 'login'
   | 'deposit_page_viewed'
@@ -219,6 +224,11 @@ export class AnalyticsService {
       // Marketplace
       filters_opened: 'view_search_results',
       car_details_clicked: 'select_item',
+      search_results_view: 'view_search_results',
+      add_to_favorites: 'add_to_wishlist',
+      remove_from_favorites: 'remove_from_cart',
+      contact_owner: 'generate_lead',
+      booking_cancelled: 'refund',
 
       // Wallet
       wallet_page_viewed: 'page_view',

@@ -57,6 +57,9 @@ export const environment = buildEnvironment({
   videoIngestionUrl: '', // Se configura via NG_APP_VIDEO_INGESTION_URL (ej: https://video-ingestion-service-XXXXX-uc.a.run.app)
   gcpProjectId: 'autorenta-prod',
   gcpBucketName: 'autorenta-inspection-videos',
+  // Logging: warn level in production (only warn, error, critical)
+  // Configurable via NG_APP_LOG_LEVEL env var
+  logLevel: 'warn' as const,
   distanceConfig: {
     // Umbrales de tiers (km)
     localThresholdKm: 20,

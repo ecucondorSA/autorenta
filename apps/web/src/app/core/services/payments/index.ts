@@ -13,6 +13,7 @@ export * from '@core/services/payments/mercadopago-payment.service';
 export * from '@core/services/payments/mercadopago-wallet-gateway.service';
 export * from '@core/services/payments/payment-authorization.service';
 export * from '@core/services/payments/payment-gateway.factory';
+export * from '@core/services/payments/payment-metrics.service';
 export * from '@core/services/payments/payment-orchestration.service';
 export * from '@core/services/payments/payments.service';
 export * from '@core/services/payments/payout.service';

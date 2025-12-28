@@ -17,6 +17,16 @@ interface TikTokConfig {
   clientId?: string;
 }
 
+/**
+ * Log levels for configurable logging
+ * - 'debug': All logs (debug, info, warn, error, critical)
+ * - 'info': Info and above (info, warn, error, critical)
+ * - 'warn': Warnings and above (warn, error, critical)
+ * - 'error': Errors and above (error, critical)
+ * - 'silent': No console logs (still sends to Sentry)
+ */
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'silent';
+
 interface EnvDefaults {
   production?: boolean;
   supabaseUrl?: string;
@@ -56,6 +66,8 @@ interface EnvDefaults {
   videoIngestionUrl?: string;
   gcpProjectId?: string;
   gcpBucketName?: string;
+  // Logging configuration
+  logLevel?: LogLevel;
 }
 
 // Type-safe interfaces for global environment access
@@ -174,6 +186,8 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   videoIngestionUrl: resolve('NG_APP_VIDEO_INGESTION_URL', defaults.videoIngestionUrl ?? ''),
   gcpProjectId: resolve('NG_APP_GCP_PROJECT_ID', defaults.gcpProjectId ?? 'autorenta-prod'),
   gcpBucketName: resolve('NG_APP_GCP_BUCKET_NAME', defaults.gcpBucketName ?? 'autorenta-inspection-videos'),
+  // Logging configuration - configurable via env var
+  logLevel: (resolve('NG_APP_LOG_LEVEL', defaults.logLevel) || (defaults.production ? 'warn' : 'debug')) as LogLevel,
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;

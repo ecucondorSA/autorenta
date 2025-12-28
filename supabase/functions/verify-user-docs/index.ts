@@ -336,10 +336,11 @@ function evaluateDriver(
         }
       });
     }
-  } else if (!DOC_VERIFIER_URL && missing.length === 0) {
-    // Auto-aprobar en entornos de desarrollo sin verificador externo.
-    status = 'VERIFICADO';
-    notes = 'Validación automática (modo desarrollo).';
+  } else if (!DOC_VERIFIER_URL) {
+    // ⚠️ SEGURIDAD: Sin verificador externo, NUNCA auto-aprobar.
+    // Requiere verificación manual por admin o configuración de DOC_VERIFIER_URL.
+    status = 'PENDIENTE';
+    notes = 'Requiere verificación manual (DOC_VERIFIER_URL no configurado).';
   }
 
   if (missing.length > 0 && status === 'VERIFICADO') {
@@ -393,9 +394,11 @@ function evaluateOwner(
         }
       });
     }
-  } else if (!DOC_VERIFIER_URL && missing.size === 0) {
-    status = 'VERIFICADO';
-    notes = 'Validación automática (modo desarrollo).';
+  } else if (!DOC_VERIFIER_URL) {
+    // ⚠️ SEGURIDAD: Sin verificador externo, NUNCA auto-aprobar.
+    // Requiere verificación manual por admin o configuración de DOC_VERIFIER_URL.
+    status = 'PENDIENTE';
+    notes = 'Requiere verificación manual (DOC_VERIFIER_URL no configurado).';
   }
 
   if (missing.size > 0 && status === 'VERIFICADO') {

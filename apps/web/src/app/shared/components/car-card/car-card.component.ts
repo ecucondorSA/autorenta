@@ -207,6 +207,18 @@ export class CarCardComponent implements OnInit, OnDestroy {
   });
 
   /**
+   * Verifica si el auto tiene fotos reales (no placeholder)
+   * Usado para mostrar badge "Sin foto" a owners
+   */
+  readonly hasRealPhotos = computed(() => {
+    const car = this._car();
+    if (!car) return false;
+
+    const photos = car.photos || car.car_photos;
+    return photos && photos.length > 0 && photos[0]?.url;
+  });
+
+  /**
    * Verifica si una URL es una imagen Base64
    * NgOptimizedImage no soporta Base64, así que debemos usar src normal
    */

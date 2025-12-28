@@ -26,7 +26,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { DriverProfileService } from '@core/services/auth/driver-profile.service';
 import { BonusProtectorService } from '@core/services/payments/bonus-protector.service';
-import { ClassBenefitsModalComponent } from '../../shared/components/class-benefits-modal/class-benefits-modal.component';
+// ClassBenefitsModalComponent removed - violates NO MODALS rule
 import { MetaService } from '@core/services/ui/meta.service';
 
 /**
@@ -73,11 +73,7 @@ import { MetaService } from '@core/services/ui/meta.service';
           <ion-back-button defaultHref="/profile" color="light"></ion-back-button>
         </ion-buttons>
         <ion-title>Mi Perfil de Conductor</ion-title>
-        <ion-buttons slot="end">
-          <ion-button fill="clear" color="light" (click)="showSystemExplanation()">
-            <ion-icon slot="icon-only" name="help-circle-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
+        <!-- Help button removed - NO MODALS rule -->
       </ion-toolbar>
     </ion-header>
     
@@ -1523,15 +1519,7 @@ export class DriverProfilePage implements OnInit {
     }
   }
 
-  async showSystemExplanation(): Promise<void> {
-    const modal = await this.modalController.create({
-      component: ClassBenefitsModalComponent,
-      componentProps: {
-        currentClass: this.driverClass(),
-      },
-    });
-    await modal.present();
-  }
+  // showSystemExplanation() removed - ClassBenefitsModalComponent violated NO MODALS rule
 
   buyProtection(): void {
     // Navigate to protections page

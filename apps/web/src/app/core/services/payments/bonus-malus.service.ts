@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import type {
   UserBonusMalus,
   BonusMalusCalculation,
@@ -7,6 +7,7 @@ import type {
   AutorentaTier,
 } from '@core/models';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 export interface TierDisplay {
   label: string;
@@ -22,6 +23,7 @@ export interface TierDisplay {
 })
 export class BonusMalusService {
   private readonly supabase = injectSupabase();
+  private readonly logger = inject(LoggerService);
 
   /**
    * Obtiene el factor bonus-malus del usuario autenticado
@@ -63,7 +65,8 @@ export class BonusMalusService {
       }
 
       return bonusMalus;
-    } catch {
+    } catch (error) {
+      this.logger.error('BonusMalusService.getUserBonusMalus failed', error, { userId });
       return null;
     }
   }
@@ -170,7 +173,8 @@ export class BonusMalusService {
 
       if (error) throw error;
       return data as BonusMalusCalculation;
-    } catch {
+    } catch (error) {
+      this.logger.error('BonusMalusService.calculateBonusMalus failed', error, { userId });
       return null;
     }
   }
@@ -182,7 +186,8 @@ export class BonusMalusService {
     try {
       const bonusMalus = await this.getUserBonusMalus(userId);
       return bonusMalus?.total_factor ?? 0;
-    } catch {
+    } catch (error) {
+      this.logger.warn('BonusMalusService.getBonusMalusFactor failed, returning neutral factor', { userId, error });
       return 0;
     }
   }
@@ -259,7 +264,8 @@ export class BonusMalusService {
 
       const nextRecalc = new Date(bonusMalus.next_recalculation_at);
       return nextRecalc < new Date();
-    } catch {
+    } catch (error) {
+      this.logger.warn('BonusMalusService.needsRecalculation failed', { userId, error });
       return false;
     }
   }
@@ -322,7 +328,8 @@ export class BonusMalusService {
       }
 
       return tips;
-    } catch {
+    } catch (error) {
+      this.logger.warn('BonusMalusService.getImprovementTips failed', { userId, error });
       return [];
     }
   }
@@ -377,7 +384,8 @@ export class BonusMalusService {
         usersNeutral,
         averageFactor,
       };
-    } catch {
+    } catch (error) {
+      this.logger.error('BonusMalusService.getBonusMalusStats failed', error);
       return null;
     }
   }
@@ -395,7 +403,8 @@ export class BonusMalusService {
         count: data as number,
         success: true,
       };
-    } catch {
+    } catch (error) {
+      this.logger.error('BonusMalusService.recalculateAllBonusMalus failed', error);
       return {
         count: 0,
         success: false,
@@ -435,8 +444,8 @@ export class BonusMalusService {
         factor: -discount, // Factor negativo para indicar descuento
         savings
       };
-    } catch {
-      // Fallback
+    } catch (error) {
+      this.logger.warn('BonusMalusService.applyBonusMalusToDeposit failed, using full deposit', { userId, baseDepositCents, error });
       return {
         adjustedDepositCents: baseDepositCents,
         factor: 0,
@@ -482,7 +491,8 @@ export class BonusMalusService {
         maluses: data?.maluses ?? [],
         lastCalculated: data?.last_calculated ?? null,
       };
-    } catch {
+    } catch (error) {
+      this.logger.error('BonusMalusService.getUserRiskScore failed', error, { userId });
       return null;
     }
   }
@@ -538,7 +548,8 @@ export class BonusMalusService {
         nextLevel: data?.next_level ?? null,
         missingRequirements: data?.missing_requirements ?? [],
       };
-    } catch {
+    } catch (error) {
+      this.logger.error('BonusMalusService.getRenterLevel failed', error, { userId });
       return null;
     }
   }

@@ -587,10 +587,12 @@ const tests = [
   { name: 'card-form-filling', fn: testCardFormFilling },
   { name: 'missing-parameters', fn: testMissingParameters },
 
-  // Full payment flow tests (commented - require valid auth and may create real bookings):
-  // { name: 'complete-payment-flow', fn: testCompletePaymentFlow },
-  // { name: 'payment-failure', fn: testPaymentFailure },
-  // { name: 'download-pdf', fn: testDownloadPdf },
+  // Full payment flow tests (require valid auth - uses MP test cards)
+  // NOTE: These tests use MercadoPago test cards (APRO/OTHE holders)
+  // They do NOT create real payments but may create test bookings
+  { name: 'complete-payment-flow', fn: testCompletePaymentFlow },
+  { name: 'payment-failure', fn: testPaymentFailure },
+  { name: 'download-pdf', fn: testDownloadPdf },
 ];
 
 async function main(): Promise<void> {

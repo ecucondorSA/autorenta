@@ -1277,21 +1277,19 @@ export class PublishCarV2Page implements OnInit {
   private handleSubmissionError(error: unknown): void {
     console.error('❌ Failed to publish car:', error);
 
-    // Log detailed error information
-    if (error instanceof Error) {
-      console.error('Error message:', error['message']);
-    }
-
     // Show user-friendly error message
     let errorTitle = 'Error al guardar';
     let errorMessage = 'Por favor intenta nuevamente.';
 
     if (error instanceof Error) {
-      if (error['message'].includes('Marca y modelo son requeridos')) {
+      // Log detailed error information
+      console.error('Error message:', error.message);
+
+      if (error.message.includes('Marca y modelo son requeridos')) {
         errorTitle = 'Información incompleta';
         errorMessage = 'Por favor completa la marca y el modelo del vehículo.';
-      } else if (error['message']) {
-        errorMessage = error['message'];
+      } else if (error.message) {
+        errorMessage = error.message;
       }
     }
 

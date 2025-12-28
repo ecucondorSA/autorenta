@@ -1150,7 +1150,7 @@ export class AdminService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error['message'] : 'Error al suspender cuenta',
+        error: error instanceof Error ? error.message : 'Error al suspender cuenta',
       };
     }
   }
@@ -1182,7 +1182,7 @@ export class AdminService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error['message'] : 'Error al reactivar cuenta',
+        error: error instanceof Error ? error.message : 'Error al reactivar cuenta',
       };
     }
   }

@@ -9,6 +9,7 @@
 DROP FUNCTION IF EXISTS wallet_lock_funds(UUID, NUMERIC, TEXT);
 
 -- Crear función para bloquear fondos
+-- SECURITY FIX 2025-12-27: Added SELECT FOR UPDATE to prevent race conditions
 CREATE OR REPLACE FUNCTION wallet_lock_funds(
   p_booking_id UUID,
   p_amount NUMERIC(10, 2),
@@ -26,6 +27,7 @@ DECLARE
   v_current_available NUMERIC(10, 2);
   v_current_locked NUMERIC(10, 2);
   v_transaction_id UUID;
+  v_wallet_exists BOOLEAN;
 BEGIN
   -- Obtener el user_id del usuario autenticado
   v_user_id := auth.uid();
@@ -43,7 +45,60 @@ BEGIN
     RAISE EXCEPTION 'booking_id es requerido';
   END IF;
 
-  -- Obtener balance actual
+  -- =====================================================
+  -- CRITICAL: Acquire row-level lock to prevent race conditions
+  -- This ensures only one transaction can lock funds at a time
+  -- =====================================================
+  SELECT TRUE INTO v_wallet_exists
+  FROM user_wallets
+  WHERE user_id = v_user_id
+  FOR UPDATE NOWAIT;  -- NOWAIT will raise error if locked by another tx
+
+  -- If wallet doesn't exist, create it (edge case)
+  IF NOT FOUND THEN
+    INSERT INTO user_wallets (user_id, currency, non_withdrawable_floor)
+    VALUES (v_user_id, 'USD', 0)
+    ON CONFLICT (user_id) DO NOTHING;
+
+    -- Try to acquire lock again
+    SELECT TRUE INTO v_wallet_exists
+    FROM user_wallets
+    WHERE user_id = v_user_id
+    FOR UPDATE;
+  END IF;
+
+  -- Verificar que no haya un lock existente para el mismo booking (idempotency check)
+  -- This check is now protected by the row lock above
+  IF EXISTS (
+    SELECT 1 FROM wallet_transactions
+    WHERE user_id = v_user_id
+      AND reference_id = p_booking_id
+      AND reference_type = 'booking'
+      AND type = 'lock'
+      AND status = 'completed'
+  ) THEN
+    -- Return the existing transaction instead of failing
+    SELECT wt.id, wb.available_balance, wb.locked_balance
+    INTO v_transaction_id, v_current_available, v_current_locked
+    FROM wallet_transactions wt
+    CROSS JOIN wallet_get_balance() wb
+    WHERE wt.user_id = v_user_id
+      AND wt.reference_id = p_booking_id
+      AND wt.reference_type = 'booking'
+      AND wt.type = 'lock'
+      AND wt.status = 'completed'
+    LIMIT 1;
+
+    RETURN QUERY SELECT
+      v_transaction_id AS transaction_id,
+      TRUE AS success,  -- Return success for idempotent request
+      'Fondos ya bloqueados para esta reserva (idempotent)' AS message,
+      v_current_available AS new_available_balance,
+      v_current_locked AS new_locked_balance;
+    RETURN;
+  END IF;
+
+  -- Obtener balance actual (now protected by row lock)
   SELECT available_balance, locked_balance
   INTO v_current_available, v_current_locked
   FROM wallet_get_balance();
@@ -54,24 +109,6 @@ BEGIN
       NULL::UUID AS transaction_id,
       FALSE AS success,
       FORMAT('Fondos insuficientes. Disponible: $%s, Requerido: $%s', v_current_available, p_amount) AS message,
-      v_current_available AS new_available_balance,
-      v_current_locked AS new_locked_balance;
-    RETURN;
-  END IF;
-
-  -- Verificar que no haya un lock existente para el mismo booking
-  IF EXISTS (
-    SELECT 1 FROM wallet_transactions
-    WHERE user_id = v_user_id
-      AND reference_id = p_booking_id
-      AND reference_type = 'booking'
-      AND type = 'lock'
-      AND status = 'completed'
-  ) THEN
-    RETURN QUERY SELECT
-      NULL::UUID AS transaction_id,
-      FALSE AS success,
-      'Ya existe un bloqueo de fondos para esta reserva' AS message,
       v_current_available AS new_available_balance,
       v_current_locked AS new_locked_balance;
     RETURN;

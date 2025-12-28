@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { environment } from '@environment';
+import { LogLevel } from '@environments/environment.base';
 import { DebugService } from '@core/services/admin/debug.service';
 
 /**
@@ -7,6 +8,18 @@ import { DebugService } from '@core/services/admin/debug.service';
  * We only import the types, not the actual module
  */
 type SentryModule = typeof import('@sentry/angular');
+
+/**
+ * Log level priority map for comparison
+ * Higher number = higher priority (fewer logs)
+ */
+const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
+  debug: 0,
+  info: 1,
+  warn: 2,
+  error: 3,
+  silent: 4,
+};
 
 /**
  * Centralized LoggerService for Angular Frontend
@@ -54,6 +67,32 @@ export class LoggerService {
   /** Cached Sentry module (lazy-loaded) */
   private sentryModule: SentryModule | null = null;
   private sentryLoadPromise: Promise<SentryModule> | null = null;
+
+  /**
+   * Current log level from environment configuration
+   * Defaults to 'debug' in development, 'warn' in production
+   */
+  private readonly logLevel: LogLevel = this.resolveLogLevel();
+
+  /**
+   * Resolve log level from environment or use sensible defaults
+   */
+  private resolveLogLevel(): LogLevel {
+    // Check environment configuration first
+    const envLogLevel = (environment as { logLevel?: LogLevel }).logLevel;
+    if (envLogLevel) {
+      return envLogLevel;
+    }
+    // Default: debug in development, warn in production
+    return this.isDevelopment ? 'debug' : 'warn';
+  }
+
+  /**
+   * Check if a log level should be logged based on current configuration
+   */
+  private shouldLog(level: LogLevel): boolean {
+    return LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[this.logLevel];
+  }
 
   /**
    * Set trace ID for request correlation
@@ -184,7 +223,7 @@ export class LoggerService {
 
   /**
    * Debug level: Detailed diagnostic information
-   * Only logged in development mode
+   * Respects logLevel configuration from environment
    */
   debug(message: string, ...args: unknown[]): void {
     const { context, data, extra } = this.resolveLogArgs(message, args);
@@ -192,8 +231,8 @@ export class LoggerService {
     // Always log to DebugService if enabled
     this.logToDebugService('DEBUG', context || 'App', message, mergedData);
 
-    if (this.isDevelopment) {
-      // In development, log to console with safe data only
+    // Only log to console if log level allows
+    if (this.shouldLog('debug')) {
       const safeArgs = this.sanitizeLogArgs(data, extra);
       const prefix = this.buildLogPrefix('[DEBUG]', context);
       this.logger.debug(`${prefix} ${message}`, ...safeArgs);
@@ -202,8 +241,7 @@ export class LoggerService {
 
   /**
    * Info level: Informational messages
-   * Production: Filtered (not logged)
-   * Development: Logged to console
+   * Respects logLevel configuration from environment
    */
   info(message: string, ...args: unknown[]): void {
     const { context, data, extra } = this.resolveLogArgs(message, args);
@@ -211,18 +249,19 @@ export class LoggerService {
     // Always log to DebugService if enabled
     this.logToDebugService('INFO', context || 'App', message, mergedData);
 
-    if (this.isDevelopment) {
+    // Only log to console if log level allows
+    if (this.shouldLog('info')) {
       const safeArgs = this.sanitizeLogArgs(data, extra);
       const prefix = this.buildLogPrefix('[INFO]', context);
       this.logger.debug(`${prefix} ${message}`, ...safeArgs);
     }
-    // Production: INFO is too noisy, don't send to Sentry
+    // INFO is never sent to Sentry (too noisy)
   }
 
   /**
    * Warn level: Warning messages
-   * Production: Sent to Sentry
-   * Development: Logged to console
+   * Respects logLevel configuration from environment
+   * Always sent to Sentry in production
    */
   warn(message: string, ...args: unknown[]): void {
     const { context, data, extra } = this.resolveLogArgs(message, args);
@@ -231,18 +270,21 @@ export class LoggerService {
     this.logToDebugService('WARN', context || 'App', message, mergedData);
 
     const prefix = this.buildLogPrefix('[WARN]', context);
-    if (this.isDevelopment) {
+    // Log to console if log level allows
+    if (this.shouldLog('warn')) {
       const safeArgs = this.sanitizeLogArgs(data, extra);
       this.logger.warn(`${prefix} ${message}`, ...safeArgs);
-    } else {
+    }
+    // Always send warnings to Sentry in production
+    if (!this.isDevelopment) {
       this.sendToSentry('warning', message, mergedData);
     }
   }
 
   /**
    * Error level: Error conditions
+   * Respects logLevel for console output
    * ALWAYS sent to Sentry with full stack trace
-   * Development: Also logged to console
    */
   error(message: string, ...args: unknown[]): void {
     const { context, data, extra } = this.resolveLogArgs(message, args);
@@ -250,9 +292,10 @@ export class LoggerService {
     // Always log to DebugService if enabled
     this.logToDebugService('ERROR', context || 'App', message, mergedData);
 
-    const prefix = this.buildLogPrefix('[ERROR]', context);
-    if (this.isDevelopment) {
+    // Log to console if log level allows
+    if (this.shouldLog('error')) {
       const safeArgs = this.sanitizeLogArgs(data, extra);
+      const prefix = this.buildLogPrefix('[ERROR]', context);
       this.logger.error(`${prefix} ${message}`, ...safeArgs);
     }
 
@@ -268,6 +311,7 @@ export class LoggerService {
 
   /**
    * Critical level: Critical errors that may cause downtime
+   * Respects logLevel for console output
    * ALWAYS sent to Sentry with highest priority
    */
   critical(message: string, ...args: unknown[]): void {
@@ -276,11 +320,13 @@ export class LoggerService {
     // Always log to DebugService if enabled
     this.logToDebugService('CRITICAL', context || 'App', message, mergedData);
 
+    // Critical errors always log to console (even if log level is 'silent')
+    // because critical errors should never be silenced locally
+    const safeArgs = this.sanitizeLogArgs(data, extra);
     const prefix = this.buildLogPrefix('[CRITICAL]', context);
-    if (this.isDevelopment) {
-      const safeArgs = this.sanitizeLogArgs(data, extra);
-      this.logger.error(`${prefix} ${message}`, ...safeArgs);
-    }
+    this.logger.error(`${prefix} ${message}`, ...safeArgs);
+
+    // Always send to Sentry
     this.sendToSentry('fatal', message, mergedData);
   }
 

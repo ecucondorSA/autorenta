@@ -325,21 +325,144 @@ serve(async (req) => {
     }
 
     // ========================================
+    // IDEMPOTENCY CHECK: Return cached result if payment already exists
+    // SECURITY FIX 2025-12-27: Prevent duplicate payment processing
+    // ========================================
+    if (booking.provider_split_payment_id && booking.metadata?.mp_status === 'approved') {
+      console.log('[IDEMPOTENCY] Payment already processed for booking:', {
+        booking_id,
+        payment_id: booking.provider_split_payment_id,
+        status: booking.metadata.mp_status,
+      });
+      return new Response(
+        JSON.stringify({
+          success: true,
+          payment_id: parseInt(booking.provider_split_payment_id),
+          status: 'approved',
+          status_detail: booking.metadata.mp_status_detail || 'accredited',
+          booking_id: booking_id,
+          booking_status: booking.status,
+          idempotent: true,
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // If payment exists but not approved, check with MercadoPago for current status
+    if (booking.provider_split_payment_id) {
+      console.log('[IDEMPOTENCY] Checking existing payment status with MercadoPago:', {
+        booking_id,
+        payment_id: booking.provider_split_payment_id,
+      });
+
+      try {
+        const existingPaymentResponse = await fetch(
+          `${MP_API_BASE}/payments/${booking.provider_split_payment_id}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${MP_ACCESS_TOKEN}`,
+            },
+          }
+        );
+
+        if (existingPaymentResponse.ok) {
+          const existingPayment = await existingPaymentResponse.json();
+
+          // If payment is now approved, update booking and return success
+          if (existingPayment.status === 'approved') {
+            await supabase
+              .from('bookings')
+              .update({
+                status: 'confirmed',
+                paid_at: new Date().toISOString(),
+                metadata: {
+                  ...booking.metadata,
+                  mp_status: existingPayment.status,
+                  mp_status_detail: existingPayment.status_detail,
+                },
+              })
+              .eq('id', booking_id);
+
+            return new Response(
+              JSON.stringify({
+                success: true,
+                payment_id: existingPayment.id,
+                status: existingPayment.status,
+                status_detail: existingPayment.status_detail,
+                booking_id: booking_id,
+                booking_status: 'confirmed',
+                idempotent: true,
+              }),
+              {
+                status: 200,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+              }
+            );
+          }
+
+          // If payment failed/rejected, allow retry with new token
+          if (['rejected', 'cancelled'].includes(existingPayment.status)) {
+            console.log('[IDEMPOTENCY] Previous payment failed, allowing retry:', {
+              booking_id,
+              previous_status: existingPayment.status,
+            });
+            // Continue with new payment attempt below
+          } else {
+            // Payment is pending or in_process, return current status
+            return new Response(
+              JSON.stringify({
+                success: false,
+                payment_id: existingPayment.id,
+                status: existingPayment.status,
+                status_detail: existingPayment.status_detail,
+                message: 'Payment is still being processed. Please wait.',
+                code: 'PAYMENT_IN_PROGRESS',
+              }),
+              {
+                status: 409,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+              }
+            );
+          }
+        }
+      } catch (checkError) {
+        console.warn('[IDEMPOTENCY] Error checking existing payment, proceeding with new payment:', checkError);
+        // Continue with new payment attempt if check fails
+      }
+    }
+
+    // ========================================
     // SECURITY: Validate price lock hasn't expired
+    // SECURITY FIX 2025-12-27: Use explicit timestamp comparison with getTime()
     // ========================================
     if (booking.price_locked_until) {
       const lockExpiry = new Date(booking.price_locked_until);
-      if (lockExpiry < new Date()) {
-        console.warn('Price lock expired for booking:', {
+      const now = new Date();
+
+      // Use getTime() for explicit numeric comparison (milliseconds since epoch)
+      const lockExpiryMs = lockExpiry.getTime();
+      const nowMs = now.getTime();
+
+      if (lockExpiryMs < nowMs) {
+        const expiredBySeconds = Math.floor((nowMs - lockExpiryMs) / 1000);
+        console.warn('[PRICE_LOCK] Expired for booking:', {
           booking_id,
           locked_until: booking.price_locked_until,
-          now: new Date().toISOString(),
+          locked_until_ms: lockExpiryMs,
+          now: now.toISOString(),
+          now_ms: nowMs,
+          expired_by_seconds: expiredBySeconds,
         });
         return new Response(
           JSON.stringify({
             error: 'El precio de la reserva ha expirado. Por favor, inicie el proceso de pago nuevamente.',
             code: 'PRICE_LOCK_EXPIRED',
             expired_at: booking.price_locked_until,
+            expired_by_seconds: expiredBySeconds,
+            server_time: now.toISOString(),
           }),
           {
             status: 400,
@@ -347,6 +470,13 @@ serve(async (req) => {
           }
         );
       }
+
+      // Log remaining time for debugging
+      const remainingSeconds = Math.floor((lockExpiryMs - nowMs) / 1000);
+      console.log('[PRICE_LOCK] Valid, remaining time:', {
+        booking_id,
+        remaining_seconds: remainingSeconds,
+      });
     }
 
     // ========================================
@@ -545,7 +675,7 @@ serve(async (req) => {
           mp_payment_method_id: mpData.payment_method_id,
           mp_payment_type_id: mpData.payment_type_id,
           mp_card_last4: mpData.card?.last_four_digits,
-          mp_card_holder_name: mpData.card?.cardholder?.name,
+          // mp_card_holder_name removed - PII should not be stored in metadata
           mp_date_created: mpData.date_created,
           mp_date_approved: mpData.date_approved,
         },

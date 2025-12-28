@@ -65,6 +65,7 @@ serve(async (req) => {
   }
 
   try {
+    // RATE LIMITING (fail-closed for security)
     try {
       await enforceRateLimit(req, {
         endpoint: 'mercadopago-process-deposit-payment',
@@ -74,7 +75,12 @@ serve(async (req) => {
       if (error instanceof RateLimitError) {
         return error.toResponse();
       }
-      console.error('[RateLimit] Error enforcing rate limit:', error);
+      // SECURITY: Fail-closed - if rate limiter fails, reject request
+      console.error('[RateLimit] Service unavailable:', error);
+      return new Response(
+        JSON.stringify({ error: 'Service temporarily unavailable', code: 'RATE_LIMITER_UNAVAILABLE' }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const MP_ACCESS_TOKEN_RAW = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');

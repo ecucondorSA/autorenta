@@ -229,6 +229,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'system-monitoring',
+        loadComponent: () =>
+          import('./features/admin/system-monitoring/system-monitoring.page').then(
+            (m) => m.SystemMonitoringPage,
+          ),
+      },
+      {
         path: 'reviews/moderate',
         loadComponent: () =>
           import('./features/admin/reviews/moderate-reviews/moderate-reviews.page').then(

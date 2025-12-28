@@ -1,0 +1,604 @@
+{
+  "info": {
+    "name": "AutoRenta Edge Functions",
+    "description": "Collection of Supabase Edge Functions for AutoRenta platform.\n\n## Authentication\nAll requests require:\n- `apikey` header with Supabase anon key\n- `Authorization` header with Bearer token (for authenticated endpoints)\n\n## Environment Variables\n- `SUPABASE_URL`: https://pisqjmoklivzpwufhscx.supabase.co\n- `SUPABASE_ANON_KEY`: Your anon key\n- `AUTH_TOKEN`: JWT token from authenticated user",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://pisqjmoklivzpwufhscx.supabase.co/functions/v1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & Monitoring",
+      "item": [
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"}
+            ],
+            "url": "{{baseUrl}}/dashboard-stats"
+          }
+        },
+        {
+          "name": "Realtime Alerting",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alert_type\": \"test\",\n  \"message\": \"Test alert from Postman\"\n}"
+            },
+            "url": "{{baseUrl}}/realtime-alerting"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pricing",
+      "item": [
+        {
+          "name": "Calculate Dynamic Price",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"car_id\": \"{{car_id}}\",\n  \"start_date\": \"2025-01-15\",\n  \"end_date\": \"2025-01-20\",\n  \"include_insurance\": true\n}"
+            },
+            "url": "{{baseUrl}}/calculate-dynamic-price"
+          }
+        },
+        {
+          "name": "Get FIPE Value",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"brand\": \"Toyota\",\n  \"model\": \"Corolla\",\n  \"year\": 2022\n}"
+            },
+            "url": "{{baseUrl}}/get-fipe-value"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MercadoPago - Payments",
+      "item": [
+        {
+          "name": "Process Booking Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": \"{{booking_id}}\",\n  \"card_token\": \"{{card_token}}\",\n  \"payer_info\": {\n    \"email\": \"test@example.com\",\n    \"identification\": {\n      \"type\": \"DNI\",\n      \"number\": \"12345678\"\n    }\n  }\n}"
+            },
+            "url": "{{baseUrl}}/mercadopago-process-booking-payment"
+          }
+        },
+        {
+          "name": "Process Brick Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": \"{{booking_id}}\",\n  \"formData\": {\n    \"token\": \"{{card_token}}\",\n    \"issuer_id\": \"310\",\n    \"payment_method_id\": \"visa\",\n    \"transaction_amount\": 5000,\n    \"installments\": 1,\n    \"payer\": {\n      \"email\": \"test@example.com\"\n    }\n  }\n}"
+            },
+            "url": "{{baseUrl}}/mercadopago-process-brick-payment"
+          }
+        },
+        {
+          "name": "Process Deposit Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1000,\n  \"card_token\": \"{{card_token}}\",\n  \"payer_email\": \"test@example.com\"\n}"
+            },
+            "url": "{{baseUrl}}/mercadopago-process-deposit-payment"
+          }
+        },
+        {
+          "name": "Process Refund",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payment_id\": \"{{mp_payment_id}}\",\n  \"amount\": 1000,\n  \"reason\": \"Customer request\"\n}"
+            },
+            "url": "{{baseUrl}}/mercadopago-process-refund"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MercadoPago - Pre-Authorization",
+      "item": [
+        {
+          "name": "Create Pre-Auth",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": \"{{booking_id}}\",\n  \"amount\": 5000,\n  \"card_token\": \"{{card_token}}\"\n}"
+            },
+            "url": "{{baseUrl}}/mp-create-preauth"
+          }
+        },
+        {
+          "name": "Capture Pre-Auth",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payment_id\": \"{{preauth_payment_id}}\",\n  \"amount\": 5000\n}"
+            },
+            "url": "{{baseUrl}}/mp-capture-preauth"
+          }
+        },
+        {
+          "name": "Cancel Pre-Auth",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payment_id\": \"{{preauth_payment_id}}\"\n}"
+            },
+            "url": "{{baseUrl}}/mp-cancel-preauth"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MercadoPago - OAuth",
+      "item": [
+        {
+          "name": "Initiate Onboarding",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"redirect_url\": \"https://autorentar.com/settings/payments\"\n}"
+            },
+            "url": "{{baseUrl}}/mercadopago-initiate-onboarding"
+          }
+        },
+        {
+          "name": "OAuth Connect",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/mercadopago-oauth-connect?redirect_uri={{redirect_uri}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["mercadopago-oauth-connect"],
+              "query": [
+                {"key": "redirect_uri", "value": "{{redirect_uri}}"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "OAuth Callback",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"}
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/mercadopago-oauth-callback?code={{oauth_code}}&state={{oauth_state}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["mercadopago-oauth-callback"],
+              "query": [
+                {"key": "code", "value": "{{oauth_code}}"},
+                {"key": "state", "value": "{{oauth_state}}"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{user_id}}\"\n}"
+            },
+            "url": "{{baseUrl}}/mercadopago-refresh-token"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MercadoPago - Webhooks",
+      "item": [
+        {
+          "name": "MercadoPago Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "x-signature", "value": "{{mp_signature}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"payment.created\",\n  \"api_version\": \"v1\",\n  \"data\": {\n    \"id\": \"{{mp_payment_id}}\"\n  },\n  \"date_created\": \"2025-01-01T00:00:00Z\",\n  \"id\": \"{{webhook_id}}\",\n  \"live_mode\": false,\n  \"type\": \"payment\",\n  \"user_id\": \"{{mp_user_id}}\"\n}"
+            },
+            "url": "{{baseUrl}}/mercadopago-webhook"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PayPal",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": \"{{booking_id}}\",\n  \"amount\": 100.00,\n  \"currency\": \"USD\"\n}"
+            },
+            "url": "{{baseUrl}}/paypal-create-order"
+          }
+        },
+        {
+          "name": "Create Deposit Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 50.00,\n  \"currency\": \"USD\"\n}"
+            },
+            "url": "{{baseUrl}}/paypal-create-deposit-order"
+          }
+        },
+        {
+          "name": "Capture Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"{{paypal_order_id}}\"\n}"
+            },
+            "url": "{{baseUrl}}/paypal-capture-order"
+          }
+        },
+        {
+          "name": "PayPal Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "paypal-transmission-id", "value": "{{pp_transmission_id}}"},
+              {"key": "paypal-transmission-sig", "value": "{{pp_signature}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_type\": \"PAYMENT.CAPTURE.COMPLETED\",\n  \"resource\": {\n    \"id\": \"{{paypal_capture_id}}\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/paypal-webhook"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Emails",
+      "item": [
+        {
+          "name": "Send Booking Confirmation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": \"{{booking_id}}\"\n}"
+            },
+            "url": "{{baseUrl}}/send-booking-confirmation-email"
+          }
+        },
+        {
+          "name": "Send Booking Reminder",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": \"{{booking_id}}\",\n  \"reminder_type\": \"24h\"\n}"
+            },
+            "url": "{{baseUrl}}/send-booking-reminder-email"
+          }
+        },
+        {
+          "name": "Send Booking Cancellation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": \"{{booking_id}}\",\n  \"reason\": \"User cancelled\"\n}"
+            },
+            "url": "{{baseUrl}}/send-booking-cancellation-email"
+          }
+        },
+        {
+          "name": "Send Deposit Confirmation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transaction_id\": \"{{transaction_id}}\",\n  \"amount\": 1000\n}"
+            },
+            "url": "{{baseUrl}}/send-deposit-confirmation-email"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "Generate Booking Contract PDF",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": \"{{booking_id}}\"\n}"
+            },
+            "url": "{{baseUrl}}/generate-booking-contract-pdf"
+          }
+        },
+        {
+          "name": "Export User Data (GDPR)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{user_id}}\",\n  \"format\": \"json\"\n}"
+            },
+            "url": "{{baseUrl}}/export-user-data"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI & Images",
+      "item": [
+        {
+          "name": "Generate Car Images",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"car_id\": \"{{car_id}}\",\n  \"style\": \"professional\"\n}"
+            },
+            "url": "{{baseUrl}}/generate-car-images"
+          }
+        },
+        {
+          "name": "RentarFast Agent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Busco un auto económico para el fin de semana\",\n  \"context\": {\n    \"location\": \"Buenos Aires\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/rentarfast-agent"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Background Jobs",
+      "item": [
+        {
+          "name": "Check Expiring Protectors",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": "{{baseUrl}}/check-expiring-protectors"
+          }
+        },
+        {
+          "name": "Expire Pending Deposits",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": "{{baseUrl}}/expire-pending-deposits"
+          }
+        },
+        {
+          "name": "Monitor Pending Payouts",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": "{{baseUrl}}/monitor-pending-payouts"
+          }
+        },
+        {
+          "name": "Poll Pending Payments",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": "{{baseUrl}}/mercadopago-poll-pending-payments"
+          }
+        },
+        {
+          "name": "Retry Failed Deposits",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": "{{baseUrl}}/mercadopago-retry-failed-deposits"
+          }
+        },
+        {
+          "name": "Process Payment Split",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "apikey", "value": "{{SUPABASE_ANON_KEY}}"},
+              {"key": "Authorization", "value": "Bearer {{AUTH_TOKEN}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": \"{{booking_id}}\"\n}"
+            },
+            "url": "{{baseUrl}}/process-payment-split"
+          }
+        }
+      ]
+    }
+  ]
+}

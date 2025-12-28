@@ -48,7 +48,7 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
   readonly loading = signal(true);
   readonly uploading = signal(false);
   readonly documents = signal<VehicleDocument[]>([]);
-  readonly expiringDocs = signal<VehicleDocument[]>([]);
+  readonly expiringDocs = signal<{ type: VehicleDocumentKind; expiryDate: Date; daysLeft: number }[]>([]);
   readonly showUploadModal = signal(false);
   private documentStatusTeardown?: () => void;
 
@@ -123,14 +123,8 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
 
   async loadExpiringDocuments() {
     try {
-      this.documentsService.getExpiringDocuments(this.carId()).subscribe({
-        next: (docs) => {
-          this.expiringDocs.set(docs);
-        },
-        error: (error) => {
-          console.error('Error loading expiring documents:', error);
-        },
-      });
+      const docs = await this.documentsService.getExpiringDocuments(this.carId());
+      this.expiringDocs.set(docs);
     } catch (error) {
       console.error('Error loading expiring documents:', error);
     }
@@ -364,46 +358,33 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
 
   /**
    * Verificar y notificar documentos próximos a vencer
-   * Checks vtv_expiry and insurance_expiry dates
+   * Usa el nuevo formato: { type, expiryDate, daysLeft }
    */
   private async checkExpiringDocuments(): Promise<void> {
     try {
       const expiringDocs = this.expiringDocs();
+      if (expiringDocs.length === 0) return;
+
+      const car = await this.carsService.getCarById(this.carId());
+      if (!car) return;
+
+      const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
+      const documentsUrl = `/cars/${this.carId()}/documents`;
 
       for (const doc of expiringDocs) {
-        const car = await this.carsService.getCarById(this.carId());
-        if (!car) continue;
+        const docLabel = doc.type === 'technical_inspection'
+          ? 'Revisión Técnica (VTV)'
+          : doc.type === 'insurance'
+            ? 'Póliza de Seguro'
+            : this.documentsService.getDocumentKindLabel(doc.type);
 
-        const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
-        const documentsUrl = `/cars/${this.carId()}/documents`;
-
-        // Check VTV expiry
-        if (doc.vtv_expiry) {
-          const daysUntilExpiry = this.getDaysUntilExpiry(doc.vtv_expiry);
-          if (daysUntilExpiry > 0 && daysUntilExpiry <= 30) {
-            this.carOwnerNotifications.notifyDocumentExpiring(
-              'Revisión Técnica (VTV)',
-              carName,
-              daysUntilExpiry,
-              documentsUrl,
-            );
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-          }
-        }
-
-        // Check insurance expiry
-        if (doc.insurance_expiry) {
-          const daysUntilExpiry = this.getDaysUntilExpiry(doc.insurance_expiry);
-          if (daysUntilExpiry > 0 && daysUntilExpiry <= 30) {
-            this.carOwnerNotifications.notifyDocumentExpiring(
-              'Póliza de Seguro',
-              carName,
-              daysUntilExpiry,
-              documentsUrl,
-            );
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-          }
-        }
+        this.carOwnerNotifications.notifyDocumentExpiring(
+          docLabel,
+          carName,
+          doc.daysLeft,
+          documentsUrl,
+        );
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     } catch (error) {
       console.error('[VehicleDocuments] Error while checking expiring docs:', error);

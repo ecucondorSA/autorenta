@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CarsService } from '@core/services/cars/cars.service';
 import { CarBrand, CarModel, VehicleCategory } from '../../../../core/models';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { APP_CONSTANTS } from '@core/config/constants';
 
 /**
  * Service for managing the publish car form
@@ -68,7 +69,11 @@ export class PublishCarFormService {
 
       // Pricing - Opcional (se calcula automáticamente si es dinámico)
       pricing_strategy: ['dynamic'],
-      price_per_day: [null, [Validators.required, Validators.min(1)]], // Opcional si es dinámico
+      price_per_day: [null, [
+        Validators.required,
+        Validators.min(APP_CONSTANTS.MIN_DAILY_RATE_USD),
+        Validators.max(APP_CONSTANTS.MAX_DAILY_RATE_USD),
+      ]], // USD: $10-$500/day
       currency: ['USD', Validators.required],
       value_usd: [null, [Validators.required, Validators.min(5000), Validators.max(500000)]], // Opcional
       category_id: [null], // Opcional (se auto-categoriza)

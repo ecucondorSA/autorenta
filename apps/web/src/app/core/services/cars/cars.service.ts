@@ -5,6 +5,7 @@ import { Car, CarFilters, CarPhoto } from '@core/models';
 import { optimizeImage } from '@core/utils/image.utils';
 import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { isNotFoundError, handleSupabaseError } from '@core/errors';
 
 // Type for raw car data from Supabase with photos joined
 type CarWithPhotosRaw = Record<string, unknown> & {
@@ -88,9 +89,18 @@ export class CarsService {
       (input as Record<string, unknown>)['location_country'] ||
       'AR';
 
+    // ✅ FIX 2025-12-27: Auto-generate title if not provided
+    // Title format: "Brand Model Year" (e.g., "Toyota Corolla 2022")
+    const brandName = input.brand_text_backup || '';
+    const modelName = input.model_text_backup || '';
+    const yearValue = input.year || new Date().getFullYear();
+    const autoTitle = `${brandName} ${modelName} ${yearValue}`.trim();
+
     // Prepare clean data for insert
     const carData = {
       ...cleanInput,
+      // ✅ FIX 2025-12-27: Ensure title is always set
+      title: (input as Record<string, unknown>)['title'] || autoTitle || 'Auto sin título',
       // ✅ Mapear campos legacy requeridos por la base de datos
       city: city || 'Buenos Aires', // Default si está vacío
       province: province || 'Buenos Aires', // Default si está vacío
@@ -296,8 +306,8 @@ export class CarsService {
       .eq('id', id)
       .single();
     if (error) {
-      if (error.code === 'PGRST116') return null;
-      throw error;
+      if (isNotFoundError(error)) return null;
+      throw handleSupabaseError(error, 'obteniendo auto');
     }
 
     return {
@@ -487,8 +497,8 @@ export class CarsService {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null; // No rows found
-      throw error;
+      if (isNotFoundError(error)) return null; // No rows found
+      throw handleSupabaseError(error, 'obteniendo último auto del usuario');
     }
 
     return data as Car;

@@ -32,7 +32,7 @@ import type { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
-import { MapDrawerComponent } from '../../shared/components/map-drawer/map-drawer.component';
+// MapDrawerComponent removed - duplicated map-booking-panel
 import {
   FilterState,
   MapFiltersComponent,
@@ -56,7 +56,6 @@ import { WazeLiveMapComponent } from '../../shared/components/waze-live-map/waze
     CarsMapComponent,
     WazeLiveMapComponent,
     MapFiltersComponent,
-    MapDrawerComponent,
   ],
 })
 export class ExplorePage implements OnInit, AfterViewInit {

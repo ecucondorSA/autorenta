@@ -8,6 +8,12 @@ import {
   UserDocument,
   UserProfile,
 } from '@core/models';
+import {
+  isNotFoundError,
+  isPermissionError,
+  handleSupabaseError,
+  AuthError,
+} from '@core/errors';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
@@ -68,17 +74,18 @@ export class ProfileService {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') {
+      // Profile not found - create a new one
+      if (isNotFoundError(error)) {
         return this.createProfile(user['id'], user['email'] ?? '');
       }
 
-      if (error.code === '42501') {
-        throw new Error(
-          `RLS Policy violation: Usuario ${user['id']} no tiene acceso a su propio perfil. Error: ${error['message']}`,
-        );
+      // RLS policy violation - user can't access their own profile
+      if (isPermissionError(error)) {
+        throw AuthError.permissionDenied(`RLS Policy: Usuario ${user['id']} sin acceso a perfil`);
       }
 
-      throw new Error(`Error cargando perfil (${error.code}): ${error['message']}`);
+      // Other errors - use centralized handler
+      throw handleSupabaseError(error, 'cargando perfil');
     }
 
     return data as UserProfile;
@@ -92,8 +99,8 @@ export class ProfileService {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
-      throw error;
+      if (isNotFoundError(error)) return null;
+      throw handleSupabaseError(error, 'obteniendo perfil por ID');
     }
 
     return data as UserProfile;
@@ -204,9 +211,7 @@ export class ProfileService {
       .single();
 
     if (error) {
-      throw new Error(
-        `Error creando perfil (${error.code}): ${error['message']}. Details: ${error.details}. Hint: ${error.hint}`,
-      );
+      throw handleSupabaseError(error, 'creando perfil');
     }
 
     this.logger.debug('✅ Perfil creado:', {
@@ -343,8 +348,8 @@ export class ProfileService {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
-      throw error;
+      if (isNotFoundError(error)) return null;
+      throw handleSupabaseError(error, 'obteniendo documento');
     }
 
     return data as UserDocument;
@@ -505,12 +510,12 @@ export class ProfileService {
       });
 
       if (error) {
-        console.warn('Could not record strike (table might not exist):', error['message']);
+        this.logger.warn('Could not record strike (table might not exist)', error.message);
       } else {
         this.logger.debug(`Strike added to user ${userId}: ${reason}`);
       }
     } catch (err) {
-      console['error']('Error adding strike:', err);
+      this.logger.error('Error adding strike', err);
     }
   }
 }

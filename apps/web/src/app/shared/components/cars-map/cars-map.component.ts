@@ -31,10 +31,15 @@ import { EnhancedMapTooltipComponent } from '../enhanced-map-tooltip/enhanced-ma
 import type { BookingFormData } from '../map-booking-panel/map-booking-panel.component';
 import { MapBookingPanelComponent } from '../map-booking-panel/map-booking-panel.component';
 import { MapDetailsPanelComponent } from '../map-details-panel/map-details-panel.component';
-import {
-  MapLayersControlComponent,
-  type MapLayer,
-} from '../map-layers-control/map-layers-control.component';
+// MapLayersControlComponent removed - was incomplete
+// Type retained for internal use
+type MapLayer = {
+  id: string;
+  label: string;
+  icon: string;
+  visible: boolean;
+  enabled: boolean;
+};
 import { MapMarkerComponent } from '../map-marker/map-marker.component';
 
 type MapboxGL = typeof import('mapbox-gl').default;
@@ -187,7 +192,6 @@ class QuadTree {
   imports: [
     MapBookingPanelComponent,
     MapDetailsPanelComponent,
-    MapLayersControlComponent
   ],
   templateUrl: './cars-map.component.html',
   styleUrls: ['./cars-map.component.css'],

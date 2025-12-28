@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, from, interval, throwError, of } from 'rxjs';
 import { map, catchError, switchMap, filter, take } from 'rxjs/operators';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 export interface PayoutRequest {
@@ -44,6 +45,7 @@ interface WalletBalance {
 
 @Injectable({ providedIn: 'root' })
 export class PayoutService {
+  private readonly logger = inject(LoggerService);
   private readonly PAYOUT_MIN_AMOUNT = 1000; // ARS 1000 minimum
   private readonly PAYOUT_MAX_AMOUNT = 1000000; // ARS 1,000,000 maximum
   private readonly PROCESSING_TIMEOUT = 300000; // 5 minutes
@@ -71,7 +73,8 @@ export class PayoutService {
         .order('created_at', { ascending: false }),
     ).pipe(
       map(({ data }) => data as Payout[]),
-      catchError(() => {
+      catchError((error) => {
+        this.logger.error('PayoutService.getUserPayouts failed', error, { userId });
         return throwError(() => new Error('Failed to fetch payouts'));
       }),
     );
@@ -112,7 +115,8 @@ export class PayoutService {
         const hasMore = offset + limit < total;
         return { data, total, hasMore };
       }),
-      catchError(() => {
+      catchError((error) => {
+        this.logger.error('PayoutService.getUserPayoutsPaginated failed', error, { userId });
         return throwError(() => new Error('Failed to fetch payouts'));
       }),
     );
@@ -126,7 +130,8 @@ export class PayoutService {
       this.supabase.getClient().from('payouts').select('*').eq('id', payoutId).single(),
     ).pipe(
       map(({ data }) => data as Payout),
-      catchError(() => {
+      catchError((error) => {
+        this.logger.error('PayoutService.getPayoutStatus failed', error, { payoutId });
         return throwError(() => new Error('Failed to fetch payout status'));
       }),
     );
@@ -146,7 +151,8 @@ export class PayoutService {
         .single(),
     ).pipe(
       map(({ data }) => (data as BankAccount) || null),
-      catchError(() => {
+      catchError((error) => {
+        this.logger.warn('PayoutService.getDefaultBankAccount - no default account', { userId, error });
         return of(null); // No default account found
       }),
     );
@@ -165,7 +171,8 @@ export class PayoutService {
         .order('is_default', { ascending: false }),
     ).pipe(
       map(({ data }) => data as BankAccount[]),
-      catchError(() => {
+      catchError((error) => {
+        this.logger.error('PayoutService.getUserBankAccounts failed', error, { userId });
         return throwError(() => new Error('Failed to fetch bank accounts'));
       }),
     );
@@ -192,7 +199,8 @@ export class PayoutService {
         .single(),
     ).pipe(
       map(({ data }) => data as BankAccount),
-      catchError(() => {
+      catchError((error) => {
+        this.logger.error('PayoutService.addBankAccount failed', error, { userId });
         return throwError(() => new Error('Failed to add bank account'));
       }),
     );
@@ -212,7 +220,8 @@ export class PayoutService {
         this.supabase.getClient().from('bank_accounts').select('*').eq('id', accountId).single(),
       ),
       map(({ data }) => data as BankAccount),
-      catchError(() => {
+      catchError((error) => {
+        this.logger.error('PayoutService.setDefaultBankAccount failed', error, { userId, accountId });
         return throwError(() => new Error('Failed to set default bank account'));
       }),
     );
@@ -226,7 +235,8 @@ export class PayoutService {
       switchMap(() => this.getPayoutStatus(payoutId)),
       filter((payout) => payout.status !== 'processing'),
       take(1),
-      catchError(() => {
+      catchError((error) => {
+        this.logger.error('PayoutService.monitorPayoutStatus failed', error, { payoutId });
         return throwError(() => new Error('Failed to monitor payout status'));
       }),
     );
@@ -262,7 +272,8 @@ export class PayoutService {
               : 0,
         };
       }),
-      catchError(() => {
+      catchError((error) => {
+        this.logger.error('PayoutService.getPayoutStats failed', error, { userId });
         return throwError(() => new Error('Failed to calculate payout statistics'));
       }),
     );
@@ -289,7 +300,8 @@ export class PayoutService {
           currency: 'ARS',
         });
       }),
-      catchError(() => {
+      catchError((error) => {
+        this.logger.error('PayoutService.requestPayout failed', error, { userId, amount });
         return throwError(() => new Error('Failed to request payout'));
       }),
     );

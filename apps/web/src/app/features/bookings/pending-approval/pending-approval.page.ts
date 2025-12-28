@@ -3,7 +3,7 @@ import {Component, OnDestroy, OnInit, computed, inject, signal, ViewChild,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ViewWillEnter } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
@@ -36,12 +36,13 @@ interface PendingApproval {
   templateUrl: './pending-approval.page.html',
   styleUrl: './pending-approval.page.scss',
 })
-export class PendingApprovalPage implements OnInit, OnDestroy {
+export class PendingApprovalPage implements OnInit, OnDestroy, ViewWillEnter {
   private readonly bookingsService = inject(BookingsService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly alertController = inject(AlertController);
   private readonly router = inject(Router);
   private pollInterval?: ReturnType<typeof setInterval>;
+  private isInitialized = false;
 
   readonly loading = signal(true);
   readonly pendingBookings = signal<PendingApproval[]>([]);
@@ -66,14 +67,24 @@ export class PendingApprovalPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     await this.loadPendingApprovals();
+    this.isInitialized = true;
 
-    // Auto-refresh cada 30 segundos
     // Auto-refresh cada 30 segundos
     this.pollInterval = setInterval(() => {
       if (!this.processingBookingId()) {
         this.loadPendingApprovals();
       }
     }, 30000);
+  }
+
+  /**
+   * FIX 2025-12-28: Reload data when returning to this page
+   * This ensures fresh data after navigating back from other pages
+   */
+  ionViewWillEnter(): void {
+    if (this.isInitialized) {
+      void this.loadPendingApprovals();
+    }
   }
 
   ngOnDestroy(): void {

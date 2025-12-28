@@ -34,10 +34,8 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
 ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ion-header></ion-header>
-    
-    <ion-content class="bg-surface-base" fullscreen="true">
-      <div class="py-4 px-4 max-w-3xl mx-auto">
+    <div class="min-h-screen bg-surface-base">
+      <div class="py-4 px-4 max-w-3xl mx-auto pb-24">
         <!-- Compact Header -->
         <div class="mb-4 flex items-center justify-between">
           <div>
@@ -496,17 +494,12 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
           </div>
         </details>
       </div>
-    </ion-content>
+    </div>
     `,
   styles: [
     `
       :host {
         display: block;
-        height: 100%;
-      }
-
-      ion-content {
-        --background: var(--color-surface-base);
       }
 
       .animate-fadeIn {

@@ -32,4 +32,6 @@ export const environment = buildEnvironment({
   enableAnalytics: false,
   docVerifierUrl: 'http://localhost:8787',
   googleGeolocationApiKey: 'AIzaSyD9VrprbZaNVWrY5CThI2mHpp_SuriWRHY',
+  // Logging: debug level shows all logs in development
+  logLevel: 'debug' as const,
 });

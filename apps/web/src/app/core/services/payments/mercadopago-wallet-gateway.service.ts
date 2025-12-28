@@ -7,6 +7,7 @@ import {
   PaymentProvider,
 } from '@core/interfaces/payment-gateway.interface';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { environment } from '@environments/environment';
 
 /**
  * MercadoPago Wallet Gateway Service
@@ -202,9 +203,7 @@ export class MercadoPagoWalletGatewayService implements WalletPaymentGateway {
    * Obtiene la URL base de Supabase
    */
   private getSupabaseUrl(): string {
-    const supabase = this.supabaseService.getClient();
-    // @ts-expect-error - Acceso interno al URL
-    return supabase.supabaseUrl || '';
+    return environment.supabaseUrl || '';
   }
 
   /**

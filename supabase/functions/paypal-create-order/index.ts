@@ -23,6 +23,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import { corsHeaders } from '../_shared/cors.ts';
+import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
 import {
   PayPalConfig,
   getPayPalAccessToken,
@@ -40,6 +41,27 @@ serve(async (req: Request) => {
   }
 
   try {
+    // ========================================================================
+    // RATE LIMITING (fail-closed for security)
+    // ========================================================================
+    try {
+      await enforceRateLimit(req, {
+        endpoint: 'paypal-create-order',
+        windowSeconds: 60,
+        maxRequests: 30,
+      });
+    } catch (error) {
+      if (error instanceof RateLimitError) {
+        return error.toResponse();
+      }
+      // SECURITY: Fail-closed - if rate limiter fails, reject request
+      console.error('[RateLimit] Service unavailable:', error);
+      return new Response(
+        JSON.stringify({ error: 'Service temporarily unavailable', code: 'RATE_LIMITER_UNAVAILABLE' }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // ========================================================================
     // 1. AUTHENTICATION & VALIDATION
     // ========================================================================

@@ -202,16 +202,7 @@
           </button>
         </div>
       </div>
-      <!-- Drawer / Sidebar -->
-      <app-map-drawer
-        [selectedCar]="selectedCar()"
-        [userLocation]="userLocation() || undefined"
-        [isOpen]="isDrawerOpen()"
-        [isMobile]="isMobileView()"
-        (closeDrawer)="onCloseDrawer()"
-        (reserveClick)="onReserveClick($event)"
-        (chatClick)="onChatClick($event)"
-      ></app-map-drawer>
+      <!-- Drawer removed - use map-booking-panel instead -->
     </div>
   }
 

@@ -318,7 +318,13 @@ export class BookingPaymentPage implements OnInit {
         );
       }
     } catch (error) {
-      console.error('[BookingPayment] Error loading bonus-malus:', error);
+      this.logger.error('[BookingPayment] Error loading bonus-malus:', error);
+      // FIX 2025-12-28: Notify user that bonus-malus calculation failed
+      // User can still proceed with payment but won't get potential discount
+      this.toastService.warning(
+        'Aviso',
+        'No pudimos calcular tu descuento de reputación. Se aplicará el depósito estándar.'
+      );
       // Continue without bonus-malus adjustment - user pays full deposit
     } finally {
       this.bonusMalusLoading.set(false);

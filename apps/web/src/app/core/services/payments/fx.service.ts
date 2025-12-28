@@ -79,7 +79,7 @@ export class FxService {
         return snapshot;
       }),
       catchError((error: unknown) => {
-        console.error('Error obteniendo FX snapshot:', error);
+        this.logger.error('Error obteniendo FX snapshot', error);
         return of(null);
       }),
     );
@@ -193,7 +193,7 @@ export class FxService {
       const rate = await this.exchangeRateService.getPlatformRate('USDARS');
       return rate;
     } catch (error) {
-      console.error('Error obteniendo tasa desde exchange_rates:', error);
+      this.logger.error('Error obteniendo tasa desde exchange_rates', error);
       throw new Error('No se pudo obtener tasa de cambio de ninguna fuente');
     }
   }
@@ -205,7 +205,7 @@ export class FxService {
     try {
       return await this.exchangeRateService.getBinanceRate('USDARS');
     } catch (error) {
-      console.error('Error obteniendo tasa Binance:', error);
+      this.logger.error('Error obteniendo tasa Binance', error);
       throw new Error('No se pudo obtener tasa de Binance');
     }
   }

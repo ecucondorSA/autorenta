@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AlertController, IonicModule, ToastController } from '@ionic/angular';
+import { AlertController, IonicModule, ToastController, ViewWillEnter } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { Booking } from '../../../core/models';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -39,7 +39,7 @@ interface CarLead {
   styleUrl: './owner-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OwnerBookingsPage implements OnInit {
+export class OwnerBookingsPage implements OnInit, ViewWillEnter {
   readonly bookings = signal<Booking[]>([]);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -51,12 +51,15 @@ export class OwnerBookingsPage implements OnInit {
   readonly leadsLoading = signal(false);
   readonly marketplaceStatus = signal<AuthMarketplaceStatus | null>(null);
 
-  /** Count of bookings pending owner approval */
-  readonly pendingApprovalCount = computed(() =>
-    this.bookings().filter((b) => b.status === 'pending').length
-  );
+  /** Count of bookings pending owner approval
+   * FIX 2025-12-27: Use separate signal loaded from owner_pending_approvals view
+   * to match the actual pending approvals query
+   * FIX 2025-12-28: Refresh on ionViewWillEnter to invalidate cache after approvals
+   */
+  readonly pendingApprovalCount = signal(0);
 
   private currentUserId: string | null = null;
+  private isInitialized = false;
 
   constructor(
     private readonly bookingsService: BookingsService,
@@ -70,6 +73,18 @@ export class OwnerBookingsPage implements OnInit {
 
   ngOnInit(): void {
     void this.initialize();
+  }
+
+  /**
+   * FIX 2025-12-28: Reload data when returning to this page
+   * This ensures the pending approval count is refreshed after approving/rejecting
+   * on the pending-approval page
+   */
+  ionViewWillEnter(): void {
+    if (this.isInitialized) {
+      // Only reload data if already initialized (returning to page)
+      void this.loadBookings();
+    }
   }
 
   private async initialize(): Promise<void> {
@@ -86,6 +101,7 @@ export class OwnerBookingsPage implements OnInit {
       this.marketplaceStatus.set(null);
     } finally {
       await this.loadBookings();
+      this.isInitialized = true;
     }
   }
 
@@ -94,10 +110,19 @@ export class OwnerBookingsPage implements OnInit {
     this.error.set(null);
     this.renterContacts.set({});
     try {
-      // ✅ NUEVO: Obtener reservas de AUTOS DEL LOCADOR
-      const { bookings } = await this.bookingsService.getOwnerBookings();
+      // Load bookings and pending approvals count in parallel
+      const [{ bookings }, pendingApprovals] = await Promise.all([
+        this.bookingsService.getOwnerBookings(),
+        this.bookingsService.getPendingApprovals(),
+      ]);
+
       await this.loadRenterContacts(bookings);
       this.bookings.set(bookings);
+
+      // FIX 2025-12-27: Use actual pending approvals count from view
+      // This matches what pending-approval page shows
+      this.pendingApprovalCount.set(pendingApprovals.length);
+
       await this.loadCarLeads();
     } catch {
       this.error.set('No pudimos cargar las reservas. Por favor intentá de nuevo más tarde.');

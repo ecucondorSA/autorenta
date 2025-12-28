@@ -1,5 +1,6 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 /**
  * Incident Webhook Handler
@@ -17,12 +18,19 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
  * - DISCORD_WEBHOOK_URL: Discord webhook URL (optional)
  * - SUPABASE_URL: Supabase project URL
  * - SUPABASE_SERVICE_ROLE_KEY: Service role key for logging
+ *
+ * NOTE: Webhooks from external services (Sentry) may not send Origin header,
+ * so we add x-sentry-token to allowed headers.
  */
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-sentry-token',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+// For webhook handlers, we need a slightly different CORS config
+// External webhooks may not have Origin header, so we use production domain as default
+const getWebhookCorsHeaders = (req: Request) => {
+  const baseHeaders = getCorsHeaders(req);
+  return {
+    ...baseHeaders,
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-sentry-token',
+  };
 };
 
 interface SentryEvent {
@@ -71,6 +79,8 @@ interface SlackMessage {
 }
 
 Deno.serve(async (req: Request) => {
+  const corsHeaders = getWebhookCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });

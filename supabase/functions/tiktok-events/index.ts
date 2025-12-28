@@ -182,8 +182,9 @@ serve(async (req) => {
         'authorization, x-client-info, apikey, content-type, x-forwarded-for, x-real-ip',
     };
   } catch {
+    // Fallback to production domain instead of wildcard for security
     corsHeaders = {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': 'https://autorentar.com',
       'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     };
