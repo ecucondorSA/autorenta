@@ -215,9 +215,19 @@ export type MockRpcCall = jasmine.Spy<
 // ============================================================================
 
 /**
+ * Mock de canal Realtime de Supabase
+ */
+export interface MockRealtimeChannel {
+  subscribe: jasmine.Spy<(callback?: (status: string) => void) => MockRealtimeChannel>;
+  unsubscribe: jasmine.Spy<() => void>;
+  on: jasmine.Spy<(event: string, filter: any, callback: (payload: any) => void) => MockRealtimeChannel>;
+  send: jasmine.Spy<(payload: { type: string; event: string; payload?: any }) => Promise<'ok' | 'error' | 'timed out'>>;
+}
+
+/**
  * Mock completo del cliente de Supabase
  *
- * Incluye todos los métodos principales: from, storage, auth, functions, rpc
+ * Incluye todos los métodos principales: from, storage, auth, functions, rpc, channel
  */
 export interface MockSupabaseClient {
   from: jasmine.Spy<(table: string) => MockQueryBuilder>;
@@ -225,6 +235,8 @@ export interface MockSupabaseClient {
   auth: MockAuth;
   functions: MockFunctions;
   rpc: MockRpcCall;
+  channel: jasmine.Spy<(name: string, opts?: { config?: { broadcast?: { self?: boolean } } }) => MockRealtimeChannel>;
+  removeChannel: jasmine.Spy<(channel: MockRealtimeChannel) => Promise<'ok' | 'timed out' | 'error'>>;
 }
 
 // ============================================================================
@@ -312,6 +324,31 @@ export function createMockStorageBucket(): MockStorageBucket {
       error: null,
     }),
   };
+}
+
+/**
+ * Crea un Realtime Channel mock
+ *
+ * @returns Realtime Channel mock configurado
+ */
+export function createMockRealtimeChannel(): MockRealtimeChannel {
+  const channel: any = {};
+
+  channel.subscribe = jasmine.createSpy('subscribe').and.callFake((callback?: (status: string) => void) => {
+    if (callback) {
+      // Simulate successful subscription
+      setTimeout(() => callback('SUBSCRIBED'), 0);
+    }
+    return channel;
+  });
+
+  channel.unsubscribe = jasmine.createSpy('unsubscribe');
+
+  channel.on = jasmine.createSpy('on').and.returnValue(channel);
+
+  channel.send = jasmine.createSpy('send').and.resolveTo('ok');
+
+  return channel as MockRealtimeChannel;
 }
 
 /**
@@ -403,6 +440,10 @@ export function createMockSupabaseClient(options?: {
       data: {},
       error: null,
     }),
+    channel: jasmine.createSpy('channel').and.callFake((_name: string) => {
+      return createMockRealtimeChannel();
+    }),
+    removeChannel: jasmine.createSpy('removeChannel').and.resolveTo('ok'),
   };
 }
 

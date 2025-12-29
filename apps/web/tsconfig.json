@@ -38,6 +38,9 @@
       ],
       "@contracts/*": [
         "../../functions/contracts/*"
+      ],
+      "@test-helpers/*": [
+        "test-helpers/*"
       ]
     }
   },

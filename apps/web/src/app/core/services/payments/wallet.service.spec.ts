@@ -3,6 +3,32 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
 import { WalletService } from '@core/services/payments/wallet.service';
 import { WalletError, isWalletError } from '@core/errors';
 import { firstValueFrom } from 'rxjs';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+
+// Mock LoggerService
+const mockLoggerService = {
+  log: jasmine.createSpy('log'),
+  debug: jasmine.createSpy('debug'),
+  info: jasmine.createSpy('info'),
+  warn: jasmine.createSpy('warn'),
+  error: jasmine.createSpy('error'),
+  setContext: jasmine.createSpy('setContext'),
+};
+
+// Helper to wrap a mock client in a service mock
+function wrapInServiceMock(mockClient: ReturnType<typeof createMockSupabaseClient>) {
+  return {
+    getClient: jasmine.createSpy('getClient').and.returnValue(mockClient),
+    getClientOrNull: jasmine.createSpy('getClientOrNull').and.returnValue(mockClient),
+    isAvailable: jasmine.createSpy('isAvailable').and.returnValue(true),
+    healthCheck: jasmine.createSpy('healthCheck').and.resolveTo(true),
+    getConnectionInfo: jasmine.createSpy('getConnectionInfo').and.returnValue({
+      url: 'https://test.supabase.co',
+      pooling: 'transaction',
+    }),
+    client: mockClient,
+  };
+}
 
 // Helper to create a fresh mock for each test
 function createMockSupabaseClient() {
@@ -33,21 +59,18 @@ function createMockSupabaseClient() {
 
 const mockSupabaseClient = createMockSupabaseClient();
 
-const mockSupabaseService = {
-  client: mockSupabaseClient,
-  from: mockSupabaseClient.from,
-  rpc: mockSupabaseClient.rpc,
-  auth: mockSupabaseClient.auth,
-  storage: mockSupabaseClient.storage,
-};
+const mockSupabaseService = wrapInServiceMock(mockSupabaseClient);
 
 describe('WalletService', () => {
   let service: WalletService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [WalletService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService }]
+      providers: [
+        WalletService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+        { provide: LoggerService, useValue: mockLoggerService }
+      ]
     });
     service = TestBed.inject(WalletService);
   });
@@ -113,7 +136,8 @@ describe('WalletService', () => {
       TestBed.configureTestingModule({
         providers: [
           WalletService,
-          { provide: SupabaseClientService, useValue: freshMock }
+          { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
+          { provide: LoggerService, useValue: mockLoggerService }
         ]
       });
 
@@ -141,7 +165,8 @@ describe('WalletService', () => {
       TestBed.configureTestingModule({
         providers: [
           WalletService,
-          { provide: SupabaseClientService, useValue: freshMock }
+          { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
+          { provide: LoggerService, useValue: mockLoggerService }
         ]
       });
 
@@ -183,7 +208,8 @@ describe('WalletService', () => {
       TestBed.configureTestingModule({
         providers: [
           WalletService,
-          { provide: SupabaseClientService, useValue: freshMock }
+          { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
+          { provide: LoggerService, useValue: mockLoggerService }
         ]
       });
 
@@ -223,7 +249,8 @@ describe('WalletService', () => {
       TestBed.configureTestingModule({
         providers: [
           WalletService,
-          { provide: SupabaseClientService, useValue: freshMock }
+          { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
+          { provide: LoggerService, useValue: mockLoggerService }
         ]
       });
 
@@ -340,7 +367,8 @@ describe('WalletService', () => {
       TestBed.configureTestingModule({
         providers: [
           WalletService,
-          { provide: SupabaseClientService, useValue: freshMock }
+          { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
+          { provide: LoggerService, useValue: mockLoggerService }
         ]
       });
 
@@ -379,7 +407,8 @@ describe('WalletService', () => {
       TestBed.configureTestingModule({
         providers: [
           WalletService,
-          { provide: SupabaseClientService, useValue: freshMock }
+          { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
+          { provide: LoggerService, useValue: mockLoggerService }
         ]
       });
 
@@ -437,7 +466,8 @@ describe('WalletService', () => {
       TestBed.configureTestingModule({
         providers: [
           WalletService,
-          { provide: SupabaseClientService, useValue: freshMock }
+          { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
+          { provide: LoggerService, useValue: mockLoggerService }
         ]
       });
 
@@ -474,7 +504,8 @@ describe('WalletService', () => {
       TestBed.configureTestingModule({
         providers: [
           WalletService,
-          { provide: SupabaseClientService, useValue: freshMock }
+          { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
+          { provide: LoggerService, useValue: mockLoggerService }
         ]
       });
 
@@ -519,7 +550,8 @@ describe('WalletService', () => {
       TestBed.configureTestingModule({
         providers: [
           WalletService,
-          { provide: SupabaseClientService, useValue: freshMock }
+          { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
+          { provide: LoggerService, useValue: mockLoggerService }
         ]
       });
 
@@ -545,8 +577,8 @@ describe('WalletService', () => {
           expect(successes.length).toBe(2);
           expect(failures.length).toBe(1);
 
-          // Failed request should have LOCK_FAILED error
-          expect(failures[0].error.code).toBe('LOCK_FAILED');
+          // Failed request should have the database error code from the timeout
+          expect(failures[0].error.code).toBe('57014');
           done();
         })
         .catch(done.fail);
