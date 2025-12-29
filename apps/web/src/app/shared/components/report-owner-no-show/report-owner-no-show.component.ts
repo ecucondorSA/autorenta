@@ -4,9 +4,9 @@ import {Component, EventEmitter, Input, Output, signal, inject,
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Booking } from '../../../core/models';
 import { EvidenceUploaderComponent } from '../evidence-uploader/evidence-uploader.component';
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 @Component({
   selector: 'app-report-owner-no-show',

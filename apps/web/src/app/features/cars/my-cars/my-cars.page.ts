@@ -3,14 +3,14 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
-import { Car, CarStatus } from '../../../core/models';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
+import { BonusProgress } from '@core/models/organization.model';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
 
-import { BonusProgress } from '@core/models/organization.model';
+import { Car, CarStatus } from '../../../core/models';
 import { OrganizationService, Organization } from '../../organizations/services/organization.service';
 
 @Component({

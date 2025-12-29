@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { environment } from '@environment';
-import { LogLevel } from '../../../../environments/environment.base';
 import { DebugService } from '@core/services/admin/debug.service';
+import { LogLevel } from '../../../../environments/environment.base';
 
 /**
  * Sentry module type definition for lazy loading

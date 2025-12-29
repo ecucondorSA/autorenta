@@ -2,9 +2,9 @@
 import {Component, computed, inject, input, output, Signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { Booking } from '../../../core/models';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
+import { Booking } from '../../../core/models';
 
 /**
  * Timeline step interface

@@ -2,8 +2,8 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {Component, computed, inject, input,
   ChangeDetectionStrategy} from '@angular/core';
 
-import type { AiBookingContext, Booking } from '../../../core/models';
 import { AuthService } from '@core/services/auth/auth.service';
+import type { AiBookingContext, Booking } from '../../../core/models';
 import { BaseChatComponent, ChatContext } from '../base-chat/base-chat.component';
 
 /**

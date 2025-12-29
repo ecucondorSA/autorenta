@@ -4,8 +4,8 @@ import {Component, inject, OnInit,
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
-import { ProfileContactSectionComponent } from '../components/sections/contact/profile-contact-section.component';
 import { ProfileStore } from '@core/stores/profile.store';
+import { ProfileContactSectionComponent } from '../components/sections/contact/profile-contact-section.component';
 
 /**
  * Profile Contact Page

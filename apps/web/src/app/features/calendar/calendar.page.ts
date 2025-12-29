@@ -7,9 +7,9 @@ import {
   CarAvailabilityService,
   DetailedBlockedRange,
 } from '@core/services/cars/car-availability.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { Car } from '../../core/models';
 import { IconComponent } from '../../shared/components/icon/icon.component';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 interface CalendarDay {
   day: number | null;

@@ -32,12 +32,12 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
 import { WalletService } from '@core/services/payments/wallet.service';
 
 // Models
-import { Car, CarPhoto, CarStats, Review } from '../../../core/models';
 import { calculateCreditSecurityUsd } from '@core/models/booking-detail-payment.model';
 import { BookingPaymentMethod } from '@core/models/wallet.model';
+import { RiskCalculation, RiskCalculatorService } from '@core/services/verification/risk-calculator.service';
+import { Car, CarPhoto, CarStats, Review } from '../../../core/models';
 
 // Components
-import { RiskCalculation, RiskCalculatorService } from '@core/services/verification/risk-calculator.service';
 import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
 import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
 import { AiReputationCardComponent } from '../../../shared/components/ai-reputation-card/ai-reputation-card.component';

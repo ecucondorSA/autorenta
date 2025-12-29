@@ -25,13 +25,13 @@ import { MercadoPagoScriptService } from '@core/services/payments/mercado-pago-s
 import { MercadoPagoPaymentService } from '@core/services/payments/mercadopago-payment.service';
 import { ToastService } from '@core/services/ui/toast.service';
 import { WalletService } from '@core/services/payments/wallet.service';
+import type { PaymentMode } from '@core/models/booking-detail-payment.model';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { LoadingStateComponent } from '../../../shared/components/loading-state/loading-state.component';
 import { MercadopagoCardFormComponent } from '../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
 import { WalletBalanceCardComponent } from '../../../shared/components/wallet-balance-card/wallet-balance-card.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { PaymentModeToggleComponent } from '../booking-detail-payment/components/payment-mode-toggle.component';
-import type { PaymentMode } from '@core/models/booking-detail-payment.model';
 
 // Types
 import { Booking, Car } from '../../../core/models';

@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/cor
 import { Router, RouterLink } from '@angular/router';
 import { AlertController, IonicModule, ToastController, ViewWillEnter } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { Booking } from '../../../core/models';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import {
@@ -11,6 +10,7 @@ import {
   MarketplaceOnboardingService,
 } from '@core/services/auth/marketplace-onboarding.service';
 import { Message, MessagesService } from '@core/services/bookings/messages.service';
+import { Booking } from '../../../core/models';
 import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { formatDateRange } from '../../../shared/utils/date.utils';

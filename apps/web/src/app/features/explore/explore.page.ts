@@ -26,18 +26,18 @@ import {
   optionsOutline,
 } from 'ionicons/icons';
 import { LocationService } from '@core/services/geo/location.service';
-import { Car } from '../../core/models';
 import { BreakpointService } from '@core/services/ui/breakpoint.service';
 import type { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
+import { SORT_OPTIONS, SortOption } from '@core/models/marketplace.model';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
 // MapDrawerComponent removed - duplicated map-booking-panel
 import {
   FilterState,
   MapFiltersComponent,
 } from '../../shared/components/map-filters/map-filters.component';
-import { SORT_OPTIONS, SortOption } from '@core/models/marketplace.model';
+import { Car } from '../../core/models';
 import { WazeLiveMapComponent } from '../../shared/components/waze-live-map/waze-live-map.component';
 
 @Component({

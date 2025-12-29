@@ -2,9 +2,9 @@ import { Component, DebugElement, PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { SwipeBackDirective } from './swipe-back.directive';
 import { GestureService } from '@core/services/ui/gesture.service';
 import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
+import { SwipeBackDirective } from './swipe-back.directive';
 
 // Mock services
 class MockRouter {

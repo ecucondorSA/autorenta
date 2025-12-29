@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { TourOrchestratorService } from '@core/guided-tour/services/tour-orchestrator.service';
-import { TourRegistryService } from './registry/tour-registry.service';
 import { TelemetryBridgeService } from '@core/guided-tour/services/telemetry-bridge.service';
 import {
   TourId,
@@ -8,6 +7,7 @@ import {
   TourDefinition,
   TourState,
 } from '@core/guided-tour/interfaces/tour-definition.interface';
+import { TourRegistryService } from './registry/tour-registry.service';
 
 /**
  * Main public API for the Guided Tour system

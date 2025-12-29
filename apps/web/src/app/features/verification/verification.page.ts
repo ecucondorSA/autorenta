@@ -8,8 +8,8 @@ import {
   DocumentTypeConfig,
   getDocumentsByCategory,
 } from '@core/config/document-types.config';
-import type { UserProfile, VerificationStatus, UserDocument } from '../../core/models';
 import { ProfileStore } from '@core/stores/profile.store';
+import type { UserProfile, VerificationStatus, UserDocument } from '../../core/models';
 
 interface PrefilledFieldHint {
   label: string;

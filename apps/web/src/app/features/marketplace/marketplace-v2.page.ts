@@ -18,7 +18,6 @@ import { Meta, Title } from '@angular/platform-browser';
 import { Router, RouterModule } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { environment } from '@environment';
-import { Car } from '../../core/models';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
@@ -49,17 +48,18 @@ import { BreakpointService } from '@core/services/ui/breakpoint.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
 
-import { HdriBackgroundComponent } from '../../shared/components/hdri-background/hdri-background.component';
-import {
-  DateRange,
-  DateRangePickerComponent,
-} from '../../shared/components/date-range-picker/date-range-picker.component';
 
 import { AssetPreloaderService } from '@core/services/ui/asset-preloader.service';
 import { CarLatestLocation, CarLocationService } from '@core/services/geo/car-location.service';
 import { MapboxPreloaderService } from '@core/services/geo/mapbox-preloader.service';
 import { SeoSchemaService } from '@core/services/ui/seo-schema.service';
 import { ThemeService } from '@core/services/ui/theme.service';
+import {
+  DateRange,
+  DateRangePickerComponent,
+} from '../../shared/components/date-range-picker/date-range-picker.component';
+import { HdriBackgroundComponent } from '../../shared/components/hdri-background/hdri-background.component';
+import { Car } from '../../core/models';
 
 export interface LatLngBoundsLiteral {
   north: number;

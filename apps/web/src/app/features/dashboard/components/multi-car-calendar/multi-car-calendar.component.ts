@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { addMonths, eachDayOfInterval, endOfMonth, format, startOfMonth } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Car } from '../../../../core/models';
 import { AuthService } from '@core/services/auth/auth.service';
 import {
   CarAvailabilityService,
@@ -15,6 +14,7 @@ import { CarBlockingService } from '@core/services/cars/car-blocking.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { Car } from '../../../../core/models';
 import {
   BlockDateModalComponent,
   BlockDateRequest,

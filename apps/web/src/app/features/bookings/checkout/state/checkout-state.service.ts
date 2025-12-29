@@ -1,12 +1,12 @@
 import { Injectable, computed, effect, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { Booking } from '../../../../core/models';
 import { BookingPaymentMethod } from '@core/models/wallet.model';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { BucketType, FgoParameters } from '@core/models/fgo-v1-1.model';
+import { Booking } from '../../../../core/models';
 import { FranchiseInfo, BookingFranchiseService } from '../support/booking-franchise.service';
 import { GuaranteeCopy, GuaranteeCopyBuilder } from '../support/guarantee-copy.builder';
 import { CheckoutRiskCalculator, GuaranteeBreakdown } from '../support/risk-calculator';

@@ -9,8 +9,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import type { Booking, Car, VehicleChecklist } from '../../../core/models';
 import { GeminiService } from '@core/services/ai/gemini.service';
+import type { Booking, Car, VehicleChecklist } from '../../../core/models';
 
 /**
  * Panel de Checklist de Inspeccion IA

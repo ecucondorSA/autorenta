@@ -6,10 +6,10 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { from, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import type { Car, Review } from '../../core/models';
 import { CarsService } from '@core/services/cars/cars.service';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
+import type { Car, Review } from '../../core/models';
 import {
   ReviewRadarChartComponent,
   type RadarChartData,

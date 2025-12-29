@@ -3,9 +3,9 @@ import {Component, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { Car } from '../../../core/models';
 import { CarBlockingService } from '@core/services/cars/car-blocking.service';
 import { CarsService } from '@core/services/cars/cars.service';
+import { Car } from '../../../core/models';
 
 @Component({
   selector: 'app-bulk-blocking',

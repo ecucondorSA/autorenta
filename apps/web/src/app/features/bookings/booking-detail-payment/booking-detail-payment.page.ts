@@ -16,13 +16,13 @@ import { WalletService } from '@core/services/payments/wallet.service';
 import { PaymentAuthorizationService } from '@core/services/payments/payment-authorization.service';
 
 // Models
-import { Car } from '../../../core/models';
 import {
   FxSnapshot,
   RiskSnapshot,
   PaymentAuthorization,
   PaymentMode,
 } from '@core/models/booking-detail-payment.model';
+import { Car } from '../../../core/models';
 
 // Components
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';

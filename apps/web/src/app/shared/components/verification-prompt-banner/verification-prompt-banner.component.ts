@@ -3,9 +3,9 @@ import {Component, computed, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { UserProfile } from '../../../core/models';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { VerificationService } from '@core/services/verification/verification.service';
+import { UserProfile } from '../../../core/models';
 
 /**
  * VerificationPromptBannerComponent

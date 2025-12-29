@@ -6,9 +6,9 @@ import { Router } from '@angular/router';
 import { DisputesService, Dispute, DisputeEvidence, DisputeStatus } from '@core/services/admin/disputes.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-import { EvidenceUploaderComponent } from '../evidence-uploader/evidence-uploader.component';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { ProfileService } from '@core/services/auth/profile.service';
+import { EvidenceUploaderComponent } from '../evidence-uploader/evidence-uploader.component';
 
 @Component({
   selector: 'app-dispute-detail',

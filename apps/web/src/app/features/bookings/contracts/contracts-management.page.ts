@@ -4,9 +4,9 @@ import {Component, inject, OnInit, signal,
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { Booking } from '../../../core/models';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BookingContract, ContractsService } from '@core/services/bookings/contracts.service';
+import { Booking } from '../../../core/models';
 
 @Component({
   selector: 'app-contracts-management',

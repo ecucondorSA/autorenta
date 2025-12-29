@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VideoDamageAnalysis, VideoDamageDetectionService } from '@core/services/verification/video-damage-detection.service';
 import { IonicModule, ToastController } from '@ionic/angular';
@@ -204,7 +204,7 @@ import { VideoInspectionRecorderComponent } from '../../../shared/components/vid
     }
   `]
 })
-export class BookingCheckinPage {
+export class BookingCheckinPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private videoService = inject(VideoDamageDetectionService);

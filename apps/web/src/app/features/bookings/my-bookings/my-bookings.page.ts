@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@a
 import { Router, RouterLink } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TranslateModule } from '@ngx-translate/core';
-import { Booking } from '../../../core/models';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { ToastService } from '@core/services/ui/toast.service';
+import { Booking } from '../../../core/models';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { formatDateRange } from '../../../shared/utils/date.utils';

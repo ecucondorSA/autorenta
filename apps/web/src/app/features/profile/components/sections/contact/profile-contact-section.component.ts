@@ -25,8 +25,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 
-import { UpdateProfileData, UserProfile } from '../../../../../core/models';
 import { ProfileStore } from '@core/stores/profile.store';
+import { UpdateProfileData, UserProfile } from '../../../../../core/models';
 import { ProfileValidators } from '../../shared/field-validators';
 import { SectionCardComponent } from '../../shared/section-card';
 

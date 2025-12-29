@@ -10,7 +10,6 @@ import {Component,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
-import { IconComponent } from '../icon/icon.component';
 import {
   BookingInspection,
   InspectionPhoto,
@@ -24,6 +23,7 @@ import {
   getFirstError,
   logFileUpload,
 } from '@core/utils/file-validation.util';
+import { IconComponent } from '../icon/icon.component';
 
 // Window extension for inspection callback
 interface WindowWithInspectionCallback extends Window {

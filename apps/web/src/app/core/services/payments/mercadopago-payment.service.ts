@@ -2,8 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { CircuitBreakerService, CircuitOpenError } from '@core/services/infrastructure/circuit-breaker.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { PaymentMetricsService } from './payment-metrics.service';
 import { environment } from '../../../../environments/environment';
+import { PaymentMetricsService } from './payment-metrics.service';
 
 export interface ProcessBookingPaymentRequest {
   booking_id: string;

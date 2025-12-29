@@ -8,6 +8,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 // Step Components (to be created)
+import { EmailVerificationService } from '@core/services/auth/email-verification.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { CarsService } from '@core/services/cars/cars.service';
+import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
+import { ErrorHandlerService } from '@core/services/infrastructure/error-handler.service';
 import { BookingDatesStepComponent } from '../../components/booking-dates-step/booking-dates-step.component';
 import { BookingDriverStepComponent } from '../../components/booking-driver-step/booking-driver-step.component';
 import { BookingExtrasStepComponent } from '../../components/booking-extras-step/booking-extras-step.component';
@@ -17,11 +22,6 @@ import { BookingReviewStepComponent } from '../../components/booking-review-step
 import { BookingStepIndicatorComponent } from '../../components/booking-step-indicator/booking-step-indicator.component';
 
 // Services
-import { EmailVerificationService } from '@core/services/auth/email-verification.service';
-import { BookingsService } from '@core/services/bookings/bookings.service';
-import { CarsService } from '@core/services/cars/cars.service';
-import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
-import { ErrorHandlerService } from '@core/services/infrastructure/error-handler.service';
 import { Car } from '../../../../core/models';
 
 export interface BookingWizardData {

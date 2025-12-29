@@ -3,12 +3,12 @@ import {Component, OnDestroy, OnInit, effect, inject, input, output, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import type { AiBookingContext, ChatSuggestion } from '../../../core/models';
 import { AuthService } from '@core/services/auth/auth.service';
 import { GeminiService } from '@core/services/ai/gemini.service';
 import { Message, MessagesService } from '@core/services/bookings/messages.service';
 import { NotificationSoundService } from '@core/services/infrastructure/notification-sound.service';
 import { ToastService } from '@core/services/ui/toast.service';
+import type { AiBookingContext, ChatSuggestion } from '../../../core/models';
 
 /**
  * Contexto del chat (booking o car)

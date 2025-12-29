@@ -3,10 +3,10 @@ import {Component, OnInit, inject, signal, computed,
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { BonusMalusService, TierDisplay } from '@core/services/payments/bonus-malus.service';
-import type { UserBonusMalus, BonusMalusDisplay } from '../../../core/models';
 import { BonusProtectorService } from '@core/services/payments/bonus-protector.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import type { UserBonusMalus, BonusMalusDisplay } from '../../../core/models';
 
 @Component({
   selector: 'app-bonus-malus-card',

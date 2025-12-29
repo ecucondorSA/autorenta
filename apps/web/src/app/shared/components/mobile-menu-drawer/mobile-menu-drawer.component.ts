@@ -11,9 +11,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { MenuIconComponent } from '../menu-icon/menu-icon.component';
 import { AuthService } from '@core/services/auth/auth.service';
 import { UserProfile } from '@core/services/auth/profile.service';
+import { MenuIconComponent } from '../menu-icon/menu-icon.component';
 
 interface MenuItem {
   label: string;

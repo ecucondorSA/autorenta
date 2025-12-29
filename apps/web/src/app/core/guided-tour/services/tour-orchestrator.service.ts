@@ -1,7 +1,6 @@
 import { inject, Injectable, OnDestroy, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
-import { ShepherdAdapterService } from '../adapters/shepherd-adapter.service';
 import {
   StepDefinition,
   TourDefinition,
@@ -10,8 +9,9 @@ import {
   TourRequestOptions,
   TourState,
 } from '@core/guided-tour/interfaces/tour-definition.interface';
-import { TourRegistryService } from '../registry/tour-registry.service';
 import { StepResolverService } from '@core/guided-tour/resolvers/step-resolver.service';
+import { ShepherdAdapterService } from '../adapters/shepherd-adapter.service';
+import { TourRegistryService } from '../registry/tour-registry.service';
 import { TelemetryBridgeService } from './telemetry-bridge.service';
 
 interface QueuedTour {

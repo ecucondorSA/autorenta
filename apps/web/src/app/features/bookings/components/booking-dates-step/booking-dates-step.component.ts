@@ -14,12 +14,12 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 // Shared Components
+import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 import { DateRangePickerComponent } from '../../../../shared/components/date-range-picker/date-range-picker.component';
 import { BookingLocationFormComponent } from '../../components/booking-location-form/booking-location-form.component';
 
 import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
 import { Car } from '../../../../core/models';
-import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 import type { BlockedDateRange } from '../../../../shared/components/date-range-picker/date-range-picker.component';
 
 interface LocationData {

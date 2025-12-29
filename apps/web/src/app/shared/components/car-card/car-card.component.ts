@@ -15,12 +15,12 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Car } from '../../../core/models';
 import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { RealtimePricingService } from '@core/services/payments/realtime-pricing.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
+import { Car } from '../../../core/models';
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
 
 @Component({

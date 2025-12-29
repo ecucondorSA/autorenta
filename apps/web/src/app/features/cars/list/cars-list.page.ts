@@ -27,6 +27,7 @@ import { MetaService } from '@core/services/ui/meta.service';
 import { ToastService } from '@core/services/ui/toast.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import { getErrorMessage } from '@core/utils/type-guards';
 import { Car } from '../../../core/models';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
 import { DateRange, DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
@@ -37,7 +38,6 @@ import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-r
 // import { CarCardV3Component } from '../../../shared/components/marketplace/car-card-v3/car-card-v3.component';
 // import { FiltersDrawerComponent } from '../../../shared/components/marketplace/filters-drawer/filters-drawer.component';
 // import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
-import { getErrorMessage } from '@core/utils/type-guards';
 import { AiCarRecommendationComponent } from '../../../shared/components/ai-car-recommendation/ai-car-recommendation.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 

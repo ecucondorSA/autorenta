@@ -8,8 +8,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core/models';
 import { GeminiService } from '@core/services/ai/gemini.service';
+import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core/models';
 
 /**
  * Panel de Planificador de Viajes IA

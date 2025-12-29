@@ -3,9 +3,9 @@ import {Component, inject, signal, OnInit,
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
+import { CarsService } from '@core/services/cars/cars.service';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
-import { CarsService } from '@core/services/cars/cars.service';
 import { Car } from '../../../core/models';
 
 @Component({

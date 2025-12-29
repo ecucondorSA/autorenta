@@ -1,8 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProfileService } from './profile.service';
 import { IdentityLevelService } from '@core/services/verification/identity-level.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { ProfileService } from './profile.service';
 
 export type VerificationContext = 'booking' | 'publish' | 'payout' | 'message';
 

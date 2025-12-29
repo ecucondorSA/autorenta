@@ -3,12 +3,12 @@ import {Component, computed, inject, OnInit, signal,
   ChangeDetectionStrategy, DestroyRef} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import type { Car } from '../../../core/models';
 import type { DashboardStats } from '@core/models/dashboard.model';
 import { CarsService } from '@core/services/cars/cars.service';
 import { DashboardService } from '@core/services/admin/dashboard.service';
 import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import type { Car } from '../../../core/models';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 

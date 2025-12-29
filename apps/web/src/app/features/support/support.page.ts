@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { SupportService } from './services/support.service';
 import { ToastService } from '@core/services/ui/toast.service';
+import { SupportService } from './services/support.service';
 import {
   TICKET_CATEGORIES,
   TICKET_URGENCY_LEVELS,

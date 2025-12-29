@@ -11,9 +11,9 @@ import {
   DisputeKind,
 } from '@core/services/admin/disputes.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
-import { Booking } from '../../../core/models';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { Booking } from '../../../core/models';
 
 @Component({
   selector: 'app-disputes-management',

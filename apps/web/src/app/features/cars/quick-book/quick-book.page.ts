@@ -4,6 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 // Components
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingInitiationService } from '@core/services/bookings/booking-initiation.service';
+import { CarsService } from '@core/services/cars/cars.service';
 import { DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import {
   PaymentMethodButtonsComponent,
@@ -13,10 +17,6 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { CarChatComponent } from '../../messages/components/car-chat.component';
 
 // Services
-import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
-import { AuthService } from '@core/services/auth/auth.service';
-import { BookingInitiationService } from '@core/services/bookings/booking-initiation.service';
-import { CarsService } from '@core/services/cars/cars.service';
 
 @Component({
   standalone: true,

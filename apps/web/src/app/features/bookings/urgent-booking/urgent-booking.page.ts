@@ -3,10 +3,10 @@ import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import type { Car } from '../../../core/models';
 import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
+import type { Car } from '../../../core/models';
 
 @Component({
   selector: 'app-urgent-booking',

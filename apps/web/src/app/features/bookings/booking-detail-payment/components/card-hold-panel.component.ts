@@ -2,16 +2,16 @@ import { Component, Input, Output, EventEmitter, inject, signal, ChangeDetection
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import {
-  MercadopagoCardFormComponent,
-  MercadoPagoCardTokenGeneratedEvent,
-} from '../../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
-import {
   RiskSnapshot,
   FxSnapshot,
   PaymentAuthorization,
 } from '@core/models/booking-detail-payment.model';
 import { PaymentAuthorizationService } from '@core/services/payments/payment-authorization.service';
 import { AuthService } from '@core/services/auth/auth.service';
+import {
+  MercadopagoCardFormComponent,
+  MercadoPagoCardTokenGeneratedEvent,
+} from '../../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
 import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component';
 
 @Component({
