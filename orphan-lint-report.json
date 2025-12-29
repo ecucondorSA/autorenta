@@ -1,0 +1,1085 @@
+{
+  "timestamp": "2025-12-28T09:58:42.697Z",
+  "summary": {
+    "orphanComponents": 2,
+    "unusedRpcFunctions": 224,
+    "tablesWithoutQueries": 54,
+    "criticalOrphans": 0,
+    "passed": true
+  },
+  "criticalIssues": [],
+  "orphanComponents": [
+    {
+      "name": "ReviewSummaryComponent",
+      "path": "apps/web/src/app/shared/components/review-summary/review-summary.component.ts",
+      "selector": "app-review-summary"
+    },
+    {
+      "name": "LoadErrorFallbackComponent",
+      "path": "apps/web/src/app/shared/components/load-error-fallback/load-error-fallback.component.ts",
+      "selector": "app-load-error-fallback"
+    }
+  ],
+  "unusedRpcFunctions": [
+    {
+      "name": "admin_get_wallet_metrics",
+      "definedIn": "supabase/migrations/20251228_wallet_usage_metrics.sql"
+    },
+    {
+      "name": "get_user_wallet_history",
+      "definedIn": "supabase/migrations/20251228_wallet_usage_metrics.sql"
+    },
+    {
+      "name": "admin_wallet_health_check",
+      "definedIn": "supabase/migrations/20251228_wallet_usage_metrics.sql"
+    },
+    {
+      "name": "log_query_performance",
+      "definedIn": "supabase/migrations/20251228_query_performance_monitoring.sql"
+    },
+    {
+      "name": "get_query_performance_stats",
+      "definedIn": "supabase/migrations/20251228_query_performance_monitoring.sql"
+    },
+    {
+      "name": "get_slowest_queries",
+      "definedIn": "supabase/migrations/20251228_query_performance_monitoring.sql"
+    },
+    {
+      "name": "get_query_performance_trends",
+      "definedIn": "supabase/migrations/20251228_query_performance_monitoring.sql"
+    },
+    {
+      "name": "measure_execution_time",
+      "definedIn": "supabase/migrations/20251228_query_performance_monitoring.sql"
+    },
+    {
+      "name": "cleanup_old_performance_logs",
+      "definedIn": "supabase/migrations/20251228_query_performance_monitoring.sql"
+    },
+    {
+      "name": "log_payment_event",
+      "definedIn": "supabase/migrations/20251228_booking_payment_events.sql"
+    },
+    {
+      "name": "get_booking_payment_history",
+      "definedIn": "supabase/migrations/20251228_booking_payment_events.sql"
+    },
+    {
+      "name": "get_payment_events_summary",
+      "definedIn": "supabase/migrations/20251228_booking_payment_events.sql"
+    },
+    {
+      "name": "try_advisory_lock_shared",
+      "definedIn": "supabase/migrations/20251228_advisory_locks.sql"
+    },
+    {
+      "name": "release_advisory_lock_shared",
+      "definedIn": "supabase/migrations/20251228_advisory_locks.sql"
+    },
+    {
+      "name": "sync_identity_to_verification",
+      "definedIn": "supabase/migrations/20251226_fix_verification_security.sql"
+    },
+    {
+      "name": "prevent_locked_identity_changes",
+      "definedIn": "supabase/migrations/20251226_add_identity_lock.sql"
+    },
+    {
+      "name": "update_profile_from_ocr",
+      "definedIn": "supabase/migrations/20251226_add_identity_lock.sql"
+    },
+    {
+      "name": "admin_unlock_identity",
+      "definedIn": "supabase/migrations/20251226_add_identity_lock.sql"
+    },
+    {
+      "name": "update_support_ticket_timestamp",
+      "definedIn": "supabase/migrations/20251223_create_support_tickets.sql"
+    },
+    {
+      "name": "update_mp_onboarding_updated_at",
+      "definedIn": "supabase/migrations/20251222_create_mp_onboarding_states.sql"
+    },
+    {
+      "name": "get_inspection_analysis",
+      "definedIn": "supabase/migrations/20251221_video_damage_detection.sql"
+    },
+    {
+      "name": "update_inspection_comparison_updated_at",
+      "definedIn": "supabase/migrations/20251221_video_damage_detection.sql"
+    },
+    {
+      "name": "enforce_renter_checkin_before_in_progress",
+      "definedIn": "supabase/migrations/20251221_enforce_renter_checkin_before_in_progress.sql"
+    },
+    {
+      "name": "send_welcome_notification",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_verification_notification",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_nearby_cars_notifications",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_car_views_milestone_notification",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_car_recommendations",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_renter_tips",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_favorite_car_available",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_pending_requests_reminder",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_booking_reminders",
+      "definedIn": "supabase/migrations/20251220_complete_notification_system.sql"
+    },
+    {
+      "name": "send_document_expiry_reminders",
+      "definedIn": "supabase/migrations/20251220_complete_notification_system.sql"
+    },
+    {
+      "name": "send_inactive_owner_reminders",
+      "definedIn": "supabase/migrations/20251220_complete_notification_system.sql"
+    },
+    {
+      "name": "send_optimization_tips",
+      "definedIn": "supabase/migrations/20251220_complete_notification_system.sql"
+    },
+    {
+      "name": "send_booking_completion_reminders",
+      "definedIn": "supabase/migrations/20251220_complete_notification_system.sql"
+    },
+    {
+      "name": "expire_pending_approvals",
+      "definedIn": "supabase/migrations/20251220_booking_approval_system.sql"
+    },
+    {
+      "name": "set_approval_expires_at",
+      "definedIn": "supabase/migrations/20251220_booking_approval_system.sql"
+    },
+    {
+      "name": "user_is_member_of_org",
+      "definedIn": "supabase/migrations/20251220120000_fix_organization_member_policy.sql"
+    },
+    {
+      "name": "update_updated_at_column",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "prevent_self_booking",
+      "definedIn": "supabase/migrations/20251219080000_prevent_self_booking.sql"
+    },
+    {
+      "name": "process_booking_payout",
+      "definedIn": "supabase/migrations/20251218_fix_revenue_pipeline.sql"
+    },
+    {
+      "name": "complete_booking_and_process_payout",
+      "definedIn": "supabase/migrations/20251218_fix_revenue_pipeline.sql"
+    },
+    {
+      "name": "process_pending_payouts",
+      "definedIn": "supabase/migrations/20251218_fix_revenue_pipeline.sql"
+    },
+    {
+      "name": "update_car_stats",
+      "definedIn": "supabase/migrations/20251217190000_create_car_stats_table.sql"
+    },
+    {
+      "name": "validate_and_confirm_split_payment",
+      "definedIn": "supabase/migrations/20251216080001_atomic_split_payment_validation.sql"
+    },
+    {
+      "name": "unlock_expired_wallet_locks",
+      "definedIn": "supabase/migrations/20251211050017_wallet_lock_expiration_system.sql"
+    },
+    {
+      "name": "wallet_confirm_deposit_admin",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "auto_update_price_per_day",
+      "definedIn": "supabase/migrations/20251215000000_auto_update_prices_from_fipe.sql"
+    },
+    {
+      "name": "generate_device_fingerprint",
+      "definedIn": "supabase/migrations/20251214000000_enhance_booking_contracts.sql"
+    },
+    {
+      "name": "update_booking_contracts_updated_at",
+      "definedIn": "supabase/migrations/20251214000000_enhance_booking_contracts.sql"
+    },
+    {
+      "name": "validate_contract_clauses_accepted",
+      "definedIn": "supabase/migrations/20251214000000_enhance_booking_contracts.sql"
+    },
+    {
+      "name": "analyze_collusion_risk",
+      "definedIn": "supabase/migrations/20251211130000_fraud_detection_system.sql"
+    },
+    {
+      "name": "is_blocked_by",
+      "definedIn": "supabase/migrations/20251211120000_create_user_blocks.sql"
+    },
+    {
+      "name": "check_message_block",
+      "definedIn": "supabase/migrations/20251211120000_create_user_blocks.sql"
+    },
+    {
+      "name": "get_cron_job_history",
+      "definedIn": "supabase/migrations/20251211060003_additional_cron_jobs.sql"
+    },
+    {
+      "name": "calculate_bonus_malus",
+      "definedIn": "supabase/migrations/20251211060001_bonus_malus_system.sql"
+    },
+    {
+      "name": "apply_bonus_malus_to_deposit",
+      "definedIn": "supabase/migrations/20251211060001_bonus_malus_system.sql"
+    },
+    {
+      "name": "update_debt_start_date",
+      "definedIn": "supabase/migrations/20251211060000_account_suspension_system.sql"
+    },
+    {
+      "name": "suspend_accounts_for_debt",
+      "definedIn": "supabase/migrations/20251211060000_account_suspension_system.sql"
+    },
+    {
+      "name": "wallet_lock_funds_with_expiration",
+      "definedIn": "supabase/migrations/20251211050017_wallet_lock_expiration_system.sql"
+    },
+    {
+      "name": "get_expiring_locks",
+      "definedIn": "supabase/migrations/20251211050017_wallet_lock_expiration_system.sql"
+    },
+    {
+      "name": "sync_profile_verification_status",
+      "definedIn": "supabase/migrations/20251203090000_fix_verification_issues.sql"
+    },
+    {
+      "name": "update_driver_class_on_event",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "improve_driver_class_annual",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "process_binance_response",
+      "definedIn": "supabase/migrations/20251203040000_auto_exchange_rate_sync.sql"
+    },
+    {
+      "name": "sync_email_verification",
+      "definedIn": "supabase/migrations/20251202020000_sync_email_verification.sql"
+    },
+    {
+      "name": "sync_phone_verification",
+      "definedIn": "supabase/migrations/20251202020000_sync_email_verification.sql"
+    },
+    {
+      "name": "account_bonus_protector_sale",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "account_protection_credit_breakage",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "account_protection_credit_consumption",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "account_protection_credit_issuance",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "account_protection_credit_renewal",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_auto_audit",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_balance_sheet",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_cancellation_fee_after_update",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_credit_breakage_after_insert",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_credit_consume_after_insert",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_credit_issue_after_insert",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_daily_closure",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_delivery_fee_after_update",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_income_statement",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_monthly_closure",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_verify_wallet_liabilities",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_wallet_deposit_after_insert",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "add_bank_account_with_encryption",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "apply_fgo_movement",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "auto_complete_first_booking_milestone",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "auto_generate_referral_code_on_first_car",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "auto_payout_approved_rewards",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "booking_location_tracking_broadcast_trigger",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_age",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_distance_based_pricing",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_distance_km",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_fgo_metrics",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_payment_split",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_suggested_daily_rate",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_trip_score",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "can_publish_car",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "cancel_conflicting_pending_by_renter",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "cancel_payment_authorization",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "cancel_preauth",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "capture_payment_authorization",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "capture_preauth",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "check_autorentar_credit_expiry",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "check_availability",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "check_car_availability",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "check_fleet_bonus_eligibility",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "check_snapshot_revalidation",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "check_user_pending_deposits_limit",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "cleanup_expired_onboarding_states",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "cleanup_expired_waitlist",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "cleanup_old_pending_deposits",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "close_accounting_period",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "complete_payment_split",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "complete_referral_milestone",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "compute_fee_with_class",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "compute_guarantee_with_class",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "config_get_boolean",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "config_get_json",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "config_get_number",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "config_get_string",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "config_update",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "connect_mercadopago",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "consume_protection_credit_for_claim",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "create_onboarding_plan_with_steps",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "create_onboarding_plan_with_steps_v1",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "create_review",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "deactivate_previous_fx_rate",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "decrypt_message",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "decrypt_pii",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "encrypt_message",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "encrypt_message_body_trigger",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "encrypt_pii",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "expire_pending_bookings",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "extend_protection_credit_for_good_history",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "fgo_contribute_from_deposit",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "fgo_pay_siniestro",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "fgo_transfer_between_subfunds",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "find_brazil_model_equivalent",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "fx_rate_needs_revalidation",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "generate_referral_code",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_active_calendar_token",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_booking_distance",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_car_conversation_participants",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_car_price_in_currency",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_cars_availability_batch",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_claims_stats",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_conversation_messages",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_conversion_stats",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_current_fx_rate",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_effective_daily_rate_pct",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_effective_vehicle_value",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_expiring_holds",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_marketplace_approved_owners",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_mp_onboarding_notifications",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_my_profile_decrypted",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_next_available_date",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_payout_stats",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_unread_messages_count",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_user_conversations",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_user_public_stats",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "handle_new_user",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "insert_notification_secure",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "is_at_least_18",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "is_car_owner",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "is_google_calendar_connected",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "log_cron_execution",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "mark_conversation_as_read",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "mark_payout_failed",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "monitoring_check_database_metrics",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "monitoring_create_alert",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "populate_car_estimates",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "prepare_booking_payment",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "prevent_completed_transaction_modification",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "prevent_message_content_changes",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "preview_booking_pricing",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "process_split_payment",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "process_withdrawal",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "recalculate_all_driver_scores",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "recognize_protection_credit_breakage",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "register_payment_split",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "rotate_encryption_key",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "send_encrypted_message",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "send_monthly_depreciation_notifications",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "set_location_tracking_created_timestamp",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "set_row_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "set_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "submit_claim",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "sync_binance_rates_direct",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "sync_binance_rates_via_edge_function",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "sync_profile_email_from_auth",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "sync_profile_email_on_user_create",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "transfer_profit_to_equity",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "trg_accounting_revenue_recognition",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "trg_accounting_security_deposit",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "trg_accounting_wallet_deposit",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_accounting_journal_entries_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_all_demand_snapshots",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_booking_payout",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_calendar_sync_timestamp",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_car_blocked_dates_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_claims_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_demand_snapshot",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_facturas_recibidas_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_fx_rates_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_location_tracking_timestamp",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_messages_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_payment_intent_status",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_payment_intents_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_profile_with_encryption",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_proveedores_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_user_cars_payment_status",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_user_stats_v2_for_booking",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_vehicle_categories_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_vehicle_pricing_models_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "user_can_receive_payments",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "validate_bonus_malus_migration",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "validate_mercadopago_oauth",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "verify_accounting_integrity",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "verify_bank_account",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "wallet_deposit_ledger",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "wallet_refund",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "wallet_transfer_to_owner",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    }
+  ],
+  "tablesWithoutQueries": [
+    {
+      "name": "query_performance_log"
+    },
+    {
+      "name": "booking_payment_events"
+    },
+    {
+      "name": "for"
+    },
+    {
+      "name": "inspection_comparisons"
+    },
+    {
+      "name": "car_views"
+    },
+    {
+      "name": "user_favorites"
+    },
+    {
+      "name": "risk_events"
+    },
+    {
+      "name": "user_risk_scores"
+    },
+    {
+      "name": "as"
+    },
+    {
+      "name": "booking_waitlist"
+    },
+    {
+      "name": "platform_config"
+    },
+    {
+      "name": "monitoring_alerts"
+    },
+    {
+      "name": "auth"
+    },
+    {
+      "name": "private"
+    },
+    {
+      "name": "accounting_accounts"
+    },
+    {
+      "name": "accounting_journal_entries"
+    },
+    {
+      "name": "accounting_period_balances"
+    },
+    {
+      "name": "booking_location_tracking"
+    },
+    {
+      "name": "booking_risk_snapshot"
+    },
+    {
+      "name": "calendar_sync_log"
+    },
+    {
+      "name": "car_google_calendars"
+    },
+    {
+      "name": "cron_execution_log"
+    },
+    {
+      "name": "driver_class_history"
+    },
+    {
+      "name": "driver_protection_addons"
+    },
+    {
+      "name": "driver_score_snapshots"
+    },
+    {
+      "name": "driver_telemetry"
+    },
+    {
+      "name": "encryption_audit_log"
+    },
+    {
+      "name": "encryption_keys"
+    },
+    {
+      "name": "exchange_rate_sync_log"
+    },
+    {
+      "name": "fgo_metrics"
+    },
+    {
+      "name": "fgo_subfunds"
+    },
+    {
+      "name": "fleet_bonuses"
+    },
+    {
+      "name": "fx_rates"
+    },
+    {
+      "name": "google_calendar_tokens"
+    },
+    {
+      "name": "monitoring_performance_metrics"
+    },
+    {
+      "name": "mp_webhook_logs"
+    },
+    {
+      "name": "onboarding_plan_templates"
+    },
+    {
+      "name": "outbound_requests"
+    },
+    {
+      "name": "pricing_class_factors"
+    },
+    {
+      "name": "pricing_cron_health"
+    },
+    {
+      "name": "pricing_day_factors"
+    },
+    {
+      "name": "pricing_hour_factors"
+    },
+    {
+      "name": "pricing_user_factors"
+    },
+    {
+      "name": "system_flags"
+    },
+    {
+      "name": "user_onboarding_plans"
+    },
+    {
+      "name": "user_onboarding_steps"
+    },
+    {
+      "name": "vehicle_model_equivalents"
+    },
+    {
+      "name": "vehicle_pricing_models"
+    },
+    {
+      "name": "wallet_audit_log"
+    },
+    {
+      "name": "wallet_split_config"
+    },
+    {
+      "name": "wallet_transaction_backups"
+    },
+    {
+      "name": "withdrawal_transactions"
+    },
+    {
+      "name": "realtime"
+    },
+    {
+      "name": "storage"
+    }
+  ]
+}

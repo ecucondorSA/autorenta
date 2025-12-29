@@ -14,7 +14,7 @@ export interface FranchiseInfo {
 @Injectable({
   providedIn: 'root',
 })
-export class FranchiseTableService {
+export class BookingFranchiseService {
   private readonly bucketThresholds: Array<{ maxValue: number; bucket: BucketType }> = [
     { maxValue: 10_000, bucket: 'economy' },
     { maxValue: 20_000, bucket: 'default' },

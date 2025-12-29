@@ -10,7 +10,7 @@ import { Booking } from '../../../core/models';
  * with visual separation and tooltips explaining each component.
  */
 @Component({
-  selector: 'app-booking-pricing-breakdown',
+  selector: 'app-booking-detail-pricing',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],

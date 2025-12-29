@@ -1,10 +1,13 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { ProfileService } from '@core/services/auth/profile.service';
+import { environment } from '@environment';
 
 /**
  * AuthCallbackPage
@@ -108,6 +111,8 @@ export class AuthCallbackPage implements OnInit {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
+  private readonly analytics = inject(AnalyticsService);
+  private readonly tiktokEvents = inject(TikTokEventsService);
 
   readonly error = signal<string | null>(null);
 
@@ -169,14 +174,39 @@ export class AuthCallbackPage implements OnInit {
 
       // Verificar si el usuario está autenticado
       if (this.auth.isAuthenticated()) {
+        // Detectar provider (TikTok o Google)
+        const provider = tiktokCode ? 'tiktok' : 'google';
+
         // Verificar si necesita completar onboarding
         try {
           const hasCompletedOnboarding = await this.profileService.hasCompletedOnboarding();
+          const isNewUser = !hasCompletedOnboarding;
 
-          if (!hasCompletedOnboarding) {
+          // Track auth completion
+          if (isNewUser) {
+            // Usuario nuevo - track sign_up
+            this.analytics.trackEvent('sign_up', {
+              method: provider,
+              source: 'oauth_callback',
+              step: 'completed',
+            });
+
+            // TikTok pixel
+            void this.tiktokEvents.trackCompleteRegistration({
+              value: 0,
+              currency: environment.defaultCurrency,
+            });
+
             // Usuario nuevo - ir al onboarding
             await this.router.navigate(['/onboarding']);
           } else {
+            // Usuario existente - track login
+            this.analytics.trackEvent('login', {
+              method: provider,
+              source: 'oauth_callback',
+              step: 'completed',
+            });
+
             // Usuario existente - ir a lista de autos
             await this.router.navigate(['/cars/list']);
           }

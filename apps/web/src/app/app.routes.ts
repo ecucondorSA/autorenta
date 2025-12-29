@@ -27,6 +27,11 @@ export const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
   {
+    path: 'oauth/consent',
+    loadComponent: () =>
+      import('./features/oauth/oauth-consent.page').then((m) => m.OAuthConsentPage),
+  },
+  {
     path: 'onboarding',
     loadComponent: () =>
       import('./features/onboarding/onboarding.page').then((m) => m.OnboardingPage),

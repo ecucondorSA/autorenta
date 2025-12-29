@@ -7,12 +7,12 @@ import {
 } from '@core/constants';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CircuitBreakerService, CircuitStats } from '@core/services/infrastructure/circuit-breaker.service';
-import { environment } from '@environments/environment';
+import { environment } from '../../../../environments/environment';
 
 /**
- * Payment method types
+ * Payment method types for metrics tracking
  */
-export type PaymentMethod = 'card' | 'wallet' | 'paypal';
+export type MetricsPaymentMethod = 'card' | 'wallet' | 'paypal';
 
 /**
  * Payment outcome types
@@ -25,7 +25,7 @@ export type PaymentOutcome = 'success' | 'rejected' | 'error' | 'timeout' | 'cir
 export interface PaymentMetricRecord {
   timestamp: Date;
   bookingId: string;
-  method: PaymentMethod;
+  method: MetricsPaymentMethod;
   outcome: PaymentOutcome;
   durationMs: number;
   errorCode?: string;

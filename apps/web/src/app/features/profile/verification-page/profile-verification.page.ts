@@ -7,7 +7,7 @@ import {
   computed,
 } from '@angular/core';
 
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { VerificationProgressComponent } from '../../../shared/components/verification-progress/verification-progress.component';
@@ -44,6 +44,18 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
           </div>
           <a routerLink="/profile" class="text-sm text-cta-default hover:underline">← Volver</a>
         </div>
+
+        <!-- Contextual Message -->
+        @if (verificationReason()) {
+          <div class="mb-4 p-4 rounded-lg bg-warning-bg border border-warning-border">
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-warning-strong flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+              </svg>
+              <p class="text-sm text-warning-strong font-medium">{{ verificationReason() }}</p>
+            </div>
+          </div>
+        }
     
         <!-- Progress Component -->
         <div class="mb-4">
@@ -522,11 +534,15 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
 export class ProfileVerificationPage implements OnInit {
   private readonly profileStore = inject(ProfileStore);
   private readonly identityService = inject(IdentityLevelService);
+  private readonly route = inject(ActivatedRoute);
 
   readonly profile = this.profileStore.profile;
   readonly loading = this.profileStore.loading;
   readonly showLicenseUpload = signal(false);
   readonly showDniUpload = signal(false);
+
+  // Contextual message based on reason query param
+  readonly verificationReason = signal<string | null>(null);
 
   // Track expanded sections
   readonly expandedSections = signal<Set<number>>(new Set([1])); // Level 1 expanded by default
@@ -536,6 +552,12 @@ export class ProfileVerificationPage implements OnInit {
   readonly requirements = computed(() => this.verificationProgress()?.requirements);
 
   async ngOnInit(): Promise<void> {
+    // Check for contextual message based on reason
+    const reason = this.route.snapshot.queryParamMap.get('reason');
+    if (reason) {
+      this.setContextualMessage(reason);
+    }
+
     if (!this.profile()) {
       void this.profileStore.loadProfile();
     }
@@ -547,6 +569,19 @@ export class ProfileVerificationPage implements OnInit {
     } catch (e) {
       console.error('Failed to load verification progress:', e);
     }
+  }
+
+  private setContextualMessage(reason: string): void {
+    const messages: Record<string, string> = {
+      booking_verification_required:
+        'Para poder alquilar un auto, necesitás completar la verificación de tu identidad.',
+      email_verification_required:
+        'Verificá tu email para acceder a todas las funciones de la plataforma.',
+      verification_check_failed:
+        'Hubo un problema verificando tu cuenta. Por favor, completá los pasos pendientes.',
+    };
+
+    this.verificationReason.set(messages[reason] || null);
   }
 
   private autoExpandCurrentLevel(): void {

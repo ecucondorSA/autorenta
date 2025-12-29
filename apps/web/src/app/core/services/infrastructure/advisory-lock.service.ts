@@ -27,7 +27,7 @@ export type LockType = (typeof LOCK_TYPES)[keyof typeof LOCK_TYPES];
  */
 export interface LockResult {
   acquired: boolean;
-  lockId?: string;
+  lockId?: number;
   error?: string;
 }
 
@@ -81,7 +81,7 @@ export class AdvisoryLockService {
 
   /** Active locks held by this service instance with metadata */
   private readonly activeLocks = new Map<
-    string,
+    number,
     {
       type: LockType;
       resourceId: string;
@@ -281,7 +281,7 @@ export class AdvisoryLockService {
    * Get all active locks held by this instance with acquisition time
    */
   getActiveLocks(): Array<{
-    lockId: string;
+    lockId: number;
     type: LockType;
     resourceId: string;
     acquiredAt: Date;

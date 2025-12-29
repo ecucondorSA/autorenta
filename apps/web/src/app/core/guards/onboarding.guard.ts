@@ -3,34 +3,19 @@ import { Router, type CanMatchFn } from '@angular/router';
 import { ProfileService } from '@core/services/auth/profile.service';
 
 /**
- * OnboardingGuard - Protege rutas que requieren onboarding completo
+ * OnboardingGuard - DEPRECADO: Onboarding ahora es opcional
  *
- * Uso en rutas:
- * ```typescript
- * {
- *   path: 'cars/publish',
- *   loadComponent: () => import('./features/cars/publish/publish.page').then(m => m.PublishPage),
- *   canMatch: [onboardingGuard]
- * }
- * ```
+ * El rol del usuario se infiere del comportamiento:
+ * - Si busca autos → Locatario
+ * - Si publica autos → Locador
+ *
+ * Este guard ahora siempre permite el acceso.
+ * Se mantiene por compatibilidad con rutas existentes.
  */
 export const onboardingGuard: CanMatchFn = async () => {
-  const profileService = inject(ProfileService);
-  const router = inject(Router);
-
-  try {
-    const hasCompleted = await profileService.hasCompletedOnboarding();
-
-    if (!hasCompleted) {
-      // Redirigir a onboarding inteligente
-      return router.createUrlTree(['/onboarding']);
-    }
-
-    return true;
-  } catch {
-    // Si hay error, permitir acceso (fail-open)
-    return true;
-  }
+  // Onboarding es opcional - siempre permitir acceso
+  // El rol se infiere del comportamiento del usuario
+  return true;
 };
 
 /**

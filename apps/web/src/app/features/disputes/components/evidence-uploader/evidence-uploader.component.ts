@@ -4,7 +4,7 @@ import {Component, Input, inject, signal,
 import { DisputeEvidenceService, EvidenceItem } from '../../services/dispute-evidence.service';
 
 @Component({
-  selector: 'app-evidence-uploader',
+  selector: 'app-dispute-evidence-uploader',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],

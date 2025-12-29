@@ -25,7 +25,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Leer configuración de Tailwind
-const tailwindConfigPath = join(__dirname, '../apps/web/tailwind.config.js');
+const tailwindConfigPath = join(__dirname, '../../apps/web/tailwind.config.js');
 let tailwindConfig;
 
 try {

@@ -14,7 +14,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
  * - Skeleton loading state
  */
 @Component({
-  selector: 'app-card',
+  selector: 'app-marketplace-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],

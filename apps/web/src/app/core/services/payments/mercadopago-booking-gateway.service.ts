@@ -3,7 +3,7 @@ import { Observable, from, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PaymentPreferenceResponse, PaymentGateway } from '@core/interfaces/payment-gateway.interface';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { environment } from '@environments/environment';
+import { environment } from '../../../../environments/environment';
 
 /**
  * Respuesta de creación de preferencia de MercadoPago

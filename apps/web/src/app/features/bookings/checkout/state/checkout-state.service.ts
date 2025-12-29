@@ -7,7 +7,7 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
 import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { BucketType, FgoParameters } from '@core/models/fgo-v1-1.model';
-import { FranchiseInfo, FranchiseTableService } from '../support/franchise-table.service';
+import { FranchiseInfo, BookingFranchiseService } from '../support/booking-franchise.service';
 import { GuaranteeCopy, GuaranteeCopyBuilder } from '../support/guarantee-copy.builder';
 import { CheckoutRiskCalculator, GuaranteeBreakdown } from '../support/risk-calculator';
 
@@ -38,7 +38,7 @@ export class CheckoutStateService {
     private readonly bookings: BookingsService,
     private readonly exchangeRates: ExchangeRateService,
     private readonly fgoService: FgoV1_1Service,
-    private readonly franchiseTable: FranchiseTableService,
+    private readonly franchiseTable: BookingFranchiseService,
     private readonly copyBuilder: GuaranteeCopyBuilder,
     private readonly riskCalculator: CheckoutRiskCalculator,
   ) {

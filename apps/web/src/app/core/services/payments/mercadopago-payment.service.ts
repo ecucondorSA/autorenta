@@ -3,7 +3,7 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
 import { CircuitBreakerService, CircuitOpenError } from '@core/services/infrastructure/circuit-breaker.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { PaymentMetricsService } from './payment-metrics.service';
-import { environment } from '@environments/environment';
+import { environment } from '../../../../environments/environment';
 
 export interface ProcessBookingPaymentRequest {
   booking_id: string;

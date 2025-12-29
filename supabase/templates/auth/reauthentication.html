@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirma tu identidad - AutoRenta</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 0; background-color: #f9fafb;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; padding: 20px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
+
+          <!-- Header -->
+          <tr>
+            <td style="padding: 40px 40px 20px 40px; text-align: center; border-bottom: 2px solid #3b82f6;">
+              <h1 style="margin: 0 0 10px 0; color: #1f2937; font-size: 32px;">AutoRenta</h1>
+              <p style="margin: 0; color: #6b7280; font-size: 16px;">Verificacion de seguridad</p>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding: 30px 40px;">
+              <p style="margin: 0 0 15px 0; color: #1f2937; font-size: 16px;">
+                ¡Hola!
+              </p>
+              <p style="margin: 0 0 20px 0; color: #6b7280; font-size: 16px; line-height: 1.6;">
+                Para completar una accion sensible en tu cuenta, necesitamos verificar tu identidad. Haz clic en el siguiente boton para confirmar que eres tu:
+              </p>
+            </td>
+          </tr>
+
+          <!-- CTA Button -->
+          <tr>
+            <td style="padding: 20px 40px;" align="center">
+              <a href="{{ .ConfirmationURL }}"
+                 style="display: inline-block; padding: 14px 32px; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">
+                Confirmar Identidad
+              </a>
+            </td>
+          </tr>
+
+          <!-- Warning -->
+          <tr>
+            <td style="padding: 20px 40px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fee2e2; border-radius: 6px; border-left: 4px solid #ef4444;">
+                <tr>
+                  <td style="padding: 15px;">
+                    <p style="margin: 0; color: #991b1b; font-size: 14px; line-height: 1.5;">
+                      <strong>Alerta de seguridad:</strong> Si no intentaste realizar ninguna accion sensible en tu cuenta, no hagas clic en el boton y contactanos inmediatamente.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Security Note -->
+          <tr>
+            <td style="padding: 20px 40px;">
+              <p style="margin: 0; color: #9ca3af; font-size: 14px; line-height: 1.5;">
+                Este enlace expira en 10 minutos por seguridad.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 30px 40px; background-color: #f9fafb; border-top: 1px solid #e5e7eb; text-align: center;">
+              <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">
+                ¿Necesitas ayuda? <a href="mailto:soporte@autorentar.com" style="color: #3b82f6; text-decoration: none;">soporte@autorentar.com</a>
+              </p>
+              <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+                © 2025 AutoRenta. Todos los derechos reservados.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

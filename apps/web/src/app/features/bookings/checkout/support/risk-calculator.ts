@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BookingPaymentMethod } from '@core/models/wallet.model';
 import { Booking } from '../../../../core/models';
-import { FranchiseInfo } from './franchise-table.service';
+import { FranchiseInfo } from './booking-franchise.service';
 
 export interface GuaranteeBreakdown {
   paymentMethod: BookingPaymentMethod;

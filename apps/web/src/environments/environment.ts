@@ -12,7 +12,7 @@ export const environment = buildEnvironment({
   supabaseAnonKey: undefined, // Will be read from NG_APP_SUPABASE_ANON_KEY
   mapboxAccessToken: undefined, // Will be read from NG_APP_MAPBOX_ACCESS_TOKEN
   tripoApiKey: undefined, // Will be read from NG_APP_TRIPO_API_KEY
-  googleAnalyticsMeasurementId: '', // Configurar via NG_APP_GA4_MEASUREMENT_ID
+  googleAnalyticsMeasurementId: 'G-WV2PWTKG2E', // Google Analytics 4
   enableAnalytics: true,
   docVerifierUrl: 'https://doc-verifier.autorentar.workers.dev',
   // Google AI Image Generation (Gemini)

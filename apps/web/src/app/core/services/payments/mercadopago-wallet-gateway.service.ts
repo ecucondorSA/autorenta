@@ -7,7 +7,7 @@ import {
   PaymentProvider,
 } from '@core/interfaces/payment-gateway.interface';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { environment } from '@environments/environment';
+import { environment } from '../../../../environments/environment';
 
 /**
  * MercadoPago Wallet Gateway Service

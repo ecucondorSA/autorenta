@@ -4,6 +4,7 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { HdriBackgroundComponent } from '../../../shared/components/hdri-background/hdri-background.component';
 
 @Component({
@@ -24,6 +25,7 @@ export class LoginPage implements OnInit {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly analytics = inject(AnalyticsService);
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -67,10 +69,23 @@ export class LoginPage implements OnInit {
       const { email, password } = this.form.getRawValue();
       await this.auth.signIn(email, password);
 
+      // Track successful login
+      this.analytics.trackEvent('login', {
+        method: 'email',
+        source: 'login_page',
+      });
+
       // Get returnUrl from query params, default to /cars/list for better UX after login
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/cars/list';
       await this.router.navigateByUrl(returnUrl);
     } catch (err) {
+      // Track failed login
+      this.analytics.trackEvent('login', {
+        method: 'email',
+        source: 'login_page',
+        error_message: err instanceof Error ? err.message : 'unknown',
+      });
+
       this.error.set(
         err instanceof Error ? err.message : 'No pudimos iniciar sesión, revisá tus credenciales.',
       );
@@ -85,15 +100,32 @@ export class LoginPage implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
+    // Track login attempt
+    this.analytics.trackEvent('login', {
+      method: 'google',
+      source: 'login_page',
+      step: 'initiated',
+    });
+
     try {
       await this.auth.signInWithGoogle();
       // La redirección a Google ocurre automáticamente
-      // El callback manejará el retorno
+      // El callback manejará el retorno y tracking de completion
     } catch (err) {
+      // Track failed Google login
+      this.analytics.trackEvent('login', {
+        method: 'google',
+        source: 'login_page',
+        error_message: err instanceof Error ? err.message : 'unknown',
+      });
+
       this.error.set(
         err instanceof Error ? err.message : 'No pudimos conectar con Google. Intentá nuevamente.',
       );
-      this.loading.set(false);
+    } finally {
+      // Timeout para permitir redirección antes de resetear loading
+      // Si la redirección ocurre, este código no se ejecutará
+      setTimeout(() => this.loading.set(false), 3000);
     }
   }
 
@@ -103,13 +135,31 @@ export class LoginPage implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
+    // Track login attempt
+    this.analytics.trackEvent('login', {
+      method: 'tiktok',
+      source: 'login_page',
+      step: 'initiated',
+    });
+
     try {
       await this.auth.signInWithTikTok();
+      // La redirección a TikTok ocurre automáticamente
+      // El callback manejará el retorno y tracking de completion
     } catch (err) {
+      // Track failed TikTok login
+      this.analytics.trackEvent('login', {
+        method: 'tiktok',
+        source: 'login_page',
+        error_message: err instanceof Error ? err.message : 'unknown',
+      });
+
       this.error.set(
         err instanceof Error ? err.message : 'No pudimos conectar con TikTok. Intentá nuevamente.',
       );
-      this.loading.set(false);
+    } finally {
+      // Timeout para permitir redirección antes de resetear loading
+      setTimeout(() => this.loading.set(false), 3000);
     }
   }
 }

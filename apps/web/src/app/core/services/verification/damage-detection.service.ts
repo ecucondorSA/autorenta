@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { DamageItem, DamageType } from '@core/services/payments/settlement.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { environment } from '@environments/environment';
+import { environment } from '../../../../environments/environment';
 
 /**
  * Resultado de análisis de daño detectado

@@ -61,7 +61,7 @@ import { EvidenceUploaderComponent } from '../../components/evidence-uploader/ev
                       </div>
                     </div>
                   </div>
-                  <app-evidence-uploader [disputeId]="disputeId()"></app-evidence-uploader>
+                  <app-dispute-evidence-uploader [disputeId]="disputeId()"></app-dispute-evidence-uploader>
                 </div>
                 <!-- Columna Lateral: Acciones Admin -->
                 <div class="lg:col-span-1">

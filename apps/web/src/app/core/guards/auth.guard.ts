@@ -25,28 +25,11 @@ export const AuthGuard: CanMatchFn = async (route: Route) => {
     return router.createUrlTree(['/auth/login']);
   }
 
-  // P0-013 FIX: Email Verification Check
-  // Users must verify their email before accessing protected routes
-  if (!session['user'].email_confirmed_at) {
-    logger.debug('Email NOT confirmed.', 'AuthGuard');
-    // Allow access to specific routes even without email verification
-    const allowedRoutes = ['profile', 'profile/verification', 'verification', 'auth/logout'];
-
-    const isAllowedRoute = allowedRoutes.some((allowed) => routePath.includes(allowed));
-
-    logger.debug(
-      `Is allowed route? ${isAllowedRoute} (path: ${routePath})`,
-      'AuthGuard',
-    );
-
-    if (!isAllowedRoute) {
-      // Redirect to verification page for all other protected routes
-      logger.warn('Email verification required. Redirecting to verification page.', 'AuthGuard');
-      return router.createUrlTree(['/profile/verification'], {
-        queryParams: { reason: 'email_verification_required' },
-      });
-    }
-  }
+  // P0-XXX: Verificación diferida
+  // AuthGuard solo valida sesión activa.
+  // La verificación de identidad (email, docs, etc.) se maneja con VerificationGuard
+  // que se aplica solo a rutas críticas (booking/payment).
+  // Esto permite que usuarios exploren el marketplace sin verificación completa.
 
   return true;
 };

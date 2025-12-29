@@ -115,7 +115,7 @@
           Creá tu cuenta
         </h1>
         <p class="text-text-secondary">
-          En 2 minutos estás listo para alquilar
+          30 segundos y empezás a explorar
         </p>
       </div>
 
@@ -142,16 +142,123 @@
           }
         </button>
 
+        <!-- Magic Link Button -->
+        <button
+          type="button"
+          (click)="toggleMagicLinkMode()"
+          class="w-full flex items-center justify-center gap-2 rounded-xl border border-border-default bg-surface-base px-6 py-2.5 text-sm text-text-secondary hover:bg-surface-secondary transition-all mt-3"
+          >
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+          </svg>
+          @if (!magicLinkMode()) {
+            <span>Entrar sin contraseña (Magic Link)</span>
+          } @else {
+            <span>Volver al registro normal</span>
+          }
+        </button>
+
         <!-- Divider -->
         <div class="relative my-5">
           <div class="absolute inset-0 flex items-center">
             <div class="w-full border-t border-border-default"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-4 bg-surface-raised text-text-secondary">o completá el formulario</span>
+            @if (!magicLinkMode()) {
+              <span class="px-4 bg-surface-raised text-text-secondary">o completá el formulario</span>
+            } @else {
+              <span class="px-4 bg-surface-raised text-text-secondary">ingresá tu email</span>
+            }
           </div>
         </div>
 
+        <!-- Magic Link Form -->
+        @if (magicLinkMode()) {
+          <div class="space-y-4">
+            <!-- Email for Magic Link -->
+            <div>
+              <label for="magic-email" class="block text-sm font-medium text-text-primary mb-1.5">
+                Email
+              </label>
+              <input
+                id="magic-email"
+                type="email"
+                [formControl]="form.controls.email"
+                autocomplete="email"
+                placeholder="ejemplo@correo.com"
+                class="w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400"
+                [class.border-border-default]="!form.controls.email.touched || !form.controls.email.invalid"
+                [class.border-error-border]="form.controls.email.touched && form.controls.email.invalid"
+                [class.focus:ring-cta-default]="!form.controls.email.touched || !form.controls.email.invalid"
+                />
+              @if (form.controls.email.touched && form.controls.email.errors?.['email']) {
+                <p class="mt-1 text-xs text-error-text">Formato de email inválido</p>
+              }
+            </div>
+
+            <!-- Name (optional for magic link) -->
+            <div>
+              <label for="magic-name" class="block text-sm font-medium text-text-primary mb-1.5">
+                Nombre <span class="text-text-muted">(opcional)</span>
+              </label>
+              <input
+                id="magic-name"
+                type="text"
+                [formControl]="form.controls.fullName"
+                autocomplete="name"
+                placeholder="Juan Pérez"
+                class="w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400 border-border-default focus:ring-cta-default"
+                />
+            </div>
+
+            <!-- Success/Error Messages -->
+            @if (message()) {
+              <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3" role="status">
+                <div class="flex items-center gap-2">
+                  <svg class="w-5 h-5 text-emerald-600 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p class="text-sm text-emerald-700">{{ message() }}</p>
+                </div>
+              </div>
+            }
+            @if (error()) {
+              <div class="bg-error-bg border border-error-border rounded-xl p-3" role="alert">
+                <div class="flex items-center gap-2">
+                  <svg class="w-5 h-5 text-error-strong flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                  </svg>
+                  <p class="text-sm text-error-strong">{{ error() }}</p>
+                </div>
+              </div>
+            }
+
+            <!-- Send Magic Link Button -->
+            @if (!magicLinkSent()) {
+              <button
+                type="button"
+                (click)="sendMagicLink()"
+                class="w-full py-3 rounded-xl bg-cta-default text-cta-text font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-cta-default/25"
+                [disabled]="form.controls.email.invalid || loading()"
+                >
+                @if (!loading()) {
+                  <span>Enviar link de acceso</span>
+                } @else {
+                  <span class="flex items-center justify-center gap-2">
+                    <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Enviando...
+                  </span>
+                }
+              </button>
+            }
+          </div>
+        }
+
+        <!-- Regular Form -->
+        @if (!magicLinkMode()) {
         <form class="space-y-4" [formGroup]="form" (ngSubmit)="submit()">
           <!-- Full Name -->
           <div>
@@ -204,10 +311,10 @@
             }
           </div>
 
-          <!-- Phone -->
+          <!-- Phone (OPCIONAL) -->
           <div>
             <label for="register-phone" class="block text-sm font-medium text-text-primary mb-1.5">
-              Teléfono
+              Teléfono <span class="text-text-muted font-normal">(opcional)</span>
             </label>
             <input
               id="register-phone"
@@ -220,16 +327,14 @@
               [class.border-error-border]="form.controls.phone.touched && form.controls.phone.invalid"
               [class.focus:ring-cta-default]="!form.controls.phone.touched || !form.controls.phone.invalid"
               />
-            @if (form.controls.phone.touched && form.controls.phone.errors?.['required']) {
-              <p class="mt-1 text-xs text-error-text">
-                El teléfono es obligatorio
-              </p>
-            }
             @if (form.controls.phone.touched && form.controls.phone.errors?.['pattern']) {
               <p class="mt-1 text-xs text-error-text">
                 Formato inválido (ej: +54 11 1234-5678)
               </p>
             }
+            <p class="mt-1 text-xs text-text-muted">
+              Lo pediremos cuando reserves un auto
+            </p>
           </div>
 
           <!-- Password -->
@@ -311,6 +416,7 @@
             <a href="/privacy" class="text-cta-default hover:underline">Privacidad</a>
           </p>
         </form>
+        } <!-- Cierra @if (!magicLinkMode()) -->
 
         <!-- Login Link -->
         <div class="mt-5 text-center text-sm border-t border-border-default pt-5">

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from '@core/guards/auth.guard';
+import { VerificationGuard } from '@core/guards/verification.guard';
 
 export const BOOKINGS_ROUTES: Routes = [
   {
@@ -38,7 +39,7 @@ export const BOOKINGS_ROUTES: Routes = [
       import('./booking-detail-payment/booking-detail-payment.page').then(
         (m) => m.BookingRequestPage,
       ),
-    canMatch: [AuthGuard],
+    canMatch: [AuthGuard, VerificationGuard],
   },
   {
     path: ':bookingId/detail-payment',
@@ -46,7 +47,7 @@ export const BOOKINGS_ROUTES: Routes = [
       import('./booking-detail-payment/booking-detail-payment.page').then(
         (m) => m.BookingRequestPage,
       ),
-    canMatch: [AuthGuard],
+    canMatch: [AuthGuard, VerificationGuard],
   },
   {
     path: 'claims',
@@ -125,13 +126,13 @@ export const BOOKINGS_ROUTES: Routes = [
     path: ':bookingId/checkout',
     loadComponent: () =>
       import('./pages/booking-checkout/booking-checkout.page').then((m) => m.BookingCheckoutPage),
-    canMatch: [AuthGuard],
+    canMatch: [AuthGuard, VerificationGuard],
   },
   {
     path: ':bookingId/payment',
     loadComponent: () =>
       import('./booking-payment/booking-payment.page').then((m) => m.BookingPaymentPage),
-    canMatch: [AuthGuard],
+    canMatch: [AuthGuard, VerificationGuard],
   },
   {
     path: ':bookingId/pending',
