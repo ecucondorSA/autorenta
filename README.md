@@ -1,6 +1,12 @@
 # Proyecto Autorentar
 
-Este proyecto contiene la aplicación y sus recursos.
+[![CI](https://github.com/ecucondorSA/autorenta/actions/workflows/ci.yml/badge.svg)](https://github.com/ecucondorSA/autorenta/actions/workflows/ci.yml)
+[![Build and Deploy](https://github.com/ecucondorSA/autorenta/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/ecucondorSA/autorenta/actions/workflows/build-and-deploy.yml)
+[![Code Coverage](https://github.com/ecucondorSA/autorenta/actions/workflows/code-coverage.yml/badge.svg)](https://github.com/ecucondorSA/autorenta/actions/workflows/code-coverage.yml)
+[![E2E Tests](https://github.com/ecucondorSA/autorenta/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/ecucondorSA/autorenta/actions/workflows/e2e-tests.yml)
+[![Security Scan](https://github.com/ecucondorSA/autorenta/actions/workflows/security-scan.yml/badge.svg)](https://github.com/ecucondorSA/autorenta/actions/workflows/security-scan.yml)
+
+Plataforma P2P de alquiler de autos.
 
 ## Optimización de Modelos 3D (.glb)
 
