@@ -482,8 +482,8 @@ describe('WalletService', () => {
 
       // Fire multiple unlock requests for the same booking simultaneously
       const promises = [
-        firstValueFrom(freshService.unlockFunds('booking-1', 100, 'Concurrent test 1')),
-        firstValueFrom(freshService.unlockFunds('booking-1', 100, 'Concurrent test 2')),
+        firstValueFrom(freshService.unlockFunds('booking-1', 'Concurrent test 1')),
+        firstValueFrom(freshService.unlockFunds('booking-1', 'Concurrent test 2')),
       ];
 
       Promise.all(promises)
