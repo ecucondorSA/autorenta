@@ -24,7 +24,6 @@ jobs:
     needs: check
     environment:
       name: production
-      url: https://app.supabase.com/project/${{ secrets.SUPABASE_PROJECT_ID }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
