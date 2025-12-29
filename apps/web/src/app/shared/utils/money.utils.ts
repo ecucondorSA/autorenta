@@ -186,7 +186,7 @@ export function parseMoney(value: string, currency: Currency = 'USD'): number | 
   const config = CURRENCY_CONFIG[currency];
 
   // Remove currency symbol and whitespace
-  let cleaned = value.replace(/[^0-9.,\-]/g, '').trim();
+  let cleaned = value.replace(/[^0-9.,-]/g, '').trim();
 
   // Handle different decimal separators
   if (config.decimalSeparator === ',') {

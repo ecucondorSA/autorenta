@@ -26,7 +26,7 @@ describe('MoneyPipe', () => {
 
     it('should handle large numbers', () => {
       const result = pipe.transform(1000000);
-      expect(result).toContain('1,000,000') || expect(result).toContain('1.000.000');
+      expect(result.includes('1,000,000') || result.includes('1.000.000')).toBe(true);
     });
   });
 

@@ -1,7 +1,7 @@
 // ============================================================================
 // RENTARFAST AGENT - Supabase Edge Function
-// Intelligent AI Agent with Gemini 2.0 Flash + Function Calling
-// Using @google/genai SDK for proper function calling support
+// Intelligent AI Agent with Gemini 3 Flash + Function Calling
+// Upgraded to Gemini 3 for PhD-level reasoning and faster results
 // ============================================================================
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
@@ -37,13 +37,13 @@ interface GeminiMessage {
 }
 
 // ============================================================================
-// GEMINI 2.0 FLASH CONFIGURATION
+// GEMINI 3 FLASH CONFIGURATION
 // ============================================================================
 
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY') || '';
-// Gemini 2.0 Flash Experimental - Best function calling support
-// gemini-2.0-flash-exp tiene mejor function calling autónomo
-const GEMINI_MODEL = 'gemini-2.0-flash-exp';
+// Gemini 3 Flash - Frontier-level intelligence with faster results
+// Upgraded from gemini-2.0-flash-exp for better PhD-level reasoning
+const GEMINI_MODEL = 'gemini-3-flash-preview';
 
 // System prompt for Rentarfast agent - AUTONOMOUS MODE
 const SYSTEM_PROMPT = `Eres Rentarfast, un agente AUTÓNOMO de la plataforma Autorentar.
@@ -427,6 +427,47 @@ const TOOLS = {
           },
         },
         required: ['booking_id'],
+      },
+    },
+    // ========================================================================
+    // AI VISION TOOLS (Gemini 3 Flash)
+    // ========================================================================
+    {
+      name: 'analyze_vehicle_damage',
+      description: 'Analiza daños en un vehículo comparando fotos de check-in vs check-out. Detecta rayones, abolladuras, vidrios rotos y otros daños. Usa esta herramienta cuando el usuario pregunte sobre daños en una reserva.',
+      parameters: {
+        type: 'object',
+        properties: {
+          booking_id: {
+            type: 'string',
+            description: 'UUID de la reserva a analizar',
+          },
+        },
+        required: ['booking_id'],
+      },
+    },
+    {
+      name: 'smart_verify_document',
+      description: 'Verifica un documento de identidad con IA avanzada. Detecta fraude y extrae datos cuando el OCR falla. Usa esta herramienta cuando el usuario tenga problemas verificando su identidad.',
+      parameters: {
+        type: 'object',
+        properties: {
+          image_url: {
+            type: 'string',
+            description: 'URL de la imagen del documento',
+          },
+          document_type: {
+            type: 'string',
+            enum: ['cedula', 'dni', 'license', 'vehicle_registration'],
+            description: 'Tipo de documento',
+          },
+          country: {
+            type: 'string',
+            enum: ['EC', 'AR', 'BR', 'CL', 'CO'],
+            description: 'País del documento',
+          },
+        },
+        required: ['image_url', 'document_type', 'country'],
       },
     },
   ],
@@ -1274,6 +1315,215 @@ async function executeInitiateCardPayment(
 }
 
 // ============================================================================
+// AI VISION TOOLS (Gemini 3 Flash)
+// ============================================================================
+
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
+const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+
+async function executeAnalyzeVehicleDamage(
+  supabase: SupabaseClient,
+  userId: string,
+  args: { booking_id: string }
+) {
+  console.log('[AI VISION] Analyzing vehicle damage for booking:', args.booking_id);
+
+  try {
+    // 1. Get booking with check-in/check-out images
+    const { data: booking, error: bookingError } = await supabase
+      .from('bookings')
+      .select(`
+        id, status, renter_id, owner_id,
+        check_in_photos, check_out_photos,
+        car:car_id (id, brand, model, plate)
+      `)
+      .eq('id', args.booking_id)
+      .single();
+
+    if (bookingError || !booking) {
+      return { error: 'Reserva no encontrada', success: false };
+    }
+
+    // 2. Verify user is part of the booking
+    if (booking.renter_id !== userId && booking.owner_id !== userId) {
+      return { error: 'No tienes acceso a esta reserva', success: false };
+    }
+
+    // 3. Check if we have images
+    const checkInPhotos = booking.check_in_photos || [];
+    const checkOutPhotos = booking.check_out_photos || [];
+
+    if (checkInPhotos.length === 0 || checkOutPhotos.length === 0) {
+      return {
+        success: false,
+        error: 'Se requieren fotos de check-in y check-out para analizar daños',
+        has_check_in: checkInPhotos.length > 0,
+        has_check_out: checkOutPhotos.length > 0,
+      };
+    }
+
+    // 4. Call the analyze-damage-images edge function
+    const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/analyze-damage-images`;
+
+    // Get session token
+    const { data: { session } } = await supabase.auth.getSession();
+
+    // Analyze each pair of images
+    const allDamages: any[] = [];
+    const pairCount = Math.min(checkInPhotos.length, checkOutPhotos.length);
+
+    for (let i = 0; i < pairCount; i++) {
+      try {
+        const response = await fetch(edgeFunctionUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token || SUPABASE_SERVICE_KEY}`,
+          },
+          body: JSON.stringify({
+            check_in_image_url: checkInPhotos[i],
+            check_out_image_url: checkOutPhotos[i],
+            pair_index: i + 1,
+            booking_id: args.booking_id,
+          }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.damages) {
+            allDamages.push(...result.damages);
+          }
+        }
+      } catch (pairError) {
+        console.error(`Error analyzing pair ${i + 1}:`, pairError);
+      }
+    }
+
+    // 5. Calculate totals
+    const totalEstimatedCost = allDamages.reduce((sum, d) => {
+      const baseCosts: Record<string, number> = {
+        scratch: 150, dent: 300, broken_glass: 400,
+        tire_damage: 200, mechanical: 500, interior: 250,
+        missing_item: 100, other: 200,
+      };
+      const severityMultiplier: Record<string, number> = {
+        minor: 1, moderate: 1.5, severe: 2,
+      };
+      const base = baseCosts[d.type] || 200;
+      const mult = severityMultiplier[d.severity] || 1;
+      return sum + (base * mult);
+    }, 0);
+
+    const car = booking.car as any;
+
+    return {
+      success: true,
+      booking_id: args.booking_id,
+      car: `${car?.brand} ${car?.model} (${car?.plate})`,
+      images_analyzed: pairCount,
+      damages_found: allDamages.length,
+      damages: allDamages,
+      total_estimated_cost_usd: Math.round(totalEstimatedCost),
+      recommendation: allDamages.length === 0
+        ? 'No se detectaron daños nuevos. El vehículo parece estar en buen estado.'
+        : allDamages.some(d => d.severity === 'severe')
+          ? 'Se detectaron daños graves. Se recomienda revisar y crear una disputa si es necesario.'
+          : 'Se detectaron algunos daños menores. Revisa los detalles.',
+    };
+  } catch (error) {
+    console.error('[AI VISION] Error:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Error al analizar daños',
+    };
+  }
+}
+
+async function executeSmartVerifyDocument(
+  supabase: SupabaseClient,
+  userId: string,
+  args: { image_url: string; document_type: string; country: string }
+) {
+  console.log('[AI VISION] Smart document verification:', args.document_type, args.country);
+
+  try {
+    // Call the gemini3-document-analyzer edge function
+    const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/gemini3-document-analyzer`;
+
+    // Get session token
+    const { data: { session } } = await supabase.auth.getSession();
+
+    const response = await fetch(edgeFunctionUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.access_token || SUPABASE_SERVICE_KEY}`,
+      },
+      body: JSON.stringify({
+        image_url: args.image_url,
+        document_type: args.document_type,
+        country: args.country,
+        user_id: userId,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[AI VISION] Edge function error:', errorText);
+      return {
+        success: false,
+        error: 'Error al verificar documento',
+      };
+    }
+
+    const result = await response.json();
+
+    // Format response for chat
+    if (result.success) {
+      const extracted = result.extracted_data || {};
+      const fraud = result.fraud_check || {};
+
+      return {
+        success: true,
+        confidence: result.confidence,
+        extracted_data: {
+          nombre: extracted.full_name || null,
+          documento: extracted.document_number || null,
+          fecha_nacimiento: extracted.birth_date || null,
+          fecha_vencimiento: extracted.expiry_date || null,
+          genero: extracted.gender || null,
+          nacionalidad: extracted.nationality || null,
+          categorias_licencia: extracted.license_categories || null,
+        },
+        fraud_check: {
+          is_suspicious: fraud.is_suspicious || false,
+          recommendation: fraud.recommendation || 'manual_review',
+          indicators: fraud.indicators || [],
+        },
+        validation_errors: result.validation_errors || [],
+        validation_warnings: result.validation_warnings || [],
+        message: fraud.is_suspicious
+          ? 'Se detectaron indicadores de posible fraude. El documento requiere revisión manual.'
+          : result.confidence >= 0.7
+            ? 'Documento verificado exitosamente con alta confianza.'
+            : 'Documento analizado pero requiere verificación adicional.',
+      };
+    }
+
+    return {
+      success: false,
+      error: result.error || 'No se pudo analizar el documento',
+    };
+  } catch (error) {
+    console.error('[AI VISION] Error:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Error al verificar documento',
+    };
+  }
+}
+
+// ============================================================================
 // TOOL EXECUTOR
 // ============================================================================
 
@@ -1314,6 +1564,12 @@ async function executeTool(
     case 'initiate_card_payment':
       return executeInitiateCardPayment(supabase, userId, args);
 
+    // AI Vision tools (Gemini 3 Flash)
+    case 'analyze_vehicle_damage':
+      return executeAnalyzeVehicleDamage(supabase, userId, args);
+    case 'smart_verify_document':
+      return executeSmartVerifyDocument(supabase, userId, args);
+
     default:
       return { error: `Unknown tool: ${toolName}` };
   }
@@ -1344,7 +1600,7 @@ async function callGemini(
       temperature: 0.1,
       topK: 20,
       topP: 0.9,
-      maxOutputTokens: 2048,
+      maxOutputTokens: 4096, // Gemini 3 Flash supports more tokens
     },
   };
 

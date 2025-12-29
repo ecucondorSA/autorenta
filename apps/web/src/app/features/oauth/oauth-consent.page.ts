@@ -244,9 +244,11 @@ export class OAuthConsentPage implements OnInit {
     const client = this.supabaseClient.getClient();
 
     // Llamar al método de OAuth Server de Supabase
-    const { data, error } = await (client.auth as any).oauth?.getAuthorizationDetails(
-      this.authorizationId
-    );
+    const oauth = (client.auth as any).oauth;
+    if (!oauth?.getAuthorizationDetails) {
+      throw new Error('OAuth get authorization details not available');
+    }
+    const { data, error } = await oauth.getAuthorizationDetails(this.authorizationId);
 
     if (error) {
       throw new Error(error.message || 'No se pudo obtener la información de autorización.');
@@ -280,9 +282,11 @@ export class OAuthConsentPage implements OnInit {
     try {
       const client = this.supabaseClient.getClient();
 
-      const { data, error } = await (client.auth as any).oauth?.approveAuthorization(
-        this.authorizationId
-      );
+      const oauth = (client.auth as any).oauth;
+      if (!oauth?.approveAuthorization) {
+        throw new Error('OAuth approve authorization not available');
+      }
+      const { data, error } = await oauth.approveAuthorization(this.authorizationId);
 
       if (error) {
         throw new Error(error.message || 'Error al aprobar la autorización.');
@@ -311,9 +315,11 @@ export class OAuthConsentPage implements OnInit {
     try {
       const client = this.supabaseClient.getClient();
 
-      const { data, error } = await (client.auth as any).oauth?.denyAuthorization(
-        this.authorizationId
-      );
+      const oauth = (client.auth as any).oauth;
+      if (!oauth?.denyAuthorization) {
+        throw new Error('OAuth deny authorization not available');
+      }
+      const { data, error } = await oauth.denyAuthorization(this.authorizationId);
 
       if (error) {
         throw new Error(error.message || 'Error al denegar la autorización.');
