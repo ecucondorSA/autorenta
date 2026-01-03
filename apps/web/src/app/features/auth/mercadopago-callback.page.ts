@@ -33,7 +33,7 @@ import { MercadoPagoOAuthService } from '@core/services/payments/mercadopago-oau
             </svg>
           </div>
           <h2>¡Cuenta conectada exitosamente!</h2>
-          <p>Ya puedes recibir pagos directos por tus alquileres.</p>
+          <p>Ya puedes recibir tus beneficios por compartir tu auto.</p>
           <div class="actions">
             <button class="btn btn-primary" (click)="goToPublish()" type="button">
               Publicar un Auto

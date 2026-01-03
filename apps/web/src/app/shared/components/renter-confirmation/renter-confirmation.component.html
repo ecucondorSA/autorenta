@@ -158,7 +158,7 @@
       <ul class="text-xs text-cta-default dark:text-cta-default space-y-2">
         <li class="flex items-start gap-2">
           <span class="text-cta-default dark:text-cta-default">•</span>
-          <span>Al confirmar, autorizas la transferencia del pago del alquiler al propietario</span>
+          <span>Al confirmar, se procesará el cierre de la reserva</span>
         </li>
         <li class="flex items-start gap-2">
           <span class="text-cta-default dark:text-cta-default">•</span>
@@ -169,7 +169,7 @@
           </li>
           <li class="flex items-start gap-2">
             <span class="text-cta-default dark:text-cta-default">•</span>
-            <span>Podrás usar los fondos del wallet para futuros alquileres</span>
+            <span>Podrás usar los fondos del wallet para futuras reservas</span>
           </li>
           @if (ownerConfirmed) {
             <li class="flex items-start gap-2">
@@ -311,7 +311,7 @@
                 Fondos liberados automáticamente:
               </p>
               <ul class="text-xs text-success-700 dark:text-success-strong space-y-1">
-                <li>✓ Pago del alquiler transferido al propietario</li>
+                <li>✓ Reserva completada exitosamente</li>
                 <li>✓ Garantía de ${{ amountToReturn }} USD devuelta a tu wallet</li>
                 @if (damageAmount && damageAmount > 0) {
                   <li>ℹ Cargo por daños: ${{ damageAmount }} USD</li>
