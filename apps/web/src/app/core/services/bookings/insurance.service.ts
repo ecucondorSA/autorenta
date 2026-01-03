@@ -13,6 +13,7 @@ import {
   ReportClaimRequest,
   CreateInspectionRequest,
   INSURER_DISPLAY_NAMES,
+  InsuranceVerification,
 } from '@core/models';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
@@ -562,5 +563,197 @@ export class InsuranceService {
   async getCommissionRate(carId: string): Promise<number> {
     const hasOwnInsurance = await this.hasOwnerInsurance(carId);
     return hasOwnInsurance ? 0.15 : 0.25;
+  }
+
+  // ============================================
+  // BYOI VERIFICATION (Mandatory for Pilot)
+  // ============================================
+
+  /**
+   * Lista de aseguradoras aceptadas para BYOI
+   */
+  static readonly ACCEPTED_INSURERS = [
+    // Con cláusula de alquiler sin chofer
+    { code: 'rio_uruguay', name: 'Río Uruguay Seguros (RUS)', type: 'personal_endorsed' },
+    { code: 'federacion_patronal', name: 'Federación Patronal', type: 'personal_endorsed' },
+    { code: 'sancor', name: 'Sancor Seguros', type: 'personal_endorsed' },
+    { code: 'rivadavia', name: 'Seguros Rivadavia', type: 'personal_endorsed' },
+    // Seguros de flota
+    { code: 'la_caja', name: 'La Caja', type: 'fleet' },
+    { code: 'mapfre', name: 'Mapfre', type: 'fleet' },
+    { code: 'san_cristobal', name: 'San Cristóbal', type: 'fleet' },
+    { code: 'allianz', name: 'Allianz', type: 'fleet' },
+    // Otros
+    { code: 'other', name: 'Otra aseguradora', type: 'other' },
+  ] as const;
+
+  /**
+   * Subir documento de seguro al storage
+   * Path: {user_id}/insurance/{car_id}/{uuid}.{ext}
+   */
+  async uploadInsuranceDocument(file: File, carId: string): Promise<string> {
+    const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
+    if (!userId) throw new Error('Usuario no autenticado');
+
+    // Validar tipo de archivo
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error('Solo se permiten archivos PDF o imágenes (JPG, PNG, WebP)');
+    }
+
+    // Validar tamaño (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error('Archivo muy grande. Máximo 10MB');
+    }
+
+    // Obtener extensión del archivo
+    const extension = file.name.split('.').pop()?.toLowerCase() || 'pdf';
+
+    // Path: {userId}/insurance/{carId}/{uuid}.{extension}
+    const filePath = `${userId}/insurance/${carId}/${uuidv4()}.${extension}`;
+
+    const { error } = await this.supabase.storage.from('documents').upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false,
+    });
+
+    if (error) throw error;
+
+    // Obtener URL pública
+    const { data: urlData } = this.supabase.storage.from('documents').getPublicUrl(filePath);
+    return urlData.publicUrl;
+  }
+
+  /**
+   * Enviar seguro para verificación
+   * Llama al RPC submit_insurance_verification
+   */
+  async submitInsuranceForVerification(params: {
+    carId: string;
+    documentUrl: string;
+    policyNumber: string;
+    insurer: string;
+    expiryDate: string;
+    coverageType?: 'personal_endorsed' | 'fleet';
+    hasRentalEndorsement?: boolean;
+    rcAmount?: number;
+  }): Promise<string> {
+    const { data, error } = await this.supabase.rpc('submit_insurance_verification', {
+      p_car_id: params.carId,
+      p_document_url: params.documentUrl,
+      p_policy_number: params.policyNumber,
+      p_insurer: params.insurer,
+      p_expiry_date: params.expiryDate,
+      p_coverage_type: params.coverageType || 'personal_endorsed',
+      p_has_rental_endorsement: params.hasRentalEndorsement ?? true,
+      p_rc_amount: params.rcAmount || 50000000, // Default: $50M ARS
+    });
+
+    if (error) throw error;
+    return data as string; // verification_id
+  }
+
+  /**
+   * Obtener estado de verificación de seguro para un auto
+   */
+  async getInsuranceVerificationStatus(carId: string): Promise<{
+    status: 'not_uploaded' | 'pending' | 'verified' | 'rejected' | 'expired';
+    documentUrl?: string;
+    policyNumber?: string;
+    insurer?: string;
+    expiresAt?: string;
+    rejectionReason?: string;
+    verifiedAt?: string;
+  } | null> {
+    const { data, error } = await this.supabase
+      .from('cars')
+      .select(`
+        insurance_status,
+        insurance_document_url,
+        insurance_policy_number,
+        insurance_company,
+        insurance_expires_at,
+        insurance_rejection_reason,
+        insurance_verified_at
+      `)
+      .eq('id', carId)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') return null;
+      throw error;
+    }
+
+    return {
+      status: data.insurance_status || 'not_uploaded',
+      documentUrl: data.insurance_document_url,
+      policyNumber: data.insurance_policy_number,
+      insurer: data.insurance_company,
+      expiresAt: data.insurance_expires_at,
+      rejectionReason: data.insurance_rejection_reason,
+      verifiedAt: data.insurance_verified_at,
+    };
+  }
+
+  /**
+   * Verificar si un auto puede ser activado (tiene seguro verificado)
+   */
+  async canActivateCar(carId: string): Promise<{
+    canActivate: boolean;
+    reason?: string;
+    insuranceStatus?: string;
+  }> {
+    const status = await this.getInsuranceVerificationStatus(carId);
+
+    if (!status) {
+      return {
+        canActivate: false,
+        reason: 'No se encontró información del vehículo',
+      };
+    }
+
+    if (status.status === 'verified') {
+      // Verificar que no esté vencido
+      if (status.expiresAt && new Date(status.expiresAt) < new Date()) {
+        return {
+          canActivate: false,
+          reason: 'El seguro ha vencido. Por favor actualiza tu póliza.',
+          insuranceStatus: 'expired',
+        };
+      }
+      return { canActivate: true, insuranceStatus: 'verified' };
+    }
+
+    const reasons: Record<string, string> = {
+      not_uploaded: 'Debes subir tu póliza de seguro para activar el auto.',
+      pending: 'Tu seguro está siendo verificado. Te notificaremos cuando esté listo.',
+      rejected: status.rejectionReason || 'Tu seguro fue rechazado. Por favor sube un nuevo documento.',
+      expired: 'El seguro ha vencido. Por favor actualiza tu póliza.',
+    };
+
+    return {
+      canActivate: false,
+      reason: reasons[status.status] || 'No se puede activar el auto.',
+      insuranceStatus: status.status,
+    };
+  }
+
+  /**
+   * Obtener historial de verificaciones de seguro para un auto
+   */
+  getInsuranceVerificationHistory(carId: string): Observable<InsuranceVerification[]> {
+    return from(
+      this.supabase
+        .from('insurance_verifications')
+        .select('*')
+        .eq('car_id', carId)
+        .order('created_at', { ascending: false }),
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        return (data as InsuranceVerification[]) || [];
+      }),
+      catchError(() => of([])),
+    );
   }
 }

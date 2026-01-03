@@ -3,7 +3,7 @@ import {Component, OnDestroy, OnInit, computed, inject, signal, ViewChild,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AlertController, ViewWillEnter } from '@ionic/angular';
+import { IonicModule, ViewWillEnter } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
@@ -32,14 +32,13 @@ interface PendingApproval {
   selector: 'app-pending-approval',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, RouterModule, TranslateModule, RenterProfileBadgeComponent, SkeletonLoaderComponent, RenterAnalysisPanelComponent, IconComponent],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule, IonicModule, RenterProfileBadgeComponent, SkeletonLoaderComponent, RenterAnalysisPanelComponent, IconComponent],
   templateUrl: './pending-approval.page.html',
   styleUrl: './pending-approval.page.scss',
 })
 export class PendingApprovalPage implements OnInit, OnDestroy, ViewWillEnter {
   private readonly bookingsService = inject(BookingsService);
   private readonly toastService = inject(NotificationManagerService);
-  private readonly alertController = inject(AlertController);
   private readonly router = inject(Router);
   private pollInterval?: ReturnType<typeof setInterval>;
   private isInitialized = false;
@@ -108,9 +107,7 @@ export class PendingApprovalPage implements OnInit, OnDestroy, ViewWillEnter {
   async onApprove(bookingId: string) {
     if (this.processingBookingId()) return;
 
-    const confirmed = await this.confirmApprove();
-    if (!confirmed) return;
-
+    // Process approval directly (no modal confirmation - follows project NO MODALS rule)
     this.processingBookingId.set(bookingId);
 
     try {
@@ -223,12 +220,7 @@ export class PendingApprovalPage implements OnInit, OnDestroy, ViewWillEnter {
     const booking = this.selectedAnalysisBooking();
     if (!booking) return;
 
-    const confirmed = await this.confirmApprove();
-    if (!confirmed) {
-      this.analysisPanel?.resetApproving();
-      return;
-    }
-
+    // Process approval directly (no modal confirmation - follows project NO MODALS rule)
     this.processingBookingId.set(booking.booking_id);
 
     try {
@@ -248,23 +240,6 @@ export class PendingApprovalPage implements OnInit, OnDestroy, ViewWillEnter {
     } finally {
       this.processingBookingId.set(null);
     }
-  }
-
-  private async confirmApprove(): Promise<boolean> {
-    const alert = await this.alertController.create({
-      cssClass: 'pending-approval-alert',
-      header: 'Confirmar aprobación',
-      message:
-        '<strong>El pago se procesará</strong> y la reserva quedará confirmada. ¿Querés continuar?',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        { text: 'Aprobar', role: 'confirm', cssClass: 'alert-confirm' },
-      ],
-    });
-
-    await alert.present();
-    const { role } = await alert.onDidDismiss();
-    return role === 'confirm';
   }
 
   onAnalysisReject(): void {

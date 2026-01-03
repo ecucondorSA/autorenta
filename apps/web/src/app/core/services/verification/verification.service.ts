@@ -21,13 +21,13 @@ const VALID_DOC_TYPES = [
   'gov_id_front',
   'gov_id_back',
   'driver_license',
-  'driver_license_back',
   'license_front',
   'license_back',
   'vehicle_registration',
   'vehicle_insurance',
   'utility_bill',
   'selfie',
+  'criminal_record',
 ] as const;
 
 type ValidDocType = (typeof VALID_DOC_TYPES)[number];
@@ -92,18 +92,15 @@ export class VerificationService {
 
     if (uploadError) throw uploadError;
 
-    // Create or update user_documents record
+    // Create or update user_documents record using RPC
+    // (workaround: PostgREST no expone la tabla directamente)
     const { error: upsertError } = await this.supabase
-      .from('user_documents')
-      .upsert(
-        {
-          user_id: user.id,
-          kind: docType,
-          storage_path: filePath,
-          status: 'pending',
-        },
-        { onConflict: 'user_id,kind' }
-      );
+      .rpc('upsert_user_document', {
+        p_user_id: user.id,
+        p_kind: docType,
+        p_storage_path: filePath,
+        p_status: 'pending',
+      });
 
     // SECURITY FIX #2: Rollback - eliminar archivo si el registro en DB falla
     if (upsertError) {
@@ -188,13 +185,9 @@ export class VerificationService {
     this.loadingDocuments.set(true);
 
     try {
+      // Usar RPC ya que PostgREST no expone la tabla directamente
       const { data, error } = await this.supabase
-        .from('user_documents')
-        .select(
-          'id, user_id, kind, storage_path, status, notes, reviewed_at, reviewed_by, created_at, analyzed_at',
-        )
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+        .rpc('get_user_documents', { p_user_id: user.id });
 
       if (error) throw error;
 

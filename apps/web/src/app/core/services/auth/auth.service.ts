@@ -152,8 +152,26 @@ export class AuthService implements OnDestroy {
         'AuthService',
         error instanceof Error ? error : new Error(getErrorMessage(error)),
       );
+      // ✅ FIX: Clear stale session data if there's an auth error
+      // This prevents "Tu sesión expiró" errors on public pages
+      await this.clearStaleSession();
     }
     this.state.set({ session: session ?? null, loading: false });
+  }
+
+  /**
+   * ✅ FIX: Clear stale session from localStorage
+   * Called when session is invalid/expired to prevent auth errors on public pages
+   */
+  private async clearStaleSession(): Promise<void> {
+    this.logger.debug('clearStaleSession: clearing invalid session', 'AuthService');
+    try {
+      // Sign out locally without making API call (session is already invalid)
+      await this.supabase.auth.signOut({ scope: 'local' });
+      this.state.set({ session: null, loading: false });
+    } catch (err) {
+      this.logger.warn('clearStaleSession: failed to clear', 'AuthService', err);
+    }
   }
 
   async refreshSession(): Promise<Session | null> {
@@ -162,6 +180,8 @@ export class AuthService implements OnDestroy {
     if (error) {
       this.logger.warn('Failed to refresh session', 'AuthService', error);
       this.logger.debug('refreshSession failed', 'AuthService', { message: error.message });
+      // ✅ FIX: Clear stale session if refresh fails (token expired)
+      await this.clearStaleSession();
       return null;
     }
     if (data.session) {
@@ -178,6 +198,14 @@ export class AuthService implements OnDestroy {
           event,
           hasSession: !!session,
         });
+
+        // ✅ FIX: Handle token refresh failures gracefully
+        // When SIGNED_OUT is triggered unexpectedly (e.g., token refresh failed),
+        // clear the session without showing errors on public pages
+        if (event === 'SIGNED_OUT' && !session) {
+          this.logger.debug('Session ended (possibly expired)', 'AuthService');
+        }
+
         this.state.set({ session: session ?? null, loading: false });
       },
     );

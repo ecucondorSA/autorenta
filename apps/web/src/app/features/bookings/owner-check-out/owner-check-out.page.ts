@@ -4,11 +4,14 @@ import {
   Component, OnInit, computed, inject, signal
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { IonicModule } from '@ionic/angular';
 import { Booking } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
@@ -32,7 +35,9 @@ export class OwnerCheckOutPage implements OnInit {
   private readonly bookingsService = inject(BookingsService);
   private readonly confirmationService = inject(BookingConfirmationService);
   private readonly authService = inject(AuthService);
+  private readonly fgoService = inject(FgoV1_1Service);
   private readonly toastService = inject(NotificationManagerService);
+  private readonly logger = inject(LoggerService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -97,9 +102,19 @@ export class OwnerCheckOutPage implements OnInit {
 
       this.booking.set(booking);
 
-      // Cargar datos del check-in
-      // FIXME: Implement once FGO (Fast Global Onboarding) service is ready
-      this.checkInData.set({ odometer_reading: 0, fuel_level: 100 });
+      // Cargar datos del check-in del renter para comparación
+      const renterCheckIn = await firstValueFrom(
+        this.fgoService.getInspectionByStage(bookingId, 'renter_check_in')
+      );
+      if (renterCheckIn) {
+        this.checkInData.set({
+          odometer_reading: renterCheckIn.odometer || 0,
+          fuel_level: renterCheckIn.fuelLevel || 100,
+          photos: renterCheckIn.photos || [],
+        });
+      } else {
+        this.checkInData.set({ odometer_reading: 0, fuel_level: 100, photos: [] });
+      }
     } catch {
       this.toastService.error('Error', 'No se pudo cargar la reserva');
       this.router.navigate(['/bookings/owner']);
@@ -108,13 +123,60 @@ export class OwnerCheckOutPage implements OnInit {
     }
   }
 
+  // Señal para daños detectados por AI
+  readonly aiDetectedDamages = signal<{ type: string; description: string; severity: string }[]>([]);
+  readonly analyzingDamages = signal(false);
+
   /**
    * Paso 1: Inspección completada
-   * Avanza al paso de reclamo de daños
+   * Llama al análisis de daños por AI y avanza al paso de confirmación
    */
-  onInspectionCompleted(_inspection: BookingInspection) {
+  async onInspectionCompleted(inspection: BookingInspection) {
     this.step.set('damages');
-    this.toastService.success('Inspección guardada', 'Ahora confirma si hay daños a reportar');
+    this.toastService.success('Inspección guardada', 'Analizando imágenes...');
+
+    // Trigger AI damage analysis if we have check-in photos to compare
+    const checkInPhotos = this.checkInData()?.photos || [];
+    const checkOutPhotos = inspection.photos || [];
+
+    if (checkInPhotos.length > 0 && checkOutPhotos.length > 0) {
+      this.analyzingDamages.set(true);
+      try {
+        // Analyze first matching pair of photos
+        const response = await fetch(
+          `${window.location.origin}/functions/v1/analyze-damage-images`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              check_in_image_url: checkInPhotos[0]?.url,
+              check_out_image_url: checkOutPhotos[0]?.url,
+              pair_index: 1,
+              booking_id: this.booking()?.id,
+            }),
+          }
+        );
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result.damages && result.damages.length > 0) {
+            this.aiDetectedDamages.set(result.damages);
+            this.hasDamages.set(true);
+            this.damagesNotes.set(result.summary || '');
+            this.toastService.info(
+              'Daños detectados',
+              `Se encontraron ${result.damages.length} posible(s) daño(s). Por favor revisa.`
+            );
+          } else {
+            this.toastService.success('Sin daños', 'No se detectaron daños nuevos');
+          }
+        }
+      } catch (err) {
+        this.logger.warn('AI damage analysis failed, continuing without', 'OwnerCheckOutPage', err);
+      } finally {
+        this.analyzingDamages.set(false);
+      }
+    }
   }
 
   toggleDamages() {
@@ -167,7 +229,7 @@ export class OwnerCheckOutPage implements OnInit {
       // Navegar al detalle de la reserva
       this.router.navigate(['/bookings/owner', booking.id]);
     } catch (error) {
-      console.error('Error en check-out:', error);
+      this.logger.error('Error en check-out', 'OwnerCheckOutPage', error);
       this.toastService.error(
         'Error',
         error instanceof Error ? error.message : 'Error al completar check-out',

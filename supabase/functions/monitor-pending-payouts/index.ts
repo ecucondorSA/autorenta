@@ -8,7 +8,7 @@
 
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { sendAlert, AlertSeverity } from '../_shared/alerts.ts';
-import { captureException } from '../_shared/sentry.ts';
+import { captureError } from '../_shared/sentry.ts';
 
 interface PendingPayout {
   booking_id: string;
@@ -68,9 +68,9 @@ Deno.serve(async (req) => {
 
     if (criticalError) {
       console.error('Error fetching critical payouts:', criticalError);
-      captureException(new Error(criticalError.message), {
-        context: 'monitor-pending-payouts',
-        operation: 'fetch_critical_payouts',
+      captureError(new Error(criticalError.message), {
+        tags: { context: 'monitor-pending-payouts' },
+        extra: { operation: 'fetch_critical_payouts' },
       });
       throw criticalError;
     }
@@ -213,9 +213,9 @@ Deno.serve(async (req) => {
     console.error('❌ Error in monitor-pending-payouts:', error);
 
     // Capturar en Sentry
-    captureException(error instanceof Error ? error : new Error(String(error)), {
-      context: 'monitor-pending-payouts',
-      operation: 'main',
+    captureError(error instanceof Error ? error : new Error(String(error)), {
+      tags: { context: 'monitor-pending-payouts' },
+      extra: { operation: 'main' },
     });
 
     // Enviar alerta de que el monitoring falló

@@ -95,17 +95,14 @@ export class EmailVerificationService extends VerificationBaseService<EmailVerif
         throw new Error('El email ya está verificado');
       }
 
-      // Call RPC function to trigger resend (actual sending by Supabase Auth)
-      const { data, error: rpcError } = await this.supabase.rpc('resend_verification_email');
+      // Use native Supabase Auth API to resend verification email
+      const { error: resendError } = await this.supabase.auth.resend({
+        type: 'signup',
+        email: user.email!,
+      });
 
-      if (rpcError) {
-        throw rpcError;
-      }
-
-      const result = data as { success: boolean; error?: string; message?: string };
-
-      if (!result.success) {
-        throw new Error(result.error ?? 'No pudimos reenviar el email de verificación');
+      if (resendError) {
+        throw resendError;
       }
 
       // Update tracking (using base class method)

@@ -40,7 +40,10 @@
           }
         </div>
         <div class="drawer-header__info">
-          <p class="drawer-header__name">{{ userProfile?.full_name || 'Usuario' }}</p>
+          <div class="flex items-center gap-2">
+            <p class="drawer-header__name">{{ userProfile?.full_name || 'Usuario' }}</p>
+            <app-verified-badge size="xs" variant="minimal" [showTooltip]="false" />
+          </div>
           <p class="drawer-header__email">{{ userEmail() || '' }}</p>
         </div>
       </div>

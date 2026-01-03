@@ -8,6 +8,7 @@ import type { DashboardStats } from '@core/models/dashboard.model';
 import { DashboardService } from '@core/services/admin/dashboard.service';
 import { NotificationsService } from '@core/services/infrastructure/user-notifications.service';
 import { MissingDocumentsWidgetComponent } from '../../shared/components/missing-documents-widget/missing-documents-widget.component';
+import { VehicleDocsSummaryWidgetComponent } from '../../shared/components/vehicle-docs-summary-widget/vehicle-docs-summary-widget.component';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { MultiCarCalendarComponent } from './components/multi-car-calendar/multi-car-calendar.component';
 import { PayoutsHistoryComponent } from './components/payouts-history/payouts-history.component';
@@ -23,6 +24,7 @@ import { PayoutsHistoryComponent } from './components/payouts-history/payouts-hi
     TranslateModule,
     MultiCarCalendarComponent,
     MissingDocumentsWidgetComponent,
+    VehicleDocsSummaryWidgetComponent,
     PayoutsHistoryComponent,
   ],
   templateUrl: './owner-dashboard.page.html',

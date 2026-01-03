@@ -1428,7 +1428,7 @@ export class BookingsService {
       const { data: car, error: carError } = await this.supabase
         .from('cars')
         .select(
-          'id, title, brand, model, year, fuel_policy, mileage_limit, extra_km_price, allow_smoking, allow_pets, allow_rideshare, max_distance_km, car_photos(id, url, stored_path, position, sort_order, created_at)',
+          'id, owner_id, title, brand, model, year, fuel_policy, mileage_limit, extra_km_price, allow_smoking, allow_pets, allow_rideshare, max_distance_km, car_photos(id, url, stored_path, position, sort_order, created_at)',
         )
         .eq('id', booking.car_id)
         .single();

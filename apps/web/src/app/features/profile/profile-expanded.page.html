@@ -90,7 +90,10 @@
                 <span class="text-xs font-medium text-text-inverse-pure">Cambiar foto</span>
               </label>
             </div>
-            <h2 class="text-xl font-bold text-text-primary mb-0.5 font-satoshi">{{ profile()?.full_name }}</h2>
+            <div class="flex items-center justify-center gap-2 mb-0.5">
+              <h2 class="text-xl font-bold text-text-primary font-satoshi">{{ profile()?.full_name }}</h2>
+              <app-verified-badge size="sm" variant="default" />
+            </div>
             <p class="text-xs text-text-secondary dark:text-text-secondary mb-1">{{ userEmail() }}</p>
             @if (profile()?.id || profile()?.gov_id_number || profile()?.driver_license_number) {
               <div class="w-full max-w-xs text-xs text-text-secondary/80 text-left">
@@ -401,6 +404,14 @@
                   {{ getKycStatusLabel(kycStatus()) }}
                 </span>
               </div>
+              <!-- CTA: Verificar Identidad -->
+              <a routerLink="/profile/verification"
+                class="mt-3 flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-cta-default hover:bg-cta-hover text-cta-text text-sm font-semibold transition-all">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                Verificar Identidad
+              </a>
             </div>
           </div>
         </div>

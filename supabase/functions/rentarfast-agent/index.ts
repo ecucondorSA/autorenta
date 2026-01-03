@@ -41,9 +41,9 @@ interface GeminiMessage {
 // ============================================================================
 
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY') || '';
-// Gemini 3 Flash - Frontier-level intelligence with faster results
+// Gemini 2.5 Flash - Latest frontier-level intelligence with faster results
 // Upgraded from gemini-2.0-flash-exp for better PhD-level reasoning
-const GEMINI_MODEL = 'gemini-3-flash-preview';
+const GEMINI_MODEL = 'gemini-2.5-flash';
 
 // System prompt for Rentarfast agent - AUTONOMOUS MODE
 const SYSTEM_PROMPT = `Eres Rentarfast, un agente AUTÓNOMO de la plataforma Autorentar.

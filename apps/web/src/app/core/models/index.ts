@@ -423,6 +423,69 @@ export interface Car {
   insurance_policy_number?: string | null;
   insurance_company?: string | null;
   insurance_expiration?: string | null;
+
+  // BYOI Insurance Verification (mandatory for pilot)
+  insurance_status?: InsuranceVerificationStatus;
+  insurance_document_url?: string | null;
+  insurance_verified_at?: string | null;
+  insurance_verified_by?: string | null;
+  insurance_rejection_reason?: string | null;
+  has_owner_insurance?: boolean;
+  insurance_coverage_type?: 'personal_endorsed' | 'fleet' | null;
+  insurance_expires_at?: string | null;
+}
+
+/**
+ * Insurance verification status for BYOI policy
+ */
+export type InsuranceVerificationStatus =
+  | 'not_uploaded'  // No insurance document uploaded
+  | 'pending'       // Document uploaded, awaiting admin review
+  | 'verified'      // Admin verified, insurance is valid
+  | 'rejected'      // Admin rejected (invalid document/coverage)
+  | 'expired';      // Insurance has expired
+
+/**
+ * Insurance verification submission
+ */
+export interface InsuranceVerificationSubmission {
+  car_id: string;
+  document_url: string;
+  policy_number: string;
+  insurer: string;
+  expiry_date: string; // ISO date string
+  coverage_type: 'personal_endorsed' | 'fleet';
+  has_rental_endorsement: boolean;
+  rc_amount?: number;
+}
+
+/**
+ * Insurance verification record
+ */
+export interface InsuranceVerification {
+  id: string;
+  car_id: string;
+  owner_id: string;
+  document_url: string;
+  document_type: string;
+  policy_number?: string;
+  insurer?: string;
+  coverage_type?: string;
+  expiry_date?: string;
+  policyholder_name?: string;
+  vehicle_plate?: string;
+  has_rc_coverage: boolean;
+  has_own_damage_coverage: boolean;
+  has_theft_coverage: boolean;
+  has_rental_endorsement: boolean;
+  rc_amount?: number;
+  status: InsuranceVerificationStatus;
+  verified_by?: string;
+  verified_at?: string;
+  rejection_reason?: string;
+  admin_notes?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CarPhoto {

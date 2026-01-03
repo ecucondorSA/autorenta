@@ -12,6 +12,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { FaceVerificationService } from '@core/services/verification/face-verification.service';
 import { IdentityLevelService } from '@core/services/verification/identity-level.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 @Component({
   standalone: true,
@@ -245,6 +246,7 @@ import { IdentityLevelService } from '@core/services/verification/identity-level
 export class SelfieCaptureComponent implements OnInit, OnDestroy {
   private readonly faceVerificationService = inject(FaceVerificationService);
   private readonly identityLevelService = inject(IdentityLevelService);
+  private readonly supabase = injectSupabase();
 
   @ViewChild('videoPreview') videoPreview!: ElementRef<HTMLVideoElement>;
 
@@ -360,12 +362,38 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
       // Upload video
       const videoUrl = await this.faceVerificationService.uploadSelfieVideo(file);
 
-      // Get document URL for face matching
-      const identityLevel = await this.identityLevelService.loadIdentityLevel();
-      const documentUrl = identityLevel?.document_front_url || identityLevel?.driver_license_url;
+      // Get current user ID
+      const { data: { user } } = await this.supabase.auth.getUser();
+      if (!user) {
+        throw new Error('No hay usuario autenticado.');
+      }
 
+      // Get document URL from user_documents table
+      const { data: docs, error: docsError } = await this.supabase
+        .from('user_documents')
+        .select('storage_path, kind')
+        .eq('user_id', user.id)
+        .eq('status', 'verified')
+        .in('kind', ['gov_id_front', 'license_front'])
+        .limit(1);
+
+      if (docsError) {
+        console.error('Error fetching documents:', docsError);
+        throw new Error('Error al obtener documentos verificados.');
+      }
+
+      if (!docs?.length) {
+        throw new Error('No se encontró documento verificado para comparar. Completa Level 2 primero.');
+      }
+
+      // Get public URL from storage
+      const { data: urlData } = this.supabase.storage
+        .from('verification-docs')
+        .getPublicUrl(docs[0].storage_path);
+
+      const documentUrl = urlData?.publicUrl;
       if (!documentUrl) {
-        throw new Error('No se encontró documento para comparar. Completa Level 2 primero.');
+        throw new Error('No se pudo obtener URL del documento.');
       }
 
       // Verify face

@@ -15,6 +15,7 @@ import { AiReputationCardComponent } from '../../shared/components/ai-reputation
 import { AiCarRecommendationComponent } from '../../shared/components/ai-car-recommendation/ai-car-recommendation.component';
 import { BookingHistoryListComponent } from '../../shared/components/booking-history-list/booking-history-list.component';
 import { ReferralBannerComponent } from '../../shared/components/referral-banner/referral-banner.component';
+import { VerifiedBadgeComponent } from '../../shared/components/verified-badge/verified-badge.component';
 import { KycStatus } from '../../core/models';
 
 /**
@@ -41,6 +42,7 @@ import { KycStatus } from '../../core/models';
     AiCarRecommendationComponent,
     BookingHistoryListComponent,
     ReferralBannerComponent,
+    VerifiedBadgeComponent,
   ],
   templateUrl: './profile-expanded.page.html',
   styleUrls: ['./profile-expanded.page.css'],

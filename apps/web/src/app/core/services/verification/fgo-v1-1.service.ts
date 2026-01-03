@@ -200,6 +200,7 @@ export class FgoV1_1Service {
 
   /**
    * Crea una inspección de vehículo
+   * @throws Error con mensaje descriptivo si el trigger bloquea la operación
    */
   createInspection(params: CreateInspectionParams): Observable<BookingInspection | null> {
     const inspectionData: Omit<BookingInspectionDb, 'id' | 'created_at' | 'signed_at'> = {
@@ -218,12 +219,17 @@ export class FgoV1_1Service {
     ).pipe(
       map((response) => {
         if (response['error']) {
-          return null;
+          // Parse trigger error messages for better UX
+          const errorMsg = response['error']['message'] || '';
+          if (errorMsg.includes('OWNER_CHECKIN_REQUIRED')) {
+            throw new Error('El dueño debe completar el check-in primero');
+          }
+          if (errorMsg.includes('RENTER_CHECKIN_REQUIRED')) {
+            throw new Error('El locatario debe completar su check-in primero');
+          }
+          throw new Error(errorMsg || 'Error al crear inspección');
         }
         return response.data ? mapBookingInspection(response.data as BookingInspectionDb) : null;
-      }),
-      catchError((_error) => {
-        return of(null);
       }),
     );
   }

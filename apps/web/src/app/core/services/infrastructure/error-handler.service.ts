@@ -1,8 +1,28 @@
 import { Injectable, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { environment } from '@environment';
 import { getErrorMessage } from '@core/utils/type-guards';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+
+/**
+ * ✅ FIX: Public routes where auth errors should be silently ignored
+ * These pages don't require authentication to view, so we shouldn't
+ * show "Tu sesión expiró" errors when browsing without login
+ */
+const PUBLIC_ROUTES = [
+  '/cars',           // Car listings
+  '/cars/',          // Car detail (with ID)
+  '/marketplace',    // Marketplace
+  '/how-it-works',   // How it works
+  '/about',          // About page
+  '/contact',        // Contact
+  '/faq',            // FAQ
+  '/terms',          // Terms
+  '/privacy',        // Privacy
+  '/auth',           // Auth pages
+  '/',               // Home
+];
 
 /**
  * ErrorHandlerService: Centralized error handling
@@ -30,6 +50,40 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
 export class ErrorHandlerService {
   private readonly logger = inject(LoggerService);
   private readonly toast = inject(NotificationManagerService);
+  private readonly router = inject(Router);
+
+  /**
+   * ✅ FIX: Check if current route is public (no auth required)
+   */
+  private isPublicRoute(): boolean {
+    const currentUrl = this.router.url || '/';
+    return PUBLIC_ROUTES.some(route => {
+      if (route === '/') {
+        return currentUrl === '/';
+      }
+      return currentUrl.startsWith(route);
+    });
+  }
+
+  /**
+   * ✅ FIX: Check if error is an authentication error
+   */
+  private isAuthError(error: unknown): boolean {
+    const errorMessage = this.extractErrorMessage(error).toLowerCase();
+    return /unauthorized|401|invalid.*token|expired.*token|jwt|auth/i.test(errorMessage);
+  }
+
+  /**
+   * Extract error message from various error types
+   */
+  private extractErrorMessage(error: unknown): string {
+    if (typeof error === 'string') return error;
+    if (error instanceof Error) return error.message;
+    if (error && typeof error === 'object' && 'message' in error) {
+      return String(error.message);
+    }
+    return '';
+  }
 
   /**
    * Handle an error with optional user notification
@@ -45,6 +99,19 @@ export class ErrorHandlerService {
     showToUser = true,
     severity: 'error' | 'warning' | 'critical' = 'error',
   ): void {
+    // ✅ FIX: Skip showing auth errors on public routes
+    // Users browsing without login shouldn't see "Tu sesión expiró" messages
+    if (this.isAuthError(error) && this.isPublicRoute()) {
+      this.logger.debug(
+        'Suppressing auth error on public route',
+        'ErrorHandlerService',
+        { context, route: this.router.url }
+      );
+      // Still log for debugging, but don't show toast to user
+      this.logError(error, context, 'warning');
+      return;
+    }
+
     // 1. Log error with appropriate severity
     this.logError(error, context, severity);
 

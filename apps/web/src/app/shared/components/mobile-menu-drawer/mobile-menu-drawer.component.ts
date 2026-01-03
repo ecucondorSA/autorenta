@@ -14,6 +14,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { UserProfile } from '@core/services/auth/profile.service';
 import { MenuIconComponent } from '../menu-icon/menu-icon.component';
+import { VerifiedBadgeComponent } from '../verified-badge/verified-badge.component';
 
 interface MenuItem {
   label: string;
@@ -33,7 +34,7 @@ interface MenuSection {
 @Component({
   selector: 'app-mobile-menu-drawer',
   standalone: true,
-  imports: [RouterModule, MenuIconComponent],
+  imports: [RouterModule, MenuIconComponent, VerifiedBadgeComponent],
   templateUrl: './mobile-menu-drawer.component.html',
   styleUrls: ['./mobile-menu-drawer.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -69,6 +70,7 @@ export class MobileMenuDrawerComponent {
       iconBgColor: 'bg-blue-500/10',
       iconTextColor: 'text-blue-600',
       items: [
+        { label: 'Verificacion', route: '/profile/verification', icon: 'check-circle', badge: 'IMPORTANTE' },
         { label: 'Mis Reservas', route: '/bookings', icon: 'calendar' },
         { label: 'Mis Autos', route: '/cars/my', icon: 'archive' },
         { label: 'Calendario', route: '/bookings/calendar', icon: 'calendar-days' },

@@ -30,7 +30,7 @@ export const environment = buildEnvironment({
   tripoApiKey: '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',
   googleAnalyticsMeasurementId: '',
   enableAnalytics: false,
-  docVerifierUrl: 'http://localhost:8787',
+  docVerifierUrl: 'https://pisqjmoklivzpwufhscx.supabase.co/functions/v1',
   googleGeolocationApiKey: 'AIzaSyD9VrprbZaNVWrY5CThI2mHpp_SuriWRHY',
   // Logging: debug level shows all logs in development
   logLevel: 'debug' as const,

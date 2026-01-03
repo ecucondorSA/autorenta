@@ -64,6 +64,7 @@ export interface PricingBreakdown {
   user_factor: number;
   demand_factor: number;
   event_factor: number;
+  seasonal_factor: number;
   total_multiplier: number;
 }
 
@@ -371,6 +372,7 @@ export class DynamicPricingService {
     user_factor: string;
     demand_factor: string;
     event_factor: string;
+    seasonal_factor: string;
   } {
     return {
       day_factor: 'Día de la semana',
@@ -378,6 +380,7 @@ export class DynamicPricingService {
       user_factor: 'Tipo de usuario',
       demand_factor: 'Demanda',
       event_factor: 'Eventos especiales',
+      seasonal_factor: 'Temporada',
     };
   }
 
