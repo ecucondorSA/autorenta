@@ -560,11 +560,13 @@ serve(async (req) => {
     let fgoAmount: number;
 
     if (isComodato) {
-      // COMODATO: 50% platform, 30% reward pool, 20% FGO, 0% owner
-      platformFee = Math.round(totalAmount * 0.50 * 100) / 100;
-      rewardPoolAmount = Math.round(totalAmount * 0.30 * 100) / 100;
-      fgoAmount = Math.round((totalAmount - platformFee - rewardPoolAmount) * 100) / 100; // ~20%
-      ownerAmount = 0; // CRITICAL: Owner gets ZERO in comodato
+      // COMODATO: 15% platform, 75% reward pool, 10% FGO, 0% owner
+      // Distribution designed to be fair: platform gets SAME as rental (15%)
+      // while majority (75%) goes to community pool for all owners
+      platformFee = Math.round(totalAmount * 0.15 * 100) / 100;
+      rewardPoolAmount = Math.round(totalAmount * 0.75 * 100) / 100;
+      fgoAmount = Math.round((totalAmount - platformFee - rewardPoolAmount) * 100) / 100; // ~10%
+      ownerAmount = 0; // CRITICAL: Owner gets ZERO direct, receives from pool instead
       console.log('[COMODATO] Payment distribution:', {
         booking_id,
         total: totalAmount,
