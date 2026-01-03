@@ -171,7 +171,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
     // 3. Calcular Costos Operativos Visibles
     const platformFee = grossIncome * this.CALC_CONSTANTS.platformFee;
-    // Estimamos 1 lavado cada 3 días de alquiler
+    // Estimamos 1 lavado cada 3 días de uso
     const estimatedWashes = Math.ceil(days / 3) * this.CALC_CONSTANTS.avgWashCost; 
     // Seguro proporcional al uso (o fijo mensual, usamos fijo para ser conservadores/realistas)
     const insuranceCost = this.CALC_CONSTANTS.insuranceAvg;
@@ -199,7 +199,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
         const missing = Math.abs(balance);
         const missingDays = Math.ceil(missing / profitPerDay);
         
-        financingMessage = `Cubres el ${Math.round(coveragePercent)}% de la cuota. Alquila ${missingDays} días más para que se pague solo.`;
+        financingMessage = `Cubres el ${Math.round(coveragePercent)}% de la cuota. Comparte ${missingDays} días más para que se pague solo.`;
         healthScore = 'yellow';
       }
     } else {
@@ -243,7 +243,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       avatar: '/assets/images/avatars/avatar-1.jpg', // Sofía (Mujer joven)
       name: 'Sofía',
       location: 'Córdoba',
-      quote: 'Lo uso para ir al trabajo y lo alquilo los fines de semana. Con eso cubro el mantenimiento y me sobra para ahorrar.',
+      quote: 'Lo uso para ir al trabajo y lo comparto los fines de semana. Con eso cubro el mantenimiento y me sobra para ahorrar.',
       earnings: 280000,
     },
     {
@@ -606,19 +606,19 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   ngOnInit(): void {
     // SEO Meta Tags
     this.titleService.setTitle(
-      'Autorentar | Alquiler de Autos entre Personas - Renta Segura',
+      'Autorentar | Comparte tu auto, encuentra el tuyo',
     );
     this.meta.updateTag({
       name: 'description',
       content:
-        'Alquila autos verificados directamente de dueños. 100% asegurado, pagos seguros con MercadoPago, entrega express. Sin intermediarios, sin tarjeta de crédito requerida.',
+        'Encuentra autos verificados de la comunidad. 100% asegurado, pagos seguros con MercadoPago, entrega express. Sin intermediarios, sin tarjeta de crédito requerida.',
     });
     this.meta.updateTag({
       name: 'keywords',
       content:
-        'alquiler autos, renta de autos, alquiler sin tarjeta, autos particulares, alquiler entre personas, Argentina',
+        'autos compartidos, carsharing, compartir auto, autos particulares, comunidad autos, Argentina',
     });
-    this.meta.updateTag({ property: 'og:title', content: 'Autorentar - Alquiler de Autos entre Personas' });
+    this.meta.updateTag({ property: 'og:title', content: 'Autorentar - Comparte tu auto, encuentra el tuyo' });
     this.meta.updateTag({
       property: 'og:description',
       content: 'Conectamos personas con vehículos verificados. Sin intermediarios, 100% asegurado.',
