@@ -536,25 +536,19 @@ interface PromotionCode {
 **Archivo:** `database/create-insurance-system.sql` (598 líneas)
 
 **Tablas:**
-1. **`insurance_policies`** - Pólizas flotantes y BYOI
+1. **`insurance_policies`** - Pólizas con Conductor Indeterminado
 2. **`booking_insurance_coverage`** - Cobertura activa por booking
 3. **`insurance_addons`** - Add-ons opcionales (RC ampliada, etc.)
 4. **`insurance_claims`** - Reclamos de siniestros
 
-**Tipos de pólizas:**
+**Tipo de póliza requerida:**
 ```sql
-policy_type: 'platform_floating' | 'owner_byoi'
-
--- Platform Floating (póliza de la plataforma)
-- Aseguradoras: Rio Uruguay, Sancor, Federación Patronal
-- Coberturas: RC $160M, daños propios, robo, incendio, mal uso ($25M)
-- Franquicia: 5% (mín $500k ARS)
-- Costo: $X/día cobrado al locatario
-
--- Owner BYOI (Bring Your Own Insurance)
-- Locador usa su propia póliza
-- Debe subir documento y ser verificado por admin
-- Sin costo adicional para locatario
+-- Seguro Particular con Conductor Indeterminado
+- Locador mantiene su póliza particular
+- OBLIGATORIO: Cláusula "Conductor Indeterminado"
+- Permite que terceros con licencia válida conduzcan
+- NO requiere "Alquiler sin Chofer" (es comodato, no alquiler)
+- Costo adicional: ~5-15% sobre prima base
 ```
 
 **Coberturas incluidas:**
@@ -834,12 +828,12 @@ interface BookingMileageTracking {
 **Estado:**
 - ✅ Database schema completo
 - ✅ RPCs para CRUD de pólizas
-- ❌ **No hay UI** para locadores subir pólizas BYOI
+- ❌ **No hay UI** para locadores subir pólizas con Conductor Indeterminado
 - ❌ **No hay workflow** de verificación de pólizas por admin
-- ❌ **No hay UI** para locatarios ver coberturas y add-ons
+- ❌ **No hay UI** para locatarios ver coberturas
 - ❌ **No hay proceso** de claims (solo tabla)
 
-**Recomendación:** Implementar UI de insurance en dashboard de locador y locatario
+**Recomendación:** Implementar UI de verificación de seguro en dashboard de locador
 
 ---
 
@@ -1134,7 +1128,7 @@ interface VehicleDocumentVerification {
 - **Inspection System:** Conflicto #2 en market research ("Daños no documentados")
 - **Rental Terms:** Conflicto #1 ("Incumplimiento de condiciones pactadas")
 - **Seasonal Pricing:** Competitividad con mercado informal (weekend boost, etc.)
-- **Insurance UI:** Locadores necesitan cargar pólizas BYOI para reducir costos
+- **Insurance UI:** Locadores necesitan verificar póliza con Conductor Indeterminado
 
 ---
 
@@ -1167,7 +1161,7 @@ interface VehicleDocumentVerification {
 |---------|--------------------|-----------------------|---------------------|------------------|
 | **Contratos escritos** | 🔄 Parcial | ✅ Completo | ✅ Sí | ❌ 30% solamente |
 | **Inspección pre-entrega** | ❌ No | ✅ Sí (con fotos) | ✅ Sí | ❌ Raro |
-| **Seguro incluido** | ✅ Sí (flotante) | ✅ Sí + BYOI | ✅ Sí | ❌ No (locador asume) |
+| **Seguro incluido** | ✅ Conductor Indet. | ✅ Conductor Indeterminado | ✅ Sí | ❌ No (locador asume) |
 | **Verificación de identidad** | ✅ Level 1-3 | ✅ Level 1-3 + AI | ⚠️ Básica | ❌ No verifican |
 | **Sistema de disputas** | ❌ No | ✅ Sí | ⚠️ Manual | ❌ No (conflictos frecuentes) |
 | **Pricing dinámico** | 🔄 Backend listo | ✅ UI + Automation | ❌ No | ✅ Sí (manual) |
@@ -1302,7 +1296,7 @@ CREATE TABLE owner_commission_overrides (...);
 - Locadores pueden configurar términos de renta (km/día, late fees, etc.)
 - Inspecciones pre/post con fotos obligatorias
 - Pricing dinámico por día de semana / temporada
-- Locadores pueden cargar pólizas BYOI
+- Verificación de póliza con Conductor Indeterminado
 
 **Success Metrics:**
 - 0% de disputas por "daños no documentados" (inspecciones resuelven)

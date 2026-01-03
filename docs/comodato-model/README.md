@@ -84,3 +84,51 @@ Este modelo se basa en:
 - **Comodato (Art. 1533 CC Argentina)**: Préstamo gratuito de cosa mueble
 
 El owner **nunca recibe pago por uso específico** del vehículo. Los rewards son por **participación en la comunidad**, no correlacionados con bookings individuales.
+
+---
+
+## Cobertura de Seguro
+
+### Tipo de Poliza Requerida
+
+Los owners mantienen su **seguro particular tradicional** con clausula de **"Conductor Indeterminado"**.
+
+### Que es Conductor Indeterminado?
+
+Es una clausula estandar en polizas argentinas que permite que **cualquier persona con licencia de conducir vigente** maneje el vehiculo, no solo el titular asegurado.
+
+| Clausula | Descripcion |
+|----------|-------------|
+| **Conductor Determinado** | Solo el titular puede conducir |
+| **Conductor Indeterminado** | Cualquier persona con licencia valida puede conducir |
+
+### Por que es Compatible con el Modelo Comodato?
+
+1. **No hay alquiler** - El comodato es prestamo gratuito, no actividad comercial
+2. **El seguro cubre terceros** - La clausula de conductor indeterminado ya contempla que otras personas usen el auto
+3. **No hay lucro directo** - El owner no recibe pago por la reserva individual
+4. **Uso particular** - El vehiculo sigue siendo de uso particular, prestado ocasionalmente
+
+### Requisitos Minimos del Seguro
+
+| Cobertura | Requerido |
+|-----------|-----------|
+| Responsabilidad Civil (RC) | Obligatorio |
+| Conductor Indeterminado | Obligatorio |
+| Robo Total | Recomendado |
+| Danos Propios | Opcional |
+
+### Diferencia con "Alquiler sin Chofer"
+
+| Aspecto | Conductor Indeterminado | Alquiler sin Chofer |
+|---------|------------------------|---------------------|
+| Tipo de poliza | Particular | Comercial |
+| Costo adicional | ~5-15% sobre prima base | ~50-100% sobre prima base |
+| Uso previsto | Prestamo ocasional a terceros | Actividad comercial de alquiler |
+| Aplicable a | Comodato P2P | Rentadoras tradicionales |
+
+### Advertencia Legal
+
+> El modelo de comodato con rewards comunitarios **no constituye alquiler** segun la definicion del Art. 1187 del CCyC (cesion de uso a cambio de precio). El owner presta su vehiculo gratuitamente y recibe incentivos por participacion en una comunidad, no por el uso especifico de su auto.
+
+Para mas detalle sobre implicaciones legales, ver: [ANALISIS_JURIDICO_SEGURO_COMODATO.md](../legal/ANALISIS_JURIDICO_SEGURO_COMODATO.md)

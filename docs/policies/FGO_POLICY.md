@@ -60,7 +60,7 @@ Ejemplo:
 | Espejo lateral | Hasta $250 USD |
 
 **Condiciones:**
-- Owner tiene BYOI válido
+- Owner tiene seguro con Conductor Indeterminado vigente
 - Daño documentado con FGO v1.1 (fotos 360°)
 - Renter no puede pagar la franquicia
 - Monto menor a $500 USD
@@ -112,7 +112,7 @@ El FGO **NUNCA** se usa para:
 6. **Incumplimientos contractuales**
 7. **Devoluciones de pagos**
 
-> Para estos casos, se recurre al seguro BYOI del owner o acciones legales.
+> Para estos casos, se recurre al seguro del owner (con Conductor Indeterminado) o acciones legales.
 
 ---
 
@@ -251,7 +251,7 @@ El FGO genera reportes automáticos:
 Situación:
 - Renter devuelve auto con rayadura de 15cm
 - FGO v1.1 confirma daño nuevo
-- Owner tiene BYOI pero franquicia es $300 USD
+- Owner tiene seguro con franquicia de $300 USD
 - Renter solo tiene $150 USD en wallet
 
 Resolución:
@@ -299,7 +299,7 @@ Resolución:
 
 ### ¿El FGO cubre robos?
 
-NO. Los robos deben ser cubiertos por el seguro BYOI del owner. El FGO puede ayudar con gastos menores asociados (grúa, trámites) pero no con el valor del vehículo.
+NO. Los robos deben ser cubiertos por el seguro del owner. El FGO puede ayudar con gastos menores asociados (grúa, trámites) pero no con el valor del vehículo.
 
 ### ¿Qué pasa si el FGO se queda sin fondos?
 
@@ -310,7 +310,7 @@ Se pausan nuevas reservas hasta recapitalizar. Los casos pendientes se resuelven
 Califica si:
 1. El monto es menor a $500 USD
 2. Tienes documentación clara (fotos FGO)
-3. El seguro BYOI no aplica o tiene franquicia
+3. El seguro del owner no aplica o tiene franquicia
 4. No hay fraude involucrado
 
 ### ¿Cuánto tarda en procesarse un pago del FGO?

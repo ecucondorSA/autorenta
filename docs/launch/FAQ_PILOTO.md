@@ -18,7 +18,7 @@ Autorenta es una plataforma de alquiler de autos entre personas (P2P). Conectamo
 4. Al terminar, check-out con fotos y el owner recibe el pago
 
 ### Es legal?
-Si. El alquiler de vehiculos entre particulares es legal. Lo importante es que el owner tenga seguro con clausula de alquiler sin chofer.
+Si. El modelo de Autorenta es un **comodato** (prestamo gratuito de uso), no un alquiler comercial. El owner presta su auto y recibe rewards por participar en la comunidad, no pago directo por cada reserva. Lo importante es que el owner tenga seguro con clausula de **Conductor Indeterminado**.
 
 ### Por que es mas barato que las agencias?
 Las agencias tienen costos fijos altos: oficinas, empleados, flota propia. Nosotros conectamos directamente owner-renter, sin intermediarios costosos.
@@ -46,15 +46,17 @@ Si en el futuro usas nuestra poliza flotante: 25%.
 
 ### Que pasa si me chocan el auto?
 1. El renter tiene su franquicia a cargo
-2. Tu seguro cubre el resto (por eso es obligatorio BYOI)
+2. Tu seguro con Conductor Indeterminado cubre el resto
 3. El FGO cubre danos menores si el renter no puede pagar
 4. Tenemos fotos 360 que documentan el estado pre/post
 
 ### Necesito seguro especial?
-Si. Tu seguro normal NO cubre uso comercial (alquiler). Necesitas agregar la clausula de "alquiler sin chofer" o tener seguro de flota. Cuesta aproximadamente +20% sobre tu prima actual.
+Necesitas tener la clausula de **Conductor Indeterminado** en tu poliza particular. Esta clausula permite que cualquier persona con licencia valida conduzca tu auto (no solo vos). La mayoria de las polizas ya la incluyen o cuesta ~5-15% adicional sobre tu prima.
 
-### Como consigo la clausula de alquiler?
-Contacta a tu aseguradora o broker y pedi agregar "clausula de alquiler sin chofer" o "uso comercial". Si necesitas ayuda, te pasamos contacto de brokers que conocen el tema.
+**NO necesitas:** Clausula de "alquiler sin chofer" ni seguro comercial, porque Autorenta es un modelo de comodato (prestamo gratuito), no alquiler.
+
+### Como consigo Conductor Indeterminado?
+Contacta a tu aseguradora y pregunta si tu poliza tiene "Conductor Indeterminado". Si no lo tiene, pedi agregarlo. Es una clausula estandar y economica.
 
 ### Puedo elegir a quien alquilo?
 Si. Ves el perfil del renter, su rating, reviews, y podes aceptar o rechazar cada solicitud. Tambien podes activar "aprobacion automatica" si preferis.
@@ -62,7 +64,7 @@ Si. Ves el perfil del renter, su rating, reviews, y podes aceptar o rechazar cad
 ### Que requisitos tiene mi auto?
 - Menos de 12 anos de antiguedad
 - Documentacion al dia (VTV, patente, seguro)
-- Seguro con clausula de alquiler verificado
+- Seguro con Conductor Indeterminado verificado
 - Fotos actuales del vehiculo
 
 ### Cuanto tiempo tarda verificar mi seguro?
