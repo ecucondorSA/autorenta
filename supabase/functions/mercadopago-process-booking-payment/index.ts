@@ -513,8 +513,17 @@ serve(async (req) => {
 
     // Obtener owner para split payment
     const owner = booking.car?.owner;
-    // Split payment only if owner has collector_id and completed onboarding
-    const shouldSplit = owner?.mercadopago_collector_id && owner?.mp_onboarding_completed;
+
+    // ========================================
+    // COMODATO MODEL: Detect agreement type
+    // comodato = owner gets $0, funds go to platform/reward_pool/FGO
+    // rental = traditional split payment (85% owner / 15% platform)
+    // ========================================
+    const isComodato = booking.agreement_type === 'comodato';
+
+    // Split payment only for RENTAL mode when owner has collector_id
+    // COMODATO mode: NO split payment (all funds to platform)
+    const shouldSplit = !isComodato && owner?.mercadopago_collector_id && owner?.mp_onboarding_completed;
 
     // Calcular montos
     const totalAmount = Number(booking.total_amount || 0);
@@ -542,8 +551,35 @@ serve(async (req) => {
       );
     }
 
-    const platformFee = shouldSplit ? Math.round(totalAmount * 0.15 * 100) / 100 : 0;
-    const ownerAmount = shouldSplit ? totalAmount - platformFee : 0;
+    // ========================================
+    // PAYMENT DISTRIBUTION based on agreement_type
+    // ========================================
+    let platformFee: number;
+    let ownerAmount: number;
+    let rewardPoolAmount: number;
+    let fgoAmount: number;
+
+    if (isComodato) {
+      // COMODATO: 50% platform, 30% reward pool, 20% FGO, 0% owner
+      platformFee = Math.round(totalAmount * 0.50 * 100) / 100;
+      rewardPoolAmount = Math.round(totalAmount * 0.30 * 100) / 100;
+      fgoAmount = Math.round((totalAmount - platformFee - rewardPoolAmount) * 100) / 100; // ~20%
+      ownerAmount = 0; // CRITICAL: Owner gets ZERO in comodato
+      console.log('[COMODATO] Payment distribution:', {
+        booking_id,
+        total: totalAmount,
+        platform_fee: platformFee,
+        reward_pool: rewardPoolAmount,
+        fgo: fgoAmount,
+        owner: ownerAmount,
+      });
+    } else {
+      // RENTAL: Traditional split (85% owner / 15% platform)
+      platformFee = shouldSplit ? Math.round(totalAmount * 0.15 * 100) / 100 : 0;
+      ownerAmount = shouldSplit ? totalAmount - platformFee : 0;
+      rewardPoolAmount = 0;
+      fgoAmount = 0;
+    }
 
     // Formatear phone para MercadoPago
     let phoneFormatted: { area_code: string; number: string } | undefined;
@@ -604,7 +640,13 @@ serve(async (req) => {
         car_id: booking.car_id,
         owner_id: owner?.id || null,
         payment_type: 'booking',
+        agreement_type: isComodato ? 'comodato' : 'rental',
         is_marketplace_split: shouldSplit,
+        is_comodato: isComodato,
+        ...(isComodato && {
+          reward_pool_cents: Math.round(rewardPoolAmount * 100),
+          fgo_cents: Math.round(fgoAmount * 100),
+        }),
       },
     };
 
@@ -685,6 +727,35 @@ serve(async (req) => {
     if (updateError) {
       console.error('Error updating booking:', updateError);
       // No fallar el pago si la actualización falla, el webhook lo hará
+    }
+
+    // ========================================
+    // COMODATO: Process reward pool and FGO contributions
+    // Only when payment is approved and booking is comodato type
+    // ========================================
+    if (isComodato && mpData.status === 'approved') {
+      console.log('[COMODATO] Processing comodato payment contributions:', {
+        booking_id,
+        reward_pool_cents: Math.round(rewardPoolAmount * 100),
+        fgo_cents: Math.round(fgoAmount * 100),
+      });
+
+      try {
+        const { data: comodatoResult, error: comodatoError } = await supabase
+          .rpc('process_comodato_booking_payment', {
+            p_booking_id: booking_id,
+          });
+
+        if (comodatoError) {
+          console.error('[COMODATO] Error processing comodato contributions:', comodatoError);
+          // Don't fail the payment - contributions can be processed later via webhook
+        } else {
+          console.log('[COMODATO] Successfully processed contributions:', comodatoResult);
+        }
+      } catch (comodatoErr) {
+        console.error('[COMODATO] Exception processing comodato:', comodatoErr);
+        // Don't fail the payment
+      }
     }
 
     // Retornar respuesta

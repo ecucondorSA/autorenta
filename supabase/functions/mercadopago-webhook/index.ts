@@ -968,6 +968,36 @@ serve(async (req: Request) => {
           payment_id: paymentData.id,
         });
 
+        // ========================================
+        // COMODATO: Process reward pool and FGO contributions
+        // Check if payment metadata indicates comodato agreement
+        // ========================================
+        const isComodatoPayment = metadata.is_comodato === true || metadata.is_comodato === 'true' || metadata.agreement_type === 'comodato';
+
+        if (isComodatoPayment) {
+          console.log('[COMODATO] Processing comodato contributions via webhook:', {
+            booking_id: reference_id,
+            reward_pool_cents: metadata.reward_pool_cents,
+            fgo_cents: metadata.fgo_cents,
+          });
+
+          try {
+            const { data: comodatoResult, error: comodatoError } = await supabase
+              .rpc('process_comodato_booking_payment', {
+                p_booking_id: reference_id,
+              });
+
+            if (comodatoError) {
+              console.error('[COMODATO] Error processing comodato contributions:', comodatoError);
+              // Don't fail the webhook - contributions can be processed manually
+            } else {
+              console.log('[COMODATO] Successfully processed contributions:', comodatoResult);
+            }
+          } catch (comodatoErr) {
+            console.error('[COMODATO] Exception processing comodato:', comodatoErr);
+          }
+        }
+
         // Marcar webhook como procesado (best-effort)
         try {
           await supabase
@@ -1027,6 +1057,34 @@ serve(async (req: Request) => {
       if (updateError) {
         console.error('Error updating booking:', updateError);
         throw updateError;
+      }
+
+      // ========================================
+      // COMODATO: Process contributions for non-split payments
+      // ========================================
+      const nonSplitMetadata = paymentData.metadata || {};
+      const isComodatoNonSplit = nonSplitMetadata.is_comodato === true || nonSplitMetadata.is_comodato === 'true' ||
+                                  nonSplitMetadata.agreement_type === 'comodato' || booking.agreement_type === 'comodato';
+
+      if (isComodatoNonSplit) {
+        console.log('[COMODATO] Processing comodato contributions (non-split):', {
+          booking_id: reference_id,
+        });
+
+        try {
+          const { data: comodatoResult, error: comodatoError } = await supabase
+            .rpc('process_comodato_booking_payment', {
+              p_booking_id: reference_id,
+            });
+
+          if (comodatoError) {
+            console.error('[COMODATO] Error processing comodato contributions:', comodatoError);
+          } else {
+            console.log('[COMODATO] Successfully processed contributions:', comodatoResult);
+          }
+        } catch (comodatoErr) {
+          console.error('[COMODATO] Exception processing comodato:', comodatoErr);
+        }
       }
 
       // Marcar webhook como procesado (best-effort)
