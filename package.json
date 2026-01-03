@@ -200,7 +200,8 @@
   },
   "pnpm": {
     "overrides": {
-      "@ionic/core": "8.6.0"
+      "@ionic/core": "8.6.0",
+      "qs": ">=6.14.1"
     },
     "onlyBuiltDependencies": [
       "@compodoc/compodoc",

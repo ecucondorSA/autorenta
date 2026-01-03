@@ -6,6 +6,7 @@ settings:
 
 overrides:
   '@ionic/core': 8.6.0
+  qs: '>=6.14.1'
 
 importers:
 
@@ -451,7 +452,7 @@ importers:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.25.1
-        version: 1.25.1(hono@4.11.1)(zod@3.25.76)
+        version: 1.25.1(hono@4.11.1)(zod@4.1.13)
       '@supabase/supabase-js':
         specifier: ^2.39.0
         version: 2.87.3
@@ -470,7 +471,7 @@ importers:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.25.1
-        version: 1.25.1(hono@4.11.1)(zod@3.25.76)
+        version: 1.25.1(hono@4.11.1)(zod@4.1.13)
       patchright:
         specifier: ^1.49.1
         version: 1.57.0
@@ -479,7 +480,7 @@ importers:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.25.1
-        version: 1.25.1(hono@4.11.1)(zod@3.25.76)
+        version: 1.25.1(hono@4.11.1)(zod@4.1.13)
       playwright:
         specifier: ^1.40.0
         version: 1.56.1
@@ -488,7 +489,7 @@ importers:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.25.1
-        version: 1.25.1(hono@4.11.1)(zod@3.25.76)
+        version: 1.25.1(hono@4.11.1)(zod@4.1.13)
       '@supabase/supabase-js':
         specifier: ^2.39.0
         version: 2.87.3
@@ -7473,8 +7474,8 @@ packages:
     resolution: {integrity: sha512-8YOJEHtxpySA3fFDyCRxA+UUV+fA+rTWnuWvylOK/NCjhY+b4ocCtmu8TtsWb+mYeU+GCHf/S66KZF/AsteKHg==}
     engines: {node: '>=0.9'}
 
-  qs@6.14.0:
-    resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
+  qs@6.14.1:
+    resolution: {integrity: sha512-4EK3+xJl8Ts67nLYNwqw/dsFVnCf+qR7RgXSK9jEEm9unao3njwMDdmsdvoKBKHzxd7tCYz5e5M+SnMjdtXGQQ==}
     engines: {node: '>=0.6'}
 
   queue-microtask@1.2.3:
@@ -11958,6 +11959,28 @@ snapshots:
       - hono
       - supports-color
 
+  '@modelcontextprotocol/sdk@1.25.1(hono@4.11.1)(zod@4.1.13)':
+    dependencies:
+      '@hono/node-server': 1.19.7(hono@4.11.1)
+      ajv: 8.17.1
+      ajv-formats: 3.0.1(ajv@8.17.1)
+      content-type: 1.0.5
+      cors: 2.8.5
+      cross-spawn: 7.0.6
+      eventsource: 3.0.7
+      eventsource-parser: 3.0.6
+      express: 5.2.1
+      express-rate-limit: 7.5.1(express@5.2.1)
+      jose: 6.1.3
+      json-schema-typed: 8.0.2
+      pkce-challenge: 5.0.1
+      raw-body: 3.0.2
+      zod: 4.1.13
+      zod-to-json-schema: 3.25.0(zod@4.1.13)
+    transitivePeerDependencies:
+      - hono
+      - supports-color
+
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
     optional: true
 
@@ -13048,7 +13071,7 @@ snapshots:
       std-env: 3.10.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@25.0.2)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@26.1.0)(less@4.4.0)(sass@1.90.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
+      vitest: 3.2.4(@types/node@20.19.25)(@vitest/ui@3.2.4)(jiti@1.21.7)(jsdom@26.1.0)(less@4.4.0)(sass@1.90.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -13105,7 +13128,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@25.0.2)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@26.1.0)(less@4.4.0)(sass@1.90.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
+      vitest: 3.2.4(@types/node@20.19.25)(@vitest/ui@3.2.4)(jiti@1.21.7)(jsdom@26.1.0)(less@4.4.0)(sass@1.90.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
 
   '@vitest/utils@3.2.4':
     dependencies:
@@ -13611,7 +13634,7 @@ snapshots:
       http-errors: 2.0.1
       iconv-lite: 0.4.24
       on-finished: 2.4.1
-      qs: 6.14.0
+      qs: 6.14.1
       raw-body: 2.5.3
       type-is: 1.6.18
       unpipe: 1.0.0
@@ -13626,7 +13649,7 @@ snapshots:
       http-errors: 2.0.1
       iconv-lite: 0.7.0
       on-finished: 2.4.1
-      qs: 6.14.0
+      qs: 6.14.1
       raw-body: 3.0.2
       type-is: 2.0.1
     transitivePeerDependencies:
@@ -14789,7 +14812,7 @@ snapshots:
       parseurl: 1.3.3
       path-to-regexp: 0.1.12
       proxy-addr: 2.0.7
-      qs: 6.14.0
+      qs: 6.14.1
       range-parser: 1.2.1
       safe-buffer: 5.2.1
       send: 0.19.1
@@ -14824,7 +14847,7 @@ snapshots:
       once: 1.4.0
       parseurl: 1.3.3
       proxy-addr: 2.0.7
-      qs: 6.14.0
+      qs: 6.14.1
       range-parser: 1.2.1
       router: 2.2.0
       send: 1.2.0
@@ -17197,7 +17220,7 @@ snapshots:
 
   qjobs@1.2.0: {}
 
-  qs@6.14.0:
+  qs@6.14.1:
     dependencies:
       side-channel: 1.1.0
 
