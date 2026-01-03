@@ -205,14 +205,14 @@ export class PlatformConfigService {
     if (hours < minHours) {
       return {
         valid: false,
-        reason: `El alquiler mínimo es de ${minHours} horas`,
+        reason: `La reserva mínima es de ${minHours} horas`,
       };
     }
 
     if (hours > maxHours) {
       return {
         valid: false,
-        reason: `El alquiler máximo es de ${maxDays} días`,
+        reason: `La reserva máxima es de ${maxDays} días`,
       };
     }
 

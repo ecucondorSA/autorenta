@@ -606,19 +606,19 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   ngOnInit(): void {
     // SEO Meta Tags
     this.titleService.setTitle(
-      'Autorentar | Comparte tu auto, encuentra el tuyo',
+      'Autorentar | Alquiler de Autos entre Personas - Renta Segura',
     );
     this.meta.updateTag({
       name: 'description',
       content:
-        'Encuentra autos verificados de la comunidad. 100% asegurado, pagos seguros con MercadoPago, entrega express. Sin intermediarios, sin tarjeta de crédito requerida.',
+        'Alquila autos verificados directamente de dueños. 100% asegurado, pagos seguros con MercadoPago, entrega express. Sin intermediarios, sin tarjeta de crédito requerida.',
     });
     this.meta.updateTag({
       name: 'keywords',
       content:
-        'autos compartidos, carsharing, compartir auto, autos particulares, comunidad autos, Argentina',
+        'alquiler autos, renta de autos, alquiler sin tarjeta, autos particulares, alquiler entre personas, Argentina',
     });
-    this.meta.updateTag({ property: 'og:title', content: 'Autorentar - Comparte tu auto, encuentra el tuyo' });
+    this.meta.updateTag({ property: 'og:title', content: 'Autorentar - Alquiler de Autos entre Personas' });
     this.meta.updateTag({
       property: 'og:description',
       content: 'Conectamos personas con vehículos verificados. Sin intermediarios, 100% asegurado.',

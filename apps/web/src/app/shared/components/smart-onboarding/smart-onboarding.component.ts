@@ -69,13 +69,13 @@ export class SmartOnboardingComponent implements OnInit {
           value: 'locador',
           label: 'Locador',
           icon: '🚗',
-          description: 'Tengo autos para alquilar',
+          description: 'Tengo autos para compartir',
         },
         {
           value: 'locatario',
           label: 'Locatario',
           icon: '🔍',
-          description: 'Busco autos para alquilar',
+          description: 'Busco autos para usar',
         },
         {
           value: 'ambos',
@@ -192,7 +192,7 @@ export class SmartOnboardingComponent implements OnInit {
     },
     {
       id: 'rental_frequency',
-      title: '¿Con qué frecuencia alquilas?',
+      title: '¿Con qué frecuencia usas autos?',
       subtitle: 'Esto nos ayuda a personalizar recomendaciones',
       type: 'single',
       required: false,
@@ -229,7 +229,7 @@ export class SmartOnboardingComponent implements OnInit {
     },
     {
       id: 'car_count',
-      title: '¿Cuántos autos tienes para alquilar?',
+      title: '¿Cuántos autos tienes para compartir?',
       subtitle: 'Esto nos ayuda a optimizar tu experiencia',
       type: 'single',
       required: false,

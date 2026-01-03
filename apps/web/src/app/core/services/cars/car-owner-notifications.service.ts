@@ -92,7 +92,7 @@ export class CarOwnerNotificationsService {
   ): void {
     this.notificationManager.show({
       title: '🎉 ¡Nueva solicitud de reserva!',
-      message: `${renterName} quiere alquilar tu ${carName} por $${pricePerDay.toLocaleString('es-AR')}/día. Revisa los detalles y aprueba o rechaza la solicitud.`,
+      message: `${renterName} quiere reservar tu ${carName} por $${pricePerDay.toLocaleString('es-AR')}/día. Revisa los detalles y aprueba o rechaza la solicitud.`,
       type: 'success',
       priority: 'high',
       duration: 10000,

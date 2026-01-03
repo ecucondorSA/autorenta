@@ -167,7 +167,7 @@ export function validateBirthDate(birthDate: Date | string | null | undefined): 
   if (age < 18) {
     return {
       valid: false,
-      error: 'Debes tener al menos 18 años para alquilar un vehículo',
+      error: 'Debes tener al menos 18 años para usar la plataforma',
     };
   }
 

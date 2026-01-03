@@ -229,7 +229,7 @@ export class BookingFlowService {
       if (status === 'pending') {
         return {
           title: 'Revisar Solicitud',
-          description: 'Un locatario quiere alquilar tu auto. Revisa y aprueba la solicitud.',
+          description: 'Un locatario quiere reservar tu auto. Revisa y aprueba la solicitud.',
           action: 'Aprobar o Rechazar',
           route: `/bookings/owner/${booking.id}`,
           priority: 'high',
@@ -378,7 +378,7 @@ export class BookingFlowService {
         label: 'Completada',
         color: 'success',
         icon: 'flag-outline',
-        description: 'El alquiler finalizó correctamente',
+        description: 'La reserva finalizó correctamente',
       },
       cancelled: {
         label: 'Cancelada',
@@ -420,7 +420,7 @@ export class BookingFlowService {
         label: 'En Revisión Final',
         color: 'warning',
         icon: 'search-outline',
-        description: 'Esperando confirmación post-alquiler o reporte de incidentes',
+        description: 'Esperando confirmación post-reserva o reporte de incidentes',
       },
       disputed: {
         label: 'En Disputa',

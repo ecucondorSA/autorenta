@@ -68,7 +68,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
               <p
                 class="mt-2 text-xs text-text-secondary dark:text-text-secondary"
                 >
-                Debes tener al menos 18 años para alquilar un vehículo
+                Debes tener al menos 18 años para usar la plataforma
               </p>
             }
           </div>

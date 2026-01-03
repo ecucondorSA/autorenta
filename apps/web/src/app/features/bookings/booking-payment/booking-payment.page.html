@@ -121,9 +121,9 @@
               <app-wallet-balance-card class="mb-6" />
               <!-- Payment Breakdown - Wallet -->
               <div class="space-y-2 mb-6">
-                <!-- Desglose del alquiler -->
+                <!-- Desglose de la reserva -->
                 <div class="flex justify-between text-sm">
-                  <span class="text-text-secondary">Alquiler del vehículo:</span>
+                  <span class="text-text-secondary">Reserva del vehículo:</span>
                   <span class="font-semibold">{{ booking()?.total_amount | money }}</span>
                 </div>
                 <!-- Línea de separación -->
@@ -166,7 +166,7 @@
                 </div>
                 <!-- Movimiento total -->
                 <div class="flex justify-between pt-2 border-t border-border-default">
-                  <span class="text-text-secondary text-sm">Impacto total en wallet (alquiler + garantía):</span>
+                  <span class="text-text-secondary text-sm">Impacto total en wallet (reserva + garantía):</span>
                   <span class="font-semibold">{{ totalAmount() | money }}</span>
                 </div>
               </div>
@@ -179,7 +179,7 @@
                   <div class="text-sm">
                     <p class="font-semibold text-info-strong mb-1">¿Cómo funciona?</p>
                     <ul class="text-info-text space-y-1 list-disc list-inside">
-                      <li>El <strong>alquiler</strong> se paga ahora al confirmar</li>
+                      <li>La <strong>reserva</strong> se paga ahora al confirmar</li>
                       <li>La <strong>garantía</strong> queda bloqueada en tu wallet</li>
                       <li>Si no hay daños, la garantía se libera automáticamente</li>
                     </ul>
@@ -225,7 +225,7 @@
                   <strong>Tu tarjeta verá:</strong>
                 </p>
                 <ul class="text-sm text-blue-600 dark:text-blue-400 mt-1 space-y-1">
-                  <li>• Cargo de <strong>{{ booking()?.total_amount | money }}</strong> (alquiler)</li>
+                  <li>• Cargo de <strong>{{ booking()?.total_amount | money }}</strong> (reserva)</li>
                   <li>• Retención de <strong>{{ depositAmount() | money }}</strong> (garantía - no se cobra)</li>
                 </ul>
               </div>
@@ -291,7 +291,7 @@
             <div class="space-y-2 mb-4">
               <!-- Base Rental Cost -->
               <div class="flex justify-between text-sm">
-                <span class="text-text-secondary">Alquiler del vehículo:</span>
+                <span class="text-text-secondary">Reserva del vehículo:</span>
                 <span class="font-medium text-text-primary dark:text-text-secondary">
                   {{ rentalBaseAmount() | money }}
                 </span>

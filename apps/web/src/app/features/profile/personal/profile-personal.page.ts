@@ -147,7 +147,7 @@ import type { UserProfile, Role } from '../../../core/models';
                     [max]="maxBirthDate()"
                     />
                   <p class="mt-1 text-xs text-text-muted">
-                    Debes tener al menos 18 años para alquilar un vehículo
+                    Debes tener al menos 18 años para usar la plataforma
                   </p>
                   @if (ageError()) {
                     <p
@@ -224,7 +224,7 @@ import type { UserProfile, Role } from '../../../core/models';
                     <div>
                       <span class="block font-medium text-text-primary">Locatario</span>
                       <span class="text-sm text-text-secondary">
-                        Solo quiero alquilar vehículos de otros usuarios
+                        Solo quiero usar vehículos de la comunidad
                       </span>
                     </div>
                   </label>
@@ -244,7 +244,7 @@ import type { UserProfile, Role } from '../../../core/models';
                     <div>
                       <span class="block font-medium text-text-primary">Locador</span>
                       <span class="text-sm text-text-secondary">
-                        Quiero publicar mis vehículos para que otros los alquilen
+                        Quiero compartir mis vehículos con la comunidad
                       </span>
                     </div>
                   </label>
@@ -264,7 +264,7 @@ import type { UserProfile, Role } from '../../../core/models';
                     <div>
                       <span class="block font-medium text-text-primary">Ambos</span>
                       <span class="text-sm text-text-secondary">
-                        Quiero alquilar vehículos y también publicar los míos
+                        Quiero usar y compartir vehículos
                       </span>
                     </div>
                   </label>

@@ -142,7 +142,7 @@ export class BookingConfirmationTimelineComponent {
       {
         key: 'car_delivered',
         label: 'Vehículo Entregado',
-        description: 'Check-in completado, alquiler iniciado',
+        description: 'Check-in completado, reserva iniciada',
         completed:
           booking.status === 'in_progress' ||
           booking.status === 'completed' ||

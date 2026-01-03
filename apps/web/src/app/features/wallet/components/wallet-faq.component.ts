@@ -132,9 +132,9 @@ export class WalletFaqComponent {
     },
     {
       question: '¿Cómo recibo pagos como locador?',
-      answer: `Cuando alquilás tu auto, recibís el pago <strong>automáticamente en tu Wallet</strong>:
+      answer: `Cuando compartís tu auto, recibís el pago <strong>automáticamente en tu Wallet</strong>:
         <ul class="list-disc list-inside mt-2 space-y-1">
-          <li><strong>85% del alquiler</strong> va directo a tu wallet (15% es comisión de plataforma)</li>
+          <li><strong>85% de la reserva</strong> va directo a tu wallet (15% es comisión de plataforma)</li>
           <li>Los fondos se acreditan <strong>al finalizar la reserva</strong></li>
           <li>Podés retirar el dinero a tu cuenta bancaria o usarlo para tus propias reservas</li>
         </ul>`,
@@ -145,7 +145,7 @@ export class WalletFaqComponent {
       answer: `El <strong>Crédito de Seguridad</strong> es una garantía de <strong>US$ 600</strong> que se bloquea al hacer una reserva sin tarjeta:
         <ul class="list-disc list-inside mt-2 space-y-1">
           <li>Se bloquea en tu wallet pero <strong>NO se cobra</strong></li>
-          <li>Si no hay daños, <strong>se libera automáticamente</strong> al terminar el alquiler</li>
+          <li>Si no hay daños, <strong>se libera automáticamente</strong> al terminar la reserva</li>
           <li>Una vez liberado, <strong>queda disponible</strong> en tu wallet para futuras reservas</li>
           <li>Es <strong>reutilizable</strong>: no necesitás volver a cargarlo cada vez</li>
         </ul>
@@ -211,7 +211,7 @@ export class WalletFaqComponent {
             <tr>
               <td class="border border-border-default dark:border-border-muted px-3 py-2 text-sm"><strong>Garantía</strong></td>
               <td class="border border-border-default dark:border-border-muted px-3 py-2 text-center text-sm">♻️ Reutilizable</td>
-              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-center text-sm">🔒 Se libera post-alquiler</td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-center text-sm">🔒 Se libera post-reserva</td>
             </tr>
             <tr class="bg-border-default/10 dark:bg-surface-base/30">
               <td class="border border-border-default dark:border-border-muted px-3 py-2 text-sm"><strong>Requisito</strong></td>
@@ -220,7 +220,7 @@ export class WalletFaqComponent {
             </tr>
           </tbody>
         </table>
-        <p class="mt-3 text-sm"><strong>Recomendación:</strong> Wallet ideal para locadores y usuarios frecuentes. Tarjeta para alquileres ocasionales.</p>`,
+        <p class="mt-3 text-sm"><strong>Recomendación:</strong> Wallet ideal para locadores y usuarios frecuentes. Tarjeta para reservas ocasionales.</p>`,
       expanded: false,
     },
     {
@@ -229,7 +229,7 @@ export class WalletFaqComponent {
         <ul class="list-disc list-inside mt-2 space-y-1">
           <li>Transferencias <strong>instantáneas y gratuitas</strong></li>
           <li>Solo necesitás el <strong>email o ID</strong> del destinatario</li>
-          <li>Útil para <strong>compartir gastos</strong> de alquiler entre amigos</li>
+          <li>Útil para <strong>compartir gastos</strong> de reserva entre amigos</li>
           <li><strong>Sin límite</strong> de monto (sujeto a tu saldo disponible)</li>
         </ul>`,
       expanded: false,
@@ -252,7 +252,7 @@ export class WalletFaqComponent {
       answer: `Depende de la <strong>severidad</strong> y <strong>culpabilidad</strong> del siniestro:
         <p class="mt-2 font-semibold">Siniestros CON culpa tuya:</p>
         <ul class="list-disc list-inside space-y-1">
-          <li><strong>Leve</strong> (rayón, espejo): Clase +1 → Fee +5%, Garantía +10% (≈ +$15 USD en alquiler $100)</li>
+          <li><strong>Leve</strong> (rayón, espejo): Clase +1 → Fee +5%, Garantía +10% (≈ +$15 USD en reserva $100)</li>
           <li><strong>Moderado</strong> (abolladura, parabrisas): Clase +2 → Fee +10%, Garantía +20% (≈ +$30 USD)</li>
           <li><strong>Grave</strong> (daño estructural): Clase +3 → Fee +15%, Garantía +40% (≈ +$55 USD)</li>
         </ul>
@@ -300,7 +300,7 @@ export class WalletFaqComponent {
           <li><strong>Protector de Bonus Nivel 2:</strong> $30 USD (protege 2 siniestros)</li>
           <li><strong>Protector de Bonus Nivel 3:</strong> $45 USD (protege 3 siniestros)</li>
         </ul>
-        <p class="mt-2 text-xs text-cta-default dark:text-cta-default">💡 <strong>Ejemplo:</strong> Clase 0 + alquiler $100 = <strong>ahorros de $40 USD</strong> por viaje (fee -$15 + garantía -$25).</p>
+        <p class="mt-2 text-xs text-cta-default dark:text-cta-default">💡 <strong>Ejemplo:</strong> Clase 0 + reserva $100 = <strong>ahorros de $40 USD</strong> por viaje (fee -$15 + garantía -$25).</p>
         <p class="mt-2 text-xs text-success-700 dark:text-success-strong">🏆 <strong>Gamificación:</strong> Badges visuales, mensajes motivacionales, y progreso visible hacia tu próxima mejora de clase.</p>`,
       expanded: false,
     },
@@ -341,8 +341,8 @@ export class WalletFaqComponent {
         <p class="mt-2"><strong>❌ Lo que SÍ perdés (y es grave):</strong></p>
         <ul class="list-disc list-inside space-y-1 text-sm">
           <li><strong>Renovación gratuita:</strong> Necesitás 10 reservas sin siniestros para recuperarla</li>
-          <li><strong>Clase aumenta:</strong> +1 (leve), +2 (moderado) o +3 (grave) → futuras rentas más caras</li>
-          <li><strong>Ejemplo:</strong> Clase 5→6 = próximo alquiler +$25 USD extra</li>
+          <li><strong>Clase aumenta:</strong> +1 (leve), +2 (moderado) o +3 (grave) → futuras reservas más caras</li>
+          <li><strong>Ejemplo:</strong> Clase 5→6 = próxima reserva +$25 USD extra</li>
         </ul>
         <p class="mt-2"><strong>✅ Lo que SÍ conservás:</strong></p>
         <ul class="list-disc list-inside space-y-1 text-sm">
@@ -356,7 +356,7 @@ export class WalletFaqComponent {
     },
     {
       question: '¿Qué pasa con mi garantía si hay daños en el auto?',
-      answer: `Si hay daños durante tu alquiler:
+      answer: `Si hay daños durante tu reserva:
         <ul class="list-disc list-inside mt-2 space-y-1">
           <li>El locador <strong>reporta el daño</strong> con fotos y descripción</li>
           <li>AutoRenta <strong>evalúa el caso</strong> (24-48hs)</li>

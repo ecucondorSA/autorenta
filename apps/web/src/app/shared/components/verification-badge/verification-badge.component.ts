@@ -70,7 +70,7 @@ export class VerificationBadgeComponent implements OnInit {
   getStatusLabel(status: VerificationStatus): string {
     switch (status) {
       case 'VERIFICADO':
-        return 'Verificado para alquiler';
+        return 'Verificado';
       case 'RECHAZADO':
         return 'Verificación rechazada';
       default:

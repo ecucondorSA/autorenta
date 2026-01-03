@@ -117,7 +117,7 @@ export class EarningsCalculatorComponent {
     if (balance >= 0) {
       return `Pagás tu cuota completa y te sobran $${this.formatNumber(balance)}. Tu auto es GRATIS.`;
     } else {
-      return `Necesitás alquilar ${this.missingDays()} días más al mes para cubrir el 100%.`;
+      return `Necesitás compartir ${this.missingDays()} días más al mes para cubrir el 100%.`;
     }
   });
 

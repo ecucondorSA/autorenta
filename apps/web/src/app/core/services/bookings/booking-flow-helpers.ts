@@ -69,7 +69,7 @@ export function canPerformCheckIn(booking: Booking): {
   if (hoursUntilStart < -2) {
     return {
       allowed: false,
-      reason: 'El check-in debe realizarse antes de que comience el alquiler',
+      reason: 'El check-in debe realizarse antes de que comience la reserva',
     };
   }
 
@@ -97,7 +97,7 @@ export function canPerformCheckOut(booking: Booking): {
   if (now < startDate) {
     return {
       allowed: false,
-      reason: 'El check-out solo está disponible después de que comience el alquiler',
+      reason: 'El check-out solo está disponible después de que comience la reserva',
     };
   }
 
@@ -205,7 +205,7 @@ export function getBookingStatusDisplay(status: BookingStatus): {
       label: 'No Presentado',
       color: 'danger',
       icon: '🚫',
-      description: 'El locatario no se presentó para el inicio del alquiler',
+      description: 'El locatario no se presentó para el inicio de la reserva',
     },
     rejected: {
       label: 'Rechazada',
@@ -223,7 +223,7 @@ export function getBookingStatusDisplay(status: BookingStatus): {
       label: 'En Revisión Final',
       color: 'warning',
       icon: '🔍',
-      description: 'Esperando confirmación post-alquiler o reporte de incidentes',
+      description: 'Esperando confirmación post-reserva o reporte de incidentes',
     },
     disputed: {
       label: 'En Disputa',

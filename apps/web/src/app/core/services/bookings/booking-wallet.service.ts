@@ -48,7 +48,7 @@ export class BookingWalletService {
         p_ref: ref,
         p_meta: {
           charged_at: new Date().toISOString(),
-          description: description || `Cargo por alquiler - Reserva ${booking.id.substring(0, 8)}`,
+          description: description || `Cargo por reserva - Reserva ${booking.id.substring(0, 8)}`,
           car_id: booking.car_id,
         },
       });

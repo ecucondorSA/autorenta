@@ -14,7 +14,7 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
 /**
  * Panel de Asistente Legal IA
  *
- * Permite a los usuarios hacer preguntas sobre los terminos del alquiler.
+ * Permite a los usuarios hacer preguntas sobre los términos de uso.
  * Usa Google Gemini para generar respuestas basadas en el contexto.
  *
  * @example
@@ -87,7 +87,7 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
                   AI
                 </span>
               </h3>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Consultas sobre terminos del alquiler</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Consultas sobre términos de uso</p>
             </div>
           </div>
           <svg
