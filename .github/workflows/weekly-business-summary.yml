@@ -1,0 +1,306 @@
+name: Weekly Business Summary
+
+on:
+  schedule:
+    # Run every Monday at 9:00 AM Argentina time (12:00 UTC)
+    - cron: '0 12 * * 1'
+  workflow_dispatch:
+
+jobs:
+  generate-summary:
+    name: Generate Weekly Summary
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Collect Weekly Data
+        id: data
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            const query = async (endpoint) => {
+              const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Prefer': 'count=exact',
+                }
+              });
+              const count = res.headers.get('content-range')?.split('/')[1] || '0';
+              const data = await res.json();
+              return { data, count: parseInt(count) };
+            };
+
+            // Date ranges
+            const now = new Date();
+            const thisWeekStart = new Date(now - 7 * 24 * 60 * 60 * 1000);
+            const lastWeekStart = new Date(now - 14 * 24 * 60 * 60 * 1000);
+            const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+            const thisWeekStr = thisWeekStart.toISOString();
+            const lastWeekStr = lastWeekStart.toISOString();
+            const monthStr = thisMonthStart.toISOString();
+
+            const summary = {
+              period: {
+                start: thisWeekStart.toISOString().split('T')[0],
+                end: now.toISOString().split('T')[0],
+              },
+              thisWeek: {},
+              lastWeek: {},
+              growth: {},
+              mtd: {},
+              topPerformers: {},
+              alerts: [],
+            };
+
+            console.log(`Generating weekly summary: ${summary.period.start} to ${summary.period.end}`);
+
+            // === THIS WEEK ===
+            console.log('Collecting this week data...');
+
+            // Bookings
+            const { count: bookingsThisWeek } = await query(
+              `bookings?created_at=gte.${thisWeekStr}&select=id`
+            );
+            const { count: confirmedThisWeek } = await query(
+              `bookings?status=in.(confirmed,in_progress,completed)&created_at=gte.${thisWeekStr}&select=id`
+            );
+            const { count: completedThisWeek } = await query(
+              `bookings?status=eq.completed&updated_at=gte.${thisWeekStr}&select=id`
+            );
+
+            // Revenue
+            const { data: revenueThisWeek } = await query(
+              `bookings?status=in.(confirmed,in_progress,completed)&created_at=gte.${thisWeekStr}&select=total_amount_ars,platform_fee_ars`
+            );
+            const gmvThisWeek = revenueThisWeek.reduce((sum, b) => sum + (b.total_amount_ars || 0), 0);
+            const feesThisWeek = revenueThisWeek.reduce((sum, b) => sum + (b.platform_fee_ars || 0), 0);
+
+            // Users
+            const { count: newUsersThisWeek } = await query(
+              `profiles?created_at=gte.${thisWeekStr}&select=id`
+            );
+            const { count: verifiedThisWeek } = await query(
+              `profiles?identity_verified_at=gte.${thisWeekStr}&select=id`
+            );
+
+            // Cars
+            const { count: newCarsThisWeek } = await query(
+              `cars?created_at=gte.${thisWeekStr}&select=id`
+            );
+
+            summary.thisWeek = {
+              bookings: bookingsThisWeek,
+              confirmed: confirmedThisWeek,
+              completed: completedThisWeek,
+              gmv: gmvThisWeek,
+              platform_fees: feesThisWeek,
+              new_users: newUsersThisWeek,
+              verified_users: verifiedThisWeek,
+              new_cars: newCarsThisWeek,
+              confirmation_rate: bookingsThisWeek > 0
+                ? ((confirmedThisWeek / bookingsThisWeek) * 100).toFixed(1)
+                : 0,
+            };
+
+            // === LAST WEEK ===
+            console.log('Collecting last week data...');
+
+            const { count: bookingsLastWeek } = await query(
+              `bookings?created_at=gte.${lastWeekStr}&created_at=lt.${thisWeekStr}&select=id`
+            );
+            const { data: revenueLastWeek } = await query(
+              `bookings?status=in.(confirmed,in_progress,completed)&created_at=gte.${lastWeekStr}&created_at=lt.${thisWeekStr}&select=total_amount_ars`
+            );
+            const gmvLastWeek = revenueLastWeek.reduce((sum, b) => sum + (b.total_amount_ars || 0), 0);
+            const { count: newUsersLastWeek } = await query(
+              `profiles?created_at=gte.${lastWeekStr}&created_at=lt.${thisWeekStr}&select=id`
+            );
+
+            summary.lastWeek = {
+              bookings: bookingsLastWeek,
+              gmv: gmvLastWeek,
+              new_users: newUsersLastWeek,
+            };
+
+            // === GROWTH ===
+            const calcGrowth = (current, previous) => {
+              if (previous === 0) return current > 0 ? 100 : 0;
+              return (((current - previous) / previous) * 100).toFixed(1);
+            };
+
+            summary.growth = {
+              bookings: calcGrowth(bookingsThisWeek, bookingsLastWeek),
+              gmv: calcGrowth(gmvThisWeek, gmvLastWeek),
+              users: calcGrowth(newUsersThisWeek, newUsersLastWeek),
+            };
+
+            // === MTD ===
+            console.log('Collecting MTD data...');
+
+            const { count: bookingsMTD } = await query(
+              `bookings?created_at=gte.${monthStr}&select=id`
+            );
+            const { data: revenueMTD } = await query(
+              `bookings?status=in.(confirmed,in_progress,completed)&created_at=gte.${monthStr}&select=total_amount_ars,platform_fee_ars`
+            );
+            const gmvMTD = revenueMTD.reduce((sum, b) => sum + (b.total_amount_ars || 0), 0);
+            const feesMTD = revenueMTD.reduce((sum, b) => sum + (b.platform_fee_ars || 0), 0);
+
+            summary.mtd = {
+              bookings: bookingsMTD,
+              gmv: gmvMTD,
+              platform_fees: feesMTD,
+            };
+
+            // === TOP PERFORMERS ===
+            console.log('Finding top performers...');
+
+            // Top owners by revenue
+            const { data: topOwners } = await query(
+              `bookings?status=in.(confirmed,in_progress,completed)&created_at=gte.${thisWeekStr}&select=owner_id,total_amount_ars&order=total_amount_ars.desc&limit=5`
+            );
+
+            // Aggregate by owner
+            const ownerRevenue = {};
+            for (const b of topOwners) {
+              ownerRevenue[b.owner_id] = (ownerRevenue[b.owner_id] || 0) + b.total_amount_ars;
+            }
+
+            summary.topPerformers.owners = Object.entries(ownerRevenue)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 3)
+              .map(([id, revenue]) => ({ id: id.substring(0, 8), revenue }));
+
+            // === ALERTS ===
+            // Check for concerning trends
+            if (parseFloat(summary.growth.bookings) < -20) {
+              summary.alerts.push({
+                type: 'BOOKING_DECLINE',
+                message: `Bookings down ${Math.abs(summary.growth.bookings)}% vs last week`,
+              });
+            }
+
+            if (parseFloat(summary.growth.gmv) < -20) {
+              summary.alerts.push({
+                type: 'REVENUE_DECLINE',
+                message: `GMV down ${Math.abs(summary.growth.gmv)}% vs last week`,
+              });
+            }
+
+            const cancelledThisWeek = bookingsThisWeek - confirmedThisWeek;
+            const cancellationRate = bookingsThisWeek > 0
+              ? (cancelledThisWeek / bookingsThisWeek) * 100
+              : 0;
+
+            if (cancellationRate > 30) {
+              summary.alerts.push({
+                type: 'HIGH_CANCELLATION',
+                message: `${cancellationRate.toFixed(1)}% cancellation rate this week`,
+              });
+            }
+
+            console.log('\n=== Weekly Summary ===');
+            console.log(JSON.stringify(summary, null, 2));
+
+            core.setOutput('summary', JSON.stringify(summary));
+
+            return summary;
+
+      - name: Create Weekly Report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const summary = JSON.parse('${{ steps.data.outputs.summary }}');
+
+            const formatCurrency = (val) => `ARS ${val.toLocaleString('es-AR')}`;
+            const formatGrowth = (val) => {
+              const num = parseFloat(val);
+              if (num > 0) return `📈 +${val}%`;
+              if (num < 0) return `📉 ${val}%`;
+              return `➡️ ${val}%`;
+            };
+
+            const alertsSection = summary.alerts.length > 0
+              ? `### ⚠️ Alerts\n${summary.alerts.map(a => `- **${a.type}:** ${a.message}`).join('\n')}\n\n`
+              : '';
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[WEEKLY REPORT] ${summary.period.start} → ${summary.period.end} | GMV: ${formatCurrency(summary.thisWeek.gmv)}`,
+              body: `## 📊 Weekly Business Summary
+
+**Period:** ${summary.period.start} → ${summary.period.end}
+
+${alertsSection}### This Week vs Last Week
+
+| Metric | This Week | Last Week | Growth |
+|--------|-----------|-----------|--------|
+| Bookings | ${summary.thisWeek.bookings} | ${summary.lastWeek.bookings} | ${formatGrowth(summary.growth.bookings)} |
+| GMV | ${formatCurrency(summary.thisWeek.gmv)} | ${formatCurrency(summary.lastWeek.gmv)} | ${formatGrowth(summary.growth.gmv)} |
+| New Users | ${summary.thisWeek.new_users} | ${summary.lastWeek.new_users} | ${formatGrowth(summary.growth.users)} |
+
+### This Week Details
+
+| Metric | Value |
+|--------|-------|
+| Total Bookings | ${summary.thisWeek.bookings} |
+| Confirmed | ${summary.thisWeek.confirmed} |
+| Completed | ${summary.thisWeek.completed} |
+| Confirmation Rate | ${summary.thisWeek.confirmation_rate}% |
+| Platform Fees | ${formatCurrency(summary.thisWeek.platform_fees)} |
+| New Cars Listed | ${summary.thisWeek.new_cars} |
+| Users Verified | ${summary.thisWeek.verified_users} |
+
+### Month to Date (MTD)
+
+| Metric | Value |
+|--------|-------|
+| Bookings | ${summary.mtd.bookings} |
+| GMV | ${formatCurrency(summary.mtd.gmv)} |
+| Platform Fees | ${formatCurrency(summary.mtd.platform_fees)} |
+
+### Top Owners This Week
+${summary.topPerformers.owners?.map((o, i) => `${i + 1}. Owner \`${o.id}...\` - ${formatCurrency(o.revenue)}`).join('\n') || 'No data'}
+
+---
+*Auto-generated by Weekly Business Summary workflow*`,
+              labels: ['report', 'weekly', 'business'],
+            });
+
+      - name: Notify on Alerts
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const summary = JSON.parse('${{ steps.data.outputs.summary }}' || '{}');
+
+            if (summary.alerts && summary.alerts.length > 0) {
+              const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+              if (!webhookUrl) return;
+
+              await fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  source: 'github',
+                  severity: 'medium',
+                  title: 'Weekly Business Alert',
+                  message: summary.alerts.map(a => a.message).join('; '),
+                  metadata: {
+                    workflow: 'weekly-business-summary',
+                    alerts: summary.alerts,
+                    run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                  },
+                  timestamp: new Date().toISOString(),
+                }),
+              });
+            }

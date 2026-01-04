@@ -1,0 +1,255 @@
+name: Daily Metrics Report
+
+on:
+  schedule:
+    # Run daily at 8:00 AM Argentina time (11:00 UTC)
+    - cron: '0 11 * * *'
+  workflow_dispatch:
+
+jobs:
+  generate-report:
+    name: Generate Daily Metrics
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Collect Metrics
+        id: metrics
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            const query = async (endpoint) => {
+              const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Prefer': 'count=exact',
+                }
+              });
+              const count = res.headers.get('content-range')?.split('/')[1] || '0';
+              const data = await res.json();
+              return { data, count: parseInt(count) };
+            };
+
+            const today = new Date();
+            const yesterday = new Date(today - 24 * 60 * 60 * 1000);
+            const lastWeek = new Date(today - 7 * 24 * 60 * 60 * 1000);
+            const lastMonth = new Date(today - 30 * 24 * 60 * 60 * 1000);
+
+            const todayStr = today.toISOString().split('T')[0];
+            const yesterdayStr = yesterday.toISOString().split('T')[0];
+            const lastWeekStr = lastWeek.toISOString().split('T')[0];
+
+            const metrics = {
+              date: yesterdayStr,
+              bookings: {},
+              revenue: {},
+              users: {},
+              cars: {},
+              wallet: {},
+              conversion: {},
+            };
+
+            console.log(`Generating metrics for ${yesterdayStr}`);
+
+            // 1. Bookings metrics
+            console.log('Collecting booking metrics...');
+            const { count: bookingsYesterday } = await query(
+              `bookings?created_at=gte.${yesterdayStr}&created_at=lt.${todayStr}&select=id`
+            );
+            const { count: bookingsLastWeek } = await query(
+              `bookings?created_at=gte.${lastWeekStr}&select=id`
+            );
+            const { count: confirmedYesterday } = await query(
+              `bookings?status=eq.confirmed&created_at=gte.${yesterdayStr}&created_at=lt.${todayStr}&select=id`
+            );
+            const { count: completedYesterday } = await query(
+              `bookings?status=eq.completed&updated_at=gte.${yesterdayStr}&updated_at=lt.${todayStr}&select=id`
+            );
+            const { count: cancelledYesterday } = await query(
+              `bookings?status=eq.cancelled&updated_at=gte.${yesterdayStr}&updated_at=lt.${todayStr}&select=id`
+            );
+
+            metrics.bookings = {
+              created_yesterday: bookingsYesterday,
+              created_last_7_days: bookingsLastWeek,
+              confirmed_yesterday: confirmedYesterday,
+              completed_yesterday: completedYesterday,
+              cancelled_yesterday: cancelledYesterday,
+              daily_avg_7d: Math.round(bookingsLastWeek / 7),
+            };
+
+            // 2. Revenue metrics
+            console.log('Collecting revenue metrics...');
+            const { data: revenueData } = await query(
+              `bookings?status=in.(confirmed,in_progress,completed)&created_at=gte.${yesterdayStr}&created_at=lt.${todayStr}&select=total_amount_ars,platform_fee_ars`
+            );
+
+            const totalRevenue = revenueData.reduce((sum, b) => sum + (b.total_amount_ars || 0), 0);
+            const platformFees = revenueData.reduce((sum, b) => sum + (b.platform_fee_ars || 0), 0);
+
+            const { data: weekRevenue } = await query(
+              `bookings?status=in.(confirmed,in_progress,completed)&created_at=gte.${lastWeekStr}&select=total_amount_ars`
+            );
+            const weekTotal = weekRevenue.reduce((sum, b) => sum + (b.total_amount_ars || 0), 0);
+
+            metrics.revenue = {
+              gmv_yesterday: totalRevenue,
+              platform_fees_yesterday: platformFees,
+              gmv_last_7_days: weekTotal,
+              daily_avg_gmv_7d: Math.round(weekTotal / 7),
+            };
+
+            // 3. User metrics
+            console.log('Collecting user metrics...');
+            const { count: newUsers } = await query(
+              `profiles?created_at=gte.${yesterdayStr}&created_at=lt.${todayStr}&select=id`
+            );
+            const { count: verifiedUsers } = await query(
+              `profiles?identity_verified_at=gte.${yesterdayStr}&identity_verified_at=lt.${todayStr}&select=id`
+            );
+            const { count: totalUsers } = await query(`profiles?select=id`);
+            const { count: activeRenters } = await query(
+              `bookings?created_at=gte.${lastWeekStr}&select=renter_id`
+            );
+
+            metrics.users = {
+              new_yesterday: newUsers,
+              verified_yesterday: verifiedUsers,
+              total: totalUsers,
+              active_renters_7d: activeRenters,
+            };
+
+            // 4. Car metrics
+            console.log('Collecting car metrics...');
+            const { count: newCars } = await query(
+              `cars?created_at=gte.${yesterdayStr}&created_at=lt.${todayStr}&select=id`
+            );
+            const { count: activeCars } = await query(
+              `cars?status=eq.active&select=id`
+            );
+            const { count: totalCars } = await query(`cars?select=id`);
+
+            metrics.cars = {
+              new_yesterday: newCars,
+              active: activeCars,
+              total: totalCars,
+              utilization_rate: activeCars > 0 ? ((confirmedYesterday / activeCars) * 100).toFixed(1) : 0,
+            };
+
+            // 5. Wallet metrics
+            console.log('Collecting wallet metrics...');
+            const { data: deposits } = await query(
+              `wallet_ledger?kind=eq.deposit&created_at=gte.${yesterdayStr}&created_at=lt.${todayStr}&select=amount_cents`
+            );
+            const { data: withdrawals } = await query(
+              `wallet_ledger?kind=eq.withdrawal&created_at=gte.${yesterdayStr}&created_at=lt.${todayStr}&select=amount_cents`
+            );
+
+            const totalDeposits = deposits.reduce((sum, d) => sum + (d.amount_cents || 0), 0) / 100;
+            const totalWithdrawals = withdrawals.reduce((sum, w) => sum + (w.amount_cents || 0), 0) / 100;
+
+            metrics.wallet = {
+              deposits_yesterday: totalDeposits,
+              withdrawals_yesterday: totalWithdrawals,
+              net_flow: totalDeposits - totalWithdrawals,
+            };
+
+            // 6. Conversion metrics
+            console.log('Calculating conversion rates...');
+            const { count: searchesYesterday } = await query(
+              `search_logs?created_at=gte.${yesterdayStr}&created_at=lt.${todayStr}&select=id`
+            ).catch(() => ({ count: 0 }));
+
+            metrics.conversion = {
+              search_to_booking: searchesYesterday > 0
+                ? ((bookingsYesterday / searchesYesterday) * 100).toFixed(2)
+                : 'N/A',
+              booking_confirmation_rate: bookingsYesterday > 0
+                ? ((confirmedYesterday / bookingsYesterday) * 100).toFixed(1)
+                : 'N/A',
+              cancellation_rate: (confirmedYesterday + cancelledYesterday) > 0
+                ? ((cancelledYesterday / (confirmedYesterday + cancelledYesterday)) * 100).toFixed(1)
+                : '0',
+            };
+
+            // Output
+            console.log('\n=== Daily Metrics Report ===');
+            console.log(JSON.stringify(metrics, null, 2));
+
+            core.setOutput('metrics', JSON.stringify(metrics));
+            core.setOutput('gmv', totalRevenue);
+            core.setOutput('bookings', bookingsYesterday);
+            core.setOutput('new_users', newUsers);
+
+            return metrics;
+
+      - name: Create Daily Report Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const metrics = JSON.parse('${{ steps.metrics.outputs.metrics }}');
+
+            const formatCurrency = (val) => `ARS ${val.toLocaleString('es-AR')}`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[DAILY REPORT] ${metrics.date} - GMV: ${formatCurrency(metrics.revenue.gmv_yesterday)}`,
+              body: `## Daily Metrics Report - ${metrics.date}
+
+### Bookings
+| Metric | Value |
+|--------|-------|
+| Created | ${metrics.bookings.created_yesterday} |
+| Confirmed | ${metrics.bookings.confirmed_yesterday} |
+| Completed | ${metrics.bookings.completed_yesterday} |
+| Cancelled | ${metrics.bookings.cancelled_yesterday} |
+| 7-day avg | ${metrics.bookings.daily_avg_7d}/day |
+
+### Revenue
+| Metric | Value |
+|--------|-------|
+| GMV | ${formatCurrency(metrics.revenue.gmv_yesterday)} |
+| Platform Fees | ${formatCurrency(metrics.revenue.platform_fees_yesterday)} |
+| 7-day GMV | ${formatCurrency(metrics.revenue.gmv_last_7_days)} |
+| 7-day avg | ${formatCurrency(metrics.revenue.daily_avg_gmv_7d)}/day |
+
+### Users
+| Metric | Value |
+|--------|-------|
+| New registrations | ${metrics.users.new_yesterday} |
+| Verified | ${metrics.users.verified_yesterday} |
+| Active renters (7d) | ${metrics.users.active_renters_7d} |
+| Total | ${metrics.users.total} |
+
+### Cars
+| Metric | Value |
+|--------|-------|
+| New listings | ${metrics.cars.new_yesterday} |
+| Active | ${metrics.cars.active} |
+| Total | ${metrics.cars.total} |
+
+### Wallet
+| Metric | Value |
+|--------|-------|
+| Deposits | ${formatCurrency(metrics.wallet.deposits_yesterday)} |
+| Withdrawals | ${formatCurrency(metrics.wallet.withdrawals_yesterday)} |
+| Net flow | ${formatCurrency(metrics.wallet.net_flow)} |
+
+### Conversion
+| Metric | Value |
+|--------|-------|
+| Confirmation rate | ${metrics.conversion.booking_confirmation_rate}% |
+| Cancellation rate | ${metrics.conversion.cancellation_rate}% |
+
+---
+*Auto-generated by Daily Metrics Report workflow*`,
+              labels: ['report', 'metrics', 'daily'],
+            });
