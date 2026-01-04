@@ -403,9 +403,32 @@ export class BookingPaymentPage implements OnInit {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
-        next: () => {
-          this.toastService.success('Pago procesado', 'Tu pago ha sido procesado exitosamente');
-          this.router.navigate(['/bookings', 'success', bookingData.id]);
+        next: async (response) => {
+          if (!response.success) {
+            this.toastService.error('Error de pago', response.message || 'No se pudo bloquear los fondos');
+            return;
+          }
+
+          // FIX: Update booking with lock transaction IDs and payment status
+          // Note: Set both payment_method and payment_mode for compatibility with booking-detail UI
+          try {
+            await this.bookingService.updateBooking(bookingData.id, {
+              payment_method: 'wallet',
+              payment_mode: 'wallet',
+              wallet_status: 'locked',
+              rental_lock_transaction_id: response.rental_lock_transaction_id,
+              deposit_lock_transaction_id: response.deposit_lock_transaction_id,
+            });
+
+            this.toastService.success('Pago procesado', 'Tu pago ha sido procesado exitosamente');
+            this.router.navigate(['/bookings', 'success', bookingData.id]);
+          } catch (updateError) {
+            console.error('[BookingPayment] Error updating booking after lock:', updateError);
+            // Lock succeeded but update failed - still navigate to success
+            // The booking will be updated on next load
+            this.toastService.success('Pago procesado', 'Tu pago ha sido procesado exitosamente');
+            this.router.navigate(['/bookings', 'success', bookingData.id]);
+          }
         },
         error: (error) => {
           console.error('[BookingPayment] Wallet payment error:', error);

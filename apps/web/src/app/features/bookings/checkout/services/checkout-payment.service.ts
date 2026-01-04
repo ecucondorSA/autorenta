@@ -75,6 +75,7 @@ export class CheckoutPaymentService {
     try {
       await this.bookings.updateBooking(bookingId, {
         payment_method: 'wallet',
+        payment_mode: 'wallet', // FIX: Also set payment_mode for booking-detail UI
         rental_amount_cents: Math.round(rentalAmount * 100),
         deposit_amount_cents: Math.round(depositUsd * 100),
         rental_lock_transaction_id: lock.rental_lock_transaction_id,
@@ -111,6 +112,7 @@ export class CheckoutPaymentService {
 
     await this.bookings.updateBooking(bookingId, {
       payment_method: 'credit_card',
+      payment_mode: 'card', // FIX: Also set payment_mode for booking-detail UI
       wallet_amount_cents: 0,
       deposit_amount_cents: Math.round(this.state.getDepositUsd() * 100),
     });
@@ -172,6 +174,7 @@ export class CheckoutPaymentService {
       await this.bookings.updateBooking(bookingId, {
         status: 'pending_payment',
         payment_method: 'partial_wallet',
+        payment_mode: 'wallet', // FIX: Also set payment_mode for booking-detail UI
         wallet_amount_cents: Math.round(walletAmount * 100),
         wallet_status: 'locked',
         wallet_lock_transaction_id: lockResult.transaction_id ?? undefined,
