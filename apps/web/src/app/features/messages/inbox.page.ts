@@ -265,34 +265,34 @@ export class InboxPage implements OnInit, OnDestroy {
    * no soporta OR en filtros directamente
    */
   private subscribeToConversations(userId: string): void {
-    // Canal para mensajes donde el usuario es el remitente
+    // Canal para mensajes donde el usuario es el remitente (solo INSERT para actualizar preview)
     const senderChannel = this.realtimeConnection.subscribeWithRetry<Message>(
       'inbox-conversations-sender',
       {
-        event: '*', // INSERT, UPDATE
+        event: 'INSERT', // Solo INSERT - no incrementa unread
         schema: 'public',
         table: 'messages',
         filter: `sender_id=eq.${userId}`,
       },
       (payload) => {
-        this.handleMessageChange(payload.new as Message, userId);
+        this.handleMessageChange(payload.new as Message, userId, false);
       },
       (status) => {
         this.connectionStatus.set(status);
       },
     );
 
-    // Canal para mensajes donde el usuario es el destinatario
+    // Canal para mensajes donde el usuario es el destinatario (solo INSERT = mensaje nuevo)
     this.realtimeConnection.subscribeWithRetry<Message>(
       'inbox-conversations-recipient',
       {
-        event: '*', // INSERT, UPDATE
+        event: 'INSERT', // Solo INSERT - evita inflar contador con UPDATE (read_at)
         schema: 'public',
         table: 'messages',
         filter: `recipient_id=eq.${userId}`,
       },
       (payload) => {
-        this.handleMessageChange(payload.new as Message, userId);
+        this.handleMessageChange(payload.new as Message, userId, true);
       },
       (status) => {
         this.connectionStatus.set(status);
@@ -306,8 +306,9 @@ export class InboxPage implements OnInit, OnDestroy {
   /**
    * Maneja cambios en mensajes recibidos via realtime
    * Optimizado: actualiza solo los campos necesarios sin refetch completo
+   * @param incrementUnread - true solo para mensajes recibidos (recipient channel)
    */
-  private handleMessageChange(message: Message, userId: string): void {
+  private handleMessageChange(message: Message, userId: string, incrementUnread: boolean): void {
     const conversationId = message['car_id'] || message.booking_id;
     if (!conversationId) return;
 
@@ -324,13 +325,16 @@ export class InboxPage implements OnInit, OnDestroy {
         const existingConv = updated[index];
 
         // Update only changed fields
+        // Solo incrementar unread si es mensaje de otro usuario Y viene del canal recipient
+        const shouldIncrementUnread = incrementUnread && message.sender_id !== userId;
+
         updated[index] = {
           ...existingConv,
           lastMessage: message.body,
           lastMessageAt: new Date(message['created_at']),
-          // Increment unread count if message is from other user and not read
-          unreadCount:
-            message.sender_id !== userId ? existingConv.unreadCount + 1 : existingConv.unreadCount,
+          unreadCount: shouldIncrementUnread
+            ? existingConv.unreadCount + 1
+            : existingConv.unreadCount,
         };
 
         // Reordenar por fecha de último mensaje
@@ -404,6 +408,9 @@ export class InboxPage implements OnInit, OnDestroy {
       userName: conv.otherUserName,
     };
 
+    // Resetear unread count inmediatamente en la UI
+    this.resetUnreadCount(conv['id']);
+
     if (conv['carId']) {
       params['carId'] = conv['carId'];
       params['carName'] = `${conv.carBrand} ${conv.carModel}`;
@@ -418,6 +425,24 @@ export class InboxPage implements OnInit, OnDestroy {
     }
 
     this.router.navigate(['/messages/chat'], { queryParams: params });
+  }
+
+  /**
+   * Resetea el contador de mensajes no leídos para una conversación
+   * Se llama al abrir una conversación para actualizar la UI inmediatamente
+   */
+  private resetUnreadCount(conversationId: string): void {
+    this.conversations.update((convs) => {
+      const index = convs.findIndex((c) => c['id'] === conversationId);
+      if (index === -1) return convs;
+
+      const updated = [...convs];
+      updated[index] = {
+        ...updated[index],
+        unreadCount: 0,
+      };
+      return updated;
+    });
   }
 
   formatDate(date: Date): string {
@@ -447,21 +472,12 @@ export class InboxPage implements OnInit, OnDestroy {
       navigator.vibrate([10, 20, 5]);
     }
 
-    // Trigger the appropriate file input
-    setTimeout(() => {
-      const inputId =
-        type === 'document' ? 'documentInput' : type === 'image' ? 'imageInput' : 'cameraInput';
-      const input = document.querySelector(`input[type="file"]#${inputId}`) as HTMLInputElement;
-      if (input) {
-        input.click();
-      } else {
-        // Fallback: try by accept attribute
-        const inputs = document.querySelectorAll('input[type="file"]');
-        if (type === 'document' && inputs[0]) (inputs[0] as HTMLInputElement).click();
-        if (type === 'image' && inputs[1]) (inputs[1] as HTMLInputElement).click();
-        if (type === 'camera' && inputs[2]) (inputs[2] as HTMLInputElement).click();
-      }
-    }, 100);
+    // En el Inbox no hay conversación activa - informar al usuario
+    this.notifications.info(
+      'Abrí una conversación',
+      'Para enviar archivos, primero abrí una conversación haciendo clic en ella.',
+      4000,
+    );
   }
 
   async handleFileSelect(event: Event, fileType: 'document' | 'media' | 'camera'): Promise<void> {
