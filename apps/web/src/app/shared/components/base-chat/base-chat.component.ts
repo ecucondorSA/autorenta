@@ -44,16 +44,25 @@ export interface ChatContext {
           >
             {{ getInitials() }}
           </div>
-          <!-- Online indicator -->
-          <div class="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-surface-raised bg-emerald-500"></div>
+          <!-- Online indicator - real presence -->
+          @if (recipientOnline()) {
+            <div class="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-surface-raised bg-emerald-500"></div>
+          } @else {
+            <div class="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-surface-raised bg-gray-400"></div>
+          }
         </div>
 
         <!-- Contact Info -->
         <div class="flex-1 min-w-0">
           <h3 class="text-base font-semibold text-text-primary truncate">{{ context().recipientName }}</h3>
           <div class="flex items-center gap-1.5">
-            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-            <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium">En línea</span>
+            @if (recipientOnline()) {
+              <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+              <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium">En línea</span>
+            } @else {
+              <span class="h-2 w-2 rounded-full bg-gray-400"></span>
+              <span class="text-xs text-text-secondary font-medium">Desconectado</span>
+            }
           </div>
         </div>
 
@@ -89,6 +98,11 @@ export interface ChatContext {
       @if (blocked()) {
         <div class="bg-error-bg/50 border-b border-error-border px-4 py-2.5 text-sm text-center text-error-strong">
           <span class="font-medium">Usuario bloqueado</span> · Desbloquéalo para volver a chatear
+        </div>
+      }
+      @if (blockedBy() && !blocked()) {
+        <div class="bg-warning-bg/50 border-b border-warning-border px-4 py-2.5 text-sm text-center text-warning-strong">
+          <span class="font-medium">Este usuario te ha bloqueado</span> · No puedes enviarle mensajes
         </div>
       }
 
@@ -167,6 +181,12 @@ export interface ChatContext {
                         <div class="mt-1 flex items-center justify-end gap-1">
                           <span class="text-xs text-white/70">{{ formatTime(message.created_at) }}</span>
                           <!-- Status indicators -->
+                          @if (getMessageStatus(message) === 'pending') {
+                            <!-- Clock icon - pending/queued -->
+                            <svg class="h-3.5 w-3.5 text-white/50 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          }
                           @if (getMessageStatus(message) === 'sent') {
                             <svg class="h-3.5 w-3.5 text-white/70" fill="currentColor" viewBox="0 0 16 15">
                               <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512z" />
@@ -282,8 +302,8 @@ export interface ChatContext {
               [ngModel]="draftMessage"
               (ngModelChange)="onMessageDraftChange($event)"
               name="message"
-              [disabled]="sending() || blocked()"
-              [placeholder]="blocked() ? 'Usuario bloqueado' : 'Escribe un mensaje...'"
+              [disabled]="sending() || blocked() || blockedBy()"
+              [placeholder]="blocked() ? 'Usuario bloqueado' : blockedBy() ? 'Te han bloqueado' : 'Escribe un mensaje...'"
               class="w-full rounded-full bg-surface-base border border-border-default px-4 py-2.5 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
             />
           </div>
@@ -291,7 +311,7 @@ export interface ChatContext {
           <!-- Send button -->
           <button
             type="submit"
-            [disabled]="!draftMessage.trim() || sending() || blocked()"
+            [disabled]="!draftMessage.trim() || sending() || blocked() || blockedBy()"
             class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-sm"
           >
             @if (!sending()) {
@@ -335,9 +355,11 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   readonly sending = signal(false);
   readonly error = signal<string | null>(null);
   readonly newMessage = signal('');
-  readonly blocked = signal(false);
+  readonly blocked = signal(false);       // I blocked them
+  readonly blockedBy = signal(false);     // They blocked me
   readonly notification = signal<string | null>(null);
   readonly recipientTyping = signal(false);
+  readonly recipientOnline = signal(false); // Real presence status
 
   // AI Suggestions State
   readonly aiSuggestions = signal<ChatSuggestion[]>([]);
@@ -350,6 +372,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   protected notificationTimeout: ReturnType<typeof setTimeout> | null = null;
   protected typingTimeout: ReturnType<typeof setTimeout> | null = null;
   protected typingChannel?: RealtimeChannel;
+  protected presenceChannel?: RealtimeChannel;
 
   constructor() {
     // Update current user ID when session changes
@@ -363,12 +386,14 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     await this.loadMessages();
     this.subscribeToMessages();
     this.subscribeToTyping();
+    this.subscribeToPresence();
 
-    // Check initial blocked status from server
+    // Check initial bidirectional block status from server
     const ctx = this.context();
     if (ctx.recipientId) {
-      this.messagesService.isUserBlocked(ctx.recipientId).then((isBlocked) => {
-        this.blocked.set(isBlocked);
+      this.messagesService.isBlocked(ctx.recipientId).then((status) => {
+        this.blocked.set(status.blocked);
+        this.blockedBy.set(status.blockedBy);
       });
     }
   }
@@ -377,6 +402,9 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     this.messagesService.unsubscribe();
     if (this.typingChannel) {
       this.typingChannel.unsubscribe();
+    }
+    if (this.presenceChannel) {
+      this.presenceChannel.unsubscribe();
     }
     if (this.notificationTimeout) {
       clearTimeout(this.notificationTimeout);
@@ -517,6 +545,46 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Suscribe a presencia real del destinatario (online/offline)
+   */
+  protected subscribeToPresence(): void {
+    const ctx = this.context();
+    const channelName = `presence-online-${ctx.contextId}`;
+
+    // @ts-expect-error - Supabase types incomplete for presence
+    this.presenceChannel = this.messagesService['supabase']
+      .channel(channelName, {
+        config: {
+          presence: {
+            key: this.currentUserId() || 'anonymous',
+          },
+        },
+      })
+      .on('presence', { event: 'sync' }, () => {
+        const state = this.presenceChannel?.presenceState() || {};
+        // Check if recipient is in the presence state
+        const onlineUsers = Object.keys(state);
+        this.recipientOnline.set(onlineUsers.includes(ctx.recipientId));
+      })
+      .on('presence', { event: 'join' }, ({ key }: { key: string }) => {
+        if (key === ctx.recipientId) {
+          this.recipientOnline.set(true);
+        }
+      })
+      .on('presence', { event: 'leave' }, ({ key }: { key: string }) => {
+        if (key === ctx.recipientId) {
+          this.recipientOnline.set(false);
+        }
+      })
+      .subscribe(async (status: string) => {
+        if (status === 'SUBSCRIBED' && this.currentUserId()) {
+          // Track our own presence
+          await this.presenceChannel?.track({ user_id: this.currentUserId() });
+        }
+      });
+  }
+
+  /**
    * Envía un mensaje con optimistic update
    * El mensaje aparece inmediatamente mientras se envía al servidor
    */
@@ -527,6 +595,13 @@ export class BaseChatComponent implements OnInit, OnDestroy {
       this.toastService.warning(
         'Usuario bloqueado',
         'Debes desbloquear a este usuario para enviar mensajes.'
+      );
+      return;
+    }
+    if (this.blockedBy()) {
+      this.toastService.error(
+        'No puedes enviar mensajes',
+        'Este usuario te ha bloqueado.'
       );
       return;
     }
@@ -570,19 +645,35 @@ export class BaseChatComponent implements OnInit, OnDestroy {
       // El mensaje real llegará via realtime subscription y reemplazará al optimistic
       // Ver subscribeToMessages() para la lógica de deduplicación
       this.messageSent.emit({ messageId: optimisticId, context: ctx });
-    } catch {
-      // Error: Remover mensaje optimistic
-      this.messages.update((prev) => prev.filter((m) => m.id !== optimisticId));
-      
-      // Restaurar el texto en el input
-      this.newMessage.set(draft);
-      
-      // Mostrar toast
-      this.toastService.error(
-        'Error al enviar', 
-        'No pudimos enviar el mensaje. Inténtalo de nuevo.'
-      );
-      this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+
+      // Check if it's a validation error (blocked, rate limit) vs network error
+      const isValidationError = errorMessage.includes('bloqueado') ||
+                                errorMessage.includes('bloqueó') ||
+                                errorMessage.includes('límite');
+
+      if (isValidationError) {
+        // Validation error: remove optimistic message and restore draft
+        this.messages.update((prev) => prev.filter((m) => m.id !== optimisticId));
+        this.newMessage.set(draft);
+        this.toastService.error('Error al enviar', errorMessage);
+        this.error.set(errorMessage);
+      } else {
+        // Network error: message was queued for retry, mark as pending
+        // Keep optimistic message but mark it visually as pending
+        this.messages.update((prev) =>
+          prev.map((m) => m.id === optimisticId
+            ? { ...m, id: `pending-${optimisticId}` }
+            : m
+          )
+        );
+        this.toastService.info(
+          'Mensaje pendiente',
+          'Se enviará automáticamente cuando vuelva la conexión.'
+        );
+        // Don't set error - message is queued and will be retried
+      }
     } finally {
       this.sending.set(false);
     }
@@ -645,7 +736,11 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   /**
    * Obtiene el estado de un mensaje
    */
-  getMessageStatus(message: Message): 'sent' | 'delivered' | 'read' {
+  getMessageStatus(message: Message): 'pending' | 'sent' | 'delivered' | 'read' {
+    // Check if message is pending (queued for retry)
+    if (message.id.startsWith('pending-') || message.id.startsWith('temp-')) {
+      return 'pending';
+    }
     if (message.read_at) return 'read';
     if (message.delivered_at) return 'delivered';
     return 'sent';

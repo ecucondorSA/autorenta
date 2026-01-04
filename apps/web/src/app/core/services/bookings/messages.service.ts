@@ -168,6 +168,15 @@ export class MessagesService implements OnDestroy {
     if (authError) throw authError;
     if (!user?.id) throw new Error('Usuario no autenticado');
 
+    // Check bidirectional block status
+    const blockStatus = await this.isBlocked(params.recipientId);
+    if (blockStatus.blocked) {
+      throw new Error('Has bloqueado a este usuario. Desbloquealo para enviar mensajes.');
+    }
+    if (blockStatus.blockedBy) {
+      throw new Error('Este usuario te ha bloqueado. No puedes enviarle mensajes.');
+    }
+
     // P0-015: Check rate limit for messages
     if (!this.rateLimiter.isAllowed('messageSend', user.id)) {
       this.rateLimiter.logViolation('messageSend', user.id);
@@ -531,6 +540,49 @@ export class MessagesService implements OnDestroy {
 
     if (error) return false;
     return (count ?? 0) > 0;
+  }
+
+  /**
+   * Verifica si otro usuario ha bloqueado al usuario actual.
+   */
+  async isBlockedByUser(userId: string): Promise<boolean> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
+    if (!user) return false;
+
+    const { count, error } = await this.supabase
+      .from('user_blocks')
+      .select('*', { count: 'exact', head: true })
+      .eq('blocker_id', userId)
+      .eq('blocked_id', user.id);
+
+    if (error) return false;
+    return (count ?? 0) > 0;
+  }
+
+  /**
+   * Verifica bloqueo bidireccional: si yo bloqueé al otro O si el otro me bloqueó.
+   */
+  async isBlocked(userId: string): Promise<{ blocked: boolean; blockedBy: boolean }> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
+    if (!user) return { blocked: false, blockedBy: false };
+
+    // Query both directions in one call using OR
+    const { data, error } = await this.supabase
+      .from('user_blocks')
+      .select('blocker_id, blocked_id')
+      .or(`and(blocker_id.eq.${user.id},blocked_id.eq.${userId}),and(blocker_id.eq.${userId},blocked_id.eq.${user.id})`);
+
+    if (error) return { blocked: false, blockedBy: false };
+
+    const rows = data ?? [];
+    const blocked = rows.some(r => r.blocker_id === user.id && r.blocked_id === userId);
+    const blockedBy = rows.some(r => r.blocker_id === userId && r.blocked_id === user.id);
+
+    return { blocked, blockedBy };
   }
 
   /**
