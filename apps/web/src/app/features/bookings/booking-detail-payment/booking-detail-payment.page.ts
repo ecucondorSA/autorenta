@@ -165,10 +165,12 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   // Computed - Total guarantee + rental in ARS
   readonly totalArs = computed(() => {
     const fx = this.fxSnapshot();
+    const riskSnapshot = this.riskSnapshot();
     if (!fx) return 0;
 
-    // Guarantee uses platform_rate (with 10% margin for volatility protection)
-    const guaranteeArs = this.PRE_AUTH_AMOUNT_USD * fx.platformRate;
+    // Guarantee uses calculated hold from risk snapshot (aligns with checkout flow)
+    // Fallback to PRE_AUTH_AMOUNT_USD if risk snapshot not yet calculated
+    const guaranteeArs = riskSnapshot?.holdEstimatedArs ?? (this.PRE_AUTH_AMOUNT_USD * fx.platformRate);
 
     // Rental cost already handles currency conversion correctly
     // (uses binanceRate for USD cars, direct ARS for ARS cars)
@@ -647,8 +649,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
     const rolloverDeductibleUsd = deductibleUsd * 2;
 
-    // Calculate hold amount: use PRE_AUTH_AMOUNT_USD as base
-    const holdEstimatedUsd = this.PRE_AUTH_AMOUNT_USD;
+    // Calculate hold amount: 35% of rollover deductible, with minimum of PRE_AUTH_AMOUNT_USD
+    // This aligns with CheckoutRiskCalculator.calculateHoldUsd formula
+    const holdEstimatedUsd = Math.max(this.PRE_AUTH_AMOUNT_USD, Math.round(0.35 * rolloverDeductibleUsd));
     const holdEstimatedArs = holdEstimatedUsd * fx.platformRate;
 
     const riskSnapshot: RiskSnapshot = {
