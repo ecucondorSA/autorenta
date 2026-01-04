@@ -571,7 +571,11 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   readonly insuranceView = computed(() => {
     const insurance = this.insurance();
+    const booking = this.booking();
     if (!insurance) return null;
+
+    // FIX: Use the currency from the booking instead of hardcoding ARS
+    const currency = (booking?.currency as 'ARS' | 'USD') || 'ARS';
 
     return {
       coverageName: insurance.coverage_upgrade || 'Estándar',
@@ -580,7 +584,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       guaranteeAmount: insurance.guarantee_amount_cents
         ? insurance.guarantee_amount_cents / 100
         : undefined,
-      currency: 'ARS' as const,
+      currency,
       notes: null,
     };
   });

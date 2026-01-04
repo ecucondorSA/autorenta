@@ -300,13 +300,26 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       try {
         const { data: booking, error } = await this.supabaseClient
           .from('bookings')
-          .select('id, car_id, start_at, end_at, payment_mode, wallet_lock_id, authorized_payment_id')
+          .select('id, car_id, start_at, end_at, status, payment_mode, wallet_lock_id, authorized_payment_id, paid_at')
           .eq('id', bookingIdParam)
           .single();
 
         if (error || !booking) {
           this.logger.error('Error loading booking', { bookingId: bookingIdParam, error });
           this.error.set('No se encontró la reserva. Puede que haya sido cancelada o el enlace sea incorrecto.');
+          return;
+        }
+
+        // FIX: Validate booking is in a modifiable state
+        const validStates = ['pending', 'draft'];
+        if (!validStates.includes(booking.status)) {
+          this.error.set(`Este booking está en estado "${booking.status}" y no se puede modificar.`);
+          return;
+        }
+
+        // FIX: If already has payment, redirect to detail
+        if (booking.paid_at) {
+          this.error.set('Esta reserva ya fue pagada.');
           return;
         }
 
@@ -543,6 +556,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
             payment_mode: 'card',
             guarantee_type: 'hold',
             guarantee_amount_cents: Math.round((authorization?.amountArs ?? 0) * 100),
+            currency: 'ARS', // MercadoPago always operates in ARS
             authorized_payment_id: authorization?.authorizedPaymentId ?? null,
             wallet_lock_id: null,
           })
@@ -553,7 +567,25 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         }
       } else {
         const walletLockId = await this.ensureWalletLock(bookingId);
-        const amountCents = Math.round(this.walletRequiredArs() * 100);
+
+        // FIX: Calculate guarantee amount in the same currency as the wallet lock
+        const walletCurrency = this.walletCurrency();
+        const fx = this.fxSnapshot();
+        const requiredArs = this.walletRequiredArs();
+
+        let guaranteeAmountCents: number;
+        let guaranteeCurrency: string;
+
+        if (walletCurrency === 'USD' && fx?.platformRate) {
+          // Lock was in USD - store guarantee in USD
+          const requiredUsd = requiredArs / fx.platformRate;
+          guaranteeAmountCents = Math.round(requiredUsd * 100);
+          guaranteeCurrency = 'USD';
+        } else {
+          // Lock was in ARS - store guarantee in ARS
+          guaranteeAmountCents = Math.round(requiredArs * 100);
+          guaranteeCurrency = 'ARS';
+        }
 
         const { error: updateError } = await this.supabaseClient
           .from('bookings')
@@ -561,7 +593,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
             status: 'pending', // Awaiting owner approval
             payment_mode: 'wallet',
             guarantee_type: 'security_credit',
-            guarantee_amount_cents: amountCents,
+            guarantee_amount_cents: guaranteeAmountCents,
+            currency: guaranteeCurrency,
             wallet_lock_id: walletLockId,
             authorized_payment_id: null,
           })

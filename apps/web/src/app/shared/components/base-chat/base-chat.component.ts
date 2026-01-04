@@ -551,7 +551,6 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     const ctx = this.context();
     const channelName = `presence-online-${ctx.contextId}`;
 
-    // @ts-expect-error - Supabase types incomplete for presence
     this.presenceChannel = this.messagesService['supabase']
       .channel(channelName, {
         config: {

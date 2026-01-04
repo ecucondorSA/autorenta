@@ -268,6 +268,27 @@ export class BookingPaymentPage implements OnInit {
             return;
           }
 
+          // FIX: Validate booking is in a payable state
+          const validPayableStates = ['pending', 'draft'];
+          if (!validPayableStates.includes(booking.status)) {
+            this.toastService.error(
+              'Estado inválido',
+              `Este booking está en estado "${booking.status}" y no se puede pagar`,
+            );
+            this.router.navigate(['/bookings', booking.id]);
+            return;
+          }
+
+          // FIX: Check if payment/lock already exists
+          if (booking.wallet_lock_id || booking.authorized_payment_id || booking.paid_at) {
+            this.toastService.error(
+              'Pago ya iniciado',
+              'Este booking ya tiene un pago o garantía en proceso',
+            );
+            this.router.navigate(['/bookings', booking.id]);
+            return;
+          }
+
           this.booking.set(booking as unknown as Booking);
 
           // Load car data if available
