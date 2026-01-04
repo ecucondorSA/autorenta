@@ -1101,6 +1101,11 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    if (this.isCarOwner()) {
+      this.bookingError.set('No podés reservar tu propio auto.');
+      return;
+    }
+
     // Track: CTA clicked
     this.analytics.trackEvent('cta_clicked', {
       car_id: car.id,
@@ -1270,9 +1275,23 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       });
 
       let userMessage = err instanceof Error ? err.message : 'Error al crear la reserva';
+      const userMessageLower = userMessage.toLowerCase();
 
-      // Handle OVERLAP error specifically
-      if (userMessage.includes('OVERLAP') || (err as { code?: string })?.code === 'P0001') {
+      if (
+        userMessageLower.includes('self_booking_not_allowed') ||
+        userMessageLower.includes('self booking')
+      ) {
+        userMessage = 'No podés reservar tu propio auto.';
+      } else if (userMessage.includes('OVERLAP')) {
+        userMessage = 'El auto ya está reservado para estas fechas. Por favor seleccioná otras.';
+
+        // Load blocked dates to refresh calendar
+        void this.loadBlockedDates(car.id);
+
+        // Show waitlist option
+        this.canWaitlist.set(true);
+      } else if ((err as { code?: string })?.code === 'P0001') {
+        // Handle P0001 as overlap only if it doesn't match self-booking
         userMessage = 'El auto ya está reservado para estas fechas. Por favor seleccioná otras.';
 
         // Load blocked dates to refresh calendar

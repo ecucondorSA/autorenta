@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import {Component, computed, inject, OnInit, signal,
+import {Component, computed, inject, OnInit, OnDestroy, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { take } from 'rxjs/operators';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { BankAccount, PayoutService } from '@core/services/payments/payout.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { WalletService } from '@core/services/payments/wallet.service';
@@ -33,10 +34,15 @@ import { RequestPayoutModalComponent } from './components/request-payout-modal.c
   templateUrl: './payouts.page.html',
   styleUrls: ['./payouts.page.css'],
 })
-export class PayoutsPage implements OnInit {
+export class PayoutsPage implements OnInit, OnDestroy {
   private readonly payoutService = inject(PayoutService);
   private readonly walletService = inject(WalletService);
   private readonly supabase = inject(SupabaseClientService).getClient();
+
+  // Realtime channels
+  private payoutsChannel: RealtimeChannel | null = null;
+  private walletsChannel: RealtimeChannel | null = null;
+  private bankAccountsChannel: RealtimeChannel | null = null;
 
   // State
   readonly loading = signal(false);
@@ -72,6 +78,85 @@ export class PayoutsPage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.loadData();
+    this.setupRealtimeSubscription();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeRealtime();
+  }
+
+  private setupRealtimeSubscription(): void {
+    const userId = this.userId();
+    if (!userId) return;
+
+    // Limpiar suscripciones anteriores
+    this.unsubscribeRealtime();
+
+    // Suscribirse a cambios en payouts del usuario
+    this.payoutsChannel = this.supabase
+      .channel(`payouts:${userId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'payouts',
+          filter: `user_id=eq.${userId}`,
+        },
+        () => {
+          void this.loadData();
+        },
+      )
+      .subscribe();
+
+    // Suscribirse a cambios en wallets del usuario
+    this.walletsChannel = this.supabase
+      .channel(`wallets:${userId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'wallets',
+          filter: `user_id=eq.${userId}`,
+        },
+        () => {
+          void this.loadData();
+        },
+      )
+      .subscribe();
+
+    // Suscribirse a cambios en cuentas bancarias del usuario
+    this.bankAccountsChannel = this.supabase
+      .channel(`bank_accounts:${userId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bank_accounts',
+          filter: `user_id=eq.${userId}`,
+        },
+        () => {
+          void this.loadData();
+        },
+      )
+      .subscribe();
+  }
+
+  private unsubscribeRealtime(): void {
+    if (this.payoutsChannel) {
+      this.supabase.removeChannel(this.payoutsChannel);
+      this.payoutsChannel = null;
+    }
+    if (this.walletsChannel) {
+      this.supabase.removeChannel(this.walletsChannel);
+      this.walletsChannel = null;
+    }
+    if (this.bankAccountsChannel) {
+      this.supabase.removeChannel(this.bankAccountsChannel);
+      this.bankAccountsChannel = null;
+    }
   }
 
   async loadData(): Promise<void> {

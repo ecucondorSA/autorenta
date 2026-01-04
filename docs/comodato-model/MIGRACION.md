@@ -212,8 +212,8 @@ SELECT
   EXTRACT(YEAR FROM now())::INT,
   EXTRACT(MONTH FROM now())::INT,
   c.annual_expense_estimate_cents,
-  15,  -- máximo 15 días/mes
-  5    -- máximo 5 días consecutivos
+  24,  -- máximo 24 días/mes
+  NULL -- sin límite de días consecutivos
 FROM cars c
 WHERE c.sharing_mode = 'comodato'
 ON CONFLICT (car_id, year, month) DO NOTHING;

@@ -2,6 +2,7 @@ import {
   Component,
   inject,
   OnInit,
+  OnDestroy,
   ChangeDetectionStrategy,
   signal,
   computed,
@@ -704,7 +705,7 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
     }
   `],
 })
-export class ProfileVerificationPage implements OnInit {
+export class ProfileVerificationPage implements OnInit, OnDestroy {
   private readonly profileStore = inject(ProfileStore);
   private readonly identityService = inject(IdentityLevelService);
   private readonly route = inject(ActivatedRoute);
@@ -751,9 +752,17 @@ export class ProfileVerificationPage implements OnInit {
     try {
       await this.identityService.getVerificationProgress();
       this.autoExpandCurrentLevel();
+
+      // Subscribe to realtime updates for automatic UI refresh
+      await this.identityService.subscribeToRealtimeUpdates();
     } catch (e) {
       console.error('Failed to load verification progress:', e);
     }
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup realtime subscription
+    this.identityService.unsubscribeFromRealtime();
   }
 
   private setContextualMessage(reason: string): void {

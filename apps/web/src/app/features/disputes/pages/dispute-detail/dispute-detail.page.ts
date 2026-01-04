@@ -1,13 +1,15 @@
-import {Component, OnInit, inject, signal,
+import {Component, OnInit, OnDestroy, inject, signal,
   ChangeDetectionStrategy, DestroyRef} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import {
   DisputesService,
   Dispute,
   DisputeStatus,
 } from '@core/services/admin/disputes.service';
+import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import { EvidenceUploaderComponent } from '../../components/evidence-uploader/evidence-uploader.component'; // Importar el uploader
 
 @Component({
@@ -105,10 +107,13 @@ import { EvidenceUploaderComponent } from '../../components/evidence-uploader/ev
         </div>
     `,
 })
-export class DisputeDetailPage implements OnInit {
+export class DisputeDetailPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private disputesService = inject(DisputesService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly realtimeConnection = inject(RealtimeConnectionService);
+
+  private realtimeChannel: RealtimeChannel | null = null;
 
   disputeId = signal<string>('');
   dispute = signal<Dispute | undefined>(undefined);
@@ -123,10 +128,43 @@ export class DisputeDetailPage implements OnInit {
         if (id) {
           this.disputeId.set(id);
           this.loadDispute(id);
+          this.setupRealtimeSubscription(id);
         } else {
           this.loading.set(false);
         }
       });
+  }
+
+  ngOnDestroy(): void {
+    if (this.realtimeChannel) {
+      this.realtimeConnection.unsubscribe(this.realtimeChannel.topic);
+      this.realtimeChannel = null;
+    }
+  }
+
+  private setupRealtimeSubscription(disputeId: string): void {
+    // Limpiar suscripción anterior si existe
+    if (this.realtimeChannel) {
+      this.realtimeConnection.unsubscribe(this.realtimeChannel.topic);
+    }
+
+    this.realtimeChannel = this.realtimeConnection.subscribeWithRetry<Dispute>(
+      `dispute-detail-${disputeId}`,
+      {
+        event: '*',
+        schema: 'public',
+        table: 'disputes',
+        filter: `id=eq.${disputeId}`,
+      },
+      (payload) => {
+        // Actualizar disputa directamente si es un UPDATE
+        if (payload.eventType === 'UPDATE' && payload.new) {
+          this.dispute.set(payload.new as Dispute);
+        } else {
+          void this.loadDispute(disputeId);
+        }
+      },
+    );
   }
 
   async loadDispute(id: string) {

@@ -172,8 +172,8 @@ BYOI_REQUIREMENTS = {
 1. **Si tiene Conductor Indeterminado:** El riesgo de que terceros conduzcan **YA ESTA TARIFADO** en la prima. El asegurador cobro ~5-15% adicional por este riesgo.
 
 2. **Limites de uso de Autorenta:**
-   - Max 15 dias/mes de comparticion
-   - Max 5 dias consecutivos
+   - Max 24 dias/mes de comparticion
+   - Sin limite de dias consecutivos
    - Rewards <= gastos anuales del vehiculo
 
 Estos limites mantienen el **caracter ocasional** del prestamo, coherente con el uso previsto de "conductor indeterminado" (prestamo a familiares, amigos, conocidos).
@@ -182,7 +182,7 @@ Estos limites mantienen el **caracter ocasional** del prestamo, coherente con el
 
 | Situacion | Hay agravamiento? | Accion |
 |-----------|------------------|--------|
-| Uso > 15 dias/mes sistematico | POSIBLE | Plataforma bloquea |
+| Uso > 24 dias/mes sistematico | POSIBLE | Plataforma bloquea |
 | Owner recibe pago directo | SI | Modelo lo prohibe |
 | Uso como taxi/remis | SI | Modelo no permite |
 | Sin conductor indeterminado | N/A (terceros no cubiertos) | Plataforma rechaza BYOI |
@@ -232,7 +232,7 @@ El renter de Autorenta **USA el auto para fines propios** (turismo, paseo, viaje
 - Conductor indeterminado ya contempla el prestamo a terceros
 - No hay actividad comercial
 - No hay agravamiento del riesgo mas alla de lo tarifado
-- El uso ocasional (15 dias/mes) esta dentro de parametros normales
+- El uso ocasional (24 dias/mes) esta dentro de parametros normales
 
 **Argumento potencial de aseguradora (restrictivo):**
 - Uso "sistematico" aunque infrecuente
@@ -307,7 +307,7 @@ a aseguradora        |   seguro    |   cobertura   |
 | # | Incumplimiento | Gravedad | Estado en Autorenta |
 |---|----------------|----------|---------------------|
 | 1 | Owner sin conductor indeterminado | **CRITICO** | Sistema BYOI lo bloquea |
-| 2 | Uso > 15 dias/mes | MEDIO | Sistema lo bloquea |
+| 2 | Uso > 24 dias/mes | MEDIO | Sistema lo bloquea |
 | 3 | Rewards > gastos anuales | MEDIO | Sistema lo limita |
 | 4 | Owner no informa a aseguradora | BAJO-MEDIO | Responsabilidad del owner |
 
@@ -323,8 +323,8 @@ CONTROLES DEL SISTEMA:
    - Aseguradora reconocida: VERIFICADA
 
 2. Limites operativos
-   - Max 15 dias/mes: ENFORCED
-   - Max 5 consecutivos: ENFORCED
+   - Max 24 dias/mes: ENFORCED
+   - Sin limite de dias consecutivos: SIN TOPE
    - Bloqueo al exceder: AUTOMATICO
 
 3. Control de rewards
@@ -426,7 +426,7 @@ La plataforma Autorenta **NO INCUMPLE** las condiciones generales del seguro aut
 | Condicion | Responsable | Estado |
 |-----------|-------------|--------|
 | Owner tiene Conductor Indeterminado | Owner (plataforma verifica) | OBLIGATORIO |
-| Uso <= 15 dias/mes | Plataforma (enforced) | IMPLEMENTADO |
+| Uso <= 24 dias/mes | Plataforma (enforced) | IMPLEMENTADO |
 | Rewards <= gastos anuales | Plataforma (calculo) | IMPLEMENTADO |
 | Es comodato, no alquiler | Diseno del modelo | CUMPLE |
 | Sin actividad lucrativa | Diseno del modelo | CUMPLE |
@@ -456,7 +456,7 @@ La plataforma Autorenta **NO INCUMPLE** las condiciones generales del seguro aut
 
 3. **Para disputas con aseguradoras:**
    - Documentar que NO es alquiler (sin pago directo)
-   - Demostrar caracter ocasional (< 15 dias/mes)
+   - Demostrar caracter ocasional (< 24 dias/mes)
    - Presentar contrato de comodato
    - Citar precedentes de carsharing P2P
 
@@ -471,7 +471,7 @@ Una aseguradora restrictiva podria argumentar:
 | Argumento Aseguradora | Respuesta Defensiva |
 |-----------------------|---------------------|
 | "La plataforma monetiza" | Solo 15% fee operativo, 75% va al pool comunitario |
-| "Uso sistematico" | Limite 15 dias/mes, caracter ocasional documentado |
+| "Uso sistematico" | Limite 24 dias/mes, caracter ocasional documentado |
 | "Multiplicidad de terceros" | Conductor Indeterminado ya contempla terceros |
 | "Owner obtiene beneficio" | Rewards <= gastos anuales, sin lucro neto |
 
@@ -507,7 +507,7 @@ Una aseguradora restrictiva podria argumentar:
 1. **NO ser alquiler** - El owner no recibe pago por booking
 2. **NO ser actividad lucrativa** - Rewards <= gastos del vehiculo
 3. **Usar seguros particulares** - Con clausula Conductor Indeterminado
-4. **Mantener caracter ocasional** - Limites de 15 dias/mes
+4. **Mantener caracter ocasional** - Limites de 24 dias/mes
 5. **Documentar legalmente** - Contrato de comodato formal
 
 ### El modelo es legalmente valido porque:
@@ -559,7 +559,7 @@ HECHOS:
 **Documento 2: Historial de Uso**
 - Registro de la plataforma: 8 dias en el mes
 - Promedio anual: 10 dias/mes
-- Nunca excedio 15 dias/mes
+- Nunca excedio 24 dias/mes
 
 **Documento 3: Rewards vs Gastos**
 - Rewards recibidos (12 meses): $800.000 ARS
@@ -584,7 +584,7 @@ HECHOS:
 |-------------------|--------------|------------|
 | Juez compra argumento "organizacion comercial" | BAJA | Precedente BlaBlaCar + documentacion |
 | Owner no tenia Conductor Indeterminado | N/A | Sistema BYOI lo bloquea |
-| Owner excedio 15 dias/mes | N/A | Sistema lo bloquea |
+| Owner excedio 24 dias/mes | N/A | Sistema lo bloquea |
 | Owner no informo a aseguradora | MEDIA | Template + recordatorio implementado |
 
 ### 9.6 Conclusion de Simulacion

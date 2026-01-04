@@ -29,7 +29,7 @@ import { InspectionUploaderComponent } from '../../../shared/components/inspecti
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule, InspectionUploaderComponent],
   templateUrl: './owner-check-out.page.html',
-  styleUrl: './owner-check-out.page.css',
+  styleUrls: ['./owner-check-out.page.css'],
 })
 export class OwnerCheckOutPage implements OnInit {
   private readonly bookingsService = inject(BookingsService);
@@ -65,6 +65,8 @@ export class OwnerCheckOutPage implements OnInit {
 
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');
+    this.logger.debug(`[OwnerCheckOut] ngOnInit called, bookingId: ${bookingId}`);
+
     if (!bookingId) {
       this.toastService.error('Error', 'ID de reserva inválido');
       this.router.navigate(['/bookings/owner']);
@@ -74,8 +76,16 @@ export class OwnerCheckOutPage implements OnInit {
     try {
       const session = await this.authService.ensureSession();
       this.currentUserId.set(session?.user?.id ?? null);
+      this.logger.debug(`[OwnerCheckOut] Session user ID: ${this.currentUserId()}`);
 
       const booking = await this.bookingsService.getBookingById(bookingId);
+      this.logger.debug(`[OwnerCheckOut] Booking loaded, car:`, 'OwnerCheckOut', {
+        hasBooking: !!booking,
+        hasCar: !!booking?.car,
+        carOwnerId: booking?.car?.owner_id,
+        currentUserId: this.currentUserId(),
+        status: booking?.status
+      });
       if (!booking) {
         this.toastService.error('Error', 'Reserva no encontrada');
         this.router.navigate(['/bookings/owner']);
@@ -84,7 +94,13 @@ export class OwnerCheckOutPage implements OnInit {
 
       // Validar que es el dueño del auto
       const currentUserId = this.currentUserId();
+      this.logger.debug(`[OwnerCheckOut] Validating owner:`, 'OwnerCheckOut', {
+        carOwnerId: booking.car?.owner_id,
+        currentUserId,
+        isOwner: booking.car?.owner_id === currentUserId
+      });
       if (!booking.car?.owner_id || !currentUserId || booking.car.owner_id !== currentUserId) {
+        this.logger.warn(`[OwnerCheckOut] Owner validation FAILED`, 'OwnerCheckOut');
         this.toastService.error('Error', 'No tienes permiso para hacer check-out de esta reserva');
         this.router.navigate(['/bookings/owner']);
         return;

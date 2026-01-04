@@ -547,25 +547,33 @@ export class AdminReviewsPage implements OnInit {
   }
 
   getOverallRating(review: Review): number {
-    return (
-      (review.rating_cleanliness +
-        review.rating_communication +
-        review.rating_accuracy +
-        review.rating_location +
-        review.rating_checkin +
-        review.rating_value) /
-      6
-    );
+    let ratings: (number | null | undefined)[];
+    if (review.review_type === 'owner_to_renter') {
+      ratings = [review.rating_communication, review.rating_punctuality, review.rating_care, review.rating_rules, review.rating_recommend];
+    } else {
+      ratings = [review.rating_cleanliness, review.rating_communication, review.rating_accuracy, review.rating_location, review.rating_checkin, review.rating_value];
+    }
+    const validRatings = ratings.filter((val): val is number => val != null && val > 0);
+    return validRatings.length > 0 ? Number((validRatings.reduce((a, b) => a + b, 0) / validRatings.length).toFixed(1)) : 0;
   }
 
   getCategoryRatings(review: Review): Array<{ label: string; value: number }> {
+    if (review.review_type === 'owner_to_renter') {
+      return [
+        { label: 'Comunicación', value: review.rating_communication ?? 0 },
+        { label: 'Puntualidad', value: review.rating_punctuality ?? 0 },
+        { label: 'Cuidado', value: review.rating_care ?? 0 },
+        { label: 'Reglas', value: review.rating_rules ?? 0 },
+        { label: 'Recomendación', value: review.rating_recommend ?? 0 },
+      ].filter(c => c.value > 0);
+    }
     return [
-      { label: 'Limpieza', value: review.rating_cleanliness },
-      { label: 'Comunicación', value: review.rating_communication },
-      { label: 'Precisión', value: review.rating_accuracy },
-      { label: 'Ubicación', value: review.rating_location },
-      { label: 'Check-in', value: review.rating_checkin },
-      { label: 'Valor', value: review.rating_value },
-    ];
+      { label: 'Limpieza', value: review.rating_cleanliness ?? 0 },
+      { label: 'Comunicación', value: review.rating_communication ?? 0 },
+      { label: 'Precisión', value: review.rating_accuracy ?? 0 },
+      { label: 'Ubicación', value: review.rating_location ?? 0 },
+      { label: 'Check-in', value: review.rating_checkin ?? 0 },
+      { label: 'Valor', value: review.rating_value ?? 0 },
+    ].filter(c => c.value > 0);
   }
 }

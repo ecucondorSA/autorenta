@@ -1,4 +1,4 @@
-import {Component, OnInit, inject, signal, computed,
+import {Component, OnInit, OnDestroy, inject, signal, computed,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -531,9 +531,12 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
     </div>
   `,
 })
-export class NotificationsPage implements OnInit {
+export class NotificationsPage implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly notificationsService = inject(NotificationsService);
+
+  // Realtime subscription cleanup
+  private unsubscribeRealtime?: () => void;
 
   // Signals
   loading = signal(false);
@@ -576,6 +579,15 @@ export class NotificationsPage implements OnInit {
 
   async ngOnInit() {
     await this.loadNotifications();
+
+    // Suscribirse a cambios en tiempo real
+    this.unsubscribeRealtime = this.notificationsService.onChange(() => {
+      void this.loadNotifications();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeRealtime?.();
   }
 
   async loadNotifications() {

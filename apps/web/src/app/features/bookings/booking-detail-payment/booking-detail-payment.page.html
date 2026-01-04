@@ -255,51 +255,52 @@
         @if (!bookingCreated()) {
         <section class="space-y-6">
           <!-- ============================================ -->
-          <!-- P2P PROCESS INFO - Contract at Check-in -->
+          <!-- P2P PROCESS INFO - Collapsible -->
           <!-- ============================================ -->
           <section
-            class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border border-blue-200 dark:border-blue-800 p-4 sm:p-6">
-            <div class="flex flex-col sm:flex-row sm:items-start gap-4">
-              <div
-                class="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900/40 rounded-xl flex items-center justify-center">
-                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor"
-                  viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 font-satoshi">¿Cómo
-                  funciona la reserva P2P?</h3>
-                <div class="space-y-3 text-sm text-gray-600 dark:text-gray-300">
-                  <div class="flex items-start gap-2">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                    <p><strong>Ahora:</strong> Enviás tu solicitud y garantizás la reserva
-                      (pre-autorización en tarjeta o bloqueo de wallet). No se cobra el alquiler. Si
-                      el anfitrión rechaza, se libera automáticamente.</p>
-                  </div>
-                  <div class="flex items-start gap-2">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                    <p><strong>Aprobación:</strong> El anfitrión revisa tu perfil y acepta o
-                      rechaza.</p>
-                  </div>
-                  <div class="flex items-start gap-2">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                    <p><strong>Check-in:</strong> El día del retiro, firmás el contrato con fotos
-                      del auto.</p>
-                  </div>
-                  <div class="flex items-start gap-2">
-                    <span
-                      class="flex-shrink-0 w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold">✓</span>
-                    <p><strong>Viaje:</strong> Disfrutá tu viaje con toda la documentación digital.
-                    </p>
-                  </div>
+            class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border border-blue-200 dark:border-blue-800 overflow-hidden">
+            <button type="button" (click)="showP2PDetails.set(!showP2PDetails())"
+              class="w-full p-4 flex items-center justify-between text-left hover:bg-blue-100/50 dark:hover:bg-blue-900/30 transition-colors">
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-xl flex items-center justify-center">
+                  <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-base font-bold text-gray-900 dark:text-white font-satoshi">¿Cómo funciona?</h3>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Solicitud → Aprobación → Check-in → Viaje</p>
                 </div>
               </div>
+              <svg class="w-5 h-5 text-gray-500 transition-transform"
+                [class.rotate-180]="showP2PDetails()"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            @if (showP2PDetails()) {
+            <div class="px-4 pb-4 space-y-3 text-sm text-gray-600 dark:text-gray-300 border-t border-blue-200/50 dark:border-blue-800/50 pt-4">
+              <div class="flex items-start gap-2">
+                <span class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                <p><strong>Ahora:</strong> Garantizás la reserva (pre-autorización o bloqueo wallet). No se cobra.</p>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                <p><strong>Aprobación:</strong> El anfitrión revisa y acepta o rechaza.</p>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                <p><strong>Check-in:</strong> Firmás el contrato con fotos del auto.</p>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="flex-shrink-0 w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold">✓</span>
+                <p><strong>Viaje:</strong> Disfrutá con toda la documentación digital.</p>
+              </div>
             </div>
+            }
           </section>
 
           <!-- ============================================ -->
@@ -375,97 +376,58 @@
           </div>
           }
 
-          <!-- Card Payment Form - Premium Vault Design -->
+          <!-- Card Payment Form -->
           @if (paymentMode() === 'card') {
           <div
-            class="relative bg-gradient-to-b from-white to-slate-50 dark:from-surface-raised dark:to-surface-base rounded-2xl shadow-2xl border-2 border-slate-200 dark:border-slate-700 overflow-hidden">
-            <!-- Top Security Strip -->
-            <div
-              class="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            class="relative bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-md border border-border-default dark:border-neutral-800/60 overflow-hidden">
+            <!-- Top Security Strip - Simplified -->
+            <div class="bg-slate-800 px-4 py-2.5 flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span class="text-xs text-slate-300 font-medium tracking-wide">CONEXIÓN
-                  SEGURA</span>
+                <span class="text-xs text-slate-300 font-medium">Conexión segura</span>
               </div>
-              <div class="hidden sm:flex items-center gap-3">
-                <!-- Mini card logos in header -->
-                <div class="h-5 w-8 bg-white/90 rounded flex items-center justify-center">
-                  <svg viewBox="0 0 48 16" class="h-2.5 w-auto">
-                    <path fill="#1434CB"
-                      d="M19.5 1.3l-3.1 13.4h-2.5l3.1-13.4h2.5zm12.4 8.7l1.3-3.6.8 3.6h-2.1zm2.8 4.7h2.3l-2-13.4h-2.1c-.5 0-.9.3-1.1.7l-3.8 12.7h2.7l.5-1.5h3.3l.2 1.5z" />
-                  </svg>
-                </div>
-                <div class="h-5 w-8 bg-white/90 rounded flex items-center justify-center">
-                  <svg viewBox="0 0 48 30" class="h-3 w-auto">
-                    <circle cx="15" cy="15" r="15" fill="#EB001B" />
-                    <circle cx="33" cy="15" r="15" fill="#F79E1B" />
-                  </svg>
-                </div>
-                <div class="h-5 w-8 bg-[#006FCF] rounded flex items-center justify-center">
-                  <span class="text-white text-[5px] font-bold">AMEX</span>
-                </div>
-                <div class="h-5 w-8 bg-[#009EE3] rounded flex items-center justify-center">
-                  <span class="text-white text-[5px] font-bold">MP</span>
-                </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-400">Procesado por</span>
+                <span class="text-xs text-[#009EE3] font-semibold">MercadoPago</span>
               </div>
             </div>
 
             <div class="p-4 sm:p-6 space-y-5">
               <!-- Header -->
-              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <h3
-                  class="text-lg font-bold text-text-primary flex items-center gap-2 font-satoshi">
-                  <div
-                    class="w-10 h-10 bg-gradient-to-br from-cta-default to-cta-hover rounded-xl flex items-center justify-center shadow-lg shadow-cta-default/30">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
-                  </div>
-                  Garantizar reserva (pre-autorización)
-                </h3>
-                <div
-                  class="flex items-center gap-1.5 text-xs text-success-strong bg-success-light/10 px-2 py-1 rounded-full">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-bold text-text-primary font-satoshi flex items-center gap-2">
+                  <svg class="w-5 h-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                   </svg>
-                  <span class="font-semibold">Protegido</span>
-                </div>
+                  Pre-autorización de garantía
+                </h3>
+                <span class="text-xs text-success-strong bg-success-light/10 px-2 py-1 rounded-full font-medium">
+                  No se cobra
+                </span>
               </div>
 
-              <!-- Amount Display Box - Highlighted -->
-              <div
-                class="relative p-4 sm:p-5 bg-gradient-to-br from-slate-100 via-white to-slate-50 dark:from-slate-800 dark:via-slate-800 dark:to-slate-900 rounded-xl border-2 border-slate-200 dark:border-slate-600 shadow-inner">
-                <div
-                  class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-cta-default/10 to-transparent rounded-bl-full">
-                </div>
-                <div
-                  class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 relative">
+              <!-- Amount Display Box -->
+              <div class="p-4 bg-surface-base rounded-xl border border-border-default">
+                <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-xs text-text-secondary font-medium uppercase tracking-wide mb-1">
-                      Monto a retener</p>
-                    <p
-                      class="text-2xl sm:text-3xl font-extrabold text-text-primary font-mono tracking-tight break-words leading-tight">
+                    <p class="text-xs text-text-secondary font-medium mb-1">Monto a retener</p>
+                    <p class="text-2xl font-bold text-text-primary font-mono">
                       ${{ (riskSnapshot()?.holdEstimatedArs || 0) | number: '1.0-0' }}
-                      <span class="text-lg font-bold text-text-secondary">ARS</span>
+                      <span class="text-sm font-medium text-text-secondary">ARS</span>
                     </p>
-                    <p class="text-xs text-text-secondary mt-1">
-                      ≈ USD {{ (riskSnapshot()?.holdEstimatedUsd || PRE_AUTH_AMOUNT_USD) | number:
-                      '1.0-0' }}
+                    <p class="text-xs text-text-secondary mt-0.5">
+                      ≈ USD {{ (riskSnapshot()?.holdEstimatedUsd || PRE_AUTH_AMOUNT_USD) | number: '1.0-0' }}
                     </p>
                   </div>
-                  <div class="sm:text-right space-y-2">
-                    <div
-                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 rounded-lg">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div class="text-right">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 rounded-lg text-xs font-semibold">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
-                      <span class="text-sm font-bold">Pre-autorización</span>
-                    </div>
-                    <p class="text-xs text-text-secondary">No se cobra, solo se retiene</p>
+                      Solo retención
+                    </span>
                   </div>
                 </div>
               </div>
@@ -485,94 +447,48 @@
                 }
               </div>
 
-              <!-- Pay Button with Amount - Blindado Style -->
+              <!-- Submit Button -->
               <button type="button" (click)="submitRequest()"
                 [disabled]="processingPayment() || !termsAccepted() || currentAuthorization()?.status !== 'authorized'"
-                class="w-full py-4 px-6 bg-gradient-to-r from-cta-default via-cta-default to-cta-hover hover:from-cta-hover hover:via-cta-hover hover:to-cta-default text-white font-bold text-base sm:text-lg rounded-xl shadow-xl shadow-cta-default/40 transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3 relative overflow-hidden group">
-                <!-- Shine effect -->
-                <div
-                  class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent">
-                </div>
-
+                class="w-full py-3.5 px-6 bg-cta-default hover:bg-cta-hover text-white font-bold text-base rounded-xl shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                 @if (processingPayment()) {
-                <svg class="animate-spin h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                    stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                  </path>
+                <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span>Enviando solicitud...</span>
+                <span>Enviando...</span>
                 } @else {
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
                 <span>Enviar Solicitud</span>
                 }
               </button>
-
-              <!-- Security Footer -->
-              <div
-                class="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs text-text-secondary pt-2 text-center">
-                <div class="flex items-center gap-1">
-                  <svg class="w-4 h-4 text-success-strong" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                  <span>SSL 256-bit</span>
-                </div>
-                <span class="text-slate-300">•</span>
-                <div class="flex items-center gap-1">
-                  <svg class="w-4 h-4 text-success-strong" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                  <span>PCI DSS</span>
-                </div>
-                <span class="text-slate-300">•</span>
-                <span class="text-[#009EE3] font-medium">MercadoPago</span>
-              </div>
-
             </div>
           </div>
           }
 
           <!-- Wallet Guarantee Form -->
           @if (paymentMode() === 'wallet') {
-          <div
-            class="relative bg-gradient-to-b from-emerald-50 to-white dark:from-emerald-900/20 dark:to-surface-base rounded-2xl shadow-2xl border-2 border-emerald-200 dark:border-emerald-800 overflow-hidden">
-            <div
-              class="bg-gradient-to-r from-emerald-600 via-emerald-700 to-emerald-600 px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-md border border-border-default dark:border-neutral-800/60 overflow-hidden">
+            <!-- Header -->
+            <div class="bg-emerald-600 px-4 py-2.5 flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <div class="w-2 h-2 bg-emerald-300 rounded-full animate-pulse"></div>
-                <span class="text-xs text-emerald-100 font-medium tracking-wide">WALLET</span>
+                <span class="text-xs text-emerald-100 font-medium">Garantía con Wallet</span>
               </div>
-              <div class="flex items-center gap-1.5 text-emerald-100 text-xs">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                <span class="font-semibold">Bloqueo de saldo</span>
-              </div>
+              <span class="text-xs text-emerald-100">Bloqueo de saldo</span>
             </div>
 
             <div class="p-4 sm:p-6 space-y-5">
-              <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div class="flex items-center justify-between">
                 <div>
-                  <h3 class="text-lg font-bold text-text-primary font-satoshi">Garantizar con Wallet
-                  </h3>
-                  <p class="text-xs text-text-secondary mt-1">
-                    Se bloquea saldo en tu wallet (no se cobra). Si el anfitrión rechaza, se libera
-                    automáticamente.
-                  </p>
+                  <h3 class="text-lg font-bold text-text-primary font-satoshi">Bloquear garantía</h3>
+                  <p class="text-xs text-text-secondary mt-1">No se cobra. Se libera si el anfitrión rechaza.</p>
                 </div>
                 @if (walletLockId()) {
-                <span
-                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-light/20 text-success-700 border border-success-light/30">
-                  Garantía bloqueada
+                <span class="text-xs font-semibold bg-success-light/20 text-success-700 px-2.5 py-1 rounded-full">
+                  Bloqueada
                 </span>
                 }
               </div>
@@ -625,32 +541,20 @@
 
               <button type="button" (click)="submitRequest()"
                 [disabled]="processingPayment() || lockingWallet() || !termsAccepted() || walletBalanceLoading() || (!walletHasSufficientFunds() && !walletLockId())"
-                class="w-full py-4 px-6 bg-gradient-to-r from-emerald-600 via-emerald-600 to-emerald-500 hover:from-emerald-500 hover:via-emerald-500 hover:to-emerald-400 text-white font-bold text-base sm:text-lg rounded-xl shadow-xl shadow-emerald-600/40 transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3 relative overflow-hidden group">
-                <div
-                  class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent">
-                </div>
-
+                class="w-full py-3.5 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-base rounded-xl shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                 @if (processingPayment() || lockingWallet()) {
-                <svg class="animate-spin h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                    stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                  </path>
+                <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span>Enviando solicitud...</span>
+                <span>Enviando...</span>
                 } @else {
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
                 <span>Enviar Solicitud</span>
                 }
               </button>
-
-              <p class="text-xs text-text-secondary text-center">
-                Se bloquea el saldo hasta que el anfitrión apruebe.
-              </p>
             </div>
           </div>
           }
@@ -826,52 +730,7 @@
                 </div>
               </div>
 
-              <!-- Action Buttons -->
-              <div class="space-y-3 pt-2">
-                @if (bookingCreated() || !car()) {
-                <button (click)="submitRequest()"
-                  [disabled]="processingPayment() || !termsAccepted() || currentAuthorization()?.status !== 'authorized'"
-                  class="w-full py-4 px-6 bg-gradient-to-r from-cta-default via-cta-default to-cta-hover hover:from-cta-hover hover:via-cta-hover hover:to-cta-default text-white font-bold text-base sm:text-lg rounded-xl shadow-xl shadow-cta-default/40 transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3 relative overflow-hidden group">
-                  <!-- Shine effect on hover -->
-                  <div
-                    class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent">
-                  </div>
-
-                  @if (processingPayment()) {
-                  <svg class="animate-spin h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                      stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                    </path>
-                  </svg>
-                  <span>Enviando...</span>
-                  } @else {
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                  </svg>
-                  <span>Enviar Solicitud</span>
-                  }
-                </button>
-
-                <!-- Security micro-copy under button -->
-                <div
-                  class="flex flex-wrap items-center justify-center gap-2 text-xs text-text-secondary text-center">
-                  <div class="flex items-center gap-1">
-                    <svg class="w-3.5 h-3.5 text-success-strong" fill="none" stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                    <span>Encriptado</span>
-                  </div>
-                  <span class="text-slate-300">•</span>
-                  <span>Protegido por MercadoPago</span>
-                </div>
-                }
-
-              </div>
+              <!-- Note: Action buttons are in the payment form section -->
 
               <!-- Trust Badges & Card Logos -->
               <div class="space-y-4 pt-4 border-t border-border-default/50">

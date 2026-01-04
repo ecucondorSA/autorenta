@@ -12,14 +12,14 @@ import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { PricingService } from '@core/services/payments/pricing.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
-import { VehicleDocumentsService } from '@core/services/verification/vehicle-documents.service';
 import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-generator/ai-photo-generator.component';
 import { FipeAutocompleteComponent } from '../../../shared/components/fipe-autocomplete/fipe-autocomplete.component';
 import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
 import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
 
 // ✅ NEW: Extracted services
+import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
+import { VehicleDocumentsService } from '@core/services/verification/vehicle-documents.service';
 import { PublishCarFormService } from './services/publish-car-form.service';
 import { PublishCarLocationService } from './services/publish-car-location.service';
 import { PublishCarMpOnboardingService } from './services/publish-car-mp-onboarding.service';
@@ -1277,19 +1277,21 @@ export class PublishCarV2Page implements OnInit {
   private handleSubmissionError(error: unknown): void {
     console.error('❌ Failed to publish car:', error);
 
+    // Log detailed error information
+    if (error instanceof Error) {
+      console.error('Error message:', error['message']);
+    }
+
     // Show user-friendly error message
     let errorTitle = 'Error al guardar';
     let errorMessage = 'Por favor intenta nuevamente.';
 
     if (error instanceof Error) {
-      // Log detailed error information
-      console.error('Error message:', error.message);
-
-      if (error.message.includes('Marca y modelo son requeridos')) {
+      if (error['message'].includes('Marca y modelo son requeridos')) {
         errorTitle = 'Información incompleta';
         errorMessage = 'Por favor completa la marca y el modelo del vehículo.';
-      } else if (error.message) {
-        errorMessage = error.message;
+      } else if (error['message']) {
+        errorMessage = error['message'];
       }
     }
 

@@ -1,4 +1,5 @@
-import {Component,
+import {
+  Component,
   OnDestroy,
   AfterViewInit,
   Output,
@@ -9,7 +10,8 @@ import {Component,
   NgZone,
   ElementRef,
   ViewChild,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy
+} from '@angular/core';
 
 import { environment } from '@environment';
 import { MercadoPagoScriptService } from '@core/services/payments/mercado-pago-script.service';
@@ -428,7 +430,7 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
         this.ngZone.run(() => {
           if (!this.isDestroyed) {
             this.isInitializing.set(false);
-            const errorMsg = error instanceof Error ? error.message : String(error);
+            const errorMsg = error instanceof Error ? error['message'] : String(error);
             this.errorMessage.set(`No pudimos cargar el formulario de pago: ${errorMsg}`);
             this.cardError.emit('Error al inicializar Mercado Pago');
           }
@@ -498,7 +500,7 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
 
     } catch (error) {
       this.ngZone.run(() => {
-        const errorMsg = error instanceof Error ? error.message : 'Error al procesar la tarjeta';
+        const errorMsg = error instanceof Error ? error['message'] : 'Error al procesar la tarjeta';
         this.errorMessage.set(errorMsg);
         this.cardError.emit(errorMsg);
       });

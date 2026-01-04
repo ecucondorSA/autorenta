@@ -115,8 +115,8 @@ Para mantener el caracter **ocasional y no comercial**, la plataforma impone:
 
 | Limite | Valor | Enforcement |
 |--------|-------|-------------|
-| Dias por mes | Max 15 | Sistema bloquea al exceder |
-| Dias consecutivos | Max 5 | Sistema impide reservas largas |
+| Dias por mes | Max 24 | Sistema bloquea al exceder |
+| Dias consecutivos | Sin limite | Sin tope por reserva |
 | Rewards anuales | ≤ Gastos vehiculo | Calculo automatico |
 
 Estos limites garantizan que:
@@ -154,7 +154,7 @@ Esta documentacion esta disponible para:
 
 ### "¿Agrava el riesgo?"
 
-**NO**, si tiene Conductor Indeterminado. Esta clausula ya contempla y tarifa el riesgo de que terceros conduzcan. El uso ocasional (max 15 dias/mes) esta dentro de los parametros normales de la clausula.
+**NO**, si tiene Conductor Indeterminado. Esta clausula ya contempla y tarifa el riesgo de que terceros conduzcan. El uso ocasional (max 24 dias/mes) esta dentro de los parametros normales de la clausula.
 
 ### "¿Debo informar a mi aseguradora?"
 

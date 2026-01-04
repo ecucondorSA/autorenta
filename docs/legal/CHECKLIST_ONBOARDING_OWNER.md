@@ -149,7 +149,7 @@ de comparticion de vehiculos (modelo similar a BlaBlaCar).
 
 Confirmo que:
 1. Mi poliza incluye la clausula de CONDUCTOR INDETERMINADO
-2. El uso sera OCASIONAL (maximo 15 dias por mes)
+2. El uso sera OCASIONAL (maximo 24 dias por mes)
 3. NO es alquiler - no recibo pago por cada prestamo
 4. El uso es PARTICULAR, no comercial
 
@@ -198,8 +198,8 @@ Atentamente,
   - No constituyen renta ni alquiler
 
 ☐ Acepto los limites operativos:
-  - Maximo 15 dias de uso por mes
-  - Maximo 5 dias consecutivos por reserva
+  - Maximo 24 dias de uso por mes
+  - Sin limite de dias consecutivos por reserva
 
 ☐ Me comprometo a mantener mi seguro vigente con clausula
   de Conductor Indeterminado mientras participe en la comunidad.

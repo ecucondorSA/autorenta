@@ -6,10 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import type { CreateReviewParams, ReviewType } from '../../../core/models';
 
 interface RatingCategory {
-  key: keyof Omit<
-    CreateReviewParams,
-    'booking_id' | 'reviewee_id' | 'car_id' | 'review_type' | 'comment_public' | 'comment_private'
-  >;
+  key: string;
   label: string;
   icon: string;
   description: string;
@@ -38,7 +35,8 @@ export class ReviewFormComponent implements OnInit {
   isSubmitting = false;
   hoverRatings: Record<string, number> = {};
 
-  ratingCategories: RatingCategory[] = [
+  // Categorías para Renter → Owner (evalúa auto/propietario)
+  private readonly renterToOwnerCategories: RatingCategory[] = [
     {
       key: 'rating_cleanliness',
       label: 'Limpieza',
@@ -49,7 +47,7 @@ export class ReviewFormComponent implements OnInit {
       key: 'rating_communication',
       label: 'Comunicación',
       icon: '💬',
-      description: 'Rapidez y claridad en la comunicación',
+      description: 'Rapidez y claridad del propietario',
     },
     {
       key: 'rating_accuracy',
@@ -77,23 +75,66 @@ export class ReviewFormComponent implements OnInit {
     },
   ];
 
+  // Categorías para Owner → Renter (evalúa arrendatario)
+  private readonly ownerToRenterCategories: RatingCategory[] = [
+    {
+      key: 'rating_communication',
+      label: 'Comunicación',
+      icon: '💬',
+      description: 'Claridad y respuesta del arrendatario',
+    },
+    {
+      key: 'rating_punctuality',
+      label: 'Puntualidad',
+      icon: '⏰',
+      description: 'Cumplimiento de horarios acordados',
+    },
+    {
+      key: 'rating_care',
+      label: 'Cuidado',
+      icon: '🚗',
+      description: 'Cómo cuidó y devolvió el vehículo',
+    },
+    {
+      key: 'rating_rules',
+      label: 'Reglas',
+      icon: '📋',
+      description: 'Respeto de las condiciones del alquiler',
+    },
+    {
+      key: 'rating_recommend',
+      label: 'Recomendación',
+      icon: '⭐',
+      description: '¿Alquilarías nuevamente a este usuario?',
+    },
+  ];
+
+  // Categorías activas según el tipo de review
+  ratingCategories: RatingCategory[] = [];
+
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    // Seleccionar categorías según el tipo de review
+    this.ratingCategories = this.reviewType === 'renter_to_owner'
+      ? this.renterToOwnerCategories
+      : this.ownerToRenterCategories;
+
     this.initForm();
   }
 
   private initForm(): void {
-    this.reviewForm = this.fb.group({
-      rating_cleanliness: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
-      rating_communication: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
-      rating_accuracy: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
-      rating_location: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
-      rating_checkin: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
-      rating_value: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
-      comment_public: ['', [Validators.maxLength(1000)]],
-      comment_private: ['', [Validators.maxLength(500)]],
-    });
+    // Crear form dinámicamente según las categorías
+    const formControls: Record<string, unknown> = {};
+
+    for (const category of this.ratingCategories) {
+      formControls[category.key] = [0, [Validators.required, Validators.min(1), Validators.max(5)]];
+    }
+
+    formControls['comment_public'] = ['', [Validators.maxLength(1000)]];
+    formControls['comment_private'] = ['', [Validators.maxLength(500)]];
+
+    this.reviewForm = this.fb.group(formControls);
   }
 
   setRating(category: string, rating: number): void {
@@ -105,14 +146,8 @@ export class ReviewFormComponent implements OnInit {
   }
 
   getAverageRating(): number {
-    const ratings = [
-      this.getRating('rating_cleanliness'),
-      this.getRating('rating_communication'),
-      this.getRating('rating_accuracy'),
-      this.getRating('rating_location'),
-      this.getRating('rating_checkin'),
-      this.getRating('rating_value'),
-    ];
+    // Calcular promedio dinámicamente según las categorías activas
+    const ratings = this.ratingCategories.map(cat => this.getRating(cat.key));
 
     const validRatings = ratings.filter((r) => r > 0);
     if (validRatings.length === 0) return 0;
@@ -131,20 +166,40 @@ export class ReviewFormComponent implements OnInit {
     this.isSubmitting = true;
 
     const formValue = this.reviewForm.value;
-    const params: CreateReviewParams = {
+
+    // Construir params dinámicamente según el tipo de review
+    const baseParams = {
       booking_id: this.bookingId,
       reviewee_id: this.revieweeId,
       car_id: this.carId,
       review_type: this.reviewType,
-      rating_cleanliness: formValue.rating_cleanliness,
       rating_communication: formValue.rating_communication,
-      rating_accuracy: formValue.rating_accuracy,
-      rating_location: formValue.rating_location,
-      rating_checkin: formValue.rating_checkin,
-      rating_value: formValue.rating_value,
       comment_public: formValue.comment_public || undefined,
       comment_private: formValue.comment_private || undefined,
     };
+
+    let params: CreateReviewParams;
+
+    if (this.reviewType === 'renter_to_owner') {
+      params = {
+        ...baseParams,
+        review_type: 'renter_to_owner',
+        rating_cleanliness: formValue.rating_cleanliness,
+        rating_accuracy: formValue.rating_accuracy,
+        rating_location: formValue.rating_location,
+        rating_checkin: formValue.rating_checkin,
+        rating_value: formValue.rating_value,
+      };
+    } else {
+      params = {
+        ...baseParams,
+        review_type: 'owner_to_renter',
+        rating_punctuality: formValue.rating_punctuality,
+        rating_care: formValue.rating_care,
+        rating_rules: formValue.rating_rules,
+        rating_recommend: formValue.rating_recommend,
+      };
+    }
 
     this.submitReview.emit(params);
   }

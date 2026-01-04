@@ -220,7 +220,7 @@ Autorenta - Equipo de Siniestros
 - Intentos de contacto
 
 ### 4. FGO (Fondo de Garantia)
-- 20% de cada booking
+- 10% de cada booking
 - Cubre el GAP cuando el seguro igual rechaza
 - Cubre gastos legales de recuperacion
 

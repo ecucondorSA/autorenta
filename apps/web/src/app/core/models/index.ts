@@ -772,13 +772,28 @@ export interface Review {
   car_id: string;
   review_type: ReviewType;
 
-  // Category ratings (1-5)
-  rating_cleanliness: number;
-  rating_communication: number;
-  rating_accuracy: number;
-  rating_location: number;
-  rating_checkin: number;
-  rating_value: number;
+  // ============================================
+  // RENTER → OWNER ratings (evaluating car/owner)
+  // ============================================
+  rating_cleanliness?: number | null;  // Limpieza del vehículo
+  rating_accuracy?: number | null;     // Descripción vs realidad
+  rating_location?: number | null;     // Punto de entrega
+  rating_checkin?: number | null;      // Proceso de entrega
+  rating_value?: number | null;        // Relación precio-calidad
+
+  // ============================================
+  // OWNER → RENTER ratings (evaluating renter)
+  // ============================================
+  rating_punctuality?: number | null;  // Puntualidad
+  rating_care?: number | null;         // Cuidado del vehículo
+  rating_rules?: number | null;        // Respeto de reglas
+  rating_recommend?: number | null;    // ¿Lo recomendarías?
+
+  // ============================================
+  // SHARED ratings (both types)
+  // ============================================
+  rating_communication?: number | null; // Comunicación
+  rating?: number | null;               // Legacy: rating general
 
   // Overall rating (calculated)
   rating_overall?: number;
@@ -786,11 +801,16 @@ export interface Review {
   // Comments
   comment_public?: string | null;
   comment_private?: string | null;
+  comment?: string | null; // Legacy field
 
   // Status
   status: ReviewStatus;
   is_visible: boolean;
   published_at?: string | null;
+
+  // Legacy flags (for backward compatibility)
+  is_car_review?: boolean;
+  is_renter_review?: boolean;
 
   // Moderation
   is_flagged: boolean;
@@ -815,17 +835,55 @@ export interface Review {
   car_title?: string;
 }
 
-export interface CreateReviewParams {
+// Base params for all reviews
+interface BaseReviewParams {
   booking_id: string;
   reviewee_id: string;
   car_id: string;
   review_type: ReviewType;
+  rating_communication: number; // Shared between both types
+  comment_public?: string;
+  comment_private?: string;
+}
+
+// Renter evaluating Owner/Car
+export interface RenterToOwnerReviewParams extends BaseReviewParams {
+  review_type: 'renter_to_owner';
   rating_cleanliness: number;
-  rating_communication: number;
   rating_accuracy: number;
   rating_location: number;
   rating_checkin: number;
   rating_value: number;
+}
+
+// Owner evaluating Renter
+export interface OwnerToRenterReviewParams extends BaseReviewParams {
+  review_type: 'owner_to_renter';
+  rating_punctuality: number;
+  rating_care: number;
+  rating_rules: number;
+  rating_recommend: number;
+}
+
+// Union type for creating reviews
+export type CreateReviewParams = RenterToOwnerReviewParams | OwnerToRenterReviewParams;
+
+// Legacy interface for backward compatibility
+export interface CreateReviewParamsLegacy {
+  booking_id: string;
+  reviewee_id: string;
+  car_id: string;
+  review_type: ReviewType;
+  rating_cleanliness?: number;
+  rating_communication: number;
+  rating_accuracy?: number;
+  rating_location?: number;
+  rating_checkin?: number;
+  rating_value?: number;
+  rating_punctuality?: number;
+  rating_care?: number;
+  rating_rules?: number;
+  rating_recommend?: number;
   comment_public?: string;
   comment_private?: string;
 }

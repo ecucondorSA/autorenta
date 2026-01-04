@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AlertController, IonicModule, ToastController, ViewWillEnter } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
 import {
   AuthMarketplaceStatus,
   MarketplaceOnboardingService,
@@ -39,7 +40,7 @@ interface CarLead {
   styleUrl: './owner-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OwnerBookingsPage implements OnInit, ViewWillEnter {
+export class OwnerBookingsPage implements OnInit, OnDestroy, ViewWillEnter {
   readonly bookings = signal<Booking[]>([]);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -58,6 +59,9 @@ export class OwnerBookingsPage implements OnInit, ViewWillEnter {
    */
   readonly pendingApprovalCount = signal(0);
 
+  /** Count of bookings pending review (post-return confirmation) */
+  readonly pendingReviewCount = signal(0);
+
   private currentUserId: string | null = null;
   private isInitialized = false;
 
@@ -69,10 +73,15 @@ export class OwnerBookingsPage implements OnInit, ViewWillEnter {
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly marketplaceService: MarketplaceOnboardingService,
+    private readonly bookingRealtimeService: BookingRealtimeService,
   ) {}
 
   ngOnInit(): void {
     void this.initialize();
+  }
+
+  ngOnDestroy(): void {
+    this.bookingRealtimeService.unsubscribeUserBookings();
   }
 
   /**
@@ -93,6 +102,12 @@ export class OwnerBookingsPage implements OnInit, ViewWillEnter {
       this.currentUserId = session?.user?.id ?? null;
       if (this.currentUserId) {
         await this.loadMarketplaceStatus(this.currentUserId);
+        // Subscribe to realtime updates for owner bookings
+        this.bookingRealtimeService.subscribeToUserBookings(this.currentUserId, 'owner', {
+          onBookingsChange: () => {
+            void this.loadBookings();
+          },
+        });
       } else {
         this.marketplaceStatus.set(null);
       }
@@ -123,6 +138,10 @@ export class OwnerBookingsPage implements OnInit, ViewWillEnter {
       // This matches what pending-approval page shows
       this.pendingApprovalCount.set(pendingApprovals.length);
 
+      // Count pending review bookings
+      const pendingReviewBookings = bookings.filter((b) => this.isPendingReview(b));
+      this.pendingReviewCount.set(pendingReviewBookings.length);
+
       await this.loadCarLeads();
     } catch {
       this.error.set('No pudimos cargar las reservas. Por favor intentá de nuevo más tarde.');
@@ -138,10 +157,23 @@ export class OwnerBookingsPage implements OnInit, ViewWillEnter {
   statusLabel(booking: Booking): string {
     switch (booking.status) {
       case 'pending':
-        return 'Pendiente de confirmación';
+        // Distinguish between approval flow (payment_mode set) vs payment flow
+        return booking.payment_mode ? 'Esperando tu aprobación' : 'Pendiente de pago';
+      case 'pending_review':
+        return 'En revisión';
       case 'confirmed':
         return 'Confirmada';
       case 'in_progress':
+        // FIX: Consider completion_status for detailed status
+        if (booking.completion_status === 'pending_owner' || booking.completion_status === 'pending_both') {
+          return 'Confirmar devolución';
+        }
+        if (booking.completion_status === 'returned') {
+          return 'Inspección pendiente';
+        }
+        if (booking.completion_status === 'pending_renter') {
+          return 'Esperando al locatario';
+        }
         return 'En curso';
       case 'completed':
         return 'Finalizada';
@@ -157,10 +189,25 @@ export class OwnerBookingsPage implements OnInit, ViewWillEnter {
   statusHint(booking: Booking): string | null {
     switch (booking.status) {
       case 'pending':
-        return 'El locatario debe completar el pago.';
+        // Distinguish between approval flow vs payment flow
+        return booking.payment_mode
+          ? 'El locatario está esperando tu aprobación.'
+          : 'El locatario debe completar el pago.';
+      case 'pending_review':
+        return 'Confirmá la devolución del auto para liberar los fondos.';
       case 'confirmed':
         return 'Coordiná la entrega del auto con el locatario.';
       case 'in_progress':
+        // FIX: Consider completion_status for detailed hint
+        if (booking.completion_status === 'pending_owner' || booking.completion_status === 'pending_both') {
+          return 'El locatario devolvió el auto. Ingresá al detalle para confirmar.';
+        }
+        if (booking.completion_status === 'returned') {
+          return 'Revisá el vehículo e ingresá al detalle para confirmar la recepción.';
+        }
+        if (booking.completion_status === 'pending_renter') {
+          return 'Tu confirmación fue registrada. Esperando al locatario.';
+        }
         return 'El auto está siendo utilizado.';
       case 'completed':
         return 'Alquiler finalizado correctamente.';
@@ -175,6 +222,8 @@ export class OwnerBookingsPage implements OnInit, ViewWillEnter {
     switch (booking.status) {
       case 'pending':
         return 'badge-warning';
+      case 'pending_review':
+        return 'badge-info';
       case 'confirmed':
         return 'badge-success';
       case 'in_progress':
@@ -193,6 +242,8 @@ export class OwnerBookingsPage implements OnInit, ViewWillEnter {
     switch (booking.status) {
       case 'pending':
         return '⏳';
+      case 'pending_review':
+        return '🔍';
       case 'confirmed':
         return '✅';
       case 'in_progress':
@@ -379,6 +430,17 @@ export class OwnerBookingsPage implements OnInit, ViewWillEnter {
 
   goToPendingApprovals(): void {
     void this.router.navigate(['/bookings/pending-approval']);
+  }
+
+  goToPendingReviews(): void {
+    void this.router.navigate(['/bookings/pending-review']);
+  }
+
+  /**
+   * Check if booking is in pending review status (post-return confirmation)
+   */
+  isPendingReview(booking: Booking): boolean {
+    return booking.status === 'pending_review';
   }
 
   private async loadMarketplaceStatus(userId: string): Promise<void> {

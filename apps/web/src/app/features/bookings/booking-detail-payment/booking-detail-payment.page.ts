@@ -90,6 +90,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   messageToHost = '';
   readonly termsAccepted = signal(false);
 
+  // UI state
+  readonly showP2PDetails = signal(false);
+
   // Constants
   readonly PRE_AUTH_AMOUNT_USD = 600;
 

@@ -178,7 +178,7 @@ e) El uso del vehiculo es **OCASIONAL Y PARTICULAR**, no profesional ni comercia
 
 f) Este contrato **NO AGRAVA EL RIESGO** asegurado, dado que:
    - El seguro tiene clausula de conductor indeterminado
-   - El uso es ocasional (max 15 dias/mes)
+   - El uso es ocasional (max 24 dias/mes)
    - No hay actividad lucrativa
 
 ---

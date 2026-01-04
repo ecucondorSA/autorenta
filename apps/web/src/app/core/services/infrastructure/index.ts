@@ -1,7 +1,5 @@
-export * from './advisory-lock.service';
 export * from './analytics.service';
 export * from './auto-refresh.service';
-export * from './circuit-breaker.service';
 export * from './email.service';
 export * from './encryption.service';
 export * from './error-handler.service';

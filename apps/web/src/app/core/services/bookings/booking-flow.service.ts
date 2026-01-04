@@ -143,24 +143,59 @@ export class BookingFlowService {
 
     // FASE 3: IN_PROGRESS - Alquiler activo
     if (status === 'in_progress') {
+      const completionStatus = booking.completion_status;
+
       if (isRenter) {
-        actions.push({
-          label: 'Realizar Check-Out',
-          action: 'renter-check-out',
-          route: `/bookings/${booking.id}/check-out`,
-          variant: 'primary',
-          icon: 'log-out',
-          description: 'Devolución del vehículo',
-        });
+        // FIX: Consider completion_status for renter actions
+        if (completionStatus === 'pending_renter' || completionStatus === 'pending_both') {
+          actions.push({
+            label: 'Confirmar Devolución',
+            action: 'confirm-checkout',
+            route: `/bookings/${booking.id}/check-out`,
+            variant: 'primary',
+            icon: 'checkmark-circle',
+            description: 'Confirmar que el auto fue devuelto',
+          });
+        } else if (!completionStatus || completionStatus === 'active') {
+          actions.push({
+            label: 'Realizar Check-Out',
+            action: 'renter-check-out',
+            route: `/bookings/${booking.id}/check-out`,
+            variant: 'primary',
+            icon: 'log-out',
+            description: 'Devolución del vehículo',
+          });
+        } else {
+          // returned, pending_owner, funds_released - just view
+          actions.push({
+            label: 'Ver Estado',
+            action: 'view',
+            route: `/bookings/${booking.id}`,
+            variant: 'secondary',
+            icon: 'eye',
+          });
+        }
       }
       if (isOwner) {
-        actions.push({
-          label: 'Ver Ubicación',
-          action: 'track',
-          route: `/bookings/${booking.id}`,
-          variant: 'secondary',
-          icon: 'location',
-        });
+        // FIX: Consider completion_status for owner actions
+        if (completionStatus === 'pending_owner' || completionStatus === 'pending_both' || completionStatus === 'returned') {
+          actions.push({
+            label: 'Confirmar Devolución',
+            action: 'owner-check-out',
+            route: `/bookings/${booking.id}/owner-check-out`,
+            variant: 'primary',
+            icon: 'checkmark-done',
+            description: 'Verificar el vehículo y confirmar recepción',
+          });
+        } else {
+          actions.push({
+            label: 'Ver Ubicación',
+            action: 'track',
+            route: `/bookings/${booking.id}`,
+            variant: 'secondary',
+            icon: 'location',
+          });
+        }
       }
     }
 
@@ -288,6 +323,29 @@ export class BookingFlowService {
         };
       }
       if (status === 'in_progress') {
+        // FIX: Consider completion_status for proper next step
+        const completionStatus = booking.completion_status;
+
+        if (completionStatus === 'pending_owner' || completionStatus === 'pending_both') {
+          return {
+            title: 'Confirmar Devolución',
+            description: 'El locatario devolvió el auto. Confirmá la recepción para liberar los fondos.',
+            action: 'Confirmar Check-Out',
+            route: `/bookings/${booking.id}/owner-check-out`,
+            priority: 'high',
+          };
+        }
+
+        if (completionStatus === 'returned') {
+          return {
+            title: 'Revisar Devolución',
+            description: 'El auto fue devuelto. Realiza la inspección final.',
+            action: 'Inspeccionar',
+            route: `/bookings/${booking.id}/owner-check-out`,
+            priority: 'high',
+          };
+        }
+
         return {
           title: 'Esperando Devolución',
           description: 'El locatario está usando el vehículo. Prepárate para el check-out.',
@@ -360,6 +418,29 @@ export class BookingFlowService {
         };
       }
       if (status === 'in_progress') {
+        // FIX: Consider completion_status for proper next step
+        const completionStatus = booking.completion_status;
+
+        if (completionStatus === 'pending_renter' || completionStatus === 'pending_both') {
+          return {
+            title: 'Confirmar Devolución',
+            description: 'El propietario está esperando tu confirmación de la devolución.',
+            action: 'Confirmar Check-Out',
+            route: `/bookings/${booking.id}/check-out`,
+            priority: 'high',
+          };
+        }
+
+        if (completionStatus === 'returned' || completionStatus === 'pending_owner') {
+          return {
+            title: 'Devolución en proceso',
+            description: 'El propietario está verificando el vehículo. Te avisaremos cuando confirme.',
+            action: 'Ver Estado',
+            route: `/bookings/${booking.id}`,
+            priority: 'medium',
+          };
+        }
+
         return {
           title: 'Realizar Check-Out',
           description: 'Cuando devuelvas el vehículo, completa el check-out.',
@@ -533,14 +614,33 @@ export class BookingFlowService {
       },
     };
 
-    return (
-      statusMap[status] || {
-        label: status,
-        color: 'medium',
-        icon: 'help-circle',
-        description: '',
+    const baseInfo = statusMap[status] || {
+      label: status,
+      color: 'medium',
+      icon: 'help-circle',
+      description: '',
+    };
+
+    // Distinguish pending status based on payment_mode
+    // If payment_mode is set -> approval flow (waiting for owner)
+    // If payment_mode is NOT set -> traditional flow (waiting for payment)
+    if (status === 'pending') {
+      if (booking.payment_mode) {
+        return {
+          ...baseInfo,
+          label: 'Esperando aprobación',
+          description: 'El propietario está revisando tu solicitud',
+        };
+      } else {
+        return {
+          ...baseInfo,
+          label: 'Pendiente de pago',
+          description: 'Completá el pago para confirmar la reserva',
+        };
       }
-    );
+    }
+
+    return baseInfo;
   }
 
   /**

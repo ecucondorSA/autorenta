@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, computed, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TranslateModule } from '@ngx-translate/core';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { ToastService } from '@core/services/ui/toast.service';
 import { Booking } from '../../../core/models';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
@@ -13,6 +15,7 @@ import { formatDateRange } from '../../../shared/utils/date.utils';
 type BookingStatusFilter =
   | 'all'
   | 'pending'
+  | 'pending_review'
   | 'confirmed'
   | 'in_progress'
   | 'completed'
@@ -44,11 +47,12 @@ interface BookingSection {
   styleUrl: './my-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyBookingsPage implements OnInit {
+export class MyBookingsPage implements OnInit, OnDestroy {
   readonly bookings = signal<Booking[]>([]);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly statusFilter = signal<BookingStatusFilter>('all');
+  private currentUserId: string | null = null;
 
   // Collapsible sections state
   readonly sections = signal<BookingSection[]>([
@@ -58,7 +62,7 @@ export class MyBookingsPage implements OnInit {
       icon: '⚠️',
       expanded: true, // Always expanded by default
       priority: 1,
-      statuses: ['pending'],
+      statuses: ['pending', 'pending_review'],
       accentClass: 'section-accent section-accent--pending',
     },
     {
@@ -85,6 +89,7 @@ export class MyBookingsPage implements OnInit {
   readonly statusFilters: readonly BookingStatusFilter[] = [
     'all',
     'pending',
+    'pending_review',
     'confirmed',
     'in_progress',
     'completed',
@@ -126,6 +131,7 @@ export class MyBookingsPage implements OnInit {
     return {
       all: bookings.length,
       pending: bookings.filter((b) => this.getEffectiveStatus(b) === 'pending').length,
+      pending_review: bookings.filter((b) => this.getEffectiveStatus(b) === 'pending_review').length,
       confirmed: bookings.filter((b) => this.getEffectiveStatus(b) === 'confirmed').length,
       in_progress: bookings.filter((b) => this.getEffectiveStatus(b) === 'in_progress').length,
       completed: bookings.filter((b) => this.getEffectiveStatus(b) === 'completed').length,
@@ -138,7 +144,7 @@ export class MyBookingsPage implements OnInit {
   readonly dashboardStats = computed(() => {
     const counts = this.statusCounts();
     return {
-      actionRequired: counts.pending, // Only truly pending (can still be paid)
+      actionRequired: counts.pending + counts.pending_review, // Pending payment or review
       active: counts.confirmed + counts.in_progress,
       history: counts.completed + counts.cancelled + counts.expired, // Include expired
       total: counts.all,
@@ -149,10 +155,29 @@ export class MyBookingsPage implements OnInit {
     private readonly bookingsService: BookingsService,
     private readonly router: Router,
     private readonly toastService: ToastService,
+    private readonly bookingRealtimeService: BookingRealtimeService,
+    private readonly authService: AuthService,
   ) {}
 
   ngOnInit(): void {
     void this.loadBookings();
+    void this.setupRealtimeSubscription();
+  }
+
+  ngOnDestroy(): void {
+    this.bookingRealtimeService.unsubscribeUserBookings();
+  }
+
+  private async setupRealtimeSubscription(): Promise<void> {
+    const session = await this.authService.ensureSession();
+    this.currentUserId = session?.user?.id ?? null;
+    if (this.currentUserId) {
+      this.bookingRealtimeService.subscribeToUserBookings(this.currentUserId, 'renter', {
+        onBookingsChange: () => {
+          void this.loadBookings();
+        },
+      });
+    }
   }
 
   async loadBookings(): Promise<void> {
@@ -208,9 +233,18 @@ export class MyBookingsPage implements OnInit {
           return 'Pago en proceso';
         }
         return this.isWalletBooking(booking) ? 'Esperando aprobación' : 'Pendiente de pago';
+      case 'pending_review':
+        return 'En revisión';
       case 'confirmed':
         return 'Aprobada';
       case 'in_progress':
+        // FIX: Consider completion_status for detailed status
+        if (booking.completion_status === 'pending_renter' || booking.completion_status === 'pending_both') {
+          return 'Confirmar devolución';
+        }
+        if (booking.completion_status === 'pending_owner' || booking.completion_status === 'returned') {
+          return 'Esperando al propietario';
+        }
         return 'En uso';
       case 'completed':
         return 'Finalizada';
@@ -241,8 +275,19 @@ export class MyBookingsPage implements OnInit {
         return this.isWalletBooking(booking)
           ? 'El propietario está revisando tu solicitud. Te notificaremos cuando responda.'
           : 'Completá el checkout para confirmar tu reserva.';
+      case 'pending_review':
+        return 'El auto fue devuelto. Confirmá la devolución para liberar los fondos.';
       case 'confirmed':
         return 'Tu reserva fue aprobada. Coordiná el check-in con el propietario.';
+      case 'in_progress':
+        // FIX: Consider completion_status for detailed hint
+        if (booking.completion_status === 'pending_renter' || booking.completion_status === 'pending_both') {
+          return 'El propietario ya confirmó. Ingresá al detalle para confirmar la devolución.';
+        }
+        if (booking.completion_status === 'pending_owner' || booking.completion_status === 'returned') {
+          return 'Tu confirmación fue registrada. El propietario está verificando el vehículo.';
+        }
+        return 'Disfrutá tu viaje. Recordá devolver el auto en las condiciones acordadas.';
       case 'completed':
         return 'Gracias por viajar con nosotros.';
       case 'cancelled':
@@ -261,6 +306,8 @@ export class MyBookingsPage implements OnInit {
     switch (effectiveStatus) {
       case 'pending':
         return 'status-banner--pending';
+      case 'pending_review':
+        return 'status-banner--info';
       case 'confirmed':
       case 'in_progress':
         return 'status-banner--success';
@@ -279,6 +326,8 @@ export class MyBookingsPage implements OnInit {
     switch (effectiveStatus) {
       case 'pending':
         return 'badge-warning';
+      case 'pending_review':
+        return 'badge-info';
       case 'confirmed':
         return 'badge-success';
       case 'in_progress':
@@ -298,6 +347,8 @@ export class MyBookingsPage implements OnInit {
     switch (effectiveStatus) {
       case 'pending':
         return 'booking-card--pending';
+      case 'pending_review':
+        return 'booking-card--info';
       case 'confirmed':
       case 'in_progress':
         return 'booking-card--success';
@@ -316,6 +367,8 @@ export class MyBookingsPage implements OnInit {
     switch (effectiveStatus) {
       case 'pending':
         return '⏳';
+      case 'pending_review':
+        return '🔍';
       case 'confirmed':
       case 'in_progress':
         return '✅';
@@ -334,11 +387,20 @@ export class MyBookingsPage implements OnInit {
     const effectiveStatus = this.getEffectiveStatus(booking);
     switch (effectiveStatus) {
       case 'pending':
-        // P2P flow: wallet bookings show "En revisión" instead of "Pendiente"
-        return this.isWalletBooking(booking) ? 'En revisión' : 'Pendiente';
+        // P2P flow: wallet bookings show "Esperando" instead of "Pendiente"
+        return this.isWalletBooking(booking) ? 'Esperando' : 'Pendiente';
+      case 'pending_review':
+        return 'En revisión';
       case 'confirmed':
         return 'Aprobada';
       case 'in_progress':
+        // FIX: Consider completion_status for short label
+        if (booking.completion_status === 'pending_renter' || booking.completion_status === 'pending_both') {
+          return 'Confirmar';
+        }
+        if (booking.completion_status === 'pending_owner' || booking.completion_status === 'returned') {
+          return 'Verificando';
+        }
         return 'En uso';
       case 'completed':
         return 'Finalizada';
@@ -357,6 +419,8 @@ export class MyBookingsPage implements OnInit {
     switch (effectiveStatus) {
       case 'pending':
         return 'border-l-amber-500';
+      case 'pending_review':
+        return 'border-l-blue-500';
       case 'confirmed':
       case 'in_progress':
         return 'border-l-green-500';
@@ -376,6 +440,8 @@ export class MyBookingsPage implements OnInit {
     switch (effectiveStatus) {
       case 'pending':
         return 'bg-amber-100 dark:bg-amber-900/50';
+      case 'pending_review':
+        return 'bg-blue-100 dark:bg-blue-900/50';
       case 'confirmed':
       case 'in_progress':
         return 'bg-green-100 dark:bg-green-900/50';
@@ -395,6 +461,8 @@ export class MyBookingsPage implements OnInit {
     switch (effectiveStatus) {
       case 'pending':
         return 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300';
+      case 'pending_review':
+        return 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300';
       case 'confirmed':
         return 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300';
       case 'in_progress':
@@ -427,6 +495,13 @@ export class MyBookingsPage implements OnInit {
    */
   isPendingApproval(booking: Booking): boolean {
     return booking.status === 'pending' && this.isWalletBooking(booking) && !this.isStartDatePassed(booking);
+  }
+
+  /**
+   * Check if booking is pending review (renter needs to confirm return)
+   */
+  isPendingReview(booking: Booking): boolean {
+    return booking.status === 'pending_review';
   }
 
   // Actions
@@ -542,6 +617,8 @@ export class MyBookingsPage implements OnInit {
         return 'Todas';
       case 'pending':
         return 'Pendientes';
+      case 'pending_review':
+        return 'En revisión';
       case 'confirmed':
         return 'Confirmadas';
       case 'in_progress':

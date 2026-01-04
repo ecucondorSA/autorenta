@@ -234,6 +234,10 @@ export class BookingValidationService {
       return 'Debes iniciar sesión para crear una reserva.';
     }
 
+    if (errorLower.includes('self_booking_not_allowed') || errorLower.includes('self booking')) {
+      return 'No podés reservar tu propio auto.';
+    }
+
     if (errorLower.includes('propio auto') || errorLower.includes('own car')) {
       return 'No puedes reservar tu propio auto.';
     }

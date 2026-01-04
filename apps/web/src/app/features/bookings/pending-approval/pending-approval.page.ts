@@ -6,6 +6,8 @@ import { Router, RouterModule } from '@angular/router';
 import { IonicModule, ViewWillEnter } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { RenterProfileBadgeComponent } from '../../../shared/components/renter-profile-badge/renter-profile-badge.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
@@ -38,10 +40,13 @@ interface PendingApproval {
 })
 export class PendingApprovalPage implements OnInit, OnDestroy, ViewWillEnter {
   private readonly bookingsService = inject(BookingsService);
+  private readonly bookingRealtimeService = inject(BookingRealtimeService);
+  private readonly authService = inject(AuthService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly router = inject(Router);
   private pollInterval?: ReturnType<typeof setInterval>;
   private isInitialized = false;
+  private currentUserId: string | null = null;
 
   readonly loading = signal(true);
   readonly pendingBookings = signal<PendingApproval[]>([]);
@@ -68,12 +73,33 @@ export class PendingApprovalPage implements OnInit, OnDestroy, ViewWillEnter {
     await this.loadPendingApprovals();
     this.isInitialized = true;
 
-    // Auto-refresh cada 30 segundos
+    // Setup realtime subscription
+    await this.setupRealtimeSubscription();
+
+    // Polling como fallback (cada 60s en lugar de 30s gracias a realtime)
     this.pollInterval = setInterval(() => {
       if (!this.processingBookingId()) {
         this.loadPendingApprovals();
       }
-    }, 30000);
+    }, 60000);
+  }
+
+  private async setupRealtimeSubscription(): Promise<void> {
+    try {
+      const session = await this.authService.ensureSession();
+      this.currentUserId = session?.user?.id ?? null;
+      if (this.currentUserId) {
+        this.bookingRealtimeService.subscribeToUserBookings(this.currentUserId, 'owner', {
+          onBookingsChange: () => {
+            if (!this.processingBookingId()) {
+              void this.loadPendingApprovals();
+            }
+          },
+        });
+      }
+    } catch {
+      // Fallback a polling si realtime falla
+    }
   }
 
   /**
@@ -90,6 +116,7 @@ export class PendingApprovalPage implements OnInit, OnDestroy, ViewWillEnter {
     if (this.pollInterval) {
       clearInterval(this.pollInterval);
     }
+    this.bookingRealtimeService.unsubscribeUserBookings();
   }
 
   async loadPendingApprovals() {

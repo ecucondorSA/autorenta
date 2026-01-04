@@ -20,6 +20,7 @@ import { CarsService } from '@core/services/cars/cars.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
 import { GeocodingService } from '@core/services/geo/geocoding.service';
 import { LocationCoordinates, LocationService } from '@core/services/geo/location.service';
+import { CarAvailabilityService, CarWithAvailability } from '@core/services/cars/car-availability.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { BreakpointService } from '@core/services/ui/breakpoint.service';
@@ -27,7 +28,6 @@ import { MetaService } from '@core/services/ui/meta.service';
 import { ToastService } from '@core/services/ui/toast.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { RealtimeChannel } from '@supabase/supabase-js';
-import { getErrorMessage } from '@core/utils/type-guards';
 import { Car } from '../../../core/models';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
 import { DateRange, DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
@@ -38,6 +38,7 @@ import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-r
 // import { CarCardV3Component } from '../../../shared/components/marketplace/car-card-v3/car-card-v3.component';
 // import { FiltersDrawerComponent } from '../../../shared/components/marketplace/filters-drawer/filters-drawer.component';
 // import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
+import { getErrorMessage } from '@core/utils/type-guards';
 import { AiCarRecommendationComponent } from '../../../shared/components/ai-car-recommendation/ai-car-recommendation.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 
@@ -48,12 +49,15 @@ interface BreadcrumbItem {
   icon?: string;
 }
 
-// Interface para auto con distancia
+// Interface para auto con distancia y disponibilidad
 export interface CarWithDistance extends Car {
   distance?: number;
   distanceText?: string;
   body_type?: string | null;
   image_url?: string;
+  // Campos de disponibilidad (cuando showUnavailableCars está activo)
+  isAvailableForDates?: boolean;
+  nextAvailableDate?: string | null;
 }
 
 const SORT_STORAGE_KEY = 'autorenta:list-sort';
@@ -132,6 +136,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   private readonly urgentRentalService = inject(UrgentRentalService);
   private readonly breakpoint = inject(BreakpointService);
   private readonly toastService = inject(ToastService);
+  private readonly carAvailabilityService = inject(CarAvailabilityService);
   private readonly economyRadiusKm = ECONOMY_RADIUS_KM;
   private sortInitialized = false;
   private locationOverrideApplied = false;
@@ -216,6 +221,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly maxPrice = signal<number | null>(null);
   readonly minRating = signal<number | null>(null); // 0-5
   readonly searchQuery = signal<string>(''); // Búsqueda por texto
+  readonly showUnavailableCars = signal(false); // Toggle para mostrar autos no disponibles
   readonly searchSuggestions = signal<string[]>([]); // Sugerencias de autocompletado
   private allBrandsAndModels: { brand: string; model: string }[] = [];
   private carCities: string[] = [];
@@ -950,14 +956,29 @@ export class CarsListPage implements OnInit, OnDestroy {
       }
 
       const dateRange = this.dateRange();
+      const showUnavailable = this.showUnavailableCars();
 
       // ✅ SPRINT 2 INTEGRATION: Usar getAvailableCars si hay fechas seleccionadas
       if (dateRange.from && dateRange.to) {
-        const items = await this.carsService.getAvailableCars(dateRange.from, dateRange.to, {
-          city: this['city']() ?? undefined,
-          limit: 100,
-        });
-        this.cars.set(items);
+        if (showUnavailable) {
+          // 🆕 Mostrar TODOS los autos con info de disponibilidad
+          const items = await this.carAvailabilityService.getAllCarsWithAvailability(
+            dateRange.from,
+            dateRange.to,
+            {
+              city: this['city']() ?? undefined,
+              limit: 100,
+            },
+          );
+          this.cars.set(items as Car[]);
+        } else {
+          // Solo autos disponibles (comportamiento original)
+          const items = await this.carsService.getAvailableCars(dateRange.from, dateRange.to, {
+            city: this['city']() ?? undefined,
+            limit: 100,
+          });
+          this.cars.set(items);
+        }
       } else {
         // Si no hay fechas, usar método tradicional
         const items = await this.carsService.listActiveCars({
@@ -1253,6 +1274,15 @@ export class CarsListPage implements OnInit, OnDestroy {
     this.maxPrice.set(null);
     this.minRating.set(null);
     this.searchQuery.set('');
+    this.showUnavailableCars.set(false);
+  }
+
+  /**
+   * Toggle para mostrar/ocultar autos no disponibles
+   */
+  toggleShowUnavailable(): void {
+    this.showUnavailableCars.update((v) => !v);
+    void this.loadCars();
   }
 
   /**

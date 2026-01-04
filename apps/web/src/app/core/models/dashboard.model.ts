@@ -41,6 +41,7 @@ export interface BookingStats {
   upcoming: number;
   active: number;
   completed: number;
+  pendingReview: number;
   total: number;
 }
 

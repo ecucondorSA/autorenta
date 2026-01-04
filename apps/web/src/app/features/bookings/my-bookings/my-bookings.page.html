@@ -309,6 +309,13 @@
               Pago pendiente →
             </span>
           }
+          @if (isPendingReview(booking)) {
+            <span
+              class="booking-card__hint booking-card__hint--info"
+              >
+              Confirmar devolución →
+            </span>
+          }
           @if (getEffectiveStatus(booking) === 'expired') {
             <span
               class="booking-card__hint booking-card__hint--danger"
@@ -316,7 +323,7 @@
               Vencida
             </span>
           }
-          @if (!canCompletePay(booking) && !isPendingApproval(booking) && getEffectiveStatus(booking) !== 'expired') {
+          @if (!canCompletePay(booking) && !isPendingApproval(booking) && !isPendingReview(booking) && getEffectiveStatus(booking) !== 'expired') {
             <span
               class="booking-card__hint"
               >

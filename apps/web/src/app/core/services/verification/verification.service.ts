@@ -1,7 +1,9 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, OnDestroy, effect } from '@angular/core';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import type { UserDocument, UserVerificationStatus, VerificationRole } from '@core/models';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import type { Database } from '@core/types/database.types';
 
 export interface DetailedVerificationStatus {
@@ -48,15 +50,108 @@ function validateDocType(docType: string): asserts docType is ValidDocType {
 @Injectable({
   providedIn: 'root',
 })
-export class VerificationService {
+export class VerificationService implements OnDestroy {
   private readonly logger = inject(LoggerService);
   private supabase = injectSupabase();
+  private readonly authService = inject(AuthService);
+
+  // Realtime channels
+  private verificationsChannel: RealtimeChannel | null = null;
+  private documentsChannel: RealtimeChannel | null = null;
+  private currentUserId: string | null = null;
 
   // Reactive state consumed by guards/widgets/pages
   readonly statuses = signal<UserVerificationStatus[]>([]);
   readonly documents = signal<UserDocument[]>([]);
   readonly loadingStatuses = signal(false);
   readonly loadingDocuments = signal(false);
+
+  constructor() {
+    // Auto-subscribe to realtime when user is authenticated
+    effect(() => {
+      const isAuthenticated = this.authService.isAuthenticated();
+      if (isAuthenticated) {
+        void this.setupRealtimeSubscriptions();
+      } else {
+        this.unsubscribeRealtime();
+        this.statuses.set([]);
+        this.documents.set([]);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeRealtime();
+  }
+
+  /**
+   * Setup realtime subscriptions for verification status and documents
+   */
+  private async setupRealtimeSubscriptions(): Promise<void> {
+    const { data: { user } } = await this.supabase.auth.getUser();
+    if (!user) return;
+
+    // Avoid duplicate subscriptions
+    if (this.currentUserId === user.id && this.verificationsChannel) {
+      return;
+    }
+
+    this.unsubscribeRealtime();
+    this.currentUserId = user.id;
+
+    this.logger.debug('[VerificationService] Setting up realtime subscriptions for user:', user.id);
+
+    // Subscribe to user_verifications changes
+    this.verificationsChannel = this.supabase
+      .channel(`verifications:${user.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'user_verifications',
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => {
+          this.logger.debug('[VerificationService] Verification status changed via realtime');
+          void this.loadStatuses();
+        },
+      )
+      .subscribe();
+
+    // Subscribe to user_documents changes
+    this.documentsChannel = this.supabase
+      .channel(`documents:${user.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'user_documents',
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => {
+          this.logger.debug('[VerificationService] User documents changed via realtime');
+          void this.loadDocuments();
+        },
+      )
+      .subscribe();
+  }
+
+  /**
+   * Unsubscribe from realtime channels
+   */
+  private unsubscribeRealtime(): void {
+    if (this.verificationsChannel) {
+      this.supabase.removeChannel(this.verificationsChannel);
+      this.verificationsChannel = null;
+    }
+    if (this.documentsChannel) {
+      this.supabase.removeChannel(this.documentsChannel);
+      this.documentsChannel = null;
+    }
+    this.currentUserId = null;
+  }
 
   /**
    * Sube una imagen de documento al bucket seguro y crea/actualiza el registro en user_documents.

@@ -44,6 +44,35 @@
     </div>
   }
 
+  <!-- Pending Review Banner -->
+  @if (pendingReviewCount() > 0) {
+    <div class="bg-gradient-to-r from-blue-500 to-indigo-500 border-b-4 border-blue-600">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex items-center gap-3 text-white">
+            <span class="text-2xl">🔍</span>
+            <div>
+              <p class="font-bold text-lg">
+                {{ pendingReviewCount() }} {{ pendingReviewCount() === 1 ? 'reserva en revisión' : 'reservas en revisión' }}
+              </p>
+              <p class="text-sm text-blue-100">
+                Confirmá la devolución del vehículo para liberar los fondos
+              </p>
+            </div>
+          </div>
+          <button
+            (click)="goToPendingReviews()"
+            class="flex items-center gap-2 px-6 py-3 bg-white text-blue-600 font-bold rounded-lg shadow-lg hover:bg-blue-50 hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+          >
+            <span>✅</span>
+            <span>Revisar Ahora</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
   <!-- Content -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     @if (loading()) {
@@ -299,6 +328,15 @@
                     class="owner-booking-btn bg-cta-default text-cta-text"
                     >
                     🏁 Recibir
+                  </a>
+                }
+
+                @if (isPendingReview(booking)) {
+                  <a
+                    [routerLink]="['/bookings', 'owner', booking.id]"
+                    class="owner-booking-btn bg-blue-600 text-text-inverse"
+                    >
+                    🔍 Confirmar Devolución
                   </a>
                 }
 

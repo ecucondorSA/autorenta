@@ -1,5 +1,5 @@
-import { computed, Injectable, signal } from '@angular/core';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import { computed, Injectable, OnDestroy, signal } from '@angular/core';
+import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
@@ -109,7 +109,7 @@ export interface LevelAccessCheck {
 @Injectable({
   providedIn: 'root',
 })
-export class IdentityLevelService {
+export class IdentityLevelService implements OnDestroy {
   private readonly supabase: SupabaseClient = injectSupabase();
 
   // Reactive state
@@ -117,6 +117,10 @@ export class IdentityLevelService {
   readonly verificationProgress = signal<VerificationProgress | null>(null);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+
+  // Realtime subscription
+  private realtimeChannel?: RealtimeChannel;
+  private currentUserId: string | null = null;
 
   // Computed values
   readonly currentLevel = computed(() => this.identityLevel()?.current_level ?? 1);
@@ -307,5 +311,70 @@ export class IdentityLevelService {
    */
   async refresh(): Promise<void> {
     await Promise.all([this.loadIdentityLevel(), this.getVerificationProgress()]);
+  }
+
+  /**
+   * Subscribe to realtime updates for verification changes
+   * Call this when the verification page loads
+   */
+  async subscribeToRealtimeUpdates(): Promise<void> {
+    try {
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+
+      if (!user) {
+        return;
+      }
+
+      this.currentUserId = user.id;
+
+      // Unsubscribe from previous channel if exists
+      this.unsubscribeFromRealtime();
+
+      // Create new channel for this user
+      this.realtimeChannel = this.supabase
+        .channel(`identity_level_${user.id}`)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'user_identity_levels',
+            filter: `user_id=eq.${user.id}`,
+          },
+          async () => {
+            // Refresh progress when changes detected
+            console.log('[IdentityLevelService] Realtime update detected, refreshing...');
+            await this.getVerificationProgress();
+          },
+        )
+        .subscribe((status) => {
+          if (status === 'CHANNEL_ERROR') {
+            console.error('[IdentityLevelService] Realtime channel error');
+          } else if (status === 'SUBSCRIBED') {
+            console.log('[IdentityLevelService] Realtime subscription active');
+          }
+        });
+    } catch (err) {
+      console.error('[IdentityLevelService] Failed to subscribe to realtime:', err);
+    }
+  }
+
+  /**
+   * Unsubscribe from realtime updates
+   */
+  unsubscribeFromRealtime(): void {
+    if (this.realtimeChannel) {
+      this.supabase.removeChannel(this.realtimeChannel);
+      this.realtimeChannel = undefined;
+    }
+  }
+
+  /**
+   * Cleanup on service destroy
+   */
+  ngOnDestroy(): void {
+    this.unsubscribeFromRealtime();
   }
 }

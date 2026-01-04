@@ -143,9 +143,9 @@ ALTER TABLE payment_splits ADD CONSTRAINT chk_comodato_split
 ### Distribución Comodato:
 ```
 Total del Usuario (100%)
-├── Platform Fee (50%)
-├── Reward Pool (30%) → Distribuido mensualmente a owners por puntos
-└── FGO (20%) → Fondo de Garantía Operativo
+├── Platform Fee (15%)
+├── Reward Pool (75%) → Distribuido mensualmente a owners por puntos
+└── FGO (10%) → Fondo de Garantía Operativo
 ```
 
 ---
@@ -156,9 +156,9 @@ Agregar configuración para modelo comodato.
 ```sql
 -- Insertar configuración para comodato
 INSERT INTO platform_fee_config (name, fee_type, fee_value, applies_to, active, valid_from) VALUES
-  ('Comodato - Platform Fee', 'percentage', 0.50, 'comodato_booking', true, now()),
-  ('Comodato - Reward Pool', 'percentage', 0.30, 'comodato_reward_pool', true, now()),
-  ('Comodato - FGO Contribution', 'percentage', 0.20, 'comodato_fgo', true, now());
+  ('Comodato - Platform Fee', 'percentage', 0.15, 'comodato_booking', true, now()),
+  ('Comodato - Reward Pool', 'percentage', 0.75, 'comodato_reward_pool', true, now()),
+  ('Comodato - FGO Contribution', 'percentage', 0.10, 'comodato_fgo', true, now());
 ```
 
 ---
@@ -184,14 +184,14 @@ CREATE OR REPLACE FUNCTION calculate_payment_split(
 ) AS $$
 BEGIN
   IF p_agreement_type = 'comodato' THEN
-    -- Comodato: 50% platform, 30% rewards, 20% FGO, 0% owner
+    -- Comodato: 15% platform, 75% rewards, 10% FGO, 0% owner
     RETURN QUERY SELECT
       p_total_amount,
       0::NUMERIC, -- owner no recibe nada
-      FLOOR(p_total_amount * 0.50),
-      FLOOR(p_total_amount * 0.30),
-      p_total_amount - FLOOR(p_total_amount * 0.50) - FLOOR(p_total_amount * 0.30),
-      0.50::NUMERIC;
+      FLOOR(p_total_amount * 0.15),
+      FLOOR(p_total_amount * 0.75),
+      p_total_amount - FLOOR(p_total_amount * 0.15) - FLOOR(p_total_amount * 0.75),
+      0.15::NUMERIC;
   ELSE
     -- Rental tradicional: owner recibe mayoría
     RETURN QUERY SELECT

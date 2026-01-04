@@ -1,0 +1,88 @@
+<div class="pending-review-page">
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">
+      <span>←</span>
+      <span>Volver</span>
+    </button>
+    <h1>Reservas en Revisión</h1>
+    <p class="subtitle">Confirmá la devolución del vehículo para liberar los fondos</p>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="bookings-list">
+      <app-skeleton-loader type="list" [count]="3"></app-skeleton-loader>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading() && !hasBookings()) {
+    <div class="empty-state">
+      <div class="empty-icon">✅</div>
+      <h2>No hay revisiones pendientes</h2>
+      <p>Todas las devoluciones han sido confirmadas</p>
+      <button class="btn-primary" routerLink="/bookings/owner">
+        Ver mis reservas
+      </button>
+    </div>
+  }
+
+  <!-- Bookings List -->
+  @if (!loading() && hasBookings()) {
+    <div class="bookings-list">
+      @for (booking of pendingReviews(); track booking.id) {
+        <div class="booking-card" (click)="navigateToBooking(booking.id)">
+          <!-- Status Badge -->
+          <div class="status-badge">
+            <span class="icon">🔍</span>
+            <span class="label">Pendiente de revisión</span>
+          </div>
+
+          <!-- Car Info -->
+          <div class="car-info">
+            <h3>{{ booking.car_title || booking.car_id }}</h3>
+            <div class="booking-dates">
+              <span class="date-range">📅 {{ formatDateRange(booking) }}</span>
+            </div>
+          </div>
+
+          <!-- Booking Details -->
+          <div class="booking-details">
+            <div class="detail-item">
+              <span class="label">Total:</span>
+              <span class="value amount">{{ booking.total_amount | money }} {{ booking.currency }}</span>
+            </div>
+            @if (booking.returned_at) {
+              <div class="detail-item">
+                <span class="label">Devuelto:</span>
+                <span class="value">{{ booking.returned_at | date: 'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            }
+          </div>
+
+          <!-- Action Button -->
+          <div class="booking-actions">
+            <button class="btn-confirm">
+              <span>✅</span>
+              <span>Confirmar Devolución</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Info Banner -->
+    <div class="info-banner">
+      <div class="info-icon">ℹ️</div>
+      <div class="info-content">
+        <p><strong>Importante:</strong></p>
+        <ul>
+          <li>Revisá el estado del vehículo antes de confirmar la devolución.</li>
+          <li>Si hay daños, podés reportarlos antes de confirmar.</li>
+          <li>Al confirmar ambas partes, los fondos se liberarán automáticamente.</li>
+        </ul>
+      </div>
+    </div>
+  }
+</div>

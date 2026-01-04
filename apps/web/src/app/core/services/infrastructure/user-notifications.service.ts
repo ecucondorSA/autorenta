@@ -62,6 +62,9 @@ export class NotificationsService implements OnDestroy {
   private isSubscribed = false;
   private reconnectTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
+  // Callbacks para notificar cambios a los componentes suscritos
+  private onChangeCallbacks: Set<() => void> = new Set();
+
   constructor() {
     // Efecto reactivo: suscribirse cuando el usuario se autentica
     effect(() => {
@@ -208,7 +211,7 @@ export class NotificationsService implements OnDestroy {
         user.id,
       );
 
-      // Crear nuevo channel
+      // Crear nuevo channel - suscribirse a todos los eventos (INSERT, UPDATE, DELETE)
       this.realtimeChannel = this.supabase
         .channel(`notifications:${user.id}`)
         .on(
@@ -222,6 +225,35 @@ export class NotificationsService implements OnDestroy {
           (payload: RealtimePostgresInsertPayload<NotificationRow>) => {
             this.logger.debug('[NotificationsService] New notification received via Realtime:', payload);
             this.addNotification(payload.new);
+            this.onChangeCallbacks.forEach((cb) => cb());
+          },
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'notifications',
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            this.logger.debug('[NotificationsService] Notification updated via Realtime:', payload);
+            this.handleNotificationUpdate(payload.new as NotificationRow);
+            this.onChangeCallbacks.forEach((cb) => cb());
+          },
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: 'DELETE',
+            schema: 'public',
+            table: 'notifications',
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            this.logger.debug('[NotificationsService] Notification deleted via Realtime:', payload);
+            this.handleNotificationDelete((payload.old as { id: string }).id);
+            this.onChangeCallbacks.forEach((cb) => cb());
           },
         )
         .subscribe((status) => {
@@ -301,6 +333,37 @@ export class NotificationsService implements OnDestroy {
     this.logger.debug('[NotificationsService] Manual reconnect requested');
     this.unsubscribe();
     await this.subscribeToRealtime();
+  }
+
+  /**
+   * Suscribirse a cambios de notificaciones (para componentes que necesitan recargar)
+   * @returns función para desuscribirse
+   */
+  onChange(callback: () => void): () => void {
+    this.onChangeCallbacks.add(callback);
+    return () => this.onChangeCallbacks.delete(callback);
+  }
+
+  /**
+   * Manejar actualizaciones de notificaciones (ej: marcada como leída)
+   */
+  private handleNotificationUpdate(updated: NotificationRow): void {
+    const current = this.notifications();
+    const updatedList = current.map((n) =>
+      n.id === updated.id ? this.mapNotification(updated) : n,
+    );
+    this.notifications.set(updatedList);
+    this.updateUnreadCount();
+  }
+
+  /**
+   * Manejar eliminaciones de notificaciones
+   */
+  private handleNotificationDelete(notificationId: string): void {
+    const current = this.notifications();
+    const updatedList = current.filter((n) => n.id !== notificationId);
+    this.notifications.set(updatedList);
+    this.updateUnreadCount();
   }
 
   private addNotification(notificationData: NotificationRow) {

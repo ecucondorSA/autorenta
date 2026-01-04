@@ -1,9 +1,10 @@
-import {Component, OnInit, signal, inject,
+import {Component, OnInit, OnDestroy, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import {
   DisputesService,
   Dispute,
@@ -13,6 +14,7 @@ import {
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import { Booking } from '../../../core/models';
 
 @Component({
@@ -23,13 +25,16 @@ import { Booking } from '../../../core/models';
   templateUrl: './disputes-management.page.html',
   styleUrls: ['./disputes-management.page.scss'],
 })
-export class DisputesManagementPage implements OnInit {
+export class DisputesManagementPage implements OnInit, OnDestroy {
   private readonly disputesService = inject(DisputesService);
   private readonly bookingsService = inject(BookingsService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly supabaseService = inject(SupabaseClientService);
+  private readonly realtimeConnection = inject(RealtimeConnectionService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+
+  private realtimeChannel: RealtimeChannel | null = null;
 
   readonly bookingId = signal<string>('');
   readonly booking = signal<Booking | null>(null);
@@ -60,6 +65,32 @@ export class DisputesManagementPage implements OnInit {
 
     this.bookingId.set(id);
     await Promise.all([this.loadBooking(), this.loadDisputes()]);
+
+    // Suscribirse a cambios en tiempo real de disputas
+    this.setupRealtimeSubscription(id);
+  }
+
+  ngOnDestroy(): void {
+    if (this.realtimeChannel) {
+      this.realtimeConnection.unsubscribe(this.realtimeChannel.topic);
+      this.realtimeChannel = null;
+    }
+  }
+
+  private setupRealtimeSubscription(bookingId: string): void {
+    this.realtimeChannel = this.realtimeConnection.subscribeWithRetry<Dispute>(
+      `disputes-booking-${bookingId}`,
+      {
+        event: '*',
+        schema: 'public',
+        table: 'disputes',
+        filter: `booking_id=eq.${bookingId}`,
+      },
+      () => {
+        // Recargar disputas cuando hay cambios
+        void this.loadDisputes();
+      },
+    );
   }
 
   async loadBooking(): Promise<void> {

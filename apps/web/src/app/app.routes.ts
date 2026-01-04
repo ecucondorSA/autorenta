@@ -130,6 +130,19 @@ export const routes: Routes = [
       import('./features/bookings/bookings.routes').then((m) => m.BOOKINGS_ROUTES),
   },
   {
+    path: 'reviews',
+    canMatch: [AuthGuard],
+    children: [
+      {
+        path: 'pending',
+        loadComponent: () =>
+          import('./features/reviews/pending-reviews/pending-reviews.page').then(
+            (m) => m.PendingReviewsPage,
+          ),
+      },
+    ],
+  },
+  {
     path: 'admin',
     canMatch: [AuthGuard],
     children: [

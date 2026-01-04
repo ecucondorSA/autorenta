@@ -21,16 +21,21 @@ export const BOOKINGS_ROUTES: Routes = [
   },
   {
     path: 'owner/:id',
+    // Usa la misma página unificada de detalle (detecta rol automáticamente)
     loadComponent: () =>
-      import('./owner-booking-detail/owner-booking-detail.page').then(
-        (m) => m.OwnerBookingDetailPage,
-      ),
+      import('./booking-detail/booking-detail.page').then((m) => m.BookingDetailPage),
     canMatch: [AuthGuard],
   },
   {
     path: 'pending-approval',
     loadComponent: () =>
       import('./pending-approval/pending-approval.page').then((m) => m.PendingApprovalPage),
+    canMatch: [AuthGuard],
+  },
+  {
+    path: 'pending-review',
+    loadComponent: () =>
+      import('./pending-review/pending-review.page').then((m) => m.PendingReviewPage),
     canMatch: [AuthGuard],
   },
   {

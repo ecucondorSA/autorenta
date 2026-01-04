@@ -22,6 +22,7 @@ import {
   BookingPricingRow,
 } from '@core/services/bookings/booking-ops.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
@@ -177,6 +178,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly insuranceService = inject(InsuranceService);
   private readonly bookingOpsService = inject(BookingOpsService);
   private readonly trafficInfractionsService = inject(TrafficInfractionsService); // NEW
+  private readonly bookingRealtimeService = inject(BookingRealtimeService);
   private readonly logger = inject(LoggerService).createChildLogger('BookingDetailPage');
 
   constructor() {
@@ -203,6 +205,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   nextStepLoading = signal(false);
   deliveryTimeRemaining = signal<string | null>(null);
   returnChecklistItems = signal<ReturnChecklistItem[]>([]);
+  showAllSteps = signal(false);
   private readonly isBrowser = typeof window !== 'undefined';
   private readonly returnChecklistStoragePrefix = 'autorenta:return-checklist:';
   private returnChecklistSaveTimeout: number | null = null;
@@ -396,6 +399,43 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const current = this.currentBookingStageIndex();
     return Math.min(100, Math.round((current / (steps.length - 1)) * 100));
   });
+
+  /** Pasos visibles (colapsable): muestra anterior + actual + siguiente */
+  readonly visibleSteps = computed(() => {
+    const steps = this.flowSteps();
+    const currentIdx = this.currentBookingStageIndex();
+
+    if (this.showAllSteps() || steps.length <= 4) {
+      return steps.map((step, i) => ({ ...step, originalIndex: i }));
+    }
+
+    // Mostrar: paso anterior + actual + siguiente (máx 3 pasos)
+    const start = Math.max(0, currentIdx - 1);
+    const end = Math.min(steps.length, currentIdx + 2);
+    return steps.slice(start, end).map((step, i) => ({
+      ...step,
+      originalIndex: start + i,
+    }));
+  });
+
+  /** Cantidad de pasos ocultos antes de los visibles */
+  readonly hiddenStepsBefore = computed(() => {
+    if (this.showAllSteps()) return 0;
+    const currentIdx = this.currentBookingStageIndex();
+    return Math.max(0, currentIdx - 1);
+  });
+
+  /** Cantidad de pasos ocultos después de los visibles */
+  readonly hiddenStepsAfter = computed(() => {
+    if (this.showAllSteps()) return 0;
+    const steps = this.flowSteps();
+    const currentIdx = this.currentBookingStageIndex();
+    return Math.max(0, steps.length - currentIdx - 2);
+  });
+
+  toggleShowAllSteps(): void {
+    this.showAllSteps.update(v => !v);
+  }
 
   readonly flowStatusInfo = computed(() => {
     const booking = this.booking();
@@ -1011,6 +1051,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       // Load car owner ID for confirmation logic
       await this.loadCarOwner();
 
+      // Load renter verification for owners
+      await this.loadRenterVerification();
+
       // Load FGO inspections
       await this.loadInspections();
 
@@ -1024,6 +1067,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       void this.loadTracking(booking.id);
       void this.loadConfirmation(booking.id);
       void this.loadCancellation(booking.id);
+
+      // Subscribe to realtime updates for this booking
+      this.setupRealtimeSubscriptions(booking.id);
     } catch {
       this.error.set('Error al cargar la reserva');
     } finally {
@@ -1309,6 +1355,44 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopCountdown();
+    this.bookingRealtimeService.unsubscribeAll();
+  }
+
+  /**
+   * Subscribe to realtime updates for this booking.
+   * When owner/renter takes an action, the UI updates automatically.
+   */
+  private setupRealtimeSubscriptions(bookingId: string): void {
+    this.bookingRealtimeService.subscribeToBooking(bookingId, {
+      onBookingChange: (booking) => {
+        this.logger.debug('[Realtime] Booking updated:', booking.status);
+        this.booking.set(booking);
+        void this.loadNextStep(booking);
+      },
+      onConfirmationChange: (confirmation) => {
+        this.logger.debug('[Realtime] Confirmation updated');
+        this.confirmation.set(confirmation);
+      },
+      onInspectionChange: () => {
+        this.logger.debug('[Realtime] Inspection changed, reloading...');
+        void this.loadInspections();
+      },
+      onExtensionChange: () => {
+        this.logger.debug('[Realtime] Extension changed, reloading...');
+        void this.loadPendingExtensionRequests(bookingId);
+      },
+      onClaimChange: () => {
+        this.logger.debug('[Realtime] Claim changed, reloading...');
+        void this.loadClaims();
+      },
+      onFineChange: () => {
+        this.logger.debug('[Realtime] Traffic fine changed, reloading...');
+        void this.loadTrafficFines(bookingId);
+      },
+      onConnectionChange: (status) => {
+        this.logger.debug('[Realtime] Connection status:', status);
+      },
+    });
   }
 
   private startCountdown() {
@@ -1735,4 +1819,220 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
     await alert.present();
   }
+
+  // ============================================================================
+  // RENTER VERIFICATION (FOR OWNERS)
+  // ============================================================================
+  readonly renterVerification = signal<RenterVerification | null>(null);
+  readonly renterVerificationLoading = signal(false);
+
+  readonly renterDriverScore = computed(() => this.renterVerification()?.driver_score ?? null);
+  readonly renterDriverClass = computed(() => this.renterVerification()?.driver_class ?? null);
+  readonly renterClassDescription = computed(() => this.renterVerification()?.class_description ?? null);
+  readonly renterFeeMultiplier = computed(() => this.renterVerification()?.fee_multiplier ?? null);
+  readonly renterPhone = computed(() => this.renterVerification()?.phone ?? null);
+  readonly renterWhatsApp = computed(() => this.renterVerification()?.whatsapp ?? null);
+  readonly renterDni = computed(() => this.renterVerification()?.gov_id_number ?? null);
+  readonly renterDniType = computed(() => this.renterVerification()?.gov_id_type ?? 'DNI');
+  readonly renterLicenseExpiry = computed(() => this.renterVerification()?.driver_license_expiry ?? null);
+  readonly renterLicenseClass = computed(() => this.renterVerification()?.driver_license_class ?? null);
+  readonly renterLicenseVerified = computed(() => this.renterVerification()?.driver_license_verified_at ?? null);
+  readonly renterIdVerified = computed(() => this.renterVerification()?.id_verified ?? null);
+
+  readonly videoCallUrl = computed(() => {
+    const booking = this.booking();
+    if (!booking) return null;
+    return `https://meet.jit.si/autorenta-${booking.id}`;
+  });
+
+  async loadRenterVerification(): Promise<void> {
+    const booking = this.booking();
+    if (!booking || !this.isOwner()) return;
+
+    try {
+      this.renterVerificationLoading.set(true);
+      const data = await this.bookingsService.getRenterVerificationForOwner(booking.id);
+      this.renterVerification.set(data as RenterVerification | null);
+    } catch {
+      this.renterVerification.set(null);
+    } finally {
+      this.renterVerificationLoading.set(false);
+    }
+  }
+
+  renterDocStatus(kind: RenterDocumentKind): RenterDocumentStatus {
+    const doc = this.findRenterDoc(kind);
+    if (!doc) return { label: 'Faltante', tone: 'danger' };
+    if (doc.status === 'verified') return { label: 'Verificado', tone: 'success' };
+    if (doc.status === 'rejected') return { label: 'Rechazado', tone: 'danger' };
+    return { label: 'Pendiente', tone: 'warning' };
+  }
+
+  renterResidenceDocStatus(): RenterDocumentStatus {
+    const doc = this.findRenterDoc('utility_bill');
+    if (!doc) return { label: 'Faltante', tone: 'danger' };
+    if (doc.status !== 'verified') return { label: 'Pendiente', tone: 'warning' };
+    if (!doc.created_at) return { label: 'Verificado', tone: 'success' };
+    const ageDays = Math.floor((Date.now() - new Date(doc.created_at).getTime()) / 86400000);
+    if (ageDays <= 90) return { label: 'Vigente', tone: 'success' };
+    return { label: 'Vencido', tone: 'danger' };
+  }
+
+  private findRenterDoc(kind: RenterDocumentKind): RenterDocument | null {
+    const docs = this.renterVerification()?.documents ?? [];
+    return docs.find((d) => d.kind === kind) ?? null;
+  }
+
+  // ============================================================================
+  // OWNER APPROVE/REJECT BOOKING
+  // ============================================================================
+  readonly canApproveBooking = computed(() => {
+    const booking = this.booking();
+    return this.isOwner() && booking?.status === 'pending' && !!booking?.payment_mode;
+  });
+
+  async approveBooking(): Promise<void> {
+    const booking = this.booking();
+    if (!booking || this.loading()) return;
+
+    this.loading.set(true);
+    try {
+      const result = await this.bookingsService.approveBooking(booking.id);
+      if (result.success) {
+        const updated = await this.bookingsService.getBookingById(booking.id);
+        this.booking.set(updated);
+
+        const successAlert = await this.alertController.create({
+          header: '✅ Reserva Aprobada',
+          message: result.message || 'La reserva fue aprobada exitosamente.',
+          buttons: ['Entendido'],
+        });
+        await successAlert.present();
+      } else {
+        const errorAlert = await this.alertController.create({
+          header: '❌ Error',
+          message: result.error || 'No se pudo aprobar la reserva.',
+          buttons: ['Cerrar'],
+        });
+        await errorAlert.present();
+      }
+    } catch {
+      const errorAlert = await this.alertController.create({
+        header: '❌ Error',
+        message: 'Ocurrió un error inesperado al aprobar la reserva.',
+        buttons: ['Cerrar'],
+      });
+      await errorAlert.present();
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async rejectBooking(): Promise<void> {
+    const booking = this.booking();
+    if (!booking || this.loading()) return;
+
+    const alert = await this.alertController.create({
+      header: 'Rechazar reserva',
+      message: 'Podés agregar un motivo opcional para el locatario.',
+      inputs: [
+        {
+          name: 'reason',
+          type: 'textarea',
+          placeholder: 'Motivo (opcional)',
+        },
+      ],
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Rechazar',
+          role: 'confirm',
+          handler: async (data) => {
+            this.loading.set(true);
+            try {
+              const result = await this.bookingsService.rejectBooking(booking.id, data?.reason);
+              if (result.success) {
+                const updated = await this.bookingsService.getBookingById(booking.id);
+                this.booking.set(updated);
+
+                const successAlert = await this.alertController.create({
+                  header: '✅ Reserva Rechazada',
+                  message: result.message || 'La reserva fue rechazada.',
+                  buttons: ['Entendido'],
+                });
+                await successAlert.present();
+              } else {
+                const errorAlert = await this.alertController.create({
+                  header: '❌ Error',
+                  message: result.error || 'No se pudo rechazar la reserva.',
+                  buttons: ['Cerrar'],
+                });
+                await errorAlert.present();
+              }
+            } catch {
+              const errorAlert = await this.alertController.create({
+                header: '❌ Error',
+                message: 'Ocurrió un error inesperado al rechazar la reserva.',
+                buttons: ['Cerrar'],
+              });
+              await errorAlert.present();
+            } finally {
+              this.loading.set(false);
+            }
+            return true;
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
 }
+
+// Types for Renter Verification
+type RenterDocumentKind =
+  | 'gov_id_front'
+  | 'gov_id_back'
+  | 'driver_license'
+  | 'license_front'
+  | 'license_back'
+  | 'utility_bill'
+  | 'selfie'
+  | 'criminal_record';
+
+type RenterDocument = {
+  kind: RenterDocumentKind;
+  status: 'not_started' | 'pending' | 'verified' | 'rejected';
+  created_at: string | null;
+  reviewed_at: string | null;
+};
+
+type RenterVerification = {
+  renter_id: string;
+  full_name: string | null;
+  phone: string | null;
+  whatsapp: string | null;
+  gov_id_type: string | null;
+  gov_id_number: string | null;
+  driver_license_country: string | null;
+  driver_license_expiry: string | null;
+  driver_license_class: string | null;
+  driver_license_professional: boolean | null;
+  driver_license_points: number | null;
+  email_verified: boolean | null;
+  phone_verified: boolean | null;
+  id_verified: boolean | null;
+  location_verified_at: string | null;
+  driver_license_verified_at: string | null;
+  driver_class: number | null;
+  driver_score: number | null;
+  fee_multiplier: number | null;
+  guarantee_multiplier: number | null;
+  class_description: string | null;
+  documents: RenterDocument[];
+};
+
+type RenterDocumentStatus = {
+  label: string;
+  tone: 'success' | 'warning' | 'danger';
+};

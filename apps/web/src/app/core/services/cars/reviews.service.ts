@@ -48,14 +48,15 @@ export class ReviewsService {
     const reviews = this.reviews();
     if (reviews.length === 0) return 0;
     const total = reviews.reduce((sum, r) => {
-      const avg =
-        (r.rating_cleanliness +
-          r.rating_communication +
-          r.rating_accuracy +
-          r.rating_location +
-          r.rating_checkin +
-          r.rating_value) /
-        6;
+      // Get valid ratings based on review type
+      let ratings: (number | null | undefined)[];
+      if (r.review_type === 'owner_to_renter') {
+        ratings = [r.rating_communication, r.rating_punctuality, r.rating_care, r.rating_rules, r.rating_recommend];
+      } else {
+        ratings = [r.rating_cleanliness, r.rating_communication, r.rating_accuracy, r.rating_location, r.rating_checkin, r.rating_value];
+      }
+      const validRatings = ratings.filter((val): val is number => val != null && val > 0);
+      const avg = validRatings.length > 0 ? validRatings.reduce((a, b) => a + b, 0) / validRatings.length : 0;
       return sum + avg;
     }, 0);
     return Number((total / reviews.length).toFixed(1));
@@ -63,7 +64,9 @@ export class ReviewsService {
   readonly hasReviews = computed(() => this.reviews().length > 0);
 
   /**
-   * Create a new review using the category ratings (averaged to single rating for DB)
+   * Create a new review with category ratings based on review type
+   * - renter_to_owner: cleanliness, communication, accuracy, location, checkin, value
+   * - owner_to_renter: communication, punctuality, care, rules, recommend
    */
   async createReview(params: CreateReviewParams): Promise<CreateReviewResult> {
     try {
@@ -75,33 +78,83 @@ export class ReviewsService {
       if (authError) throw authError;
       if (!user?.id) throw new Error('Usuario no autenticado');
 
-      // Calculate average rating from all categories
-      const avgRating = Math.round(
-        (params.rating_cleanliness +
-          params.rating_communication +
-          params.rating_accuracy +
-          params.rating_location +
-          params.rating_checkin +
-          params.rating_value) /
-          6,
-      );
+      // Calculate average rating based on review type
+      let avgRating: number;
+      let categoryRatings: Record<string, number | null>;
 
-      // Call the create_review function (uses single rating)
-      const { data, error } = await this.supabase.rpc('create_review', {
-        p_booking_id: params.booking_id,
-        p_reviewer_id: user.id,
-        p_reviewee_id: params.reviewee_id,
-        p_car_id: params.car_id,
-        p_review_type: params.review_type,
-        p_rating: avgRating,
-        p_comment: params.comment_public ?? null,
-      });
+      if (params.review_type === 'renter_to_owner') {
+        // Renter evaluating Owner/Car
+        const renterParams = params as import('@core/models').RenterToOwnerReviewParams;
+        avgRating = Math.round(
+          (renterParams.rating_cleanliness +
+            renterParams.rating_communication +
+            renterParams.rating_accuracy +
+            renterParams.rating_location +
+            renterParams.rating_checkin +
+            renterParams.rating_value) /
+            6,
+        );
+        categoryRatings = {
+          rating_cleanliness: renterParams.rating_cleanliness,
+          rating_communication: renterParams.rating_communication,
+          rating_accuracy: renterParams.rating_accuracy,
+          rating_location: renterParams.rating_location,
+          rating_checkin: renterParams.rating_checkin,
+          rating_value: renterParams.rating_value,
+          // Owner→Renter categories are null
+          rating_punctuality: null,
+          rating_care: null,
+          rating_rules: null,
+          rating_recommend: null,
+        };
+      } else {
+        // Owner evaluating Renter
+        const ownerParams = params as import('@core/models').OwnerToRenterReviewParams;
+        avgRating = Math.round(
+          (ownerParams.rating_communication +
+            ownerParams.rating_punctuality +
+            ownerParams.rating_care +
+            ownerParams.rating_rules +
+            ownerParams.rating_recommend) /
+            5,
+        );
+        categoryRatings = {
+          // Renter→Owner categories are null
+          rating_cleanliness: null,
+          rating_accuracy: null,
+          rating_location: null,
+          rating_checkin: null,
+          rating_value: null,
+          // Owner→Renter categories
+          rating_communication: ownerParams.rating_communication,
+          rating_punctuality: ownerParams.rating_punctuality,
+          rating_care: ownerParams.rating_care,
+          rating_rules: ownerParams.rating_rules,
+          rating_recommend: ownerParams.rating_recommend,
+        };
+      }
+
+      // Insert directly into reviews table with all category ratings
+      const { data, error } = await this.supabase
+        .from('reviews')
+        .insert({
+          booking_id: params.booking_id,
+          reviewer_id: user.id,
+          reviewee_id: params.reviewee_id,
+          rating: avgRating,
+          comment: params.comment_public ?? null,
+          is_car_review: params.review_type === 'renter_to_owner',
+          is_renter_review: params.review_type === 'owner_to_renter',
+          ...categoryRatings,
+        })
+        .select('id')
+        .single();
 
       if (error) throw error;
 
-      const reviewId = data as string;
+      const reviewId = data.id as string;
 
-      // ✅ NUEVO: Notificar al dueño del auto sobre la nueva reseña (si es renter_to_owner)
+      // Notificar al dueño del auto sobre la nueva reseña (si es renter_to_owner)
       if (params.review_type === 'renter_to_owner') {
         this.notifyOwnerOfNewReview(reviewId, params).catch((_error: unknown) => {
           // Silently fail - notification is optional enhancement
@@ -666,18 +719,30 @@ export class ReviewsService {
         const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
         const reviewerName = reviewer.full_name || 'Un usuario';
 
-        // Calcular rating promedio de las 6 categorías
-        const ratings = [
-          params.rating_cleanliness,
-          params.rating_communication,
-          params.rating_accuracy,
-          params.rating_location,
-          params.rating_checkin,
-          params.rating_value,
-        ];
-        const avgRating = Math.round(
-          ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length,
-        );
+        // Calcular rating promedio según el tipo de review
+        let avgRating: number;
+        if (params.review_type === 'renter_to_owner') {
+          const renterParams = params as import('@core/models').RenterToOwnerReviewParams;
+          avgRating = Math.round(
+            (renterParams.rating_cleanliness +
+              renterParams.rating_communication +
+              renterParams.rating_accuracy +
+              renterParams.rating_location +
+              renterParams.rating_checkin +
+              renterParams.rating_value) /
+              6,
+          );
+        } else {
+          const ownerParams = params as import('@core/models').OwnerToRenterReviewParams;
+          avgRating = Math.round(
+            (ownerParams.rating_communication +
+              ownerParams.rating_punctuality +
+              ownerParams.rating_care +
+              ownerParams.rating_rules +
+              ownerParams.rating_recommend) /
+              5,
+          );
+        }
 
         const reviewUrl = `/cars/${params.car_id}/reviews`;
 

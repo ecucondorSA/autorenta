@@ -25,7 +25,8 @@ export class ReviewCardComponent {
 
   showFlagModal = signal(false);
 
-  categoryLabels: Record<string, string> = {
+  // Categorías para Renter → Owner (evalúa auto/propietario)
+  renterToOwnerLabels: Record<string, string> = {
     rating_cleanliness: 'Limpieza',
     rating_communication: 'Comunicación',
     rating_accuracy: 'Precisión',
@@ -34,19 +35,58 @@ export class ReviewCardComponent {
     rating_value: 'Valor',
   };
 
+  // Categorías para Owner → Renter (evalúa arrendatario)
+  ownerToRenterLabels: Record<string, string> = {
+    rating_communication: 'Comunicación',
+    rating_punctuality: 'Puntualidad',
+    rating_care: 'Cuidado',
+    rating_rules: 'Reglas',
+    rating_recommend: 'Recomendación',
+  };
+
+  // Determinar si es una review de Owner→Renter
+  get isOwnerToRenterReview(): boolean {
+    // Usar review_type si existe, sino usar los flags legacy
+    if (this.review.review_type) {
+      return this.review.review_type === 'owner_to_renter';
+    }
+    return this.review.is_renter_review === true;
+  }
+
+  // Obtener las categorías activas según el tipo de review
+  get activeCategories(): { key: string; label: string; value: number | null | undefined }[] {
+    if (this.isOwnerToRenterReview) {
+      return [
+        { key: 'rating_communication', label: 'Comunicación', value: this.review.rating_communication },
+        { key: 'rating_punctuality', label: 'Puntualidad', value: this.review.rating_punctuality },
+        { key: 'rating_care', label: 'Cuidado', value: this.review.rating_care },
+        { key: 'rating_rules', label: 'Reglas', value: this.review.rating_rules },
+        { key: 'rating_recommend', label: 'Recomendación', value: this.review.rating_recommend },
+      ].filter(cat => cat.value != null && cat.value > 0);
+    } else {
+      return [
+        { key: 'rating_cleanliness', label: 'Limpieza', value: this.review.rating_cleanliness },
+        { key: 'rating_communication', label: 'Comunicación', value: this.review.rating_communication },
+        { key: 'rating_accuracy', label: 'Precisión', value: this.review.rating_accuracy },
+        { key: 'rating_location', label: 'Ubicación', value: this.review.rating_location },
+        { key: 'rating_checkin', label: 'Check-in', value: this.review.rating_checkin },
+        { key: 'rating_value', label: 'Valor', value: this.review.rating_value },
+      ].filter(cat => cat.value != null && cat.value > 0);
+    }
+  }
+
   getOverallRating(): number {
     if (!this.review) return 0;
 
-    const avg =
-      (this.review.rating_cleanliness +
-        this.review.rating_communication +
-        this.review.rating_accuracy +
-        this.review.rating_location +
-        this.review.rating_checkin +
-        this.review.rating_value) /
-      6;
+    // Usar las categorías activas para calcular el promedio
+    const categories = this.activeCategories;
+    if (categories.length === 0) {
+      // Fallback al rating legacy si existe
+      return this.review.rating ?? 0;
+    }
 
-    return Number(avg.toFixed(1));
+    const sum = categories.reduce((acc, cat) => acc + (cat.value ?? 0), 0);
+    return Number((sum / categories.length).toFixed(1));
   }
 
   getRatingStars(rating: number): string[] {

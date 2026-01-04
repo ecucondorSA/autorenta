@@ -189,16 +189,16 @@ export class PublicProfilePage implements OnInit {
   }
 
   getOverallRating(review: Review): number {
-    const ratings = [
-      review.rating_cleanliness,
-      review.rating_communication,
-      review.rating_accuracy,
-      review.rating_location,
-      review.rating_checkin,
-      review.rating_value,
-    ];
-    const sum = ratings.reduce((acc, r) => acc + r, 0);
-    return Math.round((sum / 6) * 10) / 10;
+    let ratings: (number | null | undefined)[];
+    if (review.review_type === 'owner_to_renter') {
+      ratings = [review.rating_communication, review.rating_punctuality, review.rating_care, review.rating_rules, review.rating_recommend];
+    } else {
+      ratings = [review.rating_cleanliness, review.rating_communication, review.rating_accuracy, review.rating_location, review.rating_checkin, review.rating_value];
+    }
+    const validRatings = ratings.filter((val): val is number => val != null && val > 0);
+    if (validRatings.length === 0) return 0;
+    const sum = validRatings.reduce((acc, r) => acc + r, 0);
+    return Math.round((sum / validRatings.length) * 10) / 10;
   }
 
   getCarPhotoUrl(car: Car): string {

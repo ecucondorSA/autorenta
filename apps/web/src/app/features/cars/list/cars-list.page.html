@@ -187,13 +187,44 @@
           </div>
         </div>
 
+        <!-- Toggle mostrar no disponibles (solo cuando hay fechas seleccionadas) -->
+        @if (dateRange().from && dateRange().to) {
+        <div class="mt-4 flex items-center gap-3">
+          <button
+            type="button"
+            data-testid="toggle-show-unavailable"
+            (click)="toggleShowUnavailable()"
+            [class.bg-cyan-600]="showUnavailableCars()"
+            [class.bg-slate-300]="!showUnavailableCars()"
+            [class.dark:bg-slate-600]="!showUnavailableCars()"
+            class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
+            role="switch"
+            [attr.aria-checked]="showUnavailableCars()">
+            <span
+              [class.translate-x-5]="showUnavailableCars()"
+              [class.translate-x-0]="!showUnavailableCars()"
+              class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out">
+            </span>
+          </button>
+          <span class="text-sm text-slate-700 dark:text-slate-300">
+            Mostrar autos no disponibles
+          </span>
+          @if (showUnavailableCars()) {
+          <span class="text-xs text-amber-600 dark:text-amber-400 font-medium">
+            (ver cuando estarán libres)
+          </span>
+          }
+        </div>
+        }
+
         <!-- Botón limpiar filtros -->
         <div class="mt-4 flex justify-end">
           @if (
           maxDistance() !== null ||
           minPrice() !== null ||
           maxPrice() !== null ||
-          minRating() !== null
+          minRating() !== null ||
+          showUnavailableCars()
           ) {
           <button type="button" data-testid="clear-filters" (click)="clearFilters()"
             aria-label="Limpiar filtros"
@@ -295,6 +326,20 @@
             </button>
             <!-- Badges Desktop (optimized: uses pre-computed carBadges Map) -->
             <div class="absolute top-3 right-3 flex flex-col gap-1.5 items-end">
+              <!-- Badge de disponibilidad -->
+              @if (showUnavailableCars() && car.isAvailableForDates === false) {
+              <span
+                class="px-2 py-1 bg-amber-500/90 text-white text-xs font-semibold rounded-full shadow-md flex items-center gap-1 backdrop-blur-sm">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                @if (car.nextAvailableDate) {
+                Libre desde {{ car.nextAvailableDate | date: 'd MMM' }}
+                } @else {
+                No disponible
+                }
+              </span>
+              }
               @if (carBadges().get(car.id)?.topRated) {
               <span
                 class="px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold rounded-full shadow-md flex items-center gap-1">
@@ -378,6 +423,23 @@
             }
             <!-- Gradient Overlay -->
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+            <!-- Badge de disponibilidad (mobile) -->
+            @if (showUnavailableCars() && car.isAvailableForDates === false) {
+            <div class="absolute top-4 left-4 z-10">
+              <span
+                class="px-3 py-1.5 bg-amber-500/90 text-white text-xs font-semibold rounded-full shadow-lg flex items-center gap-1.5 backdrop-blur-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                @if (car.nextAvailableDate) {
+                Libre desde {{ car.nextAvailableDate | date: 'd MMM' }}
+                } @else {
+                No disponible
+                }
+              </span>
+            </div>
+            }
 
             <!-- Price Tag on Image (Tinder Style) -->
             <div class="absolute bottom-4 left-4 text-white">

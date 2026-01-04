@@ -174,9 +174,9 @@ CREATE TABLE owner_usage_limits (
 
   -- Contadores de uso compartido
   days_shared INT DEFAULT 0,
-  max_days_allowed INT DEFAULT 15,
+  max_days_allowed INT DEFAULT 24,
   consecutive_days_current INT DEFAULT 0,
-  max_consecutive_allowed INT DEFAULT 5,
+  max_consecutive_allowed INT,
 
   -- Uso personal verificado
   personal_use_days INT DEFAULT 0,
@@ -531,10 +531,10 @@ BEGIN
     RAISE EXCEPTION 'Este booking no es de tipo comodato';
   END IF;
 
-  -- Calcular distribución (50% platform, 30% rewards, 20% FGO)
+  -- Calcular distribución (15% platform, 75% rewards, 10% FGO)
   v_total_cents := v_booking.total_cents;
-  v_platform_fee_cents := FLOOR(v_total_cents * 0.50);
-  v_reward_pool_cents := FLOOR(v_total_cents * 0.30);
+  v_platform_fee_cents := FLOOR(v_total_cents * 0.15);
+  v_reward_pool_cents := FLOOR(v_total_cents * 0.75);
   v_fgo_cents := v_total_cents - v_platform_fee_cents - v_reward_pool_cents;
 
   -- Actualizar booking
@@ -606,8 +606,10 @@ BEGIN
     v_block_reason := 'Límite mensual de días alcanzado (' || v_limits.max_days_allowed || ' días)';
   END IF;
 
-  -- Verificar días consecutivos
-  IF v_limits.consecutive_days_current + p_days_to_add > v_limits.max_consecutive_allowed THEN
+  -- Verificar días consecutivos (si hay límite definido)
+  IF v_limits.max_consecutive_allowed IS NOT NULL
+     AND v_limits.max_consecutive_allowed > 0
+     AND v_limits.consecutive_days_current + p_days_to_add > v_limits.max_consecutive_allowed THEN
     v_is_blocked := true;
     v_block_reason := COALESCE(v_block_reason || '; ', '') ||
       'Límite de días consecutivos alcanzado (' || v_limits.max_consecutive_allowed || ' días)';
@@ -767,7 +769,7 @@ SELECT
   c.ytd_earnings_cents,
   c.earnings_limit_reached,
   COALESCE(l.days_shared, 0) as days_shared_this_month,
-  COALESCE(l.max_days_allowed, 15) as max_days_allowed,
+  COALESCE(l.max_days_allowed, 24) as max_days_allowed,
   COALESCE(l.personal_use_days, 0) as personal_use_days_this_month,
   COALESCE(l.is_blocked, false) as is_blocked,
   l.block_reason,
@@ -879,7 +881,7 @@ EXECUTE FUNCTION trg_ensure_usage_limits();
 
 ```sql
 INSERT INTO platform_fee_config (name, fee_type, fee_value, applies_to, active, valid_from) VALUES
-  ('Comodato - Platform Fee', 'percentage', 0.50, 'comodato_booking', true, now()),
-  ('Comodato - Reward Pool', 'percentage', 0.30, 'comodato_reward_pool', true, now()),
-  ('Comodato - FGO Contribution', 'percentage', 0.20, 'comodato_fgo', true, now());
+  ('Comodato - Platform Fee', 'percentage', 0.15, 'comodato_booking', true, now()),
+  ('Comodato - Reward Pool', 'percentage', 0.75, 'comodato_reward_pool', true, now()),
+  ('Comodato - FGO Contribution', 'percentage', 0.10, 'comodato_fgo', true, now());
 ```

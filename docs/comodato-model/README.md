@@ -27,11 +27,11 @@ Transformar Autorenta de un modelo de alquiler tradicional a un modelo de **como
 ```
 Usuario Paga (100%)
     │
-    ├──► Platform Fee (50%)     → Autorenta
+    ├──► Platform Fee (15%)     → Autorenta
     │
-    ├──► Reward Pool (30%)      → Distribuido mensualmente a owners por puntos
+    ├──► Reward Pool (75%)      → Distribuido mensualmente a owners por puntos
     │
-    └──► FGO (20%)              → Fondo de Garantía Operativo
+    └──► FGO (10%)              → Fondo de Garantía Operativo
 ```
 
 **Owner recibe: $0 por booking** (todo va al pool de rewards mensuales)
@@ -53,8 +53,8 @@ Usuario Paga (100%)
 
 ## Límites de Uso (No-Comercial)
 
-- **Máximo 15 días/mes** de compartición
-- **Máximo 5 días consecutivos**
+- **Máximo 24 días/mes** de compartición
+- **Sin límite de días consecutivos**
 - **Rewards anuales <= gastos anuales** del vehículo
 - **Verificación de uso personal** requerida
 

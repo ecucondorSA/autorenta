@@ -281,7 +281,10 @@ function buildUpdateData(
       data.document_ai_score = validation.confidence;
 
       if (validation.isValid) {
-        data.document_verified_at = new Date().toISOString();
+        const now = new Date().toISOString();
+        data.document_verified_at = now;
+        // FIX: Also set id_verified_at for get_verification_progress compatibility
+        data.id_verified_at = now;
       }
     }
 

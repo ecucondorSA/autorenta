@@ -30,6 +30,11 @@ export interface AvailabilityRange {
   to: string;
 }
 
+export interface CarWithAvailability extends Car {
+  isAvailableForDates: boolean;
+  nextAvailableDate: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class CarAvailabilityService {
   private readonly supabase = injectSupabase();
@@ -345,6 +350,58 @@ export class CarAvailabilityService {
     if (error) throw error;
 
     return (data || []) as Car[];
+  }
+
+  /**
+   * Gets ALL active cars with availability info for a date range.
+   * Returns cars with `isAvailableForDates` and `nextAvailableDate` fields.
+   * This allows showing unavailable cars with "Available from X" badge.
+   */
+  async getAllCarsWithAvailability(
+    start: Date | string,
+    end: Date | string,
+    options: { limit?: number; offset?: number; city?: string } = {},
+  ): Promise<CarWithAvailability[]> {
+    const { limit = 50, offset = 0, city } = options;
+    const fromIso = this.normalizeToDate(start).toISOString();
+    const toIso = this.normalizeToDate(end).toISOString();
+
+    // Get all blocked car IDs for this date range
+    const blockedCarIds = await this.getBlockedCarIds(fromIso, toIso);
+
+    // Build query for ALL active cars (not filtering by availability)
+    let query = this.supabase.from('cars').select('*').eq('status', 'active');
+    if (city) query = query.eq('location_city', city);
+
+    const { data: allCars, error } = await query.range(offset, offset + limit - 1);
+    if (error) throw error;
+
+    const cars = (allCars || []) as Car[];
+
+    // For blocked cars, calculate next available date
+    const results: CarWithAvailability[] = [];
+
+    for (const car of cars) {
+      const isAvailable = !blockedCarIds.has(car.id);
+
+      if (isAvailable) {
+        results.push({
+          ...car,
+          isAvailableForDates: true,
+          nextAvailableDate: null,
+        });
+      } else {
+        // Get next available date (looking 90 days ahead)
+        const nextDate = await this.getNextAvailableDate(car.id, new Date());
+        results.push({
+          ...car,
+          isAvailableForDates: false,
+          nextAvailableDate: nextDate,
+        });
+      }
+    }
+
+    return results;
   }
 
   async hasActiveBookings(carId: string): Promise<{

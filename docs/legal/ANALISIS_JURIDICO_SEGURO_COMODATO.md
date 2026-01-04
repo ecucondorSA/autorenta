@@ -52,11 +52,11 @@ Segun la documentacion del modelo comodato:
 ```
 Usuario Paga (100%)
     |
-    +-- Platform Fee (50%)     -> Autorenta
+    +-- Platform Fee (15%)     -> Autorenta
     |
-    +-- Reward Pool (30%)      -> Pool mensual para owners
+    +-- Reward Pool (75%)      -> Pool mensual para owners
     |
-    +-- FGO (20%)              -> Fondo de Garantia
+    +-- FGO (10%)              -> Fondo de Garantia
 ```
 
 **Declaracion clave:** "Owner recibe $0 por booking"
@@ -71,8 +71,8 @@ Usuario Paga (100%)
 | Referidos | 200/ref | Captacion |
 
 **Limites declarados:**
-- Max 15 dias/mes de comparticion
-- Max 5 dias consecutivos
+- Max 24 dias/mes de comparticion
+- Sin limite de dias consecutivos
 - Rewards anuales <= gastos anuales del vehiculo
 
 ### 3.3 Cobertura de Seguro: Conductor Indeterminado
@@ -111,7 +111,7 @@ Es una clausula estandar en polizas argentinas que permite que **cualquier perso
 2. Los rewards **no son correlacionados 1:1** con uso del vehiculo
 3. El owner puede recibir rewards **sin que su auto sea usado** (por antiguedad, referidos, etc.)
 4. El modelo es analogo a **BlaBlaCar** (compartir gastos)
-5. **Limites de uso no-comercial**: max 15 dias/mes, max 5 consecutivos
+5. **Limites de uso no-comercial**: max 24 dias/mes, sin limite de dias consecutivos
 6. **Rewards <= gastos anuales** del vehiculo (sin lucro neto)
 
 #### Argumentos potenciales en contra (vision restrictiva):
@@ -146,7 +146,7 @@ La clausula de **Conductor Indeterminado** esta disenada especificamente para pe
 
 1. **El riesgo ya esta contemplado** - La poliza con conductor indeterminado ya asume que terceros usaran el auto
 2. **No hay ocultamiento** - El owner contrato esa clausula precisamente para esto
-3. **Uso ocasional** - Los limites (15 dias/mes) mantienen el caracter no-comercial
+3. **Uso ocasional** - Los limites (24 dias/mes) mantienen el caracter no-comercial
 
 ### 4.3 Tercera Cuestion: Que podria invalidar la cobertura?
 
@@ -157,7 +157,7 @@ La cobertura podria cuestionarse si:
 | Situacion | Riesgo |
 |-----------|--------|
 | Owner recibe pago directo por reserva | **ALTO** - Se convierte en alquiler |
-| Uso excede 15 dias/mes sistematicamente | **MEDIO** - Patron comercial |
+| Uso excede 24 dias/mes sistematicamente | **MEDIO** - Patron comercial |
 | Rewards superan gastos anuales del vehiculo | **MEDIO** - Indica lucro |
 | Owner no tiene clausula conductor indeterminado | **ALTO** - Terceros no cubiertos |
 
@@ -270,7 +270,7 @@ Fundamentos:
 1. **Conductor Indeterminado permite terceros** - La clausula esta disenada para esto
 2. **No hay alquiler** - El owner no recibe pago por booking individual
 3. **Es comodato** - Prestamo gratuito de uso, no actividad comercial
-4. **Limites de uso** - Max 15 dias/mes mantiene caracter ocasional
+4. **Limites de uso** - Max 24 dias/mes mantiene caracter ocasional
 5. **Sin lucro** - Rewards <= gastos anuales del vehiculo
 
 ### 7.2 Calificacion del Modelo
@@ -289,7 +289,7 @@ Fundamentos:
 | **Poliza con Conductor Indeterminado** | **BAJO** - Modelo compatible |
 | Poliza con Conductor Determinado | **CRITICO** - Terceros no cubiertos |
 | Sin seguro | **CATASTROFICO** - Responsabilidad ilimitada |
-| Exceder limites (15 dias/mes) | **MEDIO** - Podria cuestionarse |
+| Exceder limites (24 dias/mes) | **MEDIO** - Podria cuestionarse |
 
 ---
 
@@ -321,8 +321,8 @@ Para mantener el caracter no-comercial:
 
 | Limite | Control |
 |--------|---------|
-| Max 15 dias/mes | Sistema bloquea al exceder |
-| Max 5 consecutivos | Sistema impide reservas mas largas |
+| Max 24 dias/mes | Sistema bloquea al exceder |
+| Sin limite de dias consecutivos | Sistema no impone tope por reserva |
 | Rewards <= gastos | Calculo anual automatico |
 
 ### 8.4 Documentacion Legal

@@ -28,6 +28,7 @@ interface DashboardStats {
     upcoming: number;
     active: number;
     completed: number;
+    pendingReview: number;
     total: number;
   };
   earnings: {
@@ -157,6 +158,7 @@ serve(async (req) => {
       ).length,
       active: bookings.filter((b) => b.status === 'in_progress').length,
       completed: bookings.filter((b) => b.status === 'completed').length,
+      pendingReview: bookings.filter((b) => b.status === 'pending_review').length,
       total: bookings.length,
     };
 

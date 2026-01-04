@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
+  OnDestroy,
   computed,
   inject,
   signal,
@@ -11,6 +12,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AlertController, IonicModule } from '@ionic/angular';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { Booking } from '../../../core/models';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
@@ -41,13 +43,14 @@ interface ReturnChecklistItem {
   templateUrl: './owner-booking-detail.page.html',
   styleUrl: './owner-booking-detail.page.css',
 })
-export class OwnerBookingDetailPage implements OnInit {
+export class OwnerBookingDetailPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly bookingsService = inject(BookingsService);
   private readonly authService = inject(AuthService);
   private readonly alertController = inject(AlertController);
   private readonly toastService = inject(NotificationManagerService);
+  private readonly bookingRealtimeService = inject(BookingRealtimeService);
 
   readonly booking = signal<Booking | null>(null);
   readonly loading = signal(true);
@@ -143,6 +146,17 @@ export class OwnerBookingDetailPage implements OnInit {
     }
 
     await this.loadBooking(bookingId);
+
+    // Subscribe to realtime updates
+    this.bookingRealtimeService.subscribeToBooking(bookingId, {
+      onBookingChange: (booking) => {
+        this.booking.set(booking);
+      },
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.bookingRealtimeService.unsubscribeAll();
   }
 
   private async loadBooking(bookingId: string): Promise<void> {

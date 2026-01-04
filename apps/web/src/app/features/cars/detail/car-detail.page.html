@@ -609,7 +609,7 @@
     [guaranteeAmount]="depositAmountArs()"
     [ctaText]="canBook() ? 'Solicitar Reserva' : 'Seleccionar Fechas'"
     [showCalendarIcon]="!canBook()"
-    [disabled]="bookingInProgress()"
+    [disabled]="bookingInProgress() || isCarOwner()"
     [loading]="bookingInProgress()"
     [expressMode]="expressMode()"
     [showTermsCheckbox]="!!canBook()"
