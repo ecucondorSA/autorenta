@@ -177,6 +177,12 @@ export class MyBookingsPage implements OnInit {
    * Si está pendiente pero la fecha de inicio ya pasó, se considera "vencida".
    */
   getEffectiveStatus(booking: Booking): string {
+    if (booking.status === 'pending_payment' && this.isStartDatePassed(booking)) {
+      return 'expired';
+    }
+    if (booking.status === 'pending_payment') {
+      return 'pending';
+    }
     if (booking.status === 'pending' && this.isStartDatePassed(booking)) {
       return 'expired';
     }
@@ -198,6 +204,9 @@ export class MyBookingsPage implements OnInit {
     switch (effectiveStatus) {
       case 'pending':
         // P2P flow: wallet bookings are awaiting owner approval, not payment
+        if (booking.status === 'pending_payment') {
+          return 'Pago en proceso';
+        }
         return this.isWalletBooking(booking) ? 'Esperando aprobación' : 'Pendiente de pago';
       case 'confirmed':
         return 'Aprobada';
@@ -226,6 +235,9 @@ export class MyBookingsPage implements OnInit {
     switch (effectiveStatus) {
       case 'pending':
         // P2P flow: wallet bookings are awaiting owner approval
+        if (booking.status === 'pending_payment') {
+          return 'Estamos confirmando tu pago. Si hubo un problema, podés intentar nuevamente.';
+        }
         return this.isWalletBooking(booking)
           ? 'El propietario está revisando tu solicitud. Te notificaremos cuando responda.'
           : 'Completá el checkout para confirmar tu reserva.';
@@ -406,7 +418,8 @@ export class MyBookingsPage implements OnInit {
     if (this.isWalletBooking(booking)) {
       return false;
     }
-    return booking.status === 'pending' && !this.isStartDatePassed(booking);
+    const pendingStatus = booking.status === 'pending' || booking.status === 'pending_payment';
+    return pendingStatus && !this.isStartDatePassed(booking);
   }
 
   /**

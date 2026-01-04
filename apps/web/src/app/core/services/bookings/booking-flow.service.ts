@@ -53,6 +53,7 @@ export class BookingFlowService {
     const actions: BookingAction[] = [];
     const status = booking.status;
     const currentUserId = this.authService.session$()?.user?.id;
+    const isApprovalFlow = !!booking.payment_mode;
 
     if (!currentUserId) return actions;
 
@@ -61,7 +62,7 @@ export class BookingFlowService {
 
     // FASE 1: PENDING - Esperando aprobación
     if (status === 'pending') {
-      if (isOwner) {
+      if (isOwner && isApprovalFlow) {
         actions.push({
           label: 'Aprobar Reserva',
           action: 'approve',
@@ -78,19 +79,41 @@ export class BookingFlowService {
         });
       }
       if (isRenter) {
-        actions.push({
-          label: 'Completar Pago',
-          action: 'pay',
-          route: `/bookings/${booking.id}/detail-payment`,
-          variant: 'primary',
-          icon: 'card',
-        });
+        if (isApprovalFlow) {
+          actions.push({
+            label: 'Ver Estado',
+            action: 'view',
+            route: `/bookings/${booking.id}`,
+            variant: 'secondary',
+            icon: 'eye',
+          });
+        } else {
+          actions.push({
+            label: 'Completar Pago',
+            action: 'pay',
+            route: `/bookings/${booking.id}/detail-payment`,
+            variant: 'primary',
+            icon: 'card',
+          });
+        }
         actions.push({
           label: 'Cancelar Solicitud',
           action: 'cancel',
           route: `/bookings/${booking.id}`,
           variant: 'secondary',
           icon: 'close',
+        });
+      }
+    }
+
+    if (status === 'pending_payment') {
+      if (isRenter) {
+        actions.push({
+          label: 'Completar Pago',
+          action: 'pay',
+          route: `/bookings/${booking.id}/payment`,
+          variant: 'primary',
+          icon: 'card',
         });
       }
     }
@@ -219,6 +242,7 @@ export class BookingFlowService {
   async getNextStep(booking: Booking, _userRole: 'owner' | 'renter'): Promise<NextStep | null> {
     const status = booking.status;
     const currentUserId = this.authService.session$()?.user?.id;
+    const isApprovalFlow = !!booking.payment_mode;
     if (!currentUserId) return null;
 
     const isOwner = booking.owner_id === currentUserId;
@@ -227,12 +251,31 @@ export class BookingFlowService {
     // Flujo del Locador
     if (isOwner) {
       if (status === 'pending') {
+        if (isApprovalFlow) {
+          return {
+            title: 'Revisar Solicitud',
+            description: 'Un locatario quiere reservar tu auto. Revisa y aprueba la solicitud.',
+            action: 'Aprobar o Rechazar',
+            route: `/bookings/owner/${booking.id}`,
+            priority: 'high',
+          };
+        }
+
         return {
-          title: 'Revisar Solicitud',
-          description: 'Un locatario quiere reservar tu auto. Revisa y aprueba la solicitud.',
-          action: 'Aprobar o Rechazar',
+          title: 'Esperando Pago',
+          description: 'El locatario debe completar el pago para confirmar la reserva.',
+          action: 'Ver Detalles',
           route: `/bookings/owner/${booking.id}`,
-          priority: 'high',
+          priority: 'medium',
+        };
+      }
+      if (status === 'pending_payment') {
+        return {
+          title: 'Pago en proceso',
+          description: 'El locatario está completando el pago. Te avisaremos cuando confirme.',
+          action: 'Ver Detalles',
+          route: `/bookings/owner/${booking.id}`,
+          priority: 'medium',
         };
       }
       if (status === 'confirmed') {
@@ -265,18 +308,45 @@ export class BookingFlowService {
           };
         }
       }
+      if (status === 'pending_dispute_resolution' || status === 'disputed' || status === 'resolved') {
+        return {
+          title: 'Revisar Disputa',
+          description: 'Hay un reclamo asociado a esta reserva.',
+          action: 'Ver disputa',
+          route: `/bookings/${booking.id}/disputes`,
+          priority: 'high',
+        };
+      }
     }
 
     // Flujo del Locatario
     if (isRenter) {
       if (status === 'pending') {
+        if (isApprovalFlow) {
+          return {
+            title: 'Esperando aprobación',
+            description: 'El anfitrión está revisando tu solicitud.',
+            action: 'Ver Estado',
+            route: `/bookings/${booking.id}`,
+            priority: 'medium',
+          };
+        }
+
         return {
           title: 'Completar Pago',
-          description:
-            'Tu solicitud está pendiente de aprobación. Completa el pago cuando sea aprobada.',
-          action: 'Ver Estado',
-          route: `/bookings/${booking.id}`,
-          priority: 'medium',
+          description: 'Completá el pago para confirmar tu reserva.',
+          action: 'Completar Pago',
+          route: `/bookings/${booking.id}/detail-payment`,
+          priority: 'high',
+        };
+      }
+      if (status === 'pending_payment') {
+        return {
+          title: 'Completar Pago',
+          description: 'Finalizá el pago para confirmar la reserva.',
+          action: 'Completar Pago',
+          route: `/bookings/${booking.id}/payment`,
+          priority: 'high',
         };
       }
       if (status === 'confirmed') {
@@ -309,6 +379,15 @@ export class BookingFlowService {
             priority: 'low',
           };
         }
+      }
+      if (status === 'pending_dispute_resolution' || status === 'disputed' || status === 'resolved') {
+        return {
+          title: 'Revisar Disputa',
+          description: 'Hay un reclamo asociado a esta reserva.',
+          action: 'Ver disputa',
+          route: `/bookings/${booking.id}/disputes`,
+          priority: 'high',
+        };
       }
     }
 

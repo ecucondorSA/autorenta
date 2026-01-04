@@ -157,8 +157,9 @@ export class BookingStatusComponent {
 
     switch (status) {
       case 'pending':
-      case 'pending_payment':
         return 'Pendiente de pago';
+      case 'pending_payment':
+        return 'Pago en proceso';
       case 'confirmed':
         return 'Aprobada';
       case 'in_progress':

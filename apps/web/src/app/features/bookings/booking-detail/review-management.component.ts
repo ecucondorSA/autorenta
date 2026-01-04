@@ -1,9 +1,9 @@
-import {Component, Input, OnInit, computed, inject, signal,
+import {Component, Input, OnInit, OnChanges, SimpleChanges, computed, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { AuthService } from '@core/services/auth/auth.service';
-import { BookingsService } from '@core/services/bookings/bookings.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { Booking, CreateReviewParams, Review } from '../../../core/models';
 import { ReviewFormComponent } from '../../../shared/components/review-form/review-form.component';
 import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
@@ -81,12 +81,14 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
     }
     `,
 })
-export class ReviewManagementComponent implements OnInit {
+export class ReviewManagementComponent implements OnInit, OnChanges {
   @Input({ required: true }) booking!: Booking;
 
   private readonly reviewsService = inject(ReviewsService);
   private readonly authService = inject(AuthService);
-  private readonly bookingsService = inject(BookingsService);
+  private readonly supabase = injectSupabase();
+
+  private dataLoaded = false;
 
   showReviewForm = signal(false);
   canReview = signal(false);
@@ -100,13 +102,56 @@ export class ReviewManagementComponent implements OnInit {
     reviewType: 'renter_to_owner' | 'owner_to_renter';
   } | null>(null);
 
-  showCompletedActions = computed(() => this.booking?.status === 'completed');
+  // Allow reviews for both pending_review and completed statuses
+  showCompletedActions = computed(() =>
+    this.booking?.status === 'completed' || this.booking?.status === 'pending_review'
+  );
 
   async ngOnInit() {
-    if (this.booking.status === 'completed') {
-      await this.checkReviewStatus();
-      await this.loadReviewData();
+    await this.initializeReviewData();
+  }
+
+  async ngOnChanges(changes: SimpleChanges) {
+    // React to booking input changes
+    if (changes['booking'] && !changes['booking'].firstChange) {
+      this.dataLoaded = false;
+      await this.initializeReviewData();
     }
+  }
+
+  private async initializeReviewData(): Promise<void> {
+    if (this.dataLoaded) return;
+
+    // Check if booking status allows reviews
+    if (this.booking?.status !== 'completed' && this.booking?.status !== 'pending_review') {
+      return;
+    }
+
+    // Wait for auth to be ready (max 3 seconds)
+    const currentUser = await this.waitForAuth(3000);
+    if (!currentUser) {
+      console.warn('[ReviewManagement] Auth not ready after timeout');
+      return;
+    }
+
+    this.dataLoaded = true;
+    await this.checkReviewStatus();
+    await this.loadReviewData();
+  }
+
+  private async waitForAuth(timeoutMs: number): Promise<{ id: string } | null> {
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < timeoutMs) {
+      const session = this.authService.session$();
+      if (session?.user) {
+        return session.user;
+      }
+      // Wait 100ms before checking again
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    return null;
   }
 
   async checkReviewStatus(): Promise<void> {
@@ -117,7 +162,7 @@ export class ReviewManagementComponent implements OnInit {
       const currentUser = this.authService.session$()?.user;
       if (!currentUser) return;
 
-      const { data: car } = await this.bookingsService['supabase']
+      const { data: car } = await this.supabase
         .from('cars')
         .select('id, owner_id')
         .eq('id', this.booking.car_id)
@@ -125,7 +170,7 @@ export class ReviewManagementComponent implements OnInit {
 
       if (!car) return;
 
-      const { data: review } = await this.reviewsService['supabase']
+      const { data: review } = await this.supabase
         .from('reviews')
         .select('*')
         .eq('booking_id', this.booking.id)
@@ -175,38 +220,71 @@ export class ReviewManagementComponent implements OnInit {
   async loadReviewData(): Promise<void> {
     try {
       const currentUser = this.authService.session$()?.user;
-      if (!currentUser) return;
+      if (!currentUser) {
+        console.warn('[ReviewManagement] No current user found');
+        return;
+      }
 
-      const { data: car } = await this.bookingsService['supabase']
+      if (!this.booking?.car_id) {
+        console.warn('[ReviewManagement] No car_id in booking');
+        return;
+      }
+
+      const { data: car, error: carError } = await this.supabase
         .from('cars')
-        .select('id, title, owner_id, owner:profiles!cars_owner_id_fkey(id, full_name)')
+        .select('id, title, owner_id')
         .eq('id', this.booking.car_id)
         .single();
 
-      if (!car) return;
+      if (carError) {
+        console.error('[ReviewManagement] Car query error:', carError);
+        return;
+      }
+
+      if (!car) {
+        console.error('[ReviewManagement] Car not found');
+        return;
+      }
 
       const isRenter = this.booking.renter_id === currentUser.id;
       const isOwner = car.owner_id === currentUser.id;
 
-      if (!isRenter && !isOwner) return;
+      if (!isRenter && !isOwner) {
+        console.warn('[ReviewManagement] User is neither renter nor owner');
+        return;
+      }
 
       let revieweeId: string;
       let revieweeName: string;
       let reviewType: 'renter_to_owner' | 'owner_to_renter';
 
       if (isRenter) {
+        // Renter reviews the owner
         revieweeId = car.owner_id;
-        const owner = car.owner as { full_name?: string } | undefined;
-        revieweeName = owner?.full_name || 'Propietario';
+        const { data: ownerProfile } = await this.supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', car.owner_id)
+          .single();
+        revieweeName = ownerProfile?.full_name || 'Propietario';
         reviewType = 'renter_to_owner';
       } else {
-        const { data: renter } = await this.bookingsService['supabase']
+        // Owner reviews the renter
+        const { data: renter, error: renterError } = await this.supabase
           .from('profiles')
           .select('id, full_name')
           .eq('id', this.booking.renter_id)
           .single();
 
-        if (!renter) return;
+        if (renterError) {
+          console.error('[ReviewManagement] Renter profile query error:', renterError);
+          return;
+        }
+
+        if (!renter) {
+          console.error('[ReviewManagement] Renter profile not found');
+          return;
+        }
 
         revieweeId = renter.id;
         revieweeName = renter.full_name || 'Arrendatario';
@@ -220,8 +298,8 @@ export class ReviewManagementComponent implements OnInit {
         carTitle: car.title || 'Vehículo',
         reviewType,
       });
-    } catch {
-      /* Silenced */
+    } catch (err) {
+      console.error('[ReviewManagement] Error in loadReviewData:', err);
     }
   }
 }

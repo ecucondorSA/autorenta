@@ -4,7 +4,7 @@ import {
   Component, OnDestroy, OnInit, computed, inject, signal
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Booking, BookingExtensionRequest, TrafficInfraction } from '@core/models';
+import { Booking, BookingExtensionRequest, BookingStatus, TrafficInfraction } from '@core/models';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { CLAIM_STATUS_LABELS, InsuranceClaim } from '@core/models/insurance.model';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -31,6 +31,21 @@ import { PaymentsService } from '@core/services/payments/payments.service';
 import { MetaService } from '@core/services/ui/meta.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { AlertController } from '@ionic/angular';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  timeOutline,
+  checkmarkCircleOutline,
+  carSportOutline,
+  flagOutline,
+  closeCircleOutline,
+  hourglassOutline,
+  alertCircleOutline,
+  cardOutline,
+  searchOutline,
+  hammerOutline,
+  helpCircle,
+} from 'ionicons/icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
@@ -65,6 +80,37 @@ interface ReturnChecklistItem {
   checked: boolean;
 }
 
+interface FlowStep {
+  key: string;
+  label: string;
+  description: string;
+}
+
+interface FlowAlert {
+  tone: 'info' | 'warning' | 'danger' | 'success';
+  title: string;
+  message: string;
+  action?: { label: string; route: string };
+}
+
+type FlowStatus = BookingStatus | 'renter_checkin';
+
+const TERMINAL_STATUSES = new Set<BookingStatus>([
+  'cancelled',
+  'cancelled_owner',
+  'cancelled_renter',
+  'cancelled_system',
+  'expired',
+  'rejected',
+  'no_show',
+]);
+
+const DISPUTE_STATUSES = new Set<BookingStatus>([
+  'pending_dispute_resolution',
+  'disputed',
+  'resolved',
+]);
+
 /**
  * BookingDetailPage
  *
@@ -84,6 +130,7 @@ interface ReturnChecklistItem {
   imports: [
     CommonModule,
     RouterLink,
+    IonIcon,
     OwnerConfirmationComponent,
     RenterConfirmationComponent,
     BookingChatComponent,
@@ -132,6 +179,22 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly trafficInfractionsService = inject(TrafficInfractionsService); // NEW
   private readonly logger = inject(LoggerService).createChildLogger('BookingDetailPage');
 
+  constructor() {
+    addIcons({
+      timeOutline,
+      checkmarkCircleOutline,
+      carSportOutline,
+      flagOutline,
+      closeCircleOutline,
+      hourglassOutline,
+      alertCircleOutline,
+      cardOutline,
+      searchOutline,
+      hammerOutline,
+      helpCircle,
+    });
+  }
+
   booking = signal<Booking | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
@@ -144,50 +207,101 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly returnChecklistStoragePrefix = 'autorenta:return-checklist:';
   private returnChecklistSaveTimeout: number | null = null;
 
-  readonly bookingFlowSteps = [
-    {
-      key: 'pending',
-      label: 'Solicitud enviada',
-      description: 'Solicitud creada correctamente.',
-    },
-    {
-      key: 'pending_payment',
-      label: 'Garantía bloqueada',
-      description: 'Fondos reservados en tu wallet.',
-    },
-    {
-      key: 'awaiting_approval',
-      label: 'Esperando aprobación',
-      description: 'El propietario está revisando tu solicitud.',
-    },
-    {
-      key: 'confirmed',
-      label: 'Aprobada por locador',
-      description: 'Reserva aprobada. Coordiná el check-in y la entrega.',
-    },
-    {
-      key: 'renter_checkin',
-      label: 'Recepción y documentación',
-      description: 'Confirmá la recepción, sacá fotos y registrá el estado del auto.',
-    },
-    {
-      key: 'in_progress',
-      label: 'Check-in y uso',
-      description: 'Check-in completado. Disfrutá del viaje y cuidá el vehículo.',
-    },
-    {
-      key: 'pending_review',
-      label: 'Revisión final',
-      description: 'Check-out realizado. Período de 24h para reportar incidentes.',
-    },
-    {
-      key: 'completed',
-      label: 'Cierre',
-      description: 'Reserva finalizada y fondos liberados.',
-    },
-  ] as const;
+  readonly isApprovalFlow = computed(() => !!this.booking()?.payment_mode);
 
-  readonly effectiveStatus = computed(() => {
+  readonly isWalletFlow = computed(() => {
+    const booking = this.booking();
+    const mode = booking?.payment_mode ?? booking?.payment_method;
+    return mode === 'wallet' || mode === 'partial_wallet';
+  });
+
+  readonly hasGuaranteeLocked = computed(() => {
+    const booking = this.booking();
+    if (!booking) return false;
+    return (
+      booking.wallet_status === 'locked' ||
+      booking.deposit_status === 'locked' ||
+      !!booking.authorized_payment_id ||
+      !!booking.wallet_lock_id ||
+      !!booking.wallet_lock_transaction_id
+    );
+  });
+
+  readonly flowSteps = computed<FlowStep[]>(() => {
+    const booking = this.booking();
+    const isApprovalFlow = !!booking?.payment_mode;
+    const paymentPending = booking?.status === 'pending' || booking?.status === 'pending_payment';
+    const guaranteeLocked = this.hasGuaranteeLocked();
+
+    const paymentLabel = isApprovalFlow
+      ? guaranteeLocked
+        ? 'Garantía bloqueada'
+        : 'Garantía en proceso'
+      : paymentPending
+        ? 'Pago pendiente'
+        : 'Pago confirmado';
+
+    const paymentDescription = isApprovalFlow
+      ? guaranteeLocked
+        ? 'Fondos reservados hasta el cierre de la reserva.'
+        : 'Estamos asegurando la garantía antes de la aprobación.'
+      : paymentPending
+        ? 'Completá el pago para confirmar la reserva.'
+        : 'Pago recibido. Coordiná la entrega.';
+
+    const steps: FlowStep[] = [
+      {
+        key: 'pending',
+        label: 'Solicitud enviada',
+        description: 'Solicitud creada correctamente.',
+      },
+      {
+        key: 'pending_payment',
+        label: paymentLabel,
+        description: paymentDescription,
+      },
+    ];
+
+    if (isApprovalFlow) {
+      steps.push({
+        key: 'awaiting_approval',
+        label: 'Esperando aprobación',
+        description: 'El propietario está revisando tu solicitud.',
+      });
+    }
+
+    steps.push(
+      {
+        key: 'confirmed',
+        label: 'Reserva confirmada',
+        description: 'Coordiná el check-in y la entrega.',
+      },
+      {
+        key: 'renter_checkin',
+        label: 'Recepción y documentación',
+        description: 'Confirmá la recepción, sacá fotos y registrá el estado del auto.',
+      },
+      {
+        key: 'in_progress',
+        label: 'En viaje',
+        description: 'Disfrutá del viaje y cuidá el vehículo.',
+      },
+      {
+        key: 'pending_review',
+        label: 'Revisión final',
+        description: 'Check-out realizado. Período de 24h para reportar incidentes.',
+      },
+      {
+        key: 'completed',
+        label: 'Cierre',
+        description: 'Reserva finalizada y fondos liberados.',
+      },
+    );
+
+    return steps;
+  });
+
+  readonly effectiveStatus = computed<FlowStatus | null>(() => {
     const booking = this.booking();
     if (!booking) return null;
 
@@ -198,64 +312,179 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     return booking.status;
   });
 
-  /**
-   * Determines the current step index in the booking flow.
-   * For P2P (wallet) bookings: pending status means steps 1-2 are done, waiting at step 3.
-   * For traditional bookings: pending status means at step 1, waiting for payment.
-   */
-  readonly currentBookingStageIndex = computed(() => {
+  readonly currentFlowStepKey = computed(() => {
     const booking = this.booking();
     const status = this.effectiveStatus();
-    if (!booking || !status) return 0;
+    if (!booking || !status) return 'pending';
 
-    // If return flow started (returned_at or pending confirmations), show review step
-    if (
-      booking.returned_at ||
+    const isReturnFlow =
+      !!booking.returned_at ||
       booking.completion_status === 'returned' ||
       booking.completion_status === 'pending_owner' ||
       booking.completion_status === 'pending_renter' ||
-      booking.completion_status === 'pending_both'
-    ) {
-      return 6; // Step 7: Revisión final
+      booking.completion_status === 'pending_both';
+
+    if (isReturnFlow) {
+      return 'pending_review';
+    }
+
+    if (status !== 'renter_checkin' && TERMINAL_STATUSES.has(status as BookingStatus)) {
+      return 'pending';
+    }
+
+    if (status !== 'renter_checkin' && DISPUTE_STATUSES.has(status as BookingStatus)) {
+      return 'pending_review';
     }
 
     // If marked in_progress but start date is in the future, treat as confirmed for UI
     if (status === 'in_progress' && booking.start_at) {
       const startAt = new Date(booking.start_at).getTime();
       if (!Number.isNaN(startAt) && Date.now() < startAt) {
-        return 3; // Step 4: Aprobada por locador / Reserva confirmada
+        return 'confirmed';
       }
     }
 
-    // Request/approval flow: pending + selected guarantee mode = waiting for owner approval
-    if (status === 'pending' && !!booking.payment_mode) {
-      return 2; // Step 3: "Esperando aprobación" (0-indexed = 2)
+    if (status === 'pending' && this.isApprovalFlow()) {
+      return this.hasGuaranteeLocked() ? 'awaiting_approval' : 'pending_payment';
+    }
+
+    if (status === 'pending_payment') {
+      return 'pending_payment';
+    }
+
+    if (status === 'pending') {
+      return 'pending';
+    }
+
+    if (status === 'confirmed') {
+      return 'confirmed';
     }
 
     if (status === 'renter_checkin') {
-      return 4; // Step 5: Recepción y documentación
+      return 'renter_checkin';
     }
 
-    // Traditional flow or other statuses
-    const statusMap: Record<string, number> = {
-      'pending': 0,           // Step 1: Solicitud enviada
-      'pending_payment': 1,   // Step 2: Garantía bloqueada
-      'confirmed': 3,         // Step 4: Reserva confirmada
-      'in_progress': 5,       // Step 6: Check-in y uso (después de documentación)
-      'pending_review': 6,    // Step 7: Revisión final
-      'completed': 7,         // Step 8: Cierre
-      'disputed': 6,          // Map to pending_review
-    };
-
-    const idx = statusMap[status];
-    if (idx !== undefined) return idx;
-
-    if (status === 'cancelled' || status === 'expired') {
-      return 0; // Cancelled bookings show at start
+    if (status === 'in_progress') {
+      return 'in_progress';
     }
 
-    // Default fallback
-    return this.bookingFlowSteps.length - 1;
+    if (status === 'pending_review') {
+      return 'pending_review';
+    }
+
+    if (status === 'completed') {
+      return 'completed';
+    }
+
+    return 'pending';
+  });
+
+  /**
+   * Determines the current step index in the booking flow.
+   * Maps the current status to the active flow step (handles approval flow, return flow, disputes).
+   */
+  readonly currentBookingStageIndex = computed(() => {
+    const steps = this.flowSteps();
+    const currentKey = this.currentFlowStepKey();
+    const idx = steps.findIndex((step) => step.key === currentKey);
+    return idx >= 0 ? idx : 0;
+  });
+
+  readonly flowProgress = computed(() => {
+    const steps = this.flowSteps();
+    if (steps.length <= 1) return 0;
+    const current = this.currentBookingStageIndex();
+    return Math.min(100, Math.round((current / (steps.length - 1)) * 100));
+  });
+
+  readonly flowStatusInfo = computed(() => {
+    const booking = this.booking();
+    if (!booking) return null;
+    const base = this.bookingFlowService.getBookingStatusInfo(booking);
+
+    if (this.isPendingOwnerApproval()) {
+      return {
+        ...base,
+        label: 'Esperando aprobación',
+        description: 'El anfitrión está revisando tu solicitud.',
+      };
+    }
+
+    if (booking.status === 'pending_payment') {
+      return {
+        ...base,
+        label: 'Pago en proceso',
+        description: 'Estamos confirmando el pago de tu reserva.',
+      };
+    }
+
+    return base;
+  });
+
+  readonly flowAlert = computed<FlowAlert | null>(() => {
+    const booking = this.booking();
+    if (!booking) return null;
+
+    switch (booking.status) {
+      case 'pending_dispute_resolution':
+      case 'disputed':
+        return {
+          tone: 'warning',
+          title: 'Reserva en disputa',
+          message: 'Hay un reclamo activo. Nuestro equipo está revisando el caso.',
+          action: { label: 'Ver disputa', route: `/bookings/${booking.id}/disputes` },
+        };
+      case 'resolved':
+        return {
+          tone: 'success',
+          title: 'Disputa resuelta',
+          message: 'La disputa fue resuelta. Los fondos se liberarán según el resultado.',
+        };
+      case 'cancelled_owner':
+        return {
+          tone: 'danger',
+          title: 'Cancelada por el anfitrión',
+          message: 'La reserva fue cancelada por el anfitrión. Podés buscar otro auto disponible.',
+        };
+      case 'cancelled_renter':
+        return {
+          tone: 'danger',
+          title: 'Cancelada por vos',
+          message: 'La reserva fue cancelada. Podés iniciar una nueva cuando quieras.',
+        };
+      case 'cancelled_system':
+        return {
+          tone: 'danger',
+          title: 'Cancelada por el sistema',
+          message: 'La reserva fue cancelada automáticamente por el sistema.',
+        };
+      case 'cancelled':
+        return {
+          tone: 'danger',
+          title: 'Reserva cancelada',
+          message: 'La reserva fue cancelada. Si necesitás ayuda, contactá soporte.',
+        };
+      case 'expired':
+        return {
+          tone: 'danger',
+          title: 'Reserva expirada',
+          message: 'La solicitud expiró antes de completar el pago.',
+        };
+      case 'rejected':
+        return {
+          tone: 'danger',
+          title: 'Solicitud rechazada',
+          message: 'El anfitrión rechazó tu solicitud. Podés intentar con otro vehículo.',
+        };
+      case 'no_show':
+        return {
+          tone: 'warning',
+          title: 'No show',
+          message: 'No se registró presentación para el inicio de la reserva.',
+        };
+      default:
+        return null;
+    }
   });
 
   // Exchange rate signals
@@ -375,8 +604,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const currentUser = this.authService.session$()?.user;
     if (!booking || !currentUser) return false;
 
-    // Need to check car owner_id - will load from car data
-    return this.carOwnerId() === currentUser.id;
+    const ownerId = booking.owner_id || this.carOwnerId();
+    return ownerId === currentUser.id;
   });
 
   isRenter = computed(() => {
@@ -807,6 +1036,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       this.nextStepLoading.set(true);
       const role: 'owner' | 'renter' = this.isOwner() ? 'owner' : 'renter';
       const step = await this.bookingFlowService.getNextStep(booking, role);
+      if (step && step.route === `/bookings/${booking.id}`) {
+        this.nextStep.set(null);
+        return;
+      }
       this.nextStep.set(step);
     } catch {
       this.nextStep.set(null);

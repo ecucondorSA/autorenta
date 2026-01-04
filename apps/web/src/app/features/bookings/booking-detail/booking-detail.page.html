@@ -43,42 +43,94 @@
       </button>
       <!-- Booking Flow Progress -->
       <div
-        class="rounded-2xl border border-border-default dark:border-border-muted bg-surface-raised dark:bg-surface-secondary p-4 sm:p-6 shadow-sm"
+        class="flow-card rounded-2xl border border-border-default dark:border-border-muted bg-surface-raised dark:bg-surface-secondary p-4 sm:p-6 shadow-sm"
         >
-        <div class="flex items-center justify-between mb-6">
-          <div>
+        <div class="flow-header">
+          <div class="flow-header__meta">
             <p
               class="text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-secondary/70"
               >
               Estado del flujo
             </p>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/80">
-              Seguimiento paso a paso de tu reserva
-            </p>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="text-xs font-medium text-cta-default">
-              Paso {{ currentBookingStageIndex() + 1 }} / {{ bookingFlowSteps.length }}
-            </span>
-            <button
-              [routerLink]="backLink()"
-              class="px-3 py-1.5 text-xs font-medium border border-border-default rounded-full hover:bg-surface-base transition-colors"
-              >
-              Volver
-            </button>
-            @if (nextStep() && !nextStepLoading()) {
-              <button
-                (click)="goToNextStep()"
-                class="px-3 py-1.5 text-xs font-semibold rounded-full bg-cta-default text-cta-text hover:bg-cta-strong transition-colors"
-                >
-                {{ nextStep()!.action }}
-              </button>
+            <div class="flex flex-wrap items-center gap-2">
+              <p class="text-sm text-text-secondary dark:text-text-secondary/80">
+                Seguimiento paso a paso de tu reserva
+              </p>
+              @if (flowStatusInfo()) {
+                <span
+                  [ngClass]="['flow-status-pill', 'flow-status-pill--' + (flowStatusInfo()!.color || 'medium')]"
+                  >
+                  <ion-icon class="flow-status-pill__icon" [name]="flowStatusInfo()!.icon"></ion-icon>
+                  <span class="flow-status-pill__label">{{ flowStatusInfo()!.label }}</span>
+                </span>
+              }
+            </div>
+            @if (flowStatusInfo()?.description) {
+              <p class="flow-status-note">
+                {{ flowStatusInfo()!.description }}
+              </p>
             }
           </div>
+          <div class="flow-header__actions">
+            <div class="flow-step-count">
+              Paso {{ currentBookingStageIndex() + 1 }} / {{ flowSteps().length }}
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                [routerLink]="backLink()"
+                class="flow-action flow-action--ghost"
+                >
+                Volver
+              </button>
+              @if (nextStep() && !nextStepLoading()) {
+                <button
+                  (click)="goToNextStep()"
+                  class="flow-action flow-action--primary"
+                  >
+                  {{ nextStep()!.action }}
+                </button>
+              }
+            </div>
+          </div>
         </div>
+
+        <div class="flow-progress">
+          <div class="flow-progress__meta">
+            <span class="flow-progress__label">Progreso</span>
+            <span class="flow-progress__value">{{ flowProgress() }}%</span>
+          </div>
+          <div
+            class="flow-progress__bar"
+            role="progressbar"
+            [attr.aria-valuenow]="flowProgress()"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            <div class="flow-progress__fill" [style.width.%]="flowProgress()"></div>
+          </div>
+        </div>
+
+        @if (flowAlert()) {
+          <div class="flow-alert" [ngClass]="'flow-alert--' + flowAlert()!.tone">
+            <div class="flow-alert__dot" [ngClass]="'flow-alert__dot--' + flowAlert()!.tone"></div>
+            <div class="flow-alert__content">
+              <p class="flow-alert__title">{{ flowAlert()!.title }}</p>
+              <p class="flow-alert__message">{{ flowAlert()!.message }}</p>
+              @if (flowAlert()!.action) {
+                <a
+                  [routerLink]="flowAlert()!.action!.route"
+                  class="flow-alert__cta"
+                  >
+                  {{ flowAlert()!.action!.label }}
+                </a>
+              }
+            </div>
+          </div>
+        }
+
         <!-- Responsive Stepper (Mutant Stepper) -->
         <div class="stepper-container">
-          @for (step of bookingFlowSteps; track step; let i = $index) {
+          @for (step of flowSteps(); track step; let i = $index) {
             <div
               class="step"
               [class.completed]="isStepCompleted(i)"

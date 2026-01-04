@@ -63,7 +63,7 @@ export class ReviewsService {
   readonly hasReviews = computed(() => this.reviews().length > 0);
 
   /**
-   * Create a new review using the v2 system with category ratings
+   * Create a new review using the category ratings (averaged to single rating for DB)
    */
   async createReview(params: CreateReviewParams): Promise<CreateReviewResult> {
     try {
@@ -75,21 +75,26 @@ export class ReviewsService {
       if (authError) throw authError;
       if (!user?.id) throw new Error('Usuario no autenticado');
 
-      // Call the create_review_v2 function
-      const { data, error } = await this.supabase.rpc('create_review_v2', {
+      // Calculate average rating from all categories
+      const avgRating = Math.round(
+        (params.rating_cleanliness +
+          params.rating_communication +
+          params.rating_accuracy +
+          params.rating_location +
+          params.rating_checkin +
+          params.rating_value) /
+          6,
+      );
+
+      // Call the create_review function (uses single rating)
+      const { data, error } = await this.supabase.rpc('create_review', {
         p_booking_id: params.booking_id,
         p_reviewer_id: user.id,
         p_reviewee_id: params.reviewee_id,
         p_car_id: params.car_id,
         p_review_type: params.review_type,
-        p_rating_cleanliness: params.rating_cleanliness,
-        p_rating_communication: params.rating_communication,
-        p_rating_accuracy: params.rating_accuracy,
-        p_rating_location: params.rating_location,
-        p_rating_checkin: params.rating_checkin,
-        p_rating_value: params.rating_value,
-        p_comment_public: params.comment_public ?? null,
-        p_comment_private: params.comment_private ?? null,
+        p_rating: avgRating,
+        p_comment: params.comment_public ?? null,
       });
 
       if (error) throw error;

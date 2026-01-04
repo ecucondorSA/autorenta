@@ -582,6 +582,312 @@
 }
 
 /* ==========================================================================
+   Flow Header & Progress
+   ========================================================================== */
+
+.flow-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.flow-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .flow-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.flow-header__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.flow-status-note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+:host-context(.dark) .flow-status-note {
+  color: #94a3b8;
+}
+
+.flow-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.flow-status-pill__icon {
+  font-size: 0.85rem;
+}
+
+.flow-status-pill--success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #15803d;
+}
+
+.flow-status-pill--warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: #b45309;
+}
+
+.flow-status-pill--danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+}
+
+.flow-status-pill--primary {
+  background: rgba(14, 165, 233, 0.15);
+  color: #0369a1;
+}
+
+.flow-status-pill--medium {
+  background: rgba(148, 163, 184, 0.2);
+  color: #475569;
+}
+
+:host-context(.dark) .flow-status-pill--success {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+}
+
+:host-context(.dark) .flow-status-pill--warning {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+}
+
+:host-context(.dark) .flow-status-pill--danger {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fecaca;
+}
+
+:host-context(.dark) .flow-status-pill--primary {
+  background: rgba(14, 165, 233, 0.2);
+  color: #7dd3fc;
+}
+
+:host-context(.dark) .flow-status-pill--medium {
+  background: rgba(148, 163, 184, 0.2);
+  color: #e2e8f0;
+}
+
+.flow-header__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+  .flow-header__actions {
+    align-items: flex-end;
+  }
+}
+
+.flow-step-count {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0f766e;
+  background: rgba(15, 118, 110, 0.08);
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+}
+
+:host-context(.dark) .flow-step-count {
+  color: #5eead4;
+  background: rgba(20, 184, 166, 0.2);
+}
+
+.flow-action {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+.flow-action--ghost {
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  background: transparent;
+}
+
+.flow-action--ghost:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.flow-action--primary {
+  border: 1px solid transparent;
+  background: var(--cta-default, #0f766e);
+  color: var(--cta-text, #ffffff);
+  box-shadow: 0 10px 24px rgba(15, 118, 110, 0.18);
+}
+
+.flow-action--primary:hover {
+  background: var(--cta-strong, #0d9488);
+}
+
+:host-context(.dark) .flow-action--ghost {
+  border-color: rgba(148, 163, 184, 0.4);
+  color: #e2e8f0;
+}
+
+:host-context(.dark) .flow-action--ghost:hover {
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.flow-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.flow-progress__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.flow-progress__bar {
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.flow-progress__fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(15, 118, 110, 0.9), rgba(34, 197, 94, 0.9));
+  transition: width 0.4s ease;
+}
+
+:host-context(.dark) .flow-progress__meta {
+  color: #94a3b8;
+}
+
+:host-context(.dark) .flow-progress__bar {
+  background: rgba(51, 65, 85, 0.8);
+}
+
+/* ==========================================================================
+   Flow Alerts
+   ========================================================================== */
+
+.flow-alert {
+  display: flex;
+  gap: 0.9rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid transparent;
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.flow-alert__dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  margin-top: 0.45rem;
+  flex-shrink: 0;
+}
+
+.flow-alert__title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.flow-alert__message {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.flow-alert__cta {
+  display: inline-flex;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0f766e;
+  text-decoration: none;
+}
+
+.flow-alert__cta:hover {
+  text-decoration: underline;
+}
+
+.flow-alert--info {
+  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.flow-alert__dot--info {
+  background: #3b82f6;
+}
+
+.flow-alert--warning {
+  border-color: rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.flow-alert__dot--warning {
+  background: #f59e0b;
+}
+
+.flow-alert--danger {
+  border-color: rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.flow-alert__dot--danger {
+  background: #ef4444;
+}
+
+.flow-alert--success {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.flow-alert__dot--success {
+  background: #22c55e;
+}
+
+:host-context(.dark) .flow-alert {
+  background: rgba(30, 41, 59, 0.5);
+}
+
+:host-context(.dark) .flow-alert__title {
+  color: #f8fafc;
+}
+
+:host-context(.dark) .flow-alert__message {
+  color: #cbd5e1;
+}
+
+:host-context(.dark) .flow-alert__cta {
+  color: #5eead4;
+}
+
+/* ==========================================================================
    Responsive Stepper ("The Mutant Stepper")
    Horizontal on Desktop, Vertical on Mobile
    ========================================================================== */
