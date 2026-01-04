@@ -1,0 +1,204 @@
+name: Payment Reconciliation
+
+on:
+  schedule:
+    # Run daily at 3:00 AM Argentina time (6:00 UTC)
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      days_back:
+        description: 'Days to reconcile (default: 1)'
+        required: false
+        default: '1'
+
+jobs:
+  reconcile:
+    name: Reconcile MercadoPago Payments
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Reconcile Payments
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          MERCADOPAGO_ACCESS_TOKEN: ${{ secrets.MERCADOPAGO_ACCESS_TOKEN }}
+        with:
+          script: |
+            const daysBack = parseInt('${{ inputs.days_back }}' || '1');
+            const fromDate = new Date();
+            fromDate.setDate(fromDate.getDate() - daysBack);
+            const fromDateStr = fromDate.toISOString().split('T')[0];
+
+            console.log(`Reconciling payments from ${fromDateStr}`);
+
+            // 1. Get payments from Supabase
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            const dbPaymentsRes = await fetch(
+              `${supabaseUrl}/rest/v1/payments?created_at=gte.${fromDateStr}&select=*`,
+              {
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                }
+              }
+            );
+
+            if (!dbPaymentsRes.ok) {
+              throw new Error(`Failed to fetch DB payments: ${dbPaymentsRes.status}`);
+            }
+
+            const dbPayments = await dbPaymentsRes.json();
+            console.log(`Found ${dbPayments.length} payments in DB`);
+
+            // 2. Get payments from MercadoPago
+            const mpToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
+            const mpPayments = [];
+            let offset = 0;
+            const limit = 50;
+
+            while (true) {
+              const mpRes = await fetch(
+                `https://api.mercadopago.com/v1/payments/search?begin_date=${fromDateStr}T00:00:00Z&end_date=${new Date().toISOString()}&offset=${offset}&limit=${limit}`,
+                {
+                  headers: {
+                    'Authorization': `Bearer ${mpToken}`,
+                  }
+                }
+              );
+
+              if (!mpRes.ok) {
+                console.error(`MP API error: ${mpRes.status}`);
+                break;
+              }
+
+              const data = await mpRes.json();
+              mpPayments.push(...data.results);
+
+              if (data.results.length < limit) break;
+              offset += limit;
+
+              // Safety limit
+              if (offset > 500) break;
+            }
+
+            console.log(`Found ${mpPayments.length} payments in MercadoPago`);
+
+            // 3. Compare and find discrepancies
+            const discrepancies = [];
+            const dbPaymentIds = new Set(dbPayments.map(p => p.external_payment_id));
+
+            // Find MP payments not in DB
+            for (const mpPayment of mpPayments) {
+              if (mpPayment.status === 'approved' && !dbPaymentIds.has(String(mpPayment.id))) {
+                discrepancies.push({
+                  type: 'MISSING_IN_DB',
+                  mp_id: mpPayment.id,
+                  amount: mpPayment.transaction_amount,
+                  status: mpPayment.status,
+                  date: mpPayment.date_created,
+                  external_reference: mpPayment.external_reference,
+                });
+              }
+            }
+
+            // Find DB payments with wrong status
+            const mpStatusMap = new Map(mpPayments.map(p => [String(p.id), p.status]));
+
+            for (const dbPayment of dbPayments) {
+              if (dbPayment.external_payment_id) {
+                const mpStatus = mpStatusMap.get(dbPayment.external_payment_id);
+                if (mpStatus && mpStatus !== dbPayment.status) {
+                  discrepancies.push({
+                    type: 'STATUS_MISMATCH',
+                    payment_id: dbPayment.id,
+                    mp_id: dbPayment.external_payment_id,
+                    db_status: dbPayment.status,
+                    mp_status: mpStatus,
+                  });
+                }
+              }
+            }
+
+            // 4. Report results
+            const report = {
+              timestamp: new Date().toISOString(),
+              period_from: fromDateStr,
+              db_payments: dbPayments.length,
+              mp_payments: mpPayments.length,
+              discrepancies_found: discrepancies.length,
+              discrepancies: discrepancies.slice(0, 20), // Limit output
+            };
+
+            console.log('Reconciliation Report:', JSON.stringify(report, null, 2));
+
+            // 5. Create issue if discrepancies found
+            if (discrepancies.length > 0) {
+              const totalMissing = discrepancies
+                .filter(d => d.type === 'MISSING_IN_DB')
+                .reduce((sum, d) => sum + (d.amount || 0), 0);
+
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `[ALERT] Payment Reconciliation: ${discrepancies.length} discrepancies found`,
+                body: `## Payment Reconciliation Alert
+
+**Period:** ${fromDateStr} to ${new Date().toISOString().split('T')[0]}
+**DB Payments:** ${dbPayments.length}
+**MercadoPago Payments:** ${mpPayments.length}
+**Discrepancies:** ${discrepancies.length}
+
+### Summary
+- Missing in DB: ${discrepancies.filter(d => d.type === 'MISSING_IN_DB').length} (Total: ARS ${totalMissing.toFixed(2)})
+- Status mismatch: ${discrepancies.filter(d => d.type === 'STATUS_MISMATCH').length}
+
+### Discrepancies (first 10)
+\`\`\`json
+${JSON.stringify(discrepancies.slice(0, 10), null, 2)}
+\`\`\`
+
+---
+*Auto-generated by Payment Reconciliation workflow*`,
+                labels: ['alert', 'payments', 'reconciliation'],
+              });
+
+              core.setFailed(`Found ${discrepancies.length} payment discrepancies`);
+            } else {
+              console.log('All payments reconciled successfully');
+            }
+
+  notify-failure:
+    name: Notify on Failure
+    runs-on: ubuntu-latest
+    needs: reconcile
+    if: failure()
+    steps:
+      - name: Send Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+            if (!webhookUrl) {
+              console.log('INCIDENT_WEBHOOK_URL not configured');
+              return;
+            }
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source: 'github',
+                severity: 'high',
+                title: 'Payment Reconciliation Failed',
+                message: 'The payment reconciliation workflow detected discrepancies or failed to complete.',
+                metadata: {
+                  workflow: 'payment-reconciliation',
+                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                },
+                timestamp: new Date().toISOString(),
+              }),
+            });

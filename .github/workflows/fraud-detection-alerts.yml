@@ -1,0 +1,262 @@
+name: Fraud Detection Alerts
+
+on:
+  schedule:
+    # Run every 30 minutes
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  detect-fraud:
+    name: Detect Suspicious Patterns
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check for Suspicious Patterns
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+            const alerts = [];
+
+            const query = async (table, params = '') => {
+              const res = await fetch(
+                `${supabaseUrl}/rest/v1/${table}${params}`,
+                {
+                  headers: {
+                    'apikey': supabaseKey,
+                    'Authorization': `Bearer ${supabaseKey}`,
+                  }
+                }
+              );
+              return res.json();
+            };
+
+            const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+            const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+            // 1. Multiple failed payments from same user (>3 in last hour)
+            console.log('Checking failed payments...');
+            const failedPayments = await query(
+              'payments',
+              `?status=eq.rejected&created_at=gte.${oneHourAgo}&select=user_id`
+            );
+
+            const failedByUser = {};
+            for (const p of failedPayments) {
+              failedByUser[p.user_id] = (failedByUser[p.user_id] || 0) + 1;
+            }
+
+            for (const [userId, count] of Object.entries(failedByUser)) {
+              if (count >= 3) {
+                alerts.push({
+                  type: 'MULTIPLE_FAILED_PAYMENTS',
+                  severity: 'high',
+                  user_id: userId,
+                  count: count,
+                  message: `User ${userId.substring(0, 8)}... had ${count} failed payments in the last hour`,
+                });
+              }
+            }
+
+            // 2. Rapid booking attempts (>5 bookings in 1 hour from same user)
+            console.log('Checking rapid booking attempts...');
+            const recentBookings = await query(
+              'bookings',
+              `?created_at=gte.${oneHourAgo}&select=renter_id`
+            );
+
+            const bookingsByRenter = {};
+            for (const b of recentBookings) {
+              bookingsByRenter[b.renter_id] = (bookingsByRenter[b.renter_id] || 0) + 1;
+            }
+
+            for (const [renterId, count] of Object.entries(bookingsByRenter)) {
+              if (count >= 5) {
+                alerts.push({
+                  type: 'RAPID_BOOKING_ATTEMPTS',
+                  severity: 'medium',
+                  user_id: renterId,
+                  count: count,
+                  message: `User ${renterId.substring(0, 8)}... made ${count} booking attempts in the last hour`,
+                });
+              }
+            }
+
+            // 3. Large wallet transfers (>$50,000 ARS in 24h)
+            console.log('Checking large transfers...');
+            const largeTransfers = await query(
+              'wallet_ledger',
+              `?kind=in.(transfer_in,transfer_out)&amount_cents=gte.5000000&created_at=gte.${twentyFourHoursAgo}&select=user_id,kind,amount_cents`
+            );
+
+            if (largeTransfers.length > 0) {
+              for (const t of largeTransfers) {
+                alerts.push({
+                  type: 'LARGE_TRANSFER',
+                  severity: 'medium',
+                  user_id: t.user_id,
+                  amount_ars: t.amount_cents / 100,
+                  kind: t.kind,
+                  message: `Large transfer of ARS ${(t.amount_cents / 100).toLocaleString()} detected`,
+                });
+              }
+            }
+
+            // 4. Multiple cancellations by same owner (>3 in 24h)
+            console.log('Checking owner cancellations...');
+            const cancelledBookings = await query(
+              'bookings',
+              `?status=eq.cancelled&cancelled_by=eq.owner&updated_at=gte.${twentyFourHoursAgo}&select=owner_id`
+            );
+
+            const cancellationsByOwner = {};
+            for (const b of cancelledBookings) {
+              cancellationsByOwner[b.owner_id] = (cancellationsByOwner[b.owner_id] || 0) + 1;
+            }
+
+            for (const [ownerId, count] of Object.entries(cancellationsByOwner)) {
+              if (count >= 3) {
+                alerts.push({
+                  type: 'MULTIPLE_OWNER_CANCELLATIONS',
+                  severity: 'medium',
+                  user_id: ownerId,
+                  count: count,
+                  message: `Owner ${ownerId.substring(0, 8)}... cancelled ${count} bookings in 24h`,
+                });
+              }
+            }
+
+            // 5. High-value bookings from unverified users
+            console.log('Checking unverified high-value bookings...');
+            const highValueBookings = await query(
+              'bookings',
+              `?total_amount_ars=gte.100000&status=eq.pending_payment&created_at=gte.${twentyFourHoursAgo}&select=id,renter_id,total_amount_ars`
+            );
+
+            for (const booking of highValueBookings) {
+              const profile = await query(
+                'profiles',
+                `?id=eq.${booking.renter_id}&select=identity_verified_at`
+              );
+
+              if (profile[0] && !profile[0].identity_verified_at) {
+                alerts.push({
+                  type: 'UNVERIFIED_HIGH_VALUE_BOOKING',
+                  severity: 'high',
+                  booking_id: booking.id,
+                  user_id: booking.renter_id,
+                  amount_ars: booking.total_amount_ars,
+                  message: `Unverified user attempting high-value booking of ARS ${booking.total_amount_ars.toLocaleString()}`,
+                });
+              }
+            }
+
+            // 6. Check for suspicious refund patterns
+            console.log('Checking refund patterns...');
+            const refunds = await query(
+              'wallet_ledger',
+              `?kind=eq.refund&created_at=gte.${twentyFourHoursAgo}&select=user_id,amount_cents`
+            );
+
+            const refundsByUser = {};
+            for (const r of refunds) {
+              refundsByUser[r.user_id] = (refundsByUser[r.user_id] || 0) + r.amount_cents;
+            }
+
+            for (const [userId, totalCents] of Object.entries(refundsByUser)) {
+              if (totalCents >= 5000000) { // >$50,000 ARS in refunds
+                alerts.push({
+                  type: 'HIGH_REFUND_VOLUME',
+                  severity: 'high',
+                  user_id: userId,
+                  total_ars: totalCents / 100,
+                  message: `User ${userId.substring(0, 8)}... received ARS ${(totalCents / 100).toLocaleString()} in refunds in 24h`,
+                });
+              }
+            }
+
+            // Report results
+            console.log(`Found ${alerts.length} suspicious patterns`);
+
+            const criticalAlerts = alerts.filter(a => a.severity === 'critical');
+            const highAlerts = alerts.filter(a => a.severity === 'high');
+            const mediumAlerts = alerts.filter(a => a.severity === 'medium');
+
+            console.log(`Critical: ${criticalAlerts.length}, High: ${highAlerts.length}, Medium: ${mediumAlerts.length}`);
+
+            if (alerts.length > 0) {
+              console.log('Alerts:', JSON.stringify(alerts, null, 2));
+            }
+
+            // Create issue for high/critical alerts
+            if (highAlerts.length > 0 || criticalAlerts.length > 0) {
+              const alertsSummary = [...criticalAlerts, ...highAlerts]
+                .slice(0, 10)
+                .map(a => `- **${a.type}** (${a.severity}): ${a.message}`)
+                .join('\n');
+
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `[FRAUD ALERT] ${criticalAlerts.length + highAlerts.length} suspicious patterns detected`,
+                body: `## Fraud Detection Alert
+
+**Critical Alerts:** ${criticalAlerts.length}
+**High Alerts:** ${highAlerts.length}
+**Medium Alerts:** ${mediumAlerts.length}
+
+### Detected Patterns
+${alertsSummary}
+
+### Recommended Actions
+1. Review affected user accounts
+2. Check transaction history
+3. Consider temporary account restrictions if needed
+4. Document findings
+
+---
+*Auto-generated by Fraud Detection workflow*`,
+                labels: ['alert', 'security', 'fraud'],
+              });
+
+              if (criticalAlerts.length > 0) {
+                core.setFailed(`Critical fraud patterns detected`);
+              }
+            }
+
+            return { alerts };
+
+  notify-critical:
+    name: Notify on Critical
+    runs-on: ubuntu-latest
+    needs: detect-fraud
+    if: failure()
+    steps:
+      - name: Send Critical Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+            if (!webhookUrl) return;
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source: 'github',
+                severity: 'critical',
+                title: 'Critical Fraud Pattern Detected',
+                message: 'The fraud detection system has identified critical suspicious patterns requiring immediate attention.',
+                metadata: {
+                  workflow: 'fraud-detection-alerts',
+                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                },
+                timestamp: new Date().toISOString(),
+              }),
+            });

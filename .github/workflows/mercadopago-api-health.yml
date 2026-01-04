@@ -1,0 +1,281 @@
+name: MercadoPago API Health
+
+on:
+  schedule:
+    # Run every 30 minutes
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check-mp-api:
+    name: Check MercadoPago API
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check MercadoPago Connectivity
+        id: mp-check
+        uses: actions/github-script@v7
+        env:
+          MERCADOPAGO_ACCESS_TOKEN: ${{ secrets.MERCADOPAGO_ACCESS_TOKEN }}
+        with:
+          script: |
+            const mpToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
+            const results = [];
+
+            const checkEndpoint = async (name, url, method = 'GET') => {
+              const start = Date.now();
+              try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+                const response = await fetch(url, {
+                  method,
+                  headers: {
+                    'Authorization': `Bearer ${mpToken}`,
+                    'Content-Type': 'application/json',
+                  },
+                  signal: controller.signal,
+                });
+
+                clearTimeout(timeoutId);
+                const latency = Date.now() - start;
+
+                let data = null;
+                try {
+                  data = await response.json();
+                } catch (e) {}
+
+                return {
+                  name,
+                  url,
+                  status: response.status,
+                  ok: response.ok,
+                  latency,
+                  data,
+                };
+              } catch (error) {
+                return {
+                  name,
+                  url,
+                  status: 0,
+                  ok: false,
+                  latency: Date.now() - start,
+                  error: error.name === 'AbortError' ? 'Timeout' : error.message,
+                };
+              }
+            };
+
+            // 1. Check user account (validates token)
+            console.log('Checking MP user account...');
+            const userCheck = await checkEndpoint(
+              'MP User Account',
+              'https://api.mercadopago.com/users/me'
+            );
+            results.push(userCheck);
+
+            if (!userCheck.ok) {
+              console.error('Failed to authenticate with MercadoPago');
+              core.setFailed('MercadoPago authentication failed');
+              return { results };
+            }
+
+            // 2. Check payment methods availability
+            console.log('Checking payment methods...');
+            results.push(await checkEndpoint(
+              'MP Payment Methods',
+              'https://api.mercadopago.com/v1/payment_methods'
+            ));
+
+            // 3. Check if we can search payments
+            console.log('Checking payment search...');
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            results.push(await checkEndpoint(
+              'MP Payment Search',
+              `https://api.mercadopago.com/v1/payments/search?begin_date=${yesterday.toISOString()}&limit=1`
+            ));
+
+            // 4. Check money-out capability (for payouts)
+            console.log('Checking money-out capability...');
+            results.push(await checkEndpoint(
+              'MP Account Balance',
+              'https://api.mercadopago.com/users/me/mercadopago_account/balance'
+            ));
+
+            // 5. Check if we have pending webhooks
+            console.log('Checking webhook notifications...');
+            results.push(await checkEndpoint(
+              'MP Webhooks',
+              'https://api.mercadopago.com/v1/notifications/search?limit=5'
+            ));
+
+            // Report results
+            console.log('\n=== MercadoPago Health Check ===\n');
+
+            const failed = [];
+            const slow = [];
+
+            for (const result of results) {
+              const status = result.ok ? '✅' : '❌';
+              const latencyWarning = result.latency > 5000 ? '⚠️ SLOW' : '';
+              console.log(`${status} ${result.name}: ${result.status} (${result.latency}ms) ${latencyWarning}`);
+
+              if (!result.ok) {
+                failed.push(result);
+              }
+              if (result.latency > 5000) {
+                slow.push(result);
+              }
+            }
+
+            // Calculate average latency
+            const avgLatency = results.reduce((sum, r) => sum + r.latency, 0) / results.length;
+            console.log(`\nAverage latency: ${avgLatency.toFixed(0)}ms`);
+
+            // Set outputs
+            core.setOutput('failed', failed.length);
+            core.setOutput('slow', slow.length);
+            core.setOutput('avg_latency', avgLatency.toFixed(0));
+            core.setOutput('results', JSON.stringify(results));
+
+            // Check for API degradation
+            if (avgLatency > 8000) {
+              console.warn('⚠️ MercadoPago API is responding slowly');
+            }
+
+            if (failed.length > 0) {
+              console.error('\n❌ MercadoPago API issues detected!');
+              core.setFailed(`${failed.length} MercadoPago endpoints are failing`);
+            } else if (slow.length >= 3) {
+              console.warn('\n⚠️ MercadoPago API is degraded (multiple slow endpoints)');
+            }
+
+            return { results, failed, slow, avgLatency };
+
+      - name: Check Pending Payments
+        if: success()
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            // Check for stuck pending payments (>1 hour old)
+            const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+
+            const pendingPaymentsRes = await fetch(
+              `${supabaseUrl}/rest/v1/payments?status=eq.pending&created_at=lt.${oneHourAgo}&select=id,created_at,amount,booking_id`,
+              {
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                }
+              }
+            );
+
+            const stuckPayments = await pendingPaymentsRes.json();
+
+            if (stuckPayments.length > 0) {
+              console.warn(`Found ${stuckPayments.length} stuck pending payments`);
+
+              // Call the poll-pending-payments function to process them
+              console.log('Triggering pending payments poll...');
+
+              try {
+                const pollRes = await fetch(
+                  `${supabaseUrl}/functions/v1/mercadopago-poll-pending-payments`,
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Authorization': `Bearer ${supabaseKey}`,
+                      'Content-Type': 'application/json',
+                    }
+                  }
+                );
+
+                if (pollRes.ok) {
+                  console.log('Pending payments poll triggered successfully');
+                } else {
+                  console.error('Failed to trigger pending payments poll');
+                }
+              } catch (e) {
+                console.error('Error triggering poll:', e);
+              }
+            } else {
+              console.log('No stuck pending payments found');
+            }
+
+      - name: Create Issue on Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const results = JSON.parse('${{ steps.mp-check.outputs.results }}' || '[]');
+            const failed = results.filter(r => !r.ok);
+            const avgLatency = '${{ steps.mp-check.outputs.avg_latency }}';
+
+            const failedList = failed
+              .map(f => `- **${f.name}**: Status ${f.status} ${f.error ? `(${f.error})` : ''}`)
+              .join('\n');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[PAYMENT ALERT] MercadoPago API Issues Detected`,
+              body: `## MercadoPago API Health Alert
+
+**Time:** ${new Date().toISOString()}
+**Average Latency:** ${avgLatency}ms
+**Failed Endpoints:** ${failed.length}
+
+### Issues Detected
+${failedList || 'API responding slowly'}
+
+### Impact
+- New payments may fail
+- Webhooks may be delayed
+- Refunds may not process
+
+### Recommended Actions
+1. Check [MercadoPago Status Page](https://status.mercadopago.com/)
+2. Monitor payment success rates
+3. Consider fallback payment methods (PayPal)
+4. Notify support if issues persist
+
+---
+*Auto-generated by MercadoPago API Health workflow*`,
+              labels: ['alert', 'payments', 'mercadopago'],
+            });
+
+  notify-mp-issues:
+    name: Notify on MP Issues
+    runs-on: ubuntu-latest
+    needs: check-mp-api
+    if: failure()
+    steps:
+      - name: Send MP Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+            if (!webhookUrl) return;
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source: 'github',
+                severity: 'high',
+                title: 'MercadoPago API Issues',
+                message: 'MercadoPago API is experiencing issues. Payment processing may be affected.',
+                metadata: {
+                  workflow: 'mercadopago-api-health',
+                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                },
+                timestamp: new Date().toISOString(),
+              }),
+            });

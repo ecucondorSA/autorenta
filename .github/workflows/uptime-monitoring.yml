@@ -1,0 +1,245 @@
+name: Uptime Monitoring
+
+on:
+  schedule:
+    # Run every 5 minutes
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    name: Check Service Health
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check All Endpoints
+        id: health
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          WEB_URL: https://autorentar.pages.dev
+        with:
+          script: |
+            const results = [];
+            const webUrl = process.env.WEB_URL;
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+            const checkEndpoint = async (name, url, options = {}) => {
+              const start = Date.now();
+              try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+                const response = await fetch(url, {
+                  ...options,
+                  signal: controller.signal,
+                });
+
+                clearTimeout(timeoutId);
+                const latency = Date.now() - start;
+
+                return {
+                  name,
+                  url,
+                  status: response.status,
+                  ok: response.ok,
+                  latency,
+                };
+              } catch (error) {
+                return {
+                  name,
+                  url,
+                  status: 0,
+                  ok: false,
+                  latency: Date.now() - start,
+                  error: error.message,
+                };
+              }
+            };
+
+            // 1. Web App
+            console.log('Checking web app...');
+            results.push(await checkEndpoint('Web App', webUrl));
+
+            // 2. Supabase REST API
+            console.log('Checking Supabase REST API...');
+            results.push(await checkEndpoint(
+              'Supabase REST API',
+              `${supabaseUrl}/rest/v1/`,
+              {
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                }
+              }
+            ));
+
+            // 3. Supabase Auth
+            console.log('Checking Supabase Auth...');
+            results.push(await checkEndpoint(
+              'Supabase Auth',
+              `${supabaseUrl}/auth/v1/settings`,
+              {
+                headers: {
+                  'apikey': supabaseKey,
+                }
+              }
+            ));
+
+            // 4. Key Edge Functions
+            const edgeFunctions = [
+              'dashboard-stats',
+              'sync-binance-rates',
+            ];
+
+            for (const fn of edgeFunctions) {
+              console.log(`Checking edge function: ${fn}...`);
+              results.push(await checkEndpoint(
+                `Edge Function: ${fn}`,
+                `${supabaseUrl}/functions/v1/${fn}`,
+                {
+                  method: 'OPTIONS',
+                  headers: {
+                    'Authorization': `Bearer ${supabaseKey}`,
+                  }
+                }
+              ));
+            }
+
+            // 5. Web App API routes
+            const webRoutes = [
+              '/manifest.webmanifest',
+            ];
+
+            for (const route of webRoutes) {
+              results.push(await checkEndpoint(
+                `Web Route: ${route}`,
+                `${webUrl}${route}`
+              ));
+            }
+
+            // Report results
+            console.log('\n=== Health Check Results ===\n');
+
+            const failed = [];
+            const slow = [];
+
+            for (const result of results) {
+              const status = result.ok ? '✅' : '❌';
+              const latencyWarning = result.latency > 3000 ? '⚠️ SLOW' : '';
+              console.log(`${status} ${result.name}: ${result.status} (${result.latency}ms) ${latencyWarning}`);
+
+              if (!result.ok) {
+                failed.push(result);
+              }
+              if (result.latency > 5000) {
+                slow.push(result);
+              }
+            }
+
+            console.log(`\nTotal: ${results.length}, Failed: ${failed.length}, Slow: ${slow.length}`);
+
+            // Set outputs
+            core.setOutput('total', results.length);
+            core.setOutput('failed', failed.length);
+            core.setOutput('slow', slow.length);
+            core.setOutput('results', JSON.stringify(results));
+
+            // Fail if any critical service is down
+            if (failed.length > 0) {
+              console.error('\n❌ CRITICAL: Some services are down!');
+              console.error('Failed services:', failed.map(f => f.name).join(', '));
+              core.setFailed(`${failed.length} services are down`);
+            }
+
+            return { results, failed, slow };
+
+      - name: Create Issue on Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const results = JSON.parse('${{ steps.health.outputs.results }}' || '[]');
+            const failed = results.filter(r => !r.ok);
+
+            const failedList = failed
+              .map(f => `- **${f.name}**: Status ${f.status} ${f.error ? `(${f.error})` : ''}`)
+              .join('\n');
+
+            // Check if there's already an open uptime issue
+            const existingIssues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'uptime',
+              state: 'open',
+            });
+
+            if (existingIssues.data.length > 0) {
+              // Add comment to existing issue
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssues.data[0].number,
+                body: `### Uptime Check Failed - ${new Date().toISOString()}
+
+${failedList}
+
+[View Run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+              });
+            } else {
+              // Create new issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `[OUTAGE] ${failed.length} services down`,
+                body: `## Service Outage Detected
+
+**Time:** ${new Date().toISOString()}
+**Failed Services:** ${failed.length}
+
+### Down Services
+${failedList}
+
+### Immediate Actions
+1. Check Cloudflare status
+2. Check Supabase status
+3. Review recent deployments
+4. Check for infrastructure issues
+
+---
+*Auto-generated by Uptime Monitoring workflow*`,
+                labels: ['alert', 'uptime', 'critical'],
+              });
+            }
+
+  notify-outage:
+    name: Notify on Outage
+    runs-on: ubuntu-latest
+    needs: health-check
+    if: failure()
+    steps:
+      - name: Send Outage Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+            if (!webhookUrl) return;
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source: 'github',
+                severity: 'critical',
+                title: 'SERVICE OUTAGE DETECTED',
+                message: 'One or more critical services are down. Immediate attention required.',
+                metadata: {
+                  workflow: 'uptime-monitoring',
+                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                },
+                timestamp: new Date().toISOString(),
+              }),
+            });
