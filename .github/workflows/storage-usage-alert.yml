@@ -1,0 +1,279 @@
+name: Storage Usage Alert
+
+on:
+  schedule:
+    # Run daily at 2:00 AM Argentina time (5:00 UTC)
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-storage:
+    name: Check Storage Usage
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check Storage Usage
+        id: storage
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            const rpc = async (fnName, params = {}) => {
+              const res = await fetch(`${supabaseUrl}/rest/v1/rpc/${fnName}`, {
+                method: 'POST',
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params),
+              });
+              if (!res.ok) return null;
+              return res.json();
+            };
+
+            const query = async (endpoint) => {
+              const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                }
+              });
+              return res.json();
+            };
+
+            const storage = {
+              buckets: [],
+              total_size_bytes: 0,
+              total_files: 0,
+              issues: [],
+            };
+
+            // Supabase free tier limits
+            const STORAGE_LIMIT_GB = 1; // 1GB for free tier, adjust as needed
+            const STORAGE_LIMIT_BYTES = STORAGE_LIMIT_GB * 1024 * 1024 * 1024;
+
+            console.log('Checking storage usage...\n');
+
+            // 1. List all storage buckets
+            const bucketsRes = await fetch(`${supabaseUrl}/storage/v1/bucket`, {
+              headers: {
+                'Authorization': `Bearer ${supabaseKey}`,
+              }
+            });
+
+            if (!bucketsRes.ok) {
+              console.log('Could not fetch buckets, checking via SQL...');
+            } else {
+              const buckets = await bucketsRes.json();
+              console.log(`Found ${buckets.length} storage buckets`);
+
+              for (const bucket of buckets) {
+                console.log(`Checking bucket: ${bucket.name}`);
+
+                // Get bucket size via listing (approximate)
+                const objectsRes = await fetch(
+                  `${supabaseUrl}/storage/v1/object/list/${bucket.name}?limit=1000`,
+                  {
+                    headers: {
+                      'Authorization': `Bearer ${supabaseKey}`,
+                    }
+                  }
+                );
+
+                if (objectsRes.ok) {
+                  const objects = await objectsRes.json();
+                  const bucketSize = objects.reduce((sum, obj) => sum + (obj.metadata?.size || 0), 0);
+                  const fileCount = objects.length;
+
+                  storage.buckets.push({
+                    name: bucket.name,
+                    size_bytes: bucketSize,
+                    size_mb: (bucketSize / (1024 * 1024)).toFixed(2),
+                    file_count: fileCount,
+                    public: bucket.public,
+                  });
+
+                  storage.total_size_bytes += bucketSize;
+                  storage.total_files += fileCount;
+                }
+              }
+            }
+
+            // 2. Check database size
+            console.log('\nChecking database size...');
+            try {
+              const dbSizeSQL = `
+                SELECT pg_size_pretty(pg_database_size(current_database())) as db_size,
+                       pg_database_size(current_database()) as db_size_bytes
+              `;
+              const dbSize = await rpc('execute_sql', { query: dbSizeSQL });
+
+              if (dbSize && dbSize[0]) {
+                storage.database_size = dbSize[0].db_size;
+                storage.database_size_bytes = dbSize[0].db_size_bytes;
+                console.log(`Database size: ${dbSize[0].db_size}`);
+              }
+            } catch (e) {
+              console.log('Could not get database size');
+            }
+
+            // 3. Check for large tables
+            console.log('\nChecking large tables...');
+            try {
+              const largeTablesSQL = `
+                SELECT
+                  tablename,
+                  pg_size_pretty(pg_total_relation_size('public.' || tablename)) as size,
+                  pg_total_relation_size('public.' || tablename) as size_bytes
+                FROM pg_tables
+                WHERE schemaname = 'public'
+                ORDER BY pg_total_relation_size('public.' || tablename) DESC
+                LIMIT 5
+              `;
+              const largeTables = await rpc('execute_sql', { query: largeTablesSQL });
+
+              if (Array.isArray(largeTables)) {
+                storage.large_tables = largeTables;
+                for (const table of largeTables) {
+                  console.log(`  ${table.tablename}: ${table.size}`);
+                }
+              }
+            } catch (e) {
+              console.log('Could not get table sizes');
+            }
+
+            // 4. Calculate usage percentage
+            const usagePercentage = (storage.total_size_bytes / STORAGE_LIMIT_BYTES) * 100;
+            storage.usage_percentage = usagePercentage.toFixed(1);
+            storage.limit_gb = STORAGE_LIMIT_GB;
+
+            console.log(`\n=== Storage Summary ===`);
+            console.log(`Total storage: ${(storage.total_size_bytes / (1024 * 1024)).toFixed(2)} MB`);
+            console.log(`Files: ${storage.total_files}`);
+            console.log(`Usage: ${storage.usage_percentage}% of ${STORAGE_LIMIT_GB}GB limit`);
+
+            // 5. Check for issues
+            if (usagePercentage > 90) {
+              storage.issues.push({
+                type: 'CRITICAL_STORAGE',
+                severity: 'critical',
+                message: `Storage at ${storage.usage_percentage}% - immediate action required`,
+              });
+            } else if (usagePercentage > 80) {
+              storage.issues.push({
+                type: 'HIGH_STORAGE',
+                severity: 'high',
+                message: `Storage at ${storage.usage_percentage}% - cleanup recommended`,
+              });
+            } else if (usagePercentage > 70) {
+              storage.issues.push({
+                type: 'STORAGE_WARNING',
+                severity: 'medium',
+                message: `Storage at ${storage.usage_percentage}% - monitor closely`,
+              });
+            }
+
+            // Check for very large buckets
+            for (const bucket of storage.buckets) {
+              if (bucket.size_bytes > 500 * 1024 * 1024) { // 500MB
+                storage.issues.push({
+                  type: 'LARGE_BUCKET',
+                  severity: 'medium',
+                  bucket: bucket.name,
+                  size: bucket.size_mb + 'MB',
+                  message: `Bucket ${bucket.name} is ${bucket.size_mb}MB`,
+                });
+              }
+            }
+
+            core.setOutput('usage_percentage', storage.usage_percentage);
+            core.setOutput('total_mb', (storage.total_size_bytes / (1024 * 1024)).toFixed(2));
+            core.setOutput('issues_count', storage.issues.length);
+            core.setOutput('storage', JSON.stringify(storage));
+
+            if (storage.issues.some(i => i.severity === 'critical')) {
+              core.setFailed('Critical storage level reached');
+            } else if (storage.issues.some(i => i.severity === 'high')) {
+              core.setFailed('High storage usage detected');
+            }
+
+            return storage;
+
+      - name: Create Issue on High Usage
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const storage = JSON.parse('${{ steps.storage.outputs.storage }}' || '{}');
+            const usagePercentage = '${{ steps.storage.outputs.usage_percentage }}';
+            const totalMB = '${{ steps.storage.outputs.total_mb }}';
+
+            const bucketsTable = storage.buckets?.map(b =>
+              `| ${b.name} | ${b.size_mb} MB | ${b.file_count} |`
+            ).join('\n') || 'No data';
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[STORAGE ALERT] Usage at ${usagePercentage}%`,
+              body: `## Storage Usage Alert
+
+**Current Usage:** ${totalMB} MB (${usagePercentage}%)
+**Limit:** ${storage.limit_gb || 1} GB
+
+### Buckets
+| Bucket | Size | Files |
+|--------|------|-------|
+${bucketsTable}
+
+### Large Tables
+${storage.large_tables?.map(t => `- **${t.tablename}**: ${t.size}`).join('\n') || 'No data'}
+
+### Recommended Actions
+1. Clean up old/unused files from storage buckets
+2. Archive old data to external storage
+3. Consider upgrading Supabase plan
+4. Review and delete old backups
+
+---
+*Auto-generated by Storage Usage Alert workflow*`,
+              labels: ['alert', 'storage', 'infrastructure'],
+            });
+
+  notify:
+    name: Notify on High Usage
+    runs-on: ubuntu-latest
+    needs: check-storage
+    if: failure()
+    steps:
+      - name: Send Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+            if (!webhookUrl) return;
+
+            const usagePercentage = '${{ needs.check-storage.outputs.usage_percentage }}';
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source: 'github',
+                severity: parseFloat(usagePercentage) > 90 ? 'critical' : 'high',
+                title: 'Storage Usage Alert',
+                message: `Storage usage at ${usagePercentage}%. Cleanup required.`,
+                metadata: {
+                  workflow: 'storage-usage-alert',
+                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                },
+                timestamp: new Date().toISOString(),
+              }),
+            });

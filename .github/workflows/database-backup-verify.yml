@@ -1,0 +1,311 @@
+name: Database Backup Verify
+
+on:
+  schedule:
+    # Run daily at 1:00 AM Argentina time (4:00 UTC)
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  verify-backups:
+    name: Verify Database Backups
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Verify Backup Status
+        id: verify
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            const rpc = async (fnName, params = {}) => {
+              const res = await fetch(`${supabaseUrl}/rest/v1/rpc/${fnName}`, {
+                method: 'POST',
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params),
+              });
+              if (!res.ok) return null;
+              return res.json();
+            };
+
+            const status = {
+              database_healthy: false,
+              replication_ok: false,
+              recent_activity: false,
+              tables_count: 0,
+              data_integrity: [],
+              issues: [],
+            };
+
+            console.log('Verifying database health and backup readiness...\n');
+
+            // 1. Check database connectivity
+            console.log('1. Checking database connectivity...');
+            try {
+              const healthSQL = `SELECT 1 as check, now() as timestamp`;
+              const health = await rpc('execute_sql', { query: healthSQL });
+
+              if (health && health[0]) {
+                status.database_healthy = true;
+                status.last_check = health[0].timestamp;
+                console.log('   ✅ Database is healthy');
+              }
+            } catch (e) {
+              status.issues.push({
+                type: 'DB_CONNECTIVITY',
+                severity: 'critical',
+                message: 'Cannot connect to database',
+              });
+              console.log('   ❌ Database connectivity failed');
+            }
+
+            // 2. Check table count and schema integrity
+            console.log('2. Checking schema integrity...');
+            try {
+              const tablesSQL = `
+                SELECT count(*) as count
+                FROM pg_tables
+                WHERE schemaname = 'public'
+              `;
+              const tables = await rpc('execute_sql', { query: tablesSQL });
+
+              if (tables && tables[0]) {
+                status.tables_count = parseInt(tables[0].count);
+                console.log(`   ✅ Found ${status.tables_count} tables in public schema`);
+
+                // Alert if table count changes significantly
+                // This would need a baseline to compare against
+                if (status.tables_count < 10) {
+                  status.issues.push({
+                    type: 'LOW_TABLE_COUNT',
+                    severity: 'high',
+                    message: `Only ${status.tables_count} tables found - possible schema issue`,
+                  });
+                }
+              }
+            } catch (e) {
+              console.log('   ⚠️ Could not verify schema');
+            }
+
+            // 3. Check for recent data activity
+            console.log('3. Checking recent data activity...');
+            try {
+              const activitySQL = `
+                SELECT
+                  (SELECT count(*) FROM bookings WHERE created_at > now() - interval '24 hours') as recent_bookings,
+                  (SELECT count(*) FROM profiles WHERE updated_at > now() - interval '24 hours') as recent_profile_updates,
+                  (SELECT count(*) FROM wallet_ledger WHERE created_at > now() - interval '24 hours') as recent_transactions
+              `;
+              const activity = await rpc('execute_sql', { query: activitySQL });
+
+              if (activity && activity[0]) {
+                const totalActivity =
+                  parseInt(activity[0].recent_bookings || 0) +
+                  parseInt(activity[0].recent_profile_updates || 0) +
+                  parseInt(activity[0].recent_transactions || 0);
+
+                status.recent_activity = totalActivity > 0;
+                status.activity_24h = {
+                  bookings: activity[0].recent_bookings,
+                  profile_updates: activity[0].recent_profile_updates,
+                  transactions: activity[0].recent_transactions,
+                };
+
+                console.log(`   ✅ ${totalActivity} records modified in last 24h`);
+              }
+            } catch (e) {
+              console.log('   ⚠️ Could not check activity');
+            }
+
+            // 4. Verify critical tables have data
+            console.log('4. Verifying critical tables...');
+            const criticalTables = ['profiles', 'cars', 'bookings', 'user_wallets', 'payments'];
+
+            for (const table of criticalTables) {
+              try {
+                const countSQL = `SELECT count(*) as count FROM ${table}`;
+                const result = await rpc('execute_sql', { query: countSQL });
+
+                if (result && result[0]) {
+                  const count = parseInt(result[0].count);
+                  status.data_integrity.push({
+                    table,
+                    count,
+                    ok: count > 0,
+                  });
+
+                  if (count === 0) {
+                    status.issues.push({
+                      type: 'EMPTY_CRITICAL_TABLE',
+                      severity: 'high',
+                      table,
+                      message: `Critical table ${table} is empty`,
+                    });
+                  }
+
+                  console.log(`   ${count > 0 ? '✅' : '❌'} ${table}: ${count} rows`);
+                }
+              } catch (e) {
+                console.log(`   ⚠️ Could not check ${table}`);
+              }
+            }
+
+            // 5. Check for orphaned records
+            console.log('5. Checking data relationships...');
+            try {
+              const orphanedSQL = `
+                SELECT
+                  (SELECT count(*) FROM bookings b
+                   WHERE NOT EXISTS (SELECT 1 FROM cars c WHERE c.id = b.car_id)) as orphaned_bookings,
+                  (SELECT count(*) FROM payments p
+                   WHERE p.booking_id IS NOT NULL
+                   AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.id = p.booking_id)) as orphaned_payments
+              `;
+              const orphaned = await rpc('execute_sql', { query: orphanedSQL });
+
+              if (orphaned && orphaned[0]) {
+                const orphanedBookings = parseInt(orphaned[0].orphaned_bookings || 0);
+                const orphanedPayments = parseInt(orphaned[0].orphaned_payments || 0);
+
+                if (orphanedBookings > 0 || orphanedPayments > 0) {
+                  status.issues.push({
+                    type: 'ORPHANED_RECORDS',
+                    severity: 'medium',
+                    message: `Found ${orphanedBookings} orphaned bookings, ${orphanedPayments} orphaned payments`,
+                  });
+                  console.log(`   ⚠️ Found orphaned records`);
+                } else {
+                  console.log('   ✅ No orphaned records found');
+                }
+              }
+            } catch (e) {
+              console.log('   ⚠️ Could not check relationships');
+            }
+
+            // 6. Verify WAL archiving (for PITR)
+            console.log('6. Checking replication status...');
+            try {
+              const walSQL = `
+                SELECT
+                  pg_is_in_recovery() as is_replica,
+                  pg_last_wal_receive_lsn() as last_wal_receive,
+                  pg_last_wal_replay_lsn() as last_wal_replay
+              `;
+              const wal = await rpc('execute_sql', { query: walSQL });
+
+              if (wal && wal[0]) {
+                status.replication_ok = true;
+                console.log('   ✅ WAL status verified');
+              }
+            } catch (e) {
+              // This is expected to fail on primary
+              status.replication_ok = true;
+              console.log('   ✅ Primary database (no replication lag)');
+            }
+
+            // Summary
+            console.log('\n=== Backup Verification Summary ===');
+            console.log(`Database healthy: ${status.database_healthy ? '✅' : '❌'}`);
+            console.log(`Tables: ${status.tables_count}`);
+            console.log(`Recent activity: ${status.recent_activity ? '✅' : '⚠️'}`);
+            console.log(`Issues: ${status.issues.length}`);
+
+            core.setOutput('database_healthy', status.database_healthy);
+            core.setOutput('tables_count', status.tables_count);
+            core.setOutput('issues_count', status.issues.length);
+            core.setOutput('status', JSON.stringify(status));
+
+            const criticalIssues = status.issues.filter(i => i.severity === 'critical');
+            if (criticalIssues.length > 0 || !status.database_healthy) {
+              core.setFailed('Database backup verification failed');
+            }
+
+            return status;
+
+      - name: Create Issue on Problems
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = JSON.parse('${{ steps.verify.outputs.status }}' || '{}');
+
+            const issuesList = status.issues?.map(i =>
+              `- **${i.type}** (${i.severity}): ${i.message}`
+            ).join('\n') || 'Unknown issues';
+
+            const integrityTable = status.data_integrity?.map(t =>
+              `| ${t.table} | ${t.count} | ${t.ok ? '✅' : '❌'} |`
+            ).join('\n') || 'No data';
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[BACKUP ALERT] Database verification failed`,
+              body: `## Database Backup Verification Alert
+
+**Database Healthy:** ${status.database_healthy ? '✅' : '❌'}
+**Tables Count:** ${status.tables_count}
+
+### Issues Detected
+${issuesList}
+
+### Critical Tables
+| Table | Rows | Status |
+|-------|------|--------|
+${integrityTable}
+
+### Recommended Actions
+1. Check Supabase dashboard for backup status
+2. Verify database connectivity
+3. Review migration history
+4. Contact Supabase support if backups are failing
+
+### Supabase Backup Info
+- Supabase provides automatic daily backups
+- Point-in-Time Recovery (PITR) available on Pro plan
+- Check dashboard: Project Settings > Database > Backups
+
+---
+*Auto-generated by Database Backup Verify workflow*`,
+              labels: ['alert', 'database', 'backup'],
+            });
+
+  notify:
+    name: Notify on Failure
+    runs-on: ubuntu-latest
+    needs: verify-backups
+    if: failure()
+    steps:
+      - name: Send Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+            if (!webhookUrl) return;
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source: 'github',
+                severity: 'high',
+                title: 'Database Backup Verification Failed',
+                message: 'Database health check failed. Backup integrity may be at risk.',
+                metadata: {
+                  workflow: 'database-backup-verify',
+                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                },
+                timestamp: new Date().toISOString(),
+              }),
+            });

@@ -1,0 +1,320 @@
+name: Error Rate Monitoring
+
+on:
+  schedule:
+    # Run every hour
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check-errors:
+    name: Check Error Rates
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Analyze Error Rates
+        id: errors
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            const query = async (endpoint) => {
+              const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Prefer': 'count=exact',
+                }
+              });
+              const count = res.headers.get('content-range')?.split('/')[1] || '0';
+              const data = await res.json();
+              return { data, count: parseInt(count) };
+            };
+
+            const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+            const sixHoursAgo = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
+
+            const stats = {
+              payment_errors: 0,
+              booking_failures: 0,
+              auth_errors: 0,
+              api_errors: 0,
+              edge_function_errors: 0,
+              total_errors: 0,
+              error_rate: 0,
+              issues: [],
+            };
+
+            console.log('Analyzing error rates...\n');
+
+            // 1. Check payment failures
+            console.log('1. Checking payment errors...');
+            try {
+              const { count: failedPayments } = await query(
+                `payments?status=in.(rejected,failed,error)&created_at=gte.${oneHourAgo}&select=id`
+              );
+              const { count: totalPayments } = await query(
+                `payments?created_at=gte.${oneHourAgo}&select=id`
+              );
+
+              stats.payment_errors = failedPayments;
+
+              if (totalPayments > 0) {
+                const paymentErrorRate = (failedPayments / totalPayments) * 100;
+                console.log(`   Payment error rate: ${paymentErrorRate.toFixed(1)}% (${failedPayments}/${totalPayments})`);
+
+                if (paymentErrorRate > 20) {
+                  stats.issues.push({
+                    type: 'HIGH_PAYMENT_FAILURES',
+                    severity: 'critical',
+                    rate: paymentErrorRate.toFixed(1),
+                    count: failedPayments,
+                    message: `${paymentErrorRate.toFixed(1)}% payment failure rate`,
+                  });
+                } else if (paymentErrorRate > 10) {
+                  stats.issues.push({
+                    type: 'ELEVATED_PAYMENT_FAILURES',
+                    severity: 'high',
+                    rate: paymentErrorRate.toFixed(1),
+                    count: failedPayments,
+                    message: `${paymentErrorRate.toFixed(1)}% payment failure rate`,
+                  });
+                }
+              }
+            } catch (e) {
+              console.log('   ⚠️ Could not check payment errors');
+            }
+
+            // 2. Check booking failures
+            console.log('2. Checking booking failures...');
+            try {
+              const { count: failedBookings } = await query(
+                `bookings?status=eq.failed&created_at=gte.${oneHourAgo}&select=id`
+              );
+              const { count: cancelledBookings } = await query(
+                `bookings?status=eq.cancelled&cancelled_reason=like.*error*&updated_at=gte.${oneHourAgo}&select=id`
+              );
+
+              stats.booking_failures = failedBookings + cancelledBookings;
+              console.log(`   Booking failures: ${stats.booking_failures}`);
+
+              if (stats.booking_failures > 5) {
+                stats.issues.push({
+                  type: 'BOOKING_FAILURES',
+                  severity: 'high',
+                  count: stats.booking_failures,
+                  message: `${stats.booking_failures} booking failures in the last hour`,
+                });
+              }
+            } catch (e) {
+              console.log('   ⚠️ Could not check booking failures');
+            }
+
+            // 3. Check error logs table
+            console.log('3. Checking error logs...');
+            try {
+              const { count: errorLogs, data: recentErrors } = await query(
+                `error_logs?created_at=gte.${oneHourAgo}&select=id,error_type,message,source&order=created_at.desc&limit=20`
+              );
+
+              stats.api_errors = errorLogs;
+              console.log(`   Error logs: ${errorLogs}`);
+
+              if (errorLogs > 50) {
+                stats.issues.push({
+                  type: 'HIGH_ERROR_VOLUME',
+                  severity: 'high',
+                  count: errorLogs,
+                  message: `${errorLogs} errors logged in the last hour`,
+                });
+              }
+
+              // Group errors by type
+              const errorsByType = {};
+              for (const err of recentErrors) {
+                const type = err.error_type || 'unknown';
+                errorsByType[type] = (errorsByType[type] || 0) + 1;
+              }
+
+              stats.errors_by_type = errorsByType;
+            } catch (e) {
+              console.log('   ⚠️ Error logs table not found');
+            }
+
+            // 4. Check auth failures
+            console.log('4. Checking auth failures...');
+            try {
+              const { count: authFailures } = await query(
+                `auth_logs?success=eq.false&created_at=gte.${oneHourAgo}&select=id`
+              );
+
+              stats.auth_errors = authFailures;
+              console.log(`   Auth failures: ${authFailures}`);
+
+              if (authFailures > 20) {
+                stats.issues.push({
+                  type: 'HIGH_AUTH_FAILURES',
+                  severity: 'medium',
+                  count: authFailures,
+                  message: `${authFailures} auth failures in the last hour`,
+                });
+              }
+            } catch (e) {
+              console.log('   ⚠️ Auth logs not available');
+            }
+
+            // 5. Check edge function errors via Supabase logs
+            console.log('5. Checking edge function errors...');
+            try {
+              // Check for functions that returned error status
+              const { count: functionErrors } = await query(
+                `function_logs?status=gte.400&created_at=gte.${oneHourAgo}&select=id`
+              );
+
+              stats.edge_function_errors = functionErrors;
+              console.log(`   Edge function errors: ${functionErrors}`);
+
+              if (functionErrors > 10) {
+                stats.issues.push({
+                  type: 'EDGE_FUNCTION_ERRORS',
+                  severity: 'medium',
+                  count: functionErrors,
+                  message: `${functionErrors} edge function errors in the last hour`,
+                });
+              }
+            } catch (e) {
+              console.log('   ⚠️ Function logs not available');
+            }
+
+            // 6. Check wallet transaction failures
+            console.log('6. Checking wallet errors...');
+            try {
+              const { count: walletErrors } = await query(
+                `wallet_ledger?status=eq.failed&created_at=gte.${oneHourAgo}&select=id`
+              );
+
+              if (walletErrors > 0) {
+                stats.issues.push({
+                  type: 'WALLET_ERRORS',
+                  severity: 'high',
+                  count: walletErrors,
+                  message: `${walletErrors} wallet transaction failures`,
+                });
+              }
+              console.log(`   Wallet errors: ${walletErrors}`);
+            } catch (e) {
+              console.log('   ⚠️ Could not check wallet errors');
+            }
+
+            // Calculate totals
+            stats.total_errors = stats.payment_errors + stats.booking_failures +
+                                 stats.api_errors + stats.auth_errors +
+                                 stats.edge_function_errors;
+
+            // Summary
+            console.log('\n=== Error Rate Summary ===');
+            console.log(`Total errors (1h): ${stats.total_errors}`);
+            console.log(`Payment errors: ${stats.payment_errors}`);
+            console.log(`Booking failures: ${stats.booking_failures}`);
+            console.log(`API errors: ${stats.api_errors}`);
+            console.log(`Issues found: ${stats.issues.length}`);
+
+            core.setOutput('total_errors', stats.total_errors);
+            core.setOutput('payment_errors', stats.payment_errors);
+            core.setOutput('issues_count', stats.issues.length);
+            core.setOutput('stats', JSON.stringify(stats));
+
+            const criticalIssues = stats.issues.filter(i => i.severity === 'critical');
+            const highIssues = stats.issues.filter(i => i.severity === 'high');
+
+            if (criticalIssues.length > 0) {
+              core.setFailed(`Critical error rate detected: ${criticalIssues[0].message}`);
+            } else if (highIssues.length >= 2) {
+              core.setFailed(`Multiple high severity error patterns detected`);
+            }
+
+            return stats;
+
+      - name: Create Issue on High Errors
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const stats = JSON.parse('${{ steps.errors.outputs.stats }}' || '{}');
+
+            const issuesList = stats.issues?.map(i =>
+              `- **${i.type}** (${i.severity}): ${i.message}`
+            ).join('\n') || 'Unknown issues';
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[ERROR ALERT] High error rates detected`,
+              body: `## Error Rate Alert
+
+**Period:** Last 1 hour
+**Total Errors:** ${stats.total_errors}
+
+### Error Breakdown
+| Category | Count |
+|----------|-------|
+| Payment Errors | ${stats.payment_errors} |
+| Booking Failures | ${stats.booking_failures} |
+| API Errors | ${stats.api_errors} |
+| Auth Errors | ${stats.auth_errors} |
+| Edge Function Errors | ${stats.edge_function_errors} |
+
+### Issues Detected
+${issuesList}
+
+### Recommended Actions
+1. Check application logs for stack traces
+2. Review recent deployments
+3. Check third-party service status (MercadoPago, etc.)
+4. Monitor Sentry for detailed error reports
+
+---
+*Auto-generated by Error Rate Monitoring workflow*`,
+              labels: ['alert', 'errors', 'monitoring'],
+            });
+
+  notify:
+    name: Notify on High Errors
+    runs-on: ubuntu-latest
+    needs: check-errors
+    if: failure()
+    steps:
+      - name: Send Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+            if (!webhookUrl) return;
+
+            const totalErrors = '${{ needs.check-errors.outputs.total_errors }}';
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source: 'github',
+                severity: 'high',
+                title: 'High Error Rate Detected',
+                message: `${totalErrors} errors detected in the last hour. Investigation required.`,
+                metadata: {
+                  workflow: 'error-rate-monitoring',
+                  total_errors: totalErrors,
+                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                },
+                timestamp: new Date().toISOString(),
+              }),
+            });

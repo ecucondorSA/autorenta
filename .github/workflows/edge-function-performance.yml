@@ -1,0 +1,227 @@
+name: Edge Function Performance
+
+on:
+  schedule:
+    # Run every 2 hours
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-performance:
+    name: Check Edge Function Performance
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Benchmark Edge Functions
+        id: benchmark
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            const results = [];
+            const issues = [];
+
+            // Critical edge functions to benchmark
+            const functions = [
+              { name: 'dashboard-stats', method: 'GET', critical: true },
+              { name: 'sync-binance-rates', method: 'POST', critical: true },
+              { name: 'update-exchange-rate', method: 'POST', critical: false },
+              { name: 'mercadopago-webhook', method: 'OPTIONS', critical: true },
+              { name: 'verify-document', method: 'OPTIONS', critical: false },
+              { name: 'send-push-notification', method: 'OPTIONS', critical: false },
+            ];
+
+            const benchmark = async (fn) => {
+              const url = `${supabaseUrl}/functions/v1/${fn.name}`;
+              const times = [];
+
+              // Run 3 times and average
+              for (let i = 0; i < 3; i++) {
+                const start = Date.now();
+                try {
+                  const controller = new AbortController();
+                  const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+                  const res = await fetch(url, {
+                    method: fn.method,
+                    headers: {
+                      'Authorization': `Bearer ${supabaseKey}`,
+                      'Content-Type': 'application/json',
+                    },
+                    signal: controller.signal,
+                  });
+
+                  clearTimeout(timeoutId);
+                  const latency = Date.now() - start;
+                  times.push({ latency, status: res.status, ok: res.ok });
+
+                } catch (error) {
+                  times.push({
+                    latency: Date.now() - start,
+                    status: 0,
+                    ok: false,
+                    error: error.name === 'AbortError' ? 'Timeout' : error.message,
+                  });
+                }
+
+                // Small delay between requests
+                await new Promise(r => setTimeout(r, 200));
+              }
+
+              const avgLatency = times.reduce((sum, t) => sum + t.latency, 0) / times.length;
+              const maxLatency = Math.max(...times.map(t => t.latency));
+              const minLatency = Math.min(...times.map(t => t.latency));
+              const successRate = (times.filter(t => t.ok).length / times.length) * 100;
+
+              return {
+                name: fn.name,
+                critical: fn.critical,
+                avg_latency: Math.round(avgLatency),
+                max_latency: maxLatency,
+                min_latency: minLatency,
+                success_rate: successRate,
+                samples: times.length,
+              };
+            };
+
+            console.log('Benchmarking edge functions...\n');
+
+            for (const fn of functions) {
+              console.log(`Testing ${fn.name}...`);
+              const result = await benchmark(fn);
+              results.push(result);
+
+              const status = result.success_rate === 100 ? '✅' : '❌';
+              const latencyWarning = result.avg_latency > 3000 ? '⚠️ SLOW' : '';
+              console.log(`${status} ${result.name}: ${result.avg_latency}ms avg ${latencyWarning}`);
+
+              // Check for issues
+              if (result.success_rate < 100) {
+                issues.push({
+                  type: 'FUNCTION_FAILING',
+                  severity: fn.critical ? 'high' : 'medium',
+                  function: fn.name,
+                  success_rate: result.success_rate,
+                  message: `${fn.name} has ${result.success_rate}% success rate`,
+                });
+              }
+
+              if (result.avg_latency > 5000) {
+                issues.push({
+                  type: 'SLOW_FUNCTION',
+                  severity: fn.critical ? 'high' : 'low',
+                  function: fn.name,
+                  avg_latency: result.avg_latency,
+                  message: `${fn.name} averaging ${result.avg_latency}ms`,
+                });
+              }
+
+              if (result.max_latency > 10000) {
+                issues.push({
+                  type: 'LATENCY_SPIKE',
+                  severity: 'medium',
+                  function: fn.name,
+                  max_latency: result.max_latency,
+                  message: `${fn.name} had spike of ${result.max_latency}ms`,
+                });
+              }
+            }
+
+            // Summary
+            const avgOverall = results.reduce((sum, r) => sum + r.avg_latency, 0) / results.length;
+            const criticalFailing = issues.filter(i => i.severity === 'high' && i.type === 'FUNCTION_FAILING');
+
+            console.log('\n=== Summary ===');
+            console.log(`Functions tested: ${results.length}`);
+            console.log(`Average latency: ${Math.round(avgOverall)}ms`);
+            console.log(`Issues found: ${issues.length}`);
+
+            core.setOutput('results', JSON.stringify(results));
+            core.setOutput('avg_latency', Math.round(avgOverall));
+            core.setOutput('issues_count', issues.length);
+
+            if (criticalFailing.length > 0) {
+              core.setFailed(`${criticalFailing.length} critical functions are failing`);
+            } else if (avgOverall > 5000) {
+              core.setFailed(`Average latency too high: ${Math.round(avgOverall)}ms`);
+            }
+
+            return { results, issues };
+
+      - name: Create Issue on Problems
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const results = JSON.parse('${{ steps.benchmark.outputs.results }}' || '[]');
+            const avgLatency = '${{ steps.benchmark.outputs.avg_latency }}';
+
+            const slowFunctions = results
+              .filter(r => r.avg_latency > 3000)
+              .map(r => `- **${r.name}**: ${r.avg_latency}ms avg`)
+              .join('\n');
+
+            const failingFunctions = results
+              .filter(r => r.success_rate < 100)
+              .map(r => `- **${r.name}**: ${r.success_rate}% success`)
+              .join('\n');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[PERFORMANCE] Edge function issues detected`,
+              body: `## Edge Function Performance Alert
+
+**Average Latency:** ${avgLatency}ms
+
+### Slow Functions (>3s)
+${slowFunctions || 'None'}
+
+### Failing Functions
+${failingFunctions || 'None'}
+
+### Action Required
+1. Check Supabase Edge Function logs
+2. Review cold start times
+3. Consider function optimization
+4. Check for resource limits
+
+---
+*Auto-generated by Edge Function Performance workflow*`,
+              labels: ['alert', 'performance', 'edge-functions'],
+            });
+
+  notify:
+    name: Notify on Issues
+    runs-on: ubuntu-latest
+    needs: check-performance
+    if: failure()
+    steps:
+      - name: Send Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+            if (!webhookUrl) return;
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source: 'github',
+                severity: 'medium',
+                title: 'Edge Function Performance Issues',
+                message: 'Edge functions are experiencing performance degradation.',
+                metadata: {
+                  workflow: 'edge-function-performance',
+                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                },
+                timestamp: new Date().toISOString(),
+              }),
+            });
