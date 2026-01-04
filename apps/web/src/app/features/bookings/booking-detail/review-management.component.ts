@@ -249,6 +249,16 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
       const isRenter = this.booking.renter_id === currentUser.id;
       const isOwner = car.owner_id === currentUser.id;
 
+      // Debug: Log role detection for troubleshooting category display
+      console.log('[ReviewManagement] Role detection:', {
+        currentUserId: currentUser.id,
+        renterId: this.booking.renter_id,
+        ownerId: car.owner_id,
+        isRenter,
+        isOwner,
+        reviewType: isRenter ? 'renter_to_owner' : 'owner_to_renter',
+      });
+
       if (!isRenter && !isOwner) {
         console.warn('[ReviewManagement] User is neither renter nor owner');
         return;

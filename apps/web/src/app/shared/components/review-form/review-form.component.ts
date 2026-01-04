@@ -120,6 +120,13 @@ export class ReviewFormComponent implements OnInit {
       ? this.renterToOwnerCategories
       : this.ownerToRenterCategories;
 
+    // Debug: Log which categories are loaded
+    console.log('[ReviewForm] Categories loaded:', {
+      reviewType: this.reviewType,
+      categoriesCount: this.ratingCategories.length,
+      categoryKeys: this.ratingCategories.map(c => c.key),
+    });
+
     this.initForm();
   }
 
