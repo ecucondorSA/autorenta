@@ -1,0 +1,213 @@
+name: Pending Payouts Alert
+
+on:
+  schedule:
+    # Run every 4 hours
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-payouts:
+    name: Check Pending Payouts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check Pending Payouts
+        id: payouts
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            const query = async (endpoint) => {
+              const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                }
+              });
+              return res.json();
+            };
+
+            const alerts = [];
+            const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+            const seventyTwoHoursAgo = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString();
+
+            // 1. Check pending owner payouts (bookings completed but not paid out)
+            console.log('Checking pending owner payouts...');
+            const completedBookings = await query(
+              `bookings?status=eq.completed&completion_status=eq.both_confirmed&updated_at=lt.${fortyEightHoursAgo}&select=id,owner_id,total_amount_ars,updated_at`
+            );
+
+            // Check which ones don't have a corresponding payout
+            for (const booking of completedBookings) {
+              const payouts = await query(
+                `wallet_ledger?booking_id=eq.${booking.id}&kind=eq.rental_payment&select=id`
+              );
+
+              if (payouts.length === 0) {
+                const hoursAgo = Math.round((Date.now() - new Date(booking.updated_at).getTime()) / (1000 * 60 * 60));
+                alerts.push({
+                  type: 'PENDING_OWNER_PAYOUT',
+                  severity: hoursAgo > 72 ? 'critical' : 'high',
+                  booking_id: booking.id,
+                  owner_id: booking.owner_id,
+                  amount_ars: booking.total_amount_ars,
+                  hours_pending: hoursAgo,
+                  message: `Booking ${booking.id.substring(0, 8)}... completed ${hoursAgo}h ago, owner not paid`,
+                });
+              }
+            }
+
+            // 2. Check pending deposit refunds
+            console.log('Checking pending deposit refunds...');
+            const pendingRefunds = await query(
+              `bookings?status=eq.completed&deposit_status=eq.pending_refund&updated_at=lt.${fortyEightHoursAgo}&select=id,renter_id,deposit_amount_ars,updated_at`
+            );
+
+            for (const booking of pendingRefunds) {
+              const hoursAgo = Math.round((Date.now() - new Date(booking.updated_at).getTime()) / (1000 * 60 * 60));
+              alerts.push({
+                type: 'PENDING_DEPOSIT_REFUND',
+                severity: hoursAgo > 72 ? 'critical' : 'high',
+                booking_id: booking.id,
+                renter_id: booking.renter_id,
+                amount_ars: booking.deposit_amount_ars,
+                hours_pending: hoursAgo,
+                message: `Deposit refund pending for ${hoursAgo}h - Booking ${booking.id.substring(0, 8)}...`,
+              });
+            }
+
+            // 3. Check stuck money-out requests
+            console.log('Checking stuck money-out requests...');
+            const stuckMoneyOut = await query(
+              `money_out_requests?status=in.(pending,processing)&created_at=lt.${fortyEightHoursAgo}&select=id,user_id,amount_cents,created_at,status`
+            );
+
+            for (const request of stuckMoneyOut) {
+              const hoursAgo = Math.round((Date.now() - new Date(request.created_at).getTime()) / (1000 * 60 * 60));
+              alerts.push({
+                type: 'STUCK_MONEY_OUT',
+                severity: 'critical',
+                request_id: request.id,
+                user_id: request.user_id,
+                amount_ars: request.amount_cents / 100,
+                hours_pending: hoursAgo,
+                status: request.status,
+                message: `Money-out request stuck in ${request.status} for ${hoursAgo}h`,
+              });
+            }
+
+            // 4. Check pending wallet withdrawals
+            console.log('Checking pending withdrawals...');
+            const pendingWithdrawals = await query(
+              `wallet_withdrawals?status=eq.pending&created_at=lt.${fortyEightHoursAgo}&select=id,user_id,amount_cents,created_at`
+            );
+
+            for (const withdrawal of pendingWithdrawals) {
+              const hoursAgo = Math.round((Date.now() - new Date(withdrawal.created_at).getTime()) / (1000 * 60 * 60));
+              alerts.push({
+                type: 'PENDING_WITHDRAWAL',
+                severity: hoursAgo > 72 ? 'critical' : 'high',
+                withdrawal_id: withdrawal.id,
+                user_id: withdrawal.user_id,
+                amount_ars: withdrawal.amount_cents / 100,
+                hours_pending: hoursAgo,
+                message: `Withdrawal pending for ${hoursAgo}h - ARS ${(withdrawal.amount_cents / 100).toLocaleString()}`,
+              });
+            }
+
+            // Report
+            console.log(`\n=== Pending Payouts Check ===`);
+            console.log(`Total alerts: ${alerts.length}`);
+
+            const critical = alerts.filter(a => a.severity === 'critical');
+            const high = alerts.filter(a => a.severity === 'high');
+
+            console.log(`Critical: ${critical.length}, High: ${high.length}`);
+
+            if (alerts.length > 0) {
+              console.log('\nAlerts:', JSON.stringify(alerts, null, 2));
+            }
+
+            // Calculate total pending amount
+            const totalPending = alerts.reduce((sum, a) => sum + (a.amount_ars || 0), 0);
+
+            core.setOutput('total_alerts', alerts.length);
+            core.setOutput('critical_count', critical.length);
+            core.setOutput('total_pending_ars', totalPending);
+
+            if (critical.length > 0) {
+              core.setFailed(`${critical.length} critical payout issues require immediate attention`);
+            } else if (high.length > 5) {
+              core.setFailed(`${high.length} high priority payout issues detected`);
+            }
+
+            return { alerts, totalPending };
+
+      - name: Create Issue on Alert
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const totalAlerts = '${{ steps.payouts.outputs.total_alerts }}';
+            const criticalCount = '${{ steps.payouts.outputs.critical_count }}';
+            const totalPending = '${{ steps.payouts.outputs.total_pending_ars }}';
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[PAYOUT ALERT] ${totalAlerts} pending payouts require attention`,
+              body: `## Pending Payouts Alert
+
+**Total Alerts:** ${totalAlerts}
+**Critical:** ${criticalCount}
+**Total Pending Amount:** ARS ${parseFloat(totalPending || 0).toLocaleString()}
+
+### Action Required
+1. Review pending owner payouts in admin dashboard
+2. Check money-out request queue
+3. Process stuck withdrawals manually if needed
+4. Investigate any processing failures
+
+### Links
+- [Workflow Run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+
+---
+*Auto-generated by Pending Payouts Alert workflow*`,
+              labels: ['alert', 'payments', 'payouts'],
+            });
+
+  notify:
+    name: Notify on Critical
+    runs-on: ubuntu-latest
+    needs: check-payouts
+    if: failure()
+    steps:
+      - name: Send Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+            if (!webhookUrl) return;
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source: 'github',
+                severity: 'high',
+                title: 'Pending Payouts Alert',
+                message: 'There are pending payouts that require immediate attention.',
+                metadata: {
+                  workflow: 'pending-payouts-alert',
+                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                },
+                timestamp: new Date().toISOString(),
+              }),
+            });

@@ -1,0 +1,331 @@
+name: Slow Query Detection
+
+on:
+  schedule:
+    # Run daily at 5:00 AM Argentina time (8:00 UTC)
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  detect-slow-queries:
+    name: Detect Slow Queries
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Analyze Query Performance
+        id: queries
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            const rpc = async (fnName, params = {}) => {
+              const res = await fetch(`${supabaseUrl}/rest/v1/rpc/${fnName}`, {
+                method: 'POST',
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params),
+              });
+              if (!res.ok) {
+                const text = await res.text();
+                throw new Error(`RPC ${fnName} failed: ${res.status} - ${text}`);
+              }
+              return res.json();
+            };
+
+            const issues = [];
+
+            // 1. Check for slow queries using pg_stat_statements
+            console.log('Analyzing query statistics...');
+
+            try {
+              // Query to get slow queries (mean_time > 1000ms or total_time high)
+              const slowQueriesSQL = `
+                SELECT
+                  substring(query, 1, 200) as query_preview,
+                  calls,
+                  round(total_exec_time::numeric, 2) as total_time_ms,
+                  round(mean_exec_time::numeric, 2) as mean_time_ms,
+                  round(max_exec_time::numeric, 2) as max_time_ms,
+                  rows
+                FROM pg_stat_statements
+                WHERE mean_exec_time > 500
+                  AND calls > 10
+                ORDER BY mean_exec_time DESC
+                LIMIT 10
+              `;
+
+              // Use direct SQL execution if available
+              const slowQueries = await rpc('execute_sql', { query: slowQueriesSQL }).catch(() => []);
+
+              if (Array.isArray(slowQueries) && slowQueries.length > 0) {
+                for (const q of slowQueries) {
+                  if (q.mean_time_ms > 2000) {
+                    issues.push({
+                      type: 'VERY_SLOW_QUERY',
+                      severity: 'high',
+                      mean_time_ms: q.mean_time_ms,
+                      max_time_ms: q.max_time_ms,
+                      calls: q.calls,
+                      query: q.query_preview,
+                      message: `Query averaging ${q.mean_time_ms}ms (${q.calls} calls)`,
+                    });
+                  } else if (q.mean_time_ms > 500) {
+                    issues.push({
+                      type: 'SLOW_QUERY',
+                      severity: 'medium',
+                      mean_time_ms: q.mean_time_ms,
+                      calls: q.calls,
+                      query: q.query_preview,
+                      message: `Query averaging ${q.mean_time_ms}ms`,
+                    });
+                  }
+                }
+              }
+            } catch (e) {
+              console.log('pg_stat_statements not accessible, using alternative checks...');
+            }
+
+            // 2. Check table sizes and bloat
+            console.log('Checking table sizes...');
+            try {
+              const tableSizesSQL = `
+                SELECT
+                  schemaname,
+                  tablename,
+                  pg_size_pretty(pg_total_relation_size(schemaname || '.' || tablename)) as total_size,
+                  pg_total_relation_size(schemaname || '.' || tablename) as size_bytes
+                FROM pg_tables
+                WHERE schemaname = 'public'
+                ORDER BY pg_total_relation_size(schemaname || '.' || tablename) DESC
+                LIMIT 10
+              `;
+
+              const tableSizes = await rpc('execute_sql', { query: tableSizesSQL }).catch(() => []);
+
+              // Alert on very large tables (>1GB)
+              if (Array.isArray(tableSizes)) {
+                for (const table of tableSizes) {
+                  if (table.size_bytes > 1073741824) { // 1GB
+                    issues.push({
+                      type: 'LARGE_TABLE',
+                      severity: 'medium',
+                      table: table.tablename,
+                      size: table.total_size,
+                      message: `Table ${table.tablename} is ${table.total_size}`,
+                    });
+                  }
+                }
+              }
+            } catch (e) {
+              console.log('Table size check skipped');
+            }
+
+            // 3. Check for missing indexes on frequently queried columns
+            console.log('Checking for missing indexes...');
+            try {
+              const missingIndexesSQL = `
+                SELECT
+                  schemaname,
+                  tablename,
+                  seq_scan,
+                  seq_tup_read,
+                  idx_scan,
+                  idx_tup_fetch
+                FROM pg_stat_user_tables
+                WHERE seq_scan > 1000
+                  AND seq_tup_read > 100000
+                  AND (idx_scan IS NULL OR idx_scan < seq_scan * 0.1)
+                ORDER BY seq_tup_read DESC
+                LIMIT 5
+              `;
+
+              const missingIndexes = await rpc('execute_sql', { query: missingIndexesSQL }).catch(() => []);
+
+              if (Array.isArray(missingIndexes)) {
+                for (const table of missingIndexes) {
+                  issues.push({
+                    type: 'MISSING_INDEX',
+                    severity: 'medium',
+                    table: table.tablename,
+                    seq_scans: table.seq_scan,
+                    rows_scanned: table.seq_tup_read,
+                    message: `Table ${table.tablename} has ${table.seq_scan} sequential scans`,
+                  });
+                }
+              }
+            } catch (e) {
+              console.log('Missing index check skipped');
+            }
+
+            // 4. Check active connections
+            console.log('Checking connection count...');
+            try {
+              const connectionsSQL = `
+                SELECT
+                  count(*) as total_connections,
+                  count(*) FILTER (WHERE state = 'active') as active,
+                  count(*) FILTER (WHERE state = 'idle') as idle,
+                  count(*) FILTER (WHERE state = 'idle in transaction') as idle_in_transaction
+                FROM pg_stat_activity
+                WHERE datname = current_database()
+              `;
+
+              const connections = await rpc('execute_sql', { query: connectionsSQL }).catch(() => []);
+
+              if (Array.isArray(connections) && connections[0]) {
+                const conn = connections[0];
+                console.log(`Connections: ${conn.total_connections} total, ${conn.active} active`);
+
+                if (conn.total_connections > 80) {
+                  issues.push({
+                    type: 'HIGH_CONNECTION_COUNT',
+                    severity: 'high',
+                    total: conn.total_connections,
+                    active: conn.active,
+                    message: `${conn.total_connections} database connections (${conn.active} active)`,
+                  });
+                }
+
+                if (conn.idle_in_transaction > 5) {
+                  issues.push({
+                    type: 'IDLE_IN_TRANSACTION',
+                    severity: 'medium',
+                    count: conn.idle_in_transaction,
+                    message: `${conn.idle_in_transaction} connections idle in transaction`,
+                  });
+                }
+              }
+            } catch (e) {
+              console.log('Connection check skipped');
+            }
+
+            // 5. Check for long-running queries
+            console.log('Checking for long-running queries...');
+            try {
+              const longRunningSQL = `
+                SELECT
+                  pid,
+                  now() - query_start as duration,
+                  state,
+                  substring(query, 1, 100) as query_preview
+                FROM pg_stat_activity
+                WHERE state != 'idle'
+                  AND query_start < now() - interval '5 minutes'
+                  AND datname = current_database()
+              `;
+
+              const longRunning = await rpc('execute_sql', { query: longRunningSQL }).catch(() => []);
+
+              if (Array.isArray(longRunning)) {
+                for (const q of longRunning) {
+                  issues.push({
+                    type: 'LONG_RUNNING_QUERY',
+                    severity: 'high',
+                    pid: q.pid,
+                    duration: q.duration,
+                    query: q.query_preview,
+                    message: `Query running for ${q.duration}`,
+                  });
+                }
+              }
+            } catch (e) {
+              console.log('Long-running query check skipped');
+            }
+
+            // Report
+            console.log('\n=== Slow Query Detection ===');
+            console.log(`Issues found: ${issues.length}`);
+
+            const highIssues = issues.filter(i => i.severity === 'high');
+            const mediumIssues = issues.filter(i => i.severity === 'medium');
+
+            console.log(`High: ${highIssues.length}, Medium: ${mediumIssues.length}`);
+
+            if (issues.length > 0) {
+              console.log('\nIssues:', JSON.stringify(issues.slice(0, 10), null, 2));
+            }
+
+            core.setOutput('total_issues', issues.length);
+            core.setOutput('high_issues', highIssues.length);
+
+            if (highIssues.length > 0) {
+              core.setFailed(`${highIssues.length} high priority database performance issues detected`);
+            }
+
+            return { issues };
+
+      - name: Create Issue on Problems
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const totalIssues = '${{ steps.queries.outputs.total_issues }}';
+            const highIssues = '${{ steps.queries.outputs.high_issues }}';
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[DB PERFORMANCE] ${highIssues} slow query issues detected`,
+              body: `## Database Performance Alert
+
+**Total Issues:** ${totalIssues}
+**High Priority:** ${highIssues}
+
+### Potential Issues
+- Slow queries (>500ms average)
+- Missing indexes causing sequential scans
+- High connection count
+- Long-running transactions
+
+### Action Required
+1. Review pg_stat_statements for slow queries
+2. Add indexes for frequently queried columns
+3. Check for connection leaks
+4. Consider query optimization
+
+### Links
+- [Workflow Run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+- [Supabase Dashboard](https://supabase.com/dashboard)
+
+---
+*Auto-generated by Slow Query Detection workflow*`,
+              labels: ['alert', 'database', 'performance'],
+            });
+
+  notify:
+    name: Notify on Issues
+    runs-on: ubuntu-latest
+    needs: detect-slow-queries
+    if: failure()
+    steps:
+      - name: Send Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+            if (!webhookUrl) return;
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source: 'github',
+                severity: 'medium',
+                title: 'Database Performance Issues',
+                message: 'Slow queries or database performance issues have been detected.',
+                metadata: {
+                  workflow: 'slow-query-detection',
+                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                },
+                timestamp: new Date().toISOString(),
+              }),
+            });

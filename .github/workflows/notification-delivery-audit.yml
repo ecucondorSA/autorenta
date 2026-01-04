@@ -1,0 +1,270 @@
+name: Notification Delivery Audit
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  audit-notifications:
+    name: Audit Notification Delivery
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check Notification Delivery
+        id: notifications
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            const query = async (endpoint) => {
+              const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                }
+              });
+              if (!res.ok) return [];
+              return res.json();
+            };
+
+            const sixHoursAgo = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
+            const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+            const stats = {
+              email: { sent: 0, failed: 0, pending: 0 },
+              push: { sent: 0, failed: 0, pending: 0 },
+              whatsapp: { sent: 0, failed: 0, pending: 0 },
+            };
+            const issues = [];
+
+            // 1. Check email notifications
+            console.log('Checking email notifications...');
+            try {
+              const emails = await query(
+                `notification_logs?channel=eq.email&created_at=gte.${sixHoursAgo}&select=id,status,recipient,template,created_at,error`
+              );
+
+              for (const email of emails) {
+                if (email.status === 'sent' || email.status === 'delivered') {
+                  stats.email.sent++;
+                } else if (email.status === 'failed' || email.status === 'bounced') {
+                  stats.email.failed++;
+                  issues.push({
+                    type: 'EMAIL_FAILED',
+                    severity: 'medium',
+                    recipient: email.recipient?.substring(0, 3) + '***',
+                    template: email.template,
+                    error: email.error,
+                    created_at: email.created_at,
+                  });
+                } else {
+                  stats.email.pending++;
+                }
+              }
+            } catch (e) {
+              console.log('notification_logs table may not exist, checking alternative...');
+            }
+
+            // 2. Check for bookings without confirmation emails
+            console.log('Checking bookings without confirmation emails...');
+            const recentBookings = await query(
+              `bookings?status=eq.confirmed&created_at=gte.${twentyFourHoursAgo}&select=id,renter_id,created_at`
+            );
+
+            // Check if notifications were sent for these bookings
+            for (const booking of recentBookings.slice(0, 20)) { // Limit to prevent timeout
+              const notifications = await query(
+                `notification_logs?booking_id=eq.${booking.id}&template=eq.booking_confirmation&select=id`
+              );
+
+              if (notifications.length === 0) {
+                const hoursAgo = Math.round((Date.now() - new Date(booking.created_at).getTime()) / (1000 * 60 * 60));
+                if (hoursAgo > 1) { // Give 1 hour grace period
+                  issues.push({
+                    type: 'MISSING_BOOKING_CONFIRMATION',
+                    severity: 'high',
+                    booking_id: booking.id,
+                    hours_ago: hoursAgo,
+                    message: `Booking ${booking.id.substring(0, 8)}... confirmed ${hoursAgo}h ago without confirmation email`,
+                  });
+                }
+              }
+            }
+
+            // 3. Check push notification delivery
+            console.log('Checking push notifications...');
+            try {
+              const pushNotifications = await query(
+                `push_notifications?created_at=gte.${sixHoursAgo}&select=id,status,user_id,title,created_at,error`
+              );
+
+              for (const push of pushNotifications) {
+                if (push.status === 'delivered') {
+                  stats.push.sent++;
+                } else if (push.status === 'failed') {
+                  stats.push.failed++;
+                } else {
+                  stats.push.pending++;
+                }
+              }
+
+              // Alert if high failure rate
+              const pushTotal = stats.push.sent + stats.push.failed;
+              if (pushTotal > 10 && stats.push.failed / pushTotal > 0.2) {
+                issues.push({
+                  type: 'HIGH_PUSH_FAILURE_RATE',
+                  severity: 'high',
+                  failure_rate: ((stats.push.failed / pushTotal) * 100).toFixed(1) + '%',
+                  message: `Push notification failure rate is ${((stats.push.failed / pushTotal) * 100).toFixed(1)}%`,
+                });
+              }
+            } catch (e) {
+              console.log('push_notifications table check skipped');
+            }
+
+            // 4. Check WhatsApp OTP delivery
+            console.log('Checking WhatsApp OTPs...');
+            try {
+              const otps = await query(
+                `otp_verifications?channel=eq.whatsapp&created_at=gte.${sixHoursAgo}&select=id,status,phone,created_at`
+              );
+
+              const otpSent = otps.filter(o => o.status === 'sent' || o.status === 'verified').length;
+              const otpFailed = otps.filter(o => o.status === 'failed').length;
+              const otpExpired = otps.filter(o => o.status === 'expired').length;
+
+              stats.whatsapp.sent = otpSent;
+              stats.whatsapp.failed = otpFailed;
+
+              // High expiry rate might indicate delivery issues
+              if (otps.length > 5 && otpExpired / otps.length > 0.5) {
+                issues.push({
+                  type: 'HIGH_OTP_EXPIRY_RATE',
+                  severity: 'medium',
+                  expiry_rate: ((otpExpired / otps.length) * 100).toFixed(1) + '%',
+                  message: `${((otpExpired / otps.length) * 100).toFixed(1)}% of WhatsApp OTPs expired without verification`,
+                });
+              }
+            } catch (e) {
+              console.log('otp_verifications table check skipped');
+            }
+
+            // 5. Check for users with failed verifications due to notification issues
+            console.log('Checking verification notification issues...');
+            const stuckVerifications = await query(
+              `profiles?phone_verified=eq.false&phone=not.is.null&updated_at=lt.${twentyFourHoursAgo}&select=id,phone,updated_at&limit=10`
+            );
+
+            if (stuckVerifications.length > 5) {
+              issues.push({
+                type: 'STUCK_PHONE_VERIFICATIONS',
+                severity: 'medium',
+                count: stuckVerifications.length,
+                message: `${stuckVerifications.length} users have phone numbers but unverified for >24h`,
+              });
+            }
+
+            // Report
+            console.log('\n=== Notification Delivery Audit ===');
+            console.log('Stats:', JSON.stringify(stats, null, 2));
+            console.log(`Issues found: ${issues.length}`);
+
+            if (issues.length > 0) {
+              console.log('Issues:', JSON.stringify(issues, null, 2));
+            }
+
+            const criticalIssues = issues.filter(i => i.severity === 'critical');
+            const highIssues = issues.filter(i => i.severity === 'high');
+
+            core.setOutput('total_issues', issues.length);
+            core.setOutput('email_sent', stats.email.sent);
+            core.setOutput('email_failed', stats.email.failed);
+            core.setOutput('push_sent', stats.push.sent);
+            core.setOutput('push_failed', stats.push.failed);
+
+            // Calculate overall health
+            const totalSent = stats.email.sent + stats.push.sent + stats.whatsapp.sent;
+            const totalFailed = stats.email.failed + stats.push.failed + stats.whatsapp.failed;
+            const failureRate = totalSent > 0 ? (totalFailed / (totalSent + totalFailed)) * 100 : 0;
+
+            console.log(`\nOverall failure rate: ${failureRate.toFixed(1)}%`);
+
+            if (criticalIssues.length > 0 || highIssues.length > 3) {
+              core.setFailed(`Notification delivery issues detected: ${highIssues.length} high priority`);
+            } else if (failureRate > 10) {
+              core.setFailed(`High notification failure rate: ${failureRate.toFixed(1)}%`);
+            }
+
+            return { stats, issues };
+
+      - name: Create Issue on Problems
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const totalIssues = '${{ steps.notifications.outputs.total_issues }}';
+            const emailSent = '${{ steps.notifications.outputs.email_sent }}';
+            const emailFailed = '${{ steps.notifications.outputs.email_failed }}';
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[NOTIFICATION ALERT] Delivery issues detected`,
+              body: `## Notification Delivery Alert
+
+**Issues Detected:** ${totalIssues}
+
+### Email Stats (last 6h)
+- Sent: ${emailSent}
+- Failed: ${emailFailed}
+
+### Action Required
+1. Check email service provider status (Resend/SendGrid)
+2. Review failed notification logs
+3. Check WhatsApp API connectivity
+4. Verify push notification certificates
+
+### Links
+- [Workflow Run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+
+---
+*Auto-generated by Notification Delivery Audit workflow*`,
+              labels: ['alert', 'notifications'],
+            });
+
+  notify:
+    name: Notify on Issues
+    runs-on: ubuntu-latest
+    needs: audit-notifications
+    if: failure()
+    steps:
+      - name: Send Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+            if (!webhookUrl) return;
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source: 'github',
+                severity: 'medium',
+                title: 'Notification Delivery Issues',
+                message: 'The notification delivery audit detected issues with email, push, or WhatsApp notifications.',
+                metadata: {
+                  workflow: 'notification-delivery-audit',
+                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                },
+                timestamp: new Date().toISOString(),
+              }),
+            });
