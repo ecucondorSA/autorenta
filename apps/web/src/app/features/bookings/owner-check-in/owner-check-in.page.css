@@ -1,3 +1,10 @@
+/* Host element needs proper sizing for Ionic layout */
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
 canvas {
   touch-action: none;
   cursor: crosshair;

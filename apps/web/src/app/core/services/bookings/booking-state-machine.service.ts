@@ -1,0 +1,217 @@
+import { Injectable } from '@angular/core';
+import { Booking } from '@core/models';
+
+/**
+ * Estados canonicos del booking (Finite State Machine)
+ *
+ * Este enum representa la UNICA fuente de verdad para el estado del booking.
+ * Todos los componentes deben usar deriveState() para determinar el estado.
+ */
+export type BookingState =
+  | 'DRAFT'           // Solicitud creada, no pagada
+  | 'PENDING_PAYMENT' // Esperando pago/autorizacion
+  | 'CONFIRMED'       // Pagado, esperando check-in
+  | 'ACTIVE'          // En progreso (vehiculo entregado)
+  | 'RETURNED'        // Vehiculo devuelto, esperando confirmaciones
+  | 'PENDING_OWNER'   // Esperando confirmacion del propietario
+  | 'PENDING_RENTER'  // Esperando confirmacion del locatario
+  | 'FUNDS_RELEASED'  // Fondos liberados
+  | 'COMPLETED'       // Finalizado exitosamente
+  | 'CANCELLED'       // Cancelado
+  | 'DISPUTED';       // En disputa
+
+/**
+ * Transiciones validas entre estados
+ *
+ * Define las transiciones legales del sistema.
+ * Usar canTransition() para validar antes de cambiar estado.
+ */
+export const VALID_TRANSITIONS: Record<BookingState, BookingState[]> = {
+  DRAFT:           ['PENDING_PAYMENT', 'CANCELLED'],
+  PENDING_PAYMENT: ['CONFIRMED', 'CANCELLED'],
+  CONFIRMED:       ['ACTIVE', 'CANCELLED'],
+  ACTIVE:          ['RETURNED', 'DISPUTED'],
+  RETURNED:        ['PENDING_OWNER', 'PENDING_RENTER', 'DISPUTED'],
+  PENDING_OWNER:   ['FUNDS_RELEASED', 'DISPUTED'],
+  PENDING_RENTER:  ['FUNDS_RELEASED', 'DISPUTED'],
+  FUNDS_RELEASED:  ['COMPLETED'],
+  COMPLETED:       [],
+  CANCELLED:       [],
+  DISPUTED:        ['FUNDS_RELEASED', 'CANCELLED'],
+};
+
+/**
+ * Mapeo de estados FSM a labels en espanol para UI
+ */
+export const STATE_LABELS: Record<BookingState, string> = {
+  DRAFT:           'Borrador',
+  PENDING_PAYMENT: 'Pago Pendiente',
+  CONFIRMED:       'Confirmada',
+  ACTIVE:          'En Progreso',
+  RETURNED:        'Vehiculo Devuelto',
+  PENDING_OWNER:   'Esperando Propietario',
+  PENDING_RENTER:  'Esperando Locatario',
+  FUNDS_RELEASED:  'Fondos Liberados',
+  COMPLETED:       'Completada',
+  CANCELLED:       'Cancelada',
+  DISPUTED:        'En Disputa',
+};
+
+/**
+ * Acciones disponibles por estado y rol
+ */
+export const STATE_ACTIONS: Record<BookingState, { owner: string[]; renter: string[] }> = {
+  DRAFT:           { owner: ['approve', 'reject'], renter: ['cancel'] },
+  PENDING_PAYMENT: { owner: [], renter: ['pay', 'cancel'] },
+  CONFIRMED:       { owner: ['check_in'], renter: ['check_in'] },
+  ACTIVE:          { owner: ['mark_returned'], renter: ['mark_returned'] },
+  RETURNED:        { owner: ['confirm'], renter: ['confirm'] },
+  PENDING_OWNER:   { owner: ['confirm'], renter: [] },
+  PENDING_RENTER:  { owner: [], renter: ['confirm'] },
+  FUNDS_RELEASED:  { owner: [], renter: [] },
+  COMPLETED:       { owner: ['review'], renter: ['review'] },
+  CANCELLED:       { owner: [], renter: [] },
+  DISPUTED:        { owner: ['provide_evidence'], renter: ['provide_evidence'] },
+};
+
+/**
+ * BookingStateMachineService
+ *
+ * Servicio centralizado que actua como UNICA fuente de verdad para
+ * el estado del booking. Elimina la ambiguedad de tener multiples
+ * campos (status, completion_status, flags booleanos) que determinan
+ * el estado de forma dispersa.
+ *
+ * Uso:
+ * ```typescript
+ * const state = this.fsm.deriveState(booking);
+ * const actions = this.fsm.getAvailableActions(state, 'owner');
+ * const canConfirm = this.fsm.canTransition(state, 'FUNDS_RELEASED');
+ * ```
+ */
+@Injectable({ providedIn: 'root' })
+export class BookingStateMachineService {
+
+  /**
+   * Deriva el estado canonico desde los campos del booking.
+   * Esta es la UNICA funcion que debe usarse para determinar el estado.
+   *
+   * El orden de evaluacion importa - estados mas especificos primero.
+   */
+  deriveState(booking: Booking | null | undefined): BookingState {
+    if (!booking) return 'DRAFT';
+
+    // 1. Cancelled takes precedence
+    if (booking.status === 'cancelled') return 'CANCELLED';
+
+    // 2. Check for disputes
+    if (booking.dispute_open_at && booking.dispute_status === 'open') return 'DISPUTED';
+
+    // 3. Completed flow (check funds_released_at specifically)
+    if (booking.status === 'completed' && booking.funds_released_at) return 'COMPLETED';
+    if (booking.funds_released_at) return 'FUNDS_RELEASED';
+
+    // 4. Bilateral confirmation (after vehicle returned)
+    if (booking.returned_at) {
+      const ownerConfirmed = !!booking.owner_confirmed_delivery;
+      const renterConfirmed = !!booking.renter_confirmed_payment;
+
+      if (ownerConfirmed && renterConfirmed) return 'FUNDS_RELEASED';
+      if (ownerConfirmed && !renterConfirmed) return 'PENDING_RENTER';
+      if (!ownerConfirmed && renterConfirmed) return 'PENDING_OWNER';
+      return 'RETURNED';
+    }
+
+    // 5. Active rental
+    if (booking.status === 'in_progress') return 'ACTIVE';
+
+    // 6. Pre-rental states
+    if (booking.status === 'confirmed' || booking.paid_at) return 'CONFIRMED';
+    if (booking.payment_intent_id || booking.wallet_lock_id) return 'PENDING_PAYMENT';
+
+    // 7. Default
+    return 'DRAFT';
+  }
+
+  /**
+   * Valida si una transicion de estado es permitida
+   */
+  canTransition(from: BookingState, to: BookingState): boolean {
+    return VALID_TRANSITIONS[from]?.includes(to) ?? false;
+  }
+
+  /**
+   * Obtiene las acciones disponibles para un estado y rol
+   */
+  getAvailableActions(state: BookingState, role: 'owner' | 'renter'): string[] {
+    return STATE_ACTIONS[state]?.[role] ?? [];
+  }
+
+  /**
+   * Obtiene el label en espanol para un estado
+   */
+  getStateLabel(state: BookingState): string {
+    return STATE_LABELS[state] ?? state;
+  }
+
+  /**
+   * Verifica si el booking esta en un estado terminal (no mas transiciones)
+   */
+  isTerminalState(state: BookingState): boolean {
+    return VALID_TRANSITIONS[state]?.length === 0;
+  }
+
+  /**
+   * Verifica si el booking requiere accion del usuario especificado
+   */
+  requiresActionFrom(booking: Booking, role: 'owner' | 'renter'): boolean {
+    const state = this.deriveState(booking);
+    const actions = this.getAvailableActions(state, role);
+    return actions.length > 0;
+  }
+
+  /**
+   * Obtiene el mensaje de estado pendiente para mostrar al usuario
+   */
+  getPendingMessage(booking: Booking, role: 'owner' | 'renter'): string | null {
+    const state = this.deriveState(booking);
+
+    if (state === 'PENDING_OWNER' && role === 'owner') {
+      return 'Esperando tu confirmacion como propietario';
+    }
+    if (state === 'PENDING_RENTER' && role === 'renter') {
+      return 'Esperando tu confirmacion como locatario';
+    }
+    if (state === 'RETURNED') {
+      if (role === 'owner' && !booking.owner_confirmed_delivery) {
+        return 'Confirma la recepcion del vehiculo';
+      }
+      if (role === 'renter' && !booking.renter_confirmed_payment) {
+        return 'Confirma la liberacion del pago';
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Mapea el estado FSM al step index del timeline (0-8)
+   * Util para componentes que muestran progreso
+   */
+  getTimelineStepIndex(state: BookingState): number {
+    const stateToStep: Record<BookingState, number> = {
+      DRAFT:           0,
+      PENDING_PAYMENT: 1,
+      CONFIRMED:       2,
+      ACTIVE:          3,
+      RETURNED:        4,
+      PENDING_OWNER:   5,
+      PENDING_RENTER:  5,
+      FUNDS_RELEASED:  7,
+      COMPLETED:       8,
+      CANCELLED:       -1,
+      DISPUTED:        -1,
+    };
+    return stateToStep[state] ?? 0;
+  }
+}

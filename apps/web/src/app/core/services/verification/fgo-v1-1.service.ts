@@ -199,7 +199,8 @@ export class FgoV1_1Service {
   // ============================================================================
 
   /**
-   * Crea una inspección de vehículo
+   * Crea o actualiza una inspección de vehículo
+   * Uses upsert to handle re-submissions for the same booking+stage
    * @throws Error con mensaje descriptivo si el trigger bloquea la operación
    */
   createInspection(params: CreateInspectionParams): Observable<BookingInspection | null> {
@@ -215,7 +216,11 @@ export class FgoV1_1Service {
     };
 
     return from(
-      this.supabaseClient.from('booking_inspections').insert(inspectionData).select().single(),
+      this.supabaseClient
+        .from('booking_inspections')
+        .upsert(inspectionData, { onConflict: 'booking_id,stage' })
+        .select()
+        .single(),
     ).pipe(
       map((response) => {
         if (response['error']) {

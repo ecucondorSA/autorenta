@@ -18,6 +18,9 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import { corsHeaders } from '../_shared/cors.ts';
 import {
+import { createChildLogger } from '../_shared/logger.ts';
+
+const log = createChildLogger('PayPalWebhook');
   PayPalConfig,
   getPayPalAccessToken,
   verifyPayPalWebhookSignature,
@@ -65,7 +68,7 @@ serve(async (req: Request) => {
       // Reset window
       rateLimitStore.set(clientIP, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
     } else if (rateLimit.count >= RATE_LIMIT_MAX) {
-      console.warn(`Rate limit exceeded for IP: ${clientIP}`);
+      log.warn(`Rate limit exceeded for IP: ${clientIP}`);
       return new Response(
         JSON.stringify({ error: 'Rate limit exceeded. Please try again later.' }),
         {
@@ -85,14 +88,14 @@ serve(async (req: Request) => {
     const rawBody = await req.text();
     const event: PayPalWebhookEvent = JSON.parse(rawBody);
 
-    console.log(`PayPal webhook received: ${event.event_type} (ID: ${event.id})`);
+    log.info(`PayPal webhook received: ${event.event_type} (ID: ${event.id})`);
 
     // ========================================================================
     // 3. IDEMPOTENCY CHECK
     // ========================================================================
 
     if (processedEvents.has(event.id)) {
-      console.log(`Event ${event.id} already processed, skipping`);
+      log.info(`Event ${event.id} already processed, skipping`);
       return new Response(
         JSON.stringify({ status: 'already_processed', event_id: event.id }),
         {
@@ -139,7 +142,7 @@ serve(async (req: Request) => {
     );
 
     if (!isValid) {
-      console.error('Invalid PayPal webhook signature');
+      log.error('Invalid PayPal webhook signature');
       return new Response(
         JSON.stringify({ error: 'Invalid webhook signature' }),
         {
@@ -149,7 +152,7 @@ serve(async (req: Request) => {
       );
     }
 
-    console.log('Webhook signature verified ✓');
+    log.info('Webhook signature verified ✓');
 
     // ========================================================================
     // 5. INITIALIZE SUPABASE CLIENT
@@ -184,7 +187,7 @@ serve(async (req: Request) => {
         break;
 
       default:
-        console.log(`Unhandled event type: ${event.event_type}`);
+        log.info(`Unhandled event type: ${event.event_type}`);
         result = { status: 'ignored', event_type: event.event_type };
     }
 
@@ -198,7 +201,7 @@ serve(async (req: Request) => {
     }
 
     const duration = Date.now() - startTime;
-    console.log(`Webhook processed in ${duration}ms`);
+    log.info(`Webhook processed in ${duration}ms`);
 
     return new Response(
       JSON.stringify({
@@ -215,7 +218,7 @@ serve(async (req: Request) => {
     );
 
   } catch (error) {
-    console.error('PayPal webhook error:', error);
+    log.error('PayPal webhook error:', error);
 
     return new Response(
       JSON.stringify({
@@ -242,7 +245,7 @@ async function handleOrderApproved(supabase: any, event: PayPalWebhookEvent) {
   const orderId = event.resource.id;
   const orderStatus = event.resource.status;
 
-  console.log(`Order approved: ${orderId}, status: ${orderStatus}`);
+  log.info(`Order approved: ${orderId}, status: ${orderStatus}`);
 
   // Update payment intent status
   const { error: updateError } = await supabase
@@ -255,7 +258,7 @@ async function handleOrderApproved(supabase: any, event: PayPalWebhookEvent) {
     .eq('paypal_order_id', orderId);
 
   if (updateError) {
-    console.error('Failed to update payment intent:', updateError);
+    log.error('Failed to update payment intent:', updateError);
   }
 
   return { order_id: orderId, status: orderStatus };
@@ -275,7 +278,7 @@ async function handleCaptureCompleted(supabase: any, event: PayPalWebhookEvent) 
   // Get order ID from supplementary data
   const orderId = capture.supplementary_data?.related_ids?.order_id;
 
-  console.log(`Payment capture completed: ${captureId}, amount: ${captureAmount} ${currency}`);
+  log.info(`Payment capture completed: ${captureId}, amount: ${captureAmount} ${currency}`);
 
   // Find booking by order ID
   const { data: booking, error: bookingError } = await supabase
@@ -286,11 +289,11 @@ async function handleCaptureCompleted(supabase: any, event: PayPalWebhookEvent) 
     .single();
 
   if (bookingError || !booking) {
-    console.error('Booking not found for order:', orderId);
+    log.error('Booking not found for order:', orderId);
     throw new Error(`Booking not found for order ${orderId}`);
   }
 
-  console.log(`Booking found: ${booking.id}`);
+  log.info(`Booking found: ${booking.id}`);
 
   // Check if already processed (idempotency)
   const { data: existingPayment } = await supabase
@@ -301,7 +304,7 @@ async function handleCaptureCompleted(supabase: any, event: PayPalWebhookEvent) 
     .single();
 
   if (existingPayment) {
-    console.log('Payment already processed');
+    log.info('Payment already processed');
     return { booking_id: booking.id, capture_id: captureId, status: 'already_processed' };
   }
 
@@ -318,7 +321,7 @@ async function handleCaptureCompleted(supabase: any, event: PayPalWebhookEvent) 
     .eq('paypal_order_id', orderId);
 
   if (intentError) {
-    console.error('Failed to update payment intent:', intentError);
+    log.error('Failed to update payment intent:', intentError);
   }
 
   // Create payment record
@@ -339,7 +342,7 @@ async function handleCaptureCompleted(supabase: any, event: PayPalWebhookEvent) 
     });
 
   if (paymentError) {
-    console.error('Failed to create payment record:', paymentError);
+    log.error('Failed to create payment record:', paymentError);
   }
 
   // Update booking status
@@ -352,12 +355,12 @@ async function handleCaptureCompleted(supabase: any, event: PayPalWebhookEvent) 
     .eq('id', booking.id);
 
   if (bookingUpdateError) {
-    console.error('Failed to update booking status:', bookingUpdateError);
+    log.error('Failed to update booking status:', bookingUpdateError);
   }
 
   // Process split payment if applicable
   if (booking.provider_collector_id && !booking.payment_split_completed) {
-    console.log('Processing split payment...');
+    log.info('Processing split payment...');
 
     // Get owner details
     const { data: car } = await supabase
@@ -388,7 +391,7 @@ async function handleCaptureCompleted(supabase: any, event: PayPalWebhookEvent) 
       });
 
       if (splitError) {
-        console.error('Failed to register split payment:', splitError);
+        log.error('Failed to register split payment:', splitError);
 
         // Log issue for manual review
         await supabase.from('payment_issues').insert({
@@ -404,7 +407,7 @@ async function handleCaptureCompleted(supabase: any, event: PayPalWebhookEvent) 
           },
         });
       } else {
-        console.log('Split payment registered successfully');
+        log.info('Split payment registered successfully');
       }
     }
   }
@@ -427,7 +430,7 @@ async function handleCaptureFailed(supabase: any, event: PayPalWebhookEvent) {
   const captureId = capture.id;
   const captureStatus = capture.status;
 
-  console.log(`Payment capture failed: ${captureId}, status: ${captureStatus}`);
+  log.info(`Payment capture failed: ${captureId}, status: ${captureStatus}`);
 
   // Update payment intent
   const { error: intentError } = await supabase
@@ -440,7 +443,7 @@ async function handleCaptureFailed(supabase: any, event: PayPalWebhookEvent) {
     .eq('paypal_capture_id', captureId);
 
   if (intentError) {
-    console.error('Failed to update payment intent:', intentError);
+    log.error('Failed to update payment intent:', intentError);
   }
 
   return { capture_id: captureId, status: captureStatus };
@@ -455,7 +458,7 @@ async function handleMerchantOnboarding(supabase: any, event: PayPalWebhookEvent
   const merchantId = resource.merchant_id;
   const trackingId = resource.tracking_id;
 
-  console.log(`Merchant onboarding completed: ${merchantId}, tracking: ${trackingId}`);
+  log.info(`Merchant onboarding completed: ${merchantId}, tracking: ${trackingId}`);
 
   // Update onboarding record
   const { data: onboarding, error: onboardingError } = await supabase
@@ -471,7 +474,7 @@ async function handleMerchantOnboarding(supabase: any, event: PayPalWebhookEvent
     .single();
 
   if (onboardingError || !onboarding) {
-    console.error('Failed to update onboarding record:', onboardingError);
+    log.error('Failed to update onboarding record:', onboardingError);
     return { merchant_id: merchantId, status: 'error' };
   }
 
@@ -487,10 +490,10 @@ async function handleMerchantOnboarding(supabase: any, event: PayPalWebhookEvent
     .eq('id', onboarding.user_id);
 
   if (profileError) {
-    console.error('Failed to update profile:', profileError);
+    log.error('Failed to update profile:', profileError);
   }
 
-  console.log(`Profile ${onboarding.user_id} updated with PayPal merchant ID`);
+  log.info(`Profile ${onboarding.user_id} updated with PayPal merchant ID`);
 
   return { merchant_id: merchantId, user_id: onboarding.user_id, status: 'completed' };
 }

@@ -8,7 +8,6 @@ import {Component,
   inject,
   signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import {
   BookingInspection,
@@ -51,7 +50,7 @@ interface WindowWithInspectionCallback extends Window {
   selector: 'app-inspection-uploader',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, IconComponent],
+  imports: [IconComponent],
   templateUrl: './inspection-uploader.component.html',
   styleUrl: './inspection-uploader.component.css',
 })
@@ -70,16 +69,20 @@ export class InspectionUploaderComponent implements OnInit {
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
 
-  // Datos de la inspección
-  odometer = 0;
-  fuelLevel = 100;
+  // Datos de la inspección (signals para que isValid computed se actualice)
+  readonly odometer = signal(0);
+  readonly fuelLevel = signal(100);
 
   // Computed properties
   readonly isValid = computed(() => {
+    // Photos are optional - users assume risk for disputes if no photos
     return (
-      this.photos().length >= 8 && this.odometer > 0 && this.fuelLevel >= 0 && this.fuelLevel <= 100
+      this.odometer() > 0 && this.fuelLevel() >= 0 && this.fuelLevel() <= 100
     );
   });
+
+  readonly hasMinPhotos = computed(() => this.photos().length >= 8);
+  readonly showPhotoWarning = computed(() => !this.hasMinPhotos() && this.isValid());
 
   readonly stageLabel = computed(() => {
     if (this.stage === 'check_in') return 'Check-in';
@@ -233,8 +236,8 @@ export class InspectionUploaderComponent implements OnInit {
           stage: this.stage,
           inspectorId: user.id,
           photos: this.photos(),
-          odometer: this.odometer,
-          fuelLevel: this.fuelLevel,
+          odometer: this.odometer(),
+          fuelLevel: this.fuelLevel(),
         }),
       );
 
@@ -272,7 +275,7 @@ export class InspectionUploaderComponent implements OnInit {
    * Cancela y cierra el modal
    */
   cancel(): void {
-    if (this.photos().length > 0 || this.odometer > 0) {
+    if (this.photos().length > 0 || this.odometer() > 0) {
       if (!confirm('¿Descartar inspección? Se perderán los datos ingresados.')) {
         return;
       }

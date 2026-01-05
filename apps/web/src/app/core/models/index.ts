@@ -612,14 +612,15 @@ export interface Booking {
   deposit_lock_expires_at?: string | null;
 
   // Bilateral confirmation system
+  // IMPORTANTE: Estos nombres deben coincidir EXACTAMENTE con las columnas de BD
   returned_at?: string | null;
   owner_confirmed_delivery?: boolean | null;
-  owner_confirmation_at?: string | null;
-  owner_reported_damages?: boolean | null;
-  owner_damage_amount?: number | null;
-  owner_damage_description?: string | null;
+  owner_confirmed_at?: string | null;           // Timestamp confirmacion owner (BD: owner_confirmed_at)
+  has_damages?: boolean | null;                 // Si reporto danos (BD: has_damages)
+  damage_amount_cents?: number | null;          // Monto danos en CENTAVOS (BD: damage_amount_cents)
+  damage_description?: string | null;           // Descripcion danos (BD: damage_description)
   renter_confirmed_payment?: boolean | null;
-  renter_confirmation_at?: string | null;
+  renter_confirmed_at?: string | null;          // Timestamp confirmacion renter (BD: renter_confirmed_at)
   funds_released_at?: string | null;
   completion_status?: BookingCompletionStatus | null;
 
@@ -662,6 +663,8 @@ export interface Booking {
   car_province?: string;
   car_image?: string;
   main_photo_url?: string;
+  car_location_lat?: number | null;
+  car_location_lng?: number | null;
   payment_status?: PaymentStatus;
   payment_provider?: PaymentProvider;
 

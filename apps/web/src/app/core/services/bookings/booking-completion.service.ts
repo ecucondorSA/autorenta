@@ -232,11 +232,12 @@ export class BookingCompletionService {
     const description = `Cargos al cierre: ${descriptionParts.join(', ')}`;
 
     // Actualizar la reserva para reflejar los cargos pendientes de disputa
+    // CORRECTO: usar nombres de columnas reales de BD
     await onUpdateBooking(booking.id, {
       status: 'pending_dispute_resolution', // Nuevo estado
       dispute_open_at: new Date().toISOString(),
-      owner_damage_amount: inspectionData.damageAmountCents,
-      owner_damage_description: inspectionData.damageDescription,
+      damage_amount_cents: inspectionData.damageAmountCents,  // BD: damage_amount_cents
+      damage_description: inspectionData.damageDescription,   // BD: damage_description
       // Almacenar otros cargos en metadata si no hay columnas dedicadas
       metadata: {
         ...(booking.metadata || {}),

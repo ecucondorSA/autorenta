@@ -24,6 +24,9 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { requireEmailVerification } from '../_shared/auth-utils.ts';
+import { createChildLogger } from '../_shared/logger.ts';
+
+const log = createChildLogger('CreateBookingPreference');
 
 // Helper para evitar usar tokens sandbox en flujos productivos
 const ensureProductionToken = (rawToken: string, context: string) => {
@@ -132,7 +135,7 @@ serve(async (req) => {
     // P0-013 FIX: Verificar que el email está confirmado
     const verificationResult = await requireEmailVerification(supabase);
     if (!verificationResult.isVerified) {
-      console.warn('Email verification required for booking payment', {
+      log.warn('Email verification required for booking payment', {
         error: verificationResult.error,
         bookingId: booking_id,
       });
@@ -181,7 +184,7 @@ serve(async (req) => {
 
     // Validar ownership (debe ser el renter)
     if (booking.renter_id !== authenticated_user_id) {
-      console.error('SECURITY: User attempting to pay for booking from another user', {
+      log.error('SECURITY: User attempting to pay for booking from another user', {
         authenticated_user: authenticated_user_id,
         booking_renter: booking.renter_id,
         booking_id,
@@ -241,7 +244,7 @@ serve(async (req) => {
       platformRate = exchangeRate?.rate || 1015.0;
       amountUSD = Math.round((amountARS / platformRate) * 100) / 100;
 
-      console.log(`💵 Booking ya en ARS: ${amountARS} ARS = ~${amountUSD} USD (rate: ${platformRate})`);
+      log.info(`💵 Booking ya en ARS: ${amountARS} ARS = ~${amountUSD} USD (rate: ${platformRate})`);
     } else {
       // Booking en USD, convertir a ARS
       amountUSD = booking.total_amount;
@@ -258,12 +261,12 @@ serve(async (req) => {
       platformRate = exchangeRate?.rate || 1015.0;
 
       if (rateError) {
-        console.warn('⚠️ No exchange rate found, using fallback:', platformRate);
+        log.warn('⚠️ No exchange rate found, using fallback:', platformRate);
       }
 
       amountARS = Math.round(amountUSD * platformRate * 100) / 100;
 
-      console.log(`💱 Conversión: ${amountUSD} USD → ${amountARS} ARS (rate: ${platformRate})`);
+      log.info(`💱 Conversión: ${amountUSD} USD → ${amountARS} ARS (rate: ${platformRate})`);
     }
 
     // Validar monto
@@ -284,7 +287,7 @@ serve(async (req) => {
     // IDEMPOTENCIA: Verificar si ya existe preference
     // ========================================
     if (booking.mercadopago_preference_id) {
-      console.log('Preference already exists for booking, checking if still valid...');
+      log.info('Preference already exists for booking, checking if still valid...');
 
       // Intentar obtener la preference existente de MercadoPago
       try {
@@ -303,7 +306,7 @@ serve(async (req) => {
 
           // Si la preference existe y no expiró, retornarla
           if (existingPref.init_point) {
-            console.log('Returning existing valid preference');
+            log.info('Returning existing valid preference');
             return new Response(
               JSON.stringify({
                 success: true,
@@ -320,7 +323,7 @@ serve(async (req) => {
           }
         }
       } catch (err) {
-        console.warn('Could not fetch existing preference, creating new one:', err);
+        log.warn('Could not fetch existing preference, creating new one:', err);
       }
     }
 
@@ -399,12 +402,12 @@ serve(async (req) => {
             .update({ mercadopago_customer_id: customerId })
             .eq('id', booking.renter_id);
 
-          console.log('✅ Customer creado en MercadoPago:', customerId);
+          log.info('✅ Customer creado en MercadoPago:', customerId);
         } else {
-          console.warn('⚠️ No se pudo crear customer, continuando sin customer_id');
+          log.warn('⚠️ No se pudo crear customer, continuando sin customer_id');
         }
       } catch (error) {
-        console.warn('⚠️ Error creando customer, continuando sin customer_id:', error);
+        log.warn('⚠️ Error creando customer, continuando sin customer_id:', error);
       }
     }
 
@@ -447,7 +450,7 @@ serve(async (req) => {
     if (shouldSplit) {
       // Validar que marketplace esté configurado
       if (!MP_MARKETPLACE_ID) {
-        console.error('❌ MERCADOPAGO_MARKETPLACE_ID not configured - cannot create split payment');
+        log.error('❌ MERCADOPAGO_MARKETPLACE_ID not configured - cannot create split payment');
         return new Response(
           JSON.stringify({
             error: 'MARKETPLACE_NOT_CONFIGURED',
@@ -475,7 +478,7 @@ serve(async (req) => {
         ownerAmount = splitData.owner_amount_cents / 100;
         platformFee = splitData.platform_fee_cents / 100;
 
-        console.log(`💰 Split Payment ENABLED:
+        log.info(`💰 Split Payment ENABLED:
           Mode: ACCOUNT_MONEY only (no cards)
           Total: ${amountARS} ARS
           Owner (85%): ${ownerAmount} ARS
@@ -485,11 +488,11 @@ serve(async (req) => {
         `);
       }
     } else if (use_split_payment && !ENABLE_SPLIT_PAYMENTS) {
-      console.warn('⚠️ User requested split payment but ENABLE_SPLIT_PAYMENTS is false');
+      log.warn('⚠️ User requested split payment but ENABLE_SPLIT_PAYMENTS is false');
     } else if (!use_split_payment) {
-      console.log('💳 Traditional Payment: All payment methods accepted (cards, cash, etc.)');
+      log.info('💳 Traditional Payment: All payment methods accepted (cards, cash, etc.)');
     } else {
-      console.warn('⚠️ Blocking preference: owner not marketplace approved or missing collector_id', {
+      log.warn('⚠️ Blocking preference: owner not marketplace approved or missing collector_id', {
         owner_id: owner?.id ?? booking.car?.owner_id,
         marketplace_approved: owner?.marketplace_approved ?? null,
         collector_id: owner?.mercadopago_collector_id ?? null,
@@ -519,7 +522,7 @@ serve(async (req) => {
     // CREAR PREFERENCE EN MERCADOPAGO
     // ========================================
 
-    console.log('Creating booking preference with MercadoPago REST API...');
+    log.info('Creating booking preference with MercadoPago REST API...');
 
     const carTitle = booking.car?.title || 'Vehículo';
     const startDate = new Date(booking.start_date).toLocaleDateString('es-AR');
@@ -640,7 +643,7 @@ serve(async (req) => {
       },
     };
 
-    console.log('Preference data:', JSON.stringify(preferenceData, null, 2));
+    log.info('Preference data:', JSON.stringify(preferenceData, null, 2));
 
     // Llamar a MercadoPago REST API
     const mpResponse = await fetch('https://api.mercadopago.com/checkout/preferences', {
@@ -654,13 +657,13 @@ serve(async (req) => {
 
     if (!mpResponse.ok) {
       const errorData = await mpResponse.json();
-      console.error('MercadoPago API Error:', errorData);
+      log.error('MercadoPago API Error:', errorData);
       throw new Error(`MercadoPago API error: ${JSON.stringify(errorData)}`);
     }
 
     const mpData = await mpResponse.json();
 
-    console.log('MercadoPago API Response:', JSON.stringify(mpData, null, 2));
+    log.info('MercadoPago API Response:', JSON.stringify(mpData, null, 2));
 
     // Actualizar booking con preference_id
     await supabase
@@ -688,7 +691,7 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error('Error creating MercadoPago booking preference:', error);
+    log.error('Error creating MercadoPago booking preference:', error);
 
     return new Response(
       JSON.stringify({

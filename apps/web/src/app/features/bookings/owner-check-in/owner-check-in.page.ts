@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component, OnDestroy, OnInit, inject, signal
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingNotificationsService } from '@core/services/bookings/booking-notifications.service';
@@ -29,7 +29,7 @@ import { LiveTrackingMapComponent } from '../../../shared/components/live-tracki
   selector: 'app-owner-check-in',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule, LiveTrackingMapComponent, InspectionUploaderComponent],
+  imports: [CommonModule, RouterLink, IonicModule, LiveTrackingMapComponent, InspectionUploaderComponent],
   templateUrl: './owner-check-in.page.html',
   styleUrl: './owner-check-in.page.css',
 })

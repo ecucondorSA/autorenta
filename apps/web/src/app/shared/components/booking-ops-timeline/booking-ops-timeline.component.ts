@@ -7,8 +7,8 @@ export interface BookingOpsData {
   payment_date?: string | null;
   pickup_confirmed_at?: string | null;
   dropoff_confirmed_at?: string | null;
-  owner_confirmation_at?: string | null;
-  renter_confirmation_at?: string | null;
+  owner_confirmed_at?: string | null;   // CORRECTO: nombre de columna BD
+  renter_confirmed_at?: string | null;  // CORRECTO: nombre de columna BD
   returned_at?: string | null;
   funds_released_at?: string | null;
   cancellation_reason?: string | null;
@@ -84,8 +84,8 @@ export class BookingOpsTimelineComponent {
       { label: 'Pago', date: this.data.payment_date, note: this.data.payment_note },
       { label: 'Confirmación pickup', date: this.data.pickup_confirmed_at },
       { label: 'Confirmación dropoff', date: this.data.dropoff_confirmed_at },
-      { label: 'Owner confirmó', date: this.data.owner_confirmation_at },
-      { label: 'Renter confirmó pago', date: this.data.renter_confirmation_at },
+      { label: 'Owner confirmó', date: this.data.owner_confirmed_at },    // CORRECTO
+      { label: 'Renter confirmó pago', date: this.data.renter_confirmed_at },  // CORRECTO
       { label: 'Devuelto', date: this.data.returned_at },
       { label: 'Fondos liberados', date: this.data.funds_released_at },
     ];

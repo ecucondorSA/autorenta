@@ -109,7 +109,7 @@ export class OwnerDamageReportPage implements OnInit {
       }
 
       // Validar que no haya reportado daños ya
-      if (booking.owner_reported_damages) {
+      if (booking.has_damages) {  // CORRECTO: usa nombre de columna BD real
         this.toastService.error('Error', 'Ya has reportado daños para esta reserva');
         this.router.navigate(['/bookings/owner', bookingId]);
         return;
@@ -222,10 +222,11 @@ export class OwnerDamageReportPage implements OnInit {
       // 2. Update booking with damage information
       const damageAmountCents = Math.round(this.damageAmount() * 100);
 
+      // CORRECTO: usar nombres de columnas reales de BD
       await this.bookingsService.updateBooking(booking.id, {
-        owner_reported_damages: true,
-        owner_damage_amount: damageAmountCents,
-        owner_damage_description: this.damageDescription().trim(),
+        has_damages: true,                              // BD: has_damages
+        damage_amount_cents: damageAmountCents,         // BD: damage_amount_cents
+        damage_description: this.damageDescription().trim(),  // BD: damage_description
       });
 
       // 3. Store photo references in database (create a damage_reports table entry or store in metadata)

@@ -965,7 +965,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     // Owner can report damage after vehicle return (completed status or returned_at is set)
     const canReport =
       (booking.status === 'completed' || booking.returned_at !== null) &&
-      !booking.owner_reported_damages;
+      !booking.has_damages;  // CORRECTO: usa nombre de columna BD real
     return canReport;
   });
 

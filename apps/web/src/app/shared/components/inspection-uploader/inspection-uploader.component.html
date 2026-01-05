@@ -50,9 +50,9 @@
           {{ photoCount() }} fotos subidas</span
         >
       } @else {
-        <span class="warning">
+        <span class="text-amber-600">
           <app-icon name="alert-circle" [size]="16" cssClass="inline-block mr-1" />
-          {{ photoCount() }} / 8 fotos (faltan {{ missingPhotos() }})
+          {{ photoCount() }} / 8 fotos (opcional)
         </span>
       }
     </div>
@@ -82,13 +82,14 @@
       <input
         id="odometer"
         type="number"
-        [(ngModel)]="odometer"
+        [value]="odometer()"
+        (input)="odometer.set(+$any($event.target).value)"
         min="0"
         step="1"
         placeholder="Ej: 45000"
         [disabled]="saving()"
       />
-      @if (odometer <= 0) {
+      @if (odometer() <= 0) {
         <span class="field-hint error"
           ><app-icon name="alert-circle" [size]="14" cssClass="inline-block mr-1" /> Ingrese el
           kilometraje</span
@@ -103,19 +104,36 @@
         <input
           id="fuel-level"
           type="range"
-          [(ngModel)]="fuelLevel"
+          [value]="fuelLevel()"
+          (input)="fuelLevel.set(+$any($event.target).value)"
           min="0"
           max="100"
           step="5"
           [disabled]="saving()"
         />
-        <span class="fuel-value">{{ fuelLevel }}%</span>
+        <span class="fuel-value">{{ fuelLevel() }}%</span>
       </div>
       <div class="fuel-indicator">
-        <div class="fuel-bar" [style.width.%]="fuelLevel"></div>
+        <div class="fuel-bar" [style.width.%]="fuelLevel()"></div>
       </div>
     </div>
   </div>
+
+  <!-- Photo warning -->
+  @if (showPhotoWarning()) {
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+      <div class="flex items-start gap-3">
+        <app-icon name="alert-triangle" [size]="20" cssClass="text-amber-600 flex-shrink-0 mt-0.5" />
+        <div>
+          <p class="font-medium text-amber-800">Advertencia: Sin fotos documentadas</p>
+          <p class="text-sm text-amber-700 mt-1">
+            Continuar sin fotos significa asumir el riesgo en caso de disputas.
+            Recomendamos subir al menos 8 fotos del vehículo para proteger tus intereses.
+          </p>
+        </div>
+      </div>
+    </div>
+  }
 
   <!-- Actions -->
   <div class="actions">
@@ -136,19 +154,7 @@
     <div class="validation-hints">
       <h4>Para continuar necesitás:</h4>
       <ul>
-        @if (photoCount() < 8) {
-          <li>
-            <app-icon name="close-circle" [size]="14" cssClass="inline-block mr-1" /> Subir al menos
-            8 fotos (tenés {{ photoCount() }})
-          </li>
-        } @else {
-          <li>
-            <app-icon name="check-circle" [size]="14" cssClass="inline-block mr-1" /> Fotos
-            completas
-          </li>
-        }
-
-        @if (odometer <= 0) {
+        @if (odometer() <= 0) {
           <li>
             <app-icon name="close-circle" [size]="14" cssClass="inline-block mr-1" /> Ingresar el
             kilometraje
@@ -162,7 +168,12 @@
 
         <li>
           <app-icon name="check-circle" [size]="14" cssClass="inline-block mr-1" /> Nivel de
-          combustible: {{ fuelLevel }}%
+          combustible: {{ fuelLevel() }}%
+        </li>
+
+        <li class="text-amber-600">
+          <app-icon name="alert-circle" [size]="14" cssClass="inline-block mr-1" /> Fotos:
+          {{ photoCount() }} (opcional, recomendado 8+)
         </li>
       </ul>
     </div>

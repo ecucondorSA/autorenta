@@ -6,6 +6,9 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
+import { createChildLogger } from '../_shared/logger.ts';
+
+const log = createChildLogger('OAuthCallback');
 
 
 interface OAuthState {
@@ -54,7 +57,7 @@ serve(async (req) => {
   }
 
   try {
-    console.log('[OAuth Callback] Request received');
+    log.info('[OAuth Callback] Request received');
 
     // ============================================
     // 1. PARSEAR QUERY PARAMS O BODY
@@ -76,16 +79,16 @@ serve(async (req) => {
       callbackData = await req.json();
     }
 
-    console.log(`[OAuth Callback] Code: ${callbackData.code ? 'present' : 'missing'}`);
-    console.log(`[OAuth Callback] State: ${callbackData.state ? 'present' : 'missing'}`);
-    console.log(`[OAuth Callback] Raw state received: ${callbackData.state}`);
+    log.info(`[OAuth Callback] Code: ${callbackData.code ? 'present' : 'missing'}`);
+    log.info(`[OAuth Callback] State: ${callbackData.state ? 'present' : 'missing'}`);
+    log.info(`[OAuth Callback] Raw state received: ${callbackData.state}`);
 
     // ============================================
     // 2. VERIFICAR ERRORES DE MERCADOPAGO
     // ============================================
 
     if (callbackData.error) {
-      console.error('[OAuth Error]', callbackData.error, callbackData.error_description);
+      log.error('[OAuth Error]', callbackData.error, callbackData.error_description);
 
       return new Response(
         JSON.stringify({
@@ -133,8 +136,8 @@ serve(async (req) => {
       const stateJson = atob(base64);
       stateData = JSON.parse(stateJson);
     } catch (e) {
-      console.error('[State Error] Could not decode state:', e);
-      console.error('[State Error] Raw state received:', callbackData.state);
+      log.error('[State Error] Could not decode state:', e);
+      log.error('[State Error] Raw state received:', callbackData.state);
       return new Response(
         JSON.stringify({
           success: false,
@@ -148,18 +151,18 @@ serve(async (req) => {
       );
     }
 
-    console.log(`[OAuth Callback] User ID from state: ${stateData.user_id}`);
-    console.log(`[OAuth Callback] State timestamp: ${stateData.timestamp}`);
-    console.log(`[OAuth Callback] Current time: ${Date.now()}`);
+    log.info(`[OAuth Callback] User ID from state: ${stateData.user_id}`);
+    log.info(`[OAuth Callback] State timestamp: ${stateData.timestamp}`);
+    log.info(`[OAuth Callback] Current time: ${Date.now()}`);
 
     // Verificar que el state no sea muy viejo (> 60 minutos - aumentado para testing)
     const stateAge = Date.now() - stateData.timestamp;
     const maxAgeMs = 60 * 60 * 1000; // 60 minutos
-    console.log(`[OAuth Callback] State age: ${stateAge}ms (max: ${maxAgeMs}ms)`);
-    console.log(`[OAuth Callback] State age in minutes: ${(stateAge / 60000).toFixed(2)}`);
+    log.info(`[OAuth Callback] State age: ${stateAge}ms (max: ${maxAgeMs}ms)`);
+    log.info(`[OAuth Callback] State age in minutes: ${(stateAge / 60000).toFixed(2)}`);
 
     if (stateAge > maxAgeMs) {
-      console.error('[State Error] State expired:', stateAge, 'ms');
+      log.error('[State Error] State expired:', stateAge, 'ms');
       return new Response(
         JSON.stringify({
           success: false,
@@ -196,7 +199,7 @@ serve(async (req) => {
       .single();
 
     if (profileError || !profile) {
-      console.error('[DB Error] Profile not found:', profileError);
+      log.error('[DB Error] Profile not found:', profileError);
       return new Response(
         JSON.stringify({
           success: false,
@@ -222,12 +225,12 @@ serve(async (req) => {
     const expectedState = normalizeState(profile.mercadopago_oauth_state || '');
     const receivedState = normalizeState(callbackData.state);
 
-    console.log('[State Comparison] Expected (from DB):', expectedState);
-    console.log('[State Comparison] Received (from MP):', receivedState);
-    console.log('[State Comparison] Match:', expectedState === receivedState);
+    log.info('[State Comparison] Expected (from DB):', expectedState);
+    log.info('[State Comparison] Received (from MP):', receivedState);
+    log.info('[State Comparison] Match:', expectedState === receivedState);
 
     if (expectedState !== receivedState) {
-      console.error('[State Error] State mismatch after normalization');
+      log.error('[State Error] State mismatch after normalization');
 
       return new Response(
         JSON.stringify({
@@ -246,7 +249,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('[OAuth Callback] State validated successfully');
+    log.info('[OAuth Callback] State validated successfully');
 
     // ============================================
     // 5. EXCHANGE CODE POR ACCESS TOKEN
@@ -261,10 +264,10 @@ serve(async (req) => {
       Deno.env.get('MERCADOPAGO_OAUTH_REDIRECT_URI') ||
       'https://autorentar.com/auth/mercadopago/callback';
 
-    console.log(`[OAuth Callback] Using redirect_uri: ${REDIRECT_URI}`);
+    log.info(`[OAuth Callback] Using redirect_uri: ${REDIRECT_URI}`);
 
     if (!MP_CLIENT_SECRET) {
-      console.error('[Config Error] MERCADOPAGO_CLIENT_SECRET not set');
+      log.error('[Config Error] MERCADOPAGO_CLIENT_SECRET not set');
       return new Response(
         JSON.stringify({
           success: false,
@@ -278,7 +281,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('[OAuth] Exchanging code for token...');
+    log.info('[OAuth] Exchanging code for token...');
 
     const tokenResponse = await fetch('https://api.mercadopago.com/oauth/token', {
       method: 'POST',
@@ -297,7 +300,7 @@ serve(async (req) => {
 
     if (!tokenResponse.ok) {
       const errorData = await tokenResponse.json().catch(() => ({}));
-      console.error('[MP Token Error]', tokenResponse.status, errorData);
+      log.error('[MP Token Error]', tokenResponse.status, errorData);
 
       // Propagar el status real de MercadoPago para evitar 500 genérico en frontend
       const status = tokenResponse.status === 400 ? 400 : tokenResponse.status || 500;
@@ -320,16 +323,16 @@ serve(async (req) => {
 
     const tokenData: MercadoPagoTokenResponse = await tokenResponse.json();
 
-    console.log('[OAuth] Token received successfully');
-    console.log(`[OAuth] Collector ID: ${tokenData.user_id}`);
-    console.log(`[OAuth] Expires in: ${tokenData.expires_in} seconds`);
-    console.log(`[OAuth] Live mode: ${tokenData.live_mode}`);
+    log.info('[OAuth] Token received successfully');
+    log.info(`[OAuth] Collector ID: ${tokenData.user_id}`);
+    log.info(`[OAuth] Expires in: ${tokenData.expires_in} seconds`);
+    log.info(`[OAuth] Live mode: ${tokenData.live_mode}`);
 
     // ============================================
     // 6. OBTENER INFORMACIÓN DEL USUARIO
     // ============================================
 
-    console.log('[OAuth] Fetching user info...');
+    log.info('[OAuth] Fetching user info...');
 
     const userInfoResponse = await fetch('https://api.mercadopago.com/users/me', {
       headers: {
@@ -338,14 +341,14 @@ serve(async (req) => {
     });
 
     if (!userInfoResponse.ok) {
-      console.error('[MP User Info Error]', userInfoResponse.status);
+      log.error('[MP User Info Error]', userInfoResponse.status);
       // No bloqueamos por esto, seguimos con la info del token
     }
 
     let userInfo: MercadoPagoUserInfo | null = null;
     if (userInfoResponse.ok) {
       userInfo = await userInfoResponse.json();
-      console.log(`[OAuth] User info: ${userInfo?.email} (${userInfo?.site_id})`);
+      log.info(`[OAuth] User info: ${userInfo?.email} (${userInfo?.site_id})`);
     }
 
     // ============================================
@@ -354,7 +357,7 @@ serve(async (req) => {
 
     const expiresAt = new Date(Date.now() + tokenData.expires_in * 1000);
 
-    console.log('[OAuth] Saving to database...');
+    log.info('[OAuth] Saving to database...');
 
     // 7.a Validar que el collector_id no esté asignado a otro usuario
     const { data: existingCollector, error: collectorError } = await supabase
@@ -365,7 +368,7 @@ serve(async (req) => {
       .maybeSingle();
 
     if (collectorError) {
-      console.error('[DB Error] Checking collector_id:', collectorError);
+      log.error('[DB Error] Checking collector_id:', collectorError);
       return new Response(
         JSON.stringify({
           success: false,
@@ -380,7 +383,7 @@ serve(async (req) => {
     }
 
     if (existingCollector) {
-      console.error('[DB Error] collector_id already in use by', existingCollector.id);
+      log.error('[DB Error] collector_id already in use by', existingCollector.id);
       return new Response(
         JSON.stringify({
           success: false,
@@ -413,7 +416,7 @@ serve(async (req) => {
       .eq('id', stateData.user_id);
 
     if (updateError) {
-      console.error('[DB Error] Could not save OAuth data:', updateError);
+      log.error('[DB Error] Could not save OAuth data:', updateError);
 
       return new Response(
         JSON.stringify({
@@ -428,7 +431,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('[OAuth Callback] Success! MercadoPago connected.');
+    log.info('[OAuth Callback] Success! MercadoPago connected.');
 
     // ============================================
     // 8. RETORNAR RESPONSE EXITOSA
@@ -453,7 +456,7 @@ serve(async (req) => {
       }
     );
   } catch (error: any) {
-    console.error('[OAuth Callback Error]', error);
+    log.error('[OAuth Callback Error]', error);
 
     return new Response(
       JSON.stringify({

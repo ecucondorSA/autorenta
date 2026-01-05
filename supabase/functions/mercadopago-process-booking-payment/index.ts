@@ -2,7 +2,9 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
+import { createChildLogger } from '../_shared/logger.ts';
 
+const log = createChildLogger('ProcessBookingPayment');
 const MP_API_BASE = 'https://api.mercadopago.com/v1';
 
 interface ProcessBookingPaymentRequest {
@@ -34,7 +36,7 @@ const ensureProductionToken = (rawToken: string, context: string) => {
   // Allow TEST tokens for development/sandbox mode
   const isTestToken = cleaned.toUpperCase().includes('TEST-') || cleaned.startsWith('TEST');
   if (isTestToken) {
-    console.warn(`${context}: Using TEST/sandbox token - ensure this is intentional`);
+    log.warn(`${context}: Using TEST/sandbox token - ensure this is intentional`);
   }
   return cleaned;
 };
@@ -61,7 +63,7 @@ serve(async (req) => {
         return error.toResponse();
       }
       // SECURITY FIX: Fail-closed - reject request if rate limiter has errors
-      console.error('[RateLimit] Error enforcing rate limit - failing closed:', error);
+      log.error('[RateLimit] Error enforcing rate limit - failing closed:', error);
       return new Response(
         JSON.stringify({
           error: 'Service temporarily unavailable',
@@ -137,7 +139,7 @@ serve(async (req) => {
     // ========================================
     // CONTRACT VALIDATION (Phase 7)
     // ========================================
-    console.log('[CONTRACT_VALIDATION] Starting validation for booking:', booking_id);
+    log.info('[CONTRACT_VALIDATION] Starting validation for booking:', booking_id);
 
     // 1. Get contract record
     const { data: contract, error: contractError } = await supabase
@@ -147,7 +149,7 @@ serve(async (req) => {
       .maybeSingle();
 
     if (contractError) {
-      console.error('[CONTRACT_VALIDATION] Error fetching contract:', contractError);
+      log.error('[CONTRACT_VALIDATION] Error fetching contract:', contractError);
       return new Response(
         JSON.stringify({
           error: 'CONTRACT_FETCH_ERROR',
@@ -161,7 +163,7 @@ serve(async (req) => {
     }
 
     if (!contract) {
-      console.warn('[CONTRACT_VALIDATION] Contract not found for booking:', booking_id);
+      log.warn('[CONTRACT_VALIDATION] Contract not found for booking:', booking_id);
       return new Response(
         JSON.stringify({
           error: 'CONTRACT_NOT_FOUND',
@@ -176,7 +178,7 @@ serve(async (req) => {
 
     // 2. Validate contract accepted
     if (!contract.accepted_by_renter) {
-      console.warn('[CONTRACT_VALIDATION] Contract not accepted for booking:', booking_id);
+      log.warn('[CONTRACT_VALIDATION] Contract not accepted for booking:', booking_id);
       return new Response(
         JSON.stringify({
           error: 'CONTRACT_NOT_ACCEPTED',
@@ -191,7 +193,7 @@ serve(async (req) => {
 
     // 3. Validate acceptance within 24 hours (security measure)
     if (!contract.accepted_at) {
-      console.error('[CONTRACT_VALIDATION] Missing accepted_at timestamp for booking:', booking_id);
+      log.error('[CONTRACT_VALIDATION] Missing accepted_at timestamp for booking:', booking_id);
       return new Response(
         JSON.stringify({
           error: 'CONTRACT_INVALID_STATE',
@@ -208,7 +210,7 @@ serve(async (req) => {
     const hoursSinceAcceptance = (Date.now() - acceptedAt.getTime()) / (1000 * 60 * 60);
 
     if (hoursSinceAcceptance > 24) {
-      console.warn('[CONTRACT_VALIDATION] Contract acceptance expired for booking:', {
+      log.warn('[CONTRACT_VALIDATION] Contract acceptance expired for booking:', {
         booking_id,
         accepted_at: contract.accepted_at,
         hours_elapsed: hoursSinceAcceptance.toFixed(2),
@@ -235,7 +237,7 @@ serve(async (req) => {
       typeof clauses !== 'object' ||
       Array.isArray(clauses)
     ) {
-      console.error('[CONTRACT_VALIDATION] Invalid clauses_accepted format for booking:', booking_id);
+      log.error('[CONTRACT_VALIDATION] Invalid clauses_accepted format for booking:', booking_id);
       return new Response(
         JSON.stringify({
           error: 'CONTRACT_CLAUSES_MISSING',
@@ -254,7 +256,7 @@ serve(async (req) => {
     );
 
     if (missingClauses.length > 0) {
-      console.warn('[CONTRACT_VALIDATION] Incomplete clause acceptance for booking:', {
+      log.warn('[CONTRACT_VALIDATION] Incomplete clause acceptance for booking:', {
         booking_id,
         missing_clauses: missingClauses,
         clauses_state: clauses,
@@ -272,7 +274,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('[CONTRACT_VALIDATION] ✅ Contract validated successfully', {
+    log.info('[CONTRACT_VALIDATION] ✅ Contract validated successfully', {
       booking_id,
       accepted_at: contract.accepted_at,
       hours_since_acceptance: hoursSinceAcceptance.toFixed(2),
@@ -329,7 +331,7 @@ serve(async (req) => {
     // SECURITY FIX 2025-12-27: Prevent duplicate payment processing
     // ========================================
     if (booking.provider_split_payment_id && booking.metadata?.mp_status === 'approved') {
-      console.log('[IDEMPOTENCY] Payment already processed for booking:', {
+      log.info('[IDEMPOTENCY] Payment already processed for booking:', {
         booking_id,
         payment_id: booking.provider_split_payment_id,
         status: booking.metadata.mp_status,
@@ -353,7 +355,7 @@ serve(async (req) => {
 
     // If payment exists but not approved, check with MercadoPago for current status
     if (booking.provider_split_payment_id) {
-      console.log('[IDEMPOTENCY] Checking existing payment status with MercadoPago:', {
+      log.info('[IDEMPOTENCY] Checking existing payment status with MercadoPago:', {
         booking_id,
         payment_id: booking.provider_split_payment_id,
       });
@@ -405,7 +407,7 @@ serve(async (req) => {
 
           // If payment failed/rejected, allow retry with new token
           if (['rejected', 'cancelled'].includes(existingPayment.status)) {
-            console.log('[IDEMPOTENCY] Previous payment failed, allowing retry:', {
+            log.info('[IDEMPOTENCY] Previous payment failed, allowing retry:', {
               booking_id,
               previous_status: existingPayment.status,
             });
@@ -429,7 +431,7 @@ serve(async (req) => {
           }
         }
       } catch (checkError) {
-        console.warn('[IDEMPOTENCY] Error checking existing payment, proceeding with new payment:', checkError);
+        log.warn('[IDEMPOTENCY] Error checking existing payment, proceeding with new payment:', checkError);
         // Continue with new payment attempt if check fails
       }
     }
@@ -448,7 +450,7 @@ serve(async (req) => {
 
       if (lockExpiryMs < nowMs) {
         const expiredBySeconds = Math.floor((nowMs - lockExpiryMs) / 1000);
-        console.warn('[PRICE_LOCK] Expired for booking:', {
+        log.warn('[PRICE_LOCK] Expired for booking:', {
           booking_id,
           locked_until: booking.price_locked_until,
           locked_until_ms: lockExpiryMs,
@@ -473,7 +475,7 @@ serve(async (req) => {
 
       // Log remaining time for debugging
       const remainingSeconds = Math.floor((lockExpiryMs - nowMs) / 1000);
-      console.log('[PRICE_LOCK] Valid, remaining time:', {
+      log.info('[PRICE_LOCK] Valid, remaining time:', {
         booking_id,
         remaining_seconds: remainingSeconds,
       });
@@ -487,7 +489,7 @@ serve(async (req) => {
     const metadataAmount = booking.metadata?.total_ars_at_lock;
 
     if (metadataAmount && Math.abs(storedAmount - metadataAmount) > 0.01) {
-      console.error('Amount mismatch detected:', {
+      log.error('Amount mismatch detected:', {
         booking_id,
         stored_amount: storedAmount,
         metadata_amount: metadataAmount,
@@ -567,7 +569,7 @@ serve(async (req) => {
       rewardPoolAmount = Math.round(totalAmount * 0.75 * 100) / 100;
       fgoAmount = Math.round((totalAmount - platformFee - rewardPoolAmount) * 100) / 100; // ~10%
       ownerAmount = 0; // CRITICAL: Owner gets ZERO direct, receives from pool instead
-      console.log('[COMODATO] Payment distribution:', {
+      log.info('[COMODATO] Payment distribution:', {
         booking_id,
         total: totalAmount,
         platform_fee: platformFee,
@@ -664,7 +666,7 @@ serve(async (req) => {
       mpPayload.collector_id = owner.mercadopago_collector_id;
     }
 
-    console.log('Processing booking payment with MercadoPago:', {
+    log.info('Processing booking payment with MercadoPago:', {
       booking_id,
       amount: totalAmount,
       split: shouldSplit,
@@ -682,7 +684,7 @@ serve(async (req) => {
 
     if (!mpResponse.ok) {
       const errorData = await mpResponse.json();
-      console.error('MercadoPago API Error:', errorData);
+      log.error('MercadoPago API Error:', errorData);
 
       return new Response(
         JSON.stringify({
@@ -698,7 +700,7 @@ serve(async (req) => {
     }
 
     const mpData: MercadoPagoPaymentResponse = await mpResponse.json();
-    console.log('MercadoPago Payment Response:', mpData);
+    log.info('MercadoPago Payment Response:', mpData);
 
     // Actualizar booking con información del pago
     // Using correct column names from bookings table schema
@@ -727,7 +729,7 @@ serve(async (req) => {
       .eq('id', booking_id);
 
     if (updateError) {
-      console.error('Error updating booking:', updateError);
+      log.error('Error updating booking:', updateError);
       // No fallar el pago si la actualización falla, el webhook lo hará
     }
 
@@ -736,7 +738,7 @@ serve(async (req) => {
     // Only when payment is approved and booking is comodato type
     // ========================================
     if (isComodato && mpData.status === 'approved') {
-      console.log('[COMODATO] Processing comodato payment contributions:', {
+      log.info('[COMODATO] Processing comodato payment contributions:', {
         booking_id,
         reward_pool_cents: Math.round(rewardPoolAmount * 100),
         fgo_cents: Math.round(fgoAmount * 100),
@@ -749,13 +751,13 @@ serve(async (req) => {
           });
 
         if (comodatoError) {
-          console.error('[COMODATO] Error processing comodato contributions:', comodatoError);
+          log.error('[COMODATO] Error processing comodato contributions:', comodatoError);
           // Don't fail the payment - contributions can be processed later via webhook
         } else {
-          console.log('[COMODATO] Successfully processed contributions:', comodatoResult);
+          log.info('[COMODATO] Successfully processed contributions:', comodatoResult);
         }
       } catch (comodatoErr) {
-        console.error('[COMODATO] Exception processing comodato:', comodatoErr);
+        log.error('[COMODATO] Exception processing comodato:', comodatoErr);
         // Don't fail the payment
       }
     }
@@ -776,7 +778,7 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error('Fatal error in mercadopago-process-booking-payment:', error);
+    log.error('Fatal error in mercadopago-process-booking-payment:', error);
     return new Response(
       JSON.stringify({
         success: false,

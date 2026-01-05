@@ -4,6 +4,7 @@ import {Component, computed, inject, input, output, Signal,
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
+import { BookingStateMachineService, BookingState } from '@core/services/bookings/booking-state-machine.service';
 import { Booking } from '../../../core/models';
 
 /**
@@ -56,6 +57,7 @@ export interface TimelineStep {
 export class BookingConfirmationTimelineComponent {
   private readonly authService = inject(AuthService);
   private readonly confirmationService = inject(BookingConfirmationService);
+  private readonly stateMachine = inject(BookingStateMachineService);
 
   // ==================== INPUTS ====================
   /**
@@ -106,6 +108,13 @@ export class BookingConfirmationTimelineComponent {
     const booking = this.booking();
     const user = this.currentUser();
     return booking?.owner_id === user?.id;
+  });
+
+  /**
+   * Current FSM state - single source of truth for booking state
+   */
+  readonly currentState = computed((): BookingState => {
+    return this.stateMachine.deriveState(this.booking());
   });
 
   /**
@@ -174,21 +183,21 @@ export class BookingConfirmationTimelineComponent {
       {
         key: 'owner_confirms',
         label: 'Propietario Confirma',
-        description: booking.owner_reported_damages
-          ? `Confirmado con daños reportados ($${booking.owner_damage_amount || 0} USD)`
+        description: booking.has_damages
+          ? `Confirmado con daños reportados ($${(booking.damage_amount_cents || 0) / 100} USD)`
           : 'Vehículo recibido en buenas condiciones',
         completed: !!booking.owner_confirmed_delivery,
-        timestamp: booking.owner_confirmation_at || null,
+        timestamp: booking.owner_confirmed_at || null,
         actor: this.ownerName(),
         actorId: booking.owner_id || null,
         requiresAction:
           !!booking.returned_at && !booking.owner_confirmed_delivery && this.isOwner(),
         actionLabel: 'Confirmar recepción',
         actionDescription: 'Confirmar que recibiste el vehículo (con o sin daños)',
-        metadata: booking.owner_reported_damages
+        metadata: booking.has_damages
           ? {
-              damageAmount: booking.owner_damage_amount || 0,
-              damageDescription: booking.owner_damage_description || undefined,
+              damageAmount: (booking.damage_amount_cents || 0) / 100,
+              damageDescription: booking.damage_description || undefined,
             }
           : undefined,
       },
@@ -197,15 +206,15 @@ export class BookingConfirmationTimelineComponent {
       {
         key: 'damage_report',
         label: 'Reporte de Daños',
-        description: booking.owner_damage_description || 'No se reportaron daños',
+        description: booking.damage_description || 'No se reportaron daños',
         completed: true, // Always shown if we reach this step
-        timestamp: booking.owner_confirmation_at || null,
+        timestamp: booking.owner_confirmed_at || null,
         actor: this.ownerName(),
         actorId: booking.owner_id || null,
         isConditional: true, // Only show if damages reported
         metadata: {
-          damageAmount: booking.owner_damage_amount || 0,
-          damageDescription: booking.owner_damage_description || undefined,
+          damageAmount: (booking.damage_amount_cents || 0) / 100,
+          damageDescription: booking.damage_description || undefined,
         },
       },
 
@@ -215,7 +224,7 @@ export class BookingConfirmationTimelineComponent {
         label: 'Locatario Confirma',
         description: 'Confirma liberar el pago al propietario',
         completed: !!booking.renter_confirmed_payment,
-        timestamp: booking.renter_confirmation_at || null,
+        timestamp: booking.renter_confirmed_at || null,
         actor: this.renterName(),
         actorId: booking.renter_id,
         requiresAction:
@@ -250,7 +259,7 @@ export class BookingConfirmationTimelineComponent {
     // Filter out conditional steps if not applicable
     return steps.filter((step) => {
       if (step.key === 'damage_report') {
-        return booking.owner_reported_damages === true;
+        return booking.has_damages === true;
       }
       return true;
     });
@@ -280,24 +289,26 @@ export class BookingConfirmationTimelineComponent {
   });
 
   /**
-   * Pending action message for current user
+   * Pending action message for current user (using FSM as source of truth)
    */
   readonly pendingActionMessage = computed(() => {
     const booking = this.booking();
+    const state = this.currentState();
     const isOwner = this.isOwner();
     const isRenter = this.isRenter();
 
-    if (booking?.completion_status === 'pending_owner' && isOwner) {
+    // Use FSM state for cleaner logic
+    if (state === 'PENDING_OWNER' && isOwner) {
       return 'Esperando tu confirmación como propietario';
     }
-    if (booking?.completion_status === 'pending_renter' && isRenter) {
+    if (state === 'PENDING_RENTER' && isRenter) {
       return 'Esperando tu confirmación como locatario';
     }
-    if (booking?.completion_status === 'pending_both') {
-      if (isOwner && !booking.owner_confirmed_delivery) {
+    if (state === 'RETURNED') {
+      if (isOwner && !booking?.owner_confirmed_delivery) {
         return 'Esperando tu confirmación como propietario';
       }
-      if (isRenter && !booking.renter_confirmed_payment) {
+      if (isRenter && !booking?.renter_confirmed_payment) {
         return 'Esperando tu confirmación como locatario';
       }
     }

@@ -36,8 +36,8 @@ export interface BookingConfirmationRow {
   pickup_confirmed_by: string | null;
   dropoff_confirmed_at: string | null;
   dropoff_confirmed_by: string | null;
-  owner_confirmation_at: string | null;
-  renter_confirmation_at: string | null;
+  owner_confirmed_at: string | null;    // CORRECTO: nombre de columna BD
+  renter_confirmed_at: string | null;   // CORRECTO: nombre de columna BD
   returned_at: string | null;
   funds_released_at: string | null;
   created_at: string | null;
@@ -114,7 +114,7 @@ export class BookingOpsService {
     const { data, error } = await this.supabase
       .from('bookings_confirmation')
       .select(
-        'booking_id, pickup_confirmed_at, pickup_confirmed_by, dropoff_confirmed_at, dropoff_confirmed_by, owner_confirmation_at, renter_confirmation_at, returned_at, funds_released_at, created_at, updated_at',
+        'booking_id, pickup_confirmed_at, pickup_confirmed_by, dropoff_confirmed_at, dropoff_confirmed_by, owner_confirmed_at, renter_confirmed_at, returned_at, funds_released_at, created_at, updated_at',
       )
       .eq('booking_id', bookingId)
       .maybeSingle();

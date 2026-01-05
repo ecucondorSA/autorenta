@@ -253,7 +253,7 @@ serve(async (req: Request) => {
     const isProduction = Deno.env.get('ENVIRONMENT') === 'production' || !Deno.env.get('ENVIRONMENT');
 
     if (!isAuthorizedIP && isProduction) {
-      console.warn('⚠️ Unauthorized IP attempt:', {
+      log.warn('⚠️ Unauthorized IP attempt:', {
         ip: clientIP,
         userAgent: req.headers.get('user-agent'),
       });
@@ -283,7 +283,7 @@ serve(async (req: Request) => {
       });
     } catch (error) {
       if (error instanceof RateLimitError) {
-        console.warn('⚠️ Rate limit exceeded:', {
+        log.warn('⚠️ Rate limit exceeded:', {
           ip: clientIP,
           resetAt: error.resetAt,
         });
@@ -291,7 +291,7 @@ serve(async (req: Request) => {
       }
       // SECURITY FIX: Fail-closed - reject request if rate limiter has errors
       // This prevents potential DDoS attacks when rate limiter is unavailable
-      console.error('[RateLimit] Error enforcing rate limit - failing closed:', error);
+      log.error('[RateLimit] Error enforcing rate limit - failing closed:', error);
       return new Response(
         JSON.stringify({
           error: 'Service temporarily unavailable',
@@ -320,7 +320,7 @@ serve(async (req: Request) => {
     const xSignature = req.headers.get('x-signature');
     const xRequestId = req.headers.get('x-request-id');
 
-    console.log('Webhook validation:', {
+    log.info('Webhook validation:', {
       ip: clientIP,
       isAuthorizedIP,
       hasSignature: !!xSignature,
@@ -338,7 +338,7 @@ serve(async (req: Request) => {
     try {
       webhookPayload = JSON.parse(rawBody);
     } catch (e) {
-      console.error('Invalid JSON in webhook payload:', e);
+      log.error('Invalid JSON in webhook payload:', e);
       return new Response(
         JSON.stringify({ error: 'Invalid JSON payload' }),
         {
@@ -380,7 +380,7 @@ serve(async (req: Request) => {
         const paymentId = webhookPayload.data?.id || dataId || '';
         const manifest = `id:${paymentId};request-id:${xRequestId};ts:${ts};`;
 
-        console.log('HMAC validation:', {
+        log.info('HMAC validation:', {
           manifest,
           ts,
           hash_received: hash.substring(0, 20) + '...',
@@ -410,10 +410,10 @@ serve(async (req: Request) => {
             .map(b => b.toString(16).padStart(2, '0'))
             .join('')
             .toLowerCase();
-          console.log('HMAC calculated:', calculatedHash.substring(0, 20) + '...');
+          log.info('HMAC calculated:', calculatedHash.substring(0, 20) + '...');
           // Comparar hashes en tiempo constante (hex-safe)
           if (!timingSafeEqualHex(calculatedHash, (hash || '').toLowerCase())) {
-            console.error('HMAC validation FAILED', {
+            log.error('HMAC validation FAILED', {
               expected: hash.substring(0, 20) + '...',
               calculated: calculatedHash.substring(0, 20) + '...',
             });
@@ -430,7 +430,7 @@ serve(async (req: Request) => {
               }
             );
           } else {
-            console.log('✅ HMAC validation passed');
+            log.info('✅ HMAC validation passed');
             // ==============================
             // IDEMPOTENCIA / DEDUPLICACIÓN (atómica)
             // Insertamos un log con event_id (x-request-id). Con índice UNIQUE sobre event_id,
@@ -459,7 +459,7 @@ serve(async (req: Request) => {
               if (insertError) {
                 const msg = String(insertError.message || '').toLowerCase();
                 if (insertError.code === '23505' || msg.includes('duplicate') || msg.includes('unique')) {
-                  console.log('Duplicate webhook detected via insert conflict, ignoring', { event_id: xRequestId });
+                  log.info('Duplicate webhook detected via insert conflict, ignoring', { event_id: xRequestId });
                   return new Response(
                     JSON.stringify({ success: true, message: 'Duplicate webhook ignored' }),
                     {
@@ -470,16 +470,16 @@ serve(async (req: Request) => {
                 }
 
                 // Otro error: loguear y continuar (no bloquear procesamiento)
-                console.warn('Warning: failed to insert mp_webhook_logs entry', { err: insertError });
+                log.warn('Warning: failed to insert mp_webhook_logs entry', { err: insertError });
               }
             } catch (dedupErr) {
               // Si falla inesperadamente la verificación/inserción, continuar el procesamiento
-              console.error('Error inserting mp_webhook_logs for deduplication', dedupErr);
+              log.error('Error inserting mp_webhook_logs for deduplication', dedupErr);
             }
           }
         } catch (cryptoError) {
           // ✅ SECURITY: Si falla la validación HMAC, rechazar
-          console.error('❌ Webhook rejected: HMAC calculation error', {
+          log.error('❌ Webhook rejected: HMAC calculation error', {
             error: cryptoError,
             ip: clientIP,
             timestamp: new Date().toISOString(),
@@ -498,7 +498,7 @@ serve(async (req: Request) => {
         }
       } else {
         // ✅ SECURITY: Rechazar firma malformada
-        console.error('❌ Webhook rejected: Invalid x-signature format (missing ts or v1)', {
+        log.error('❌ Webhook rejected: Invalid x-signature format (missing ts or v1)', {
           ip: clientIP,
           signatureFormat: xSignature,
           timestamp: new Date().toISOString(),
@@ -521,7 +521,7 @@ serve(async (req: Request) => {
       if (!xSignature) missingHeaders.push('x-signature');
       if (!xRequestId) missingHeaders.push('x-request-id');
 
-      console.error('❌ Webhook rejected: Missing required headers', {
+      log.error('❌ Webhook rejected: Missing required headers', {
         ip: clientIP,
         missingHeaders,
         type: webhookPayload.type,
@@ -543,7 +543,7 @@ serve(async (req: Request) => {
 
     // Solo procesar notificaciones de tipo 'payment'
     if (webhookPayload.type !== 'payment') {
-      console.log(`Ignoring webhook type: ${webhookPayload.type}`);
+      log.info(`Ignoring webhook type: ${webhookPayload.type}`);
       return new Response(
         JSON.stringify({ success: true, message: 'Webhook type ignored' }),
         {
@@ -558,7 +558,7 @@ serve(async (req: Request) => {
     // ========================================
 
     const paymentId = webhookPayload.data.id;
-    console.log(`Fetching payment ${paymentId} using MercadoPago SDK...`);
+    log.info(`Fetching payment ${paymentId} using MercadoPago SDK...`);
 
     // Obtener datos del pago usando SDK
     let paymentData: MPPayment | null = null;
@@ -571,13 +571,13 @@ serve(async (req: Request) => {
       try {
         paymentData = await withTimeout(paymentClient.get({ id: paymentId }), 3000);
       } catch (timeoutErr) {
-        console.warn('Timeout fetching payment data, retrying might be needed', timeoutErr);
+        log.warn('Timeout fetching payment data, retrying might be needed', timeoutErr);
         throw timeoutErr;
       }
 
       // Validar que la respuesta contiene datos válidos
       if (!paymentData || !paymentData.id) {
-        console.error('Invalid payment data received from MercadoPago SDK:', paymentData);
+        log.error('Invalid payment data received from MercadoPago SDK:', paymentData);
         return new Response(
           JSON.stringify({
             success: false,
@@ -653,7 +653,7 @@ serve(async (req: Request) => {
 
     // Check if this is a preauthorization (status: authorized)
     if (paymentData.status === 'authorized') {
-      console.log('Processing preauthorization (hold) webhook...');
+      log.info('Processing preauthorization (hold) webhook...');
 
       // Find payment intent by mp_payment_id
       const { data: intent, error: intentError } = await supabase
@@ -663,7 +663,7 @@ serve(async (req: Request) => {
         .single();
 
       if (intentError || !intent) {
-        console.log('No payment intent found for authorized payment:', paymentId);
+        log.info('No payment intent found for authorized payment:', paymentId);
         // This might be a regular authorized payment, not a preauth
         return new Response(
           JSON.stringify({
@@ -692,9 +692,9 @@ serve(async (req: Request) => {
       });
 
       if (updateError) {
-        console.error('Error updating preauth intent:', updateError);
+        log.error('Error updating preauth intent:', updateError);
       } else {
-        console.log('✅ Preauthorization updated successfully');
+        log.info('✅ Preauthorization updated successfully');
       }
 
       return new Response(
@@ -724,7 +724,7 @@ serve(async (req: Request) => {
       .single();
 
     if (!capturedIntentError && capturedIntent && paymentData.status === 'approved') {
-      console.log('Processing preauth capture webhook...');
+      log.info('Processing preauth capture webhook...');
 
       // Update payment intent to captured
       const { error: updateError } = await supabase.rpc('update_payment_intent_status', {
@@ -739,7 +739,7 @@ serve(async (req: Request) => {
       });
 
       if (updateError) {
-        console.error('Error updating captured preauth:', updateError);
+        log.error('Error updating captured preauth:', updateError);
       }
 
       // Call capture_preauth RPC to handle ledger entries
@@ -750,9 +750,9 @@ serve(async (req: Request) => {
         });
 
         if (captureError) {
-          console.error('Error processing capture ledger:', captureError);
+          log.error('Error processing capture ledger:', captureError);
         } else {
-          console.log('✅ Preauth captured and ledger updated');
+          log.info('✅ Preauth captured and ledger updated');
         }
       }
 
@@ -775,7 +775,7 @@ serve(async (req: Request) => {
     // ========================================
 
     if (paymentData.status === 'cancelled') {
-      console.log('Processing preauth cancellation webhook...');
+      log.info('Processing preauth cancellation webhook...');
 
       // Find payment intent by mp_payment_id
       const { data: cancelledIntent, error: cancelledIntentError } = await supabase
@@ -798,7 +798,7 @@ serve(async (req: Request) => {
         });
 
         if (updateError) {
-          console.error('Error updating cancelled preauth:', updateError);
+          log.error('Error updating cancelled preauth:', updateError);
         }
 
         // Call cancel_preauth RPC to release any locked funds
@@ -807,9 +807,9 @@ serve(async (req: Request) => {
         });
 
         if (cancelError) {
-          console.error('Error processing cancellation:', cancelError);
+          log.error('Error processing cancellation:', cancelError);
         } else {
-          console.log('✅ Preauth cancelled successfully');
+          log.info('✅ Preauth cancelled successfully');
         }
 
         return new Response(
@@ -833,7 +833,7 @@ serve(async (req: Request) => {
 
     // Verificar que el pago esté aprobado
     if (paymentData.status !== 'approved') {
-      console.log(`Payment not approved. Status: ${paymentData.status}`);
+      log.info(`Payment not approved. Status: ${paymentData.status}`);
       return new Response(
         JSON.stringify({
           success: true,
@@ -851,7 +851,7 @@ serve(async (req: Request) => {
     const reference_id = paymentData.external_reference;
 
     if (!reference_id) {
-      console.error('Missing external_reference in payment data');
+      log.error('Missing external_reference in payment data');
       throw new Error('Missing external_reference');
     }
 
@@ -868,11 +868,11 @@ serve(async (req: Request) => {
 
     // Si es un booking, procesar pago de booking
     if (booking && !bookingError) {
-      console.log('Processing booking payment:', reference_id);
+      log.info('Processing booking payment:', reference_id);
 
       // Verificar que el booking esté pendiente de pago
       if (booking.status !== 'pending') {
-        console.log(`Booking is not pending (status: ${booking.status}), ignoring webhook`);
+        log.info(`Booking is not pending (status: ${booking.status}), ignoring webhook`);
         return new Response(
           JSON.stringify({ success: true, message: 'Booking already processed' }),
           {
@@ -890,7 +890,7 @@ serve(async (req: Request) => {
       const isMarketplaceSplit = metadata.is_marketplace_split === 'true' || metadata.is_marketplace_split === true;
 
       if (isMarketplaceSplit) {
-        console.log('💰 Processing marketplace split payment with ATOMIC validation...');
+        log.info('💰 Processing marketplace split payment with ATOMIC validation...');
 
         // ========================================
         // P0-3 FIX: ATOMIC SPLIT PAYMENT VALIDATION
@@ -916,13 +916,13 @@ serve(async (req: Request) => {
         );
 
         if (splitError) {
-          console.error('Error in atomic split validation:', splitError);
+          log.error('Error in atomic split validation:', splitError);
           throw splitError;
         }
 
         // Check result of atomic validation
         if (splitResult.already_processed) {
-          console.log('Booking already processed:', splitResult.message);
+          log.info('Booking already processed:', splitResult.message);
           return new Response(
             JSON.stringify({
               success: true,
@@ -938,7 +938,7 @@ serve(async (req: Request) => {
 
         if (!splitResult.validation_passed) {
           // P0-3: Validation failed - booking NOT confirmed
-          console.error('❌ Split payment validation FAILED (atomic):', {
+          log.error('❌ Split payment validation FAILED (atomic):', {
             booking_id: reference_id,
             payment_id: paymentData.id,
             issues: splitResult.validation_issues,
@@ -963,7 +963,7 @@ serve(async (req: Request) => {
           );
         }
 
-        console.log('✅ Split payment validated and booking confirmed (atomic):', {
+        log.info('✅ Split payment validated and booking confirmed (atomic):', {
           booking_id: reference_id,
           payment_id: paymentData.id,
         });
@@ -975,7 +975,7 @@ serve(async (req: Request) => {
         const isComodatoPayment = metadata.is_comodato === true || metadata.is_comodato === 'true' || metadata.agreement_type === 'comodato';
 
         if (isComodatoPayment) {
-          console.log('[COMODATO] Processing comodato contributions via webhook:', {
+          log.info('[COMODATO] Processing comodato contributions via webhook:', {
             booking_id: reference_id,
             reward_pool_cents: metadata.reward_pool_cents,
             fgo_cents: metadata.fgo_cents,
@@ -988,13 +988,13 @@ serve(async (req: Request) => {
               });
 
             if (comodatoError) {
-              console.error('[COMODATO] Error processing comodato contributions:', comodatoError);
+              log.error('[COMODATO] Error processing comodato contributions:', comodatoError);
               // Don't fail the webhook - contributions can be processed manually
             } else {
-              console.log('[COMODATO] Successfully processed contributions:', comodatoResult);
+              log.info('[COMODATO] Successfully processed contributions:', comodatoResult);
             }
           } catch (comodatoErr) {
-            console.error('[COMODATO] Exception processing comodato:', comodatoErr);
+            log.error('[COMODATO] Exception processing comodato:', comodatoErr);
           }
         }
 
@@ -1012,7 +1012,7 @@ serve(async (req: Request) => {
             })
             .eq('event_id', xRequestId);
         } catch (e) {
-          console.warn('Warning: failed to mark mp_webhook_logs processed (split booking)', e);
+          log.warn('Warning: failed to mark mp_webhook_logs processed (split booking)', e);
         }
 
         return new Response(
@@ -1055,7 +1055,7 @@ serve(async (req: Request) => {
         .eq('id', reference_id);
 
       if (updateError) {
-        console.error('Error updating booking:', updateError);
+        log.error('Error updating booking:', updateError);
         throw updateError;
       }
 
@@ -1067,7 +1067,7 @@ serve(async (req: Request) => {
                                   nonSplitMetadata.agreement_type === 'comodato' || booking.agreement_type === 'comodato';
 
       if (isComodatoNonSplit) {
-        console.log('[COMODATO] Processing comodato contributions (non-split):', {
+        log.info('[COMODATO] Processing comodato contributions (non-split):', {
           booking_id: reference_id,
         });
 
@@ -1078,12 +1078,12 @@ serve(async (req: Request) => {
             });
 
           if (comodatoError) {
-            console.error('[COMODATO] Error processing comodato contributions:', comodatoError);
+            log.error('[COMODATO] Error processing comodato contributions:', comodatoError);
           } else {
-            console.log('[COMODATO] Successfully processed contributions:', comodatoResult);
+            log.info('[COMODATO] Successfully processed contributions:', comodatoResult);
           }
         } catch (comodatoErr) {
-          console.error('[COMODATO] Exception processing comodato:', comodatoErr);
+          log.error('[COMODATO] Exception processing comodato:', comodatoErr);
         }
       }
 
@@ -1101,10 +1101,10 @@ serve(async (req: Request) => {
           })
           .eq('event_id', xRequestId);
       } catch (e) {
-        console.warn('Warning: failed to mark mp_webhook_logs processed (booking)', e);
+        log.warn('Warning: failed to mark mp_webhook_logs processed (booking)', e);
       }
 
-      console.log('✅ Booking payment confirmed successfully:', reference_id);
+      log.info('✅ Booking payment confirmed successfully:', reference_id);
 
       return new Response(
         JSON.stringify({
@@ -1130,15 +1130,15 @@ serve(async (req: Request) => {
       .single();
 
     if (txError || !transaction) {
-      console.error('Neither booking nor wallet transaction found:', reference_id);
+      log.error('Neither booking nor wallet transaction found:', reference_id);
       throw new Error('Reference not found - not a booking or wallet deposit');
     }
 
-    console.log('Processing wallet deposit:', reference_id);
+    log.info('Processing wallet deposit:', reference_id);
 
     // Si la transacción ya fue completada, ignorar (idempotencia)
     if (transaction.status === 'completed') {
-      console.log('Transaction already completed, ignoring webhook');
+      log.info('Transaction already completed, ignoring webhook');
       return new Response(
         JSON.stringify({ success: true, message: 'Transaction already completed' }),
         {
@@ -1159,7 +1159,7 @@ serve(async (req: Request) => {
 
     // Tolerancia de 1 centavo por redondeo
     if (amountDifferenceCents > 1) {
-      console.error(
+      log.error(
         `[P1-5] Amount mismatch detected! Expected: ${expectedAmountCents}, Received: ${receivedAmountCents}, Diff: ${amountDifferenceCents}`
       );
 
@@ -1178,14 +1178,14 @@ serve(async (req: Request) => {
           user_id: transaction.user_id,
         },
         detected_at: new Date().toISOString(),
-      }).catch(e => console.error('Failed to log payment issue:', e));
+      }).catch(e => log.error('Failed to log payment issue:', e));
 
       throw new Error(
         `AMOUNT_MISMATCH: Expected ${expectedAmountCents} cents, received ${receivedAmountCents} cents`
       );
     }
 
-    console.log(`Amount validation passed: ${receivedAmountCents} cents (diff: ${amountDifferenceCents})`);
+    log.info(`Amount validation passed: ${receivedAmountCents} cents (diff: ${amountDifferenceCents})`);
 
     // ========================================
     // MEJORA: Usar función admin que no requiere auth
@@ -1217,7 +1217,7 @@ serve(async (req: Request) => {
     );
 
     if (confirmError) {
-      console.error('Error confirming deposit:', confirmError);
+      log.error('Error confirming deposit:', confirmError);
       throw confirmError;
     }
 
@@ -1234,10 +1234,10 @@ serve(async (req: Request) => {
         })
         .eq('event_id', xRequestId);
     } catch (e) {
-      console.warn('Warning: failed to mark mp_webhook_logs processed (deposit)', e);
+      log.warn('Warning: failed to mark mp_webhook_logs processed (deposit)', e);
     }
 
-    console.log('Deposit confirmed successfully:', confirmResult);
+    log.info('Deposit confirmed successfully:', confirmResult);
 
     // ========================================
     // REGISTRAR EN WALLET LEDGER (NUEVO SISTEMA)
@@ -1246,7 +1246,7 @@ serve(async (req: Request) => {
     const amountCents = Math.round(paymentData.transaction_amount * 100);
     const refKey = `mp-${paymentData.id}`;
 
-    console.log(`Registering deposit in ledger: ${amountCents} cents for user ${transaction.user_id}`);
+    log.info(`Registering deposit in ledger: ${amountCents} cents for user ${transaction.user_id}`);
 
     const { data: ledgerResult, error: ledgerError } = await supabase.rpc(
       'wallet_deposit_ledger',
@@ -1273,9 +1273,9 @@ serve(async (req: Request) => {
     if (ledgerError) {
       // No fallar el webhook si el ledger falla, solo loggear
       // El sistema viejo (wallet_transactions) ya funcionó
-      console.error('Warning: Error registering in ledger (old system still worked):', ledgerError);
+      log.error('Warning: Error registering in ledger (old system still worked):', ledgerError);
     } else {
-      console.log('✅ Deposit registered in ledger successfully:', ledgerResult);
+      log.info('✅ Deposit registered in ledger successfully:', ledgerResult);
     }
 
     // Retornar éxito
