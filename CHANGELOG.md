@@ -1,3 +1,16 @@
+# [1.1.0](https://github.com/ecucondorSA/autorenta/compare/v1.0.2...v1.1.0) (2026-01-05)
+
+
+### Bug Fixes
+
+* **ci:** ensure cordova.variables.gradle exists for android build ([d42bb1d](https://github.com/ecucondorSA/autorenta/commit/d42bb1dbb0dc82b87760a7fa97313f787746529a))
+
+
+### Features
+
+* **ci:** add production readiness check workflow ([36b4459](https://github.com/ecucondorSA/autorenta/commit/36b4459f684e74f4ce055037a7f4c0d0e3f977b7))
+* **ui:** responsive design for review form ([4a18c01](https://github.com/ecucondorSA/autorenta/commit/4a18c012e67a98c327404bf7961d936f4e7446fa))
+
 ## [1.0.2](https://github.com/ecucondorSA/autorenta/compare/v1.0.1...v1.0.2) (2026-01-05)
 
 
