@@ -1,4 +1,4 @@
-<div class="review-form-container bg-surface-raised rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+<div class="review-form-container bg-surface-raised rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
   <!-- Header -->
   <div class="stack-sm mb-6">
     <h2 class="h2 text-text-primary font-bold font-satoshi">Califica tu experiencia</h2>
@@ -11,27 +11,28 @@
 
   <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
     <!-- Rating Categories -->
-    <div class="stack-lg mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       @for (category of ratingCategories; track category) {
-        <div class="rating-category stack-sm">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-              <span class="text-xl">{{ category.icon }}</span>
+        <div class="rating-category p-4 bg-surface-base rounded-lg border border-border-muted hover:border-cta-default transition-colors">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-start sm:items-center space-x-3">
+              <span class="text-2xl mt-1 sm:mt-0">{{ category.icon }}</span>
               <div>
                 <h3 class="font-semibold text-text-primary font-satoshi">{{ category.label }}</h3>
-                <p class="text-xs text-text-secondary dark:text-text-secondary">
+                <p class="text-xs text-text-secondary dark:text-text-secondary hidden sm:block">
                   {{ category.description }}
                 </p>
               </div>
             </div>
-            <div class="flex space-x-1 star-rating-container" [attr.data-category]="category.key">
+            
+            <div class="flex space-x-1 star-rating-container self-end sm:self-auto" [attr.data-category]="category.key">
               @for (star of [1, 2, 3, 4, 5]; track star) {
                 <button
                   type="button"
                   (click)="setRating(category.key, star)"
                   (mouseenter)="onStarHover(category.key, star)"
                   (mouseleave)="onStarLeave(category.key)"
-                  class="star-button focus:outline-none focus:ring-2 focus:ring-cta-default rounded transition-all duration-200 hover:scale-125 active:scale-95"
+                  class="star-button focus:outline-none focus:ring-2 focus:ring-cta-default rounded transition-all duration-200 hover:scale-125 active:scale-95 p-1"
                   [attr.aria-label]="'Calificar ' + category.label + ' con ' + star + ' estrellas'"
                   [attr.data-star]="star"
                   >
@@ -43,7 +44,7 @@
                 [class.text-warning-300]="
                   getHoverRating(category.key) >= star && getRating(category.key) < star
                 "
-                [class.text-gray-500]="
+                [class.text-gray-300]="
                   getRating(category.key) < star && getHoverRating(category.key) < star
                 "
                     fill="currentColor"
@@ -56,17 +57,22 @@
                 </button>
               }
             </div>
+            
+            <!-- Mobile description fallback -->
+             <p class="text-xs text-text-secondary dark:text-text-secondary sm:hidden w-full pt-1">
+               {{ category.description }}
+             </p>
           </div>
         </div>
       }
     </div>
 
     <!-- Overall Rating Display -->
-    <div class="bg-cta-default/10 rounded-lg p-4 mb-6 stack-xs">
-      <div class="flex items-center justify-between">
-        <span class="text-text-primary font-medium">Calificación promedio:</span>
+    <div class="bg-cta-default/10 rounded-lg p-4 mb-8 stack-xs max-w-sm mx-auto md:max-w-none md:w-full md:grid md:grid-cols-1">
+      <div class="flex items-center justify-between md:justify-center md:gap-4">
+        <span class="text-text-primary font-medium text-lg">Calificación promedio:</span>
         <div class="flex items-center space-x-2">
-          <span class="h3 text-cta-default">{{ getAverageRating() }}</span>
+          <span class="text-3xl font-bold text-cta-default">{{ getAverageRating() }}</span>
           <svg class="w-8 h-8 text-warning-400" fill="currentColor" viewBox="0 0 20 20">
             <path
               d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
@@ -76,57 +82,59 @@
       </div>
     </div>
 
-    <!-- Public Comment -->
-    <div class="mb-6">
-      <label for="comment_public" class="block text-sm font-medium text-text-primary mb-2">
-        Comentario público
-        <span class="text-text-secondary dark:text-text-secondary font-normal"
-          >(opcional, visible para todos)</span
-          >
-        </label>
-        <textarea
-          id="comment_public"
-          formControlName="comment_public"
-          rows="4"
-          class="w-full px-3 py-2 border border-border-muted rounded-lg focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none transition-all"
-        [class.border-error-300]="
-          reviewForm.get('comment_public')?.invalid && reviewForm.get('comment_public')?.touched
-        "
-          placeholder="Comparte tu experiencia con otros usuarios..."
-          maxlength="1000"
-        ></textarea>
-        <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 text-right">
-          <span
-            [class.text-error-text]="(reviewForm.get('comment_public')?.value?.length || 0) > 1000"
-            >
-            {{ reviewForm.get('comment_public')?.value?.length || 0 }} / 1000 caracteres
-          </span>
-        </p>
-      </div>
-
-      <!-- Private Comment -->
-      <div class="mb-6">
-        <label for="comment_private" class="block text-sm font-medium text-text-primary mb-2">
-          Comentario privado
-          <span class="text-text-secondary dark:text-text-secondary font-normal"
-            >(opcional, solo visible para {{ revieweeName }})</span
-            >
-          </label>
-          <textarea
-            id="comment_private"
-            formControlName="comment_private"
-            rows="3"
-            class="w-full px-3 py-2 border border-border-muted rounded-lg focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none"
-            placeholder="Comentarios privados para {{ revieweeName }}..."
-            maxlength="500"
-          ></textarea>
-          <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 text-right">
-            {{ reviewForm.get('comment_private')?.value?.length || 0 }} / 500 caracteres
-          </p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Public Comment -->
+        <div class="w-full">
+          <label for="comment_public" class="block text-sm font-medium text-text-primary mb-2">
+            Comentario público
+            <span class="text-text-secondary dark:text-text-secondary font-normal block sm:inline"
+              >(opcional, visible para todos)</span
+              >
+            </label>
+            <textarea
+              id="comment_public"
+              formControlName="comment_public"
+              rows="6"
+              class="w-full px-3 py-2 border border-border-muted rounded-lg focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none transition-all"
+            [class.border-error-300]="
+              reviewForm.get('comment_public')?.invalid && reviewForm.get('comment_public')?.touched
+            "
+              placeholder="Comparte tu experiencia con otros usuarios..."
+              maxlength="1000"
+            ></textarea>
+            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 text-right">
+              <span
+                [class.text-error-text]="(reviewForm.get('comment_public')?.value?.length || 0) > 1000"
+                >
+                {{ reviewForm.get('comment_public')?.value?.length || 0 }} / 1000
+              </span>
+            </p>
         </div>
 
-        <!-- Info Note -->
-        <div class="bg-warning-bg border border-warning-border rounded-lg p-4 mb-6">
+        <!-- Private Comment -->
+        <div class="w-full">
+            <label for="comment_private" class="block text-sm font-medium text-text-primary mb-2">
+            Comentario privado
+            <span class="text-text-secondary dark:text-text-secondary font-normal block sm:inline"
+                >(solo para {{ revieweeName }})</span
+                >
+            </label>
+            <textarea
+                id="comment_private"
+                formControlName="comment_private"
+                rows="6"
+                class="w-full px-3 py-2 border border-border-muted rounded-lg focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none"
+                placeholder="Comentarios privados..."
+                maxlength="500"
+            ></textarea>
+            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 text-right">
+                {{ reviewForm.get('comment_private')?.value?.length || 0 }} / 500
+            </p>
+        </div>
+    </div>
+
+    <!-- Info Note -->
+    <div class="bg-warning-bg border border-warning-border rounded-lg p-4 mb-6">
           <div class="flex">
             <svg
               class="w-5 h-5 text-warning-text mr-2 flex-shrink-0 mt-0.5"
