@@ -46,6 +46,23 @@ import {
   searchOutline,
   hammerOutline,
   helpCircle,
+  arrowBackOutline,
+  arrowBack,
+  documentTextOutline,
+  shieldCheckmarkOutline,
+  gitCompareOutline,
+  warningOutline,
+  chevronForward,
+  receiptOutline,
+  chatbubbleEllipsesOutline,
+  arrowForward,
+  checkmarkDoneOutline,
+  sparkles,
+  informationCircle,
+  alertCircle,
+  closeCircle,
+  checkmarkCircle,
+  mapOutline,
 } from 'ionicons/icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -53,6 +70,7 @@ import { AiChecklistPanelComponent } from '../../../shared/components/ai-checkli
 import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
 import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
+import { SidePanelComponent } from '../../../shared/components/side-panel/side-panel.component';
 import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
 import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
 import { BookingInsuranceSummaryComponent } from '../../../shared/components/booking-insurance-summary/booking-insurance-summary.component';
@@ -158,6 +176,7 @@ const DISPUTE_STATUSES = new Set<BookingStatus>([
     AiTripPanelComponent,
     AiChecklistPanelComponent,
     ErrorStateComponent,
+    SidePanelComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -194,6 +213,23 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       searchOutline,
       hammerOutline,
       helpCircle,
+      arrowBackOutline,
+      arrowBack,
+      documentTextOutline,
+      shieldCheckmarkOutline,
+      gitCompareOutline,
+      warningOutline,
+      chevronForward,
+      receiptOutline,
+      chatbubbleEllipsesOutline,
+      arrowForward,
+      checkmarkDoneOutline,
+      sparkles,
+      informationCircle,
+      alertCircle,
+      closeCircle,
+      checkmarkCircle,
+      mapOutline,
     });
   }
 
@@ -711,6 +747,17 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   showReportTrafficFineModal = signal(false); // NEW
   showReportOwnerNoShowModal = signal(false); // NEW
 
+  // Chat Side Panel
+  chatPanelOpen = signal(false);
+
+  openChatPanel(): void {
+    this.chatPanelOpen.set(true);
+  }
+
+  closeChatPanel(): void {
+    this.chatPanelOpen.set(false);
+  }
+
   // NEW: Extension Requests
   pendingExtensionRequests = signal<BookingExtensionRequest[]>([]);
   loadingExtensionRequests = signal(false);
@@ -894,6 +941,22 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     if (!booking || !this.isRenter() || !status) return false;
     const validStatus = status === 'in_progress' || status === 'pending_review';
     return validStatus && this.hasRenterCheckIn() && !this.hasCheckOut();
+  });
+
+  // Owner check-in: Owner debe entregar el vehículo primero
+  readonly canOwnerCheckIn = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isOwner()) return false;
+    // Owner puede hacer check-in cuando booking está confirmado y aún no ha hecho check-in
+    return booking.status === 'confirmed' && !this.hasOwnerCheckIn();
+  });
+
+  // Owner check-out: Owner confirma la devolución del vehículo
+  readonly canOwnerCheckOut = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isOwner()) return false;
+    // Owner puede hacer check-out cuando el renter ya devolvió (in_progress con renter check-out)
+    return booking.status === 'in_progress' && this.hasRenterCheckIn();
   });
 
   readonly canReportDamage = computed(() => {
@@ -1816,6 +1879,57 @@ export class BookingDetailPage implements OnInit, OnDestroy {
               this.loading.set(false);
             }
             return true;
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  // ============================================================================
+  // RENTER CANCELLATION
+  // ============================================================================
+  async cancelBooking(bookingId: string): Promise<void> {
+    const booking = this.booking();
+    if (!booking || booking.id !== bookingId) return;
+
+    const alert = await this.alertController.create({
+      header: 'Cancelar Reserva',
+      message: '¿Estás seguro de que querés cancelar esta reserva?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+        },
+        {
+          text: 'Sí, cancelar',
+          handler: async () => {
+            this.loading.set(true);
+            try {
+              await this.bookingsService.cancelBooking(booking.id);
+              
+              const updated = await this.bookingsService.getBookingById(bookingId);
+              this.booking.set(updated);
+              
+              const successAlert = await this.alertController.create({
+                header: 'Reserva Cancelada',
+                message: 'La reserva ha sido cancelada exitosamente.',
+                buttons: ['OK']
+              });
+              await successAlert.present();
+
+            } catch (error) {
+              console.error('Error cancelling booking:', error);
+               const errorAlert = await this.alertController.create({
+                  header: 'Error',
+                  message: 'No se pudo cancelar la reserva. Intentalo de nuevo.',
+                  buttons: ['OK']
+                 });
+                 await errorAlert.present();
+            } finally {
+              this.loading.set(false);
+            }
           },
         },
       ],

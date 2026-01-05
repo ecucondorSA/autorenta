@@ -237,13 +237,13 @@ export class DynamicPricingService {
     pending_requests: number;
     demand_ratio: number;
     surge_factor: number;
-    timestamp: string;
+    created_at: string;
   } | null> {
     const { data, error } = await this.supabase
       .from('pricing_demand_snapshots')
       .select('*')
       .eq('region_id', regionId)
-      .order('timestamp', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(1)
       .single();
 

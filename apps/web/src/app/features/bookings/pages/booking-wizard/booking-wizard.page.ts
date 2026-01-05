@@ -346,8 +346,8 @@ export class BookingWizardPage implements OnInit {
       const carId = this.wizardData().carId;
       if (this.isBrowser) localStorage.removeItem(`booking_draft_${carId}`);
 
-      // Navigate to payment page
-      this.router.navigate(['/bookings', booking.id, 'payment']);
+      // Navigate to payment page (detail-payment has full guarantee info)
+      this.router.navigate(['/bookings', booking.id, 'detail-payment']);
     } catch (error) {
       this.errorHandler.handleError(error, 'Crear reserva', true);
     } finally {

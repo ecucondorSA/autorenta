@@ -134,10 +134,10 @@ export const BOOKINGS_ROUTES: Routes = [
     canMatch: [AuthGuard, VerificationGuard],
   },
   {
+    // Redirect legacy /payment route to /detail-payment (component with full guarantee info)
     path: ':bookingId/payment',
-    loadComponent: () =>
-      import('./booking-payment/booking-payment.page').then((m) => m.BookingPaymentPage),
-    canMatch: [AuthGuard, VerificationGuard],
+    redirectTo: ':bookingId/detail-payment',
+    pathMatch: 'full',
   },
   {
     path: ':bookingId/pending',

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
 import { PaymentsService } from '@core/services/payments/payments.service';
 import { Booking } from '../../../core/models';
 import { ReferralBannerComponent } from '../../../shared/components/referral-banner/referral-banner.component';
@@ -24,6 +25,7 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly bookingsService = inject(BookingsService);
+  private readonly bookingRealtime = inject(BookingRealtimeService);
   private readonly paymentsService = inject(PaymentsService);
 
   readonly bookingId = signal<string>('');
@@ -53,14 +55,56 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
     this.bookingId.set(id);
     this.loadBooking(id);
 
-    // ✅ Iniciar polling si viene desde MercadoPago
+    // ✅ FIX Bug #9: Usar realtime + polling como fallback si viene desde MercadoPago
     const fromMercadoPago = this.route.snapshot.queryParamMap.get('from_mp') === 'true';
     if (fromMercadoPago) {
-      this.startPolling();
+      this.subscribeToRealtimeUpdates(id);
+      this.startPolling(); // Keep polling as fallback for network issues
     }
   }
 
+  /**
+   * ✅ FIX Bug #9: Subscribe to realtime booking updates
+   *
+   * Uses Supabase Realtime to detect status changes instantly instead of polling.
+   * Polling is kept as a fallback in case realtime connection fails.
+   */
+  private subscribeToRealtimeUpdates(bookingId: string): void {
+    this.logger.debug(`[BookingSuccess] Subscribing to realtime for booking: ${bookingId}`);
+
+    this.bookingRealtime.subscribeToBooking(bookingId, {
+      onBookingChange: (updatedBooking: Booking) => {
+        this.logger.debug('[BookingSuccess] Realtime: Booking changed', {
+          status: updatedBooking.status,
+        });
+
+        // Update booking signal
+        this.booking.set(updatedBooking);
+
+        // Check status and react
+        if (updatedBooking.status === 'confirmed') {
+          this.paymentStatus.set('completed');
+          this.pollProgress.set(100);
+          this.stopPolling();
+          this.logger.debug('✅ Payment confirmed via realtime');
+          return;
+        }
+
+        if (updatedBooking.status === 'cancelled') {
+          this.paymentStatus.set('failed');
+          this.stopPolling();
+          this.logger.debug('❌ Payment failed via realtime');
+          return;
+        }
+      },
+      onConnectionChange: (status) => {
+        this.logger.debug('[BookingSuccess] Realtime connection status:', status);
+      },
+    });
+  }
+
   ngOnDestroy(): void {
+    this.bookingRealtime.unsubscribeAll(); // ✅ FIX Bug #9: Cleanup realtime subscription
     this.stopPolling();
     this.stopAutoRedirect();
   }

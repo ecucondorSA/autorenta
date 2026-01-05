@@ -68,35 +68,6 @@ const CACHE_DURATION_HOURS = 24;
 
         <!-- Content -->
         <div class="p-3">
-          <!-- Initial State: Not Recommended -->
-          @if (!hasRecommendation() && !loading()) {
-            <div class="text-center py-3">
-              <!-- Animated car icon -->
-              <div class="relative w-12 h-12 mx-auto mb-3">
-                <div class="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-full animate-pulse"></div>
-                <div class="relative w-full h-full bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30 rounded-full flex items-center justify-center">
-                  <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 17h.01M16 17h.01M4 11l1.664-4.992A2 2 0 017.56 4h8.88a2 2 0 011.896 1.368L20 10m0 0h-4m-8 0H4m0 0v6a1 1 0 001 1h1m14-7v6a1 1 0 01-1 1h-1m-8 0h4" />
-                  </svg>
-                </div>
-              </div>
-              <p class="text-xs text-gray-600 dark:text-gray-300 mb-3 max-w-xs mx-auto">
-                Nuestra IA analiza tu historial para recomendarte el auto perfecto
-              </p>
-              <button
-                (click)="getRecommendation()"
-                class="relative group/btn overflow-hidden bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-2 px-5 rounded-lg text-xs transition-all duration-300 shadow hover:shadow-orange-500/25"
-              >
-                <span class="relative z-10 flex items-center gap-1.5">
-                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/>
-                  </svg>
-                  Ver Sugerencia
-                </span>
-              </button>
-            </div>
-          }
-
           <!-- Loading State -->
           @if (loading()) {
             <div class="py-3">
@@ -245,6 +216,10 @@ export class AiCarRecommendationComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFromCache();
+    // Auto-fetch if no cached recommendation
+    if (!this.hasRecommendation()) {
+      void this.getRecommendation();
+    }
   }
 
   async getRecommendation(): Promise<void> {

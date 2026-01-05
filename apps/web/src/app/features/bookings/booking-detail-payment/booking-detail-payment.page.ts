@@ -313,7 +313,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         }
 
         // FIX: Validate booking is in a modifiable state
-        const validStates = ['pending', 'draft'];
+        const validStates = ['pending', 'pending_payment', 'draft'];
         if (!validStates.includes(booking.status)) {
           this.error.set(`Este booking está en estado "${booking.status}" y no se puede modificar.`);
           return;
@@ -341,6 +341,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
         if (booking.wallet_lock_id) {
           this.walletLockId.set(booking.wallet_lock_id);
+          // FIX: Lock FX rate if wallet lock already exists
+          this.fxRateLocked.set(true);
         }
 
         if (booking.authorized_payment_id) {
@@ -350,6 +352,10 @@ export class BookingRequestPage implements OnInit, OnDestroy {
             );
             if (auth) {
               this.currentAuthorization.set(auth);
+              // FIX: Lock FX rate if preauthorization already exists
+              if (auth.status === 'authorized') {
+                this.fxRateLocked.set(true);
+              }
             }
           } catch {
             // Silent: user can re-authorize
@@ -393,10 +399,13 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     await this.fetchAndSetRate();
     this.loading.set(false);
 
-    // Poll every 30 seconds
+    // Poll every 30 seconds (only if FX rate is not locked)
     this.stopPolling(); // Ensure no duplicate intervals
     this.pollInterval = setInterval(() => {
-      this.fetchAndSetRate();
+      // FIX: Don't update rate if already locked (preauth or wallet lock done)
+      if (!this.fxRateLocked()) {
+        this.fetchAndSetRate();
+      }
     }, 30000);
   }
 
@@ -483,6 +492,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
       if (!lockWithExpirationError && lockWithExpiration) {
         this.walletLockId.set(lockWithExpiration as string);
+        // FIX: Lock FX rate when wallet lock succeeds
+        this.fxRateLocked.set(true);
+        this.stopPolling();
         await this.walletService.fetchBalance(true).catch(() => {});
         return lockWithExpiration as string;
       }
@@ -498,6 +510,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       }
 
       this.walletLockId.set(lockId as string);
+      // FIX: Lock FX rate when wallet lock succeeds
+      this.fxRateLocked.set(true);
+      this.stopPolling();
       await this.walletService.fetchBalance(true).catch(() => {});
       return lockId as string;
     } finally {
@@ -679,7 +694,11 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     this.currentAuthorization.set(authorization);
 
     if (authorization?.status === 'authorized') {
-      this.logger.info('Preauthorization successful', {
+      // FIX: Lock FX rate and stop polling when preauthorization succeeds
+      this.fxRateLocked.set(true);
+      this.stopPolling();
+
+      this.logger.info('Preauthorization successful - FX rate locked', {
         authorizedPaymentId: authorization.authorizedPaymentId,
         amountArs: authorization.amountArs,
       });

@@ -345,16 +345,21 @@ export class BookingsService {
   }
 
   async getRenterVerificationForOwner(bookingId: string): Promise<Record<string, unknown> | null> {
-    const { data, error } = await this.supabase.rpc('get_renter_verification_for_owner', {
-      p_booking_id: bookingId,
-    });
+    try {
+      const { data, error } = await this.supabase.rpc('get_renter_verification_for_owner', {
+        p_booking_id: bookingId,
+      });
 
-    if (error) {
+      if (error) {
+        return null;
+      }
+
+      if (!data) return null;
+      return Array.isArray(data) ? (data[0] as Record<string, unknown> | null) : (data as Record<string, unknown> | null);
+    } catch {
+      // Silently handle RPC errors (e.g., 400 when user is not the owner)
       return null;
     }
-
-    if (!data) return null;
-    return Array.isArray(data) ? (data[0] as Record<string, unknown> | null) : (data as Record<string, unknown> | null);
   }
 
   /**
@@ -1910,7 +1915,12 @@ export class BookingsService {
     isSuspended: boolean;
   } | null> {
     try {
-      const { data, error } = await this.supabase.rpc('get_owner_penalties');
+      const user = await this.supabase.auth.getUser();
+      if (!user.data.user?.id) return null;
+
+      const { data, error } = await this.supabase.rpc('get_owner_penalties', {
+        p_owner_id: user.data.user.id,
+      });
 
       if (error) throw error;
 

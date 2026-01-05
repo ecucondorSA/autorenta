@@ -14,6 +14,8 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 
 // Services
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { ToastService } from '@core/services/ui/toast.service';
 
 // Components
@@ -40,6 +42,8 @@ export class BookingPendingPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly bookingService = inject(BookingsService);
+  private readonly bookingRealtime = inject(BookingRealtimeService);
+  private readonly logger = inject(LoggerService);
   private readonly toastService = inject(ToastService);
   private readonly destroy$ = new Subject<void>();
 
@@ -60,12 +64,48 @@ export class BookingPendingPage implements OnInit, OnDestroy {
     }
 
     this.loadBookingData(bookingId);
-    this.startPolling(bookingId);
+    this.subscribeToRealtimeUpdates(bookingId); // ✅ FIX Bug #9: Realtime primero
+    this.startPolling(bookingId); // Polling como fallback
   }
 
   ngOnDestroy(): void {
+    this.bookingRealtime.unsubscribeAll(); // ✅ FIX Bug #9: Cleanup realtime
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  /**
+   * ✅ FIX Bug #9: Subscribe to realtime booking updates
+   *
+   * Uses Supabase Realtime to detect payment status changes instantly.
+   * Polling is kept as a fallback in case realtime connection fails.
+   */
+  private subscribeToRealtimeUpdates(bookingId: string): void {
+    this.logger.debug(`[BookingPending] Subscribing to realtime for booking: ${bookingId}`);
+
+    this.bookingRealtime.subscribeToBooking(bookingId, {
+      onBookingChange: (updatedBooking) => {
+        this.logger.debug('[BookingPending] Realtime: Booking changed', {
+          payment_status: updatedBooking.payment_status,
+          status: updatedBooking.status,
+        });
+
+        // Update booking signal
+        this.booking.set(updatedBooking as unknown as Booking);
+
+        // Check payment status
+        if (updatedBooking.payment_status === 'approved') {
+          this.logger.debug('✅ Payment approved via realtime');
+          this.handlePaymentApproved(bookingId);
+        } else if (updatedBooking.payment_status === 'rejected') {
+          this.logger.debug('❌ Payment rejected via realtime');
+          this.handlePaymentRejected(bookingId);
+        }
+      },
+      onConnectionChange: (status) => {
+        this.logger.debug('[BookingPending] Realtime connection status:', status);
+      },
+    });
   }
 
   private loadBookingData(bookingId: string): void {
@@ -144,7 +184,7 @@ export class BookingPendingPage implements OnInit, OnDestroy {
   private handlePaymentRejected(bookingId: string): void {
     this.destroy$.next(); // Stop polling
     this.toastService.error('Pago rechazado', 'El pago fue rechazado por el procesador');
-    this.router.navigate(['/bookings', bookingId, 'payment'], {
+    this.router.navigate(['/bookings', bookingId, 'detail-payment'], {
       queryParams: { retry: 'true' },
     });
   }
@@ -160,7 +200,7 @@ export class BookingPendingPage implements OnInit, OnDestroy {
   retryPayment(): void {
     const bookingId = this.booking()?.id;
     if (bookingId) {
-      this.router.navigate(['/bookings', bookingId, 'payment'], {
+      this.router.navigate(['/bookings', bookingId, 'detail-payment'], {
         queryParams: { retry: 'true' },
       });
     }

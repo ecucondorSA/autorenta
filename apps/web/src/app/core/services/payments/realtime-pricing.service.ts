@@ -44,7 +44,7 @@ export interface ExchangeRateUpdate {
 export interface DemandSnapshot {
   id: string;
   region_id: string;
-  timestamp: string;
+  created_at: string;
   available_cars: number;
   active_bookings: number;
   pending_requests: number;
@@ -285,7 +285,7 @@ export class RealtimePricingService {
       const { data, error } = await this.supabase
         .from('pricing_demand_snapshots')
         .select('*')
-        .order('timestamp', { ascending: false });
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       if (data) {

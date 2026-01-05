@@ -269,7 +269,7 @@ export class BookingPaymentPage implements OnInit {
           }
 
           // FIX: Validate booking is in a payable state
-          const validPayableStates = ['pending', 'draft'];
+          const validPayableStates = ['pending', 'pending_payment', 'draft'];
           if (!validPayableStates.includes(booking.status)) {
             this.toastService.error(
               'Estado inválido',
