@@ -164,12 +164,10 @@ jobs:
         continue-on-error: true
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID || secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/web/dist/web/browser --project-name=autorentar --branch=main
-          packageManager: pnpm
+        run: npx wrangler pages deploy apps/web/dist/web/browser --project-name=autorentar --branch=main
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID || secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Web Deploy Status
         if: always()
