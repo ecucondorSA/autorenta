@@ -169,6 +169,7 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID || secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy apps/web/dist/web/browser --project-name=autorentar --branch=main
+          packageManager: pnpm
 
       - name: Web Deploy Status
         if: always()
@@ -219,10 +220,13 @@ jobs:
           NODE_ENV: production
 
       - name: Sync Capacitor
-        run: pnpm --filter @autorenta/web exec cap sync android
+        working-directory: apps/web
+        run: npx cap sync android
 
       - name: Decode Keystore
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > apps/web/android/keystore/autorentar-release.keystore
+        run: |
+          mkdir -p apps/web/android/keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > apps/web/android/keystore/autorentar-release.keystore
 
       - name: Build Release APK
         working-directory: apps/web/android
