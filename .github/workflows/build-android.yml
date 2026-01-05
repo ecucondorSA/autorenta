@@ -70,6 +70,11 @@ jobs:
       - name: Sync Capacitor
         run: pnpm --filter @autorenta/web exec cap sync android
 
+      - name: Workaround for missing cordova.variables.gradle
+        run: |
+          mkdir -p apps/web/android/capacitor-cordova-android-plugins
+          touch apps/web/android/capacitor-cordova-android-plugins/cordova.variables.gradle
+
       - name: Decode Keystore
         if: github.event.inputs.build_type == 'release'
         run: |
