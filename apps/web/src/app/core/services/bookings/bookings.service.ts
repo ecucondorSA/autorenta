@@ -4,15 +4,17 @@ import { getErrorMessage } from '@core/utils/type-guards';
 import { BookingApprovalService } from '@core/services/bookings/booking-approval.service';
 import { BookingCancellationService } from '@core/services/bookings/booking-cancellation.service';
 import { BookingCompletionService } from '@core/services/bookings/booking-completion.service';
+import { BookingDataLoaderService } from '@core/services/bookings/booking-data-loader.service';
 import { BookingDisputeService } from '@core/services/bookings/booking-dispute.service';
 import { BookingExtensionService } from '@core/services/bookings/booking-extension.service';
+import { BookingInsuranceHelperService } from '@core/services/bookings/booking-insurance-helper.service';
+import { BookingOwnerPenaltyService } from '@core/services/bookings/booking-owner-penalty.service';
 import { BookingUtilsService } from '@core/services/bookings/booking-utils.service';
 import { BookingValidationService } from '@core/services/bookings/booking-validation.service';
 import { BookingWalletService } from '@core/services/bookings/booking-wallet.service';
 import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { BookingNotificationsService } from '@core/services/bookings/booking-notifications.service';
-import { InsuranceService } from '@core/services/bookings/insurance.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { PwaService } from '@core/services/infrastructure/pwa.service';
@@ -38,7 +40,6 @@ type BookingWithMetadata = Booking & {
 export class BookingsService {
   private readonly supabase = injectSupabase();
   private readonly pwaService = inject(PwaService);
-  private readonly insuranceService = inject(InsuranceService);
   private readonly logger = inject(LoggerService);
   private readonly tiktokEvents = inject(TikTokEventsService);
 
@@ -52,6 +53,11 @@ export class BookingsService {
   private readonly extensionService = inject(BookingExtensionService);
   private readonly disputeService = inject(BookingDisputeService);
   private readonly utilsService = inject(BookingUtilsService);
+
+  // Extracted services
+  private readonly insuranceHelper = inject(BookingInsuranceHelperService);
+  private readonly ownerPenaltyService = inject(BookingOwnerPenaltyService);
+  private readonly dataLoaderService = inject(BookingDataLoaderService);
 
   // Notification services
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
@@ -154,7 +160,7 @@ export class BookingsService {
     }
 
     // ✅ P0-003 FIX: Activate insurance coverage with retry and BLOCK if fails
-    await this.activateInsuranceWithRetry(bookingId, []);
+    await this.insuranceHelper.activateInsuranceWithRetry(bookingId, [], this.updateBooking.bind(this));
 
     // Recalculate pricing breakdown
     await this.recalculatePricing(bookingId);
@@ -246,7 +252,7 @@ export class BookingsService {
     }
 
     // ✅ P0-003 FIX: Activate insurance coverage with retry and BLOCK if fails
-    await this.activateInsuranceWithRetry(bookingId, []);
+    await this.insuranceHelper.activateInsuranceWithRetry(bookingId, [], this.updateBooking.bind(this));
 
     // Recalculate pricing breakdown
     await this.recalculatePricing(bookingId);
@@ -384,19 +390,7 @@ export class BookingsService {
     if (!booking) return null;
 
     // ✅ OPTIMIZED: Load car details and insurance coverage in parallel
-    const loadPromises: Promise<void>[] = [];
-
-    if (booking?.car_id) {
-      loadPromises.push(this.loadCarDetails(booking));
-    }
-
-    if (booking?.insurance_coverage_id) {
-      loadPromises.push(this.loadInsuranceCoverage(booking));
-    }
-
-    if (loadPromises.length > 0) {
-      await Promise.all(loadPromises);
-    }
+    await this.dataLoaderService.loadAllRelatedData(booking);
 
     return booking;
   }
@@ -610,7 +604,7 @@ export class BookingsService {
       }
 
       // ✅ P0-003: Insurance is mandatory — block booking if it fails
-      await this.activateInsuranceWithRetry(result.booking_id, []);
+      await this.insuranceHelper.activateInsuranceWithRetry(result.booking_id, [], this.updateBooking.bind(this));
 
       return {
         success: true,
@@ -972,43 +966,28 @@ export class BookingsService {
   }
 
 
-  // Insurance Operations (delegation to InsuranceService)
+  // Insurance Operations (delegated to BookingInsuranceHelperService)
   async activateInsuranceCoverage(
     bookingId: string,
     addonIds: string[] = [],
   ): Promise<{ success: boolean; coverage_id?: string; error?: string }> {
-    try {
-      const coverageId = await this.insuranceService.activateCoverage({
-        booking_id: bookingId,
-        addon_ids: addonIds,
-      });
-
-      return {
-        success: true,
-        coverage_id: coverageId,
-      };
-    } catch (error: unknown) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Error al activar cobertura de seguro',
-      };
-    }
+    return this.insuranceHelper.activateInsuranceCoverage(bookingId, addonIds);
   }
 
   async getBookingInsuranceSummary(bookingId: string) {
-    return this.insuranceService.getInsuranceSummary(bookingId);
+    return this.insuranceHelper.getBookingInsuranceSummary(bookingId);
   }
 
   async calculateInsuranceDeposit(carId: string): Promise<number> {
-    return this.insuranceService.calculateSecurityDeposit(carId);
+    return this.insuranceHelper.calculateInsuranceDeposit(carId);
   }
 
   async hasOwnerInsurance(carId: string): Promise<boolean> {
-    return this.insuranceService.hasOwnerInsurance(carId);
+    return this.insuranceHelper.hasOwnerInsurance(carId);
   }
 
   async getInsuranceCommissionRate(carId: string): Promise<number> {
-    return this.insuranceService.getCommissionRate(carId);
+    return this.insuranceHelper.getInsuranceCommissionRate(carId);
   }
 
   // ============================================================================
@@ -1027,110 +1006,6 @@ export class BookingsService {
       await this.pwaService.setAppBadge(pendingCount);
     } else {
       await this.pwaService.clearAppBadge();
-    }
-  }
-
-  /**
-   * Load car details for a booking
-   */
-  private async loadCarDetails(booking: Booking): Promise<void> {
-    try {
-      const { data: car, error: carError } = await this.supabase
-        .from('cars')
-        .select(
-          'id, owner_id, title, brand, model, year, fuel_policy, mileage_limit, extra_km_price, allow_smoking, allow_pets, allow_rideshare, max_distance_km, car_photos(id, url, stored_path, position, sort_order, created_at)',
-        )
-        .eq('id', booking.car_id)
-        .single();
-
-      if (!carError && car) {
-        const rawPhotos = (car as unknown as { car_photos?: unknown }).car_photos;
-        const photos = Array.isArray(rawPhotos) ? (rawPhotos as Array<Record<string, unknown>>) : [];
-        const images = photos
-          .map((p) => {
-            const url = p['url'];
-            return typeof url === 'string' ? url : null;
-          })
-          .filter((url): url is string => Boolean(url));
-
-        (booking as Booking).car = {
-          ...(car as Partial<import('@core/models').Car>),
-          car_photos: photos as unknown as import('@core/models').CarPhoto[],
-          photos: photos as unknown as import('@core/models').CarPhoto[],
-          images,
-        } as Partial<import('@core/models').Car>;
-      } else if (carError) {
-        this.logger.error(
-          'Car query error',
-          'BookingsService',
-          carError instanceof Error ? carError : new Error(getErrorMessage(carError)),
-        );
-      }
-    } catch (carException) {
-      this.logger.error(
-        'Error loading car details',
-        'BookingsService',
-        carException instanceof Error ? carException : new Error(getErrorMessage(carException)),
-      );
-      throw new Error(
-        `Failed to load car details: ${carException instanceof Error ? carException.message : getErrorMessage(carException)}`,
-      );
-    }
-  }
-
-  /**
-   * Load insurance coverage for a booking
-   */
-  private async loadInsuranceCoverage(booking: Booking): Promise<void> {
-    try {
-      const { data: coverage, error: coverageError } = await this.supabase
-        .from('booking_insurance_coverage')
-        .select('*')
-        .eq('id', booking.insurance_coverage_id)
-        .single();
-
-      if (!coverageError && coverage) {
-        if (coverage.policy_id) {
-          const { data: policy, error: policyError } = await this.supabase
-            .from('insurance_policies')
-            .select('*')
-            .eq('id', coverage.policy_id)
-            .single();
-
-          if (!policyError && policy) {
-            (coverage as Record<string, unknown>)['policy'] = policy;
-          } else if (policyError) {
-            this.logger.error(
-              'Policy query error',
-              'BookingsService',
-              policyError instanceof Error ? policyError : new Error(getErrorMessage(policyError)),
-            );
-            throw new Error(`Failed to load policy: ${policyError.message}`);
-          }
-        }
-
-        (booking as Booking).insurance_coverage = coverage;
-      } else if (coverageError) {
-        this.logger.error(
-          'Coverage query error',
-          'BookingsService',
-          coverageError instanceof Error
-            ? coverageError
-            : new Error(getErrorMessage(coverageError)),
-        );
-        throw new Error(`Failed to load coverage: ${coverageError.message}`);
-      }
-    } catch (coverageException) {
-      this.logger.error(
-        'Error loading coverage details',
-        'BookingsService',
-        coverageException instanceof Error
-          ? coverageException
-          : new Error(getErrorMessage(coverageException)),
-      );
-      throw new Error(
-        `Failed to load insurance coverage: ${coverageException instanceof Error ? coverageException.message : getErrorMessage(coverageException)}`,
-      );
     }
   }
 
@@ -1245,269 +1120,17 @@ export class BookingsService {
   }
 
   // ============================================================================
-  // PAYMENT ISSUES (P0-002 FIX)
-  // ============================================================================
-
-  /**
-   * Create a payment issue record for manual review and background retry
-   *
-   * ✅ P0-002 FIX: Registro de fallos de wallet unlock para retry posterior
-   *
-   * Esta función guarda los errores críticos de pago/wallet en la tabla
-   * `payment_issues` para que un background job pueda reintentarlos.
-   *
-   * @param issue - Payment issue data
-   * @returns Promise<void>
-   */
-  async createPaymentIssue(issue: {
-    booking_id: string;
-    issue_type: string;
-    severity: 'low' | 'medium' | 'high' | 'critical';
-    description: string;
-    metadata?: Record<string, unknown>;
-    status?: 'pending_review' | 'in_progress' | 'resolved' | 'ignored';
-  }): Promise<void> {
-    const { error } = await this.supabase.from('payment_issues').insert({
-      booking_id: issue.booking_id,
-      issue_type: issue.issue_type,
-      severity: issue.severity,
-      description: issue.description,
-      metadata: issue.metadata || {},
-      status: issue.status || 'pending_review',
-      created_at: new Date().toISOString(),
-    });
-
-    if (error) {
-      this.logger.error('Failed to create payment issue record', 'BookingsService', error);
-      throw error;
-    }
-
-    this.logger.info('Payment issue created successfully', 'BookingsService', {
-      booking_id: issue.booking_id,
-      issue_type: issue.issue_type,
-      severity: issue.severity,
-    });
-  }
-
-  // ============================================================================
-  // INSURANCE ACTIVATION (P0-003 FIX)
-  // ============================================================================
-
-  /**
-   * Activate insurance coverage with retry logic and MANDATORY blocking
-   *
-   * ✅ P0-003 FIX: Insurance activation BLOCKS booking if it fails
-   *
-   * CRITICAL: This method will throw an error if insurance activation fails
-   * after all retries. This is MANDATORY for legal compliance - bookings
-   * CANNOT proceed without valid insurance coverage.
-   *
-   * Features:
-   * - 3 retry attempts with exponential backoff (1s, 2s, 4s)
-   * - Detailed logging of each attempt
-   * - Critical alerts to Sentry if all retries fail
-   * - BLOCKS booking creation if insurance fails
-   * - Auto-cancellation of booking if insurance fails
-   *
-   * Legal Requirements:
-   * - All bookings MUST have active insurance coverage
-   * - Violation of this requirement is ILLEGAL in most jurisdictions
-   * - Potential financial exposure: millions USD per incident
-   *
-   * @param bookingId - ID of the booking
-   * @param addonIds - Optional insurance addon IDs
-   * @throws Error if insurance activation fails after all retries
-   */
-  private async activateInsuranceWithRetry(
-    bookingId: string,
-    addonIds: string[] = [],
-  ): Promise<void> {
-    const maxRetries = 3;
-    let lastError: unknown;
-
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        this.logger.info(
-          `Attempting insurance activation (attempt ${attempt}/${maxRetries})`,
-          'BookingsService',
-          { bookingId, addonIds, attempt },
-        );
-
-        // Attempt to activate insurance
-        await this.insuranceService.activateCoverage({
-          booking_id: bookingId,
-          addon_ids: addonIds,
-        });
-
-        this.logger.info('Insurance activated successfully', 'BookingsService', {
-          bookingId,
-          addonIds,
-          attempt,
-          totalAttempts: attempt,
-        });
-
-        // ✅ Success - insurance is active
-        return;
-      } catch (error) {
-        lastError = error;
-
-        this.logger.warn(
-          `Insurance activation failed (attempt ${attempt}/${maxRetries})`,
-          'BookingsService',
-          error instanceof Error ? error : new Error(getErrorMessage(error)),
-        );
-
-        // If not the last attempt, wait with exponential backoff
-        if (attempt < maxRetries) {
-          const delayMs = Math.pow(2, attempt - 1) * 1000; // 1s, 2s, 4s
-          await this.delay(delayMs);
-        }
-      }
-    }
-
-    // ❌ All retries failed - CRITICAL ERROR
-    await this.handleInsuranceActivationFailure(bookingId, addonIds, lastError);
-  }
-
-  /**
-   * Handle critical insurance activation failure
-   *
-   * Actions:
-   * 1. Log CRITICAL error to Sentry (legal compliance)
-   * 2. Auto-cancel the booking (cannot proceed without insurance)
-   * 3. Create compliance issue record for audit trail
-   * 4. Alert compliance team
-   *
-   * @param bookingId - ID of the booking
-   * @param addonIds - Insurance addon IDs that failed to activate
-   * @param error - Error that caused the failure
-   * @throws Error - Always throws to block booking creation
-   */
-  private async handleInsuranceActivationFailure(
-    bookingId: string,
-    addonIds: string[],
-    error: unknown,
-  ): Promise<never> {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorStack = error instanceof Error ? error.stack : undefined;
-
-    // 1. ❌ CRITICAL LOG - Legal compliance violation
-    this.logger.critical(
-      'CRITICAL: Insurance activation failed - LEGAL COMPLIANCE VIOLATION',
-      'BookingsService',
-      error instanceof Error ? error : new Error(`Insurance activation failed: ${errorMessage}`),
-    );
-
-    // 2. Log detailed information for audit trail
-    this.logger.error(
-      'Insurance activation failure details (LEGAL COMPLIANCE)',
-      'BookingsService',
-      error instanceof Error ? error : new Error(errorMessage),
-    );
-
-    // 3. Auto-cancel booking due to system failure (insurance activation)
-    // ✅ ATOMICITY FIX: Use cancellation_reason to distinguish from user cancellations
-    // Note: 'failed' status not in DB enum, using 'cancelled' with distinct reason
-    try {
-      await this.updateBooking(bookingId, {
-        status: 'cancelled',
-        cancellation_reason: 'system_failure:insurance_activation_failed',
-        cancelled_at: new Date().toISOString(),
-        cancelled_by_role: 'system',
-      });
-
-      this.logger.info(
-        'Booking auto-cancelled due to insurance system failure',
-        'BookingsService',
-        {
-          bookingId,
-          status: 'cancelled',
-          reason: 'system_failure:insurance_activation_failed',
-          isSystemFailure: true,
-        },
-      );
-    } catch (cancelError) {
-      this.logger.error(
-        'Failed to auto-cancel booking after insurance failure',
-        'BookingsService',
-        cancelError instanceof Error ? cancelError : new Error(getErrorMessage(cancelError)),
-      );
-    }
-
-    // 4. Create compliance issue for audit trail
-    try {
-      await this.createPaymentIssue({
-        booking_id: bookingId,
-        issue_type: 'insurance_activation_failed',
-        severity: 'critical',
-        description: `LEGAL COMPLIANCE: Failed to activate insurance after ${3} retry attempts. Booking auto-cancelled.`,
-        metadata: {
-          addon_ids: addonIds,
-          error: errorMessage,
-          stack: errorStack,
-          timestamp: new Date().toISOString(),
-          retry_count: 3,
-          compliance_violation: true,
-          legal_risk: 'HIGH',
-        },
-        status: 'pending_review',
-      });
-    } catch (issueError) {
-      this.logger.error(
-        'Failed to create compliance issue record',
-        'BookingsService',
-        issueError instanceof Error ? issueError : new Error(getErrorMessage(issueError)),
-      );
-    }
-
-    // 5. ❌ THROW ERROR - BLOCK booking creation
-    throw new Error(
-      `CRITICAL: Cannot create booking without insurance coverage. ` +
-      `Insurance activation failed after 3 attempts. ` +
-      `Error: ${errorMessage}. ` +
-      `Booking has been auto-cancelled for legal compliance.`,
-    );
-  }
-
-  /**
-   * Utility: Delay execution for specified milliseconds
-   */
-  private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  // ============================================================================
-  // RPC INTEGRATIONS - Owner Cancellation & Penalties
+  // RPC INTEGRATIONS - Owner Cancellation & Penalties (delegated)
   // ============================================================================
 
   /**
    * Owner cancela una reserva con penalización automática
-   * - Reembolso 100% al renter
-   * - -10% visibilidad por 30 días
-   * - 3+ cancelaciones en 90 días = suspensión temporal
    */
   async ownerCancelBooking(
     bookingId: string,
     reason: string,
   ): Promise<{ success: boolean; error?: string; penaltyApplied?: boolean }> {
-    try {
-      const { data, error } = await this.supabase.rpc('owner_cancel_booking', {
-        p_booking_id: bookingId,
-        p_reason: reason,
-      });
-
-      if (error) throw error;
-
-      return {
-        success: true,
-        penaltyApplied: data?.penalty_applied ?? true,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Error al cancelar reserva',
-      };
-    }
+    return this.ownerPenaltyService.ownerCancelBooking(bookingId, reason);
   }
 
   /**
@@ -1519,42 +1142,32 @@ export class BookingsService {
     cancellationCount90d: number;
     isSuspended: boolean;
   } | null> {
-    try {
-      const user = await this.supabase.auth.getUser();
-      if (!user.data.user?.id) return null;
-
-      const { data, error } = await this.supabase.rpc('get_owner_penalties', {
-        p_owner_id: user.data.user.id,
-      });
-
-      if (error) throw error;
-
-      return {
-        visibilityPenaltyUntil: data?.visibility_penalty_until || null,
-        visibilityFactor: data?.visibility_factor ?? 1.0,
-        cancellationCount90d: data?.cancellation_count_90d ?? 0,
-        isSuspended: data?.is_suspended ?? false,
-      };
-    } catch {
-      return null;
-    }
+    return this.ownerPenaltyService.getOwnerPenalties();
   }
 
   /**
    * Obtiene el factor de visibilidad de un owner (para búsquedas)
-   * Factor entre 0.0 y 1.0 donde 1.0 = visibilidad completa
    */
   async getOwnerVisibilityFactor(ownerId?: string): Promise<number> {
-    try {
-      const { data, error } = await this.supabase.rpc('get_owner_visibility_factor', {
-        p_owner_id: ownerId || null,
-      });
+    return this.ownerPenaltyService.getOwnerVisibilityFactor(ownerId);
+  }
 
-      if (error) throw error;
+  // ============================================================================
+  // PAYMENT ISSUES (delegated to BookingInsuranceHelperService)
+  // ============================================================================
 
-      return data ?? 1.0;
-    } catch {
-      return 1.0; // Default to full visibility on error
-    }
+  /**
+   * Create a payment issue record for manual review and background retry
+   * Delegated to BookingInsuranceHelperService for consistency
+   */
+  async createPaymentIssue(issue: {
+    booking_id: string;
+    issue_type: string;
+    severity: 'low' | 'medium' | 'high' | 'critical';
+    description: string;
+    metadata?: Record<string, unknown>;
+    status?: 'pending_review' | 'in_progress' | 'resolved' | 'ignored';
+  }): Promise<void> {
+    return this.insuranceHelper.createPaymentIssue(issue);
   }
 }
