@@ -1,0 +1,123 @@
+name: 🚀 Production Release
+
+# Este workflow orquesta todo el despliegue a producción de forma segura y secuencial.
+# Se activa SOLAMENTE cuando publicas un "Release" en GitHub (ej. v1.0.0).
+
+on:
+  release:
+    types: [published]
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9'
+  # Asegura que el entorno sea explícitamente producción
+  SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+  SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+
+jobs:
+  # 1. GATEKEEPER: Verifica calidad antes de tocar nada
+  quality-check:
+    name: 🛡️ Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: ${{ env.PNPM_VERSION }} }
+      - uses: actions/setup-node@v4
+        with: { node-version: ${{ env.NODE_VERSION }}, cache: 'pnpm' }
+      
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm type-check
+      # NOTA: Aquí deberíamos correr 'pnpm test' sin continue-on-error
+      # Por ahora, solo verificamos que compile y no tenga errores de linter/tipos
+
+  # 2. DATABASE: Se ejecuta primero. Si falla, se cancela todo.
+  database-migration:
+    name: 🗄️ Migrate Database
+    needs: quality-check
+    runs-on: ubuntu-latest
+    environment: production # Requiere aprobación si configuras Environments en GitHub
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with: { version: latest }
+      
+      - name: Link & Push Migrations
+        run: |
+          supabase link --project-ref $SUPABASE_PROJECT_ID --password $SUPABASE_DB_PASSWORD
+          supabase db push --password $SUPABASE_DB_PASSWORD
+
+  # 3. WEB DEPLOY: Solo corre si la DB se migró correctamente
+  deploy-web:
+    name: 🌐 Deploy Web (Cloudflare)
+    needs: database-migration
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: ${{ env.PNPM_VERSION }} }
+      - uses: actions/setup-node@v4
+        with: { node-version: ${{ env.NODE_VERSION }}, cache: 'pnpm' }
+      
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:web
+        env: { NODE_ENV: production }
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy apps/web/www --project-name=autorenta --branch=main --commit-dirty=true
+
+  # 4. ANDROID BUILD: Corre en paralelo a la web, pero después de validar calidad
+  build-android:
+    name: 🤖 Build Android APK
+    needs: quality-check # No espera a la web, pero sí al Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: ${{ env.PNPM_VERSION }} }
+      - uses: actions/setup-node@v4
+        with: { node-version: ${{ env.NODE_VERSION }}, cache: 'pnpm' }
+      - uses: actions/setup-java@v4
+        with: { distribution: 'temurin', java-version: '17' }
+      - uses: android-actions/setup-android@v3
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:web
+        env: { NODE_ENV: production }
+
+      - name: Sync Capacitor
+        run: pnpm --filter @autorenta/web exec cap sync android
+
+      # Truco para inyectar la versión del Release Tag (v1.2.3) en el binario Android
+      # Esto evita el error de "Version Code already exists" si gestionamos bien los tags
+      - name: Bump Version Code
+        working-directory: apps/web/android
+        run: |
+          # Extraer número simple del tag o timestamp para versionCode
+          # Usa timestamp para asegurar unicidad: 2024010101
+          VERSION_CODE=$(date +%s)
+          sed -i "s/versionCode [0-9]*/versionCode $VERSION_CODE/" app/build.gradle
+
+      - name: Decode Keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > apps/web/android/keystore/autorentar-release.keystore
+
+      - name: Build Release APK
+        working-directory: apps/web/android
+        run: ./gradlew assembleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload APK to Release Asset
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: apps/web/android/app/build/outputs/apk/release/*.apk

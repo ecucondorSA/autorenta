@@ -1,7 +1,19 @@
 import {Component, Input,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 import { Booking } from '../../../core/models';
+
+/**
+ * Coverage info for Autorentar Club subscription
+ */
+export interface SubscriptionCoverageInfo {
+  coverageType: 'full_subscription' | 'partial_subscription' | 'none';
+  coveredBySubscriptionUsd: number;
+  depositRequiredUsd: number;
+  franchiseUsd: number;
+  subscriptionBalanceUsd?: number;
+}
 
 /**
  * BookingPricingBreakdownComponent
@@ -13,7 +25,7 @@ import { Booking } from '../../../core/models';
   selector: 'app-booking-detail-pricing',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [CommonModule, IonicModule],
   template: `
     @if (booking) {
       <div
@@ -149,64 +161,136 @@ import { Booking } from '../../../core/models';
           </div>
           <!-- Security Deposit Section -->
           <div class="space-y-3">
-            <div
-              class="flex items-start justify-between p-3 rounded-lg bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default/40"
-              >
-              <div class="flex-1">
-                <div class="flex items-center gap-2">
-                  <h4 class="text-sm font-semibold text-cta-default dark:text-cta-default">
-                    Depósito de Garantía
-                  </h4>
-                  <span
-                    class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-success-light/20 text-success-700 dark:bg-success-light/40 dark:text-success-strong"
-                    >
-                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fill-rule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clip-rule="evenodd"
-                        />
-                    </svg>
-                    Reembolsable
-                  </span>
-                  <button
-                    type="button"
-                    class="group relative"
-                    [title]="depositTooltipText"
-                    aria-label="Información sobre depósito de garantía"
-                    >
-                    <svg
-                      class="w-4 h-4 text-cta-default hover:text-cta-default dark:hover:text-cta-default cursor-help"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
+            <!-- Full Coverage by Autorentar Club -->
+            @if (subscriptionCoverage?.coverageType === 'full_subscription') {
+              <div
+                class="flex items-start justify-between p-3 rounded-lg bg-gradient-to-r from-amber-500/20 to-amber-600/10 border border-amber-500/40"
+                >
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h4 class="text-sm font-semibold text-amber-700 dark:text-amber-400">
+                      Depósito de Garantía
+                    </h4>
+                    <span
+                      class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-bold rounded-full bg-amber-500/30 text-amber-800 dark:bg-amber-500/40 dark:text-amber-200"
                       >
-                      <path
-                        fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                        clip-rule="evenodd"
-                        />
-                    </svg>
-                    <!-- Tooltip -->
-                    <div
-                      class="absolute left-0 bottom-full mb-2 w-64 p-2 bg-surface-raised text-text-inverse text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10"
-                      >
-                      {{ depositTooltipText }}
-                      <div
-                        class="absolute top-full left-4 -mt-1 border-4 border-transparent border-t-gray-900"
-                      ></div>
-                    </div>
-                  </button>
+                      <ion-icon name="shield-checkmark" class="text-sm"></ion-icon>
+                      Cubierto por Club
+                    </span>
+                  </div>
+                  <p class="text-xs text-amber-700/80 dark:text-amber-400/80 mt-1">
+                    Tu membresía Autorentar Club cubre el 100% del depósito
+                  </p>
                 </div>
-                <p class="text-xs text-cta-default dark:text-cta-default mt-1">
-                  Se devuelve al finalizar el alquiler sin daños
-                </p>
+                <div class="text-right">
+                  <p class="text-lg font-bold text-amber-700 dark:text-amber-400 line-through opacity-60">
+                    {{ formatCurrency((subscriptionCoverage?.franchiseUsd ?? 0) * 100, 'USD') }}
+                  </p>
+                  <p class="text-xl font-bold text-success-strong dark:text-success-400">
+                    $0
+                  </p>
+                </div>
               </div>
-              <div class="text-right">
-                <p class="text-lg font-bold text-cta-default dark:text-cta-default">
-                  {{ formatCurrency(depositAmount, booking.currency) }}
-                </p>
+            }
+            <!-- Partial Coverage by Autorentar Club -->
+            @else if (subscriptionCoverage?.coverageType === 'partial_subscription') {
+              <div
+                class="flex items-start justify-between p-3 rounded-lg bg-gradient-to-r from-amber-500/15 to-cta-default/10 border border-amber-500/30"
+                >
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h4 class="text-sm font-semibold text-text-primary dark:text-text-inverse">
+                      Depósito de Garantía
+                    </h4>
+                    <span
+                      class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-amber-500/20 text-amber-700 dark:bg-amber-500/30 dark:text-amber-300"
+                      >
+                      <ion-icon name="shield-half" class="text-sm"></ion-icon>
+                      Cobertura parcial
+                    </span>
+                  </div>
+                  <div class="text-xs mt-2 space-y-1">
+                    <div class="flex justify-between text-text-secondary dark:text-text-muted">
+                      <span>Franquicia total:</span>
+                      <span>{{ formatCurrency((subscriptionCoverage?.franchiseUsd ?? 0) * 100, 'USD') }}</span>
+                    </div>
+                    <div class="flex justify-between text-amber-700 dark:text-amber-400">
+                      <span>Cubierto por Club:</span>
+                      <span>-{{ formatCurrency((subscriptionCoverage?.coveredBySubscriptionUsd ?? 0) * 100, 'USD') }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm text-text-muted line-through">
+                    {{ formatCurrency((subscriptionCoverage?.franchiseUsd ?? 0) * 100, 'USD') }}
+                  </p>
+                  <p class="text-lg font-bold text-cta-default dark:text-cta-default">
+                    {{ formatCurrency((subscriptionCoverage?.depositRequiredUsd ?? 0) * 100, 'USD') }}
+                  </p>
+                </div>
               </div>
-            </div>
+            }
+            <!-- No Coverage - Standard deposit -->
+            @else {
+              <div
+                class="flex items-start justify-between p-3 rounded-lg bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default/40"
+                >
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <h4 class="text-sm font-semibold text-cta-default dark:text-cta-default">
+                      Depósito de Garantía
+                    </h4>
+                    <span
+                      class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-success-light/20 text-success-700 dark:bg-success-light/40 dark:text-success-strong"
+                      >
+                      <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clip-rule="evenodd"
+                          />
+                      </svg>
+                      Reembolsable
+                    </span>
+                    <button
+                      type="button"
+                      class="group relative"
+                      [title]="depositTooltipText"
+                      aria-label="Información sobre depósito de garantía"
+                      >
+                      <svg
+                        class="w-4 h-4 text-cta-default hover:text-cta-default dark:hover:text-cta-default cursor-help"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        >
+                        <path
+                          fill-rule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                          clip-rule="evenodd"
+                          />
+                      </svg>
+                      <!-- Tooltip -->
+                      <div
+                        class="absolute left-0 bottom-full mb-2 w-64 p-2 bg-surface-raised text-text-inverse text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10"
+                        >
+                        {{ depositTooltipText }}
+                        <div
+                          class="absolute top-full left-4 -mt-1 border-4 border-transparent border-t-gray-900"
+                        ></div>
+                      </div>
+                    </button>
+                  </div>
+                  <p class="text-xs text-cta-default dark:text-cta-default mt-1">
+                    Se devuelve al finalizar el alquiler sin daños
+                  </p>
+                </div>
+                <div class="text-right">
+                  <p class="text-lg font-bold text-cta-default dark:text-cta-default">
+                    {{ formatCurrency(depositAmount, booking.currency) }}
+                  </p>
+                </div>
+              </div>
+            }
             <!-- Payment method info -->
             @if (booking.payment_method) {
               <div
@@ -284,6 +368,7 @@ import { Booking } from '../../../core/models';
 })
 export class BookingPricingBreakdownComponent {
   @Input({ required: true }) booking!: Booking;
+  @Input() subscriptionCoverage?: SubscriptionCoverageInfo;
 
   protected readonly rentalTooltipText =
     'Incluye la tarifa diaria del vehículo, el aporte FGO (garantía de alquileres) y el cargo de servicio de la plataforma. Este monto se cobra inmediatamente al confirmar la reserva.';
@@ -303,6 +388,17 @@ export class BookingPricingBreakdownComponent {
   }
 
   protected get depositAmount(): number {
+    // If subscription covers the deposit, use the adjusted amount
+    if (this.subscriptionCoverage) {
+      if (this.subscriptionCoverage.coverageType === 'full_subscription') {
+        return 0;
+      }
+      if (this.subscriptionCoverage.coverageType === 'partial_subscription') {
+        return this.subscriptionCoverage.depositRequiredUsd * 100;
+      }
+    }
+
+    // Standard deposit calculation
     if (this.booking.deposit_amount_cents) {
       return this.booking.deposit_amount_cents;
     }
@@ -312,6 +408,19 @@ export class BookingPricingBreakdownComponent {
 
   protected get totalAmount(): number {
     return this.rentalAmount + this.depositAmount;
+  }
+
+  /**
+   * Effective deposit for display (considers subscription coverage)
+   */
+  protected get effectiveDepositDisplay(): number {
+    if (this.subscriptionCoverage?.coverageType === 'full_subscription') {
+      return 0;
+    }
+    if (this.subscriptionCoverage?.coverageType === 'partial_subscription') {
+      return this.subscriptionCoverage.depositRequiredUsd * 100;
+    }
+    return this.depositAmount;
   }
 
   protected get dailyRateTotal(): number {

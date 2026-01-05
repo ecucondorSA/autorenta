@@ -1,0 +1,341 @@
+name: 🚀 Release to Production
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      skip_db_migration:
+        description: 'Skip database migration'
+        type: boolean
+        default: false
+      skip_android:
+        description: 'Skip Android build'
+        type: boolean
+        default: false
+
+concurrency:
+  group: release-production
+  cancel-in-progress: false  # Never cancel production releases
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '10.22.0'
+  JAVA_VERSION: '17'
+
+jobs:
+  # ============================================
+  # PRE-FLIGHT CHECKS
+  # ============================================
+  pre-flight:
+    name: 🛫 Pre-flight Checks
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      should_deploy_db: ${{ steps.checks.outputs.deploy_db }}
+      should_build_android: ${{ steps.checks.outputs.build_android }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version
+        id: version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          else
+            echo "version=manual-$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Determine deployment targets
+        id: checks
+        run: |
+          echo "deploy_db=${{ github.event.inputs.skip_db_migration != 'true' }}" >> $GITHUB_OUTPUT
+          echo "build_android=${{ github.event.inputs.skip_android != 'true' }}" >> $GITHUB_OUTPUT
+
+      - name: Check for migration files
+        id: migrations
+        run: |
+          # Check if there are new migrations since last tag
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -n "$LAST_TAG" ]; then
+            MIGRATION_CHANGES=$(git diff --name-only $LAST_TAG HEAD -- 'supabase/migrations/*.sql' | wc -l)
+            echo "new_migrations=$MIGRATION_CHANGES" >> $GITHUB_OUTPUT
+          else
+            echo "new_migrations=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Pre-flight Summary
+        run: |
+          echo "## 🛫 Pre-flight Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Deploy DB:** ${{ steps.checks.outputs.deploy_db }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build Android:** ${{ steps.checks.outputs.build_android }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **New Migrations:** ${{ steps.migrations.outputs.new_migrations }}" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================
+  # STAGE 1: DATABASE MIGRATIONS (First!)
+  # ============================================
+  deploy-database:
+    name: 🗄️ Deploy Database
+    runs-on: ubuntu-latest
+    needs: pre-flight
+    if: needs.pre-flight.outputs.should_deploy_db == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link Supabase Project
+        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }} --password ${{ secrets.SUPABASE_DB_PASSWORD }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Apply Migrations
+        run: supabase db push
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+
+      - name: Migration Status
+        if: always()
+        run: |
+          echo "## 🗄️ Database Migration" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================
+  # STAGE 2: WEB DEPLOYMENT (After DB)
+  # ============================================
+  deploy-web:
+    name: 🌐 Deploy Web
+    runs-on: ubuntu-latest
+    needs: [pre-flight, deploy-database]
+    # Run even if deploy-database was skipped, but not if it failed
+    if: always() && (needs.deploy-database.result == 'success' || needs.deploy-database.result == 'skipped')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build production
+        run: pnpm build:web
+        env:
+          NODE_ENV: production
+          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
+          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
+          NG_APP_DEFAULT_CURRENCY: "ARS"
+          NG_APP_PAYMENTS_WEBHOOK_URL: ${{ secrets.NG_APP_PAYMENTS_WEBHOOK_URL }}
+          NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN }}
+          NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: ${{ secrets.NG_APP_CAR_LOCATIONS_EDGE_FUNCTION }}
+          NG_APP_MERCADOPAGO_PUBLIC_KEY: ${{ secrets.NG_APP_MERCADOPAGO_PUBLIC_KEY }}
+          NG_APP_CLOUDFLARE_WORKER_URL: ${{ secrets.NG_APP_CLOUDFLARE_WORKER_URL }}
+          NG_APP_SENTRY_DSN: ${{ secrets.NG_APP_SENTRY_DSN }}
+          NG_APP_SENTRY_ENVIRONMENT: "production"
+
+      - name: Upload Sentry Source Maps
+        working-directory: apps/web
+        run: npm run sentry:sourcemaps
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG || 'autorenta' }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT || 'autorenta-web' }}
+        continue-on-error: true
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID || secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy apps/web/dist/web/browser --project-name=autorentar --branch=main
+
+      - name: Web Deploy Status
+        if: always()
+        run: |
+          echo "## 🌐 Web Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "- URL: https://autorentar.com" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================
+  # STAGE 3: ANDROID BUILD (Parallel with Web)
+  # ============================================
+  build-android:
+    name: 📱 Build Android
+    runs-on: ubuntu-latest
+    needs: [pre-flight, deploy-database]
+    if: always() && needs.pre-flight.outputs.should_build_android == 'true' && (needs.deploy-database.result == 'success' || needs.deploy-database.result == 'skipped')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web app
+        run: pnpm build:web
+        env:
+          NODE_ENV: production
+
+      - name: Sync Capacitor
+        run: pnpm --filter @autorenta/web exec cap sync android
+
+      - name: Decode Keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > apps/web/android/keystore/autorentar-release.keystore
+
+      - name: Build Release APK
+        working-directory: apps/web/android
+        run: ./gradlew assembleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Rename APK
+        run: |
+          VERSION="${{ needs.pre-flight.outputs.version }}"
+          mv apps/web/android/app/build/outputs/apk/release/app-release.apk \
+             apps/web/android/app/build/outputs/apk/release/autorentar-${VERSION}.apk
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: apps/web/android/app/build/outputs/apk/release/*.apk
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload to Google Play (Internal Track)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+          packageName: com.autorentar.app
+          releaseFiles: apps/web/android/app/build/outputs/apk/release/*.apk
+          track: internal
+          status: completed
+        continue-on-error: true  # Don't fail release if Play Store upload fails
+
+      - name: Android Build Status
+        if: always()
+        run: |
+          echo "## 📱 Android Build" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Version: ${{ needs.pre-flight.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================
+  # SMOKE TESTS (After Web Deploy)
+  # ============================================
+  smoke-tests:
+    name: 🧪 Smoke Tests
+    runs-on: ubuntu-latest
+    needs: deploy-web
+    if: needs.deploy-web.result == 'success'
+    steps:
+      - name: Test Homepage
+        run: |
+          for i in {1..3}; do
+            status=$(curl -o /dev/null -s -w "%{http_code}" -L https://autorentar.com)
+            if [ "$status" = "200" ]; then
+              echo "✅ Homepage OK"
+              exit 0
+            fi
+            echo "Attempt $i: Got $status, retrying..."
+            sleep 10
+          done
+          echo "::error::Homepage not responding after 3 attempts"
+          exit 1
+
+      - name: Test API Health
+        run: |
+          status=$(curl -o /dev/null -s -w "%{http_code}" -L "${{ secrets.NG_APP_SUPABASE_URL }}/rest/v1/")
+          if [ "$status" != "200" ]; then
+            echo "::warning::Supabase API returned $status"
+          fi
+          echo "✅ API check completed"
+
+  # ============================================
+  # RELEASE SUMMARY
+  # ============================================
+  release-summary:
+    name: 📊 Release Summary
+    runs-on: ubuntu-latest
+    needs: [pre-flight, deploy-database, deploy-web, build-android, smoke-tests]
+    if: always()
+    steps:
+      - name: Generate Summary
+        run: |
+          echo "# 🚀 Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ needs.pre-flight.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Time:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Stage | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Database | ${{ needs.deploy-database.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Web | ${{ needs.deploy-web.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Android | ${{ needs.build-android.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Smoke Tests | ${{ needs.smoke-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Overall status
+          if [[ "${{ needs.deploy-web.result }}" == "success" ]]; then
+            echo "## ✅ Release Successful" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- 🌐 Web: https://autorentar.com" >> $GITHUB_STEP_SUMMARY
+            echo "- 📱 APK: Check GitHub Releases" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ❌ Release Failed" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Check the failed jobs above for details." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Notify on Failure
+        if: failure()
+        run: |
+          echo "::error::Release ${{ needs.pre-flight.outputs.version }} failed!"
+          # Add Slack/Discord notification here if needed

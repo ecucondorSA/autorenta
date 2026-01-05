@@ -1,18 +1,22 @@
-import { Injectable, computed, effect, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { BookingPaymentMethod } from '@core/models/wallet.model';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 import { BucketType, FgoParameters } from '@core/models/fgo-v1-1.model';
+import { SubscriptionCoverageCheck } from '@core/models/subscription.model';
 import { Booking } from '../../../../core/models';
-import { FranchiseInfo, BookingFranchiseService } from '../support/booking-franchise.service';
+import { FranchiseInfo, BookingFranchiseService, DepositWithSubscriptionResult } from '../support/booking-franchise.service';
 import { GuaranteeCopy, GuaranteeCopyBuilder } from '../support/guarantee-copy.builder';
 import { CheckoutRiskCalculator, GuaranteeBreakdown } from '../support/risk-calculator';
 
 @Injectable()
 export class CheckoutStateService {
+  private readonly subscriptionService = inject(SubscriptionService);
+
   private readonly bookingId = signal<string | null>(null);
   private readonly booking = signal<Booking | null>(null);
   private readonly fgoParams = signal<FgoParameters | null>(null);
@@ -20,11 +24,15 @@ export class CheckoutStateService {
   private readonly paymentMethod = signal<BookingPaymentMethod>('credit_card');
   private readonly walletSplit = signal<{ wallet: number; card: number }>({ wallet: 0, card: 0 });
 
+  // Subscription coverage state
+  private readonly subscriptionCoverage = signal<DepositWithSubscriptionResult | null>(null);
+
   readonly loading = signal(false);
   readonly message = signal<string | null>(null);
   readonly status = signal<string>('requires_payment_method');
   readonly fgoLoading = signal(false);
   readonly fxLoading = signal(false);
+  readonly subscriptionLoading = signal(false);
 
   readonly bookingSignal = this.booking.asReadonly();
   readonly statusSignal = this.status.asReadonly();
@@ -32,6 +40,22 @@ export class CheckoutStateService {
   readonly paymentMethodSignal = this.paymentMethod.asReadonly();
   readonly walletSplitSignal = this.walletSplit.asReadonly();
   readonly loadingSignal = this.loading.asReadonly();
+  readonly subscriptionCoverageSignal = this.subscriptionCoverage.asReadonly();
+
+  // Computed signals for subscription coverage
+  readonly hasSubscriptionCoverage = computed(() => {
+    const coverage = this.subscriptionCoverage();
+    return coverage !== null && coverage.coverageType !== 'none';
+  });
+
+  readonly isFullyCoveredBySubscription = computed(() => {
+    const coverage = this.subscriptionCoverage();
+    return coverage?.coverageType === 'full_subscription';
+  });
+
+  readonly subscriptionCoverageUsd = computed(() => {
+    return this.subscriptionCoverage()?.coveredBySubscriptionUsd ?? 0;
+  });
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -97,6 +121,14 @@ export class CheckoutStateService {
     const booking = this.booking();
     if (!booking) return 0;
 
+    // Check subscription coverage first
+    const coverage = this.subscriptionCoverage();
+    if (coverage) {
+      // Return the deposit required after subscription coverage
+      return coverage.depositRequiredUsd;
+    }
+
+    // Fallback to legacy calculation if subscription not loaded yet
     const depositFromBooking = this.getDepositFromBooking(booking);
     const recommended = this.recommendByNightlyRate(booking);
     const franchise = this.franchise();
@@ -163,6 +195,10 @@ export class CheckoutStateService {
     return this.walletSplit();
   }
 
+  getSubscriptionCoverage(): DepositWithSubscriptionResult | null {
+    return this.subscriptionCoverage();
+  }
+
   setMessage(message: string | null): void {
     this.message.set(message);
   }
@@ -189,7 +225,11 @@ export class CheckoutStateService {
 
     this.bookingId.set(routeBookingId);
     await this.loadBooking(routeBookingId);
-    await Promise.all([this.loadFgoParameters(), this.loadExchangeRate()]);
+    await Promise.all([
+      this.loadFgoParameters(),
+      this.loadExchangeRate(),
+      this.loadSubscriptionCoverage()
+    ]);
   }
 
   private async loadBooking(bookingId: string): Promise<void> {
@@ -242,6 +282,29 @@ export class CheckoutStateService {
       this.exchangeRate.set(1);
     } finally {
       this.fxLoading.set(false);
+    }
+  }
+
+  /**
+   * Load subscription coverage for deposit calculation.
+   * This determines how much of the deposit is covered by Autorentar Club.
+   */
+  private async loadSubscriptionCoverage(): Promise<void> {
+    const booking = this.booking();
+    if (!booking) {
+      this.subscriptionCoverage.set(null);
+      return;
+    }
+
+    try {
+      this.subscriptionLoading.set(true);
+      const coverage = await this.franchiseTable.calculateDepositWithSubscription(booking);
+      this.subscriptionCoverage.set(coverage);
+    } catch {
+      // On error, fallback to no coverage (user pays full deposit)
+      this.subscriptionCoverage.set(null);
+    } finally {
+      this.subscriptionLoading.set(false);
     }
   }
 

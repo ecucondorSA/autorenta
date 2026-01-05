@@ -856,8 +856,87 @@ serve(async (req: Request) => {
     }
 
     // ========================================
-    // DETERMINAR TIPO DE PAGO: BOOKING O WALLET DEPOSIT
+    // DETERMINAR TIPO DE PAGO: SUBSCRIPTION, BOOKING O WALLET DEPOSIT
     // ========================================
+
+    // Check if this is a subscription payment (external_reference starts with "subscription_")
+    if (reference_id.startsWith('subscription_')) {
+      log.info('Processing subscription payment:', reference_id);
+
+      // Parse external_reference: subscription_{user_id}_{tier}_{timestamp}
+      const parts = reference_id.split('_');
+      if (parts.length < 4) {
+        log.error('Invalid subscription external_reference format:', reference_id);
+        throw new Error('Invalid subscription external_reference');
+      }
+
+      const userId = parts[1];
+      const tier = parts[2] as 'club_standard' | 'club_black';
+
+      // Validate tier
+      const validTiers = ['club_standard', 'club_black'];
+      if (!validTiers.includes(tier)) {
+        log.error('Invalid subscription tier:', tier);
+        throw new Error(`Invalid subscription tier: ${tier}`);
+      }
+
+      // Get tier config
+      const tierConfig = {
+        club_standard: { price_cents: 30000, coverage_cents: 50000 },
+        club_black: { price_cents: 60000, coverage_cents: 100000 },
+      }[tier];
+
+      // Check if user already has active subscription (idempotency)
+      const { data: existingSub } = await supabase.rpc('get_active_subscription_for_user', {
+        p_user_id: userId,
+      });
+
+      if (existingSub) {
+        log.info('User already has active subscription, ignoring webhook');
+        return new Response(
+          JSON.stringify({ success: true, message: 'Subscription already active' }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
+      // Create subscription via RPC
+      const { data: subscriptionId, error: createError } = await supabase.rpc('create_subscription', {
+        p_user_id: userId,
+        p_tier: tier,
+        p_amount_cents: tierConfig.price_cents,
+        p_payment_provider: 'mercadopago',
+        p_payment_external_id: paymentData.id.toString(),
+      });
+
+      if (createError) {
+        log.error('Error creating subscription:', createError);
+        throw createError;
+      }
+
+      log.info('✅ Subscription created successfully:', {
+        subscriptionId,
+        userId,
+        tier,
+        paymentId: paymentData.id,
+      });
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Subscription created successfully',
+          subscription_id: subscriptionId,
+          user_id: userId,
+          tier: tier,
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     // Primero verificar si es un booking
     const { data: booking, error: bookingError } = await supabase

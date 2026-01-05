@@ -1,27 +1,27 @@
 import { CommonModule } from '@angular/common';
-import {AfterViewInit,
+import {
   Component,
   computed,
   effect,
   inject,
   OnInit,
   signal,
-  ViewChild,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import type { AddBankAccountParams, RequestWithdrawalParams } from '@core/models/wallet.model';
+import { SubscriptionTier } from '@core/models/subscription.model';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { MetaService } from '@core/services/ui/meta.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { WithdrawalService } from '@core/services/payments/withdrawal.service';
+import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 import { BankAccountFormComponent } from '../../shared/components/bank-account-form/bank-account-form.component';
 import { BankAccountsListComponent } from '../../shared/components/bank-accounts-list/bank-accounts-list.component';
-
 import { TransactionHistoryComponent } from '../../shared/components/transaction-history/transaction-history.component';
-import { WalletBalanceCardComponent } from '../../shared/components/wallet-balance-card/wallet-balance-card.component';
 import { WithdrawalHistoryComponent } from '../../shared/components/withdrawal-history/withdrawal-history.component';
 import { WithdrawalRequestFormComponent } from '../../shared/components/withdrawal-request-form/withdrawal-request-form.component';
 
@@ -44,9 +44,7 @@ import { WithdrawalRequestFormComponent } from '../../shared/components/withdraw
  *
  * Ruta: /wallet
  */
-import { GuaranteeOptionsInfoComponent } from '../../shared/components/guarantee-options-info/guarantee-options-info.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
-import { WalletAccountNumberCardComponent } from '../../shared/components/wallet-account-number-card/wallet-account-number-card.component';
 import { WalletFaqComponent } from './components/wallet-faq.component';
 import { WalletTransfersComponent } from './components/wallet-transfers.component';
 
@@ -56,15 +54,12 @@ import { WalletTransfersComponent } from './components/wallet-transfers.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    WalletBalanceCardComponent,
     TransactionHistoryComponent,
     BankAccountFormComponent,
     BankAccountsListComponent,
     WithdrawalRequestFormComponent,
     WithdrawalHistoryComponent,
     TranslateModule,
-    WalletAccountNumberCardComponent,
-    GuaranteeOptionsInfoComponent,
     WalletFaqComponent,
     WalletTransfersComponent,
     IconComponent,
@@ -72,19 +67,12 @@ import { WalletTransfersComponent } from './components/wallet-transfers.componen
   templateUrl: './wallet.page.html',
   styleUrls: ['./wallet.page.css'],
 })
-export class WalletPage implements AfterViewInit, OnInit {
-  /**
-   * Referencia al componente de balance card
-   */
-  @ViewChild('balanceCard') balanceCard?: WalletBalanceCardComponent;
+export class WalletPage implements OnInit {
 
   /**
-   * Tab activa (transactions | withdrawals)
+   * Tab activa (transactions | withdrawals | transfers | coverage)
    */
-  /**
-   * Tab activa (transactions | withdrawals)
-   */
-  activeTab = signal<'transactions' | 'withdrawals' | 'transfers'>('transactions');
+  activeTab = signal<'transactions' | 'withdrawals' | 'transfers' | 'coverage'>('transactions');
 
   /**
    * Tabs definition for the view
@@ -124,6 +112,7 @@ export class WalletPage implements AfterViewInit, OnInit {
   private readonly profileService = inject(ProfileService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly analyticsService = inject(AnalyticsService);
+  readonly subscriptionService = inject(SubscriptionService);
 
   /**
    * Wallet Account Number del usuario actual
@@ -278,14 +267,6 @@ export class WalletPage implements AfterViewInit, OnInit {
     }
   }
 
-  /**
-   * Configura el balance card después de que la vista se inicialice
-   */
-  ngAfterViewInit(): void {
-    if (this.balanceCard) {
-      this.balanceCard.setDepositClickHandler(() => this.navigateToDeposit());
-    }
-  }
 
   /**
    * Navega a la página de depósito
@@ -351,8 +332,19 @@ export class WalletPage implements AfterViewInit, OnInit {
   /**
    * Cambia el tab activo
    */
-  setActiveTab(tab: 'transactions' | 'withdrawals' | 'transfers'): void {
+  setActiveTab(tab: 'transactions' | 'withdrawals' | 'transfers' | 'coverage'): void {
     this.activeTab.set(tab);
+  }
+
+  /**
+   * Calcula los días restantes hasta una fecha de expiración
+   */
+  getDaysRemaining(expiresAt: string | Date): number {
+    const expDate = new Date(expiresAt);
+    const now = new Date();
+    const diffTime = expDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.max(0, diffDays);
   }
 
   /**
@@ -367,8 +359,7 @@ export class WalletPage implements AfterViewInit, OnInit {
    */
   async refreshWalletData(): Promise<void> {
     try {
-      const balanceRefresh = this.balanceCard ? this.balanceCard.loadBalance() : Promise.resolve();
-      await Promise.all([balanceRefresh, this.walletService.refreshPendingDepositsCount()]);
+      await this.walletService.refreshPendingDepositsCount();
     } catch {
       /* Silenced */
     }
@@ -553,5 +544,51 @@ export class WalletPage implements AfterViewInit, OnInit {
     } catch {
       this.toastService.error('Error', 'Error al copiar el número de cuenta');
     }
+  }
+
+  // ============================================
+  // AUTORENTAR CLUB HANDLERS
+  // ============================================
+
+  /**
+   * Navega al flujo de compra de suscripción
+   */
+  handleJoinClub(tier: SubscriptionTier): void {
+    this.analyticsService.trackEvent('club_join_clicked', { tier });
+    // TODO: Implement subscription purchase flow
+    // For now, navigate to a future subscription page
+    void this.router.navigate(['/wallet/club/subscribe'], { queryParams: { tier } });
+  }
+
+  /**
+   * Navega a la página de planes del Club
+   */
+  handleViewClubPlans(): void {
+    this.analyticsService.trackEvent('club_view_plans_clicked');
+    void this.router.navigate(['/wallet/club/plans']);
+  }
+
+  /**
+   * Muestra el historial de uso de la cobertura
+   */
+  handleViewClubHistory(): void {
+    this.analyticsService.trackEvent('club_view_history_clicked');
+    void this.router.navigate(['/wallet/club/history']);
+  }
+
+  /**
+   * Navega al flujo de renovación de suscripción
+   */
+  handleRenewClub(): void {
+    this.analyticsService.trackEvent('club_renew_clicked');
+    void this.router.navigate(['/wallet/club/renew']);
+  }
+
+  /**
+   * Navega al flujo de recarga de saldo de cobertura
+   */
+  handleRechargeClub(): void {
+    this.analyticsService.trackEvent('club_recharge_clicked');
+    void this.router.navigate(['/wallet/club/recharge']);
   }
 }

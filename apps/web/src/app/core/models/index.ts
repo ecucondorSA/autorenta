@@ -1228,3 +1228,6 @@ export interface ProcessRefundResult {
   wallet_transaction_id?: string | null;
   message: string;
 }
+
+// Export Subscription models (Autorentar Club)
+export * from './subscription.model';
