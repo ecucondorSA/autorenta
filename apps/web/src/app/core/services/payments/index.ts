@@ -1,6 +1,8 @@
 export * from '@core/services/payments/accounting.service';
 export * from '@core/services/payments/autorentar-credit.service';
 export * from '@core/services/payments/bonus-malus.service';
+export * from '@core/services/payments/claim-lock.service';
+export * from '@core/services/payments/claim-validation.service';
 export * from '@core/services/payments/bonus-protector.service';
 export * from '@core/services/payments/dynamic-pricing.service';
 export * from '@core/services/payments/exchange-rate.service';
@@ -28,4 +30,5 @@ export * from '@core/services/payments/settlement.service';
 export * from '@core/services/payments/split-payment.service';
 export * from '@core/services/payments/wallet-ledger.service';
 export * from '@core/services/payments/wallet.service';
+export * from '@core/services/payments/waterfall-execution.service';
 export * from '@core/services/payments/withdrawal.service';
