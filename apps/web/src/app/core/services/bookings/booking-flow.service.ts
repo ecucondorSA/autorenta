@@ -522,6 +522,12 @@ export class BookingFlowService {
         icon: 'time-outline',
         description: 'Esperando aprobación del dueño',
       },
+      pending_approval: {
+        label: 'Pendiente de Aprobación',
+        color: 'warning',
+        icon: 'time-outline',
+        description: 'Esperando aprobación del dueño',
+      },
       confirmed: {
         label: 'Confirmada',
         color: 'success',
@@ -611,6 +617,12 @@ export class BookingFlowService {
         color: 'danger',
         icon: 'alert-circle-outline',
         description: 'La reserva fue cancelada automáticamente por el sistema',
+      },
+      payment_validation_failed: {
+        label: 'Error de Pago',
+        color: 'danger',
+        icon: 'card-outline',
+        description: 'El pago no pudo ser validado. Por favor, intenta nuevamente.',
       },
     };
 
