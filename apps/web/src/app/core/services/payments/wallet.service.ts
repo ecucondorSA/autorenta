@@ -130,10 +130,12 @@ export class WalletService {
 
       const { data, error } = await this.supabase.rpc('wallet_get_balance');
       if (error) throw error;
-      if (!data) throw new Error('No se pudo obtener el balance');
+      if (!data || !Array.isArray(data) || data.length === 0) {
+        throw new Error('No se pudo obtener el balance');
+      }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const balance = data[0] as any as WalletBalance;
+      const rawBalance = data[0] as Record<string, unknown>;
+      const balance = this.parseWalletBalance(rawBalance);
       this.balance.set(balance);
       return balance;
     } catch (err) {
@@ -623,6 +625,34 @@ export class WalletService {
       this.logger['error']('Error al obtener créditos por vencer', String(err));
       return [];
     }
+  }
+
+  /**
+   * Parse raw RPC result into WalletBalance with type safety
+   * Extracts numeric values with defaults to prevent runtime errors
+   */
+  private parseWalletBalance(raw: Record<string, unknown>): WalletBalance {
+    const toNumber = (value: unknown, defaultValue = 0): number => {
+      if (typeof value === 'number') return value;
+      if (typeof value === 'string') {
+        const parsed = parseFloat(value);
+        return isNaN(parsed) ? defaultValue : parsed;
+      }
+      return defaultValue;
+    };
+
+    return {
+      user_id: String(raw['user_id'] ?? ''),
+      available_balance: toNumber(raw['available_balance']),
+      transferable_balance: toNumber(raw['transferable_balance']),
+      withdrawable_balance: toNumber(raw['withdrawable_balance']),
+      autorentar_credit_balance: toNumber(raw['autorentar_credit_balance']),
+      cash_deposit_balance: toNumber(raw['cash_deposit_balance']),
+      protected_credit_balance: toNumber(raw['protected_credit_balance']),
+      locked_balance: toNumber(raw['locked_balance']),
+      total_balance: toNumber(raw['total_balance']),
+      currency: String(raw['currency'] ?? 'USD'),
+    };
   }
 
   private handleError(err: unknown, defaultMessage: string): void {

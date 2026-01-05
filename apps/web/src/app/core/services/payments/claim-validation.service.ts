@@ -245,26 +245,23 @@ export class ClaimValidationService {
     if (!inspection) return [];
 
     const images: string[] = [];
-    const insp = inspection as unknown as {
-      photos?: string[];
-      images?: string[];
-      photo_urls?: string[];
-    };
+    // Use Record type for safe property access on dynamic structures
+    const insp = inspection as unknown as Record<string, unknown>;
 
     // Suportar diferentes estructuras de almacenamiento de fotos
-    if (Array.isArray(insp.photos)) {
-      images.push(...insp.photos);
+    const photos = insp['photos'];
+    if (Array.isArray(photos)) {
+      images.push(...photos.filter((p): p is string => typeof p === 'string'));
     }
 
-    if (Array.isArray(insp.images)) {
-      images.push(...insp.images);
+    const inspImages = insp['images'];
+    if (Array.isArray(inspImages)) {
+      images.push(...inspImages.filter((i): i is string => typeof i === 'string'));
     }
 
-    if (insp.photo_urls) {
-      const urls = insp.photo_urls;
-      if (Array.isArray(urls)) {
-        images.push(...urls);
-      }
+    const photoUrls = insp['photo_urls'];
+    if (Array.isArray(photoUrls)) {
+      images.push(...photoUrls.filter((u): u is string => typeof u === 'string'));
     }
 
     // Filtrar URLs vacías y duplicadas

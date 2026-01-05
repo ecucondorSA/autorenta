@@ -16,7 +16,8 @@ export function isValidStatusTransition(
 ): { valid: boolean; reason?: string } {
   const validTransitions: Record<BookingStatus, BookingStatus[]> = {
     pending: ['confirmed', 'cancelled', 'expired', 'rejected', 'cancelled_renter', 'cancelled_owner', 'cancelled_system'],
-    pending_payment: ['confirmed', 'cancelled', 'expired', 'cancelled_renter', 'cancelled_owner', 'cancelled_system'],
+    pending_payment: ['confirmed', 'cancelled', 'expired', 'cancelled_renter', 'cancelled_owner', 'cancelled_system', 'payment_validation_failed'],
+    pending_approval: ['pending_payment', 'confirmed', 'cancelled', 'rejected', 'cancelled_renter', 'cancelled_owner', 'cancelled_system'],
     confirmed: ['in_progress', 'cancelled', 'cancelled_renter', 'cancelled_owner', 'cancelled_system'],
     in_progress: ['pending_review', 'completed', 'cancelled', 'cancelled_renter', 'cancelled_owner', 'cancelled_system'],
     pending_review: ['completed', 'disputed', 'cancelled', 'cancelled_renter', 'cancelled_owner', 'cancelled_system'],
@@ -32,6 +33,7 @@ export function isValidStatusTransition(
     cancelled_renter: [],
     cancelled_owner: [],
     cancelled_system: [],
+    payment_validation_failed: ['pending_payment', 'cancelled', 'cancelled_system'],
   };
 
   const allowed = validTransitions[from]?.includes(to) ?? false;
@@ -165,6 +167,12 @@ export function getBookingStatusDisplay(status: BookingStatus): {
       icon: '⏳',
       description: 'Esperando aprobación del locador',
     },
+    pending_approval: {
+      label: 'Pendiente de Aprobación',
+      color: 'warning',
+      icon: '⏳',
+      description: 'Esperando aprobación del locador',
+    },
     confirmed: {
       label: 'Confirmada',
       color: 'success',
@@ -254,6 +262,12 @@ export function getBookingStatusDisplay(status: BookingStatus): {
       color: 'danger',
       icon: '⛔',
       description: 'La reserva fue cancelada automáticamente por el sistema',
+    },
+    payment_validation_failed: {
+      label: 'Error de Pago',
+      color: 'danger',
+      icon: '💳',
+      description: 'El pago no pudo ser validado. Por favor, intenta nuevamente.',
     },
   };
 
