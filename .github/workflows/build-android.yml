@@ -80,13 +80,16 @@ jobs:
         run: |
           mkdir -p apps/web/android/keystore
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > apps/web/android/keystore/autorentar-release.keystore
+          ls -la apps/web/android/keystore/
+          file apps/web/android/keystore/autorentar-release.keystore
 
       - name: Build Release APK
         id: build
         if: github.event.inputs.build_type == 'release'
         working-directory: apps/web/android
         run: |
-          ./gradlew assembleRelease
+          ls -la app/capacitor.build.gradle
+          ./gradlew assembleRelease --stacktrace --info
           APK_PATH="app/build/outputs/apk/release/app-release.apk"
           echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
         env:
