@@ -107,6 +107,15 @@ jobs:
         with:
           version: 10.22.0
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
