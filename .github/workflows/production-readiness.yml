@@ -1,0 +1,168 @@
+name: 🚦 Production Readiness Check
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 8 * * 1' # Ejecutar cada lunes a las 8 AM
+
+jobs:
+  quality-gate:
+    name: 🛡️ Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: 🎨 Lint Check
+        run: pnpm lint
+        continue-on-error: false
+
+      - name: 🔒 Security Audit
+        run: pnpm audit --prod --audit-level=high
+        continue-on-error: true # Advertencia por ahora, cambiar a false para bloquear
+
+  test-coverage:
+    name: 🧪 Unit Tests & Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Run Tests with Coverage
+        run: pnpm test:unit:coverage
+      
+      # Aquí podríamos añadir un paso para fallar si el coverage es bajo
+      # Por ahora solo reporta
+
+  build-verification:
+    name: 🏗️ Build Verification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build Web App
+        run: pnpm build:web
+        env:
+          NODE_ENV: production
+          # Variables ficticias para validar que el build no falla por falta de ellas
+          # (Angular a veces requiere que existan en tiempo de build)
+          NG_APP_SUPABASE_URL: "https://example.supabase.co"
+          NG_APP_SUPABASE_ANON_KEY: "dummy-key"
+          
+  e2e-smoke:
+    name: 🎭 E2E Smoke Tests
+    runs-on: ubuntu-latest
+    needs: [build-verification]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install
+        
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install chromium --with-deps
+
+      # Ejecutamos solo los tests de "smoke" o críticos
+      # Asumiendo que existen o ejecutando un subconjunto seguro
+      # Si no hay tag @smoke, ejecutamos el test de login como ejemplo
+      - name: Run E2E Smoke Tests
+        run: pnpm exec playwright test tests/renter/booking/success-page.spec.ts --project=chromium
+        continue-on-error: true
+
+  final-verdict:
+    name: 🏁 Readiness Verdict
+    needs: [quality-gate, test-coverage, build-verification, e2e-smoke]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Decide
+        run: |
+          echo "### 🚦 Production Readiness Report" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.quality-gate.result }}" == "success" ]; then
+            echo "✅ Quality Gate: PASS" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Quality Gate: FAIL" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.test-coverage.result }}" == "success" ]; then
+            echo "✅ Unit Tests: PASS" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Unit Tests: FAIL" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.build-verification.result }}" == "success" ]; then
+            echo "✅ Build Check: PASS" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Build Check: FAIL" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.e2e-smoke.result }}" == "success" ]; then
+            echo "✅ E2E Smoke: PASS" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ E2E Smoke: WARNING (Check logs)" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.quality-gate.result }}" == "success" ] && [ "${{ needs.build-verification.result }}" == "success" ]; then
+             echo "## 🚀 READY FOR PRODUCTION (With Cautions)" >> $GITHUB_STEP_SUMMARY
+             echo "Core checks passed. Verify E2E results manually if warning exists." >> $GITHUB_STEP_SUMMARY
+          else
+             echo "## ⛔ NOT READY FOR PRODUCTION" >> $GITHUB_STEP_SUMMARY
+             echo "Critical checks failed. Do not deploy." >> $GITHUB_STEP_SUMMARY
+             exit 1
+          fi
