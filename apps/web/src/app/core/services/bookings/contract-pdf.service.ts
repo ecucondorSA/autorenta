@@ -21,6 +21,45 @@ export interface GeneratePdfResult {
  * 5. Sube PDF a Supabase Storage
  * 6. Retorna URL pública del PDF
  */
+/**
+ * Mapping de aseguradoras argentinas a sus CUITs
+ * Fuente: Superintendencia de Seguros de la Nación (SSN)
+ */
+const INSURANCE_COMPANY_CUITS: Record<string, string> = {
+  // Aseguradoras aceptadas para BYOI (con cláusula alquiler sin chofer)
+  'rio uruguay seguros': '30-50000618-1',
+  'río uruguay seguros': '30-50000618-1',
+  'rus': '30-50000618-1',
+  'federacion patronal': '30-54619801-2',
+  'federación patronal': '30-54619801-2',
+  'la segunda': '30-50000261-5',
+  'sancor': '30-50003191-0',
+  'sancor seguros': '30-50003191-0',
+  // Aseguradoras de flota
+  'mapfre': '30-59049468-5',
+  'mapfre argentina': '30-59049468-5',
+  'san cristobal': '30-50003662-9',
+  'san cristóbal': '30-50003662-9',
+  'allianz': '30-64834298-8',
+  'allianz argentina': '30-64834298-8',
+  // Otras aseguradoras comunes
+  'zurich': '30-50001008-8',
+  'zurich argentina': '30-50001008-8',
+  'mercantil andina': '30-50001404-0',
+  'provincia seguros': '30-50003215-1',
+  'sura': '30-50001461-0',
+  'seguros sura': '30-50001461-0',
+  'berkley': '30-70738065-3',
+  'hdi': '30-62712332-1',
+  'hdi seguros': '30-62712332-1',
+  'integrity': '30-70917091-9',
+  'integrity seguros': '30-70917091-9',
+  'caja de seguros': '30-62730808-4',
+  'prudencia seguros': '30-64869536-6',
+  'libra seguros': '30-65049731-0',
+  'smg seguros': '30-50001248-0',
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -165,7 +204,7 @@ export class ContractPdfService {
 
       insurancePolicyNumber: car?.insurance_policy_number || 'No especificado',
       insuranceCompany: car?.insurance_company || 'No especificada',
-      insuranceCuit: '30-12345678-9', // TODO: Agregar CUIT de aseguradora al modelo
+      insuranceCuit: this.getInsuranceCuit(car?.insurance_company),
       insuranceValidity: 'Vigente',
       insuranceCoverage: 'Terceros Completo',
 
@@ -297,5 +336,45 @@ export class ContractPdfService {
     if (error) {
       this.logger.warn('[ContractPdf] Failed to update contract record', error);
     }
+  }
+
+  /**
+   * Obtiene el CUIT de una aseguradora basándose en su nombre
+   * Busca en el mapping de aseguradoras argentinas conocidas
+   *
+   * @param companyName - Nombre de la compañía de seguros
+   * @returns CUIT formateado o 'No disponible' si no se encuentra
+   */
+  private getInsuranceCuit(companyName?: string | null): string {
+    if (!companyName) {
+      return 'No disponible';
+    }
+
+    // Normalizar el nombre para búsqueda (lowercase, sin acentos)
+    const normalizedName = companyName
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+
+    // Buscar coincidencia exacta primero
+    if (INSURANCE_COMPANY_CUITS[normalizedName]) {
+      return INSURANCE_COMPANY_CUITS[normalizedName];
+    }
+
+    // Buscar coincidencia parcial
+    for (const [key, cuit] of Object.entries(INSURANCE_COMPANY_CUITS)) {
+      const normalizedKey = key
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+
+      if (normalizedName.includes(normalizedKey) || normalizedKey.includes(normalizedName)) {
+        return cuit;
+      }
+    }
+
+    // Si no se encuentra, retornar valor por defecto
+    this.logger.warn(`[ContractPdf] Unknown insurance company: ${companyName}`);
+    return 'No disponible';
   }
 }

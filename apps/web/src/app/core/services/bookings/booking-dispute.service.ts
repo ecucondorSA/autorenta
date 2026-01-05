@@ -231,6 +231,169 @@ export class BookingDisputeService {
   }
 
   // ============================================================================
+  // DISPUTE RESOLUTION
+  // ============================================================================
+
+  /**
+   * Resolve a dispute with final decision
+   *
+   * @param bookingId - ID of the booking with dispute
+   * @param resolution - Resolution decision (approved/partial/rejected)
+   * @param finalCharges - Final charge amount in cents (for partial resolution)
+   * @param adminNotes - Notes from admin explaining the resolution
+   */
+  async resolveDispute(
+    bookingId: string,
+    resolution: 'approved' | 'partial' | 'rejected',
+    finalCharges?: number,
+    adminNotes?: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const user = await this.supabase.auth.getUser();
+      if (!user.data.user) throw new Error('No autenticado');
+
+      // Get the open dispute
+      const { data: dispute, error: disputeError } = await this.supabase
+        .from('booking_disputes')
+        .select('*')
+        .eq('booking_id', bookingId)
+        .eq('status', 'open')
+        .maybeSingle();
+
+      if (disputeError) throw disputeError;
+      if (!dispute) {
+        return { success: false, error: 'No hay disputa abierta para esta reserva' };
+      }
+
+      // Determine final booking status based on resolution
+      let bookingStatus: string;
+      let settlementAction: 'full_refund' | 'partial_refund' | 'no_refund';
+
+      switch (resolution) {
+        case 'approved':
+          // Dispute approved = owner's claim rejected, full refund to renter
+          bookingStatus = 'completed';
+          settlementAction = 'full_refund';
+          break;
+        case 'partial':
+          // Partial resolution = split the difference
+          bookingStatus = 'completed';
+          settlementAction = 'partial_refund';
+          break;
+        case 'rejected':
+          // Dispute rejected = owner's claim approved, no additional refund
+          bookingStatus = 'completed';
+          settlementAction = 'no_refund';
+          break;
+        default:
+          return { success: false, error: 'Resolución inválida' };
+      }
+
+      // Update dispute record
+      const { error: updateDisputeError } = await this.supabase
+        .from('booking_disputes')
+        .update({
+          status: 'resolved',
+          resolution,
+          resolved_by: user.data.user.id,
+          resolved_at: new Date().toISOString(),
+          admin_notes: adminNotes,
+          final_charges_cents: finalCharges,
+        })
+        .eq('id', dispute.id);
+
+      if (updateDisputeError) throw updateDisputeError;
+
+      // Update booking status
+      const { error: updateBookingError } = await this.supabase
+        .from('bookings')
+        .update({
+          status: bookingStatus,
+          dispute_resolution: resolution,
+          dispute_resolved_at: new Date().toISOString(),
+        })
+        .eq('id', bookingId);
+
+      if (updateBookingError) throw updateBookingError;
+
+      // Process settlement based on resolution
+      if (settlementAction === 'full_refund' || settlementAction === 'partial_refund') {
+        const refundAmount = settlementAction === 'full_refund'
+          ? dispute.disputed_amount_cents
+          : (dispute.disputed_amount_cents || 0) - (finalCharges || 0);
+
+        if (refundAmount > 0) {
+          // Get booking to find renter
+          const { data: booking } = await this.supabase
+            .from('bookings')
+            .select('renter_id, user_id')
+            .eq('id', bookingId)
+            .single();
+
+          const renterId = booking?.renter_id || booking?.user_id;
+          if (renterId) {
+            await this.walletService.depositFunds(
+              renterId,
+              refundAmount,
+              `Reembolso por resolución de disputa (${resolution})`,
+              bookingId,
+            );
+          }
+        }
+      }
+
+      this.logger.info(
+        `Dispute resolved for booking ${bookingId}`,
+        JSON.stringify({
+          resolution,
+          finalCharges,
+          settlementAction,
+        }),
+      );
+
+      return { success: true };
+    } catch (error) {
+      this.logger.error(
+        'Error resolving dispute',
+        'BookingDisputeService',
+        error instanceof Error ? error : new Error(String(error)),
+      );
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al resolver disputa',
+      };
+    }
+  }
+
+  /**
+   * Get dispute details for a booking
+   */
+  async getDisputeDetails(bookingId: string): Promise<{
+    success: boolean;
+    dispute?: Record<string, unknown>;
+    error?: string;
+  }> {
+    try {
+      const { data, error } = await this.supabase
+        .from('booking_disputes')
+        .select('*')
+        .eq('booking_id', bookingId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      return { success: true, dispute: data as Record<string, unknown> };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al obtener disputa',
+      };
+    }
+  }
+
+  // ============================================================================
   // PRIVATE HELPERS
   // ============================================================================
 
