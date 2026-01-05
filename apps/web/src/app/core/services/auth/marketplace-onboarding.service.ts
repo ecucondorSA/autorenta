@@ -214,15 +214,39 @@ export class MarketplaceOnboardingService {
 
   /**
    * Desvincula la cuenta de Mercado Pago
-   * (Requiere revocar tokens en MP)
+   * Revoca tokens en MP antes de limpiar datos locales
    *
    * @param userId ID del usuario
    */
   async unlinkAccount(userId: string): Promise<void> {
-    // TODO: Revocar tokens en Mercado Pago API
-    // https://api.mercadopago.com/oauth/token/revoke
+    // Step 1: Revoke tokens at MercadoPago
+    try {
+      const { data: session } = await this.supabase.auth.getSession();
+      if (session?.session?.access_token) {
+        const response = await fetch(
+          `${environment.supabaseUrl}/functions/v1/mercadopago-revoke-token`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${session.session.access_token}`,
+            },
+            body: JSON.stringify({ user_id: userId }),
+          }
+        );
 
-    // Limpiar datos locales
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.warn('[MarketplaceOnboarding] Token revocation failed:', errorData);
+          // Continue anyway - we still want to clear local tokens
+        }
+      }
+    } catch (revokeError) {
+      console.warn('[MarketplaceOnboarding] Token revocation error:', revokeError);
+      // Continue anyway - we still want to clear local tokens
+    }
+
+    // Step 2: Clear local tokens
     const { error } = await this.supabase
       .from('profiles')
       .update({

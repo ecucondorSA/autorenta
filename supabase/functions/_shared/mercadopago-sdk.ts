@@ -11,6 +11,67 @@
 // El SDK v2 usa una estructura modular con clases separadas
 import { MercadoPagoConfig, Preference, Payment, Customer, Refund, MoneyRequest } from 'mercadopago';
 
+// ============================================================================
+// Token Validation Utilities
+// ============================================================================
+
+export interface TokenValidationOptions {
+  /** Si true, permite tokens TEST con warning en lugar de error. Default: false */
+  allowTestTokens?: boolean;
+  /** Contexto para mensajes de error (nombre de la función que llama) */
+  context: string;
+}
+
+/**
+ * Limpia y valida un token de MercadoPago.
+ * Por defecto rechaza tokens de sandbox (TEST-*).
+ *
+ * @param rawToken - Token sin procesar
+ * @param options - Opciones de validación
+ * @returns Token limpio y validado
+ * @throws Error si el token es de sandbox y allowTestTokens es false
+ */
+export function ensureProductionToken(
+  rawToken: string,
+  options: TokenValidationOptions
+): string {
+  const { allowTestTokens = false, context } = options;
+  const cleaned = rawToken.trim().replace(/[\r\n\t\s]/g, '');
+
+  const isTestToken = cleaned.toUpperCase().includes('TEST-') || cleaned.startsWith('TEST');
+
+  if (isTestToken) {
+    if (allowTestTokens) {
+      console.warn(`[${context}] WARNING: Using TEST/sandbox token. This should only be used in development.`);
+    } else {
+      throw new Error(
+        `${context}: MERCADOPAGO_ACCESS_TOKEN parece ser de sandbox (TEST). Configura el token de producción APP_USR-*`
+      );
+    }
+  }
+
+  return cleaned;
+}
+
+/**
+ * Obtiene y valida el token de MercadoPago desde variables de entorno.
+ *
+ * @param context - Nombre de la función que llama (para mensajes de error)
+ * @param allowTestTokens - Si true, permite tokens TEST. Default: false
+ * @returns Token limpio y validado
+ * @throws Error si el token no está configurado o es de sandbox (cuando no permitido)
+ */
+export function getMercadoPagoAccessToken(
+  context: string,
+  allowTestTokens = false
+): string {
+  const rawToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
+  if (!rawToken) {
+    throw new Error(`${context}: MERCADOPAGO_ACCESS_TOKEN environment variable not configured`);
+  }
+  return ensureProductionToken(rawToken, { context, allowTestTokens });
+}
+
 /**
  * P1-3: Timeout configuration for different operation types
  *

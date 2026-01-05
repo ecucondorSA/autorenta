@@ -2,6 +2,8 @@ export * from '@core/services/bookings/booking-approval.service';
 export * from '@core/services/bookings/booking-cancellation.service';
 export * from '@core/services/bookings/booking-completion.service';
 export * from '@core/services/bookings/booking-confirmation.service';
+export * from '@core/services/bookings/booking-dispute.service';
+export * from '@core/services/bookings/booking-extension.service';
 export * from '@core/services/bookings/booking-flow-helpers';
 export * from '@core/services/bookings/booking-flow-logger.service';
 export * from '@core/services/bookings/booking-flow.service';

@@ -5,6 +5,33 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
 import { FxService } from '@core/services/payments/fx.service';
 
 /**
+ * Type guard for PaymentIntent
+ * Validates that RPC response has required fields
+ */
+function isPaymentIntent(data: unknown): data is PaymentIntent {
+  if (!data || typeof data !== 'object') return false;
+  const obj = data as Record<string, unknown>;
+  return (
+    typeof obj['id'] === 'string' &&
+    typeof obj['provider'] === 'string' &&
+    typeof obj['status'] === 'string' &&
+    typeof obj['created_at'] === 'string'
+  );
+}
+
+/**
+ * Safely casts RPC response to PaymentIntent with runtime validation
+ * @throws Error if data doesn't match PaymentIntent structure
+ */
+function assertPaymentIntent(data: unknown, context: string): PaymentIntent {
+  if (!isPaymentIntent(data)) {
+    console.error(`[PaymentsService] Invalid PaymentIntent in ${context}:`, data);
+    throw new Error(`Invalid PaymentIntent response from ${context}`);
+  }
+  return data;
+}
+
+/**
  * PaymentsService
  * ... (Comments preserved) ...
  */
@@ -115,7 +142,7 @@ export class PaymentsService {
       p_booking_id: bookingId,
     });
     if (error) throw new Error(error.message);
-    return data as unknown as PaymentIntent;
+    return assertPaymentIntent(data, 'create_mp_preauth_order');
   }
 
   async markAsPaid(intentId: string): Promise<void> {
@@ -183,7 +210,7 @@ export class PaymentsService {
       p_description: description,
     });
     if (error) throw new Error(error.message);
-    return data as unknown as PaymentIntent;
+    return assertPaymentIntent(data, 'capture_mp_preauth_order');
   }
 
   async releaseMpPreAuth(mpOrderId: string, description: string): Promise<PaymentIntent> {
@@ -192,7 +219,7 @@ export class PaymentsService {
       p_description: description,
     });
     if (error) throw new Error(error.message);
-    return data as unknown as PaymentIntent;
+    return assertPaymentIntent(data, 'release_mp_preauth_order');
   }
 
   async cancelMpPreAuth(mpOrderId: string, description: string): Promise<PaymentIntent> {

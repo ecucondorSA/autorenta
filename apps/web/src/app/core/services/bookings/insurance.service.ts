@@ -251,7 +251,7 @@ export class InsuranceService {
         theft: policy.theft_coverage,
         fire: policy.fire_coverage,
         misappropriation: policy.misappropriation_coverage,
-        countries: ['Argentina'], // TODO: detectar add-on países limítrofes
+        countries: this.detectCoverageCountries(addonsList),
       },
     };
   }
@@ -262,6 +262,22 @@ export class InsuranceService {
     const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays > 0 ? diffDays : 1;
+  }
+
+  /**
+   * Detecta países cubiertos basándose en los add-ons contratados
+   * Si tiene el add-on 'paises_limitrofes', incluye países vecinos de Argentina
+   */
+  private detectCoverageCountries(addonsList: BookingInsuranceAddon[]): string[] {
+    const hasLimitrofesAddon = addonsList.some(
+      (a) => a.addon && a.addon.addon_type === 'paises_limitrofes'
+    );
+
+    if (hasLimitrofesAddon) {
+      return ['Argentina', 'Uruguay', 'Chile', 'Brasil', 'Paraguay', 'Bolivia'];
+    }
+
+    return ['Argentina'];
   }
 
   // ============================================

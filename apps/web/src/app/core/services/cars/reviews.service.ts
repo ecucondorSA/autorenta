@@ -241,14 +241,9 @@ export class ReviewsService {
 
   /**
    * Load user statistics (updates signals)
-   * TODO: Enable when user_stats table/view is created
+   * Queries the user_stats materialized view
    */
-  async loadUserStats(_userId: string): Promise<void> {
-    // Table user_stats doesn't exist yet - skip query to avoid 404 errors
-    // When the table is created, uncomment the code below
-    this.userStatsSignal.set(null);
-
-    /*
+  async loadUserStats(userId: string): Promise<void> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
@@ -267,7 +262,6 @@ export class ReviewsService {
     } finally {
       this.loadingSignal.set(false);
     }
-    */
   }
 
   /**

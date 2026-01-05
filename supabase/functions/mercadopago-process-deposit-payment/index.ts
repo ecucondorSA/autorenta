@@ -2,6 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
+import { getMercadoPagoAccessToken } from '../_shared/mercadopago-sdk.ts';
 
 const MP_API_BASE = 'https://api.mercadopago.com/v1';
 
@@ -39,16 +40,6 @@ interface MercadoPagoPaymentResponse {
   metadata?: Record<string, unknown>;
 }
 
-const ensureProductionToken = (rawToken: string, context: string) => {
-  const cleaned = rawToken.trim().replace(/[\r\n\t\s]/g, '');
-  if (cleaned.toUpperCase().includes('TEST-') || cleaned.startsWith('TEST')) {
-    throw new Error(
-      `${context}: MERCADOPAGO_ACCESS_TOKEN parece ser de sandbox (TEST). Configura token APP_USR-*`,
-    );
-  }
-  return cleaned;
-};
-
 const FAILURE_STATUSES = new Set([
   'rejected',
   'cancelled',
@@ -83,18 +74,15 @@ serve(async (req) => {
       );
     }
 
-    const MP_ACCESS_TOKEN_RAW = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
+    // Obtener y validar token (usando módulo compartido)
+    const MP_ACCESS_TOKEN = getMercadoPagoAccessToken('mercadopago-process-deposit-payment');
+
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-    if (!MP_ACCESS_TOKEN_RAW || !SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-      throw new Error('Missing required environment variables');
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+      throw new Error('Missing required environment variables: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
     }
-
-    const MP_ACCESS_TOKEN = ensureProductionToken(
-      MP_ACCESS_TOKEN_RAW,
-      'mercadopago-process-deposit-payment',
-    );
 
     if (req.method !== 'POST') {
       return new Response(

@@ -4,6 +4,8 @@ import { getErrorMessage } from '@core/utils/type-guards';
 import { BookingApprovalService } from '@core/services/bookings/booking-approval.service';
 import { BookingCancellationService } from '@core/services/bookings/booking-cancellation.service';
 import { BookingCompletionService } from '@core/services/bookings/booking-completion.service';
+import { BookingDisputeService } from '@core/services/bookings/booking-dispute.service';
+import { BookingExtensionService } from '@core/services/bookings/booking-extension.service';
 import { BookingUtilsService } from '@core/services/bookings/booking-utils.service';
 import { BookingValidationService } from '@core/services/bookings/booking-validation.service';
 import { BookingWalletService } from '@core/services/bookings/booking-wallet.service';
@@ -47,6 +49,8 @@ export class BookingsService {
   private readonly completionService = inject(BookingCompletionService);
   private readonly validationService = inject(BookingValidationService);
   private readonly cancellationService = inject(BookingCancellationService);
+  private readonly extensionService = inject(BookingExtensionService);
+  private readonly disputeService = inject(BookingDisputeService);
   private readonly utilsService = inject(BookingUtilsService);
 
   // Notification services
@@ -822,476 +826,115 @@ export class BookingsService {
     return this.cancellationService.cancelBookingLegacy(booking, reason);
   }
 
-  // Extension Operations
-  /**
-   * Solicita una extensión de reserva.
-   * Crea una solicitud pendiente para aprobación del Owner.
-   */
+  // Extension Operations (delegated to BookingExtensionService)
   async requestExtension(
     bookingId: string,
     newEndDate: Date,
     renterMessage?: string,
   ): Promise<{ success: boolean; error?: string; additionalCost?: number }> {
-    try {
-      const booking = await this.getBookingById(bookingId);
-      if (!booking) throw new Error('Reserva no encontrada');
-
-      if (newEndDate <= new Date(booking.end_at)) {
-        return { success: false, error: 'La nueva fecha debe ser posterior a la actual' };
-      }
-
-      const currentUser = (await this.supabase.auth.getUser()).data.user;
-      if (!currentUser || currentUser.id !== booking.renter_id) {
-        return { success: false, error: 'Solo el arrendatario puede solicitar una extensión.' };
-      }
-
-      // Calcular costo adicional ESTIMADO (puede variar al momento de la aprobación)
-      const currentEnd = new Date(booking.end_at);
-      const additionalDays = Math.ceil(
-        (newEndDate.getTime() - currentEnd.getTime()) / (1000 * 60 * 60 * 24),
-      );
-      if (additionalDays <= 0)
-        return { success: false, error: 'La nueva fecha debe ser posterior a la actual' };
-
-      const pricePerDay = this.getBookingPricePerDay(booking);
-      const estimatedAdditionalCostCents = Math.round(pricePerDay * additionalDays * 100);
-
-      // INSERT a new extension request
-      const { error: insertError } = await this.supabase
-        .from('booking_extension_requests')
-        .insert({
-          booking_id: booking.id,
-          renter_id: booking.renter_id,
-          owner_id: booking.owner_id || '', // owner_id is NOT NULL in DB, ensure it's set
-          original_end_at: booking.end_at,
-          new_end_at: newEndDate.toISOString(),
-          estimated_cost_amount: estimatedAdditionalCostCents / 100, // Store as actual amount
-          estimated_cost_currency: booking.currency,
-          renter_message: renterMessage || null,
-          request_status: 'pending',
-        })
-        .select('*')
-        .single();
-
-      if (insertError) throw insertError;
-
-      await this.bookingNotifications.notifyExtensionRequested(
-        booking,
-        newEndDate.toISOString(),
-        renterMessage,
-      );
-
-      return { success: true, additionalCost: estimatedAdditionalCostCents / 100 };
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Error al solicitar extensión',
-      };
-    }
+    const booking = await this.getBookingById(bookingId);
+    if (!booking) return { success: false, error: 'Reserva no encontrada' };
+    return this.extensionService.requestExtension(booking, newEndDate, renterMessage);
   }
 
-  /**
-   * Aprueba una solicitud de extensión de reserva.
-   * Extiende el booking y realiza el cobro.
-   */
   async approveExtensionRequest(
     requestId: string,
     ownerResponse?: string,
   ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const existingRequest = await this.supabase
-        .from('booking_extension_requests')
-        .select('*')
-        .eq('id', requestId)
-        .single();
+    // Get request to find booking
+    const { data: request, error } = await this.supabase
+      .from('booking_extension_requests')
+      .select('booking_id')
+      .eq('id', requestId)
+      .single();
 
-      if (existingRequest.error || !existingRequest.data) {
-        throw new Error('Solicitud de extensión no encontrada.');
-      }
-
-      const request = existingRequest.data as BookingExtensionRequest;
-      if (request.request_status !== 'pending') {
-        throw new Error('La solicitud ya no está pendiente.');
-      }
-
-      const booking = await this.getBookingById(request.booking_id);
-      if (!booking) throw new Error('Reserva no encontrada');
-
-      const currentUser = (await this.supabase.auth.getUser()).data.user;
-      if (!currentUser || currentUser.id !== booking.owner_id) {
-        throw new Error('Solo el propietario puede aprobar una extensión.');
-      }
-
-      // 1. Cobrar el costo adicional al renter (assuming this logic is correct from original)
-      // This part needs to be carefully handled. The `additionalCost` in the request is estimated.
-      // Re-calculate the cost or trust the estimated one. For now, we trust the estimated one.
-      if (!request.estimated_cost_amount || !request.estimated_cost_currency) {
-        throw new Error('Faltan datos de costo estimado en la solicitud.');
-      }
-
-      // Assuming a new endpoint or helper is needed to process additional payment.
-      // For simplicity, let's assume `processRentalPayment` can handle additional charges.
-      const chargeResult = await this.bookingWalletService.processRentalPayment(
-        booking,
-        Math.round(request.estimated_cost_amount * 100), // Convert to cents
-        `Extensión de reserva #${booking.id} (${new Date(request.new_end_at).toLocaleDateString()})`,
-      );
-
-      if (!chargeResult.ok) {
-        throw new Error(`Fallo al cobrar extensión: ${chargeResult.error}`);
-      }
-
-      // 2. Actualizar la solicitud de extensión
-      const { error: updateRequestError } = await this.supabase
-        .from('booking_extension_requests')
-        .update({
-          request_status: 'approved',
-          responded_at: new Date().toISOString(),
-          owner_response: ownerResponse || null,
-        })
-        .eq('id', requestId);
-
-      if (updateRequestError) throw updateRequestError;
-
-      // 3. Actualizar la reserva con la nueva fecha y total
-      await this.updateBooking(booking.id, {
-        end_at: request.new_end_at,
-        total_amount: (booking.total_amount || 0) + request.estimated_cost_amount,
-      });
-
-      await this.extendInsuranceCoverageIfNeeded(booking.id, request.new_end_at);
-
-      return { success: true };
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Error al aprobar extensión',
-      };
+    if (error || !request) {
+      return { success: false, error: 'Solicitud de extensión no encontrada.' };
     }
+
+    const booking = await this.getBookingById(request.booking_id);
+    if (!booking) return { success: false, error: 'Reserva no encontrada' };
+
+    return this.extensionService.approveExtensionRequest(
+      requestId,
+      booking,
+      ownerResponse,
+      this.updateBooking.bind(this),
+    );
   }
 
-  /**
-   * Rechaza una solicitud de extensión de reserva.
-   */
   async rejectExtensionRequest(
     requestId: string,
     reason: string,
   ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const existingRequest = await this.supabase
-        .from('booking_extension_requests')
-        .select('*')
-        .eq('id', requestId)
-        .single();
+    // Get request to find booking
+    const { data: request, error } = await this.supabase
+      .from('booking_extension_requests')
+      .select('booking_id')
+      .eq('id', requestId)
+      .single();
 
-      if (existingRequest.error || !existingRequest.data) {
-        throw new Error('Solicitud de extensión no encontrada.');
-      }
-
-      const request = existingRequest.data as BookingExtensionRequest;
-      if (request.request_status !== 'pending') {
-        throw new Error('La solicitud ya no está pendiente.');
-      }
-
-      const booking = await this.getBookingById(request.booking_id);
-      if (!booking) throw new Error('Reserva no encontrada');
-
-      const currentUser = (await this.supabase.auth.getUser()).data.user;
-      if (!currentUser || currentUser.id !== booking.owner_id) {
-        throw new Error('Solo el propietario puede rechazar una extensión.');
-      }
-
-      const { error: updateRequestError } = await this.supabase
-        .from('booking_extension_requests')
-        .update({
-          request_status: 'rejected',
-          responded_at: new Date().toISOString(),
-          owner_response: reason,
-        })
-        .eq('id', requestId);
-
-      if (updateRequestError) throw updateRequestError;
-
-      await this.bookingNotifications.notifyExtensionRejected(booking, reason);
-
-      return { success: true };
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Error al rechazar extensión',
-      };
+    if (error || !request) {
+      return { success: false, error: 'Solicitud de extensión no encontrada.' };
     }
+
+    const booking = await this.getBookingById(request.booking_id);
+    if (!booking) return { success: false, error: 'Reserva no encontrada' };
+
+    return this.extensionService.rejectExtensionRequest(requestId, booking, reason);
   }
 
-  private async extendInsuranceCoverageIfNeeded(
-    bookingId: string,
-    newEndAt: string,
-  ): Promise<void> {
-    try {
-      const { data: coverage, error } = await this.supabase
-        .from('booking_insurance_coverage')
-        .select('id, coverage_end')
-        .eq('booking_id', bookingId)
-        .eq('status', 'active')
-        .maybeSingle();
-
-      if (error) throw error;
-      if (!coverage) return;
-
-      const { error: updateError } = await this.supabase
-        .from('booking_insurance_coverage')
-        .update({
-          coverage_end: newEndAt,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', coverage.id);
-
-      if (updateError) throw updateError;
-
-      this.logger.info('Insurance coverage extended', 'BookingsService', {
-        booking_id: bookingId,
-        new_end_at: newEndAt,
-      });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : getErrorMessage(error);
-      this.logger.warn('Failed to extend insurance coverage; recorded issue', 'BookingsService', {
-        booking_id: bookingId,
-        new_end_at: newEndAt,
-        error: message,
-      });
-
-      try {
-        await this.createPaymentIssue({
-          booking_id: bookingId,
-          issue_type: 'insurance_extension_required',
-          severity: 'high',
-          description: 'Extensión de seguro pendiente luego de aprobar extensión de reserva',
-          metadata: {
-            new_end_at: newEndAt,
-            error: message,
-          },
-        });
-      } catch (issueError) {
-        this.logger.error('Failed to create insurance extension issue', 'BookingsService', issueError);
-      }
-    }
-  }
-
-
-  /**
-   * Rechaza el auto en el momento del retiro (Check-in)
-   * Caso de uso: Auto sucio, daños no reportados, no es el modelo correcto.
-   * Acción: Cancela reserva, reembolso 100% inmediato, penaliza al dueño.
-   */
+  // Dispute Operations (delegated to BookingDisputeService)
   async rejectCarAtPickup(
     bookingId: string,
     reason: string,
     evidencePhotos: string[] = [],
   ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const booking = await this.getBookingById(bookingId);
-      if (!booking) throw new Error('Reserva no encontrada');
+    const booking = await this.getBookingById(bookingId);
+    if (!booking) return { success: false, error: 'Reserva no encontrada' };
 
-      // 1. Cancelar la reserva con motivo especial
-      // Usamos force=true para bypassear reglas de tiempo (es una cancelación justificada)
-      await this.cancellationService.cancelBooking(booking, true);
-
-      // 2. Actualizar motivo específico y evidencia
-      await this.updateBooking(booking.id, {
-        cancellation_reason: `RECHAZADO EN CHECK-IN: ${reason}`,
-        cancelled_by_role: 'owner',
-        metadata: {
-          ...booking.metadata,
-          rejection_evidence: evidencePhotos,
-          rejected_at_pickup: true,
-        },
-      });
-
-      // 3. Registrar incidente para penalización del dueño (Strike)
-      await this.profileService.addStrike(
-        booking.owner_id || '',
-        'car_rejected_at_pickup',
-        booking.id,
-      );
-
-      this.logger.info(
-        `Car rejected at pickup for booking ${booking.id}`,
-        JSON.stringify({
-          reason,
-          photos: evidencePhotos.length,
-        }),
-      );
-
-      return { success: true };
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Error al rechazar vehículo',
-      };
-    }
+    return this.disputeService.rejectCarAtPickup(
+      booking,
+      reason,
+      evidencePhotos,
+      this.updateBooking.bind(this),
+    );
   }
 
-  /**
-   * Procesa una devolución anticipada (Early Return)
-   * Reembolsa los días no utilizados al locatario.
-   */
   async processEarlyReturn(bookingId: string): Promise<{ success: boolean; error?: string }> {
-    try {
-      const booking = await this.getBookingById(bookingId);
-      if (!booking) throw new Error('Reserva no encontrada');
+    const booking = await this.getBookingById(bookingId);
+    if (!booking) return { success: false, error: 'Reserva no encontrada' };
 
-      const now = new Date();
-      const endDate = new Date(booking.end_at);
-      const startDate = new Date(booking.start_at);
-
-      // Validar que sea realmente anticipada
-      if (now >= endDate) {
-        return { success: false, error: 'La reserva ya ha finalizado o está por finalizar' };
-      }
-
-      if (now < startDate) {
-        return { success: false, error: 'La reserva aún no ha comenzado' };
-      }
-
-      // Calcular días no utilizados (diferencia entre ahora y fin programado)
-      const msPerDay = 1000 * 60 * 60 * 24;
-      const remainingDays = Math.floor((endDate.getTime() - now.getTime()) / msPerDay);
-
-      if (remainingDays <= 0) {
-        return { success: false, error: 'No hay días completos para reembolsar' };
-      }
-
-      const pricePerDay = this.getBookingPricePerDay(booking);
-      const refundAmount = pricePerDay * remainingDays;
-
-      // Actualizar fecha de fin a "ahora"
-      await this.updateBooking(booking.id, {
-        end_at: now.toISOString(),
-        // total_amount se ajustará automáticamente o se deja como registro histórico
-        // Idealmente deberíamos actualizar total_amount = total_amount - refundAmount
-        total_amount: (booking.total_amount || 0) - refundAmount,
-      });
-
-      // Procesar reembolso
-      if (refundAmount > 0) {
-        // Reembolsar a wallet (o tarjeta si es posible, pero wallet es inmediato)
-        if (booking.user_id) {
-          await this.walletService.depositFunds(
-            booking.user_id,
-            Math.round(refundAmount * 100),
-            `Reembolso por devolución anticipada (${remainingDays} días)`,
-            booking.id,
-          );
-        }
-      }
-
-      return { success: true };
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Error al procesar devolución anticipada',
-      };
-    }
+    return this.disputeService.processEarlyReturn(booking, this.updateBooking.bind(this));
   }
 
-  /**
-   * Reporta que el propietario no se presentó (Owner No-Show).
-   * Inicia el protocolo de no-show: cancela reserva, procesa reembolso y busca alternativas.
-   */
   async reportOwnerNoShow(
     bookingId: string,
     details: string,
     evidenceUrls: string[] = [],
   ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const { data, error } = await this.supabase.rpc('report_owner_no_show', {
-        p_booking_id: bookingId,
-        p_details: details,
-        p_evidence_urls: evidenceUrls,
-      });
-
-      if (error) throw error;
-
-      // The RPC should handle booking cancellation, refund, etc.
-      // This service method just reports the no-show.
-
-      return { success: true, ...data }; // Assuming RPC returns success/error/message
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Error al reportar no-show del propietario',
-      };
-    }
+    return this.disputeService.reportOwnerNoShow(bookingId, details, evidenceUrls);
   }
 
-  /**
-   * Reporta que el locatario no se presentó (Renter No-Show).
-   * Inicia el protocolo de no-show: marca reserva como cancelada, cobra penalidad al locatario.
-   */
   async reportRenterNoShow(
     bookingId: string,
     details: string,
     evidenceUrls: string[] = [],
   ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const { data, error } = await this.supabase.rpc('report_renter_no_show', {
-        p_booking_id: bookingId,
-        p_details: details,
-        p_evidence_urls: evidenceUrls,
-      });
-
-      if (error) throw error;
-
-      // The RPC should handle booking cancellation, penalty charges, etc.
-      // This service method just reports the no-show.
-
-      return { success: true, ...data }; // Assuming RPC returns success/error/message
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Error al reportar no-show del locatario',
-      };
-    }
+    return this.disputeService.reportRenterNoShow(bookingId, details, evidenceUrls);
   }
 
-  /**
-   * Inicia una disputa sobre cargos adicionales
-   * Congela la transferencia de fondos al dueño hasta resolución.
-   */
   async createDispute(
     bookingId: string,
     reason: string,
     evidence?: string[],
   ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const user = await this.supabase.auth.getUser();
-      if (!user.data.user) throw new Error('No autenticado');
-
-      // Insertar disputa
-      const { error } = await this.supabase.from('booking_disputes').insert({
-        booking_id: bookingId,
-        opened_by: user.data.user.id,
-        reason,
-        evidence: evidence || [],
-        status: 'open',
-        created_at: new Date().toISOString(),
-      });
-
-      if (error) throw error;
-
-      // Marcar booking en estado de disputa (esto debería bloquear payouts automáticos en el backend)
-      await this.updateBooking(bookingId, {
-        status: 'pending_dispute_resolution', // Correct status for disputes
-        // metadata: { is_disputed: true } // Alternativa si no hay enum
-      });
-
-      return { success: true };
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Error al crear disputa',
-      };
-    }
+    return this.disputeService.createDispute(
+      bookingId,
+      reason,
+      evidence,
+      this.updateBooking.bind(this),
+    );
   }
 
   // Utility Operations
@@ -1311,59 +954,21 @@ export class BookingsService {
    * Obtiene las solicitudes de extensión pendientes para una reserva.
    */
   async getPendingExtensionRequests(bookingId: string): Promise<BookingExtensionRequest[]> {
-    const { data, error } = await this.supabase
-      .from('booking_extension_requests')
-      .select('*')
-      .eq('booking_id', bookingId)
-      .eq('request_status', 'pending')
-      .order('requested_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching pending extension requests:', error);
-      throw error;
-    }
-    return (data || []) as BookingExtensionRequest[];
+    return this.extensionService.getPendingExtensionRequests(bookingId);
   }
 
   /**
    * Estima el costo adicional de una extensión de reserva.
-   * @param bookingId ID de la reserva.
-   * @param newEndDate Nueva fecha de fin de la reserva.
-   * @returns Costo estimado en `amount` y un posible `error`.
    */
   async estimateExtensionCost(
     bookingId: string,
     newEndDate: Date,
   ): Promise<{ amount: number; currency: string; error?: string }> {
-    try {
-      const booking = await this.getBookingById(bookingId);
-      if (!booking) throw new Error('Reserva no encontrada');
-
-      if (newEndDate <= new Date(booking.end_at)) {
-        return { amount: 0, currency: booking.currency, error: 'La nueva fecha debe ser posterior a la actual' };
-      }
-
-      // Calcular días adicionales
-      const currentEnd = new Date(booking.end_at);
-      const additionalDays = Math.ceil(
-        (newEndDate.getTime() - currentEnd.getTime()) / (1000 * 60 * 60 * 24),
-      );
-      if (additionalDays <= 0)
-        return { amount: 0, currency: booking.currency, error: 'La nueva fecha debe ser posterior a la actual' };
-
-      // Obtener precio por día actual (utilizando el desglose de la reserva original)
-      const pricePerDay = this.getBookingPricePerDay(booking); // Assuming this helper exists and returns price per day in actual amount (not cents)
-
-      const estimatedAdditionalCost = pricePerDay * additionalDays;
-
-      return { amount: estimatedAdditionalCost, currency: booking.currency };
-    } catch (error) {
-      return {
-        amount: 0,
-        currency: 'ARS',
-        error: error instanceof Error ? error.message : 'Error al estimar el costo de extensión',
-      };
+    const booking = await this.getBookingById(bookingId);
+    if (!booking) {
+      return { amount: 0, currency: 'ARS', error: 'Reserva no encontrada' };
     }
+    return this.extensionService.estimateExtensionCost(booking, newEndDate);
   }
 
 

@@ -25,19 +25,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { requireEmailVerification } from '../_shared/auth-utils.ts';
 import { createChildLogger } from '../_shared/logger.ts';
+import { getMercadoPagoAccessToken } from '../_shared/mercadopago-sdk.ts';
 
 const log = createChildLogger('CreateBookingPreference');
-
-// Helper para evitar usar tokens sandbox en flujos productivos
-const ensureProductionToken = (rawToken: string, context: string) => {
-  const cleaned = rawToken.trim().replace(/[\r\n\t\s]/g, '');
-  if (cleaned.toUpperCase().includes('TEST-') || cleaned.startsWith('TEST')) {
-    throw new Error(
-      `${context}: MERCADOPAGO_ACCESS_TOKEN parece ser de sandbox (TEST). Configura el token de producción APP_USR-*`,
-    );
-  }
-  return cleaned;
-};
 
 // Tipos
 interface CreateBookingPreferenceRequest {
@@ -56,18 +46,8 @@ serve(async (req) => {
   }
 
   try {
-    // Verificar variables de entorno
-    const MP_ACCESS_TOKEN_RAW = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
-
-    if (!MP_ACCESS_TOKEN_RAW) {
-      throw new Error('MERCADOPAGO_ACCESS_TOKEN environment variable not configured');
-    }
-
-    // Limpiar token
-    const MP_ACCESS_TOKEN = ensureProductionToken(
-      MP_ACCESS_TOKEN_RAW,
-      'mercadopago-create-booking-preference',
-    );
+    // Verificar variables de entorno (usando módulo compartido)
+    const MP_ACCESS_TOKEN = getMercadoPagoAccessToken('mercadopago-create-booking-preference');
 
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
@@ -75,8 +55,8 @@ serve(async (req) => {
     const MP_MARKETPLACE_ID = Deno.env.get('MERCADOPAGO_MARKETPLACE_ID');
     const MP_APPLICATION_ID = Deno.env.get('MERCADOPAGO_APPLICATION_ID');
 
-    if (!MP_ACCESS_TOKEN || !SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-      throw new Error('Missing required environment variables');
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+      throw new Error('Missing required environment variables: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
     }
 
     // Validar marketplace configurado si se requiere split payment

@@ -25,19 +25,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { createChildLogger } from '../_shared/logger.ts';
+import { getMercadoPagoAccessToken } from '../_shared/mercadopago-sdk.ts';
 
 const log = createChildLogger('CreatePreference');
-
-// Small helper: prevent accidental use of sandbox/test tokens in production flows
-const ensureProductionToken = (rawToken: string, context: string) => {
-  const cleaned = rawToken.trim().replace(/[\r\n\t\s]/g, '');
-  if (cleaned.toUpperCase().includes('TEST-') || cleaned.startsWith('TEST')) {
-    throw new Error(
-      `${context}: MERCADOPAGO_ACCESS_TOKEN parece ser de sandbox (TEST). Configura el token de producción APP_USR-*`,
-    );
-  }
-  return cleaned;
-};
 
 // Tipos
 interface CreatePreferenceRequest {
@@ -71,29 +61,15 @@ serve(async (req) => {
       // Don't block on rate limiter errors - fail open for availability
       console.error('[RateLimit] Error enforcing rate limit:', error);
     }
-    // Verificar variables de entorno - PRODUCTION TOKEN (NO FALLBACK)
-    const MP_ACCESS_TOKEN_RAW = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
-
-    if (!MP_ACCESS_TOKEN_RAW) {
-      throw new Error('MERCADOPAGO_ACCESS_TOKEN environment variable not configured');
-    }
-
-    // Limpiar token y validar que no sea de sandbox
-    const MP_ACCESS_TOKEN = ensureProductionToken(MP_ACCESS_TOKEN_RAW, 'mercadopago-create-preference');
+    // Verificar variables de entorno - PRODUCTION TOKEN (usando módulo compartido)
+    const MP_ACCESS_TOKEN = getMercadoPagoAccessToken('mercadopago-create-preference');
 
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     const APP_BASE_URL = Deno.env.get('APP_BASE_URL') || 'http://localhost:4200';
 
-    // Debug: Log token info
-    console.log('MP_ACCESS_TOKEN from env:', !!Deno.env.get('MERCADOPAGO_ACCESS_TOKEN'));
-    console.log('MP_ACCESS_TOKEN after cleaning:', !!MP_ACCESS_TOKEN);
-    console.log('MP_ACCESS_TOKEN length:', MP_ACCESS_TOKEN?.length);
-    console.log('MP_ACCESS_TOKEN prefix:', MP_ACCESS_TOKEN?.substring(0, 15) + '...');
-    console.log('MP_ACCESS_TOKEN suffix:', '...' + MP_ACCESS_TOKEN?.substring(MP_ACCESS_TOKEN.length - 10));
-
-    if (!MP_ACCESS_TOKEN || !SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-      throw new Error('Missing required environment variables');
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+      throw new Error('Missing required environment variables: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
     }
 
     // Validar método HTTP
