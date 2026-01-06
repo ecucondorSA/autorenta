@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/ecucondorSA/autorenta/compare/v1.1.4...v1.1.5) (2026-01-06)
+
+
+### Bug Fixes
+
+* **ci:** skip DB migration for tag releases ([bff68ba](https://github.com/ecucondorSA/autorenta/commit/bff68baa3dc3c796957a60a8d6522819bbdf6adf))
+
 ## [1.1.4](https://github.com/ecucondorSA/autorenta/compare/v1.1.3...v1.1.4) (2026-01-06)
 
 
