@@ -276,7 +276,7 @@ jobs:
           packageName: com.autorentar.app
           releaseFiles: apps/web/android/app/build/outputs/bundle/release/*.aab
           track: internal
-          status: completed
+          status: draft
         continue-on-error: true  # Don't fail release if Play Store upload fails
 
       - name: Android Build Status
