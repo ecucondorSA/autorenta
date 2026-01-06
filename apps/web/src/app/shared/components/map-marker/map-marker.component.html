@@ -1,28 +1,41 @@
 @if (car) {
   <div
-    class="relative cursor-pointer transition-transform duration-200 ease-in-out"
-    [class.transform]="isSelected"
+    class="relative cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group"
     [class.scale-110]="isSelected"
+    [class.z-50]="isSelected"
     >
+    <!-- Car Photo Circle -->
     <div
-      class="w-16 h-16 rounded-full bg-surface-raised dark:bg-surface-raised p-1 shadow-lg"
-      [class.ring-2]="isSelected"
-      [class.ring-offset-2]="isSelected"
-      [class.ring-border-focus]="isSelected"
-      [class.dark:ring-border-focus]="isSelected"
+      class="w-14 h-14 rounded-full bg-white dark:bg-slate-900 p-0.5 shadow-xl transition-all duration-300"
+      [class.ring-4]="isSelected"
+      [class.ring-cyan-500]="isSelected"
+      [class.shadow-cyan-500/20]="isSelected"
       >
       <img
         class="w-full h-full rounded-full object-cover"
         [src]="car.photoUrl || '/assets/images/car-placeholder.svg'"
-        [alt]="'Photo of ' + (car.title || 'Car')"
+        [alt]="car.title || 'Auto'"
         />
     </div>
-    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/4">
+
+    <!-- Price Tag (Floating below) -->
+    <div 
+      class="absolute -bottom-2 left-1/2 -translate-x-1/2 transition-all duration-300"
+      [class.scale-110]="isSelected"
+    >
       <div
-        class="bg-surface-raised dark:bg-surface-raised text-text-primary dark:text-text-primary text-xs font-bold px-2 py-1 rounded-full shadow-md"
+        class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black uppercase tracking-tighter px-2 py-0.5 rounded-md shadow-lg border border-white/10 dark:border-slate-200"
+        [class.bg-cyan-600]="isSelected"
+        [class.dark:bg-cyan-500]="isSelected"
+        [class.text-white]="isSelected"
         >
-        ${{ car.pricePerDay | number: '1.0-0' }}
+        \${{ car.pricePerDay | number: '1.0-0' }}
       </div>
     </div>
+
+    <!-- Selection Glow -->
+    @if (isSelected) {
+      <div class="absolute inset-0 bg-cyan-500/20 blur-xl rounded-full -z-10 animate-pulse"></div>
+    }
   </div>
 }

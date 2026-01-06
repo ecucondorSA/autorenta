@@ -4,6 +4,8 @@ import {Component, signal,
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
+import { IconComponent } from '../icon/icon.component';
+
 interface FooterSection {
   title: string;
   links: FooterLink[];
@@ -30,7 +32,7 @@ interface FooterLink {
   selector: 'app-footer',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, NgOptimizedImage],
+  imports: [RouterLink, NgOptimizedImage, IconComponent],
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css'],
 })
@@ -74,19 +76,19 @@ export class FooterComponent {
   socialLinks = signal([
     {
       name: 'Facebook',
-      icon: '📘',
+      icon: 'facebook',
       url: 'https://facebook.com/autorenta',
       ariaLabel: 'Visita nuestro Facebook',
     },
     {
       name: 'Twitter',
-      icon: '🐦',
+      icon: 'twitter',
       url: 'https://twitter.com/autorenta',
       ariaLabel: 'Visita nuestro Twitter',
     },
     {
       name: 'Instagram',
-      icon: '📷',
+      icon: 'instagram',
       url: 'https://instagram.com/autorenta',
       ariaLabel: 'Visita nuestro Instagram',
     },

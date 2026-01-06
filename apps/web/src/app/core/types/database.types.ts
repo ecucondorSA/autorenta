@@ -1,4 +1,4 @@
-export type Json =
+{"types":"export type Json =
   | string
   | number
   | boolean
@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: \"13.0.5\"
   }
   public: {
     Tables: {
@@ -39,7 +39,7 @@ export type Database = {
           resolution_notes: string | null
           resolved_at: string | null
           resolved_by: string | null
-          status: Database["public"]["Enums"]["accident_status"]
+          status: Database[\"public\"][\"Enums\"][\"accident_status\"]
           updated_at: string
         }
         Insert: {
@@ -66,7 +66,7 @@ export type Database = {
           resolution_notes?: string | null
           resolved_at?: string | null
           resolved_by?: string | null
-          status?: Database["public"]["Enums"]["accident_status"]
+          status?: Database[\"public\"][\"Enums\"][\"accident_status\"]
           updated_at?: string
         }
         Update: {
@@ -93,205 +93,205 @@ export type Database = {
           resolution_notes?: string | null
           resolved_at?: string | null
           resolved_by?: string | null
-          status?: Database["public"]["Enums"]["accident_status"]
+          status?: Database[\"public\"][\"Enums\"][\"accident_status\"]
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accident_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accident_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accident_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accident_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accident_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accident_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accident_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "accident_reports_charge_transaction_id_fkey"
-            columns: ["charge_transaction_id"]
+            foreignKeyName: \"accident_reports_charge_transaction_id_fkey\"
+            columns: [\"charge_transaction_id\"]
             isOneToOne: false
-            referencedRelation: "v_wallet_locks_status"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_wallet_locks_status\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_charge_transaction_id_fkey"
-            columns: ["charge_transaction_id"]
+            foreignKeyName: \"accident_reports_charge_transaction_id_fkey\"
+            columns: [\"charge_transaction_id\"]
             isOneToOne: false
-            referencedRelation: "v_wallet_transfers_summary"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_wallet_transfers_summary\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_charge_transaction_id_fkey"
-            columns: ["charge_transaction_id"]
+            foreignKeyName: \"accident_reports_charge_transaction_id_fkey\"
+            columns: [\"charge_transaction_id\"]
             isOneToOne: false
-            referencedRelation: "wallet_transactions"
-            referencedColumns: ["id"]
+            referencedRelation: \"wallet_transactions\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
+            foreignKeyName: \"accident_reports_reporter_id_fkey\"
+            columns: [\"reporter_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
+            foreignKeyName: \"accident_reports_reporter_id_fkey\"
+            columns: [\"reporter_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
+            foreignKeyName: \"accident_reports_reporter_id_fkey\"
+            columns: [\"reporter_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
+            foreignKeyName: \"accident_reports_reporter_id_fkey\"
+            columns: [\"reporter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
+            foreignKeyName: \"accident_reports_reporter_id_fkey\"
+            columns: [\"reporter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
+            foreignKeyName: \"accident_reports_reporter_id_fkey\"
+            columns: [\"reporter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
+            foreignKeyName: \"accident_reports_reporter_id_fkey\"
+            columns: [\"reporter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
+            foreignKeyName: \"accident_reports_reporter_id_fkey\"
+            columns: [\"reporter_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
+            foreignKeyName: \"accident_reports_reporter_id_fkey\"
+            columns: [\"reporter_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"accident_reports_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"accident_reports_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"accident_reports_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"accident_reports_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"accident_reports_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"accident_reports_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"accident_reports_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"accident_reports_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"accident_reports_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -331,11 +331,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "accounting_accounts_parent_account_id_fkey"
-            columns: ["parent_account_id"]
+            foreignKeyName: \"accounting_accounts_parent_account_id_fkey\"
+            columns: [\"parent_account_id\"]
             isOneToOne: false
-            referencedRelation: "accounting_accounts"
-            referencedColumns: ["id"]
+            referencedRelation: \"accounting_accounts\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -546,32 +546,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "accounting_ledger_account_code_fkey"
-            columns: ["account_code"]
+            foreignKeyName: \"accounting_ledger_account_code_fkey\"
+            columns: [\"account_code\"]
             isOneToOne: false
-            referencedRelation: "accounting_balance_sheet"
-            referencedColumns: ["code"]
+            referencedRelation: \"accounting_balance_sheet\"
+            referencedColumns: [\"code\"]
           },
           {
-            foreignKeyName: "accounting_ledger_account_code_fkey"
-            columns: ["account_code"]
+            foreignKeyName: \"accounting_ledger_account_code_fkey\"
+            columns: [\"account_code\"]
             isOneToOne: false
-            referencedRelation: "accounting_chart_of_accounts"
-            referencedColumns: ["code"]
+            referencedRelation: \"accounting_chart_of_accounts\"
+            referencedColumns: [\"code\"]
           },
           {
-            foreignKeyName: "accounting_ledger_account_code_fkey"
-            columns: ["account_code"]
+            foreignKeyName: \"accounting_ledger_account_code_fkey\"
+            columns: [\"account_code\"]
             isOneToOne: false
-            referencedRelation: "accounting_income_statement"
-            referencedColumns: ["code"]
+            referencedRelation: \"accounting_income_statement\"
+            referencedColumns: [\"code\"]
           },
           {
-            foreignKeyName: "accounting_ledger_journal_entry_id_fkey"
-            columns: ["journal_entry_id"]
+            foreignKeyName: \"accounting_ledger_journal_entry_id_fkey\"
+            columns: [\"journal_entry_id\"]
             isOneToOne: false
-            referencedRelation: "accounting_journal_entries"
-            referencedColumns: ["id"]
+            referencedRelation: \"accounting_journal_entries\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -614,11 +614,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "accounting_period_balances_account_id_fkey"
-            columns: ["account_id"]
+            foreignKeyName: \"accounting_period_balances_account_id_fkey\"
+            columns: [\"account_id\"]
             isOneToOne: false
-            referencedRelation: "accounting_accounts"
-            referencedColumns: ["id"]
+            referencedRelation: \"accounting_accounts\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -775,53 +775,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accounting_revenue_recognition_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accounting_revenue_recognition_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accounting_revenue_recognition_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accounting_revenue_recognition_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accounting_revenue_recognition_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accounting_revenue_recognition_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"accounting_revenue_recognition_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -870,7 +870,7 @@ export type Database = {
           notes: string | null
           revoked_at: string | null
           revoked_by: string | null
-          role: Database["public"]["Enums"]["admin_role"]
+          role: Database[\"public\"][\"Enums\"][\"admin_role\"]
           updated_at: string
           user_id: string
         }
@@ -882,7 +882,7 @@ export type Database = {
           notes?: string | null
           revoked_at?: string | null
           revoked_by?: string | null
-          role: Database["public"]["Enums"]["admin_role"]
+          role: Database[\"public\"][\"Enums\"][\"admin_role\"]
           updated_at?: string
           user_id: string
         }
@@ -894,7 +894,7 @@ export type Database = {
           notes?: string | null
           revoked_at?: string | null
           revoked_by?: string | null
-          role?: Database["public"]["Enums"]["admin_role"]
+          role?: Database[\"public\"][\"Enums\"][\"admin_role\"]
           updated_at?: string
           user_id?: string
         }
@@ -1020,53 +1020,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -1136,53 +1136,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_contracts_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_contracts_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_contracts_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_contracts_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_contracts_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_contracts_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_contracts_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -1240,179 +1240,179 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extension_requests_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extension_requests_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extension_requests_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extension_requests_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extension_requests_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extension_requests_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extension_requests_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extension_requests_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extension_requests_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extension_requests_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extension_requests_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extension_requests_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extension_requests_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extension_requests_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extension_requests_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extension_requests_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"booking_extension_requests_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"booking_extension_requests_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"booking_extension_requests_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"booking_extension_requests_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"booking_extension_requests_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"booking_extension_requests_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"booking_extension_requests_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"booking_extension_requests_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"booking_extension_requests_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -1467,179 +1467,179 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"booking_extensions_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"booking_extensions_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"booking_extensions_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"booking_extensions_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"booking_extensions_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"booking_extensions_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"booking_extensions_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"booking_extensions_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"booking_extensions_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extensions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extensions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extensions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extensions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extensions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extensions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_extensions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
+            foreignKeyName: \"booking_extensions_requested_by_fkey\"
+            columns: [\"requested_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
+            foreignKeyName: \"booking_extensions_requested_by_fkey\"
+            columns: [\"requested_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
+            foreignKeyName: \"booking_extensions_requested_by_fkey\"
+            columns: [\"requested_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
+            foreignKeyName: \"booking_extensions_requested_by_fkey\"
+            columns: [\"requested_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
+            foreignKeyName: \"booking_extensions_requested_by_fkey\"
+            columns: [\"requested_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
+            foreignKeyName: \"booking_extensions_requested_by_fkey\"
+            columns: [\"requested_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
+            foreignKeyName: \"booking_extensions_requested_by_fkey\"
+            columns: [\"requested_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
+            foreignKeyName: \"booking_extensions_requested_by_fkey\"
+            columns: [\"requested_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
+            foreignKeyName: \"booking_extensions_requested_by_fkey\"
+            columns: [\"requested_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -1694,123 +1694,123 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_extras_config_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_extras_config_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_extras_config_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_extras_config_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_extras_config_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_extras_config_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_extras_config_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_extras_config_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extras_config_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extras_config_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extras_config_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extras_config_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extras_config_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extras_config_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extras_config_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extras_config_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"booking_extras_config_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -1859,116 +1859,116 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_inspections_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_inspections_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_inspections_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_inspections_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_inspections_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_inspections_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_inspections_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
+            foreignKeyName: \"booking_inspections_inspector_id_fkey\"
+            columns: [\"inspector_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
+            foreignKeyName: \"booking_inspections_inspector_id_fkey\"
+            columns: [\"inspector_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
+            foreignKeyName: \"booking_inspections_inspector_id_fkey\"
+            columns: [\"inspector_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
+            foreignKeyName: \"booking_inspections_inspector_id_fkey\"
+            columns: [\"inspector_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
+            foreignKeyName: \"booking_inspections_inspector_id_fkey\"
+            columns: [\"inspector_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
+            foreignKeyName: \"booking_inspections_inspector_id_fkey\"
+            columns: [\"inspector_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
+            foreignKeyName: \"booking_inspections_inspector_id_fkey\"
+            columns: [\"inspector_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
+            foreignKeyName: \"booking_inspections_inspector_id_fkey\"
+            columns: [\"inspector_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
+            foreignKeyName: \"booking_inspections_inspector_id_fkey\"
+            columns: [\"inspector_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -2023,60 +2023,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_insurance_coverage_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_insurance_coverage_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_insurance_coverage_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_insurance_coverage_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_insurance_coverage_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_insurance_coverage_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_insurance_coverage_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_insurance_coverage_policy_id_fkey"
-            columns: ["policy_id"]
+            foreignKeyName: \"booking_insurance_coverage_policy_id_fkey\"
+            columns: [\"policy_id\"]
             isOneToOne: false
-            referencedRelation: "insurance_policies"
-            referencedColumns: ["id"]
+            referencedRelation: \"insurance_policies\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -2134,116 +2134,116 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_location_tracking_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_location_tracking_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_location_tracking_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_location_tracking_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_location_tracking_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_location_tracking_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_location_tracking_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"booking_location_tracking_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"booking_location_tracking_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"booking_location_tracking_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"booking_location_tracking_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"booking_location_tracking_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"booking_location_tracking_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"booking_location_tracking_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"booking_location_tracking_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"booking_location_tracking_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -2259,7 +2259,7 @@ export type Database = {
           error_code: string | null
           error_message: string | null
           event_data: Json
-          event_type: Database["public"]["Enums"]["payment_event_type"]
+          event_type: Database[\"public\"][\"Enums\"][\"payment_event_type\"]
           id: string
           idempotency_key: string | null
           ip_address: unknown
@@ -2282,7 +2282,7 @@ export type Database = {
           error_code?: string | null
           error_message?: string | null
           event_data?: Json
-          event_type: Database["public"]["Enums"]["payment_event_type"]
+          event_type: Database[\"public\"][\"Enums\"][\"payment_event_type\"]
           id?: string
           idempotency_key?: string | null
           ip_address?: unknown
@@ -2305,7 +2305,7 @@ export type Database = {
           error_code?: string | null
           error_message?: string | null
           event_data?: Json
-          event_type?: Database["public"]["Enums"]["payment_event_type"]
+          event_type?: Database[\"public\"][\"Enums\"][\"payment_event_type\"]
           id?: string
           idempotency_key?: string | null
           ip_address?: unknown
@@ -2319,53 +2319,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_payment_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_payment_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_payment_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_payment_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_payment_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_payment_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_payment_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -2462,53 +2462,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_risk_snapshot_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_risk_snapshot_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_risk_snapshot_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_risk_snapshot_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_risk_snapshot_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_risk_snapshot_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"booking_risk_snapshot_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -2551,60 +2551,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_waitlist_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_waitlist_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_waitlist_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_waitlist_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_waitlist_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_waitlist_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_waitlist_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"booking_waitlist_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -2625,7 +2625,7 @@ export type Database = {
           cancellation_reason: string | null
           cancelled_at: string | null
           cancelled_by_role:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | Database[\"public\"][\"Enums\"][\"booking_cancelled_by_role\"]
             | null
           car_id: string
           comodato_agreement_id: string | null
@@ -2693,7 +2693,7 @@ export type Database = {
           payment_mode: string | null
           payment_preference_id: string | null
           payment_provider:
-            | Database["public"]["Enums"]["payment_provider"]
+            | Database[\"public\"][\"Enums\"][\"payment_provider\"]
             | null
           payment_split_completed: boolean | null
           payment_split_validated_at: string | null
@@ -2701,7 +2701,7 @@ export type Database = {
           payout_error_message: string | null
           payout_retry_count: number | null
           payout_status:
-            | Database["public"]["Enums"]["payout_status_enum"]
+            | Database[\"public\"][\"Enums\"][\"payout_status_enum\"]
             | null
           pickup_location_lat: number | null
           pickup_location_lng: number | null
@@ -2726,7 +2726,7 @@ export type Database = {
           risk_snapshot_date: string | null
           risk_snapshot_id: string | null
           start_at: string
-          status: Database["public"]["Enums"]["booking_status"]
+          status: Database[\"public\"][\"Enums\"][\"booking_status\"]
           subscription_coverage_cents: number | null
           subscription_id: string | null
           subtotal_cents: number | null
@@ -2754,7 +2754,7 @@ export type Database = {
           cancellation_reason?: string | null
           cancelled_at?: string | null
           cancelled_by_role?:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | Database[\"public\"][\"Enums\"][\"booking_cancelled_by_role\"]
             | null
           car_id: string
           comodato_agreement_id?: string | null
@@ -2822,7 +2822,7 @@ export type Database = {
           payment_mode?: string | null
           payment_preference_id?: string | null
           payment_provider?:
-            | Database["public"]["Enums"]["payment_provider"]
+            | Database[\"public\"][\"Enums\"][\"payment_provider\"]
             | null
           payment_split_completed?: boolean | null
           payment_split_validated_at?: string | null
@@ -2830,7 +2830,7 @@ export type Database = {
           payout_error_message?: string | null
           payout_retry_count?: number | null
           payout_status?:
-            | Database["public"]["Enums"]["payout_status_enum"]
+            | Database[\"public\"][\"Enums\"][\"payout_status_enum\"]
             | null
           pickup_location_lat?: number | null
           pickup_location_lng?: number | null
@@ -2855,7 +2855,7 @@ export type Database = {
           risk_snapshot_date?: string | null
           risk_snapshot_id?: string | null
           start_at: string
-          status?: Database["public"]["Enums"]["booking_status"]
+          status?: Database[\"public\"][\"Enums\"][\"booking_status\"]
           subscription_coverage_cents?: number | null
           subscription_id?: string | null
           subtotal_cents?: number | null
@@ -2883,7 +2883,7 @@ export type Database = {
           cancellation_reason?: string | null
           cancelled_at?: string | null
           cancelled_by_role?:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | Database[\"public\"][\"Enums\"][\"booking_cancelled_by_role\"]
             | null
           car_id?: string
           comodato_agreement_id?: string | null
@@ -2951,7 +2951,7 @@ export type Database = {
           payment_mode?: string | null
           payment_preference_id?: string | null
           payment_provider?:
-            | Database["public"]["Enums"]["payment_provider"]
+            | Database[\"public\"][\"Enums\"][\"payment_provider\"]
             | null
           payment_split_completed?: boolean | null
           payment_split_validated_at?: string | null
@@ -2959,7 +2959,7 @@ export type Database = {
           payout_error_message?: string | null
           payout_retry_count?: number | null
           payout_status?:
-            | Database["public"]["Enums"]["payout_status_enum"]
+            | Database[\"public\"][\"Enums\"][\"payout_status_enum\"]
             | null
           pickup_location_lat?: number | null
           pickup_location_lng?: number | null
@@ -2984,7 +2984,7 @@ export type Database = {
           risk_snapshot_date?: string | null
           risk_snapshot_id?: string | null
           start_at?: string
-          status?: Database["public"]["Enums"]["booking_status"]
+          status?: Database[\"public\"][\"Enums\"][\"booking_status\"]
           subscription_coverage_cents?: number | null
           subscription_id?: string | null
           subtotal_cents?: number | null
@@ -2998,235 +2998,235 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"bookings_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"bookings_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"bookings_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"bookings_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"bookings_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"bookings_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"bookings_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"bookings_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"bookings_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_authorized_payment_id_fkey"
-            columns: ["authorized_payment_id"]
+            foreignKeyName: \"bookings_authorized_payment_id_fkey\"
+            columns: [\"authorized_payment_id\"]
             isOneToOne: false
-            referencedRelation: "payment_intents"
-            referencedColumns: ["id"]
+            referencedRelation: \"payment_intents\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_comodato_agreement_id_fkey"
-            columns: ["comodato_agreement_id"]
+            foreignKeyName: \"bookings_comodato_agreement_id_fkey\"
+            columns: [\"comodato_agreement_id\"]
             isOneToOne: false
-            referencedRelation: "comodato_agreements"
-            referencedColumns: ["id"]
+            referencedRelation: \"comodato_agreements\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_payment_id_fkey"
-            columns: ["payment_id"]
+            foreignKeyName: \"bookings_payment_id_fkey\"
+            columns: [\"payment_id\"]
             isOneToOne: false
-            referencedRelation: "payments"
-            referencedColumns: ["id"]
+            referencedRelation: \"payments\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_risk_snapshot_booking_id_fkey"
-            columns: ["risk_snapshot_booking_id"]
+            foreignKeyName: \"bookings_risk_snapshot_booking_id_fkey\"
+            columns: [\"risk_snapshot_booking_id\"]
             isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"booking_risk_snapshot\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_risk_snapshot_id_fkey"
-            columns: ["risk_snapshot_id"]
+            foreignKeyName: \"bookings_risk_snapshot_id_fkey\"
+            columns: [\"risk_snapshot_id\"]
             isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"booking_risk_snapshot\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_subscription_id_fkey"
-            columns: ["subscription_id"]
+            foreignKeyName: \"bookings_subscription_id_fkey\"
+            columns: [\"subscription_id\"]
             isOneToOne: false
-            referencedRelation: "subscriptions"
-            referencedColumns: ["id"]
+            referencedRelation: \"subscriptions\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "fk_bookings_risk_snapshot"
-            columns: ["risk_snapshot_booking_id"]
+            foreignKeyName: \"fk_bookings_risk_snapshot\"
+            columns: [\"risk_snapshot_booking_id\"]
             isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"booking_risk_snapshot\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -3239,7 +3239,7 @@ export type Database = {
           cancelled_at: string
           cancelled_by: string | null
           cancelled_by_role:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | Database[\"public\"][\"Enums\"][\"booking_cancelled_by_role\"]
             | null
           created_at: string
         }
@@ -3251,7 +3251,7 @@ export type Database = {
           cancelled_at?: string
           cancelled_by?: string | null
           cancelled_by_role?:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | Database[\"public\"][\"Enums\"][\"booking_cancelled_by_role\"]
             | null
           created_at?: string
         }
@@ -3263,122 +3263,122 @@ export type Database = {
           cancelled_at?: string
           cancelled_by?: string | null
           cancelled_by_role?:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | Database[\"public\"][\"Enums\"][\"booking_cancelled_by_role\"]
             | null
           created_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_cancellation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_cancellation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_cancellation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_cancellation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_cancellation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_cancellation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_cancellation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
+            foreignKeyName: \"bookings_cancellation_cancelled_by_fkey\"
+            columns: [\"cancelled_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
+            foreignKeyName: \"bookings_cancellation_cancelled_by_fkey\"
+            columns: [\"cancelled_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
+            foreignKeyName: \"bookings_cancellation_cancelled_by_fkey\"
+            columns: [\"cancelled_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
+            foreignKeyName: \"bookings_cancellation_cancelled_by_fkey\"
+            columns: [\"cancelled_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
+            foreignKeyName: \"bookings_cancellation_cancelled_by_fkey\"
+            columns: [\"cancelled_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
+            foreignKeyName: \"bookings_cancellation_cancelled_by_fkey\"
+            columns: [\"cancelled_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
+            foreignKeyName: \"bookings_cancellation_cancelled_by_fkey\"
+            columns: [\"cancelled_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
+            foreignKeyName: \"bookings_cancellation_cancelled_by_fkey\"
+            columns: [\"cancelled_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
+            foreignKeyName: \"bookings_cancellation_cancelled_by_fkey\"
+            columns: [\"cancelled_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -3424,179 +3424,179 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_confirmation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_confirmation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_confirmation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_confirmation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_confirmation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_confirmation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_confirmation_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_dropoff_confirmed_by_fkey\"
+            columns: [\"dropoff_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_dropoff_confirmed_by_fkey\"
+            columns: [\"dropoff_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_dropoff_confirmed_by_fkey\"
+            columns: [\"dropoff_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_dropoff_confirmed_by_fkey\"
+            columns: [\"dropoff_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_dropoff_confirmed_by_fkey\"
+            columns: [\"dropoff_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_dropoff_confirmed_by_fkey\"
+            columns: [\"dropoff_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_dropoff_confirmed_by_fkey\"
+            columns: [\"dropoff_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_dropoff_confirmed_by_fkey\"
+            columns: [\"dropoff_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_dropoff_confirmed_by_fkey\"
+            columns: [\"dropoff_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_pickup_confirmed_by_fkey\"
+            columns: [\"pickup_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_pickup_confirmed_by_fkey\"
+            columns: [\"pickup_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_pickup_confirmed_by_fkey\"
+            columns: [\"pickup_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_pickup_confirmed_by_fkey\"
+            columns: [\"pickup_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_pickup_confirmed_by_fkey\"
+            columns: [\"pickup_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_pickup_confirmed_by_fkey\"
+            columns: [\"pickup_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_pickup_confirmed_by_fkey\"
+            columns: [\"pickup_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_pickup_confirmed_by_fkey\"
+            columns: [\"pickup_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
+            foreignKeyName: \"bookings_confirmation_pickup_confirmed_by_fkey\"
+            columns: [\"pickup_confirmed_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -3633,53 +3633,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_insurance_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_insurance_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_insurance_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_insurance_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_insurance_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_insurance_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_insurance_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -3719,53 +3719,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_payment_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_payment_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_payment_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_payment_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_payment_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_payment_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_payment_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -3811,53 +3811,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_pricing_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_pricing_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_pricing_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_pricing_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_pricing_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_pricing_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"bookings_pricing_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -3894,60 +3894,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_blocked_dates_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_blocked_dates_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_blocked_dates_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_blocked_dates_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_blocked_dates_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_blocked_dates_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_blocked_dates_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_blocked_dates_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -4008,60 +4008,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_handover_points_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_handover_points_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_handover_points_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_handover_points_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_handover_points_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_handover_points_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_handover_points_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_handover_points_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -4143,60 +4143,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -4233,11 +4233,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "car_models_brand_id_fkey"
-            columns: ["brand_id"]
+            foreignKeyName: \"car_models_brand_id_fkey\"
+            columns: [\"brand_id\"]
             isOneToOne: false
-            referencedRelation: "car_brands"
-            referencedColumns: ["id"]
+            referencedRelation: \"car_brands\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -4274,60 +4274,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_photos_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_photos_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_photos_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_photos_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_photos_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_photos_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_photos_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_photos_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -4391,60 +4391,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_stats_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: true
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_stats_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: true
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_stats_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: true
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_stats_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: true
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_stats_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_stats_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_stats_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: true
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_stats_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: true
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -4472,11 +4472,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "car_tracking_points_session_id_fkey"
-            columns: ["session_id"]
+            foreignKeyName: \"car_tracking_points_session_id_fkey\"
+            columns: [\"session_id\"]
             isOneToOne: false
-            referencedRelation: "car_tracking_sessions"
-            referencedColumns: ["id"]
+            referencedRelation: \"car_tracking_sessions\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -4507,53 +4507,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"car_tracking_sessions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"car_tracking_sessions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"car_tracking_sessions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"car_tracking_sessions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"car_tracking_sessions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"car_tracking_sessions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"car_tracking_sessions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -4584,60 +4584,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_views_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_views_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_views_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_views_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_views_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_views_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_views_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_views_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -4656,7 +4656,7 @@ export type Database = {
           brand_id: string | null
           brand_text_backup: string | null
           can_receive_payments: boolean | null
-          cancel_policy: Database["public"]["Enums"]["cancel_policy"]
+          cancel_policy: Database[\"public\"][\"Enums\"][\"cancel_policy\"]
           category_id: string | null
           city: string
           color: string | null
@@ -4726,7 +4726,7 @@ export type Database = {
           sharing_mode: string | null
           sharing_suspended_at: string | null
           sharing_suspension_reason: string | null
-          status: Database["public"]["Enums"]["car_status"]
+          status: Database[\"public\"][\"Enums\"][\"car_status\"]
           terms_and_conditions: string | null
           title: string
           transmission: string | null
@@ -4755,7 +4755,7 @@ export type Database = {
           brand_id?: string | null
           brand_text_backup?: string | null
           can_receive_payments?: boolean | null
-          cancel_policy?: Database["public"]["Enums"]["cancel_policy"]
+          cancel_policy?: Database[\"public\"][\"Enums\"][\"cancel_policy\"]
           category_id?: string | null
           city: string
           color?: string | null
@@ -4825,7 +4825,7 @@ export type Database = {
           sharing_mode?: string | null
           sharing_suspended_at?: string | null
           sharing_suspension_reason?: string | null
-          status?: Database["public"]["Enums"]["car_status"]
+          status?: Database[\"public\"][\"Enums\"][\"car_status\"]
           terms_and_conditions?: string | null
           title: string
           transmission?: string | null
@@ -4854,7 +4854,7 @@ export type Database = {
           brand_id?: string | null
           brand_text_backup?: string | null
           can_receive_payments?: boolean | null
-          cancel_policy?: Database["public"]["Enums"]["cancel_policy"]
+          cancel_policy?: Database[\"public\"][\"Enums\"][\"cancel_policy\"]
           category_id?: string | null
           city?: string
           color?: string | null
@@ -4924,7 +4924,7 @@ export type Database = {
           sharing_mode?: string | null
           sharing_suspended_at?: string | null
           sharing_suspension_reason?: string | null
-          status?: Database["public"]["Enums"]["car_status"]
+          status?: Database[\"public\"][\"Enums\"][\"car_status\"]
           terms_and_conditions?: string | null
           title?: string
           transmission?: string | null
@@ -4941,81 +4941,81 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "cars_category_id_fkey"
-            columns: ["category_id"]
+            foreignKeyName: \"cars_category_id_fkey\"
+            columns: [\"category_id\"]
             isOneToOne: false
-            referencedRelation: "vehicle_categories"
-            referencedColumns: ["id"]
+            referencedRelation: \"vehicle_categories\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_organization_id_fkey"
-            columns: ["organization_id"]
+            foreignKeyName: \"cars_organization_id_fkey\"
+            columns: [\"organization_id\"]
             isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
+            referencedRelation: \"organizations\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -5035,7 +5035,7 @@ export type Database = {
           resolution_notes: string | null
           resolved_at: string | null
           resolved_by: string | null
-          status: Database["public"]["Enums"]["claim_status"]
+          status: Database[\"public\"][\"Enums\"][\"claim_status\"]
           total_estimated_cost_usd: number
           updated_at: string
           waterfall_result: Json | null
@@ -5055,7 +5055,7 @@ export type Database = {
           resolution_notes?: string | null
           resolved_at?: string | null
           resolved_by?: string | null
-          status?: Database["public"]["Enums"]["claim_status"]
+          status?: Database[\"public\"][\"Enums\"][\"claim_status\"]
           total_estimated_cost_usd?: number
           updated_at?: string
           waterfall_result?: Json | null
@@ -5075,60 +5075,60 @@ export type Database = {
           resolution_notes?: string | null
           resolved_at?: string | null
           resolved_by?: string | null
-          status?: Database["public"]["Enums"]["claim_status"]
+          status?: Database[\"public\"][\"Enums\"][\"claim_status\"]
           total_estimated_cost_usd?: number
           updated_at?: string
           waterfall_result?: Json | null
         }
         Relationships: [
           {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -5180,67 +5180,67 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_memberships_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: true
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_memberships_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: true
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_memberships_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_memberships_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_memberships_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: true
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_memberships_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: true
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_memberships_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: true
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_memberships_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: true
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_memberships_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: true
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -5328,151 +5328,151 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"community_rewards_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"community_rewards_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"community_rewards_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"community_rewards_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"community_rewards_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"community_rewards_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"community_rewards_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"community_rewards_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
+            foreignKeyName: \"community_rewards_approved_by_fkey\"
+            columns: [\"approved_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_rewards_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_rewards_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_rewards_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_rewards_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_rewards_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_rewards_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_rewards_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_rewards_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"community_rewards_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "community_rewards_wallet_transaction_id_fkey"
-            columns: ["wallet_transaction_id"]
+            foreignKeyName: \"community_rewards_wallet_transaction_id_fkey\"
+            columns: [\"wallet_transaction_id\"]
             isOneToOne: false
-            referencedRelation: "v_wallet_locks_status"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_wallet_locks_status\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_rewards_wallet_transaction_id_fkey"
-            columns: ["wallet_transaction_id"]
+            foreignKeyName: \"community_rewards_wallet_transaction_id_fkey\"
+            columns: [\"wallet_transaction_id\"]
             isOneToOne: false
-            referencedRelation: "v_wallet_transfers_summary"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_wallet_transfers_summary\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "community_rewards_wallet_transaction_id_fkey"
-            columns: ["wallet_transaction_id"]
+            foreignKeyName: \"community_rewards_wallet_transaction_id_fkey\"
+            columns: [\"wallet_transaction_id\"]
             isOneToOne: false
-            referencedRelation: "wallet_transactions"
-            referencedColumns: ["id"]
+            referencedRelation: \"wallet_transactions\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -5548,235 +5548,235 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"comodato_agreements_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"comodato_agreements_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"comodato_agreements_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"comodato_agreements_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"comodato_agreements_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"comodato_agreements_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"comodato_agreements_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
+            foreignKeyName: \"comodato_agreements_borrower_id_fkey\"
+            columns: [\"borrower_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
+            foreignKeyName: \"comodato_agreements_borrower_id_fkey\"
+            columns: [\"borrower_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
+            foreignKeyName: \"comodato_agreements_borrower_id_fkey\"
+            columns: [\"borrower_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
+            foreignKeyName: \"comodato_agreements_borrower_id_fkey\"
+            columns: [\"borrower_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
+            foreignKeyName: \"comodato_agreements_borrower_id_fkey\"
+            columns: [\"borrower_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
+            foreignKeyName: \"comodato_agreements_borrower_id_fkey\"
+            columns: [\"borrower_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
+            foreignKeyName: \"comodato_agreements_borrower_id_fkey\"
+            columns: [\"borrower_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
+            foreignKeyName: \"comodato_agreements_borrower_id_fkey\"
+            columns: [\"borrower_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
+            foreignKeyName: \"comodato_agreements_borrower_id_fkey\"
+            columns: [\"borrower_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"comodato_agreements_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"comodato_agreements_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"comodato_agreements_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"comodato_agreements_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"comodato_agreements_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"comodato_agreements_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"comodato_agreements_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"comodato_agreements_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"comodato_agreements_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"comodato_agreements_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"comodato_agreements_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"comodato_agreements_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"comodato_agreements_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"comodato_agreements_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"comodato_agreements_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"comodato_agreements_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"comodato_agreements_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -5807,60 +5807,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"conversion_events_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"conversion_events_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"conversion_events_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"conversion_events_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"conversion_events_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"conversion_events_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"conversion_events_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"conversion_events_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -5933,53 +5933,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"damage_analysis_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"damage_analysis_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"damage_analysis_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"damage_analysis_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"damage_analysis_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"damage_analysis_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"damage_analysis_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -6007,11 +6007,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "dispute_evidence_dispute_id_fkey"
-            columns: ["dispute_id"]
+            foreignKeyName: \"dispute_evidence_dispute_id_fkey\"
+            columns: [\"dispute_id\"]
             isOneToOne: false
-            referencedRelation: "disputes"
-            referencedColumns: ["id"]
+            referencedRelation: \"disputes\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -6021,209 +6021,209 @@ export type Database = {
           created_at: string | null
           description: string | null
           id: string
-          kind: Database["public"]["Enums"]["dispute_kind"]
+          kind: Database[\"public\"][\"Enums\"][\"dispute_kind\"]
           opened_by: string
           resolved_at: string | null
           resolved_by: string | null
-          status: Database["public"]["Enums"]["dispute_status"]
+          status: Database[\"public\"][\"Enums\"][\"dispute_status\"]
         }
         Insert: {
           booking_id: string
           created_at?: string | null
           description?: string | null
           id?: string
-          kind: Database["public"]["Enums"]["dispute_kind"]
+          kind: Database[\"public\"][\"Enums\"][\"dispute_kind\"]
           opened_by: string
           resolved_at?: string | null
           resolved_by?: string | null
-          status?: Database["public"]["Enums"]["dispute_status"]
+          status?: Database[\"public\"][\"Enums\"][\"dispute_status\"]
         }
         Update: {
           booking_id?: string
           created_at?: string | null
           description?: string | null
           id?: string
-          kind?: Database["public"]["Enums"]["dispute_kind"]
+          kind?: Database[\"public\"][\"Enums\"][\"dispute_kind\"]
           opened_by?: string
           resolved_at?: string | null
           resolved_by?: string | null
-          status?: Database["public"]["Enums"]["dispute_status"]
+          status?: Database[\"public\"][\"Enums\"][\"dispute_status\"]
         }
         Relationships: [
           {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"disputes_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"disputes_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"disputes_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"disputes_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"disputes_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"disputes_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"disputes_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
+            foreignKeyName: \"disputes_opened_by_fkey\"
+            columns: [\"opened_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
+            foreignKeyName: \"disputes_opened_by_fkey\"
+            columns: [\"opened_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
+            foreignKeyName: \"disputes_opened_by_fkey\"
+            columns: [\"opened_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
+            foreignKeyName: \"disputes_opened_by_fkey\"
+            columns: [\"opened_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
+            foreignKeyName: \"disputes_opened_by_fkey\"
+            columns: [\"opened_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
+            foreignKeyName: \"disputes_opened_by_fkey\"
+            columns: [\"opened_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
+            foreignKeyName: \"disputes_opened_by_fkey\"
+            columns: [\"opened_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
+            foreignKeyName: \"disputes_opened_by_fkey\"
+            columns: [\"opened_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
+            foreignKeyName: \"disputes_opened_by_fkey\"
+            columns: [\"opened_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"disputes_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"disputes_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"disputes_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"disputes_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"disputes_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"disputes_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"disputes_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"disputes_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
+            foreignKeyName: \"disputes_resolved_by_fkey\"
+            columns: [\"resolved_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -6266,60 +6266,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_class_history_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_class_history_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_class_history_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_class_history_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_class_history_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_class_history_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_class_history_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "driver_class_history_claim_id_fkey"
-            columns: ["claim_id"]
+            foreignKeyName: \"driver_class_history_claim_id_fkey\"
+            columns: [\"claim_id\"]
             isOneToOne: false
-            referencedRelation: "booking_claims"
-            referencedColumns: ["id"]
+            referencedRelation: \"booking_claims\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -6491,53 +6491,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_telemetry_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_telemetry_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_telemetry_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_telemetry_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_telemetry_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_telemetry_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"driver_telemetry_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -6571,18 +6571,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "encryption_audit_log_message_id_fkey"
-            columns: ["message_id"]
+            foreignKeyName: \"encryption_audit_log_message_id_fkey\"
+            columns: [\"message_id\"]
             isOneToOne: false
-            referencedRelation: "messages"
-            referencedColumns: ["id"]
+            referencedRelation: \"messages\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "encryption_audit_log_message_id_fkey"
-            columns: ["message_id"]
+            foreignKeyName: \"encryption_audit_log_message_id_fkey\"
+            columns: [\"message_id\"]
             isOneToOne: false
-            referencedRelation: "messages_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"messages_decrypted\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -6718,11 +6718,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "feature_flag_audit_log_feature_flag_id_fkey"
-            columns: ["feature_flag_id"]
+            foreignKeyName: \"feature_flag_audit_log_feature_flag_id_fkey\"
+            columns: [\"feature_flag_id\"]
             isOneToOne: false
-            referencedRelation: "feature_flags"
-            referencedColumns: ["id"]
+            referencedRelation: \"feature_flags\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -6756,11 +6756,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "feature_flag_overrides_feature_flag_id_fkey"
-            columns: ["feature_flag_id"]
+            foreignKeyName: \"feature_flag_overrides_feature_flag_id_fkey\"
+            columns: [\"feature_flag_id\"]
             isOneToOne: false
-            referencedRelation: "feature_flags"
-            referencedColumns: ["id"]
+            referencedRelation: \"feature_flags\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -6833,53 +6833,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "fees_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"fees_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "fees_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"fees_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "fees_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"fees_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "fees_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"fees_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "fees_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"fees_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "fees_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"fees_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "fees_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"fees_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -7075,67 +7075,67 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"fleet_bonuses_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"fleet_bonuses_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"fleet_bonuses_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"fleet_bonuses_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"fleet_bonuses_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"fleet_bonuses_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"fleet_bonuses_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"fleet_bonuses_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "fleet_bonuses_organization_id_fkey"
-            columns: ["organization_id"]
+            foreignKeyName: \"fleet_bonuses_organization_id_fkey\"
+            columns: [\"organization_id\"]
             isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
+            referencedRelation: \"organizations\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -7222,6 +7222,9 @@ export type Database = {
           adjuster_contact: string | null
           assigned_adjuster: string | null
           booking_id: string
+          charge_source: string | null
+          charged_at: string | null
+          charged_by: string | null
           claim_type: string
           closed_at: string | null
           created_at: string
@@ -7243,12 +7246,17 @@ export type Database = {
           reporter_role: string
           resolution_notes: string | null
           status: string
+          subscription_deducted_cents: number | null
           updated_at: string
+          wallet_charged_cents: number | null
         }
         Insert: {
           adjuster_contact?: string | null
           assigned_adjuster?: string | null
           booking_id: string
+          charge_source?: string | null
+          charged_at?: string | null
+          charged_by?: string | null
           claim_type: string
           closed_at?: string | null
           created_at?: string
@@ -7270,12 +7278,17 @@ export type Database = {
           reporter_role: string
           resolution_notes?: string | null
           status?: string
+          subscription_deducted_cents?: number | null
           updated_at?: string
+          wallet_charged_cents?: number | null
         }
         Update: {
           adjuster_contact?: string | null
           assigned_adjuster?: string | null
           booking_id?: string
+          charge_source?: string | null
+          charged_at?: string | null
+          charged_by?: string | null
           claim_type?: string
           closed_at?: string | null
           created_at?: string
@@ -7297,120 +7310,185 @@ export type Database = {
           reporter_role?: string
           resolution_notes?: string | null
           status?: string
+          subscription_deducted_cents?: number | null
           updated_at?: string
+          wallet_charged_cents?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_claims_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
+            foreignKeyName: \"insurance_claims_charged_by_fkey\"
+            columns: [\"charged_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
+            foreignKeyName: \"insurance_claims_charged_by_fkey\"
+            columns: [\"charged_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
+            foreignKeyName: \"insurance_claims_charged_by_fkey\"
+            columns: [\"charged_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
+            foreignKeyName: \"insurance_claims_charged_by_fkey\"
+            columns: [\"charged_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
+            foreignKeyName: \"insurance_claims_charged_by_fkey\"
+            columns: [\"charged_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
+            foreignKeyName: \"insurance_claims_charged_by_fkey\"
+            columns: [\"charged_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
+            foreignKeyName: \"insurance_claims_charged_by_fkey\"
+            columns: [\"charged_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
+            foreignKeyName: \"insurance_claims_charged_by_fkey\"
+            columns: [\"charged_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
+            foreignKeyName: \"insurance_claims_charged_by_fkey\"
+            columns: [\"charged_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
+          },
+          {
+            foreignKeyName: \"insurance_claims_reported_by_fkey\"
+            columns: [\"reported_by\"]
+            isOneToOne: false
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
+          },
+          {
+            foreignKeyName: \"insurance_claims_reported_by_fkey\"
+            columns: [\"reported_by\"]
+            isOneToOne: false
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
+          },
+          {
+            foreignKeyName: \"insurance_claims_reported_by_fkey\"
+            columns: [\"reported_by\"]
+            isOneToOne: false
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
+          },
+          {
+            foreignKeyName: \"insurance_claims_reported_by_fkey\"
+            columns: [\"reported_by\"]
+            isOneToOne: false
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
+          },
+          {
+            foreignKeyName: \"insurance_claims_reported_by_fkey\"
+            columns: [\"reported_by\"]
+            isOneToOne: false
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
+          },
+          {
+            foreignKeyName: \"insurance_claims_reported_by_fkey\"
+            columns: [\"reported_by\"]
+            isOneToOne: false
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
+          },
+          {
+            foreignKeyName: \"insurance_claims_reported_by_fkey\"
+            columns: [\"reported_by\"]
+            isOneToOne: false
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
+          },
+          {
+            foreignKeyName: \"insurance_claims_reported_by_fkey\"
+            columns: [\"reported_by\"]
+            isOneToOne: false
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
+          },
+          {
+            foreignKeyName: \"insurance_claims_reported_by_fkey\"
+            columns: [\"reported_by\"]
+            isOneToOne: false
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -7492,67 +7570,67 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_notifications_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_notifications_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_notifications_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_notifications_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_notifications_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_notifications_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"insurance_notifications_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "insurance_notifications_police_report_id_fkey"
-            columns: ["police_report_id"]
+            foreignKeyName: \"insurance_notifications_police_report_id_fkey\"
+            columns: [\"police_report_id\"]
             isOneToOne: false
-            referencedRelation: "police_reports"
-            referencedColumns: ["id"]
+            referencedRelation: \"police_reports\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_notifications_protocol_event_id_fkey"
-            columns: ["protocol_event_id"]
+            foreignKeyName: \"insurance_notifications_protocol_event_id_fkey\"
+            columns: [\"protocol_event_id\"]
             isOneToOne: false
-            referencedRelation: "return_protocol_events"
-            referencedColumns: ["id"]
+            referencedRelation: \"return_protocol_events\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -7655,60 +7733,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"insurance_policies_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"insurance_policies_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"insurance_policies_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"insurance_policies_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"insurance_policies_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"insurance_policies_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"insurance_policies_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"insurance_policies_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -7751,109 +7829,109 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -8043,60 +8121,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"mp_webhook_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"mp_webhook_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"mp_webhook_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"mp_webhook_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"mp_webhook_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"mp_webhook_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"mp_webhook_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "mp_webhook_logs_split_id_fkey"
-            columns: ["split_id"]
+            foreignKeyName: \"mp_webhook_logs_split_id_fkey\"
+            columns: [\"split_id\"]
             isOneToOne: false
-            referencedRelation: "payment_splits"
-            referencedColumns: ["id"]
+            referencedRelation: \"payment_splits\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -8127,7 +8205,7 @@ export type Database = {
           is_read: boolean
           metadata: Json | null
           title: string
-          type: Database["public"]["Enums"]["notification_type"]
+          type: Database[\"public\"][\"Enums\"][\"notification_type\"]
           user_id: string
         }
         Insert: {
@@ -8138,7 +8216,7 @@ export type Database = {
           is_read?: boolean
           metadata?: Json | null
           title: string
-          type: Database["public"]["Enums"]["notification_type"]
+          type: Database[\"public\"][\"Enums\"][\"notification_type\"]
           user_id: string
         }
         Update: {
@@ -8149,7 +8227,7 @@ export type Database = {
           is_read?: boolean
           metadata?: Json | null
           title?: string
-          type?: Database["public"]["Enums"]["notification_type"]
+          type?: Database[\"public\"][\"Enums\"][\"notification_type\"]
           user_id?: string
         }
         Relationships: []
@@ -8211,74 +8289,74 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "organization_members_organization_id_fkey"
-            columns: ["organization_id"]
+            foreignKeyName: \"organization_members_organization_id_fkey\"
+            columns: [\"organization_id\"]
             isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
+            referencedRelation: \"organizations\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"organization_members_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"organization_members_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"organization_members_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"organization_members_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"organization_members_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"organization_members_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"organization_members_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"organization_members_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"organization_members_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -8321,67 +8399,67 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"organizations_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"organizations_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"organizations_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"organizations_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"organizations_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"organizations_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"organizations_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"organizations_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"organizations_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -8460,172 +8538,172 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_availability_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_availability_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_availability_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_availability_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_availability_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_availability_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_availability_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_availability_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
+            foreignKeyName: \"owner_availability_occupied_by_booking_id_fkey\"
+            columns: [\"occupied_by_booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
+            foreignKeyName: \"owner_availability_occupied_by_booking_id_fkey\"
+            columns: [\"occupied_by_booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
+            foreignKeyName: \"owner_availability_occupied_by_booking_id_fkey\"
+            columns: [\"occupied_by_booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
+            foreignKeyName: \"owner_availability_occupied_by_booking_id_fkey\"
+            columns: [\"occupied_by_booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
+            foreignKeyName: \"owner_availability_occupied_by_booking_id_fkey\"
+            columns: [\"occupied_by_booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
+            foreignKeyName: \"owner_availability_occupied_by_booking_id_fkey\"
+            columns: [\"occupied_by_booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
+            foreignKeyName: \"owner_availability_occupied_by_booking_id_fkey\"
+            columns: [\"occupied_by_booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"owner_availability_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"owner_availability_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"owner_availability_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"owner_availability_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"owner_availability_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"owner_availability_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"owner_availability_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"owner_availability_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"owner_availability_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -8692,60 +8770,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_usage_limits_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_usage_limits_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_usage_limits_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_usage_limits_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_usage_limits_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_usage_limits_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_usage_limits_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"owner_usage_limits_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -8836,11 +8914,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "p2p_events_order_id_fkey"
-            columns: ["order_id"]
+            foreignKeyName: \"p2p_events_order_id_fkey\"
+            columns: [\"order_id\"]
             isOneToOne: false
-            referencedRelation: "p2p_orders"
-            referencedColumns: ["id"]
+            referencedRelation: \"p2p_orders\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -9016,9 +9094,9 @@ export type Database = {
           mp_status_detail: string | null
           payment_method_id: string | null
           preauth_expires_at: string | null
-          provider: Database["public"]["Enums"]["payment_provider"]
+          provider: Database[\"public\"][\"Enums\"][\"payment_provider\"]
           provider_intent_id: string | null
-          status: Database["public"]["Enums"]["payment_status"]
+          status: Database[\"public\"][\"Enums\"][\"payment_status\"]
           updated_at: string
           user_id: string | null
         }
@@ -9052,9 +9130,9 @@ export type Database = {
           mp_status_detail?: string | null
           payment_method_id?: string | null
           preauth_expires_at?: string | null
-          provider: Database["public"]["Enums"]["payment_provider"]
+          provider: Database[\"public\"][\"Enums\"][\"payment_provider\"]
           provider_intent_id?: string | null
-          status?: Database["public"]["Enums"]["payment_status"]
+          status?: Database[\"public\"][\"Enums\"][\"payment_status\"]
           updated_at?: string
           user_id?: string | null
         }
@@ -9088,61 +9166,61 @@ export type Database = {
           mp_status_detail?: string | null
           payment_method_id?: string | null
           preauth_expires_at?: string | null
-          provider?: Database["public"]["Enums"]["payment_provider"]
+          provider?: Database[\"public\"][\"Enums\"][\"payment_provider\"]
           provider_intent_id?: string | null
-          status?: Database["public"]["Enums"]["payment_status"]
+          status?: Database[\"public\"][\"Enums\"][\"payment_status\"]
           updated_at?: string
           user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_intents_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_intents_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_intents_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_intents_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_intents_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_intents_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_intents_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -9194,53 +9272,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_issues_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_issues_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_issues_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_issues_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_issues_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_issues_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_issues_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -9355,53 +9433,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_splits_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_splits_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_splits_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_splits_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_splits_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_splits_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payment_splits_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -9425,9 +9503,9 @@ export type Database = {
           metadata: Json | null
           payment_intent_id: string | null
           payment_method_id: string | null
-          provider: Database["public"]["Enums"]["payment_provider"]
+          provider: Database[\"public\"][\"Enums\"][\"payment_provider\"]
           provider_payment_id: string | null
-          status: Database["public"]["Enums"]["payment_status"]
+          status: Database[\"public\"][\"Enums\"][\"payment_status\"]
           updated_at: string
           user_id: string | null
         }
@@ -9450,9 +9528,9 @@ export type Database = {
           metadata?: Json | null
           payment_intent_id?: string | null
           payment_method_id?: string | null
-          provider: Database["public"]["Enums"]["payment_provider"]
+          provider: Database[\"public\"][\"Enums\"][\"payment_provider\"]
           provider_payment_id?: string | null
-          status?: Database["public"]["Enums"]["payment_status"]
+          status?: Database[\"public\"][\"Enums\"][\"payment_status\"]
           updated_at?: string
           user_id?: string | null
         }
@@ -9475,68 +9553,68 @@ export type Database = {
           metadata?: Json | null
           payment_intent_id?: string | null
           payment_method_id?: string | null
-          provider?: Database["public"]["Enums"]["payment_provider"]
+          provider?: Database[\"public\"][\"Enums\"][\"payment_provider\"]
           provider_payment_id?: string | null
-          status?: Database["public"]["Enums"]["payment_status"]
+          status?: Database[\"public\"][\"Enums\"][\"payment_status\"]
           updated_at?: string
           user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "payments_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payments_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payments_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payments_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payments_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payments_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payments_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payments_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payments_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payments_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "payments_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payments_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "payments_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"payments_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "payments_payment_intent_id_fkey"
-            columns: ["payment_intent_id"]
+            foreignKeyName: \"payments_payment_intent_id_fkey\"
+            columns: [\"payment_intent_id\"]
             isOneToOne: false
-            referencedRelation: "payment_intents"
-            referencedColumns: ["id"]
+            referencedRelation: \"payment_intents\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -9588,18 +9666,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "payouts_bank_account_id_fkey"
-            columns: ["bank_account_id"]
+            foreignKeyName: \"payouts_bank_account_id_fkey\"
+            columns: [\"bank_account_id\"]
             isOneToOne: false
-            referencedRelation: "bank_accounts"
-            referencedColumns: ["id"]
+            referencedRelation: \"bank_accounts\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "payouts_bank_account_id_fkey"
-            columns: ["bank_account_id"]
+            foreignKeyName: \"payouts_bank_account_id_fkey\"
+            columns: [\"bank_account_id\"]
             isOneToOne: false
-            referencedRelation: "bank_accounts_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"bank_accounts_decrypted\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -9657,186 +9735,186 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"personal_use_verifications_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"personal_use_verifications_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"personal_use_verifications_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"personal_use_verifications_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"personal_use_verifications_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"personal_use_verifications_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"personal_use_verifications_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"personal_use_verifications_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"personal_use_verifications_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"personal_use_verifications_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"personal_use_verifications_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"personal_use_verifications_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"personal_use_verifications_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"personal_use_verifications_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"personal_use_verifications_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"personal_use_verifications_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"personal_use_verifications_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
+            foreignKeyName: \"personal_use_verifications_validated_by_fkey\"
+            columns: [\"validated_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
+            foreignKeyName: \"personal_use_verifications_validated_by_fkey\"
+            columns: [\"validated_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
+            foreignKeyName: \"personal_use_verifications_validated_by_fkey\"
+            columns: [\"validated_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
+            foreignKeyName: \"personal_use_verifications_validated_by_fkey\"
+            columns: [\"validated_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
+            foreignKeyName: \"personal_use_verifications_validated_by_fkey\"
+            columns: [\"validated_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
+            foreignKeyName: \"personal_use_verifications_validated_by_fkey\"
+            columns: [\"validated_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
+            foreignKeyName: \"personal_use_verifications_validated_by_fkey\"
+            columns: [\"validated_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
+            foreignKeyName: \"personal_use_verifications_validated_by_fkey\"
+            columns: [\"validated_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
+            foreignKeyName: \"personal_use_verifications_validated_by_fkey\"
+            columns: [\"validated_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -10074,242 +10152,242 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"police_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"police_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"police_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"police_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"police_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"police_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"police_reports_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"police_reports_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"police_reports_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"police_reports_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"police_reports_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"police_reports_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"police_reports_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"police_reports_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"police_reports_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"police_reports_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"police_reports_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"police_reports_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"police_reports_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"police_reports_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"police_reports_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"police_reports_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"police_reports_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"police_reports_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "police_reports_protocol_event_id_fkey"
-            columns: ["protocol_event_id"]
+            foreignKeyName: \"police_reports_protocol_event_id_fkey\"
+            columns: [\"protocol_event_id\"]
             isOneToOne: false
-            referencedRelation: "return_protocol_events"
-            referencedColumns: ["id"]
+            referencedRelation: \"return_protocol_events\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"police_reports_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"police_reports_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"police_reports_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"police_reports_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"police_reports_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"police_reports_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"police_reports_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"police_reports_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"police_reports_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -10406,60 +10484,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"pricing_calculations_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"pricing_calculations_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"pricing_calculations_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"pricing_calculations_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"pricing_calculations_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"pricing_calculations_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"pricing_calculations_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "pricing_calculations_region_id_fkey"
-            columns: ["region_id"]
+            foreignKeyName: \"pricing_calculations_region_id_fkey\"
+            columns: [\"region_id\"]
             isOneToOne: false
-            referencedRelation: "pricing_regions"
-            referencedColumns: ["id"]
+            referencedRelation: \"pricing_regions\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -10550,11 +10628,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "pricing_day_factors_region_id_fkey"
-            columns: ["region_id"]
+            foreignKeyName: \"pricing_day_factors_region_id_fkey\"
+            columns: [\"region_id\"]
             isOneToOne: false
-            referencedRelation: "pricing_regions"
-            referencedColumns: ["id"]
+            referencedRelation: \"pricing_regions\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -10621,11 +10699,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "pricing_hour_factors_region_id_fkey"
-            columns: ["region_id"]
+            foreignKeyName: \"pricing_hour_factors_region_id_fkey\"
+            columns: [\"region_id\"]
             isOneToOne: false
-            referencedRelation: "pricing_regions"
-            referencedColumns: ["id"]
+            referencedRelation: \"pricing_regions\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -10650,60 +10728,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"pricing_overrides_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"pricing_overrides_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"pricing_overrides_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"pricing_overrides_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"pricing_overrides_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"pricing_overrides_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"pricing_overrides_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"pricing_overrides_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -10788,11 +10866,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "pricing_seasonal_rules_region_id_fkey"
-            columns: ["region_id"]
+            foreignKeyName: \"pricing_seasonal_rules_region_id_fkey\"
+            columns: [\"region_id\"]
             isOneToOne: false
-            referencedRelation: "pricing_regions"
-            referencedColumns: ["id"]
+            referencedRelation: \"pricing_regions\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -10829,11 +10907,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "pricing_special_events_region_id_fkey"
-            columns: ["region_id"]
+            foreignKeyName: \"pricing_special_events_region_id_fkey\"
+            columns: [\"region_id\"]
             isOneToOne: false
-            referencedRelation: "pricing_regions"
-            referencedColumns: ["id"]
+            referencedRelation: \"pricing_regions\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -10916,7 +10994,7 @@ export type Database = {
           mercadopago_site_id: string | null
           mp_onboarding_completed: boolean | null
           mp_onboarding_url: string | null
-          onboarding: Database["public"]["Enums"]["onboarding_status"]
+          onboarding: Database[\"public\"][\"Enums\"][\"onboarding_status\"]
           phone: string | null
           phone_encrypted: string | null
           phone_verified: boolean | null
@@ -10987,7 +11065,7 @@ export type Database = {
           mercadopago_site_id?: string | null
           mp_onboarding_completed?: boolean | null
           mp_onboarding_url?: string | null
-          onboarding?: Database["public"]["Enums"]["onboarding_status"]
+          onboarding?: Database[\"public\"][\"Enums\"][\"onboarding_status\"]
           phone?: string | null
           phone_encrypted?: string | null
           phone_verified?: boolean | null
@@ -11058,7 +11136,7 @@ export type Database = {
           mercadopago_site_id?: string | null
           mp_onboarding_completed?: boolean | null
           mp_onboarding_url?: string | null
-          onboarding?: Database["public"]["Enums"]["onboarding_status"]
+          onboarding?: Database[\"public\"][\"Enums\"][\"onboarding_status\"]
           phone?: string | null
           phone_encrypted?: string | null
           phone_verified?: boolean | null
@@ -11257,11 +11335,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "referral_rewards_referral_id_fkey"
-            columns: ["referral_id"]
+            foreignKeyName: \"referral_rewards_referral_id_fkey\"
+            columns: [\"referral_id\"]
             isOneToOne: false
-            referencedRelation: "referrals"
-            referencedColumns: ["id"]
+            referencedRelation: \"referrals\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -11316,11 +11394,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "referrals_referral_code_id_fkey"
-            columns: ["referral_code_id"]
+            foreignKeyName: \"referrals_referral_code_id_fkey\"
+            columns: [\"referral_code_id\"]
             isOneToOne: false
-            referencedRelation: "referral_codes"
-            referencedColumns: ["id"]
+            referencedRelation: \"referral_codes\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -11387,67 +11465,67 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"rental_terms_templates_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"rental_terms_templates_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"rental_terms_templates_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"rental_terms_templates_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"rental_terms_templates_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"rental_terms_templates_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"rental_terms_templates_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"rental_terms_templates_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"rental_terms_templates_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -11502,116 +11580,116 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"return_protocol_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"return_protocol_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"return_protocol_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"return_protocol_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"return_protocol_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"return_protocol_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"return_protocol_events_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
+            foreignKeyName: \"return_protocol_events_executed_by_user_id_fkey\"
+            columns: [\"executed_by_user_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
+            foreignKeyName: \"return_protocol_events_executed_by_user_id_fkey\"
+            columns: [\"executed_by_user_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
+            foreignKeyName: \"return_protocol_events_executed_by_user_id_fkey\"
+            columns: [\"executed_by_user_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
+            foreignKeyName: \"return_protocol_events_executed_by_user_id_fkey\"
+            columns: [\"executed_by_user_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
+            foreignKeyName: \"return_protocol_events_executed_by_user_id_fkey\"
+            columns: [\"executed_by_user_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
+            foreignKeyName: \"return_protocol_events_executed_by_user_id_fkey\"
+            columns: [\"executed_by_user_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
+            foreignKeyName: \"return_protocol_events_executed_by_user_id_fkey\"
+            columns: [\"executed_by_user_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
+            foreignKeyName: \"return_protocol_events_executed_by_user_id_fkey\"
+            columns: [\"executed_by_user_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
+            foreignKeyName: \"return_protocol_events_executed_by_user_id_fkey\"
+            columns: [\"executed_by_user_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -11684,53 +11762,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -11893,123 +11971,123 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"subscription_usage_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"subscription_usage_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"subscription_usage_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"subscription_usage_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"subscription_usage_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"subscription_usage_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"subscription_usage_logs_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
+            foreignKeyName: \"subscription_usage_logs_performed_by_fkey\"
+            columns: [\"performed_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
+            foreignKeyName: \"subscription_usage_logs_performed_by_fkey\"
+            columns: [\"performed_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
+            foreignKeyName: \"subscription_usage_logs_performed_by_fkey\"
+            columns: [\"performed_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
+            foreignKeyName: \"subscription_usage_logs_performed_by_fkey\"
+            columns: [\"performed_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
+            foreignKeyName: \"subscription_usage_logs_performed_by_fkey\"
+            columns: [\"performed_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
+            foreignKeyName: \"subscription_usage_logs_performed_by_fkey\"
+            columns: [\"performed_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
+            foreignKeyName: \"subscription_usage_logs_performed_by_fkey\"
+            columns: [\"performed_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
+            foreignKeyName: \"subscription_usage_logs_performed_by_fkey\"
+            columns: [\"performed_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
+            foreignKeyName: \"subscription_usage_logs_performed_by_fkey\"
+            columns: [\"performed_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "subscription_usage_logs_subscription_id_fkey"
-            columns: ["subscription_id"]
+            foreignKeyName: \"subscription_usage_logs_subscription_id_fkey\"
+            columns: [\"subscription_id\"]
             isOneToOne: false
-            referencedRelation: "subscriptions"
-            referencedColumns: ["id"]
+            referencedRelation: \"subscriptions\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -12029,8 +12107,8 @@ export type Database = {
           purchase_amount_cents: number
           remaining_balance_cents: number
           starts_at: string
-          status: Database["public"]["Enums"]["subscription_status"]
-          tier: Database["public"]["Enums"]["subscription_tier"]
+          status: Database[\"public\"][\"Enums\"][\"subscription_status\"]
+          tier: Database[\"public\"][\"Enums\"][\"subscription_tier\"]
           updated_at: string
           user_id: string
         }
@@ -12049,8 +12127,8 @@ export type Database = {
           purchase_amount_cents: number
           remaining_balance_cents: number
           starts_at?: string
-          status?: Database["public"]["Enums"]["subscription_status"]
-          tier?: Database["public"]["Enums"]["subscription_tier"]
+          status?: Database[\"public\"][\"Enums\"][\"subscription_status\"]
+          tier?: Database[\"public\"][\"Enums\"][\"subscription_tier\"]
           updated_at?: string
           user_id: string
         }
@@ -12069,74 +12147,74 @@ export type Database = {
           purchase_amount_cents?: number
           remaining_balance_cents?: number
           starts_at?: string
-          status?: Database["public"]["Enums"]["subscription_status"]
-          tier?: Database["public"]["Enums"]["subscription_tier"]
+          status?: Database[\"public\"][\"Enums\"][\"subscription_status\"]
+          tier?: Database[\"public\"][\"Enums\"][\"subscription_tier\"]
           updated_at?: string
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"subscriptions_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"subscriptions_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"subscriptions_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"subscriptions_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"subscriptions_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"subscriptions_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"subscriptions_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"subscriptions_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"subscriptions_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -12146,16 +12224,16 @@ export type Database = {
           attachment_urls: string[] | null
           booking_id: string | null
           car_id: string | null
-          category: Database["public"]["Enums"]["ticket_category"]
+          category: Database[\"public\"][\"Enums\"][\"ticket_category\"]
           created_at: string
           description: string
           id: string
           resolution_notes: string | null
           resolved_at: string | null
-          status: Database["public"]["Enums"]["ticket_status"]
+          status: Database[\"public\"][\"Enums\"][\"ticket_status\"]
           subject: string
           updated_at: string
-          urgency: Database["public"]["Enums"]["ticket_urgency"]
+          urgency: Database[\"public\"][\"Enums\"][\"ticket_urgency\"]
           user_id: string
         }
         Insert: {
@@ -12163,16 +12241,16 @@ export type Database = {
           attachment_urls?: string[] | null
           booking_id?: string | null
           car_id?: string | null
-          category: Database["public"]["Enums"]["ticket_category"]
+          category: Database[\"public\"][\"Enums\"][\"ticket_category\"]
           created_at?: string
           description: string
           id?: string
           resolution_notes?: string | null
           resolved_at?: string | null
-          status?: Database["public"]["Enums"]["ticket_status"]
+          status?: Database[\"public\"][\"Enums\"][\"ticket_status\"]
           subject: string
           updated_at?: string
-          urgency?: Database["public"]["Enums"]["ticket_urgency"]
+          urgency?: Database[\"public\"][\"Enums\"][\"ticket_urgency\"]
           user_id: string
         }
         Update: {
@@ -12180,249 +12258,249 @@ export type Database = {
           attachment_urls?: string[] | null
           booking_id?: string | null
           car_id?: string | null
-          category?: Database["public"]["Enums"]["ticket_category"]
+          category?: Database[\"public\"][\"Enums\"][\"ticket_category\"]
           created_at?: string
           description?: string
           id?: string
           resolution_notes?: string | null
           resolved_at?: string | null
-          status?: Database["public"]["Enums"]["ticket_status"]
+          status?: Database[\"public\"][\"Enums\"][\"ticket_status\"]
           subject?: string
           updated_at?: string
-          urgency?: Database["public"]["Enums"]["ticket_urgency"]
+          urgency?: Database[\"public\"][\"Enums\"][\"ticket_urgency\"]
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
+            foreignKeyName: \"support_tickets_assigned_to_fkey\"
+            columns: [\"assigned_to\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
+            foreignKeyName: \"support_tickets_assigned_to_fkey\"
+            columns: [\"assigned_to\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
+            foreignKeyName: \"support_tickets_assigned_to_fkey\"
+            columns: [\"assigned_to\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
+            foreignKeyName: \"support_tickets_assigned_to_fkey\"
+            columns: [\"assigned_to\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
+            foreignKeyName: \"support_tickets_assigned_to_fkey\"
+            columns: [\"assigned_to\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
+            foreignKeyName: \"support_tickets_assigned_to_fkey\"
+            columns: [\"assigned_to\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
+            foreignKeyName: \"support_tickets_assigned_to_fkey\"
+            columns: [\"assigned_to\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
+            foreignKeyName: \"support_tickets_assigned_to_fkey\"
+            columns: [\"assigned_to\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
+            foreignKeyName: \"support_tickets_assigned_to_fkey\"
+            columns: [\"assigned_to\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "support_tickets_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"support_tickets_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"support_tickets_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"support_tickets_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"support_tickets_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"support_tickets_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "support_tickets_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"support_tickets_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "support_tickets_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"support_tickets_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"support_tickets_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"support_tickets_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"support_tickets_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"support_tickets_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"support_tickets_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"support_tickets_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"support_tickets_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"support_tickets_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"support_tickets_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"support_tickets_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"support_tickets_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"support_tickets_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"support_tickets_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"support_tickets_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"support_tickets_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"support_tickets_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"support_tickets_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -12462,7 +12540,7 @@ export type Database = {
           owner_id: string
           renter_id: string
           renter_response: string | null
-          status: Database["public"]["Enums"]["infraction_status"]
+          status: Database[\"public\"][\"Enums\"][\"infraction_status\"]
           updated_at: string
         }
         Insert: {
@@ -12482,7 +12560,7 @@ export type Database = {
           owner_id: string
           renter_id: string
           renter_response?: string | null
-          status?: Database["public"]["Enums"]["infraction_status"]
+          status?: Database[\"public\"][\"Enums\"][\"infraction_status\"]
           updated_at?: string
         }
         Update: {
@@ -12502,205 +12580,205 @@ export type Database = {
           owner_id?: string
           renter_id?: string
           renter_response?: string | null
-          status?: Database["public"]["Enums"]["infraction_status"]
+          status?: Database[\"public\"][\"Enums\"][\"infraction_status\"]
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"traffic_infractions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"traffic_infractions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"traffic_infractions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"traffic_infractions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"traffic_infractions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"traffic_infractions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"traffic_infractions_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_charge_transaction_id_fkey"
-            columns: ["charge_transaction_id"]
+            foreignKeyName: \"traffic_infractions_charge_transaction_id_fkey\"
+            columns: [\"charge_transaction_id\"]
             isOneToOne: false
-            referencedRelation: "v_wallet_locks_status"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_wallet_locks_status\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_charge_transaction_id_fkey"
-            columns: ["charge_transaction_id"]
+            foreignKeyName: \"traffic_infractions_charge_transaction_id_fkey\"
+            columns: [\"charge_transaction_id\"]
             isOneToOne: false
-            referencedRelation: "v_wallet_transfers_summary"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_wallet_transfers_summary\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_charge_transaction_id_fkey"
-            columns: ["charge_transaction_id"]
+            foreignKeyName: \"traffic_infractions_charge_transaction_id_fkey\"
+            columns: [\"charge_transaction_id\"]
             isOneToOne: false
-            referencedRelation: "wallet_transactions"
-            referencedColumns: ["id"]
+            referencedRelation: \"wallet_transactions\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"traffic_infractions_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"traffic_infractions_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"traffic_infractions_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"traffic_infractions_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"traffic_infractions_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"traffic_infractions_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"traffic_infractions_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"traffic_infractions_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"traffic_infractions_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"traffic_infractions_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"traffic_infractions_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"traffic_infractions_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"traffic_infractions_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"traffic_infractions_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"traffic_infractions_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"traffic_infractions_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"traffic_infractions_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"traffic_infractions_renter_id_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -12773,130 +12851,130 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
+            foreignKeyName: \"user_blocks_blocked_id_fkey\"
+            columns: [\"blocked_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
+            foreignKeyName: \"user_blocks_blocked_id_fkey\"
+            columns: [\"blocked_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
+            foreignKeyName: \"user_blocks_blocked_id_fkey\"
+            columns: [\"blocked_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
+            foreignKeyName: \"user_blocks_blocked_id_fkey\"
+            columns: [\"blocked_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
+            foreignKeyName: \"user_blocks_blocked_id_fkey\"
+            columns: [\"blocked_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
+            foreignKeyName: \"user_blocks_blocked_id_fkey\"
+            columns: [\"blocked_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
+            foreignKeyName: \"user_blocks_blocked_id_fkey\"
+            columns: [\"blocked_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
+            foreignKeyName: \"user_blocks_blocked_id_fkey\"
+            columns: [\"blocked_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
+            foreignKeyName: \"user_blocks_blocked_id_fkey\"
+            columns: [\"blocked_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
+            foreignKeyName: \"user_blocks_blocker_id_fkey\"
+            columns: [\"blocker_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
+            foreignKeyName: \"user_blocks_blocker_id_fkey\"
+            columns: [\"blocker_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
+            foreignKeyName: \"user_blocks_blocker_id_fkey\"
+            columns: [\"blocker_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
+            foreignKeyName: \"user_blocks_blocker_id_fkey\"
+            columns: [\"blocker_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
+            foreignKeyName: \"user_blocks_blocker_id_fkey\"
+            columns: [\"blocker_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
+            foreignKeyName: \"user_blocks_blocker_id_fkey\"
+            columns: [\"blocker_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
+            foreignKeyName: \"user_blocks_blocker_id_fkey\"
+            columns: [\"blocker_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
+            foreignKeyName: \"user_blocks_blocker_id_fkey\"
+            columns: [\"blocker_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
+            foreignKeyName: \"user_blocks_blocker_id_fkey\"
+            columns: [\"blocker_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -12938,12 +13016,12 @@ export type Database = {
           analyzed_at: string | null
           created_at: string
           id: number
-          kind: Database["public"]["Enums"]["document_kind"]
+          kind: Database[\"public\"][\"Enums\"][\"document_kind\"]
           metadata: Json | null
           notes: string | null
           reviewed_at: string | null
           reviewed_by: string | null
-          status: Database["public"]["Enums"]["kyc_status"]
+          status: Database[\"public\"][\"Enums\"][\"kyc_status\"]
           storage_path: string
           user_id: string
         }
@@ -12951,12 +13029,12 @@ export type Database = {
           analyzed_at?: string | null
           created_at?: string
           id?: number
-          kind: Database["public"]["Enums"]["document_kind"]
+          kind: Database[\"public\"][\"Enums\"][\"document_kind\"]
           metadata?: Json | null
           notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
-          status?: Database["public"]["Enums"]["kyc_status"]
+          status?: Database[\"public\"][\"Enums\"][\"kyc_status\"]
           storage_path: string
           user_id: string
         }
@@ -12964,12 +13042,12 @@ export type Database = {
           analyzed_at?: string | null
           created_at?: string
           id?: number
-          kind?: Database["public"]["Enums"]["document_kind"]
+          kind?: Database[\"public\"][\"Enums\"][\"document_kind\"]
           metadata?: Json | null
           notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
-          status?: Database["public"]["Enums"]["kyc_status"]
+          status?: Database[\"public\"][\"Enums\"][\"kyc_status\"]
           storage_path?: string
           user_id?: string
         }
@@ -12996,60 +13074,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorite_cars_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorite_cars_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorite_cars_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorite_cars_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorite_cars_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorite_cars_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorite_cars_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorite_cars_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -13074,60 +13152,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorites_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorites_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorites_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorites_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorites_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorites_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorites_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"user_favorites_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -13344,11 +13422,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "user_onboarding_steps_plan_id_fkey"
-            columns: ["plan_id"]
+            foreignKeyName: \"user_onboarding_steps_plan_id_fkey\"
+            columns: [\"plan_id\"]
             isOneToOne: false
-            referencedRelation: "user_onboarding_plans"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_onboarding_plans\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -13571,186 +13649,186 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
+            foreignKeyName: \"vehicle_documents_manual_reviewed_by_fkey\"
+            columns: [\"manual_reviewed_by\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
+            foreignKeyName: \"vehicle_documents_manual_reviewed_by_fkey\"
+            columns: [\"manual_reviewed_by\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
+            foreignKeyName: \"vehicle_documents_manual_reviewed_by_fkey\"
+            columns: [\"manual_reviewed_by\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
+            foreignKeyName: \"vehicle_documents_manual_reviewed_by_fkey\"
+            columns: [\"manual_reviewed_by\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
+            foreignKeyName: \"vehicle_documents_manual_reviewed_by_fkey\"
+            columns: [\"manual_reviewed_by\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
+            foreignKeyName: \"vehicle_documents_manual_reviewed_by_fkey\"
+            columns: [\"manual_reviewed_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
+            foreignKeyName: \"vehicle_documents_manual_reviewed_by_fkey\"
+            columns: [\"manual_reviewed_by\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
+            foreignKeyName: \"vehicle_documents_manual_reviewed_by_fkey\"
+            columns: [\"manual_reviewed_by\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
+            foreignKeyName: \"vehicle_documents_manual_reviewed_by_fkey\"
+            columns: [\"manual_reviewed_by\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"vehicle_documents_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"vehicle_documents_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"vehicle_documents_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"vehicle_documents_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"vehicle_documents_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"vehicle_documents_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"vehicle_documents_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"vehicle_documents_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: \"vehicle_documents_user_id_fkey\"
+            columns: [\"user_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
+            foreignKeyName: \"vehicle_documents_vehicle_id_fkey\"
+            columns: [\"vehicle_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
+            foreignKeyName: \"vehicle_documents_vehicle_id_fkey\"
+            columns: [\"vehicle_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
+            foreignKeyName: \"vehicle_documents_vehicle_id_fkey\"
+            columns: [\"vehicle_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
+            foreignKeyName: \"vehicle_documents_vehicle_id_fkey\"
+            columns: [\"vehicle_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
+            foreignKeyName: \"vehicle_documents_vehicle_id_fkey\"
+            columns: [\"vehicle_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
+            foreignKeyName: \"vehicle_documents_vehicle_id_fkey\"
+            columns: [\"vehicle_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
+            foreignKeyName: \"vehicle_documents_vehicle_id_fkey\"
+            columns: [\"vehicle_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
+            foreignKeyName: \"vehicle_documents_vehicle_id_fkey\"
+            columns: [\"vehicle_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -13841,11 +13919,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "vehicle_pricing_models_category_id_fkey"
-            columns: ["category_id"]
+            foreignKeyName: \"vehicle_pricing_models_category_id_fkey\"
+            columns: [\"category_id\"]
             isOneToOne: false
-            referencedRelation: "vehicle_categories"
-            referencedColumns: ["id"]
+            referencedRelation: \"vehicle_categories\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -14002,53 +14080,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
+            foreignKeyName: \"wallet_transactions_related_booking_id_fkey\"
+            columns: [\"related_booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
+            foreignKeyName: \"wallet_transactions_related_booking_id_fkey\"
+            columns: [\"related_booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
+            foreignKeyName: \"wallet_transactions_related_booking_id_fkey\"
+            columns: [\"related_booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
+            foreignKeyName: \"wallet_transactions_related_booking_id_fkey\"
+            columns: [\"related_booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
+            foreignKeyName: \"wallet_transactions_related_booking_id_fkey\"
+            columns: [\"related_booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
+            foreignKeyName: \"wallet_transactions_related_booking_id_fkey\"
+            columns: [\"related_booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
+            foreignKeyName: \"wallet_transactions_related_booking_id_fkey\"
+            columns: [\"related_booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -14100,18 +14178,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "withdrawal_requests_bank_account_id_fkey"
-            columns: ["bank_account_id"]
+            foreignKeyName: \"withdrawal_requests_bank_account_id_fkey\"
+            columns: [\"bank_account_id\"]
             isOneToOne: false
-            referencedRelation: "bank_accounts"
-            referencedColumns: ["id"]
+            referencedRelation: \"bank_accounts\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "withdrawal_requests_bank_account_id_fkey"
-            columns: ["bank_account_id"]
+            foreignKeyName: \"withdrawal_requests_bank_account_id_fkey\"
+            columns: [\"bank_account_id\"]
             isOneToOne: false
-            referencedRelation: "bank_accounts_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"bank_accounts_decrypted\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -14154,11 +14232,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "withdrawal_transactions_request_id_fkey"
-            columns: ["request_id"]
+            foreignKeyName: \"withdrawal_transactions_request_id_fkey\"
+            columns: [\"request_id\"]
             isOneToOne: false
-            referencedRelation: "withdrawal_requests"
-            referencedColumns: ["id"]
+            referencedRelation: \"withdrawal_requests\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -14413,7 +14491,7 @@ export type Database = {
           rating_count: number | null
           region_id: string | null
           seats: number | null
-          status: Database["public"]["Enums"]["car_status"] | null
+          status: Database[\"public\"][\"Enums\"][\"car_status\"] | null
           terms_and_conditions: string | null
           title: string | null
           transmission: string | null
@@ -14429,74 +14507,74 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "cars_category_id_fkey"
-            columns: ["category_id"]
+            foreignKeyName: \"cars_category_id_fkey\"
+            columns: [\"category_id\"]
             isOneToOne: false
-            referencedRelation: "vehicle_categories"
-            referencedColumns: ["id"]
+            referencedRelation: \"vehicle_categories\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -14510,67 +14588,67 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_tracking_points_session_id_fkey"
-            columns: ["session_id"]
+            foreignKeyName: \"car_tracking_points_session_id_fkey\"
+            columns: [\"session_id\"]
             isOneToOne: false
-            referencedRelation: "car_tracking_sessions"
-            referencedColumns: ["id"]
+            referencedRelation: \"car_tracking_sessions\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -14633,7 +14711,7 @@ export type Database = {
           owner_email: string | null
           owner_id: string | null
           owner_mp_completed: boolean | null
-          status: Database["public"]["Enums"]["car_status"] | null
+          status: Database[\"public\"][\"Enums\"][\"car_status\"] | null
         }
         Relationships: []
       }
@@ -14690,7 +14768,7 @@ export type Database = {
           id: string | null
           id_verified: boolean | null
           is_admin: boolean | null
-          onboarding: Database["public"]["Enums"]["onboarding_status"] | null
+          onboarding: Database[\"public\"][\"Enums\"][\"onboarding_status\"] | null
           phone: string | null
           phone_verified: boolean | null
           role: string | null
@@ -14706,7 +14784,7 @@ export type Database = {
           id?: string | null
           id_verified?: boolean | null
           is_admin?: boolean | null
-          onboarding?: Database["public"]["Enums"]["onboarding_status"] | null
+          onboarding?: Database[\"public\"][\"Enums\"][\"onboarding_status\"] | null
           phone?: string | null
           phone_verified?: boolean | null
           role?: string | null
@@ -14722,7 +14800,7 @@ export type Database = {
           id?: string | null
           id_verified?: boolean | null
           is_admin?: boolean | null
-          onboarding?: Database["public"]["Enums"]["onboarding_status"] | null
+          onboarding?: Database[\"public\"][\"Enums\"][\"onboarding_status\"] | null
           phone?: string | null
           phone_verified?: boolean | null
           role?: string | null
@@ -14769,109 +14847,109 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"messages_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"messages_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -14930,19 +15008,19 @@ export type Database = {
           payment_mode: string | null
           payment_preference_id: string | null
           payment_provider:
-            | Database["public"]["Enums"]["payment_provider"]
+            | Database[\"public\"][\"Enums\"][\"payment_provider\"]
             | null
           payment_split_completed: boolean | null
           payment_split_validated_at: string | null
-          payment_status: Database["public"]["Enums"]["payment_status"] | null
+          payment_status: Database[\"public\"][\"Enums\"][\"payment_status\"] | null
           payment_table_provider:
-            | Database["public"]["Enums"]["payment_provider"]
+            | Database[\"public\"][\"Enums\"][\"payment_provider\"]
             | null
           payout_date: string | null
           payout_error_message: string | null
           payout_retry_count: number | null
           payout_status:
-            | Database["public"]["Enums"]["payout_status_enum"]
+            | Database[\"public\"][\"Enums\"][\"payout_status_enum\"]
             | null
           pickup_location_lat: number | null
           pickup_location_lng: number | null
@@ -14959,7 +15037,7 @@ export type Database = {
           risk_snapshot_date: string | null
           risk_snapshot_id: string | null
           start_at: string | null
-          status: Database["public"]["Enums"]["booking_status"] | null
+          status: Database[\"public\"][\"Enums\"][\"booking_status\"] | null
           subtotal_cents: number | null
           total_amount: number | null
           total_cents: number | null
@@ -14969,158 +15047,158 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_authorized_payment_id_fkey"
-            columns: ["authorized_payment_id"]
+            foreignKeyName: \"bookings_authorized_payment_id_fkey\"
+            columns: [\"authorized_payment_id\"]
             isOneToOne: false
-            referencedRelation: "payment_intents"
-            referencedColumns: ["id"]
+            referencedRelation: \"payment_intents\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_payment_id_fkey"
-            columns: ["payment_id"]
+            foreignKeyName: \"bookings_payment_id_fkey\"
+            columns: [\"payment_id\"]
             isOneToOne: false
-            referencedRelation: "payments"
-            referencedColumns: ["id"]
+            referencedRelation: \"payments\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_risk_snapshot_booking_id_fkey"
-            columns: ["risk_snapshot_booking_id"]
+            foreignKeyName: \"bookings_risk_snapshot_booking_id_fkey\"
+            columns: [\"risk_snapshot_booking_id\"]
             isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"booking_risk_snapshot\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_risk_snapshot_id_fkey"
-            columns: ["risk_snapshot_id"]
+            foreignKeyName: \"bookings_risk_snapshot_id_fkey\"
+            columns: [\"risk_snapshot_id\"]
             isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"booking_risk_snapshot\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "fk_bookings_risk_snapshot"
-            columns: ["risk_snapshot_booking_id"]
+            foreignKeyName: \"fk_bookings_risk_snapshot\"
+            columns: [\"risk_snapshot_booking_id\"]
             isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"booking_risk_snapshot\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -15175,19 +15253,19 @@ export type Database = {
           payment_mode: string | null
           payment_preference_id: string | null
           payment_provider:
-            | Database["public"]["Enums"]["payment_provider"]
+            | Database[\"public\"][\"Enums\"][\"payment_provider\"]
             | null
           payment_split_completed: boolean | null
           payment_split_validated_at: string | null
-          payment_status: Database["public"]["Enums"]["payment_status"] | null
+          payment_status: Database[\"public\"][\"Enums\"][\"payment_status\"] | null
           payment_table_provider:
-            | Database["public"]["Enums"]["payment_provider"]
+            | Database[\"public\"][\"Enums\"][\"payment_provider\"]
             | null
           payout_date: string | null
           payout_error_message: string | null
           payout_retry_count: number | null
           payout_status:
-            | Database["public"]["Enums"]["payout_status_enum"]
+            | Database[\"public\"][\"Enums\"][\"payout_status_enum\"]
             | null
           pickup_location_lat: number | null
           pickup_location_lng: number | null
@@ -15206,7 +15284,7 @@ export type Database = {
           risk_snapshot_date: string | null
           risk_snapshot_id: string | null
           start_at: string | null
-          status: Database["public"]["Enums"]["booking_status"] | null
+          status: Database[\"public\"][\"Enums\"][\"booking_status\"] | null
           subtotal_cents: number | null
           total_amount: number | null
           total_cents: number | null
@@ -15216,158 +15294,158 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_authorized_payment_id_fkey"
-            columns: ["authorized_payment_id"]
+            foreignKeyName: \"bookings_authorized_payment_id_fkey\"
+            columns: [\"authorized_payment_id\"]
             isOneToOne: false
-            referencedRelation: "payment_intents"
-            referencedColumns: ["id"]
+            referencedRelation: \"payment_intents\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_payment_id_fkey"
-            columns: ["payment_id"]
+            foreignKeyName: \"bookings_payment_id_fkey\"
+            columns: [\"payment_id\"]
             isOneToOne: false
-            referencedRelation: "payments"
-            referencedColumns: ["id"]
+            referencedRelation: \"payments\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_risk_snapshot_booking_id_fkey"
-            columns: ["risk_snapshot_booking_id"]
+            foreignKeyName: \"bookings_risk_snapshot_booking_id_fkey\"
+            columns: [\"risk_snapshot_booking_id\"]
             isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"booking_risk_snapshot\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "bookings_risk_snapshot_id_fkey"
-            columns: ["risk_snapshot_id"]
+            foreignKeyName: \"bookings_risk_snapshot_id_fkey\"
+            columns: [\"risk_snapshot_id\"]
             isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"booking_risk_snapshot\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "fk_bookings_risk_snapshot"
-            columns: ["risk_snapshot_booking_id"]
+            foreignKeyName: \"fk_bookings_risk_snapshot\"
+            columns: [\"risk_snapshot_booking_id\"]
             isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"booking_risk_snapshot\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -15389,123 +15467,123 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -15522,7 +15600,7 @@ export type Database = {
           payout_error_message: string | null
           payout_retry_count: number | null
           payout_status:
-            | Database["public"]["Enums"]["payout_status_enum"]
+            | Database[\"public\"][\"Enums\"][\"payout_status_enum\"]
             | null
           total_amount: number | null
         }
@@ -15673,130 +15751,130 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
+            foreignKeyName: \"bookings_renter_profile_fkey\"
+            columns: [\"renter_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -15831,109 +15909,109 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"bookings_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
+            referencedRelation: \"_schema_cache_refresh\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"my_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
+            referencedRelation: \"owner_bookings\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"owner_pending_approvals\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"booking_id\"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: \"reviews_booking_id_fkey\"
+            columns: [\"booking_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"booking_id\"]
           },
         ]
       }
@@ -15957,67 +16035,67 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -16068,7 +16146,7 @@ export type Database = {
           rating_avg: number | null
           rating_count: number | null
           seats: number | null
-          status: Database["public"]["Enums"]["car_status"] | null
+          status: Database[\"public\"][\"Enums\"][\"car_status\"] | null
           terms_and_conditions: string | null
           title: string | null
           transmission: string | null
@@ -16123,7 +16201,7 @@ export type Database = {
           rating_avg?: number | null
           rating_count?: number | null
           seats?: number | null
-          status?: Database["public"]["Enums"]["car_status"] | null
+          status?: Database[\"public\"][\"Enums\"][\"car_status\"] | null
           terms_and_conditions?: string | null
           title?: string | null
           transmission?: string | null
@@ -16178,7 +16256,7 @@ export type Database = {
           rating_avg?: number | null
           rating_count?: number | null
           seats?: number | null
-          status?: Database["public"]["Enums"]["car_status"] | null
+          status?: Database[\"public\"][\"Enums\"][\"car_status\"] | null
           terms_and_conditions?: string | null
           title?: string | null
           transmission?: string | null
@@ -16189,67 +16267,67 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
+            referencedRelation: \"me_profile\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"owner_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
+            referencedRelation: \"profiles_decrypted\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"user_profiles\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
+            referencedRelation: \"v_identity_verification_status\"
+            referencedColumns: [\"user_id\"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: \"cars_owner_id_fkey\"
+            columns: [\"owner_id\"]
             isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
+            referencedRelation: \"v_owner_community_status\"
+            referencedColumns: [\"owner_id\"]
           },
         ]
       }
@@ -16536,60 +16614,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"bookable_cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
+            referencedRelation: \"cars_multi_currency\"
+            referencedColumns: [\"id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"cars_payment_status_diagnostic\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"pending_payouts_critical\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_active_return_protocols\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
+            referencedRelation: \"v_car_sharing_status\"
+            referencedColumns: [\"car_id\"]
           },
           {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: \"car_icp_monthly_car_id_fkey\"
+            columns: [\"car_id\"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
+            referencedRelation: \"v_cars_with_main_photo\"
+            referencedColumns: [\"id\"]
           },
         ]
       }
@@ -16636,12 +16714,10 @@ export type Database = {
         Row: {
           coverage_limit_cents: number | null
           coverage_limit_usd: number | null
-          description: string | null
           name: string | null
           price_cents: number | null
           price_usd: number | null
-          target_segment: string | null
-          tier: Database["public"]["Enums"]["subscription_tier"] | null
+          tier: Database[\"public\"][\"Enums\"][\"subscription_tier\"] | null
         }
         Relationships: []
       }
@@ -16688,7 +16764,7 @@ export type Database = {
         Row: {
           amount_ars: number | null
           booking_id: string | null
-          booking_status: Database["public"]["Enums"]["booking_status"] | null
+          booking_status: Database[\"public\"][\"Enums\"][\"booking_status\"] | null
           created_at: string | null
           days_until_expiration: number | null
           expiration_status: string | null
@@ -16790,7 +16866,7 @@ export type Database = {
         Returns: number
       }
       _postgis_stats: {
-        Args: { ""?: string; att_name: string; tbl: unknown }
+        Args: { \"\"?: string; att_name: string; tbl: unknown }
         Returns: string
       }
       _st_3dintersects: {
@@ -16914,13 +16990,13 @@ export type Database = {
             Args: { p_date: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.accounting_balance_sheet(p_date => date), public.accounting_balance_sheet(p_date => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"[]
+            } & \"Could not choose the best candidate function between: public.accounting_balance_sheet(p_date => date), public.accounting_balance_sheet(p_date => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved\"[]
           }
         | {
             Args: { p_date?: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.accounting_balance_sheet(p_date => date), public.accounting_balance_sheet(p_date => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"[]
+            } & \"Could not choose the best candidate function between: public.accounting_balance_sheet(p_date => date), public.accounting_balance_sheet(p_date => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved\"[]
           }
       accounting_daily_closure: { Args: never; Returns: Json }
       accounting_income_statement:
@@ -16980,13 +17056,13 @@ export type Database = {
           user_id: string
         }
         SetofOptions: {
-          from: "*"
-          to: "booking_waitlist"
+          from: \"*\"
+          to: \"booking_waitlist\"
           isOneToOne: true
           isSetofReturn: false
         }
       }
-      addauth: { Args: { "": string }; Returns: boolean }
+      addauth: { Args: { \"\": string }; Returns: boolean }
       addgeometrycolumn:
         | {
             Args: {
@@ -17178,8 +17254,8 @@ export type Database = {
           wallet_transaction_id: string | null
         }
         SetofOptions: {
-          from: "*"
-          to: "community_rewards"
+          from: \"*\"
+          to: \"community_rewards\"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -17417,13 +17493,13 @@ export type Database = {
             Args: { p_key: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.config_get_boolean(p_key => text), public.config_get_boolean(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+            } & \"Could not choose the best candidate function between: public.config_get_boolean(p_key => text), public.config_get_boolean(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved\"
           }
         | {
             Args: { p_key: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.config_get_boolean(p_key => text), public.config_get_boolean(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+            } & \"Could not choose the best candidate function between: public.config_get_boolean(p_key => text), public.config_get_boolean(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved\"
           }
       config_get_json: { Args: { p_key: string }; Returns: Json }
       config_get_number: { Args: { p_key: string }; Returns: number }
@@ -17442,13 +17518,13 @@ export type Database = {
             Args: { p_key: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.config_get_string(p_key => text), public.config_get_string(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+            } & \"Could not choose the best candidate function between: public.config_get_string(p_key => text), public.config_get_string(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved\"
           }
         | {
             Args: { p_key: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.config_get_string(p_key => text), public.config_get_string(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+            } & \"Could not choose the best candidate function between: public.config_get_string(p_key => text), public.config_get_string(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved\"
           }
       config_update: {
         Args: { p_key: string; p_value: Json }
@@ -17463,8 +17539,8 @@ export type Database = {
           value: Json
         }
         SetofOptions: {
-          from: "*"
-          to: "platform_config"
+          from: \"*\"
+          to: \"platform_config\"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -17599,7 +17675,7 @@ export type Database = {
           p_metadata?: Json
           p_payment_external_id?: string
           p_payment_provider: string
-          p_tier: Database["public"]["Enums"]["subscription_tier"]
+          p_tier: Database[\"public\"][\"Enums\"][\"subscription_tier\"]
           p_user_id: string
         }
         Returns: string
@@ -17791,7 +17867,7 @@ export type Database = {
         Returns: string
       }
       generate_referral_code: { Args: { p_user_id: string }; Returns: string }
-      geometry: { Args: { "": string }; Returns: unknown }
+      geometry: { Args: { \"\": string }; Returns: unknown }
       geometry_above: {
         Args: { geom1: unknown; geom2: unknown }
         Returns: boolean
@@ -17888,7 +17964,7 @@ export type Database = {
         Args: { geom1: unknown; geom2: unknown }
         Returns: boolean
       }
-      geomfromewkt: { Args: { "": string }; Returns: unknown }
+      geomfromewkt: { Args: { \"\": string }; Returns: unknown }
       get_active_bonus_protector: {
         Args: { p_user_id: string }
         Returns: {
@@ -17901,6 +17977,10 @@ export type Database = {
         }[]
       }
       get_active_subscription: { Args: never; Returns: Json }
+      get_active_subscription_for_user: {
+        Args: { p_user_id: string }
+        Returns: Json
+      }
       get_active_tracking_for_booking: {
         Args: { p_booking_id: string }
         Returns: {
@@ -17921,7 +18001,7 @@ export type Database = {
       }
       get_admin_roles: {
         Args: { check_user_id: string }
-        Returns: Database["public"]["Enums"]["admin_role"][]
+        Returns: Database[\"public\"][\"Enums\"][\"admin_role\"][]
       }
       get_available_cars: {
         Args: {
@@ -17977,7 +18057,7 @@ export type Database = {
           booking_id: string
           end_date: string
           start_date: string
-          status: Database["public"]["Enums"]["booking_status"]
+          status: Database[\"public\"][\"Enums\"][\"booking_status\"]
         }[]
       }
       get_car_conversation_participants: {
@@ -18040,6 +18120,7 @@ export type Database = {
           year: number
         }[]
       }
+      get_claim_charge_summary: { Args: { p_claim_id: string }; Returns: Json }
       get_claims_stats: { Args: never; Returns: Json }
       get_class_benefits: {
         Args: { p_class: number }
@@ -18371,18 +18452,18 @@ export type Database = {
           analyzed_at: string | null
           created_at: string
           id: number
-          kind: Database["public"]["Enums"]["document_kind"]
+          kind: Database[\"public\"][\"Enums\"][\"document_kind\"]
           metadata: Json | null
           notes: string | null
           reviewed_at: string | null
           reviewed_by: string | null
-          status: Database["public"]["Enums"]["kyc_status"]
+          status: Database[\"public\"][\"Enums\"][\"kyc_status\"]
           storage_path: string
           user_id: string
         }[]
         SetofOptions: {
-          from: "*"
-          to: "user_documents"
+          from: \"*\"
+          to: \"user_documents\"
           isOneToOne: false
           isSetofReturn: true
         }
@@ -18628,8 +18709,8 @@ export type Database = {
           updated_at: string | null
         }[]
         SetofOptions: {
-          from: "*"
-          to: "p2p_orders"
+          from: \"*\"
+          to: \"p2p_orders\"
           isOneToOne: false
           isSetofReturn: true
         }
@@ -18686,7 +18767,7 @@ export type Database = {
       prepare_booking_payment: {
         Args: {
           p_booking_id: string
-          p_provider: Database["public"]["Enums"]["payment_provider"]
+          p_provider: Database[\"public\"][\"Enums\"][\"payment_provider\"]
           p_use_split_payment?: boolean
         }
         Returns: Json
@@ -18734,7 +18815,7 @@ export type Database = {
           cancellation_reason: string | null
           cancelled_at: string | null
           cancelled_by_role:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
+            | Database[\"public\"][\"Enums\"][\"booking_cancelled_by_role\"]
             | null
           car_id: string
           comodato_agreement_id: string | null
@@ -18802,7 +18883,7 @@ export type Database = {
           payment_mode: string | null
           payment_preference_id: string | null
           payment_provider:
-            | Database["public"]["Enums"]["payment_provider"]
+            | Database[\"public\"][\"Enums\"][\"payment_provider\"]
             | null
           payment_split_completed: boolean | null
           payment_split_validated_at: string | null
@@ -18810,7 +18891,7 @@ export type Database = {
           payout_error_message: string | null
           payout_retry_count: number | null
           payout_status:
-            | Database["public"]["Enums"]["payout_status_enum"]
+            | Database[\"public\"][\"Enums\"][\"payout_status_enum\"]
             | null
           pickup_location_lat: number | null
           pickup_location_lng: number | null
@@ -18835,7 +18916,7 @@ export type Database = {
           risk_snapshot_date: string | null
           risk_snapshot_id: string | null
           start_at: string
-          status: Database["public"]["Enums"]["booking_status"]
+          status: Database[\"public\"][\"Enums\"][\"booking_status\"]
           subscription_coverage_cents: number | null
           subscription_id: string | null
           subtotal_cents: number | null
@@ -18848,8 +18929,8 @@ export type Database = {
           wallet_status: string | null
         }
         SetofOptions: {
-          from: "*"
-          to: "bookings"
+          from: \"*\"
+          to: \"bookings\"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -18861,6 +18942,7 @@ export type Database = {
           p_claim_id: string
           p_damage_amount_cents: number
           p_description?: string
+          p_performed_by?: string
           p_renter_id: string
         }
         Returns: Json
@@ -19213,12 +19295,12 @@ export type Database = {
           }
       st_area:
         | { Args: { geog: unknown; use_spheroid?: boolean }; Returns: number }
-        | { Args: { "": string }; Returns: number }
+        | { Args: { \"\": string }; Returns: number }
       st_asencodedpolyline: {
         Args: { geom: unknown; nprecision?: number }
         Returns: string
       }
-      st_asewkt: { Args: { "": string }; Returns: string }
+      st_asewkt: { Args: { \"\": string }; Returns: string }
       st_asgeojson:
         | {
             Args: { geog: unknown; maxdecimaldigits?: number; options?: number }
@@ -19237,7 +19319,7 @@ export type Database = {
             }
             Returns: string
           }
-        | { Args: { "": string }; Returns: string }
+        | { Args: { \"\": string }; Returns: string }
       st_asgml:
         | {
             Args: {
@@ -19253,7 +19335,7 @@ export type Database = {
             Args: { geom: unknown; maxdecimaldigits?: number; options?: number }
             Returns: string
           }
-        | { Args: { "": string }; Returns: string }
+        | { Args: { \"\": string }; Returns: string }
         | {
             Args: {
               geog: unknown
@@ -19285,7 +19367,7 @@ export type Database = {
             Args: { geom: unknown; maxdecimaldigits?: number; nprefix?: string }
             Returns: string
           }
-        | { Args: { "": string }; Returns: string }
+        | { Args: { \"\": string }; Returns: string }
       st_aslatlontext: {
         Args: { geom: unknown; tmpl?: string }
         Returns: string
@@ -19310,8 +19392,8 @@ export type Database = {
             Args: { geom: unknown; maxdecimaldigits?: number; rel?: number }
             Returns: string
           }
-        | { Args: { "": string }; Returns: string }
-      st_astext: { Args: { "": string }; Returns: string }
+        | { Args: { \"\": string }; Returns: string }
+      st_astext: { Args: { \"\": string }; Returns: string }
       st_astwkb:
         | {
             Args: {
@@ -19356,7 +19438,7 @@ export type Database = {
             Args: { geom: unknown; quadsegs: number; radius: number }
             Returns: unknown
           }
-      st_centroid: { Args: { "": string }; Returns: unknown }
+      st_centroid: { Args: { \"\": string }; Returns: unknown }
       st_clipbybox2d: {
         Args: { box: unknown; geom: unknown }
         Returns: unknown
@@ -19467,12 +19549,12 @@ export type Database = {
             Args: { area: unknown; npoints: number; seed: number }
             Returns: unknown
           }
-      st_geogfromtext: { Args: { "": string }; Returns: unknown }
-      st_geographyfromtext: { Args: { "": string }; Returns: unknown }
+      st_geogfromtext: { Args: { \"\": string }; Returns: unknown }
+      st_geographyfromtext: { Args: { \"\": string }; Returns: unknown }
       st_geohash:
         | { Args: { geog: unknown; maxchars?: number }; Returns: string }
         | { Args: { geom: unknown; maxchars?: number }; Returns: string }
-      st_geomcollfromtext: { Args: { "": string }; Returns: unknown }
+      st_geomcollfromtext: { Args: { \"\": string }; Returns: unknown }
       st_geometricmedian: {
         Args: {
           fail_if_not_converged?: boolean
@@ -19482,17 +19564,17 @@ export type Database = {
         }
         Returns: unknown
       }
-      st_geometryfromtext: { Args: { "": string }; Returns: unknown }
-      st_geomfromewkt: { Args: { "": string }; Returns: unknown }
+      st_geometryfromtext: { Args: { \"\": string }; Returns: unknown }
+      st_geomfromewkt: { Args: { \"\": string }; Returns: unknown }
       st_geomfromgeojson:
-        | { Args: { "": Json }; Returns: unknown }
-        | { Args: { "": Json }; Returns: unknown }
-        | { Args: { "": string }; Returns: unknown }
-      st_geomfromgml: { Args: { "": string }; Returns: unknown }
-      st_geomfromkml: { Args: { "": string }; Returns: unknown }
+        | { Args: { \"\": Json }; Returns: unknown }
+        | { Args: { \"\": Json }; Returns: unknown }
+        | { Args: { \"\": string }; Returns: unknown }
+      st_geomfromgml: { Args: { \"\": string }; Returns: unknown }
+      st_geomfromkml: { Args: { \"\": string }; Returns: unknown }
       st_geomfrommarc21: { Args: { marc21xml: string }; Returns: unknown }
-      st_geomfromtext: { Args: { "": string }; Returns: unknown }
-      st_gmltosql: { Args: { "": string }; Returns: unknown }
+      st_geomfromtext: { Args: { \"\": string }; Returns: unknown }
+      st_gmltosql: { Args: { \"\": string }; Returns: unknown }
       st_hasarc: { Args: { geometry: unknown }; Returns: boolean }
       st_hausdorffdistance: {
         Args: { geom1: unknown; geom2: unknown }
@@ -19519,17 +19601,17 @@ export type Database = {
         | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
       st_isvaliddetail: {
         Args: { flags?: number; geom: unknown }
-        Returns: Database["public"]["CompositeTypes"]["valid_detail"]
+        Returns: Database[\"public\"][\"CompositeTypes\"][\"valid_detail\"]
         SetofOptions: {
-          from: "*"
-          to: "valid_detail"
+          from: \"*\"
+          to: \"valid_detail\"
           isOneToOne: true
           isSetofReturn: false
         }
       }
       st_length:
         | { Args: { geog: unknown; use_spheroid?: boolean }; Returns: number }
-        | { Args: { "": string }; Returns: number }
+        | { Args: { \"\": string }; Returns: number }
       st_letters: { Args: { font?: Json; letters: string }; Returns: unknown }
       st_linecrossingdirection: {
         Args: { line1: unknown; line2: unknown }
@@ -19539,7 +19621,7 @@ export type Database = {
         Args: { nprecision?: number; txtin: string }
         Returns: unknown
       }
-      st_linefromtext: { Args: { "": string }; Returns: unknown }
+      st_linefromtext: { Args: { \"\": string }; Returns: unknown }
       st_linelocatepoint: {
         Args: { geom1: unknown; geom2: unknown }
         Returns: number
@@ -19586,12 +19668,12 @@ export type Database = {
         Args: { inputgeom: unknown; segs_per_quarter?: number }
         Returns: unknown
       }
-      st_mlinefromtext: { Args: { "": string }; Returns: unknown }
-      st_mpointfromtext: { Args: { "": string }; Returns: unknown }
-      st_mpolyfromtext: { Args: { "": string }; Returns: unknown }
-      st_multilinestringfromtext: { Args: { "": string }; Returns: unknown }
-      st_multipointfromtext: { Args: { "": string }; Returns: unknown }
-      st_multipolygonfromtext: { Args: { "": string }; Returns: unknown }
+      st_mlinefromtext: { Args: { \"\": string }; Returns: unknown }
+      st_mpointfromtext: { Args: { \"\": string }; Returns: unknown }
+      st_mpolyfromtext: { Args: { \"\": string }; Returns: unknown }
+      st_multilinestringfromtext: { Args: { \"\": string }; Returns: unknown }
+      st_multipointfromtext: { Args: { \"\": string }; Returns: unknown }
+      st_multipolygonfromtext: { Args: { \"\": string }; Returns: unknown }
       st_node: { Args: { g: unknown }; Returns: unknown }
       st_normalize: { Args: { geom: unknown }; Returns: unknown }
       st_offsetcurve: {
@@ -19610,7 +19692,7 @@ export type Database = {
         Args: { geog: unknown; use_spheroid?: boolean }
         Returns: number
       }
-      st_pointfromtext: { Args: { "": string }; Returns: unknown }
+      st_pointfromtext: { Args: { \"\": string }; Returns: unknown }
       st_pointm: {
         Args: {
           mcoordinate: number
@@ -19639,8 +19721,8 @@ export type Database = {
         }
         Returns: unknown
       }
-      st_polyfromtext: { Args: { "": string }; Returns: unknown }
-      st_polygonfromtext: { Args: { "": string }; Returns: unknown }
+      st_polyfromtext: { Args: { \"\": string }; Returns: unknown }
+      st_polygonfromtext: { Args: { \"\": string }; Returns: unknown }
       st_project: {
         Args: { azimuth: number; distance: number; geog: unknown }
         Returns: unknown
@@ -19749,7 +19831,7 @@ export type Database = {
       }
       st_within: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
       st_wkbtosql: { Args: { wkb: string }; Returns: unknown }
-      st_wkttosql: { Args: { "": string }; Returns: unknown }
+      st_wkttosql: { Args: { \"\": string }; Returns: unknown }
       st_wrapx: {
         Args: { geom: unknown; move: number; wrap: number }
         Returns: unknown
@@ -19780,7 +19862,7 @@ export type Database = {
           unlocked_count: number
         }[]
       }
-      unlockrows: { Args: { "": string }; Returns: number }
+      unlockrows: { Args: { \"\": string }; Returns: number }
       update_accident_status: {
         Args: {
           p_accident_id: string
@@ -19801,7 +19883,7 @@ export type Database = {
           p_mp_split_id?: string
           p_owner_amount: number
           p_platform_fee: number
-          p_status?: Database["public"]["Enums"]["payout_status_enum"]
+          p_status?: Database[\"public\"][\"Enums\"][\"payout_status_enum\"]
         }
         Returns: undefined
       }
@@ -20181,167 +20263,167 @@ export type Database = {
     }
     Enums: {
       accident_status:
-        | "reported"
-        | "under_review"
-        | "insurance_filed"
-        | "resolved"
-        | "closed"
-      admin_role: "super_admin" | "operations" | "support" | "finance"
-      booking_cancelled_by_role: "renter" | "owner" | "system" | "admin"
+        | \"reported\"
+        | \"under_review\"
+        | \"insurance_filed\"
+        | \"resolved\"
+        | \"closed\"
+      admin_role: \"super_admin\" | \"operations\" | \"support\" | \"finance\"
+      booking_cancelled_by_role: \"renter\" | \"owner\" | \"system\" | \"admin\"
       booking_status:
-        | "pending_payment"
-        | "pending"
-        | "pending_approval"
-        | "confirmed"
-        | "in_progress"
-        | "pending_review"
-        | "disputed"
-        | "completed"
-        | "cancelled"
-        | "no_show"
-        | "expired"
-        | "cancelled_renter"
-        | "cancelled_owner"
-        | "cancelled_system"
-        | "rejected"
-        | "resolved"
-        | "pending_dispute_resolution"
-        | "payment_validation_failed"
-      cancel_policy: "flex" | "moderate" | "strict"
-      car_status: "draft" | "pending" | "active" | "suspended" | "deleted"
+        | \"pending_payment\"
+        | \"pending\"
+        | \"pending_approval\"
+        | \"confirmed\"
+        | \"in_progress\"
+        | \"pending_review\"
+        | \"disputed\"
+        | \"completed\"
+        | \"cancelled\"
+        | \"no_show\"
+        | \"expired\"
+        | \"cancelled_renter\"
+        | \"cancelled_owner\"
+        | \"cancelled_system\"
+        | \"rejected\"
+        | \"resolved\"
+        | \"pending_dispute_resolution\"
+        | \"payment_validation_failed\"
+      cancel_policy: \"flex\" | \"moderate\" | \"strict\"
+      car_status: \"draft\" | \"pending\" | \"active\" | \"suspended\" | \"deleted\"
       claim_status:
-        | "draft"
-        | "submitted"
-        | "under_review"
-        | "approved"
-        | "rejected"
-        | "paid"
-        | "processing"
-      damage_severity: "minor" | "moderate" | "severe"
+        | \"draft\"
+        | \"submitted\"
+        | \"under_review\"
+        | \"approved\"
+        | \"rejected\"
+        | \"paid\"
+        | \"processing\"
+      damage_severity: \"minor\" | \"moderate\" | \"severe\"
       damage_type:
-        | "scratch"
-        | "dent"
-        | "broken_glass"
-        | "tire_damage"
-        | "mechanical"
-        | "interior"
-        | "missing_item"
-        | "other"
-      dispute_kind: "damage" | "no_show" | "late_return" | "other"
-      dispute_status: "open" | "in_review" | "resolved" | "rejected"
+        | \"scratch\"
+        | \"dent\"
+        | \"broken_glass\"
+        | \"tire_damage\"
+        | \"mechanical\"
+        | \"interior\"
+        | \"missing_item\"
+        | \"other\"
+      dispute_kind: \"damage\" | \"no_show\" | \"late_return\" | \"other\"
+      dispute_status: \"open\" | \"in_review\" | \"resolved\" | \"rejected\"
       document_kind:
-        | "gov_id_front"
-        | "gov_id_back"
-        | "driver_license"
-        | "utility_bill"
-        | "selfie"
-        | "license_front"
-        | "license_back"
-        | "vehicle_registration"
-        | "vehicle_insurance"
-        | "criminal_record"
+        | \"gov_id_front\"
+        | \"gov_id_back\"
+        | \"driver_license\"
+        | \"utility_bill\"
+        | \"selfie\"
+        | \"license_front\"
+        | \"license_back\"
+        | \"vehicle_registration\"
+        | \"vehicle_insurance\"
+        | \"criminal_record\"
       infraction_status:
-        | "pending"
-        | "accepted"
-        | "disputed"
-        | "charged"
-        | "dismissed"
-      kyc_status: "not_started" | "pending" | "verified" | "rejected"
+        | \"pending\"
+        | \"accepted\"
+        | \"disputed\"
+        | \"charged\"
+        | \"dismissed\"
+      kyc_status: \"not_started\" | \"pending\" | \"verified\" | \"rejected\"
       notification_type:
-        | "new_booking_for_owner"
-        | "booking_cancelled_for_owner"
-        | "booking_cancelled_for_renter"
-        | "new_chat_message"
-        | "payment_successful"
-        | "payout_successful"
-        | "inspection_reminder"
-        | "generic_announcement"
-        | "mp_onboarding_required"
-        | "booking_reminder_24h"
-        | "booking_reminder_2h"
-        | "document_expiry_license"
-        | "owner_inactive_reminder"
-        | "optimization_tip"
-        | "booking_ended_review"
-        | "monthly_report"
-        | "welcome"
-        | "verification_approved"
-        | "verification_rejected"
-        | "nearby_cars"
-        | "car_views_milestone"
-        | "car_recommendation"
-        | "renter_tip"
-        | "price_drop_alert"
-        | "favorite_car_available"
-        | "pending_requests_reminder"
-      onboarding_status: "incomplete" | "complete" | "skipped"
+        | \"new_booking_for_owner\"
+        | \"booking_cancelled_for_owner\"
+        | \"booking_cancelled_for_renter\"
+        | \"new_chat_message\"
+        | \"payment_successful\"
+        | \"payout_successful\"
+        | \"inspection_reminder\"
+        | \"generic_announcement\"
+        | \"mp_onboarding_required\"
+        | \"booking_reminder_24h\"
+        | \"booking_reminder_2h\"
+        | \"document_expiry_license\"
+        | \"owner_inactive_reminder\"
+        | \"optimization_tip\"
+        | \"booking_ended_review\"
+        | \"monthly_report\"
+        | \"welcome\"
+        | \"verification_approved\"
+        | \"verification_rejected\"
+        | \"nearby_cars\"
+        | \"car_views_milestone\"
+        | \"car_recommendation\"
+        | \"renter_tip\"
+        | \"price_drop_alert\"
+        | \"favorite_car_available\"
+        | \"pending_requests_reminder\"
+      onboarding_status: \"incomplete\" | \"complete\" | \"skipped\"
       payment_event_type:
-        | "payment_initiated"
-        | "payment_processing"
-        | "payment_approved"
-        | "payment_rejected"
-        | "payment_failed"
-        | "payment_cancelled"
-        | "hold_created"
-        | "hold_captured"
-        | "hold_released"
-        | "hold_expired"
-        | "hold_reauthorized"
-        | "refund_initiated"
-        | "refund_processing"
-        | "refund_completed"
-        | "refund_failed"
-        | "partial_refund_completed"
-        | "split_initiated"
-        | "split_owner_payment"
-        | "split_platform_fee"
-        | "split_completed"
-        | "wallet_lock_created"
-        | "wallet_lock_released"
-        | "wallet_funds_transferred"
-        | "dispute_opened"
-        | "dispute_evidence_submitted"
-        | "dispute_resolved"
-        | "webhook_received"
-        | "status_sync"
-        | "manual_intervention"
-      payment_provider: "mock" | "mercadopago" | "stripe"
+        | \"payment_initiated\"
+        | \"payment_processing\"
+        | \"payment_approved\"
+        | \"payment_rejected\"
+        | \"payment_failed\"
+        | \"payment_cancelled\"
+        | \"hold_created\"
+        | \"hold_captured\"
+        | \"hold_released\"
+        | \"hold_expired\"
+        | \"hold_reauthorized\"
+        | \"refund_initiated\"
+        | \"refund_processing\"
+        | \"refund_completed\"
+        | \"refund_failed\"
+        | \"partial_refund_completed\"
+        | \"split_initiated\"
+        | \"split_owner_payment\"
+        | \"split_platform_fee\"
+        | \"split_completed\"
+        | \"wallet_lock_created\"
+        | \"wallet_lock_released\"
+        | \"wallet_funds_transferred\"
+        | \"dispute_opened\"
+        | \"dispute_evidence_submitted\"
+        | \"dispute_resolved\"
+        | \"webhook_received\"
+        | \"status_sync\"
+        | \"manual_intervention\"
+      payment_provider: \"mock\" | \"mercadopago\" | \"stripe\"
       payment_status:
-        | "pending"
-        | "processing"
-        | "approved"
-        | "rejected"
-        | "refunded"
-        | "cancelled"
+        | \"pending\"
+        | \"processing\"
+        | \"approved\"
+        | \"rejected\"
+        | \"refunded\"
+        | \"cancelled\"
       payout_status_enum:
-        | "pending"
-        | "processing"
-        | "completed"
-        | "failed"
-        | "manual_review"
+        | \"pending\"
+        | \"processing\"
+        | \"completed\"
+        | \"failed\"
+        | \"manual_review\"
       subscription_status:
-        | "active"
-        | "inactive"
-        | "depleted"
-        | "expired"
-        | "cancelled"
-      subscription_tier: "club_standard" | "club_black"
+        | \"active\"
+        | \"inactive\"
+        | \"depleted\"
+        | \"expired\"
+        | \"cancelled\"
+      subscription_tier: \"club_standard\" | \"club_black\"
       ticket_category:
-        | "booking_issue"
-        | "payment_issue"
-        | "vehicle_issue"
-        | "account_issue"
-        | "verification_issue"
-        | "technical_issue"
-        | "suggestion"
-        | "other"
+        | \"booking_issue\"
+        | \"payment_issue\"
+        | \"vehicle_issue\"
+        | \"account_issue\"
+        | \"verification_issue\"
+        | \"technical_issue\"
+        | \"suggestion\"
+        | \"other\"
       ticket_status:
-        | "open"
-        | "in_progress"
-        | "waiting_user"
-        | "resolved"
-        | "closed"
-      ticket_urgency: "low" | "medium" | "high" | "critical"
+        | \"open\"
+        | \"in_progress\"
+        | \"waiting_user\"
+        | \"resolved\"
+        | \"closed\"
+      ticket_urgency: \"low\" | \"medium\" | \"high\" | \"critical\"
     }
     CompositeTypes: {
       geometry_dump: {
@@ -20357,33 +20439,33 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, \"__InternalSupabase\">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, \"public\">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | keyof (DefaultSchema[\"Tables\"] & DefaultSchema[\"Views\"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Views\"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Views\"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema[\"Tables\"] &
+        DefaultSchema[\"Views\"])
+    ? (DefaultSchema[\"Tables\"] &
+        DefaultSchema[\"Views\"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -20392,23 +20474,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof DefaultSchema[\"Tables\"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema[\"Tables\"]
+    ? DefaultSchema[\"Tables\"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -20417,23 +20499,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof DefaultSchema[\"Tables\"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema[\"Tables\"]
+    ? DefaultSchema[\"Tables\"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -20442,232 +20524,217 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
+    | keyof DefaultSchema[\"Enums\"]
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions[\"schema\"]][\"Enums\"]
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions[\"schema\"]][\"Enums\"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema[\"Enums\"]
+    ? DefaultSchema[\"Enums\"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
+    | keyof DefaultSchema[\"CompositeTypes\"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions[\"schema\"]][\"CompositeTypes\"]
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions[\"schema\"]][\"CompositeTypes\"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema[\"CompositeTypes\"]
+    ? DefaultSchema[\"CompositeTypes\"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
   public: {
     Enums: {
       accident_status: [
-        "reported",
-        "under_review",
-        "insurance_filed",
-        "resolved",
-        "closed",
+        \"reported\",
+        \"under_review\",
+        \"insurance_filed\",
+        \"resolved\",
+        \"closed\",
       ],
-      admin_role: ["super_admin", "operations", "support", "finance"],
-      booking_cancelled_by_role: ["renter", "owner", "system", "admin"],
+      admin_role: [\"super_admin\", \"operations\", \"support\", \"finance\"],
+      booking_cancelled_by_role: [\"renter\", \"owner\", \"system\", \"admin\"],
       booking_status: [
-        "pending_payment",
-        "pending",
-        "pending_approval",
-        "confirmed",
-        "in_progress",
-        "pending_review",
-        "disputed",
-        "completed",
-        "cancelled",
-        "no_show",
-        "expired",
-        "cancelled_renter",
-        "cancelled_owner",
-        "cancelled_system",
-        "rejected",
-        "resolved",
-        "pending_dispute_resolution",
-        "payment_validation_failed",
+        \"pending_payment\",
+        \"pending\",
+        \"pending_approval\",
+        \"confirmed\",
+        \"in_progress\",
+        \"pending_review\",
+        \"disputed\",
+        \"completed\",
+        \"cancelled\",
+        \"no_show\",
+        \"expired\",
+        \"cancelled_renter\",
+        \"cancelled_owner\",
+        \"cancelled_system\",
+        \"rejected\",
+        \"resolved\",
+        \"pending_dispute_resolution\",
+        \"payment_validation_failed\",
       ],
-      cancel_policy: ["flex", "moderate", "strict"],
-      car_status: ["draft", "pending", "active", "suspended", "deleted"],
+      cancel_policy: [\"flex\", \"moderate\", \"strict\"],
+      car_status: [\"draft\", \"pending\", \"active\", \"suspended\", \"deleted\"],
       claim_status: [
-        "draft",
-        "submitted",
-        "under_review",
-        "approved",
-        "rejected",
-        "paid",
-        "processing",
+        \"draft\",
+        \"submitted\",
+        \"under_review\",
+        \"approved\",
+        \"rejected\",
+        \"paid\",
+        \"processing\",
       ],
-      damage_severity: ["minor", "moderate", "severe"],
+      damage_severity: [\"minor\", \"moderate\", \"severe\"],
       damage_type: [
-        "scratch",
-        "dent",
-        "broken_glass",
-        "tire_damage",
-        "mechanical",
-        "interior",
-        "missing_item",
-        "other",
+        \"scratch\",
+        \"dent\",
+        \"broken_glass\",
+        \"tire_damage\",
+        \"mechanical\",
+        \"interior\",
+        \"missing_item\",
+        \"other\",
       ],
-      dispute_kind: ["damage", "no_show", "late_return", "other"],
-      dispute_status: ["open", "in_review", "resolved", "rejected"],
+      dispute_kind: [\"damage\", \"no_show\", \"late_return\", \"other\"],
+      dispute_status: [\"open\", \"in_review\", \"resolved\", \"rejected\"],
       document_kind: [
-        "gov_id_front",
-        "gov_id_back",
-        "driver_license",
-        "utility_bill",
-        "selfie",
-        "license_front",
-        "license_back",
-        "vehicle_registration",
-        "vehicle_insurance",
-        "criminal_record",
+        \"gov_id_front\",
+        \"gov_id_back\",
+        \"driver_license\",
+        \"utility_bill\",
+        \"selfie\",
+        \"license_front\",
+        \"license_back\",
+        \"vehicle_registration\",
+        \"vehicle_insurance\",
+        \"criminal_record\",
       ],
       infraction_status: [
-        "pending",
-        "accepted",
-        "disputed",
-        "charged",
-        "dismissed",
+        \"pending\",
+        \"accepted\",
+        \"disputed\",
+        \"charged\",
+        \"dismissed\",
       ],
-      kyc_status: ["not_started", "pending", "verified", "rejected"],
+      kyc_status: [\"not_started\", \"pending\", \"verified\", \"rejected\"],
       notification_type: [
-        "new_booking_for_owner",
-        "booking_cancelled_for_owner",
-        "booking_cancelled_for_renter",
-        "new_chat_message",
-        "payment_successful",
-        "payout_successful",
-        "inspection_reminder",
-        "generic_announcement",
-        "mp_onboarding_required",
-        "booking_reminder_24h",
-        "booking_reminder_2h",
-        "document_expiry_license",
-        "owner_inactive_reminder",
-        "optimization_tip",
-        "booking_ended_review",
-        "monthly_report",
-        "welcome",
-        "verification_approved",
-        "verification_rejected",
-        "nearby_cars",
-        "car_views_milestone",
-        "car_recommendation",
-        "renter_tip",
-        "price_drop_alert",
-        "favorite_car_available",
-        "pending_requests_reminder",
+        \"new_booking_for_owner\",
+        \"booking_cancelled_for_owner\",
+        \"booking_cancelled_for_renter\",
+        \"new_chat_message\",
+        \"payment_successful\",
+        \"payout_successful\",
+        \"inspection_reminder\",
+        \"generic_announcement\",
+        \"mp_onboarding_required\",
+        \"booking_reminder_24h\",
+        \"booking_reminder_2h\",
+        \"document_expiry_license\",
+        \"owner_inactive_reminder\",
+        \"optimization_tip\",
+        \"booking_ended_review\",
+        \"monthly_report\",
+        \"welcome\",
+        \"verification_approved\",
+        \"verification_rejected\",
+        \"nearby_cars\",
+        \"car_views_milestone\",
+        \"car_recommendation\",
+        \"renter_tip\",
+        \"price_drop_alert\",
+        \"favorite_car_available\",
+        \"pending_requests_reminder\",
       ],
-      onboarding_status: ["incomplete", "complete", "skipped"],
+      onboarding_status: [\"incomplete\", \"complete\", \"skipped\"],
       payment_event_type: [
-        "payment_initiated",
-        "payment_processing",
-        "payment_approved",
-        "payment_rejected",
-        "payment_failed",
-        "payment_cancelled",
-        "hold_created",
-        "hold_captured",
-        "hold_released",
-        "hold_expired",
-        "hold_reauthorized",
-        "refund_initiated",
-        "refund_processing",
-        "refund_completed",
-        "refund_failed",
-        "partial_refund_completed",
-        "split_initiated",
-        "split_owner_payment",
-        "split_platform_fee",
-        "split_completed",
-        "wallet_lock_created",
-        "wallet_lock_released",
-        "wallet_funds_transferred",
-        "dispute_opened",
-        "dispute_evidence_submitted",
-        "dispute_resolved",
-        "webhook_received",
-        "status_sync",
-        "manual_intervention",
+        \"payment_initiated\",
+        \"payment_processing\",
+        \"payment_approved\",
+        \"payment_rejected\",
+        \"payment_failed\",
+        \"payment_cancelled\",
+        \"hold_created\",
+        \"hold_captured\",
+        \"hold_released\",
+        \"hold_expired\",
+        \"hold_reauthorized\",
+        \"refund_initiated\",
+        \"refund_processing\",
+        \"refund_completed\",
+        \"refund_failed\",
+        \"partial_refund_completed\",
+        \"split_initiated\",
+        \"split_owner_payment\",
+        \"split_platform_fee\",
+        \"split_completed\",
+        \"wallet_lock_created\",
+        \"wallet_lock_released\",
+        \"wallet_funds_transferred\",
+        \"dispute_opened\",
+        \"dispute_evidence_submitted\",
+        \"dispute_resolved\",
+        \"webhook_received\",
+        \"status_sync\",
+        \"manual_intervention\",
       ],
-      payment_provider: ["mock", "mercadopago", "stripe"],
+      payment_provider: [\"mock\", \"mercadopago\", \"stripe\"],
       payment_status: [
-        "pending",
-        "processing",
-        "approved",
-        "rejected",
-        "refunded",
-        "cancelled",
+        \"pending\",
+        \"processing\",
+        \"approved\",
+        \"rejected\",
+        \"refunded\",
+        \"cancelled\",
       ],
       payout_status_enum: [
-        "pending",
-        "processing",
-        "completed",
-        "failed",
-        "manual_review",
+        \"pending\",
+        \"processing\",
+        \"completed\",
+        \"failed\",
+        \"manual_review\",
       ],
       subscription_status: [
-        "active",
-        "inactive",
-        "depleted",
-        "expired",
-        "cancelled",
+        \"active\",
+        \"inactive\",
+        \"depleted\",
+        \"expired\",
+        \"cancelled\",
       ],
-      subscription_tier: ["club_standard", "club_black"],
+      subscription_tier: [\"club_standard\", \"club_black\"],
       ticket_category: [
-        "booking_issue",
-        "payment_issue",
-        "vehicle_issue",
-        "account_issue",
-        "verification_issue",
-        "technical_issue",
-        "suggestion",
-        "other",
+        \"booking_issue\",
+        \"payment_issue\",
+        \"vehicle_issue\",
+        \"account_issue\",
+        \"verification_issue\",
+        \"technical_issue\",
+        \"suggestion\",
+        \"other\",
       ],
       ticket_status: [
-        "open",
-        "in_progress",
-        "waiting_user",
-        "resolved",
-        "closed",
+        \"open\",
+        \"in_progress\",
+        \"waiting_user\",
+        \"resolved\",
+        \"closed\",
       ],
-      ticket_urgency: ["low", "medium", "high", "critical"],
+      ticket_urgency: [\"low\", \"medium\", \"high\", \"critical\"],
     },
   },
-} as const;
-
-// ============================================================================
-// ENUM TYPE ALIASES - For convenience and backward compatibility
-// ============================================================================
-
-export type BookingStatus = Enums<'booking_status'>;
-export type CancelPolicy = Enums<'cancel_policy'>;
-export type CarStatus = Enums<'car_status'>;
-export type ClaimStatus = Enums<'claim_status'>;
-export type PaymentStatus = Enums<'payment_status'>;
-
-// Simple string types (not enums in DB)
-export type FuelType = string;
-export type Transmission = string;
-export type PaymentProvider = 'mercadopago' | 'paypal' | 'stripe' | 'wallet';
-export type UserRole = 'renter' | 'owner' | 'both' | 'admin' | 'super_admin';
+} as const
+"}

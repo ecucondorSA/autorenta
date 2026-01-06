@@ -1842,71 +1842,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       }
     }
 
-    // Create enhanced popup with contextual information
-    const popupHTML = this.createUserLocationPopup();
-    const popup = new this.mapboxgl.Popup({
-      offset: 25,
-      closeButton: true,
-      closeOnClick: true,
-      maxWidth: '280px',
-    }).setHTML(popupHTML);
-
-    this.userLocationMarker.setPopup(popup);
-
-    // Show popup initially with pulse animation (only if it's the first time)
+    // Trigger visual pulse on initial load
     if (!previousLocation) {
       setTimeout(() => {
-        this.userLocationMarker?.togglePopup();
         this.triggerLocationPulse();
       }, 1000);
     }
-  }
-
-  /**
-   * Create HTML content for user location popup
-   */
-  private createUserLocationPopup(): string {
-    const modeText = this.viewMode() === 'map' ? 'Tu ubicación actual' : 'Estás aquí';
-    const accuracyText = this.locationAccuracy
-      ? `Precisión: ±${Math.round(this.locationAccuracy)}m`
-      : 'Precisión: Desconocida';
-
-    const updateTime = this.lastLocationUpdate
-      ? this.formatUpdateTime(this.lastLocationUpdate)
-      : 'Actualizado ahora';
-
-    // Calculate nearby cars
-    const nearbyCars = this.getNearbyCarsCount();
-    const carsText =
-      nearbyCars > 0 ? `🚗 Hay <b>${nearbyCars}</b> autos cerca` : 'No hay autos cerca';
-
-    const popupHTML = `
-      <div class="user-location-popup" style="font-family: 'Inter', sans-serif; padding: 4px;">
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-          <div style="width: 8px; height: 8px; background-color: var(--success-default, #10b981); border-radius: 50%; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);"></div>
-          <p class="font-semibold text-slate-800 dark:text-white" style="margin: 0; font-size: 14px;">${modeText}</p>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; padding-left: 16px;">
-          <p class="text-xs text-slate-500 dark:text-slate-500" style="margin: 0;">${accuracyText}</p>
-          <p class="text-xs text-gray-500 dark:text-slate-500" style="margin: 0;">${updateTime}</p>
-          <p class="text-xs text-cyan-600 dark:text-cyan-400 font-medium" style="margin: 4px 0 0 0;">${carsText}</p>
-        </div>
-
-        <div class="user-location-popup-actions" style="display: flex; gap: 8px; margin-top: 8px;">
-          <button class="user-location-cta" data-action="search-nearby"
-            style="flex: 1; background: var(--cta-default, #06b6d4); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
-            Buscar aquí
-          </button>
-          <button class="user-location-cta" data-action="view-routes"
-            style="flex: 1; background: var(--cta-alpha-10, rgba(6, 182, 212, 0.1)); color: var(--cta-default, #06b6d4); border: 1px solid var(--cta-alpha-20, rgba(6, 182, 212, 0.2)); padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
-            Ver rutas
-          </button>
-        </div>
-      </div>
-    `;
-
-    return popupHTML;
   }
 
   /**

@@ -66,7 +66,7 @@
           (click)="onLanguageChange()"
           aria-label="Elegir idioma"
           >
-          <span class="selector-icon">🌐</span>
+          <app-icon name="globe" [size]="16" cssClass="selector-icon" />
           <span class="selector-text">{{ currentLanguage() }}</span>
         </button>
 
@@ -77,7 +77,7 @@
           (click)="onCurrencyChange()"
           aria-label="Elegir moneda"
           >
-          <span class="selector-icon">$</span>
+          <app-icon name="money" [size]="16" cssClass="selector-icon" />
           <span class="selector-text">{{ currentCurrency() }}</span>
         </button>
 
@@ -91,7 +91,7 @@
               class="social-link"
               [attr.aria-label]="social.ariaLabel"
               >
-              <span class="social-icon">{{ social.icon }}</span>
+              <app-icon [name]="social.icon" [size]="18" cssClass="social-icon" />
             </a>
           }
         </div>
