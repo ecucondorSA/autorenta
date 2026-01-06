@@ -64,13 +64,13 @@ import {
 
         <div class="flex gap-3">
           <button
-            (click)="onJoinClick.emit('club_standard')"
+            (click)="join.emit('club_standard')"
             class="flex-1 py-3 px-4 rounded-xl bg-amber-500 text-black font-semibold text-sm hover:bg-amber-400 transition-colors"
           >
             Unirse por $300/ano
           </button>
           <button
-            (click)="onViewPlans.emit()"
+            (click)="viewPlans.emit()"
             class="py-3 px-4 rounded-xl border border-amber-500/50 text-amber-500 font-medium text-sm hover:bg-amber-500/10 transition-colors"
           >
             Ver planes
@@ -142,7 +142,7 @@ import {
               Tu membresia vence en {{ daysRemaining() }} dias
             </span>
             <button
-              (click)="onRenew.emit()"
+              (click)="renew.emit()"
               class="ml-auto text-sm font-semibold text-white underline"
             >
               Renovar
@@ -153,7 +153,7 @@ import {
         <!-- Actions -->
         <div class="relative flex gap-3">
           <button
-            (click)="onViewHistory.emit()"
+            (click)="viewHistory.emit()"
             class="flex-1 py-2.5 px-4 rounded-xl bg-white/20 text-white text-sm font-medium hover:bg-white/30 transition-colors flex items-center justify-center gap-2"
           >
             <ion-icon name="list-outline"></ion-icon>
@@ -161,7 +161,7 @@ import {
           </button>
           @if (subscription()?.status === 'depleted') {
             <button
-              (click)="onRecharge.emit()"
+              (click)="recharge.emit()"
               class="flex-1 py-2.5 px-4 rounded-xl bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors flex items-center justify-center gap-2"
             >
               <ion-icon name="add-circle-outline"></ion-icon>
@@ -180,11 +180,11 @@ export class ClubMembershipCardComponent implements OnInit {
   readonly compact = input(false);
 
   // Outputs
-  readonly onJoinClick = output<SubscriptionTier>();
-  readonly onViewPlans = output<void>();
-  readonly onViewHistory = output<void>();
-  readonly onRenew = output<void>();
-  readonly onRecharge = output<void>();
+  readonly join = output<SubscriptionTier>();
+  readonly viewPlans = output<void>();
+  readonly viewHistory = output<void>();
+  readonly renew = output<void>();
+  readonly recharge = output<void>();
 
   // State from service
   readonly subscription = this.subscriptionService.subscription;
