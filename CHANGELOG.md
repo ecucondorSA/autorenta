@@ -1,3 +1,10 @@
+## [1.1.6](https://github.com/ecucondorSA/autorenta/compare/v1.1.5...v1.1.6) (2026-01-06)
+
+
+### Bug Fixes
+
+* **ci:** add permissions for GitHub releases ([76f4d94](https://github.com/ecucondorSA/autorenta/commit/76f4d94d87e1fa791b6308cf881c885a73a9e8a2))
+
 ## [1.1.5](https://github.com/ecucondorSA/autorenta/compare/v1.1.4...v1.1.5) (2026-01-06)
 
 
