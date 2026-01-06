@@ -45,6 +45,8 @@ apps/web/e2e/auth/
 # Temporary files and archives
 *.log
 *.png
+!apps/web/android/app/src/main/res/**/splash.png
+!apps/web/android/app/src/main/res/**/ic_launcher*.png
 *.backup
 *.tar.gz
 scripts/temp/
