@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/ecucondorSA/autorenta/compare/v1.2.1...v1.3.0) (2026-01-06)
+
+
+### Features
+
+* **account:** add account deletion system for Play Store compliance ([27a93d2](https://github.com/ecucondorSA/autorenta/commit/27a93d215c814e0d5e3ef7e8bb9a7022b2b2ee62))
+
 ## [1.2.1](https://github.com/ecucondorSA/autorenta/compare/v1.2.0...v1.2.1) (2026-01-06)
 
 
