@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/ecucondorSA/autorenta/compare/v1.1.0...v1.1.1) (2026-01-06)
+
+
+### Bug Fixes
+
+* **ci:** upgrade Java to 21 for Capacitor Android builds ([5b9fe4d](https://github.com/ecucondorSA/autorenta/commit/5b9fe4d401476d1f7e6783d7a45daf5420f6e779))
+
 # [1.1.0](https://github.com/ecucondorSA/autorenta/compare/v1.0.2...v1.1.0) (2026-01-05)
 
 
