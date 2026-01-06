@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/ecucondorSA/autorenta/compare/v1.3.0...v1.4.0) (2026-01-06)
+
+
+### Features
+
+* **ui:** refactor explore page and align design system consistency for 2026 standards ([d750429](https://github.com/ecucondorSA/autorenta/commit/d7504296744402f22d76e637a579025d86f5b230))
+
 # [1.3.0](https://github.com/ecucondorSA/autorenta/compare/v1.2.1...v1.3.0) (2026-01-06)
 
 
