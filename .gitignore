@@ -46,7 +46,8 @@ apps/web/e2e/auth/
 *.log
 *.png
 !apps/web/android/app/src/main/res/**/splash.png
-!apps/web/android/app/src/main/res/**/ic_launcher*.png
+!apps/web/android/app/src/main/res/drawable*/ic_launcher*.png
+!apps/web/android/app/src/main/res/mipmap*/ic_launcher*.png
 *.backup
 *.tar.gz
 scripts/temp/
