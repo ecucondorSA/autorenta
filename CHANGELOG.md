@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/ecucondorSA/autorenta/compare/v1.2.0...v1.2.1) (2026-01-06)
+
+
+### Bug Fixes
+
+* **ci:** use draft status for Google Play + bump to v1.0.8 ([5c103f2](https://github.com/ecucondorSA/autorenta/commit/5c103f2acabf6614da11d44012affc4603ef0f2b))
+
 # [1.2.0](https://github.com/ecucondorSA/autorenta/compare/v1.1.6...v1.2.0) (2026-01-06)
 
 
