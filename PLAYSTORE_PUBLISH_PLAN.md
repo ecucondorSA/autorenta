@@ -46,8 +46,8 @@ Google requiere que los usuarios puedan eliminar su cuenta y datos.
 - [x] Implementar Edge Function `delete-account-request` (solicitud por email)
 - [x] Crear pagina web publica `/delete-account`
 - [x] Migracion SQL para tabla `account_deletion_requests`
-- [ ] **Aplicar migracion en produccion**: `supabase db push`
-- [ ] **Desplegar Edge Functions**: `supabase functions deploy delete-account` y `delete-account-request`
+- [x] Migracion aplicada en produccion
+- [x] Edge Functions desplegadas (`delete-account`, `delete-account-request`)
 
 **URL para Play Console**: `https://autorentar.com/delete-account`
 

@@ -1806,11 +1806,16 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     haloDiv.className = 'user-marker-halo';
 
     const imgElement = document.createElement('img');
-    imgElement.src = this.userAvatarUrl || 'assets/images/default-avatar.svg';
+    imgElement.src = this.userAvatarUrl || '/assets/images/default-avatar.svg';
     imgElement.className = 'user-marker-avatar';
     imgElement.alt = 'Tu ubicación';
     imgElement.addEventListener('error', function handleImageError(this: HTMLImageElement) {
-      this.src = 'assets/images/default-avatar.svg';
+      if (!this.src.endsWith('default-avatar.svg')) {
+        this.src = '/assets/images/default-avatar.svg';
+      } else {
+        // If even the default avatar fails, hide the image to prevent infinite loop
+        this.style.display = 'none';
+      }
     });
 
     el.appendChild(haloDiv);

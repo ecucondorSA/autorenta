@@ -20744,7 +20744,7 @@ export const Constants = {
 
 export type UserRole = 'renter' | 'owner' | 'admin' | 'both';
 export type CarStatus = Database['public']['Enums']['car_status'];
-export type FuelType = 'nafta' | 'gasoil' | 'flex' | 'hibrido' | 'electrico' | 'electric' | 'diesel';
+export type FuelType = 'nafta' | 'gasoil' | 'flex' | 'hibrido' | 'electrico' | 'diesel';
 export type Transmission = 'manual' | 'automatic' | 'automatico';
 export type CancelPolicy = Database['public']['Enums']['cancel_policy'];
 export type BookingStatus = Database['public']['Enums']['booking_status'];

@@ -44,16 +44,16 @@
 // Toolbar Search
 .search-bar-toolbar {
   padding: 4px 0;
-  --background: #E3E3E3;
+  --background: var(--surface-elevated);
   --border-radius: 8px;
   margin: 0 8px;
 }
 
 // Filters Panel
 .filters-panel {
-  background: white;
+  background: var(--surface-base);
   padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--elevation-2);
   animation: slideDown 0.3s ease;
 }
 
@@ -79,12 +79,12 @@
   right: 16px;
 
   ion-fab-button {
-    --background: white;
-    --color: #4f46e5;
-    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --background: var(--surface-base);
+    --color: var(--cta-default);
+    --box-shadow: var(--elevation-3);
 
     &:hover {
-      --background: #f9fafb;
+      --background: var(--surface-hover);
     }
   }
 }
@@ -151,21 +151,17 @@
   app-car-card {
     display: block;
     height: 160px;
-    background: white;
+    background: var(--surface-base);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow:
-      0 2px 12px rgba(0, 0, 0, 0.12),
-      0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--elevation-2);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     border: 2px solid transparent;
 
     &:hover {
       transform: translateY(-4px);
-      box-shadow:
-        0 6px 24px rgba(0, 0, 0, 0.18),
-        0 3px 8px rgba(0, 0, 0, 0.12);
+      box-shadow: var(--shadow-hard);
     }
 
     &:active {
@@ -176,10 +172,8 @@
   // Selected state
   &.selected {
     app-car-card {
-      border-color: #22c55e;
-      box-shadow:
-        0 4px 20px rgba(34, 197, 94, 0.3),
-        0 2px 8px rgba(34, 197, 94, 0.2);
+      border-color: var(--cta-default);
+      box-shadow: var(--shadow-neon-glow);
     }
   }
 
@@ -197,11 +191,11 @@
 @keyframes pulseHighlight {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.7);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+    box-shadow: 0 0 0 10px rgba(57, 255, 20, 0);
     transform: scale(1.03);
   }
 }
@@ -210,8 +204,8 @@
   animation: pulseHighlight 1.5s ease-in-out;
 
   app-car-card {
-    border-color: #22c55e !important;
-    box-shadow: 0 6px 28px rgba(34, 197, 94, 0.4) !important;
+    border-color: var(--cta-default) !important;
+    box-shadow: 0 6px 28px rgba(57, 255, 20, 0.4) !important;
   }
 }
 
@@ -239,40 +233,4 @@
 // Safe area for notched devices
 .top-safe-top {
   top: max(12px, env(safe-area-inset-top));
-}
-
-// Dark mode
-@media (prefers-color-scheme: dark) {
-  .search-bar-toolbar {
-    --background: rgba(31, 41, 55, 0.95);
-  }
-
-  .filters-panel {
-    background: #1f2937;
-  }
-
-  .fab-location ion-fab-button {
-    --background: #1f2937;
-    --color: #818cf8;
-  }
-
-  .map-carousel {
-    background: linear-gradient(to top, #7B7B7B 0%, transparent 100%);
-  }
-
-  .map-carousel-card-wrapper {
-    app-car-card {
-      background: #1f2937;
-      box-shadow:
-        0 2px 12px #4E4E4E,
-        0 1px 3px #7B7B7B;
-    }
-
-    &.selected app-car-card {
-      border-color: #22c55e;
-      box-shadow:
-        0 4px 20px rgba(34, 197, 94, 0.5),
-        0 2px 8px rgba(34, 197, 94, 0.3);
-    }
-  }
 }
