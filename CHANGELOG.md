@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/ecucondorSA/autorenta/compare/v1.1.6...v1.2.0) (2026-01-06)
+
+
+### Bug Fixes
+
+* **ci:** use AAB instead of APK for Google Play ([91cd4d4](https://github.com/ecucondorSA/autorenta/commit/91cd4d45a3536f7c4ba91868f514e5c157b18cac))
+
+
+### Features
+
+* **marketplace:** redesign search filters, remove AI recommendations, and update brand colors in reviews banner. docs: update pitch deck with Frontier Connection strategy and add Santana business plan. ([de9eec2](https://github.com/ecucondorSA/autorenta/commit/de9eec2f83784aa8110f9ffcf0309e39605d98cc))
+* **marketplace:** redesign search filters, remove AI recommendations, and update brand colors in reviews banner. docs: update pitch deck with Frontier Connection strategy and add Santana business plan. ([ead4f7c](https://github.com/ecucondorSA/autorenta/commit/ead4f7c81843ca45cea1b4a98764bd3b23b533d1))
+
 ## [1.1.6](https://github.com/ecucondorSA/autorenta/compare/v1.1.5...v1.1.6) (2026-01-06)
 
 
