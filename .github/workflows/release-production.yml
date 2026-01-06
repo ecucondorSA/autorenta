@@ -19,6 +19,9 @@ concurrency:
   group: release-production
   cancel-in-progress: false  # Never cancel production releases
 
+permissions:
+  contents: write  # Required for creating GitHub releases and uploading assets
+
 env:
   NODE_VERSION: '20'
   PNPM_VERSION: '10.22.0'
