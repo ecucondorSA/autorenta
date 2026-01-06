@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/ecucondorSA/autorenta/compare/v1.1.3...v1.1.4) (2026-01-06)
+
+
+### Bug Fixes
+
+* **android:** add launcher icons (mipmap) to git ([914e824](https://github.com/ecucondorSA/autorenta/commit/914e82417fd956bbc8a2757c5d53d9f5996fe9d2))
+
 ## [1.1.3](https://github.com/ecucondorSA/autorenta/compare/v1.1.2...v1.1.3) (2026-01-06)
 
 
