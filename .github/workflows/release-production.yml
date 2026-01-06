@@ -245,25 +245,26 @@ jobs:
           mkdir -p apps/web/android/keystore
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > apps/web/android/keystore/autorentar-release.keystore
 
-      - name: Build Release APK
+      - name: Build Release AAB
         working-directory: apps/web/android
-        run: ./gradlew assembleRelease
+        run: ./gradlew bundleRelease
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Rename APK
+      - name: Rename AAB
         run: |
           VERSION="${{ needs.pre-flight.outputs.version }}"
-          mv apps/web/android/app/build/outputs/apk/release/app-release.apk \
-             apps/web/android/app/build/outputs/apk/release/autorentar-${VERSION}.apk
+          mv apps/web/android/app/build/outputs/bundle/release/app-release.aab \
+             apps/web/android/app/build/outputs/bundle/release/autorentar-${VERSION}.aab
 
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
-          files: apps/web/android/app/build/outputs/apk/release/*.apk
+          files: apps/web/android/app/build/outputs/bundle/release/*.aab
           generate_release_notes: true
+          overwrite_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -273,7 +274,7 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
           packageName: com.autorentar.app
-          releaseFiles: apps/web/android/app/build/outputs/apk/release/*.apk
+          releaseFiles: apps/web/android/app/build/outputs/bundle/release/*.aab
           track: internal
           status: completed
         continue-on-error: true  # Don't fail release if Play Store upload fails
