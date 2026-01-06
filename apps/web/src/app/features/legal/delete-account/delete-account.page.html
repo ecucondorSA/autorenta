@@ -1,0 +1,308 @@
+<section
+  class="delete-account-page terms-page min-h-screen bg-surface-base dark:bg-surface-base text-text-primary dark:text-text-primary"
+>
+  <div class="max-w-2xl mx-auto px-6 py-16 space-y-8">
+    <header class="space-y-4">
+      <p
+        class="text-sm uppercase tracking-wide text-red-600 dark:text-red-400 font-semibold"
+      >
+        Cuenta
+      </p>
+      <h1 class="text-3xl font-bold tracking-tight font-satoshi">
+        Eliminar Cuenta
+      </h1>
+      <p class="text-lg text-text-secondary dark:text-text-secondary/80 leading-relaxed">
+        Si deseas eliminar tu cuenta de Autorentar, puedes hacerlo desde esta pagina.
+        Ten en cuenta que esta accion es irreversible.
+      </p>
+    </header>
+
+    <!-- Authenticated User Flow -->
+    @if (isAuthenticated()) {
+      <div class="space-y-6">
+        <!-- Step: Confirm -->
+        @if (step() === 'confirm') {
+          <article class="card border-red-200 dark:border-red-800">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h2 class="text-xl font-semibold text-red-700 dark:text-red-400">Advertencia</h2>
+                <p class="mt-2 text-text-secondary">
+                  Estas a punto de eliminar permanentemente tu cuenta asociada a
+                  <strong class="text-text-primary">{{ userEmail() }}</strong>.
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3 class="font-semibold text-lg">Al eliminar tu cuenta:</h3>
+            <ul class="list-disc list-inside space-y-2 mt-4 text-text-secondary">
+              <li>Se eliminaran todos tus datos personales</li>
+              <li>Se eliminaran tus vehiculos publicados</li>
+              <li>Se eliminara tu historial de reservas</li>
+              <li>Se eliminara tu saldo en Wallet (si aplica)</li>
+              <li>No podras recuperar tu cuenta ni tus datos</li>
+              <li>Las reservas activas seran canceladas</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3 class="font-semibold text-lg mb-4">Datos que se conservaran por obligacion legal:</h3>
+            <ul class="list-disc list-inside space-y-2 text-text-secondary">
+              <li>Registros de transacciones financieras (5 anos)</li>
+              <li>Informacion fiscal requerida por ley</li>
+              <li>Registros de disputas o reclamos pendientes</li>
+            </ul>
+          </article>
+
+          <div class="card bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                [checked]="confirmChecked()"
+                (change)="confirmChecked.set(!confirmChecked())"
+                class="mt-1 w-5 h-5 rounded border-gray-300 text-red-600 focus:ring-red-500"
+              />
+              <span class="text-sm text-yellow-800 dark:text-yellow-200">
+                Entiendo que esta accion es <strong>permanente e irreversible</strong>.
+                Confirmo que deseo eliminar mi cuenta y todos mis datos de Autorentar.
+              </span>
+            </label>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-4">
+            <button
+              (click)="deleteAccount()"
+              [disabled]="!canSubmit() || isLoading()"
+              class="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors"
+            >
+              @if (isLoading()) {
+                <span class="flex items-center justify-center gap-2">
+                  <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Procesando...
+                </span>
+              } @else {
+                Eliminar mi cuenta permanentemente
+              }
+            </button>
+            <a
+              href="/profile"
+              class="flex-1 px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-center font-semibold rounded-lg transition-colors"
+            >
+              Cancelar
+            </a>
+          </div>
+        }
+
+        <!-- Step: Processing -->
+        @if (step() === 'processing') {
+          <article class="card text-center py-12">
+            <svg class="animate-spin h-12 w-12 mx-auto text-cta-default" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <h2 class="mt-6 text-xl font-semibold">Eliminando tu cuenta...</h2>
+            <p class="mt-2 text-text-secondary">Por favor espera mientras procesamos tu solicitud.</p>
+          </article>
+        }
+
+        <!-- Step: Success -->
+        @if (step() === 'success') {
+          <article class="card text-center py-12 border-green-200 dark:border-green-800">
+            <div class="w-16 h-16 mx-auto bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+              <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 class="mt-6 text-xl font-semibold text-green-700 dark:text-green-400">
+              Cuenta eliminada correctamente
+            </h2>
+            <p class="mt-2 text-text-secondary">
+              Tu cuenta y datos han sido eliminados. Seras redirigido a la pagina principal.
+            </p>
+            <p class="mt-4 text-sm text-text-secondary">
+              Gracias por haber sido parte de Autorentar.
+            </p>
+          </article>
+        }
+
+        <!-- Step: Error -->
+        @if (step() === 'error') {
+          <article class="card text-center py-12 border-red-200 dark:border-red-800">
+            <div class="w-16 h-16 mx-auto bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+              <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <h2 class="mt-6 text-xl font-semibold text-red-700 dark:text-red-400">
+              Error al eliminar la cuenta
+            </h2>
+            <p class="mt-2 text-text-secondary">
+              {{ errorMessage() || 'Ocurrio un error inesperado. Por favor intenta nuevamente.' }}
+            </p>
+            <button
+              (click)="step.set('confirm')"
+              class="mt-6 px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-semibold rounded-lg transition-colors"
+            >
+              Volver a intentar
+            </button>
+          </article>
+        }
+      </div>
+    }
+
+    <!-- Unauthenticated User Flow -->
+    @if (!isAuthenticated()) {
+      <div class="space-y-6">
+        @if (!requestSubmitted()) {
+          <article class="card">
+            <h2 class="text-xl font-semibold">Solicitar eliminacion de cuenta</h2>
+            <p class="mt-2 text-text-secondary">
+              Para eliminar tu cuenta, puedes iniciar sesion o enviar una solicitud
+              proporcionando el email asociado a tu cuenta.
+            </p>
+
+            <button
+              (click)="goToLogin()"
+              class="mt-4 w-full px-6 py-3 bg-cta-default hover:bg-cta-hover text-white font-semibold rounded-lg transition-colors"
+            >
+              Iniciar sesion para eliminar cuenta
+            </button>
+
+            <div class="relative my-6">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+              </div>
+              <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-white dark:bg-gray-800 text-text-secondary">o</span>
+              </div>
+            </div>
+
+            <h3 class="font-semibold">Enviar solicitud por email</h3>
+            <p class="mt-2 text-sm text-text-secondary">
+              Si no puedes acceder a tu cuenta, enviaremos un enlace de confirmacion a tu email.
+            </p>
+
+            <div class="mt-4 space-y-4">
+              <div>
+                <label for="email" class="block text-sm font-medium mb-1">
+                  Email de la cuenta
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  [value]="requestEmail()"
+                  (input)="requestEmail.set($any($event.target).value)"
+                  placeholder="tu@email.com"
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label for="reason" class="block text-sm font-medium mb-1">
+                  Motivo (opcional)
+                </label>
+                <textarea
+                  id="reason"
+                  [value]="requestReason()"
+                  (input)="requestReason.set($any($event.target).value)"
+                  placeholder="Cuentanos por que deseas eliminar tu cuenta..."
+                  rows="3"
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none"
+                ></textarea>
+              </div>
+
+              <div class="card bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
+                <label class="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    [checked]="confirmChecked()"
+                    (change)="confirmChecked.set(!confirmChecked())"
+                    class="mt-1 w-5 h-5 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                  />
+                  <span class="text-sm text-yellow-800 dark:text-yellow-200">
+                    Confirmo que soy el titular de esta cuenta y deseo eliminarla permanentemente.
+                  </span>
+                </label>
+              </div>
+
+              @if (errorMessage()) {
+                <div class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                  <p class="text-sm text-red-700 dark:text-red-400">{{ errorMessage() }}</p>
+                </div>
+              }
+
+              <button
+                (click)="submitDeletionRequest()"
+                [disabled]="!canSubmit() || isLoading()"
+                class="w-full px-6 py-3 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors"
+              >
+                @if (isLoading()) {
+                  <span class="flex items-center justify-center gap-2">
+                    <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Enviando...
+                  </span>
+                } @else {
+                  Enviar solicitud de eliminacion
+                }
+              </button>
+            </div>
+          </article>
+        }
+
+        @if (requestSubmitted()) {
+          <article class="card text-center py-12 border-green-200 dark:border-green-800">
+            <div class="w-16 h-16 mx-auto bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+              <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h2 class="mt-6 text-xl font-semibold text-green-700 dark:text-green-400">
+              Solicitud enviada
+            </h2>
+            <p class="mt-2 text-text-secondary">
+              Hemos enviado un enlace de confirmacion a <strong>{{ requestEmail() }}</strong>.
+            </p>
+            <p class="mt-4 text-sm text-text-secondary">
+              Si no recibes el email en los proximos minutos, revisa tu carpeta de spam.
+              La solicitud expira en 24 horas.
+            </p>
+            <a
+              href="/"
+              class="inline-block mt-6 px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-semibold rounded-lg transition-colors"
+            >
+              Volver al inicio
+            </a>
+          </article>
+        }
+      </div>
+    }
+
+    <!-- Contact Info -->
+    <article class="card">
+      <h2 class="font-semibold text-lg">Necesitas ayuda?</h2>
+      <p class="mt-2 text-text-secondary">
+        Si tienes problemas para eliminar tu cuenta o necesitas asistencia,
+        contactanos en:
+        <a href="mailto:soporte&#64;autorentar.com" class="link font-semibold">
+          soporte&#64;autorentar.com
+        </a>
+      </p>
+      <p class="mt-4 text-sm text-text-secondary">
+        Procesamos las solicitudes de eliminacion en un plazo maximo de 30 dias,
+        conforme a las regulaciones de proteccion de datos.
+      </p>
+    </article>
+  </div>
+</section>

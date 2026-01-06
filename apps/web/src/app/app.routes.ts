@@ -482,6 +482,13 @@ export const routes: Routes = [
       import('./features/legal/privacy/privacy.page').then((m) => m.PrivacyPage),
   },
   {
+    path: 'delete-account',
+    loadComponent: () =>
+      import('./features/legal/delete-account/delete-account.page').then(
+        (m) => m.DeleteAccountPage,
+      ),
+  },
+  {
     path: 'politica-seguros',
     loadComponent: () =>
       import('./features/legal/insurance-policy/insurance-policy.page').then(
