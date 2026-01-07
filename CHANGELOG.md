@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/ecucondorSA/autorenta/compare/v1.6.2...v1.6.3) (2026-01-07)
+
+
+### Bug Fixes
+
+* **chat:** real-time messages now update without page refresh + messages aligned to bottom ([9abcf50](https://github.com/ecucondorSA/autorenta/commit/9abcf5095f0d5b7e12f9fe13b09c2f0cc8740962))
+
 ## [1.6.2](https://github.com/ecucondorSA/autorenta/compare/v1.6.1...v1.6.2) (2026-01-07)
 
 
