@@ -20,7 +20,7 @@ import { BookingLocationFormComponent } from '../../components/booking-location-
 
 import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
 import { Car } from '../../../../core/models';
-import type { BlockedDateRange } from '@core/services/cars/car-blocking.service';
+import type { DetailedBlockedRange } from '@core/services/cars/car-availability.service';
 
 interface LocationData {
   address: string;
@@ -54,7 +54,7 @@ export class BookingDatesStepComponent implements OnInit {
   pickupLocation = signal<LocationData | null>(null);
   dropoffLocation = signal<LocationData | null>(null);
   sameLocation = signal(true);
-  blockedRanges = signal<BlockedDateRange[]>([]);
+  blockedRanges = signal<DetailedBlockedRange[]>([]);
   handoverPoints = signal<
     { address: string; lat: number; lng: number; label?: string; radius_m?: number | null }[]
   >([]);
@@ -185,7 +185,7 @@ export class BookingDatesStepComponent implements OnInit {
     if (!this.car?.id) return;
     try {
       const blackouts = await this.availabilityService.getBlackouts(this.car.id);
-      const ranges: BlockedDateRange[] = blackouts.map((b) => ({
+      const ranges: DetailedBlockedRange[] = blackouts.map((b) => ({
         from: b.starts_at.split('T')[0],
         to: b.ends_at.split('T')[0],
       }));

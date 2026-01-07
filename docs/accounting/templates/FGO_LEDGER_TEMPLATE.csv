@@ -1,4 +1,0 @@
-Fecha,Usuario ID,Usuario Nombre,Tipo Movimiento,Subfondo,Monto Depósito USD,Alpha %,Monto FGO USD,Operación,Saldo Liquidez USD,Saldo Capitalización USD,Saldo Rentabilidad USD,Total FGO USD,Observaciones
-22/10/2025,user_001,Juan Pérez,Depósito,Liquidez,100.00,15%,15.00,Crédito,15.00,0.00,0.00,15.00,Reserva inicial desde depósito
-22/10/2025,user_002,María García,Depósito,Liquidez,250.00,15%,37.50,Crédito,52.50,0.00,0.00,52.50,Aporte automático
-23/10/2025,booking_001,Siniestro Auto 01,Pago Siniestro,Liquidez,0.00,0%,300.00,Débito,-247.50,0.00,0.00,-247.50,Reparación parachoques - Balance insuficiente
