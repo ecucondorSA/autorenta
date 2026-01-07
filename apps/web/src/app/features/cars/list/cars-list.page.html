@@ -360,7 +360,7 @@
         @for (car of premiumCars(); track car.id; let idx = $index) {
         <a [routerLink]="['/cars', car.id]" [attr.data-car-id]="car.id"
           [id]="'car-card-desktop-' + car.id" data-testid="car-card"
-          class="airbnb-card group block cursor-pointer transition-transform duration-200"
+          class="airbnb-card group block cursor-pointer transition-transform duration-200 no-min-touch"
           (mouseenter)="onCardMouseEnter(car.id)" (mouseleave)="onCardMouseLeave()">
           <!-- Image Container -->
           <div
@@ -468,7 +468,7 @@
         class="sm:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-4 px-4 scrollbar-hide items-stretch h-[calc(100vh-14rem)]">
         @for (car of premiumCars(); track car.id; let idx = $index) {
         <a [routerLink]="['/cars', car.id]"
-          class="relative flex-shrink-0 w-[85vw] snap-center bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700 flex flex-col">
+          class="relative flex-shrink-0 w-[85vw] snap-center bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700 flex flex-col no-min-touch">
           <!-- Full Height Image -->
           <div class="h-[65%] relative">
             @if (idx === 0) {
@@ -611,7 +611,7 @@
         @for (car of premiumCars(); track car.id) {
         <a [routerLink]="['/cars', car.id]" [attr.data-car-id]="car.id" [id]="'car-card-' + car.id"
           data-testid="car-card"
-          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer flex flex-col md:flex-row"
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer flex flex-col md:flex-row no-min-touch"
           [class.ring-2]="activeMapCarId() === car.id"
           [class.ring-cyan-500]="activeMapCarId() === car.id"
           (mouseenter)="onCardMouseEnter(car.id)" (mouseleave)="onCardMouseLeave()">
@@ -818,7 +818,7 @@
       style="-webkit-overflow-scrolling: touch; height: 96px;">
       @for (car of premiumCars(); track car.id) {
       <a [routerLink]="['/cars', car.id]" [attr.data-car-id]="car.id"
-        class="flex-shrink-0 w-[260px] snap-start bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-200 active:scale-[0.98] mobile-map-carousel-card"
+        class="flex-shrink-0 w-[260px] snap-start bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-200 active:scale-[0.98] mobile-map-carousel-card no-min-touch"
         [class.ring-2]="activeMapCarId() === car.id"
         [class.ring-cyan-500]="activeMapCarId() === car.id"
         [class.shadow-cyan-200]="activeMapCarId() === car.id">
