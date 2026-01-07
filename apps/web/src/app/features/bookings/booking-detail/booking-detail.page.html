@@ -417,22 +417,30 @@
                 (click)="openChatPanel()"
                 class="w-full flex items-center justify-center gap-3 p-4 mb-4 rounded-2xl bg-cta-default text-cta-text font-bold text-lg hover:bg-cta-hover active:scale-[0.98] transition-all shadow-md">
                 <ion-icon name="chatbubble-ellipses-outline" class="text-2xl"></ion-icon>
-                Chat con {{ isOwner() ? 'Locatario' : 'Anfitrión' }}
+                Chat con {{ isOwner() ? 'Viajero' : 'Anfitrión' }}
               </button>
 
               <!-- Contextual Action Buttons -->
               <div class="space-y-3">
-                
-                <!-- Payment Action -->
+
+                <!-- Contribution Action (Viajero) -->
                 @if (booking()?.status === 'pending_payment' && isRenter()) {
                   <a [routerLink]="['/bookings', booking()?.id, 'detail-payment']"
                      class="w-full flex items-center justify-between p-4 rounded-xl bg-warning-50 text-warning-900 hover:bg-warning-100 transition-colors border border-warning-200">
                     <span class="font-semibold flex items-center gap-2">
                       <ion-icon name="card-outline"></ion-icon>
-                      Pagar Reserva
+                      Contribuir
                     </span>
                     <ion-icon name="arrow-forward"></ion-icon>
                   </a>
+                }
+
+                <!-- Waiting for Contribution (Anfitrión) -->
+                @if (booking()?.status === 'pending_payment' && isOwner()) {
+                  <div class="w-full flex items-center gap-3 p-4 rounded-xl bg-warning-50 text-warning-700 border border-warning-200">
+                    <ion-icon name="time-outline" class="text-2xl text-warning-500"></ion-icon>
+                    <span class="font-medium">Esperando contribución del viajero</span>
+                  </div>
                 }
 
                 <!-- Approve/Reject (Owner) -->
