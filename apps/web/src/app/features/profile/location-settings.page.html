@@ -145,9 +145,9 @@
           Arrastra el marcador para ajustar tu ubicación exacta. Esta será tu ubicación de referencia.
         </p>
         <app-location-map-picker
-          [initialLatitude]="selectedCoordinates()?.latitude ?? profile()?.home_latitude ?? undefined"
+          [initialLatitude]="selectedCoordinates()?.lat ?? profile()?.home_latitude ?? undefined"
         [initialLongitude]="
-          selectedCoordinates()?.longitude ?? profile()?.home_longitude ?? undefined
+          selectedCoordinates()?.lng ?? profile()?.home_longitude ?? undefined
         "
           [initialAddress]="selectedCoordinates()?.address ?? profile()?.address_line1 ?? undefined"
           (locationChange)="onMapLocationChange($event)"

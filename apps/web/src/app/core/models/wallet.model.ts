@@ -296,6 +296,7 @@ export type BookingDepositStatus =
   | 'none' // Sin garantía
   | 'locked' // Garantía bloqueada
   | 'released' // Garantía liberada al usuario
+  | 'charged' // Garantía cobrada por daños (alias for fully_charged)
   | 'partially_charged' // Garantía parcialmente cobrada por daños
   | 'fully_charged'; // Garantía completamente cobrada por daños
 
