@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/ecucondorSA/autorenta/compare/v1.7.3...v1.8.0) (2026-01-07)
+
+
+### Features
+
+* **subscriptions:** add Black Access tier and upgrade flow ([cfd0f2c](https://github.com/ecucondorSA/autorenta/commit/cfd0f2cfe8e384810a0b518abb47fc2ff2c5dc8c))
+
 ## [1.7.3](https://github.com/ecucondorSA/autorenta/compare/v1.7.2...v1.7.3) (2026-01-07)
 
 
