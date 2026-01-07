@@ -53,27 +53,30 @@ export class MyClaimsPage implements OnInit {
 
   readonly hasClaims = computed(() => this.filteredClaims().length > 0);
 
-  // Stats
+  // Stats - Using correct ClaimStatus values from database
   readonly stats = computed(() => {
     const allClaims = this.claims();
     return {
       total: allClaims.length,
-      pending: allClaims.filter((c) => c.status === 'pending').length,
-      investigating: allClaims.filter((c) => c.status === 'investigating').length,
+      // "submitted" = recently submitted, waiting review
+      submitted: allClaims.filter((c) => c.status === 'submitted').length,
+      // "under_review" = being investigated
+      underReview: allClaims.filter((c) => c.status === 'under_review').length,
       approved: allClaims.filter((c) => c.status === 'approved').length,
       rejected: allClaims.filter((c) => c.status === 'rejected').length,
-      closed: allClaims.filter((c) => c.status === 'closed').length,
+      // "paid" = closed and paid out
+      paid: allClaims.filter((c) => c.status === 'paid').length,
     };
   });
 
-  // Filter options
+  // Filter options - using correct ClaimStatus values
   readonly statusFilters = [
     { value: 'all' as const, label: 'Todos', icon: '📋' },
-    { value: 'pending' as const, label: 'Pendientes', icon: '⏳' },
-    { value: 'investigating' as const, label: 'En Investigación', icon: '🔍' },
+    { value: 'submitted' as const, label: 'Enviados', icon: '⏳' },
+    { value: 'under_review' as const, label: 'En Revisión', icon: '🔍' },
     { value: 'approved' as const, label: 'Aprobados', icon: '✅' },
     { value: 'rejected' as const, label: 'Rechazados', icon: '❌' },
-    { value: 'closed' as const, label: 'Cerrados', icon: '🔒' },
+    { value: 'paid' as const, label: 'Pagados', icon: '💰' },
   ];
 
   async ngOnInit() {
@@ -119,15 +122,18 @@ export class MyClaimsPage implements OnInit {
 
   getStatusColor(status: InsuranceClaim['status']): string {
     switch (status) {
-      case 'pending':
+      case 'draft':
+        return 'status-draft';
+      case 'submitted':
         return 'status-pending';
-      case 'investigating':
+      case 'under_review':
+      case 'processing':
         return 'status-investigating';
       case 'approved':
         return 'status-approved';
       case 'rejected':
         return 'status-rejected';
-      case 'closed':
+      case 'paid':
         return 'status-closed';
       default:
         return '';
@@ -136,16 +142,20 @@ export class MyClaimsPage implements OnInit {
 
   getStatusLabel(status: InsuranceClaim['status']): string {
     switch (status) {
-      case 'pending':
-        return 'Pendiente';
-      case 'investigating':
-        return 'En Investigación';
+      case 'draft':
+        return 'Borrador';
+      case 'submitted':
+        return 'Enviado';
+      case 'under_review':
+        return 'En Revisión';
+      case 'processing':
+        return 'Procesando';
       case 'approved':
         return 'Aprobado';
       case 'rejected':
         return 'Rechazado';
-      case 'closed':
-        return 'Cerrado';
+      case 'paid':
+        return 'Pagado';
       default:
         return status;
     }

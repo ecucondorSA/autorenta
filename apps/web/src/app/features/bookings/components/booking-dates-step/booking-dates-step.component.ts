@@ -188,6 +188,8 @@ export class BookingDatesStepComponent implements OnInit {
       const ranges: DetailedBlockedRange[] = blackouts.map((b) => ({
         from: b.starts_at.split('T')[0],
         to: b.ends_at.split('T')[0],
+        type: 'blackout',
+        reason: b.reason ?? null,
       }));
       this.blockedRanges.set(ranges);
     } catch (error) {

@@ -8,7 +8,7 @@
  */
 export interface DashboardStats {
   wallet: WalletStats;
-  cars: CarStats;
+  cars: DashboardCarStats;
   bookings: BookingStats;
   earnings: EarningsStats;
   timestamp: string;
@@ -25,13 +25,34 @@ export interface WalletStats {
 }
 
 /**
- * Car count statistics by status
+ * Car count statistics by status (for dashboard)
  */
-export interface CarStats {
+export interface DashboardCarStats {
   total: number;
   active: number;
   pending: number;
   suspended: number;
+}
+
+/**
+ * Car review/rating statistics (from car_stats table)
+ */
+export interface CarStats {
+  car_id: string;
+  reviews_count: number;
+  rating_avg: number;
+  rating_cleanliness_avg: number;
+  rating_communication_avg: number;
+  rating_accuracy_avg: number;
+  rating_location_avg: number;
+  rating_checkin_avg: number;
+  rating_value_avg: number;
+  total_bookings: number;
+  completed_bookings: number;
+  cancelled_bookings: number;
+  cancellation_rate: number;
+  last_review_at?: string | null;
+  updated_at: string;
 }
 
 /**

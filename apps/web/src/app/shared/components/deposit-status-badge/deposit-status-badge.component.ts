@@ -84,6 +84,22 @@ export class DepositStatusBadgeComponent {
       borderColor: 'border-error-border',
       tooltip: 'El depósito fue cobrado por daños reportados',
     },
+    partially_charged: {
+      icon: '⚠️',
+      label: 'Cobro parcial',
+      bgColor: 'bg-warning-bg',
+      textColor: 'text-warning-strong',
+      borderColor: 'border-warning-border',
+      tooltip: 'Se cobró parte del depósito por daños, el resto fue devuelto',
+    },
+    fully_charged: {
+      icon: '⛔',
+      label: 'Cobro total',
+      bgColor: 'bg-error-bg',
+      textColor: 'text-error-strong',
+      borderColor: 'border-error-border',
+      tooltip: 'El depósito completo fue cobrado por daños reportados',
+    },
   };
 
   get config(): BadgeConfig {

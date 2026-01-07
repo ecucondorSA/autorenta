@@ -14,6 +14,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import type { PaymentMethod } from '@core/services/payments/payment-orchestration.service';
+export type { PaymentMethod };
 import { WalletService } from '@core/services/payments/wallet.service';
 import { MoneyPipe } from '../../pipes/money.pipe';
 import { IconComponent } from '../icon/icon.component';

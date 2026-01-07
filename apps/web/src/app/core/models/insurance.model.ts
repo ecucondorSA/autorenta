@@ -311,26 +311,24 @@ export const CLAIM_TYPE_LABELS: Record<ClaimType, string> = {
  * Helpers para estados de siniestro
  */
 export const CLAIM_STATUS_LABELS: Record<ClaimStatus, string> = {
-  reported: 'Reportado',
+  draft: 'Borrador',
+  submitted: 'Enviado',
   under_review: 'En Revisión',
   approved: 'Aprobado',
   rejected: 'Rechazado',
   paid: 'Pagado',
-  closed: 'Cerrado',
-  pending: 'Pendiente',
-  investigating: 'En investigación',
+  processing: 'En proceso',
 };
 
 /**
  * Colores para estados de claim
  */
 export const CLAIM_STATUS_COLORS: Record<ClaimStatus, string> = {
-  reported: 'warning',
+  draft: 'medium',
+  submitted: 'info',
   under_review: 'info',
   approved: 'success',
   rejected: 'danger',
   paid: 'success',
-  closed: 'medium',
-  pending: 'warning',
-  investigating: 'info',
+  processing: 'warning',
 };
