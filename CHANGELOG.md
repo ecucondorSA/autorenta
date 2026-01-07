@@ -1,3 +1,10 @@
+## [1.6.5](https://github.com/ecucondorSA/autorenta/compare/v1.6.4...v1.6.5) (2026-01-07)
+
+
+### Bug Fixes
+
+* **config:** add no-cache headers for env.js at Cloudflare level ([9e18c49](https://github.com/ecucondorSA/autorenta/commit/9e18c49c7e687afa937e556f3dda0bc94f02fc77))
+
 ## [1.6.4](https://github.com/ecucondorSA/autorenta/compare/v1.6.3...v1.6.4) (2026-01-07)
 
 
