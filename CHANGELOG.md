@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/ecucondorSA/autorenta/compare/v1.6.0...v1.6.1) (2026-01-07)
+
+
+### Bug Fixes
+
+* **ci:** repair wallet test and verify-selectors workflow ([68451fe](https://github.com/ecucondorSA/autorenta/commit/68451febcede7e54bccc2218a9ba7e777aa0090a))
+
 # [1.6.0](https://github.com/ecucondorSA/autorenta/compare/v1.5.1...v1.6.0) (2026-01-07)
 
 
