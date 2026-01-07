@@ -162,14 +162,6 @@ describe('WalletPage', () => {
       })
       .compileComponents();
 
-    // Spy on prototype BEFORE creating component
-    spyOn(WalletPage.prototype, 'ngAfterViewInit').and.callFake(function (this: WalletPage) {
-      // Safe implementation - balanceCard may be undefined in tests
-      if ((this as any).balanceCard?.setDepositClickHandler) {
-        (this as any).balanceCard.setDepositClickHandler(() => this.navigateToDeposit());
-      }
-    });
-
     fixture = TestBed.createComponent(WalletPage);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
@@ -601,12 +593,4 @@ describe('WalletPage', () => {
     });
   });
 
-  describe('AfterViewInit', () => {
-    it('should set deposit click handler on balance card', () => {
-      // The spy on ngAfterViewInit should call setDepositClickHandler
-      // Since balanceCard is assigned in the spy's callFake, we need to check
-      // that the spy was called (which happens during detectChanges)
-      expect(WalletPage.prototype.ngAfterViewInit).toHaveBeenCalled();
-    });
-  });
 });

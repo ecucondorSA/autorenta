@@ -27,26 +27,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Verify test selectors
         id: verify-selectors
         run: |
           echo "🔍 Verificando selectores de tests E2E..."
-          npm run test:selectors:check || true
+          pnpm run test:selectors:check || true
 
       - name: Generate full report
         if: steps.verify-selectors.outcome == 'failure'
         run: |
           echo "📊 Generando reporte completo..."
-          npm run test:selectors > selector-report.txt 2>&1 || true
+          pnpm run test:selectors > selector-report.txt 2>&1 || true
 
       - name: Upload selector report
         if: steps.verify-selectors.outcome == 'failure'
