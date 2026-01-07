@@ -62,7 +62,7 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
         }
 
         <!-- Plans comparison -->
-        <div class="grid md:grid-cols-2 gap-6">
+        <div class="grid md:grid-cols-3 gap-6">
           @for (tier of tiers; track tier.tier) {
             <div
               [class]="getPlanCardClass(tier)"
@@ -71,8 +71,15 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
               <!-- Popular badge -->
               @if (tier.tier === 'club_black') {
                 <div class="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span class="px-4 py-1 rounded-full bg-gray-900 text-white text-xs font-bold">
+                  <span class="px-4 py-1 rounded-full bg-gray-700 text-white text-xs font-bold">
                     MAS POPULAR
+                  </span>
+                </div>
+              }
+              @if (tier.tier === 'club_luxury') {
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span class="px-4 py-1 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-black text-xs font-bold">
+                    PREMIUM
                   </span>
                 </div>
               }
@@ -116,7 +123,7 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
               <!-- CTA -->
               <button
                 (click)="selectPlan(tier.tier)"
-                [disabled]="isCurrentTier(tier.tier)"
+                [disabled]="isCurrentTier(tier.tier) || isDowngrade(tier.tier)"
                 [class]="getCtaButtonClass(tier)"
                 class="w-full py-3 rounded-xl font-bold transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -125,8 +132,16 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
                     <ion-icon name="checkmark-circle"></ion-icon>
                     Plan actual
                   </span>
+                } @else if (isDowngrade(tier.tier)) {
+                  <span class="flex items-center justify-center gap-2">
+                    <ion-icon name="lock-closed"></ion-icon>
+                    Plan inferior
+                  </span>
                 } @else if (hasActiveSubscription()) {
-                  Cambiar a {{ tier.name }}
+                  <span class="flex items-center justify-center gap-2">
+                    <ion-icon name="arrow-up-circle"></ion-icon>
+                    Mejorar a {{ tier.name }}
+                  </span>
                 } @else {
                   Unirse por \${{ tier.price_usd }}/ano
                 }
@@ -184,6 +199,7 @@ export class ClubPlansPage {
   readonly tiers: SubscriptionTierConfig[] = [
     SUBSCRIPTION_TIERS['club_standard'],
     SUBSCRIPTION_TIERS['club_black'],
+    SUBSCRIPTION_TIERS['club_luxury'],
   ];
 
   readonly faqs = [
@@ -228,29 +244,58 @@ export class ClubPlansPage {
     return sub?.tier === tier && sub.status === 'active';
   }
 
+  /**
+   * Check if selecting this tier would be a downgrade
+   * Tier hierarchy: club_standard < club_black < club_luxury
+   */
+  isDowngrade(tier: SubscriptionTier): boolean {
+    const sub = this.subscription();
+    if (!sub || sub.status !== 'active') return false;
+
+    const tierHierarchy: Record<SubscriptionTier, number> = {
+      club_standard: 1,
+      club_black: 2,
+      club_luxury: 3
+    };
+
+    return tierHierarchy[tier] < tierHierarchy[sub.tier];
+  }
+
   getPlanCardClass(tier: SubscriptionTierConfig): string {
     const base = 'border-2';
+    if (tier.tier === 'club_luxury') {
+      return `${base} border-amber-400 bg-gradient-to-br from-amber-900/90 to-amber-800/80 text-white`;
+    }
     if (tier.tier === 'club_black') {
-      return `${base} border-gray-800 bg-gradient-to-br from-gray-900 to-gray-800`;
+      return `${base} border-gray-600 bg-gradient-to-br from-gray-800 to-gray-700`;
     }
     return `${base} border-amber-500/40 bg-gradient-to-br from-amber-500/10 to-surface-raised`;
   }
 
   getTierIconClass(tier: SubscriptionTierConfig): string {
+    if (tier.tier === 'club_luxury') {
+      return 'bg-gradient-to-br from-amber-400 to-yellow-300 text-amber-900';
+    }
     if (tier.tier === 'club_black') {
-      return 'bg-gray-700 text-white';
+      return 'bg-gray-600 text-white';
     }
     return 'bg-amber-500/20 text-amber-600';
   }
 
   getCoverageBoxClass(tier: SubscriptionTierConfig): string {
+    if (tier.tier === 'club_luxury') {
+      return 'bg-amber-400/30 text-amber-100';
+    }
     if (tier.tier === 'club_black') {
-      return 'bg-gray-700/50 text-white';
+      return 'bg-gray-600/50 text-white';
     }
     return 'bg-amber-500/20 text-amber-700';
   }
 
   getCtaButtonClass(tier: SubscriptionTierConfig): string {
+    if (tier.tier === 'club_luxury') {
+      return 'bg-gradient-to-r from-amber-400 to-yellow-300 text-amber-900 hover:from-amber-300 hover:to-yellow-200 font-bold';
+    }
     if (tier.tier === 'club_black') {
       return 'bg-white text-gray-900 hover:bg-gray-100';
     }

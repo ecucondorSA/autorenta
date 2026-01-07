@@ -436,6 +436,9 @@ cmd_deploy_worker_ai_car_generator() {
 cmd_ci() {
     header "🚀 CI/CD Pipeline"
 
+    log "Guardrails: duplicate & drift checks"
+    (cd "$PROJECT_ROOT" && npm run guardrails) || error "Guardrails failed"
+
     log "Phase 1/3: Linting & Testing (parallel)"
 
     # Run lint and test in parallel
@@ -468,6 +471,7 @@ cmd_ci() {
 
 cmd_lint() {
     header "🔍 Running Linter"
+    (cd "$PROJECT_ROOT" && npm run guardrails)
     cd "$WEB_DIR"
     npm run lint
 }
