@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/ecucondorSA/autorenta/compare/v1.6.1...v1.6.2) (2026-01-07)
+
+
+### Bug Fixes
+
+* **pwa:** bypass Service Worker cache for critical wallet/payment RPCs ([1ea2730](https://github.com/ecucondorSA/autorenta/commit/1ea27302c4a3e5d11f8d190dda64960ec0034798))
+
 ## [1.6.1](https://github.com/ecucondorSA/autorenta/compare/v1.6.0...v1.6.1) (2026-01-07)
 
 
