@@ -102,6 +102,13 @@ const headersContent = `# Headers globales de seguridad
   Cache-Control: public, max-age=0, must-revalidate
 /manifest.webmanifest
   Cache-Control: public, max-age=0, must-revalidate
+
+# CRITICAL: env.js must NEVER be cached - contains runtime configuration
+# This ensures all users always get fresh environment variables
+/env.js
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
 `;
 
 // Step 1: Skip copying files (we will deploy the browser directory directly)
