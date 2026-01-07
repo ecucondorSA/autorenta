@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/ecucondorSA/autorenta/compare/v1.5.1...v1.6.0) (2026-01-07)
+
+
+### Features
+
+* **scalability:** implement server-side pagination with infinite scroll ([21378b2](https://github.com/ecucondorSA/autorenta/commit/21378b2edc894e8b66ca09f1a94a2d60d330a407))
+
 ## [1.5.1](https://github.com/ecucondorSA/autorenta/compare/v1.5.0...v1.5.1) (2026-01-07)
 
 
