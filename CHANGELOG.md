@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/ecucondorSA/autorenta/compare/v1.9.0...v1.9.1) (2026-01-07)
+
+
+### Bug Fixes
+
+* minor updates to wallet model and location settings ([bc89209](https://github.com/ecucondorSA/autorenta/commit/bc89209ff96c0c204f3284ec038215854c931603))
+
 # [1.9.0](https://github.com/ecucondorSA/autorenta/compare/v1.8.0...v1.9.0) (2026-01-07)
 
 
