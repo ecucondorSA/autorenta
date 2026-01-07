@@ -1,3 +1,11 @@
+# [1.7.0](https://github.com/ecucondorSA/autorenta/compare/v1.6.6...v1.7.0) (2026-01-07)
+
+
+### Features
+
+* **ui:** integrar widgets de dashboard y resumen de reseñas en el detalle del auto ([2c90b1b](https://github.com/ecucondorSA/autorenta/commit/2c90b1b30f069016924f82f4dde8f9dd6f296b11))
+* **ui:** reconectar componentes huérfanos en wallet y payouts ([561703a](https://github.com/ecucondorSA/autorenta/commit/561703a751292a349773f5e90091f4721787c0a9))
+
 ## [1.6.6](https://github.com/ecucondorSA/autorenta/compare/v1.6.5...v1.6.6) (2026-01-07)
 
 
