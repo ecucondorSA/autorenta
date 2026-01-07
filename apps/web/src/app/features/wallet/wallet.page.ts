@@ -44,9 +44,10 @@ import { WithdrawalRequestFormComponent } from '../../shared/components/withdraw
  *
  * Ruta: /wallet
  */
-import { IconComponent } from '../../shared/components/icon/icon.component';
 import { WalletFaqComponent } from './components/wallet-faq.component';
 import { WalletTransfersComponent } from './components/wallet-transfers.component';
+import { ClubMembershipCardComponent } from './components/club-membership-card.component';
+import { WalletAccountNumberCardComponent } from '../../shared/components/wallet-account-number-card/wallet-account-number-card.component';
 
 @Component({
   selector: 'app-wallet',
@@ -63,6 +64,8 @@ import { WalletTransfersComponent } from './components/wallet-transfers.componen
     WalletFaqComponent,
     WalletTransfersComponent,
     IconComponent,
+    ClubMembershipCardComponent,
+    WalletAccountNumberCardComponent,
   ],
   templateUrl: './wallet.page.html',
   styleUrls: ['./wallet.page.css'],
