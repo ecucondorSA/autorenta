@@ -78,6 +78,20 @@
   ],
   "dataGroups": [
     {
+      "name": "api-supabase-rpc-critical",
+      "urls": [
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_*",
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/payment_*",
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/booking_*"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 0,
+        "maxAge": "0u",
+        "timeout": "30s"
+      }
+    },
+    {
       "name": "api-supabase-rpc",
       "urls": [
         "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/*"
@@ -184,6 +198,9 @@
     "!/**/*__*",
     "!/**/*__*/**",
     "!https://pisqjmoklivzpwufhscx.supabase.co/**",
+    "!https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_*",
+    "!https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/payment_*",
+    "!https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/booking_*",
     "!https://api.mapbox.com/**",
     "!https://events.mapbox.com/**",
     "/auth/**"

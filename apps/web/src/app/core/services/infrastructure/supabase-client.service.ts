@@ -188,6 +188,26 @@ export class SupabaseClientService {
       db: {
         schema: 'public',
       },
+      global: {
+        // Force bypass Service Worker cache for all API calls
+        // This prevents stale 404 responses from being cached (P0 fix for wallet_lock_funds)
+        fetch: (url, options = {}) => {
+          const fetchOptions: RequestInit = {
+            ...options,
+            cache: 'no-store', // Never use HTTP cache
+          };
+          // Add cache-busting headers for critical RPC calls
+          const urlStr = typeof url === 'string' ? url : url.toString();
+          if (urlStr.includes('/rpc/wallet_') || urlStr.includes('/rpc/payment_') || urlStr.includes('/rpc/booking_')) {
+            fetchOptions.headers = {
+              ...(options.headers || {}),
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+            };
+          }
+          return fetch(url, fetchOptions);
+        },
+      },
       realtime: {
         params: {
           eventsPerSecond: 10,
