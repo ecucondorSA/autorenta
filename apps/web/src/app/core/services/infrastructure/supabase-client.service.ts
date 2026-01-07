@@ -199,8 +199,14 @@ export class SupabaseClientService {
           // Add cache-busting headers for critical RPC calls
           const urlStr = typeof url === 'string' ? url : url.toString();
           if (urlStr.includes('/rpc/wallet_') || urlStr.includes('/rpc/payment_') || urlStr.includes('/rpc/booking_')) {
+            // FIX: Headers object is not spreadable - convert to plain object first
+            // Without this, Authorization header is lost causing 401 errors
+            const existingHeaders = options.headers instanceof Headers
+              ? Object.fromEntries(options.headers.entries())
+              : (options.headers || {});
+
             fetchOptions.headers = {
-              ...(options.headers || {}),
+              ...existingHeaders,
               'Cache-Control': 'no-cache, no-store, must-revalidate',
               'Pragma': 'no-cache',
             };

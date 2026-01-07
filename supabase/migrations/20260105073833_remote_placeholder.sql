@@ -1,0 +1,4 @@
+-- Placeholder migration for remote history alignment
+-- Version: 20260105073833
+-- Source: remote project history (PISQ)
+-- NOTE: This file intentionally left blank.
