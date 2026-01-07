@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/ecucondorSA/autorenta/compare/v1.7.0...v1.7.1) (2026-01-07)
+
+
+### Bug Fixes
+
+* **bookings:** añadir botón de 'Garantizar Reserva' en el detalle para evitar bloqueos de flujo ([bd34eb3](https://github.com/ecucondorSA/autorenta/commit/bd34eb3ae447df1136a394b679a1454e7de6fca2))
+
 # [1.7.0](https://github.com/ecucondorSA/autorenta/compare/v1.6.6...v1.7.0) (2026-01-07)
 
 
