@@ -41,7 +41,7 @@ import {
 
     <!-- Side Panel -->
     <div
-      class="fixed top-0 right-0 h-full z-50 flex flex-col bg-surface-base dark:bg-surface-secondary border-l border-border-default shadow-2xl transition-transform duration-300 ease-out"
+      class="fixed top-0 right-0 h-full z-50 flex flex-col bg-surface-base border-l border-border-default shadow-2xl transition-transform duration-300 ease-out"
       [class.translate-x-0]="isOpen"
       [class.translate-x-full]="!isOpen"
       [style.width]="width"

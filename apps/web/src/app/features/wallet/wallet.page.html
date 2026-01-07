@@ -1,11 +1,11 @@
 <div
-  class="wallet-page min-h-screen bg-surface-base dark:bg-surface-base dark:text-text-secondary py-4 sm:py-6 md:py-section-sm"
+  class="wallet-page min-h-screen bg-surface-base py-4 sm:py-6 md:py-section-sm"
 >
   <div class="container-page px-3 sm:px-4 md:px-container space-y-6 sm:space-y-8 md:space-y-10">
     <!-- Error Alert -->
     @if (walletError(); as error) {
       <div
-        class="bg-error-bg border border-error-border dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4 transition-colors duration-300"
+        class="bg-error-bg border border-error-border rounded-lg p-4 transition-colors duration-300"
       >
         <div class="flex items-start space-x-3">
           <svg class="w-6 h-6 text-error-text flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -36,7 +36,7 @@
     <section class="rounded-2xl sm:rounded-3xl overflow-hidden">
       @if (subscriptionService.subscription(); as subscription) {
         <!-- MIEMBRO ACTIVO: Tarjeta Premium de Membresía -->
-        <div class="relative bg-gradient-to-br from-amber-900 via-amber-800 to-yellow-900 dark:from-amber-950 dark:via-amber-900 dark:to-yellow-950 p-6 sm:p-8 md:p-10">
+        <div class="relative bg-gradient-to-br from-amber-900 via-amber-800 to-yellow-900 p-6 sm:p-8 md:p-10">
           <!-- Patrón decorativo de fondo -->
           <div class="absolute inset-0 opacity-10">
             <svg class="w-full h-full" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
@@ -176,7 +176,7 @@
         </div>
       } @else {
         <!-- NO MIEMBRO: Banner Promocional -->
-        <div class="relative bg-gradient-to-br from-cta-default/10 via-amber-500/5 to-yellow-500/10 dark:from-cta-default/20 dark:via-amber-600/10 dark:to-yellow-600/15 p-6 sm:p-8 md:p-10 border-2 border-cta-default/30 dark:border-cta-default/40">
+        <div class="relative bg-gradient-to-br from-cta-default/10 via-amber-500/5 to-yellow-500/10 p-6 sm:p-8 md:p-10 border-2 border-cta-default/30">
           <!-- Patrón decorativo -->
           <div class="absolute top-0 right-0 w-64 h-64 opacity-5">
             <svg viewBox="0 0 200 200" fill="currentColor" class="w-full h-full text-cta-default">
@@ -193,30 +193,30 @@
                   </svg>
                   Nuevo
                 </span>
-                <span class="text-xs font-medium text-text-secondary dark:text-text-secondary/70">
+                <span class="text-xs font-medium text-text-secondary">
                   Ahorra hasta 100% en depósitos
                 </span>
               </div>
 
-              <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-text-primary dark:text-text-primary tracking-tight">
+              <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-text-primary tracking-tight">
                 Autorentar Club
               </h1>
-              <p class="text-base sm:text-lg text-text-secondary dark:text-text-secondary/80 max-w-xl">
+              <p class="text-base sm:text-lg text-text-secondary max-w-xl">
                 Paga una membresía anual y <strong class="text-cta-default">olvídate de los depósitos</strong>.
                 Tu cobertura cubre la franquicia automáticamente.
               </p>
 
               <!-- Beneficios rápidos -->
               <div class="flex flex-wrap gap-3 text-sm">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-700 border border-emerald-500/20">
                   <app-icon name="check" [size]="14" />
                   Depósito $0
                 </span>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-700 dark:text-blue-400 border border-blue-500/20">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-700 border border-blue-500/20">
                   <app-icon name="check" [size]="14" />
                   Sin tarjeta internacional
                 </span>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-700 dark:text-purple-400 border border-purple-500/20">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-700 border border-purple-500/20">
                   <app-icon name="check" [size]="14" />
                   Reservas ilimitadas
                 </span>
@@ -226,10 +226,10 @@
             <div class="lg:col-span-2 space-y-4">
               <!-- Precios compactos -->
               <div class="grid gap-3 sm:grid-cols-2">
-                <div class="bg-surface-raised dark:bg-surface-secondary/50 rounded-xl p-4 border border-border-default/50 dark:border-border-default/30">
-                  <p class="text-xs font-semibold text-text-secondary dark:text-text-secondary/70 uppercase tracking-wider mb-1">Estándar</p>
-                  <p class="text-2xl font-bold text-text-primary dark:text-text-primary">$300<span class="text-sm font-normal text-text-secondary">/año</span></p>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">Cobertura: $500</p>
+                <div class="bg-surface-raised rounded-xl p-4 border border-border-default/50">
+                  <p class="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1">Estándar</p>
+                  <p class="text-2xl font-bold text-text-primary">$300<span class="text-sm font-normal text-text-secondary">/año</span></p>
+                  <p class="text-xs text-text-secondary mt-1">Cobertura: $500</p>
                 </div>
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 border border-slate-600/50">
                   <p class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Black</p>
@@ -250,7 +250,7 @@
                 Unirse al Club
                 <app-icon name="chevron-right" [size]="18" />
               </button>
-              <p class="text-center text-xs text-text-secondary dark:text-text-secondary/60">
+              <p class="text-center text-xs text-text-secondary">
                 Cancela cuando quieras. Sin compromisos.
               </p>
             </div>
@@ -262,7 +262,7 @@
     <!-- ============================================ -->
     <!-- SECCIÓN 2: SALDO CASH (SECUNDARIA) -->
     <!-- ============================================ -->
-    <section class="rounded-2xl sm:rounded-3xl border border-border-default/50 dark:border-border-default/30 bg-surface-raised dark:bg-surface-raised p-4 sm:p-6 md:p-8">
+    <section class="rounded-2xl sm:rounded-3xl border border-border-default/50 bg-surface-raised p-4 sm:p-6 md:p-8">
       <!-- Header compacto -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
@@ -270,11 +270,11 @@
             <svg class="w-5 h-5 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <p class="text-xs uppercase tracking-widest text-text-secondary dark:text-text-secondary/70 font-semibold">
+            <p class="text-xs uppercase tracking-widest text-text-secondary font-semibold">
               Saldo Cash
             </p>
           </div>
-          <h2 class="text-xl sm:text-2xl font-bold text-text-primary dark:text-text-primary">
+          <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
             Tu Billetera
           </h2>
         </div>
@@ -302,7 +302,10 @@
       <!-- Grid de balances compacto -->
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <!-- Balance Total -->
-        <div class="bg-gradient-to-br from-success-light/10 to-success-light/5 dark:from-success-light/15 dark:to-success-light/5 rounded-xl p-4 border border-success-light/30">
+        <div
+          class="bg-gradient-to-br from-success-light/10 to-success-light/5 rounded-xl p-4 border border-success-light/30"
+          data-tour-step="wallet-balance"
+        >
           <p class="text-xs uppercase tracking-wider text-success-strong/80 font-semibold mb-1">Disponible</p>
           <p class="text-2xl sm:text-3xl font-bold text-success-strong">
             ${{ availableBalanceSummary() | number:'1.2-2' }}
@@ -327,23 +330,23 @@
         </div>
 
         <!-- Transferible -->
-        <div class="bg-surface-secondary/50 dark:bg-surface-secondary/30 rounded-xl p-4 border border-border-default/50">
+        <div class="bg-surface-secondary/50 rounded-xl p-4 border border-border-default/50">
           <div class="flex items-center justify-between mb-1">
             <p class="text-xs uppercase tracking-wider text-text-secondary font-semibold">Transferible</p>
             <app-icon name="arrow-right-left" [size]="14" cssClass="text-text-secondary/60" />
           </div>
-          <p class="text-2xl sm:text-3xl font-bold text-text-primary dark:text-text-primary">
+          <p class="text-2xl sm:text-3xl font-bold text-text-primary">
             ${{ transferableBalance() | number:'1.2-2' }}
           </p>
         </div>
 
         <!-- Retirable -->
-        <div class="bg-surface-secondary/50 dark:bg-surface-secondary/30 rounded-xl p-4 border border-border-default/50">
+        <div class="bg-surface-secondary/50 rounded-xl p-4 border border-border-default/50">
           <div class="flex items-center justify-between mb-1">
             <p class="text-xs uppercase tracking-wider text-text-secondary font-semibold">Retirable</p>
             <app-icon name="arrow-up" [size]="14" cssClass="text-text-secondary/60" />
           </div>
-          <p class="text-2xl sm:text-3xl font-bold text-text-primary dark:text-text-primary">
+          <p class="text-2xl sm:text-3xl font-bold text-text-primary">
             ${{ withdrawableBalance() | number:'1.2-2' }}
           </p>
         </div>
@@ -366,11 +369,11 @@
 
       <!-- WAN Card compacto -->
       @if (walletAccountNumber()) {
-        <div class="mt-4 bg-surface-base dark:bg-surface-secondary/30 rounded-lg p-4 border border-border-default/30">
+        <div class="mt-4 bg-surface-base rounded-lg p-4 border border-border-default/30">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70 mb-0.5">Tu número de cuenta Autorentar</p>
-              <p class="text-lg font-mono font-bold text-text-primary dark:text-text-primary tracking-wider">
+              <p class="text-xs text-text-secondary mb-0.5">Tu número de cuenta Autorentar</p>
+              <p class="text-lg font-mono font-bold text-text-primary tracking-wider">
                 {{ walletAccountNumber() }}
               </p>
             </div>
@@ -395,20 +398,20 @@
     <!-- ============================================ -->
     <!-- SECCIÓN 3: HISTORIAL UNIFICADO -->
     <!-- ============================================ -->
-    <section class="rounded-2xl sm:rounded-3xl border border-border-default/50 dark:border-border-default/30 bg-surface-raised dark:bg-surface-raised p-4 sm:p-6 md:p-8">
+    <section class="rounded-2xl sm:rounded-3xl border border-border-default/50 bg-surface-raised p-4 sm:p-6 md:p-8">
       <!-- Header con Tabs -->
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 sm:pb-6 border-b border-border-default/30">
         <div>
-          <h2 class="text-xl sm:text-2xl font-bold text-text-primary dark:text-text-primary">
+          <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
             Historial de Movimientos
           </h2>
-          <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-1 hidden sm:block">
+          <p class="text-sm text-text-secondary mt-1 hidden sm:block">
             Todos tus movimientos en un solo lugar
           </p>
         </div>
 
         <!-- Tabs -->
-        <div class="flex gap-1 p-1 bg-surface-base dark:bg-surface-secondary/40 rounded-lg border border-border-default/50 dark:border-border-default/30 overflow-x-auto">
+        <div class="flex gap-1 p-1 bg-surface-base rounded-lg border border-border-default/50 overflow-x-auto">
           <button
             type="button"
             (click)="setActiveTab('transactions')"
@@ -441,6 +444,7 @@
               'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent': activeTab() !== 'withdrawals'
             }"
             class="px-4 py-2 text-sm font-medium rounded-md border transition whitespace-nowrap"
+            data-tour-step="withdraw-button"
           >
             <app-icon name="arrow-up" [size]="14" cssClass="inline-block mr-1.5" />
             Retiros
@@ -450,7 +454,7 @@
               type="button"
               (click)="setActiveTab('coverage')"
               [ngClass]="{
-                'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30': activeTab() === 'coverage',
+                'bg-amber-500/15 text-amber-600 border-amber-500/30': activeTab() === 'coverage',
                 'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent': activeTab() !== 'coverage'
               }"
               class="px-4 py-2 text-sm font-medium rounded-md border transition whitespace-nowrap"
@@ -475,7 +479,7 @@
         @if (activeTab() === 'withdrawals') {
           <div class="space-y-6">
             <div class="flex items-center justify-between mb-2">
-              <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary font-satoshi">
+              <h3 class="text-lg font-semibold text-text-primary font-satoshi">
                 Gestión de Retiros
               </h3>
               <div class="flex gap-2">
@@ -519,7 +523,7 @@
                     <div class="flex items-start gap-3">
                       <app-icon name="alert-triangle" [size]="20" cssClass="text-warning-strong mt-0.5 flex-shrink-0" />
                       <div>
-                        <p class="text-sm text-text-primary dark:text-text-secondary">
+                        <p class="text-sm text-text-primary">
                           Aún no registraste cuentas bancarias.
                         </p>
                         <button
@@ -534,7 +538,7 @@
                   </div>
                 }
 
-                <div class="border-t border-border-default dark:border-border-default/30 pt-6">
+                <div class="border-t border-border-default pt-6">
                   <app-withdrawal-history
                     [requests]="withdrawalRequests()"
                     [loading]="loading().fetchingRequests"
@@ -554,7 +558,7 @@
                   (deleteAccount)="handleDeleteAccount($event)"
                 ></app-bank-accounts-list>
 
-                <div class="border-t border-border-default dark:border-border-default/30 pt-6">
+                <div class="border-t border-border-default pt-6">
                   <h4 class="text-base font-semibold mb-4 font-satoshi">Agregar nueva cuenta</h4>
                   <app-bank-account-form
                     (submitAccount)="handleAddBankAccount($event)"
@@ -568,23 +572,23 @@
         @if (activeTab() === 'coverage' && subscriptionService.subscription()) {
           <!-- Tab de Cobertura del Club -->
           <div class="space-y-6">
-            <div class="bg-amber-50/50 dark:bg-amber-900/20 rounded-xl p-6 border border-amber-200/50 dark:border-amber-700/30">
+            <div class="bg-amber-50/50 rounded-xl p-6 border border-amber-200/50">
               <div class="flex items-start gap-4">
-                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-800/50 flex items-center justify-center">
-                  <app-icon name="shield" [size]="24" cssClass="text-amber-600 dark:text-amber-400" />
+                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+                  <app-icon name="shield" [size]="24" cssClass="text-amber-600" />
                 </div>
                 <div class="flex-1">
-                  <h3 class="text-lg font-semibold text-amber-900 dark:text-amber-100">
+                  <h3 class="text-lg font-semibold text-amber-900">
                     Historial de uso de cobertura
                   </h3>
-                  <p class="text-sm text-amber-700 dark:text-amber-300/80 mt-1">
+                  <p class="text-sm text-amber-700 mt-1">
                     Aquí verás las deducciones realizadas de tu saldo de cobertura por daños o claims.
                   </p>
                 </div>
                 <button
                   type="button"
                   (click)="handleViewClubHistory()"
-                  class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-amber-100 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-800 transition"
+                  class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-amber-100 text-amber-700 hover:bg-amber-200 transition"
                 >
                   Ver completo
                   <app-icon name="external-link" [size]="14" />
@@ -593,7 +597,7 @@
             </div>
 
             <!-- Placeholder para historial de cobertura -->
-            <div class="text-center py-12 text-text-secondary dark:text-text-secondary/70">
+            <div class="text-center py-12 text-text-secondary">
               <app-icon name="shield-check" [size]="48" cssClass="mx-auto mb-4 text-success-strong/30" />
               <p class="text-lg font-medium">Sin deducciones registradas</p>
               <p class="text-sm mt-1">Tu cobertura no ha sido utilizada aún. ¡Excelente!</p>
@@ -611,7 +615,7 @@
     </section>
 
     <section class="text-center pb-4">
-      <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+      <p class="text-sm text-text-secondary">
         ¿Necesitas ayuda?
         <a
           href="mailto:autorentardev@gmail.com"

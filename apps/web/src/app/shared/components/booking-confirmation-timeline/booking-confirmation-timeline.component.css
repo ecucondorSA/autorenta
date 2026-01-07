@@ -51,7 +51,7 @@
 
 /* Timeline Line */
 .timeline-line {
-  @apply absolute w-0.5 bg-surface-hover dark:bg-surface-base;
+  @apply absolute w-0.5 bg-surface-hover;
   @apply transition-colors duration-300;
 }
 
@@ -67,9 +67,6 @@
   background-color: var(--cta-default);
 }
 
-.dark .timeline-line--completed {
-  background-color: var(--cta-default);
-}
 
 /* Timeline Marker (Circle) */
 .timeline-marker {
@@ -89,16 +86,16 @@
 }
 
 .timeline-marker--current {
-  @apply bg-surface-raised dark:bg-surface-secondary;
+  @apply bg-surface-raised;
   @apply ring-4 animate-pulse;
   border-color: var(--cta-default);
   --tw-ring-color: rgba(167, 216, 244, 0.2);
 }
 
 .timeline-marker--pending {
-  @apply bg-surface-raised dark:bg-surface-secondary;
-  @apply border-border-muted dark:border-border-default;
-  @apply text-text-secondary dark:text-text-muted;
+  @apply bg-surface-raised;
+  @apply border-border-muted;
+  @apply text-text-secondary;
 }
 
 /* Timeline Content */
@@ -127,22 +124,20 @@
 
 .timeline-step-badge--completed {
   @apply bg-success-light/20 text-success-800;
-  @apply dark:bg-success-light/20 dark:text-success-800;
 }
 
 .timeline-step-badge--pending {
   @apply bg-warning-light/20 text-warning-900;
-  @apply dark:bg-warning-light/20 dark:text-warning-900;
 }
 
 .timeline-step-description {
-  @apply text-sm text-text-secondary dark:text-text-secondary;
+  @apply text-sm text-text-secondary;
   @apply mb-2;
 }
 
 .timeline-step-metadata {
   @apply flex flex-wrap items-center gap-4;
-  @apply text-xs text-text-secondary dark:text-text-muted;
+  @apply text-xs text-text-secondary;
 }
 
 .timeline-metadata-item {
@@ -178,7 +173,7 @@
 
 /* Conditional Step Styling */
 .timeline-item--conditional .timeline-marker {
-  @apply border-error-400 dark:border-error-600;
+  @apply border-error-400;
 }
 
 .timeline-item--conditional.timeline-item--completed .timeline-marker {

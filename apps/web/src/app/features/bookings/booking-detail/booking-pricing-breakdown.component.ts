@@ -29,12 +29,12 @@ export interface SubscriptionCoverageInfo {
   template: `
     @if (booking) {
       <div
-        class="rounded-lg border border-border-default dark:border-border-muted bg-surface-raised dark:bg-surface-secondary shadow-sm"
+        class="rounded-lg border border-border-default bg-surface-raised shadow-sm"
         >
         <!-- Header -->
-        <div class="p-4 border-b border-border-default dark:border-border-muted">
+        <div class="p-4 border-b border-border-default">
           <h3
-            class="text-lg font-semibold text-text-primary dark:text-text-inverse flex items-center gap-2"
+            class="text-lg font-semibold text-text-primary flex items-center gap-2"
             >
             <svg
               class="w-5 h-5 text-cta-default"
@@ -58,7 +58,7 @@ export interface SubscriptionCoverageInfo {
             <div class="flex items-start justify-between">
               <div class="flex-1">
                 <div class="flex items-center gap-2">
-                  <h4 class="text-sm font-semibold text-text-primary dark:text-text-inverse">
+                  <h4 class="text-sm font-semibold text-text-primary">
                     Cargos del Alquiler
                   </h4>
                   <button
@@ -68,7 +68,7 @@ export interface SubscriptionCoverageInfo {
                     aria-label="Información sobre cargos del alquiler"
                     >
                     <svg
-                      class="w-4 h-4 text-text-muted hover:text-text-secondary dark:hover:text-gray-500 cursor-help"
+                      class="w-4 h-4 text-text-muted hover:text-text-secondary cursor-help"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                       >
@@ -89,12 +89,12 @@ export interface SubscriptionCoverageInfo {
                     </div>
                   </button>
                 </div>
-                <p class="text-xs text-text-secondary dark:text-text-muted mt-1">
+                <p class="text-xs text-text-secondary mt-1">
                   Incluye tarifa diaria, aporte FGO y cargo de servicio
                 </p>
               </div>
               <div class="text-right">
-                <p class="text-lg font-bold text-text-primary dark:text-text-inverse">
+                <p class="text-lg font-bold text-text-primary">
                   {{ formatCurrency(rentalAmount, booking.currency) }}
                 </p>
               </div>
@@ -102,7 +102,7 @@ export interface SubscriptionCoverageInfo {
             <!-- Breakdown items if available -->
             @if (booking.breakdown) {
               <div
-                class="pl-4 space-y-2 text-sm text-text-secondary dark:text-text-secondary"
+                class="pl-4 space-y-2 text-sm text-text-secondary"
                 >
                 @if (booking.days_count) {
                   <div class="flex justify-between">
@@ -149,11 +149,11 @@ export interface SubscriptionCoverageInfo {
           <!-- Divider -->
           <div class="relative">
             <div class="absolute inset-0 flex items-center" aria-hidden="true">
-              <div class="w-full border-t border-border-muted dark:border-border-default"></div>
+              <div class="w-full border-t border-border-muted"></div>
             </div>
             <div class="relative flex justify-center">
               <span
-                class="px-2 bg-surface-raised dark:bg-surface-secondary text-xs text-text-secondary dark:text-text-muted"
+                class="px-2 bg-surface-raised text-xs text-text-secondary"
                 >
                 +
               </span>
@@ -168,25 +168,25 @@ export interface SubscriptionCoverageInfo {
                 >
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
-                    <h4 class="text-sm font-semibold text-amber-700 dark:text-amber-400">
+                    <h4 class="text-sm font-semibold text-amber-700">
                       Depósito de Garantía
                     </h4>
                     <span
-                      class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-bold rounded-full bg-amber-500/30 text-amber-800 dark:bg-amber-500/40 dark:text-amber-200"
+                      class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-bold rounded-full bg-amber-500/30 text-amber-800"
                       >
                       <ion-icon name="shield-checkmark" class="text-sm"></ion-icon>
                       Cubierto por Club
                     </span>
                   </div>
-                  <p class="text-xs text-amber-700/80 dark:text-amber-400/80 mt-1">
+                  <p class="text-xs text-amber-700/80 mt-1">
                     Tu membresía Autorentar Club cubre el 100% del depósito
                   </p>
                 </div>
                 <div class="text-right">
-                  <p class="text-lg font-bold text-amber-700 dark:text-amber-400 line-through opacity-60">
+                  <p class="text-lg font-bold text-amber-700 line-through opacity-60">
                     {{ formatCurrency((subscriptionCoverage?.franchiseUsd ?? 0) * 100, 'USD') }}
                   </p>
-                  <p class="text-xl font-bold text-success-strong dark:text-success-400">
+                  <p class="text-xl font-bold text-success-strong">
                     $0
                   </p>
                 </div>
@@ -199,22 +199,22 @@ export interface SubscriptionCoverageInfo {
                 >
                 <div class="flex-1">
                   <div class="flex items-center gap-2 flex-wrap">
-                    <h4 class="text-sm font-semibold text-text-primary dark:text-text-inverse">
+                    <h4 class="text-sm font-semibold text-text-primary">
                       Depósito de Garantía
                     </h4>
                     <span
-                      class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-amber-500/20 text-amber-700 dark:bg-amber-500/30 dark:text-amber-300"
+                      class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-amber-500/20 text-amber-700"
                       >
                       <ion-icon name="shield-half" class="text-sm"></ion-icon>
                       Cobertura parcial
                     </span>
                   </div>
                   <div class="text-xs mt-2 space-y-1">
-                    <div class="flex justify-between text-text-secondary dark:text-text-muted">
+                    <div class="flex justify-between text-text-secondary">
                       <span>Franquicia total:</span>
                       <span>{{ formatCurrency((subscriptionCoverage?.franchiseUsd ?? 0) * 100, 'USD') }}</span>
                     </div>
-                    <div class="flex justify-between text-amber-700 dark:text-amber-400">
+                    <div class="flex justify-between text-amber-700">
                       <span>Cubierto por Club:</span>
                       <span>-{{ formatCurrency((subscriptionCoverage?.coveredBySubscriptionUsd ?? 0) * 100, 'USD') }}</span>
                     </div>
@@ -224,7 +224,7 @@ export interface SubscriptionCoverageInfo {
                   <p class="text-sm text-text-muted line-through">
                     {{ formatCurrency((subscriptionCoverage?.franchiseUsd ?? 0) * 100, 'USD') }}
                   </p>
-                  <p class="text-lg font-bold text-cta-default dark:text-cta-default">
+                  <p class="text-lg font-bold text-cta-default">
                     {{ formatCurrency((subscriptionCoverage?.depositRequiredUsd ?? 0) * 100, 'USD') }}
                   </p>
                 </div>
@@ -233,15 +233,15 @@ export interface SubscriptionCoverageInfo {
             <!-- No Coverage - Standard deposit -->
             @else {
               <div
-                class="flex items-start justify-between p-3 rounded-lg bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default/40"
+                class="flex items-start justify-between p-3 rounded-lg bg-cta-default/10 border border-cta-default/40"
                 >
                 <div class="flex-1">
                   <div class="flex items-center gap-2">
-                    <h4 class="text-sm font-semibold text-cta-default dark:text-cta-default">
+                    <h4 class="text-sm font-semibold text-cta-default">
                       Depósito de Garantía
                     </h4>
                     <span
-                      class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-success-light/20 text-success-700 dark:bg-success-light/40 dark:text-success-strong"
+                      class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-success-light/20 text-success-700"
                       >
                       <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                         <path
@@ -259,7 +259,7 @@ export interface SubscriptionCoverageInfo {
                       aria-label="Información sobre depósito de garantía"
                       >
                       <svg
-                        class="w-4 h-4 text-cta-default hover:text-cta-default dark:hover:text-cta-default cursor-help"
+                        class="w-4 h-4 text-cta-default hover:text-cta-default cursor-help"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         >
@@ -280,12 +280,12 @@ export interface SubscriptionCoverageInfo {
                       </div>
                     </button>
                   </div>
-                  <p class="text-xs text-cta-default dark:text-cta-default mt-1">
+                  <p class="text-xs text-cta-default mt-1">
                     Se devuelve al finalizar el alquiler sin daños
                   </p>
                 </div>
                 <div class="text-right">
-                  <p class="text-lg font-bold text-cta-default dark:text-cta-default">
+                  <p class="text-lg font-bold text-cta-default">
                     {{ formatCurrency(depositAmount, booking.currency) }}
                   </p>
                 </div>
@@ -294,7 +294,7 @@ export interface SubscriptionCoverageInfo {
             <!-- Payment method info -->
             @if (booking.payment_method) {
               <div
-                class="text-xs text-text-secondary dark:text-text-muted flex items-start gap-2"
+                class="text-xs text-text-secondary flex items-start gap-2"
                 >
                 <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path
@@ -310,30 +310,30 @@ export interface SubscriptionCoverageInfo {
             }
           </div>
           <!-- Divider -->
-          <div class="border-t border-border-muted dark:border-border-default"></div>
+          <div class="border-t border-border-muted"></div>
           <!-- Total Amount -->
           <div class="flex items-center justify-between pt-2">
             <div>
-              <h4 class="text-base font-semibold text-text-primary dark:text-text-inverse">
+              <h4 class="text-base font-semibold text-text-primary">
                 Total Bloqueado
               </h4>
-              <p class="text-xs text-text-secondary dark:text-text-muted mt-0.5">
+              <p class="text-xs text-text-secondary mt-0.5">
                 Incluye alquiler + depósito de garantía
               </p>
             </div>
             <div class="text-right">
-              <p class="text-xl font-bold text-cta-default dark:text-warning-strong">
+              <p class="text-xl font-bold text-cta-default">
                 {{ formatCurrency(totalAmount, booking.currency) }}
               </p>
             </div>
           </div>
           <!-- Important note -->
           <div
-            class="mt-4 p-3 bg-warning-bg dark:bg-warning-900/20 border border-warning-border dark:border-warning-800/40 rounded-lg"
+            class="mt-4 p-3 bg-warning-bg border border-warning-border rounded-lg"
             >
             <div class="flex items-start gap-2">
               <svg
-                class="w-5 h-5 text-warning-text dark:text-warning-400 flex-shrink-0 mt-0.5"
+                class="w-5 h-5 text-warning-text flex-shrink-0 mt-0.5"
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 >
@@ -344,10 +344,10 @@ export interface SubscriptionCoverageInfo {
                   />
               </svg>
               <div class="flex-1">
-                <p class="text-xs font-medium text-warning-strong dark:text-warning-200">
+                <p class="text-xs font-medium text-warning-strong">
                   Importante
                 </p>
-                <p class="text-xs text-warning-strong dark:text-warning-300 mt-1">
+                <p class="text-xs text-warning-strong mt-1">
                   El depósito de garantía se devuelve automáticamente al finalizar el alquiler si no
                   hay daños reportados. El monto del alquiler se cobra inmediatamente.
                 </p>

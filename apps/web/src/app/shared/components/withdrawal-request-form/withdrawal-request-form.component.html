@@ -1,19 +1,19 @@
 <div
-  class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border border-border-default dark:border-border-default/70 dark:border-slate-deep rounded-2xl shadow-soft dark:shadow-card p-6 max-w-2xl mx-auto transition-colors duration-300"
+  class="bg-surface-raised border border-border-default rounded-2xl shadow-soft p-6 max-w-2xl mx-auto transition-colors duration-300"
   >
   <div class="stack-md">
-    <h2 class="h2 text-text-primary dark:text-text-primary font-bold font-satoshi">Solicitar Retiro</h2>
+    <h2 class="h2 text-text-primary font-bold font-satoshi">Solicitar Retiro</h2>
 
     <!-- Saldo disponible -->
     <div class="grid gap-3 md:grid-cols-2">
       <div
-        class="p-4 bg-cta-default/10 dark:bg-cta-default/20 rounded-xl border border-cta-default/20 dark:border-cta-default/30 transition-colors"
+        class="p-4 bg-cta-default/10 rounded-xl border border-cta-default/20 transition-colors"
         >
         <div class="stack-xs">
-          <p class="text-sm text-text-secondary dark:text-text-secondary/80">
+          <p class="text-sm text-text-secondary">
             Saldo total en wallet
           </p>
-          <p class="h4 text-cta-default dark:text-text-primary">
+          <p class="h4 text-cta-default">
             ${{ availableBalance | number: '1.2-2' }}
           </p>
         </div>
@@ -30,11 +30,11 @@
         <div
           class="md:col-span-2 p-4 bg-warning-bg border border-warning-border rounded-xl transition-colors"
           >
-          <p class="text-sm font-semibold text-warning-strong font-luxury">Crédito Autorentar protegido</p>
+          <p class="text-sm font-semibold text-warning-strong font-luxury">Credito Autorentar protegido</p>
           <p class="text-xs text-warning-text leading-relaxed">
             ${{ nonWithdrawableBalance | number: '1.2-2' }} deben permanecer en tu wallet para
             garantizar reservas y futuras locaciones. Este saldo no es reembolsable, pero puedes
-            usarlo para reservar vehículos o cubrir garantías.
+            usarlo para reservar vehiculos o cubrir garantias.
           </p>
         </div>
       }
@@ -62,14 +62,14 @@
         <div class="stack-xs">
           <label
             for="bank_account_id"
-            class="block text-sm font-semibold text-text-secondary dark:text-text-secondary"
+            class="block text-sm font-semibold text-text-secondary"
             >
             Cuenta de destino *
           </label>
           <select
             id="bank_account_id"
             formControlName="bank_account_id"
-            class="w-full px-4 py-3 border border-border-default dark:border-border-default/70 dark:border-slate-deep rounded-xl bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:ring-2 focus:ring-cta-default focus:border-transparent transition-colors"
+            class="w-full px-4 py-3 border border-border-default rounded-xl bg-surface-raised text-text-primary focus:ring-2 focus:ring-cta-default focus:border-transparent transition-colors"
             [class.border-error-border]="
               form.get('bank_account_id')?.invalid && form.get('bank_account_id')?.touched
             "
@@ -96,21 +96,21 @@
           <div class="flex items-center justify-between">
             <label
               for="amount"
-              class="block text-sm font-semibold text-text-secondary dark:text-text-secondary"
+              class="block text-sm font-semibold text-text-secondary"
               >
               Monto a retirar *
             </label>
             <button
               type="button"
               (click)="setMaxAmount()"
-              class="text-sm text-cta-default dark:text-text-primary hover:underline font-semibold"
+              class="text-sm text-cta-default hover:underline font-semibold"
               >
-              Retirar máximo
+              Retirar maximo
             </button>
           </div>
           <div class="relative">
             <span
-              class="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted dark:text-text-secondary/60 font-semibold"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted font-semibold"
               >$</span
               >
               <input
@@ -118,7 +118,7 @@
                 type="number"
                 formControlName="amount"
                 placeholder="0.00"
-                class="w-full pl-8 pr-4 py-3 border border-border-default dark:border-border-default/70 dark:border-slate-deep rounded-xl bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:ring-2 focus:ring-cta-default focus:border-transparent transition-colors"
+                class="w-full pl-8 pr-4 py-3 border border-border-default rounded-xl bg-surface-raised text-text-primary focus:ring-2 focus:ring-cta-default focus:border-transparent transition-colors"
               [class.border-error-border]="
                 form.get('amount')?.invalid && form.get('amount')?.touched
               "
@@ -126,8 +126,8 @@
                 step="0.01"
                 />
             </div>
-            <p class="text-sm text-text-muted dark:text-text-secondary/70">
-              Mínimo: ${{ MIN_AMOUNT }}
+            <p class="text-sm text-text-muted">
+              Minimo: ${{ MIN_AMOUNT }}
             </p>
             @if (getErrorMessage('amount')) {
               <p class="text-sm text-error-text">{{ getErrorMessage('amount') }}</p>
@@ -137,40 +137,40 @@
           <!-- Desglose de costos -->
           @if (amount() > 0) {
             <div
-              class="bg-surface-secondary/70 dark:bg-surface-secondary/60 rounded-xl p-4 stack-sm border border-border-default dark:border-border-default/70 dark:border-slate-deep transition-colors"
+              class="bg-surface-secondary/70 rounded-xl p-4 stack-sm border border-border-default transition-colors"
               >
-              <h4 class="h5 text-text-secondary dark:text-text-secondary/80 font-bold font-satoshi">Desglose del retiro</h4>
+              <h4 class="h5 text-text-secondary font-bold font-satoshi">Desglose del retiro</h4>
 
               <div class="flex items-center justify-between text-sm">
-                <span class="text-text-secondary dark:text-text-secondary/70">Monto solicitado</span>
-                <span class="font-semibold text-text-primary dark:text-text-primary">
+                <span class="text-text-secondary">Monto solicitado</span>
+                <span class="font-semibold text-text-primary">
                   ${{ amount() | number: '1.2-2' }}
                 </span>
               </div>
 
               <div class="flex items-center justify-between text-sm">
-                <span class="text-text-secondary dark:text-text-secondary/70">Comisión (1.5%)</span>
+                <span class="text-text-secondary">Comision (1.5%)</span>
                 <span class="font-semibold text-error-text">
                   -${{ feeAmount() | number: '1.2-2' }}
                 </span>
               </div>
 
               <div
-                class="border-t border-border-muted dark:border-border-default pt-2 flex items-center justify-between"
+                class="border-t border-border-muted pt-2 flex items-center justify-between"
                 >
-                <span class="text-sm font-bold text-text-primary dark:text-text-primary"
-                  >Recibirás en tu cuenta</span
+                <span class="text-sm font-bold text-text-primary"
+                  >Recibiras en tu cuenta</span
                   >
                   <span class="h5 text-success-strong font-mono"> ${{ netAmount() | number: '1.2-2' }} </span>
                 </div>
 
                 <div
-                  class="border-t border-border-muted dark:border-slate-deep pt-2 flex items-center justify-between text-sm"
+                  class="border-t border-border-muted pt-2 flex items-center justify-between text-sm"
                   >
-                  <span class="text-text-secondary dark:text-text-secondary/70"
-                    >Se debitará de tu wallet</span
+                  <span class="text-text-secondary"
+                    >Se debitara de tu wallet</span
                     >
-                    <span class="font-semibold text-text-primary dark:text-text-primary">
+                    <span class="font-semibold text-text-primary">
                       ${{ totalDebit() | number: '1.2-2' }}
                     </span>
                   </div>
@@ -206,7 +206,7 @@
               <div>
                 <label
                   for="user_notes"
-                  class="block text-sm font-semibold text-text-secondary dark:text-text-secondary mb-2"
+                  class="block text-sm font-semibold text-text-secondary mb-2"
                   >
                   Notas (opcional)
                 </label>
@@ -215,15 +215,15 @@
                   formControlName="user_notes"
                   rows="3"
                   placeholder="Agrega cualquier comentario sobre este retiro..."
-                  class="w-full px-4 py-3 border border-border-default dark:border-border-default/70 dark:border-slate-deep rounded-xl bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none transition-colors"
+                  class="w-full px-4 py-3 border border-border-default rounded-xl bg-surface-raised text-text-primary focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none transition-colors"
                 ></textarea>
               </div>
 
-              <!-- Información importante -->
+              <!-- Informacion importante -->
               <div
-                class="bg-cta-default/5 dark:bg-cta-default/20 border border-cta-default/20 dark:border-cta-default/30 rounded-xl p-4 transition-colors"
+                class="bg-cta-default/5 border border-cta-default/20 rounded-xl p-4 transition-colors"
                 >
-                <p class="text-sm text-cta-default dark:text-text-primary flex items-center gap-1">
+                <p class="text-sm text-cta-default flex items-center gap-1">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       stroke-linecap="round"
@@ -232,18 +232,18 @@
                       d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                   </svg>
-                  <strong>Información importante:</strong>
+                  <strong>Informacion importante:</strong>
                 </p>
                 <ul
-                  class="mt-2 text-xs text-cta-default/80 dark:text-text-secondary/80 space-y-1 list-disc list-inside"
+                  class="mt-2 text-xs text-cta-default/80 space-y-1 list-disc list-inside"
                   >
-                  <li>El retiro será procesado en 24-48 horas hábiles.</li>
-                  <li>La transferencia puede demorar 1-2 días hábiles adicionales según el banco.</li>
-                  <li>Se aplicará una comisión del 1.5% sobre el monto solicitado.</li>
+                  <li>El retiro sera procesado en 24-48 horas habiles.</li>
+                  <li>La transferencia puede demorar 1-2 dias habiles adicionales segun el banco.</li>
+                  <li>Se aplicara una comision del 1.5% sobre el monto solicitado.</li>
                   <li>
-                    El crédito exclusivo de Autorentar se mantiene en tu wallet y no puede retirarse.
+                    El credito exclusivo de Autorentar se mantiene en tu wallet y no puede retirarse.
                   </li>
-                  <li>Una vez aprobado, el monto se debitará de tu wallet inmediatamente.</li>
+                  <li>Una vez aprobado, el monto se debitara de tu wallet inmediatamente.</li>
                 </ul>
               </div>
 
@@ -254,7 +254,7 @@
                   [disabled]="submitting() || form.invalid || !hasEnoughBalance() || amount() === 0"
                   class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-cta-default text-ivory-soft font-semibold rounded-xl hover:bg-cta-default/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
-                  <!-- Spinner cuando está procesando -->
+                  <!-- Spinner cuando esta procesando -->
                   @if (submitting()) {
                     <svg
                       class="animate-spin h-5 w-5"
@@ -277,7 +277,7 @@
                       ></path>
                     </svg>
                   }
-                  <!-- Icono cuando no está procesando -->
+                  <!-- Icono cuando no esta procesando -->
                   @if (!submitting()) {
                     <svg
                       class="h-5 w-5"
@@ -300,7 +300,7 @@
                   type="button"
                   (click)="onCancel()"
                   [disabled]="submitting()"
-                  class="px-6 py-3 border-2 border-border-default dark:border-border-default/70 dark:border-slate-deep text-text-secondary dark:text-text-secondary font-semibold rounded-xl hover:bg-surface-secondary dark:hover:bg-slate-deep/70 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  class="px-6 py-3 border-2 border-border-default text-text-secondary font-semibold rounded-xl hover:bg-surface-secondary disabled:opacity-50 disabled:cursor-not-allowed transition"
                   >
                   Cancelar
                 </button>

@@ -24,23 +24,23 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
   imports: [RouterLink],
   template: `
     <div
-      class="min-h-screen flex items-center justify-center bg-gradient-to-br from-cta-default/5 via-surface-base to-cta-hover/5 dark:from-cyan-900/20 dark:via-slate-900 dark:to-cyan-800/20 py-16 px-4"
+      class="min-h-screen flex items-center justify-center bg-gradient-to-br from-cta-default/5 via-surface-base to-cta-hover/5 py-16 px-4"
     >
       <div class="max-w-md w-full">
         @if (loading()) {
           <div class="card-premium p-8 text-center">
             <div
-              class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default dark:border-cyan-500 mb-4"
+              class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default mb-4"
             ></div>
-            <p class="text-text-secondary dark:text-gray-500">Validando código...</p>
+            <p class="text-text-secondary">Validando código...</p>
           </div>
         } @else if (error()) {
           <div class="card-premium p-8 text-center">
             <div class="text-5xl mb-4">❌</div>
-            <h2 class="text-2xl font-bold mb-2 text-text-primary dark:text-white">
+            <h2 class="text-2xl font-bold mb-2 text-text-primary">
               Código inválido
             </h2>
-            <p class="text-text-secondary dark:text-gray-500 mb-6">
+            <p class="text-text-secondary mb-6">
               {{ error() }}
             </p>
             <a routerLink="/" class="btn-primary"> Ir al inicio </a>
@@ -48,11 +48,11 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
         } @else if (success()) {
           <div class="card-premium p-8 text-center">
             <div class="text-5xl mb-4">🎉</div>
-            <h2 class="text-2xl font-bold mb-2 text-text-primary dark:text-white">
+            <h2 class="text-2xl font-bold mb-2 text-text-primary">
               ¡Código aplicado!
             </h2>
-            <p class="text-text-secondary dark:text-gray-500 mb-6">
-              Recibiste <strong class="text-cta-default dark:text-cyan-400">$500 ARS</strong> de
+            <p class="text-text-secondary mb-6">
+              Recibiste <strong class="text-cta-default">$500 ARS</strong> de
               bono de bienvenida. ¡Publicá tu primer auto y ganá $1,000 ARS más!
             </p>
             <a routerLink="/cars/publish" class="btn-primary"> Publicar mi auto </a>
@@ -61,35 +61,35 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
           <div class="card-premium p-8">
             <div class="text-center mb-6">
               <div class="text-5xl mb-4">🎁</div>
-              <h2 class="text-2xl font-bold mb-2 text-text-primary dark:text-white">
+              <h2 class="text-2xl font-bold mb-2 text-text-primary">
                 ¡Te invitaron a Autorentar!
               </h2>
-              <p class="text-text-secondary dark:text-gray-500">
+              <p class="text-text-secondary">
                 Usá el código
-                <strong class="text-cta-default dark:text-cyan-400">{{ code() }}</strong> y ganás:
+                <strong class="text-cta-default">{{ code() }}</strong> y ganás:
               </p>
             </div>
 
             <div
-              class="bg-gradient-to-br from-cta-default/10 to-cta-hover/10 dark:from-cyan-900/20 dark:to-cyan-800/20 rounded-xl p-6 border border-cta-default/20 dark:border-cyan-500/20 mb-6"
+              class="bg-gradient-to-br from-cta-default/10 to-cta-hover/10 rounded-xl p-6 border border-cta-default/20 mb-6"
             >
               <ul class="space-y-3">
                 <li class="flex items-start gap-3">
                   <span class="text-2xl">💵</span>
                   <div>
-                    <div class="font-semibold text-text-primary dark:text-white">
+                    <div class="font-semibold text-text-primary">
                       $500 ARS de bienvenida
                     </div>
-                    <div class="text-sm text-text-secondary dark:text-gray-500">Al registrarte</div>
+                    <div class="text-sm text-text-secondary">Al registrarte</div>
                   </div>
                 </li>
                 <li class="flex items-start gap-3">
                   <span class="text-2xl">🚗</span>
                   <div>
-                    <div class="font-semibold text-text-primary dark:text-white">
+                    <div class="font-semibold text-text-primary">
                       $1,000 ARS extras
                     </div>
-                    <div class="text-sm text-text-secondary dark:text-gray-500">
+                    <div class="text-sm text-text-secondary">
                       Al publicar tu primer auto
                     </div>
                   </div>
@@ -97,10 +97,10 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
                 <li class="flex items-start gap-3">
                   <span class="text-2xl">💰</span>
                   <div>
-                    <div class="font-semibold text-text-primary dark:text-white">
+                    <div class="font-semibold text-text-primary">
                       Generá ingresos
                     </div>
-                    <div class="text-sm text-text-secondary dark:text-gray-500">
+                    <div class="text-sm text-text-secondary">
                       Rentá tu auto y ganás hasta $200k/mes
                     </div>
                   </div>
@@ -112,9 +112,9 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
               Registrarme y recibir bono
             </button>
 
-            <div class="text-center text-sm text-text-muted dark:text-gray-500">
+            <div class="text-center text-sm text-text-muted">
               ¿Ya tenés cuenta?
-              <button (click)="login()" class="text-cta-default dark:text-cyan-400 hover:underline">
+              <button (click)="login()" class="text-cta-default hover:underline">
                 Iniciá sesión
               </button>
             </div>

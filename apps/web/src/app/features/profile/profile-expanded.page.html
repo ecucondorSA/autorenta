@@ -1,16 +1,16 @@
 <div
-  class="min-h-screen bg-surface-base dark:bg-surface-base pb-20 transition-colors duration-300 text-text-primary dark:text-text-secondary"
+  class="min-h-screen bg-surface-base pb-20 transition-colors duration-300 text-text-primary"
   >
   <!-- Header -->
   <div
-    class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-border-default/30 dark:border-slate-deep/50 transition-colors"
+    class="bg-surface-raised border-b border-border-default transition-colors"
     >
     <div class="mx-auto max-w-5xl px-6 py-4">
       <div>
-        <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary tracking-tight font-satoshi">
+        <h1 class="text-2xl font-bold text-text-primary tracking-tight font-satoshi">
           Mi Perfil
         </h1>
-        <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary/70">
+        <p class="mt-1 text-sm text-text-secondary">
           Gestiona tu información personal y preferencias
         </p>
       </div>
@@ -23,7 +23,7 @@
       <div
         class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent"
       ></div>
-      <p class="mt-4 text-text-secondary dark:text-text-secondary/70">Cargando perfil...</p>
+      <p class="mt-4 text-text-secondary">Cargando perfil...</p>
     </div>
   }
 
@@ -33,14 +33,14 @@
       <!-- Messages -->
       @if (message()) {
         <div
-          class="mb-3 rounded-xl bg-success-light/10 border border-success-light/40 dark:bg-success-bg0/15 dark:border-success-400/40 p-3 transition-colors"
+          class="mb-3 rounded-xl bg-success-light/10 border border-success-light/40 p-3 transition-colors"
           >
-          <p class="text-sm font-medium text-success-700 dark:text-success-100">{{ message() }}</p>
+          <p class="text-sm font-medium text-success-700">{{ message() }}</p>
         </div>
       }
       @if (error()) {
         <div
-          class="mb-3 rounded-xl bg-error-bg border border-error-border dark:bg-error-bg0/15 dark:border-error-400/40 p-3 transition-colors"
+          class="mb-3 rounded-xl bg-error-bg border border-error-border p-3 transition-colors"
           >
           <p class="text-sm font-medium text-error-strong">{{ error() }}</p>
         </div>
@@ -54,7 +54,7 @@
               <img
                 [src]="avatarUrl() || '/assets/avatar-placeholder.png'"
                 alt="Avatar"
-                class="h-24 w-24 rounded-full object-cover bg-surface-secondary dark:bg-surface-secondary/70 ring-2 ring-pearl-gray/30 dark:ring-slate-deep/60 transition-colors"
+                class="h-24 w-24 rounded-full object-cover bg-surface-secondary ring-2 ring-pearl-gray/30 transition-colors"
                 />
               <!-- Hover Overlay -->
               <label
@@ -94,7 +94,7 @@
               <h2 class="text-xl font-bold text-text-primary font-satoshi">{{ profile()?.full_name }}</h2>
               <app-verified-badge size="sm" variant="default" />
             </div>
-            <p class="text-xs text-text-secondary dark:text-text-secondary mb-1">{{ userEmail() }}</p>
+            <p class="text-xs text-text-secondary mb-1">{{ userEmail() }}</p>
             @if (profile()?.id || profile()?.gov_id_number || profile()?.driver_license_number) {
               <div class="w-full max-w-xs text-xs text-text-secondary/80 text-left">
                 @if (profile()?.id) {
@@ -128,7 +128,7 @@
             <!-- Member Since -->
             @if (memberSince()) {
               <p
-                class="text-xs text-text-secondary dark:text-text-secondary/60 mb-2"
+                class="text-xs text-text-secondary mb-2"
                 >
                 Miembro desde {{ memberSince()! | date: 'MMMM yyyy' }}
               </p>
@@ -178,7 +178,7 @@
                           stroke-linecap="round"
                           stroke-linejoin="round"
                           stroke-width="2"
-                          d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                          d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
                           />
                       </svg>
                     }
@@ -204,7 +204,7 @@
             }
             <!-- Permissions -->
             <div
-              class="mt-2 flex flex-col gap-1 text-xs text-text-secondary dark:text-text-secondary"
+              class="mt-2 flex flex-col gap-1 text-xs text-text-secondary"
               >
               @if (canPublishCars()) {
                 <span class="flex items-center gap-1">
@@ -237,26 +237,26 @@
             <!-- Ratings -->
             <div class="space-y-2">
               <div
-                class="flex items-center justify-between p-3 rounded-lg bg-gradient-to-br from-cta-default/10 to-cta-default/5 dark:from-cta-default/12 dark:to-transparent border border-cta-default/20 dark:border-cta-default/35 transition-colors"
+                class="flex items-center justify-between p-3 rounded-lg bg-gradient-to-br from-cta-default/10 to-cta-default/5 border border-cta-default/20 transition-colors"
                 >
                 <div>
                   <p
-                    class="text-xs font-medium text-text-secondary dark:text-text-secondary/70 mb-0.5"
+                    class="text-xs font-medium text-text-secondary mb-0.5"
                     >
                     Como Locador
                   </p>
                   <div class="flex items-baseline gap-1.5">
-                    <span class="text-2xl font-bold text-text-primary dark:text-text-primary">{{
+                    <span class="text-2xl font-bold text-text-primary">{{
                       ownerRating() | number: '1.1-1'
                     }}</span>
-                    <span class="text-cta-default dark:text-cta-default/80 text-sm">★</span>
+                    <span class="text-cta-default text-sm">★</span>
                   </div>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary/60 mt-0.5">
+                  <p class="text-xs text-text-secondary mt-0.5">
                     {{ ownerReviewsCount() }} {{ ownerReviewsCount() === 1 ? 'review' : 'reviews' }}
                   </p>
                   @if (totalBookingsAsOwner() > 0) {
                     <p
-                      class="text-xs text-text-secondary dark:text-text-secondary/50 mt-0.5"
+                      class="text-xs text-text-secondary mt-0.5"
                       >
                       {{ totalBookingsAsOwner() }}
                       {{ totalBookingsAsOwner() === 1 ? 'viaje' : 'viajes' }}
@@ -264,7 +264,7 @@
                   }
                 </div>
                 <svg
-                  class="h-8 w-8 text-cta-default/20 dark:text-cta-default/30"
+                  class="h-8 w-8 text-cta-default/20"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -278,26 +278,26 @@
                 </svg>
               </div>
               <div
-                class="flex items-center justify-between p-3 rounded-lg bg-gradient-to-br from-warning-light/10 to-warning-light/5 dark:from-warning-light/12 dark:to-transparent border border-warning-light/20 dark:border-warning-light/35 transition-colors"
+                class="flex items-center justify-between p-3 rounded-lg bg-gradient-to-br from-warning-light/10 to-warning-light/5 border border-warning-light/20 transition-colors"
                 >
                 <div>
                   <p
-                    class="text-xs font-medium text-text-secondary dark:text-text-secondary/70 mb-0.5"
+                    class="text-xs font-medium text-text-secondary mb-0.5"
                     >
                     Como Locatario
                   </p>
                   <div class="flex items-baseline gap-1.5">
-                    <span class="text-2xl font-bold text-text-primary dark:text-text-primary">{{
+                    <span class="text-2xl font-bold text-text-primary">{{
                       renterRating() | number: '1.1-1'
                     }}</span>
-                    <span class="text-warning-700 dark:text-warning-strong/80 text-sm">★</span>
+                    <span class="text-warning-700 text-sm">★</span>
                   </div>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary/60 mt-0.5">
+                  <p class="text-xs text-text-secondary mt-0.5">
                     {{ renterReviewsCount() }} {{ renterReviewsCount() === 1 ? 'review' : 'reviews' }}
                   </p>
                   @if (totalBookingsAsRenter() > 0) {
                     <p
-                      class="text-xs text-text-secondary dark:text-text-secondary/50 mt-0.5"
+                      class="text-xs text-text-secondary mt-0.5"
                       >
                       {{ totalBookingsAsRenter() }}
                       {{ totalBookingsAsRenter() === 1 ? 'viaje' : 'viajes' }}
@@ -305,7 +305,7 @@
                   }
                 </div>
                 <svg
-                  class="h-8 w-8 text-warning-strong/20 dark:text-warning-strong/30"
+                  class="h-8 w-8 text-warning-strong/20"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -324,21 +324,21 @@
           <div class="flex flex-col justify-center gap-3">
             <!-- Verification Status -->
             <div
-              class="p-3 rounded-lg bg-surface-secondary dark:bg-surface-secondary/70 border border-border-default dark:border-slate-deep transition-colors"
+              class="p-3 rounded-lg bg-surface-secondary border border-border-default transition-colors"
               >
               <h4
-                class="text-xs font-semibold text-text-primary dark:text-text-primary mb-2 uppercase tracking-wide"
+                class="text-xs font-semibold text-text-primary mb-2 uppercase tracking-wide"
                 >
                 Estado de Verificación
               </h4>
-              <div class="space-y-1.5 text-xs text-text-secondary dark:text-text-secondary/70">
+              <div class="space-y-1.5 text-xs text-text-secondary">
                 <div class="flex items-center justify-between">
                   <span>Email</span>
                   <span
                   [class]="
                     profile()?.email_verified
-                      ? 'text-success-text dark:text-success-200 font-semibold'
-                      : 'text-text-muted dark:text-text-secondary/50'
+                      ? 'text-success-text font-semibold'
+                      : 'text-text-muted'
                   "
                     >
                     {{ profile()?.email_verified ? '✓ Verificado' : '✗ Sin verificar' }}
@@ -349,8 +349,8 @@
                   <span
                   [class]="
                     profile()?.phone_verified
-                      ? 'text-success-text dark:text-success-200 font-semibold'
-                      : 'text-text-muted dark:text-text-secondary/50'
+                      ? 'text-success-text font-semibold'
+                      : 'text-text-muted'
                   "
                     >
                     {{ profile()?.phone_verified ? '✓ Verificado' : '✗ Sin verificar' }}
@@ -361,8 +361,8 @@
                   <span
                   [class]="
                     profile()?.id_verified
-                      ? 'text-success-text dark:text-success-200 font-semibold'
-                      : 'text-text-muted dark:text-text-secondary/50'
+                      ? 'text-success-text font-semibold'
+                      : 'text-text-muted'
                   "
                     >
                     {{ profile()?.id_verified ? '✓ Verificado' : '✗ Sin verificar' }}
@@ -370,7 +370,7 @@
                 </div>
                 <!-- Document Status: Driver License -->
                 <div
-                  class="flex items-center justify-between pt-1.5 mt-1.5 border-t border-border-default dark:border-border-default/30 dark:border-slate-deep/40"
+                  class="flex items-center justify-between pt-1.5 mt-1.5 border-t border-border-default"
                   >
                   <span class="text-xs">Licencia de conducir</span>
                   <span [class]="getKycStatusClass(driverLicenseStatus()) + ' text-xs'">
@@ -386,7 +386,7 @@
                 </div>
               </div>
               <!-- KYC Badge -->
-              <div class="mt-2 pt-2 border-t border-border-default dark:border-slate-deep/70">
+              <div class="mt-2 pt-2 border-t border-border-default">
                 <span
                 [class]="
                   'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ' +
@@ -443,16 +443,16 @@
             </div>
             <div class="flex-1 min-w-0">
               <h3
-                class="text-sm font-bold text-text-primary dark:text-text-primary group-hover:text-success-strong transition-colors"
+                class="text-sm font-bold text-text-primary group-hover:text-success-strong transition-colors"
                 >
                 Ganancias
               </h3>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-0.5">
+              <p class="text-xs text-text-secondary mt-0.5">
                 Ver ingresos y estadísticas
               </p>
             </div>
             <svg
-              class="h-4 w-4 text-text-secondary dark:text-text-secondary/70 group-hover:text-success-strong group-hover:translate-x-1 transition-all"
+              class="h-4 w-4 text-text-secondary group-hover:text-success-strong group-hover:translate-x-1 transition-all"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -491,16 +491,16 @@
             </div>
             <div class="flex-1 min-w-0">
               <h3
-                class="text-sm font-bold text-text-primary dark:text-text-primary group-hover:text-warning-strong transition-colors"
+                class="text-sm font-bold text-text-primary group-hover:text-warning-strong transition-colors"
                 >
                 Wallet
               </h3>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-0.5">
+              <p class="text-xs text-text-secondary mt-0.5">
                 Balance y movimientos
               </p>
             </div>
             <svg
-              class="h-4 w-4 text-text-secondary dark:text-text-secondary/70 group-hover:text-warning-strong group-hover:translate-x-1 transition-all"
+              class="h-4 w-4 text-text-secondary group-hover:text-warning-strong group-hover:translate-x-1 transition-all"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -539,16 +539,16 @@
             </div>
             <div class="flex-1 min-w-0">
               <h3
-                class="text-sm font-bold text-text-primary dark:text-text-primary group-hover:text-cta-default transition-colors"
+                class="text-sm font-bold text-text-primary group-hover:text-cta-default transition-colors"
                 >
                 Publicar Auto
               </h3>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-0.5">
+              <p class="text-xs text-text-secondary mt-0.5">
                 Añade un nuevo vehículo
               </p>
             </div>
             <svg
-              class="h-4 w-4 text-text-secondary dark:text-text-secondary/70 group-hover:text-cta-default group-hover:translate-x-1 transition-all"
+              class="h-4 w-4 text-text-secondary group-hover:text-cta-default group-hover:translate-x-1 transition-all"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

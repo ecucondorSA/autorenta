@@ -15,7 +15,7 @@ import { AuthService } from '@core/services/auth/auth.service';
     <div class="space-y-4">
       <!-- Header -->
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse">
+        <h3 class="text-lg font-semibold text-text-primary">
           Historial de Ingresos
         </h3>
         <button
@@ -37,7 +37,7 @@ import { AuthService } from '@core/services/auth/auth.service';
       <!-- Error State -->
       @if (error() && !loading()) {
         <div
-          class="bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-lg p-4"
+          class="bg-error-bg border border-error-border rounded-lg p-4"
         >
           <p class="text-error-strong">{{ error() }}</p>
         </div>
@@ -45,7 +45,7 @@ import { AuthService } from '@core/services/auth/auth.service';
 
       <!-- Empty State -->
       @if (!loading() && !error() && payouts().length === 0) {
-        <div class="bg-surface-base dark:bg-surface-base rounded-lg p-8 text-center">
+        <div class="bg-surface-base rounded-lg p-8 text-center">
           <svg
             class="mx-auto h-12 w-12 text-text-muted"
             fill="none"
@@ -59,10 +59,10 @@ import { AuthService } from '@core/services/auth/auth.service';
               d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <h3 class="mt-4 text-lg font-medium text-text-primary dark:text-text-inverse">
+          <h3 class="mt-4 text-lg font-medium text-text-primary">
             No hay ingresos registrados
           </h3>
-          <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary">
+          <p class="mt-2 text-sm text-text-secondary">
             Tus ingresos por bookings completados aparecerán aquí.
           </p>
         </div>
@@ -73,7 +73,7 @@ import { AuthService } from '@core/services/auth/auth.service';
         <div class="space-y-3">
           @for (payout of payouts(); track payout.id) {
             <div
-              class="bg-surface-raised dark:bg-surface-base rounded-lg border border-border-default dark:border-border-muted p-4 hover:shadow-md transition-shadow"
+              class="bg-surface-raised rounded-lg border border-border-default p-4 hover:shadow-md transition-shadow"
             >
               <div class="flex items-start justify-between">
                 <div class="flex-1">
@@ -93,22 +93,22 @@ import { AuthService } from '@core/services/auth/auth.service';
                     >
                       {{ getStatusLabel(payout.status) }}
                     </span>
-                    <span class="text-xs text-text-secondary dark:text-text-muted">
+                    <span class="text-xs text-text-secondary">
                       {{ formatDate(payout.createdAt) }}
                     </span>
                   </div>
                   <div class="mb-2">
-                    <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
+                    <p class="text-2xl font-bold text-text-primary">
                       {{ formatCurrency(payout.amount, payout.currency) }}
                     </p>
                     @if (payout.splitId) {
-                      <p class="text-xs text-text-secondary dark:text-text-muted mt-1">
+                      <p class="text-xs text-text-secondary mt-1">
                         Split ID: {{ payout.splitId }}
                       </p>
                     }
                   </div>
                   @if (payout.providerPayoutId) {
-                    <p class="text-xs text-text-secondary dark:text-text-muted">
+                    <p class="text-xs text-text-secondary">
                       ID Transacción: {{ payout.providerPayoutId }}
                     </p>
                   }
@@ -116,7 +116,7 @@ import { AuthService } from '@core/services/auth/auth.service';
                     <p class="text-xs text-error-text mt-2">Razón: {{ payout.failureReason }}</p>
                   }
                   @if (payout.completedAt) {
-                    <p class="text-xs text-text-secondary dark:text-text-muted mt-1">
+                    <p class="text-xs text-text-secondary mt-1">
                       Completado: {{ formatDate(payout.completedAt) }}
                     </p>
                   }
@@ -150,27 +150,27 @@ import { AuthService } from '@core/services/auth/auth.service';
         }
 
         <!-- Pagination Info -->
-        <div class="mt-2 text-center text-xs text-gray-500 dark:text-gray-500">
+        <div class="mt-2 text-center text-xs text-gray-500">
           Mostrando {{ payouts().length }} de {{ totalCount() }} ingresos
         </div>
 
         <!-- Summary Stats -->
         <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-cta-default/10 dark:bg-cta-default/20 rounded-lg p-4">
-            <p class="text-sm text-cta-default dark:text-cta-default mb-1">Total Ingresos</p>
-            <p class="text-2xl font-bold text-cta-default dark:text-cta-default">
+          <div class="bg-cta-default/10 rounded-lg p-4">
+            <p class="text-sm text-cta-default mb-1">Total Ingresos</p>
+            <p class="text-2xl font-bold text-cta-default">
               {{ formatCurrency(totalAmount(), 'ARS') }}
             </p>
           </div>
-          <div class="bg-success-light/10 dark:bg-success-light/20 rounded-lg p-4">
-            <p class="text-sm text-success-700 dark:text-success-strong mb-1">Completados</p>
-            <p class="text-2xl font-bold text-success-700 dark:text-success-strong">
+          <div class="bg-success-light/10 rounded-lg p-4">
+            <p class="text-sm text-success-700 mb-1">Completados</p>
+            <p class="text-2xl font-bold text-success-700">
               {{ completedCount() }}
             </p>
           </div>
-          <div class="bg-warning-bg dark:bg-warning-900/20 rounded-lg p-4">
-            <p class="text-sm text-warning-text dark:text-warning-400 mb-1">Pendientes</p>
-            <p class="text-2xl font-bold text-warning-strong dark:text-warning-200">
+          <div class="bg-warning-bg rounded-lg p-4">
+            <p class="text-sm text-warning-text mb-1">Pendientes</p>
+            <p class="text-2xl font-bold text-warning-strong">
               {{ pendingCount() }}
             </p>
           </div>

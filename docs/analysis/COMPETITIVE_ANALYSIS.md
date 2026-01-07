@@ -1215,7 +1215,7 @@ await this.supabase
 ```typescript
 // Edge function: calculate-platform-fee
 const insuranceCommission = booking.insurance_cost_usd * 0.30; // 30% de comisión en seguros
-const rentalCommission = booking.rental_cost_usd * 0.15; // 15% en alquiler
+const rentalCommission = booking.rental_cost_usd * booking.platform_fee_rate; // Fee variable en alquiler
 
 const totalPlatformFee = insuranceCommission + rentalCommission;
 ```

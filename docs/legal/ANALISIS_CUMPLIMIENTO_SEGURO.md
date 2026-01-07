@@ -91,15 +91,15 @@ Usuario Paga: $100 USD
     |
     +-- Reward Pool (75%) ------> Pool mensual       [NO va al owner directo]
     |
-    +-- Platform Fee (15%) -----> Autorenta          [Comision plataforma]
+    +-- Platform Fee (Variable) -> Autorenta          [Comision plataforma]
     |
     +-- FGO (10%) --------------> Fondo Garantia    [Proteccion operativa]
 
 Owner recibe: $0 USD por booking individual
               $X USD mensual del pool (por PUNTOS, no por uso)
 
-NOTA IMPORTANTE: La plataforma retiene solo 15% como fee operativo.
-El 75% va al pool comunitario de rewards, reforzando que NO hay
+NOTA IMPORTANTE: La plataforma retiene un fee operativo variable.
+El porcentaje mayoritario va al pool comunitario de rewards, reforzando que NO hay
 explotacion comercial del vehiculo por parte de Autorenta.
 ```
 
@@ -470,7 +470,7 @@ Una aseguradora restrictiva podria argumentar:
 
 | Argumento Aseguradora | Respuesta Defensiva |
 |-----------------------|---------------------|
-| "La plataforma monetiza" | Solo 15% fee operativo, 75% va al pool comunitario |
+| "La plataforma monetiza" | Fee operativo variable, el resto va al pool comunitario |
 | "Uso sistematico" | Limite 24 dias/mes, caracter ocasional documentado |
 | "Multiplicidad de terceros" | Conductor Indeterminado ya contempla terceros |
 | "Owner obtiene beneficio" | Rewards <= gastos anuales, sin lucro neto |

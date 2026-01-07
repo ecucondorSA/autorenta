@@ -1,12 +1,12 @@
-<div class="min-h-screen bg-surface-base dark:bg-surface-raised py-8">
+<div class="min-h-screen bg-surface-base py-8">
   <div class="max-w-4xl mx-auto px-4">
     <!-- Loading State -->
     @if (loading()) {
       <div class="text-center py-12">
         <div
-          class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted dark:border-border-default border-t-blue-600"
+          class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-600"
         ></div>
-        <p class="mt-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+        <p class="mt-4 text-text-secondary">
           Cargando reserva...
         </p>
       </div>
@@ -15,7 +15,7 @@
     <!-- Error State -->
     @else if (error()) {
       <div
-        class="bg-error-bg border border-error-border rounded-xl p-6 dark:bg-error-900/20 dark:border-error-800"
+        class="bg-error-bg border border-error-border rounded-xl p-6"
       >
         <div class="flex items-start gap-3">
           <div class="flex-shrink-0 text-2xl">⚠️</div>
@@ -47,7 +47,7 @@
       <div class="mb-6">
         <button
           routerLink="/bookings"
-          class="inline-flex items-center gap-2 text-sm font-medium text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-100 transition-colors mb-4"
+          class="inline-flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors mb-4"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -61,13 +61,13 @@
         </button>
 
         <div
-          class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6"
+          class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6"
         >
-          <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse mb-2 flex items-center gap-3 font-satoshi">
+          <h1 class="text-2xl font-bold text-text-primary mb-2 flex items-center gap-3 font-satoshi">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             Check-out del Vehículo
           </h1>
-          <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+          <p class="text-text-secondary">
             Realizá la inspección final del vehículo al devolver el auto
           </p>
         </div>
@@ -75,45 +75,45 @@
 
       <!-- Booking Info Card -->
       <div
-        class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6 mb-6"
+        class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6 mb-6"
       >
-        <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4 font-satoshi">
+        <h2 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">
           Información de la Reserva
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p
-              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1"
+              class="text-sm text-text-secondary mb-1"
             >
               Vehículo
             </p>
-            <p class="font-medium text-text-primary dark:text-text-inverse">
+            <p class="font-medium text-text-primary">
               {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{ booking()?.car_year }})
             </p>
           </div>
           <div>
             <p
-              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1"
+              class="text-sm text-text-secondary mb-1"
             >
               Inicio de la reserva
             </p>
-            <p class="font-medium text-text-primary dark:text-text-inverse">
+            <p class="font-medium text-text-primary">
               {{ formatDateTime(booking()!.start_at) }}
             </p>
           </div>
           <div>
             <p
-              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1"
+              class="text-sm text-text-secondary mb-1"
             >
               Fin de la reserva
             </p>
-            <p class="font-medium text-text-primary dark:text-text-inverse">
+            <p class="font-medium text-text-primary">
               {{ formatDateTime(booking()!.end_at) }}
             </p>
           </div>
           <div>
             <p
-              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1"
+              class="text-sm text-text-secondary mb-1"
             >
               Estado
             </p>
@@ -129,31 +129,31 @@
       <!-- Comparison with Check-in -->
       @if (checkInInspection() && !inspectionCompleted()) {
         <div
-          class="bg-cta-default/10 border border-cta-default/40 rounded-xl p-6 mb-6 dark:bg-cta-default/20 dark:border-cta-default"
+          class="bg-cta-default/10 border border-cta-default/40 rounded-xl p-6 mb-6"
         >
-          <h3 class="text-lg font-semibold text-cta-default dark:text-cta-default mb-4 flex items-center gap-2 font-satoshi">
+          <h3 class="text-lg font-semibold text-cta-default mb-4 flex items-center gap-2 font-satoshi">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 21h18" stroke-width="1.75" stroke-linecap="round"/><rect x="5" y="13" width="3" height="8" rx="0.5" stroke-width="1.5"/><rect x="10.5" y="7" width="3" height="14" rx="0.5" stroke-width="1.5"/><rect x="16" y="3" width="3" height="18" rx="0.5" stroke-width="1.5"/></svg>
             Comparación con Check-in
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p class="text-sm text-cta-default dark:text-cta-default mb-1">Odómetro al inicio</p>
-              <p class="text-lg font-bold text-cta-default dark:text-cta-default">
+              <p class="text-sm text-cta-default mb-1">Odómetro al inicio</p>
+              <p class="text-lg font-bold text-cta-default">
                 {{ checkInInspection()?.odometer }} km
               </p>
             </div>
             <div>
-              <p class="text-sm text-cta-default dark:text-cta-default mb-1">
+              <p class="text-sm text-cta-default mb-1">
                 Combustible al inicio
               </p>
-              <p class="text-lg font-bold text-cta-default dark:text-cta-default">
+              <p class="text-lg font-bold text-cta-default">
                 {{ checkInInspection()?.fuelLevel }}%
               </p>
             </div>
           </div>
           @if (checkInInspection()?.fuelLevel !== undefined) {
-            <div class="mt-4 p-3 bg-surface-raised dark:bg-surface-base rounded-lg">
-              <p class="text-sm text-cta-default dark:text-cta-default flex items-start gap-2">
+            <div class="mt-4 p-3 bg-surface-raised rounded-lg">
+              <p class="text-sm text-cta-default flex items-start gap-2">
                 <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 21h6M12 3a6 6 0 0 0-4 10.5V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3.5A6 6 0 0 0 12 3z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 <span><strong>Recordatorio:</strong> Dejá el vehículo con el mismo nivel de combustible
                 que al inicio ({{ checkInInspection()?.fuelLevel }}%) o pagarás la diferencia.</span>
@@ -166,15 +166,15 @@
       <!-- Check-out Already Completed -->
       @if (inspectionCompleted() && existingInspection()) {
         <div
-          class="bg-success-light/10 border border-success-light/40 rounded-xl p-6 dark:bg-success-light/20 dark:border-success-light"
+          class="bg-success-light/10 border border-success-light/40 rounded-xl p-6"
         >
           <div class="flex items-start gap-3">
-            <svg class="w-6 h-6 flex-shrink-0 text-success-700 dark:text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="w-6 h-6 flex-shrink-0 text-success-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-success-700 dark:text-success-strong mb-2 font-satoshi">
+              <h3 class="text-lg font-semibold text-success-700 mb-2 font-satoshi">
                 Check-out Completado
               </h3>
-              <p class="text-success-700 dark:text-success-strong mb-4">
+              <p class="text-success-700 mb-4">
                 El check-out de este vehículo ya fue completado el
                 {{
                   existingInspection()?.signedAt
@@ -184,25 +184,25 @@
               </p>
 
               @if (kilometersDriven() !== null) {
-                <p class="text-sm text-success-700 dark:text-success-strong mb-2">
+                <p class="text-sm text-success-700 mb-2">
                   <strong>Kilómetros recorridos:</strong> {{ kilometersDriven() }} km
                 </p>
               }
 
               @if (existingInspection()?.odometer) {
-                <p class="text-sm text-success-700 dark:text-success-strong mb-2">
+                <p class="text-sm text-success-700 mb-2">
                   <strong>Odómetro final:</strong> {{ existingInspection()?.odometer }} km
                 </p>
               }
 
               @if (existingInspection()?.fuelLevel !== undefined) {
-                <p class="text-sm text-success-700 dark:text-success-strong mb-2">
+                <p class="text-sm text-success-700 mb-2">
                   <strong>Combustible final:</strong> {{ existingInspection()?.fuelLevel }}%
                 </p>
               }
 
               @if (fuelDifference() !== null) {
-                <p class="text-sm text-success-700 dark:text-success-strong mb-2">
+                <p class="text-sm text-success-700 mb-2">
                   <strong>Diferencia de combustible:</strong>
                   @if (fuelDifference()! >= 0) {
                     <span class="text-success-strong">+{{ fuelDifference() }}%</span>
@@ -214,29 +214,29 @@
 
               <!-- Fuel Penalty Alert -->
               @if (fuelPenalty()) {
-                <div class="p-4 bg-error-bg dark:bg-error-900/30 rounded-xl border border-error-border dark:border-error-700 mb-4">
+                <div class="p-4 bg-error-bg rounded-xl border border-error-border mb-4">
                   <div class="flex items-start gap-3">
                     <svg class="w-6 h-6 text-error-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                     <div class="flex-1">
-                      <h4 class="font-semibold text-error-700 dark:text-error-200 mb-1 font-satoshi">
+                      <h4 class="font-semibold text-error-700 mb-1 font-satoshi">
                         Penalización por Combustible
                       </h4>
-                      <p class="text-sm text-error-600 dark:text-error-300 mb-2">
+                      <p class="text-sm text-error-600 mb-2">
                         El vehículo fue devuelto con {{ fuelPenalty()!.percentageMissing }}% menos de combustible.
                       </p>
                       <div class="text-sm space-y-1">
-                        <div class="flex justify-between text-error-600 dark:text-error-300">
+                        <div class="flex justify-between text-error-600">
                           <span>Litros faltantes:</span>
                           <span class="font-medium">~{{ fuelPenalty()!.liters }} L</span>
                         </div>
-                        <div class="flex justify-between text-error-700 dark:text-error-200 font-semibold">
+                        <div class="flex justify-between text-error-700 font-semibold">
                           <span>Cargo total (inc. servicio):</span>
                           <span>US$ {{ fuelPenalty()!.totalCost | number:'1.2-2' }}</span>
                         </div>
                       </div>
-                      <p class="text-xs text-error-500 dark:text-error-400 mt-2">
+                      <p class="text-xs text-error-500 mt-2">
                         Este monto será descontado de tu depósito de garantía.
                       </p>
                     </div>
@@ -258,14 +258,14 @@
       <!-- Check-out Form -->
       @else if (canPerformCheckOut()) {
         <div
-          class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6"
+          class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6"
         >
           <div class="mb-6">
-            <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-2 font-satoshi">
+            <h2 class="text-lg font-semibold text-text-primary mb-2 font-satoshi">
               Instrucciones
             </h2>
             <ul
-              class="list-disc list-inside space-y-2 text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+              class="list-disc list-inside space-y-2 text-sm text-text-secondary"
             >
               <li>Tomá al menos 8 fotos claras del vehículo en el mismo estado que al inicio</li>
               <li>Registrá el kilometraje final (odómetro)</li>
@@ -286,15 +286,15 @@
       <!-- Cannot Perform Check-out -->
       @else {
         <div
-          class="bg-warning-bg border border-warning-border rounded-xl p-6 dark:bg-warning-900/20 dark:border-warning-800"
+          class="bg-warning-bg border border-warning-border rounded-xl p-6"
         >
           <div class="flex items-start gap-3">
             <div class="flex-shrink-0 text-2xl">⚠️</div>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-warning-strong dark:text-warning-200 mb-2 font-satoshi">
+              <h3 class="text-lg font-semibold text-warning-strong mb-2 font-satoshi">
                 No se puede realizar el check-out
               </h3>
-              <p class="text-warning-strong dark:text-warning-300 mb-4">
+              <p class="text-warning-strong mb-4">
                 @if (!renterCheckInInspection()) {
                   El check-out no está disponible porque no completaste la recepción del vehículo.
                 } @else {

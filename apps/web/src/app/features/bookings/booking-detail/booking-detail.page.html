@@ -1,9 +1,9 @@
-<div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans text-slate-900 dark:text-slate-100">
+<div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans text-text-primary">
   <!-- Loading State -->
   @if (loading()) {
     <div class="flex flex-col items-center justify-center py-20 space-y-4">
-      <div class="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-      <p class="text-slate-500 font-medium animate-pulse">Cargando detalles de la reserva...</p>
+      <div class="w-12 h-12 border-4 border-surface-secondary border-t-cta-default rounded-full animate-spin"></div>
+      <p class="text-text-secondary font-medium animate-pulse">Cargando detalles de la reserva...</p>
     </div>
   }
 
@@ -15,7 +15,7 @@
       variant="banner">
       <button
         [routerLink]="backLink()"
-        class="mt-4 px-6 py-2.5 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-medium text-sm flex items-center gap-2 mx-auto">
+        class="mt-4 px-6 py-2.5 bg-surface-inverse text-text-inverse rounded-xl hover:bg-surface-inverse/90 transition-colors font-medium text-sm flex items-center gap-2 mx-auto">
         <ion-icon name="arrow-back-outline"></ion-icon>
         {{ backLabel() }}
       </button>
@@ -28,15 +28,15 @@
     <nav class="mb-6 flex items-center justify-between">
       <button
         [routerLink]="backLink()"
-        class="group inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+        class="group inline-flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
       >
-        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+        <div class="w-8 h-8 rounded-full bg-surface-secondary flex items-center justify-center group-hover:bg-surface-hover transition-colors">
           <ion-icon name="arrow-back" class="text-lg"></ion-icon>
         </div>
         <span>{{ backLabel() }}</span>
       </button>
       
-      <div class="text-xs text-slate-400 font-mono">
+      <div class="text-xs text-text-muted font-mono">
         ID: {{ booking()!.id.slice(0, 8) }}
       </div>
     </nav>
@@ -49,9 +49,9 @@
       <div class="lg:col-span-8 space-y-6">
         
         <!-- 1. COMPACT HERO: Car & Key Stats -->
-        <section class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row">
+        <section class="card-premium p-0 flex flex-col sm:flex-row overflow-hidden">
           <!-- Image Section (35%) -->
-          <div class="relative sm:w-1/3 h-48 sm:h-auto bg-slate-100">
+          <div class="relative sm:w-1/3 h-48 sm:h-auto bg-surface-secondary">
             @if (booking()?.car_image) {
               <img 
                 [src]="booking()!.car_image" 
@@ -60,12 +60,12 @@
               />
               <!-- Status Overlay -->
               <div class="absolute top-3 left-3">
-                 <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest bg-slate-900/90 text-white backdrop-blur-sm shadow-sm border border-white/10">
+                 <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest bg-surface-inverse/90 text-text-inverse backdrop-blur-sm shadow-sm border border-white/10">
                   {{ booking()?.status === 'in_progress' ? 'En Curso' : (booking()?.status | uppercase) }}
                 </span>
               </div>
             } @else {
-              <div class="w-full h-full flex items-center justify-center text-slate-400">
+              <div class="w-full h-full flex items-center justify-center text-text-muted">
                 <ion-icon name="car-sport-outline" class="text-4xl"></ion-icon>
               </div>
             }
@@ -75,22 +75,22 @@
           <div class="flex-1 p-5 flex flex-col justify-between">
             <div>
               <div class="flex justify-between items-start mb-2">
-                <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight leading-none">
+                <h1 class="text-xl sm:text-2xl font-bold text-text-primary tracking-tight leading-none font-satoshi">
                   {{ booking()?.car_brand }} {{ booking()?.car_model }}
-                  <span class="text-slate-400 font-normal ml-1">{{ booking()?.car_year }}</span>
+                  <span class="text-text-muted font-normal ml-1">{{ booking()?.car_year }}</span>
                 </h1>
                 <!-- Price Tag -->
                 <div class="text-right">
-                  <p class="text-lg font-bold text-slate-900 leading-none">
+                  <p class="text-lg font-bold text-text-primary leading-none">
                     {{ (booking()!.total_amount) | currency:booking()!.currency:'symbol':'1.0-0' }}
                   </p>
-                  <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wide">Total</p>
+                  <p class="text-[10px] text-text-muted font-medium uppercase tracking-wide">Total</p>
                 </div>
               </div>
               
               <!-- Owner info tiny -->
-              <div class="flex items-center gap-2 text-sm text-slate-500 mb-4">
-                <div class="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600">
+              <div class="flex items-center gap-2 text-sm text-text-secondary mb-4">
+                <div class="w-5 h-5 rounded-full bg-surface-secondary flex items-center justify-center text-[10px] font-bold text-text-secondary">
                    {{ carOwnerName().charAt(0) }}
                 </div>
                 <span>{{ carOwnerName() }}</span>
@@ -98,21 +98,21 @@
             </div>
 
             <!-- Dashboard Stats Grid -->
-            <div class="grid grid-cols-3 gap-2 border-t border-slate-100 pt-4">
+            <div class="grid grid-cols-3 gap-2 border-t border-border-default pt-4">
               <div>
-                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Inicio</p>
-                <p class="text-sm font-semibold text-slate-800">{{ booking()!.start_at | date:'dd MMM, HH:mm' }}</p>
+                <p class="text-[10px] text-text-muted uppercase font-bold tracking-wider mb-0.5">Inicio</p>
+                <p class="text-sm font-semibold text-text-primary">{{ booking()!.start_at | date:'dd MMM, HH:mm' }}</p>
               </div>
               <div>
-                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Fin</p>
-                <p class="text-sm font-semibold text-slate-800">{{ booking()!.end_at | date:'dd MMM, HH:mm' }}</p>
+                <p class="text-[10px] text-text-muted uppercase font-bold tracking-wider mb-0.5">Fin</p>
+                <p class="text-sm font-semibold text-text-primary">{{ booking()!.end_at | date:'dd MMM, HH:mm' }}</p>
               </div>
               <div>
-                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-0.5">Tiempo</p>
-                <p class="text-sm font-semibold text-slate-800 flex items-center gap-1">
+                <p class="text-[10px] text-text-muted uppercase font-bold tracking-wider mb-0.5">Tiempo</p>
+                <p class="text-sm font-semibold text-text-primary flex items-center gap-1">
                   {{ booking()!.days_count }} días
                   @if (deliveryTimeRemaining()) {
-                    <span class="text-[10px] text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded-full">{{ deliveryTimeRemaining() }}</span>
+                    <span class="text-[10px] text-info-700 bg-info-50 px-1.5 py-0.5 rounded-full">{{ deliveryTimeRemaining() }}</span>
                   }
                 </p>
               </div>
@@ -121,7 +121,7 @@
         </section>
 
         <!-- 2. Timeline Bar (Slim) -->
-        <section class="bg-white dark:bg-slate-900 rounded-2xl px-6 py-4 shadow-sm border border-slate-200 dark:border-slate-800">
+        <section class="card-premium p-6">
           <app-booking-confirmation-timeline
             [booking]="booking()!"
             [ownerName]="carOwnerName()"
@@ -131,17 +131,17 @@
            
            <!-- Alerts integrated efficiently -->
            @if (flowAlert()) {
-            <div class="mt-4 pt-4 border-t border-slate-100">
+            <div class="mt-4 pt-4 border-t border-border-default">
               <div class="flex items-start gap-3">
                  <ion-icon [name]="flowAlert()!.tone === 'danger' ? 'alert-circle' : 'information-circle'" 
-                   [class]="flowAlert()!.tone === 'danger' ? 'text-red-500' : 'text-blue-500'" 
+                   [class]="flowAlert()!.tone === 'danger' ? 'text-error-500' : 'text-info-500'" 
                    class="mt-0.5"></ion-icon>
                  <div class="flex-1">
-                   <p class="text-sm font-medium text-slate-900">{{ flowAlert()!.title }}</p>
-                   <p class="text-xs text-slate-500">{{ flowAlert()!.message }}</p>
+                   <p class="text-sm font-medium text-text-primary">{{ flowAlert()!.title }}</p>
+                   <p class="text-xs text-text-secondary">{{ flowAlert()!.message }}</p>
                  </div>
                  @if (flowAlert()!.action) {
-                    <a [routerLink]="flowAlert()!.action!.route" class="text-xs font-bold text-indigo-600 hover:underline">
+                    <a [routerLink]="flowAlert()!.action!.route" class="text-xs font-bold text-cta-default hover:underline">
                       {{ flowAlert()!.action!.label }}
                     </a>
                   }
@@ -152,23 +152,23 @@
 
         <!-- 3. CHECK-IN CRITICAL INFO CARD -->
         @if (booking()?.status === 'confirmed' || booking()?.status === 'in_progress') {
-          <section class="bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800 rounded-2xl shadow-xl overflow-hidden text-white">
+          <section class="bg-surface-inverse text-text-inverse rounded-2xl shadow-xl overflow-hidden">
             <!-- Header -->
             <div class="px-5 py-4 border-b border-white/10 flex justify-between items-center">
-              <h3 class="text-base font-bold flex items-center gap-2">
+              <h3 class="text-base font-bold flex items-center gap-2 text-text-inverse">
                 <ion-icon name="location" class="text-xl"></ion-icon>
                 Información de Check-in
               </h3>
               <!-- Car Ready Status -->
               <div class="flex items-center gap-2">
                 @if (booking()?.owner_confirmed_delivery) {
-                  <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-success-500/20 border border-success-400/30 text-success-300 text-xs font-bold">
+                    <span class="w-2 h-2 rounded-full bg-success-400 animate-pulse"></span>
                     Auto Listo
                   </span>
                 } @else {
-                  <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-bold">
-                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                  <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-warning-500/20 border border-warning-400/30 text-warning-300 text-xs font-bold">
+                    <span class="w-2 h-2 rounded-full bg-warning-400"></span>
                     Preparando
                   </span>
                 }
@@ -180,9 +180,9 @@
               <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10">
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-xs text-indigo-200 font-semibold uppercase tracking-wider mb-1">Fecha y Hora de Retiro</p>
-                    <p class="text-2xl font-bold">{{ booking()!.start_at | date:'EEEE d MMMM' }}</p>
-                    <p class="text-3xl font-black tracking-tight">{{ booking()!.start_at | date:'HH:mm' }} hs</p>
+                    <p class="text-xs text-text-inverse/70 font-semibold uppercase tracking-wider mb-1">Fecha y Hora de Retiro</p>
+                    <p class="text-2xl font-bold text-text-inverse">{{ booking()!.start_at | date:'EEEE d MMMM' }}</p>
+                    <p class="text-3xl font-black tracking-tight text-text-inverse">{{ booking()!.start_at | date:'HH:mm' }} hs</p>
                   </div>
                   <div class="text-right">
                     <ion-icon name="calendar" class="text-5xl text-white/30"></ion-icon>
@@ -192,11 +192,11 @@
 
               <!-- Coordenadas con Navegación -->
               <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10">
-                <p class="text-xs text-indigo-200 font-semibold uppercase tracking-wider mb-3">Punto de Encuentro</p>
+                <p class="text-xs text-text-inverse/70 font-semibold uppercase tracking-wider mb-3">Punto de Encuentro</p>
 
                 @if (booking()?.pickup_location_lat && booking()?.pickup_location_lng) {
                   <!-- Usar coordenadas específicas del pickup -->
-                  <p class="text-sm font-medium mb-4 text-white/90">
+                  <p class="text-sm font-medium mb-4 text-text-inverse/90">
                     {{ booking()!.pickup_location_lat?.toFixed(6) }}, {{ booking()!.pickup_location_lng?.toFixed(6) }}
                   </p>
 
@@ -205,7 +205,7 @@
                       [href]="'https://www.google.com/maps/dir/?api=1&destination=' + booking()!.pickup_location_lat + ',' + booking()!.pickup_location_lng"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white text-slate-900 font-bold text-sm hover:bg-slate-100 transition-all active:scale-[0.98] shadow-lg">
+                      class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-surface-base text-text-primary font-bold text-sm hover:bg-surface-hover transition-all active:scale-[0.98] shadow-lg">
                       <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                       </svg>
@@ -215,38 +215,7 @@
                       [href]="'https://waze.com/ul?ll=' + booking()!.pickup_location_lat + ',' + booking()!.pickup_location_lng + '&navigate=yes'"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#33CCFF] text-slate-900 font-bold text-sm hover:bg-[#2eb8e6] transition-all active:scale-[0.98] shadow-lg">
-                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20.54 6.63c.69 2.24.46 4.27-.46 6.13-.67 1.36-1.62 2.49-2.82 3.42-.43.33-.88.63-1.36.89.05.58.01 1.16-.12 1.73-.18.78-.53 1.5-1.03 2.13-.37.47-.81.88-1.31 1.22-.1.07-.22.07-.32 0-.1-.07-.14-.19-.1-.3.22-.57.35-1.18.38-1.79-1.27.24-2.59.18-3.84-.19-1.72-.51-3.17-1.51-4.28-2.93-.98-1.25-1.59-2.68-1.8-4.27-.14-1.1-.08-2.19.19-3.26.34-1.35.96-2.56 1.84-3.61 1.1-1.31 2.47-2.29 4.09-2.89 1.35-.5 2.76-.68 4.2-.53 1.56.16 2.99.66 4.27 1.51 1.2.79 2.18 1.81 2.93 3.02.18.29.33.59.54.99zM12 9c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-4 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm8 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"/>
-                      </svg>
-                      Waze
-                    </a>
-                  </div>
-                } @else if (booking()?.car_location_lat && booking()?.car_location_lng) {
-                  <!-- Fallback: usar ubicación del auto -->
-                  <p class="text-sm font-medium mb-2 text-white/90">
-                    Ubicación del vehículo
-                  </p>
-                  <p class="text-xs text-white/60 mb-4">
-                    {{ booking()?.car_city }}{{ booking()?.car_province ? ', ' + booking()?.car_province : '' }}
-                  </p>
-
-                  <div class="flex gap-3">
-                    <a
-                      [href]="'https://www.google.com/maps/dir/?api=1&destination=' + booking()!.car_location_lat + ',' + booking()!.car_location_lng"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white text-slate-900 font-bold text-sm hover:bg-slate-100 transition-all active:scale-[0.98] shadow-lg">
-                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                      </svg>
-                      Google Maps
-                    </a>
-                    <a
-                      [href]="'https://waze.com/ul?ll=' + booking()!.car_location_lat + ',' + booking()!.car_location_lng + '&navigate=yes'"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#33CCFF] text-slate-900 font-bold text-sm hover:bg-[#2eb8e6] transition-all active:scale-[0.98] shadow-lg">
+                      class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-info-400 text-black font-bold text-sm hover:bg-info-300 transition-all active:scale-[0.98] shadow-lg">
                       <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M20.54 6.63c.69 2.24.46 4.27-.46 6.13-.67 1.36-1.62 2.49-2.82 3.42-.43.33-.88.63-1.36.89.05.58.01 1.16-.12 1.73-.18.78-.53 1.5-1.03 2.13-.37.47-.81.88-1.31 1.22-.1.07-.22.07-.32 0-.1-.07-.14-.19-.1-.3.22-.57.35-1.18.38-1.79-1.27.24-2.59.18-3.84-.19-1.72-.51-3.17-1.51-4.28-2.93-.98-1.25-1.59-2.68-1.8-4.27-.14-1.1-.08-2.19.19-3.26.34-1.35.96-2.56 1.84-3.61 1.1-1.31 2.47-2.29 4.09-2.89 1.35-.5 2.76-.68 4.2-.53 1.56.16 2.99.66 4.27 1.51 1.2.79 2.18 1.81 2.93 3.02.18.29.33.59.54.99zM12 9c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-4 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm8 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"/>
                       </svg>
@@ -254,7 +223,7 @@
                     </a>
                   </div>
                 } @else {
-                  <div class="flex items-center gap-3 text-white/70">
+                  <div class="flex items-center gap-3 text-text-inverse/70">
                     <ion-icon name="location-outline" class="text-2xl"></ion-icon>
                     <span class="text-sm">Ubicación no disponible</span>
                   </div>
@@ -262,24 +231,24 @@
               </div>
 
               <!-- Documentos Físicos Requeridos (PROMINENTE) -->
-              <div class="bg-amber-500/20 backdrop-blur rounded-xl p-4 border border-amber-400/30">
+              <div class="bg-warning-500/20 backdrop-blur rounded-xl p-4 border border-warning-400/30">
                 <div class="flex items-start gap-3">
-                  <div class="w-10 h-10 rounded-full bg-amber-500/30 flex items-center justify-center shrink-0">
-                    <ion-icon name="warning" class="text-xl text-amber-300"></ion-icon>
+                  <div class="w-10 h-10 rounded-full bg-warning-500/30 flex items-center justify-center shrink-0">
+                    <ion-icon name="warning" class="text-xl text-warning-300"></ion-icon>
                   </div>
                   <div>
-                    <p class="text-sm font-bold text-amber-200 mb-2">Documentos Físicos Obligatorios</p>
-                    <p class="text-xs text-white/80 mb-3">
+                    <p class="text-sm font-bold text-warning-200 mb-2">Documentos Físicos Obligatorios</p>
+                    <p class="text-xs text-text-inverse/80 mb-3">
                       Aunque la App verificó tu identidad, legalmente debes mostrar los documentos físicos al dueño.
                     </p>
                     <div class="grid grid-cols-2 gap-2">
                       <div class="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2">
-                        <ion-icon name="id-card" class="text-amber-300"></ion-icon>
-                        <span class="text-xs font-semibold">DNI Físico</span>
+                        <ion-icon name="id-card" class="text-warning-300"></ion-icon>
+                        <span class="text-xs font-semibold text-text-inverse">DNI Físico</span>
                       </div>
                       <div class="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2">
-                        <ion-icon name="car" class="text-amber-300"></ion-icon>
-                        <span class="text-xs font-semibold">Carnet Físico</span>
+                        <ion-icon name="car" class="text-warning-300"></ion-icon>
+                        <span class="text-xs font-semibold text-text-inverse">Carnet Físico</span>
                       </div>
                     </div>
                   </div>
@@ -291,14 +260,14 @@
 
         <!-- 4. LOGISTICS CARD (Delivery/Dropoff info) -->
         @if (booking()?.delivery_required || booking()?.dropoff_location_lat) {
-          <section class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-            <div class="px-5 py-3 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-              <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                <ion-icon name="swap-horizontal-outline" class="text-indigo-500"></ion-icon>
+          <section class="card-premium overflow-hidden p-0">
+            <div class="px-5 py-3 border-b border-border-default bg-surface-secondary/50 flex justify-between items-center">
+              <h3 class="text-sm font-bold text-text-primary flex items-center gap-2">
+                <ion-icon name="swap-horizontal-outline" class="text-info-500"></ion-icon>
                 Devolución
               </h3>
               @if (booking()?.delivery_fee_cents) {
-                <span class="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">
+                <span class="text-[10px] font-bold bg-success-50 text-success-700 px-2 py-0.5 rounded-full border border-success-200">
                   Delivery Incluido
                 </span>
               }
@@ -306,19 +275,19 @@
 
             <div class="p-5">
               <div class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
-                  <ion-icon name="flag" class="text-slate-600"></ion-icon>
+                <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center shrink-0">
+                  <ion-icon name="flag" class="text-text-secondary"></ion-icon>
                 </div>
                 <div class="flex-1">
-                  <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Punto de Devolución</p>
-                  <p class="text-sm font-medium text-slate-900 mb-1">
+                  <p class="text-[10px] uppercase font-bold text-text-muted tracking-wider mb-1">Punto de Devolución</p>
+                  <p class="text-sm font-medium text-text-primary mb-1">
                     @if (booking()?.dropoff_location_lat) {
                       {{ booking()!.dropoff_location_lat?.toFixed(6) }}, {{ booking()!.dropoff_location_lng?.toFixed(6) }}
                     } @else {
                       Mismo punto de retiro
                     }
                   </p>
-                  <p class="text-xs text-slate-500">
+                  <p class="text-xs text-text-secondary">
                     {{ booking()!.end_at | date:'EEEE d MMMM, HH:mm' }} hs
                   </p>
                 </div>
@@ -330,12 +299,12 @@
         <!-- 4. Documentation (Compact Grid) -->
         <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Contract Card -->
-          <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col h-full">
+          <div class="card-premium p-6 flex flex-col h-full">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
+              <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
                 <ion-icon name="document-text-outline" class="text-xl"></ion-icon>
               </div>
-              <h3 class="font-bold text-slate-900">Contrato Digital</h3>
+              <h3 class="font-bold text-text-primary">Contrato Digital</h3>
             </div>
             <div class="flex-1">
               <app-booking-contract [bookingId]="booking()!.id"></app-booking-contract>
@@ -343,12 +312,12 @@
           </div>
 
           <!-- Refund Status / Insurance -->
-          <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col h-full">
+          <div class="card-premium p-6 flex flex-col h-full">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
+              <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
                 <ion-icon name="shield-checkmark-outline" class="text-xl"></ion-icon>
               </div>
-              <h3 class="font-bold text-slate-900">Estado de Garantía</h3>
+              <h3 class="font-bold text-text-primary">Estado de Garantía</h3>
             </div>
             <div class="flex-1">
               <app-refund-status [bookingId]="booking()!.id"></app-refund-status>
@@ -360,14 +329,14 @@
         @if (hasClaim() || canReportClaim() || isOwner()) {
           <section class="space-y-6">
             <div class="flex items-center justify-between px-1">
-              <h2 class="text-lg font-bold text-slate-900">Gestión de Incidentes</h2>
+              <h2 class="text-lg font-bold text-text-primary">Gestión de Incidentes</h2>
             </div>
 
             <!-- Damage Comparison (if inspections exist) -->
             @if (hasOwnerCheckIn() && hasCheckOut()) {
-              <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
-                <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                  <ion-icon name="git-compare-outline" class="text-indigo-600"></ion-icon>
+              <div class="card-premium p-6">
+                <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
+                  <ion-icon name="git-compare-outline" class="text-info-600"></ion-icon>
                   Comparativa de Daños
                 </h3>
                 <app-damage-comparison [bookingId]="booking()!.id"></app-damage-comparison>
@@ -376,23 +345,23 @@
 
             <!-- Claims List -->
             @if (hasClaim()) {
-              <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
-                <h3 class="font-bold text-slate-900 mb-4 text-red-600 flex items-center gap-2">
+              <div class="card-premium p-6">
+                <h3 class="font-bold text-text-primary mb-4 text-error-600 flex items-center gap-2">
                   <ion-icon name="warning-outline"></ion-icon>
                   Siniestros Reportados
                 </h3>
                 <!-- Simple list of existing claims -->
                 @for (claim of bookingClaims(); track claim.id) {
-                  <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 mb-3 last:mb-0">
+                  <div class="p-4 rounded-xl bg-surface-secondary border border-border-default mb-3 last:mb-0">
                     <div class="flex justify-between items-start">
                       <div>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white border border-slate-200 text-slate-800 mb-2">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-raised border border-border-default text-text-primary mb-2">
                           {{ getClaimStatusLabel(claim.status) }}
                         </span>
-                        <p class="font-medium text-slate-900">{{ claim.description }}</p>
-                        <p class="text-sm text-slate-500 mt-1">Reportado el {{ claim.created_at | date:'mediumDate' }}</p>
+                        <p class="font-medium text-text-primary">{{ claim.description }}</p>
+                        <p class="text-sm text-text-secondary mt-1">Reportado el {{ claim.created_at | date:'mediumDate' }}</p>
                       </div>
-                      <ion-icon name="chevron-forward" class="text-slate-400"></ion-icon>
+                      <ion-icon name="chevron-forward" class="text-text-muted"></ion-icon>
                     </div>
                   </div>
                 }
@@ -403,7 +372,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               @if (canReportDamage()) {
                 <a [routerLink]="['/bookings', booking()!.id, 'owner-damage-report']"
-                   class="flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-dashed border-slate-300 hover:border-red-400 hover:bg-red-50 text-slate-600 hover:text-red-700 transition-all group cursor-pointer">
+                   class="flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-dashed border-border-muted hover:border-error-400 hover:bg-error-50 text-text-secondary hover:text-error-700 transition-all group cursor-pointer">
                   <ion-icon name="alert-circle-outline" class="text-2xl group-hover:scale-110 transition-transform"></ion-icon>
                   <span class="font-semibold">Reportar Daños</span>
                 </a>
@@ -411,7 +380,7 @@
               
               @if (canReportClaim()) {
                 <a [routerLink]="['/bookings', booking()!.id, 'report-claim']"
-                   class="flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-dashed border-slate-300 hover:border-red-400 hover:bg-red-50 text-slate-600 hover:text-red-700 transition-all group cursor-pointer">
+                   class="flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-dashed border-border-muted hover:border-error-400 hover:bg-error-50 text-text-secondary hover:text-error-700 transition-all group cursor-pointer">
                   <ion-icon name="car-sport-outline" class="text-2xl group-hover:scale-110 transition-transform"></ion-icon>
                   <span class="font-semibold">Reportar Siniestro</span>
                 </a>
@@ -419,7 +388,7 @@
 
               @if (canReportTrafficFine()) {
                 <button (click)="showReportTrafficFineModal.set(true)"
-                   class="flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-dashed border-slate-300 hover:border-amber-400 hover:bg-amber-50 text-slate-600 hover:text-amber-700 transition-all group cursor-pointer">
+                   class="flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-dashed border-border-muted hover:border-warning-400 hover:bg-warning-50 text-text-secondary hover:text-warning-700 transition-all group cursor-pointer">
                   <ion-icon name="receipt-outline" class="text-2xl group-hover:scale-110 transition-transform"></ion-icon>
                   <span class="font-semibold">Reportar Multa</span>
                 </button>
@@ -439,14 +408,14 @@
         <div class="sticky top-6 z-10 space-y-6">
           
           <!-- Primary Action Card -->
-          <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-lg border border-slate-200 dark:border-slate-800 overflow-hidden">
+          <div class="card-premium p-0 overflow-hidden">
             <div class="p-6">
-              <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Gestión</h3>
+              <h3 class="text-sm font-bold text-text-muted uppercase tracking-wider mb-4">Gestión</h3>
               
               <!-- Contact Button (Primary Communication) -->
               <button 
                 (click)="openChatPanel()"
-                class="w-full flex items-center justify-center gap-3 p-4 mb-4 rounded-2xl bg-indigo-600 text-white font-bold text-lg hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-md shadow-indigo-200 hover:shadow-xl">
+                class="w-full flex items-center justify-center gap-3 p-4 mb-4 rounded-2xl bg-cta-default text-cta-text font-bold text-lg hover:bg-cta-hover active:scale-[0.98] transition-all shadow-md">
                 <ion-icon name="chatbubble-ellipses-outline" class="text-2xl"></ion-icon>
                 Chat con {{ isOwner() ? 'Locatario' : 'Anfitrión' }}
               </button>
@@ -457,7 +426,7 @@
                 <!-- Payment Action -->
                 @if (booking()?.status === 'pending_payment' && isRenter()) {
                   <a [routerLink]="['/bookings', booking()?.id, 'detail-payment']"
-                     class="w-full flex items-center justify-between p-4 rounded-xl bg-amber-50 text-amber-900 hover:bg-amber-100 transition-colors border border-amber-200">
+                     class="w-full flex items-center justify-between p-4 rounded-xl bg-warning-50 text-warning-900 hover:bg-warning-100 transition-colors border border-warning-200">
                     <span class="font-semibold flex items-center gap-2">
                       <ion-icon name="card-outline"></ion-icon>
                       Pagar Reserva
@@ -469,10 +438,10 @@
                 <!-- Approve/Reject (Owner) -->
                 @if (canApproveBooking()) {
                   <div class="grid grid-cols-2 gap-3">
-                    <button (click)="rejectBooking()" class="px-4 py-3 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition-colors">
+                    <button (click)="rejectBooking()" class="px-4 py-3 rounded-xl border border-border-default text-text-secondary font-semibold hover:bg-surface-secondary transition-colors">
                       Rechazar
                     </button>
-                    <button (click)="approveBooking()" class="px-4 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition-colors shadow-sm">
+                    <button (click)="approveBooking()" class="px-4 py-3 rounded-xl bg-success-600 text-white font-semibold hover:bg-success-700 transition-colors shadow-sm">
                       Aprobar
                     </button>
                   </div>
@@ -481,7 +450,7 @@
                 <!-- Check-in Action -->
                 @if (canPerformCheckIn()) {
                   <a [routerLink]="['/bookings', booking()?.id, 'check-in']"
-                     class="w-full flex items-center justify-between p-4 rounded-xl bg-emerald-50 text-emerald-900 hover:bg-emerald-100 transition-colors border border-emerald-200">
+                     class="w-full flex items-center justify-between p-4 rounded-xl bg-success-50 text-success-900 hover:bg-success-100 transition-colors border border-success-200">
                     <span class="font-semibold flex items-center gap-2">
                       <ion-icon name="checkmark-done-outline"></ion-icon>
                       Iniciar Check-in
@@ -493,7 +462,7 @@
                 <!-- Check-out Action (Renter) -->
                 @if (canPerformCheckOut()) {
                   <a [routerLink]="['/bookings', booking()?.id, 'check-out']"
-                     class="w-full flex items-center justify-between p-4 rounded-xl bg-blue-50 text-blue-900 hover:bg-blue-100 transition-colors border border-blue-200">
+                     class="w-full flex items-center justify-between p-4 rounded-xl bg-info-50 text-info-900 hover:bg-info-100 transition-colors border border-info-200">
                     <span class="font-semibold flex items-center gap-2">
                       <ion-icon name="flag-outline"></ion-icon>
                       Finalizar Viaje
@@ -505,7 +474,7 @@
                 <!-- Owner Check-in Action -->
                 @if (canOwnerCheckIn()) {
                   <a [routerLink]="['/bookings', booking()?.id, 'owner-check-in']"
-                     class="w-full flex items-center justify-between p-4 rounded-xl bg-amber-50 text-amber-900 hover:bg-amber-100 transition-colors border border-amber-200">
+                     class="w-full flex items-center justify-between p-4 rounded-xl bg-warning-50 text-warning-900 hover:bg-warning-100 transition-colors border border-warning-200">
                     <span class="font-semibold flex items-center gap-2">
                       <ion-icon name="car-outline"></ion-icon>
                       Iniciar Entrega del Vehículo
@@ -517,7 +486,7 @@
                 <!-- Owner Check-out Action -->
                 @if (canOwnerCheckOut()) {
                   <a [routerLink]="['/bookings', booking()?.id, 'owner-check-out']"
-                     class="w-full flex items-center justify-between p-4 rounded-xl bg-indigo-50 text-indigo-900 hover:bg-indigo-100 transition-colors border border-indigo-200">
+                     class="w-full flex items-center justify-between p-4 rounded-xl bg-info-50 text-info-900 hover:bg-info-100 transition-colors border border-info-200">
                     <span class="font-semibold flex items-center gap-2">
                       <ion-icon name="checkmark-done-outline"></ion-icon>
                       Confirmar Devolución
@@ -530,7 +499,7 @@
                 @if (canOwnerCancel() || (isRenter() && booking()?.status === 'pending')) {
                   <button 
                     (click)="isOwner() ? ownerCancelBooking() : cancelBooking(booking()!.id)"
-                    class="w-full py-3 text-slate-400 hover:text-red-600 text-sm font-medium transition-colors">
+                    class="w-full py-3 text-text-muted hover:text-error-600 text-sm font-medium transition-colors">
                     Cancelar Reserva
                   </button>
                 }
@@ -538,20 +507,20 @@
             </div>
 
             <!-- Financial Summary Mini -->
-            <div class="bg-slate-50 border-t border-slate-100 p-6">
+            <div class="bg-surface-secondary border-t border-border-default p-6">
               <div class="flex justify-between items-center mb-2">
-                <span class="text-slate-500">Total</span>
-                <span class="text-xl font-bold text-slate-900">
+                <span class="text-text-secondary">Total</span>
+                <span class="text-xl font-bold text-text-primary">
                   {{ booking()?.total_amount | currency:booking()?.currency:'symbol':'1.0-0' }}
                 </span>
               </div>
               @if (booking()?.deposit_amount_cents) {
                 <div class="flex justify-between items-center text-sm">
-                  <span class="text-slate-500 flex items-center gap-1">
+                  <span class="text-text-secondary flex items-center gap-1">
                     <ion-icon name="shield-checkmark-outline"></ion-icon>
                     Garantía
                   </span>
-                  <span class="font-medium text-slate-700">
+                  <span class="font-medium text-text-primary">
                     {{ (booking()?.deposit_amount_cents ?? 0) / 100 | currency:booking()?.currency:'symbol':'1.0-0' }}
                   </span>
                 </div>
@@ -560,10 +529,10 @@
           </div>
 
           <!-- 2. AI Tools Panel -->
-          <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-            <div class="p-4 border-b border-slate-100 bg-gradient-to-r from-indigo-50 to-white">
-              <h3 class="font-bold text-indigo-900 flex items-center gap-2">
-                <ion-icon name="sparkles" class="text-indigo-500"></ion-icon>
+          <div class="card-premium overflow-hidden p-0">
+            <div class="p-4 border-b border-border-default bg-surface-secondary">
+              <h3 class="font-bold text-info-900 flex items-center gap-2">
+                <ion-icon name="sparkles" class="text-info-500"></ion-icon>
                 Asistente IA
               </h3>
             </div>

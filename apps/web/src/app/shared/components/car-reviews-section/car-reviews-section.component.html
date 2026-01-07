@@ -6,14 +6,14 @@
     @if (loading()) {
       <!-- Skeleton loader -->
       <div class="animate-pulse">
-        <div class="h-8 bg-surface-hover dark:bg-surface-base rounded w-32 mb-2"></div>
-        <div class="h-4 bg-surface-hover dark:bg-surface-base rounded w-48"></div>
+        <div class="h-8 bg-surface-hover rounded w-32 mb-2"></div>
+        <div class="h-4 bg-surface-hover rounded w-48"></div>
       </div>
     } @else if (reviewsCount() > 0) {
       <div class="stats flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <div class="rating flex items-center gap-2">
           <span class="h3 text-text-primary font-mono">{{ averageRating() | number: '1.1-1' }}</span>
-          <span class="text-text-secondary dark:text-text-secondary text-lg">/5.0</span>
+          <span class="text-text-secondary text-lg">/5.0</span>
         </div>
         <div class="stars flex items-center gap-1">
           @for (star of getStarRating(averageRating()); track $index) {
@@ -31,7 +31,7 @@
             </svg>
           }
         </div>
-        <span class="text-text-secondary dark:text-text-secondary">
+        <span class="text-text-secondary">
           {{ reviewsCount() }} {{ reviewsCount() === 1 ? 'calificación' : 'calificaciones' }}
         </span>
       </div>
@@ -66,9 +66,9 @@
       }
     </div>
   } @else if (!loading() && reviewsCount() === 0) {
-    <div class="empty-state text-center py-12 bg-surface-base dark:bg-surface-base rounded-lg">
+    <div class="empty-state text-center py-12 bg-surface-base rounded-lg">
       <svg
-        class="mx-auto h-12 w-12 text-text-muted dark:text-text-secondary"
+        class="mx-auto h-12 w-12 text-text-muted"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -82,7 +82,7 @@
         />
       </svg>
       <h3 class="mt-4 text-sm font-medium text-text-primary font-satoshi">Sin calificaciones aún</h3>
-      <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary">
+      <p class="mt-2 text-sm text-text-secondary">
         Este auto aún no tiene calificaciones de arrendatarios. ¡Sé el primero en reservarlo y dejar
         una reseña!
       </p>

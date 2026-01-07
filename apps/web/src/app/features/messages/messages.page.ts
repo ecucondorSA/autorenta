@@ -23,15 +23,15 @@ import { CarChatComponent } from './components/car-chat.component';
   imports: [RouterLink, BookingChatComponent, CarChatComponent],
   hostDirectives: [],
   template: `
-    <div class="min-h-screen bg-surface-base dark:bg-surface-raised">
+    <div class="min-h-screen bg-surface-base">
       <!-- Header -->
-      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base">
+      <div class="sticky top-0 z-10 bg-surface-raised shadow">
         <div class="mx-auto max-w-4xl px-4 py-4">
           <div class="flex items-center gap-4">
             <!-- Back button -->
             <button
               (click)="goBack()"
-              class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-raised dark:hover:bg-gray-700"
+              class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-raised"
               type="button"
             >
               <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,11 +45,11 @@ import { CarChatComponent } from './components/car-chat.component';
             </button>
 
             <div>
-              <h1 class="text-xl font-semibold text-text-primary dark:text-text-inverse">
+              <h1 class="text-xl font-semibold text-text-primary">
                 Mensajes
               </h1>
               <p
-                class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                class="text-sm text-text-secondary"
               >
                 @if (bookingId()) {
                   Conversación sobre reserva
@@ -69,12 +69,12 @@ import { CarChatComponent } from './components/car-chat.component';
         <!-- Booking Context Card -->
         @if (hasBookingContext() && bookingContext()) {
           <div
-            class="mb-4 rounded-lg border border-cta-default/40 bg-cta-default/10 p-4 dark:border-cta-default dark:bg-cta-default/20"
+            class="mb-4 rounded-lg border border-cta-default/40 bg-cta-default/10 p-4"
           >
             <div class="flex items-start gap-3">
               <div class="flex-shrink-0">
                 <svg
-                  class="h-6 w-6 text-cta-default dark:text-cta-default"
+                  class="h-6 w-6 text-cta-default"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -88,11 +88,11 @@ import { CarChatComponent } from './components/car-chat.component';
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-sm font-semibold text-cta-default dark:text-cta-default mb-1">
+                <h3 class="text-sm font-semibold text-cta-default mb-1">
                   Reserva: {{ bookingContext()!.carTitle }}
                 </h3>
                 @if (bookingContext()!.dates) {
-                  <p class="text-xs text-cta-default dark:text-cta-default mb-2">
+                  <p class="text-xs text-cta-default mb-2">
                     📅 {{ bookingContext()!.dates }}
                   </p>
                 }
@@ -116,7 +116,7 @@ import { CarChatComponent } from './components/car-chat.component';
                   </span>
                   <a
                     [routerLink]="['/bookings', bookingId()]"
-                    class="text-xs text-cta-default hover:text-cta-default dark:text-cta-default dark:hover:text-cta-default underline"
+                    class="text-xs text-cta-default hover:text-cta-default underline"
                   >
                     Ver detalle
                   </a>
@@ -132,13 +132,13 @@ import { CarChatComponent } from './components/car-chat.component';
               <div
                 class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500"
               ></div>
-              <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+              <p class="text-text-secondary">
                 Cargando chat...
               </p>
             </div>
           </div>
         } @else if (error()) {
-          <div class="rounded-lg bg-error-bg p-4 dark:bg-error-900/20">
+          <div class="rounded-lg bg-error-bg p-4">
             <p class="text-sm text-error-strong">{{ error() }}</p>
             <button
               (click)="goBack()"
@@ -163,13 +163,13 @@ import { CarChatComponent } from './components/car-chat.component';
             [recipientName]="recipientName()!"
           />
         } @else {
-          <div class="rounded-lg bg-warning-bg p-4 dark:bg-warning-900/20">
-            <p class="text-sm text-warning-strong dark:text-warning-200">
+          <div class="rounded-lg bg-warning-bg p-4">
+            <p class="text-sm text-warning-strong">
               ⚠️ Faltan parámetros para iniciar el chat
             </p>
             <button
               (click)="goBack()"
-              class="mt-2 text-sm text-warning-text underline hover:text-warning-strong dark:text-warning-400"
+              class="mt-2 text-sm text-warning-text underline hover:text-warning-strong"
               type="button"
             >
               Volver

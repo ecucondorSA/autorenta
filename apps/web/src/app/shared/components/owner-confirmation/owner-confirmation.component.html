@@ -1,16 +1,16 @@
-<div class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-lg p-6">
+<div class="bg-surface-raised rounded-lg shadow-lg p-6">
   <!-- Header -->
   <div class="mb-6">
-    <h3 class="text-xl font-semibold text-slate-900 dark:text-text-inverse mb-2 font-satoshi">
-      Confirmación del Propietario
+    <h3 class="text-xl font-semibold text-slate-900 mb-2 font-satoshi">
+      Confirmacion del Propietario
     </h3>
-    <p class="text-sm text-slate-600 dark:text-slate-500">
-      Confirma que recibiste el vehículo de vuelta. Opcionalmente puedes reportar daños.
+    <p class="text-sm text-slate-600">
+      Confirma que recibiste el vehiculo de vuelta. Opcionalmente puedes reportar danos.
     </p>
   </div>
 
   <!-- Estado de confirmaciones -->
-  <div class="mb-6 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+  <div class="mb-6 p-4 bg-slate-50 rounded-lg">
     <div class="grid grid-cols-2 gap-4">
       <div class="flex items-center gap-2">
         <div
@@ -24,7 +24,7 @@
           [class.text-slate-500]="!ownerConfirmed"
           >
           Propietario
-          <span class="font-medium">{{ ownerConfirmed ? 'confirmó' : 'pendiente' }}</span>
+          <span class="font-medium">{{ ownerConfirmed ? 'confirmo' : 'pendiente' }}</span>
         </span>
       </div>
       <div class="flex items-center gap-2">
@@ -39,52 +39,52 @@
           [class.text-slate-500]="!renterConfirmed"
           >
           Locatario
-          <span class="font-medium">{{ renterConfirmed ? 'confirmó' : 'pendiente' }}</span>
+          <span class="font-medium">{{ renterConfirmed ? 'confirmo' : 'pendiente' }}</span>
         </span>
       </div>
     </div>
 
     <!-- Mensaje explicativo -->
-    <p class="mt-3 text-xs text-slate-600 dark:text-slate-500">
-      Cuando AMBOS confirmen, los fondos se liberarán automáticamente. Tus beneficios se acumularán
-      en tu cuenta, y la garantía (menos daños si aplica) volverá al wallet del usuario.
+    <p class="mt-3 text-xs text-slate-600">
+      Cuando AMBOS confirmen, los fondos se liberaran automaticamente. Tus beneficios se acumularan
+      en tu cuenta, y la garantia (menos danos si aplica) volvera al wallet del usuario.
     </p>
   </div>
 
-  <!-- Formulario de confirmación -->
+  <!-- Formulario de confirmacion -->
   @if (!ownerConfirmed) {
     <form [formGroup]="form" (ngSubmit)="confirm()">
-      <!-- Checkbox: ¿Hay daños? -->
+      <!-- Checkbox: Hay danos? -->
       <div class="mb-4">
         <label class="flex items-start gap-3 cursor-pointer">
           <input
             type="checkbox"
             formControlName="has_damages"
-            class="mt-1 w-4 h-4 text-cta-default bg-slate-100 border-slate-300 rounded focus:ring-cta-default dark:focus:ring-blue-600 dark:ring-offset-slate-800 focus:ring-2 dark:bg-slate-700 dark:border-slate-600"
+            class="mt-1 w-4 h-4 text-cta-default bg-slate-100 border-slate-300 rounded focus:ring-cta-default focus:ring-2"
             />
           <div>
-            <span class="text-sm font-medium text-slate-900 dark:text-text-inverse">
-              El vehículo tiene daños
+            <span class="text-sm font-medium text-slate-900">
+              El vehiculo tiene danos
             </span>
-            <p class="text-xs text-slate-500 dark:text-slate-500 mt-1">
-              Marca esta opción si encontraste daños al recibir el vehículo. Puedes cobrar hasta $250
-              USD de la garantía.
+            <p class="text-xs text-slate-500 mt-1">
+              Marca esta opcion si encontraste danos al recibir el vehiculo. Puedes cobrar hasta $250
+              USD de la garantia.
             </p>
           </div>
         </label>
       </div>
-      <!-- Campos de daños (si has_damages = true) -->
+      <!-- Campos de danos (si has_damages = true) -->
       @if (form.controls.has_damages.value) {
         <div
-          class="ml-7 mb-4 space-y-4 p-4 bg-warning-bg dark:bg-warning-900/20 rounded-lg border border-warning-border dark:border-warning-800"
+          class="ml-7 mb-4 space-y-4 p-4 bg-warning-bg rounded-lg border border-warning-border"
           >
-          <!-- Monto de daños -->
+          <!-- Monto de danos -->
           <div>
             <label
               for="damage_amount"
-              class="block text-sm font-medium text-slate-700 dark:text-slate-500 mb-2"
+              class="block text-sm font-medium text-slate-700 mb-2"
               >
-              Monto de daños (USD) <span class="text-error-500">*</span>
+              Monto de danos (USD) <span class="text-error-500">*</span>
             </label>
             <input
               id="damage_amount"
@@ -94,13 +94,13 @@
               max="250"
               step="0.01"
               placeholder="Ej: 100"
-              class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cta-default dark:bg-slate-700 dark:text-text-inverse"
+              class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cta-default"
           [class.border-error-border]="
             form.controls.damage_amount.touched && form.controls.damage_amount.invalid
           "
               />
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-500">
-              Máximo: $250 USD (monto de la garantía)
+            <p class="mt-1 text-xs text-slate-500">
+              Maximo: $250 USD (monto de la garantia)
             </p>
             @if (
               form.controls.damage_amount.touched &&
@@ -109,7 +109,7 @@
               <p
                 class="mt-1 text-xs text-error-text"
                 >
-                El monto de daños es requerido
+                El monto de danos es requerido
               </p>
             }
             @if (
@@ -122,26 +122,26 @@
               </p>
             }
           </div>
-          <!-- Descripción de daños -->
+          <!-- Descripcion de danos -->
           <div>
             <label
               for="damage_description"
-              class="block text-sm font-medium text-slate-700 dark:text-slate-500 mb-2"
+              class="block text-sm font-medium text-slate-700 mb-2"
               >
-              Descripción de daños <span class="text-error-500">*</span>
+              Descripcion de danos <span class="text-error-500">*</span>
             </label>
             <textarea
               id="damage_description"
               formControlName="damage_description"
               rows="4"
-              placeholder="Describe los daños encontrados (rayones, abolladuras, faltantes, etc.)"
-              class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cta-default dark:bg-slate-700 dark:text-text-inverse resize-none"
+              placeholder="Describe los danos encontrados (rayones, abolladuras, faltantes, etc.)"
+              class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-cta-default resize-none"
           [class.border-error-border]="
             form.controls.damage_description.touched && form.controls.damage_description.invalid
           "
             ></textarea>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-500">
-              Mínimo 10 caracteres. Sé específico con los daños encontrados.
+            <p class="mt-1 text-xs text-slate-500">
+              Minimo 10 caracteres. Se especifico con los danos encontrados.
             </p>
             @if (
               form.controls.damage_description.touched &&
@@ -150,7 +150,7 @@
               <p
                 class="mt-1 text-xs text-error-text"
                 >
-                La descripción es requerida cuando hay daños
+                La descripcion es requerida cuando hay danos
               </p>
             }
             @if (
@@ -160,18 +160,18 @@
               <p
                 class="mt-1 text-xs text-error-text"
                 >
-                La descripción debe tener al menos 10 caracteres
+                La descripcion debe tener al menos 10 caracteres
               </p>
             }
           </div>
         </div>
       }
-      <!-- Botón de confirmación -->
+      <!-- Boton de confirmacion -->
       <div class="flex items-center justify-between mt-6">
         <button
           type="button"
           (click)="reset()"
-          class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+          class="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
           [disabled]="loading().confirmingOwner"
           >
           Limpiar
@@ -203,7 +203,7 @@
               ></path>
             </svg>
           }
-          <span>{{ loading().confirmingOwner ? 'Confirmando...' : 'Confirmar recepción' }}</span>
+          <span>{{ loading().confirmingOwner ? 'Confirmando...' : 'Confirmar recepcion' }}</span>
         </button>
       </div>
     </form>
@@ -213,10 +213,10 @@
   @if (ownerConfirmed) {
     <div class="text-center py-8">
       <div
-        class="inline-flex items-center justify-center w-16 h-16 bg-success-light/20 dark:bg-success-light/30 rounded-full mb-4"
+        class="inline-flex items-center justify-center w-16 h-16 bg-success-light/20 rounded-full mb-4"
         >
         <svg
-          class="w-8 h-8 text-success-700 dark:text-success-strong"
+          class="w-8 h-8 text-success-700"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -229,18 +229,18 @@
           ></path>
         </svg>
       </div>
-      <h4 class="text-lg font-semibold text-slate-900 dark:text-text-inverse mb-2 font-satoshi">
-        Ya confirmaste la recepción del vehículo
+      <h4 class="text-lg font-semibold text-slate-900 mb-2 font-satoshi">
+        Ya confirmaste la recepcion del vehiculo
       </h4>
-      <p class="text-sm text-slate-600 dark:text-slate-500">
+      <p class="text-sm text-slate-600">
         @if (!renterConfirmed) {
           <span>
-            Esperando confirmación del locatario para liberar fondos.
+            Esperando confirmacion del locatario para liberar fondos.
           </span>
         }
         @if (renterConfirmed) {
           <span>
-            El locatario también confirmó. Los fondos se liberaron automáticamente.
+            El locatario tambien confirmo. Los fondos se liberaron automaticamente.
           </span>
         }
       </p>
@@ -252,32 +252,28 @@
     <div
       class="mt-4 p-4 rounded-lg"
       [class.bg-success-light/10]="confirmationResult()?.success"
-      [class.dark:bg-success-light/20]="confirmationResult()?.success"
       [class.bg-error-bg]="!confirmationResult()?.success"
-      [class.dark:bg-error-900/20]="!confirmationResult()?.success"
       >
       <p
         class="text-sm"
         [class.text-success-strong]="confirmationResult()?.success"
-        [class.dark:text-success-strong]="confirmationResult()?.success"
         [class.text-error-strong]="!confirmationResult()?.success"
-        [class.dark:text-error-300]="!confirmationResult()?.success"
         >
         {{ message() }}
       </p>
-      <!-- Detalles de liberación de fondos -->
+      <!-- Detalles de liberacion de fondos -->
       @if (confirmationResult()?.funds_released) {
         <div
-          class="mt-3 pt-3 border-t border-success-light/40 dark:border-success-light"
+          class="mt-3 pt-3 border-t border-success-light/40"
           >
-          <p class="text-xs font-semibold text-success-700 dark:text-success-strong mb-2">
-            Fondos liberados automáticamente:
+          <p class="text-xs font-semibold text-success-700 mb-2">
+            Fondos liberados automaticamente:
           </p>
-          <ul class="text-xs text-success-700 dark:text-success-strong space-y-1">
-            <li>✓ Beneficios acreditados a tu cuenta</li>
+          <ul class="text-xs text-success-700 space-y-1">
+            <li>Beneficios acreditados a tu cuenta</li>
             <li>
-              ✓ Garantía devuelta al wallet del locatario{{
-              form.controls.has_damages.value ? ' (menos daños reportados)' : ''
+              Garantia devuelta al wallet del locatario{{
+              form.controls.has_damages.value ? ' (menos danos reportados)' : ''
               }}
             </li>
           </ul>

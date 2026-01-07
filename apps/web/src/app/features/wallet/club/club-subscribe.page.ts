@@ -10,6 +10,7 @@ import {
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { WalletService } from '@core/services/payments/wallet.service';
 import { environment } from '../../../../environments/environment';
 
 declare global {
@@ -89,6 +90,38 @@ declare global {
           <div class="rounded-xl border border-border-default bg-surface-raised p-6 space-y-4">
             <h4 class="font-semibold text-text-primary">Metodo de pago</h4>
 
+            <!-- Wallet balance option -->
+            <div class="rounded-lg border border-border-default bg-surface-secondary p-4 space-y-2">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <p class="text-sm font-semibold text-text-primary">Pagar con tu wallet</p>
+                  <p class="text-xs text-text-muted">
+                    Saldo disponible:
+                    <span class="font-medium text-text-primary">{{ formatCurrency(walletAvailableCents()) }}</span>
+                  </p>
+                </div>
+                <button
+                  (click)="payWithWallet()"
+                  [disabled]="!canPayWithWallet() || loading()"
+                  class="px-4 py-2 rounded-lg text-sm font-semibold transition"
+                  [class]="
+                    canPayWithWallet()
+                      ? 'bg-cta-default text-cta-text hover:bg-cta-default/90'
+                      : 'bg-surface-muted text-text-muted cursor-not-allowed'
+                  "
+                >
+                  Pagar con wallet
+                </button>
+              </div>
+              @if (!canPayWithWallet()) {
+                <p class="text-xs text-text-muted">
+                  Te faltan {{ formatCurrency(walletShortfallCents()) }} para este plan.
+                </p>
+              }
+            </div>
+
+            <div class="text-center text-xs text-text-muted">o</div>
+
             <!-- MercadoPago button container -->
             <div id="wallet_container" class="min-h-[50px]"></div>
 
@@ -166,10 +199,31 @@ export class ClubSubscribePage implements OnInit {
   private readonly subscriptionService = inject(SubscriptionService);
   private readonly analytics = inject(AnalyticsService);
   private readonly toast = inject(NotificationManagerService);
+  private readonly walletService = inject(WalletService);
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly selectedTier = signal<SubscriptionTierConfig | null>(null);
+  readonly walletBalance = computed(() => this.walletService.balance());
+  readonly walletAvailableCents = computed(() => {
+    const balance = this.walletBalance();
+    if (!balance) return 0;
+    return Math.round((balance.available_balance ?? 0) * 100);
+  });
+  readonly walletShortfallCents = computed(() => {
+    const tier = this.selectedTier();
+    if (!tier) return 0;
+    const shortfall = tier.price_cents - this.walletAvailableCents();
+    return Math.max(0, shortfall);
+  });
+  readonly canPayWithWallet = computed(() => {
+    const tier = this.selectedTier();
+    if (!tier) return false;
+    const balance = this.walletBalance();
+    if (!balance) return false;
+    if (balance.currency && balance.currency !== 'USD') return false;
+    return this.walletAvailableCents() >= tier.price_cents;
+  });
 
   private mp: any = null;
 
@@ -181,6 +235,8 @@ export class ClubSubscribePage implements OnInit {
       this.analytics.trackEvent('club_subscribe_page_viewed', { tier: tierParam });
       void this.initializePayment();
     }
+
+    void this.walletService.fetchBalance().catch(() => null);
   }
 
   async initializePayment(): Promise<void> {
@@ -240,6 +296,32 @@ export class ClubSubscribePage implements OnInit {
     }
   }
 
+  async payWithWallet(): Promise<void> {
+    const tier = this.selectedTier();
+    if (!tier) return;
+    if (!this.canPayWithWallet()) {
+      this.error.set('Saldo insuficiente en tu wallet para pagar la membresia.');
+      return;
+    }
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      await this.subscriptionService.createSubscriptionWithWallet(tier.tier);
+      this.analytics.trackEvent('club_payment_submitted', { tier: tier.tier, method: 'wallet' });
+      this.toast.success('Membresia activada', 'Se activo tu membresia con wallet.');
+      void this.router.navigate(['/wallet/club/history'], {
+        queryParams: { payment: 'success', tier: tier.tier },
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'No se pudo procesar el pago con wallet.';
+      this.error.set(message);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
   private loadMercadoPagoSDK(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (window.MercadoPago) {
@@ -273,6 +355,15 @@ export class ClubSubscribePage implements OnInit {
 
   getTierTextClass(): string {
     return 'text-white';
+  }
+
+  formatCurrency(amountCents: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amountCents / 100);
   }
 
   goBack(): void {

@@ -31,7 +31,7 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
           </div>
           <div>
             <h4 class="font-semibold text-text-primary">Verificación Facial (Level 3)</h4>
-            <p class="text-sm text-text-secondary dark:text-text-secondary">
+            <p class="text-sm text-text-secondary">
               Verifica tu identidad con un selfie en video
             </p>
           </div>

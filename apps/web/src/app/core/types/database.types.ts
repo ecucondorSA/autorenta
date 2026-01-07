@@ -20407,7 +20407,7 @@ export type Database = {
         | "depleted"
         | "expired"
         | "cancelled"
-      subscription_tier: "club_standard" | "club_black"
+      subscription_tier: "club_standard" | "club_black" | "club_luxury"
       ticket_category:
         | "booking_issue"
         | "payment_issue"
@@ -20715,7 +20715,7 @@ export const Constants = {
         "expired",
         "cancelled",
       ],
-      subscription_tier: ["club_standard", "club_black"],
+      subscription_tier: ["club_standard", "club_black", "club_luxury"],
       ticket_category: [
         "booking_issue",
         "payment_issue",

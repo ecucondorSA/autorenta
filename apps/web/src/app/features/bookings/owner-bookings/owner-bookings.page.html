@@ -1,15 +1,15 @@
 <div
-  class="owner-bookings-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
+  class="owner-bookings-page bg-surface-base min-h-screen transition-colors duration-300"
   >
   <!-- Header -->
   <div
-    class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
+    class="bg-surface-raised border-b border-border-default transition-colors duration-300"
     >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary tracking-tight font-satoshi">
+      <h1 class="text-3xl font-bold text-text-primary tracking-tight font-satoshi">
         Reservas de Mis Autos
       </h1>
-      <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
+      <p class="mt-2 text-text-secondary">
         Gestiona las reservas de tus vehículos
       </p>
     </div>
@@ -78,7 +78,7 @@
     @if (loading()) {
       <div class="flex flex-col items-center justify-center py-16">
         <svg
-          class="animate-spin h-12 w-12 text-primary-600 dark:text-cta-default"
+          class="animate-spin h-12 w-12 text-primary-600"
           fill="none"
           viewBox="0 0 24 24"
           >
@@ -96,7 +96,7 @@
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           ></path>
         </svg>
-        <p class="mt-4 text-sm text-text-secondary dark:text-text-secondary/70">
+        <p class="mt-4 text-sm text-text-secondary">
           Cargando reservas...
         </p>
       </div>
@@ -105,7 +105,7 @@
     <!-- Error State -->
     @if (error(); as errorMsg) {
       <div
-        class="bg-error-bg border border-error-border dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4"
+        class="bg-error-bg border border-error-border rounded-lg p-4"
         >
         <p class="text-sm text-error-strong">{{ errorMsg }}</p>
         <button (click)="loadBookings()" class="mt-2 text-sm font-medium text-error-text underline">
@@ -118,7 +118,7 @@
       @if (marketplaceStatus(); as mpStatus) {
         @if (!mpStatus.isApproved) {
           <div
-            class="mb-8 rounded-lg border border-warning-300 bg-warning-bg px-4 py-4 text-sm text-warning-strong dark:border-warning-600/60 dark:bg-warning-900/25 dark:text-warning-100"
+            class="mb-8 rounded-lg border border-warning-300 bg-warning-bg px-4 py-4 text-sm text-warning-strong"
             >
             <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div class="flex items-start gap-3">
@@ -134,7 +134,7 @@
               <a
                 [routerLink]="['/profile']"
                 [queryParams]="{ section: 'payments' }"
-                class="inline-flex items-center gap-2 rounded-lg border border-warning-400 bg-surface-raised dark:bg-surface-secondary px-3 py-2 text-sm font-medium text-warning-strong transition hover:bg-warning-bg-hover dark:border-warning-border/70 dark:bg-transparent dark:text-warning-100 dark:hover:bg-warning-900/40"
+                class="inline-flex items-center gap-2 rounded-lg border border-warning-400 bg-surface-raised px-3 py-2 text-sm font-medium text-warning-strong transition hover:bg-warning-bg-hover"
                 >
                 Vincular ahora →
               </a>
@@ -145,10 +145,10 @@
       <section class="mb-10">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary font-satoshi">
+            <h2 class="text-xl font-semibold text-text-primary font-satoshi">
               Consultas sobre tus autos
             </h2>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+            <p class="text-sm text-text-secondary">
               Responde mensajes iniciales antes de que concreten una reserva.
             </p>
           </div>
@@ -156,10 +156,10 @@
 
         @if (leadsLoading()) {
           <div
-            class="flex items-center gap-3 rounded-lg border border-border-default dark:border-border-default/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3 text-sm text-text-secondary dark:text-text-secondary/70"
+            class="flex items-center gap-3 rounded-lg border border-border-default bg-surface-raised px-4 py-3 text-sm text-text-secondary"
             >
             <svg
-              class="h-5 w-5 animate-spin text-primary-600 dark:text-cta-default"
+              class="h-5 w-5 animate-spin text-primary-600"
               viewBox="0 0 24 24"
               fill="none"
               >
@@ -181,9 +181,9 @@
           </div>
         } @else if (carLeads().length === 0) {
           <div
-            class="rounded-lg border border-dashed border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary/40 dark:bg-surface-raised/40 px-4 py-6 text-center"
+            class="rounded-lg border border-dashed border-border-default bg-surface-raised px-4 py-6 text-center"
             >
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+            <p class="text-sm text-text-secondary">
               Aún no hay consultas pendientes sin reserva.
             </p>
           </div>
@@ -235,7 +235,7 @@
       @if (bookings().length === 0) {
         <div class="text-center py-16">
           <svg
-            class="mx-auto h-12 w-12 text-text-secondary dark:text-text-secondary/50"
+            class="mx-auto h-12 w-12 text-text-secondary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -247,10 +247,10 @@
               d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
               />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-text-primary dark:text-text-primary font-satoshi">
+          <h3 class="mt-2 text-sm font-medium text-text-primary font-satoshi">
             No tenés reservas
           </h3>
-          <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary/70">
+          <p class="mt-1 text-sm text-text-secondary">
             Cuando alguien alquile tus autos, aparecerán acá.
           </p>
         </div>

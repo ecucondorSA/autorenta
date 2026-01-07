@@ -1,9 +1,11 @@
 <section
   class="cars-marketplace bg-surface-base dark:bg-surface-base transition-colors duration-300 min-h-screen">
   <!-- Barra superior fija -->
+  <!-- Recompilation trigger 1 -->
   <app-pwa-titlebar />
 
-  <!-- Desktop Header with View Toggles -->
+
+  <!-- Desktop Header with View Toggles (hidden on mobile when map view) -->
   <div
     class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50"
     [class.hidden]="viewMode() === 'map'" [class.lg:block]="true">
@@ -11,8 +13,10 @@
       class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 py-3 pt-[calc(0.75rem+env(safe-area-inset-top))]">
       <!-- Header Left -->
       <div class="header-left">
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white font-satoshi">Alquila tu próximo auto</h1>
-        <p class="text-sm text-slate-600 dark:text-slate-500" data-testid="results-count" aria-live="polite">
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-white font-satoshi">Alquila tu
+          próximo auto</h1>
+        <p class="text-sm text-slate-600 dark:text-slate-500" data-testid="results-count"
+          aria-live="polite">
           {{ premiumCars().length }} vehículos disponibles
         </p>
       </div>
@@ -24,7 +28,7 @@
           <label for="sort-select" class="sr-only">Ordenar por</label>
           <select id="sort-select" data-testid="sort-select" [value]="sortBy()"
             (change)="onSortChange($any($event.target).value)"
-            class="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-slate-700 dark:text-slate-500 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all">
+            class="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-slate-700 dark:text-slate-500 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500">
             <option value="rating">Mejor valorados</option>
             <option value="price_asc">Precio: menor a mayor</option>
             <option value="price_desc">Precio: mayor a menor</option>
@@ -35,15 +39,17 @@
             cssClass="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
         </div>
 
-        <!-- View Toggle -->
+        <!-- View Toggle (Desktop only - mobile uses floating pill) -->
         <div
-          class="hidden lg:flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl items-center border border-slate-200 dark:border-slate-700 shadow-inner">
+          class="hidden lg:flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl items-center border border-slate-200 dark:border-slate-700">
           <button type="button" data-testid="view-map" [class.bg-white]="viewMode() === 'map'"
             [class.dark:bg-slate-700]="viewMode() === 'map'"
             [class.shadow-sm]="viewMode() === 'map'" [class.text-slate-900]="viewMode() === 'map'"
             [class.dark:text-white]="viewMode() === 'map'"
             [class.text-slate-500]="viewMode() !== 'map'" (click)="viewMode.set('map')"
-            class="px-4 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-2 text-sm font-bold">
+            [attr.aria-pressed]="viewMode() === 'map'" aria-label="Cambiar a vista mapa"
+            class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
+            title="Vista Mapa">
             <app-icon name="map" [size]="16" />
             <span>Mapa</span>
           </button>
@@ -52,7 +58,9 @@
             [class.shadow-sm]="viewMode() !== 'map'" [class.text-slate-900]="viewMode() !== 'map'"
             [class.dark:text-white]="viewMode() !== 'map'"
             [class.text-slate-500]="viewMode() === 'map'" (click)="viewMode.set('grid')"
-            class="px-4 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-2 text-sm font-bold">
+            [attr.aria-pressed]="viewMode() !== 'map'" aria-label="Cambiar a vista lista"
+            class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
+            title="Vista Lista">
             <app-icon name="menu" [size]="16" />
             <span>Lista</span>
           </button>
@@ -61,35 +69,57 @@
     </div>
   </div>
 
-  <!-- 🎯 SPLIT VIEW CONTAINER -->
+  <!-- 🎯 SPLIT VIEW CONTAINER (Desktop: side-by-side, Mobile: toggle) -->
   <div class="flex flex-col lg:flex-row lg:h-[calc(100vh-4rem)]"
     [class.h-screen]="viewMode() === 'map' && !isDesktop()">
-    
-    <!-- 📦 LEFT PANEL: Lista de Autos -->
+    <!-- 📦 LEFT PANEL: Lista de Autos (scrollable independiente) -->
     <div class="w-full lg:overflow-y-auto lg:h-full px-4 sm:px-6 py-6"
       [ngClass]="{ 'lg:w-1/2 xl:w-[55%]': viewMode() === 'map', 'lg:w-full xl:w-full': viewMode() !== 'map' }"
       [class.hidden]="viewMode() === 'map'" [class.lg:block]="true">
 
       <!-- 🔎 BARRA DE BÚSQUEDA PROFESIONAL -->
-      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 mb-8">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 mb-6">
         
-        <!-- Fila Principal -->
+        <!-- Fila Principal: Búsqueda + Fechas -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
+          
+          <!-- Input Búsqueda -->
           <div class="lg:col-span-7 relative">
-            <label for="search-cars-input" class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-2 ml-1">Ubicación o Vehículo</label>
+            <label for="search-cars-input" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">
+              Ubicación o Auto
+            </label>
             <div class="relative group">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <app-icon name="search" [size]="20" cssClass="text-slate-400 group-focus-within:text-cyan-500 transition-colors" />
+                <svg class="w-5 h-5 text-slate-400 group-focus-within:text-cyan-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
               </div>
-              <input id="search-cars-input" type="text" [value]="searchQuery()" (input)="onSearchInput($event)" (keyup.enter)="onSearchSubmit()"
-                placeholder="Ej. Toyota Corolla en Rivera..."
-                class="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all font-medium" />
+              <input 
+                id="search-cars-input" 
+                type="text" 
+                data-testid="search-input" 
+                [value]="searchQuery()"
+                (input)="onSearchInput($event)" 
+                (keyup.enter)="onSearchSubmit()"
+                aria-autocomplete="list"
+                [attr.aria-expanded]="searchSuggestions().length > 0" 
+                aria-controls="search-suggestions"
+                placeholder="Ej. Toyota Corolla en Centro..."
+                class="w-full pl-11 pr-4 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all font-medium" 
+              />
               
+              <!-- Sugerencias (Dropdown) -->
               @if (searchSuggestions().length > 0) {
-                <div id="search-suggestions" class="absolute inset-x-0 top-full mt-2 z-20 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl overflow-hidden">
-                  @for (suggestion of searchSuggestions(); track suggestion) {
-                    <button type="button" (click)="onSuggestionClick(suggestion)"
-                      class="w-full text-left px-4 py-3 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border-b border-slate-50 dark:border-slate-700/50 last:border-0">
+                <div id="search-suggestions" role="listbox" class="absolute inset-x-0 top-full mt-2 z-20 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                  @for (suggestion of searchSuggestions(); track suggestion; let idx = $index) {
+                    <button 
+                      type="button" 
+                      role="option"
+                      [id]="'search-suggestion-' + idx"
+                      (click)="onSuggestionClick(suggestion)"
+                      class="w-full text-left px-4 py-3 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3 border-b border-slate-50 dark:border-slate-700/50 last:border-0"
+                    >
+                      <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                       {{ suggestion }}
                     </button>
                   }
@@ -98,221 +128,807 @@
             </div>
           </div>
 
+          <!-- Selector de Fechas -->
           <div class="lg:col-span-5">
-            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-2 ml-1">Fechas de reserva</label>
-            <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to" (rangeChange)="onRangeChange($event)" />
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">
+              Fechas de Viaje
+            </label>
+            <app-date-range-picker 
+              [initialFrom]="dateRange().from" 
+              [initialTo]="dateRange().to"
+              (rangeChange)="onRangeChange($event)" 
+            />
           </div>
         </div>
 
+        <!-- Separador sutil -->
         <div class="h-px w-full bg-slate-100 dark:bg-slate-700/50 mb-6"></div>
 
-        <!-- Fila Secundaria: Filtros -->
+        <!-- Fila Secundaria: Filtros Avanzados -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <!-- Distancia -->
+          
+          <!-- Filtro Distancia -->
           <div>
-            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-1.5 ml-1">Radio (Km)</label>
+            <label for="filter-max-distance" class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">
+              Radio (Km)
+            </label>
             <div class="relative group">
-              <input type="number" [value]="maxDistance() ?? ''" (input)="maxDistance.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
-                placeholder="Ilimitado" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all" />
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-4 h-4 text-slate-400 group-focus-within:text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+              </div>
+              <input 
+                id="filter-max-distance" 
+                type="number" 
+                [value]="maxDistance() ?? ''" 
+                (input)="maxDistance.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
+                placeholder="Ilimitado" 
+                min="0" step="5"
+                class="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" 
+              />
             </div>
           </div>
-          <!-- Precio Min -->
+
+          <!-- Precio Mínimo -->
           <div>
-            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-1.5 ml-1">Precio Min</label>
+            <label for="filter-min-price" class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">
+              Precio Min
+            </label>
             <div class="relative group">
-              <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 font-bold">$</span>
-              <input type="number" [value]="minPrice() ?? ''" (input)="minPrice.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
-                placeholder="0" class="w-full pl-7 pr-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all" />
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-slate-400 text-sm font-semibold group-focus-within:text-cyan-500">$</span>
+              </div>
+              <input 
+                id="filter-min-price" 
+                type="number" 
+                [value]="minPrice() ?? ''" 
+                (input)="minPrice.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
+                placeholder="0" 
+                min="0" step="100"
+                class="w-full pl-7 pr-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" 
+              />
             </div>
           </div>
-          <!-- Precio Max -->
+
+          <!-- Precio Máximo -->
           <div>
-            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-1.5 ml-1">Precio Max</label>
+            <label for="filter-max-price" class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">
+              Precio Max
+            </label>
             <div class="relative group">
-              <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 font-bold">$</span>
-              <input type="number" [value]="maxPrice() ?? ''" (input)="maxPrice.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
-                placeholder="Sin límite" class="w-full pl-7 pr-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-4 focus:ring-cyan-500/10 focus:border-cyan-500 transition-all" />
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-slate-400 text-sm font-semibold group-focus-within:text-cyan-500">$</span>
+              </div>
+              <input 
+                id="filter-max-price" 
+                type="number" 
+                [value]="maxPrice() ?? ''" 
+                (input)="maxPrice.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
+                placeholder="Ilimitado" 
+                min="0" step="100"
+                class="w-full pl-7 pr-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all" 
+              />
             </div>
           </div>
-          <!-- Rating -->
+
+          <!-- Calificación -->
           <div>
-            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-1.5 ml-1">Rating</label>
-            <select [value]="minRating() ?? ''" (change)="minRating.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
-              class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm appearance-none cursor-pointer focus:ring-4 focus:ring-cyan-500/10 transition-all">
-              <option value="">Cualquier calificación</option>
-              <option value="4.5">4.5+ Estrellas</option>
-              <option value="4">4.0+ Estrellas</option>
-              <option value="3">3.0+ Estrellas</option>
-            </select>
+            <label for="filter-min-rating" class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">
+              Estrellas
+            </label>
+            <div class="relative group">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-4 h-4 text-slate-400 group-focus-within:text-amber-500 transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <select
+                id="filter-min-rating"
+                [value]="minRating() ?? ''"
+                (change)="minRating.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
+                class="w-full pl-9 pr-8 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all appearance-none cursor-pointer"
+              >
+                <option value="">Todas</option>
+                <option value="4.5">4.5+ Excelente</option>
+                <option value="4">4.0+ Muy bueno</option>
+                <option value="3">3.0+ Bueno</option>
+              </select>
+              <!-- Flecha custom -->
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="mt-6 flex items-center justify-between">
-          @if (dateRange().from && dateRange().to) {
-            <button type="button" (click)="toggleShowUnavailable()" class="flex items-center gap-3">
-              <div [class.bg-cyan-600]="showUnavailableCars()" [class.bg-slate-300]="!showUnavailableCars()" class="relative h-5 w-9 rounded-full transition-colors">
-                <span [class.translate-x-4]="showUnavailableCars()" class="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white transition-transform shadow-sm"></span>
-              </div>
-              <span class="text-xs font-bold text-slate-600">Ver no disponibles</span>
-            </button>
-          } @else { <div></div> }
+        <!-- Footer de Filtros: Toggle + Limpiar -->
+        <div class="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
           
-          @if (maxDistance() || minPrice() || maxPrice() || minRating()) {
-            <button (click)="clearFilters()" class="text-[10px] font-black uppercase tracking-widest text-rose-500 hover:text-rose-600 transition-colors">Limpiar Filtros</button>
+          <!-- Toggle Disponibles -->
+          @if (dateRange().from && dateRange().to) {
+            <button
+              type="button"
+              (click)="toggleShowUnavailable()"
+              class="group flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            >
+              <div 
+                [class.bg-cyan-600]="showUnavailableCars()"
+                [class.bg-slate-300]="!showUnavailableCars()"
+                class="relative h-5 w-9 flex-shrink-0 rounded-full transition-colors duration-200 ease-in-out"
+              >
+                <span
+                  [class.translate-x-4]="showUnavailableCars()"
+                  [class.translate-x-0]="!showUnavailableCars()"
+                  class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out border border-slate-100"
+                ></span>
+              </div>
+              <div class="flex flex-col items-start">
+                <span class="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  Mostrar no disponibles
+                </span>
+                @if (showUnavailableCars()) {
+                  <span class="text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+                    (Ver disponibilidad futura)
+                  </span>
+                }
+              </div>
+            </button>
+          } @else {
+            <div></div> <!-- Spacer -->
+          }
+
+          <!-- Botón Limpiar -->
+          @if (
+            maxDistance() !== null ||
+            minPrice() !== null ||
+            maxPrice() !== null ||
+            minRating() !== null ||
+            showUnavailableCars()
+          ) {
+            <button 
+              type="button" 
+              (click)="clearFilters()"
+              class="text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-rose-500 transition-colors flex items-center gap-1"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              Limpiar Filtros
+            </button>
           }
         </div>
       </div>
 
       <!-- Error State -->
       @if (loadError()) {
-        <div class="p-6 bg-rose-50 dark:bg-rose-900/20 border border-rose-100 rounded-2xl flex items-center justify-between">
-          <p class="text-rose-700 dark:text-rose-400 font-medium">{{ loadError() }}</p>
-          <button (click)="loadCars()" class="px-4 py-2 bg-rose-600 text-white rounded-xl text-sm font-bold">Reintentar</button>
+      <div class="mb-6" role="alert" aria-live="polite" data-testid="load-error">
+        <div
+          class="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 flex items-start justify-between gap-4">
+          <div>
+            <p class="text-sm font-semibold text-slate-900 dark:text-white">Error al cargar</p>
+            <p class="text-sm text-slate-600 dark:text-slate-500 mt-1">{{ loadError() }}</p>
+          </div>
+          <button type="button" (click)="loadCars()"
+            class="px-3 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 active:bg-cyan-800 text-white text-sm font-semibold whitespace-nowrap">
+            Reintentar
+          </button>
         </div>
+      </div>
       }
 
       <!-- SKELETON LOADING -->
-      @if (loading()) {
-        <div [class.grid]="viewMode() !== 'list'" class="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-          @for (_ of [1,2,3,4,5,6]; track _) {
-            <div class="animate-pulse">
-              <div class="aspect-[4/3] bg-slate-100 dark:bg-slate-800 rounded-2xl mb-4"></div>
-              <div class="h-4 bg-slate-100 dark:bg-slate-800 rounded w-3/4 mb-2"></div>
-              <div class="h-3 bg-slate-50 dark:bg-slate-900 rounded w-1/2"></div>
+      @if (loading() && (viewMode() === 'grid' || (viewMode() === 'map' && isDesktop()))) {
+      <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-x-4 sm:gap-y-8">
+        @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
+        <div class="animate-pulse">
+          <!-- Image Skeleton -->
+          <div class="aspect-[4/3] rounded-xl bg-slate-200 dark:bg-slate-700 mb-3"></div>
+          <!-- Content Skeleton -->
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
+              <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-12"></div>
             </div>
-          }
+            <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
+          </div>
         </div>
+        }
+      </div>
       }
 
-      <!-- GRID VIEW -->
-      @if (!loading() && (viewMode() === 'grid' || (viewMode() === 'map' && isDesktop()))) {
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-10">
-          @for (car of premiumCars(); track car.id; let idx = $index) {
-            <a [routerLink]="['/cars', car.id]" class="group block transition-all duration-300 hover:-translate-y-1">
-              <div class="aspect-[4/3] relative overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800 mb-4 shadow-sm group-hover:shadow-xl transition-all">
-                <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'" [alt]="car.brand" fill [priority]="idx < 2" class="object-cover transition-transform duration-700 group-hover:scale-110" />
-                
-                <button type="button" (click)="toggleFavorite($event, car.id)" class="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-full bg-black/10 backdrop-blur-md hover:bg-white transition-all">
-                  <app-icon [name]="isFavorite(car.id) ? 'heart-filled' : 'heart'" [size]="20" [cssClass]="isFavorite(car.id) ? 'text-rose-500' : 'text-white hover:text-slate-900'" />
-                </button>
+      <!-- SKELETON LOADING (List view) -->
+      @if (loading() && viewMode() === 'list') {
+      <div class="flex flex-col gap-4 max-w-5xl mx-auto" data-testid="list-skeleton">
+        @for (_ of [1, 2, 3]; track _) {
+        <div
+          class="animate-pulse bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col md:flex-row">
+          <div
+            class="w-full sm:w-48 md:w-56 lg:w-72 aspect-video md:aspect-[4/3] bg-slate-200 dark:bg-slate-700 flex-shrink-0">
+          </div>
+          <div class="p-5 flex-1 space-y-3">
+            <div class="h-5 bg-slate-200 dark:bg-slate-700 rounded w-2/3"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
+          </div>
+        </div>
+        }
+      </div>
+      }
 
-                @if (carBadges().get(car.id)?.topRated) {
-                  <span class="absolute top-3 left-3 px-2 py-1 bg-white/95 dark:bg-slate-900/90 backdrop-blur-sm text-slate-900 dark:text-white text-[10px] font-black uppercase tracking-wider rounded-lg shadow-sm flex items-center gap-1">
-                    <app-icon name="star-filled" [size]="10" cssClass="text-amber-500" />
-                    Superanfitrión
-                  </span>
+      <!-- GRID VIEW - Airbnb Style (Desktop/Tablet)
+         Desktop split-view: when viewMode() === 'map', keep the grid visible in the left panel. -->
+      @if (!loading() && (viewMode() === 'grid' || (viewMode() === 'map' && isDesktop()))) {
+      <!-- Desktop/Tablet Grid (Hidden on Mobile) -->
+      <div
+        class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-6 grid-view">
+        @for (car of premiumCars(); track car.id; let idx = $index) {
+        <a [routerLink]="['/cars', car.id]" [attr.data-car-id]="car.id"
+          [id]="'car-card-desktop-' + car.id" data-testid="car-card"
+          class="airbnb-card group block cursor-pointer transition-transform duration-200"
+          (mouseenter)="onCardMouseEnter(car.id)" (mouseleave)="onCardMouseLeave()">
+          <!-- Image Container -->
+          <div
+            class="aspect-[16/10] relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700 mb-3">
+            @if (idx
+            < 2) { <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [alt]="car.brand + ' ' + car.model" fill [priority]="true"
+              sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 24vw, (min-width: 640px) 45vw, 85vw"
+              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+            } @else {
+            <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [alt]="car.brand + ' ' + car.model" fill
+              sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 24vw, (min-width: 640px) 45vw, 85vw"
+              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+            }
+            <!-- Favorite Heart Button -->
+            <button type="button" (click)="toggleFavorite($event, car.id)"
+              [attr.aria-label]="isFavorite(car.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+              class="absolute top-3 left-3 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 hover:bg-white shadow-sm backdrop-blur-sm transition-all hover:scale-110">
+              <app-icon [name]="isFavorite(car.id) ? 'heart-filled' : 'heart'" [size]="20"
+                [cssClass]="isFavorite(car.id) ? 'text-rose-500' : 'text-slate-600'" />
+            </button>
+            <!-- Badges Desktop (optimized: uses pre-computed carBadges Map) -->
+            <div class="absolute top-3 right-3 flex flex-col gap-1.5 items-end">
+              <!-- Badge de disponibilidad -->
+              @if (showUnavailableCars() && car.isAvailableForDates === false) {
+              <span
+                class="px-2 py-1 bg-amber-500/90 text-white text-xs font-semibold rounded-full shadow-md flex items-center gap-1 backdrop-blur-sm">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                @if (car.nextAvailableDate) {
+                Libre desde {{ car.nextAvailableDate | date: 'd MMM' }}
+                } @else {
+                No disponible
+                }
+              </span>
+              }
+              @if (carBadges().get(car.id)?.topRated) {
+              <span
+                class="px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold rounded-full shadow-md flex items-center gap-1">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                Superanfitrión
+              </span>
+              }
+              @if (carBadges().get(car.id)?.instantBooking && !carBadges().get(car.id)?.topRated) {
+              <span
+                class="px-2 py-1 bg-cyan-500 text-white text-xs font-semibold rounded-full shadow-md flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Reserva inmediata
+              </span>
+              }
+            </div>
+          </div>
+          <!-- Content Desktop -->
+          <div class="space-y-1">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 min-w-0">
+                <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                  {{ car.location_city || car.location_state || 'Argentina' }}
+                </p>
+                @if (car.distanceText) {
+                <span class="text-xs text-slate-500 dark:text-slate-500 flex-shrink-0">· {{
+                  car.distanceText }}</span>
                 }
               </div>
-
-              <div class="space-y-1 px-1">
-                <div class="flex items-start justify-between gap-2">
-                  <h3 class="text-base font-bold text-slate-900 dark:text-white truncate font-satoshi">{{ car.brand || 'Vehículo' }} {{ car.model || 'Disponible' }}</h3>
-                  @if (car.rating_avg) {
-                    <div class="flex items-center gap-1 flex-shrink-0">
-                      <app-icon name="star-filled" [size]="14" cssClass="text-slate-900 dark:text-white" />
-                      <span class="text-sm font-bold">{{ car.rating_avg | number: '1.1-1' }}</span>
-                    </div>
-                  }
-                </div>
-                <p class="text-sm text-slate-500">{{ car.year || '2020+' }} · {{ car.transmission | titlecase }} · {{ car.fuel_type | titlecase }}</p>
-                <div class="flex items-end justify-between pt-2">
-                  <p class="text-xs font-bold text-slate-400 truncate uppercase tracking-widest">
-                    {{ car.location_city || 'Argentina' }}
-                    @if (car.distance && car.distance < 1) { <span class="text-emerald-500 ml-1">· En la zona</span> }
-                    @else if (car.distanceText) { <span class="ml-1">· {{ car.distanceText }}</span> }
-                  </p>
-                  <div class="text-right">
-                    <span class="text-xl font-black text-slate-900 dark:text-white">${{ car.price_per_day | number: '1.0-0' }}</span>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase ml-1">/ día</span>
-                  </div>
-                </div>
+              @if (car.rating_avg) {
+              <div class="flex items-center gap-1 flex-shrink-0">
+                <app-icon name="star-filled" [size]="16"
+                  cssClass="text-slate-900 dark:text-white" />
+                <span class="text-sm font-medium text-slate-900 dark:text-white">{{ car.rating_avg |
+                  number: '1.1-1' }}</span>
+                @if (car.rating_count) {
+                <span class="text-xs text-slate-500 dark:text-slate-500">({{ car.rating_count
+                  }})</span>
+                }
               </div>
-            </a>
-          }
-        </div>
-      }
-
-      <!-- MOBILE VIEW -->
-      <div class="sm:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-12 -mx-4 px-4 scrollbar-hide">
-        @for (car of premiumCars(); track car.id; let idx = $index) {
-          <a [routerLink]="['/cars', car.id]" class="relative flex-shrink-0 w-[85vw] snap-center bg-white dark:bg-slate-800 rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-700 flex flex-col">
-            <div class="h-[60%] relative bg-slate-100">
-              <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'" [alt]="car.brand" fill [priority]="idx === 0" class="object-cover" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-              <button type="button" (click)="toggleFavorite($event, car.id)" class="absolute top-6 right-6 w-12 h-12 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-xl">
-                <app-icon [name]="isFavorite(car.id) ? 'heart-filled' : 'heart'" [size]="24" cssClass="text-white" />
-              </button>
+              }
             </div>
-            <div class="flex-1 p-8 flex flex-col justify-between">
-              <div>
-                <div class="flex justify-between items-start mb-2">
-                  <h3 class="text-2xl font-bold text-slate-900 dark:text-white font-satoshi">{{ car.brand || 'Vehículo' }}</h3>
-                  @if (car.rating_avg) {
-                    <span class="px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-lg text-sm font-black">{{ car.rating_avg }}</span>
-                  }
-                </div>
-                <p class="text-slate-500 mb-4">{{ car.model }} · {{ car.year }}</p>
-                <div class="flex gap-2">
-                  <span class="px-3 py-1 bg-slate-50 dark:bg-slate-700 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400">{{ car.transmission }}</span>
-                  <span class="px-3 py-1 bg-slate-50 dark:bg-slate-700 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400">{{ car.seats }} Pasajeros</span>
-                </div>
-              </div>
-              <div class="flex items-center justify-between mt-8 pt-6 border-t border-slate-50 dark:border-slate-700">
-                <div>
-                  <span class="text-3xl font-black text-slate-900 dark:text-white">${{ car.price_per_day }}</span>
-                  <span class="text-xs font-bold text-slate-400 uppercase block">Total por día</span>
-                </div>
-                <div class="px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-black uppercase tracking-widest text-xs">Reservar</div>
-              </div>
-            </div>
-          </a>
+            <h3 class="text-sm text-slate-500 dark:text-slate-500 truncate font-bold font-satoshi">
+              {{ car.brand }} {{ car.model }} {{ car.year }}
+            </h3>
+            <p class="text-sm text-slate-500 dark:text-slate-500">
+              {{ car.transmission | titlecase }} · {{ car.seats }} asientos · {{ car.fuel_type |
+              titlecase }}
+            </p>
+            <p class="pt-1">
+              <span class="font-semibold text-slate-900 dark:text-white">${{ car.price_per_day |
+                number: '1.0-0' }}</span>
+              <span class="text-slate-500 dark:text-slate-500"> / día</span>
+            </p>
+          </div>
+        </a>
         }
       </div>
 
-      <!-- EMPTY STATE -->
-      @if (!loading() && premiumCars().length === 0) {
-        <div class="flex flex-col items-center justify-center py-32 px-6 text-center">
-          <div class="w-32 h-32 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-8">
-            <app-icon name="search" [size]="48" cssClass="text-slate-200" />
+      <!-- 📱 MOBILE TINDER-STYLE SWIPE VIEW -->
+      <div
+        class="sm:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-4 px-4 scrollbar-hide items-stretch h-[calc(100vh-14rem)]">
+        @for (car of premiumCars(); track car.id; let idx = $index) {
+        <a [routerLink]="['/cars', car.id]"
+          class="relative flex-shrink-0 w-[85vw] snap-center bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700 flex flex-col">
+          <!-- Full Height Image -->
+          <div class="h-[65%] relative">
+            @if (idx === 0) {
+            <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [alt]="car.brand + ' ' + car.model" fill [priority]="true" sizes="85vw"
+              class="w-full h-full object-cover" />
+            } @else {
+            <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [alt]="car.brand + ' ' + car.model" fill sizes="85vw"
+              class="w-full h-full object-cover" />
+            }
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+            <!-- Badge de disponibilidad (mobile) -->
+            @if (showUnavailableCars() && car.isAvailableForDates === false) {
+            <div class="absolute top-4 left-4 z-10">
+              <span
+                class="px-3 py-1.5 bg-amber-500/90 text-white text-xs font-semibold rounded-full shadow-lg flex items-center gap-1.5 backdrop-blur-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                @if (car.nextAvailableDate) {
+                Libre desde {{ car.nextAvailableDate | date: 'd MMM' }}
+                } @else {
+                No disponible
+                }
+              </span>
+            </div>
+            }
+
+            <!-- Price Tag on Image (Tinder Style) -->
+            <div class="absolute bottom-4 left-4 text-white">
+              <p class="text-2xl font-bold font-satoshi">${{ car.price_per_day | number: '1.0-0' }}
+              </p>
+              <p class="text-sm font-medium opacity-90">por día</p>
+            </div>
+
+            <!-- Heart Top Right -->
+            <button type="button" (click)="toggleFavorite($event, car.id)"
+              class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md transition-transform active:scale-90"
+              [attr.aria-label]="isFavorite(car.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'">
+              <app-icon [name]="isFavorite(car.id) ? 'heart-filled' : 'heart'" [size]="24"
+                [cssClass]="isFavorite(car.id) ? 'text-rose-500' : 'text-white'" />
+            </button>
           </div>
-          <h3 class="text-3xl font-bold text-slate-900 dark:text-white mb-4 font-satoshi">Sin resultados</h3>
-          <p class="text-slate-500 max-w-xs mb-10">No encontramos autos que coincidan con tus filtros actuales.</p>
-          <button (click)="clearFilters()" class="px-10 py-4 bg-cyan-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-cyan-500/20">Limpiar Filtros</button>
+
+          <!-- Bottom Content -->
+          <div class="flex-1 p-5 flex flex-col justify-between bg-white dark:bg-slate-800">
+            <div>
+              <div class="flex justify-between items-start mb-1">
+                <h3
+                  class="text-xl font-bold text-slate-900 dark:text-white font-satoshi leading-tight">
+                  {{ car.brand }} {{ car.model }}
+                </h3>
+                @if (car.rating_avg) {
+                <div
+                  class="flex items-center gap-1 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-lg">
+                  <app-icon name="star-filled" [size]="14" cssClass="text-amber-500" />
+                  <span class="text-sm font-bold text-slate-900 dark:text-white">
+                    {{ car.rating_avg | number: '1.1-1' }}
+                    @if (car.rating_count) {
+                    <span class="text-xs font-semibold text-slate-600 dark:text-slate-300">({{
+                      car.rating_count }})</span>
+                    }
+                  </span>
+                </div>
+                }
+              </div>
+              <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">
+                {{ car.year }} · {{ car.location_city || 'Argentina' }}
+                @if (car.distanceText) {
+                · {{ car.distanceText }}
+                }
+              </p>
+
+              <!-- Features Chips -->
+              <div class="flex flex-wrap gap-2">
+                <span
+                  class="px-3 py-1 bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 rounded-full text-xs text-slate-600 dark:text-slate-400">
+                  {{ car.transmission | titlecase }}
+                </span>
+                <span
+                  class="px-3 py-1 bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 rounded-full text-xs text-slate-600 dark:text-slate-400">
+                  {{ car.seats }} asientos
+                </span>
+              </div>
+            </div>
+
+            <div class="w-full mt-4">
+              <div
+                class="w-full py-3 bg-cyan-600 hover:bg-cyan-700 active:bg-cyan-800 text-white rounded-xl font-bold transition-colors text-center"
+                [attr.aria-label]="'Ver detalles de ' + car.brand + ' ' + car.model" role="text">
+                Ver detalles
+              </div>
+            </div>
+          </div>
+        </a>
+        }
+
+        <!-- "Load More" Card -->
+        @if (hasMoreCars()) {
+        <div class="relative flex-shrink-0 w-[85vw] snap-center flex items-center justify-center">
+          <button (click)="loadMore()"
+            class="flex flex-col items-center gap-4 p-8 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+            <div
+              class="w-16 h-16 rounded-full bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </div>
+            <span class="font-bold text-lg text-slate-900 dark:text-white">Ver más autos</span>
+          </button>
         </div>
+        }
+      </div>
       }
 
-      @if (hasMoreCars() && !loading()) {
-        <div class="flex justify-center py-12">
-          <button (click)="loadMore()" class="px-8 py-4 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-2xl font-black uppercase tracking-widest text-xs hover:border-cyan-500 transition-all">Ver más vehículos</button>
-        </div>
-      }
-    </div>
-
-    <!-- 🗺️ RIGHT PANEL: Mapa -->
-    @if (viewMode() === 'map') {
-    <div class="w-full lg:w-1/2 xl:w-[45%] h-full relative border-l border-slate-100 dark:border-slate-800">
-      <!-- Floating Button -->
-      <div class="absolute top-6 left-1/2 -translate-x-1/2 z-10">
-        <button (click)="loadCars()" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-6 py-3 rounded-full shadow-2xl border border-slate-100 dark:border-slate-700 text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:scale-105 active:scale-95 transition-all">
-          <app-icon name="refresh" [size]="14" />
-          Buscar en esta zona
+      <!-- LOAD MORE BUTTON (Desktop only) -->
+      @if (!loading() && (viewMode() === 'grid' || (viewMode() === 'map' && isDesktop())) &&
+      hasMoreCars()) {
+      <!-- ... existing load more button logic but wrapped to hide on mobile since it's inside the carousel now ... -->
+      <div class="hidden sm:flex mt-8 mb-12 justify-center pb-20 lg:pb-0">
+        <button (click)="loadMore()"
+          class="px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full shadow-sm text-slate-900 dark:text-white font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 group">
+          <span>Ver más autos</span>
+          <svg class="w-4 h-4 group-hover:translate-y-0.5 transition-transform" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 9l-7 7-7-7"></path>
+          </svg>
         </button>
       </div>
-      <app-cars-map [cars]="carMapLocations()" [selectedCarId]="activeMapCarId()" [userLocation]="userLocation()" (carSelected)="onMapCarSelected($event)" class="w-full h-full" />
+      }
+
+      <!-- LIST VIEW -->
+      @if (viewMode() === 'list') {
+      <div class="flex flex-col gap-4 max-w-5xl mx-auto list-view">
+        @for (car of premiumCars(); track car.id) {
+        <a [routerLink]="['/cars', car.id]" [attr.data-car-id]="car.id" [id]="'car-card-' + car.id"
+          data-testid="car-card"
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer flex flex-col md:flex-row"
+          [class.ring-2]="activeMapCarId() === car.id"
+          [class.ring-cyan-500]="activeMapCarId() === car.id"
+          (mouseenter)="onCardMouseEnter(car.id)" (mouseleave)="onCardMouseLeave()">
+          <!-- Image -->
+          <div
+            class="w-full sm:w-48 md:w-56 lg:w-72 aspect-video md:aspect-[4/3] relative bg-slate-100 dark:bg-slate-700 flex-shrink-0">
+            <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [alt]="car.brand + ' ' + car.model" fill
+              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 35vw, (min-width: 640px) 45vw, 100vw"
+              class="w-full h-full object-cover" />
+          </div>
+          <!-- Content -->
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h3 class="text-xl font-bold text-slate-900 dark:text-white"
+                    data-testid="car-title">
+                    {{ car.brand }} {{ car.model }}
+                  </h3>
+                  <p class="text-sm text-slate-500 dark:text-slate-500 flex items-center gap-1 mt-1"
+                    data-testid="car-location">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+                        stroke-width="1.75" />
+                      <circle cx="12" cy="10" r="3" stroke-width="1.75" />
+                    </svg>
+                    <span class="truncate">{{ car.location_city || 'Ubicación no disponible'
+                      }}</span>
+                    @if (car.distanceText) {
+                    <span class="text-xs text-slate-500 dark:text-slate-500 flex-shrink-0">· {{
+                      car.distanceText }}</span>
+                    }
+                  </p>
+                </div>
+                <div class="text-right">
+                  @if (car.price_per_day && car.price_per_day > 0) {
+                  <div class="text-2xl font-bold text-cyan-600 dark:text-cyan-400"
+                    data-testid="car-price">
+                    ${{ car.price_per_day | number: '1.0-0' }}
+                  </div>
+                  <div class="text-xs text-slate-500">por día</div>
+                  } @else {
+                  <div class="text-lg font-semibold text-primary-600">Consultar precio</div>
+                  }
+
+                  @if (car.rating_avg) {
+                  <div class="mt-1 flex items-center justify-end gap-1">
+                    <app-icon name="star-filled" [size]="14"
+                      cssClass="text-slate-900 dark:text-white" />
+                    <span class="text-sm font-semibold text-slate-900 dark:text-white">{{
+                      car.rating_avg | number: '1.1-1' }}</span>
+                    @if (car.rating_count) {
+                    <span class="text-xs text-slate-500 dark:text-slate-500">({{ car.rating_count
+                      }})</span>
+                    }
+                  </div>
+                  }
+                </div>
+              </div>
+              @if (car.description) {
+              <p class="text-slate-600 dark:text-slate-500 text-sm line-clamp-2 mb-4">
+                {{ car.description }}
+              </p>
+              }
+              <div class="flex flex-wrap gap-3">
+                <span
+                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3" stroke-width="1.75" />
+                    <path
+                      d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"
+                      stroke-width="1.75" stroke-linecap="round" />
+                  </svg>
+                  {{ car.transmission || 'Manual' }}
+                </span>
+                <span
+                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1">
+                  ⛽ {{ car.fuel_type || 'Nafta' }}
+                </span>
+                <span
+                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1">
+                  👥 {{ car.seats || 5 }} asientos
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+        }
+      </div>
+      }
+
+      <!-- Empty State -->
+      @if (!loading() && !loadError() && premiumCars().length === 0) {
+      <div class="text-center py-20" data-testid="empty-state">
+        <img src="/assets/images/empty-states/empty-search.svg" alt="No se encontraron autos"
+          class="w-64 h-64 mx-auto mb-6">
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 font-satoshi">
+          No encontramos vehículos
+        </h3>
+        <p class="text-slate-500 dark:text-slate-500">Intenta ajustar tu búsqueda o filtros.</p>
+      </div>
+      }
     </div>
+    <!-- END LEFT PANEL -->
+
+    <!-- 🗺️ RIGHT PANEL: Mapa (Desktop: fixed height, Mobile: fullscreen) -->
+    @if (viewMode() === 'map') {
+    <div
+      class="w-full lg:w-1/2 xl:w-[45%] fixed inset-0 z-40 lg:relative lg:inset-auto lg:z-auto lg:h-full flex-shrink-0 overflow-hidden lg:border-l lg:border-slate-200 dark:lg:border-slate-800"
+      data-testid="cars-map">
+      @if (loading() && premiumCars().length === 0) {
+      <div
+        class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80 dark:bg-slate-900/70">
+        <div class="text-sm font-semibold text-slate-900 dark:text-white">Cargando vehículos…</div>
+      </div>
+      }
+
+      @if (!loading() && loadError() && premiumCars().length === 0) {
+      <div
+        class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80 dark:bg-slate-900/70 p-6">
+        <div
+          class="max-w-md w-full bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+          <p class="text-sm font-semibold text-slate-900 dark:text-white">Error al cargar</p>
+          <p class="text-sm text-slate-600 dark:text-slate-500 mt-1">{{ loadError() }}</p>
+          <button type="button" (click)="loadCars()"
+            class="mt-4 w-full px-3 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 active:bg-cyan-800 text-white text-sm font-semibold">
+            Reintentar
+          </button>
+        </div>
+      </div>
+      }
+
+      @if (!loading() && !loadError() && premiumCars().length === 0) {
+      <div
+        class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80 dark:bg-slate-900/70 p-6">
+        <div class="max-w-md w-full text-center">
+          <p class="text-sm font-semibold text-slate-900 dark:text-white">No encontramos vehículos
+          </p>
+          <p class="text-sm text-slate-600 dark:text-slate-500 mt-1">Intenta ajustar tu búsqueda o
+            filtros.</p>
+        </div>
+      </div>
+      }
+
+      <app-cars-map [cars]="carMapLocations()" [selectedCarId]="activeMapCarId()"
+        [userLocation]="userLocation()" (carSelected)="onMapCarSelected($event)"
+        (userLocationChange)="onUserLocationChange($event)" class="w-full h-full"></app-cars-map>
+
+      <!-- Urgent Banner over map -->
+      @if (selectedCarId() && urgentAvailability()?.available) {
+      <div class="absolute bottom-6 left-0 right-0 px-4 z-[400] pointer-events-none">
+        <div class="max-w-2xl mx-auto pointer-events-auto">
+          <app-urgent-rental-banner [carId]="selectedCarId()!"
+            [regionId]="selectedCar()?.region_id || ''" [expressMode]="expressModeSignal" />
+        </div>
+      </div>
+      }
+
+      <!-- Map Controls Overlay -->
+      <div class="absolute top-20 lg:top-4 left-4 z-10 flex flex-col gap-2">
+        <button type="button"
+          class="w-11 h-11 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-300 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
+          [class.ring-2]="isCenteredOnUser()"
+          [class.ring-primary-500]="isCenteredOnUser()"
+          [disabled]="isLocating()"
+          [attr.aria-busy]="isLocating()"
+          [attr.aria-pressed]="isCenteredOnUser()"
+          (click)="centerOnUserLocation()"
+          title="Mi ubicación"
+          aria-label="Centrar mapa en mi ubicación actual">
+          @if (isLocating()) {
+            <svg class="w-5 h-5 animate-spin text-primary-600" viewBox="0 0 24 24" fill="none">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+          } @else {
+            <app-icon name="location" [size]="22"
+              cssClass="text-slate-600 dark:text-slate-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors" />
+          }
+        </button>
+      </div>
+
+    </div>
+    <!-- END RIGHT PANEL -->
     }
   </div>
+  <!-- END SPLIT VIEW CONTAINER -->
 
-  <!-- Mobile Floating Pill -->
-  @if (!loading()) {
-    <div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 lg:hidden flex gap-3">
-      <button (click)="viewMode.set(viewMode() === 'map' ? 'grid' : 'map')" class="bg-slate-900 text-white px-6 py-4 rounded-full shadow-2xl font-black uppercase tracking-widest text-[10px] flex items-center gap-2">
-        <app-icon [name]="viewMode() === 'map' ? 'menu' : 'map'" [size]="16" />
-        {{ viewMode() === 'map' ? 'Lista' : 'Mapa' }}
-      </button>
-      <button (click)="toggleFiltersDrawer()" class="bg-white text-slate-900 px-6 py-4 rounded-full shadow-2xl font-black uppercase tracking-widest text-[10px] border border-slate-100">
-        Filtros
-      </button>
+  <!-- 📱 Mobile Car Carousel (Bottom of Map) - Airbnb Style -->
+  @if (viewMode() === 'map') {
+  <div class="fixed bottom-[65px] left-0 right-0 z-[100] lg:hidden mobile-map-carousel"
+    style="top: auto; max-height: 140px;" data-testid="mobile-car-carousel">
+    <!-- Results Count Badge -->
+    <div class="flex justify-center mb-2">
+      <span
+        class="px-3 py-1.5 bg-white dark:bg-slate-800 rounded-full text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200 dark:border-slate-700 mobile-map-carousel-badge">
+        {{ premiumCars().length }} autos en esta zone
+      </span>
     </div>
+    <!-- Carousel Container -->
+    <div
+      class="flex flex-nowrap gap-3 overflow-x-auto snap-x snap-mandatory px-4 pb-3 scrollbar-hide mobile-map-carousel-track"
+      style="-webkit-overflow-scrolling: touch; height: 96px;">
+      @for (car of premiumCars(); track car.id) {
+      <a [routerLink]="['/cars', car.id]" [attr.data-car-id]="car.id"
+        class="flex-shrink-0 w-[260px] snap-start bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-200 active:scale-[0.98] mobile-map-carousel-card"
+        [class.ring-2]="activeMapCarId() === car.id"
+        [class.ring-cyan-500]="activeMapCarId() === car.id"
+        [class.shadow-cyan-200]="activeMapCarId() === car.id">
+        <div class="flex h-[88px]">
+          <!-- Car Image -->
+          <div class="w-[88px] h-full flex-shrink-0 bg-slate-100 dark:bg-slate-700 relative">
+            <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [alt]="car.brand + ' ' + car.model" width="88" height="88"
+              class="w-full h-full object-cover" />
+            <!-- Superhost Badge (optimized: uses pre-computed carBadges Map) -->
+            @if (carBadges().get(car.id)?.topRated) {
+            <span
+              class="absolute top-1 left-1 px-1.5 py-0.5 bg-amber-500 text-white text-[9px] font-bold rounded flex items-center justify-center">
+              <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+            </span>
+            }
+          </div>
+          <!-- Car Info -->
+          <div class="flex-1 p-2.5 min-w-0 flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-1">
+                <h4
+                  class="font-semibold text-[13px] text-slate-900 dark:text-white truncate leading-tight font-satoshi">
+                  {{ car.brand }} {{ car.model }}
+                </h4>
+                @if (car.rating_avg) {
+                <div class="flex items-center gap-0.5 flex-shrink-0">
+                  <app-icon name="star-filled" [size]="11"
+                    cssClass="text-slate-900 dark:text-white" />
+                  <span class="text-xs font-medium text-slate-900 dark:text-white">
+                    {{ car.rating_avg | number: '1.1-1' }}
+                  </span>
+                  @if (car.rating_count) {
+                  <span class="text-xs font-medium text-slate-500 dark:text-slate-500">({{
+                    car.rating_count }})</span>
+                  }
+                </div>
+                }
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-500 truncate mt-0.5">
+                {{ car.location_city || 'Argentina' }} · {{ car.transmission | titlecase }}
+                @if (car.distanceText) {
+                · {{ car.distanceText }}
+                }
+              </p>
+            </div>
+            <div class="flex items-center justify-between">
+              @if (car.price_per_day && car.price_per_day > 0) {
+              <span class="font-bold text-[15px] text-slate-900 dark:text-white">
+                ${{ car.price_per_day | number: '1.0-0' }}<span
+                  class="text-xs font-normal text-slate-500 font-mono">/día</span>
+              </span>
+              } @else {
+              <span class="font-semibold text-[13px] text-primary-600">Consultar</span>
+              }
+              <span class="text-cyan-600 dark:text-cyan-400 text-xs font-medium">
+                Ver →
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- Sticky CTA Mobile -->
+  @if (selectedCarId() && selectedCarPrice()) {
+  <app-sticky-cta-mobile [pricePerDay]="selectedCarPrice()!" [ctaText]="'Rentar ahora'"
+    [expressMode]="urgentAvailability()?.available || false"
+    (ctaClick)="onReserveClick(selectedCarId()!)" />
+  }
+
+  <!-- Floating Actions Pill (Map/List + Filters) -->
+  @if (!loading()) {
+  <div
+    class="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-40 flex items-center gap-3 lg:hidden">
+    <!-- Map/List Toggle -->
+    <button type="button"
+      (click)="viewMode() === 'map' ? viewMode.set('grid') : viewMode.set('map')"
+      [attr.aria-pressed]="viewMode() === 'map'"
+      [attr.aria-label]="viewMode() === 'map' ? 'Cambiar a vista lista' : 'Cambiar a vista mapa'"
+      class="flex items-center gap-2 px-5 py-3 bg-text-primary text-text-inverse rounded-full shadow-2xl font-bold text-sm tracking-wide hover:bg-black transition-all active:scale-95 border border-white/10">
+      @if (viewMode() !== 'map') {
+      <span>Mapa</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+      </svg>
+      } @else {
+      <span>Lista</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      }
+    </button>
+    <!-- Filters Button -->
+    <button type="button" (click)="toggleFiltersDrawer()" aria-label="Abrir filtros"
+      class="flex items-center gap-2 px-5 py-3 bg-text-primary text-text-inverse rounded-full shadow-2xl font-bold text-sm tracking-wide hover:bg-black transition-all active:scale-95 border border-white/10">
+      <span>Filtros</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+      </svg>
+    </button>
+  </div>
   }
 </section>

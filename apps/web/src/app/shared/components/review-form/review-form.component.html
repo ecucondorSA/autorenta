@@ -2,11 +2,11 @@
   <!-- Header -->
   <div class="stack-sm mb-6">
     <h2 class="h2 text-text-primary font-bold font-satoshi">Califica tu experiencia</h2>
-    <p class="text-text-secondary dark:text-text-secondary">
+    <p class="text-text-secondary">
       {{ isRenterToOwner ? 'Califica al propietario' : 'Califica al arrendatario' }}:
       <span class="font-semibold">{{ revieweeName }}</span>
     </p>
-    <p class="text-sm text-text-secondary dark:text-text-secondary">Vehículo: {{ carTitle }}</p>
+    <p class="text-sm text-text-secondary">Vehículo: {{ carTitle }}</p>
   </div>
 
   <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
@@ -19,7 +19,7 @@
               <span class="text-2xl mt-1 sm:mt-0">{{ category.icon }}</span>
               <div>
                 <h3 class="font-semibold text-text-primary font-satoshi">{{ category.label }}</h3>
-                <p class="text-xs text-text-secondary dark:text-text-secondary hidden sm:block">
+                <p class="text-xs text-text-secondary hidden sm:block">
                   {{ category.description }}
                 </p>
               </div>
@@ -59,7 +59,7 @@
             </div>
             
             <!-- Mobile description fallback -->
-             <p class="text-xs text-text-secondary dark:text-text-secondary sm:hidden w-full pt-1">
+             <p class="text-xs text-text-secondary sm:hidden w-full pt-1">
                {{ category.description }}
              </p>
           </div>
@@ -87,7 +87,7 @@
         <div class="w-full">
           <label for="comment_public" class="block text-sm font-medium text-text-primary mb-2">
             Comentario público
-            <span class="text-text-secondary dark:text-text-secondary font-normal block sm:inline"
+            <span class="text-text-secondary font-normal block sm:inline"
               >(opcional, visible para todos)</span
               >
             </label>
@@ -102,7 +102,7 @@
               placeholder="Comparte tu experiencia con otros usuarios..."
               maxlength="1000"
             ></textarea>
-            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 text-right">
+            <p class="text-xs text-text-secondary mt-1 text-right">
               <span
                 [class.text-error-text]="(reviewForm.get('comment_public')?.value?.length || 0) > 1000"
                 >
@@ -115,7 +115,7 @@
         <div class="w-full">
             <label for="comment_private" class="block text-sm font-medium text-text-primary mb-2">
             Comentario privado
-            <span class="text-text-secondary dark:text-text-secondary font-normal block sm:inline"
+            <span class="text-text-secondary font-normal block sm:inline"
                 >(solo para {{ revieweeName }})</span
                 >
             </label>
@@ -127,7 +127,7 @@
                 placeholder="Comentarios privados..."
                 maxlength="500"
             ></textarea>
-            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 text-right">
+            <p class="text-xs text-text-secondary mt-1 text-right">
                 {{ reviewForm.get('comment_private')?.value?.length || 0 }} / 500
             </p>
         </div>

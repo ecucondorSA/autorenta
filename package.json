@@ -81,6 +81,7 @@
     "_comment_monitor": "=== MONITORING ===",
     "monitor:health": "./tools/ops/monitor-health.sh",
     "monitor:wallet": "./tools/run.sh monitor:wallet",
+    "simulate:fgo": "npx tsx apps/web/tools/coverage-simulator.ts",
     "check:auth": "./tools/archive/check-auth.sh",
     "_comment_browser": "=== BROWSER AUTOMATION ===",
     "bridge": "cd browser-extension && npm run bridge",

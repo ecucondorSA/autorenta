@@ -418,19 +418,19 @@ export class MyBookingsPage implements OnInit, OnDestroy {
     const effectiveStatus = this.getEffectiveStatus(booking);
     switch (effectiveStatus) {
       case 'pending':
-        return 'border-l-amber-500';
+        return 'border-l-warning-500';
       case 'pending_review':
-        return 'border-l-blue-500';
+        return 'border-l-info-500';
       case 'confirmed':
       case 'in_progress':
-        return 'border-l-green-500';
+        return 'border-l-success-500';
       case 'completed':
-        return 'border-l-gray-400';
+        return 'border-l-border-default';
       case 'cancelled':
       case 'expired':
-        return 'border-l-red-500';
+        return 'border-l-error-500';
       default:
-        return 'border-l-gray-300';
+        return 'border-l-border-default';
     }
   }
 
@@ -439,19 +439,19 @@ export class MyBookingsPage implements OnInit, OnDestroy {
     const effectiveStatus = this.getEffectiveStatus(booking);
     switch (effectiveStatus) {
       case 'pending':
-        return 'bg-amber-100 dark:bg-amber-900/50';
+        return 'bg-warning-bg';
       case 'pending_review':
-        return 'bg-blue-100 dark:bg-blue-900/50';
+        return 'bg-info-bg';
       case 'confirmed':
       case 'in_progress':
-        return 'bg-green-100 dark:bg-green-900/50';
+        return 'bg-success-bg';
       case 'completed':
-        return 'bg-gray-100 dark:bg-gray-800';
+        return 'bg-surface-secondary';
       case 'cancelled':
       case 'expired':
-        return 'bg-red-100 dark:bg-red-900/50';
+        return 'bg-error-bg';
       default:
-        return 'bg-gray-100 dark:bg-gray-800';
+        return 'bg-surface-secondary';
     }
   }
 
@@ -460,20 +460,20 @@ export class MyBookingsPage implements OnInit, OnDestroy {
     const effectiveStatus = this.getEffectiveStatus(booking);
     switch (effectiveStatus) {
       case 'pending':
-        return 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300';
+        return 'bg-warning-bg text-warning-text';
       case 'pending_review':
-        return 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300';
+        return 'bg-info-bg text-info-text';
       case 'confirmed':
-        return 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300';
+        return 'bg-success-bg text-success-text';
       case 'in_progress':
-        return 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300';
+        return 'bg-info-bg text-info-text';
       case 'completed':
-        return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-500';
+        return 'bg-surface-secondary text-text-secondary';
       case 'cancelled':
       case 'expired':
-        return 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300';
+        return 'bg-error-bg text-error-text';
       default:
-        return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-500';
+        return 'bg-surface-secondary text-text-secondary';
     }
   }
 

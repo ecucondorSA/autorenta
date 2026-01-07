@@ -1,20 +1,20 @@
 <div
-  class="reviews-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
+  class="reviews-page bg-surface-base min-h-screen transition-colors duration-300"
 >
   <!-- Header -->
   <div
-    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
+    class="bg-surface-raised border-b border-border-default transition-colors duration-300"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary flex items-center gap-2 tracking-tight font-satoshi">
+          <h1 class="text-3xl font-bold text-text-primary flex items-center gap-2 tracking-tight font-satoshi">
             <svg class="w-8 h-8 text-warning-400" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
             Reseñas
           </h1>
-          <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
+          <p class="mt-2 text-text-secondary">
             Todas tus calificaciones y comentarios
           </p>
         </div>
@@ -65,7 +65,7 @@
       <!-- Tabs -->
       @if (userRole() === 'both') {
         <div
-          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-1 mb-6 flex gap-2"
+          class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-1 mb-6 flex gap-2"
         >
           <button
             (click)="setActiveTab('owner')"
@@ -73,7 +73,6 @@
             [class.bg-primary-600]="activeTab() === 'owner'"
             [class.text-text-inverse]="activeTab() === 'owner'"
             [class.text-text-primary]="activeTab() !== 'owner'"
-            [class.dark:text-text-primary]="activeTab() !== 'owner'"
           >
             Como Locador ({{ ownerReviewsCount() }})
           </button>
@@ -83,7 +82,6 @@
             [class.bg-primary-600]="activeTab() === 'renter'"
             [class.text-text-inverse]="activeTab() === 'renter'"
             [class.text-text-primary]="activeTab() !== 'renter'"
-            [class.dark:text-text-primary]="activeTab() !== 'renter'"
           >
             Como Locatario ({{ renterReviewsCount() }})
           </button>
@@ -95,17 +93,17 @@
         <!-- Owner Reviews Summary -->
         @if (userRole() === 'owner' || userRole() === 'both') {
           <div
-            class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+            class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
           >
-            <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4 font-satoshi">
+            <h2 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">
               Reseñas como Locador
             </h2>
             <div class="flex items-center gap-4">
               <div class="text-center">
-                <p class="text-4xl font-bold text-text-primary dark:text-text-primary">
+                <p class="text-4xl font-bold text-text-primary">
                   {{ ownerAverageRating().toFixed(1) }}
                 </p>
-                <p class="text-sm text-text-secondary dark:text-text-secondary/70">Promedio</p>
+                <p class="text-sm text-text-secondary">Promedio</p>
               </div>
               <div class="flex-1">
                 <div class="flex items-center gap-1 mb-2">
@@ -123,7 +121,7 @@
                     </svg>
                   }
                 </div>
-                <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+                <p class="text-sm text-text-secondary">
                   {{ ownerReviewsCount() }}
                   {{ ownerReviewsCount() === 1 ? 'reseña' : 'reseñas' }}
                 </p>
@@ -135,17 +133,17 @@
         <!-- Renter Reviews Summary -->
         @if (userRole() === 'renter' || userRole() === 'both') {
           <div
-            class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+            class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
           >
-            <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4 font-satoshi">
+            <h2 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">
               Reseñas como Locatario
             </h2>
             <div class="flex items-center gap-4">
               <div class="text-center">
-                <p class="text-4xl font-bold text-text-primary dark:text-text-primary">
+                <p class="text-4xl font-bold text-text-primary">
                   {{ renterAverageRating().toFixed(1) }}
                 </p>
-                <p class="text-sm text-text-secondary dark:text-text-secondary/70">Promedio</p>
+                <p class="text-sm text-text-secondary">Promedio</p>
               </div>
               <div class="flex-1">
                 <div class="flex items-center gap-1 mb-2">
@@ -163,7 +161,7 @@
                     </svg>
                   }
                 </div>
-                <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+                <p class="text-sm text-text-secondary">
                   {{ renterReviewsCount() }}
                   {{ renterReviewsCount() === 1 ? 'reseña' : 'reseñas' }}
                 </p>
@@ -180,9 +178,9 @@
 
       <!-- Reviews List -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 font-satoshi">
+        <h2 class="text-xl font-semibold text-text-primary mb-4 font-satoshi">
           @if (activeTab() === 'owner' || userRole() === 'owner') {
             Reseñas como Locador
           } @else {
@@ -195,7 +193,7 @@
           (activeTab() === 'renter' && renterReviewsCount() === 0)
         ) {
           <div class="text-center py-12">
-            <p class="text-text-secondary dark:text-text-secondary/70">
+            <p class="text-text-secondary">
               Aún no tenés reseñas
               @if (activeTab() === 'owner' || userRole() === 'owner') {
                 como locador
@@ -209,7 +207,7 @@
             @if (activeTab() === 'owner' || userRole() === 'owner') {
               @if (ownerReviews().length === 0) {
                 <div class="text-center py-12">
-                  <p class="text-text-secondary dark:text-text-secondary/70">
+                  <p class="text-text-secondary">
                     Aún no tenés reseñas como locador
                   </p>
                 </div>
@@ -221,7 +219,7 @@
             } @else {
               @if (renterReviews().length === 0) {
                 <div class="text-center py-12">
-                  <p class="text-text-secondary dark:text-text-secondary/70">
+                  <p class="text-text-secondary">
                     Aún no tenés reseñas como locatario
                   </p>
                 </div>

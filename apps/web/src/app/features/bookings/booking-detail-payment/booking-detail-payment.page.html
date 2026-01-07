@@ -1,8 +1,8 @@
 <div
-  class="min-h-screen bg-surface-base dark:bg-surface-base transition-colors duration-300 flex flex-col font-sans">
+  class="min-h-screen bg-surface-base transition-colors duration-300 flex flex-col font-sans">
   <!-- Secure Header -->
   <header
-    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 py-4 sticky top-0 z-20 shadow-sm">
+    class="bg-surface-raised border-b border-border-default py-4 sticky top-0 z-20 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 flex items-center justify-between">
       <div class="flex items-center gap-4">
         <a href="/cars"
@@ -38,7 +38,7 @@
     <div class="flex flex-col items-center justify-center py-32 space-y-6">
       <div class="relative">
         <div
-          class="w-16 h-16 rounded-full border-4 border-primary-100 dark:border-primary-900/30 border-t-primary-600 animate-spin">
+          class="w-16 h-16 rounded-full border-4 border-primary-100 border-t-primary-600 animate-spin">
         </div>
       </div>
       <div class="text-center space-y-2">
@@ -91,7 +91,7 @@
       <div class="lg:col-span-7 xl:col-span-8 space-y-6">
         <!-- 1. Car Summary Card -->
         <section
-          class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-md border border-border-default dark:border-neutral-800/60 overflow-hidden group hover:shadow-lg transition-all duration-300">
+          class="bg-surface-raised rounded-2xl shadow-md border border-border-default overflow-hidden group hover:shadow-lg transition-all duration-300">
           <div class="p-4 sm:p-6 flex flex-col sm:flex-row gap-6">
             <!-- Car Image -->
             <div
@@ -190,7 +190,7 @@
 
         <!-- 2. Dates & Location -->
         <section
-          class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-md border border-border-default dark:border-neutral-800/60 p-6">
+          class="bg-surface-raised rounded-2xl shadow-md border border-border-default p-6">
           <h3 class="text-lg font-bold text-text-primary mb-4 font-satoshi">Fechas y Ubicación</h3>
           <div class="flex flex-col md:flex-row items-center gap-6">
             <!-- Start -->
@@ -200,7 +200,7 @@
                 Retiro
               </p>
               <div class="flex items-center gap-3">
-                <div class="p-2 bg-primary-50 dark:bg-primary-900/20 text-primary-600 rounded-lg">
+                <div class="p-2 bg-primary-50 text-primary-600 rounded-lg">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -232,7 +232,7 @@
                 Devolución
               </p>
               <div class="flex items-center gap-3">
-                <div class="p-2 bg-primary-50 dark:bg-primary-900/20 text-primary-600 rounded-lg">
+                <div class="p-2 bg-primary-50 text-primary-600 rounded-lg">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -258,12 +258,12 @@
           <!-- P2P PROCESS INFO - Collapsible -->
           <!-- ============================================ -->
           <section
-            class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border border-blue-200 dark:border-blue-800 overflow-hidden">
+            class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 overflow-hidden">
             <button type="button" (click)="showP2PDetails.set(!showP2PDetails())"
-              class="w-full p-4 flex items-center justify-between text-left hover:bg-blue-100/50 dark:hover:bg-blue-900/30 transition-colors">
+              class="w-full p-4 flex items-center justify-between text-left hover:bg-blue-100/50 transition-colors">
               <div class="flex items-center gap-3">
                 <div
-                  class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-xl flex items-center justify-center">
+                  class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
                   <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -271,8 +271,8 @@
                   </svg>
                 </div>
                 <div>
-                  <h3 class="text-base font-bold text-gray-900 dark:text-white font-satoshi">¿Cómo funciona?</h3>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">Solicitud → Aprobación → Check-in → Viaje</p>
+                  <h3 class="text-base font-bold text-gray-900 font-satoshi">¿Cómo funciona?</h3>
+                  <p class="text-xs text-gray-500">Solicitud → Aprobación → Check-in → Viaje</p>
                 </div>
               </div>
               <svg class="w-5 h-5 text-gray-500 transition-transform"
@@ -282,7 +282,7 @@
               </svg>
             </button>
             @if (showP2PDetails()) {
-            <div class="px-4 pb-4 space-y-3 text-sm text-gray-600 dark:text-gray-300 border-t border-blue-200/50 dark:border-blue-800/50 pt-4">
+            <div class="px-4 pb-4 space-y-3 text-sm text-gray-600 border-t border-blue-200/50 pt-4">
               <div class="flex items-start gap-2">
                 <span class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
                 <p><strong>Ahora:</strong> Garantizás la reserva (pre-autorización o bloqueo wallet). No se cobra.</p>
@@ -307,7 +307,7 @@
           <!-- MESSAGE TO HOST - Key for P2P -->
           <!-- ============================================ -->
           <section
-            class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-md border border-border-default dark:border-neutral-800/60 p-4 sm:p-6">
+            class="bg-surface-raised rounded-2xl shadow-md border border-border-default p-4 sm:p-6">
             <div class="flex items-center gap-3 mb-4">
               <div
                 class="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
@@ -341,7 +341,7 @@
           <!-- GUARANTEE MODE TOGGLE -->
           <!-- ============================================ -->
           <section
-            class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-md border border-border-default dark:border-neutral-800/60 p-4 sm:p-6">
+            class="bg-surface-raised rounded-2xl shadow-md border border-border-default p-4 sm:p-6">
             <div class="flex items-center justify-between gap-4">
               <div>
                 <h3 class="text-lg font-bold text-text-primary font-satoshi">¿Cómo querés garantizar
@@ -379,7 +379,7 @@
           <!-- Card Payment Form -->
           @if (paymentMode() === 'card') {
           <div
-            class="relative bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-md border border-border-default dark:border-neutral-800/60 overflow-hidden">
+            class="relative bg-surface-raised rounded-2xl shadow-md border border-border-default overflow-hidden">
             <!-- Top Security Strip - Simplified -->
             <div class="bg-slate-800 px-4 py-2.5 flex items-center justify-between">
               <div class="flex items-center gap-2">
@@ -421,7 +421,7 @@
                     </p>
                   </div>
                   <div class="text-right">
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 rounded-lg text-xs font-semibold">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-100 text-amber-700 rounded-lg text-xs font-semibold">
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -434,7 +434,7 @@
 
               <!-- MercadoPago Form Container with vault aesthetic -->
               <div
-                class="bg-white dark:bg-surface-raised rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm overflow-x-auto">
+                class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm overflow-x-auto">
                 @if (riskSnapshot() && fxSnapshot()) {
                 <app-card-hold-panel [riskSnapshot]="riskSnapshot()!" [fxSnapshot]="fxSnapshot()!"
                   [userId]="currentUserId()" [bookingId]="bookingId() || undefined"
@@ -470,7 +470,7 @@
 
           <!-- Wallet Guarantee Form -->
           @if (paymentMode() === 'wallet') {
-          <div class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-md border border-border-default dark:border-neutral-800/60 overflow-hidden">
+          <div class="bg-surface-raised rounded-2xl shadow-md border border-border-default overflow-hidden">
             <!-- Header -->
             <div class="bg-emerald-600 px-4 py-2.5 flex items-center justify-between">
               <div class="flex items-center gap-2">
@@ -497,7 +497,7 @@
               <div class="text-sm text-text-secondary">Cargando balance de wallet...</div>
               } @else {
               <div
-                class="bg-white/70 dark:bg-surface-raised rounded-xl p-4 border border-emerald-200 dark:border-emerald-800">
+                class="bg-white/70 rounded-xl p-4 border border-emerald-200">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <span class="text-sm text-text-secondary">Saldo disponible</span>
                   <div class="text-right">
@@ -587,7 +587,7 @@
         <div class="lg:sticky lg:top-24 space-y-4">
           <!-- Main Summary Card -->
           <div
-            class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-xl border border-border-default dark:border-neutral-800/60 overflow-hidden ring-1 ring-black/5">
+            class="bg-surface-raised rounded-2xl shadow-xl border border-border-default overflow-hidden ring-1 ring-black/5">
             <!-- Car Preview Header -->
             <div class="relative">
               <!-- Car Image Background -->

@@ -199,17 +199,17 @@ import { UserProfile } from '../../../core/models';
         (click)="closeBenefits()"
         >
         <div
-          class="bg-surface-raised dark:bg-graphite-light rounded-xl shadow-2xl max-w-2xl w-full p-6 max-h-[80vh] overflow-y-auto"
+          class="bg-surface-raised rounded-xl shadow-2xl max-w-2xl w-full p-6 max-h-[80vh] overflow-y-auto"
           (click)="$event.stopPropagation()"
           >
           <div class="flex items-start justify-between mb-4">
-            <h2 class="h3 text-text-primary dark:text-text-primary">
+            <h2 class="h3 text-text-primary">
               ¿Por qué verificar tu identidad?
             </h2>
             <button
               type="button"
               (click)="closeBenefits()"
-              class="text-text-secondary dark:text-text-secondary hover:text-text-primary dark:hover:text-text-inverse transition-colors"
+              class="text-text-secondary hover:text-text-primary transition-colors"
               >
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
@@ -221,13 +221,13 @@ import { UserProfile } from '../../../core/models';
               </svg>
             </button>
           </div>
-          <div class="space-y-4 text-text-primary dark:text-text-secondary">
+          <div class="space-y-4 text-text-primary">
             <div class="flex items-start gap-3">
               <div
-                class="flex-shrink-0 w-10 h-10 bg-success-light/20 dark:bg-success-light/30 rounded-full flex items-center justify-center"
+                class="flex-shrink-0 w-10 h-10 bg-success-light/20 rounded-full flex items-center justify-center"
                 >
                 <svg
-                  class="w-5 h-5 text-success-700 dark:text-success-strong"
+                  class="w-5 h-5 text-success-700"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -249,10 +249,10 @@ import { UserProfile } from '../../../core/models';
             </div>
             <div class="flex items-start gap-3">
               <div
-                class="flex-shrink-0 w-10 h-10 bg-cta-default/20 dark:bg-cta-default/30 rounded-full flex items-center justify-center"
+                class="flex-shrink-0 w-10 h-10 bg-cta-default/20 rounded-full flex items-center justify-center"
                 >
                 <svg
-                  class="w-5 h-5 text-cta-default dark:text-cta-default"
+                  class="w-5 h-5 text-cta-default"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -274,10 +274,10 @@ import { UserProfile } from '../../../core/models';
             </div>
             <div class="flex items-start gap-3">
               <div
-                class="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center"
+                class="flex-shrink-0 w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center"
                 >
                 <svg
-                  class="w-5 h-5 text-purple-600 dark:text-purple-400"
+                  class="w-5 h-5 text-purple-600"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -300,10 +300,10 @@ import { UserProfile } from '../../../core/models';
             </div>
             <div class="flex items-start gap-3">
               <div
-                class="flex-shrink-0 w-10 h-10 bg-warning-bg-hover dark:bg-warning-900/30 rounded-full flex items-center justify-center"
+                class="flex-shrink-0 w-10 h-10 bg-warning-bg-hover rounded-full flex items-center justify-center"
                 >
                 <svg
-                  class="w-5 h-5 text-warning-text dark:text-warning-400"
+                  class="w-5 h-5 text-warning-text"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -329,7 +329,7 @@ import { UserProfile } from '../../../core/models';
             <button
               type="button"
               (click)="closeBenefits()"
-              class="px-4 py-2 text-sm font-medium text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-secondary dark:hover:text-text-inverse transition-colors"
+              class="px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
               >
               Cerrar
             </button>

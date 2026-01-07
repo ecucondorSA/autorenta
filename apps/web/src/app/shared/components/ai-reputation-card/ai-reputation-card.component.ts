@@ -190,9 +190,9 @@ export class AiReputationCardComponent implements OnInit {
   readonly confidenceClasses = computed(() => {
     const confidence = this.analysis()?.confidence;
     return {
-      'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400': confidence === 'high',
-      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400': confidence === 'medium',
-      'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400': confidence === 'low' || !confidence,
+      'bg-green-100 text-green-800': confidence === 'high',
+      'bg-yellow-100 text-yellow-800': confidence === 'medium',
+      'bg-gray-100 text-gray-800': confidence === 'low' || !confidence,
     };
   });
 

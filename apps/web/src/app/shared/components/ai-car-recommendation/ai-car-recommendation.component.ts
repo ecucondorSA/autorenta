@@ -37,9 +37,9 @@ const CACHE_DURATION_HOURS = 24;
       <div class="absolute -inset-px bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 rounded-xl opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
 
       <!-- Main card -->
-      <div class="relative bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
+      <div class="relative bg-white rounded-xl shadow-lg overflow-hidden">
         <!-- Header with AI indicator (compact) -->
-        <div class="relative px-3 py-2 border-b border-gray-100 dark:border-gray-800">
+        <div class="relative px-3 py-2 border-b border-gray-100">
           <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500"></div>
 
           <div class="flex items-center justify-between">
@@ -54,8 +54,8 @@ const CACHE_DURATION_HOURS = 24;
                 </div>
               </div>
               <div>
-                <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Sugerencia para Vos</h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400">Basado en tu historial</p>
+                <h3 class="font-semibold text-gray-900 text-sm">Sugerencia para Vos</h3>
+                <p class="text-xs text-gray-500">Basado en tu historial</p>
               </div>
             </div>
 
@@ -73,10 +73,10 @@ const CACHE_DURATION_HOURS = 24;
             <div class="py-3">
               <div class="flex items-center justify-center gap-2 mb-3">
                 <div class="w-5 h-5 border-2 border-orange-200 border-t-orange-500 rounded-full animate-spin"></div>
-                <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Analizando...</span>
+                <span class="text-xs font-medium text-gray-700">Analizando...</span>
               </div>
               <div class="space-y-2">
-                <div class="h-10 bg-gradient-to-r from-orange-100 via-orange-50 to-orange-100 dark:from-orange-900/30 dark:via-orange-800/20 dark:to-orange-900/30 rounded-lg animate-shimmer bg-[length:200%_100%]"></div>
+                <div class="h-10 bg-gradient-to-r from-orange-100 via-orange-50 to-orange-100 rounded-lg animate-shimmer bg-[length:200%_100%]"></div>
               </div>
             </div>
           }
@@ -84,15 +84,15 @@ const CACHE_DURATION_HOURS = 24;
           <!-- Error State -->
           @if (error() && !loading()) {
             <div class="py-3 text-center">
-              <div class="w-10 h-10 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-2">
+              <div class="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-2">
                 <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p class="text-xs text-red-600 dark:text-red-400 mb-2 font-medium">{{ error() }}</p>
+              <p class="text-xs text-red-600 mb-2 font-medium">{{ error() }}</p>
               <button
                 (click)="getRecommendation()"
-                class="text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400 font-medium flex items-center gap-1 mx-auto hover:underline"
+                class="text-sm text-orange-600 hover:text-orange-700 font-medium flex items-center gap-1 mx-auto hover:underline"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -106,7 +106,7 @@ const CACHE_DURATION_HOURS = 24;
           @if (recommendation() && !loading()) {
             <div class="space-y-4">
               <!-- Main Recommendation Card -->
-              <div class="relative overflow-hidden bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-4 border border-orange-200/50 dark:border-orange-700/30">
+              <div class="relative overflow-hidden bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-4 border border-orange-200/50">
                 <!-- Decorative sparkles -->
                 <div class="absolute top-2 right-2 w-6 h-6 opacity-30">
                   <svg fill="currentColor" class="text-orange-400" viewBox="0 0 24 24">
@@ -124,10 +124,10 @@ const CACHE_DURATION_HOURS = 24;
                     </div>
                   </div>
                   <div class="flex-1">
-                    <h4 class="font-bold text-gray-900 dark:text-white text-lg">
+                    <h4 class="font-bold text-gray-900 text-lg">
                       {{ recommendation()!.recommendedType }}
                     </h4>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-1 leading-relaxed">
+                    <p class="text-sm text-gray-600 mt-1 leading-relaxed">
                       {{ recommendation()!.reasoning }}
                     </p>
                   </div>
@@ -137,7 +137,7 @@ const CACHE_DURATION_HOURS = 24;
               <!-- Alternatives -->
               @if (recommendation()!.alternativeSuggestions && recommendation()!.alternativeSuggestions!.length > 0) {
                 <div>
-                  <h4 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                     </svg>
@@ -145,7 +145,7 @@ const CACHE_DURATION_HOURS = 24;
                   </h4>
                   <div class="flex flex-wrap gap-2">
                     @for (alt of recommendation()!.alternativeSuggestions; track alt) {
-                      <span class="text-xs bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-orange-300 dark:hover:border-orange-600 transition-all cursor-default">
+                      <span class="text-xs bg-white text-gray-700 px-3 py-1.5 rounded-full border border-gray-200 shadow-sm hover:shadow-md hover:border-orange-300 transition-all cursor-default">
                         {{ alt }}
                       </span>
                     }
@@ -167,7 +167,7 @@ const CACHE_DURATION_HOURS = 24;
                 </button>
                 <button
                   (click)="regenerate()"
-                  class="text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 py-2 px-4 flex items-center justify-center gap-2 rounded-xl hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors font-medium"
+                  class="text-sm text-orange-600 hover:text-orange-700 py-2 px-4 flex items-center justify-center gap-2 rounded-xl hover:bg-orange-50 transition-colors font-medium"
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />

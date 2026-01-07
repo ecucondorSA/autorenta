@@ -4098,7 +4098,11 @@ WHERE id = '<OWNER_ID>';
 # 1. Obtener datos
 PAYMENT_ID="<PAYMENT_ID>"
 OWNER_MP_ID="<MERCADOPAGO_COLLECTOR_ID>"
-OWNER_PERCENTAGE="0.85"  # 85% al locador, 15% plataforma
+# MODELO COMODATO: Owner no recibe pago directo
+# Distribución: Fee variable plataforma, reward pool, FGO
+PLATFORM_FEE="0.15"
+REWARD_POOL="0.75"
+FGO="0.10"
 TOTAL_AMOUNT="<BOOKING_TOTAL_PRICE>"
 
 # 2. Calcular monto locador
@@ -4138,8 +4142,11 @@ WITH booking_data AS (
     b.total_price,
     b.transaction_id,
     c.owner_id,
-    (b.total_price * 0.85) as owner_amount,
-    (b.total_price * 0.15) as platform_fee
+    -- MODELO COMODATO: owner no recibe pago directo
+    0 as owner_amount,
+    (b.total_price * 0.15) as platform_fee,
+    (b.total_price * 0.75) as reward_pool,
+    (b.total_price * 0.10) as fgo
   FROM bookings b
   JOIN cars c ON c.id = b.car_id
   WHERE b.transaction_id = '<TRANSACTION_ID>'

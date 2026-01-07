@@ -3,10 +3,10 @@
   <div class="timeline-header">
     <div class="flex items-center justify-between flex-wrap gap-2">
       <div>
-        <h3 class="text-lg font-bold text-text-primary dark:text-text-inverse font-satoshi">
-          Progreso de Confirmación
+        <h3 class="text-lg font-bold text-text-primary font-satoshi">
+          Progreso de Confirmacion
         </h3>
-        <p class="text-sm text-text-secondary dark:text-text-secondary">
+        <p class="text-sm text-text-secondary">
           Seguimiento bilateral del proceso de devolución
         </p>
       </div>
@@ -16,7 +16,7 @@
         </span>
         @if (isTimelineComplete()) {
           <span
-            class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-success-light/20 text-success-700 dark:bg-success-light/40 dark:text-success-strong rounded-full"
+            class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-success-light/20 text-success-700 rounded-full"
             >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -35,11 +35,11 @@
     <!-- Pending Action Alert -->
     @if (pendingActionMessage()) {
       <div
-        class="mt-4 p-4 rounded-xl bg-warning-light/10 dark:bg-warning-light/20 border border-warning-light/40 dark:border-warning-light"
+        class="mt-4 p-4 rounded-xl bg-warning-light/10 border border-warning-light/40"
         >
         <div class="flex items-start gap-3">
           <svg
-            class="w-5 h-5 text-warning-700 dark:text-warning-strong flex-shrink-0 mt-0.5"
+            class="w-5 h-5 text-warning-700 flex-shrink-0 mt-0.5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -52,10 +52,10 @@
               />
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-semibold text-warning-700 dark:text-warning-strong">
-              Acción requerida
+            <p class="text-sm font-semibold text-warning-700">
+              Accion requerida
             </p>
-            <p class="text-sm text-warning-700 dark:text-warning-strong">
+            <p class="text-sm text-warning-700">
               {{ pendingActionMessage() }}
             </p>
           </div>
@@ -125,9 +125,7 @@
               <h4
                 class="timeline-step-title"
                 [class.text-text-primary]="step.completed || isStepCurrent(i)"
-                [class.dark:text-text-inverse]="step.completed || isStepCurrent(i)"
                 [class.text-text-secondary]="isStepUpcoming(i)"
-                [class.dark:text-text-muted]="isStepUpcoming(i)"
                 >
                 {{ step.label }}
               </h4>
@@ -212,7 +210,7 @@
             <!-- Damage Report Details -->
             @if (step.key === 'damage_report' && step.metadata) {
               <div
-                class="mt-3 p-3 rounded-lg bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800"
+                class="mt-3 p-3 rounded-lg bg-error-bg border border-error-border"
                 >
                 <div class="flex items-start gap-2">
                   <svg
@@ -255,7 +253,7 @@
                   </svg>
                   <span>{{ step.actionLabel }}</span>
                 </button>
-                <p class="mt-2 text-xs text-text-secondary dark:text-text-muted">
+                <p class="mt-2 text-xs text-text-secondary">
                   {{ step.actionDescription }}
                 </p>
               </div>
@@ -269,11 +267,11 @@
   <!-- Footer with Info -->
   <div class="timeline-footer">
     <div
-      class="p-4 rounded-lg bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default"
+      class="p-4 rounded-lg bg-cta-default/10 border border-cta-default/40"
       >
       <div class="flex items-start gap-3">
         <svg
-          class="w-5 h-5 text-cta-default dark:text-cta-default flex-shrink-0 mt-0.5"
+          class="w-5 h-5 text-cta-default flex-shrink-0 mt-0.5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -285,9 +283,9 @@
             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
         </svg>
-        <div class="flex-1 text-sm text-cta-default dark:text-cta-default">
-          <p class="font-semibold mb-1">Sistema de confirmación bilateral</p>
-          <p class="text-cta-default dark:text-cta-default">
+        <div class="flex-1 text-sm text-cta-default">
+          <p class="font-semibold mb-1">Sistema de confirmacion bilateral</p>
+          <p class="text-cta-default">
             Para protección de ambas partes, tanto el propietario como el locatario deben confirmar
             la devolución antes de que se liberen los fondos automáticamente.
           </p>

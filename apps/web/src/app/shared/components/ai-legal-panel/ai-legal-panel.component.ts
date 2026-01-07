@@ -40,13 +40,13 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
 
       <!-- Main card -->
       <div
-        class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden transition-all duration-300"
+        class="relative bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300"
         [class.shadow-2xl]="isExpanded()"
       >
         <!-- Header -->
         <button
           type="button"
-          class="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
+          class="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-50"
           (click)="togglePanel.emit()"
         >
           <div class="flex items-center gap-3">
@@ -81,13 +81,13 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
               </div>
             </div>
             <div>
-              <h3 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2">
                 Asistente Legal
                 <span class="text-xs bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
                   AI
                 </span>
               </h3>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Consultas sobre términos de uso</p>
+              <p class="text-xs text-gray-500">Consultas sobre terminos de uso</p>
             </div>
           </div>
           <svg
@@ -119,7 +119,7 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
           <div class="p-5 space-y-4">
             <!-- Quick questions - Chat style bubbles -->
             <div>
-              <p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -129,7 +129,7 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
                 @for (q of quickQuestions; track q) {
                   <button
                     type="button"
-                    class="group/q relative overflow-hidden rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 transition-all duration-200 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:text-indigo-700 dark:hover:text-indigo-400 hover:shadow-md"
+                    class="group/q relative overflow-hidden rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 hover:shadow-md"
                     (click)="askQuestion(q)"
                   >
                     {{ q }}
@@ -148,7 +148,7 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
                     name="legalQuestionInput"
                     [(ngModel)]="customQuestion"
                     placeholder="Escribe tu consulta legal..."
-                    class="w-full rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 pr-12 text-sm text-gray-900 dark:text-white placeholder-gray-400 transition-all duration-200 focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-indigo-500/10"
+                    class="w-full rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-3 pr-12 text-sm text-gray-900 placeholder-gray-400 transition-all duration-200 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/10"
                     (keydown.enter)="askQuestion(customQuestion)"
                   />
                   <div class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
@@ -184,14 +184,14 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
                   </svg>
                 </div>
-                <div class="flex-1 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-2xl rounded-tl-none p-4">
+                <div class="flex-1 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl rounded-tl-none p-4">
                   <div class="flex items-center gap-2">
                     <div class="flex gap-1">
                       <div class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style="animation-delay: 0ms;"></div>
                       <div class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style="animation-delay: 150ms;"></div>
                       <div class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style="animation-delay: 300ms;"></div>
                     </div>
-                    <span class="text-sm text-gray-600 dark:text-gray-300">Analizando tu consulta...</span>
+                    <span class="text-sm text-gray-600">Analizando tu consulta...</span>
                   </div>
                 </div>
               </div>
@@ -210,14 +210,14 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
                 </div>
                 <div class="flex-1 space-y-3">
                   <!-- Main answer bubble -->
-                  <div class="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-2xl rounded-tl-none p-4 border border-indigo-100 dark:border-indigo-800/30">
-                    <p class="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">{{ answer()!.answer }}</p>
+                  <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl rounded-tl-none p-4 border border-indigo-100">
+                    <p class="text-sm text-gray-800 leading-relaxed">{{ answer()!.answer }}</p>
 
                     @if (answer()!.sources.length > 0) {
-                      <div class="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-indigo-200/50 dark:border-indigo-700/30">
-                        <span class="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider mr-1">Fuentes:</span>
+                      <div class="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-indigo-200/50">
+                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider mr-1">Fuentes:</span>
                         @for (source of answer()!.sources; track source) {
-                          <span class="inline-flex items-center gap-1 rounded-full bg-white dark:bg-gray-800 border border-indigo-200 dark:border-indigo-700 px-2 py-0.5 text-xs font-medium text-indigo-700 dark:text-indigo-400">
+                          <span class="inline-flex items-center gap-1 rounded-full bg-white border border-indigo-200 px-2 py-0.5 text-xs font-medium text-indigo-700">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
@@ -233,13 +233,13 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
                     <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <p class="text-xs italic text-gray-400 dark:text-gray-500">{{ answer()!.disclaimer }}</p>
+                    <p class="text-xs italic text-gray-400">{{ answer()!.disclaimer }}</p>
                   </div>
 
                   <!-- Related questions -->
                   @if (answer()!.relatedQuestions?.length) {
-                    <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3">
-                      <p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                    <div class="bg-gray-50 rounded-xl p-3">
+                      <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -249,7 +249,7 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
                         @for (rq of answer()!.relatedQuestions; track rq) {
                           <button
                             type="button"
-                            class="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 hover:underline bg-white dark:bg-gray-900 px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 transition-colors"
+                            class="text-xs text-indigo-600 hover:text-indigo-800 hover:underline bg-white px-2 py-1 rounded-lg border border-gray-200 hover:border-indigo-300 transition-colors"
                             (click)="askQuestion(rq)"
                           >
                             {{ rq }}
@@ -265,16 +265,16 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
             <!-- Error State -->
             @if (error()) {
               <div class="flex gap-3">
-                <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center flex-shrink-0">
+                <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
                   <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <div class="flex-1 bg-red-50 dark:bg-red-900/20 rounded-2xl rounded-tl-none p-4 border border-red-200 dark:border-red-800/30">
-                  <p class="text-sm text-red-700 dark:text-red-400 font-medium">{{ error() }}</p>
+                <div class="flex-1 bg-red-50 rounded-2xl rounded-tl-none p-4 border border-red-200">
+                  <p class="text-sm text-red-700 font-medium">{{ error() }}</p>
                   <button
                     type="button"
-                    class="mt-2 text-xs text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-medium flex items-center gap-1 hover:underline"
+                    class="mt-2 text-xs text-red-600 hover:text-red-800 font-medium flex items-center gap-1 hover:underline"
                     (click)="error.set(null)"
                   >
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -30,29 +30,29 @@ import type { UserProfile, Role } from '../../../core/models';
   template: `
     <ion-header>
       <ion-toolbar
-        class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default"
+        class="bg-surface-raised border-b border-border-default"
         >
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
             text="Perfil"
-            class="text-text-primary dark:text-text-secondary"
+            class="text-text-primary"
           ></ion-back-button>
         </ion-buttons>
-        <ion-title class="text-text-primary dark:text-text-secondary">
+        <ion-title class="text-text-primary">
           Datos Personales
         </ion-title>
       </ion-toolbar>
     </ion-header>
-    
-    <ion-content class="bg-surface-base dark:bg-surface-base">
+
+    <ion-content class="bg-surface-base">
       <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
         <!-- Header -->
         <div class="mb-6">
-          <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2">
+          <h1 class="text-2xl font-bold text-text-primary mb-2">
             Información Personal
           </h1>
-          <p class="text-sm text-text-secondary dark:text-text-secondary">
+          <p class="text-sm text-text-secondary">
             Mantén tus datos personales actualizados para una mejor experiencia.
           </p>
         </div>
@@ -118,8 +118,8 @@ import type { UserProfile, Role } from '../../../core/models';
                     id="full_name"
                     type="text"
                     formControlName="full_name"
-                  class="w-full px-3 py-2 rounded-lg border bg-surface-base dark:bg-surface-secondary
-                         text-text-primary dark:text-text-primary
+                  class="w-full px-3 py-2 rounded-lg border bg-surface-base
+                         text-text-primary
                          border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default
                          placeholder:text-text-muted"
                     placeholder="Ej: Juan Pérez"
@@ -141,8 +141,8 @@ import type { UserProfile, Role } from '../../../core/models';
                     id="date_of_birth"
                     type="date"
                     formControlName="date_of_birth"
-                  class="w-full px-3 py-2 rounded-lg border bg-surface-base dark:bg-surface-secondary
-                         text-text-primary dark:text-text-primary
+                  class="w-full px-3 py-2 rounded-lg border bg-surface-base
+                         text-text-primary
                          border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default"
                     [max]="maxBirthDate()"
                     />
@@ -170,8 +170,8 @@ import type { UserProfile, Role } from '../../../core/models';
                   <select
                     id="gov_id_type"
                     formControlName="gov_id_type"
-                  class="w-full px-3 py-2 rounded-lg border bg-surface-base dark:bg-surface-secondary
-                         text-text-primary dark:text-text-primary
+                  class="w-full px-3 py-2 rounded-lg border bg-surface-base
+                         text-text-primary
                          border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default"
                     >
                     <option value="">Seleccionar...</option>
@@ -189,8 +189,8 @@ import type { UserProfile, Role } from '../../../core/models';
                     id="gov_id_number"
                     type="text"
                     formControlName="gov_id_number"
-                  class="w-full px-3 py-2 rounded-lg border bg-surface-base dark:bg-surface-secondary
-                         text-text-primary dark:text-text-primary
+                  class="w-full px-3 py-2 rounded-lg border bg-surface-base
+                         text-text-primary
                          border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default
                          placeholder:text-text-muted"
                     placeholder="Ej: 12345678"
@@ -272,7 +272,7 @@ import type { UserProfile, Role } from '../../../core/models';
               </div>
             </app-section-card>
             <!-- Help Text -->
-            <div class="p-4 rounded-lg bg-info-bg border border-info-border dark:bg-info-bg/20">
+            <div class="p-4 rounded-lg bg-info-bg border border-info-border">
               <h4 class="text-sm font-semibold text-info-text mb-2 flex items-center gap-2">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path

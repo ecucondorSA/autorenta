@@ -76,25 +76,25 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
       (click)="onBackdropClick($event)"
     >
       <div
-        class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto"
+        class="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto"
         (click)="$event.stopPropagation()"
       >
         <!-- Header -->
-        <div class="flex items-center justify-between p-4 border-b border-gray-300 dark:border-gray-700">
+        <div class="flex items-center justify-between p-4 border-b border-gray-300">
           <div class="flex items-center gap-3">
             <span class="text-2xl">{{ config?.emoji }}</span>
             <div>
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+              <h2 class="text-lg font-semibold text-gray-900">
                 {{ config?.label }}
               </h2>
-              <p class="text-sm text-gray-500 dark:text-gray-500">
+              <p class="text-sm text-gray-500">
                 {{ config?.description }}
               </p>
             </div>
           </div>
           <button
             (click)="closed.emit()"
-            class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+            class="p-2 hover:bg-gray-100 rounded-full transition-colors"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -109,9 +109,9 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
             <div class="grid grid-cols-2 gap-4">
               <!-- Front -->
               <div class="space-y-2">
-                <p class="text-sm font-medium text-gray-700 dark:text-gray-500">Frente</p>
+                <p class="text-sm font-medium text-gray-700">Frente</p>
                 <div
-                  class="aspect-[3/2] bg-gray-100 dark:bg-gray-700 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden relative cursor-pointer hover:border-primary-500 transition-colors"
+                  class="aspect-[3/2] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden relative cursor-pointer hover:border-primary-500 transition-colors"
                   (click)="frontInput.click()"
                 >
                   @if (frontPreview()) {
@@ -139,9 +139,9 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
 
               <!-- Back -->
               <div class="space-y-2">
-                <p class="text-sm font-medium text-gray-700 dark:text-gray-500">Dorso</p>
+                <p class="text-sm font-medium text-gray-700">Dorso</p>
                 <div
-                  class="aspect-[3/2] bg-gray-100 dark:bg-gray-700 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden relative cursor-pointer hover:border-primary-500 transition-colors"
+                  class="aspect-[3/2] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden relative cursor-pointer hover:border-primary-500 transition-colors"
                   (click)="backInput.click()"
                 >
                   @if (backPreview()) {
@@ -171,7 +171,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
             <!-- Single Upload -->
             <div class="space-y-2">
               <div
-                class="aspect-video bg-gray-100 dark:bg-gray-700 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden relative cursor-pointer hover:border-primary-500 transition-colors"
+                class="aspect-video bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden relative cursor-pointer hover:border-primary-500 transition-colors"
                 (click)="singleInput.click()"
               >
                 @if (singlePreview()) {
@@ -200,7 +200,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
 
           <!-- Success Message -->
           @if (uploadSuccess()) {
-            <div class="mt-4 p-3 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-lg text-sm flex items-center gap-2">
+            <div class="mt-4 p-3 bg-green-50 text-green-700 rounded-lg text-sm flex items-center gap-2">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
               </svg>
@@ -210,13 +210,13 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
 
           <!-- Error Message -->
           @if (uploadError()) {
-            <div class="mt-4 p-3 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-lg text-sm">
+            <div class="mt-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
               {{ uploadError() }}
             </div>
           }
 
           <!-- Info -->
-          <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm flex items-start gap-2">
+          <div class="mt-4 p-3 bg-blue-50 text-blue-700 rounded-lg text-sm flex items-start gap-2">
             <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
@@ -225,10 +225,10 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
         </div>
 
         <!-- Footer -->
-        <div class="p-4 border-t border-gray-300 dark:border-gray-700 flex justify-end gap-3">
+        <div class="p-4 border-t border-gray-300 flex justify-end gap-3">
           <button
             (click)="closed.emit()"
-            class="px-4 py-2 text-gray-700 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
           >
             Cerrar
           </button>

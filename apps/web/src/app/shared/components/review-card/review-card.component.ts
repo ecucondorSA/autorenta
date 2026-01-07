@@ -160,10 +160,10 @@ export class ReviewCardComponent {
 
     const classes: Record<string, string> = {
       pending:
-        'bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-300',
+        'bg-warning-bg-hover text-warning-strong',
       approved:
-        'bg-success-light/20 text-success-700 dark:bg-success-light/20 dark:text-success-strong',
-      rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-300',
+        'bg-success-light/20 text-success-700',
+      rejected: 'bg-error-bg-hover text-error-strong',
     };
 
     return classes[status] || classes['pending'];

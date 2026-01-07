@@ -167,39 +167,30 @@ export class TransactionHistoryComponent implements OnInit {
 
   getTypeColor(type: TransactionType): string {
     const colors: Record<TransactionType, string> = {
-      all: 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-200',
-      deposit:
-        'bg-success-bg-hover text-success-strong dark:bg-success-bg0/20 dark:text-success-100',
-      withdrawal: 'bg-cta-default/20 text-cta-default dark:bg-cta-default/20 dark:text-cta-default',
-      lock: 'bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/25 dark:text-warning-100',
-      unlock: 'bg-cta-default/20 text-cta-default dark:bg-cta-default/20 dark:text-cta-default',
-      charge: 'bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-100',
-      refund:
-        'bg-success-bg-hover text-success-strong dark:bg-success-bg0/20 dark:text-success-100',
-      bonus: 'bg-success-bg-hover text-success-strong dark:bg-success-bg0/20 dark:text-success-100',
-      rental_payment_lock:
-        'bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/25 dark:text-warning-100',
-      rental_payment_transfer:
-        'bg-cta-default/20 text-cta-default dark:bg-cta-default/20 dark:text-cta-default',
-      security_deposit_lock:
-        'bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/25 dark:text-warning-100',
-      security_deposit_release:
-        'bg-success-bg-hover text-success-strong dark:bg-success-bg0/20 dark:text-success-100',
-      security_deposit_charge:
-        'bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-100',
+      all: 'bg-neutral-100 text-neutral-900',
+      deposit: 'bg-success-bg-hover text-success-strong',
+      withdrawal: 'bg-cta-default/20 text-cta-default',
+      lock: 'bg-warning-bg-hover text-warning-strong',
+      unlock: 'bg-cta-default/20 text-cta-default',
+      charge: 'bg-error-bg-hover text-error-strong',
+      refund: 'bg-success-bg-hover text-success-strong',
+      bonus: 'bg-success-bg-hover text-success-strong',
+      rental_payment_lock: 'bg-warning-bg-hover text-warning-strong',
+      rental_payment_transfer: 'bg-cta-default/20 text-cta-default',
+      security_deposit_lock: 'bg-warning-bg-hover text-warning-strong',
+      security_deposit_release: 'bg-success-bg-hover text-success-strong',
+      security_deposit_charge: 'bg-error-bg-hover text-error-strong',
     };
     return colors[type] || 'bg-neutral-100 text-neutral-900';
   }
 
   getStatusColor(status: TransactionStatus): string {
     const colors: Record<TransactionStatus, string> = {
-      all: 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-200',
-      pending:
-        'bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/25 dark:text-warning-100',
-      completed:
-        'bg-success-bg-hover text-success-strong dark:bg-success-bg0/20 dark:text-success-100',
-      failed: 'bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-100',
-      refunded: 'bg-neutral-100 text-neutral-900 dark:bg-neutral-700/40 dark:text-neutral-200',
+      all: 'bg-neutral-100 text-neutral-900',
+      pending: 'bg-warning-bg-hover text-warning-strong',
+      completed: 'bg-success-bg-hover text-success-strong',
+      failed: 'bg-error-bg-hover text-error-strong',
+      refunded: 'bg-neutral-100 text-neutral-900',
     };
     return colors[status] || 'bg-neutral-100 text-neutral-900';
   }

@@ -32,7 +32,7 @@ export class CardComponent {
   hasHeader = input(false);
   hasFooter = input(false);
   cardClasses = computed(() => {
-    const base = 'bg-surface-raised dark:bg-surface-raised rounded-lg transition-shadow';
+    const base = 'bg-surface-raised rounded-lg transition-shadow';
     const v = this.variant();
     const vClass =
       v === 'flat' ? '' : v === 'elevated' ? 'shadow-elevation-2' : 'border border-border-default';

@@ -41,8 +41,8 @@ FGO_nuevo = FGO_actual + (comision_autorenta * 0.10)
 
 Ejemplo:
 - Booking de $100 USD
-- Comisión Autorenta (15%): $15 USD
-- Aporte a FGO: $1.50 USD
+- Comisión Autorenta (Variable): Monto según categoría
+- Aporte a FGO: 10% de la comisión cobrada
 ```
 
 ---

@@ -58,7 +58,7 @@ export interface ChatContext {
           <div class="flex items-center gap-1.5">
             @if (recipientOnline()) {
               <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-              <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium">En línea</span>
+              <span class="text-xs text-emerald-600 font-medium">En línea</span>
             } @else {
               <span class="h-2 w-2 rounded-full bg-gray-400"></span>
               <span class="text-xs text-text-secondary font-medium">Desconectado</span>
@@ -131,7 +131,7 @@ export interface ChatContext {
         <!-- Empty state -->
         @if (!loading() && messages().length === 0) {
           <div class="flex h-full flex-col items-center justify-center px-6 text-center">
-            <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-indigo-50 dark:bg-indigo-900/20">
+            <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-indigo-50">
               <svg class="h-10 w-10 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                   d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -162,7 +162,7 @@ export interface ChatContext {
                       {{ getInitials() }}
                     </div>
                     <div class="relative">
-                      <div class="rounded-2xl rounded-bl-md bg-white dark:bg-surface-secondary border border-border-default px-4 py-2.5 shadow-sm">
+                      <div class="rounded-2xl rounded-bl-md bg-white border border-border-default px-4 py-2.5 shadow-sm">
                         <p class="text-sm text-text-primary leading-relaxed whitespace-pre-wrap break-words">{{ message.body }}</p>
                         <div class="mt-1 flex items-center justify-end">
                           <span class="text-xs text-text-muted">{{ formatTime(message.created_at) }}</span>
@@ -219,7 +219,7 @@ export interface ChatContext {
                   <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-xs font-bold">
                     {{ getInitials() }}
                   </div>
-                  <div class="rounded-2xl rounded-bl-md bg-white dark:bg-surface-secondary border border-border-default px-4 py-3 shadow-sm">
+                  <div class="rounded-2xl rounded-bl-md bg-white border border-border-default px-4 py-3 shadow-sm">
                     <div class="flex items-center gap-1">
                       <div class="h-2 w-2 animate-bounce rounded-full bg-indigo-400" style="animation-delay: 0ms"></div>
                       <div class="h-2 w-2 animate-bounce rounded-full bg-indigo-400" style="animation-delay: 150ms"></div>
@@ -244,9 +244,9 @@ export interface ChatContext {
 
       <!-- AI Suggestions Bar -->
       @if (bookingContextForAI() && showSuggestions()) {
-        <div class="border-t border-border-default bg-indigo-50/50 dark:bg-indigo-900/10 px-4 py-2.5">
+        <div class="border-t border-border-default bg-indigo-50/50 px-4 py-2.5">
           @if (loadingSuggestions()) {
-            <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+            <div class="flex items-center gap-2 text-indigo-600">
               <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -258,7 +258,7 @@ export interface ChatContext {
               @for (suggestion of aiSuggestions(); track suggestion.id) {
                 <button
                   type="button"
-                  class="rounded-full bg-white dark:bg-surface-raised border border-indigo-200 dark:border-indigo-700 px-3 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 transition-all hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:border-indigo-300 shadow-sm"
+                  class="rounded-full bg-white border border-indigo-200 px-3 py-1.5 text-xs font-medium text-indigo-600 transition-all hover:bg-indigo-50 hover:border-indigo-300 shadow-sm"
                   (click)="useSuggestion(suggestion)"
                 >
                   {{ suggestion.text }}
@@ -281,7 +281,7 @@ export interface ChatContext {
               class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-all"
               [class.bg-indigo-100]="showSuggestions()"
               [class.text-indigo-600]="showSuggestions()"
-              [class.dark:bg-indigo-900/30]="showSuggestions()"
+              [class."showSuggestions()"
               [class.text-text-secondary]="!showSuggestions()"
               [class.hover:bg-surface-hover]="!showSuggestions()"
               [disabled]="loadingSuggestions()"

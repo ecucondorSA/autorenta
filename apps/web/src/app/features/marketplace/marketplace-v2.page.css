@@ -2144,8 +2144,8 @@
    =========================================== */
 .pagination-btn {
   @apply flex items-center px-4 py-3 rounded-lg font-medium text-sm
-         bg-white/5 border border-white/10 text-text-primary dark:text-white/80
-         hover:bg-white/10 hover:border-cyan-500/30 hover:text-text-primary dark:hover:text-white
+         bg-white/5 border border-white/10 text-text-primary
+         hover:bg-white/10 hover:border-cyan-500/30 hover:text-text-primary
          transition-all duration-200;
   min-height: 44px;
 }

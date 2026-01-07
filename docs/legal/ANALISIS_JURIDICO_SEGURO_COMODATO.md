@@ -52,9 +52,9 @@ Segun la documentacion del modelo comodato:
 ```
 Usuario Paga (100%)
     |
-    +-- Platform Fee (15%)     -> Autorenta
+    +-- Platform Fee (Variable) -> Autorenta
     |
-    +-- Reward Pool (75%)      -> Pool mensual para owners
+    +-- Reward Pool (Dinámico) -> Pool mensual para owners
     |
     +-- FGO (10%)              -> Fondo de Garantia
 ```

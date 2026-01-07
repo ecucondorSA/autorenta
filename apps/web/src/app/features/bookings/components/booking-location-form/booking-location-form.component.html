@@ -1,20 +1,20 @@
 <div
-  class="booking-location-form bg-surface-raised dark:bg-surface-raised rounded-lg shadow-lg p-6"
+  class="booking-location-form bg-surface-raised rounded-lg shadow-lg p-6"
 >
   <!-- Header -->
   <div class="mb-6">
-    <h2 class="text-2xl font-bold text-text-primary dark:text-text-inverse mb-2 font-satoshi">
-      ¿Dónde es el retiro y devolución del auto?
+    <h2 class="text-2xl font-bold text-text-primary mb-2 font-satoshi">
+      Donde es el retiro y devolucion del auto?
     </h2>
-    <p class="text-text-secondary dark:text-text-muted">
+    <p class="text-text-secondary">
       Selecciona ubicaciones para calcular la tarifa de delivery si es necesario
     </p>
   </div>
 
   <!-- Pickup Location -->
   <div class="mb-8">
-    <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4 font-satoshi">
-      📍 Lugar de retiro
+    <h3 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">
+      Lugar de retiro
     </h3>
     <div class="location-input-group">
       <!-- Address Input -->
@@ -23,21 +23,21 @@
         id="search-location"
         [(ngModel)]="pickupAddress"
         placeholder="Ej: Av. Corrientes 1234, Buenos Aires"
-        class="w-full px-4 py-2 border border-border-muted dark:border-border-default rounded-lg focus:ring-2 focus:ring-cta-default dark:bg-surface-base dark:text-text-inverse"
+        class="w-full px-4 py-2 border border-border-muted rounded-lg focus:ring-2 focus:ring-cta-default"
         (input)="onPickupAddressChange()"
         [disabled]="loading()"
       />
       @if (pickupSuggestions().length > 0) {
         <div
-          class="mt-2 border border-border-default dark:border-border-muted rounded-lg overflow-hidden"
+          class="mt-2 border border-border-default rounded-lg overflow-hidden"
         >
           @for (suggestion of pickupSuggestions(); track suggestion.address) {
             <button
               type="button"
               (click)="selectPickupSuggestion(suggestion)"
-              class="w-full text-left px-4 py-2 hover:bg-surface-raised dark:hover:bg-surface-base border-b border-border-default dark:border-border-muted last:border-b-0"
+              class="w-full text-left px-4 py-2 hover:bg-surface-raised border-b border-border-default last:border-b-0"
             >
-              <div class="font-medium text-text-primary dark:text-text-inverse">
+              <div class="font-medium text-text-primary">
                 {{ suggestion.address }}
               </div>
               <div class="text-sm text-text-secondary">{{ suggestion.city }}</div>
@@ -46,8 +46,8 @@
         </div>
       }
       @if (pickupCoordinates()) {
-        <div class="mt-2 text-sm text-success-700 dark:text-success-strong">
-          ✓ Ubicación: {{ pickupCoordinates()!.lat.toFixed(4) }},
+        <div class="mt-2 text-sm text-success-700">
+          Ubicacion: {{ pickupCoordinates()!.lat.toFixed(4) }},
           {{ pickupCoordinates()!.lng.toFixed(4) }}
         </div>
       }
@@ -56,8 +56,8 @@
 
   <!-- Dropoff Location -->
   <div class="mb-8">
-    <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4 font-satoshi">
-      📍 Lugar de devolución
+    <h3 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">
+      Lugar de devolucion
     </h3>
     <div class="location-input-group">
       <!-- Address Input -->
@@ -65,21 +65,21 @@
         type="text"
         [(ngModel)]="dropoffAddress"
         placeholder="Ej: Av. Rivadavia 5678, Buenos Aires"
-        class="w-full px-4 py-2 border border-border-muted dark:border-border-default rounded-lg focus:ring-2 focus:ring-cta-default dark:bg-surface-base dark:text-text-inverse"
+        class="w-full px-4 py-2 border border-border-muted rounded-lg focus:ring-2 focus:ring-cta-default"
         (input)="onDropoffAddressChange()"
         [disabled]="loading()"
       />
       @if (dropoffSuggestions().length > 0) {
         <div
-          class="mt-2 border border-border-default dark:border-border-muted rounded-lg overflow-hidden"
+          class="mt-2 border border-border-default rounded-lg overflow-hidden"
         >
           @for (suggestion of dropoffSuggestions(); track suggestion.address) {
             <button
               type="button"
               (click)="selectDropoffSuggestion(suggestion)"
-              class="w-full text-left px-4 py-2 hover:bg-surface-raised dark:hover:bg-surface-base border-b border-border-default dark:border-border-muted last:border-b-0"
+              class="w-full text-left px-4 py-2 hover:bg-surface-raised border-b border-border-default last:border-b-0"
             >
-              <div class="font-medium text-text-primary dark:text-text-inverse">
+              <div class="font-medium text-text-primary">
                 {{ suggestion.address }}
               </div>
               <div class="text-sm text-text-secondary">{{ suggestion.city }}</div>
@@ -88,8 +88,8 @@
         </div>
       }
       @if (dropoffCoordinates()) {
-        <div class="mt-2 text-sm text-success-700 dark:text-success-strong">
-          ✓ Ubicación: {{ dropoffCoordinates()!.lat.toFixed(4) }},
+        <div class="mt-2 text-sm text-success-700">
+          Ubicacion: {{ dropoffCoordinates()!.lat.toFixed(4) }},
           {{ dropoffCoordinates()!.lng.toFixed(4) }}
         </div>
       }
@@ -99,13 +99,13 @@
   <!-- Distance Display -->
   @if (distanceKm() !== null) {
     <div
-      class="mb-8 p-4 bg-cta-default/10 dark:bg-cta-default rounded-lg border border-cta-default/40 dark:border-cta-default"
+      class="mb-8 p-4 bg-cta-default/10 rounded-lg border border-cta-default/40"
     >
-      <div class="text-lg font-semibold text-cta-default dark:text-cta-default">
+      <div class="text-lg font-semibold text-cta-default">
         Distancia: {{ distanceKm()! | number: '1.0-2' }} km
       </div>
-      <div class="text-sm text-cta-default dark:text-cta-default">
-        Categoría:
+      <div class="text-sm text-cta-default">
+        Categoria:
         {{
           distanceTier() === 'local'
             ? 'Local'
@@ -118,7 +118,7 @@
   }
 
   <!-- Delivery Toggle -->
-  <div class="mb-8 p-4 bg-surface-base dark:bg-surface-base rounded-lg">
+  <div class="mb-8 p-4 bg-surface-base rounded-lg">
     <label class="flex items-center cursor-pointer">
       <input
         type="checkbox"
@@ -128,15 +128,15 @@
         class="w-5 h-5 text-cta-default rounded focus:ring-2 focus:ring-cta-default"
       />
       <div class="ml-3 flex-1">
-        <div class="font-semibold text-text-primary dark:text-text-inverse">
-          ¿Necesitas delivery del auto?
+        <div class="font-semibold text-text-primary">
+          Necesitas delivery del auto?
         </div>
-        <div class="text-sm text-text-secondary dark:text-text-muted">
-          Entrega del auto en tu ubicación de retiro
+        <div class="text-sm text-text-secondary">
+          Entrega del auto en tu ubicacion de retiro
         </div>
         @if (!isWithinDeliveryRange()) {
-          <div class="text-xs text-warning-700 dark:text-warning-strong mt-1">
-            ⚠️ La distancia excede el rango de delivery (máx. 50 km)
+          <div class="text-xs text-warning-700 mt-1">
+            La distancia excede el rango de delivery (max. 50 km)
           </div>
         }
       </div>
@@ -144,12 +144,12 @@
 
     <!-- Delivery Fee Display -->
     @if (deliveryRequired() && deliveryFeeCents() > 0) {
-      <div class="mt-4 pt-4 border-t border-border-default dark:border-border-muted">
-        <div class="text-lg font-semibold text-text-primary dark:text-text-inverse">
+      <div class="mt-4 pt-4 border-t border-border-default">
+        <div class="text-lg font-semibold text-text-primary">
           Tarifa de delivery: ARS ${{ deliveryFeeCents() / 100 | number: '1.2-2' }}
         </div>
-        <div class="text-sm text-text-secondary dark:text-text-muted mt-1">
-          Se agregará al precio total de la reserva
+        <div class="text-sm text-text-secondary mt-1">
+          Se agregara al precio total de la reserva
         </div>
       </div>
     }
@@ -158,7 +158,7 @@
   <!-- Error Messages -->
   @if (errorMessage()) {
     <div
-      class="mb-6 p-4 bg-error-bg dark:bg-error-900 rounded-lg border border-error-border dark:border-error-700"
+      class="mb-6 p-4 bg-error-bg rounded-lg border border-error-border"
     >
       <div class="text-error-strong">{{ errorMessage() }}</div>
     </div>
@@ -170,7 +170,7 @@
       type="button"
       (click)="onCancel()"
       [disabled]="loading()"
-      class="flex-1 px-4 py-2 bg-surface-hover dark:bg-surface-base text-text-primary dark:text-text-inverse rounded-lg hover:bg-surface-pressed dark:hover:bg-gray-600 disabled:opacity-50 font-semibold"
+      class="flex-1 px-4 py-2 bg-surface-hover text-text-primary rounded-lg hover:bg-surface-pressed disabled:opacity-50 font-semibold"
     >
       Cancelar
     </button>
@@ -181,7 +181,7 @@
       class="flex-1 px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default disabled:opacity-50 font-semibold flex items-center justify-center gap-2"
     >
       @if (loading()) {
-        <span class="inline-block animate-spin">⏳</span>
+        <span class="inline-block animate-spin">...</span>
       }
       Continuar
     </button>

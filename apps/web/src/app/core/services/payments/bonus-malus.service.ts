@@ -222,7 +222,7 @@ export class BonusMalusService {
       type = 'NEUTRAL';
       message = 'Precio estándar sin ajustes';
       icon = '➖';
-      color = 'text-text-secondary dark:text-text-secondary';
+      color = 'text-text-secondary';
       tips.push('Completa reservas y obtén buenas calificaciones para recibir descuentos.');
       tips.push('Evita cancelaciones para no recibir recargos.');
     } else if (factor <= 0.05) {

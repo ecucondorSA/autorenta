@@ -34,7 +34,7 @@ import { environment } from '@environment';
   imports: [NgOptimizedImage],
   template: `
     <div
-      class="min-h-screen bg-surface-base dark:bg-surface-base flex items-center justify-center py-12 px-4"
+      class="min-h-screen bg-surface-base flex items-center justify-center py-12 px-4"
       >
       <div class="w-full max-w-md text-center">
         <!-- Loading State -->
@@ -73,10 +73,10 @@ import { environment } from '@environment';
               </svg>
             </div>
             <div class="space-y-2">
-              <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary">
+              <h1 class="text-2xl font-bold text-text-primary">
                 Completando inicio de sesión...
               </h1>
-              <p class="text-text-secondary dark:text-text-secondary">
+              <p class="text-text-secondary">
                 Por favor esperá mientras procesamos tu autenticación
               </p>
             </div>
@@ -87,7 +87,7 @@ import { environment } from '@environment';
         @if (error()) {
           <div class="space-y-6">
             <div
-              class="bg-error-bg dark:bg-error-900/20 border-2 border-error-border dark:border-error-800 rounded-lg p-6"
+              class="bg-error-bg border-2 border-error-border rounded-lg p-6"
               >
               <h2 class="text-xl font-bold text-error-strong mb-2">Error de autenticación</h2>
               <p class="text-error-text mb-4">

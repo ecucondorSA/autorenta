@@ -1,24 +1,24 @@
 <ion-header>
-  <ion-toolbar class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default">
+  <ion-toolbar class="bg-surface-raised border-b border-border-default">
     <ion-buttons slot="start">
       <ion-back-button
         defaultHref="/"
         text="Inicio"
-        class="text-text-primary dark:text-text-secondary"
+        class="text-text-primary"
       ></ion-back-button>
     </ion-buttons>
-    <ion-title class="text-text-primary dark:text-text-secondary">Soporte</ion-title>
+    <ion-title class="text-text-primary">Soporte</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="bg-surface-base dark:bg-surface-base">
+<ion-content class="bg-surface-base">
   <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
     <!-- Page Header -->
     <div class="mb-6">
-      <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2 font-satoshi">
+      <h1 class="text-2xl font-bold text-text-primary mb-2 font-satoshi">
         Centro de Soporte
       </h1>
-      <p class="text-sm text-text-secondary dark:text-text-secondary">
+      <p class="text-sm text-text-secondary">
         Crea un ticket de soporte o revisa el estado de tus consultas anteriores.
       </p>
     </div>
@@ -188,7 +188,7 @@
             <div class="mt-4 space-y-2">
               @for (url of pendingAttachments(); track url; let i = $index) {
                 <div
-                  class="flex items-center justify-between p-2 rounded bg-surface-secondary dark:bg-surface-secondary"
+                  class="flex items-center justify-between p-2 rounded bg-surface-secondary"
                 >
                   <span class="text-sm text-text-primary truncate max-w-[200px]">
                     Archivo {{ i + 1 }}

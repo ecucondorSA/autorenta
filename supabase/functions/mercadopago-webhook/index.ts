@@ -1048,12 +1048,10 @@ serve(async (req: Request) => {
         });
 
         // ========================================
-        // COMODATO: Process reward pool and FGO contributions
-        // Check if payment metadata indicates comodato agreement
+        // AUTORENTA: Siempre comodato - procesar reward pool y FGO
         // ========================================
-        const isComodatoPayment = metadata.is_comodato === true || metadata.is_comodato === 'true' || metadata.agreement_type === 'comodato';
-
-        if (isComodatoPayment) {
+        // AutoRenta es exclusivamente comodato, siempre procesamos contribuciones
+        {
           log.info('[COMODATO] Processing comodato contributions via webhook:', {
             booking_id: reference_id,
             reward_pool_cents: metadata.reward_pool_cents,
@@ -1139,13 +1137,10 @@ serve(async (req: Request) => {
       }
 
       // ========================================
-      // COMODATO: Process contributions for non-split payments
+      // AUTORENTA: Siempre comodato - procesar contribuciones
       // ========================================
-      const nonSplitMetadata = paymentData.metadata || {};
-      const isComodatoNonSplit = nonSplitMetadata.is_comodato === true || nonSplitMetadata.is_comodato === 'true' ||
-                                  nonSplitMetadata.agreement_type === 'comodato' || booking.agreement_type === 'comodato';
-
-      if (isComodatoNonSplit) {
+      // AutoRenta es exclusivamente comodato, siempre procesamos contribuciones
+      {
         log.info('[COMODATO] Processing comodato contributions (non-split):', {
           booking_id: reference_id,
         });

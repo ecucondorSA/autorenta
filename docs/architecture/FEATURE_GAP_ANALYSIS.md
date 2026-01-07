@@ -60,7 +60,7 @@ interface BookingContract {
    - `profitability` - Intereses o excedentes
 
 2. **Movimientos** (`fgo_movements`):
-   - `user_contribution` - Aporte de usuario (α% = 15%)
+   - `user_contribution` - Aporte de usuario (α% = variable)
    - `siniestro_payment` - Pago de siniestro
    - `franchise_payment` - Pago de franquicia
    - `capitalization` - Transferencia a capitalización
@@ -73,7 +73,7 @@ interface BookingContract {
    - Estado del fondo: `healthy`, `warning`, `critical`
 
 **Parámetros configurables:**
-- `alpha_percentage` = 15% (aporte de cada booking)
+- `alpha_percentage` = porcentaje variable (aporte de cada booking)
 - `target_months_coverage` = 12 meses de cobertura
 
 **Estado:** 🟢 **Producción-ready** (contabilidad completa)
@@ -86,7 +86,7 @@ interface BookingContract {
 - `supabase/migrations/20251028_fix_non_withdrawable_cash_deposits.sql`
 
 **Funcionalidades:**
-- Split payments: 85% locador, 15% plataforma
+- Split payments: Propietario recibe el neto (total - fees), Plataforma recibe fees dinámicos
 - Balance types: `available`, `locked`, `protected_credit`, `non_withdrawable`
 - Bank accounts: CBU, CVU, Alias (Argentina)
 - Wallet ledger: Double-entry accounting
@@ -324,7 +324,7 @@ interface QuoteBreakdown {
 
 ---
 
-#### Split Payment System (85/15)
+#### Payment Distribution (Modelo Comodato: Fee variable plataforma, reward pool, FGO)
 **Archivo:** `supabase/migrations/20251028_add_split_payment_system.sql`
 
 **Configuración:**
@@ -343,14 +343,14 @@ CREATE TABLE payment_splits (
   payment_id UUID,
 
   -- Split amounts
-  locador_amount_cents BIGINT,    -- 85% (o custom)
-  platform_amount_cents BIGINT,   -- 15% (o custom)
+  locador_amount_cents BIGINT,    -- Neto para el locador
+  platform_amount_cents BIGINT,   -- Fee de plataforma (dinámico)
 
   -- Deposit handling
   deposit_amount_cents BIGINT,
   deposit_returned_at TIMESTAMPTZ,
 
-  -- FGO contribution (15% del total)
+  -- FGO contribution (porcentaje del total)
   fgo_contribution_cents BIGINT,
 
   split_completed BOOLEAN DEFAULT false
@@ -443,10 +443,10 @@ interface OwnerCommissionOverride {
 
 **Competencia:**
 - **DeRentas/Enchulame:** 40-50% fijo (sin descuentos)
-- **AutoRenta actual:** 15% fijo
-- **AutoRenta propuesto:** 15% → 12% → 10% → 8% según volumen
+- **AutoRenta actual:** Fee dinámico base
+- **AutoRenta propuesto:** Esquema de fees variable según volumen y performance
 
-**Prioridad:** 🟡 **MEDIA** - Importante para atraer locadores grandes, pero MVP puede empezar con flat 15%
+**Prioridad:** 🟡 **MEDIA** - Importante para atraer locadores grandes, pero MVP puede empezar con fee dinámico base
 
 ---
 
@@ -1165,13 +1165,13 @@ interface VehicleDocumentVerification {
 | **Verificación de identidad** | ✅ Level 1-3 | ✅ Level 1-3 + AI | ⚠️ Básica | ❌ No verifican |
 | **Sistema de disputas** | ❌ No | ✅ Sí | ⚠️ Manual | ❌ No (conflictos frecuentes) |
 | **Pricing dinámico** | 🔄 Backend listo | ✅ UI + Automation | ❌ No | ✅ Sí (manual) |
-| **Comisión** | 15% flat | 15-8% por volumen | 40-50% | 0% (P2P) |
+| **Comisión** | Variable | Variable por volumen | 40-50% | 0% (P2P) |
 | **Mantenimiento tracking** | ❌ No | ✅ Sí | ⚠️ Requieren VTV | ❌ No |
 | **Mileage tracking** | ❌ No | ✅ Sí | ❌ No | ⚠️ A veces |
-| **Split payments** | ✅ 85/15 | ✅ 85/15 + custom | ✅ 50/50 o 60/40 | N/A |
+| **Split payments** | ✅ Dinámico | ✅ Dinámico + custom | ✅ 50/50 o 60/40 | N/A |
 
 **Ventaja Competitiva de AutoRenta (post-MVP):**
-1. ✅ **Comisión más baja** (15% vs 40-50% de DeRentas)
+1. ✅ **Comisión más competitiva** (Esquema variable vs 40-50% de DeRentas)
 2. ✅ **Verificación más robusta** (3 niveles vs básica)
 3. ✅ **Inspecciones digitales** (vs manual/inexistente)
 4. ✅ **Sistema de disputas** (vs soporte lento)
@@ -1316,7 +1316,7 @@ CREATE TABLE owner_commission_overrides (...);
 **Deliverables:**
 - Contratos firmados digitalmente por ambas partes
 - Sistema de disputas con chat + evidencia
-- Comisiones escalonadas por volumen (8-15%)
+- Fees dinámicos por volumen y categoría (dinámico)
 - Verificación Level 2 con AI (95% aprobación automática)
 
 **Success Metrics:**
@@ -1390,7 +1390,7 @@ CREATE TABLE owner_commission_overrides (...);
 ### 10.2 Ventaja Competitiva Post-MVP
 
 Después de completar Phases 1-2, AutoRenta será:
-1. **Más barato** que DeRentas/Enchulame (15% vs 40-50%)
+1. **Más eficiente** que DeRentas/Enchulame (Fee competitivo vs 40-50%)
 2. **Más seguro** que mercado informal (inspecciones + verificación)
 3. **Más flexible** que ambos (términos custom + pricing dinámico)
 4. **Más justo** (sistema de disputas + contratos claros)

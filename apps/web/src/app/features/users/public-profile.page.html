@@ -1,12 +1,12 @@
-<div class="min-h-screen bg-surface-base dark:bg-surface-base pb-20 transition-colors duration-300">
+<div class="min-h-screen bg-surface-base pb-20 transition-colors duration-300">
   <!-- Header with back button -->
   <div
-    class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-border-default/30 dark:border-slate-deep/50 transition-colors"
+    class="bg-surface-raised border-b border-border-default transition-colors"
     >
     <div class="mx-auto max-w-5xl px-6 py-6">
       <button
         (click)="goBack()"
-        class="flex items-center gap-2 text-sm font-medium text-text-secondary dark:text-text-secondary/80 hover:text-text-primary dark:hover:text-ivory-luminous transition-colors"
+        class="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
         >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -27,7 +27,7 @@
       <div
         class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent"
       ></div>
-      <p class="mt-4 text-text-secondary dark:text-text-secondary/70">
+      <p class="mt-4 text-text-secondary">
         {{ 'publicProfile.loadingProfile' | translate }}
       </p>
     </div>
@@ -37,7 +37,7 @@
   @if (error() && !loading()) {
     <div class="mx-auto max-w-5xl px-6 py-12">
       <div
-        class="rounded-xl bg-error-bg dark:bg-error-bg0/15 border border-error-border dark:border-error-400/40 p-6 text-center"
+        class="rounded-xl bg-error-bg border border-error-border p-6 text-center"
         >
         <p class="text-error-strong font-medium">{{ error() }}</p>
         <button (click)="goBack()" class="mt-4 btn-secondary px-6 py-2">
@@ -54,7 +54,7 @@
       <div class="card-premium mb-8 overflow-hidden">
         <!-- Cover/Background -->
         <div
-          class="h-32 bg-gradient-to-br from-cta-default via-cta-default/90 to-warning-light dark:from-slate-deep dark:via-cta-default/60 dark:to-charcoal-medium"
+          class="h-32 bg-gradient-to-br from-cta-default via-cta-default/90 to-warning-light"
         ></div>
         <!-- Profile Info -->
         <div class="px-6 sm:px-8 pb-6">
@@ -64,7 +64,7 @@
               <img
                 [src]="profile()?.avatar_url || '/assets/avatar-placeholder.png'"
                 [alt]="profile()?.full_name"
-                class="h-32 w-32 rounded-full object-cover bg-surface-secondary dark:bg-surface-secondary/70 ring-4 ring-white-pure dark:ring-anthracite transition-colors shadow-lg"
+                class="h-32 w-32 rounded-full object-cover bg-surface-secondary ring-4 ring-white-pure transition-colors shadow-lg"
                 />
             </div>
             <!-- Name and Stats -->
@@ -72,14 +72,14 @@
               <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
                   <h1
-                    class="text-3xl font-bold text-text-primary dark:text-text-primary tracking-tight"
+                    class="text-3xl font-bold text-text-primary tracking-tight"
                     >
                     {{ profile()?.full_name }}
                   </h1>
                   <div class="mt-2 flex flex-wrap items-center gap-2">
                     <!-- Role Badge -->
                     <span
-                      class="inline-flex items-center gap-1.5 rounded-full bg-surface-secondary dark:bg-surface-secondary/70 px-3 py-1 text-sm font-semibold text-text-primary dark:text-text-primary border border-border-default dark:border-border-default/30 dark:border-slate-deep/50"
+                      class="inline-flex items-center gap-1.5 rounded-full bg-surface-secondary px-3 py-1 text-sm font-semibold text-text-primary border border-border-default"
                       >
                       {{
                       profile()?.role === 'renter'
@@ -110,7 +110,7 @@
                       }}
                     </span>
                   </div>
-                  <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary/70">
+                  <p class="mt-2 text-sm text-text-secondary">
                     {{ 'publicProfile.memberSince' | translate }}
                     {{ formatMemberSince(profile()?.created_at || '') }}
                   </p>
@@ -122,63 +122,63 @@
           <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
             <!-- Owner Rating -->
             <div
-              class="rounded-xl bg-gradient-to-br from-cta-default/10 to-cta-default/5 dark:from-cta-default/15 dark:to-transparent border border-cta-default/20 dark:border-cta-default/30 p-4 transition-colors"
+              class="rounded-xl bg-gradient-to-br from-cta-default/10 to-cta-default/5 border border-cta-default/20 p-4 transition-colors"
               >
-              <p class="text-xs font-medium text-text-secondary dark:text-text-secondary/70 mb-1">
+              <p class="text-xs font-medium text-text-secondary mb-1">
                 {{ 'publicProfile.asOwner' | translate }}
               </p>
               <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-bold text-text-primary dark:text-text-primary">
+                <span class="text-2xl font-bold text-text-primary">
                   {{ userStats()?.owner_rating_avg || 0 | number: '1.1-1' }}
                 </span>
-                <span class="text-cta-default dark:text-cta-default/80">★</span>
+                <span class="text-cta-default">★</span>
               </div>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/60 mt-1">
+              <p class="text-xs text-text-secondary mt-1">
                 {{ userStats()?.owner_reviews_count || 0 }} reviews
               </p>
             </div>
             <!-- Renter Rating -->
             <div
-              class="rounded-xl bg-gradient-to-br from-warning-light/10 to-warning-light/5 dark:from-warning-light/15 dark:to-transparent border border-warning-light/20 dark:border-warning-light/30 p-4 transition-colors"
+              class="rounded-xl bg-gradient-to-br from-warning-light/10 to-warning-light/5 border border-warning-light/20 p-4 transition-colors"
               >
-              <p class="text-xs font-medium text-text-secondary dark:text-text-secondary/70 mb-1">
+              <p class="text-xs font-medium text-text-secondary mb-1">
                 {{ 'publicProfile.asRenter' | translate }}
               </p>
               <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-bold text-text-primary dark:text-text-primary">
+                <span class="text-2xl font-bold text-text-primary">
                   {{ userStats()?.renter_rating_avg || 0 | number: '1.1-1' }}
                 </span>
-                <span class="text-warning-700 dark:text-warning-strong/80">★</span>
+                <span class="text-warning-700">★</span>
               </div>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/60 mt-1">
+              <p class="text-xs text-text-secondary mt-1">
                 {{ userStats()?.renter_reviews_count || 0 }} reviews
               </p>
             </div>
             <!-- Total Cars -->
             <div
-              class="rounded-xl bg-surface-secondary dark:bg-surface-secondary/50 border border-border-default dark:border-border-default/30 dark:border-slate-deep/50 p-4 transition-colors"
+              class="rounded-xl bg-surface-secondary border border-border-default p-4 transition-colors"
               >
-              <p class="text-xs font-medium text-text-secondary dark:text-text-secondary/70 mb-1">
+              <p class="text-xs font-medium text-text-secondary mb-1">
                 {{ 'publicProfile.activeCars' | translate }}
               </p>
-              <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+              <p class="text-2xl font-bold text-text-primary">
                 {{ userCars().length }}
               </p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/60 mt-1">
+              <p class="text-xs text-text-secondary mt-1">
                 {{ 'publicProfile.published' | translate }}
               </p>
             </div>
             <!-- Average Price -->
             <div
-              class="rounded-xl bg-gradient-to-br from-success-50 to-success-100/50 dark:from-success-500/15 dark:to-transparent border border-success-border dark:border-success-400/30 p-4 transition-colors"
+              class="rounded-xl bg-gradient-to-br from-success-50 to-success-100/50 border border-success-border p-4 transition-colors"
               >
-              <p class="text-xs font-medium text-text-secondary dark:text-text-secondary/70 mb-1">
+              <p class="text-xs font-medium text-text-secondary mb-1">
                 {{ 'publicProfile.avgPrice' | translate }}
               </p>
-              <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+              <p class="text-2xl font-bold text-text-primary">
                 ${{ averageCarPrice() | number: '1.0-0' }}
               </p>
-              <p class="text-xs text-success-strong dark:text-success-300/80 mt-1">
+              <p class="text-xs text-success-strong mt-1">
                 {{ 'publicProfile.perDay' | translate }}
               </p>
             </div>
@@ -186,18 +186,17 @@
         </div>
       </div>
       <!-- Tabs Navigation -->
-      <div class="mb-6 border-b border-border-default dark:border-slate-deep/70 transition-colors">
+      <div class="mb-6 border-b border-border-default transition-colors">
         <nav class="-mb-px flex gap-6 overflow-x-auto" aria-label="Tabs">
           <button
             (click)="setActiveTab('cars')"
           [ngClass]="{
             'text-cta-default': activeTab() === 'cars',
             'border-cta-default': activeTab() === 'cars',
-            'text-text-secondary dark:text-text-secondary': activeTab() !== 'cars',
-            'dark:text-text-secondary/70': activeTab() !== 'cars',
+            'text-text-secondary': activeTab() !== 'cars',
             'border-transparent': activeTab() !== 'cars',
           }"
-            class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-text-primary dark:hover:text-ivory-luminous"
+            class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-text-primary"
             >
             {{ 'publicProfile.tabs.cars' | translate }} ({{ userCars().length }})
           </button>
@@ -207,11 +206,10 @@
           [ngClass]="{
             'text-cta-default': activeTab() === 'reviews-owner',
             'border-cta-default': activeTab() === 'reviews-owner',
-            'text-text-secondary dark:text-text-secondary': activeTab() !== 'reviews-owner',
-            'dark:text-text-secondary/70': activeTab() !== 'reviews-owner',
+            'text-text-secondary': activeTab() !== 'reviews-owner',
             'border-transparent': activeTab() !== 'reviews-owner',
           }"
-              class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-text-primary dark:hover:text-ivory-luminous"
+              class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-text-primary"
               >
               {{ 'publicProfile.tabs.reviewsAsOwner' | translate }} ({{ reviewsAsOwner().length }})
             </button>
@@ -222,11 +220,10 @@
           [ngClass]="{
             'text-cta-default': activeTab() === 'reviews-renter',
             'border-cta-default': activeTab() === 'reviews-renter',
-            'text-text-secondary dark:text-text-secondary': activeTab() !== 'reviews-renter',
-            'dark:text-text-secondary/70': activeTab() !== 'reviews-renter',
+            'text-text-secondary': activeTab() !== 'reviews-renter',
             'border-transparent': activeTab() !== 'reviews-renter',
           }"
-              class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-text-primary dark:hover:text-ivory-luminous"
+              class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-text-primary"
               >
               {{ 'publicProfile.tabs.reviewsAsRenter' | translate }} ({{ reviewsAsRenter().length }})
             </button>
@@ -239,7 +236,7 @@
         <div class="space-y-6">
           @if (!hasCars()) {
             <div class="card-premium p-12 text-center">
-              <p class="text-text-secondary dark:text-text-secondary/70">
+              <p class="text-text-secondary">
                 {{ 'publicProfile.noCars' | translate }}
               </p>
             </div>
@@ -252,7 +249,7 @@
                   class="card-premium overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 group"
                   >
                   <div
-                    class="aspect-[4/3] overflow-hidden bg-surface-secondary dark:bg-surface-secondary/70"
+                    class="aspect-[4/3] overflow-hidden bg-surface-secondary"
                     >
                     <img
                       [src]="getCarPhotoUrl(car)"
@@ -263,22 +260,22 @@
                   </div>
                   <div class="p-4">
                     <h3
-                      class="font-bold text-text-primary dark:text-text-primary group-hover:text-cta-default transition-colors"
+                      class="font-bold text-text-primary group-hover:text-cta-default transition-colors"
                       >
                       {{ car.brand }} {{ car.model }}
                     </h3>
-                    <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-1">
+                    <p class="text-sm text-text-secondary mt-1">
                       {{ car.year }}
                     </p>
                     <div class="mt-3 flex items-center justify-between">
                       @if (car.price_per_day && car.price_per_day > 0) {
-                        <p class="text-lg font-bold text-cta-default dark:text-cta-default/90">
+                        <p class="text-lg font-bold text-cta-default">
                           ${{ car.price_per_day | number: '1.0-0' }}/día
                         </p>
                       } @else {
                         <p class="text-sm font-semibold text-primary-600">Consultar precio</p>
                       }
-                      <span class="text-xs text-text-secondary dark:text-text-secondary/60">{{
+                      <span class="text-xs text-text-secondary">{{
                         car.location_city
                       }}</span>
                     </div>
@@ -289,7 +286,7 @@
           }
           @if (userCars().length > 6) {
             <div class="text-center">
-              <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+              <p class="text-sm text-text-secondary">
                 {{ 'publicProfile.showing' | translate }} 6 {{ 'publicProfile.of' | translate }}
                 {{ userCars().length }} {{ 'publicProfile.cars' | translate }}
               </p>
@@ -303,7 +300,7 @@
           <!-- Radar Chart for Owner Ratings -->
           @if (ownerRadarData()) {
             <div class="card-premium p-6">
-              <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4 font-satoshi">
+              <h3 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">
                 Desglose de Calificaciones como Locador
               </h3>
               <app-review-radar-chart [data]="ownerRadarData()!" [size]="300" />
@@ -311,7 +308,7 @@
           }
           <!-- Reviews List -->
           <div class="space-y-4">
-            <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary font-satoshi">
+            <h3 class="text-lg font-semibold text-text-primary font-satoshi">
               Reseñas Recibidas
             </h3>
             @for (review of displayedReviewsOwner(); track review) {
@@ -325,15 +322,15 @@
                   <div class="flex-1">
                     <div class="flex items-start justify-between">
                       <div>
-                        <p class="font-semibold text-text-primary dark:text-text-primary">
+                        <p class="font-semibold text-text-primary">
                           {{ review.reviewer_name }}
                         </p>
-                        <p class="text-xs text-text-secondary dark:text-text-secondary/60">
+                        <p class="text-xs text-text-secondary">
                           {{ review.created_at | date: 'medium' }}
                         </p>
                       </div>
                       <div class="flex items-center gap-1">
-                        <span class="text-lg font-bold text-text-primary dark:text-text-primary">{{
+                        <span class="text-lg font-bold text-text-primary">{{
                           getOverallRating(review)
                         }}</span>
                         <span class="text-warning-strong">★</span>
@@ -341,7 +338,7 @@
                     </div>
                     @if (review.comment_public) {
                       <p
-                        class="mt-2 text-sm text-text-primary dark:text-text-secondary/80"
+                        class="mt-2 text-sm text-text-primary"
                         >
                         {{ review.comment_public }}
                       </p>
@@ -359,7 +356,7 @@
           <!-- Radar Chart for Renter Ratings -->
           @if (renterRadarData()) {
             <div class="card-premium p-6">
-              <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4 font-satoshi">
+              <h3 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">
                 Desglose de Calificaciones como Locatario
               </h3>
               <app-review-radar-chart [data]="renterRadarData()!" [size]="300" />
@@ -367,7 +364,7 @@
           }
           <!-- Reviews List -->
           <div class="space-y-4">
-            <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary font-satoshi">
+            <h3 class="text-lg font-semibold text-text-primary font-satoshi">
               Reseñas Recibidas
             </h3>
             @for (review of displayedReviewsRenter(); track review) {
@@ -381,15 +378,15 @@
                   <div class="flex-1">
                     <div class="flex items-start justify-between">
                       <div>
-                        <p class="font-semibold text-text-primary dark:text-text-primary">
+                        <p class="font-semibold text-text-primary">
                           {{ review.reviewer_name }}
                         </p>
-                        <p class="text-xs text-text-secondary dark:text-text-secondary/60">
+                        <p class="text-xs text-text-secondary">
                           {{ review.created_at | date: 'medium' }}
                         </p>
                       </div>
                       <div class="flex items-center gap-1">
-                        <span class="text-lg font-bold text-text-primary dark:text-text-primary">{{
+                        <span class="text-lg font-bold text-text-primary">{{
                           getOverallRating(review)
                         }}</span>
                         <span class="text-cta-default">★</span>
@@ -397,7 +394,7 @@
                     </div>
                     @if (review.comment_public) {
                       <p
-                        class="mt-2 text-sm text-text-primary dark:text-text-secondary/80"
+                        class="mt-2 text-sm text-text-primary"
                         >
                         {{ review.comment_public }}
                       </p>

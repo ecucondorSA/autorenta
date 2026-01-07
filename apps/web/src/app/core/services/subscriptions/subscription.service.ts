@@ -13,8 +13,15 @@ import {
   type SubscriptionDisplayState,
   type SubscriptionTier,
   type SubscriptionUsageLogWithDetails,
+  type PreauthorizationCalculation,
+  type UpgradeRecommendation,
   SUBSCRIPTION_TIERS,
   getTierConfig,
+  getRequiredTierByVehicleValue,
+  calculatePreauthorization as calculatePreauthorizationLocal,
+  getUpgradeRecommendation as getUpgradeRecommendationLocal,
+  canAccessVehicle,
+  formatPreauthorizationInfo,
 } from '@core/models/subscription.model';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
@@ -353,10 +360,198 @@ export class SubscriptionService {
   }
 
   /**
+   * Create a subscription using wallet balance (internal transfer).
+   * Returns the subscription ID if successful.
+   */
+  async createSubscriptionWithWallet(tier: SubscriptionTier): Promise<string> {
+    try {
+      const tierConfig = SUBSCRIPTION_TIERS[tier];
+      if (!tierConfig) {
+        throw new Error(`Invalid tier: ${tier}`);
+      }
+
+      const { data, error } = await this.supabase.functions.invoke('create-subscription-wallet', {
+        body: { tier },
+      });
+
+      if (error) throw error;
+      if (!data?.subscription_id) {
+        throw new Error(data?.error || 'No subscription ID returned');
+      }
+
+      this.logger.info('Subscription created with wallet', { tier, subscriptionId: data.subscription_id });
+      await this.fetchSubscription(true);
+      return data.subscription_id as string;
+    } catch (err) {
+      this.handleError(err, 'Error al crear suscripción con wallet');
+      throw err;
+    }
+  }
+
+  /**
    * Get usage history (alias for fetchUsageHistory for component compatibility)
    */
   async getUsageHistory(limit = 50): Promise<SubscriptionUsageLogWithDetails[]> {
     return this.fetchUsageHistory(undefined, limit);
+  }
+
+  // ============================================================================
+  // PREAUTHORIZATION & VEHICLE VALUE METHODS
+  // ============================================================================
+
+  /**
+   * Calculate required preauthorization (hold) for a vehicle
+   * Uses the server-side RPC for authoritative calculation
+   * @param vehicleValueUsd - Estimated value of the vehicle in USD
+   * @returns Preauthorization details
+   */
+  async calculatePreauthorizationForVehicle(
+    vehicleValueUsd: number
+  ): Promise<PreauthorizationCalculation> {
+    try {
+      const { data: { session } } = await this.supabase.auth.getSession();
+
+      const { data, error } = await this.supabase.rpc('calculate_preauthorization', {
+        p_vehicle_value_usd: vehicleValueUsd,
+        p_user_id: session?.user?.id ?? null
+      });
+
+      if (error) throw error;
+
+      // Transform RPC response to match interface
+      return {
+        holdAmountCents: data.hold_amount_cents,
+        holdAmountUsd: data.hold_amount_usd,
+        baseHoldCents: data.base_hold_cents,
+        baseHoldUsd: data.base_hold_usd,
+        discountApplied: data.discount_applied,
+        discountReason: data.discount_reason ?? undefined,
+        requiredTier: data.required_tier as SubscriptionTier,
+        fgoCap: data.fgo_cap_usd,
+        formula: data.discount_applied
+          ? `Hold reducido con suscripción ${data.user_tier}`
+          : `Hold = max($${data.base_hold_usd}, $${vehicleValueUsd} × 10%)`
+      };
+    } catch (err) {
+      this.logger.error('Error calculating preauthorization from server', err);
+      // Fallback to local calculation
+      return calculatePreauthorizationLocal(vehicleValueUsd, this.tier());
+    }
+  }
+
+  /**
+   * Calculate preauthorization locally (without server call)
+   * Useful for instant UI feedback
+   */
+  calculatePreauthorizationLocal(vehicleValueUsd: number): PreauthorizationCalculation {
+    return calculatePreauthorizationLocal(vehicleValueUsd, this.tier());
+  }
+
+  /**
+   * Validate if user's subscription allows access to a vehicle
+   * Uses server-side validation for authoritative result
+   */
+  async validateSubscriptionForVehicle(
+    vehicleValueUsd: number
+  ): Promise<{
+    hasSubscription: boolean;
+    canBook: boolean;
+    requiresFullPreauth: boolean;
+    requiredTier: SubscriptionTier;
+    userTier: SubscriptionTier | null;
+    subscriptionId?: string;
+    remainingBalanceCents?: number;
+    upgradeRecommended?: boolean;
+    message: string;
+  }> {
+    try {
+      const { data: { session } } = await this.supabase.auth.getSession();
+      if (!session?.user) {
+        const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
+        return {
+          hasSubscription: false,
+          canBook: true,
+          requiresFullPreauth: true,
+          requiredTier,
+          userTier: null,
+          message: `Sin sesión: se requiere preautorización completa de $${SUBSCRIPTION_TIERS[requiredTier].preauth_hold_usd} USD`
+        };
+      }
+
+      const { data, error } = await this.supabase.rpc('validate_subscription_for_vehicle', {
+        p_user_id: session.user.id,
+        p_vehicle_value_usd: vehicleValueUsd
+      });
+
+      if (error) throw error;
+
+      return {
+        hasSubscription: data.has_subscription,
+        canBook: data.can_book,
+        requiresFullPreauth: data.requires_full_preauth,
+        requiredTier: data.required_tier as SubscriptionTier,
+        userTier: data.user_tier as SubscriptionTier | null,
+        subscriptionId: data.subscription_id ?? undefined,
+        remainingBalanceCents: data.remaining_balance_cents ?? undefined,
+        upgradeRecommended: data.upgrade_recommended ?? false,
+        message: data.message
+      };
+    } catch (err) {
+      this.logger.error('Error validating subscription for vehicle', err);
+      // Fallback to local validation
+      const access = canAccessVehicle(this.tier(), vehicleValueUsd);
+      return {
+        hasSubscription: this.hasActiveSubscription(),
+        canBook: true,
+        requiresFullPreauth: !access.allowed || access.reason !== undefined,
+        requiredTier: access.requiredTier,
+        userTier: access.userTier,
+        message: access.reason ?? 'Validación local'
+      };
+    }
+  }
+
+  /**
+   * Get required tier for a vehicle value (local calculation)
+   */
+  getRequiredTierForVehicle(vehicleValueUsd: number): SubscriptionTier {
+    return getRequiredTierByVehicleValue(vehicleValueUsd);
+  }
+
+  /**
+   * Get upgrade recommendation for a vehicle
+   */
+  getUpgradeRecommendation(vehicleValueUsd: number): UpgradeRecommendation {
+    return getUpgradeRecommendationLocal(vehicleValueUsd, this.tier());
+  }
+
+  /**
+   * Check if current subscription allows renting a specific vehicle
+   */
+  canRentVehicle(vehicleValueUsd: number): {
+    allowed: boolean;
+    requiredTier: SubscriptionTier;
+    userTier: SubscriptionTier | null;
+    reason?: string;
+  } {
+    return canAccessVehicle(this.tier(), vehicleValueUsd);
+  }
+
+  /**
+   * Format preauthorization info for UI display
+   */
+  formatPreauthorization(preauth: PreauthorizationCalculation) {
+    return formatPreauthorizationInfo(preauth);
+  }
+
+  /**
+   * Get all tier configurations with preauth info
+   */
+  getAllTiersWithPreauth() {
+    return Object.values(SUBSCRIPTION_TIERS).map(tier => ({
+      ...tier,
+      savingsMessage: `Reduce preautorización de $${tier.preauth_hold_usd} a $${tier.preauth_with_subscription_usd}`
+    }));
   }
 
   // ============================================================================

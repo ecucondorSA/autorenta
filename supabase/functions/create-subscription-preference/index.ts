@@ -15,9 +15,24 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { createChildLogger } from '../_shared/logger.ts';
-import { getMercadoPagoAccessToken } from '../_shared/mercadopago-sdk.ts';
 
 const log = createChildLogger('CreateSubscriptionPreference');
+
+// Local helper to avoid pulling MercadoPago SDK just to validate token
+const getMercadoPagoAccessToken = (): string => {
+  const rawToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
+  if (!rawToken) {
+    throw new Error('MERCADOPAGO_ACCESS_TOKEN environment variable not configured');
+  }
+  const cleaned = rawToken.trim().replace(/[\r\n\t\s]/g, '');
+  const isTestToken = cleaned.toUpperCase().includes('TEST-') || cleaned.startsWith('TEST');
+  if (isTestToken) {
+    throw new Error(
+      'MERCADOPAGO_ACCESS_TOKEN parece ser de sandbox (TEST). Configura el token de producción APP_USR-*'
+    );
+  }
+  return cleaned;
+};
 
 // Subscription tier configurations
 const SUBSCRIPTION_TIERS = {
@@ -53,7 +68,7 @@ serve(async (req) => {
   }
 
   try {
-    const MP_ACCESS_TOKEN = getMercadoPagoAccessToken('create-subscription-preference');
+    const MP_ACCESS_TOKEN = getMercadoPagoAccessToken();
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     const APP_BASE_URL = Deno.env.get('APP_BASE_URL') || 'https://autorentar.com';

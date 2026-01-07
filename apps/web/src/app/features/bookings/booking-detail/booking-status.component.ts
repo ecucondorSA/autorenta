@@ -92,7 +92,7 @@ export class BookingStatusComponent {
 
     // Request flow: pending approval (amber, not error)
     if (this.isAwaitingOwnerApproval()) {
-      return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
+      return 'bg-amber-100 text-amber-700';
     }
 
     if (isReturnFlow) {

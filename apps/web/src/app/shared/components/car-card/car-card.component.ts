@@ -50,6 +50,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private readonly _showOwnerActions = signal<boolean>(false);
   private readonly _priority = signal<boolean>(false);
   private readonly _urgentMode = signal<boolean>(false);
+  private readonly _isMapVariant = signal<boolean>(false);
 
   readonly hourlyPrice = signal<number | null>(null);
   readonly urgentAvailability = signal<{
@@ -210,6 +211,15 @@ export class CarCardComponent implements OnInit, OnDestroy {
 
   get urgentMode(): boolean {
     return this._urgentMode();
+  }
+
+  @Input()
+  set mapVariant(value: boolean) {
+    this._isMapVariant.set(value);
+  }
+
+  get mapVariant(): boolean {
+    return this._isMapVariant();
   }
 
   readonly firstPhoto = computed(() => this._car()?.photos?.[0] ?? null);

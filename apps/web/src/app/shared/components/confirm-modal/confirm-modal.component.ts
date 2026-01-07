@@ -39,12 +39,12 @@ export interface ConfirmModalOptions {
       >
         <!-- Modal -->
         <div
-          class="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden transform transition-all animate-modal-enter"
+          class="w-full max-w-md bg-surface-raised rounded-2xl shadow-2xl overflow-hidden transform transition-all animate-modal-enter"
           (click)="$event.stopPropagation()"
         >
           <!-- Header -->
           <div
-            class="p-6 pb-4 border-b border-gray-300 dark:border-gray-800"
+            class="p-6 pb-4 border-b border-border-default"
             [ngClass]="headerClass()"
           >
             <!-- Icon -->
@@ -68,14 +68,14 @@ export interface ConfirmModalOptions {
               }
             </div>
 
-            <h3 id="confirm-modal-title" class="text-lg font-bold text-center text-gray-900 dark:text-white">
+            <h3 id="confirm-modal-title" class="text-lg font-bold text-center text-text-primary">
               {{ options()?.title }}
             </h3>
           </div>
 
           <!-- Body -->
           <div class="p-6">
-            <p class="text-center text-gray-600 dark:text-gray-500 text-sm leading-relaxed">
+            <p class="text-center text-text-secondary text-sm leading-relaxed">
               {{ options()?.message }}
             </p>
           </div>
@@ -84,7 +84,7 @@ export interface ConfirmModalOptions {
           <div class="p-6 pt-0 flex gap-3">
             <button
               type="button"
-              class="flex-1 px-4 py-3 rounded-xl font-semibold text-sm transition-all border-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+              class="flex-1 px-4 py-3 rounded-xl font-semibold text-sm transition-all border-2 border-border-default text-text-secondary hover:bg-surface-hover"
               (click)="onCancel()"
             >
               {{ options()?.cancelText || 'Cancelar' }}
@@ -160,22 +160,22 @@ export class ConfirmModalComponent {
   iconBgClass(): string {
     switch (this.options()?.variant) {
       case 'danger':
-        return 'bg-red-100 dark:bg-red-900/30';
+        return 'bg-error-bg';
       case 'warning':
-        return 'bg-amber-100 dark:bg-amber-900/30';
+        return 'bg-warning-bg';
       default:
-        return 'bg-blue-100 dark:bg-blue-900/30';
+        return 'bg-info-bg';
     }
   }
 
   iconClass(): string {
     switch (this.options()?.variant) {
       case 'danger':
-        return 'text-red-600 dark:text-red-400';
+        return 'text-error-text';
       case 'warning':
-        return 'text-amber-600 dark:text-amber-400';
+        return 'text-warning-text';
       default:
-        return 'text-blue-600 dark:text-blue-400';
+        return 'text-info-text';
     }
   }
 

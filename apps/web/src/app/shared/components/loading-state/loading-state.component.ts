@@ -28,7 +28,7 @@ import {Component, computed, input,
             ></path>
           </svg>
           @if (message()) {
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-3">
+            <p class="text-sm text-text-secondary mt-3">
               {{ message() }}
             </p>
           }

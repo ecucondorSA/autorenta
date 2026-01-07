@@ -1,14 +1,14 @@
 <div
-  class="calendar-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
+  class="calendar-page bg-surface-base min-h-screen transition-colors duration-300"
 >
   <!-- Header -->
   <div
-    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
+    class="bg-surface-raised border-b border-border-default transition-colors duration-300"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary flex items-center gap-2 tracking-tight font-satoshi">
+          <h1 class="text-3xl font-bold text-text-primary flex items-center gap-2 tracking-tight font-satoshi">
             <svg class="w-8 h-8 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <rect x="3" y="4" width="18" height="18" rx="2" stroke-width="1.75"/>
               <path d="M3 10h18M8 2v4M16 2v4" stroke-width="1.75" stroke-linecap="round"/>
@@ -16,7 +16,7 @@
             </svg>
             Calendario
           </h1>
-          <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
+          <p class="mt-2 text-text-secondary">
             Visualiza todas tus reservas y disponibilidad
           </p>
         </div>
@@ -66,31 +66,31 @@
     @if (!loading() && !error()) {
       <!-- Calendar Legend -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-4 mb-6"
+        class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-4 mb-6"
       >
         <div class="flex flex-wrap items-center gap-4">
           <div class="flex items-center gap-2">
             <div class="w-4 h-4 rounded bg-success-light"></div>
-            <span class="text-sm text-text-secondary dark:text-text-secondary/70">Activa</span>
+            <span class="text-sm text-text-secondary">Activa</span>
           </div>
           <div class="flex items-center gap-2">
             <div class="w-4 h-4 rounded bg-warning-light"></div>
-            <span class="text-sm text-text-secondary dark:text-text-secondary/70">Pendiente</span>
+            <span class="text-sm text-text-secondary">Pendiente</span>
           </div>
           <div class="flex items-center gap-2">
             <div class="w-4 h-4 rounded bg-primary-600"></div>
-            <span class="text-sm text-text-secondary dark:text-text-secondary/70">Completada</span>
+            <span class="text-sm text-text-secondary">Completada</span>
           </div>
           <div class="flex items-center gap-2">
             <div class="w-4 h-4 rounded bg-gray-500"></div>
-            <span class="text-sm text-text-secondary dark:text-text-secondary/70">Cancelada</span>
+            <span class="text-sm text-text-secondary">Cancelada</span>
           </div>
         </div>
       </div>
 
       <!-- Calendar -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
       >
         <!-- Calendar Header -->
         <div class="flex items-center justify-between mb-6">
@@ -116,11 +116,11 @@
         <div class="grid grid-cols-7 gap-1">
           @for (day of calendarDays; track $index) {
             <div
-              class="min-h-24 p-2 border border-border-default dark:border-neutral-700 rounded hover:bg-surface-base transition-colors"
+              class="min-h-24 p-2 border border-border-default rounded hover:bg-surface-base transition-colors"
               [class.bg-gray-50]="day === null"
             >
               @if (day !== null) {
-                <div class="font-semibold text-text-primary dark:text-text-primary mb-1">
+                <div class="font-semibold text-text-primary mb-1">
                   {{ day }}
                 </div>
                 @for (event of getEventsForDay(day); track event.id) {
@@ -147,9 +147,9 @@
 
       <!-- Quick Actions -->
       <div
-        class="mt-6 bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        class="mt-6 bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+        <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
           <svg class="w-6 h-6 text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -158,7 +158,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <a
             routerLink="/bookings"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke-width="1.75"/>
@@ -166,8 +166,8 @@
               <path d="M8 10h8M8 14h8M8 18h5" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Mis Reservas</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="font-medium text-text-primary">Mis Reservas</p>
+              <p class="text-xs text-text-secondary">
                 Ver todas las reservas
               </p>
             </div>
@@ -175,7 +175,7 @@
 
           <a
             routerLink="/cars/my-cars"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-primary-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/>
@@ -183,8 +183,8 @@
               <circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Mis Autos</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="font-medium text-text-primary">Mis Autos</p>
+              <p class="text-xs text-text-secondary">
                 Gestionar disponibilidad
               </p>
             </div>
@@ -192,7 +192,7 @@
 
           <a
             routerLink="/dashboard"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-primary-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M3 21h18" stroke-width="1.75" stroke-linecap="round"/>
@@ -201,8 +201,8 @@
               <rect x="16" y="3" width="3" height="18" rx="0.5" stroke-width="1.5"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Dashboard</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="font-medium text-text-primary">Dashboard</p>
+              <p class="text-xs text-text-secondary">
                 Ver resumen completo
               </p>
             </div>
@@ -210,15 +210,15 @@
 
           <a
             routerLink="/cars/publish"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-success-strong flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="10" stroke-width="1.75"/>
               <path d="M12 8v8M8 12h8" stroke-width="2" stroke-linecap="round"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Publicar Auto</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="font-medium text-text-primary">Publicar Auto</p>
+              <p class="text-xs text-text-secondary">
                 Añade un nuevo vehículo
               </p>
             </div>

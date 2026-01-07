@@ -95,7 +95,7 @@
       <!-- Loading state -->
       @if (isCheckingAvailability()) {
         <div
-          class="flex items-center gap-2 text-xs text-text-secondary dark:text-text-secondary"
+          class="flex items-center gap-2 text-xs text-text-secondary"
           >
           <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true" focusable="false" role="presentation">
             <circle
@@ -150,7 +150,7 @@
       <!-- Alternative Date Suggestions -->
       @if (showingSuggestions() && alternativeSuggestions().length > 0) {
         <div
-          class="mt-3 rounded-xl border border-cta-default/40 bg-cta-default/10 dark:bg-cta-default/20 dark:border-cta-default p-4"
+          class="mt-3 rounded-xl border border-cta-default/40 bg-cta-default/10 p-4"
           >
           <div class="flex items-center gap-2 mb-3">
             <svg class="h-5 w-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -161,7 +161,7 @@
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
             </svg>
-            <h4 class="text-sm font-bold text-cta-default dark:text-cta-default font-satoshi">
+            <h4 class="text-sm font-bold text-cta-default font-satoshi">
               Fechas similares disponibles ({{ selectedDays() }} días):
             </h4>
           </div>
@@ -170,14 +170,14 @@
               <button
                 type="button"
                 (click)="applySuggestion(suggestion)"
-                class="w-full flex items-center justify-between p-3 bg-surface-raised dark:bg-surface-secondary rounded-lg border border-cta-default/40 dark:border-cta-default hover:border-cta-default hover:shadow-md transition-all group"
+                class="w-full flex items-center justify-between p-3 bg-surface-raised rounded-lg border border-cta-default/40 hover:border-cta-default hover:shadow-md transition-all group"
                 >
                 <div class="flex flex-col items-start gap-1">
                   <div class="flex items-center gap-2">
-                    <span class="text-sm font-semibold text-text-primary dark:text-text-secondary">
+                    <span class="text-sm font-semibold text-text-primary">
                       {{ suggestion.from | date: 'dd MMM' }} - {{ suggestion.to | date: 'dd MMM' }}
                     </span>
-                    <span class="text-xs text-text-secondary dark:text-text-secondary/70">
+                    <span class="text-xs text-text-secondary">
                       ({{ suggestion.days }} días)
                     </span>
                   </div>
@@ -189,14 +189,14 @@
                     }
                     @if (suggestion.discount > 0) {
                       <span
-                        class="text-xs px-2 py-0.5 bg-success-light/20 dark:bg-success-light/30 text-success-700 dark:text-success-strong rounded-full font-medium"
+                        class="text-xs px-2 py-0.5 bg-success-light/20 text-success-700 rounded-full font-medium"
                         >
                         -{{ suggestion.discount }}% OFF
                       </span>
                     }
                     @if (suggestion.savings) {
                       <span
-                        class="text-xs text-success-700 dark:text-success-strong"
+                        class="text-xs text-success-700"
                         >
                         (Ahorrás ${{ suggestion.savings | number: '1.0-0' }})
                       </span>
@@ -234,7 +234,7 @@
               </button>
             }
           </div>
-          <p class="mt-3 text-xs text-center text-cta-default dark:text-cta-default">
+          <p class="mt-3 text-xs text-center text-cta-default">
             💡 Click en una fecha para seleccionarla automáticamente
           </p>
         </div>
@@ -261,13 +261,13 @@
 </div>
 
 <ng-template #fromPlaceholder>
-  <span class="text-base font-semibold text-text-secondary dark:text-text-secondary/60"
+  <span class="text-base font-semibold text-text-secondary"
     >Elegí fecha</span
     >
   </ng-template>
 
   <ng-template #toPlaceholder>
-    <span class="text-base font-semibold text-text-secondary dark:text-text-secondary/60"
+    <span class="text-base font-semibold text-text-secondary"
       >Elegí fecha</span
       >
     </ng-template>

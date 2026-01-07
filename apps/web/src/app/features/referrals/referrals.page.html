@@ -14,7 +14,7 @@
       @if (referralCode()) {
         <div class="flex items-center gap-4">
           <div
-            class="flex-1 bg-surface-secondary dark:bg-slate-800 rounded-lg p-4 font-mono text-2xl font-bold text-center"
+            class="flex-1 bg-surface-secondary rounded-lg p-4 font-mono text-2xl font-bold text-center"
           >
             {{ referralCode()?.code }}
           </div>
@@ -30,7 +30,7 @@
               type="text"
               [value]="shareableLink() || ''"
               readonly
-              class="flex-1 px-4 py-2 rounded-lg bg-surface-secondary dark:bg-slate-800 text-sm"
+              class="flex-1 px-4 py-2 rounded-lg bg-surface-secondary text-sm"
             />
             <button (click)="copyLink()" class="btn-secondary">
               {{ copiedLink() ? 'Copiado!' : 'Copiar link' }}
@@ -43,29 +43,29 @@
     <!-- Estadísticas -->
     <div class="grid md:grid-cols-4 gap-4 mb-6">
       <div class="card-premium p-4">
-        <div class="text-sm text-text-muted dark:text-gray-500 mb-1">Total invitados</div>
-        <div class="text-3xl font-bold text-cta-default dark:text-cyan-400">
+        <div class="text-sm text-text-muted mb-1">Total invitados</div>
+        <div class="text-3xl font-bold text-cta-default">
           {{ stats()?.total_referrals || 0 }}
         </div>
       </div>
 
       <div class="card-premium p-4">
-        <div class="text-sm text-text-muted dark:text-gray-500 mb-1">Autos publicados</div>
-        <div class="text-3xl font-bold text-green-600 dark:text-green-400">
+        <div class="text-sm text-text-muted mb-1">Autos publicados</div>
+        <div class="text-3xl font-bold text-success-text">
           {{ stats()?.first_car_count || 0 }}
         </div>
       </div>
 
       <div class="card-premium p-4">
-        <div class="text-sm text-text-muted dark:text-gray-500 mb-1">Ganado</div>
-        <div class="text-3xl font-bold text-green-600 dark:text-green-400">
+        <div class="text-sm text-text-muted mb-1">Ganado</div>
+        <div class="text-3xl font-bold text-success-text">
           ${{ (stats()?.total_earned_cents || 0) / 100 | number: '1.0-0' }}
         </div>
       </div>
 
       <div class="card-premium p-4">
-        <div class="text-sm text-text-muted dark:text-gray-500 mb-1">Pendiente</div>
-        <div class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
+        <div class="text-sm text-text-muted mb-1">Pendiente</div>
+        <div class="text-3xl font-bold text-warning-text">
           ${{ (stats()?.pending_cents || 0) / 100 | number: '1.0-0' }}
         </div>
       </div>
@@ -74,7 +74,7 @@
     <!-- Cómo funciona -->
     <div class="card-premium p-6">
       <h2 class="text-xl font-semibold mb-4 font-satoshi">¿Cómo funciona?</h2>
-      <ol class="list-decimal list-inside space-y-2 text-text-secondary dark:text-gray-500">
+      <ol class="list-decimal list-inside space-y-2 text-text-secondary">
         <li>Compartí tu código o link con amigos propietarios</li>
         <li>Cuando se registren usando tu código, reciben $500 ARS de bienvenida</li>
         <li>Cuando publiquen su primer auto, vos ganás $1,500 ARS</li>

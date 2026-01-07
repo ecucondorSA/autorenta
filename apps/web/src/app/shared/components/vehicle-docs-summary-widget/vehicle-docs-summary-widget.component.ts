@@ -34,12 +34,12 @@ interface CarDocStatus {
         <div class="h-20 bg-surface-base rounded"></div>
       </div>
     } @else if (cars().length > 0) {
-      <div class="bg-surface-raised dark:bg-surface-raised rounded-xl sm:rounded-2xl border border-border-default dark:border-neutral-800/60 shadow-sm">
+      <div class="bg-surface-raised rounded-xl sm:rounded-2xl border border-border-default shadow-sm">
         <!-- Header -->
-        <div class="p-4 sm:p-5 border-b border-border-default dark:border-neutral-800/60">
+        <div class="p-4 sm:p-5 border-b border-border-default">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2 sm:gap-3">
-              <div class="p-2 bg-amber-100 dark:bg-amber-900/30 text-amber-600 rounded-lg">
+              <div class="p-2 bg-warning-bg text-warning-strong rounded-lg">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -63,7 +63,7 @@ interface CarDocStatus {
         </div>
 
         <!-- Car list -->
-        <div class="divide-y divide-border-default dark:divide-neutral-800/60">
+        <div class="divide-y divide-border-default">
           @for (car of cars(); track car.carId) {
             <a
               [routerLink]="['/cars', car.carId, 'documents']"
@@ -95,8 +95,7 @@ interface CarDocStatus {
                     class="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded"
                     [class.bg-success-light/20]="car.hasGreenCard"
                     [class.text-success-strong]="car.hasGreenCard"
-                    [class.bg-gray-100]="!car.hasGreenCard"
-                    [class.dark:bg-gray-800]="!car.hasGreenCard"
+                    [class.bg-surface-secondary]="!car.hasGreenCard"
                     [class.text-text-secondary]="!car.hasGreenCard"
                     [title]="car.hasGreenCard ? 'Cédula verde verificada' : 'Cédula verde pendiente'"
                   >
@@ -115,8 +114,7 @@ interface CarDocStatus {
                     [class.text-success-strong]="car.hasVtv && !car.vtvExpiringSoon"
                     [class.bg-warning-light/20]="car.hasVtv && car.vtvExpiringSoon"
                     [class.text-warning-strong]="car.hasVtv && car.vtvExpiringSoon"
-                    [class.bg-gray-100]="!car.hasVtv"
-                    [class.dark:bg-gray-800]="!car.hasVtv"
+                    [class.bg-surface-secondary]="!car.hasVtv"
                     [class.text-text-secondary]="!car.hasVtv"
                     [title]="!car.hasVtv ? 'VTV pendiente' : car.vtvExpiringSoon ? 'VTV por vencer' : 'VTV vigente'"
                   >
@@ -139,8 +137,7 @@ interface CarDocStatus {
                     [class.text-success-strong]="car.hasInsurance && !car.insuranceExpiringSoon"
                     [class.bg-warning-light/20]="car.hasInsurance && car.insuranceExpiringSoon"
                     [class.text-warning-strong]="car.hasInsurance && car.insuranceExpiringSoon"
-                    [class.bg-gray-100]="!car.hasInsurance"
-                    [class.dark:bg-gray-800]="!car.hasInsurance"
+                    [class.bg-surface-secondary]="!car.hasInsurance"
                     [class.text-text-secondary]="!car.hasInsurance"
                     [title]="!car.hasInsurance ? 'Seguro pendiente' : car.insuranceExpiringSoon ? 'Seguro por vencer' : 'Seguro vigente'"
                   >

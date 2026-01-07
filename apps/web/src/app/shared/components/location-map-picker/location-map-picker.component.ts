@@ -41,7 +41,7 @@ export interface LocationCoordinates {
             <p class="text-sm font-medium text-text-primary">
               {{ isLoading() ? 'Cargando mapa...' : 'Ajusta la ubicación' }}
             </p>
-            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
+            <p class="text-xs text-text-secondary mt-1">
               {{
               isLoading()
               ? 'Por favor espera...'
@@ -57,7 +57,7 @@ export interface LocationCoordinates {
             }
             @if (coordinates()) {
               <div
-                class="mt-1 text-xs text-text-secondary dark:text-text-secondary"
+                class="mt-1 text-xs text-text-secondary"
                 >
                 Lat: {{ coordinates()!.latitude.toFixed(6) }}, Lng:
                 {{ coordinates()!.longitude.toFixed(6) }}

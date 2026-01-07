@@ -43,16 +43,16 @@ import {
     
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse">
+            <h1 class="text-3xl font-bold text-text-primary">
               Gestión de Siniestros
             </h1>
-            <p class="text-text-secondary dark:text-text-secondary mt-1">
+            <p class="text-text-secondary mt-1">
               Administra y resuelve los siniestros reportados
             </p>
           </div>
           <div class="text-right">
-            <p class="text-sm text-text-secondary dark:text-text-muted">Total de siniestros</p>
-            <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
+            <p class="text-sm text-text-secondary">Total de siniestros</p>
+            <p class="text-2xl font-bold text-text-primary">
               {{ filteredClaims().length }}
             </p>
           </div>
@@ -61,23 +61,23 @@ import {
     
       <!-- Filters -->
       <div
-        class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-4 mb-6 shadow-sm"
+        class="bg-surface-raised rounded-lg border border-border-default p-4 mb-6 shadow-sm"
         >
-        <h3 class="text-sm font-semibold text-text-primary dark:text-text-secondary mb-3">
+        <h3 class="text-sm font-semibold text-text-primary mb-3">
           Filtros
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- Status Filter -->
           <div>
             <label
-              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1"
+              class="block text-sm font-medium text-text-primary mb-1"
               >
               Estado
             </label>
             <select
               [(ngModel)]="filterStatus"
               (ngModelChange)="onFilterChange()"
-              class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-border-muted bg-surface-raised px-3 py-2 text-sm"
               >
               <option value="">Todos los estados</option>
               @for (status of claimStatuses; track status) {
@@ -91,14 +91,14 @@ import {
           <!-- Type Filter -->
           <div>
             <label
-              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1"
+              class="block text-sm font-medium text-text-primary mb-1"
               >
               Tipo
             </label>
             <select
               [(ngModel)]="filterType"
               (ngModelChange)="onFilterChange()"
-              class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-border-muted bg-surface-raised px-3 py-2 text-sm"
               >
               <option value="">Todos los tipos</option>
               @for (type of claimTypes; track type) {
@@ -112,7 +112,7 @@ import {
           <!-- Search -->
           <div>
             <label
-              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1"
+              class="block text-sm font-medium text-text-primary mb-1"
               >
               Buscar
             </label>
@@ -121,7 +121,7 @@ import {
               [(ngModel)]="searchQuery"
               (ngModelChange)="onFilterChange()"
               placeholder="ID o descripción..."
-              class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-border-muted bg-surface-raised px-3 py-2 text-sm"
               />
           </div>
         </div>
@@ -130,7 +130,7 @@ import {
       <!-- Loading State -->
       @if (loading()) {
         <div class="text-center py-12">
-          <p class="text-text-secondary dark:text-text-secondary">Cargando siniestros...</p>
+          <p class="text-text-secondary">Cargando siniestros...</p>
         </div>
       }
     
@@ -149,7 +149,7 @@ import {
           <!-- Empty State -->
           @if (filteredClaims().length === 0) {
             <div
-              class="bg-surface-base dark:bg-surface-base rounded-xl p-12 text-center"
+              class="bg-surface-base rounded-xl p-12 text-center"
               >
               <svg
                 class="w-16 h-16 mx-auto text-text-muted mb-4"
@@ -164,10 +164,10 @@ import {
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                   />
               </svg>
-              <p class="text-text-secondary dark:text-text-secondary text-lg font-medium">
+              <p class="text-text-secondary text-lg font-medium">
                 No se encontraron siniestros
               </p>
-              <p class="text-text-secondary dark:text-text-muted text-sm mt-1">
+              <p class="text-text-secondary text-sm mt-1">
                 Intenta cambiar los filtros o buscar otro término
               </p>
             </div>
@@ -175,7 +175,7 @@ import {
           <!-- Claims Cards -->
           @for (claim of filteredClaims(); track claim) {
             <div
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+              class="bg-surface-raised rounded-lg border border-border-default p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
               [routerLink]="['/admin/claims', claim.id]"
               >
               <div class="flex items-start justify-between gap-4">
@@ -190,22 +190,22 @@ import {
                     </span>
                     <!-- Type Badge -->
                     <span
-                      class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-surface-raised text-text-primary dark:bg-surface-base dark:text-text-secondary"
+                      class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-surface-raised text-text-primary"
                       >
                       {{ CLAIM_TYPE_LABELS[claim.claim_type] }}
                     </span>
                     <!-- ID -->
-                    <span class="text-xs text-text-secondary dark:text-text-muted font-mono">
+                    <span class="text-xs text-text-secondary font-mono">
                       #{{ claim.id | slice: 0 : 8 }}
                     </span>
                   </div>
                   <h3
-                    class="text-sm font-semibold text-text-primary dark:text-text-inverse mb-1 line-clamp-2"
+                    class="text-sm font-semibold text-text-primary mb-1 line-clamp-2"
                     >
                     {{ claim.description }}
                   </h3>
                   <div
-                    class="flex items-center gap-4 text-xs text-text-secondary dark:text-text-secondary mt-2"
+                    class="flex items-center gap-4 text-xs text-text-secondary mt-2"
                     >
                     <span>📅 {{ formatDate(claim.created_at) }}</span>
                     @if (claim.location) {
@@ -339,18 +339,18 @@ export class AdminClaimsPage implements OnInit {
   getStatusBadgeClass(status: ClaimStatus): string {
     const classes: Record<ClaimStatus, string> = {
       reported:
-        'bg-warning-light/20 text-warning-700 dark:bg-warning-light/40 dark:text-warning-strong',
+        'bg-warning-light/20 text-warning-700',
       pending:
-        'bg-warning-bg-hover text-warning-strong dark:bg-warning-900/40 dark:text-warning-200',
-      investigating: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
+        'bg-warning-bg-hover text-warning-strong',
+      investigating: 'bg-purple-100 text-purple-800',
       under_review:
-        'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default',
+        'bg-cta-default/20 text-cta-default',
       approved:
-        'bg-success-light/20 text-success-700 dark:bg-success-light/40 dark:text-success-strong',
-      rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-900/40 dark:text-error-200',
-      paid: 'bg-success-light/20 text-success-700 dark:bg-success-light/40 dark:text-success-strong',
+        'bg-success-light/20 text-success-700',
+      rejected: 'bg-error-bg-hover text-error-strong',
+      paid: 'bg-success-light/20 text-success-700',
       closed:
-        'bg-surface-raised text-text-primary dark:bg-surface-raised/40 dark:text-text-primary',
+        'bg-surface-raised text-text-primary',
     };
     return classes[status] || classes.closed;
   }

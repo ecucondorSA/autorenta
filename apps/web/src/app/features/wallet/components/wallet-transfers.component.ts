@@ -12,7 +12,7 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
   imports: [CommonModule, IonicModule],
   template: `
     <div
-      class="rounded-2xl border border-border-default dark:border-border-muted bg-surface-raised dark:bg-surface-secondary p-4 space-y-3"
+      class="rounded-2xl border border-border-default bg-surface-raised p-4 space-y-3"
       >
       <div class="flex items-center justify-between">
         <div>
@@ -40,7 +40,7 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
         <div class="space-y-3">
           @for (t of transfers(); track t) {
             <div
-              class="flex items-center justify-between rounded-xl border border-border-default/60 dark:border-border-muted/60 p-3"
+              class="flex items-center justify-between rounded-xl border border-border-default/60 p-3"
               >
               <div class="space-y-0.5">
                 <p class="text-sm font-semibold text-text-primary">

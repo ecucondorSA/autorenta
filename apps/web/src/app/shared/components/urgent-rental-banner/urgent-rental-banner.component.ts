@@ -43,7 +43,7 @@ import {
               : '...'
               }}
             </div>
-            <div class="text-xs text-text-secondary dark:text-text-secondary">/hora</div>
+            <div class="text-xs text-text-secondary">/hora</div>
           </div>
         </div>
         <!-- Estado de disponibilidad -->
@@ -107,7 +107,7 @@ import {
         <!-- Loading state -->
         @if (loading()) {
           <div
-            class="flex items-center gap-2 text-sm text-text-secondary dark:text-text-secondary"
+            class="flex items-center gap-2 text-sm text-text-secondary"
             >
             <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
               <circle

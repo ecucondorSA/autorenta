@@ -27,27 +27,27 @@ import { ProfileStore } from '@core/stores/profile.store';
   template: `
     <ion-header>
       <ion-toolbar
-        class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default"
+        class="bg-surface-raised border-b border-border-default"
         >
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
             text="Perfil"
-            class="text-text-primary dark:text-text-secondary"
+            class="text-text-primary"
           ></ion-back-button>
         </ion-buttons>
-        <ion-title class="text-text-primary dark:text-text-secondary"> Preferencias </ion-title>
+        <ion-title class="text-text-primary"> Preferencias </ion-title>
       </ion-toolbar>
     </ion-header>
     
-    <ion-content class="bg-surface-base dark:bg-surface-base">
+    <ion-content class="bg-surface-base">
       <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
         <!-- Header -->
         <div class="mb-6">
-          <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2">
+          <h1 class="text-2xl font-bold text-text-primary mb-2">
             Preferencias
           </h1>
-          <p class="text-sm text-text-secondary dark:text-text-secondary">
+          <p class="text-sm text-text-secondary">
             Personaliza tu experiencia en AutoRenta.
           </p>
           <!-- Auto-save indicator -->
@@ -93,30 +93,30 @@ import { ProfileStore } from '@core/stores/profile.store';
           <form [formGroup]="preferencesForm" class="space-y-6">
             <!-- Timezone -->
             <div class="card-premium p-4">
-              <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-3">
+              <h3 class="text-sm font-semibold text-text-primary mb-3">
                 Zona Horaria
               </h3>
               <select
                 formControlName="timezone"
-                class="w-full px-3 py-2 rounded-lg border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
+                class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-raised text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
                 >
                 <option value="America/Buenos_Aires">Buenos Aires (UTC-3)</option>
                 <option value="America/Montevideo">Montevideo (UTC-3)</option>
                 <option value="America/Santiago">Santiago (UTC-3/UTC-4)</option>
                 <option value="America/Sao_Paulo">São Paulo (UTC-3)</option>
               </select>
-              <p class="mt-2 text-xs text-text-secondary dark:text-text-secondary">
+              <p class="mt-2 text-xs text-text-secondary">
                 Determina cómo se mostrarán las fechas y horas en toda la plataforma
               </p>
             </div>
             <!-- Language/Locale -->
             <div class="card-premium p-4">
-              <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-3">
+              <h3 class="text-sm font-semibold text-text-primary mb-3">
                 Idioma
               </h3>
               <select
                 formControlName="locale"
-                class="w-full px-3 py-2 rounded-lg border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
+                class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-raised text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
                 >
                 <option value="es-AR">Español (Argentina)</option>
                 <option value="es-UY">Español (Uruguay)</option>
@@ -124,18 +124,18 @@ import { ProfileStore } from '@core/stores/profile.store';
                 <option value="pt-BR">Português (Brasil)</option>
                 <option value="en-US">English (US)</option>
               </select>
-              <p class="mt-2 text-xs text-text-secondary dark:text-text-secondary">
+              <p class="mt-2 text-xs text-text-secondary">
                 Idioma de la interfaz y formatos regionales
               </p>
             </div>
             <!-- Currency -->
             <div class="card-premium p-4">
-              <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-3">
+              <h3 class="text-sm font-semibold text-text-primary mb-3">
                 Moneda Preferida
               </h3>
               <select
                 formControlName="currency"
-                class="w-full px-3 py-2 rounded-lg border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
+                class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-raised text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
                 >
                 <option value="ARS">Pesos Argentinos (ARS)</option>
                 <option value="UYU">Pesos Uruguayos (UYU)</option>
@@ -143,26 +143,26 @@ import { ProfileStore } from '@core/stores/profile.store';
                 <option value="BRL">Reales Brasileños (BRL)</option>
                 <option value="USD">Dólares Estadounidenses (USD)</option>
               </select>
-              <p class="mt-2 text-xs text-text-secondary dark:text-text-secondary">
+              <p class="mt-2 text-xs text-text-secondary">
                 Los precios se mostrarán en esta moneda cuando sea posible
               </p>
             </div>
             <!-- Marketing Opt-in -->
             <div class="card-premium p-4">
-              <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-3">
+              <h3 class="text-sm font-semibold text-text-primary mb-3">
                 Comunicaciones de Marketing
               </h3>
               <label class="flex items-start gap-3 cursor-pointer group">
                 <input
                   type="checkbox"
                   formControlName="marketing_opt_in"
-                  class="mt-0.5 h-5 w-5 rounded border-border-default dark:border-border-default text-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-0"
+                  class="mt-0.5 h-5 w-5 rounded border-border-default text-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-0"
                   />
                 <div class="flex-1">
-                  <span class="text-sm text-text-primary dark:text-text-primary">
+                  <span class="text-sm text-text-primary">
                     Recibir ofertas y promociones especiales
                   </span>
-                  <p class="mt-1 text-xs text-text-secondary dark:text-text-secondary">
+                  <p class="mt-1 text-xs text-text-secondary">
                     Recibirás emails con descuentos exclusivos, nuevas funcionalidades y promociones
                     de AutoRenta. Puedes darte de baja en cualquier momento.
                   </p>
@@ -189,7 +189,7 @@ import { ProfileStore } from '@core/stores/profile.store';
         }
     
         <!-- Help Section -->
-        <div class="mt-8 p-4 rounded-lg bg-info-bg border border-info-border dark:bg-info-bg/20">
+        <div class="mt-8 p-4 rounded-lg bg-info-bg border border-info-border">
           <h4 class="text-sm font-semibold text-info-text mb-2 flex items-center gap-2">
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path

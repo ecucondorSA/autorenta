@@ -37,21 +37,21 @@ interface WalletLedgerEntry {
     <div class="max-w-6xl mx-auto p-6">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse mb-2">
+        <h1 class="text-3xl font-bold text-text-primary mb-2">
           📊 Fondo de Cobertura
         </h1>
-        <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+        <p class="text-text-secondary">
           Administración del fondo de franquicias para incidentes
         </p>
       </div>
 
       <!-- Loading State -->
       @if (loading()) {
-        <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-8 text-center">
+        <div class="bg-surface-raised rounded-lg shadow p-8 text-center">
           <div
             class="animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default mx-auto mb-4"
           ></div>
-          <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+          <p class="text-text-secondary">
             Cargando datos del fondo...
           </p>
         </div>
@@ -60,7 +60,7 @@ interface WalletLedgerEntry {
       <!-- Error State -->
       @else if (error()) {
         <div
-          class="bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-lg p-6"
+          class="bg-error-bg border border-error-border rounded-lg p-6"
         >
           <h3 class="text-lg font-semibold text-error-strong mb-2">Error</h3>
           <p class="text-error-strong">{{ error() }}</p>
@@ -109,80 +109,80 @@ interface WalletLedgerEntry {
           @if (stats()) {
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <!-- Total Collected -->
-              <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
+              <div class="bg-surface-raised rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
                   <p
-                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                    class="text-sm text-text-secondary"
                   >
                     Total Recaudado
                   </p>
                   <span class="text-2xl">📥</span>
                 </div>
-                <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
+                <p class="text-2xl font-bold text-text-primary">
                   {{ stats()!.total_franchises_collected }}
                 </p>
                 <p
-                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                  class="text-xs text-text-secondary mt-1"
                 >
                   franquicias cobradas
                 </p>
               </div>
 
               <!-- Total Disbursed -->
-              <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
+              <div class="bg-surface-raised rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
                   <p
-                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                    class="text-sm text-text-secondary"
                   >
                     Total Desembolsado
                   </p>
                   <span class="text-2xl">📤</span>
                 </div>
-                <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
+                <p class="text-2xl font-bold text-text-primary">
                   {{ stats()!.total_franchises_disbursed }}
                 </p>
                 <p
-                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                  class="text-xs text-text-secondary mt-1"
                 >
                   franquicias pagadas
                 </p>
               </div>
 
               <!-- Total Entries -->
-              <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
+              <div class="bg-surface-raised rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
                   <p
-                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                    class="text-sm text-text-secondary"
                   >
                     Entradas en Ledger
                   </p>
                   <span class="text-2xl">📝</span>
                 </div>
-                <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
+                <p class="text-2xl font-bold text-text-primary">
                   {{ stats()!.total_ledger_entries }}
                 </p>
                 <p
-                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                  class="text-xs text-text-secondary mt-1"
                 >
                   movimientos totales
                 </p>
               </div>
 
               <!-- Average Amount -->
-              <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6">
+              <div class="bg-surface-raised rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
                   <p
-                    class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                    class="text-sm text-text-secondary"
                   >
                     Promedio Franquicia
                   </p>
                   <span class="text-2xl">💰</span>
                 </div>
-                <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
+                <p class="text-2xl font-bold text-text-primary">
                   {{ formatAmount(stats()!.avg_franchise_amount) }}
                 </p>
                 <p
-                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                  class="text-xs text-text-secondary mt-1"
                 >
                   por incidente
                 </p>
@@ -192,15 +192,15 @@ interface WalletLedgerEntry {
 
           <!-- Fund Metadata -->
           @if (fund()!.meta && Object.keys(fund()!.meta).length > 0) {
-            <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow">
-              <div class="px-6 py-4 border-b border-border-default dark:border-border-muted">
-                <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse">
+            <div class="bg-surface-raised rounded-lg shadow">
+              <div class="px-6 py-4 border-b border-border-default">
+                <h2 class="text-lg font-semibold text-text-primary">
                   Metadata del Fondo
                 </h2>
               </div>
               <div class="p-6">
                 <pre
-                  class="bg-surface-raised dark:bg-surface-raised rounded p-4 text-sm overflow-x-auto"
+                  class="bg-surface-raised rounded p-4 text-sm overflow-x-auto"
                   >{{ JSON.stringify(fund()!.meta, null, 2) }}</pre
                 >
               </div>
@@ -208,11 +208,11 @@ interface WalletLedgerEntry {
           }
 
           <!-- Recent Activity -->
-          <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow">
+          <div class="bg-surface-raised rounded-lg shadow">
             <div
-              class="px-6 py-4 border-b border-border-default dark:border-border-muted flex items-center justify-between"
+              class="px-6 py-4 border-b border-border-default flex items-center justify-between"
             >
-              <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse">
+              <h2 class="text-lg font-semibold text-text-primary">
                 Actividad Reciente
               </h2>
               <button
@@ -232,15 +232,15 @@ interface WalletLedgerEntry {
               </div>
             } @else if (recentActivity().length === 0) {
               <div class="p-8 text-center">
-                <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                <p class="text-text-secondary">
                   No hay actividad reciente
                 </p>
               </div>
             } @else {
-              <div class="divide-y divide-gray-200 dark:divide-gray-700">
+              <div class="divide-y divide-gray-200">
                 @for (entry of recentActivity(); track entry.id) {
                   <div
-                    class="p-6 hover:bg-surface-base dark:hover:bg-gray-700/50 transition-colors"
+                    class="p-6 hover:bg-surface-base transition-colors"
                   >
                     <div class="flex items-start justify-between">
                       <div class="flex items-start space-x-3">
@@ -248,18 +248,18 @@ interface WalletLedgerEntry {
                           {{ entry.kind === 'franchise_fund' ? '📥' : '📤' }}
                         </span>
                         <div>
-                          <p class="font-medium text-text-primary dark:text-text-inverse">
+                          <p class="font-medium text-text-primary">
                             {{ getKindLabel(entry.kind) }}
                           </p>
                           @if (entry.meta && entry.meta['description']) {
                             <p
-                              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                              class="text-sm text-text-secondary mt-1"
                             >
                               {{ entry.meta!['description'] }}
                             </p>
                           }
                           <div
-                            class="flex items-center space-x-4 mt-2 text-xs text-text-secondary dark:text-text-secondary"
+                            class="flex items-center space-x-4 mt-2 text-xs text-text-secondary"
                           >
                             <span>Ref: {{ entry.ref }}</span>
                             @if (entry.booking_id) {
@@ -288,9 +288,9 @@ interface WalletLedgerEntry {
 
           <!-- Action Buttons (Admin Only) -->
           <div
-            class="bg-warning-bg dark:bg-warning-900/20 border border-warning-border dark:border-warning-800 rounded-lg p-6"
+            class="bg-warning-bg border border-warning-border rounded-lg p-6"
           >
-            <h3 class="text-lg font-semibold text-warning-strong dark:text-warning-100 mb-4">
+            <h3 class="text-lg font-semibold text-warning-strong mb-4">
               ⚠️ Acciones Administrativas
             </h3>
             <div class="flex flex-wrap gap-3">

@@ -9,99 +9,90 @@
 
 @import 'shepherd.js/dist/css/shepherd.css';
 
-// ══════════════════════════════════════════════════════════════════════
-// VARIABLES
-// ══════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════════
+   VARIABLES
+   ══════════════════════════════════════════════════════════════════════ */
 
-$shepherd-primary: var(--primary-default);
-$shepherd-primary-hover: var(--primary-dark);
-$shepherd-accent-warm: var(--surface-secondary);
+:root {
+  --shepherd-primary: var(--cta-default, #00D95F);
+  --shepherd-primary-hover: var(--cta-hover, #00C553);
+  --shepherd-accent-warm: var(--surface-secondary, #F9FAFB);
+  --shepherd-bg-light: #FFFFFF;
+  --shepherd-bg-secondary-light: var(--surface-raised, #FFFFFF);
+  --shepherd-text-dark: var(--text-primary, #000000);
+  --shepherd-text-medium: var(--text-secondary, #4b4b4b);
+  --shepherd-text-light: var(--text-muted, #8e8e8e);
+  --shepherd-border-light: var(--border-muted, #F3F4F6);
+  --shepherd-shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --shepherd-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
 
-$shepherd-bg-light: #E3E3E3;
-$shepherd-bg-secondary-light: var(--surface-raised);
-
-$shepherd-text-dark: var(--text-primary);
-$shepherd-text-medium: var(--text-secondary, #4b4b4b);
-$shepherd-text-light: var(--text-tertiary, #8e8e8e);
-
-$shepherd-border-light: var(--border-muted);
-
-$shepherd-bg-dark: rgba(30, 30, 30, 0.95);
-$shepherd-bg-secondary-dark: var(--surface-raised-dark);
-
-$shepherd-text-dark-mode: var(--text-inverse);
-$shepherd-text-secondary-dark: var(--text-muted);
-
-// Sombras minimalistas
-$shepherd-shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.08);
-$shepherd-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
-
-// ══════════════════════════════════════════════════════════════════════
-// OVERLAY - Más sutil
-// ══════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════════
+   OVERLAY - Más sutil
+   ══════════════════════════════════════════════════════════════════════ */
 
 .shepherd-modal-overlay-container {
-  background-color: #7B7B7B;
+  background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);
   transition: opacity 0.2s ease;
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// TOOLTIP - Compacto e inmersivo
-// ══════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════════
+   TOOLTIP - Compacto e inmersivo
+   ══════════════════════════════════════════════════════════════════════ */
 
 .shepherd-element {
-  background: $shepherd-bg-light;
+  background: var(--shepherd-bg-light);
   backdrop-filter: blur(12px);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: $shepherd-shadow-elevated;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shepherd-shadow-elevated);
   max-width: 280px;
   z-index: 10000;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
+  .shepherd-element {
     max-width: 85vw;
     margin: 0.75rem;
   }
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// CONTENIDO - Compacto
-// ══════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════════
+   CONTENIDO - Compacto
+   ══════════════════════════════════════════════════════════════════════ */
 
 .shepherd-text {
   padding: 1rem 1.25rem;
-  color: $shepherd-text-medium;
+  color: var(--shepherd-text-medium);
   font-size: 0.875rem;
   line-height: 1.5;
 }
 
-.tour-content {
-  h3 {
-    margin: 0 0 0.375rem 0;
-    font-size: 1rem;
-    font-weight: 600;
-    color: $shepherd-text-dark;
-    line-height: 1.4;
-  }
-
-  p {
-    margin: 0;
-    color: $shepherd-text-medium;
-    font-size: 0.8125rem;
-    line-height: 1.5;
-
-    strong {
-      color: $shepherd-primary;
-      font-weight: 600;
-    }
-  }
+.tour-content h3 {
+  margin: 0 0 0.375rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--shepherd-text-dark);
+  line-height: 1.4;
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// BOTONES - Compactos e inline
-// ══════════════════════════════════════════════════════════════════════
+.tour-content p {
+  margin: 0;
+  color: var(--shepherd-text-medium);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.tour-content p strong {
+  color: var(--shepherd-primary);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   BOTONES - Compactos e inline
+   ══════════════════════════════════════════════════════════════════════ */
 
 .shepherd-footer {
   padding: 0.75rem 1.25rem 1rem;
@@ -112,8 +103,8 @@ $shepherd-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .shepherd-button {
-  background: $shepherd-primary;
-  color: white;
+  background: var(--shepherd-primary);
+  color: #000000;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -122,51 +113,51 @@ $shepherd-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
   cursor: pointer;
   transition: all 0.15s ease;
   font-family: inherit;
-
-  &:hover {
-    background: $shepherd-primary-hover;
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-
-  &:focus {
-    outline: 2px solid $shepherd-primary;
-    outline-offset: 2px;
-  }
-
-  // Botón secundario
-  &.shepherd-button-secondary {
-    background: transparent;
-    color: $shepherd-text-medium;
-    padding: 0.5rem 0.75rem;
-
-    &:hover {
-      color: $shepherd-text-dark;
-      background: rgba(0, 0, 0, 0.05);
-    }
-  }
-
-  // Botón icono (← para atrás)
-  &.shepherd-button-icon {
-    background: transparent;
-    color: $shepherd-text-medium;
-    padding: 0.5rem;
-    min-width: auto;
-    font-size: 1rem;
-
-    &:hover {
-      color: $shepherd-text-dark;
-      background: rgba(0, 0, 0, 0.05);
-    }
-  }
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// CERRAR - Discreto
-// ══════════════════════════════════════════════════════════════════════
+.shepherd-button:hover {
+  background: var(--shepherd-primary-hover);
+  transform: translateY(-1px);
+}
+
+.shepherd-button:active {
+  transform: translateY(0);
+}
+
+.shepherd-button:focus {
+  outline: 2px solid var(--shepherd-primary);
+  outline-offset: 2px;
+}
+
+/* Botón secundario */
+.shepherd-button.shepherd-button-secondary {
+  background: transparent;
+  color: var(--shepherd-text-medium);
+  padding: 0.5rem 0.75rem;
+}
+
+.shepherd-button.shepherd-button-secondary:hover {
+  color: var(--shepherd-text-dark);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Botón icono (← para atrás) */
+.shepherd-button.shepherd-button-icon {
+  background: transparent;
+  color: var(--shepherd-text-medium);
+  padding: 0.5rem;
+  min-width: auto;
+  font-size: 1rem;
+}
+
+.shepherd-button.shepherd-button-icon:hover {
+  color: var(--shepherd-text-dark);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   CERRAR - Discreto
+   ══════════════════════════════════════════════════════════════════════ */
 
 .shepherd-cancel-icon {
   position: absolute;
@@ -182,42 +173,40 @@ $shepherd-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
   align-items: center;
   justify-content: center;
   transition: all 0.15s ease;
-  color: $shepherd-text-light;
+  color: var(--shepherd-text-light);
   opacity: 0.6;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.08);
-    opacity: 1;
-    color: $shepherd-text-dark;
-  }
-
-  &:focus {
-    outline: 2px solid $shepherd-primary;
-    outline-offset: 2px;
-  }
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// FLECHA
-// ══════════════════════════════════════════════════════════════════════
-
-.shepherd-arrow {
-  &::before {
-    background: $shepherd-bg-light;
-  }
+.shepherd-cancel-icon:hover {
+  background: rgba(0, 0, 0, 0.08);
+  opacity: 1;
+  color: var(--shepherd-text-dark);
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// HEADER - Sin padding extra
-// ══════════════════════════════════════════════════════════════════════
+.shepherd-cancel-icon:focus {
+  outline: 2px solid var(--shepherd-primary);
+  outline-offset: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   FLECHA
+   ══════════════════════════════════════════════════════════════════════ */
+
+.shepherd-arrow::before {
+  background: var(--shepherd-bg-light);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   HEADER - Sin padding extra
+   ══════════════════════════════════════════════════════════════════════ */
 
 .shepherd-header {
   padding: 0;
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// PROGRESS DOTS - Minimalista
-// ══════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════════
+   PROGRESS DOTS - Minimalista
+   ══════════════════════════════════════════════════════════════════════ */
 
 .shepherd-progress {
   display: flex;
@@ -232,17 +221,17 @@ $shepherd-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.15);
   transition: all 0.2s ease;
-
-  &.active {
-    background: $shepherd-primary;
-    width: 16px;
-    border-radius: 3px;
-  }
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// ANIMACIONES - Sutiles
-// ══════════════════════════════════════════════════════════════════════
+.shepherd-progress-dot.active {
+  background: var(--shepherd-primary);
+  width: 16px;
+  border-radius: 3px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   ANIMACIONES - Sutiles
+   ══════════════════════════════════════════════════════════════════════ */
 
 @keyframes shepherd-fade-in {
   from {
@@ -259,77 +248,20 @@ $shepherd-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
   animation: shepherd-fade-in 0.2s ease-out;
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// TARGET HIGHLIGHT - Sutil
-// ══════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════════
+   TARGET HIGHLIGHT - Sutil
+   ══════════════════════════════════════════════════════════════════════ */
 
 .shepherd-target {
-  box-shadow: 0 0 0 3px rgba(44, 74, 82, 0.2) !important;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
   transition: box-shadow 0.2s ease;
   border-radius: 8px;
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// DARK MODE
-// ══════════════════════════════════════════════════════════════════════
 
-@mixin dark-theme {
-  .shepherd-element {
-    background: $shepherd-bg-dark;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .tour-content h3 {
-    color: $shepherd-text-dark-mode;
-  }
-
-  .tour-content p {
-    color: $shepherd-text-secondary-dark;
-  }
-
-  .shepherd-button-secondary,
-  .shepherd-button-icon {
-    color: $shepherd-text-secondary-dark;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: $shepherd-text-dark-mode;
-    }
-  }
-
-  .shepherd-cancel-icon {
-    color: $shepherd-text-secondary-dark;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: $shepherd-text-dark-mode;
-    }
-  }
-
-  .shepherd-arrow::before {
-    background: $shepherd-bg-dark;
-  }
-
-  .shepherd-progress-dot {
-    background: rgba(255, 255, 255, 0.2);
-
-    &.active {
-      background: var(--primary-light, #4a6c76);
-    }
-  }
-}
-
-.dark {
-  @include dark-theme;
-}
-
-@media (prefers-color-scheme: dark) {
-  @include dark-theme;
-}
-
-// ══════════════════════════════════════════════════════════════════════
-// MOBILE
-// ══════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════════
+   MOBILE
+   ══════════════════════════════════════════════════════════════════════ */
 
 @media (max-width: 640px) {
   .shepherd-element {
@@ -358,9 +290,9 @@ $shepherd-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
   }
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// ACCESSIBILITY
-// ══════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY
+   ══════════════════════════════════════════════════════════════════════ */
 
 @media (prefers-reduced-motion: reduce) {
   .shepherd-element,
@@ -375,6 +307,6 @@ $shepherd-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
 
 @media (prefers-contrast: high) {
   .shepherd-element {
-    border: 2px solid $shepherd-primary;
+    border: 2px solid var(--shepherd-primary);
   }
 }

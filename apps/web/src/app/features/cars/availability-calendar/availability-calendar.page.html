@@ -1,18 +1,18 @@
-<div class="min-h-screen bg-surface-secondary dark:bg-surface-secondary">
+<div class="min-h-screen bg-surface-secondary">
   <!-- Header -->
   <div
-    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-border-muted sticky top-0 z-10"
+    class="bg-surface-raised border-b border-border-default sticky top-0 z-10"
     >
     <div class="max-w-6xl mx-auto px-4 py-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
           <button
             (click)="goBack()"
-            class="p-2 rounded-xl hover:bg-surface-secondary dark:hover:bg-slate-deep transition-colors"
+            class="p-2 rounded-xl hover:bg-surface-secondary transition-colors"
             aria-label="Volver"
             >
             <svg
-              class="w-6 h-6 text-text-primary dark:text-text-secondary"
+              class="w-6 h-6 text-text-primary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -26,10 +26,10 @@
             </svg>
           </button>
           <div>
-            <h1 class="text-2xl font-bold text-text-primary dark:text-text-secondary font-satoshi">
+            <h1 class="text-2xl font-bold text-text-primary font-satoshi">
               Calendario de Disponibilidad
             </h1>
-            <p class="text-sm text-text-secondary dark:text-text-secondary">
+            <p class="text-sm text-text-secondary">
               Gestiona cuándo tu auto está disponible para compartir
             </p>
           </div>
@@ -61,7 +61,7 @@
           <div
             class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-cta-default border-t-transparent"
           ></div>
-          <p class="mt-4 text-text-secondary dark:text-text-secondary">Cargando calendario...</p>
+          <p class="mt-4 text-text-secondary">Cargando calendario...</p>
         </div>
       </div>
     }
@@ -72,17 +72,17 @@
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div
-            class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-border-muted"
+            class="bg-surface-raised rounded-2xl p-6 border border-border-default"
             >
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-sm text-text-secondary dark:text-text-secondary">
+                <p class="text-sm text-text-secondary">
                   Reservas Confirmadas
                 </p>
                 <p class="text-3xl font-bold text-success-strong mt-1">{{ stats().totalBookings }}</p>
               </div>
               <div
-                class="w-12 h-12 rounded-full bg-success-light/20 dark:bg-success-light/30 flex items-center justify-center"
+                class="w-12 h-12 rounded-full bg-success-light/20 flex items-center justify-center"
                 >
                 <svg
                   class="w-6 h-6 text-success-strong"
@@ -101,15 +101,15 @@
             </div>
           </div>
           <div
-            class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-border-muted"
+            class="bg-surface-raised rounded-2xl p-6 border border-border-default"
             >
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-sm text-text-secondary dark:text-text-secondary">Bloqueos Manuales</p>
+                <p class="text-sm text-text-secondary">Bloqueos Manuales</p>
                 <p class="text-3xl font-bold text-error-text mt-1">{{ stats().manualBlocks }}</p>
               </div>
               <div
-                class="w-12 h-12 rounded-full bg-error-bg-hover dark:bg-error-900/30 flex items-center justify-center"
+                class="w-12 h-12 rounded-full bg-error-bg-hover flex items-center justify-center"
                 >
                 <svg
                   class="w-6 h-6 text-error-text"
@@ -128,11 +128,11 @@
             </div>
           </div>
           <div
-            class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-border-muted"
+            class="bg-surface-raised rounded-2xl p-6 border border-border-default"
             >
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-sm text-text-secondary dark:text-text-secondary">Total Bloqueado</p>
+                <p class="text-sm text-text-secondary">Total Bloqueado</p>
                 <p class="text-3xl font-bold text-cta-default mt-1">{{ stats().totalBlocked }}</p>
               </div>
               <div class="w-12 h-12 rounded-full bg-cta-default/10 flex items-center justify-center">
@@ -155,17 +155,17 @@
         </div>
         <!-- Pricing Overrides Placeholder -->
         <div
-          class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-border-muted"
+          class="bg-surface-raised rounded-2xl p-6 border border-border-default"
           >
           <div class="flex items-center justify-between mb-3">
             <div>
-              <h3 class="text-lg font-semibold text-text-primary dark:text-text-secondary font-satoshi">
+              <h3 class="text-lg font-semibold text-text-primary font-satoshi">
                 Overrides de precio
               </h3>
               <p class="text-sm text-text-secondary">Configura precios especiales por día.</p>
             </div>
             <span
-              class="px-3 py-1 text-xs rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200"
+              class="px-3 py-1 text-xs rounded-full bg-amber-100 text-amber-700"
               >Próximamente</span
               >
             </div>
@@ -176,21 +176,21 @@
           </div>
           <!-- Calendar Section -->
           <div
-            class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-border-muted"
+            class="bg-surface-raised rounded-2xl p-6 border border-border-default"
             >
             <!-- Calendar Header -->
             <div class="flex items-center justify-between mb-6">
-              <h2 class="text-xl font-bold text-text-primary dark:text-text-secondary capitalize font-satoshi">
+              <h2 class="text-xl font-bold text-text-primary capitalize font-satoshi">
                 {{ monthName() }}
               </h2>
               <div class="flex items-center gap-2">
                 <button
                   (click)="previousMonth()"
-                  class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep transition-colors"
+                  class="p-2 rounded-lg hover:bg-surface-secondary transition-colors"
                   aria-label="Mes anterior"
                   >
                   <svg
-                    class="w-5 h-5 text-text-primary dark:text-text-secondary"
+                    class="w-5 h-5 text-text-primary"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -211,11 +211,11 @@
                 </button>
                 <button
                   (click)="nextMonth()"
-                  class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep transition-colors"
+                  class="p-2 rounded-lg hover:bg-surface-secondary transition-colors"
                   aria-label="Mes siguiente"
                   >
                   <svg
-                    class="w-5 h-5 text-text-primary dark:text-text-secondary"
+                    class="w-5 h-5 text-text-primary"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -233,36 +233,36 @@
             <!-- Calendar -->
             <div #calendarDiv class="calendar-container"></div>
             <!-- Legend -->
-            <div class="mt-6 pt-6 border-t border-border-default dark:border-border-muted">
-              <p class="text-sm font-medium text-text-primary dark:text-text-secondary mb-3">
+            <div class="mt-6 pt-6 border-t border-border-default">
+              <p class="text-sm font-medium text-text-primary mb-3">
                 Leyenda:
               </p>
               <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div class="flex items-center gap-2">
                   <div class="w-4 h-4 rounded bg-success-light"></div>
-                  <span class="text-sm text-text-secondary dark:text-text-secondary"
+                  <span class="text-sm text-text-secondary"
                     >Reserva confirmada</span
                     >
                   </div>
                   <div class="flex items-center gap-2">
                     <div class="w-4 h-4 rounded bg-error-bg0"></div>
-                    <span class="text-sm text-text-secondary dark:text-text-secondary"
+                    <span class="text-sm text-text-secondary"
                       >Bloqueado manualmente</span
                       >
                     </div>
                     <div class="flex items-center gap-2">
                       <div class="w-4 h-4 rounded bg-surface-pressed"></div>
-                      <span class="text-sm text-text-secondary dark:text-text-secondary">Fecha pasada</span>
+                      <span class="text-sm text-text-secondary">Fecha pasada</span>
                     </div>
                     <div class="flex items-center gap-2">
                       <div class="w-4 h-4 rounded border-2 border-border-muted"></div>
-                      <span class="text-sm text-text-secondary dark:text-text-secondary">Disponible</span>
+                      <span class="text-sm text-text-secondary">Disponible</span>
                     </div>
                   </div>
                 </div>
                 <!-- Instructions -->
-                <div class="mt-4 p-4 bg-cta-default/10 dark:bg-cta-default/20 rounded-xl">
-                  <p class="text-sm text-cta-default dark:text-cta-default flex gap-2">
+                <div class="mt-4 p-4 bg-cta-default/10 rounded-xl">
+                  <p class="text-sm text-cta-default flex gap-2">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path d="M9 21h6M12 3a6 6 0 0 0-4 10.5V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3.5A6 6 0 0 0 12 3z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -274,10 +274,10 @@
             <!-- Manual Blocks List -->
             @if (hasManualBlocks()) {
               <div
-                class="bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-border-muted"
+                class="bg-surface-raised rounded-2xl p-6 border border-border-default"
                 >
                 <div class="flex items-center justify-between mb-4">
-                  <h3 class="text-lg font-bold text-text-primary dark:text-text-secondary font-satoshi">
+                  <h3 class="text-lg font-bold text-text-primary font-satoshi">
                     Bloqueos Manuales ({{ stats().manualBlocks }})
                   </h3>
                   @if (stats().manualBlocks > 0) {
@@ -292,15 +292,15 @@
                 <div class="space-y-3">
                   @for (block of getManualBlocks(); track block) {
                     <div
-                      class="flex items-center justify-between p-4 bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-xl"
+                      class="flex items-center justify-between p-4 bg-error-bg border border-error-border rounded-xl"
                       >
                       <div class="flex-1">
                         <div class="flex items-center gap-2 mb-1">
-                          <span class="font-medium text-text-primary dark:text-text-secondary">
+                          <span class="font-medium text-text-primary">
                             {{ block.from | date: 'dd/MM/yyyy' }} - {{ block.to | date: 'dd/MM/yyyy' }}
                           </span>
                           <span
-                            class="px-2 py-0.5 bg-error-bg-hover dark:bg-error-900/40 text-error-strong text-xs rounded-full flex items-center gap-1"
+                            class="px-2 py-0.5 bg-error-bg-hover text-error-strong text-xs rounded-full flex items-center gap-1"
                             >
                             @if (block.reason === 'maintenance') {
                               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -327,14 +327,14 @@
                           </span>
                         </div>
                         @if (block.notes) {
-                          <p class="text-sm text-text-secondary dark:text-text-secondary">
+                          <p class="text-sm text-text-secondary">
                             {{ block.notes }}
                           </p>
                         }
                       </div>
                       <button
                         (click)="removeBlock(block.block_id!)"
-                        class="ml-4 p-2 text-error-text hover:bg-error-bg-hover dark:hover:bg-error-900/40 rounded-lg transition-colors"
+                        class="ml-4 p-2 text-error-text hover:bg-error-bg-hover rounded-lg transition-colors"
                         aria-label="Eliminar bloqueo"
                         >
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

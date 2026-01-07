@@ -590,6 +590,103 @@ app-map-filters,
   display: none;  /* Chrome, Safari and Opera */
 }
 
+/* Mobile map carousel visual polish (keeps layout & behavior) */
+.mobile-map-carousel {
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  padding-top: 2px;
+}
+
+.mobile-map-carousel::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 150px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(248, 246, 242, 0) 0%,
+      rgba(248, 246, 242, 0.35) 38%,
+      rgba(248, 246, 242, 0.85) 100%
+    ),
+    radial-gradient(circle at 18% 5%, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 50%),
+    radial-gradient(circle at 82% 0%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 45%);
+  border-top: 1px solid rgba(223, 214, 204, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mobile-map-carousel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.mobile-map-carousel-track {
+  position: relative;
+  scroll-padding-left: 16px;
+  scroll-padding-right: 16px;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 18px,
+    #000 calc(100% - 18px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 18px,
+    #000 calc(100% - 18px),
+    transparent
+  );
+}
+
+.mobile-map-carousel-badge {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(223, 214, 204, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+}
+
+.mobile-map-carousel-card {
+  background: rgba(255, 255, 255, 0.97);
+  border-color: rgba(223, 214, 204, 0.7);
+  border-radius: 14px;
+  box-shadow:
+    0 6px 18px rgba(15, 23, 42, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  font-variant-numeric: tabular-nums;
+}
+
+:host-context(.dark) .mobile-map-carousel::before {
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0) 0%,
+    rgba(15, 23, 42, 0.35) 40%,
+    rgba(15, 23, 42, 0.85) 100%
+  );
+  border-top-color: rgba(51, 65, 85, 0.55);
+}
+
+:host-context(.dark) .mobile-map-carousel-badge {
+  background: rgba(30, 41, 59, 0.78);
+  border-color: rgba(51, 65, 85, 0.65);
+  box-shadow: 0 4px 12px rgba(2, 6, 23, 0.5);
+}
+
+:host-context(.dark) .mobile-map-carousel-card {
+  background: rgba(30, 41, 59, 0.92);
+  border-color: rgba(51, 65, 85, 0.7);
+  box-shadow:
+    0 6px 20px rgba(2, 6, 23, 0.55),
+    0 1px 0 rgba(148, 163, 184, 0.06) inset;
+}
+
 /* Smooth scroll snap for carousel */
 .snap-x {
   scroll-snap-type: x mandatory;

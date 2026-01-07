@@ -47,7 +47,7 @@ export type WalletTransactionType =
   | 'charge' // Cargo efectivo de fondos
   | 'refund' // Devolución de fondos
   | 'bonus' // Bonificación/regalo
-  // Nuevos tipos para sistema dual rental + deposit
+  // Tipos para pagos de alquiler y depósito
   | 'rental_payment_lock' // Bloqueo del pago del alquiler
   | 'rental_payment_transfer' // Transferencia del pago al propietario
   | 'security_deposit_lock' // Bloqueo de la garantía

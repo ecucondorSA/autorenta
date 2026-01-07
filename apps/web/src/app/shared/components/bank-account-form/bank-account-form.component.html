@@ -50,7 +50,7 @@
           form.get('account_number')?.invalid && form.get('account_number')?.touched
         "
       />
-      <p class="text-sm text-text-secondary dark:text-text-secondary">
+      <p class="text-sm text-text-secondary">
         {{ selectedAccountTypeInfo()?.hint }}
       </p>
       @if (getErrorMessage('account_number')) {
@@ -94,7 +94,7 @@
           form.get('account_holder_document')?.touched
         "
       />
-      <p class="text-sm text-text-secondary dark:text-text-secondary">Sin puntos ni guiones</p>
+      <p class="text-sm text-text-secondary">Sin puntos ni guiones</p>
       @if (getErrorMessage('account_holder_document')) {
         <p class="mt-1 text-sm text-error-text">{{ getErrorMessage('account_holder_document') }}</p>
       }

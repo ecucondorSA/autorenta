@@ -24,34 +24,34 @@ import { AuthService } from '@core/services/auth/auth.service';
   template: `
     <ion-header>
       <ion-toolbar
-        class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default"
+        class="bg-surface-raised border-b border-border-default"
         >
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
             text="Perfil"
-            class="text-text-primary dark:text-text-secondary"
+            class="text-text-primary"
           ></ion-back-button>
         </ion-buttons>
-        <ion-title class="text-text-primary dark:text-text-secondary"> Seguridad </ion-title>
+        <ion-title class="text-text-primary"> Seguridad </ion-title>
       </ion-toolbar>
     </ion-header>
     
-    <ion-content class="bg-surface-base dark:bg-surface-base">
+    <ion-content class="bg-surface-base">
       <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
         <!-- Header -->
         <div class="mb-6">
-          <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2">
+          <h1 class="text-2xl font-bold text-text-primary mb-2">
             Configuración de Seguridad
           </h1>
-          <p class="text-sm text-text-secondary dark:text-text-secondary">
+          <p class="text-sm text-text-secondary">
             Gestiona la seguridad de tu cuenta.
           </p>
         </div>
     
         <!-- Change Password Section -->
         <div class="card-premium p-6 mb-6">
-          <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">
+          <h2 class="text-lg font-semibold text-text-primary mb-4">
             Cambiar Contraseña
           </h2>
     
@@ -78,7 +78,7 @@ import { AuthService } from '@core/services/auth/auth.service';
             <div>
               <label
                 for="currentPassword"
-                class="block text-sm font-medium text-text-primary dark:text-text-primary mb-1"
+                class="block text-sm font-medium text-text-primary mb-1"
                 >
                 Contraseña Actual
               </label>
@@ -86,7 +86,7 @@ import { AuthService } from '@core/services/auth/auth.service';
                 id="currentPassword"
                 type="password"
                 formControlName="currentPassword"
-                class="w-full px-3 py-2 rounded-lg border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
+                class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-raised text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
                 placeholder="Tu contraseña actual"
                 />
               @if (
@@ -105,7 +105,7 @@ import { AuthService } from '@core/services/auth/auth.service';
             <div>
               <label
                 for="newPassword"
-                class="block text-sm font-medium text-text-primary dark:text-text-primary mb-1"
+                class="block text-sm font-medium text-text-primary mb-1"
                 >
                 Nueva Contraseña
               </label>
@@ -113,7 +113,7 @@ import { AuthService } from '@core/services/auth/auth.service';
                 id="newPassword"
                 type="password"
                 formControlName="newPassword"
-                class="w-full px-3 py-2 rounded-lg border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
+                class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-raised text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
                 placeholder="Mínimo 8 caracteres"
                 />
               @if (
@@ -132,7 +132,7 @@ import { AuthService } from '@core/services/auth/auth.service';
             <div>
               <label
                 for="confirmPassword"
-                class="block text-sm font-medium text-text-primary dark:text-text-primary mb-1"
+                class="block text-sm font-medium text-text-primary mb-1"
                 >
                 Confirmar Nueva Contraseña
               </label>
@@ -140,7 +140,7 @@ import { AuthService } from '@core/services/auth/auth.service';
                 id="confirmPassword"
                 type="password"
                 formControlName="confirmPassword"
-                class="w-full px-3 py-2 rounded-lg border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-secondary focus:outline-none focus:ring-2 focus:ring-cta-default"
+                class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-raised text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
                 placeholder="Repite la nueva contraseña"
                 />
               @if (
@@ -173,7 +173,7 @@ import { AuthService } from '@core/services/auth/auth.service';
     
         <!-- Terms of Service -->
         <div class="card-premium p-6 mb-6">
-          <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">
+          <h2 class="text-lg font-semibold text-text-primary mb-4">
             Términos y Condiciones
           </h2>
           <div class="flex items-start gap-3">
@@ -191,7 +191,7 @@ import { AuthService } from '@core/services/auth/auth.service';
                 />
             </svg>
             <div>
-              <p class="text-sm text-text-primary dark:text-text-primary">
+              <p class="text-sm text-text-primary">
                 Aceptaste los Términos y Condiciones el
                 <span class="font-semibold">{{ formatDate(profile()?.tos_accepted_at) }}</span>
               </p>
@@ -208,13 +208,13 @@ import { AuthService } from '@core/services/auth/auth.service';
     
         <!-- Verification Status -->
         <div class="card-premium p-6">
-          <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">
+          <h2 class="text-lg font-semibold text-text-primary mb-4">
             Estado de Verificación
           </h2>
           <div class="space-y-3">
             <!-- Email -->
             <div class="flex items-center justify-between">
-              <span class="text-sm text-text-primary dark:text-text-primary">Email</span>
+              <span class="text-sm text-text-primary">Email</span>
               <span
                 [class]="
                   profile()?.email_verified
@@ -228,7 +228,7 @@ import { AuthService } from '@core/services/auth/auth.service';
     
             <!-- Phone -->
             <div class="flex items-center justify-between">
-              <span class="text-sm text-text-primary dark:text-text-primary">Teléfono</span>
+              <span class="text-sm text-text-primary">Teléfono</span>
               <span
                 [class]="
                   profile()?.phone_verified
@@ -242,7 +242,7 @@ import { AuthService } from '@core/services/auth/auth.service';
     
             <!-- Driver License -->
             <div class="flex items-center justify-between">
-              <span class="text-sm text-text-primary dark:text-text-primary"
+              <span class="text-sm text-text-primary"
                 >Licencia de Conducir</span
                 >
                 <span
@@ -267,7 +267,7 @@ import { AuthService } from '@core/services/auth/auth.service';
     
           <!-- Future: Active Sessions -->
           <!-- <div class="card-premium p-6 mt-6">
-          <h2 class="text-lg font-semibold text-text-primary dark:text-text-primary mb-4">
+          <h2 class="text-lg font-semibold text-text-primary mb-4">
             Sesiones Activas
           </h2>
           <p class="text-sm text-text-secondary">Próximamente...</p>

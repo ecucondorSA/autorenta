@@ -20,15 +20,15 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
     <!-- Modal Overlay -->
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div
-        class="w-full max-w-md rounded-2xl bg-white dark:bg-surface-raised shadow-xl"
+        class="w-full max-w-md rounded-2xl bg-white shadow-xl"
         (click)="$event.stopPropagation()"
         >
         <!-- Header -->
-        <div class="px-6 pt-6 pb-4 border-b border-border-default dark:border-border-muted">
-          <h2 class="text-xl font-bold text-text-primary dark:text-text-inverse">
+        <div class="px-6 pt-6 pb-4 border-b border-border-default">
+          <h2 class="text-xl font-bold text-text-primary">
             Necesitamos tu fecha de nacimiento
           </h2>
-          <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary">
+          <p class="mt-2 text-sm text-text-secondary">
             Para calcular el precio exacto del seguro, necesitamos conocer tu edad
           </p>
         </div>
@@ -37,7 +37,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
         <form [formGroup]="form" class="p-6 space-y-4">
           <div>
             <label
-              class="block text-sm font-semibold text-text-primary dark:text-text-primary mb-2"
+              class="block text-sm font-semibold text-text-primary mb-2"
               >
               Fecha de Nacimiento
             </label>
@@ -45,7 +45,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
               type="date"
               formControlName="date_of_birth"
               [max]="getMaxBirthDate()"
-              class="w-full px-4 py-2.5 rounded-lg border border-border-default dark:border-border-muted bg-surface-base dark:bg-surface-base text-text-primary dark:text-text-inverse focus:outline-none focus:ring-2 focus:ring-cta-default/50 focus:border-cta-default transition-colors"
+              class="w-full px-4 py-2.5 rounded-lg border border-border-default bg-surface-base text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default/50 focus:border-cta-default transition-colors"
               [class.border-error-text]="showError()"
               />
     
@@ -66,7 +66,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
             <!-- Helper Text -->
             @if (!form.value.date_of_birth) {
               <p
-                class="mt-2 text-xs text-text-secondary dark:text-text-secondary"
+                class="mt-2 text-xs text-text-secondary"
                 >
                 Debes tener al menos 18 años para usar la plataforma
               </p>
@@ -75,7 +75,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
     
           <!-- Privacy Notice -->
           <div
-            class="rounded-lg bg-surface-hover dark:bg-surface-base/50 p-4 border border-border-default dark:border-border-muted/50"
+            class="rounded-lg bg-surface-hover p-4 border border-border-default"
             >
             <div class="flex gap-3">
               <svg
@@ -92,10 +92,10 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
                   />
               </svg>
               <div>
-                <h4 class="text-sm font-semibold text-text-primary dark:text-text-primary">
+                <h4 class="text-sm font-semibold text-text-primary">
                   Tu privacidad está protegida
                 </h4>
-                <p class="mt-1 text-xs text-text-secondary dark:text-text-secondary">
+                <p class="mt-1 text-xs text-text-secondary">
                   Esta información solo se usa para calcular el precio del seguro. No se comparte
                   con terceros.
                 </p>
@@ -110,7 +110,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
             type="button"
             (click)="onCancel()"
             [disabled]="saving()"
-            class="flex-1 px-4 py-2.5 rounded-lg border border-border-default dark:border-border-muted text-text-primary dark:text-text-inverse hover:bg-surface-hover dark:hover:bg-surface-base/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+            class="flex-1 px-4 py-2.5 rounded-lg border border-border-default text-text-primary hover:bg-surface-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
             >
             Cancelar
           </button>

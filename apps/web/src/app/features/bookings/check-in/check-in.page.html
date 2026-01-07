@@ -1,12 +1,12 @@
-<div class="min-h-screen bg-surface-base dark:bg-surface-raised py-8">
+<div class="min-h-screen bg-surface-base py-8">
   <div class="max-w-4xl mx-auto px-4">
     <!-- Loading State -->
     @if (loading()) {
       <div class="text-center py-12">
         <div
-          class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted dark:border-border-default border-t-blue-600"
+          class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-600"
         ></div>
-        <p class="mt-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+        <p class="mt-4 text-text-secondary">
           Cargando reserva...
         </p>
       </div>
@@ -15,7 +15,7 @@
     <!-- Error State -->
     @else if (error()) {
       <div
-        class="bg-error-bg border border-error-border rounded-xl p-6 dark:bg-error-900/20 dark:border-error-800"
+        class="bg-error-bg border border-error-border rounded-xl p-6"
       >
         <div class="flex items-start gap-3">
           <div class="flex-shrink-0 text-2xl">⚠️</div>
@@ -39,7 +39,7 @@
       <div class="mb-6">
         <button
           routerLink="/bookings"
-          class="inline-flex items-center gap-2 text-sm font-medium text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-100 transition-colors mb-4"
+          class="inline-flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors mb-4"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -53,13 +53,13 @@
         </button>
 
         <div
-          class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6"
+          class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6"
         >
-          <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse mb-2 flex items-center gap-3 font-satoshi">
+          <h1 class="text-2xl font-bold text-text-primary mb-2 flex items-center gap-3 font-satoshi">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="1.5" stroke-width="1.5"/><circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/></svg>
             Recepción y documentación
           </h1>
-          <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+          <p class="text-text-secondary">
             Documentá el estado del auto antes de comenzar el viaje
           </p>
         </div>
@@ -67,45 +67,45 @@
 
       <!-- Booking Info Card -->
       <div
-        class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6 mb-6"
+        class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6 mb-6"
       >
-        <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4 font-satoshi">
+        <h2 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">
           Información de la Reserva
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p
-              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1"
+              class="text-sm text-text-secondary mb-1"
             >
               Vehículo
             </p>
-            <p class="font-medium text-text-primary dark:text-text-inverse">
+            <p class="font-medium text-text-primary">
               {{ booking()?.car_brand }} {{ booking()?.car_model }} ({{ booking()?.car_year }})
             </p>
           </div>
           <div>
             <p
-              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1"
+              class="text-sm text-text-secondary mb-1"
             >
               Inicio de la reserva
             </p>
-            <p class="font-medium text-text-primary dark:text-text-inverse">
+            <p class="font-medium text-text-primary">
               {{ formatDateTime(booking()!.start_at) }}
             </p>
           </div>
           <div>
             <p
-              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1"
+              class="text-sm text-text-secondary mb-1"
             >
               Fin de la reserva
             </p>
-            <p class="font-medium text-text-primary dark:text-text-inverse">
+            <p class="font-medium text-text-primary">
               {{ formatDateTime(booking()!.end_at) }}
             </p>
           </div>
           <div>
             <p
-              class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-1"
+              class="text-sm text-text-secondary mb-1"
             >
               Estado
             </p>
@@ -125,15 +125,15 @@
       <!-- Check-in Already Completed -->
       @if (inspectionCompleted() && existingInspection()) {
         <div
-          class="bg-success-light/10 border border-success-light/40 rounded-xl p-6 dark:bg-success-light/20 dark:border-success-light"
+          class="bg-success-light/10 border border-success-light/40 rounded-xl p-6"
         >
           <div class="flex items-start gap-3">
-            <svg class="w-6 h-6 flex-shrink-0 text-success-700 dark:text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="w-6 h-6 flex-shrink-0 text-success-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-success-700 dark:text-success-strong mb-2 font-satoshi">
+              <h3 class="text-lg font-semibold text-success-700 mb-2 font-satoshi">
                 Check-in Completado
               </h3>
-              <p class="text-success-700 dark:text-success-strong mb-4">
+              <p class="text-success-700 mb-4">
                 El check-in de este vehículo ya fue completado el
                 {{
                   existingInspection()?.signedAt
@@ -142,12 +142,12 @@
                 }}.
               </p>
               @if (existingInspection()?.odometer) {
-                <p class="text-sm text-success-700 dark:text-success-strong mb-2">
+                <p class="text-sm text-success-700 mb-2">
                   <strong>Odómetro:</strong> {{ existingInspection()?.odometer }} km
                 </p>
               }
               @if (existingInspection()?.fuelLevel !== undefined) {
-                <p class="text-sm text-success-700 dark:text-success-strong mb-4">
+                <p class="text-sm text-success-700 mb-4">
                   <strong>Combustible:</strong> {{ existingInspection()?.fuelLevel }}%
                 </p>
               }
@@ -165,15 +165,15 @@
       <!-- Waiting for owner check-in -->
       @else if (!ownerCheckInCompleted() && booking()?.status === 'confirmed') {
         <div
-          class="bg-warning-bg border border-warning-border rounded-xl p-6 dark:bg-warning-900/20 dark:border-warning-800"
+          class="bg-warning-bg border border-warning-border rounded-xl p-6"
         >
           <div class="flex items-start gap-3">
             <div class="flex-shrink-0 text-2xl">⏳</div>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-warning-strong dark:text-warning-200 mb-2 font-satoshi">
+              <h3 class="text-lg font-semibold text-warning-strong mb-2 font-satoshi">
                 Esperando al locador
               </h3>
-              <p class="text-warning-strong dark:text-warning-300 mb-4">
+              <p class="text-warning-strong mb-4">
                 El locador todavía no completó su check-in. Apenas lo haga, podrás
                 documentar la recepción del vehículo.
               </p>
@@ -191,22 +191,22 @@
       <!-- Check-in Form -->
       @else if (canPerformCheckIn()) {
         <div
-          class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6"
+          class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6"
         >
           @if (isLegacyInProgress()) {
-            <div class="mb-6 rounded-xl border border-warning-border bg-warning-bg p-4 dark:bg-warning-900/20">
-              <p class="text-sm text-warning-strong dark:text-warning-200">
+            <div class="mb-6 rounded-xl border border-warning-border bg-warning-bg p-4">
+              <p class="text-sm text-warning-strong">
                 Esta reserva ya está en curso y no encontramos el check-in del locador.
                 Documentá la recepción ahora para completar el registro.
               </p>
             </div>
           }
           <!-- ⚠️ REGLA DE ORO / WARNING BLOCK (Professional Style) -->
-          <div class="mb-8 overflow-hidden rounded-xl border border-rose-200 bg-rose-50/50 dark:bg-rose-900/10 dark:border-rose-800/30 shadow-sm">
+          <div class="mb-8 overflow-hidden rounded-xl border border-rose-200 bg-rose-50/50 shadow-sm">
             <div class="p-6">
               <div class="flex items-start gap-5">
                 <!-- Icono con fondo suave -->
-                <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600 dark:bg-rose-900/40 dark:text-rose-400">
+                <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600">
                   <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                   </svg>
@@ -214,34 +214,34 @@
                 
                 <div class="flex-1 space-y-3">
                   <div>
-                    <h3 class="font-satoshi text-lg font-bold uppercase tracking-wide text-rose-900 dark:text-rose-100">
+                    <h3 class="font-satoshi text-lg font-bold uppercase tracking-wide text-rose-900">
                       Regla de Oro: Tu Escudo Legal
                     </h3>
-                    <p class="mt-1 text-sm leading-relaxed text-rose-800 dark:text-rose-200">
+                    <p class="mt-1 text-sm leading-relaxed text-rose-800">
                       En Autorentar operamos bajo <strong>Comodato (Préstamo)</strong>. El uso de la palabra "alquiler" ante terceros rompe el contrato y anula tu protección patrimonial.
                     </p>
                   </div>
 
                   <!-- Caja de Consecuencias (Diseño anidado) -->
-                  <div class="rounded-lg border border-rose-200 bg-white/60 p-4 dark:border-rose-800/30 dark:bg-black/20">
+                  <div class="rounded-lg border border-rose-200 bg-white/60 p-4">
                     <div class="flex items-center gap-2 mb-1">
                       <svg class="w-4 h-4 text-rose-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                      <h4 class="text-xs font-bold uppercase tracking-wider text-rose-900 dark:text-rose-100">
+                      <h4 class="text-xs font-bold uppercase tracking-wider text-rose-900">
                         Riesgo Patrimonial
                       </h4>
                     </div>
-                    <p class="text-xs text-rose-800/90 dark:text-rose-200/80 leading-normal">
+                    <p class="text-xs text-rose-800/90 leading-normal">
                       Un error de lenguaje puede derivar en el rechazo del siniestro, haciéndote <strong>único responsable</strong> por el valor total del vehículo y daños a terceros.
                     </p>
                   </div>
 
                   <!-- Badges de Acción -->
                   <div class="flex flex-wrap gap-3 pt-1">
-                    <span class="inline-flex items-center gap-1.5 rounded-md bg-rose-100/80 px-2.5 py-1.5 text-xs font-bold text-rose-800 ring-1 ring-inset ring-rose-600/20 dark:bg-rose-900/30 dark:text-rose-200 dark:ring-rose-800">
+                    <span class="inline-flex items-center gap-1.5 rounded-md bg-rose-100/80 px-2.5 py-1.5 text-xs font-bold text-rose-800 ring-1 ring-inset ring-rose-600/20">
                       <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                       NO DIGAS: Alquiler / Renta
                     </span>
-                    <span class="inline-flex items-center gap-1.5 rounded-md bg-emerald-100/80 px-2.5 py-1.5 text-xs font-bold text-emerald-800 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-900/30 dark:text-emerald-200 dark:ring-emerald-800">
+                    <span class="inline-flex items-center gap-1.5 rounded-md bg-emerald-100/80 px-2.5 py-1.5 text-xs font-bold text-emerald-800 ring-1 ring-inset ring-emerald-600/20">
                       <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                       SIEMPRE DI: Préstamo / Comodato
                     </span>
@@ -253,24 +253,24 @@
 
           <!-- Professional Instructions List -->
           <div class="mb-8">
-            <h2 class="mb-4 flex items-center gap-2 text-lg font-bold text-text-primary dark:text-text-inverse font-satoshi">
+            <h2 class="mb-4 flex items-center gap-2 text-lg font-bold text-text-primary font-satoshi">
               <span class="flex h-6 w-6 items-center justify-center rounded-full bg-cta-default text-xs text-cta-text">1</span>
               Instrucciones de Recepción
             </h2>
             <div class="grid gap-3 sm:grid-cols-2">
-              <div class="flex items-start gap-3 rounded-lg border border-border-default bg-surface-base p-3 shadow-sm dark:border-border-muted dark:bg-surface-raised">
+              <div class="flex items-start gap-3 rounded-lg border border-border-default bg-surface-base p-3 shadow-sm">
                 <svg class="mt-0.5 h-5 w-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 <span class="text-sm font-medium text-text-secondary">Tomá al menos 8 fotos (4 lados + interior)</span>
               </div>
-              <div class="flex items-start gap-3 rounded-lg border border-border-default bg-surface-base p-3 shadow-sm dark:border-border-muted dark:bg-surface-raised">
+              <div class="flex items-start gap-3 rounded-lg border border-border-default bg-surface-base p-3 shadow-sm">
                 <svg class="mt-0.5 h-5 w-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 <span class="text-sm font-medium text-text-secondary">Registrá el odómetro actual</span>
               </div>
-              <div class="flex items-start gap-3 rounded-lg border border-border-default bg-surface-base p-3 shadow-sm dark:border-border-muted dark:bg-surface-raised">
+              <div class="flex items-start gap-3 rounded-lg border border-border-default bg-surface-base p-3 shadow-sm">
                 <svg class="mt-0.5 h-5 w-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
                 <span class="text-sm font-medium text-text-secondary">Verificá nivel de combustible</span>
               </div>
-              <div class="flex items-start gap-3 rounded-lg border border-border-default bg-surface-base p-3 shadow-sm dark:border-border-muted dark:bg-surface-raised">
+              <div class="flex items-start gap-3 rounded-lg border border-border-default bg-surface-base p-3 shadow-sm">
                 <svg class="mt-0.5 h-5 w-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <span class="text-sm font-medium text-text-secondary">Validá documentación (Cédula/Seguro)</span>
               </div>
@@ -288,15 +288,15 @@
       <!-- Cannot Perform Check-in -->
       @else {
         <div
-          class="bg-warning-bg border border-warning-border rounded-xl p-6 dark:bg-warning-900/20 dark:border-warning-800"
+          class="bg-warning-bg border border-warning-border rounded-xl p-6"
         >
           <div class="flex items-start gap-3">
             <div class="flex-shrink-0 text-2xl">⚠️</div>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-warning-strong dark:text-warning-200 mb-2 font-satoshi">
+              <h3 class="text-lg font-semibold text-warning-strong mb-2 font-satoshi">
                 No se puede realizar el check-in
               </h3>
-              <p class="text-warning-strong dark:text-warning-300 mb-4">
+              <p class="text-warning-strong mb-4">
                 El check-in no está disponible en este momento. Verificá que la reserva esté
                 confirmada y que seas el locatario.
               </p>

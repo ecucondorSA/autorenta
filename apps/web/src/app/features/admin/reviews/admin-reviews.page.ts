@@ -42,16 +42,16 @@ interface ModerationStatusOption {
     
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse">
+            <h1 class="text-3xl font-bold text-text-primary">
               Moderación de Reseñas
             </h1>
-            <p class="text-text-secondary dark:text-text-secondary mt-1">
+            <p class="text-text-secondary mt-1">
               Gestiona reseñas reportadas por usuarios
             </p>
           </div>
           <div class="text-right">
-            <p class="text-sm text-text-secondary dark:text-text-muted">Reseñas pendientes</p>
-            <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
+            <p class="text-sm text-text-secondary">Reseñas pendientes</p>
+            <p class="text-2xl font-bold text-text-primary">
               {{ pendingCount() }}
             </p>
           </div>
@@ -60,23 +60,23 @@ interface ModerationStatusOption {
     
       <!-- Filters -->
       <div
-        class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-4 mb-6 shadow-sm"
+        class="bg-surface-raised rounded-lg border border-border-default p-4 mb-6 shadow-sm"
         >
-        <h3 class="text-sm font-semibold text-text-primary dark:text-text-secondary mb-3">
+        <h3 class="text-sm font-semibold text-text-primary mb-3">
           Filtros
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Status Filter -->
           <div>
             <label
-              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1"
+              class="block text-sm font-medium text-text-primary mb-1"
               >
               Estado de Moderación
             </label>
             <select
               [(ngModel)]="filterStatus"
               (ngModelChange)="onFilterChange()"
-              class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
+              class="w-full rounded-lg border border-border-muted bg-surface-raised px-3 py-2 text-sm"
               >
               <option value="">Todos los estados</option>
               @for (status of statusOptions; track status) {
@@ -113,14 +113,14 @@ interface ModerationStatusOption {
           <div
             class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent"
           ></div>
-          <p class="mt-4 text-text-secondary dark:text-text-muted">Cargando reseñas...</p>
+          <p class="mt-4 text-text-secondary">Cargando reseñas...</p>
         </div>
       }
     
       <!-- Error State -->
       @if (error() && !loading()) {
         <div
-          class="bg-error-bg dark:bg-error-bg0/15 border border-error-border dark:border-error-400/40 rounded-lg p-6 text-center"
+          class="bg-error-bg border border-error-border rounded-lg p-6 text-center"
           >
           <p class="text-error-strong">{{ error() }}</p>
           <button
@@ -138,7 +138,7 @@ interface ModerationStatusOption {
           <!-- Empty State -->
           @if (filteredReviews().length === 0) {
             <div
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-12 text-center"
+              class="bg-surface-raised rounded-lg border border-border-default p-12 text-center"
               >
               <svg
                 class="mx-auto h-12 w-12 text-text-muted"
@@ -153,10 +153,10 @@ interface ModerationStatusOption {
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                   />
               </svg>
-              <h3 class="mt-2 text-sm font-medium text-text-primary dark:text-text-inverse">
+              <h3 class="mt-2 text-sm font-medium text-text-primary">
                 No hay reseñas reportadas
               </h3>
-              <p class="mt-1 text-sm text-text-secondary dark:text-text-muted">
+              <p class="mt-1 text-sm text-text-secondary">
                 Todas las reseñas están en buen estado.
               </p>
             </div>
@@ -164,7 +164,7 @@ interface ModerationStatusOption {
           <!-- Review Cards -->
           @for (review of filteredReviews(); track review) {
             <div
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm hover:shadow-md transition-shadow"
+              class="bg-surface-raised rounded-lg border border-border-default p-6 shadow-sm hover:shadow-md transition-shadow"
               >
               <!-- Header with Checkbox -->
               <div class="flex items-start gap-4">
@@ -184,10 +184,10 @@ interface ModerationStatusOption {
                         class="h-10 w-10 rounded-full object-cover"
                         />
                       <div>
-                        <p class="font-semibold text-text-primary dark:text-text-inverse">
+                        <p class="font-semibold text-text-primary">
                           {{ review.reviewer_name }}
                         </p>
-                        <p class="text-xs text-text-secondary dark:text-text-muted">
+                        <p class="text-xs text-text-secondary">
                           Reseña para: {{ review.reviewee_name }}
                         </p>
                       </div>
@@ -202,7 +202,7 @@ interface ModerationStatusOption {
                   </div>
                   <!-- Rating -->
                   <div class="flex items-center gap-2 mb-2">
-                    <span class="text-lg font-bold text-text-primary dark:text-text-inverse">
+                    <span class="text-lg font-bold text-text-primary">
                       {{ getOverallRating(review).toFixed(1) }}
                     </span>
                     <div class="flex gap-0.5">
@@ -218,7 +218,7 @@ interface ModerationStatusOption {
                         </svg>
                       }
                     </div>
-                    <span class="text-sm text-text-secondary dark:text-text-muted">
+                    <span class="text-sm text-text-secondary">
                       {{ review.created_at | date: 'short' }}
                     </span>
                   </div>
@@ -228,26 +228,26 @@ interface ModerationStatusOption {
                       <div
                         class="flex items-center justify-between text-xs"
                         >
-                        <span class="text-text-secondary dark:text-text-muted"
+                        <span class="text-text-secondary"
                           >{{ category.label }}:</span
                           >
-                          <span class="font-semibold text-text-primary dark:text-text-inverse">
+                          <span class="font-semibold text-text-primary">
                             {{ category.value.toFixed(1) }}
                           </span>
                         </div>
                       }
                     </div>
                     <!-- Public Comment -->
-                    <div class="bg-surface-base dark:bg-surface-base rounded-lg p-3 mb-4">
-                      <p class="text-sm font-medium text-text-primary dark:text-text-secondary mb-1">
+                    <div class="bg-surface-base rounded-lg p-3 mb-4">
+                      <p class="text-sm font-medium text-text-primary mb-1">
                         Comentario Público:
                       </p>
-                      <p class="text-sm text-text-primary dark:text-text-inverse">
+                      <p class="text-sm text-text-primary">
                         {{ review.comment_public || '(Sin comentario público)' }}
                       </p>
                     </div>
                     <!-- Flag Reason -->
-                    <div class="bg-error-bg dark:bg-error-bg0/10 rounded-lg p-3 mb-4">
+                    <div class="bg-error-bg rounded-lg p-3 mb-4">
                       <p class="text-sm font-medium text-error-strong mb-1">Motivo del Reporte:</p>
                       <p class="text-sm text-error-strong">{{ review.flag_reason }}</p>
                       <p class="text-xs text-error-text mt-1">
@@ -258,15 +258,15 @@ interface ModerationStatusOption {
                     <!-- Moderation Notes (if moderated) -->
                     @if (review.moderation_notes) {
                       <div
-                        class="bg-cta-default/10 dark:bg-cta-default/10 rounded-lg p-3 mb-4"
+                        class="bg-cta-default/10 rounded-lg p-3 mb-4"
                         >
-                        <p class="text-sm font-medium text-cta-default dark:text-cta-default mb-1">
+                        <p class="text-sm font-medium text-cta-default mb-1">
                           Notas de Moderación:
                         </p>
-                        <p class="text-sm text-cta-default dark:text-cta-default">
+                        <p class="text-sm text-cta-default">
                           {{ review.moderation_notes }}
                         </p>
-                        <p class="text-xs text-cta-default dark:text-cta-default mt-1">
+                        <p class="text-xs text-cta-default mt-1">
                           Moderado por: {{ review.moderated_by_name || 'Usuario' }} el
                           {{ review.moderated_at | date: 'short' }}
                         </p>
@@ -304,13 +304,13 @@ interface ModerationStatusOption {
           (click)="closeModal()"
           >
           <div
-            class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl max-w-md w-full p-6"
+            class="bg-surface-raised rounded-lg shadow-xl max-w-md w-full p-6"
             (click)="$event.stopPropagation()"
             >
-            <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
+            <h3 class="text-lg font-semibold text-text-primary mb-4">
               {{ modalAction() === 'approved' ? 'Aprobar' : 'Rechazar' }} Reseña
             </h3>
-            <p class="text-sm text-text-secondary dark:text-text-muted mb-4">
+            <p class="text-sm text-text-secondary mb-4">
               ¿Estás seguro de que deseas {{ modalAction() === 'approved' ? 'aprobar' : 'rechazar' }}
               esta reseña?
               {{
@@ -321,13 +321,13 @@ interface ModerationStatusOption {
             </p>
             <!-- Notes Input -->
             <div class="mb-4">
-              <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">
+              <label class="block text-sm font-medium text-text-primary mb-2">
                 Notas de moderación (opcional):
               </label>
               <textarea
                 [(ngModel)]="moderationNotes"
                 rows="3"
-                class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
+                class="w-full rounded-lg border border-border-muted bg-surface-raised px-3 py-2 text-sm"
                 placeholder="Agrega notas sobre esta decisión..."
               ></textarea>
             </div>
@@ -335,7 +335,7 @@ interface ModerationStatusOption {
             <div class="flex gap-2">
               <button
                 (click)="closeModal()"
-                class="flex-1 px-4 py-2 bg-surface-hover dark:bg-surface-base text-text-primary dark:text-text-secondary rounded-lg hover:bg-surface-pressed dark:hover:bg-gray-600 transition-colors text-sm font-medium"
+                class="flex-1 px-4 py-2 bg-surface-hover text-text-primary rounded-lg hover:bg-surface-pressed transition-colors text-sm font-medium"
                 >
                 Cancelar
               </button>
@@ -538,10 +538,10 @@ export class AdminReviewsPage implements OnInit {
   getModerationBadgeClass(status: string): string {
     const classes: Record<string, string> = {
       pending:
-        'bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-300',
+        'bg-warning-bg-hover text-warning-strong',
       approved:
-        'bg-success-light/20 text-success-700 dark:bg-success-light/20 dark:text-success-strong',
-      rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-300',
+        'bg-success-light/20 text-success-700',
+      rejected: 'bg-error-bg-hover text-error-strong',
     };
     return classes[status] || 'bg-surface-raised text-text-primary';
   }

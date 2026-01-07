@@ -17,17 +17,17 @@ import { getDocumentEmoji, getDocumentLabel } from '@core/config/document-types.
         @if (missingDocsCount() > 0) {
           <!-- Missing Documents Alert -->
           <div
-            class="bg-warning-bg dark:bg-warning-900/20 border border-warning-border dark:border-warning-800/40 rounded-lg p-4 mb-6"
+            class="bg-warning-bg border border-warning-border rounded-lg p-4 mb-6"
           >
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 text-xl">
                 <span>⚠️</span>
               </div>
               <div class="flex-1">
-                <h3 class="font-semibold text-warning-strong dark:text-warning-200 mb-2">
+                <h3 class="font-semibold text-warning-strong mb-2">
                   Documentos Faltantes
                 </h3>
-                <p class="text-sm text-warning-strong dark:text-warning-300 mb-3">
+                <p class="text-sm text-warning-strong mb-3">
                   Necesitas completar tu verificación para publicar autos y recibir reservas.
                 </p>
 
@@ -35,7 +35,7 @@ import { getDocumentEmoji, getDocumentLabel } from '@core/config/document-types.
                 <div class="flex flex-wrap gap-2 mb-4">
                   @for (doc of missingDocs(); track doc) {
                     <span
-                      class="inline-flex items-center gap-1 px-3 py-1 bg-warning-bg-hover dark:bg-warning-800/40 text-warning-strong dark:text-warning-200 rounded-full text-sm font-medium"
+                      class="inline-flex items-center gap-1 px-3 py-1 bg-warning-bg-hover text-warning-strong rounded-full text-sm font-medium"
                     >
                       <span>{{ getDocumentEmoji(doc) }}</span>
                       <span>{{ getDocumentLabel(doc) }}</span>
@@ -46,14 +46,14 @@ import { getDocumentEmoji, getDocumentLabel } from '@core/config/document-types.
                 <!-- Action Button -->
                 <a
                   routerLink="/verification"
-                  class="inline-block px-4 py-2 bg-warning-600 hover:bg-warning-700 dark:bg-warning-700 dark:hover:bg-warning-600 text-text-inverse font-medium rounded-lg transition-colors text-sm"
+                  class="inline-block px-4 py-2 bg-warning-600 hover:bg-warning-700 text-text-inverse font-medium rounded-lg transition-colors text-sm"
                 >
                   Completar Verificación →
                 </a>
               </div>
               <button
                 (click)="dismissAlert()"
-                class="flex-shrink-0 text-warning-text dark:text-warning-400 hover:text-warning-strong dark:hover:text-warning-300"
+                class="flex-shrink-0 text-warning-text hover:text-warning-strong"
                 aria-label="Cerrar alerta"
               >
                 ✕
@@ -63,15 +63,15 @@ import { getDocumentEmoji, getDocumentLabel } from '@core/config/document-types.
         } @else if (currentStatus()?.status === 'VERIFICADO') {
           <!-- Verified Badge -->
           <div
-            class="bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light/40 rounded-lg p-4 mb-6"
+            class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mb-6"
           >
             <div class="flex items-center gap-3">
               <span class="text-xl">✅</span>
               <div>
-                <p class="font-semibold text-success-700 dark:text-success-strong">
+                <p class="font-semibold text-success-700">
                   Verificación Completada
                 </p>
-                <p class="text-sm text-success-700 dark:text-success-strong">
+                <p class="text-sm text-success-700">
                   Tu cuenta está completamente verificada
                 </p>
               </div>
@@ -80,7 +80,7 @@ import { getDocumentEmoji, getDocumentLabel } from '@core/config/document-types.
         } @else if (currentStatus()?.status === 'RECHAZADO') {
           <!-- Rejected Status -->
           <div
-            class="bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800/40 rounded-lg p-4 mb-6"
+            class="bg-error-bg border border-error-border rounded-lg p-4 mb-6"
           >
             <div class="flex items-start gap-4">
               <span class="text-xl flex-shrink-0">❌</span>
@@ -94,7 +94,7 @@ import { getDocumentEmoji, getDocumentLabel } from '@core/config/document-types.
                 </p>
                 <a
                   routerLink="/verification"
-                  class="inline-block px-4 py-2 bg-error-600 hover:bg-error-700 dark:bg-error-700 dark:hover:bg-error-600 text-text-inverse font-medium rounded-lg transition-colors text-sm"
+                  class="inline-block px-4 py-2 bg-error-600 hover:bg-error-700 text-text-inverse font-medium rounded-lg transition-colors text-sm"
                 >
                   Reintentar Verificación →
                 </a>

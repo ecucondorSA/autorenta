@@ -24,7 +24,7 @@ Cada verano miles de argentinos viajan a Santa Catarina y necesitan auto. Nosotr
 • Garantías en *USD o BRL*
   - Económico: USD 300 / BRL 1.500
   - SUV/Pickup: USD 800 / BRL 4.000
-• Comisión Autorentar: *15%* por reserva
+• Fee Autorentar: *Variable* por reserva
 • Sin costos fijos
 
 *Seguros requeridos:*

@@ -25,29 +25,29 @@ import { ProfileContactSectionComponent } from '../components/sections/contact/p
   template: `
     <ion-header>
       <ion-toolbar
-        class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default"
+        class="bg-surface-raised border-b border-border-default"
         >
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
             text="Perfil"
-            class="text-text-primary dark:text-text-secondary"
+            class="text-text-primary"
           ></ion-back-button>
         </ion-buttons>
-        <ion-title class="text-text-primary dark:text-text-secondary">
+        <ion-title class="text-text-primary">
           Información de Contacto
         </ion-title>
       </ion-toolbar>
     </ion-header>
     
-    <ion-content class="bg-surface-base dark:bg-surface-base">
+    <ion-content class="bg-surface-base">
       <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
         <!-- Header -->
         <div class="mb-6">
-          <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2">
+          <h1 class="text-2xl font-bold text-text-primary mb-2">
             Contacto y Dirección
           </h1>
-          <p class="text-sm text-text-secondary dark:text-text-secondary">
+          <p class="text-sm text-text-secondary">
             Mantén tu información de contacto actualizada para una mejor comunicación.
           </p>
         </div>
@@ -67,7 +67,7 @@ import { ProfileContactSectionComponent } from '../components/sections/contact/p
         }
     
         <!-- Help Text -->
-        <div class="mt-8 p-4 rounded-lg bg-info-bg border border-info-border dark:bg-info-bg/20">
+        <div class="mt-8 p-4 rounded-lg bg-info-bg border border-info-border">
           <h4 class="text-sm font-semibold text-info-text mb-2 flex items-center gap-2">
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path

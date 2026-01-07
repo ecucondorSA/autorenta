@@ -1,14 +1,14 @@
 <div
-  class="stats-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
+  class="stats-page bg-surface-base min-h-screen transition-colors duration-300"
 >
   <!-- Header -->
   <div
-    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
+    class="bg-surface-raised border-b border-border-default transition-colors duration-300"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary flex items-center gap-2 tracking-tight font-satoshi">
+          <h1 class="text-3xl font-bold text-text-primary flex items-center gap-2 tracking-tight font-satoshi">
             <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M3 21h18" stroke-width="1.75" stroke-linecap="round"/>
               <rect x="5" y="13" width="3" height="8" rx="0.5" stroke-width="1.5"/>
@@ -17,7 +17,7 @@
             </svg>
             Estadísticas
           </h1>
-          <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
+          <p class="mt-2 text-text-secondary">
             Resumen completo de tu actividad
           </p>
         </div>
@@ -67,9 +67,9 @@
     @if (!loading() && !error()) {
       <!-- Cars Stats -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+        class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6 mb-8"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+        <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
           <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/>
             <circle cx="7.5" cy="17" r="1.5" stroke-width="1.5"/>
@@ -80,36 +80,36 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Total</p>
-            <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
+            <p class="text-sm text-text-secondary mb-1">Total</p>
+            <p class="text-3xl font-bold text-text-primary">
               {{ totalCars() }}
             </p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Activos</p>
+            <p class="text-sm text-text-secondary mb-1">Activos</p>
             <p class="text-3xl font-bold text-success-strong">{{ activeCars() }}</p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Pendientes</p>
+            <p class="text-sm text-text-secondary mb-1">Pendientes</p>
             <p class="text-3xl font-bold text-warning-strong">{{ pendingCars() }}</p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Suspendidos</p>
+            <p class="text-sm text-text-secondary mb-1">Suspendidos</p>
             <p class="text-3xl font-bold text-error-text">{{ suspendedCars() }}</p>
           </div>
         </div>
-        <div class="mt-4 pt-4 border-t border-border-default dark:border-neutral-700">
-          <p class="text-sm text-text-secondary dark:text-text-secondary/70">Tasa de Ocupación</p>
+        <div class="mt-4 pt-4 border-t border-border-default">
+          <p class="text-sm text-text-secondary">Tasa de Ocupación</p>
           <div class="flex items-center gap-2 mt-2">
             <div
-              class="flex-1 h-2 bg-surface-hover dark:bg-surface-base rounded-full overflow-hidden"
+              class="flex-1 h-2 bg-surface-hover rounded-full overflow-hidden"
             >
               <div
                 class="h-full bg-primary-600 transition-all duration-500"
                 [style.width.%]="occupancyRate()"
               ></div>
             </div>
-            <span class="text-lg font-bold text-text-primary dark:text-text-primary">
+            <span class="text-lg font-bold text-text-primary">
               {{ occupancyRate() }}%
             </span>
           </div>
@@ -118,9 +118,9 @@
 
       <!-- Bookings Stats -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+        class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6 mb-8"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+        <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
           <svg class="w-6 h-6 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <rect x="3" y="4" width="18" height="18" rx="2" stroke-width="1.75"/>
             <path d="M3 10h18M8 2v4M16 2v4" stroke-width="1.75" stroke-linecap="round"/>
@@ -130,21 +130,21 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Total</p>
-            <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
+            <p class="text-sm text-text-secondary mb-1">Total</p>
+            <p class="text-3xl font-bold text-text-primary">
               {{ totalBookings() }}
             </p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Próximas</p>
+            <p class="text-sm text-text-secondary mb-1">Próximas</p>
             <p class="text-3xl font-bold text-cta-default">{{ upcomingBookings() }}</p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Activas</p>
+            <p class="text-sm text-text-secondary mb-1">Activas</p>
             <p class="text-3xl font-bold text-warning-strong">{{ activeBookings() }}</p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Completadas</p>
+            <p class="text-sm text-text-secondary mb-1">Completadas</p>
             <p class="text-3xl font-bold text-success-strong">{{ completedBookings() }}</p>
           </div>
         </div>
@@ -152,9 +152,9 @@
 
       <!-- Earnings Stats -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+        class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6 mb-8"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+        <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
           <svg class="w-6 h-6 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path d="M6 10c0-1 1-2 2-3l1-2h6l1 2c1 1 2 2 2 3v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8z" stroke-width="1.75" stroke-linejoin="round"/>
             <path d="M9 5h6" stroke-width="1.5" stroke-linecap="round"/>
@@ -164,19 +164,19 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Este Mes</p>
-            <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+            <p class="text-sm text-text-secondary mb-1">Este Mes</p>
+            <p class="text-2xl font-bold text-text-primary">
               {{ thisMonthEarnings() | money }}
             </p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Mes Anterior</p>
-            <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+            <p class="text-sm text-text-secondary mb-1">Mes Anterior</p>
+            <p class="text-2xl font-bold text-text-primary">
               {{ lastMonthEarnings() | money }}
             </p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Total</p>
+            <p class="text-sm text-text-secondary mb-1">Total</p>
             <p class="text-2xl font-bold text-success-strong">{{ totalEarnings() | money }}</p>
           </div>
         </div>
@@ -184,9 +184,9 @@
 
       <!-- Wallet Stats -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+        class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6 mb-8"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+        <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
           <svg class="w-6 h-6 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.75"/>
             <circle cx="12" cy="12" r="3.5" stroke-width="1.5"/>
@@ -196,13 +196,13 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">
+            <p class="text-sm text-text-secondary mb-1">
               Balance Disponible
             </p>
             <p class="text-3xl font-bold text-success-strong">{{ availableBalance() | money }}</p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">
+            <p class="text-sm text-text-secondary mb-1">
               Balance Pendiente
             </p>
             <p class="text-3xl font-bold text-warning-strong">{{ pendingBalance() | money }}</p>
@@ -212,9 +212,9 @@
 
       <!-- Quick Actions -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+        <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
           <svg class="w-6 h-6 text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -223,7 +223,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <a
             routerLink="/dashboard/earnings"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-success-strong flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.75"/>
@@ -231,14 +231,14 @@
               <path d="M12 9.5v5M10.5 10.5c0-.5.67-1 1.5-1s1.5.5 1.5 1-.67 1-1.5 1-1.5.5-1.5 1 .67 1 1.5 1 1.5-.5 1.5-1" stroke-width="1.25" stroke-linecap="round"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary font-luxury">Ganancias</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">Ver detalles</p>
+              <p class="font-medium text-text-primary font-luxury">Ganancias</p>
+              <p class="text-xs text-text-secondary">Ver detalles</p>
             </div>
           </a>
 
           <a
             routerLink="/dashboard/calendar"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-cta-default flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <rect x="3" y="4" width="18" height="18" rx="2" stroke-width="1.75"/>
@@ -246,14 +246,14 @@
               <rect x="7" y="14" width="3" height="3" rx="0.5" fill="currentColor" opacity="0.3"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Calendario</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">Ver reservas</p>
+              <p class="font-medium text-text-primary">Calendario</p>
+              <p class="text-xs text-text-secondary">Ver reservas</p>
             </div>
           </a>
 
           <a
             routerLink="/cars/my-cars"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-primary-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/>
@@ -261,8 +261,8 @@
               <circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Mis Autos</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="font-medium text-text-primary">Mis Autos</p>
+              <p class="text-xs text-text-secondary">
                 Gestionar vehículos
               </p>
             </div>
@@ -270,7 +270,7 @@
 
           <a
             routerLink="/bookings"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke-width="1.75"/>
@@ -278,8 +278,8 @@
               <path d="M8 10h8M8 14h8M8 18h5" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Reservas</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">Ver todas</p>
+              <p class="font-medium text-text-primary">Reservas</p>
+              <p class="text-xs text-text-secondary">Ver todas</p>
             </div>
           </a>
         </div>

@@ -5,7 +5,7 @@
     <button
       (click)="onRefresh()"
       [disabled]="loading"
-      class="px-3 py-1 text-sm border border-border-muted dark:border-border-default text-text-primary rounded-lg hover:bg-surface-base dark:bg-surface-base disabled:opacity-50 disabled:cursor-not-allowed transition"
+      class="px-3 py-1 text-sm border border-border-muted text-text-primary rounded-lg hover:bg-surface-base disabled:opacity-50 disabled:cursor-not-allowed transition"
     >
       @if (loading) {
         Actualizando...
@@ -21,17 +21,17 @@
       <div
         class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default"
       ></div>
-      <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary">Cargando historial...</p>
+      <p class="mt-2 text-sm text-text-secondary">Cargando historial...</p>
     </div>
   }
 
   <!-- Empty State -->
   @if (!loading && requests.length === 0) {
     <div
-      class="text-center py-12 bg-surface-base dark:bg-surface-base rounded-2xl border-2 border-dashed border-border-muted dark:border-border-default"
+      class="text-center py-12 bg-surface-base rounded-2xl border-2 border-dashed border-border-muted"
     >
       <svg
-        class="mx-auto h-12 w-12 text-text-muted dark:text-text-secondary"
+        class="mx-auto h-12 w-12 text-text-muted"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -44,7 +44,7 @@
         ></path>
       </svg>
       <h3 class="mt-2 text-sm font-semibold text-text-primary font-satoshi">No hay retiros</h3>
-      <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">
+      <p class="mt-1 text-sm text-text-secondary">
         Todavía no has solicitado ningún retiro
       </p>
     </div>
@@ -55,7 +55,7 @@
     <div class="space-y-3">
       @for (request of requests; track request.id) {
         <div
-          class="bg-surface-raised dark:bg-surface-secondary border border-border-default dark:border-border-muted rounded-xl p-4 hover:shadow-md transition-shadow"
+          class="bg-surface-raised border border-border-default rounded-xl p-4 hover:shadow-md transition-shadow"
         >
           <div class="flex items-start justify-between">
             <!-- Request Info -->
@@ -69,7 +69,7 @@
                   {{ getStatusIcon(request.status) }}
                   {{ getStatusLabel(request.status) }}
                 </span>
-                <span class="text-xs text-text-secondary dark:text-text-secondary">
+                <span class="text-xs text-text-secondary">
                   {{ formatDate(request.created_at) }}
                 </span>
               </div>
@@ -77,19 +77,19 @@
               <!-- Amount Info -->
               <div class="grid grid-cols-3 gap-4 mb-2">
                 <div>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary">Solicitado</p>
+                  <p class="text-xs text-text-secondary">Solicitado</p>
                   <p class="text-lg font-bold text-text-primary">
                     ${{ request.amount | number: '1.2-2' }}
                   </p>
                 </div>
                 <div>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary">Comisión</p>
+                  <p class="text-xs text-text-secondary">Comision</p>
                   <p class="text-sm font-semibold text-error-text">
                     -${{ request.fee_amount | number: '1.2-2' }}
                   </p>
                 </div>
                 <div>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary">Neto</p>
+                  <p class="text-xs text-text-secondary">Neto</p>
                   <p class="text-lg font-bold text-success-strong">
                     ${{ request.net_amount | number: '1.2-2' }}
                   </p>
@@ -98,14 +98,14 @@
 
               <!-- Additional Info -->
               @if (request.user_notes) {
-                <p class="text-sm text-text-secondary dark:text-text-secondary mb-2">
+                <p class="text-sm text-text-secondary mb-2">
                   <strong>Nota:</strong> {{ request.user_notes }}
                 </p>
               }
 
               @if (request.rejection_reason) {
                 <div
-                  class="mt-2 p-2 bg-error-bg dark:bg-error-bg0/15 border border-error-border dark:border-error-border/40 rounded-lg"
+                  class="mt-2 p-2 bg-error-bg border border-error-border rounded-lg"
                 >
                   <p class="text-xs text-error-strong">
                     <strong>Motivo de rechazo:</strong> {{ request.rejection_reason }}
@@ -115,7 +115,7 @@
 
               @if (request.failure_reason) {
                 <div
-                  class="mt-2 p-2 bg-error-bg dark:bg-error-bg0/15 border border-error-border dark:border-error-border/40 rounded-lg"
+                  class="mt-2 p-2 bg-error-bg border border-error-border rounded-lg"
                 >
                   <p class="text-xs text-error-strong">
                     <strong>Error:</strong> {{ request.failure_reason }}
@@ -125,9 +125,9 @@
 
               @if (request.admin_notes) {
                 <div
-                  class="mt-2 p-2 bg-cta-default/10 dark:bg-cta-default/15 border border-cta-default dark:border-cta-default/40 rounded-lg"
+                  class="mt-2 p-2 bg-cta-default/10 border border-cta-default rounded-lg"
                 >
-                  <p class="text-xs text-cta-default dark:text-cta-default">
+                  <p class="text-xs text-cta-default">
                     <strong>Nota del admin:</strong> {{ request.admin_notes }}
                   </p>
                 </div>
@@ -135,7 +135,7 @@
 
               <!-- Dates -->
               <div
-                class="mt-2 flex flex-wrap gap-4 text-xs text-text-secondary dark:text-text-secondary"
+                class="mt-2 flex flex-wrap gap-4 text-xs text-text-secondary"
               >
                 @if (request.approved_at) {
                   <span
@@ -162,7 +162,7 @@
             @if (canCancel(request)) {
               <button
                 (click)="onCancel(request.id)"
-                class="ml-4 px-3 py-1 text-sm border border-error-border text-error-strong rounded-lg hover:bg-error-bg dark:hover:bg-error-bg0/15 transition"
+                class="ml-4 px-3 py-1 text-sm border border-error-border text-error-strong rounded-lg hover:bg-error-bg transition"
               >
                 Cancelar
               </button>

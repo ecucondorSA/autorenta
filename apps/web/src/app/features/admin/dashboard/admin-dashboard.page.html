@@ -1,25 +1,25 @@
 <section
-  class="space-y-6 text-text-primary dark:text-text-secondary transition-colors duration-300"
+  class="space-y-6 text-text-primary transition-colors duration-300"
   >
   <header>
-    <h1 class="text-3xl font-semibold text-slate-900 dark:text-text-primary tracking-tight font-satoshi">
+    <h1 class="text-3xl font-semibold text-slate-900 tracking-tight font-satoshi">
       Panel de administración
     </h1>
-    <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+    <p class="text-sm text-slate-500">
       Aprobá vehículos y controlá las reservas recientes.
     </p>
   </header>
 
   <!-- Admin Navigation -->
   <nav
-    class="bg-surface-raised dark:bg-surface-raised rounded-xl border border-slate-200 dark:border-slate-deep shadow-sm dark:shadow-card p-4 transition-colors"
+    class="bg-surface-raised rounded-xl border border-slate-200 shadow-sm p-4 transition-colors"
     >
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <a
         routerLink="/admin"
         routerLinkActive="bg-cta-default/10 border-cta-default"
         [routerLinkActiveOptions]="{ exact: true }"
-        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
+        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-dashboard-link"
         >
         <div class="flex-shrink-0 bg-cta-default rounded-md p-3 shadow-sm shadow-blue-500/40">
@@ -38,15 +38,15 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-text-primary font-satoshi">Dashboard</h3>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">Resumen general</p>
+          <h3 class="font-semibold text-slate-900 font-satoshi">Dashboard</h3>
+          <p class="text-sm text-slate-500">Resumen general</p>
         </div>
       </a>
 
       <a
         routerLink="/admin/withdrawals"
         routerLinkActive="bg-success-light/10 border-success-light"
-        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
+        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-withdrawals-link"
         >
         <div class="flex-shrink-0 bg-success-light rounded-md p-3 shadow-sm shadow-success-500/40">
@@ -65,8 +65,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-text-primary font-satoshi">Retiros</h3>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+          <h3 class="font-semibold text-slate-900 font-satoshi">Retiros</h3>
+          <p class="text-sm text-slate-500">
             Gestionar retiros de fondos
           </p>
         </div>
@@ -75,7 +75,7 @@
       <a
         routerLink="/admin/exchange-rates"
         routerLinkActive="bg-purple-50 border-purple-500"
-        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
+        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-exchange-rates-link"
         >
         <div class="flex-shrink-0 bg-purple-500 rounded-md p-3 shadow-sm shadow-purple-500/40">
@@ -94,15 +94,15 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-text-primary font-satoshi">Tipos de Cambio</h3>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">Monitor de tasas</p>
+          <h3 class="font-semibold text-slate-900 font-satoshi">Tipos de Cambio</h3>
+          <p class="text-sm text-slate-500">Monitor de tasas</p>
         </div>
       </a>
 
       <a
         routerLink="/admin/claims"
         routerLinkActive="bg-error-bg border-error-border"
-        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
+        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-claims-link"
         >
         <div class="flex-shrink-0 bg-error-bg0 rounded-md p-3 shadow-sm shadow-red-500/40">
@@ -121,8 +121,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-text-primary font-satoshi">Siniestros</h3>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+          <h3 class="font-semibold text-slate-900 font-satoshi">Siniestros</h3>
+          <p class="text-sm text-slate-500">
             Gestionar claims reportados
           </p>
         </div>
@@ -131,7 +131,7 @@
       <a
         routerLink="/admin/reviews"
         routerLinkActive="bg-purple-50 border-purple-500"
-        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
+        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-reviews-link"
         >
         <div class="flex-shrink-0 bg-purple-500 rounded-md p-3 shadow-sm shadow-purple-500/40">
@@ -150,8 +150,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-text-primary font-satoshi">Reseñas</h3>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+          <h3 class="font-semibold text-slate-900 font-satoshi">Reseñas</h3>
+          <p class="text-sm text-slate-500">
             Moderar reseñas reportadas
           </p>
         </div>
@@ -160,7 +160,7 @@
       <a
         routerLink="/admin/accounting"
         routerLinkActive="bg-teal-50 border-teal-500"
-        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
+        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-accounting-link"
         >
         <div class="flex-shrink-0 bg-teal-500 rounded-md p-3 shadow-sm shadow-teal-500/40">
@@ -179,8 +179,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-text-primary font-satoshi">Contabilidad</h3>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+          <h3 class="font-semibold text-slate-900 font-satoshi">Contabilidad</h3>
+          <p class="text-sm text-slate-500">
             Estados financieros y reportes
           </p>
         </div>
@@ -189,7 +189,7 @@
       <a
         routerLink="/admin/verifications"
         routerLinkActive="bg-blue-50 border-blue-500"
-        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
+        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-verifications-link"
         >
         <div class="flex-shrink-0 bg-blue-500 rounded-md p-3 shadow-sm shadow-blue-500/40">
@@ -208,8 +208,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-text-primary font-satoshi">Verificaciones</h3>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+          <h3 class="font-semibold text-slate-900 font-satoshi">Verificaciones</h3>
+          <p class="text-sm text-slate-500">
             Aprobar documentos de usuarios
           </p>
         </div>
@@ -218,7 +218,7 @@
       <a
         routerLink="/admin/disputes"
         routerLinkActive="bg-orange-50 border-orange-500"
-        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
+        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-disputes-link"
         >
         <div class="flex-shrink-0 bg-orange-500 rounded-md p-3 shadow-sm shadow-orange-500/40">
@@ -237,8 +237,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-text-primary font-satoshi">Disputas</h3>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+          <h3 class="font-semibold text-slate-900 font-satoshi">Disputas</h3>
+          <p class="text-sm text-slate-500">
             Resolver disputas entre usuarios
           </p>
         </div>
@@ -247,7 +247,7 @@
       <a
         routerLink="/admin/suspended-users"
         routerLinkActive="bg-red-50 border-red-500"
-        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
+        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-suspended-users-link"
         >
         <div class="flex-shrink-0 bg-red-500 rounded-md p-3 shadow-sm shadow-red-500/40">
@@ -266,8 +266,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-text-primary font-satoshi">Usuarios Suspendidos</h3>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+          <h3 class="font-semibold text-slate-900 font-satoshi">Usuarios Suspendidos</h3>
+          <p class="text-sm text-slate-500">
             Gestionar cuentas suspendidas
           </p>
         </div>
@@ -276,7 +276,7 @@
       <a
         routerLink="/admin/traffic-infractions"
         routerLinkActive="bg-amber-50 border-amber-500"
-        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
+        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-traffic-infractions-link"
         >
         <div class="flex-shrink-0 bg-amber-500 rounded-md p-3 shadow-sm shadow-amber-500/40">
@@ -295,8 +295,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-text-primary font-satoshi">Multas de Tránsito</h3>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+          <h3 class="font-semibold text-slate-900 font-satoshi">Multas de Tránsito</h3>
+          <p class="text-sm text-slate-500">
             Gestionar multas reportadas
           </p>
         </div>
@@ -305,7 +305,7 @@
       <a
         routerLink="/admin/accidents"
         routerLinkActive="bg-rose-50 border-rose-500"
-        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
+        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-accidents-link"
         >
         <div class="flex-shrink-0 bg-rose-500 rounded-md p-3 shadow-sm shadow-rose-500/40">
@@ -324,8 +324,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-text-primary font-satoshi">Accidentes</h3>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+          <h3 class="font-semibold text-slate-900 font-satoshi">Accidentes</h3>
+          <p class="text-sm text-slate-500">
             Seguimiento de accidentes
           </p>
         </div>
@@ -334,7 +334,7 @@
       <a
         routerLink="/admin/system-monitoring"
         routerLinkActive="bg-slate-50 border-slate-500"
-        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"
+        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-system-monitoring-link"
         >
         <div class="flex-shrink-0 bg-slate-600 rounded-md p-3 shadow-sm shadow-slate-500/40">
@@ -353,8 +353,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="font-semibold text-slate-900 dark:text-text-primary font-satoshi">Monitoreo</h3>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+          <h3 class="font-semibold text-slate-900 font-satoshi">Monitoreo</h3>
+          <p class="text-sm text-slate-500">
             Locks, circuitos y métricas
           </p>
         </div>
@@ -364,21 +364,21 @@
 
   @if (loading()) {
     <div
-      class="rounded-xl border border-slate-200 dark:border-slate-deep bg-surface-raised dark:bg-surface-raised p-5 text-sm text-slate-500 dark:text-text-secondary/70 shadow-sm dark:shadow-card"
+      class="rounded-xl border border-slate-200 bg-surface-raised p-5 text-sm text-slate-500 shadow-sm"
       >
       Cargando datos…
     </div>
   }
 
   <section
-    class="space-y-4 rounded-xl border border-slate-200 dark:border-slate-deep bg-surface-raised dark:bg-surface-raised p-5 shadow-sm dark:shadow-card transition-colors"
+    class="space-y-4 rounded-xl border border-slate-200 bg-surface-raised p-5 shadow-sm transition-colors"
     >
     <header class="flex items-center justify-between">
       <div>
-        <h2 class="text-xl font-semibold text-slate-900 dark:text-text-primary font-satoshi">
+        <h2 class="text-xl font-semibold text-slate-900 font-satoshi">
           Autos pendientes
         </h2>
-        <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+        <p class="text-sm text-slate-500">
           Revisá y aprobá nuevos vehículos antes de que salgan al aire.
         </p>
       </div>
@@ -386,7 +386,7 @@
 
     @if (pendingCars().length === 0) {
       <div
-        class="rounded-lg border border-dashed border-slate-200 dark:border-slate-deep/70 p-4 text-sm text-slate-500 dark:text-text-secondary/70"
+        class="rounded-lg border border-dashed border-slate-200 p-4 text-sm text-slate-500"
         >
         No hay autos pendientes de aprobación.
       </div>
@@ -395,25 +395,25 @@
     <div class="grid gap-4 md:grid-cols-2">
       @for (car of pendingCars(); track car.id) {
         <article
-          class="space-y-2 rounded-xl border border-slate-200 dark:border-slate-deep p-4 shadow-sm dark:shadow-card bg-surface-raised dark:bg-surface-secondary/90 transition-colors"
+          class="space-y-2 rounded-xl border border-slate-200 p-4 shadow-sm bg-surface-raised transition-colors"
           >
           <div class="flex items-center justify-between">
-            <h3 class="text-lg font-semibold text-slate-900 dark:text-text-primary font-satoshi">
+            <h3 class="text-lg font-semibold text-slate-900 font-satoshi">
               {{ car.title }}
             </h3>
-            <span class="text-sm font-semibold text-primary-600 dark:text-cta-default/80">{{
+            <span class="text-sm font-semibold text-primary-600">{{
               car.price_per_day | money
             }}</span>
           </div>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+          <p class="text-sm text-slate-500">
             {{ car.brand }} • {{ car.model }} • {{ car.year }}
           </p>
-          <p class="text-sm text-slate-500 dark:text-text-secondary/70">
+          <p class="text-sm text-slate-500">
             {{ car.location_city }}, {{ car.location_province }}
           </p>
           <button
             type="button"
-            class="rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-text-inverse hover:bg-primary-700 dark:hover:bg-primary-500/90 transition"
+            class="rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-text-inverse hover:bg-primary-700 transition"
             (click)="approveCar(car.id)"
             >
             Aprobar auto
@@ -424,17 +424,17 @@
   </section>
 
   <section
-    class="space-y-4 rounded-xl border border-slate-200 dark:border-slate-deep bg-surface-raised dark:bg-surface-raised p-5 shadow-sm dark:shadow-card transition-colors"
+    class="space-y-4 rounded-xl border border-slate-200 bg-surface-raised p-5 shadow-sm transition-colors"
     >
     <header>
-      <h2 class="text-xl font-semibold text-slate-900 dark:text-text-primary font-satoshi">
+      <h2 class="text-xl font-semibold text-slate-900 font-satoshi">
         Reservas recientes
       </h2>
     </header>
 
     @if (bookings().length === 0) {
       <div
-        class="rounded-lg border border-dashed border-slate-200 dark:border-slate-deep/70 p-4 text-sm text-slate-500 dark:text-text-secondary/70"
+        class="rounded-lg border border-dashed border-slate-200 p-4 text-sm text-slate-500"
         >
         No hay reservas registradas aún.
       </div>
@@ -443,29 +443,29 @@
     <div class="space-y-3">
       @for (booking of bookings(); track booking.id) {
         <article
-          class="rounded-xl border border-slate-200 dark:border-slate-deep p-4 bg-surface-raised dark:bg-surface-secondary/90 shadow-sm dark:shadow-card transition-colors"
+          class="rounded-xl border border-slate-200 p-4 bg-surface-raised shadow-sm transition-colors"
           >
           <div
-            class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600 dark:text-text-secondary/70"
+            class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600"
             >
-            <span class="font-semibold text-slate-700 dark:text-text-primary"
+            <span class="font-semibold text-slate-700"
               >Reserva #{{ booking.id }}</span
               >
               <span
-                class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-500 dark:bg-surface-secondary/80 dark:text-text-secondary/70"
+                class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-500"
                 >
                 {{ booking.status }}
               </span>
             </div>
             <div
-              class="mt-2 grid gap-2 text-xs text-slate-500 dark:text-text-secondary/60 md:grid-cols-3"
+              class="mt-2 grid gap-2 text-xs text-slate-500 md:grid-cols-3"
               >
               <div>Inicio: {{ booking.start_at | date: 'dd/MM/yyyy' }}</div>
               <div>Fin: {{ booking.end_at | date: 'dd/MM/yyyy' }}</div>
               <div>Total: {{ booking.total_amount | money: booking.currency }}</div>
             </div>
             @if (booking.status === 'cancelled' || booking.status === 'cancelled_owner' || booking.status === 'expired') {
-              <div class="mt-3 grid gap-2 text-xs text-slate-600 dark:text-text-secondary/70 md:grid-cols-2">
+              <div class="mt-3 grid gap-2 text-xs text-slate-600 md:grid-cols-2">
                 <div>
                   Cancelado por:
                   <span class="font-semibold">{{ formatCancelledByRole(booking.cancelled_by_role) }}</span>

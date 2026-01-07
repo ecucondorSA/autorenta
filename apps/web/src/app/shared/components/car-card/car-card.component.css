@@ -60,6 +60,19 @@
     /* warning-light glow */ 0 14px 36px rgba(167, 216, 244, 0.25); /* cta-default shadow */
 }
 
+/* Tech Brutalism & Neon Shadow Utilities */
+.shadow-neon-glow-sm {
+  box-shadow: 0 0 10px rgba(0, 217, 95, 0.3);
+}
+
+.shadow-hard-sm {
+  box-shadow: 2px 2px 0px 0px #000000;
+}
+
+.dark .shadow-hard-sm {
+  box-shadow: 2px 2px 0px 0px rgba(0, 217, 95, 0.2);
+}
+
 /* Animación sutil para el fallback sin foto */
 .card-premium:hover .absolute.inset-0:has(svg) {
   background: rgba(167, 216, 244, 0.14); /* cta-default tint sin gradiente */

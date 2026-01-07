@@ -23,7 +23,7 @@
         ? 'header-transparent absolute top-0 left-0 right-0 z-50 pt-[env(safe-area-inset-top)]'
         : 'sticky top-0 z-sticky border-b border-border-default/70 backdrop-blur-md bg-white/[0.005] supports-[backdrop-filter]:bg-white/[0.005] shadow-sm pt-[env(safe-area-inset-top)]'
     ">
-    <a class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 px-3 py-2 rounded-lg bg-surface-secondary dark:bg-surface-secondary"
+    <a class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 px-3 py-2 rounded-lg bg-surface-secondary"
       href="#main-content">
       {{ 'common.skipToContent' | translate }}
     </a>
@@ -349,7 +349,7 @@
               <div class="my-2 mx-3 border-t border-border-subtle"></div>
               <!-- CERRAR SESIÓN -->
               <button (click)="signOut()"
-                class="menu-item group text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 w-full"
+                class="menu-item group text-red-600 hover:bg-red-50 w-full"
                 role="menuitem" type="button">
                 <div class="menu-icon bg-red-500/10 text-red-600 group-hover:bg-red-500/20">
                   <app-icon name="logout" [size]="18" />

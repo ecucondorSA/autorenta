@@ -231,14 +231,14 @@ export class VerifiedBadgeComponent implements OnInit {
 
     // Background based on level
     if (level >= 3) {
-      classes.push('bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20');
-      classes.push('border border-amber-200 dark:border-amber-700/50');
+      classes.push('bg-gradient-to-r from-amber-50 to-amber-100');
+      classes.push('border border-amber-200');
     } else if (level >= 2) {
-      classes.push('bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20');
-      classes.push('border border-blue-200 dark:border-blue-700/50');
+      classes.push('bg-gradient-to-r from-blue-50 to-blue-100');
+      classes.push('border border-blue-200');
     } else {
-      classes.push('bg-gray-50 dark:bg-gray-800/50');
-      classes.push('border border-gray-200 dark:border-gray-700');
+      classes.push('bg-gray-50');
+      classes.push('border border-gray-200');
     }
 
     // Size-based padding
@@ -290,11 +290,11 @@ export class VerifiedBadgeComponent implements OnInit {
 
     // Color based on level
     if (level >= 3) {
-      classes.push('text-amber-700 dark:text-amber-300');
+      classes.push('text-amber-700');
     } else if (level >= 2) {
-      classes.push('text-blue-700 dark:text-blue-300');
+      classes.push('text-blue-700');
     } else {
-      classes.push('text-gray-600 dark:text-gray-400');
+      classes.push('text-gray-600');
     }
 
     // Size-based text

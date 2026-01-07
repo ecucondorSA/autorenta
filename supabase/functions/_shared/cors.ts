@@ -8,6 +8,7 @@
  * - https://autorenta.com (producción)
  * - https://autorenta-web.pages.dev (Cloudflare Pages)
  * - http://localhost:4200 (desarrollo local)
+ * - http://127.0.0.1:4200 (desarrollo local loopback)
  */
 
 const ALLOWED_ORIGINS = [
@@ -18,6 +19,7 @@ const ALLOWED_ORIGINS = [
   'https://autorenta-web.pages.dev',
   'https://autorentar.pages.dev',
   'http://localhost:4200',
+  'http://127.0.0.1:4200',
   'http://localhost:8787', // Worker local
 ];
 

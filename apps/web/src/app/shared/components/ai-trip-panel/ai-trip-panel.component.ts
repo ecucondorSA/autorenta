@@ -231,11 +231,11 @@ import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core
 
               <!-- Tips -->
               @if (itinerary()!.tips.length > 0) {
-                <div class="rounded-lg bg-amber-50 p-3 dark:bg-amber-900/20">
-                  <h4 class="mb-2 text-xs font-semibold text-amber-700 dark:text-amber-400">
+                <div class="rounded-lg bg-amber-50 p-3">
+                  <h4 class="mb-2 text-xs font-semibold text-amber-700">
                     Tips para el viaje
                   </h4>
-                  <ul class="space-y-1 text-xs text-amber-800 dark:text-amber-300">
+                  <ul class="space-y-1 text-xs text-amber-800">
                     @for (tip of itinerary()!.tips; track tip) {
                       <li>{{ tip }}</li>
                     }
@@ -245,11 +245,11 @@ import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core
 
               <!-- Warnings -->
               @if (itinerary()!.warnings?.length) {
-                <div class="rounded-lg bg-red-50 p-3 dark:bg-red-900/20">
-                  <h4 class="mb-2 text-xs font-semibold text-red-700 dark:text-red-400">
+                <div class="rounded-lg bg-red-50 p-3">
+                  <h4 class="mb-2 text-xs font-semibold text-red-700">
                     Advertencias
                   </h4>
-                  <ul class="space-y-1 text-xs text-red-800 dark:text-red-300">
+                  <ul class="space-y-1 text-xs text-red-800">
                     @for (warning of itinerary()!.warnings; track warning) {
                       <li>{{ warning }}</li>
                     }

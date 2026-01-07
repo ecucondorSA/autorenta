@@ -1,17 +1,17 @@
 <section
-  class="delete-account-page terms-page min-h-screen bg-surface-base dark:bg-surface-base text-text-primary dark:text-text-primary"
+  class="delete-account-page terms-page min-h-screen bg-surface-base text-text-primary"
 >
   <div class="max-w-2xl mx-auto px-6 py-16 space-y-8">
     <header class="space-y-4">
       <p
-        class="text-sm uppercase tracking-wide text-red-600 dark:text-red-400 font-semibold"
+        class="text-sm uppercase tracking-wide text-red-600 font-semibold"
       >
         Cuenta
       </p>
       <h1 class="text-3xl font-bold tracking-tight font-satoshi">
         Eliminar Cuenta
       </h1>
-      <p class="text-lg text-text-secondary dark:text-text-secondary/80 leading-relaxed">
+      <p class="text-lg text-text-secondary leading-relaxed">
         Si deseas eliminar tu cuenta de Autorentar, puedes hacerlo desde esta pagina.
         Ten en cuenta que esta accion es irreversible.
       </p>
@@ -22,15 +22,15 @@
       <div class="space-y-6">
         <!-- Step: Confirm -->
         @if (step() === 'confirm') {
-          <article class="card border-red-200 dark:border-red-800">
+          <article class="card border-red-200">
             <div class="flex items-start gap-4">
-              <div class="flex-shrink-0 w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
-                <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div class="flex-shrink-0 w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
               <div class="flex-1">
-                <h2 class="text-xl font-semibold text-red-700 dark:text-red-400">Advertencia</h2>
+                <h2 class="text-xl font-semibold text-red-700">Advertencia</h2>
                 <p class="mt-2 text-text-secondary">
                   Estas a punto de eliminar permanentemente tu cuenta asociada a
                   <strong class="text-text-primary">{{ userEmail() }}</strong>.
@@ -60,7 +60,7 @@
             </ul>
           </article>
 
-          <div class="card bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
+          <div class="card bg-yellow-50 border-yellow-200 ">
             <label class="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
@@ -68,7 +68,7 @@
                 (change)="confirmChecked.set(!confirmChecked())"
                 class="mt-1 w-5 h-5 rounded border-gray-300 text-red-600 focus:ring-red-500"
               />
-              <span class="text-sm text-yellow-800 dark:text-yellow-200">
+              <span class="text-sm text-yellow-800">
                 Entiendo que esta accion es <strong>permanente e irreversible</strong>.
                 Confirmo que deseo eliminar mi cuenta y todos mis datos de Autorentar.
               </span>
@@ -95,7 +95,7 @@
             </button>
             <a
               href="/profile"
-              class="flex-1 px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-center font-semibold rounded-lg transition-colors"
+              class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-center font-semibold rounded-lg transition-colors"
             >
               Cancelar
             </a>
@@ -116,13 +116,13 @@
 
         <!-- Step: Success -->
         @if (step() === 'success') {
-          <article class="card text-center py-12 border-green-200 dark:border-green-800">
-            <div class="w-16 h-16 mx-auto bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-              <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <article class="card text-center py-12 border-green-200">
+            <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
+              <svg class="w-8 h-8 text-green-600 " fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 class="mt-6 text-xl font-semibold text-green-700 dark:text-green-400">
+            <h2 class="mt-6 text-xl font-semibold text-green-700">
               Cuenta eliminada correctamente
             </h2>
             <p class="mt-2 text-text-secondary">
@@ -136,13 +136,13 @@
 
         <!-- Step: Error -->
         @if (step() === 'error') {
-          <article class="card text-center py-12 border-red-200 dark:border-red-800">
-            <div class="w-16 h-16 mx-auto bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
-              <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <article class="card text-center py-12 border-red-200">
+            <div class="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center">
+              <svg class="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
-            <h2 class="mt-6 text-xl font-semibold text-red-700 dark:text-red-400">
+            <h2 class="mt-6 text-xl font-semibold text-red-700">
               Error al eliminar la cuenta
             </h2>
             <p class="mt-2 text-text-secondary">
@@ -150,7 +150,7 @@
             </p>
             <button
               (click)="step.set('confirm')"
-              class="mt-6 px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-semibold rounded-lg transition-colors"
+              class="mt-6 px-6 py-2 bg-gray-200 hover:bg-gray-300 font-semibold rounded-lg transition-colors"
             >
               Volver a intentar
             </button>
@@ -179,10 +179,10 @@
 
             <div class="relative my-6">
               <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                <div class="w-full border-t border-gray-300"></div>
               </div>
               <div class="relative flex justify-center text-sm">
-                <span class="px-2 bg-white dark:bg-gray-800 text-text-secondary">o</span>
+                <span class="px-2 bg-white text-text-secondary">o</span>
               </div>
             </div>
 
@@ -202,7 +202,7 @@
                   [value]="requestEmail()"
                   (input)="requestEmail.set($any($event.target).value)"
                   placeholder="tu@email.com"
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-cta-default focus:border-transparent"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-cta-default focus:border-transparent"
                 />
               </div>
 
@@ -216,11 +216,11 @@
                   (input)="requestReason.set($any($event.target).value)"
                   placeholder="Cuentanos por que deseas eliminar tu cuenta..."
                   rows="3"
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none"
                 ></textarea>
               </div>
 
-              <div class="card bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
+              <div class="card bg-yellow-50 border-yellow-200">
                 <label class="flex items-start gap-3 cursor-pointer">
                   <input
                     type="checkbox"
@@ -228,15 +228,15 @@
                     (change)="confirmChecked.set(!confirmChecked())"
                     class="mt-1 w-5 h-5 rounded border-gray-300 text-red-600 focus:ring-red-500"
                   />
-                  <span class="text-sm text-yellow-800 dark:text-yellow-200">
+                  <span class="text-sm text-yellow-800">
                     Confirmo que soy el titular de esta cuenta y deseo eliminarla permanentemente.
                   </span>
                 </label>
               </div>
 
               @if (errorMessage()) {
-                <div class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                  <p class="text-sm text-red-700 dark:text-red-400">{{ errorMessage() }}</p>
+                <div class="p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p class="text-sm text-red-700">{{ errorMessage() }}</p>
                 </div>
               }
 
@@ -262,13 +262,13 @@
         }
 
         @if (requestSubmitted()) {
-          <article class="card text-center py-12 border-green-200 dark:border-green-800">
-            <div class="w-16 h-16 mx-auto bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-              <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <article class="card text-center py-12 border-green-200">
+            <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
+              <svg class="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h2 class="mt-6 text-xl font-semibold text-green-700 dark:text-green-400">
+            <h2 class="mt-6 text-xl font-semibold text-green-700">
               Solicitud enviada
             </h2>
             <p class="mt-2 text-text-secondary">
@@ -280,7 +280,7 @@
             </p>
             <a
               href="/"
-              class="inline-block mt-6 px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 font-semibold rounded-lg transition-colors"
+              class="inline-block mt-6 px-6 py-2 bg-gray-200 hover:bg-gray-300 font-semibold rounded-lg transition-colors"
             >
               Volver al inicio
             </a>

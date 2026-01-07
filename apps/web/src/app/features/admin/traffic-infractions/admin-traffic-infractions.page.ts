@@ -15,7 +15,7 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
     <div class="p-6 max-w-7xl mx-auto">
       <!-- Header -->
       <div class="mb-6">
-        <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse">
+        <h1 class="text-2xl font-bold text-text-primary">
           Multas de Tránsito
         </h1>
         <p class="text-text-secondary mt-1">
@@ -39,7 +39,7 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
         </div>
         <div class="card-premium p-4">
           <p class="text-sm text-text-muted">Cobradas</p>
-          <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">{{ chargedCount() }}</p>
+          <p class="text-2xl font-bold text-text-primary">{{ chargedCount() }}</p>
         </div>
         <div class="card-premium p-4">
           <p class="text-sm text-text-muted">Monto Total Pendiente</p>
@@ -86,7 +86,7 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
       @else if (filteredInfractions().length > 0) {
         <div class="card-premium overflow-hidden">
           <table class="w-full">
-            <thead class="bg-surface-secondary dark:bg-surface-raised">
+            <thead class="bg-surface-secondary">
               <tr>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Fecha</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Renter</th>
@@ -97,12 +97,12 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
                 <th class="px-4 py-3 text-right text-xs font-semibold text-text-muted uppercase">Acciones</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-border-default dark:divide-slate-deep">
+            <tbody class="divide-y divide-border-default">
               @for (infraction of filteredInfractions(); track infraction.id) {
-                <tr class="hover:bg-surface-secondary/50 dark:hover:bg-surface-raised/50">
+                <tr class="hover:bg-surface-secondary/50">
                   <td class="px-4 py-4">
                     <div>
-                      <p class="text-sm text-text-primary dark:text-text-inverse">
+                      <p class="text-sm text-text-primary">
                         {{ infraction.infraction_date | date:'dd/MM/yyyy' }}
                       </p>
                       <p class="text-xs text-text-muted">
@@ -110,14 +110,14 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
                       </p>
                     </div>
                   </td>
-                  <td class="px-4 py-4 text-sm text-text-primary dark:text-text-inverse">
+                  <td class="px-4 py-4 text-sm text-text-primary">
                     {{ infraction.renter_name || 'N/A' }}
                   </td>
-                  <td class="px-4 py-4 text-sm text-text-primary dark:text-text-inverse">
+                  <td class="px-4 py-4 text-sm text-text-primary">
                     {{ infraction.owner_name || 'N/A' }}
                   </td>
                   <td class="px-4 py-4">
-                    <span class="font-semibold text-text-primary dark:text-text-inverse">
+                    <span class="font-semibold text-text-primary">
                       {{ (infraction.amount_cents / 100) | currency:infraction.currency:'symbol':'1.2-2' }}
                     </span>
                   </td>
@@ -178,7 +178,7 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
-          <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-2">
+          <h3 class="text-lg font-semibold text-text-primary mb-2">
             No hay multas {{ filterStatus === 'all' ? '' : 'con el estado seleccionado' }}
           </h3>
         </div>

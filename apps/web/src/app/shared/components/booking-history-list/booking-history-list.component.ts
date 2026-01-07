@@ -29,10 +29,10 @@ import type { Booking } from '../../../core/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink],
   template: `
-    <div class="bg-white dark:bg-surface-secondary rounded-xl border border-border-default dark:border-border-muted shadow-sm">
+    <div class="bg-white rounded-xl border border-border-default shadow-sm">
       <!-- Header -->
-      <div class="px-4 py-3 border-b border-border-default dark:border-border-muted flex items-center justify-between">
-        <h3 class="font-bold text-text-primary dark:text-white flex items-center gap-2">
+      <div class="px-4 py-3 border-b border-border-default flex items-center justify-between">
+        <h3 class="font-bold text-text-primary flex items-center gap-2">
           <svg class="w-5 h-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
@@ -50,10 +50,10 @@ import type { Booking } from '../../../core/models';
         <div class="p-4 space-y-3">
           @for (i of [1, 2, 3]; track i) {
             <div class="animate-pulse flex items-center gap-3">
-              <div class="w-16 h-12 bg-surface-hover dark:bg-surface-hover/30 rounded-lg"></div>
+              <div class="w-16 h-12 bg-surface-hover rounded-lg"></div>
               <div class="flex-1">
-                <div class="h-4 bg-surface-hover dark:bg-surface-hover/30 rounded w-3/4 mb-2"></div>
-                <div class="h-3 bg-surface-hover dark:bg-surface-hover/30 rounded w-1/2"></div>
+                <div class="h-4 bg-surface-hover rounded w-3/4 mb-2"></div>
+                <div class="h-3 bg-surface-hover rounded w-1/2"></div>
               </div>
             </div>
           }
@@ -63,12 +63,12 @@ import type { Booking } from '../../../core/models';
       <!-- Empty State -->
       @if (!loading() && bookings().length === 0) {
         <div class="p-8 text-center">
-          <div class="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-3">
+          <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
             <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
-          <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+          <p class="text-sm text-text-secondary">
             No tienes viajes registrados
           </p>
           <a routerLink="/marketplace" class="text-xs text-cta-default hover:underline mt-2 inline-block">
@@ -79,11 +79,11 @@ import type { Booking } from '../../../core/models';
 
       <!-- Booking List -->
       @if (!loading() && bookings().length > 0) {
-        <div class="divide-y divide-border-default dark:divide-border-muted">
+        <div class="divide-y divide-border-default">
           @for (booking of bookings(); track booking.id) {
-            <div class="p-4 flex items-center gap-3 hover:bg-surface-hover/50 dark:hover:bg-surface-hover/20 transition-colors">
+            <div class="p-4 flex items-center gap-3 hover:bg-surface-hover/50 transition-colors">
               <!-- Car Image -->
-              <div class="w-16 h-12 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden flex-shrink-0">
+              <div class="w-16 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                 @if (getCarImage(booking)) {
                   <img
                     [src]="getCarImage(booking)"
@@ -102,10 +102,10 @@ import type { Booking } from '../../../core/models';
 
               <!-- Booking Info -->
               <div class="flex-1 min-w-0">
-                <p class="font-medium text-sm text-text-primary dark:text-white truncate">
+                <p class="font-medium text-sm text-text-primary truncate">
                   {{ getCarTitle(booking) }}
                 </p>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                <p class="text-xs text-text-secondary">
                   {{ formatDateRange(booking.start_at, booking.end_at) }}
                 </p>
               </div>

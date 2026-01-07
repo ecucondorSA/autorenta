@@ -29,7 +29,7 @@ import { EmailVerificationService } from '@core/services/auth/email-verification
           </div>
           <div>
             <h4 class="font-semibold text-text-primary">Verificación de Email</h4>
-            <p class="text-sm text-text-secondary dark:text-text-secondary">
+            <p class="text-sm text-text-secondary">
               {{ status().value || 'No configurado' }}
             </p>
           </div>
@@ -80,7 +80,7 @@ import { EmailVerificationService } from '@core/services/auth/email-verification
             [class]="
               canResend()
                 ? 'bg-cta-default text-cta-text hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2'
-                : 'bg-surface-hover text-text-secondary dark:text-text-secondary cursor-not-allowed'
+                : 'bg-surface-hover text-text-secondary cursor-not-allowed'
             "
                 >
                 @if (!loading()) {
@@ -123,7 +123,7 @@ import { EmailVerificationService } from '@core/services/auth/email-verification
               </div>
             }
             <!-- Help Text -->
-            <div class="text-xs text-text-secondary dark:text-text-secondary">
+            <div class="text-xs text-text-secondary">
               <p>• Revisa tu carpeta de spam si no encuentras el email</p>
               <p>• El link de verificación expira en 24 horas</p>
               <p>• Puedes reenviar el email cada 60 segundos</p>

@@ -42,15 +42,15 @@
 | `wallet_amount_cents` | `BIGINT` | `wallet_amount_cents` | `number \| null` | Monto pagado con wallet |
 | `wallet_lock_transaction_id` | `UUID` | `wallet_lock_transaction_id` | `string \| null` | FK a `wallet_transactions.id` |
 | `wallet_status` | `TEXT` | `wallet_status` | `'none' \| 'locked' \| 'charged' \| 'refunded'` | Estado de wallet |
-| `rental_amount_cents` | `BIGINT` | `rental_amount_cents` | `number \| null` | Monto del alquiler (sistema dual) |
-| `deposit_amount_cents` | `BIGINT` | `deposit_amount_cents` | `number \| null` | Monto de garantía (sistema dual) |
+| `rental_amount_cents` | `BIGINT` | `rental_amount_cents` | `number \| null` | Monto del alquiler |
+| `deposit_amount_cents` | `BIGINT` | `deposit_amount_cents` | `number \| null` | Monto de garantía |
 | `deposit_status` | `TEXT` | `deposit_status` | `BookingDepositStatus` | Estado de garantía |
 | `completion_status` | `TEXT` | `completion_status` | `BookingCompletionStatus` | Estado de finalización bilateral |
 | `owner_confirmed_delivery` | `BOOLEAN` | `owner_confirmed_delivery` | `boolean \| null` | Owner confirmó entrega |
 | `renter_confirmed_payment` | `BOOLEAN` | `renter_confirmed_payment` | `boolean \| null` | Renter confirmó pago |
-| `payment_split_completed` | `BOOLEAN` | - | `boolean` | Split de pago completado (85/15) |
-| `owner_payment_amount` | `DECIMAL(10,2)` | - | `number` | Monto recibido por owner (85%) |
-| `platform_fee` | `DECIMAL(10,2)` | - | `number` | Comisión plataforma (15%) |
+| `payment_split_completed` | `BOOLEAN` | - | `boolean` | Split de pago completado (comodato) |
+| `owner_payment_amount` | `DECIMAL(10,2)` | - | `number` | Monto recibido por owner (neto) |
+| `platform_fee` | `DECIMAL(10,2)` | - | `number` | Comisión plataforma (variable) |
 | `provider_split_payment_id` | `TEXT` | - | `string` | ID de split payment en MP |
 | `pickup_location_lat` | `NUMERIC(10,8)` | `pickup_location_lat` | `number \| null` | Latitud pickup |
 | `pickup_location_lng` | `NUMERIC(11,8)` | `pickup_location_lng` | `number \| null` | Longitud pickup |
@@ -306,8 +306,8 @@ type WalletReferenceType =
 | `payment_id` | `TEXT` | ID del pago en MercadoPago |
 | `mercadopago_payment_id` | `TEXT` | ID de MP (legacy) |
 | `total_amount` | `DECIMAL(10,2)` | Monto total |
-| `owner_amount` | `DECIMAL(10,2)` | Monto para owner (85%) |
-| `platform_fee` | `DECIMAL(10,2)` | Comisión plataforma (15%) |
+| `owner_amount` | `DECIMAL(10,2)` | Monto para owner (neto) |
+| `platform_fee` | `DECIMAL(10,2)` | Comisión plataforma (variable) |
 | `split_status` | `TEXT` | Estado del split |
 | `created_at` | `TIMESTAMPTZ` | Fecha creación |
 
@@ -320,19 +320,21 @@ type WalletReferenceType =
 | `platform_fee` | `DECIMAL(10,2)` | Comisión plataforma |
 | `provider_split_payment_id` | `TEXT` | ID del split payment en proveedor |
 
-### Lógica de Split
+### Lógica de Split (Modelo Comodato)
 
-- **Owner recibe**: 85% del `total_amount`
-- **Plataforma recibe**: 15% del `total_amount`
-- **Total**: `owner_amount + platform_fee = total_amount`
+AutoRenta opera exclusivamente bajo modelo **comodato**:
+- **Plataforma**: 15% del total
+- **Reward Pool**: 75% del total (distribuido mensualmente a owners por puntos)
+- **FGO**: 10% del total (Fondo de Garantía Operacional)
+- **Owner directo**: $0 (recibe rewards mensuales, no pago por booking)
 
 ### Validaciones para Tests E2E
 
-- ✅ `owner_amount` = `total_amount * 0.85` (redondeado)
 - ✅ `platform_fee` = `total_amount * 0.15` (redondeado)
-- ✅ `owner_amount + platform_fee` = `total_amount` (con tolerancia de redondeo)
+- ✅ `reward_pool_contribution_cents` = `total_amount * 0.75`
+- ✅ `fgo_contribution_cents` = `total_amount * 0.10`
+- ✅ `owner_payment_amount` = 0 (comodato)
 - ✅ `payment_split_completed` = `true` después del split
-- ✅ Transacciones en `wallet_transactions` creadas para owner y platform
 
 ---
 
@@ -421,11 +423,10 @@ if (booking && booking.status === 'in_progress') {
 - ✅ `owner_confirmed_delivery` = `true`
 - ✅ `renter_confirmed_payment` = `true`
 - ✅ `payment_split_completed` = `true`
-- ✅ `owner_payment_amount` = `total_amount * 0.85`
+- ✅ `owner_payment_amount` = 0 (comodato - owner recibe rewards mensuales)
 - ✅ `platform_fee` = `total_amount * 0.15`
-- ✅ Transacciones en `wallet_transactions`:
-  - Tipo `'rental_payment_transfer'` para owner
-  - Tipo `'platform_fee'` para platform
+- ✅ `reward_pool_contribution_cents` = `total_amount * 0.75`
+- ✅ `fgo_contribution_cents` = `total_amount * 0.10`
 
 ---
 

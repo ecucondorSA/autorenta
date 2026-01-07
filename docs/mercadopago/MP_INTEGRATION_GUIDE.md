@@ -465,7 +465,7 @@ onError: (errors) => {
       - items: [{ id: booking_id, title, description, category_id: 'travel', picture_url }]
       - payer: { email, first_name, last_name, phone, identification }
       - marketplace: MP_MARKETPLACE_ID (si split)
-      - marketplace_fee: platformFee (15% si split)
+      - marketplace_fee: platformFee (Variable según categoría)
       - collector_id: owner.mercadopago_collector_id (si split)
    ↓
 5. Usuario redirigido a MercadoPago
@@ -482,11 +482,12 @@ onError: (errors) => {
 9. Booking confirmado, auto disponible
 ```
 
-**Split Payments:**
-- **Plataforma recibe:** 15% (marketplace_fee)
-- **Owner recibe:** 85% (resto del pago)
-- **Token usado:** OAuth token del owner (si está disponible)
-- **Fallback:** Token del marketplace si owner no tiene OAuth
+**Distribución de Pagos (Modelo Comodato):**
+- **Plataforma:** Fee variable (según categoría/riesgo)
+- **Reward Pool:** Parte mayoritaria (distribuido mensualmente a owners)
+- **FGO:** Fondo de Garantía Operacional
+- **Owner directo:** $0 (recibe rewards mensuales)
+- **Nota:** No hay split payment a owners en modelo comodato
 
 ---
 

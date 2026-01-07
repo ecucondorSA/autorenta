@@ -17,18 +17,18 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
         (click)="onBackdropClick($event)"
         >
         <div
-          class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-2xl max-w-2xl w-full p-6 transform transition-all max-h-[90vh] overflow-y-auto"
+          class="bg-surface-raised rounded-2xl shadow-2xl max-w-2xl w-full p-6 transform transition-all max-h-[90vh] overflow-y-auto"
           (click)="$event.stopPropagation()"
           >
           <!-- Header -->
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-text-primary dark:text-text-secondary">
+            <h2 class="text-xl font-bold text-text-primary">
               Solicitar Reembolso
             </h2>
             <button
               type="button"
               (click)="close()"
-              class="text-text-secondary hover:text-text-primary dark:hover:text-pearl-light transition-colors"
+              class="text-text-secondary hover:text-text-primary transition-colors"
               aria-label="Cerrar"
               >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,20 +43,20 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
           </div>
           <!-- Content -->
           <div class="space-y-4">
-            <p class="text-sm text-text-secondary dark:text-text-secondary">
+            <p class="text-sm text-text-secondary">
               Puedes solicitar un reembolso completo o parcial para esta reserva. Nuestro equipo
               revisará tu solicitud.
             </p>
             <!-- Refund Type Selector -->
             <div>
               <label
-                class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                class="block text-sm font-medium text-text-primary mb-2"
                 >
                 Tipo de Reembolso *
               </label>
               <div class="space-y-2">
                 <label
-                  class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-surface-base dark:hover:bg-surface-base transition-colors"
+                  class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-surface-base transition-colors"
                   [class.border-cta-default]="refundType() === 'full'"
                   [class.border-border-muted]="refundType() !== 'full'"
                   >
@@ -67,16 +67,16 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
                     class="mr-3"
                     />
                   <div class="flex-1">
-                    <div class="font-medium text-text-primary dark:text-text-inverse">
+                    <div class="font-medium text-text-primary">
                       Reembolso Completo
                     </div>
-                    <div class="text-xs text-text-secondary dark:text-text-muted">
+                    <div class="text-xs text-text-secondary">
                       Se reembolsará el monto total de la reserva
                     </div>
                   </div>
                 </label>
                 <label
-                  class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-surface-base dark:hover:bg-surface-base transition-colors"
+                  class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-surface-base transition-colors"
                   [class.border-cta-default]="refundType() === 'partial'"
                   [class.border-border-muted]="refundType() !== 'partial'"
                   >
@@ -87,10 +87,10 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
                     class="mr-3"
                     />
                   <div class="flex-1">
-                    <div class="font-medium text-text-primary dark:text-text-inverse">
+                    <div class="font-medium text-text-primary">
                       Reembolso Parcial
                     </div>
-                    <div class="text-xs text-text-secondary dark:text-text-muted">
+                    <div class="text-xs text-text-secondary">
                       Especifica el monto a reembolsar
                     </div>
                   </div>
@@ -101,7 +101,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
             @if (refundType() === 'partial') {
               <div>
                 <label
-                  class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                  class="block text-sm font-medium text-text-primary mb-2"
                   >
                   Monto a Reembolsar (USD) *
                 </label>
@@ -111,14 +111,14 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
                   min="0.01"
                   step="0.01"
                   placeholder="0.00"
-                  class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
+                  class="w-full px-4 py-3 rounded-xl border-2 border-border-default bg-surface-raised focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
                   />
               </div>
             }
             <!-- Reason -->
             <div>
               <label
-                class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                class="block text-sm font-medium text-text-primary mb-2"
                 >
                 Motivo del Reembolso *
               </label>
@@ -126,14 +126,14 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
                 [(ngModel)]="reason"
                 rows="4"
                 placeholder="Explica el motivo del reembolso..."
-                class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
+                class="w-full px-4 py-3 rounded-xl border-2 border-border-default bg-surface-raised focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
                 required
               ></textarea>
             </div>
             <!-- Error Message -->
             @if (error()) {
               <div
-                class="p-3 bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-xl text-sm text-error-strong"
+                class="p-3 bg-error-bg border border-error-border rounded-xl text-sm text-error-strong"
                 >
                 {{ error() }}
               </div>
@@ -144,7 +144,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
             <button
               type="button"
               (click)="close()"
-              class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default text-text-secondary hover:bg-surface-raised dark:hover:bg-slate-deep transition-all font-medium"
+              class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default text-text-secondary hover:bg-surface-raised transition-all font-medium"
               >
               Cancelar
             </button>

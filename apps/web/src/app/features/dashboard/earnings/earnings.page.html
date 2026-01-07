@@ -1,14 +1,14 @@
 <div
-  class="earnings-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
+  class="earnings-page bg-surface-base min-h-screen transition-colors duration-300"
 >
   <!-- Header -->
   <div
-    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
+    class="bg-surface-raised border-b border-border-default transition-colors duration-300"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary flex items-center gap-2 tracking-tight font-satoshi">
+          <h1 class="text-3xl font-bold text-text-primary flex items-center gap-2 tracking-tight font-satoshi">
             <svg class="w-8 h-8 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.75"/>
               <circle cx="12" cy="12" r="3.5" stroke-width="1.5"/>
@@ -16,7 +16,7 @@
             </svg>
             Ganancias
           </h1>
-          <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
+          <p class="mt-2 text-text-secondary">
             Visualiza tus ingresos y ganancias
           </p>
         </div>
@@ -73,54 +73,54 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <!-- Balance Disponible -->
         <div
-          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+          class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
         >
           <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-text-secondary dark:text-text-secondary/70">
+            <p class="text-sm font-medium text-text-secondary">
               Balance Disponible
             </p>
             <app-icon name="wallet" [size]="24" cssClass="text-success-600" />
           </div>
-          <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
+          <p class="text-3xl font-bold text-text-primary">
             {{ availableBalance() | money }}
           </p>
-          <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+          <p class="text-xs text-text-secondary mt-1">
             Listo para retirar
           </p>
         </div>
 
         <!-- Balance Pendiente -->
         <div
-          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+          class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
         >
           <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-text-secondary dark:text-text-secondary/70">
+            <p class="text-sm font-medium text-text-secondary">
               Balance Pendiente
             </p>
             <app-icon name="clock" [size]="24" cssClass="text-warning-600" />
           </div>
-          <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
+          <p class="text-3xl font-bold text-text-primary">
             {{ pendingBalance() | money }}
           </p>
-          <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+          <p class="text-xs text-text-secondary mt-1">
             De reservas en curso
           </p>
         </div>
 
         <!-- Total Ganado -->
         <div
-          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+          class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
         >
           <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-text-secondary dark:text-text-secondary/70">
+            <p class="text-sm font-medium text-text-secondary">
               Total Ganado
             </p>
             <app-icon name="trending-up" [size]="24" cssClass="text-primary-600" />
           </div>
-          <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
+          <p class="text-3xl font-bold text-text-primary">
             {{ totalEarnings() | money }}
           </p>
-          <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+          <p class="text-xs text-text-secondary mt-1">
             Histórico total
           </p>
         </div>
@@ -128,9 +128,9 @@
 
       <!-- Earnings by Month -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+        class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6 mb-8"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+        <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
           <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path d="M3 21h18" stroke-width="1.75" stroke-linecap="round"/>
             <rect x="5" y="13" width="3" height="8" rx="0.5" stroke-width="1.5"/>
@@ -141,19 +141,19 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Este Mes</p>
-            <p class="text-3xl font-extrabold text-text-primary dark:text-text-primary leading-tight">
+            <p class="text-sm text-text-secondary mb-1">Este Mes</p>
+            <p class="text-3xl font-extrabold text-text-primary leading-tight">
               {{ thisMonthEarnings() | money }}
             </p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Mes Anterior</p>
-            <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+            <p class="text-sm text-text-secondary mb-1">Mes Anterior</p>
+            <p class="text-2xl font-bold text-text-primary">
               {{ lastMonthEarnings() | money }}
             </p>
           </div>
           <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Crecimiento</p>
+            <p class="text-sm text-text-secondary mb-1">Crecimiento</p>
             <p
               class="text-3xl font-extrabold"
               [class.text-success-strong]="isGrowthPositive()"
@@ -169,9 +169,9 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <!-- Depreciation Chart -->
         <div
-          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+          class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
         >
-          <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+          <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
             <svg class="w-6 h-6 text-error-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M3 3v18h18" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M6 7l4 4 4-2 6 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -199,16 +199,16 @@
               </div>
             }
           </div>
-          <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-4">
+          <p class="text-sm text-text-secondary mt-4">
             Depreciación acumulada estimada durante el año
           </p>
         </div>
 
         <!-- Income Chart -->
         <div
-          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+          class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
         >
-          <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+          <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
             <svg class="w-6 h-6 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M3 3v18h18" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M6 17l4-4 4 2 6-8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -236,7 +236,7 @@
               </div>
             }
           </div>
-          <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-4">
+          <p class="text-sm text-text-secondary mt-4">
             Ingresos acumulados estimados durante el año
           </p>
         </div>
@@ -244,9 +244,9 @@
 
       <!-- Breakeven Metrics -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+        class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6 mb-8"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-6 flex items-center gap-2 font-satoshi">
+        <h2 class="text-xl font-semibold text-text-primary mb-6 flex items-center gap-2 font-satoshi">
           <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="10" stroke-width="1.75"/>
             <circle cx="12" cy="12" r="6" stroke-width="1.5"/>
@@ -258,50 +258,50 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <!-- Depreciación Anual -->
           <div
-            class="p-4 bg-error-bg/10 dark:bg-error-bg/20 rounded-lg border border-error-border/30"
+            class="p-4 bg-error-bg/10 rounded-lg border border-error-border/30"
           >
-            <p class="text-sm font-medium text-error-text dark:text-error-text mb-2">
+            <p class="text-sm font-medium text-error-text mb-2">
               Depreciación Anual
             </p>
-            <p class="text-2xl font-bold text-error-text dark:text-error-text">
+            <p class="text-2xl font-bold text-error-text">
               {{ totalAnnualDepreciation() | money }}
             </p>
-            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+            <p class="text-xs text-text-secondary mt-1">
               Pérdida de valor estimada
             </p>
           </div>
 
           <!-- Días para Breakeven -->
           <div
-            class="p-4 bg-warning-bg/10 dark:bg-warning-bg/20 rounded-lg border border-warning-border/30"
+            class="p-4 bg-warning-bg/10 rounded-lg border border-warning-border/30"
           >
-            <p class="text-sm font-medium text-warning-text dark:text-warning-text mb-2">
+            <p class="text-sm font-medium text-warning-text mb-2">
               Días para Breakeven
             </p>
-            <p class="text-2xl font-bold text-warning-text dark:text-warning-text">
+            <p class="text-2xl font-bold text-warning-text">
               {{ breakevenDays() }}
             </p>
-            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+            <p class="text-xs text-text-secondary mt-1">
               Días de uso necesarios
             </p>
           </div>
 
           <!-- Fecha de Ganancia -->
           <div
-            class="p-4 bg-success-bg/10 dark:bg-success-bg/20 rounded-lg border border-success-border/30"
+            class="p-4 bg-success-bg/10 rounded-lg border border-success-border/30"
           >
-            <p class="text-sm font-medium text-success-text dark:text-success-text mb-2">
+            <p class="text-sm font-medium text-success-text mb-2">
               Inicio de Ganancia Real
             </p>
             @if (profitStartDate()) {
-              <p class="text-2xl font-bold text-success-text dark:text-success-text">
+              <p class="text-2xl font-bold text-success-text">
                 {{ profitStartDate()! | date: 'dd/MM/yyyy' }}
               </p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+              <p class="text-xs text-text-secondary mt-1">
                 Después de cubrir depreciación
               </p>
             } @else {
-              <p class="text-lg text-text-secondary dark:text-text-secondary/70">
+              <p class="text-lg text-text-secondary">
                 No disponible
                 <span
                   class="ml-1 text-xs inline-flex items-center gap-1 text-text-muted"
@@ -318,16 +318,16 @@
 
         <!-- Explanation -->
         <div
-          class="mt-6 p-4 bg-surface-base dark:bg-surface-base rounded-lg border border-border-default dark:border-neutral-700"
+          class="mt-6 p-4 bg-surface-base rounded-lg border border-border-default"
         >
-          <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-2 flex items-center gap-2 font-satoshi">
+          <h3 class="text-sm font-semibold text-text-primary mb-2 flex items-center gap-2 font-satoshi">
             <svg class="w-5 h-5 text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M9 21h6M12 3a6 6 0 0 0-4 10.5V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3.5A6 6 0 0 0 12 3z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M10 17h4M10 19h4" stroke-width="1" stroke-linecap="round"/>
             </svg>
             ¿Qué significa esto?
           </h3>
-          <ul class="text-sm text-text-secondary dark:text-text-secondary/70 space-y-1">
+          <ul class="text-sm text-text-secondary space-y-1">
             <li>
               • <strong>Depreciación Anual:</strong> Es la pérdida de valor que sufre tu auto
               durante un año.
@@ -346,9 +346,9 @@
 
       <!-- Quick Actions -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+        <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
           <svg class="w-6 h-6 text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -357,7 +357,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <a
             routerLink="/wallet"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-success-strong flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <rect x="2" y="7" width="14" height="10" rx="1.5" stroke-width="1.75"/>
@@ -366,8 +366,8 @@
               <path d="M18 10h3M18 12h4M18 14h3" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary pr-0.5 font-luxury">Retirar Dinero</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="font-medium text-text-primary pr-0.5 font-luxury">Retirar Dinero</p>
+              <p class="text-xs text-text-secondary">
                 Solicitar retiro
               </p>
             </div>
@@ -375,7 +375,7 @@
 
           <a
             routerLink="/payouts"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-primary-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M3 21h18" stroke-width="1.75" stroke-linecap="round"/>
@@ -384,10 +384,10 @@
               <rect x="16" y="3" width="3" height="18" rx="0.5" stroke-width="1.5"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary pr-0.5">
+              <p class="font-medium text-text-primary pr-0.5">
                 Historial de Payouts
               </p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="text-xs text-text-secondary">
                 Ver transacciones
               </p>
             </div>
@@ -395,7 +395,7 @@
 
           <a
             routerLink="/dashboard"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-success-strong flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M3 3v18h18" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
@@ -403,8 +403,8 @@
               <path d="M17 10l3-3m0 0l-2.5 1m2.5-1l-1 2.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary pr-0.5">Dashboard</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="font-medium text-text-primary pr-0.5">Dashboard</p>
+              <p class="text-xs text-text-secondary">
                 Ver resumen completo
               </p>
             </div>
@@ -412,7 +412,7 @@
 
           <a
             routerLink="/wallet/history"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke-width="1.75"/>
@@ -420,8 +420,8 @@
               <path d="M8 10h8M8 14h8M8 18h5" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary pr-0.5">Historial Wallet</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">Ver movimientos</p>
+              <p class="font-medium text-text-primary pr-0.5">Historial Wallet</p>
+              <p class="text-xs text-text-secondary">Ver movimientos</p>
             </div>
           </a>
         </div>

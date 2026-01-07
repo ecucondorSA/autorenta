@@ -6,17 +6,16 @@
 
 .section-card {
   @apply rounded-2xl p-8 mb-6
-    bg-surface-raised dark:bg-surface-raised
-    border border-border-default/30 dark:border-white/5
+    bg-surface-raised
+    border border-border-default/30
     shadow-card hover:shadow-elevated
     transition-all duration-300;
 
   // Editing state - highlight border with glow effect
   &--editing {
-    @apply border-2 border-cta-default dark:border-cyan-500
+    @apply border-2 border-cta-default
       shadow-[0_0_0_3px_rgba(0,198,255,0.1)]
-      dark:shadow-[0_0_0_3px_rgba(6,182,212,0.15)]
-      ring-2 ring-cta-default/20 dark:ring-cyan-500/20;
+      ring-2 ring-cta-default/20;
   }
 
   // Readonly state - subtle appearance
@@ -33,7 +32,7 @@
 /* Header */
 .section-header {
   @apply flex items-start justify-between mb-6 pb-5
-    border-b border-border-default/30 dark:border-white/10;
+    border-b border-border-default/30;
 
   &__content {
     @apply flex-1;
@@ -48,18 +47,18 @@
   @apply flex items-center gap-3 mb-2;
 
   ion-icon {
-    @apply text-2xl text-cta-default/80 dark:text-cyan-500/80
+    @apply text-2xl text-cta-default/80
       flex-shrink-0;
   }
 
   h3 {
-    @apply text-xl font-bold text-text-primary dark:text-text-primary
+    @apply text-xl font-bold text-text-primary
       tracking-tight m-0;
   }
 }
 
 .section-description {
-  @apply text-sm leading-relaxed text-text-muted dark:text-gray-500 m-0 ml-11;
+  @apply text-sm leading-relaxed text-text-muted m-0 ml-11;
 }
 
 /* Content */
@@ -74,15 +73,15 @@
 /* Actions */
 .section-actions {
   @apply flex justify-end gap-4 mt-8 pt-6
-    border-t border-border-default/30 dark:border-white/10;
+    border-t border-border-default/30;
 }
 
 /* Error Alert */
 .section-error {
   @apply flex items-start gap-3 mt-5 px-5 py-4 rounded-xl
-    bg-red-50 dark:bg-red-500/10
-    border-l-4 border-red-500 dark:border-red-400
-    text-red-700 dark:text-red-400
+    bg-red-50
+    border-l-4 border-red-500
+    text-red-700
     shadow-sm;
 
   &__icon {
@@ -97,11 +96,11 @@
 /* Loading Overlay */
 .section-loading-overlay {
   @apply absolute inset-0 flex items-center justify-center
-    bg-surface-base bg-opacity-50 dark:bg-slate-deep dark:bg-opacity-50
+    bg-surface-base bg-opacity-50
     backdrop-blur-sm rounded-lg z-10;
 
   ion-spinner {
-    @apply text-cta-default dark:text-cyan-500;
+    @apply text-cta-default;
     --color: currentColor;
     width: 32px;
     height: 32px;
@@ -110,8 +109,8 @@
 
 /* Button overrides for consistency */
 .btn-text {
-  @apply text-cta-default dark:text-cyan-400
-    hover:text-cta-hover dark:hover:text-cyan-300
+  @apply text-cta-default
+    hover:text-cta-hover
     font-medium
     transition-all duration-200
     hover:underline underline-offset-2;
@@ -138,22 +137,21 @@
 
 .btn-primary {
   @apply bg-gradient-to-r from-cta-default to-cta-hover
-    dark:from-cyan-600 dark:to-cyan-500
     text-cta-text shadow-md
     hover:shadow-elevated hover:scale-[1.02] hover:-translate-y-0.5
-    focus:ring-cta-default/30 dark:focus:ring-cyan-500/30
+    focus:ring-cta-default/30
     active:scale-[0.98];
 }
 
 .btn-secondary {
-  @apply bg-surface-secondary dark:bg-slate-deep
-    text-text-primary dark:text-text-primary
-    border-2 border-border-default/40 dark:border-white/10
+  @apply bg-surface-secondary
+    text-text-primary
+    border-2 border-border-default/40
     shadow-sm
-    hover:bg-surface-elevated dark:hover:bg-gray-700
-    hover:border-border-default/60 dark:hover:border-white/20
+    hover:bg-surface-elevated
+    hover:border-border-default/60
     hover:shadow-md
-    focus:ring-border-default/30 dark:focus:ring-white/10
+    focus:ring-border-default/30
     active:scale-[0.98];
 }
 

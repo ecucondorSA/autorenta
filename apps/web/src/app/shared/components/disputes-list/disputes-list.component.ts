@@ -13,7 +13,7 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
     <div class="space-y-4">
       <!-- Header -->
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse">
+        <h3 class="text-lg font-semibold text-text-primary">
           Disputas ({{ disputes().length }})
         </h3>
         @if (showCreateButton) {
@@ -35,8 +35,8 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
     
       <!-- Empty State -->
       @if (!loading() && disputes().length === 0) {
-        <div class="bg-surface-base dark:bg-surface-base rounded-lg p-6 text-center">
-          <p class="text-text-secondary dark:text-text-secondary">
+        <div class="bg-surface-base rounded-lg p-6 text-center">
+          <p class="text-text-secondary">
             No hay disputas para esta reserva.
           </p>
         </div>
@@ -48,7 +48,7 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
           @for (dispute of disputes(); track dispute.id) {
             <div
               (click)="openDetail(dispute.id)"
-              class="bg-surface-raised dark:bg-surface-base rounded-lg border border-border-default dark:border-border-muted p-4 cursor-pointer hover:border-cta-default transition-colors group"
+              class="bg-surface-raised rounded-lg border border-border-default p-4 cursor-pointer hover:border-cta-default transition-colors group"
               >
               <div class="flex items-start justify-between mb-3">
                 <div class="flex-1">
@@ -66,16 +66,16 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
                       >
                       {{ getStatusLabel(dispute.status) }}
                     </span>
-                    <span class="text-xs text-text-secondary dark:text-text-muted">
+                    <span class="text-xs text-text-secondary">
                       {{ getKindLabel(dispute.kind) }}
                     </span>
                   </div>
-                  <p class="text-sm text-text-primary dark:text-text-secondary group-hover:text-cta-default transition-colors">
+                  <p class="text-sm text-text-primary group-hover:text-cta-default transition-colors">
                     {{ dispute.description || 'Sin descripción' }}
                   </p>
                 </div>
                 <div class="flex flex-col items-end gap-1">
-                  <span class="text-xs text-text-secondary dark:text-text-muted">
+                  <span class="text-xs text-text-secondary">
                     {{ formatDate(dispute.created_at) }}
                   </span>
                   <span class="text-xs text-cta-default opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</span>
@@ -84,13 +84,13 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
     
               <!-- Evidence Section -->
               @if (disputeEvidenceMap().has(dispute.id)) {
-                <div class="mt-3 pt-3 border-t border-border-default dark:border-border-muted">
-                  <p class="text-xs font-medium text-text-secondary dark:text-text-muted mb-2">
+                <div class="mt-3 pt-3 border-t border-border-default">
+                  <p class="text-xs font-medium text-text-secondary mb-2">
                     Evidencia ({{ disputeEvidenceMap().get(dispute.id)!.length }})
                   </p>
                   <div class="space-y-1">
                     @for (evidence of disputeEvidenceMap().get(dispute.id); track evidence.id) {
-                      <div class="text-xs text-text-secondary dark:text-text-muted truncate">
+                      <div class="text-xs text-text-secondary truncate">
                         • {{ evidence.note || 'Archivo adjunto' }}
                       </div>
                     }

@@ -18,7 +18,7 @@ Una plataforma para alquilar autos entre nosotros, de la comunidad para la comun
 
 PARA OWNERS (tienes auto que usas poco):
 - Gana $50-150 USD/mes alquilando tu auto
-- 0% comision los primeros 3 meses (despues 15%)
+- 0% comision los primeros 3 meses (despues variable según categoría)
 - Cobras directo en tu cuenta MercadoPago
 - Sistema de fotos 360 para protegerte de disputas
 
@@ -141,7 +141,7 @@ Si tenes alguna duda me avisas!
 > El owner debe tener seguro con clausula de alquiler. Si no la tiene, le ayudamos a conseguirla (+20% sobre su prima actual aprox).
 
 ### "Como cobro?"
-> Directo en tu MercadoPago. Cuando el renter paga, el 85% va automaticamente a tu cuenta. No tenes que esperar que Autorenta te transfiera.
+> Directo en tu MercadoPago. Cuando el renter paga, tu ganancia neta va automaticamente a tu cuenta. No tenes que esperar que Autorenta te transfiera.
 
 ### "Y si el renter no devuelve el auto?"
 > Verificamos identidad con DNI/licencia. Tenemos protocolo de recuperacion y seguro contra robo. En 2+ años de carsharing en el mundo, los casos de robo son <0.01%.

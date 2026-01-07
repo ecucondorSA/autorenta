@@ -32,7 +32,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
       <button
         type="button"
         (click)="toggleDropdown()"
-        class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary dark:text-text-secondary hover:bg-surface-secondary/50 dark:hover:bg-slate-deep/50 transition-base focus:outline-none focus:ring-2 focus:ring-cta-default/50"
+        class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:bg-surface-secondary/50 transition-base focus:outline-none focus:ring-2 focus:ring-cta-default/50"
         [attr.aria-expanded]="isOpen()"
         aria-label="Seleccionar idioma"
         >
@@ -48,7 +48,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
       <!-- Dropdown menu -->
       @if (isOpen()) {
         <div
-          class="absolute right-0 mt-2 w-48 bg-surface-raised dark:bg-surface-raised border border-border-default dark:border-slate-deep rounded-xl shadow-elevated dark:shadow-card overflow-hidden z-50"
+          class="absolute right-0 mt-2 w-48 bg-surface-raised border border-border-default rounded-xl shadow-elevated overflow-hidden z-50"
           role="menu"
           aria-orientation="vertical"
           >
@@ -56,7 +56,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
             <button
               type="button"
               (click)="selectLanguage(lang.code)"
-              class="w-full flex items-center gap-3 px-4 py-3 text-sm text-text-secondary dark:text-text-secondary hover:bg-surface-secondary dark:hover:bg-slate-deep transition-base"
+              class="w-full flex items-center gap-3 px-4 py-3 text-sm text-text-secondary hover:bg-surface-secondary transition-base"
               [class.bg-cta-default/10]="lang.code === languageService.currentLanguage()"
               [class.font-semibold]="lang.code === languageService.currentLanguage()"
               role="menuitem"

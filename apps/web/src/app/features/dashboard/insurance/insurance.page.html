@@ -1,21 +1,21 @@
 <div
-  class="insurance-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
+  class="insurance-page bg-surface-base min-h-screen transition-colors duration-300"
 >
   <!-- Header -->
   <div
-    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
+    class="bg-surface-raised border-b border-border-default transition-colors duration-300"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary flex items-center gap-2 tracking-tight font-satoshi">
+          <h1 class="text-3xl font-bold text-text-primary flex items-center gap-2 tracking-tight font-satoshi">
             <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M12 2l8 4v6c0 5.5-3.8 10.7-8 12-4.2-1.3-8-6.5-8-12V6l8-4z" stroke-width="1.75" stroke-linejoin="round"/>
               <path d="M9 12l2 2 4-4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             Seguros
           </h1>
-          <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
+          <p class="mt-2 text-text-secondary">
             Gestiona los seguros de tus vehículos
           </p>
         </div>
@@ -65,7 +65,7 @@
     @if (!loading() && !error()) {
       <!-- Info Card -->
       <div
-        class="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-6 mb-8"
+        class="bg-primary-50 border border-primary-200 rounded-lg p-6 mb-8"
       >
         <div class="flex items-start gap-4">
           <svg class="w-8 h-8 text-primary-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,10 +73,10 @@
             <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
           </svg>
           <div>
-            <h3 class="font-semibold text-text-primary dark:text-text-primary mb-2 font-satoshi">
+            <h3 class="font-semibold text-text-primary mb-2 font-satoshi">
               Información sobre Seguros
             </h3>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+            <p class="text-sm text-text-secondary">
               Para publicar tus vehículos en AutoRenta, es necesario que tengas un seguro de
               responsabilidad civil vigente. Asegurate de mantener tus pólizas actualizadas.
             </p>
@@ -87,7 +87,7 @@
       <!-- Cars List -->
       @if (cars().length === 0) {
         <div
-          class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-12 text-center"
+          class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-12 text-center"
         >
           <svg class="w-16 h-16 mx-auto mb-4 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/>
@@ -95,10 +95,10 @@
             <circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/>
             <path d="M7 12h10" stroke-width="1" opacity="0.5"/>
           </svg>
-          <h3 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-2 font-satoshi">
+          <h3 class="text-xl font-semibold text-text-primary mb-2 font-satoshi">
             No tenés autos registrados
           </h3>
-          <p class="text-text-secondary dark:text-text-secondary/70 mb-6">
+          <p class="text-text-secondary mb-6">
             Publicá tu primer auto para comenzar a gestionar seguros
           </p>
           <a
@@ -112,14 +112,14 @@
         <div class="space-y-4">
           @for (car of cars(); track car.id) {
             <div
-              class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+              class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
             >
               <div class="flex items-start justify-between mb-4">
                 <div>
-                  <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary font-satoshi">
+                  <h3 class="text-lg font-semibold text-text-primary font-satoshi">
                     {{ car.brand }} {{ car.model }} ({{ car.year }})
                   </h3>
-                  <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-1">
+                  <p class="text-sm text-text-secondary mt-1">
                     Estado: {{ car.status }}
                   </p>
                 </div>
@@ -147,21 +147,21 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <p
-                    class="text-sm font-medium text-text-secondary dark:text-text-secondary/70 mb-1"
+                    class="text-sm font-medium text-text-secondary mb-1"
                   >
                     Número de Póliza
                   </p>
-                  <p class="text-text-primary dark:text-text-primary">
+                  <p class="text-text-primary">
                     {{ car.insurance_policy_number || 'No registrado' }}
                   </p>
                 </div>
                 <div>
                   <p
-                    class="text-sm font-medium text-text-secondary dark:text-text-secondary/70 mb-1"
+                    class="text-sm font-medium text-text-secondary mb-1"
                   >
                     Vencimiento
                   </p>
-                  <p class="text-text-primary dark:text-text-primary">
+                  <p class="text-text-primary">
                     @if (car.insurance_expires_at) {
                       {{ car.insurance_expires_at | date: 'short' }}
                     } @else {
@@ -172,10 +172,10 @@
               </div>
 
               @if (getInsuranceStatus(car.insurance_expires_at) !== 'valid') {
-                <div class="mt-4 pt-4 border-t border-border-default dark:border-neutral-700">
+                <div class="mt-4 pt-4 border-t border-border-default">
                   <a
                     [routerLink]="['/cars', car.id, 'edit']"
-                    class="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
+                    class="text-sm text-primary-600 hover:text-primary-700 font-medium"
                   >
                     Actualizar información del seguro →
                   </a>
@@ -188,9 +188,9 @@
 
       <!-- Quick Actions -->
       <div
-        class="mt-8 bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        class="mt-8 bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+        <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
           <svg class="w-6 h-6 text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -199,15 +199,15 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <a
             routerLink="/cars/publish"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-success-strong flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="10" stroke-width="1.75"/>
               <path d="M12 8v8M8 12h8" stroke-width="2" stroke-linecap="round"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Publicar Auto</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="font-medium text-text-primary">Publicar Auto</p>
+              <p class="text-xs text-text-secondary">
                 Añade un nuevo vehículo
               </p>
             </div>
@@ -215,7 +215,7 @@
 
           <a
             routerLink="/cars/my-cars"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-primary-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/>
@@ -223,8 +223,8 @@
               <circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Mis Autos</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="font-medium text-text-primary">Mis Autos</p>
+              <p class="text-xs text-text-secondary">
                 Gestionar vehículos
               </p>
             </div>
@@ -232,15 +232,15 @@
 
           <a
             routerLink="/protections"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-primary-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M12 2l8 4v6c0 5.5-3.8 10.7-8 12-4.2-1.3-8-6.5-8-12V6l8-4z" stroke-width="1.75" stroke-linejoin="round"/>
               <path d="M9 12l2 2 4-4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Protecciones</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="font-medium text-text-primary">Protecciones</p>
+              <p class="text-xs text-text-secondary">
                 Ver opciones de protección
               </p>
             </div>
@@ -248,7 +248,7 @@
 
           <a
             routerLink="/dashboard"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
           >
             <svg class="w-7 h-7 text-primary-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M3 21h18" stroke-width="1.75" stroke-linecap="round"/>
@@ -257,8 +257,8 @@
               <rect x="16" y="3" width="3" height="18" rx="0.5" stroke-width="1.5"/>
             </svg>
             <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Dashboard</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="font-medium text-text-primary">Dashboard</p>
+              <p class="text-xs text-text-secondary">
                 Volver al inicio
               </p>
             </div>

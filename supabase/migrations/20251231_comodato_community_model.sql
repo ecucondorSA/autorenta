@@ -260,11 +260,11 @@ BEGIN
     SELECT 1 FROM pg_constraint WHERE conname = 'cars_sharing_mode_check'
   ) THEN
     ALTER TABLE cars ADD CONSTRAINT cars_sharing_mode_check
-      CHECK (sharing_mode IS NULL OR sharing_mode IN ('rental', 'comodato', 'disabled'));
+      CHECK (sharing_mode IS NULL OR sharing_mode IN ('comodato', 'disabled')); -- Solo comodato en AutoRenta
   END IF;
 END $$;
 
-COMMENT ON COLUMN cars.sharing_mode IS 'rental=alquiler tradicional, comodato=préstamo con rewards, disabled=no disponible';
+COMMENT ON COLUMN cars.sharing_mode IS 'comodato=préstamo con rewards, disabled=no disponible';
 COMMENT ON COLUMN cars.annual_expense_estimate_cents IS 'Gastos anuales estimados del vehículo (límite de ganancias para no-lucro)';
 COMMENT ON COLUMN cars.ytd_earnings_cents IS 'Ganancias acumuladas del año calendario actual';
 
@@ -292,7 +292,7 @@ BEGIN
     SELECT 1 FROM pg_constraint WHERE conname = 'bookings_agreement_type_check'
   ) THEN
     ALTER TABLE bookings ADD CONSTRAINT bookings_agreement_type_check
-      CHECK (agreement_type IS NULL OR agreement_type IN ('rental', 'comodato'));
+      CHECK (agreement_type IS NULL OR agreement_type = 'comodato'); -- AutoRenta es solo comodato
   END IF;
 END $$;
 
@@ -313,7 +313,7 @@ BEGIN
   END IF;
 END $$;
 
-COMMENT ON COLUMN bookings.agreement_type IS 'rental=alquiler tradicional, comodato=préstamo gratuito';
+COMMENT ON COLUMN bookings.agreement_type IS 'comodato=préstamo gratuito (único modelo en AutoRenta)';
 COMMENT ON COLUMN bookings.reward_pool_contribution_cents IS 'Monto que va al pool de rewards mensuales';
 
 -- 2.3 profiles - Agregar campos para membresía de comunidad
@@ -333,7 +333,7 @@ ALTER TABLE user_wallets ADD COLUMN IF NOT EXISTS community_rewards_balance_cent
 COMMENT ON COLUMN user_wallets.community_rewards_balance_cents IS 'Balance de rewards de comunidad (retirable)';
 
 -- 2.5 payment_splits - Agregar campos para comodato
-ALTER TABLE payment_splits ADD COLUMN IF NOT EXISTS agreement_type TEXT DEFAULT 'rental';
+ALTER TABLE payment_splits ADD COLUMN IF NOT EXISTS agreement_type TEXT DEFAULT 'comodato'; -- AutoRenta es solo comodato
 ALTER TABLE payment_splits ADD COLUMN IF NOT EXISTS reward_pool_cents INT DEFAULT 0;
 ALTER TABLE payment_splits ADD COLUMN IF NOT EXISTS fgo_cents INT DEFAULT 0;
 
@@ -900,7 +900,7 @@ FROM cars c
 LEFT JOIN owner_usage_limits l ON c.id = l.car_id
   AND l.year = EXTRACT(YEAR FROM now())::INT
   AND l.month = EXTRACT(MONTH FROM now())::INT
-WHERE c.sharing_mode IN ('comodato', 'rental');
+WHERE c.sharing_mode = 'comodato'; -- AutoRenta es solo comodato
 
 -- 5.3 v_reward_pool_status
 CREATE OR REPLACE VIEW v_reward_pool_status AS

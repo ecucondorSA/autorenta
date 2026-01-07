@@ -1,20 +1,20 @@
-<div class="min-h-screen bg-surface-base dark:bg-surface-base">
+<div class="min-h-screen bg-surface-base">
   <div class="max-w-7xl mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-6">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary tracking-tight font-satoshi">
+          <h1 class="text-3xl font-bold text-text-primary tracking-tight font-satoshi">
             Comparar Autos
           </h1>
-          <p class="text-sm text-text-muted dark:text-text-secondary dark:text-text-secondary mt-1">
+          <p class="text-sm text-text-muted mt-1">
             Comparando {{ count() }} auto{{ count() > 1 ? 's' : '' }}
           </p>
         </div>
         <div class="flex gap-2">
           <button
             (click)="clearAll()"
-            class="px-4 py-2 text-sm rounded-lg border border-error-300 text-error-strong hover:bg-error-bg dark:border-error-700 dark:text-error-400 dark:hover:bg-red-950 transition"
+            class="px-4 py-2 text-sm rounded-lg border border-error-300 text-error-strong hover:bg-error-bg transition"
             >
             Limpiar todo
           </button>
@@ -30,16 +30,16 @@
 
     <!-- Comparison Table -->
     <div
-      class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-xl shadow-lg overflow-hidden"
+      class="bg-surface-raised rounded-xl shadow-lg overflow-hidden"
       >
       <!-- Header con fotos de autos -->
       <div
         class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30"
         >
         <!-- Columna de labels (vac\u00eda en header) -->
-        <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised p-4">
+        <div class="bg-surface-raised p-4">
           <span
-            class="text-xs font-semibold text-text-muted dark:text-text-secondary dark:text-text-secondary"
+            class="text-xs font-semibold text-text-muted"
             >CARACTER\u00cdSTICAS</span
             >
           </div>
@@ -47,7 +47,7 @@
           <!-- Columnas de autos -->
           @for (car of cars(); track car; let i = $index) {
             <div
-              class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised p-4"
+              class="bg-surface-raised p-4"
               >
               <div class="space-y-3">
                 <!-- Foto -->
@@ -60,10 +60,10 @@
                 }
                 @if (!car.photos || car.photos.length === 0) {
                   <div
-                    class="w-full h-32 bg-surface-secondary dark:bg-surface-secondary rounded-lg flex items-center justify-center"
+                    class="w-full h-32 bg-surface-secondary rounded-lg flex items-center justify-center"
                     >
                     <svg
-                      class="w-12 h-12 text-text-muted dark:text-text-secondary/70"
+                      class="w-12 h-12 text-text-muted"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -78,7 +78,7 @@
                   </div>
                 }
                 <!-- T\u00edtulo -->
-                <h3 class="font-semibold text-sm text-text-primary dark:text-text-primary line-clamp-2 font-satoshi">
+                <h3 class="font-semibold text-sm text-text-primary line-clamp-2 font-satoshi">
                   {{ car.title }}
                 </h3>
                 <!-- Acciones -->
@@ -91,7 +91,7 @@
                   </button>
                   <button
                     (click)="removeCar(car.id)"
-                    class="px-3 py-1.5 text-xs rounded-lg border border-error-300 text-error-text hover:bg-error-bg dark:border-error-700 dark:text-error-400 dark:hover:bg-red-950 transition"
+                    class="px-3 py-1.5 text-xs rounded-lg border border-error-300 text-error-text hover:bg-error-bg transition"
                     title="Quitar de comparaci\u00f3n"
                     >
                     \u00d7
@@ -105,35 +105,33 @@
         <!-- Informaci\u00f3n B\u00e1sica -->
         @if (basicRows().length > 0) {
           <div
-            class="border-t border-border-default dark:border-border-default/30"
+            class="border-t border-border-default"
             >
-            <div class="bg-surface-secondary dark:bg-surface-secondary px-4 py-2">
+            <div class="bg-surface-secondary px-4 py-2">
               <h3
-                class="text-xs font-bold text-text-secondary dark:text-text-secondary uppercase tracking-wide"
+                class="text-xs font-bold text-text-secondary uppercase tracking-wide"
                 >
                 Informaci\u00f3n B\u00e1sica
               </h3>
             </div>
             @for (row of basicRows(); track row) {
               <div
-                class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-border-default/30"
+                class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default"
                 >
-                <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3">
-                  <span class="text-sm font-medium text-text-secondary dark:text-text-secondary">{{
+                <div class="bg-surface-raised px-4 py-3">
+                  <span class="text-sm font-medium text-text-secondary">{{
                     row.label
                   }}</span>
                 </div>
                 @for (value of row.values; track value; let i = $index) {
                   <div
-                    class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3"
+                    class="bg-surface-raised px-4 py-3"
                     [class.bg-success-bg]="isBestValue(row, i)"
-                    [class.dark:bg-success-950]="isBestValue(row, i)"
                     >
                     <span
-                      class="text-sm text-text-primary dark:text-text-primary"
+                      class="text-sm text-text-primary"
                       [class.font-semibold]="isBestValue(row, i)"
                       [class.text-success-strong]="isBestValue(row, i)"
-                      [class.dark:text-success-400]="isBestValue(row, i)"
                       >
                       {{ value }}
                     </span>
@@ -147,35 +145,33 @@
         <!-- Especificaciones -->
         @if (specsRows().length > 0) {
           <div
-            class="border-t border-border-default dark:border-border-default/30"
+            class="border-t border-border-default"
             >
-            <div class="bg-surface-secondary dark:bg-surface-secondary px-4 py-2">
+            <div class="bg-surface-secondary px-4 py-2">
               <h3
-                class="text-xs font-bold text-text-secondary dark:text-text-secondary uppercase tracking-wide"
+                class="text-xs font-bold text-text-secondary uppercase tracking-wide"
                 >
                 Especificaciones
               </h3>
             </div>
             @for (row of specsRows(); track row) {
               <div
-                class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-border-default/30"
+                class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default"
                 >
-                <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3">
-                  <span class="text-sm font-medium text-text-secondary dark:text-text-secondary">{{
+                <div class="bg-surface-raised px-4 py-3">
+                  <span class="text-sm font-medium text-text-secondary">{{
                     row.label
                   }}</span>
                 </div>
                 @for (value of row.values; track value; let i = $index) {
                   <div
-                    class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3"
+                    class="bg-surface-raised px-4 py-3"
                     [class.bg-success-bg]="isBestValue(row, i)"
-                    [class.dark:bg-success-950]="isBestValue(row, i)"
                     >
                     <span
-                      class="text-sm text-text-primary dark:text-text-primary"
+                      class="text-sm text-text-primary"
                       [class.font-semibold]="isBestValue(row, i)"
                       [class.text-success-strong]="isBestValue(row, i)"
-                      [class.dark:text-success-400]="isBestValue(row, i)"
                       >
                       {{ value }}
                     </span>
@@ -189,35 +185,33 @@
         <!-- Precios y Rating -->
         @if (pricingRows().length > 0) {
           <div
-            class="border-t border-border-default dark:border-border-default/30"
+            class="border-t border-border-default"
             >
-            <div class="bg-surface-secondary dark:bg-surface-secondary px-4 py-2">
+            <div class="bg-surface-secondary px-4 py-2">
               <h3
-                class="text-xs font-bold text-text-secondary dark:text-text-secondary uppercase tracking-wide"
+                class="text-xs font-bold text-text-secondary uppercase tracking-wide"
                 >
                 Precio y Valoraci\u00f3n
               </h3>
             </div>
             @for (row of pricingRows(); track row) {
               <div
-                class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-border-default/30"
+                class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default"
                 >
-                <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3">
-                  <span class="text-sm font-medium text-text-secondary dark:text-text-secondary">{{
+                <div class="bg-surface-raised px-4 py-3">
+                  <span class="text-sm font-medium text-text-secondary">{{
                     row.label
                   }}</span>
                 </div>
                 @for (value of row.values; track value; let i = $index) {
                   <div
-                    class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3"
+                    class="bg-surface-raised px-4 py-3"
                     [class.bg-success-bg]="isBestValue(row, i)"
-                    [class.dark:bg-success-950]="isBestValue(row, i)"
                     >
                     <span
-                      class="text-sm text-text-primary dark:text-text-primary"
+                      class="text-sm text-text-primary"
                       [class.font-semibold]="isBestValue(row, i)"
                       [class.text-success-strong]="isBestValue(row, i)"
-                      [class.dark:text-success-400]="isBestValue(row, i)"
                       >
                       {{ value }}
                     </span>
@@ -231,29 +225,29 @@
         <!-- Ubicaci\u00f3n -->
         @if (locationRows().length > 0) {
           <div
-            class="border-t border-border-default dark:border-border-default/30"
+            class="border-t border-border-default"
             >
-            <div class="bg-surface-secondary dark:bg-surface-secondary px-4 py-2">
+            <div class="bg-surface-secondary px-4 py-2">
               <h3
-                class="text-xs font-bold text-text-secondary dark:text-text-secondary uppercase tracking-wide"
+                class="text-xs font-bold text-text-secondary uppercase tracking-wide"
                 >
                 Ubicaci\u00f3n
               </h3>
             </div>
             @for (row of locationRows(); track row) {
               <div
-                class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-border-default/30"
+                class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default"
                 >
-                <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3">
-                  <span class="text-sm font-medium text-text-secondary dark:text-text-secondary">{{
+                <div class="bg-surface-raised px-4 py-3">
+                  <span class="text-sm font-medium text-text-secondary">{{
                     row.label
                   }}</span>
                 </div>
                 @for (value of row.values; track value) {
                   <div
-                    class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3"
+                    class="bg-surface-raised px-4 py-3"
                     >
-                    <span class="text-sm text-text-primary dark:text-text-primary">{{ value }}</span>
+                    <span class="text-sm text-text-primary">{{ value }}</span>
                   </div>
                 }
               </div>
@@ -264,29 +258,29 @@
         <!-- Propietario -->
         @if (ownerRows().length > 0) {
           <div
-            class="border-t border-border-default dark:border-border-default/30"
+            class="border-t border-border-default"
             >
-            <div class="bg-surface-secondary dark:bg-surface-secondary px-4 py-2">
+            <div class="bg-surface-secondary px-4 py-2">
               <h3
-                class="text-xs font-bold text-text-secondary dark:text-text-secondary uppercase tracking-wide"
+                class="text-xs font-bold text-text-secondary uppercase tracking-wide"
                 >
                 Propietario
               </h3>
             </div>
             @for (row of ownerRows(); track row) {
               <div
-                class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default dark:border-border-default/30"
+                class="grid grid-cols-[200px_repeat(auto-fit,minmax(250px,1fr))] gap-px bg-border-default/30 border-t border-border-default"
                 >
-                <div class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3">
-                  <span class="text-sm font-medium text-text-secondary dark:text-text-secondary">{{
+                <div class="bg-surface-raised px-4 py-3">
+                  <span class="text-sm font-medium text-text-secondary">{{
                     row.label
                   }}</span>
                 </div>
                 @for (value of row.values; track value) {
                   <div
-                    class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3"
+                    class="bg-surface-raised px-4 py-3"
                     >
-                    <span class="text-sm text-text-primary dark:text-text-primary">{{ value }}</span>
+                    <span class="text-sm text-text-primary">{{ value }}</span>
                   </div>
                 }
               </div>
@@ -299,7 +293,7 @@
       @if (count() === 0) {
         <div class="text-center py-16">
           <svg
-            class="w-24 h-24 mx-auto text-text-muted dark:text-text-secondary/70 mb-4"
+            class="w-24 h-24 mx-auto text-text-muted mb-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -311,7 +305,7 @@
               d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
               />
           </svg>
-          <p class="text-text-secondary dark:text-text-secondary mb-4">No hay autos para comparar</p>
+          <p class="text-text-secondary mb-4">No hay autos para comparar</p>
           <a
             routerLink="/cars"
             class="inline-block px-6 py-3 rounded-lg bg-cta-default text-cta-text hover:opacity-90 transition"

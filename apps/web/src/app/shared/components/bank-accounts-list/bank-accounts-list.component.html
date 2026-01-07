@@ -17,7 +17,7 @@
       <div
         class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default"
       ></div>
-      <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary">Cargando cuentas...</p>
+      <p class="mt-2 text-sm text-text-secondary">Cargando cuentas...</p>
     </div>
   }
 
@@ -27,7 +27,7 @@
       class="text-center py-12 bg-surface-base rounded-2xl border-2 border-dashed border-border-muted"
     >
       <svg
-        class="mx-auto h-12 w-12 text-text-muted dark:text-text-secondary"
+        class="mx-auto h-12 w-12 text-text-muted"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -40,7 +40,7 @@
         ></path>
       </svg>
       <h3 class="mt-2 text-sm font-semibold text-text-primary font-satoshi">No hay cuentas bancarias</h3>
-      <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">
+      <p class="mt-1 text-sm text-text-secondary">
         Agregá una cuenta para poder retirar tus ganancias
       </p>
       <button
@@ -90,12 +90,12 @@
                 {{ maskAccountNumber(account.account_number, account.account_type) }}
               </p>
 
-              <p class="text-sm text-text-secondary dark:text-text-secondary">
+              <p class="text-sm text-text-secondary">
                 {{ account.account_holder_name }}
               </p>
 
               @if (account.bank_name) {
-                <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
+                <p class="text-xs text-text-secondary mt-1">
                   {{ account.bank_name }}
                 </p>
               }

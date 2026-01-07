@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="mb-6">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-2xl font-bold text-text-primary dark:text-text-secondary font-satoshi">
+      <h2 class="text-2xl font-bold text-text-primary font-satoshi">
         Calendario Multi-Auto
       </h2>
       <div class="flex items-center gap-2">
@@ -28,37 +28,37 @@
     <!-- Stats -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-border-muted"
+        class="bg-surface-raised rounded-xl p-4 border border-border-default"
         >
-        <p class="text-sm text-text-secondary dark:text-text-secondary">Total Autos</p>
+        <p class="text-sm text-text-secondary">Total Autos</p>
         <p class="text-2xl font-bold text-cta-default mt-1">{{ stats().total }}</p>
       </div>
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-border-muted"
+        class="bg-surface-raised rounded-xl p-4 border border-border-default"
         >
-        <p class="text-sm text-text-secondary dark:text-text-secondary">Con Reservas</p>
+        <p class="text-sm text-text-secondary">Con Reservas</p>
         <p class="text-2xl font-bold text-success-strong mt-1">{{ stats().withBookings }}</p>
       </div>
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-border-muted"
+        class="bg-surface-raised rounded-xl p-4 border border-border-default"
         >
-        <p class="text-sm text-text-secondary dark:text-text-secondary">Con Bloqueos</p>
+        <p class="text-sm text-text-secondary">Con Bloqueos</p>
         <p class="text-2xl font-bold text-error-text mt-1">{{ stats().withBlocks }}</p>
       </div>
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-xl p-4 border border-border-default dark:border-border-muted"
+        class="bg-surface-raised rounded-xl p-4 border border-border-default"
         >
-        <p class="text-sm text-text-secondary dark:text-text-secondary">Totalmente Disponibles</p>
+        <p class="text-sm text-text-secondary">Totalmente Disponibles</p>
         <p class="text-2xl font-bold text-cta-default mt-1">{{ stats().fullyAvailable }}</p>
       </div>
     </div>
 
     <!-- Selection Controls -->
     <div
-      class="flex items-center justify-between p-4 bg-surface-raised dark:bg-surface-raised rounded-xl border border-border-default dark:border-border-muted"
+      class="flex items-center justify-between p-4 bg-surface-raised rounded-xl border border-border-default"
       >
       <div class="flex items-center gap-4">
-        <span class="text-sm text-text-secondary dark:text-text-secondary">
+        <span class="text-sm text-text-secondary">
           {{ selectedCars().length }} de {{ cars().length }} seleccionados
         </span>
         <button
@@ -81,11 +81,11 @@
       <div class="flex items-center gap-2">
         <button
           (click)="previousMonth()"
-          class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep transition-colors"
+          class="p-2 rounded-lg hover:bg-surface-secondary transition-colors"
           aria-label="Mes anterior"
           >
           <svg
-            class="w-5 h-5 text-text-primary dark:text-text-secondary"
+            class="w-5 h-5 text-text-primary"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -99,17 +99,17 @@
           </svg>
         </button>
         <span
-          class="text-sm font-medium text-text-primary dark:text-text-secondary capitalize min-w-[120px] text-center"
+          class="text-sm font-medium text-text-primary capitalize min-w-[120px] text-center"
           >
           {{ monthName() }}
         </span>
         <button
           (click)="nextMonth()"
-          class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep transition-colors"
+          class="p-2 rounded-lg hover:bg-surface-secondary transition-colors"
           aria-label="Mes siguiente"
           >
           <svg
-            class="w-5 h-5 text-text-primary dark:text-text-secondary"
+            class="w-5 h-5 text-text-primary"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -139,7 +139,7 @@
         <div
           class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-cta-default border-t-transparent"
         ></div>
-        <p class="mt-4 text-text-secondary dark:text-text-secondary">Cargando calendarios...</p>
+        <p class="mt-4 text-text-secondary">Cargando calendarios...</p>
       </div>
     </div>
   }
@@ -149,13 +149,12 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
       @for (car of cars(); track car) {
         <div
-          class="bg-surface-raised dark:bg-surface-raised rounded-2xl border-2 transition-all"
+          class="bg-surface-raised rounded-2xl border-2 transition-all"
           [class.border-cta-default]="car.selected"
           [class.border-border-default]="!car.selected"
-          [class.dark:border-border-muted]="!car.selected"
           >
           <!-- Car Header -->
-          <div class="p-4 border-b border-border-default dark:border-border-muted">
+          <div class="p-4 border-b border-border-default">
             <div class="flex items-start gap-3">
               <input
                 type="checkbox"
@@ -164,11 +163,11 @@
                 class="mt-1 w-5 h-5 text-cta-default border-border-default rounded focus:ring-cta-default cursor-pointer"
                 />
               <div class="flex-1 min-w-0">
-                <h3 class="font-semibold text-text-primary dark:text-text-secondary truncate font-satoshi">
+                <h3 class="font-semibold text-text-primary truncate font-satoshi">
                   {{ car.carTitle }}
                 </h3>
                 <div
-                  class="flex items-center gap-2 mt-1 text-xs text-text-secondary dark:text-text-secondary"
+                  class="flex items-center gap-2 mt-1 text-xs text-text-secondary"
                   >
                   <span class="flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-success-light"></span>
@@ -207,7 +206,7 @@
             <div class="grid grid-cols-7 gap-1 mb-2">
               @for (day of ['D', 'L', 'M', 'M', 'J', 'V', 'S']; track day) {
                 <div
-                  class="text-center text-xs font-semibold text-text-secondary dark:text-text-secondary"
+                  class="text-center text-xs font-semibold text-text-secondary"
                   >
                   {{ day }}
                 </div>
@@ -220,9 +219,9 @@
             [ngClass]="{
               'bg-success-light text-text-primary font-medium': getDayStatus(car, day) === 'booked',
               'bg-error-bg0 text-text-inverse font-medium': getDayStatus(car, day) === 'blocked',
-              'bg-surface-hover dark:bg-surface-base text-text-muted':
+              'bg-surface-hover text-text-muted':
                 getDayStatus(car, day) === 'past',
-              'hover:bg-surface-secondary dark:hover:bg-slate-deep':
+              'hover:bg-surface-secondary':
                 getDayStatus(car, day) === 'available',
             }"
                   >
@@ -252,10 +251,10 @@
           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
           />
       </svg>
-      <h3 class="mt-4 text-xl font-semibold text-text-primary dark:text-text-secondary font-satoshi">
+      <h3 class="mt-4 text-xl font-semibold text-text-primary font-satoshi">
         No tienes autos activos
       </h3>
-      <p class="mt-2 text-text-secondary dark:text-text-secondary">
+      <p class="mt-2 text-text-secondary">
         Publica un auto para empezar a gestionar su disponibilidad
       </p>
     </div>

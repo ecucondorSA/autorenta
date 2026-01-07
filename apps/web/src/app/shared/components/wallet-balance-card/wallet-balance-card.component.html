@@ -1,17 +1,17 @@
 <div
-  class="wallet-balance-card bg-surface-raised dark:bg-surface-raised border border-border-default/70 dark:border-slate-deep rounded-xl shadow-soft dark:shadow-card p-6 transition-colors duration-300"
+  class="wallet-balance-card bg-surface-raised border border-border-default/70 rounded-xl shadow-soft p-6 transition-colors duration-300"
   data-testid="wallet-balance-card"
   >
   <!-- Header -->
   <div class="flex items-center justify-between mb-6">
-    <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary font-satoshi">Mi Wallet</h2>
+    <h2 class="text-xl font-semibold text-text-primary font-satoshi">Mi Wallet</h2>
 
     <!-- Refresh Button -->
     <button
       type="button"
       (click)="loadBalance()"
       [disabled]="isLoadingBalance()"
-      class="text-cta-default hover:text-cta-default/80 disabled:text-text-muted dark:text-text-secondary dark:hover:text-ivory-luminous dark:disabled:text-neutral-500 transition-colors"
+      class="text-cta-default hover:text-cta-default/80 disabled:text-text-muted transition-colors"
       aria-label="Refrescar balance"
       >
       <svg
@@ -37,8 +37,8 @@
     <div
       class="mb-4 p-4 rounded-xl border-l-4 shadow-soft"
       [ngClass]="{
-        'bg-error-bg dark:bg-error-900/20 border-error-500': hasUrgentExpiringCredits(),
-        'bg-warning-bg dark:bg-warning-bg0/15 border-warning-border': !hasUrgentExpiringCredits()
+        'bg-error-bg border-error-500': hasUrgentExpiringCredits(),
+        'bg-warning-bg border-warning-border': !hasUrgentExpiringCredits()
       }"
       data-testid="expiring-credits-alert"
       >
@@ -73,8 +73,8 @@
           <p
             class="text-sm mt-1"
             [ngClass]="{
-              'text-error-700 dark:text-error-300': hasUrgentExpiringCredits(),
-              'text-warning-strong dark:text-warning-100': !hasUrgentExpiringCredits()
+              'text-error-700': hasUrgentExpiringCredits(),
+              'text-warning-strong': !hasUrgentExpiringCredits()
             }"
             >
             Tienes {{ formatCurrency(totalExpiringAmount() / 100) }} en créditos que vencerán pronto.
@@ -85,8 +85,8 @@
               <div
                 class="flex justify-between text-xs"
                 [ngClass]="{
-                  'text-error-600 dark:text-error-300': credit.days_until_expiry <= 7,
-                  'text-warning-700 dark:text-warning-200': credit.days_until_expiry > 7
+                  'text-error-600': credit.days_until_expiry <= 7,
+                  'text-warning-700': credit.days_until_expiry > 7
                 }"
                 >
                 <span>{{ formatCurrency(credit.amount_cents / 100) }}</span>
@@ -110,11 +110,11 @@
   <!-- Pending Deposits Toast Notification -->
   @if (showPendingDepositsNotification() && hasPendingDeposits()) {
     <div
-      class="mb-4 bg-warning-bg dark:bg-warning-bg0/15 border-l-4 border-warning-border dark:border-warning-border/60 p-4 rounded-r-lg shadow-lg animate-slide-in-right"
+      class="mb-4 bg-warning-bg border-l-4 border-warning-border p-4 rounded-r-lg shadow-lg animate-slide-in-right"
       >
       <div class="flex items-start">
         <svg
-          class="w-6 h-6 text-warning-text dark:text-warning-100 mt-0.5 flex-shrink-0 animate-pulse"
+          class="w-6 h-6 text-warning-text mt-0.5 flex-shrink-0 animate-pulse"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -127,14 +127,14 @@
           ></path>
         </svg>
         <div class="ml-3 flex-1">
-          <h3 class="text-sm font-medium text-warning-strong dark:text-warning-100 font-satoshi">
+          <h3 class="text-sm font-medium text-warning-strong font-satoshi">
             {{
             pendingDeposits() === 1
             ? 'Tienes 1 depósito pendiente'
             : 'Tienes ' + pendingDeposits() + ' depósitos pendientes'
             }}
           </h3>
-          <p class="text-sm text-warning-strong dark:text-warning-100 mt-1">
+          <p class="text-sm text-warning-strong mt-1">
             {{
             pendingDeposits() === 1
             ? 'Tu depósito está siendo procesado'
@@ -145,7 +145,7 @@
           <button
             type="button"
             (click)="retry()"
-            class="mt-2 text-xs font-medium text-warning-strong dark:text-warning-100 hover:text-warning-strong dark:hover:text-ivory-luminous underline"
+            class="mt-2 text-xs font-medium text-warning-strong hover:text-warning-strong underline"
             >
             Actualizar ahora
           </button>
@@ -154,7 +154,7 @@
         <button
           type="button"
           (click)="dismissPendingNotification()"
-          class="ml-2 text-warning-text dark:text-warning-100 hover:text-warning-strong dark:hover:text-ivory-luminous transition-colors"
+          class="ml-2 text-warning-text hover:text-warning-strong transition-colors"
           aria-label="Cerrar notificación"
           >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -174,9 +174,9 @@
   @if (isLoadingBalance()) {
     <div class="text-center py-8">
       <div
-        class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cta-default dark:border-pearl-light"
+        class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cta-default"
       ></div>
-      <p class="text-text-secondary dark:text-text-secondary/80 mt-4">Cargando balance...</p>
+      <p class="text-text-secondary mt-4">Cargando balance...</p>
     </div>
   }
 
@@ -184,7 +184,7 @@
   @if (error() && !isLoadingBalance()) {
     <div class="text-center py-8">
       <div
-        class="bg-error-bg dark:bg-error-bg0/10 border border-error-border dark:border-error-border/40 rounded-lg p-4 mb-4"
+        class="bg-error-bg border border-error-border rounded-lg p-4 mb-4"
         >
         <div class="flex items-start">
           <svg
@@ -215,13 +215,13 @@
     <div class="space-y-4">
       <!-- Total Balance -->
       <div
-        class="bg-surface-raised dark:bg-surface-secondary rounded-xl p-6 border-2 border-cta-default/30 dark:border-cta-default/40 shadow-soft hover:border-cta-default/50 dark:hover:border-cta-default/60 transition-all"
+        class="bg-surface-raised rounded-xl p-6 border-2 border-cta-default/30 shadow-soft hover:border-cta-default/50 transition-all"
         >
-        <p class="text-sm text-text-secondary dark:text-text-secondary/90 font-medium mb-1">
+        <p class="text-sm text-text-secondary font-medium mb-1">
           Balance Total
         </p>
         <p
-          class="h3 text-text-primary dark:text-text-primary wallet-balance balance-amount"
+          class="h3 text-text-primary wallet-balance balance-amount"
           data-testid="wallet-balance"
           >
           {{ formatCurrency(totalBalance()) }}
@@ -232,12 +232,12 @@
         <!-- Available Balance / Debt -->
         @if (availableBalance() < 0) {
           <div
-            class="bg-error-bg dark:bg-error-900/20 rounded-xl p-4 border border-error-border dark:border-error-800"
+            class="bg-error-bg rounded-xl p-4 border border-error-border"
             >
             <div class="flex items-center justify-between mb-2">
-              <p class="text-xs text-error-strong dark:text-error-200 font-bold uppercase tracking-wider">Deuda Pendiente</p>
+              <p class="text-xs text-error-strong font-bold uppercase tracking-wider">Deuda Pendiente</p>
               <svg
-                class="w-5 h-5 text-error-text dark:text-error-400"
+                class="w-5 h-5 text-error-text"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -250,10 +250,10 @@
                 ></path>
               </svg>
             </div>
-            <p class="h4 text-error-strong dark:text-error-200" data-testid="available-balance">
+            <p class="h4 text-error-strong" data-testid="available-balance">
               {{ formatCurrency(availableBalance()) }}
             </p>
-            <p class="text-xs text-error-strong dark:text-error-300 mt-1">
+            <p class="text-xs text-error-strong mt-1">
               Saldo negativo a cubrir
             </p>
             <button
@@ -266,12 +266,12 @@
           </div>
         } @else {
           <div
-            class="bg-success-bg dark:bg-success-bg0/15 rounded-xl p-4 border border-success-border dark:border-success-border/40"
+            class="bg-success-bg rounded-xl p-4 border border-success-border"
             >
             <div class="flex items-center justify-between mb-2">
-              <p class="text-xs text-success-strong dark:text-success-100 font-medium">Disponible</p>
+              <p class="text-xs text-success-strong font-medium">Disponible</p>
               <svg
-                class="w-5 h-5 text-success-text dark:text-success-100"
+                class="w-5 h-5 text-success-text"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -284,24 +284,24 @@
                 ></path>
               </svg>
             </div>
-            <p class="h4 text-success-strong dark:text-success-100" data-testid="available-balance">
+            <p class="h4 text-success-strong" data-testid="available-balance">
               {{ formatCurrency(availableBalance()) }}
             </p>
-            <p class="text-xs text-success-strong dark:text-success-100/80 mt-1">
+            <p class="text-xs text-success-strong mt-1">
               Fondos totales listos para usar
             </p>
             <div class="mt-3 space-y-2">
               <div
-                class="flex items-center justify-between text-xs text-success-strong dark:text-success-100"
+                class="flex items-center justify-between text-xs text-success-strong"
                 >
                 <span>Retirable</span>
-                <span class="font-semibold text-success-strong dark:text-success-100">{{
+                <span class="font-semibold text-success-strong">{{
                   formatCurrency(withdrawableBalance())
                 }}</span>
               </div>
               @if (nonWithdrawableBalance() > 0) {
                 <div
-                  class="flex items-start justify-between text-xs text-cta-default dark:text-cta-default"
+                  class="flex items-start justify-between text-xs text-cta-default"
                   data-testid="non-withdrawable-balance"
                   >
                   <span class="flex items-center gap-1">
@@ -323,13 +323,13 @@
         }
         <!-- Locked Balance -->
         <div
-          class="bg-warning-bg dark:bg-warning-bg0/15 rounded-xl p-4 border border-warning-border dark:border-warning-border/40"
+          class="bg-warning-bg rounded-xl p-4 border border-warning-border"
           data-testid="locked-balance-card"
           >
           <div class="flex items-center justify-between mb-2">
-            <p class="text-xs text-warning-strong dark:text-warning-100 font-medium">Bloqueado</p>
+            <p class="text-xs text-warning-strong font-medium">Bloqueado</p>
             <svg
-              class="w-5 h-5 text-warning-text dark:text-warning-100"
+              class="w-5 h-5 text-warning-text"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -342,10 +342,10 @@
               ></path>
             </svg>
           </div>
-          <p class="h4 text-warning-strong dark:text-warning-100" data-testid="locked-balance">
+          <p class="h4 text-warning-strong" data-testid="locked-balance">
             {{ formatCurrency(lockedBalance()) }}
           </p>
-          <p class="text-sm text-warning-strong dark:text-warning-100/80 mt-1 font-medium">En reservas</p>
+          <p class="text-sm text-warning-strong mt-1 font-medium">En reservas</p>
         </div>
       </div>
       <!-- Deposit Button -->
@@ -370,11 +370,11 @@
         </button>
       }
       <!-- Bank Transfer Information -->
-      <div class="border border-border-default dark:border-slate-deep rounded-xl overflow-hidden">
+      <div class="border border-border-default rounded-xl overflow-hidden">
         <button
           type="button"
           (click)="showBankInfo.set(!showBankInfo())"
-          class="w-full px-4 py-3 bg-surface-secondary dark:bg-surface-raised text-text-primary dark:text-text-secondary font-medium flex items-center justify-between hover:bg-border-default dark:hover:bg-slate-deep transition-colors rounded-t-xl"
+          class="w-full px-4 py-3 bg-surface-secondary text-text-primary font-medium flex items-center justify-between hover:bg-border-default transition-colors rounded-t-xl"
           >
           <span class="text-sm">Ver datos para transferencia bancaria</span>
           <svg
@@ -394,30 +394,30 @@
         </button>
         @if (showBankInfo()) {
           <div
-            class="p-4 bg-surface-raised dark:bg-surface-secondary space-y-3 text-sm border-t border-border-default dark:border-slate-deep"
+            class="p-4 bg-surface-raised space-y-3 text-sm border-t border-border-default"
             >
             <div class="flex items-center justify-between">
-              <span class="text-text-secondary dark:text-text-secondary/70">Titular:</span>
-              <span class="font-semibold text-text-primary dark:text-text-primary">{{
+              <span class="text-text-secondary">Titular:</span>
+              <span class="font-semibold text-text-primary">{{
                 bankDetails.accountName
               }}</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-text-secondary dark:text-text-secondary/70">Banco:</span>
-              <span class="font-semibold text-text-primary dark:text-text-primary">{{
+              <span class="text-text-secondary">Banco:</span>
+              <span class="font-semibold text-text-primary">{{
                 bankDetails.bank
               }}</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-text-secondary dark:text-text-secondary/70">Alias:</span>
+              <span class="text-text-secondary">Alias:</span>
               <div class="flex items-center gap-2">
-                <span class="font-semibold text-text-primary dark:text-text-primary font-mono">{{
+                <span class="font-semibold text-text-primary font-mono">{{
                   bankDetails.alias
                 }}</span>
                 <button
                   type="button"
                   (click)="copyToClipboard(bankDetails.alias)"
-                  class="text-cta-default hover:text-cta-default/80 dark:text-text-secondary dark:hover:text-ivory-luminous transition-colors"
+                  class="text-cta-default hover:text-cta-default/80 transition-colors"
                   aria-label="Copiar alias"
                   >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -432,16 +432,16 @@
               </div>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-text-secondary dark:text-text-secondary/70">CBU:</span>
+              <span class="text-text-secondary">CBU:</span>
               <div class="flex items-center gap-2">
                 <span
-                  class="font-semibold text-text-primary dark:text-text-primary font-mono text-xs"
+                  class="font-semibold text-text-primary font-mono text-xs"
                   >{{ bankDetails.cbu }}</span
                   >
                   <button
                     type="button"
                     (click)="copyToClipboard(bankDetails.cbu)"
-                    class="text-cta-default hover:text-cta-default/80 dark:text-text-secondary dark:hover:text-ivory-luminous transition-colors"
+                    class="text-cta-default hover:text-cta-default/80 transition-colors"
                     aria-label="Copiar CBU"
                     >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -456,14 +456,14 @@
                 </div>
               </div>
               <div
-                class="text-xs text-warning-strong dark:text-warning-100 mt-4 p-3 bg-warning-bg dark:bg-warning-bg0/15 rounded-lg border border-warning-border dark:border-warning-border/40"
+                class="text-xs text-warning-strong mt-4 p-3 bg-warning-bg rounded-lg border border-warning-border"
                 >
                 <p class="font-semibold mb-1">Importante:</p>
                 <p>
                   Enviá el comprobante a
                   <a
                     href="mailto:{{ bankDetails.email }}"
-                    class="underline font-semibold hover:text-warning-strong dark:hover:text-ivory-luminous"
+                    class="underline font-semibold hover:text-warning-strong"
                     >{{ bankDetails.email }}</a
                     >
                     indicando tu email de cuenta. La acreditación se realiza en horario hábil (Lun-Vie
@@ -477,7 +477,7 @@
           <div class="info-card">
             <div class="flex items-start">
               <svg
-                class="w-5 h-5 text-text-secondary dark:text-text-secondary mt-0.5 flex-shrink-0"
+                class="w-5 h-5 text-text-secondary mt-0.5 flex-shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -490,16 +490,16 @@
                 ></path>
               </svg>
               <div class="ml-2 space-y-1">
-                <p class="text-xs text-text-secondary dark:text-text-secondary/80">
+                <p class="text-xs text-text-secondary">
                   Los fondos bloqueados se liberan automáticamente al finalizar tus reservas.
                 </p>
                 @if (nonWithdrawableBalance() > 0) {
-                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                  <p class="text-xs text-text-secondary">
                     Tu crédito Autorentar se mantiene disponible para nuevas reservas y no puede retirarse
                     como efectivo.
                     <a
                       href="/politica-credito-autorentar"
-                      class="underline font-semibold hover:text-text-primary dark:hover:text-ivory-luminous"
+                      class="underline font-semibold hover:text-text-primary"
                       target="_blank"
                       >
                       Consultar política

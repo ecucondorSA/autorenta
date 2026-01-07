@@ -4,7 +4,7 @@
     <div data-testid="transaction-table">
       <!-- Header -->
       <div class="flex justify-between items-center mb-6">
-        <h2 class="h2 text-text-primary dark:text-pearl-white font-bold font-satoshi">Historial de Transacciones</h2>
+        <h2 class="h2 text-text-primary font-bold font-satoshi">Historial de Transacciones</h2>
         <button
           (click)="retry()"
           [disabled]="isLoading()"
@@ -16,13 +16,13 @@
       <!-- Filters -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
-          <label class="block text-sm font-medium mb-2 text-charcoal-dark dark:text-text-secondary">
+          <label class="block text-sm font-medium mb-2 text-charcoal-dark">
             Filtrar por tipo
           </label>
           <select
             [value]="filterType()"
             (change)="onFilterTypeChange($any($event.target).value)"
-            class="w-full px-4 py-2 rounded-lg border border-ash-gray dark:border-charcoal-medium bg-surface-raised dark:bg-charcoal-dark text-text-primary dark:text-pearl-white"
+            class="w-full px-4 py-2 rounded-lg border border-ash-gray bg-surface-raised text-text-primary"
             >
             @for (type of transactionTypes; track type) {
               <option [value]="type.value">
@@ -32,13 +32,13 @@
           </select>
         </div>
         <div>
-          <label class="block text-sm font-medium mb-2 text-charcoal-dark dark:text-text-secondary">
+          <label class="block text-sm font-medium mb-2 text-charcoal-dark">
             Filtrar por estado
           </label>
           <select
             [value]="filterStatus()"
             (change)="onFilterStatusChange($any($event.target).value)"
-            class="w-full px-4 py-2 rounded-lg border border-ash-gray dark:border-charcoal-medium bg-surface-raised dark:bg-charcoal-dark text-text-primary dark:text-pearl-white"
+            class="w-full px-4 py-2 rounded-lg border border-ash-gray bg-surface-raised text-text-primary"
             >
             @for (status of transactionStatuses; track status) {
               <option [value]="status.value">
@@ -54,13 +54,13 @@
           <div
             class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-ferrari-red border-t-transparent"
           ></div>
-          <p class="mt-4 text-text-secondary dark:text-text-secondary/70">Cargando transacciones...</p>
+          <p class="mt-4 text-text-secondary">Cargando transacciones...</p>
         </div>
       }
       <!-- Error State -->
       @if (error() && !isLoading()) {
         <div
-          class="bg-error-bg-hover dark:bg-error-bg0/20 border border-error-300 dark:border-error-border/50 rounded-lg p-4 mb-4"
+          class="bg-error-bg-hover border border-error-300 rounded-lg p-4 mb-4"
           >
           <div class="flex items-center justify-between">
             <div>
@@ -83,7 +83,7 @@
           data-testid="empty-transactions"
           >
           <svg
-            class="mx-auto h-16 w-16 text-text-muted dark:text-text-secondary dark:text-text-secondary"
+            class="mx-auto h-16 w-16 text-text-muted"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -95,10 +95,10 @@
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
           </svg>
-          <h3 class="mt-4 text-lg font-medium text-charcoal-dark dark:text-text-secondary font-satoshi">
+          <h3 class="mt-4 text-lg font-medium text-charcoal-dark font-satoshi">
             No hay transacciones
           </h3>
-          <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
+          <p class="mt-2 text-text-secondary">
             No se encontraron transacciones con los filtros aplicados.
           </p>
         </div>
@@ -111,7 +111,7 @@
           >
           @for (transaction of filteredTransactions(); track trackByTransactionId($index, transaction)) {
             <div
-              class="bg-surface-raised dark:bg-charcoal-dark rounded-lg border border-ash-gray dark:border-charcoal-medium hover:shadow-lg transition-shadow"
+              class="bg-surface-raised rounded-lg border border-ash-gray hover:shadow-lg transition-shadow"
               data-testid="transaction-item"
               >
               <div class="p-4 cursor-pointer" (click)="toggleTransactionDetails(transaction.id)">
@@ -120,7 +120,7 @@
                   <div class="flex-1">
                     <div class="flex items-center gap-2 mb-1">
                       <span class="text-xl">{{ getTypeIcon(getTransactionType(transaction)) }}</span>
-                      <span class="font-semibold text-text-primary dark:text-pearl-white">
+                      <span class="font-semibold text-text-primary">
                         {{ translateType(getTransactionType(transaction)) }}
                       </span>
                       <span
@@ -131,7 +131,7 @@
                       </span>
                     </div>
                     <p
-                      class="text-sm text-text-secondary dark:text-text-secondary/70"
+                      class="text-sm text-text-secondary"
                       data-testid="transaction-date"
                       >
                       {{ formatDate(transaction.transaction_date) }}
@@ -142,10 +142,8 @@
                     <div
                       class="text-lg font-bold"
                 [ngClass]="{
-                  'text-success-text dark:text-success-400': !isOutgoingTransaction(
-                    getTransactionType(transaction)
-                  ),
-                  'text-error-text': isOutgoingTransaction(getTransactionType(transaction)),
+                  'text-success-text': !isOutgoingTransaction(getTransactionType(transaction)),
+                  'text-error-text': isOutgoingTransaction(getTransactionType(transaction))
                 }"
                       data-testid="transaction-amount"
                       >
@@ -164,7 +162,7 @@
                 <!-- Description -->
                 @if (transaction.metadata['description']) {
                   <div
-                    class="mt-2 text-sm text-text-secondary dark:text-text-secondary/70"
+                    class="mt-2 text-sm text-text-secondary"
                     >
                     {{ transaction.metadata['description'] }}
                   </div>
@@ -173,19 +171,19 @@
               <!-- Expanded Details -->
               @if (expandedTransactionId() === transaction.id) {
                 <div
-                  class="px-4 pb-4 border-t border-ash-gray dark:border-charcoal-medium"
+                  class="px-4 pb-4 border-t border-ash-gray"
                   >
                   <div class="mt-4 space-y-2 text-sm">
                     <div class="flex justify-between">
-                      <span class="text-text-secondary dark:text-text-secondary/70">ID:</span>
-                      <span class="font-mono text-xs text-text-primary dark:text-pearl-white">{{
+                      <span class="text-text-secondary">ID:</span>
+                      <span class="font-mono text-xs text-text-primary">{{
                         transaction.id
                       }}</span>
                     </div>
                     @if (transaction.booking_id) {
                       <div>
                         <div class="flex justify-between items-center mb-2">
-                          <span class="text-text-secondary dark:text-text-secondary/70">Reserva:</span>
+                          <span class="text-text-secondary">Reserva:</span>
                           <a
                             [routerLink]="['/bookings', transaction.booking_id]"
                             class="font-mono text-xs text-cta-default hover:text-warning-strong transition-colors underline"
@@ -200,7 +198,7 @@
                           <div
                             class="flex justify-between items-center"
                             >
-                            <span class="text-text-secondary dark:text-text-secondary/70"
+                            <span class="text-text-secondary"
                               >Estado del depósito:</span
                               >
                               <app-deposit-status-badge
@@ -211,15 +209,15 @@
                         </div>
                       }
                       <div class="flex justify-between">
-                        <span class="text-text-secondary dark:text-text-secondary/70">Sistema:</span>
-                        <span class="text-text-primary dark:text-pearl-white">{{
+                        <span class="text-text-secondary">Sistema:</span>
+                        <span class="text-text-primary">{{
                           transaction.source_system
                         }}</span>
                       </div>
                       @if (transaction.metadata['provider']) {
                         <div class="flex justify-between">
-                          <span class="text-text-secondary dark:text-text-secondary/70">Proveedor:</span>
-                          <span class="text-text-primary dark:text-pearl-white">{{
+                          <span class="text-text-secondary">Proveedor:</span>
+                          <span class="text-text-primary">{{
                             transaction.metadata['provider']
                           }}</span>
                         </div>

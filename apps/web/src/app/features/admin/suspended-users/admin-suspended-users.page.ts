@@ -25,7 +25,7 @@ interface SuspendedUser {
     <div class="p-6 max-w-7xl mx-auto">
       <!-- Header -->
       <div class="mb-6">
-        <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse">
+        <h1 class="text-2xl font-bold text-text-primary">
           Usuarios Suspendidos
         </h1>
         <p class="text-text-secondary mt-1">
@@ -99,7 +99,7 @@ interface SuspendedUser {
       @else if (filteredUsers().length > 0) {
       <div class="card-premium overflow-hidden">
         <table class="w-full">
-          <thead class="bg-surface-secondary dark:bg-surface-raised">
+          <thead class="bg-surface-secondary">
             <tr>
               <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Usuario</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Deuda</th>
@@ -109,12 +109,12 @@ interface SuspendedUser {
               <th class="px-4 py-3 text-right text-xs font-semibold text-text-muted uppercase">Acciones</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-border-default dark:divide-slate-deep">
+          <tbody class="divide-y divide-border-default">
             @for (user of filteredUsers(); track user.id) {
-              <tr class="hover:bg-surface-secondary/50 dark:hover:bg-surface-raised/50">
+              <tr class="hover:bg-surface-secondary/50">
                 <td class="px-4 py-4">
                   <div>
-                    <p class="font-medium text-text-primary dark:text-text-inverse">{{ user.full_name }}</p>
+                    <p class="font-medium text-text-primary">{{ user.full_name }}</p>
                     <p class="text-sm text-text-muted">{{ user.email }}</p>
                   </div>
                 </td>
@@ -186,7 +186,7 @@ interface SuspendedUser {
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
       </div>
-      <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-2">
+      <h3 class="text-lg font-semibold text-text-primary mb-2">
         No hay usuarios suspendidos
       </h3>
       <p class="text-text-secondary">

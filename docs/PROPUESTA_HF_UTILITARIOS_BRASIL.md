@@ -88,8 +88,8 @@ Expansión de Autorentar al mercado brasileño a través de partnership con flot
 
 | Concepto | Porcentaje | Cobro |
 |----------|------------|-------|
-| Comisión Autorentar | 15% | Sobre tarifa total (sin garantía) |
-| Procesamiento de pago | 3-4% | Incluido en la comisión |
+| Comisión Autorentar | Variable | Sobre tarifa total (sin garantía) |
+| Procesamiento de pago | 3-4% | Incluido en el fee operativo |
 | Seguros opcionales | 70/30 | 70% socio, 30% Autorentar |
 
 ### 3.3 Ejemplo Práctico
@@ -102,8 +102,8 @@ Total tarifa:            USD 385
 Garantía:                USD 500 (retenida, devuelta al final)
 
 Distribución:
-├── HF Utilitarios:      USD 327.25 (85%)
-└── Autorentar:          USD 57.75  (15%)
+├── HF Utilitarios:      Monto neto (Tarifa - Fees)
+└── Autorentar:          Fee operativo variable
 
 El cliente paga:         USD 885 (tarifa + garantía)
 Al finalizar recibe:     USD 500 (garantía devuelta)
@@ -256,8 +256,8 @@ Cálculo:
 720 días × USD 45 = USD 32.400 facturación total
 
 Distribución:
-├── HF Utilitarios: USD 27.540 (85%)
-└── Autorentar:     USD 4.860  (15%)
+├── HF Utilitarios: Ingreso neto
+└── Autorentar:     Fee variable
 ```
 
 ### 8.2 Escenario Optimista (Año 2)
@@ -273,8 +273,8 @@ Cálculo:
 4.106 × USD 48 = USD 197.088 facturación total
 
 Distribución:
-├── HF Utilitarios: USD 167.525 (85%)
-└── Autorentar:     USD 29.563  (15%)
+├── HF Utilitarios: Ingreso neto proyectado
+└── Autorentar:     Fee variable proyectado
 ```
 
 ---

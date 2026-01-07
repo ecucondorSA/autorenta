@@ -42,23 +42,23 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
           role="menu"
           aria-labelledby="help-center"
         >
-          <h3 class="text-sm font-semibold mb-3 text-text-primary dark:text-text-primary">
+          <h3 class="text-sm font-semibold mb-3 text-text-primary">
             Centro de ayuda
           </h3>
 
           <!-- Convertite en Renter (destacado) -->
           <button
             (click)="navigateToBecomeRenter()"
-            class="w-full text-left px-4 py-3 rounded-lg bg-gradient-to-r from-cta-default/10 to-cta-hover/10 hover:from-cta-default/20 hover:to-cta-hover/20 dark:from-cyan-500/10 dark:to-cyan-600/10 dark:hover:from-cyan-500/20 dark:hover:to-cyan-600/20 mb-3 transition-base border border-cta-default/20 dark:border-cyan-500/20"
+            class="w-full text-left px-4 py-3 rounded-lg bg-gradient-to-r from-cta-default/10 to-cta-hover/10 hover:from-cta-default/20 hover:to-cta-hover/20 mb-3 transition-base border border-cta-default/20"
             role="menuitem"
           >
             <div class="flex items-start gap-3">
               <div class="text-xl">🏠</div>
               <div class="flex-1">
-                <div class="font-semibold text-sm text-cta-default dark:text-cyan-400 mb-1">
+                <div class="font-semibold text-sm text-cta-default mb-1">
                   Convertite en Renter
                 </div>
-                <div class="text-xs text-text-muted dark:text-gray-500">
+                <div class="text-xs text-text-muted">
                   Publicá tu auto y generá ingresos extras
                 </div>
               </div>
@@ -69,7 +69,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
           @if (isAuthenticated()) {
             <button
               (click)="navigateToReferrals()"
-              class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-2 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
+              class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-surface-secondary text-sm mb-2 transition-base text-text-secondary flex items-center gap-2"
               role="menuitem"
             >
               <span class="text-lg">🎁</span>
@@ -77,16 +77,16 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
             </button>
           }
 
-          <hr class="my-2 border-border-default/40 dark:border-white/10" />
+          <hr class="my-2 border-border-default/40" />
 
           <!-- Tours guiados -->
-          <div class="text-xs font-medium text-text-muted dark:text-gray-500 px-3 mb-2">
+          <div class="text-xs font-medium text-text-muted px-3 mb-2">
             Tours guiados
           </div>
 
           <button
             (click)="showTour('welcome')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary text-sm mb-1 transition-base text-text-secondary flex items-center gap-2"
             role="menuitem"
           >
             <span>🎯</span>
@@ -95,7 +95,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
 
           <button
             (click)="showTour('renter')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary text-sm mb-1 transition-base text-text-secondary flex items-center gap-2"
             role="menuitem"
           >
             <span>🔍</span>
@@ -104,7 +104,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
 
           <button
             (click)="showTour('become-renter')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary text-sm mb-1 transition-base text-text-secondary flex items-center gap-2"
             role="menuitem"
           >
             <span>🏠</span>
@@ -113,7 +113,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
 
           <button
             (click)="showTour('publish-car')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary text-sm mb-1 transition-base text-text-secondary flex items-center gap-2"
             role="menuitem"
           >
             <span>💸</span>
@@ -122,7 +122,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
 
           <button
             (click)="showTour('referrals')"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-1 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary text-sm mb-1 transition-base text-text-secondary flex items-center gap-2"
             role="menuitem"
           >
             <span>🎁</span>
@@ -132,7 +132,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
           @if (isAuthenticated()) {
             <button
               (click)="showTour('wallet')"
-              class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm mb-2 transition-base text-text-secondary dark:text-text-secondary flex items-center gap-2"
+              class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary text-sm mb-2 transition-base text-text-secondary flex items-center gap-2"
               role="menuitem"
             >
               <span>💰</span>
@@ -140,12 +140,12 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
             </button>
           }
 
-          <hr class="my-2 border-border-default/40 dark:border-white/10" />
+          <hr class="my-2 border-border-default/40" />
 
           <!-- Soporte -->
           <a
             href="mailto:soporte@autorentar.com"
-            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-slate-deep text-sm flex items-center gap-2 transition-base text-text-secondary dark:text-text-secondary mb-2"
+            class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-secondary text-sm flex items-center gap-2 transition-base text-text-secondary mb-2"
             role="menuitem"
           >
             <svg
@@ -169,7 +169,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
           @if (!isAuthenticated()) {
             <button
               (click)="navigateToLogin()"
-              class="w-full text-left px-3 py-2 rounded-lg bg-cta-default hover:bg-cta-hover dark:bg-cyan-600 dark:hover:bg-cyan-500 text-cta-text dark:text-white text-sm font-medium transition-base flex items-center justify-center gap-2"
+              class="w-full text-left px-3 py-2 rounded-lg bg-cta-default hover:bg-cta-hover text-cta-text text-sm font-medium transition-base flex items-center justify-center gap-2"
               role="menuitem"
             >
               Iniciá sesión o registrate

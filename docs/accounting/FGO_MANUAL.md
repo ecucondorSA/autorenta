@@ -130,7 +130,7 @@ El **Fondo de Garantía Operativa (FGO)** es un sistema contable que:
 
 ### 💰 Parámetro Alpha (α)
 
-- **Valor actual**: 15% de cada depósito
+- **Valor actual**: Variable (ej: 15%) de cada depósito
 - **Ajustable**: Se puede modificar según el estado del fondo
 - **Reglas de ajuste**:
   - Si RC < 0.9 → Incrementar α (ej: 20%)
@@ -311,7 +311,7 @@ SELECT fgo_contribute_from_deposit(
   10000,  -- deposit_amount_cents
   'ledger-id-xxx'
 );
--- Calcula: 15% × 10,000 = 1,500 centavos (USD 15)
+-- Calcula: α% × 10,000 = monto variable (ej: USD 15 si α=15%)
 -- Registra en fgo_movements
 -- Actualiza subfondo de liquidez
 ```
@@ -912,7 +912,7 @@ Al registrar cada movimiento:
 - RC: 47.50 / 960 = **0.049 (4.9%)** 🔴 Critical
 
 **Recomendación**:
-- 🔼 Incrementar α de 15% a 20%
+- 🔼 Incrementar α según riesgo (ej: de 15% a 20%)
 - Monitorear más siniestros para mejorar estadísticas
 
 ---
@@ -1080,12 +1080,12 @@ El FGO se compone de **tres subfondos** especializados:
 - La operación es **transparente y automática**
 
 **Valor Actual de α**:
-- **α = 15%** (quince por ciento)
+- **α = Variable** (ej: 15%)
 
 **Ejemplo**:
 ```
 Usuario deposita: USD 100
-α aplicado: 15%
+α aplicado: 15% (ejemplo)
 Aporte al FGO: USD 15
 Saldo disponible usuario: USD 85
 ```
@@ -1098,7 +1098,7 @@ El valor de α se ajusta según el estado del FGO:
 |------------|-----------|---------------|---------------------|
 | 🔴 Critical | RC < 0.7 | 20-25% | Inmediato (48h) |
 | ⚠️ Warning | 0.7 ≤ RC < 1.0 | 17-20% | Quincenal |
-| ✅ Healthy | 1.0 ≤ RC < 1.3 | 15% | Mensual |
+| ✅ Healthy | 1.0 ≤ RC < 1.3 | Variable (ej: 15%) | Mensual |
 | 💰 Excess | RC ≥ 1.3 | 10-12% | Trimestral |
 
 **Procedimiento de Ajuste**:
@@ -1521,8 +1521,8 @@ El sistema utiliza **triggers de base de datos** que detectan eventos y crean as
 ### 📊 Principio Contable Fundamental
 
 **AutoRenta actúa como AGENTE** (no principal) según NIIF 15:
-- Solo reconoce **comisión** como ingreso (15% del alquiler)
-- El 85% restante es del locador (no es ingreso de AutoRenta)
+- Solo reconoce **comisión** como ingreso (α% del alquiler)
+- El resto es del locador (no es ingreso de AutoRenta)
 - Fondos en billetera son **PASIVO** hasta completar el servicio
 
 ---
@@ -1532,12 +1532,14 @@ El sistema utiliza **triggers de base de datos** que detectan eventos y crean as
 ### 💰 Ingresos Principales
 
 #### 1. **Comisiones por Alquileres** (Cuenta 4.1.1)
-- **Monto**: 15% del valor total del alquiler
+- **Monto**: Porcentaje variable del valor total del alquiler
 - **Reconocimiento**: Al completar el booking (NIIF 15 - devengado)
-- **Ejemplo**:
+- **Ejemplo (Modelo Comodato)**:
   - Alquiler total: $10,000 ARS
-  - Comisión AutoRenta (15%): $1,500 ARS → **INGRESO**
-  - Locador recibe (85%): $8,500 ARS → **NO es ingreso de AutoRenta**
+  - Plataforma (Variable): $1,500 ARS → **INGRESO**
+  - Reward Pool (75%): $7,500 ARS → Distribuido mensualmente a owners
+  - FGO (10%): $1,000 ARS → Fondo de Garantía
+  - Owner directo: $0 → Recibe rewards mensuales por puntos
 
 #### 2. **Comisiones por Servicios Adicionales** (Cuenta 4.1.2)
 - Seguros adicionales
@@ -1556,8 +1558,8 @@ El sistema utiliza **triggers de base de datos** que detectan eventos y crean as
 2. Booking se completa (status='completed')
    ↓
 3. Sistema automáticamente:
-   - Reconoce comisión (15%) → INGRESO
-   - Transfiere 85% al locador → PASIVO (Pago a Locadores)
+   - Reconoce comisión (Variable) → INGRESO
+   - Transfiere neto al locador → PASIVO (Pago a Locadores)
    - Libera garantía → PASIVO (Franquicia Bloqueada)
    - Crea provisión FGO (5% del alquiler) → PASIVO (NIIF 37)
 ```
@@ -1625,7 +1627,7 @@ ACTIVOS = PASIVOS + PATRIMONIO
 - **2.1.3.02** Ingresos Diferidos - Comisiones
 
 #### 2.1.4 Cuentas por Pagar
-- **2.1.4.01** Pago a Locadores Pendiente (85% del alquiler)
+- **2.1.4.01** Pago a Locadores Pendiente (Neto del alquiler)
 - **2.1.4.02** Retiros Solicitados
 
 #### 2.1.5 Provisiones (NIIF 37)
@@ -1782,9 +1784,12 @@ Fecha       | Descripción                    | Entrada | Salida  | Saldo
 ------------|--------------------------------|---------|---------|--------
 2025-11-01  | Depósito usuario Juan         | 10,000  |         | 10,000
 2025-11-02  | Comisión MercadoPago          |         | 500     | 9,500
-2025-11-03  | Pago a locador (85% booking)  |         | 8,500   | 1,000
-2025-11-05  | Retiro usuario María           |         | 800     | 200
+2025-11-03  | Plataforma (Variable)          |         | 1,500   | 8,000
+2025-11-03  | Reward Pool (75%)             |         | 7,500   | 500
+2025-11-03  | FGO (10%)                     |         | 1,000   | -500
+2025-11-05  | Retiro usuario María           |         | 800     | -1,300
 ```
+**Nota**: En modelo comodato, owner no recibe pago directo por booking.
 
 ### 🔄 Reconciliación Bancaria
 
@@ -2032,7 +2037,7 @@ WHERE entry_date <= CURRENT_DATE;
 
 ### P: ¿Por qué los depósitos van a pasivo?
 
-**R**: Según NIIF 15, los fondos depositados por usuarios son un **pasivo** (obligación con el usuario) hasta que se preste el servicio. Solo cuando se completa el booking, AutoRenta reconoce su comisión (15%) como ingreso.
+**R**: Según NIIF 15, los fondos depositados por usuarios son un **pasivo** (obligación con el usuario) hasta que se preste el servicio. Solo cuando se completa el booking, AutoRenta reconoce su comisión (variable) como ingreso.
 
 ### P: ¿Cómo se calcula el monto del FGO?
 

@@ -44,23 +44,28 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
       </div>
     }
     
-    <!-- Review Form Modal -->
+    <!-- Review Form Section (Inline - NO MODAL per design rules) -->
     @if (showReviewForm() && reviewData()) {
-      <div
-        class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto"
-        >
-        <div class="my-8">
-          <app-review-form
-            [bookingId]="booking.id"
-            [revieweeId]="reviewData()!.revieweeId"
-            [carId]="reviewData()!.carId"
-            [reviewType]="reviewData()!.reviewType"
-            [revieweeName]="reviewData()!.revieweeName"
-            [carTitle]="reviewData()!.carTitle"
-            (submitReview)="handleSubmitReview($event)"
-            (cancelReview)="handleCancelReview()"
-          ></app-review-form>
+      <div class="mt-6 card-premium rounded-2xl p-4 sm:p-6 shadow-soft animate-fade-in">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="h5">Dejar una resena</h3>
+          <button
+            (click)="handleCancelReview()"
+            class="btn-secondary-sm p-2 rounded-full hover:bg-gray-100"
+            aria-label="Cancelar resena">
+            <span class="text-lg">✕</span>
+          </button>
         </div>
+        <app-review-form
+          [bookingId]="booking.id"
+          [revieweeId]="reviewData()!.revieweeId"
+          [carId]="reviewData()!.carId"
+          [reviewType]="reviewData()!.reviewType"
+          [revieweeName]="reviewData()!.revieweeName"
+          [carTitle]="reviewData()!.carTitle"
+          (submitReview)="handleSubmitReview($event)"
+          (cancelReview)="handleCancelReview()"
+        ></app-review-form>
       </div>
     }
     
@@ -72,7 +77,7 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
         <h3 class="h5 mb-4">📝 Tu Calificación</h3>
         <div class="info-card-warm p-4 mb-4">
           <p class="text-sm font-semibold text-warning-strong">⏳ Review pendiente de publicación</p>
-          <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
+          <p class="text-xs text-text-secondary mt-1">
             Se publicará cuando ambas partes hayan calificado, o después de 14 días.
           </p>
         </div>

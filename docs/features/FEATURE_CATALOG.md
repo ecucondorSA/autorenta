@@ -907,7 +907,7 @@ El flujo de contratación de AutoRenta es un proceso completo que abarca desde l
 - ✅ **Gestión de estados** del booking (pending → confirmed → in_progress → completed)
 - ✅ **Check-in y Check-out** con inspecciones detalladas (FGO - Fine-Grained Observations)
 - ✅ **Sistema de reseñas** bidireccional (locador ↔ locatario)
-- ✅ **Cálculo automático** de ganancias para el locador (85% split)
+- ✅ **Cálculo automático** de ganancias para el locador (Split dinámico)
 - ✅ **Estadísticas en tiempo real** para ambos roles
 - ✅ **Seguros P2P** y gestión de documentos
 
@@ -1157,8 +1157,8 @@ const booking = await supabase.rpc('request_booking', {
 **Proceso**:
 1. **Cambio de Estado**: `in_progress` → `completed`
 2. **Split Payment**:
-   - 85% al locador (owner_payment_amount)
-   - 15% a la plataforma (platform_fee)
+   - Monto neto al locador (owner_payment_amount)
+   - Fee variable a la plataforma (platform_fee)
 3. **Liberación de Depósito** (si no hay daños)
 4. **Notificaciones** a ambas partes
 
@@ -1235,9 +1235,9 @@ await supabase.rpc('create_review', {
 ### Fórmula Base
 
 ```typescript
-// Split Payment: 85% locador, 15% plataforma
-const ownerEarnings = booking.total_amount * 0.85;
-const platformFee = booking.total_amount * 0.15;
+// Split Payment: Dinámico según configuración
+const ownerEarnings = booking.total_amount - booking.platform_fee;
+const platformFee = booking.platform_fee;
 ```
 
 ### Cálculo Mensual
@@ -1248,7 +1248,7 @@ const platformFee = booking.total_amount * 0.15;
 async calculateMonthlyEarnings(carId: string, month: string): Promise<number> {
   const bookings = await supabase
     .from('bookings')
-    .select('total_amount, status')
+    .select('total_amount, platform_fee, status')
     .eq('car_id', carId)
     .in('status', ['confirmed', 'in_progress', 'completed'])
     .gte('start_date', `${month}-01`)
@@ -1257,7 +1257,7 @@ async calculateMonthlyEarnings(carId: string, month: string): Promise<number> {
   const totalEarnings = bookings.reduce((sum, booking) => {
     // Solo bookings completados o en progreso cuentan
     if (booking.status === 'completed' || booking.status === 'in_progress') {
-      return sum + booking.total_amount * 0.85; // 85% para owner
+      return sum + (booking.total_amount - booking.platform_fee); // Neto para owner
     }
     return sum;
   }, 0);
@@ -1497,7 +1497,7 @@ type VehicleDocumentKind =
 
 7. FINALIZACIÓN
    └─→ status: 'completed'
-   └─→ Split payment (85% owner, 15% platform)
+   └─→ Split payment (Neto owner, Fee plataforma)
    └─→ Liberación de depósito (si no hay daños)
 
 8. RESEÑAS (14 días)
@@ -1604,7 +1604,7 @@ type VehicleDocumentKind =
    - Creación de reseña
 
 3. **calculate_payment_split()**:
-   - Cálculo de split (85/15)
+   - Cálculo de distribución (modelo comodato: fee variable, reward pool, FGO)
 
 4. **update_user_stats_v2_for_booking()**:
    - Actualización de estadísticas post-reseña

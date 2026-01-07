@@ -19,14 +19,14 @@ interface PendingReview {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
   template: `
-    <div class="min-h-screen bg-surface-base dark:bg-surface-raised py-8">
+    <div class="min-h-screen bg-surface-base py-8">
       <div class="max-w-4xl mx-auto px-4">
         <!-- Header -->
         <div class="mb-8">
-          <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse mb-2">
+          <h1 class="text-3xl font-bold text-text-primary mb-2">
             Reseñas Pendientes
           </h1>
-          <p class="text-text-secondary dark:text-text-secondary">
+          <p class="text-text-secondary">
             Tienes {{ pendingReviews().length }}
             {{ pendingReviews().length === 1 ? 'reseña pendiente' : 'reseñas pendientes' }}
           </p>
@@ -42,7 +42,7 @@ interface PendingReview {
         <!-- Error State -->
         @if (error() && !loading()) {
           <div
-            class="bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-lg p-4 mb-6"
+            class="bg-error-bg border border-error-border rounded-lg p-4 mb-6"
           >
             <p class="text-error-strong">{{ error() }}</p>
           </div>
@@ -50,7 +50,7 @@ interface PendingReview {
 
         <!-- Empty State -->
         @if (!loading() && !error() && pendingReviews().length === 0) {
-          <div class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-8 text-center">
+          <div class="bg-surface-raised rounded-lg shadow p-8 text-center">
             <svg
               class="mx-auto h-12 w-12 text-text-muted"
               fill="none"
@@ -64,10 +64,10 @@ interface PendingReview {
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 class="mt-4 text-lg font-medium text-text-primary dark:text-text-inverse">
+            <h3 class="mt-4 text-lg font-medium text-text-primary">
               No tienes reseñas pendientes
             </h3>
-            <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary">
+            <p class="mt-2 text-sm text-text-secondary">
               Cuando completes una reserva, podrás dejar una reseña aquí.
             </p>
             <div class="mt-6">
@@ -86,18 +86,18 @@ interface PendingReview {
           <div class="space-y-4">
             @for (review of pendingReviews(); track review.booking_id) {
               <div
-                class="bg-surface-raised dark:bg-surface-base rounded-lg shadow p-6 border-l-4 border-cta-default"
+                class="bg-surface-raised rounded-lg shadow p-6 border-l-4 border-cta-default"
               >
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
-                    <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-2">
+                    <h3 class="text-lg font-semibold text-text-primary mb-2">
                       {{ review.car_title }}
                     </h3>
-                    <p class="text-sm text-text-secondary dark:text-text-secondary mb-2">
+                    <p class="text-sm text-text-secondary mb-2">
                       Califica a: <span class="font-medium">{{ review.reviewee_name }}</span>
                     </p>
                     <div
-                      class="flex items-center gap-4 text-sm text-text-secondary dark:text-text-muted"
+                      class="flex items-center gap-4 text-sm text-text-secondary"
                     >
                       <span> Finalizó: {{ formatDate(review.checkout_date) }} </span>
                       <span

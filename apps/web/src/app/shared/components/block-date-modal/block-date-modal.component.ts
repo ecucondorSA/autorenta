@@ -38,7 +38,7 @@ export interface BlockDateRequest {
         (click)="onBackdropClick($event)"
         >
         <div
-          class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all"
+          class="bg-surface-raised rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all"
           (click)="$event.stopPropagation()"
           [appFocusTrap]="isOpen()"
           role="dialog"
@@ -49,14 +49,14 @@ export interface BlockDateRequest {
           <div class="flex items-center justify-between mb-6">
             <h2
               id="block-date-modal-title"
-              class="text-xl font-bold text-text-primary dark:text-text-secondary"
+              class="text-xl font-bold text-text-primary"
               >
               {{ title() || 'Bloquear Fechas' }}
             </h2>
             <button
               type="button"
               (click)="close()"
-              class="text-text-secondary hover:text-text-primary dark:hover:text-pearl-light transition-colors"
+              class="text-text-secondary hover:text-text-primary transition-colors"
               aria-label="Cerrar"
               >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,7 +74,7 @@ export interface BlockDateRequest {
             <!-- Date Range Picker -->
             <div>
               <label
-                class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                class="block text-sm font-medium text-text-primary mb-2"
                 >
                 Rango de Fechas *
               </label>
@@ -83,22 +83,22 @@ export interface BlockDateRequest {
                 type="text"
                 placeholder="Seleccionar fechas"
                 readonly
-                class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all cursor-pointer"
+                class="w-full px-4 py-3 rounded-xl border-2 border-border-default bg-surface-raised focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all cursor-pointer"
                 />
-              <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
+              <p class="text-xs text-text-secondary mt-1">
                 {{ dateRangeText() }}
               </p>
             </div>
             <!-- Reason Selector -->
             <div>
               <label
-                class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                class="block text-sm font-medium text-text-primary mb-2"
                 >
                 Motivo *
               </label>
               <select
                 [(ngModel)]="selectedReason"
-                class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
+                class="w-full px-4 py-3 rounded-xl border-2 border-border-default bg-surface-raised focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
                 >
                 <option value="">-- Seleccionar motivo --</option>
                 <option value="maintenance">🔧 Mantenimiento</option>
@@ -110,7 +110,7 @@ export interface BlockDateRequest {
             <!-- Notes (Optional) -->
             <div>
               <label
-                class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                class="block text-sm font-medium text-text-primary mb-2"
                 >
                 Notas (opcional)
               </label>
@@ -118,13 +118,13 @@ export interface BlockDateRequest {
                 [(ngModel)]="notes"
                 rows="3"
                 placeholder="Ej: Cambio de aceite programado, revisión técnica, etc."
-                class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
+                class="w-full px-4 py-3 rounded-xl border-2 border-border-default bg-surface-raised focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
               ></textarea>
             </div>
             <!-- Apply to All Cars (only show if has multiple cars) -->
             @if (hasMultipleCars()) {
               <div
-                class="flex items-start gap-3 p-4 bg-warning-bg dark:bg-warning-900/20 rounded-xl"
+                class="flex items-start gap-3 p-4 bg-warning-bg rounded-xl"
                 >
                 <input
                   type="checkbox"
@@ -134,10 +134,10 @@ export interface BlockDateRequest {
                   />
                 <label
                   for="applyToAll"
-                  class="flex-1 text-sm text-text-primary dark:text-text-secondary cursor-pointer"
+                  class="flex-1 text-sm text-text-primary cursor-pointer"
                   >
                   <span class="font-semibold">Aplicar a todos mis autos</span>
-                  <p class="text-xs text-text-secondary dark:text-text-muted mt-0.5">
+                  <p class="text-xs text-text-muted mt-0.5">
                     Bloqueará estas fechas en todos tus vehículos
                   </p>
                 </label>
@@ -146,7 +146,7 @@ export interface BlockDateRequest {
             <!-- Error Message -->
             @if (errorMessage()) {
               <div
-                class="p-3 bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-xl text-sm text-error-strong"
+                class="p-3 bg-error-bg border border-error-border rounded-xl text-sm text-error-strong"
                 >
                 {{ errorMessage() }}
               </div>
@@ -157,7 +157,7 @@ export interface BlockDateRequest {
             <button
               type="button"
               (click)="close()"
-              class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default text-text-secondary hover:bg-surface-raised dark:hover:bg-slate-deep transition-all font-medium"
+              class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default text-text-secondary hover:bg-surface-hover transition-all font-medium"
               >
               Cancelar
             </button>

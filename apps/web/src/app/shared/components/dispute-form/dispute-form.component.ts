@@ -18,18 +18,18 @@ import { EvidenceUploaderComponent } from '../../../features/disputes/components
         (click)="onBackdropClick($event)"
         >
         <div
-          class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-2xl max-w-2xl w-full p-6 transform transition-all max-h-[90vh] overflow-y-auto"
+          class="bg-surface-raised rounded-2xl shadow-2xl max-w-2xl w-full p-6 transform transition-all max-h-[90vh] overflow-y-auto"
           (click)="$event.stopPropagation()"
           >
           <!-- Header -->
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-text-primary dark:text-text-secondary">
+            <h2 class="text-xl font-bold text-text-primary">
               {{ createdDisputeId() ? 'Añadir Evidencia' : 'Crear Disputa' }}
             </h2>
             <button
               type="button"
               (click)="close()"
-              class="text-text-secondary hover:text-text-primary dark:hover:text-pearl-light transition-colors"
+              class="text-text-secondary hover:text-text-primary transition-colors"
               aria-label="Cerrar"
               >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,7 +44,7 @@ import { EvidenceUploaderComponent } from '../../../features/disputes/components
           </div>
           <!-- Content -->
           <div class="space-y-4">
-            <p class="text-sm text-text-secondary dark:text-text-secondary">
+            <p class="text-sm text-text-secondary">
               {{
               createdDisputeId()
               ? 'Ahora puedes subir archivos para respaldar tu disputa.'
@@ -56,13 +56,13 @@ import { EvidenceUploaderComponent } from '../../../features/disputes/components
                 <!-- Dispute Kind Selector -->
                 <div>
                   <label
-                    class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                    class="block text-sm font-medium text-text-primary mb-2"
                     >
                     Tipo de Disputa *
                   </label>
                   <select
                     [(ngModel)]="selectedKind"
-                    class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-border-default bg-surface-raised focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
                     >
                     <option value="">-- Seleccionar tipo --</option>
                     <option value="damage">Daños al vehículo</option>
@@ -74,7 +74,7 @@ import { EvidenceUploaderComponent } from '../../../features/disputes/components
                 <!-- Description -->
                 <div>
                   <label
-                    class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                    class="block text-sm font-medium text-text-primary mb-2"
                     >
                     Descripción *
                   </label>
@@ -82,10 +82,10 @@ import { EvidenceUploaderComponent } from '../../../features/disputes/components
                     [(ngModel)]="description"
                     rows="6"
                     placeholder="Describe el problema en detalle..."
-                    class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-border-default bg-surface-raised focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
                     required
                   ></textarea>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
+                  <p class="text-xs text-text-secondary mt-1">
                     Proporciona todos los detalles relevantes para ayudar a nuestro equipo a entender el
                     problema.
                   </p>
@@ -100,7 +100,7 @@ import { EvidenceUploaderComponent } from '../../../features/disputes/components
             <!-- Error Message -->
             @if (error()) {
               <div
-                class="p-3 bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-xl text-sm text-error-strong"
+                class="p-3 bg-error-bg border border-error-border rounded-xl text-sm text-error-strong"
                 >
                 {{ error() }}
               </div>
@@ -111,7 +111,7 @@ import { EvidenceUploaderComponent } from '../../../features/disputes/components
             <button
               type="button"
               (click)="close()"
-              class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default text-text-secondary hover:bg-surface-raised dark:hover:bg-slate-deep transition-all font-medium"
+              class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default text-text-secondary hover:bg-surface-hover transition-all font-medium"
               >
               {{ createdDisputeId() ? 'Finalizar' : 'Cancelar' }}
             </button>

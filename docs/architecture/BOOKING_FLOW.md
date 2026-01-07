@@ -119,7 +119,7 @@ const statusInfo = bookingFlowService.getBookingStatusInfo(booking);
 
 #### `calculateOwnerEarnings(totalAmount)`
 
-Calcula y formatea las ganancias del locador (split 85/15).
+Calcula y formatea la distribución del pago (modelo comodato: fee variable de plataforma, reward pool y FGO).
 
 **Parámetros**:
 - `totalAmount: number` - Monto total del booking
@@ -130,10 +130,10 @@ Calcula y formatea las ganancias del locador (split 85/15).
 ```typescript
 const earnings = bookingFlowService.calculateOwnerEarnings(100000);
 // {
-//   ownerAmount: 85000,
-//   platformFee: 15000,
-//   ownerPercentage: 85,
-//   platformPercentage: 15,
+//   ownerAmount: calculated_amount,
+//   platformFee: calculated_fee,
+//   ownerPercentage: variable,
+//   platformPercentage: variable,
 //   formatted: {
 //     owner: '$85.000',
 //     platform: '$15.000',
@@ -302,14 +302,14 @@ const display = getBookingStatusDisplay('confirmed');
 
 #### `formatOwnerEarnings(totalAmount)`
 
-Formatea el monto de ganancias del locador (85% del total).
-
 ```typescript
-const earnings = formatOwnerEarnings(100000);
+const earnings = formatOwnerEarnings(totalAmount);
+// Modelo Comodato:
 // {
-//   ownerAmount: 85000,
-//   platformFee: 15000,
-//   formatted: { owner: '$85.000', ... }
+//   ownerAmount: 0,        // Owner no recibe pago directo
+//   platformFee: fee,      // Fee variable de plataforma
+//   rewardPool: reward,    // Reward Pool distribuido mensualmente
+//   fgo: fgo_amount,       // Fondo de Garantía
 // }
 ```
 
@@ -435,12 +435,14 @@ readonly earnings = computed(() => {
   );
 });
 
-// En template
+// En template (Modelo Comodato)
 @if (earnings()) {
   <div class="earnings-breakdown">
     <p>Total: {{ earnings()?.formatted.total }}</p>
-    <p>Tu ganancia (85%): {{ earnings()?.formatted.owner }}</p>
-    <p>Comisión plataforma (15%): {{ earnings()?.formatted.platform }}</p>
+    <p>Reward Pool (75%): {{ earnings()?.formatted.rewardPool }}</p>
+    <p>FGO (10%): {{ earnings()?.formatted.fgo }}</p>
+    <p>Plataforma (Variable): {{ earnings()?.formatted.platform }}</p>
+    <!-- Owner recibe rewards mensuales, no pago directo -->
   </div>
 }
 ```

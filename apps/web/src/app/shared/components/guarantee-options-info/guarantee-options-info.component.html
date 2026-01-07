@@ -1,10 +1,10 @@
 <div
-  class="rounded-2xl border border-cta-default/30 dark:border-cta-default/40 bg-gradient-to-br from-cta-default/15 via-white-pure to-white-pure dark:from-cta-default/20 dark:via-anthracite dark:to-anthracite shadow-soft p-6 space-y-4"
+  class="rounded-2xl border border-cta-default/30 bg-gradient-to-br from-cta-default/15 via-white-pure to-white-pure shadow-soft p-6 space-y-4"
   >
   <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
     <div class="flex items-start gap-3 md:max-w-xl">
       <svg
-        class="w-6 h-6 text-cta-default dark:text-text-primary mt-0.5 flex-shrink-0"
+        class="w-6 h-6 text-cta-default mt-0.5 flex-shrink-0"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -18,12 +18,12 @@
       </svg>
       <div class="flex-1 space-y-2">
         <p
-          class="text-xs uppercase tracking-wide text-cta-default font-semibold dark:text-text-secondary/70"
+          class="text-xs uppercase tracking-wide text-cta-default font-semibold"
           >
           Opciones para garantizar tu reserva
         </p>
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-          <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary font-satoshi">
+          <h3 class="text-lg font-semibold text-text-primary font-satoshi">
             Elegí cómo activar tu protección
           </h3>
           <span
@@ -31,7 +31,7 @@
             [ngClass]="{
               'bg-success-bg-hover text-success-strong': protectedCreditStatus === 'active',
               'bg-warning-bg-hover text-warning-strong': protectedCreditStatus === 'partial',
-              'bg-surface-secondary text-text-secondary dark:text-text-secondary':
+              'bg-surface-secondary text-text-secondary':
                 protectedCreditStatus === 'pending',
             }"
             >
@@ -61,29 +61,29 @@
           <!-- Option Headers -->
           <div class="grid gap-3 sm:grid-cols-2">
             <div
-              class="rounded-xl border border-border-default/70 dark:border-slate-deep bg-surface-raised dark:bg-surface-secondary p-4"
+              class="rounded-xl border border-border-default/70 bg-surface-raised p-4"
               >
-              <p class="text-base font-bold text-text-secondary dark:text-text-secondary">
+              <p class="text-base font-bold text-text-secondary">
                 1. Tarjeta de crédito
               </p>
               <p
-                class="text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60 mt-1"
+                class="text-xs text-text-secondary mt-1"
                 >
                 Método tradicional
               </p>
             </div>
             <div
-              class="rounded-xl border-2 border-warning-300 bg-warning-bg dark:bg-warning-bg0/15 p-4 relative"
+              class="rounded-xl border-2 border-warning-300 bg-warning-bg p-4 relative"
               >
               <div
                 class="absolute -top-2 -right-2 px-2 py-1 rounded-lg bg-cta-default text-cta-text text-xs font-bold shadow-soft"
                 >
                 Recomendado
               </div>
-              <p class="text-base font-bold text-warning-strong dark:text-warning-100">
+              <p class="text-base font-bold text-warning-strong">
                 2. Crédito Autorentar
               </p>
-              <p class="text-xs text-warning-strong dark:text-warning-100/80 mt-1">
+              <p class="text-xs text-warning-strong mt-1">
                 Sin tarjeta internacional
               </p>
             </div>
@@ -93,18 +93,18 @@
           <div class="space-y-2">
             <!-- Row: Requiere tarjeta internacional -->
             <div
-              class="grid gap-3 sm:grid-cols-2 items-center p-3 rounded-lg bg-border-default/30 dark:bg-surface-secondary/30"
+              class="grid gap-3 sm:grid-cols-2 items-center p-3 rounded-lg bg-border-default/30"
               >
               <div class="sm:col-span-2">
                 <p
-                  class="text-xs uppercase tracking-wide font-semibold text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
+                  class="text-xs uppercase tracking-wide font-semibold text-text-secondary"
                   >
                   Requiere tarjeta internacional
                 </p>
               </div>
               <div class="flex items-center gap-2 justify-center sm:justify-start">
                 <svg
-                  class="w-5 h-5 text-error-500 dark:text-error-400"
+                  class="w-5 h-5 text-error-500"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -120,7 +120,7 @@
               </div>
               <div class="flex items-center gap-2 justify-center sm:justify-start">
                 <svg
-                  class="w-5 h-5 text-success-500 dark:text-success-400"
+                  class="w-5 h-5 text-success-500"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -132,53 +132,53 @@
                     d="M5 13l4 4L19 7"
                     />
                 </svg>
-                <span class="text-sm font-medium text-success-text dark:text-success-300">No</span>
+                <span class="text-sm font-medium text-success-text">No</span>
               </div>
             </div>
 
             <!-- Row: Monto bloqueado -->
             <div
-              class="grid gap-3 sm:grid-cols-2 items-center p-3 rounded-lg bg-surface-raised dark:bg-surface-raised/50"
+              class="grid gap-3 sm:grid-cols-2 items-center p-3 rounded-lg bg-surface-raised"
               >
               <div class="sm:col-span-2">
                 <p
-                  class="text-xs uppercase tracking-wide font-semibold text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
+                  class="text-xs uppercase tracking-wide font-semibold text-text-secondary"
                   >
                   Monto bloqueado por reserva
                 </p>
               </div>
               <div class="text-center sm:text-left">
-                <p class="text-sm font-semibold text-text-secondary dark:text-text-secondary">
+                <p class="text-sm font-semibold text-text-secondary">
                   USD 500 - 1.200
                 </p>
                 <p
-                  class="text-xs text-text-secondary dark:text-text-secondary/60 dark:text-text-secondary/50"
+                  class="text-xs text-text-secondary"
                   >
                   Variable
                 </p>
               </div>
               <div class="text-center sm:text-left">
-                <p class="text-sm font-semibold text-warning-strong dark:text-warning-200">
+                <p class="text-sm font-semibold text-warning-strong">
                   USD 300 - 900
                 </p>
-                <p class="text-xs text-warning-text/70 dark:text-warning-200/60">Fijo una vez</p>
+                <p class="text-xs text-warning-text/70">Fijo una vez</p>
               </div>
             </div>
 
             <!-- Row: Reembolsable -->
             <div
-              class="grid gap-3 sm:grid-cols-2 items-center p-3 rounded-lg bg-border-default/30 dark:bg-surface-secondary/30"
+              class="grid gap-3 sm:grid-cols-2 items-center p-3 rounded-lg bg-border-default/30"
               >
               <div class="sm:col-span-2">
                 <p
-                  class="text-xs uppercase tracking-wide font-semibold text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
+                  class="text-xs uppercase tracking-wide font-semibold text-text-secondary"
                   >
                   Reembolsable a cuenta bancaria
                 </p>
               </div>
               <div class="flex items-center gap-2 justify-center sm:justify-start">
                 <svg
-                  class="w-5 h-5 text-success-500 dark:text-success-400"
+                  class="w-5 h-5 text-success-500"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -190,13 +190,13 @@
                     d="M5 13l4 4L19 7"
                     />
                 </svg>
-                <span class="text-sm font-medium text-success-text dark:text-success-300"
+                <span class="text-sm font-medium text-success-text"
                   >Sí, automático</span
                   >
                 </div>
                 <div class="flex items-center gap-2 justify-center sm:justify-start">
                   <svg
-                    class="w-5 h-5 text-warning-500 dark:text-warning-400"
+                    class="w-5 h-5 text-warning-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -208,7 +208,7 @@
                       d="M6 18L18 6M6 6l12 12"
                       />
                   </svg>
-                  <span class="text-sm font-medium text-warning-strong dark:text-warning-300"
+                  <span class="text-sm font-medium text-warning-strong"
                     >No, se reutiliza</span
                     >
                   </div>
@@ -216,80 +216,80 @@
 
                 <!-- Row: Configuración -->
                 <div
-                  class="grid gap-3 sm:grid-cols-2 items-center p-3 rounded-lg bg-surface-raised dark:bg-surface-raised/50"
+                  class="grid gap-3 sm:grid-cols-2 items-center p-3 rounded-lg bg-surface-raised"
                   >
                   <div class="sm:col-span-2">
                     <p
-                      class="text-xs uppercase tracking-wide font-semibold text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
+                      class="text-xs uppercase tracking-wide font-semibold text-text-secondary"
                       >
                       Configuración requerida
                     </p>
                   </div>
                   <div class="text-center sm:text-left">
-                    <p class="text-sm font-semibold text-text-secondary dark:text-text-secondary">
+                    <p class="text-sm font-semibold text-text-secondary">
                       Cada reserva
                     </p>
                     <p
-                      class="text-xs text-text-secondary dark:text-text-secondary/60 dark:text-text-secondary/50"
+                      class="text-xs text-text-secondary"
                       >
                       Ingresar datos
                     </p>
                   </div>
                   <div class="text-center sm:text-left">
-                    <p class="text-sm font-semibold text-success-strong dark:text-success-200">
+                    <p class="text-sm font-semibold text-success-strong">
                       Una sola vez
                     </p>
-                    <p class="text-xs text-success-text/70 dark:text-success-200/60">Uso automático</p>
+                    <p class="text-xs text-success-text/70">Uso automático</p>
                   </div>
                 </div>
 
                 <!-- Row: Tiempo de liberación -->
                 <div
-                  class="grid gap-3 sm:grid-cols-2 items-center p-3 rounded-lg bg-border-default/30 dark:bg-surface-secondary/30"
+                  class="grid gap-3 sm:grid-cols-2 items-center p-3 rounded-lg bg-border-default/30"
                   >
                   <div class="sm:col-span-2">
                     <p
-                      class="text-xs uppercase tracking-wide font-semibold text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
+                      class="text-xs uppercase tracking-wide font-semibold text-text-secondary"
                       >
                       Liberación de fondos
                     </p>
                   </div>
                   <div class="text-center sm:text-left">
-                    <p class="text-sm font-semibold text-text-secondary dark:text-text-secondary">
+                    <p class="text-sm font-semibold text-text-secondary">
                       5-10 días hábiles
                     </p>
                     <p
-                      class="text-xs text-text-secondary dark:text-text-secondary/60 dark:text-text-secondary/50"
+                      class="text-xs text-text-secondary"
                       >
                       Post-viaje
                     </p>
                   </div>
                   <div class="text-center sm:text-left">
-                    <p class="text-sm font-semibold text-success-strong dark:text-success-200">
+                    <p class="text-sm font-semibold text-success-strong">
                       Inmediato
                     </p>
-                    <p class="text-xs text-success-text/70 dark:text-success-200/60 font-friendly">Post-viaje</p>
+                    <p class="text-xs text-success-text/70 font-friendly">Post-viaje</p>
                   </div>
                 </div>
 
                 <!-- Row: Ideal para -->
                 <div
-                  class="grid gap-3 sm:grid-cols-2 items-center p-3 rounded-lg bg-surface-raised dark:bg-surface-raised/50"
+                  class="grid gap-3 sm:grid-cols-2 items-center p-3 rounded-lg bg-surface-raised"
                   >
                   <div class="sm:col-span-2">
                     <p
-                      class="text-xs uppercase tracking-wide font-semibold text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
+                      class="text-xs uppercase tracking-wide font-semibold text-text-secondary"
                       >
                       Ideal para
                     </p>
                   </div>
                   <div class="text-center sm:text-left">
-                    <p class="text-xs text-text-secondary dark:text-text-secondary/80 leading-relaxed">
+                    <p class="text-xs text-text-secondary leading-relaxed">
                       Usuarios con tarjeta internacional habilitada
                     </p>
                   </div>
                   <div class="text-center sm:text-left">
-                    <p class="text-xs text-warning-strong dark:text-warning-100 leading-relaxed">
+                    <p class="text-xs text-warning-strong leading-relaxed">
                       Viajeros del exterior o sin tarjeta internacional
                     </p>
                   </div>
@@ -315,10 +315,10 @@
             Configurar Crédito Autorentar
           </button>
           <div
-            class="rounded-xl bg-gradient-to-br from-white to-cta-default/5 dark:from-slate-deep dark:to-cta-default/10 border-2 border-cta-default/30 dark:border-cta-default/40 px-4 py-4 space-y-3 shadow-soft"
+            class="rounded-xl bg-gradient-to-br from-white to-cta-default/5 border-2 border-cta-default/30 px-4 py-4 space-y-3 shadow-soft"
             >
             <div class="flex items-start justify-between gap-2">
-              <p class="font-bold text-sm text-text-primary dark:text-text-primary">
+              <p class="font-bold text-sm text-text-primary">
                 Progreso crédito protegido
               </p>
               <!-- Celebration icon when near completion (>= 80%) -->
@@ -330,11 +330,11 @@
             <!-- Amount Display -->
             <div class="flex items-baseline justify-between gap-2">
               <div class="flex items-baseline gap-2">
-                <span class="text-xl font-bold text-cta-default dark:text-cta-default">
+                <span class="text-xl font-bold text-cta-default">
                   USD {{ protectedCreditBalance | number: '1.2-2' }}
                 </span>
                 <span
-                  class="text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
+                  class="text-xs text-text-secondary"
                   >
                   / USD {{ protectedCreditTarget | number: '1.0-0' }}
                 </span>
@@ -354,8 +354,8 @@
 
             <!-- Amount Remaining (only if not complete) -->
             @if (protectedCreditProgress < 100) {
-              <p class="text-xs font-medium text-text-secondary dark:text-text-secondary/80">
-                <span class="text-warning-strong dark:text-warning-300">
+              <p class="text-xs font-medium text-text-secondary">
+                <span class="text-warning-strong">
                   Te faltan USD
                   {{ (protectedCreditTarget - protectedCreditBalance) | number: '1.2-2' }}
                 </span>
@@ -365,7 +365,7 @@
 
             <!-- Progress Bar (larger and more prominent) -->
             <div
-              class="relative h-3 rounded-full bg-surface-secondary dark:bg-surface-secondary overflow-hidden shadow-inner"
+              class="relative h-3 rounded-full bg-surface-secondary overflow-hidden shadow-inner"
               title="Una vez completes USD 300, podrás reservar sin tarjeta"
               >
               <div
@@ -383,10 +383,10 @@
             <!-- Completion Message -->
             @if (protectedCreditProgress === 100) {
               <div
-                class="flex items-center gap-2 px-3 py-2 rounded-lg bg-success-bg dark:bg-success-bg0/20 border border-success-border dark:border-success-border/30"
+                class="flex items-center gap-2 px-3 py-2 rounded-lg bg-success-bg border border-success-border"
                 >
                 <svg
-                  class="w-4 h-4 text-success-text dark:text-success-400 flex-shrink-0"
+                  class="w-4 h-4 text-success-text flex-shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -398,7 +398,7 @@
                     d="M5 13l4 4L19 7"
                     />
                 </svg>
-                <p class="text-xs font-semibold text-success-strong dark:text-success-200">
+                <p class="text-xs font-semibold text-success-strong">
                   ¡Crédito protegido activado! Ya puedes reservar sin tarjeta.
                 </p>
               </div>
@@ -406,7 +406,7 @@
 
             <!-- Tooltip/Help Text -->
             <p
-              class="text-xs text-text-secondary dark:text-text-secondary/60 dark:text-text-secondary/50 flex items-start gap-1.5"
+              class="text-xs text-text-secondary flex items-start gap-1.5"
               >
               <svg
                 class="w-3.5 h-3.5 flex-shrink-0 mt-0.5"

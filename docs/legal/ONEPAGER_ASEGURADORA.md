@@ -177,7 +177,7 @@ Usuario paga: $100 USD (ejemplo)
          |
          +---> 75% Pool comunitario (rewards diferidos)
          |
-         +---> 15% Fee operativo (Autorenta)
+         +---> Fee operativo variable (Autorenta)
          |
          +---> 10% Fondo de Garantia Operativa
 

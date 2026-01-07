@@ -30,7 +30,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
           </div>
           <div>
             <h4 class="font-semibold text-text-primary">Verificación de Teléfono</h4>
-            <p class="text-sm text-text-secondary dark:text-text-secondary">
+            <p class="text-sm text-text-secondary">
               {{ status().value || 'No configurado' }}
             </p>
           </div>
@@ -97,7 +97,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                     [disabled]="loading()"
                     />
                 </div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
+                <p class="text-xs text-text-secondary mt-1">
                   Formato: sin el 0 inicial. Ej: 11 2345 6789
                 </p>
               </div>
@@ -109,7 +109,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
             [class]="
               canSendOTP()
                 ? 'bg-cta-default text-cta-text hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2'
-                : 'bg-surface-hover text-text-secondary dark:text-text-secondary cursor-not-allowed'
+                : 'bg-surface-hover text-text-secondary cursor-not-allowed'
             "
                 >
                 @if (!loading()) {
@@ -171,7 +171,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                   [disabled]="loading()"
                   (input)="onOTPInput($event)"
                   />
-                <p class="text-xs text-text-secondary dark:text-text-secondary mt-1 text-center">
+                <p class="text-xs text-text-secondary mt-1 text-center">
                   Solo números, 6 dígitos
                 </p>
               </div>
@@ -184,7 +184,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
               [class]="
                 canVerifyOTP()
                   ? 'bg-success-light text-text-primary hover:bg-success-light focus:ring-2 focus:ring-success-light focus:ring-offset-2'
-                  : 'bg-surface-hover text-text-secondary dark:text-text-secondary cursor-not-allowed'
+                  : 'bg-surface-hover text-text-secondary cursor-not-allowed'
               "
                   >
                   @if (!loading()) {
@@ -220,7 +220,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                 type="button"
                 (click)="resendOTP()"
                 [disabled]="!canResend() || loading()"
-                class="w-full px-4 py-2 text-sm text-cta-default hover:text-cta-default disabled:text-text-muted dark:text-text-secondary"
+                class="w-full px-4 py-2 text-sm text-cta-default hover:text-cta-default disabled:text-text-muted"
                 >
                 {{
                 cooldownRemaining() > 0
@@ -247,7 +247,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
             </div>
           }
           <!-- Help Text -->
-          <div class="text-xs text-text-secondary dark:text-text-secondary space-y-1">
+          <div class="text-xs text-text-secondary space-y-1">
             <p>• El código expira en 10 minutos</p>
             <p>• Máximo 3 intentos por hora</p>
             <p>• Revisa que tu teléfono pueda recibir SMS</p>

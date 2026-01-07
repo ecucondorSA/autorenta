@@ -7,7 +7,7 @@
     [class.ring-2]="isSelected('credit_card')"
     [class.ring-cta-default]="isSelected('credit_card')"
     [class.bg-cta-default/5]="isSelected('credit_card')"
-    class="w-full p-4 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised hover:border-cta-default hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
+    class="w-full p-4 rounded-xl border-2 border-border-default bg-surface-raised hover:border-cta-default hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
     >
     <!-- Recommended Badge -->
     @if (isRecommended('credit_card')) {
@@ -47,11 +47,11 @@
 
       <!-- Content -->
       <div class="flex-1">
-        <h3 class="font-semibold text-text-primary dark:text-text-secondary mb-1 font-satoshi">
+        <h3 class="font-semibold text-text-primary mb-1 font-satoshi">
           <app-icon name="credit-card" [size]="16" cssClass="inline-block mr-1" /> Tarjeta de
           Crédito/Débito
         </h3>
-        <p class="text-sm text-text-secondary dark:text-text-secondary">
+        <p class="text-sm text-text-secondary">
           Pre-autorización segura con MercadoPago
         </p>
       </div>
@@ -78,7 +78,7 @@
     [class.ring-2]="isSelected('wallet')"
     [class.ring-cta-default]="isSelected('wallet')"
     [class.bg-cta-default/5]="isSelected('wallet')"
-    class="w-full p-4 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised hover:border-cta-default hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
+    class="w-full p-4 rounded-xl border-2 border-border-default bg-surface-raised hover:border-cta-default hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
     >
     <!-- Recommended Badge -->
     @if (isRecommended('wallet')) {
@@ -118,16 +118,16 @@
 
       <!-- Content -->
       <div class="flex-1">
-        <h3 class="font-semibold text-text-primary dark:text-text-secondary mb-1 font-satoshi">
+        <h3 class="font-semibold text-text-primary mb-1 font-satoshi">
           <app-icon name="bank" [size]="16" cssClass="inline-block mr-1" /> Wallet AutoRenta
         </h3>
-        <p class="text-sm text-text-secondary dark:text-text-secondary mb-2">
+        <p class="text-sm text-text-secondary mb-2">
           Pago instantáneo • Sin comisiones • Ideal para locadores y usuarios frecuentes
         </p>
 
         <!-- Wallet Benefits -->
         <div class="mb-2 space-y-1">
-          <div class="flex items-center gap-1 text-xs text-text-secondary dark:text-text-secondary">
+          <div class="flex items-center gap-1 text-xs text-text-secondary">
             <svg class="w-3 h-3 text-success-strong" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fill-rule="evenodd"
@@ -137,7 +137,7 @@
             </svg>
             <span>Recibe tus pagos como locador directamente aquí</span>
           </div>
-          <div class="flex items-center gap-1 text-xs text-text-secondary dark:text-text-secondary">
+          <div class="flex items-center gap-1 text-xs text-text-secondary">
             <svg class="w-3 h-3 text-success-strong" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fill-rule="evenodd"
@@ -147,7 +147,7 @@
             </svg>
             <span>Garantía reutilizable en futuras reservas</span>
           </div>
-          <div class="flex items-center gap-1 text-xs text-text-secondary dark:text-text-secondary">
+          <div class="flex items-center gap-1 text-xs text-text-secondary">
             <svg class="w-3 h-3 text-success-strong" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fill-rule="evenodd"
@@ -204,7 +204,7 @@
             <!-- Price Breakdown (if sufficient funds) -->
             @if (hasSufficientFunds()) {
               <div
-                class="text-xs text-text-secondary dark:text-text-secondary space-y-0.5"
+                class="text-xs text-text-secondary space-y-0.5"
                 >
                 <div class="flex justify-between">
                   <span>Bloqueo de reserva:</span>
@@ -215,7 +215,7 @@
                   <span class="font-semibold">{{ depositAmount | money }}</span>
                 </div>
                 <div
-                  class="flex justify-between pt-1 border-t border-border-default dark:border-border-default"
+                  class="flex justify-between pt-1 border-t border-border-default"
                   >
                   <span class="font-semibold">Total bloqueado:</span>
                   <span class="font-bold text-cta-default">{{ totalRequired() | money }}</span>

@@ -127,7 +127,7 @@ export interface WazeMapOptions {
     
       <!-- Waze Branding Badge -->
       <div
-        class="absolute bottom-4 left-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg px-3 py-2 flex items-center gap-2 z-20"
+        class="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg px-3 py-2 flex items-center gap-2 z-20"
         >
         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="#33CCFF">
           <path

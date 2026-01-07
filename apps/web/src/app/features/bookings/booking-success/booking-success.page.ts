@@ -45,6 +45,11 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
   readonly MAX_POLL_ATTEMPTS = 40; // 2 minutos (3 segundos × 40) - public para template
   private readonly POLL_INTERVAL_MS = 3000; // 3 segundos
 
+  // ✅ OPTIMIZATION: Track realtime connection to avoid wasteful polling
+  private readonly realtimeConnected = signal(false);
+  private realtimeConnectionTimeout: number | null = null;
+  private readonly REALTIME_TIMEOUT_MS = 5000; // 5 seconds to wait for realtime
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
@@ -55,11 +60,18 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
     this.bookingId.set(id);
     this.loadBooking(id);
 
-    // ✅ FIX Bug #9: Usar realtime + polling como fallback si viene desde MercadoPago
+    // ✅ OPTIMIZED: Realtime first, polling only as fallback
     const fromMercadoPago = this.route.snapshot.queryParamMap.get('from_mp') === 'true';
     if (fromMercadoPago) {
       this.subscribeToRealtimeUpdates(id);
-      this.startPolling(); // Keep polling as fallback for network issues
+
+      // Only start polling if realtime fails to connect within 5 seconds
+      this.realtimeConnectionTimeout = window.setTimeout(() => {
+        if (!this.realtimeConnected()) {
+          this.logger.debug('[BookingSuccess] Realtime timeout, starting polling fallback');
+          this.startPolling();
+        }
+      }, this.REALTIME_TIMEOUT_MS);
     }
   }
 
@@ -99,6 +111,31 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
       },
       onConnectionChange: (status) => {
         this.logger.debug('[BookingSuccess] Realtime connection status:', status);
+
+        // ✅ OPTIMIZATION: Track connection status
+        if (status === 'connected') {
+          this.realtimeConnected.set(true);
+
+          // Clear the timeout since realtime is working
+          if (this.realtimeConnectionTimeout) {
+            window.clearTimeout(this.realtimeConnectionTimeout);
+            this.realtimeConnectionTimeout = null;
+          }
+
+          // Stop polling if it was started as fallback
+          if (this.pollingInterval !== null) {
+            this.logger.debug('[BookingSuccess] Realtime connected, stopping polling fallback');
+            this.stopPolling();
+          }
+        } else if (status === 'error' || status === 'disconnected') {
+          this.realtimeConnected.set(false);
+
+          // Start polling as fallback if not already running
+          if (this.pollingInterval === null && this.paymentStatus() === 'pending') {
+            this.logger.debug('[BookingSuccess] Realtime failed, starting polling fallback');
+            this.startPolling();
+          }
+        }
       },
     });
   }
@@ -107,6 +144,12 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
     this.bookingRealtime.unsubscribeAll(); // ✅ FIX Bug #9: Cleanup realtime subscription
     this.stopPolling();
     this.stopAutoRedirect();
+
+    // ✅ OPTIMIZATION: Cleanup realtime timeout
+    if (this.realtimeConnectionTimeout) {
+      window.clearTimeout(this.realtimeConnectionTimeout);
+      this.realtimeConnectionTimeout = null;
+    }
   }
 
   private async loadBooking(id: string): Promise<void> {

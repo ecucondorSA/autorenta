@@ -1,10 +1,10 @@
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
-  <div class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden animate-slide-up">
+  <div class="bg-surface-raised rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden animate-slide-up">
 
     <!-- Header -->
-    <div class="flex items-center justify-between p-6 border-b border-border-default dark:border-border-muted bg-surface-raised z-10">
+    <div class="flex items-center justify-between p-6 border-b border-border-default bg-surface-raised z-10">
       <div>
-        <h2 class="text-xl font-bold text-text-primary dark:text-text-primary flex items-center gap-2 font-satoshi">
+        <h2 class="text-xl font-bold text-text-primary flex items-center gap-2 font-satoshi">
           Disputa #{{ disputeId().slice(0,8) }}
           <span
             class="px-2.5 py-0.5 rounded-full text-xs font-medium"
@@ -18,14 +18,14 @@
             {{ dispute() ? getStatusLabel(dispute()!.status) : 'Cargando...' }}
           </span>
         </h2>
-        <p class="text-sm text-text-secondary dark:text-text-secondary mt-1">
+        <p class="text-sm text-text-secondary mt-1">
           {{ dispute() ? getKindLabel(dispute()!.kind) : '' }}
         </p>
       </div>
       <button
         type="button"
         (click)="closeDetail.emit()"
-        class="p-2 rounded-full hover:bg-surface-base dark:hover:bg-surface-base text-text-secondary transition-colors"
+        class="p-2 rounded-full hover:bg-surface-base text-text-secondary transition-colors"
         >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -41,14 +41,14 @@
         </div>
       } @else if (dispute()) {
         <!-- Descripción Original -->
-        <div class="bg-surface-base dark:bg-surface-base rounded-xl p-4 border border-border-default dark:border-border-muted">
-          <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-2 font-satoshi">Descripción del Problema</h3>
-          <p class="text-text-secondary dark:text-text-secondary whitespace-pre-wrap">{{ dispute()!.description }}</p>
+        <div class="bg-surface-base rounded-xl p-4 border border-border-default">
+          <h3 class="text-sm font-semibold text-text-primary mb-2 font-satoshi">Descripción del Problema</h3>
+          <p class="text-text-secondary whitespace-pre-wrap">{{ dispute()!.description }}</p>
         </div>
 
         <!-- Timeline / Evidencia -->
         <div class="space-y-4">
-          <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary sticky top-0 bg-surface-raised py-2 z-10 font-satoshi">Historial y Evidencia</h3>
+          <h3 class="text-sm font-semibold text-text-primary sticky top-0 bg-surface-raised py-2 z-10 font-satoshi">Historial y Evidencia</h3>
 
           @if (evidence().length === 0) {
             <p class="text-center text-sm text-text-muted italic py-4">No hay evidencia adicional o mensajes.</p>
@@ -65,12 +65,12 @@
                   }
                 </div>
               </div>
-              <div class="flex-1 bg-surface-base dark:bg-surface-base rounded-lg p-3 border border-border-default dark:border-border-muted">
+              <div class="flex-1 bg-surface-base rounded-lg p-3 border border-border-default">
                 @if (item.note) {
-                  <p class="text-sm text-text-primary dark:text-text-primary mb-2">{{ item.note }}</p>
+                  <p class="text-sm text-text-primary mb-2">{{ item.note }}</p>
                 }
                 @if (item.path) {
-                  <img [src]="item.path" alt="Evidencia" class="rounded-lg max-h-48 object-cover border border-border-default dark:border-border-muted cursor-pointer hover:opacity-90 transition-opacity">
+                  <img [src]="item.path" alt="Evidencia" class="rounded-lg max-h-48 object-cover border border-border-default cursor-pointer hover:opacity-90 transition-opacity">
                 }
                 <p class="text-xs text-text-muted mt-2 text-right">
                   {{ item.created_at | date:'short' }}
@@ -84,8 +84,8 @@
 
     <!-- Admin Resolution Panel -->
     @if (isAdmin() && dispute()?.status !== 'resolved' && dispute()?.status !== 'rejected') {
-      <div class="p-6 bg-surface-base dark:bg-surface-base border-t border-border-default dark:border-border-muted z-10 space-y-4">
-        <h3 class="text-sm font-bold text-text-primary dark:text-text-primary uppercase tracking-wider font-satoshi">Panel de Administración</h3>
+      <div class="p-6 bg-surface-base border-t border-border-default z-10 space-y-4">
+        <h3 class="text-sm font-bold text-text-primary uppercase tracking-wider font-satoshi">Panel de Administración</h3>
 
         <div class="grid grid-cols-2 gap-4">
           <div>
@@ -94,14 +94,14 @@
               type="number"
               [(ngModel)]="adminResolutionAmount"
               placeholder="0.00"
-              class="w-full px-3 py-2 rounded-lg bg-surface-raised border border-border-default dark:border-border-muted text-sm"
+              class="w-full px-3 py-2 rounded-lg bg-surface-raised border border-border-default text-sm"
               >
           </div>
           <div>
             <label class="block text-xs font-medium text-text-secondary mb-1">Parte Responsable</label>
             <select
               [(ngModel)]="adminResolutionParty"
-              class="w-full px-3 py-2 rounded-lg bg-surface-raised border border-border-default dark:border-border-muted text-sm"
+              class="w-full px-3 py-2 rounded-lg bg-surface-raised border border-border-default text-sm"
               >
               <option value="">-- Seleccionar --</option>
               <option value="renter">Locatario (Renter)</option>
@@ -129,7 +129,7 @@
 
     <!-- Footer / Actions -->
     @if (dispute() && dispute()!.status === 'open') {
-      <div class="p-4 border-t border-border-default dark:border-border-muted bg-surface-raised z-10 space-y-4">
+      <div class="p-4 border-t border-border-default bg-surface-raised z-10 space-y-4">
         <!-- New Evidence / Message Input -->
         <div class="flex gap-2">
           <input
@@ -137,7 +137,7 @@
             [(ngModel)]="newMessage"
             (keyup.enter)="sendMessage()"
             placeholder="Escribe un mensaje o respuesta..."
-            class="flex-1 px-4 py-2 rounded-xl bg-surface-base dark:bg-surface-base border border-border-default dark:border-border-muted focus:ring-2 focus:ring-cta-default outline-none transition-all"
+            class="flex-1 px-4 py-2 rounded-xl bg-surface-base border border-border-default focus:ring-2 focus:ring-cta-default outline-none transition-all"
             >
           <button
             (click)="sendMessage()"
@@ -157,7 +157,7 @@
         <app-dispute-evidence-uploader [disputeId]="disputeId()" (uploadComplete)="loadDisputeDetails()"></app-dispute-evidence-uploader>
       </div>
     } @else if (dispute() && dispute()!.status === 'in_review' && canAcceptResolution()) {
-      <div class="p-4 border-t border-border-default dark:border-border-muted bg-surface-raised z-10 space-y-4 text-center">
+      <div class="p-4 border-t border-border-default bg-surface-raised z-10 space-y-4 text-center">
         <p class="text-text-secondary mb-3">
           Esta disputa ha sido revisada. Se ha determinado que debes pagar
           @if (dispute()!.resolution_amount && dispute()!.resolution_currency) {

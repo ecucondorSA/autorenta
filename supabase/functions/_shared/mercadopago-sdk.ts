@@ -9,7 +9,7 @@
 
 // Importar SDK de MercadoPago
 // El SDK v2 usa una estructura modular con clases separadas
-import { MercadoPagoConfig, Preference, Payment, Customer, Refund, MoneyRequest } from 'mercadopago';
+import { MercadoPagoConfig, Preference, Payment, Customer, Refund } from 'mercadopago';
 
 // ============================================================================
 // Token Validation Utilities
@@ -167,7 +167,4 @@ export function getRefundClient(config: MercadoPagoConfig): Refund {
 /**
  * Helper para money requests (retiros)
  */
-export function getMoneyRequestClient(config: MercadoPagoConfig): MoneyRequest {
-  return new MoneyRequest(config);
-}
-
+// MoneyRequest API is not available in the current MercadoPago SDK version.

@@ -502,15 +502,12 @@ serve(async (req) => {
     const owner = booking.car?.owner;
 
     // ========================================
-    // COMODATO MODEL: Detect agreement type
-    // comodato = owner gets $0, funds go to platform/reward_pool/FGO
-    // rental = traditional split payment (85% owner / 15% platform)
+    // AUTORENTA: Solo modelo COMODATO
+    // 15% platform, 75% reward pool, 10% FGO, 0% owner directo
+    // Owner recibe rewards mensuales basados en puntos
     // ========================================
-    const isComodato = booking.agreement_type === 'comodato';
-
-    // Split payment only for RENTAL mode when owner has collector_id
-    // COMODATO mode: NO split payment (all funds to platform)
-    const shouldSplit = !isComodato && owner?.mercadopago_collector_id && owner?.mp_onboarding_completed;
+    const isComodato = true; // AutoRenta es exclusivamente comodato
+    const shouldSplit = false; // No hay split payment en comodato
 
     // Calcular montos
     const totalAmount = Number(booking.total_amount || 0);
@@ -546,29 +543,20 @@ serve(async (req) => {
     let rewardPoolAmount: number;
     let fgoAmount: number;
 
-    if (isComodato) {
-      // COMODATO: 15% platform, 75% reward pool, 10% FGO, 0% owner
-      // Distribution designed to be fair: platform gets SAME as rental (15%)
-      // while majority (75%) goes to community pool for all owners
-      platformFee = Math.round(totalAmount * 0.15 * 100) / 100;
-      rewardPoolAmount = Math.round(totalAmount * 0.75 * 100) / 100;
-      fgoAmount = Math.round((totalAmount - platformFee - rewardPoolAmount) * 100) / 100; // ~10%
-      ownerAmount = 0; // CRITICAL: Owner gets ZERO direct, receives from pool instead
-      log.info('[COMODATO] Payment distribution:', {
-        booking_id,
-        total: totalAmount,
-        platform_fee: platformFee,
-        reward_pool: rewardPoolAmount,
-        fgo: fgoAmount,
-        owner: ownerAmount,
-      });
-    } else {
-      // RENTAL: Traditional split (85% owner / 15% platform)
-      platformFee = shouldSplit ? Math.round(totalAmount * 0.15 * 100) / 100 : 0;
-      ownerAmount = shouldSplit ? totalAmount - platformFee : 0;
-      rewardPoolAmount = 0;
-      fgoAmount = 0;
-    }
+    // AUTORENTA (Solo Comodato): 15% platform, 75% reward pool, 10% FGO, 0% owner
+    platformFee = Math.round(totalAmount * 0.15 * 100) / 100;
+    rewardPoolAmount = Math.round(totalAmount * 0.75 * 100) / 100;
+    fgoAmount = Math.round((totalAmount - platformFee - rewardPoolAmount) * 100) / 100; // ~10%
+    ownerAmount = 0; // Owner recibe rewards mensuales, no pago directo
+
+    log.info('[COMODATO] Payment distribution:', {
+      booking_id,
+      total: totalAmount,
+      platform_fee: platformFee,
+      reward_pool: rewardPoolAmount,
+      fgo: fgoAmount,
+      owner: ownerAmount,
+    });
 
     // Formatear phone para MercadoPago
     let phoneFormatted: { area_code: string; number: string } | undefined;
@@ -629,13 +617,11 @@ serve(async (req) => {
         car_id: booking.car_id,
         owner_id: owner?.id || null,
         payment_type: 'booking',
-        agreement_type: isComodato ? 'comodato' : 'rental',
-        is_marketplace_split: shouldSplit,
-        is_comodato: isComodato,
-        ...(isComodato && {
-          reward_pool_cents: Math.round(rewardPoolAmount * 100),
-          fgo_cents: Math.round(fgoAmount * 100),
-        }),
+        agreement_type: 'comodato', // AutoRenta es solo comodato
+        is_marketplace_split: false,
+        is_comodato: true,
+        reward_pool_cents: Math.round(rewardPoolAmount * 100),
+        fgo_cents: Math.round(fgoAmount * 100),
       },
     };
 

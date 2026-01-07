@@ -36,11 +36,11 @@ Depende de tu auto y ubicacion. En promedio:
 Esto asumiendo 8-12 dias de alquiler al mes.
 
 ### Como cobro?
-Directo en tu cuenta MercadoPago. Cuando el renter paga, el 85% (tu parte) va automaticamente a tu cuenta. No tenes que esperar transferencias.
+Directo en tu cuenta MercadoPago. Cuando el renter paga, tus ganancias netas van automaticamente a tu cuenta. No tenes que esperar transferencias.
 
 ### Cuanto cobra Autorenta?
 - Piloto: 0% los primeros 3 meses
-- Despues: 15% del precio de alquiler
+- Despues: Comisión variable según el precio de alquiler y condiciones dinámicas.
 
 Si en el futuro usas nuestra poliza flotante: 25%.
 

@@ -31,18 +31,18 @@ interface NotificationPreferencesPayload {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule],
   template: `
-    <div class="min-h-screen bg-surface-base dark:bg-surface-raised">
+    <div class="min-h-screen bg-surface-base">
       <!-- Header -->
-      <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base">
+      <div class="sticky top-0 z-10 bg-surface-raised shadow">
         <div class="mx-auto max-w-4xl px-4 py-4">
           <div class="flex items-center gap-3">
             <button
               (click)="goBack()"
-              class="rounded-lg p-2 hover:bg-surface-raised dark:hover:bg-gray-700"
+              class="rounded-lg p-2 hover:bg-surface-raised"
               type="button"
             >
               <svg
-                class="h-6 w-6 text-text-secondary dark:text-text-secondary"
+                class="h-6 w-6 text-text-secondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -56,10 +56,10 @@ interface NotificationPreferencesPayload {
               </svg>
             </button>
             <div>
-              <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse">
+              <h1 class="text-2xl font-bold text-text-primary">
                 Preferencias de notificaciones
               </h1>
-              <p class="text-sm text-text-secondary dark:text-text-muted">
+              <p class="text-sm text-text-secondary">
                 Personaliza qué notificaciones quieres recibir
               </p>
             </div>
@@ -75,24 +75,24 @@ interface NotificationPreferencesPayload {
               <div
                 class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500"
               ></div>
-              <p class="text-text-secondary dark:text-text-muted">Cargando preferencias...</p>
+              <p class="text-text-secondary">Cargando preferencias...</p>
             </div>
           </div>
         } @else {
           <!-- Browser notifications -->
-          <div class="mb-6 rounded-lg bg-surface-raised p-6 shadow dark:bg-surface-base">
+          <div class="mb-6 rounded-lg bg-surface-raised p-6 shadow">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
                 <div
-                  class="flex h-12 w-12 items-center justify-center rounded-full bg-cta-default/20 text-2xl dark:bg-cta-default/30"
+                  class="flex h-12 w-12 items-center justify-center rounded-full bg-cta-default/20 text-2xl"
                 >
                   🔔
                 </div>
                 <div>
-                  <h3 class="font-semibold text-text-primary dark:text-text-inverse">
+                  <h3 class="font-semibold text-text-primary">
                     Notificaciones del navegador
                   </h3>
-                  <p class="text-sm text-text-secondary dark:text-text-muted">
+                  <p class="text-sm text-text-secondary">
                     Recibe notificaciones incluso cuando no estés en la app
                   </p>
                 </div>
@@ -113,30 +113,30 @@ interface NotificationPreferencesPayload {
               </button>
             </div>
             @if (browserNotificationsPermission() === 'denied') {
-              <div class="mt-3 rounded-lg bg-warning-bg p-3 dark:bg-warning-900/20">
-                <p class="text-sm text-warning-strong dark:text-warning-200">
-                  ⚠️ Has bloqueado las notificaciones del navegador. Para habilitarlas, ve a la
-                  configuración de tu navegador.
+              <div class="mt-3 rounded-lg bg-warning-bg p-3">
+                <p class="text-sm text-warning-strong">
+                  Has bloqueado las notificaciones del navegador. Para habilitarlas, ve a la
+                  configuracion de tu navegador.
                 </p>
               </div>
             }
           </div>
 
           <!-- Sound preferences -->
-          <div class="mb-6 rounded-lg bg-surface-raised p-6 shadow dark:bg-surface-base">
+          <div class="mb-6 rounded-lg bg-surface-raised p-6 shadow">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
                 <div
-                  class="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-2xl dark:bg-purple-900/30"
+                  class="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-2xl"
                 >
                   🔊
                 </div>
                 <div>
-                  <h3 class="font-semibold text-text-primary dark:text-text-inverse">
+                  <h3 class="font-semibold text-text-primary">
                     Sonido de notificaciones
                   </h3>
-                  <p class="text-sm text-text-secondary dark:text-text-muted">
-                    Reproducir un sonido cuando llegue una notificación
+                  <p class="text-sm text-text-secondary">
+                    Reproducir un sonido cuando llegue una notificacion
                   </p>
                 </div>
               </div>
@@ -157,30 +157,30 @@ interface NotificationPreferencesPayload {
           </div>
 
           <!-- Notification types -->
-          <div class="rounded-lg bg-surface-raised p-6 shadow dark:bg-surface-base">
-            <h2 class="mb-4 text-lg font-semibold text-text-primary dark:text-text-inverse">
+          <div class="rounded-lg bg-surface-raised p-6 shadow">
+            <h2 class="mb-4 text-lg font-semibold text-text-primary">
               Tipos de notificaciones
             </h2>
-            <p class="mb-6 text-sm text-text-secondary dark:text-text-muted">
-              Selecciona qué tipos de notificaciones quieres recibir
+            <p class="mb-6 text-sm text-text-secondary">
+              Selecciona que tipos de notificaciones quieres recibir
             </p>
 
             <div class="space-y-4">
               @for (pref of preferences(); track pref.type) {
                 <div
-                  class="flex items-center justify-between rounded-lg border border-border-default p-4 transition-colors hover:bg-surface-base dark:border-border-muted dark:hover:bg-gray-700/50"
+                  class="flex items-center justify-between rounded-lg border border-border-default p-4 transition-colors hover:bg-surface-base"
                 >
                   <div class="flex items-center gap-4">
                     <div
-                      class="flex h-10 w-10 items-center justify-center rounded-full bg-surface-raised text-xl dark:bg-surface-base"
+                      class="flex h-10 w-10 items-center justify-center rounded-full bg-surface-raised text-xl"
                     >
                       {{ pref.icon }}
                     </div>
                     <div class="flex-1">
-                      <h3 class="font-medium text-text-primary dark:text-text-inverse">
+                      <h3 class="font-medium text-text-primary">
                         {{ pref.label }}
                       </h3>
-                      <p class="text-sm text-text-secondary dark:text-text-muted">
+                      <p class="text-sm text-text-secondary">
                         {{ pref.description }}
                       </p>
                     </div>
@@ -207,7 +207,7 @@ interface NotificationPreferencesPayload {
           <div class="mt-6 flex justify-end gap-3">
             <button
               (click)="goBack()"
-              class="rounded-lg border border-border-muted px-6 py-3 font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:text-text-secondary dark:hover:bg-gray-700"
+              class="rounded-lg border border-border-muted px-6 py-3 font-medium text-text-primary hover:bg-surface-base"
               type="button"
             >
               Cancelar

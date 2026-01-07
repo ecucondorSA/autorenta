@@ -33,7 +33,7 @@ interface Accident {
     <div class="p-6 max-w-7xl mx-auto">
       <!-- Header -->
       <div class="mb-6">
-        <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse">
+        <h1 class="text-2xl font-bold text-text-primary">
           Gestión de Accidentes
         </h1>
         <p class="text-text-secondary mt-1">
@@ -61,7 +61,7 @@ interface Accident {
         </div>
         <div class="card-premium p-4">
           <p class="text-sm text-text-muted">Daños Estimados Total</p>
-          <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">
+          <p class="text-2xl font-bold text-text-primary">
             {{ totalEstimatedDamage() | currency:'USD':'symbol':'1.0-0' }}
           </p>
         </div>
@@ -104,7 +104,7 @@ interface Accident {
       @else if (filteredAccidents().length > 0) {
         <div class="card-premium overflow-hidden">
           <table class="w-full">
-            <thead class="bg-surface-secondary dark:bg-surface-raised">
+            <thead class="bg-surface-secondary">
               <tr>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Fecha</th>
                 <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Reportado por</th>
@@ -115,12 +115,12 @@ interface Accident {
                 <th class="px-4 py-3 text-right text-xs font-semibold text-text-muted uppercase">Acciones</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-border-default dark:divide-slate-deep">
+            <tbody class="divide-y divide-border-default">
               @for (accident of filteredAccidents(); track accident.id) {
-                <tr class="hover:bg-surface-secondary/50 dark:hover:bg-surface-raised/50">
+                <tr class="hover:bg-surface-secondary/50">
                   <td class="px-4 py-4">
                     <div>
-                      <p class="text-sm text-text-primary dark:text-text-inverse">
+                      <p class="text-sm text-text-primary">
                         {{ accident.accident_date | date:'dd/MM/yyyy' }}
                       </p>
                       <p class="text-xs text-text-muted">
@@ -130,7 +130,7 @@ interface Accident {
                   </td>
                   <td class="px-4 py-4">
                     <div>
-                      <p class="text-sm text-text-primary dark:text-text-inverse">
+                      <p class="text-sm text-text-primary">
                         {{ accident.reporter_name || 'N/A' }}
                       </p>
                       <span
@@ -144,7 +144,7 @@ interface Accident {
                       </span>
                     </div>
                   </td>
-                  <td class="px-4 py-4 text-sm text-text-primary dark:text-text-inverse">
+                  <td class="px-4 py-4 text-sm text-text-primary">
                     {{ accident.car_info || 'N/A' }}
                   </td>
                   <td class="px-4 py-4 text-sm text-text-secondary max-w-xs truncate">
@@ -237,7 +237,7 @@ interface Accident {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-2">
+          <h3 class="text-lg font-semibold text-text-primary mb-2">
             No hay accidentes {{ filterStatus === 'all' ? '' : 'con el estado seleccionado' }}
           </h3>
           <p class="text-text-secondary">

@@ -24,7 +24,7 @@ export interface BookingOpsData {
   imports: [],
   template: `
     <div
-      class="rounded-xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary p-4 space-y-4"
+      class="rounded-xl border border-border-default bg-surface-raised p-4 space-y-4"
       >
       <h3 class="text-sm font-semibold text-text-primary">Operaciones</h3>
     
@@ -46,7 +46,7 @@ export interface BookingOpsData {
     
       @if (data.cancellation_reason || data.cancellation_fee_cents || data.cancelled_by_role) {
         <div
-          class="pt-3 border-t border-border-default/60 dark:border-neutral-700 text-sm"
+          class="pt-3 border-t border-border-default/60 text-sm"
           >
           <p class="font-semibold text-error-strong">Cancelación</p>
           @if (data.cancelled_by_role) {

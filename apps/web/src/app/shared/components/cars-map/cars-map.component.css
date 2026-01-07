@@ -257,7 +257,7 @@
   transform: translateX(-50%) scale(1);
 }
 
-.car-marker--dark::after {
+.car-marker-- {
   background: var(--surface-overlay-light, var(--surface-overlay-light, #E3E3E3));
   color: var(--text-primary-dark, var(--text-primary-dark, #0f172a));
   box-shadow: var(--shadow-lg-dark, 0 14px 34px rgba(15, 23, 42, 0.25));
@@ -373,17 +373,6 @@
   width: auto !important; /* Ancho automático */
 }
 
-/* Dark mode para popup */
-.dark .car-popup .mapboxgl-popup-content {
-  background-color: var(--surface-dark, #1e1e1e) !important; /* Fondo gris oscuro en dark mode */
-  color: var(--text-white, #ffffff) !important; /* Texto blanco para contraste */
-  box-shadow: var(
-    --shadow-lg-dark,
-    0 6px 20px var(--shadow-dark-alpha-80, #2B2B2B)
-  ) !important; /* Sombra más intensa */
-  border: 1px solid
-    var(--border-light-alpha-15, var(--border-light-alpha-15, rgba(255, 255, 255, 0.15))) !important; /* Borde sutil */
-}
 
 .car-popup-content {
   display: flex;
@@ -442,9 +431,6 @@ img.car-popup-image {
   color: var(--text-dark, #1a1a1a) !important; /* Color base oscuro para light mode */
 }
 
-.dark .car-popup-info {
-  color: var(--text-white, #ffffff) !important; /* Color base blanco para dark mode */
-}
 
 /* Selectores específicos para sobrescribir estilos globales de map-theme.css - REDUCIDO 4x */
 .car-popup .mapboxgl-popup-content .car-popup-info h4,
@@ -463,15 +449,6 @@ img.car-popup-image {
   opacity: 1 !important;
 }
 
-/* Dark mode para títulos */
-.dark .car-popup .mapboxgl-popup-content .car-popup-info h4,
-.dark .car-popup-info h4,
-.dark .car-popup .mapboxgl-popup-content h4,
-.dark .mapboxgl-popup-content.car-popup-content h4,
-.dark .car-popup-content h4,
-.dark .car-popup-title {
-  color: var(--text-white, #ffffff) !important; /* Blanco para contraste en dark mode */
-}
 
 .car-popup-info p:not(.car-popup-price) {
   color: var(--text-muted, #4b4b4b) !important; /* Gris medio para texto secundario en light mode */
@@ -480,12 +457,6 @@ img.car-popup-image {
   line-height: 1.4;
 }
 
-.dark .car-popup-info p:not(.car-popup-price) {
-  color: var(
-    --text-light-muted,
-    #e5e3dd
-  ) !important; /* Gris claro para texto secundario en dark mode */
-}
 
 .car-popup-price {
   margin: 0;
@@ -495,9 +466,6 @@ img.car-popup-image {
   line-height: 1.4;
 }
 
-.dark .car-popup-price {
-  color: var(--cta-light, #60a5fa) !important; /* Azul claro para precio en dark mode */
-}
 
 /* Responsive: Mejorar contraste y tamaño en móvil - REDUCCIÓN AL 1/8 (8x más pequeño) */
 @media (max-width: 640px) {
@@ -598,11 +566,6 @@ img.car-popup-image {
   ) !important;
 }
 
-/* Tip del popup - Dark mode */
-.dark .car-popup .mapboxgl-popup-tip {
-  border-top-color: var(--surface-dark, #1e1e1e) !important;
-  border-bottom-color: var(--surface-dark, #1e1e1e) !important;
-}
 
 /* Desktop: Asegurar visibilidad en pantallas grandes - REDUCIDO 4x */
 @media (min-width: 641px) {
@@ -612,34 +575,16 @@ img.car-popup-image {
     -webkit-border-radius: 4.5px !important;
   }
 
-  .dark .car-popup .mapboxgl-popup-content {
-    background-color: var(--surface-dark, #1e1e1e) !important;
-    box-shadow: var(
-      --shadow-md-dark,
-      0 2px 6px var(--shadow-dark-alpha-90, rgba(0, 0, 0, 0.9))
-    ) !important; /* Reducido 4x */
-  }
-
   .car-popup-info h4,
   .car-popup-title {
     font-size: 3.75px; /* Reducido 4x (antes 15px) */
     font-weight: 700;
   }
 
-  .dark .car-popup-info h4,
-  .dark .car-popup-title {
-    font-size: 3.75px; /* Reducido 4x (antes 15px) */
-    font-weight: 700;
-    color: var(--text-white, #ffffff) !important;
-  }
-
   .car-popup-price {
     font-size: 4.25px; /* Reducido 4x (antes 17px) */
   }
 
-  .dark .car-popup-price {
-    color: var(--cta-light, #60a5fa) !important;
-  }
 }
 
 /* Botón de geolocalización */
@@ -672,27 +617,6 @@ img.car-popup-image {
   transform: scale(0.95);
 }
 
-/* Dark mode para botón de geolocalización */
-.dark .mapbox-ctrl-geolocate {
-  background: var(--surface-dark, #1e1e1e) !important;
-  border-color: var(
-    --border-light-alpha-20,
-    var(--border-light-alpha-20, rgba(255, 255, 255, 0.2))
-  ) !important;
-  color: var(--text-white, #ffffff) !important;
-  box-shadow: var(
-    --shadow-md-dark,
-    0 2px 8px var(--shadow-dark-alpha-40, #7B7B7B)
-  ) !important;
-}
-
-.dark .mapbox-ctrl-geolocate:hover {
-  background: var(--surface-hover-dark, #2a2a2a) !important;
-  box-shadow: var(
-    --shadow-lg-dark,
-    0 4px 12px var(--shadow-dark-alpha-60, #4E4E4E)
-  ) !important;
-}
 
 .mapbox-ctrl-geolocate svg {
   width: 20px;
@@ -1186,27 +1110,6 @@ img.car-popup-image {
   transform: translateY(0);
 }
 
-/* Modo oscuro para popup */
-.dark .user-location-popup .text-text-primary {
-  color: #f8fafc;
-}
-
-.dark .user-location-popup .text-text-secondary {
-  color: var(--text-secondary);
-}
-
-.dark .user-location-popup .text-text-tertiary {
-  color: var(--text-muted);
-}
-
-.dark .user-location-cta {
-  background: rgba(167, 216, 244, 0.2);
-  color: var(--text-primary);
-}
-
-.dark .user-location-cta:hover {
-  background: var(--cta-alpha-30, rgba(167, 216, 244, 0.3));
-}
 
 /* 🎯 Tooltip Container */
 .map-tooltip-container {
@@ -1259,21 +1162,6 @@ img.car-popup-image {
   height: 20px;
 }
 
-/* Modo oscuro para controles */
-.dark .map-control-button {
-  background: var(--surface-secondary);
-  border-color: var(--border-light-alpha-20, rgba(255, 255, 255, 0.2));
-  color: #f8fafc;
-}
-
-.dark .map-control-button:hover {
-  background: var(--surface-raised);
-}
-
-.dark .map-control-button.active {
-  background: var(--cta-default);
-  color: white;
-}
 
 /* Map Feature Controls - All controls unified */
 .cars-map-feature-controls {
@@ -1349,22 +1237,6 @@ img.car-popup-image {
   white-space: nowrap;
 }
 
-/* Dark mode for feature buttons */
-.dark .cars-map-feature-button {
-  background: var(--surface-secondary);
-  border-color: var(--border-light-alpha-20, rgba(255, 255, 255, 0.2));
-  color: #f8fafc;
-}
-
-.dark .cars-map-feature-button:hover {
-  background: var(--surface-raised);
-}
-
-.dark .cars-map-feature-button.active {
-  background: var(--cta-default, #805ad5);
-  color: white;
-  border-color: var(--cta-default, #805ad5);
-}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -1436,10 +1308,6 @@ img.car-popup-image {
   transition: all 0.3s ease;
 }
 
-.dark .info-card {
-  background: var(--surface-dark-alpha-95, rgba(30, 41, 59, 0.95));
-  border-color: var(--border-default);
-}
 
 .info-card:hover {
   box-shadow:
@@ -1457,9 +1325,6 @@ img.car-popup-image {
   border-bottom: 1px solid var(--surface-muted, #f1f5f9);
 }
 
-.dark .info-card-header {
-  border-bottom-color: var(--border-default);
-}
 
 .info-icon {
   width: 20px;
@@ -1476,9 +1341,6 @@ img.car-popup-image {
   letter-spacing: -0.01em;
 }
 
-.dark .info-title {
-  color: var(--text-primary, #f1f5f9);
-}
 
 .info-content {
   display: flex;
@@ -1502,9 +1364,6 @@ img.car-popup-image {
   margin: -4px -8px 4px;
 }
 
-.dark .info-row-highlight {
-  background: rgba(71, 85, 105, 0.3);
-}
 
 .info-label {
   color: var(--text-secondary, var(--text-secondary, #64748b));
@@ -1514,18 +1373,12 @@ img.car-popup-image {
   gap: 6px;
 }
 
-.dark .info-label {
-  color: var(--text-secondary, #94a3b8);
-}
 
 .info-value {
   color: var(--text-primary, #0f172a);
   font-weight: 550;
 }
 
-.dark .info-value {
-  color: var(--text-primary, #f1f5f9);
-}
 
 .info-badge {
   background: var(--cta-default, #0284c7);
@@ -1584,9 +1437,6 @@ img.car-popup-image {
     0 0 8px rgba(2, 132, 199, 0.4);
 }
 
-.dark .legend-marker.user-marker {
-  border-color: var(--surface-primary);
-}
 
 .legend-marker.car-available {
   background: var(--map-marker-available-color, var(--success-default, #10b981));
@@ -1594,9 +1444,6 @@ img.car-popup-image {
   box-shadow: 0 0 0 1px var(--map-marker-available-color, var(--success-default, #10b981));
 }
 
-.dark .legend-marker.car-available {
-  border-color: var(--surface-primary);
-}
 
 .legend-marker.car-soon {
   background: var(--map-marker-soon-available-color, var(--warning-default, #f59e0b));
@@ -1605,9 +1452,6 @@ img.car-popup-image {
   animation: pulse-subtle 2s ease-in-out infinite;
 }
 
-.dark .legend-marker.car-soon {
-  border-color: var(--surface-primary);
-}
 
 .legend-marker.car-in-use {
   background: var(--map-marker-in-use-color, var(--info-default, #6366f1));
@@ -1616,12 +1460,6 @@ img.car-popup-image {
   opacity: 0.7;
 }
 
-.dark .legend-marker.car-in-use {
-  background: var(--map-marker-in-use-color, var(--info-default, #6366f1));
-  border-color: var(--surface-primary);
-  box-shadow: 0 0 0 1px var(--map-marker-in-use-color, var(--info-default, #6366f1));
-  opacity: 0.7;
-}
 
 .legend-marker.search-radius {
   background: var(--cta-alpha-30, rgba(167, 216, 244, 0.3));
@@ -1635,9 +1473,6 @@ img.car-popup-image {
   font-weight: 450;
 }
 
-.dark .legend-label {
-  color: var(--text-secondary, #94a3b8);
-}
 
 @keyframes pulse-subtle {
   0%,

@@ -105,7 +105,7 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
   imports: [CommonModule, RouterLink, TranslateModule],
   template: `
     <div
-      class="verification-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
+      class="verification-page bg-surface-base min-h-screen transition-colors duration-300"
     >
       <section
         class="relative overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white"
@@ -149,17 +149,17 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
         @if (currentStatus(); as status) {
           <section class="grid gap-4 md:grid-cols-3 mb-8">
             <div
-              class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"
+              class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm"
             >
               <div class="flex items-start justify-between gap-4">
                 <div>
-                  <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+                  <p class="text-sm text-text-secondary">
                     Estado actual
                   </p>
-                  <p class="text-2xl font-semibold text-text-primary dark:text-text-primary mt-1">
+                  <p class="text-2xl font-semibold text-text-primary mt-1">
                     {{ getStatusLabel(status.status) }}
                   </p>
-                  <p class="text-sm text-text-secondary dark:text-text-secondary/80">
+                  <p class="text-sm text-text-secondary">
                     Actualizado {{ formatDate(status.updated_at) }}
                   </p>
                 </div>
@@ -171,27 +171,27 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
                   {{ status.status.toLowerCase() }}
                 </span>
               </div>
-              <p class="mt-4 text-sm text-text-secondary dark:text-text-secondary/80">
+              <p class="mt-4 text-sm text-text-secondary">
                 {{ getStatusDescription(status.status) }}
               </p>
               @if (status.notes) {
                 <div
-                  class="mt-4 rounded-xl border border-error-border/60 bg-error-bg/60 dark:bg-error-900/30 px-4 py-3 text-sm text-error-strong"
+                  class="mt-4 rounded-xl border border-error-border/60 bg-error-bg/60 px-4 py-3 text-sm text-error-strong"
                 >
                   {{ status.notes }}
                 </div>
               }
             </div>
             <div
-              class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"
+              class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm"
             >
-              <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">
+              <h3 class="text-lg font-semibold text-text-primary">
                 Revisión y progreso
               </h3>
-              <ul class="mt-4 space-y-3 text-sm text-text-secondary dark:text-text-secondary/80">
+              <ul class="mt-4 space-y-3 text-sm text-text-secondary">
                 <li class="flex items-center justify-between gap-4">
                   <span>Documentos listos</span>
-                  <span class="font-semibold text-text-primary dark:text-text-primary">{{
+                  <span class="font-semibold text-text-primary">{{
                     completedDocs()
                   }}</span>
                 </li>
@@ -206,13 +206,13 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
               </ul>
             </div>
             <div
-              class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm flex flex-col gap-4"
+              class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm flex flex-col gap-4"
             >
               <div>
-                <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">
+                <h3 class="text-lg font-semibold text-text-primary">
                   Acciones inmediatas
                 </h3>
-                <p class="text-sm text-text-secondary dark:text-text-secondary/80">
+                <p class="text-sm text-text-secondary">
                   Completa los documentos marcados como pendientes y solicitaremos una revisión
                   automática.
                 </p>
@@ -224,7 +224,7 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
               >
                 {{ isVerifying() ? 'Revisando...' : 'Solicitar revisión ahora' }}
               </button>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+              <p class="text-xs text-text-secondary">
                 {{
                   autoTriggered()
                     ? 'Enviamos tu verificación automáticamente porque ya completaste todo.'
@@ -238,19 +238,19 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
             <div class="space-y-6">
               @for (category of docCategories; track category.id) {
                 <div
-                  class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"
+                  class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm"
                 >
                   <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div>
-                      <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary">
+                      <h2 class="text-xl font-semibold text-text-primary">
                         {{ category.title }}
                       </h2>
-                      <p class="text-sm text-text-secondary dark:text-text-secondary/80">
+                      <p class="text-sm text-text-secondary">
                         {{ category.description }}
                       </p>
                     </div>
                     <div
-                      class="rounded-full bg-surface-base dark:bg-graphite-dark px-4 py-1 text-sm font-semibold text-text-secondary"
+                      class="rounded-full bg-surface-base px-4 py-1 text-sm font-semibold text-text-secondary"
                     >
                       {{ getCategoryStats(category.docs).completed }}/{{ category.docs.length }}
                       completado
@@ -259,22 +259,22 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
                   <div class="mt-5 space-y-4">
                     @for (doc of category.docs; track doc.id) {
                       <div
-                        class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-white/70 dark:bg-graphite-dark/60 px-4 py-4 shadow-sm"
+                        class="rounded-2xl border border-border-default bg-white/70 px-4 py-4 shadow-sm"
                       >
                         <div
                           class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between"
                         >
                           <div>
                             <p
-                              class="text-base font-semibold text-text-primary dark:text-text-primary"
+                              class="text-base font-semibold text-text-primary"
                             >
                               {{ doc.emoji }} {{ doc.label }}
                             </p>
-                            <p class="text-sm text-text-secondary dark:text-text-secondary/80">
+                            <p class="text-sm text-text-secondary">
                               {{ doc.description }}
                             </p>
                             @if (getDocPrefillLabels(doc.id).length > 0) {
-                              <p class="mt-2 text-xs text-primary-600 dark:text-primary-300">
+                              <p class="mt-2 text-xs text-primary-600">
                                 Autocompletamos: {{ getDocPrefillLabels(doc.id).join(', ') }}
                               </p>
                             }
@@ -303,7 +303,7 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
                             <button
                               type="button"
                               (click)="prefillDoc(doc.id)"
-                              class="inline-flex items-center gap-2 rounded-xl bg-surface-base/60 dark:bg-graphite-dark px-3 py-1.5 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
+                              class="inline-flex items-center gap-2 rounded-xl bg-surface-base/60 px-3 py-1.5 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
                             >
                               ✨ Autocompletar
                             </button>
@@ -317,12 +317,12 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
             </div>
             <aside class="space-y-6">
               <div
-                class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"
+                class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm"
               >
-                <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">
+                <h3 class="text-lg font-semibold text-text-primary">
                   Datos importados del perfil
                 </h3>
-                <p class="text-sm text-text-secondary dark:text-text-secondary/80">
+                <p class="text-sm text-text-secondary">
                   Reutilizamos la información que ya completaste para evitar que escribas todo de
                   nuevo.
                 </p>
@@ -332,17 +332,17 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
                       <li class="flex items-start gap-2">
                         <span class="text-primary-500">•</span>
                         <span>
-                          <span class="font-medium text-text-primary dark:text-text-primary">{{
+                          <span class="font-medium text-text-primary">{{
                             hint.label
                           }}</span>
-                          <span class="ml-1 text-text-secondary dark:text-text-secondary/80">{{
+                          <span class="ml-1 text-text-secondary">{{
                             hint.value
                           }}</span>
                         </span>
                       </li>
                     }
                   } @else {
-                    <li class="text-text-secondary dark:text-text-secondary/70">
+                    <li class="text-text-secondary">
                       Completa tu perfil para habilitar el autollenado automático.
                     </li>
                   }
@@ -355,12 +355,12 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
                 </a>
               </div>
               <div
-                class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"
+                class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm"
               >
-                <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">
+                <h3 class="text-lg font-semibold text-text-primary">
                   ¿Necesitas ayuda?
                 </h3>
-                <p class="text-sm text-text-secondary dark:text-text-secondary/80">
+                <p class="text-sm text-text-secondary">
                   Nuestro equipo monitorea las verificaciones todos los días. Si detectamos un
                   problema te avisamos por WhatsApp.
                 </p>
@@ -376,21 +376,21 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
           @if (showFaq()) {
             <section class="mt-10">
               <div
-                class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"
+                class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm"
               >
-                <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
+                <h2 class="text-xl font-semibold text-text-primary mb-4">
                   Preguntas frecuentes
                 </h2>
-                <div class="divide-y divide-border-default dark:divide-neutral-800/60">
+                <div class="divide-y divide-border-default">
                   @for (faq of faqItems; track faq.question) {
                     <details class="group py-3">
                       <summary
-                        class="flex cursor-pointer items-center justify-between text-base font-semibold text-text-primary dark:text-text-primary"
+                        class="flex cursor-pointer items-center justify-between text-base font-semibold text-text-primary"
                       >
                         {{ faq.question }}
                         <span class="text-lg transition-transform group-open:rotate-180">⌄</span>
                       </summary>
-                      <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary/80">
+                      <p class="mt-2 text-sm text-text-secondary">
                         {{ faq.answer }}
                       </p>
                     </details>
@@ -605,11 +605,11 @@ export class VerificationPage implements OnInit {
       case 'approved':
         return 'border-success-light text-success-strong bg-success-light/10';
       case 'rejected':
-        return 'border-error-border text-error-strong bg-error-bg dark:bg-error-900/30';
+        return 'border-error-border text-error-strong bg-error-bg';
       case 'in_review':
-        return 'border-primary-400 text-primary-600 bg-primary-50 dark:bg-primary-900/30';
+        return 'border-primary-400 text-primary-600 bg-primary-50';
       default:
-        return 'border-warning-border text-warning-600 bg-warning-bg dark:bg-warning-900/20';
+        return 'border-warning-border text-warning-600 bg-warning-bg';
     }
   }
 
@@ -633,9 +633,9 @@ export class VerificationPage implements OnInit {
       case 'rejected':
         return 'text-error-strong';
       case 'in_review':
-        return 'text-primary-600 dark:text-primary-300';
+        return 'text-primary-600';
       default:
-        return 'text-text-secondary dark:text-text-secondary/70';
+        return 'text-text-secondary';
     }
   }
 
@@ -694,7 +694,7 @@ export class VerificationPage implements OnInit {
       case 'RECHAZADO':
         return 'border-error-border text-error-strong bg-error-bg';
       default:
-        return 'border-warning-border text-warning-600 bg-warning-bg dark:bg-warning-900/20';
+        return 'border-warning-border text-warning-600 bg-warning-bg';
     }
   }
 }

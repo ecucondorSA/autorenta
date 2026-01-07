@@ -1,5 +1,5 @@
 <div
-  class="min-h-screen bg-gradient-to-br from-surface-base via-surface-raised to-surface-base dark:from-surface-base dark:via-surface-secondary dark:to-surface-base py-12 px-4 sm:px-6 lg:px-8"
+  class="min-h-screen bg-gradient-to-br from-surface-base via-surface-raised to-surface-base py-12 px-4 sm:px-6 lg:px-8"
 >
   <div class="max-w-2xl mx-auto">
     <!-- Header -->
@@ -7,7 +7,7 @@
       @if (showPaymentRedirect()) {
         <button
           (click)="onBackToAmount()"
-          class="inline-flex items-center text-text-secondary dark:text-text-secondary hover:text-text-primary dark:hover:text-text-primary transition mb-4"
+          class="inline-flex items-center text-text-secondary hover:text-text-primary transition mb-4"
         >
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -22,7 +22,7 @@
       } @else {
         <button
           (click)="onCancel()"
-          class="inline-flex items-center text-text-secondary dark:text-text-secondary hover:text-text-primary dark:hover:text-text-primary transition mb-4"
+          class="inline-flex items-center text-text-secondary hover:text-text-primary transition mb-4"
         >
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -36,7 +36,7 @@
         </button>
       }
 
-      <h1 class="text-4xl font-bold text-text-primary dark:text-text-primary mb-2 tracking-tight font-satoshi">
+      <h1 class="text-4xl font-bold text-text-primary mb-2 tracking-tight font-satoshi">
         @if (paymentCompleted()) {
           ¡Depósito Exitoso!
         } @else if (paymentPending()) {
@@ -47,7 +47,7 @@
           Depositar Fondos
         }
       </h1>
-      <p class="text-lg text-text-secondary dark:text-text-secondary">
+      <p class="text-lg text-text-secondary">
         @if (paymentCompleted()) {
           Los fondos se acreditaron a tu wallet
         } @else if (paymentPending()) {
@@ -62,16 +62,16 @@
 
     <!-- Main Form Card -->
     <div
-      class="bg-surface-raised dark:bg-surface-raised rounded-3xl shadow-soft border border-border-default dark:border-border-default p-8"
+      class="bg-surface-raised rounded-3xl shadow-soft border border-border-default p-8"
     >
       <!-- Success State -->
       @if (paymentCompleted()) {
         <div class="text-center py-8">
           <div
-            class="w-20 h-20 mx-auto mb-6 rounded-full bg-success-100 dark:bg-success-500/20 flex items-center justify-center"
+            class="w-20 h-20 mx-auto mb-6 rounded-full bg-success-100 flex items-center justify-center"
           >
             <svg
-              class="w-10 h-10 text-success-600 dark:text-success-400"
+              class="w-10 h-10 text-success-600"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -82,13 +82,13 @@
               />
             </svg>
           </div>
-          <h3 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2 font-satoshi">
+          <h3 class="text-2xl font-bold text-text-primary mb-2 font-satoshi">
             ¡Pago Completado!
           </h3>
-          <p class="text-text-secondary dark:text-text-secondary mb-2">
+          <p class="text-text-secondary mb-2">
             Se acreditaron {{ formatCurrency(usdAmount()) }} USD a tu wallet
           </p>
-          <p class="text-sm text-text-muted dark:text-text-muted">Redirigiendo al wallet...</p>
+          <p class="text-sm text-text-muted">Redirigiendo al wallet...</p>
         </div>
       }
 
@@ -96,10 +96,10 @@
       @else if (paymentPending()) {
         <div class="text-center py-8">
           <div
-            class="w-20 h-20 mx-auto mb-6 rounded-full bg-warning-100 dark:bg-warning-500/20 flex items-center justify-center"
+            class="w-20 h-20 mx-auto mb-6 rounded-full bg-warning-100 flex items-center justify-center"
           >
             <svg
-              class="w-10 h-10 text-warning-600 dark:text-warning-400"
+              class="w-10 h-10 text-warning-600"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -110,10 +110,10 @@
               />
             </svg>
           </div>
-          <h3 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2 font-satoshi">
+          <h3 class="text-2xl font-bold text-text-primary mb-2 font-satoshi">
             Pago Pendiente
           </h3>
-          <p class="text-text-secondary dark:text-text-secondary mb-4">
+          <p class="text-text-secondary mb-4">
             Completa el pago en Rapipago o Pago Fácil para acreditar los fondos.
           </p>
           <button
@@ -132,13 +132,13 @@
           <div>
             <label
               for="amount"
-              class="block text-sm font-semibold text-text-primary dark:text-text-primary mb-2"
+              class="block text-sm font-semibold text-text-primary mb-2"
             >
               Monto en USD
             </label>
             <div class="relative">
               <span
-                class="absolute left-4 top-3.5 text-text-secondary dark:text-text-secondary text-lg"
+                class="absolute left-4 top-3.5 text-text-secondary text-lg"
                 >$</span
               >
               <input
@@ -147,7 +147,7 @@
                 name="amount"
                 [(ngModel)]="usdAmountValue"
                 (ngModelChange)="updateUsdAmount($event)"
-                class="w-full pl-8 pr-4 py-3 text-lg rounded-xl border-2 border-border-default dark:border-border-default bg-surface-base dark:bg-surface-base text-text-primary dark:text-text-primary focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 transition"
+                class="w-full pl-8 pr-4 py-3 text-lg rounded-xl border-2 border-border-default bg-surface-base text-text-primary focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition"
                 placeholder="0.00"
                 min="0"
                 step="10"
@@ -158,20 +158,20 @@
             <!-- Exchange Rate Info -->
             <div class="mt-2">
               @if (loadingRate()) {
-                <p class="text-sm text-text-secondary dark:text-text-secondary animate-pulse">
+                <p class="text-sm text-text-secondary animate-pulse">
                   Cargando cotización...
                 </p>
               }
               @if (!loadingRate() && platformRate() && arsAmount() > 0) {
                 <div class="flex items-center justify-between text-sm">
-                  <span class="text-text-secondary dark:text-text-secondary">
+                  <span class="text-text-secondary">
                     Se cobrará:
                   </span>
-                  <span class="font-semibold text-primary-600 dark:text-primary-400">
+                  <span class="font-semibold text-primary-600">
                     ${{ arsAmount() | number: '1.0-0' }} ARS
                   </span>
                 </div>
-                <p class="text-xs text-text-muted dark:text-text-muted mt-1">
+                <p class="text-xs text-text-muted mt-1">
                   Ingresaste {{ usdAmountInput() | number: '1.2-2' }} USD · Tasa: 1 USD ≈
                   {{ platformRate() | number: '1.2-2' }} ARS
                 </p>
@@ -183,10 +183,10 @@
           <div>
             <label
               for="description"
-              class="block text-sm font-semibold text-text-primary dark:text-text-primary mb-2"
+              class="block text-sm font-semibold text-text-primary mb-2"
             >
               Descripción
-              <span class="text-text-muted dark:text-text-muted font-normal">(opcional)</span>
+              <span class="text-text-muted font-normal">(opcional)</span>
             </label>
             <input
               type="text"
@@ -194,7 +194,7 @@
               name="description"
               [(ngModel)]="description"
               (ngModelChange)="updateDescription($event)"
-              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-base dark:bg-surface-base text-text-primary dark:text-text-primary focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 transition"
+              class="w-full px-4 py-3 rounded-xl border-2 border-border-default bg-surface-base text-text-primary focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition"
               placeholder="Ej: Depósito para reservas"
               maxlength="100"
             />
@@ -222,11 +222,11 @@
 
           <!-- Info Box -->
           <div
-            class="bg-primary-50 dark:bg-primary-500/10 border border-primary-200 dark:border-primary-400/30 rounded-xl p-4"
+            class="bg-primary-50 border border-primary-200 rounded-xl p-4"
           >
             <div class="flex">
               <svg
-                class="w-5 h-5 text-primary-600 dark:text-primary-400 mt-0.5 flex-shrink-0"
+                class="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -237,10 +237,10 @@
                 />
               </svg>
               <div class="ml-3 text-sm">
-                <p class="text-primary-800 dark:text-primary-200 font-semibold mb-1">
+                <p class="text-primary-800 font-semibold mb-1">
                   Sobre los depósitos
                 </p>
-                <ul class="text-primary-700 dark:text-primary-300 space-y-1">
+                <ul class="text-primary-700 space-y-1">
                   <li>• El monto mínimo es $1,000 ARS</li>
                   <li>• Los fondos se acreditan instantáneamente tras confirmación de pago</li>
                   <li>• Paga con tarjeta, Rapipago, Pago Fácil o cuenta de Mercado Pago</li>
@@ -254,7 +254,7 @@
             <button
               type="button"
               (click)="onCancel()"
-              class="flex-1 px-6 py-3 rounded-xl border-2 border-border-default dark:border-border-default text-text-primary dark:text-text-primary font-semibold hover:bg-surface-base dark:hover:bg-surface-base transition-all"
+              class="flex-1 px-6 py-3 rounded-xl border-2 border-border-default text-text-primary font-semibold hover:bg-surface-base transition-all"
             >
               Cancelar
             </button>
@@ -262,7 +262,7 @@
             <button
               type="submit"
               [disabled]="isProcessing() || !arsAmount() || arsAmount() <= 0"
-              class="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 dark:from-primary-500 dark:to-primary-600 text-text-inverse font-semibold hover:from-primary-700 hover:to-primary-800 dark:hover:from-primary-600 dark:hover:to-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl"
+              class="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 text-text-inverse font-semibold hover:from-primary-700 hover:to-primary-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl"
               data-testid="deposit-submit"
             >
               Continuar al Pago
@@ -274,7 +274,7 @@
 
     <!-- Security Badge -->
     <div class="mt-8 text-center">
-      <div class="inline-flex items-center text-sm text-text-muted dark:text-text-muted">
+      <div class="inline-flex items-center text-sm text-text-muted">
         <svg class="w-5 h-5 mr-2 text-success-500" fill="currentColor" viewBox="0 0 20 20">
           <path
             fill-rule="evenodd"

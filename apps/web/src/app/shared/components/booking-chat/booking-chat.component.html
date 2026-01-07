@@ -1,10 +1,10 @@
 <!-- WhatsApp-style Chat Container -->
 <div
-  class="whatsapp-chat-container flex h-[600px] flex-col overflow-hidden rounded-lg border border-border-default bg-surface-raised shadow-lg dark:border-border-muted dark:bg-surface-raised"
+  class="whatsapp-chat-container flex h-[600px] flex-col overflow-hidden rounded-lg border border-border-default bg-surface-raised shadow-lg"
 >
   <!-- Header estilo WhatsApp -->
   <div
-    class="whatsapp-header flex items-center gap-3 bg-whatsapp-teal px-4 py-3 text-text-inverse dark:bg-whatsapp-bg-header-dark"
+    class="whatsapp-header flex items-center gap-3 bg-whatsapp-teal px-4 py-3 text-text-inverse"
   >
     <!-- Avatar -->
     <div
@@ -45,7 +45,7 @@
 
   <!-- Fondo estilo WhatsApp -->
   <div
-    class="whatsapp-bg relative flex-1 overflow-y-auto bg-whatsapp-bg dark:bg-whatsapp-bg-dark"
+    class="whatsapp-bg relative flex-1 overflow-y-auto bg-whatsapp-bg"
     style="
       background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iYSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiPjxwYXRoIGQ9Ik0wIDBoMTAwdjEwMEgweiIgZmlsbD0iI2VjZTVkZCIvPjxwYXRoIGQ9Ik0wIDBoNTB2NTBIMHptNTAgNTBoNTB2NTBINTB6IiBmaWxsPSIjZjdmM2YwIiBmaWxsLW9wYWNpdHk9Ii4xIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+');
       background-size: 400px 400px;
@@ -57,7 +57,7 @@
         <div
           class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-muted border-t-whatsapp-teal"
         ></div>
-        <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+        <p class="text-sm text-text-secondary">
           Cargando mensajes...
         </p>
       </div>
@@ -66,7 +66,7 @@
     <!-- Error -->
     <div
       *ngIf="error()"
-      class="mx-4 mt-4 rounded-lg bg-error-bg-hover p-3 text-sm text-error-strong dark:bg-error-900/30 dark:text-error-200"
+      class="mx-4 mt-4 rounded-lg bg-error-bg-hover p-3 text-sm text-error-strong"
     >
       ⚠️ {{ error() }}
     </div>
@@ -77,10 +77,10 @@
       class="flex h-full flex-col items-center justify-center px-4 text-center"
     >
       <div
-        class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-surface-raised/70 dark:bg-surface-base/70"
+        class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-surface-raised/70"
       >
         <svg
-          class="h-10 w-10 text-whatsapp-teal dark:text-text-muted dark:text-text-secondary"
+          class="h-10 w-10 text-whatsapp-teal"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -93,10 +93,10 @@
           />
         </svg>
       </div>
-      <p class="mb-2 text-base font-medium text-text-primary dark:text-text-secondary">
+      <p class="mb-2 text-base font-medium text-text-primary">
         No hay mensajes todavía
       </p>
-      <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+      <p class="text-sm text-text-secondary">
         Envía un mensaje para empezar la conversación
       </p>
     </div>
@@ -112,40 +112,40 @@
         <!-- Mensaje recibido (izquierda) -->
         <div
           *ngIf="!isOwnMessage(message)"
-          class="message-received relative max-w-[75%] rounded-lg rounded-tl-none bg-surface-raised px-3 py-2 shadow-sm dark:bg-whatsapp-bg-message-dark"
+          class="message-received relative max-w-[75%] rounded-lg rounded-tl-none bg-surface-raised px-3 py-2 shadow-sm"
         >
-          <p class="break-words text-sm text-text-primary dark:text-text-primary">
+          <p class="break-words text-sm text-text-primary">
             {{ message.body }}
           </p>
           <div class="mt-1 flex items-center justify-end gap-1">
             <span
-              class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+              class="text-xs text-text-secondary"
               >{{ formatTime(message.created_at) }}</span
             >
           </div>
           <!-- Tail izquierdo -->
           <div
-            class="absolute -left-2 top-0 h-0 w-0 border-r-8 border-t-8 border-r-transparent border-t-white dark:border-t-whatsapp-bg-message-dark"
+            class="absolute -left-2 top-0 h-0 w-0 border-r-8 border-t-8 border-r-transparent border-t-white"
           ></div>
         </div>
 
         <!-- Mensaje enviado (derecha) -->
         <div
           *ngIf="isOwnMessage(message)"
-          class="message-sent relative max-w-[75%] rounded-lg rounded-tr-none bg-whatsapp-green-sent px-3 py-2 shadow-sm dark:bg-whatsapp-teal-darker"
+          class="message-sent relative max-w-[75%] rounded-lg rounded-tr-none bg-whatsapp-green-sent px-3 py-2 shadow-sm"
         >
-          <p class="break-words text-sm text-text-primary dark:text-text-primary">
+          <p class="break-words text-sm text-text-primary">
             {{ message.body }}
           </p>
           <div class="mt-1 flex items-center justify-end gap-1">
-            <span class="text-xs text-text-secondary dark:text-text-secondary">{{
+            <span class="text-xs text-text-secondary">{{
               formatTime(message.created_at)
             }}</span>
 
             <!-- Check marks - Single check (sent) -->
             <svg
               *ngIf="getMessageStatus(message) === 'sent'"
-              class="h-4 w-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+              class="h-4 w-4 text-text-secondary"
               fill="currentColor"
               viewBox="0 0 16 15"
             >
@@ -157,7 +157,7 @@
             <!-- Double check (delivered) -->
             <svg
               *ngIf="getMessageStatus(message) === 'delivered'"
-              class="h-4 w-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+              class="h-4 w-4 text-text-secondary"
               fill="currentColor"
               viewBox="0 0 16 15"
             >
@@ -180,7 +180,7 @@
           </div>
           <!-- Tail derecho -->
           <div
-            class="absolute -right-2 top-0 h-0 w-0 border-l-8 border-t-8 border-l-transparent border-t-whatsapp-green-sent dark:border-t-whatsapp-teal-darker"
+            class="absolute -right-2 top-0 h-0 w-0 border-l-8 border-t-8 border-l-transparent border-t-whatsapp-green-sent"
           ></div>
         </div>
       </div>
@@ -188,7 +188,7 @@
       <!-- Typing indicator -->
       <div *ngIf="recipientTyping()" class="flex justify-start px-4 py-2">
         <div
-          class="rounded-lg rounded-tl-none bg-surface-raised px-4 py-3 shadow-sm dark:bg-whatsapp-bg-message-dark"
+          class="rounded-lg rounded-tl-none bg-surface-raised px-4 py-3 shadow-sm"
         >
           <div class="flex items-center gap-1">
             <div
@@ -211,12 +211,12 @@
 
   <!-- Input estilo WhatsApp -->
   <div
-    class="whatsapp-input flex items-center gap-2 bg-whatsapp-bg-light px-3 py-2 dark:bg-whatsapp-bg-header-dark"
+    class="whatsapp-input flex items-center gap-2 bg-whatsapp-bg-light px-3 py-2"
   >
     <!-- Emoji button -->
     <button
       type="button"
-      class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-text-secondary dark:text-text-secondary hover:bg-surface-hover dark:text-text-muted dark:hover:bg-gray-700"
+      class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-text-secondary hover:bg-surface-hover"
     >
       <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
         <path
@@ -234,14 +234,14 @@
         name="message"
         [disabled]="sending()"
         placeholder="Escribe un mensaje"
-        class="flex-1 rounded-full bg-surface-raised px-4 py-2 text-sm text-text-primary placeholder-gray-500 focus:outline-none dark:bg-whatsapp-bg-input-dark dark:text-text-primary dark:placeholder-gray-500"
+        class="flex-1 rounded-full bg-surface-raised px-4 py-2 text-sm text-text-primary placeholder-gray-500 focus:outline-none"
       />
 
       <!-- Send button -->
       <button
         type="submit"
         [disabled]="!draftMessage.trim() || sending()"
-        class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-whatsapp-teal-light text-text-inverse transition-all hover:bg-whatsapp-teal disabled:opacity-50 dark:bg-whatsapp-green-modern dark:hover:bg-whatsapp-green-modern-dark"
+        class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-whatsapp-teal-light text-text-inverse transition-all hover:bg-whatsapp-teal disabled:opacity-50"
       >
         <svg *ngIf="!sending()" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
           <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
@@ -267,7 +267,7 @@
     <!-- Mic button -->
     <button
       type="button"
-      class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-text-secondary dark:text-text-secondary hover:bg-surface-hover dark:text-text-muted dark:hover:bg-gray-700"
+      class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-text-secondary hover:bg-surface-hover"
     >
       <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
         <path

@@ -7,6 +7,7 @@ import {
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import type { Booking } from '@core/models';
 import type { BookingConfirmationRow } from './booking-ops.service';
+import { validateBookingPayload } from '@core/utils/booking-validators';
 
 /**
  * Handlers for realtime booking updates (single booking)
@@ -100,7 +101,15 @@ export class BookingRealtimeService implements OnDestroy {
         },
         (payload) => {
           this.logger.debug('[BookingRealtime] Booking changed:', payload.eventType);
-          handlers.onBookingChange?.(payload.new as Booking);
+
+          // ✅ OPTIMIZATION: Validate payload before processing
+          const validation = validateBookingPayload(payload.new);
+          if (!validation.valid) {
+            this.logger.warn('[BookingRealtime] Invalid payload rejected:', validation.errors);
+            return;
+          }
+
+          handlers.onBookingChange?.(validation.data as Booking);
         },
         handlers.onConnectionChange,
       );

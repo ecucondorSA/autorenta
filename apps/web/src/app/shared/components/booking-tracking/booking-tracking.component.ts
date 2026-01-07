@@ -16,7 +16,7 @@ export interface TrackingSessionSnapshot {
   imports: [CommonModule],
   template: `
     <div
-      class="rounded-xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary p-4 space-y-3"
+      class="rounded-xl border border-border-default bg-surface-raised p-4 space-y-3"
       >
       <div class="flex items-center justify-between">
         <h3 class="text-sm font-semibold text-text-primary">Tracking del viaje</h3>

@@ -20,17 +20,15 @@
   /* Saving state */
   &--saving {
     @apply bg-gradient-to-r from-blue-50 to-blue-100/50
-      dark:from-blue-500/10 dark:to-blue-600/5
-      border-l-4 border-blue-500 dark:border-blue-400
-      text-blue-700 dark:text-blue-300;
+      border-l-4 border-blue-500
+      text-blue-700;
   }
 
   /* Saved state */
   &--saved {
     @apply bg-gradient-to-r from-green-50 to-green-100/50
-      dark:from-green-500/10 dark:to-green-600/5
-      border-l-4 border-green-500 dark:border-green-400
-      text-green-700 dark:text-green-300;
+      border-l-4 border-green-500
+      text-green-700;
   }
 }
 
@@ -40,22 +38,22 @@
 }
 
 .field-group {
-  @apply pb-5 border-b border-border-default/20 dark:border-white/5
+  @apply pb-5 border-b border-border-default/20
     last:border-b-0 last:pb-0
     transition-colors duration-200;
 
   &:hover {
-    @apply border-border-default/30 dark:border-white/10;
+    @apply border-border-default/30;
   }
 }
 
 .field-label {
   @apply block text-xs font-semibold uppercase tracking-wider
-    text-text-muted dark:text-gray-500 mb-2;
+    text-text-muted mb-2;
 }
 
 .field-value {
-  @apply text-base font-medium text-text-primary dark:text-text-primary
+  @apply text-base font-medium text-text-primary
     m-0 flex items-center gap-3 leading-relaxed;
 
   &--multiline {
@@ -64,10 +62,10 @@
 }
 
 .field-icon {
-  @apply text-lg flex-shrink-0 text-text-secondary dark:text-gray-500;
+  @apply text-lg flex-shrink-0 text-text-secondary;
 
   &.text-success {
-    @apply text-green-600 dark:text-green-400;
+    @apply text-green-600;
   }
 }
 
@@ -77,8 +75,8 @@
 
 .field-badge {
   @apply ml-2 px-2 py-0.5 rounded text-xs font-medium
-    bg-surface-secondary dark:bg-slate-deep
-    text-text-secondary dark:text-text-secondary
+    bg-surface-secondary
+    text-text-secondary
     flex items-center gap-1;
 
   ion-icon {
@@ -96,41 +94,41 @@
 }
 
 .form-label {
-  @apply block text-sm font-semibold text-text-primary dark:text-text-primary mb-3
+  @apply block text-sm font-semibold text-text-primary mb-3
     flex items-center justify-between tracking-wide;
 
   .text-error {
-    @apply text-red-600 dark:text-red-400 ml-0.5;
+    @apply text-red-600 ml-0.5;
   }
 }
 
 .form-input,
 .form-select {
   @apply w-full px-5 py-3.5 rounded-xl
-    bg-surface-base dark:bg-slate-deep
-    border-2 border-border-default/30 dark:border-white/10
-    text-text-primary dark:text-text-primary text-base
-    placeholder:text-text-muted/60 dark:placeholder:text-gray-500
+    bg-surface-base
+    border-2 border-border-default/30
+    text-text-primary text-base
+    placeholder:text-text-muted/60
     shadow-sm
     transition-all duration-200
-    focus:outline-none focus:ring-2 focus:ring-cta-default/20 dark:focus:ring-cyan-500/20
-    focus:border-cta-default dark:focus:border-cyan-500
+    focus:outline-none focus:ring-2 focus:ring-cta-default/20
+    focus:border-cta-default
     focus:shadow-md;
 
   &:hover {
-    @apply border-border-default/50 dark:border-white/15
+    @apply border-border-default/50
       shadow-md;
   }
 
   &:disabled,
   &--disabled {
-    @apply opacity-50 cursor-not-allowed bg-surface-secondary/50 dark:bg-gray-700/50;
+    @apply opacity-50 cursor-not-allowed bg-surface-secondary/50;
   }
 
   &--error {
-    @apply border-red-500 dark:border-red-400 dark:border-opacity-60
-      focus:ring-red-500/20 dark:focus:ring-red-500/20
-      focus:border-red-500 dark:focus:border-red-400;
+    @apply border-red-500
+      focus:ring-red-500/20
+      focus:border-red-500;
   }
 
   &--with-prefix {
@@ -149,7 +147,7 @@
 
 .input-prefix {
   @apply absolute left-4 top-1/2 -translate-y-1/2
-    text-sm font-medium text-text-secondary dark:text-gray-500
+    text-sm font-medium text-text-secondary
     pointer-events-none;
 }
 
@@ -158,19 +156,19 @@
   @apply flex items-center gap-2;
 
   input[type='checkbox'] {
-    @apply w-5 h-5 rounded border-2 border-border-default/40 dark:border-white/10
-      bg-surface-base dark:bg-slate-deep
-      text-cta-default dark:text-cyan-500
-      focus:ring-2 focus:ring-cta-default/50 dark:focus:ring-cyan-500/50
+    @apply w-5 h-5 rounded border-2 border-border-default/40
+      bg-surface-base
+      text-cta-default
+      focus:ring-2 focus:ring-cta-default/50
       transition-all duration-200 cursor-pointer;
 
     &:checked {
-      @apply bg-cta-default dark:bg-cyan-600 border-cta-default dark:border-cyan-600;
+      @apply bg-cta-default border-cta-default;
     }
   }
 
   label {
-    @apply text-sm text-text-primary dark:text-text-primary cursor-pointer select-none;
+    @apply text-sm text-text-primary cursor-pointer select-none;
   }
 }
 
@@ -180,11 +178,11 @@
 }
 
 .form-hint {
-  @apply mt-2 text-xs text-text-muted dark:text-gray-500;
+  @apply mt-2 text-xs text-text-muted;
 }
 
 .form-error {
-  @apply mt-2 flex items-center gap-1 text-xs text-error dark:text-red-400;
+  @apply mt-2 flex items-center gap-1 text-xs text-error;
 
   ion-icon {
     @apply text-sm flex-shrink-0;
@@ -197,13 +195,13 @@
   &::before {
     @apply absolute inset-0 flex items-center;
     content: '';
-    @apply border-t border-border-default/20 dark:border-white/10;
+    @apply border-t border-border-default/20;
   }
 
   &__text {
     @apply relative inline-block px-4
-      bg-surface-base dark:bg-gray-800
-      text-sm font-medium text-text-muted dark:text-gray-500;
+      bg-surface-base
+      text-sm font-medium text-text-muted;
   }
 }
 
@@ -211,15 +209,15 @@
   @apply flex items-start gap-3 p-4 rounded-lg;
 
   &--info {
-    @apply bg-blue-50 dark:bg-blue-500 dark:bg-opacity-10
-      border border-blue-200 dark:border-blue-500 dark:border-opacity-20;
+    @apply bg-blue-50
+      border border-blue-200;
   }
 
   &__icon {
     @apply text-xl flex-shrink-0 mt-0.5;
 
     .form-notice--info & {
-      @apply text-blue-600 dark:text-blue-400;
+      @apply text-blue-600;
     }
   }
 
@@ -230,12 +228,12 @@
       @apply text-sm font-semibold block mb-1;
 
       .form-notice--info & {
-        @apply text-blue-600 dark:text-blue-400;
+        @apply text-blue-600;
       }
     }
 
     p {
-      @apply text-xs text-text-secondary dark:text-gray-500 m-0;
+      @apply text-xs text-text-secondary m-0;
     }
   }
 }

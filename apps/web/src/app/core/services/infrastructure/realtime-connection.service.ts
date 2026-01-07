@@ -1,5 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Injectable, signal, OnDestroy, inject} from '@angular/core';
+import {Injectable, signal, OnDestroy, inject, computed} from '@angular/core';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
@@ -10,6 +10,26 @@ export interface ChannelConfig {
   schema: string;
   table: string;
   filter?: string;
+}
+
+/**
+ * Connection metrics for monitoring realtime health
+ */
+export interface ConnectionMetrics {
+  /** Total connection attempts */
+  totalAttempts: number;
+  /** Successful connections */
+  successCount: number;
+  /** Failed connections (errors + timeouts) */
+  failureCount: number;
+  /** Average connection latency in ms */
+  averageLatencyMs: number;
+  /** Last successful connection timestamp */
+  lastConnectedAt: number | null;
+  /** Last error timestamp */
+  lastErrorAt: number | null;
+  /** Current session uptime in ms (0 if disconnected) */
+  uptimeMs: number;
 }
 
 // Type for database records compatible with Supabase Realtime
@@ -38,6 +58,31 @@ export class RealtimeConnectionService implements OnDestroy {
   // Global connection status
   readonly connectionStatus = signal<ConnectionStatus>('disconnected');
 
+  // Connection metrics for monitoring
+  private readonly _metrics = signal<ConnectionMetrics>({
+    totalAttempts: 0,
+    successCount: 0,
+    failureCount: 0,
+    averageLatencyMs: 0,
+    lastConnectedAt: null,
+    lastErrorAt: null,
+    uptimeMs: 0,
+  });
+  readonly connectionMetrics = this._metrics.asReadonly();
+
+  // Health score computed from metrics (0-100)
+  readonly healthScore = computed(() => {
+    const metrics = this._metrics();
+    if (metrics.totalAttempts === 0) return 100; // No data yet, assume healthy
+
+    const successRate = metrics.successCount / metrics.totalAttempts;
+    const latencyPenalty = Math.min(metrics.averageLatencyMs / 5000, 0.3); // Max 30% penalty for slow connections
+    const recentErrorPenalty = metrics.lastErrorAt && (Date.now() - metrics.lastErrorAt < 60000) ? 0.2 : 0;
+
+    const score = Math.round((successRate - latencyPenalty - recentErrorPenalty) * 100);
+    return Math.max(0, Math.min(100, score));
+  });
+
   // Active channels registry
   private readonly activeChannels = new Map<string, RealtimeChannel>();
 
@@ -48,6 +93,10 @@ export class RealtimeConnectionService implements OnDestroy {
 
   // Retry counters per channel
   private readonly retryCounters = new Map<string, number>();
+
+  // Connection timing for latency tracking
+  private readonly connectionStartTimes = new Map<string, number>();
+  private latencyHistory: number[] = [];
 
   ngOnDestroy(): void {
     this.unsubscribeAll();
@@ -94,6 +143,10 @@ export class RealtimeConnectionService implements OnDestroy {
 
     // Initialize retry counter
     this.retryCounters.set(channelName, 0);
+
+    // Track connection attempt start time
+    this.connectionStartTimes.set(channelName, Date.now());
+    this.trackConnectionAttempt();
 
     // Create channel
     const channel = this.createChannel(channelName, config, handler, onStatusChange);
@@ -177,6 +230,16 @@ export class RealtimeConnectionService implements OnDestroy {
 
     // Reset retry counter on success
     this.retryCounters.set(channelName, 0);
+
+    // Track success and latency
+    const startTime = this.connectionStartTimes.get(channelName);
+    if (startTime) {
+      const latency = Date.now() - startTime;
+      this.trackConnectionSuccess(latency);
+      this.connectionStartTimes.delete(channelName);
+    } else {
+      this.trackConnectionSuccess(0);
+    }
   }
 
   /**
@@ -190,6 +253,10 @@ export class RealtimeConnectionService implements OnDestroy {
   ): void {
     this.connectionStatus.set('error');
     onStatusChange?.('error');
+
+    // Track failure
+    this.trackConnectionFailure();
+    this.connectionStartTimes.delete(channelName);
 
     this.attemptReconnect(channelName, config, handler, onStatusChange);
   }
@@ -205,6 +272,10 @@ export class RealtimeConnectionService implements OnDestroy {
   ): void {
     this.connectionStatus.set('disconnected');
     onStatusChange?.('disconnected');
+
+    // Track failure (timeout counts as failure)
+    this.trackConnectionFailure();
+    this.connectionStartTimes.delete(channelName);
 
     this.attemptReconnect(channelName, config, handler, onStatusChange);
   }
@@ -255,6 +326,10 @@ export class RealtimeConnectionService implements OnDestroy {
       // Remove old channel
       this.unsubscribe(channelName);
 
+      // Track new connection attempt
+      this.connectionStartTimes.set(channelName, Date.now());
+      this.trackConnectionAttempt();
+
       // Create new channel
       const newChannel = this.createChannel(channelName, config, handler, onStatusChange);
 
@@ -297,5 +372,86 @@ export class RealtimeConnectionService implements OnDestroy {
    */
   isChannelActive(channelName: string): boolean {
     return this.activeChannels.has(channelName);
+  }
+
+  // ==================== METRICS TRACKING ====================
+
+  /**
+   * Track a new connection attempt
+   */
+  private trackConnectionAttempt(): void {
+    this._metrics.update(m => ({
+      ...m,
+      totalAttempts: m.totalAttempts + 1,
+    }));
+  }
+
+  /**
+   * Track successful connection with latency
+   */
+  private trackConnectionSuccess(latencyMs: number): void {
+    this.latencyHistory.push(latencyMs);
+
+    // Keep only last 20 latency samples
+    if (this.latencyHistory.length > 20) {
+      this.latencyHistory.shift();
+    }
+
+    const avgLatency = this.latencyHistory.reduce((a, b) => a + b, 0) / this.latencyHistory.length;
+
+    this._metrics.update(m => ({
+      ...m,
+      successCount: m.successCount + 1,
+      averageLatencyMs: Math.round(avgLatency),
+      lastConnectedAt: Date.now(),
+      uptimeMs: 0, // Will be calculated separately if needed
+    }));
+
+    this.logger.debug(`[Realtime] Connection success. Latency: ${latencyMs}ms, Avg: ${Math.round(avgLatency)}ms`);
+  }
+
+  /**
+   * Track failed connection
+   */
+  private trackConnectionFailure(): void {
+    this._metrics.update(m => ({
+      ...m,
+      failureCount: m.failureCount + 1,
+      lastErrorAt: Date.now(),
+      uptimeMs: 0,
+    }));
+
+    this.logger.debug(`[Realtime] Connection failure tracked`);
+  }
+
+  /**
+   * Reset all metrics (useful for testing or fresh start)
+   */
+  resetMetrics(): void {
+    this._metrics.set({
+      totalAttempts: 0,
+      successCount: 0,
+      failureCount: 0,
+      averageLatencyMs: 0,
+      lastConnectedAt: null,
+      lastErrorAt: null,
+      uptimeMs: 0,
+    });
+    this.latencyHistory = [];
+    this.logger.debug('[Realtime] Metrics reset');
+  }
+
+  /**
+   * Get a human-readable summary of connection metrics
+   */
+  getMetricsSummary(): string {
+    const m = this._metrics();
+    const successRate = m.totalAttempts > 0
+      ? ((m.successCount / m.totalAttempts) * 100).toFixed(1)
+      : '100';
+
+    return `Connections: ${m.successCount}/${m.totalAttempts} (${successRate}%), ` +
+           `Avg Latency: ${m.averageLatencyMs}ms, ` +
+           `Health: ${this.healthScore()}%`;
   }
 }

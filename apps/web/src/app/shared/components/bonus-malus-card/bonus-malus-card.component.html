@@ -1,4 +1,4 @@
-<div class="card-premium h-full flex flex-col p-0 overflow-hidden bg-white dark:bg-surface-raised">
+<div class="card-premium h-full flex flex-col p-0 overflow-hidden bg-surface-raised">
   <!-- Loading State -->
   @if (loading()) {
     <div class="p-8 flex flex-col items-center justify-center flex-1">
@@ -11,7 +11,7 @@
   @if (!loading() && bonusMalus()) {
     <div class="flex flex-col h-full">
       <!-- Header with Tier Banner -->
-      <div class="relative p-6 pb-8 bg-gradient-to-br from-surface-secondary to-white dark:from-surface-raised dark:to-surface-secondary/20">
+      <div class="relative p-6 pb-8 bg-gradient-to-br from-surface-secondary to-surface-base">
         <!-- Tier Badge (Top Right) -->
         @if (tierDisplay()) {
           <div class="absolute top-4 right-4">
@@ -27,7 +27,7 @@
             <svg class="h-20 w-20 transform -rotate-90">
               <!-- Background circle -->
               <circle
-                class="text-surface-secondary dark:text-surface-secondary/50"
+                class="text-border-default"
                 stroke-width="6"
                 stroke="currentColor"
                 fill="transparent"
@@ -71,13 +71,13 @@
       </div>
       <!-- Stats Grid -->
       <div class="grid grid-cols-2 gap-px bg-border-default/30">
-        <div class="bg-white dark:bg-surface-raised p-3 flex flex-col items-center justify-center hover:bg-surface-secondary/30 transition-colors">
+        <div class="bg-surface-raised p-3 flex flex-col items-center justify-center hover:bg-surface-secondary/30 transition-colors">
           <span class="text-xs text-text-secondary uppercase tracking-wide font-medium">Rating</span>
           <span class="text-lg font-bold text-text-primary mt-1">
             {{ (bonusMalus()!.metrics.average_rating | number:'1.1-1') }}
           </span>
         </div>
-        <div class="bg-white dark:bg-surface-raised p-3 flex flex-col items-center justify-center hover:bg-surface-secondary/30 transition-colors">
+        <div class="bg-surface-raised p-3 flex flex-col items-center justify-center hover:bg-surface-secondary/30 transition-colors">
           <span class="text-xs text-text-secondary uppercase tracking-wide font-medium font-friendly">Viajes</span>
           <span class="text-lg font-bold text-text-primary mt-1">
             {{ bonusMalus()!.metrics.completed_rentals }}
@@ -94,7 +94,7 @@
       </button>
       <!-- Expanded Details -->
       @if (showDetails()) {
-        <div class="p-4 bg-surface-secondary/30 dark:bg-surface-secondary/10 border-t border-border-default/30 animate-fade-in text-sm">
+        <div class="p-4 bg-surface-secondary/30 border-t border-border-default/30 animate-fade-in text-sm">
           <!-- Metrics List -->
           <div class="space-y-3 mb-4">
             <div class="flex items-center justify-between">
@@ -114,7 +114,7 @@
               <h4 class="text-xs font-bold uppercase text-text-secondary mb-2 font-satoshi">Consejos para mejorar</h4>
               <ul class="space-y-2">
                 @for (tip of tips(); track tip) {
-                  <li class="flex items-start gap-2 text-xs text-text-primary bg-white dark:bg-surface-raised p-2 rounded border border-border-default/50">
+                  <li class="flex items-start gap-2 text-xs text-text-primary bg-surface-base p-2 rounded border border-border-default/50">
                     <span class="text-amber-500 mt-0.5">💡</span>
                     <span>{{ tip }}</span>
                   </li>

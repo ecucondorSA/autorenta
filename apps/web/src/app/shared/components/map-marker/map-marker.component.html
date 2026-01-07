@@ -6,10 +6,10 @@
     >
     <!-- Car Photo Circle -->
     <div
-      class="w-14 h-14 rounded-full bg-white dark:bg-slate-900 p-0.5 shadow-xl transition-all duration-300"
+      class="w-14 h-14 rounded-full bg-surface-raised p-0.5 shadow-xl transition-all duration-300 border border-border-default group-hover:border-black dark:group-hover:border-cta-default"
       [class.ring-4]="isSelected"
-      [class.ring-cyan-500]="isSelected"
-      [class.shadow-cyan-500/20]="isSelected"
+      [class.ring-cta-default]="isSelected"
+      [class.shadow-neon-glow]="isSelected"
       >
       <img
         class="w-full h-full rounded-full object-cover"
@@ -18,24 +18,24 @@
         />
     </div>
 
-    <!-- Price Tag (Floating below) -->
+    <!-- Price Tag (Floating below - Modern Tech Style) -->
     <div 
       class="absolute -bottom-2 left-1/2 -translate-x-1/2 transition-all duration-300"
       [class.scale-110]="isSelected"
     >
       <div
-        class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black uppercase tracking-tighter px-2 py-0.5 rounded-md shadow-lg border border-white/10 dark:border-slate-200"
-        [class.bg-cyan-600]="isSelected"
-        [class.dark:bg-cyan-500]="isSelected"
-        [class.text-white]="isSelected"
+        class="bg-black text-white dark:bg-white dark:text-black text-[10px] font-black uppercase tracking-tighter px-2 py-0.5 rounded-md shadow-hard-sm border border-white/10"
+        [class.bg-cta-default]="isSelected"
+        [class.text-black]="isSelected"
+        [class.dark:bg-cta-default]="isSelected"
         >
-        \${{ car.pricePerDay | number: '1.0-0' }}
+        <span class="font-tech">\${{ car.pricePerDay | number: '1.0-0' }}</span>
       </div>
     </div>
 
     <!-- Selection Glow -->
     @if (isSelected) {
-      <div class="absolute inset-0 bg-cyan-500/20 blur-xl rounded-full -z-10 animate-pulse"></div>
+      <div class="absolute inset-0 bg-cta-default/20 blur-xl rounded-full -z-10 animate-pulse"></div>
     }
   </div>
 }

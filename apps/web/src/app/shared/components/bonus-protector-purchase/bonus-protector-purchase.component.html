@@ -1,5 +1,5 @@
 <div
-  class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-md p-6"
+  class="bg-surface-raised rounded-lg shadow-md p-6"
   [class.p-4]="compact"
 >
   <!-- Header -->
@@ -16,7 +16,7 @@
         Protector de Bonus
       </h3>
     </div>
-    <p class="text-sm text-text-secondary dark:text-text-secondary">
+    <p class="text-sm text-text-secondary">
       Protege tu clase de conductor de reclamos inesperados
     </p>
   </div>
@@ -78,7 +78,7 @@
           />
           <div class="ml-3">
             <p class="text-sm font-semibold text-text-primary">{{ level.name }}</p>
-            <p class="text-xs text-text-secondary dark:text-text-secondary">
+            <p class="text-xs text-text-secondary">
               Nivel {{ level.level }}
             </p>
           </div>
@@ -142,11 +142,11 @@
 
     <!-- Balance Info -->
     <div
-      class="bg-surface-base dark:bg-surface-base border border-border-default dark:border-border-muted rounded-lg p-4 mb-4"
+      class="bg-surface-base border border-border-default rounded-lg p-4 mb-4"
     >
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-text-secondary dark:text-text-secondary">Tu saldo disponible</p>
+          <p class="text-sm text-text-secondary">Tu saldo disponible</p>
           <p class="text-lg font-semibold text-text-primary">
             {{ formatPrice(availableBalance() * 100) }}
           </p>
@@ -220,7 +220,7 @@
     </div>
 
     <!-- How It Works -->
-    <div class="mt-6 pt-6 border-t border-border-default dark:border-border-muted">
+    <div class="mt-6 pt-6 border-t border-border-default">
       <h4 class="text-sm font-semibold text-text-primary mb-3 font-satoshi">¿Cómo funciona?</h4>
       <ul class="space-y-2">
         <li class="flex items-start text-sm text-text-primary">
