@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/ecucondorSA/autorenta/compare/v1.4.0...v1.5.0) (2026-01-07)
+
+
+### Features
+
+* subscription tiers, UI polish, and codebase cleanup ([16aaec6](https://github.com/ecucondorSA/autorenta/commit/16aaec689e155b13e873f19e11d003f0831c8171))
+
 # [1.4.0](https://github.com/ecucondorSA/autorenta/compare/v1.3.0...v1.4.0) (2026-01-06)
 
 
