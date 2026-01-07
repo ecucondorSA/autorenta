@@ -457,9 +457,6 @@
                   </p>
                 }
 
-                <!-- Contribution Action (Legacy check - already covered by above but keeping for context if needed) -->
-                @if (booking()?.status === 'pending_payment' && isRenter() && false) {
-
                 <!-- Waiting for Contribution (Anfitrión) -->
                 @if (booking()?.status === 'pending_payment' && isOwner()) {
                   <div class="w-full flex items-center gap-3 p-4 rounded-xl bg-warning-50 text-warning-700 border border-warning-200">
