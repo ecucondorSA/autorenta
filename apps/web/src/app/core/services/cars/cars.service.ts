@@ -276,6 +276,71 @@ export class CarsService {
     })) as Car[];
   }
 
+  /**
+   * 🚀 SCALABILITY: Paginated car listing with server-side count
+   * Supports 10,000+ cars with efficient offset/limit pagination
+   */
+  async listActiveCarsPage(
+    filters: CarFilters & { page?: number; pageSize?: number },
+  ): Promise<{ data: Car[]; total: number; hasMore: boolean }> {
+    const page = filters.page ?? 1;
+    const pageSize = filters.pageSize ?? 24;
+    const offset = (page - 1) * pageSize;
+
+    // Build base query with count
+    let query = this.supabase
+      .from('cars')
+      .select(
+        `
+        *,
+        car_photos(*),
+        owner:profiles!cars_owner_id_fkey(
+          id,
+          full_name,
+          avatar_url,
+          rating_avg,
+          rating_count,
+          created_at
+        )
+      `,
+        { count: 'exact' },
+      )
+      .eq('status', 'active')
+      .order('created_at', { ascending: false });
+
+    // Apply filters
+    if (filters['city']) {
+      query = query.ilike('location_city', `%${filters['city']}%`);
+    }
+
+    if (filters.bounds) {
+      query = query
+        .lte('location_lat', filters.bounds.north)
+        .gte('location_lat', filters.bounds.south)
+        .lte('location_lng', filters.bounds.east)
+        .gte('location_lng', filters.bounds.west);
+    }
+
+    // Apply pagination
+    query = query.range(offset, offset + pageSize - 1);
+
+    const { data, error, count } = await query;
+    if (error) throw error;
+
+    const total = count ?? 0;
+    const cars = (data ?? []).map((car: CarWithPhotosRaw) => ({
+      ...car,
+      photos: car.car_photos || [],
+      owner: Array.isArray(car.owner) ? car.owner[0] : car.owner,
+    })) as Car[];
+
+    return {
+      data: cars,
+      total,
+      hasMore: offset + cars.length < total,
+    };
+  }
+
   async getCarById(id: string): Promise<Car | null> {
     const { data, error } = await this.supabase
       .from('cars')

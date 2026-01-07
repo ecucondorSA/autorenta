@@ -1,5 +1,6 @@
 import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -86,10 +87,11 @@ const PAGE_SIZE = 12;
   styleUrls: ['./cars-list.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarsListPage implements OnInit, OnDestroy {
+export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(CarsMapComponent) carsMapComponent!: CarsMapComponent;
   @ViewChild('unifiedCarousel', { read: ElementRef }) unifiedCarousel?: ElementRef<HTMLDivElement>;
   @ViewChild(PullToRefreshComponent) pullToRefresh!: PullToRefreshComponent;
+  @ViewChild('infiniteScrollSentinel') infiniteScrollSentinel?: ElementRef<HTMLDivElement>;
 
   // Exponer parseFloat para el template
   readonly parseFloat = parseFloat;
@@ -150,7 +152,14 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly loading = signal(false);
   readonly loadError = signal<string | null>(null);
   readonly cars = signal<Car[]>([]);
-  readonly page = signal(1); // Client-side pagination
+  readonly page = signal(1); // Client-side pagination (legacy, used for premiumCars computed)
+
+  // 🚀 SERVER-SIDE PAGINATION: Scalable to 10,000+ cars
+  readonly serverPage = signal(1);
+  readonly totalCars = signal(0);
+  readonly serverHasMore = signal(false);
+  readonly loadingMore = signal(false);
+  private infiniteScrollObserver?: IntersectionObserver;
 
   readonly carMapLocations = computed(() =>
     this.cars().map((car) => {
@@ -978,13 +987,16 @@ export class CarsListPage implements OnInit, OnDestroy {
           this.cars.set(items);
         }
       } else {
-        // Si no hay fechas, usar método tradicional
-        const items = await this.carsService.listActiveCars({
+        // 🚀 SERVER-SIDE PAGINATION: Sin fechas, usar método paginado escalable
+        this.serverPage.set(1); // Reset to first page
+        const result = await this.carsService.listActiveCarsPage({
           city: this['city']() ?? undefined,
-          from: dateRange.from ?? undefined,
-          to: dateRange.to ?? undefined,
+          page: 1,
+          pageSize: PAGE_SIZE * 2, // Load 24 items initially
         });
-        this.cars.set(items);
+        this.cars.set(result.data);
+        this.totalCars.set(result.total);
+        this.serverHasMore.set(result.hasMore);
       }
 
       // Collapse search form on mobile after search
@@ -1151,6 +1163,13 @@ export class CarsListPage implements OnInit, OnDestroy {
     setTimeout(() => banner.remove(), 5000);
   }
 
+  ngAfterViewInit(): void {
+    // 🚀 INFINITE SCROLL: Setup IntersectionObserver for auto-loading more cars
+    if (this.isBrowser) {
+      this.setupInfiniteScroll();
+    }
+  }
+
   ngOnDestroy(): void {
     if (this.realtimeChannel) {
       this.supabase.removeChannel(this.realtimeChannel);
@@ -1164,7 +1183,69 @@ export class CarsListPage implements OnInit, OnDestroy {
       clearTimeout(this.realtimeDebounceTimeout);
       this.realtimeDebounceTimeout = undefined;
     }
+    // 🚀 INFINITE SCROLL: Cleanup observer
+    if (this.infiniteScrollObserver) {
+      this.infiniteScrollObserver.disconnect();
+    }
     this.stopCarouselAutoScroll();
+  }
+
+  /**
+   * 🚀 INFINITE SCROLL: Setup IntersectionObserver to detect when user scrolls near bottom
+   */
+  private setupInfiniteScroll(): void {
+    // Small delay to ensure ViewChild is available
+    setTimeout(() => {
+      const sentinel = this.infiniteScrollSentinel?.nativeElement;
+      if (!sentinel) return;
+
+      this.infiniteScrollObserver = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (entry.isIntersecting && this.serverHasMore() && !this.loadingMore() && !this.loading()) {
+            this.loadMoreCarsFromServer();
+          }
+        },
+        {
+          root: null, // viewport
+          rootMargin: '200px', // Load 200px before reaching bottom
+          threshold: 0,
+        },
+      );
+
+      this.infiniteScrollObserver.observe(sentinel);
+    }, 100);
+  }
+
+  /**
+   * 🚀 SERVER-SIDE PAGINATION: Load more cars from server (infinite scroll)
+   */
+  async loadMoreCarsFromServer(): Promise<void> {
+    if (this.loadingMore() || !this.serverHasMore()) return;
+
+    this.loadingMore.set(true);
+    try {
+      const nextPage = this.serverPage() + 1;
+      const result = await this.carsService.listActiveCarsPage({
+        city: this['city']() ?? undefined,
+        page: nextPage,
+        pageSize: PAGE_SIZE * 2,
+      });
+
+      // Append new cars to existing list
+      this.cars.update((current) => [...current, ...result.data]);
+      this.serverPage.set(nextPage);
+      this.serverHasMore.set(result.hasMore);
+    } catch (err) {
+      this.logger['error'](
+        'Error loading more cars',
+        'CarsListPage',
+        err instanceof Error ? err : new Error(getErrorMessage(err)),
+      );
+      this.toastService['error']('Error', 'No se pudieron cargar más autos');
+    } finally {
+      this.loadingMore.set(false);
+    }
   }
 
   /**

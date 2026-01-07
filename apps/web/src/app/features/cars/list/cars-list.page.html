@@ -715,6 +715,31 @@
         <p class="text-slate-500 dark:text-slate-500">Intenta ajustar tu búsqueda o filtros.</p>
       </div>
       }
+
+      <!-- 🚀 INFINITE SCROLL: Sentinel element for IntersectionObserver -->
+      @if (premiumCars().length > 0) {
+        <div #infiniteScrollSentinel class="w-full h-4" aria-hidden="true"></div>
+
+        <!-- Loading more indicator -->
+        @if (loadingMore()) {
+          <div class="flex justify-center py-8">
+            <div class="flex items-center gap-3 text-slate-500 dark:text-slate-400">
+              <svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+              </svg>
+              <span class="text-sm font-medium">Cargando más autos...</span>
+            </div>
+          </div>
+        }
+
+        <!-- Total count indicator -->
+        @if (totalCars() > 0 && !serverHasMore() && !loadingMore()) {
+          <div class="text-center py-6 text-slate-500 dark:text-slate-400 text-sm">
+            Mostrando {{ premiumCars().length }} de {{ totalCars() }} vehículos
+          </div>
+        }
+      }
     </div>
     <!-- END LEFT PANEL -->
 
