@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/ecucondorSA/autorenta/compare/v1.8.0...v1.9.0) (2026-01-07)
+
+
+### Features
+
+* **subscriptions:** integrate dynamic preauthorization in booking payment ([a4fd88c](https://github.com/ecucondorSA/autorenta/commit/a4fd88cfcf4ddb443749b331362725925dcf5753))
+
 # [1.8.0](https://github.com/ecucondorSA/autorenta/compare/v1.7.3...v1.8.0) (2026-01-07)
 
 
