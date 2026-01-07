@@ -53,6 +53,7 @@ import { type PaymentMethod } from '../../../shared/components/payment-method-bu
 import { AvailabilityMiniCalendarComponent } from '../../../shared/components/availability-mini-calendar/availability-mini-calendar.component';
 import { RiskCalculatorViewerComponent } from '../../../shared/components/risk-calculator-viewer/risk-calculator-viewer.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
+import { ReviewSummaryComponent } from '../../../shared/components/review-summary/review-summary.component';
 import {
   BookingLocationData,
 } from '../../bookings/components/booking-location-form/booking-location-form.component';
@@ -104,6 +105,7 @@ interface CarDetailState {
     AiReputationCardComponent,
     CarInquiryChatComponent,
     AvailabilityMiniCalendarComponent,
+    ReviewSummaryComponent,
   ],
   templateUrl: './car-detail.page.html',
   styleUrls: ['./car-detail.page.css'],

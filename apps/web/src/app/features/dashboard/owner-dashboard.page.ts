@@ -12,6 +12,8 @@ import { VehicleDocsSummaryWidgetComponent } from '../../shared/components/vehic
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { MultiCarCalendarComponent } from './components/multi-car-calendar/multi-car-calendar.component';
 import { PayoutsHistoryComponent } from './components/payouts-history/payouts-history.component';
+import { PayoutsComponent } from './widgets/payouts.component';
+import { StatisticsComponent } from './widgets/statistics.component';
 
 @Component({
   standalone: true,
@@ -26,6 +28,8 @@ import { PayoutsHistoryComponent } from './components/payouts-history/payouts-hi
     MissingDocumentsWidgetComponent,
     VehicleDocsSummaryWidgetComponent,
     PayoutsHistoryComponent,
+    PayoutsComponent,
+    StatisticsComponent,
   ],
   templateUrl: './owner-dashboard.page.html',
   styleUrls: ['./owner-dashboard.page.css'],
