@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/ecucondorSA/autorenta/compare/v1.7.1...v1.7.2) (2026-01-07)
+
+
+### Bug Fixes
+
+* resolve build errors in payouts, dashboard and wallet ([428c3ba](https://github.com/ecucondorSA/autorenta/commit/428c3ba1306796cc3be53c33adc47ad8da0618c4))
+
 ## [1.7.1](https://github.com/ecucondorSA/autorenta/compare/v1.7.0...v1.7.1) (2026-01-07)
 
 
