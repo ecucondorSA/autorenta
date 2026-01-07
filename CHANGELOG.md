@@ -1,3 +1,10 @@
+## [1.6.4](https://github.com/ecucondorSA/autorenta/compare/v1.6.3...v1.6.4) (2026-01-07)
+
+
+### Bug Fixes
+
+* **payments:** exclude env.js from SW cache + fix BucketType ([348f98e](https://github.com/ecucondorSA/autorenta/commit/348f98ed9708358cf52b907725400d53a999f758))
+
 ## [1.6.3](https://github.com/ecucondorSA/autorenta/compare/v1.6.2...v1.6.3) (2026-01-07)
 
 
