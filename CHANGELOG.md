@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/ecucondorSA/autorenta/compare/v1.5.0...v1.5.1) (2026-01-07)
+
+
+### Bug Fixes
+
+* **ui:** restore car images in cars-list page ([304b3cb](https://github.com/ecucondorSA/autorenta/commit/304b3cb7c3ca6b1d19abd530c0428fe8aab34273))
+
 # [1.5.0](https://github.com/ecucondorSA/autorenta/compare/v1.4.0...v1.5.0) (2026-01-07)
 
 
