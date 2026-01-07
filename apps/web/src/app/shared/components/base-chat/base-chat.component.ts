@@ -1,6 +1,6 @@
 
 import {Component, OnDestroy, OnInit, effect, inject, input, output, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, viewChild, AfterViewChecked} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -107,7 +107,7 @@ export interface ChatContext {
       }
 
       <!-- Chat Messages Area -->
-      <div class="relative flex-1 overflow-y-auto bg-surface-base">
+      <div #messagesContainer class="relative flex-1 overflow-y-auto bg-surface-base flex flex-col">
         <!-- Loading state -->
         @if (loading()) {
           <div class="flex h-full items-center justify-center">
@@ -144,7 +144,7 @@ export interface ChatContext {
 
         <!-- Messages list -->
         @if (!loading() && messages().length > 0) {
-          <div class="px-4 py-4 space-y-3">
+          <div class="px-4 py-4 space-y-3 mt-auto">
             <!-- Date separator (first message) -->
             <div class="flex items-center justify-center mb-2">
               <span class="px-3 py-1 text-xs text-text-secondary bg-surface-raised rounded-full border border-border-default shadow-sm">
@@ -331,7 +331,7 @@ export interface ChatContext {
     </div>
   `,
 })
-export class BaseChatComponent implements OnInit, OnDestroy {
+export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   // Inputs
   readonly context = input.required<ChatContext>();
   /** Contexto de booking para sugerencias IA (opcional) */
@@ -348,6 +348,11 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   protected readonly notificationSound = inject(NotificationSoundService);
   protected readonly toastService = inject(ToastService);
   protected readonly geminiService = inject(GeminiService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  // ViewChild for auto-scroll
+  private readonly messagesContainer = viewChild<ElementRef<HTMLDivElement>>('messagesContainer');
+  private shouldScrollToBottom = true;
 
   // State
   readonly messages = signal<Message[]>([]);
@@ -418,6 +423,26 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngAfterViewChecked(): void {
+    if (this.shouldScrollToBottom) {
+      this.scrollToBottom();
+      this.shouldScrollToBottom = false;
+    }
+  }
+
+  /**
+   * Hace scroll al final de los mensajes
+   */
+  private scrollToBottom(): void {
+    const container = this.messagesContainer()?.nativeElement;
+    if (container) {
+      // Usar requestAnimationFrame para asegurar que el DOM está actualizado
+      requestAnimationFrame(() => {
+        container.scrollTop = container.scrollHeight;
+      });
+    }
+  }
+
   /**
    * Bloquea / desbloquea al usuario actual del chat
    */
@@ -461,6 +486,9 @@ export class BaseChatComponent implements OnInit, OnDestroy {
           ? await this.messagesService.listByBooking(ctx.contextId)
           : await this.messagesService.listByCar(ctx.contextId);
       this.messages.set(messages);
+      // Scroll al fondo después de cargar mensajes
+      this.shouldScrollToBottom = true;
+      this.cdr.markForCheck();
     } catch {
       this.error.set('No pudimos cargar los mensajes');
     } finally {
@@ -503,6 +531,10 @@ export class BaseChatComponent implements OnInit, OnDestroy {
         // Nuevo mensaje, agregarlo
         return [...prev, message];
       });
+
+      // Forzar detección de cambios (OnPush + callback fuera de zona Angular)
+      this.shouldScrollToBottom = true;
+      this.cdr.markForCheck();
 
       // Mark as delivered if it's for us
       if (message.recipient_id === this.currentUserId() && !message.delivered_at) {
@@ -632,6 +664,9 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     // Agregar optimistic y limpiar input visualmente
     this.messages.update((prev) => [...prev, optimisticMessage]);
     this.newMessage.set('');
+    // Scroll al fondo después de enviar
+    this.shouldScrollToBottom = true;
+    this.cdr.markForCheck();
 
     try {
       await this.messagesService.sendMessage({
