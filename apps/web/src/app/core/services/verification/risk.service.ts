@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import {
-  BucketType,
+  PricingBucketType,
   CalculateRiskSnapshotParams,
   CoverageUpgrade,
   RiskSnapshot,
@@ -164,7 +164,7 @@ export class RiskService {
           holdEstimatedArs: data.estimated_hold_amount || 0,
           holdEstimatedUsd: (data.estimated_hold_amount || 0) / data.fx_snapshot,
           creditSecurityUsd: data.estimated_deposit || 0,
-          bucket: data.bucket as BucketType,
+          bucket: data.bucket as PricingBucketType,
           vehicleValueUsd: data.meta?.vehicle_value_usd || 0,
           country: data.country_code,
           fxRate: data.fx_snapshot,

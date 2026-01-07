@@ -3,6 +3,8 @@
  * AutoRenta - Sistema de booking con dos modalidades de garantía
  */
 
+import type { CurrencyCode } from './fgo-v1-1.model';
+
 // ============================================================================
 // TIPOS BASE
 // ============================================================================
@@ -11,11 +13,9 @@ export type PaymentMode = 'card' | 'wallet';
 
 export type CoverageUpgrade = 'standard' | 'premium50' | 'zero';
 
-export type BucketType = 'economy' | 'standard' | 'premium' | 'luxury';
+export type PricingBucketType = 'economy' | 'standard' | 'premium' | 'luxury';
 
 export type CountryCode = 'AR' | 'CO' | 'MX';
-
-export type CurrencyCode = 'USD' | 'ARS' | 'COP' | 'MXN';
 
 // ============================================================================
 // INPUT DE BOOKING
@@ -28,7 +28,7 @@ export interface BookingInput {
   carId: string;
   startDate: Date;
   endDate: Date;
-  bucket: BucketType;
+  bucket: PricingBucketType;
   vehicleValueUsd: number;
   country: CountryCode;
   userId?: string;
@@ -92,7 +92,7 @@ export interface RiskSnapshot {
   creditSecurityUsd: number; // Crédito de Seguridad requerido (300 o 500)
 
   // Metadata
-  bucket: BucketType;
+  bucket: PricingBucketType;
   vehicleValueUsd: number;
   country: CountryCode;
   fxRate: number;
@@ -107,7 +107,7 @@ export interface RiskSnapshot {
  */
 export interface CalculateRiskSnapshotParams {
   vehicleValueUsd: number;
-  bucket: BucketType;
+  bucket: PricingBucketType;
   country: CountryCode;
   fxRate: number;
   coverageUpgrade?: CoverageUpgrade;
@@ -186,7 +186,7 @@ export interface CalculatePricingParams {
   dailyRateUsd: number;
   startDate: Date;
   endDate: Date;
-  bucket: BucketType;
+  bucket: PricingBucketType;
   coverageUpgrade: CoverageUpgrade;
   fxRate: number;
 }
@@ -426,10 +426,10 @@ export function applyUpgradeToDeductible(baseDeductible: number, upgrade: Covera
 export function calculateHoldEstimatedArs(
   rolloverDeductibleUsd: number,
   fxRate: number,
-  bucket: BucketType,
+  bucket: PricingBucketType,
 ): number {
   // Mínimo por bucket (en USD, se convierte a ARS)
-  const minBucketUsd: Record<BucketType, number> = {
+  const minBucketUsd: Record<PricingBucketType, number> = {
     economy: 750, // USD 750 mínimo para economy
     standard: 900, // USD 900 mínimo para standard
     premium: 1200, // USD 1200 mínimo para premium

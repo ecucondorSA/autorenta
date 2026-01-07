@@ -11,6 +11,7 @@ import { environment } from '@environment';
 export interface LocationCoordinates {
   lat: number;
   lng: number;
+  address?: string;
   accuracy?: number;
   timestamp?: number;
 }

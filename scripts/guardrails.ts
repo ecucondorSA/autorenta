@@ -15,6 +15,7 @@ import * as path from 'path';
 const APP_PATH = 'apps/web/src/app';
 const MIGRATIONS_PATH = 'supabase/migrations';
 const BASELINE_PATH = 'scripts/guardrails.baseline.json';
+const ALLOWLIST_PATH = 'scripts/guardrails.allowlist.json';
 
 const args = new Set(process.argv.slice(2));
 const isStrict = args.has('--strict');
@@ -28,6 +29,10 @@ interface DuplicateGroup {
 interface Baseline {
   generatedAt: string;
   categories: Record<string, string[]>;
+}
+
+interface Allowlist {
+  versionedFiles?: string[];
 }
 
 function readFile(filePath: string): string {
@@ -44,6 +49,16 @@ function normalizeSelector(selector: string): string {
     .replace(/-v\d+$/, '')
     .replace(/-\d+$/, '')
     .trim();
+}
+
+function toRelative(filePath: string): string {
+  return filePath.replace(/\\/g, '/');
+}
+
+function isVersionedName(name: string): boolean {
+  const versionPattern = /(?:^|[-_.])v\d+(?:$|[-_.])/i;
+  const copyPattern = /(?:^|[-_.])(copy|duplicate|dup|tmp|temp|draft)(?:$|[-_.])/i;
+  return versionPattern.test(name) || copyPattern.test(name);
 }
 
 function groupDuplicates(items: Array<{ key: string; file: string }>): DuplicateGroup[] {
@@ -128,7 +143,7 @@ function collectTypes() {
 
   for (const file of files) {
     const content = readFile(file);
-    const matches = content.matchAll(/(?:export\s+)?(?:interface|type)\s+(\w+)\s*[{=<]/g);
+    const matches = content.matchAll(/export\s+(?:interface|type)\s+(\w+)\s*[{=<]/g);
     for (const match of matches) {
       const name = match[1];
       types.push({ key: name, file });
@@ -157,6 +172,24 @@ function collectRpcs() {
   };
 }
 
+function collectVersionedFiles(): string[] {
+  const targets = [
+    ...globSync(`${APP_PATH}/**/*.component.ts`),
+    ...globSync(`${APP_PATH}/**/*.service.ts`),
+    ...globSync(`${APP_PATH}/**/*.page.ts`)
+  ];
+
+  const matches: string[] = [];
+  for (const file of targets) {
+    const baseName = path.basename(file).replace(/\.ts$/, '');
+    if (isVersionedName(baseName)) {
+      matches.push(toRelative(file));
+    }
+  }
+
+  return [...new Set(matches)].sort();
+}
+
 function loadBaseline(): Baseline | null {
   if (!fs.existsSync(BASELINE_PATH)) return null;
   try {
@@ -164,6 +197,16 @@ function loadBaseline(): Baseline | null {
     return JSON.parse(raw) as Baseline;
   } catch {
     return null;
+  }
+}
+
+function loadAllowlist(): Allowlist {
+  if (!fs.existsSync(ALLOWLIST_PATH)) return {};
+  try {
+    const raw = fs.readFileSync(ALLOWLIST_PATH, 'utf-8');
+    return JSON.parse(raw) as Allowlist;
+  } catch {
+    return {};
   }
 }
 
@@ -200,6 +243,7 @@ function main() {
   const pages = collectPages();
   const types = collectTypes();
   const rpcs = collectRpcs();
+  const versionedFiles = collectVersionedFiles();
 
   const categories: Record<string, DuplicateGroup[]> = {
     componentSelectors: components.selectorDuplicates,
@@ -223,6 +267,10 @@ function main() {
     console.error('   Run: npx tsx scripts/guardrails.ts --update-baseline');
     process.exit(1);
   }
+
+  const allowlist = loadAllowlist();
+  const allowedVersioned = new Set((allowlist.versionedFiles ?? []).map(toRelative));
+  const versionedIssues = versionedFiles.filter(file => !allowedVersioned.has(file));
 
   const baselineKeys: Record<string, Set<string>> = {};
   for (const [key, list] of Object.entries(baseline.categories)) {
@@ -248,7 +296,7 @@ function main() {
     rpcFunctions: newIssues.rpcFunctions
   };
 
-  const errorCount = Object.values(errors).reduce((sum, groups) => sum + groups.length, 0);
+  const errorCount = Object.values(errors).reduce((sum, groups) => sum + groups.length, 0) + (versionedIssues.length > 0 ? 1 : 0);
   const warningCount = Object.values(warnings).reduce((sum, groups) => sum + groups.length, 0);
 
   if (errorCount === 0 && warningCount === 0) {
@@ -262,6 +310,12 @@ function main() {
     printGroups('Component classes', errors.componentClasses);
     printGroups('Service classes', errors.serviceClasses);
     printGroups('Page base names', errors.pageBaseNames);
+    if (versionedIssues.length > 0) {
+      console.log('\nVersioned/copy file names (not allowlisted):');
+      for (const file of versionedIssues) {
+        console.log(`  - ${file}`);
+      }
+    }
   }
 
   if (warningCount > 0) {

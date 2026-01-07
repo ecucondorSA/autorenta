@@ -8,7 +8,9 @@
 
 // Re-export Supabase generated types
 export type {
-  WalletBalanceDB, WalletLedger as WalletLedgerDB, WalletTransaction as WalletTransactionDB
+  WalletBalanceDB,
+  WalletLedgerDB,
+  WalletTransactionDB
 } from '@core/types/supabase-types';
 
 /**

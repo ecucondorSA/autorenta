@@ -15,8 +15,8 @@ import { KpiCardComponent } from '../components/kpi-card.component';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [IonicModule, RouterModule, KpiCardComponent],
-  templateUrl: './dashboard.page.html',
-  styleUrls: ['./dashboard.page.scss'],
+  templateUrl: './accounting-dashboard.page.html',
+  styleUrls: ['./accounting-dashboard.page.scss'],
 })
 export class AccountingDashboardPage implements OnInit {
   private readonly accountingService = inject(AccountingService);

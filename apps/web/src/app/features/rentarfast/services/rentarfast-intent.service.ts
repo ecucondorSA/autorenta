@@ -10,7 +10,7 @@ import { WalletService } from '@core/services/payments/wallet.service';
 import { VerificationService } from '@core/services/verification/verification.service';
 import { ProfileStore } from '@core/stores/profile.store';
 import type { WalletBalance } from '@core/models/wallet.model';
-import { ChatContext } from '@core/services/ai/rentarfast-agent.service';
+import { AgentChatContext } from '@core/services/ai/rentarfast-agent.service';
 import {
   IntentResult,
   BookingCommand,
@@ -64,7 +64,7 @@ export class RentarfastIntentService {
   /**
    * Build chat context for AI agent
    */
-  async buildChatContext(text: string): Promise<ChatContext | undefined> {
+  async buildChatContext(text: string): Promise<AgentChatContext | undefined> {
     const profile = this.profileStore.profile();
     const session = await this.authService.ensureSession();
     const userId = session?.user?.id ?? profile?.id;
@@ -75,7 +75,7 @@ export class RentarfastIntentService {
         ? Intl.DateTimeFormat().resolvedOptions().timeZone
         : 'America/Argentina/Buenos_Aires';
 
-    const context: ChatContext = {
+    const context: AgentChatContext = {
       locale,
       timezone,
       currency: profile?.currency ?? undefined,

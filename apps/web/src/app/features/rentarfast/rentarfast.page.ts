@@ -18,7 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   ChatMessage,
-  ChatSuggestion,
+  AgentChatSuggestion,
   RentarfastAgentService,
 } from '@core/services/ai/rentarfast-agent.service';
 import { ProfileStore } from '@core/stores/profile.store';
@@ -424,7 +424,7 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
   // Suggestion Buttons (estilo Supabase)
   // ============================================
 
-  onSuggestionClick(suggestion: ChatSuggestion): void {
+  onSuggestionClick(suggestion: AgentChatSuggestion): void {
     this.shouldScrollToBottom = true;
     this.inputText.set(suggestion.action);
     // Ejecutar inmediatamente con cleanup

@@ -295,6 +295,106 @@ export type Database = {
           },
         ]
       }
+      account_deletion_requests: {
+        Row: {
+          created_at: string | null
+          email: string
+          expires_at: string
+          id: string
+          ip_address: string | null
+          reason: string | null
+          token: string
+          used_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          expires_at: string
+          id?: string
+          ip_address?: string | null
+          reason?: string | null
+          token: string
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          reason?: string | null
+          token?: string
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "account_deletion_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "account_deletion_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "account_deletion_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "account_deletion_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "account_deletion_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_decrypted"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "account_deletion_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "account_deletion_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "account_deletion_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_identity_verification_status"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "account_deletion_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_community_status"
+            referencedColumns: ["owner_id"]
+          },
+        ]
+      }
       accounting_accounts: {
         Row: {
           account_type: string
@@ -9681,243 +9781,6 @@ export type Database = {
           },
         ]
       }
-      personal_use_verifications: {
-        Row: {
-          auto_validated: boolean | null
-          car_id: string
-          created_at: string | null
-          evidence_url: string | null
-          id: string
-          location_lat: number | null
-          location_lng: number | null
-          manual_validated: boolean | null
-          odometer_reading: number | null
-          owner_id: string
-          rejection_reason: string | null
-          validated_at: string | null
-          validated_by: string | null
-          verification_date: string
-          verification_type: string
-        }
-        Insert: {
-          auto_validated?: boolean | null
-          car_id: string
-          created_at?: string | null
-          evidence_url?: string | null
-          id?: string
-          location_lat?: number | null
-          location_lng?: number | null
-          manual_validated?: boolean | null
-          odometer_reading?: number | null
-          owner_id: string
-          rejection_reason?: string | null
-          validated_at?: string | null
-          validated_by?: string | null
-          verification_date: string
-          verification_type: string
-        }
-        Update: {
-          auto_validated?: boolean | null
-          car_id?: string
-          created_at?: string | null
-          evidence_url?: string | null
-          id?: string
-          location_lat?: number | null
-          location_lng?: number | null
-          manual_validated?: boolean | null
-          odometer_reading?: number | null
-          owner_id?: string
-          rejection_reason?: string | null
-          validated_at?: string | null
-          validated_by?: string | null
-          verification_date?: string
-          verification_type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "personal_use_verifications_validated_by_fkey"
-            columns: ["validated_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
       phone_otp_codes: {
         Row: {
           attempts: number
@@ -10958,6 +10821,7 @@ export type Database = {
           country: string | null
           created_at: string | null
           date_of_birth: string | null
+          deleted_at: string | null
           dni_encrypted: string | null
           driver_license_class: string | null
           driver_license_number_encrypted: string | null
@@ -10978,6 +10842,7 @@ export type Database = {
           identity_locked: boolean | null
           identity_verified_at: string | null
           is_admin: boolean | null
+          is_deleted: boolean | null
           last_cancellation_check: string | null
           last_community_activity_at: string | null
           location_verified_at: string | null
@@ -11029,6 +10894,7 @@ export type Database = {
           country?: string | null
           created_at?: string | null
           date_of_birth?: string | null
+          deleted_at?: string | null
           dni_encrypted?: string | null
           driver_license_class?: string | null
           driver_license_number_encrypted?: string | null
@@ -11049,6 +10915,7 @@ export type Database = {
           identity_locked?: boolean | null
           identity_verified_at?: string | null
           is_admin?: boolean | null
+          is_deleted?: boolean | null
           last_cancellation_check?: string | null
           last_community_activity_at?: string | null
           location_verified_at?: string | null
@@ -11100,6 +10967,7 @@ export type Database = {
           country?: string | null
           created_at?: string | null
           date_of_birth?: string | null
+          deleted_at?: string | null
           dni_encrypted?: string | null
           driver_license_class?: string | null
           driver_license_number_encrypted?: string | null
@@ -11120,6 +10988,7 @@ export type Database = {
           identity_locked?: boolean | null
           identity_verified_at?: string | null
           is_admin?: boolean | null
+          is_deleted?: boolean | null
           last_cancellation_check?: string | null
           last_community_activity_at?: string | null
           location_verified_at?: string | null
@@ -12099,8 +11968,11 @@ export type Database = {
           created_at: string
           currency: string
           expires_at: string
+          fgo_cap_cents: number | null
           id: string
+          max_vehicle_value_usd: number | null
           metadata: Json
+          min_vehicle_value_usd: number | null
           payment_external_id: string | null
           payment_provider: string | null
           payment_transaction_id: string | null
@@ -12119,8 +11991,11 @@ export type Database = {
           created_at?: string
           currency?: string
           expires_at: string
+          fgo_cap_cents?: number | null
           id?: string
+          max_vehicle_value_usd?: number | null
           metadata?: Json
+          min_vehicle_value_usd?: number | null
           payment_external_id?: string | null
           payment_provider?: string | null
           payment_transaction_id?: string | null
@@ -12139,8 +12014,11 @@ export type Database = {
           created_at?: string
           currency?: string
           expires_at?: string
+          fgo_cap_cents?: number | null
           id?: string
+          max_vehicle_value_usd?: number | null
           metadata?: Json
+          min_vehicle_value_usd?: number | null
           payment_external_id?: string | null
           payment_provider?: string | null
           payment_transaction_id?: string | null
@@ -16714,9 +16592,19 @@ export type Database = {
         Row: {
           coverage_limit_cents: number | null
           coverage_limit_usd: number | null
+          description: string | null
+          fgo_cap_cents: number | null
+          fgo_cap_usd: number | null
+          max_vehicle_value_usd: number | null
+          min_vehicle_value_usd: number | null
           name: string | null
+          preauth_hold_cents: number | null
+          preauth_hold_usd: number | null
+          preauth_with_subscription_cents: number | null
+          preauth_with_subscription_usd: number | null
           price_cents: number | null
           price_usd: number | null
+          target_segment: string | null
           tier: Database["public"]["Enums"]["subscription_tier"] | null
         }
         Relationships: []
@@ -17293,6 +17181,10 @@ export type Database = {
           total_recovered_cents: number
         }[]
       }
+      calculate_preauthorization: {
+        Args: { p_user_id?: string; p_vehicle_value_usd: number }
+        Returns: Json
+      }
       calculate_rc_v1_1: {
         Args: { p_bucket?: string; p_country_code?: string }
         Returns: Json
@@ -17679,6 +17571,16 @@ export type Database = {
           p_user_id: string
         }
         Returns: string
+      }
+      create_subscription_with_wallet: {
+        Args: {
+          p_description?: string
+          p_meta?: Json
+          p_ref: string
+          p_tier: Database["public"]["Enums"]["subscription_tier"]
+          p_user_id: string
+        }
+        Returns: Json
       }
       cron_calculate_all_rewards: { Args: never; Returns: number }
       cron_check_overdue_bookings: { Args: never; Returns: number }
@@ -20017,6 +19919,10 @@ export type Database = {
         Args: { p_code: string; p_user_id: string }
         Returns: boolean
       }
+      validate_subscription_for_vehicle: {
+        Args: { p_user_id: string; p_vehicle_value_usd: number }
+        Returns: Json
+      }
       verify_accounting_integrity: {
         Args: never
         Returns: {
@@ -20739,32 +20645,39 @@ export const Constants = {
 } as const
 
 // ============================================================================
-// CUSTOM ENUMS (kept for backward compatibility)
+// Enum Type Exports (for direct imports)
 // ============================================================================
 
-export type UserRole = 'renter' | 'owner' | 'admin' | 'both';
-export type CarStatus = Database['public']['Enums']['car_status'];
-export type FuelType = 'nafta' | 'gasoil' | 'flex' | 'hibrido' | 'electrico' | 'electric' | 'diesel';
-export type Transmission = 'manual' | 'automatic' | 'automatico';
-export type CancelPolicy = Database['public']['Enums']['cancel_policy'];
-export type BookingStatus = Database['public']['Enums']['booking_status'];
-export type PaymentStatus = Database['public']['Enums']['payment_status'];
-export type PaymentProvider = Database['public']['Enums']['payment_provider'];
-export type DisputeKind = Database['public']['Enums']['dispute_kind'];
-export type DisputeStatus = Database['public']['Enums']['dispute_status'];
-export type SubscriptionStatus = Database['public']['Enums']['subscription_status'];
-export type SubscriptionTier = Database['public']['Enums']['subscription_tier'];
+export type CancelPolicy = Database["public"]["Enums"]["cancel_policy"]
+export type CarStatus = Database["public"]["Enums"]["car_status"]
+export type BookingStatus = Database["public"]["Enums"]["booking_status"]
+export type PaymentStatus = Database["public"]["Enums"]["payment_status"]
+export type KycStatus = Database["public"]["Enums"]["kyc_status"]
+export type DisputeStatus = Database["public"]["Enums"]["dispute_status"]
+export type DisputeKind = Database["public"]["Enums"]["dispute_kind"]
+export type AdminRole = Database["public"]["Enums"]["admin_role"]
+export type NotificationType = Database["public"]["Enums"]["notification_type"]
+export type DocumentKind = Database["public"]["Enums"]["document_kind"]
+export type AccidentStatus = Database["public"]["Enums"]["accident_status"]
+export type ClaimStatus = Database["public"]["Enums"]["claim_status"]
+export type DamageSeverity = Database["public"]["Enums"]["damage_severity"]
+export type DamageType = Database["public"]["Enums"]["damage_type"]
+export type InfractionStatus = Database["public"]["Enums"]["infraction_status"]
+export type OnboardingStatus = Database["public"]["Enums"]["onboarding_status"]
+export type PaymentProvider = Database["public"]["Enums"]["payment_provider"]
+export type PayoutStatusEnum = Database["public"]["Enums"]["payout_status_enum"]
+export type SubscriptionStatus = Database["public"]["Enums"]["subscription_status"]
+export type SubscriptionTier = Database["public"]["Enums"]["subscription_tier"]
+export type TicketCategory = Database["public"]["Enums"]["ticket_category"]
+export type TicketStatus = Database["public"]["Enums"]["ticket_status"]
+export type TicketUrgency = Database["public"]["Enums"]["ticket_urgency"]
+export type BookingCancelledByRole = Database["public"]["Enums"]["booking_cancelled_by_role"]
 
 // ============================================================================
-// COMMON TYPES
+// Legacy Type Aliases (for backward compatibility)
 // ============================================================================
 
-/** Location data (coordinates + address) */
-export interface LocationData {
-  lat?: number;
-  lng?: number;
-  address?: string;
-  city?: string;
-  country?: string;
-  [key: string]: unknown;
-}
+// FuelType and Transmission are stored as text in the database
+export type FuelType = 'gasoline' | 'diesel' | 'electric' | 'hybrid' | 'gas' | 'other'
+export type Transmission = 'manual' | 'automatic'
+

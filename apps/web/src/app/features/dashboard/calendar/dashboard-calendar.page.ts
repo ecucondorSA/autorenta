@@ -17,8 +17,8 @@ interface BookingEvent {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink],
-  templateUrl: './calendar.page.html',
-  styleUrls: ['./calendar.page.css'],
+  templateUrl: './dashboard-calendar.page.html',
+  styleUrls: ['./dashboard-calendar.page.css'],
 })
 export class DashboardCalendarPage implements OnInit {
   private readonly bookingsService = inject(BookingsService);

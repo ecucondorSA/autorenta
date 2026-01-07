@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import type { Booking } from '@core/types/supabase-types';
+import type { BookingDB } from '@core/types/supabase-types';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { PwaService } from '@core/services/infrastructure/pwa.service';
@@ -49,7 +49,7 @@ describe('Booking Logic Integration', () => {
 
     it('should create a booking when the car is available', async () => {
       const newBookingId = 'new-booking-123';
-      const mockBooking: Booking = {
+      const mockBooking: BookingDB = {
         id: newBookingId,
         car_id: carId,
         status: 'pending',
@@ -60,7 +60,7 @@ describe('Booking Logic Integration', () => {
         total_amount: 1000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-      } as unknown as Booking;
+      } as unknown as BookingDB;
 
       // Mock RPC calls
       supabase.rpc.and.callFake(async (method: string, params: unknown) => {

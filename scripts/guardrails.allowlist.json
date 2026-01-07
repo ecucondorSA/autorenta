@@ -1,0 +1,8 @@
+{
+  "versionedFiles": [
+    "apps/web/src/app/core/services/ui/guarantee-copy-builder.service.ts",
+    "apps/web/src/app/core/services/verification/fgo-v1-1.service.ts",
+    "apps/web/src/app/features/cars/publish/publish-car-v2.page.ts",
+    "apps/web/src/app/features/marketplace/marketplace-v2.page.ts"
+  ]
+}

@@ -3,7 +3,7 @@
  * Barrel export file for all UI components
  *
  * Usage:
- * import { ButtonComponent, CardComponent, InputComponent } from '@shared-v2/ui';
+ * import { ButtonComponent, MarketplaceCardComponent, InputComponent } from '@shared-v2/ui';
  */
 
 // Form Components
@@ -11,7 +11,7 @@
 export { InputComponent } from './input.component';
 
 // Layout Components
-export { CardComponent } from './card.component';
+export { MarketplaceCardComponent } from './card.component';
 export { ModalComponent } from './modal.component';
 
 // Action Components

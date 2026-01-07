@@ -3,7 +3,7 @@ import {Component, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms'; // Importar FormsModule
 import { RouterModule } from '@angular/router';
-import { OrganizationService, Organization } from '../services/organization.service';
+import { OrganizationService, OrganizationMembership } from '../services/organization.service';
 
 @Component({
   selector: 'app-organization-dashboard',
@@ -92,7 +92,7 @@ import { OrganizationService, Organization } from '../services/organization.serv
 export class OrganizationDashboardComponent implements OnInit {
   private orgService = inject(OrganizationService);
 
-  orgs = signal<Organization[]>([]);
+  orgs = signal<OrganizationMembership[]>([]);
   loading = signal(true);
 
   // Creation state

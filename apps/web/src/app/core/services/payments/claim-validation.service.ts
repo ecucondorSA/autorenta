@@ -2,23 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { InspectionStage, BookingInspection, isInspectionComplete } from '@core/models';
+import type { DamageType } from '@core/types/database.types';
+export type { DamageType } from '@core/types/database.types';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { DamageDetectionService } from '@core/services/verification/damage-detection.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-
-/**
- * Tipo de daño reportado
- */
-export type DamageType =
-  | 'scratch' // Rayón
-  | 'dent' // Abolladura
-  | 'broken_glass' // Vidrio roto
-  | 'tire_damage' // Daño en neumático
-  | 'mechanical' // Falla mecánica
-  | 'interior' // Daño interior
-  | 'missing_item' // Artículo faltante
-  | 'other'; // Otro
 
 /**
  * Daño individual reportado

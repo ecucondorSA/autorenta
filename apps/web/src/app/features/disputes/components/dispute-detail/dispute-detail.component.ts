@@ -8,13 +8,13 @@ import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { ProfileService } from '@core/services/auth/profile.service';
-import { EvidenceUploaderComponent } from '../evidence-uploader/evidence-uploader.component';
+import { DisputeEvidenceUploaderComponent } from '../evidence-uploader/evidence-uploader.component';
 
 @Component({
   selector: 'app-dispute-detail',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, EvidenceUploaderComponent],
+  imports: [CommonModule, FormsModule, DisputeEvidenceUploaderComponent],
   templateUrl: './dispute-detail.component.html',
   styleUrls: ['./dispute-detail.component.css']
 })

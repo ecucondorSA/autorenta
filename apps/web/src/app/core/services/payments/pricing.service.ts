@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { environment } from '@environment';
 import type { VehicleCategory } from '@core/models';
+import type { LocationCoords } from '@core/models/marketplace.model';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
 
@@ -16,11 +17,6 @@ export interface QuoteBreakdown {
   // ✅ NEW: Dynamic pricing flags (Sprint 2)
   pricing_strategy?: 'dynamic' | 'custom';
   dynamic_pricing_applied?: boolean;
-}
-
-export interface LocationCoords {
-  lat: number;
-  lng: number;
 }
 
 // ✅ VehicleCategory imported from ../models (uses base_daily_rate_pct)

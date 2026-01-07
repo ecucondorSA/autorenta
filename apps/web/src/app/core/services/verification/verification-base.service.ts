@@ -38,7 +38,7 @@ export type VerificationType = 'email' | 'phone';
  *
  * Usage:
  * ```typescript
- * export class PhoneVerificationService extends VerificationBaseService {
+ * class PhoneVerificationService extends VerificationBaseService {
  *   protected readonly verificationType = 'phone' as const;
  *   protected readonly cooldownMs = 60 * 1000;
  *

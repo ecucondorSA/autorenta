@@ -13,11 +13,10 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
+import { CarAvailabilityService, type DetailedBlockedRange } from '@core/services/cars/car-availability.service';
 import type { CarMapLocation } from '@core/services/cars/car-locations.service';
 import type { FilterState } from '@core/models/marketplace.model';
 import {
-  BlockedDateRange,
   DateRangePickerComponent,
 } from '../date-range-picker/date-range-picker.component';
 import { IconComponent } from '../icon/icon.component';
@@ -548,7 +547,7 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
 
   private incrementBlockedRanges(
     accumulator: Map<string, number>,
-    ranges: BlockedDateRange[],
+    ranges: DetailedBlockedRange[],
   ): void {
     for (const range of ranges) {
       const start = new Date(range.from);

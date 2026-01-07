@@ -20,7 +20,7 @@ import { BookingLocationFormComponent } from '../../components/booking-location-
 
 import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
 import { Car } from '../../../../core/models';
-import type { BlockedDateRange } from '../../../../shared/components/date-range-picker/date-range-picker.component';
+import type { BlockedDateRange } from '@core/services/cars/car-blocking.service';
 
 interface LocationData {
   address: string;

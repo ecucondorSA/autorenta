@@ -24,7 +24,12 @@ import {
   PaymentMode,
 } from '@core/models/booking-detail-payment.model';
 import { Car } from '../../../core/models';
-import { SubscriptionCoverageCheck, PreauthorizationCalculation } from '@core/models/subscription.model';
+import {
+  SubscriptionCoverageCheck,
+  PreauthorizationCalculation,
+  SUBSCRIPTION_TIERS,
+  type SubscriptionTier
+} from '@core/models/subscription.model';
 
 // Components
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';
@@ -107,9 +112,62 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
   readonly walletAvailableBalance = computed(() => this.walletBalance()?.available_balance ?? 0);
   readonly walletCurrency = computed(() => this.walletBalance()?.currency ?? 'USD');
-  readonly walletRequiredArs = computed(() => this.riskSnapshot()?.holdEstimatedArs ?? 0);
 
-  // Convert wallet balance to ARS if wallet is in USD
+  // Required guarantee in USD (platform base currency)
+  // Uses holdEstimatedUsd which includes subscription discount if applicable
+  readonly walletRequiredUsd = computed(() => this.riskSnapshot()?.holdEstimatedUsd ?? 0);
+
+  // Wallet required in ARS (converted from holdEstimatedUsd)
+  readonly walletRequiredArs = computed(() => {
+    const snapshot = this.riskSnapshot();
+    const fx = this.fxSnapshot();
+    if (!snapshot || !fx?.platformRate) return 0;
+    return snapshot.holdEstimatedUsd * fx.platformRate;
+  });
+
+  // Subscription savings calculation - shows how much user saves with/without subscription
+  readonly subscriptionSavings = computed(() => {
+    const preauth = this.preauthCalculation();
+    if (!preauth) return null;
+
+    // If user has subscription discount applied
+    if (preauth.discountApplied) {
+      return {
+        withoutSubscription: preauth.baseHoldUsd,
+        withSubscription: preauth.holdAmountUsd,
+        savings: preauth.baseHoldUsd - preauth.holdAmountUsd,
+        hasSubscription: true,
+        userTier: this.subscriptionService.tier(),
+        userTierName: this.subscriptionService.tier()
+          ? SUBSCRIPTION_TIERS[this.subscriptionService.tier()!]?.name
+          : null
+      };
+    }
+
+    // User has NO subscription - show potential savings
+    const requiredTier = preauth.requiredTier as SubscriptionTier;
+    const tierConfig = SUBSCRIPTION_TIERS[requiredTier];
+    if (!tierConfig) return null;
+
+    return {
+      withoutSubscription: preauth.holdAmountUsd,
+      withSubscription: tierConfig.preauth_with_subscription_usd,
+      savings: preauth.holdAmountUsd - tierConfig.preauth_with_subscription_usd,
+      hasSubscription: false,
+      recommendedTier: requiredTier,
+      recommendedTierName: tierConfig.name,
+      tierPriceUsd: tierConfig.price_usd,
+      fgoCap: preauth.fgoCap
+    };
+  });
+
+  // Whether to show subscription promo banner (only if no subscription and savings > 0)
+  readonly showSubscriptionPromoBanner = computed(() => {
+    const savings = this.subscriptionSavings();
+    return savings && !savings.hasSubscription && savings.savings > 0;
+  });
+
+  // Convert wallet balance to ARS for display only
   readonly walletAvailableBalanceArs = computed(() => {
     const balance = this.walletAvailableBalance();
     const currency = this.walletCurrency();
@@ -118,7 +176,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     // If wallet is already in ARS, return as is
     if (currency === 'ARS') return balance;
 
-    // Convert USD to ARS using platform rate
+    // Convert USD to ARS using platform rate (display only)
     if (fx?.platformRate && currency === 'USD') {
       return balance * fx.platformRate;
     }
@@ -126,13 +184,27 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     return balance;
   });
 
+  // FIX: Compare in USD (platform base currency)
   readonly walletHasSufficientFunds = computed(() => {
-    const requiredArs = this.walletRequiredArs();
-    if (!requiredArs) return false;
+    const requiredUsd = this.walletRequiredUsd();
+    if (!requiredUsd) return false;
 
-    // Compare in the same currency (ARS)
-    const availableArs = this.walletAvailableBalanceArs();
-    return availableArs >= requiredArs;
+    const currency = this.walletCurrency();
+    const availableBalance = this.walletAvailableBalance();
+
+    // Wallet is in USD - direct comparison
+    if (currency === 'USD') {
+      return availableBalance >= requiredUsd;
+    }
+
+    // Wallet is in ARS - convert required to ARS for comparison
+    const fx = this.fxSnapshot();
+    if (fx?.platformRate) {
+      const requiredArs = requiredUsd * fx.platformRate;
+      return availableBalance >= requiredArs;
+    }
+
+    return false;
   });
 
   // Computed - Rental days
@@ -462,22 +534,25 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     const existingLockId = this.walletLockId();
     if (existingLockId) return existingLockId;
 
-    const requiredArs = this.walletRequiredArs();
-    const fx = this.fxSnapshot();
+    // FIX: Use USD directly (platform base currency)
+    const requiredUsd = this.walletRequiredUsd();
     const walletCurrency = this.walletCurrency();
+    const fx = this.fxSnapshot();
 
-    // Convert ARS to USD if wallet is in USD (which it is by default)
+    // Calculate amount in cents based on wallet currency
     let amountCents: number;
-    if (walletCurrency === 'USD' && fx?.platformRate) {
-      // Wallet is in USD, convert ARS requirement to USD cents
-      const requiredUsd = requiredArs / fx.platformRate;
+    if (walletCurrency === 'USD') {
+      // Wallet is in USD - use USD cents directly
       amountCents = Math.round(requiredUsd * 100);
-    } else {
-      // Wallet is in ARS, use ARS cents directly
+    } else if (fx?.platformRate) {
+      // Wallet is in ARS - convert USD to ARS cents
+      const requiredArs = requiredUsd * fx.platformRate;
       amountCents = Math.round(requiredArs * 100);
+    } else {
+      throw new Error('No se pudo calcular el monto de la garantía (tipo de cambio no disponible).');
     }
 
-    if (!requiredArs || amountCents <= 0) {
+    if (!requiredUsd || amountCents <= 0) {
       throw new Error('No se pudo calcular el monto de la garantía.');
     }
 
@@ -547,7 +622,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         return;
       }
     } else {
-      const required = this.walletRequiredArs();
+      // FIX: Validate in USD (platform base currency)
+      const required = this.walletRequiredUsd();
       if (!required) {
         this.error.set('No se pudo calcular el monto de la garantía para wallet.');
         return;
@@ -590,24 +666,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       } else {
         const walletLockId = await this.ensureWalletLock(bookingId);
 
-        // FIX: Calculate guarantee amount in the same currency as the wallet lock
-        const walletCurrency = this.walletCurrency();
-        const fx = this.fxSnapshot();
-        const requiredArs = this.walletRequiredArs();
-
-        let guaranteeAmountCents: number;
-        let guaranteeCurrency: string;
-
-        if (walletCurrency === 'USD' && fx?.platformRate) {
-          // Lock was in USD - store guarantee in USD
-          const requiredUsd = requiredArs / fx.platformRate;
-          guaranteeAmountCents = Math.round(requiredUsd * 100);
-          guaranteeCurrency = 'USD';
-        } else {
-          // Lock was in ARS - store guarantee in ARS
-          guaranteeAmountCents = Math.round(requiredArs * 100);
-          guaranteeCurrency = 'ARS';
-        }
+        // FIX: Store guarantee in USD (platform base currency)
+        const requiredUsd = this.walletRequiredUsd();
+        const guaranteeAmountCents = Math.round(requiredUsd * 100);
 
         const { error: updateError } = await this.supabaseClient
           .from('bookings')
@@ -616,7 +677,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
             payment_mode: 'wallet',
             guarantee_type: 'security_credit',
             guarantee_amount_cents: guaranteeAmountCents,
-            currency: guaranteeCurrency,
+            currency: 'USD', // Platform base currency
             wallet_lock_id: walletLockId,
             authorized_payment_id: null,
           })
@@ -680,7 +741,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       rolloverDeductibleUsd: rolloverDeductibleUsd,
       holdEstimatedArs,
       holdEstimatedUsd,
-      creditSecurityUsd: 600,
+      creditSecurityUsd: holdEstimatedUsd, // Dynamic from subscription RPC (no more hardcoded $600)
       bucket: vehicleValueUsd < 20000 ? 'economy' : (vehicleValueUsd < 40000 ? 'standard' : 'premium'),
       vehicleValueUsd,
       country: 'AR',

@@ -6,7 +6,7 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 /**
  * Resultado de adquisición de lock
  */
-export interface LockResult {
+export interface ClaimLockResult {
   ok: boolean;
   error?: string;
 }
@@ -49,7 +49,7 @@ export class ClaimLockService {
    * @param claimId - ID of the claim to lock
    * @returns Result indicating if lock was acquired
    */
-  async acquireClaimLock(claimId: string): Promise<LockResult> {
+  async acquireClaimLock(claimId: string): Promise<ClaimLockResult> {
     try {
       const {
         data: { user },
@@ -207,7 +207,7 @@ export class ClaimLockService {
    *
    * @param claimId - ID of the claim to force unlock
    */
-  async forceReleaseLock(claimId: string): Promise<LockResult> {
+  async forceReleaseLock(claimId: string): Promise<ClaimLockResult> {
     try {
       const lockExpiry = new Date(
         Date.now() - this.LOCK_EXPIRY_MINUTES * 60 * 1000,

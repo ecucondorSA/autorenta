@@ -27,7 +27,7 @@ export interface UserProfileContext {
   can_book_cars?: boolean;
 }
 
-export interface ChatContext {
+export interface AgentChatContext {
   userLocation?: AIAgentUserLocation;
   userProfile?: UserProfileContext;
   auth?: {
@@ -53,7 +53,7 @@ export interface ChatContext {
 export interface AgentChatRequest {
   message: string;
   sessionId?: string;
-  context?: ChatContext;
+  context?: AgentChatContext;
 }
 
 export interface AgentChatResponse {
@@ -63,10 +63,10 @@ export interface AgentChatResponse {
   toolsUsed: string[];
   timestamp: string;
   error?: string;
-  suggestions?: ChatSuggestion[];
+  suggestions?: AgentChatSuggestion[];
 }
 
-export interface ChatSuggestion {
+export interface AgentChatSuggestion {
   label: string;        // Texto visible: "1. Toyota Corolla - $74/día"
   action: string;       // Comando a ejecutar: "reservar 7a895b42..."
   icon?: string;        // Emoji opcional: "🚗"
@@ -79,7 +79,7 @@ export interface ChatMessage {
   timestamp: Date;
   toolsUsed?: string[];
   isStreaming?: boolean;
-  suggestions?: ChatSuggestion[];  // Opciones clickeables
+  suggestions?: AgentChatSuggestion[];  // Opciones clickeables
 }
 
 export interface TranscriptionEvent {
@@ -323,7 +323,7 @@ export class RentarfastAgentService {
     });
   }
 
-  sendMessageRealtimeWithContext(message: string, context?: ChatContext): void {
+  sendMessageRealtimeWithContext(message: string, context?: AgentChatContext): void {
     // ALWAYS use Edge Function when flag is true (Gemini 2.0 Flash + Function Calling)
     // This provides database access for real user data (wallet, bookings, etc.)
     if (this.USE_EDGE_FUNCTION) {
@@ -356,7 +356,7 @@ export class RentarfastAgentService {
     });
   }
 
-  addLocalAgentMessage(content: string, toolsUsed: string[] = [], suggestions?: ChatSuggestion[]): string {
+  addLocalAgentMessage(content: string, toolsUsed: string[] = [], suggestions?: AgentChatSuggestion[]): string {
     const agentMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: 'agent',
@@ -380,7 +380,7 @@ export class RentarfastAgentService {
     return userMessage.id;
   }
 
-  updateMessageContent(messageId: string, content: string, toolsUsed?: string[], suggestions?: ChatSuggestion[]): void {
+  updateMessageContent(messageId: string, content: string, toolsUsed?: string[], suggestions?: AgentChatSuggestion[]): void {
     this._messages.update(msgs =>
       msgs.map((msg) =>
         msg.id === messageId
@@ -429,7 +429,7 @@ export class RentarfastAgentService {
    * Send a message via Supabase Edge Function (Gemini 2.0 Flash + Function Calling)
    * This is the primary method - provides full database access for wallet, bookings, etc.
    */
-  sendMessage(message: string, context?: ChatContext): Observable<AgentChatResponse> {
+  sendMessage(message: string, context?: AgentChatContext): Observable<AgentChatResponse> {
     this._isLoading.set(true);
 
     // Add user message to history
@@ -452,7 +452,7 @@ export class RentarfastAgentService {
    * Send message via Supabase Edge Function
    * Uses Gemini 2.0 Flash with Function Calling for database access
    */
-  private sendViaEdgeFunction(message: string, context?: ChatContext): Observable<AgentChatResponse> {
+  private sendViaEdgeFunction(message: string, context?: AgentChatContext): Observable<AgentChatResponse> {
     const request = {
       message,
       sessionId: this._sessionId() ?? undefined,
@@ -504,7 +504,7 @@ export class RentarfastAgentService {
    * Send message via Cloud Run (fallback)
    * Legacy method without database access
    */
-  private sendViaCloudRun(message: string, context?: ChatContext): Observable<AgentChatResponse> {
+  private sendViaCloudRun(message: string, context?: AgentChatContext): Observable<AgentChatResponse> {
     const request: AgentChatRequest = {
       message,
       sessionId: this._sessionId() ?? undefined,

@@ -14,14 +14,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import type mapboxgl from 'mapbox-gl';
 import { environment } from '@environment';
 import { GeocodingService } from '@core/services/geo/geocoding.service';
+import type { LocationCoordinates } from '@core/services/geo/location.service';
 
 // Type import (doesn't increase bundle size)
-
-export interface LocationCoordinates {
-  latitude: number;
-  longitude: number;
-  address?: string;
-}
 
 @Component({
   selector: 'app-location-map-picker',
@@ -59,8 +54,8 @@ export interface LocationCoordinates {
               <div
                 class="mt-1 text-xs text-text-secondary"
                 >
-                Lat: {{ coordinates()!.latitude.toFixed(6) }}, Lng:
-                {{ coordinates()!.longitude.toFixed(6) }}
+                Lat: {{ coordinates()!.lat.toFixed(6) }}, Lng:
+                {{ coordinates()!.lng.toFixed(6) }}
               </div>
             }
           </div>
@@ -174,8 +169,8 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
 
         // Set initial coordinates
         const initialCoords: LocationCoordinates = {
-          latitude: initialLat,
-          longitude: initialLng,
+          lat: initialLat,
+          lng: initialLng,
           address: this.initialAddress,
         };
         this.coordinates.set(initialCoords);
@@ -213,8 +208,8 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
 
     const lngLat = this.marker.getLngLat();
     const newCoordinates: LocationCoordinates = {
-      latitude: lngLat.lat,
-      longitude: lngLat.lng,
+      lat: lngLat.lat,
+      lng: lngLat.lng,
     };
 
     this.coordinates.set(newCoordinates);
@@ -238,21 +233,21 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
    * Fly to a new location on the map
    * This method can be called from parent components
    */
-  public flyToLocation(latitude: number, longitude: number, address?: string): void {
+  public flyToLocation(lat: number, lng: number, address?: string): void {
     if (!this.map || !this.marker) return;
 
     this.map.flyTo({
-      center: [longitude, latitude],
+      center: [lng, lat],
       zoom: 15,
       essential: true,
       duration: 1500,
     });
 
-    this.marker.setLngLat([longitude, latitude]);
+    this.marker.setLngLat([lng, lat]);
 
     const newCoordinates: LocationCoordinates = {
-      latitude,
-      longitude,
+      lat,
+      lng,
       address,
     };
 

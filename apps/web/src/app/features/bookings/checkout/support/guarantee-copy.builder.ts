@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Booking } from '../../../../core/models';
 import { GuaranteeBreakdown } from './risk-calculator';
 
-export interface GuaranteeCopy {
+export interface GuaranteeCopySummary {
   headline: string;
   details: string[];
   summary: Array<{ label: string; value: string }>;
@@ -12,7 +12,7 @@ export interface GuaranteeCopy {
   providedIn: 'root',
 })
 export class GuaranteeCopyBuilder {
-  buildGuaranteeCopy(booking: Booking, guarantee: GuaranteeBreakdown): GuaranteeCopy {
+  buildGuaranteeCopy(booking: Booking, guarantee: GuaranteeBreakdown): GuaranteeCopySummary {
     const formatterArs = new Intl.NumberFormat('es-AR', {
       style: 'currency',
       currency: 'ARS',

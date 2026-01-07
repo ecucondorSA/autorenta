@@ -10,13 +10,13 @@ import {
   DisputeStatus,
 } from '@core/services/admin/disputes.service';
 import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
-import { EvidenceUploaderComponent } from '../../components/evidence-uploader/evidence-uploader.component'; // Importar el uploader
+import { DisputeEvidenceUploaderComponent } from '../../components/evidence-uploader/evidence-uploader.component'; // Importar el uploader
 
 @Component({
   selector: 'app-dispute-detail-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, EvidenceUploaderComponent], // Añadir EvidenceUploaderComponent
+  imports: [CommonModule, DisputeEvidenceUploaderComponent], // Añadir EvidenceUploaderComponent
   template: `
     <div class="container mx-auto p-6">
       <div class="flex justify-between items-center mb-6">

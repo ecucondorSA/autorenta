@@ -26,7 +26,7 @@ export interface OnboardingStep {
   action: string; // Route to navigate
 }
 
-export interface OnboardingStatus {
+export interface OnboardingStatusState {
   userId: string;
   role: string | null;
   primaryGoal: PrimaryGoal;
@@ -47,7 +47,7 @@ export class OnboardingService {
   private readonly supabase: SupabaseClient;
 
   // State
-  readonly onboardingStatus = signal<OnboardingStatus | null>(null);
+  readonly onboardingStatus = signal<OnboardingStatusState | null>(null);
   readonly isLoading = signal(false);
   readonly error = signal<string | null>(null);
 
@@ -113,7 +113,7 @@ export class OnboardingService {
       }
 
       if (data) {
-        this.onboardingStatus.set(data as OnboardingStatus);
+        this.onboardingStatus.set(data as OnboardingStatusState);
 
         // Track analytics
         if (data.showInitialModal) {

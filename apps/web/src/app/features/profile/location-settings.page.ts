@@ -13,13 +13,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { debounceTime, distinctUntilChanged, filter, Subject, takeUntil } from 'rxjs';
-import { LocationService } from '@core/services/geo/location.service';
+import { LocationService, type LocationCoordinates } from '@core/services/geo/location.service';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { GeocodingService } from '@core/services/geo/geocoding.service';
 import { UserProfile } from '../../core/models';
 import {
   LocationMapPickerComponent,
-  LocationCoordinates,
 } from '../../shared/components/location-map-picker/location-map-picker.component';
 
 @Component({
@@ -139,8 +138,8 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
         // Set initial coordinates if available
         if (profile.home_latitude && profile.home_longitude) {
           this.selectedCoordinates.set({
-            latitude: profile.home_latitude,
-            longitude: profile.home_longitude,
+            lat: profile.home_latitude,
+            lng: profile.home_longitude,
             address: profile.address_line1 ?? undefined,
           });
         }
@@ -176,8 +175,8 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
         this.mapPicker?.flyToLocation(result.latitude, result.longitude, result.fullAddress);
 
         this.selectedCoordinates.set({
-          latitude: result.latitude,
-          longitude: result.longitude,
+          lat: result.latitude,
+          lng: result.longitude,
           address: result.fullAddress,
         });
 
@@ -207,8 +206,8 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
         this.mapPicker?.flyToLocation(currentPos.lat, currentPos.lng, result.fullAddress);
 
         this.selectedCoordinates.set({
-          latitude: currentPos.lat,
-          longitude: currentPos.lng,
+          lat: currentPos.lat,
+          lng: currentPos.lng,
           address: result.fullAddress,
         });
 
@@ -242,8 +241,8 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
     try {
       // Save location
       await this.locationService.saveHomeLocation(
-        coords.latitude,
-        coords.longitude,
+      coords.lat,
+      coords.lng,
         coords.address,
       );
 
@@ -290,8 +289,8 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
 
       // Calculate distance between saved location and current location
       const distance = this.calculateDistance(
-        coords.latitude,
-        coords.longitude,
+      coords.lat,
+      coords.lng,
         currentPos.lat,
         currentPos.lng,
       );
@@ -302,8 +301,8 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
       if (distance <= VERIFICATION_THRESHOLD_KM) {
         // Save with verification timestamp
         await this.locationService.saveHomeLocation(
-          coords.latitude,
-          coords.longitude,
+          coords.lat,
+          coords.lng,
           coords.address,
         );
 

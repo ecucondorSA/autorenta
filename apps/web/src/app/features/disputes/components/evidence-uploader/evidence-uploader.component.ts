@@ -33,7 +33,7 @@ import { DisputeEvidenceService, EvidenceItem } from '../../services/dispute-evi
     </div>
     `,
 })
-export class EvidenceUploaderComponent {
+export class DisputeEvidenceUploaderComponent {
   @Input({ required: true }) disputeId!: string;
 
   private evidenceService = inject(DisputeEvidenceService);

@@ -44,8 +44,8 @@ import { AiReputationCardComponent } from '../../../shared/components/ai-reputat
 import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
 import { CarInquiryChatComponent } from '../../../shared/components/car-inquiry-chat/car-inquiry-chat.component';
 import { CarReviewsSectionComponent } from '../../../shared/components/car-reviews-section/car-reviews-section.component';
+import type { DateRange } from '@core/models/marketplace.model';
 import {
-  DateRange,
   DateRangePickerComponent,
 } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';

@@ -453,7 +453,9 @@ export const routes: Routes = [
       {
         path: 'calendar',
         loadComponent: () =>
-          import('./features/dashboard/calendar/calendar.page').then((m) => m.DashboardCalendarPage),
+          import('./features/dashboard/calendar/dashboard-calendar.page').then(
+            (m) => m.DashboardCalendarPage,
+          ),
       },
     ],
   },

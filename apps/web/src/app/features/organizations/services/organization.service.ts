@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { BonusProgress } from '@core/models/organization.model';
 
-export interface Organization {
+export interface OrganizationMembership {
   id: string;
   name: string;
   type: 'fleet' | 'corporate' | 'agency';
@@ -19,7 +19,7 @@ export class OrganizationService {
   private readonly logger = inject(LoggerService);
   private supabase = inject(SupabaseClientService).getClient();
 
-  async getMyOrganizations(): Promise<Organization[]> {
+  async getMyOrganizations(): Promise<OrganizationMembership[]> {
     const {
       data: { user },
     } = await this.supabase.auth.getUser();
@@ -46,8 +46,8 @@ export class OrganizationService {
 
     // Mapear respuesta a estructura plana
     type MembershipRow = {
-      role: Organization['role'];
-      organization: Organization | Organization[];
+      role: OrganizationMembership['role'];
+      organization: OrganizationMembership | OrganizationMembership[];
     };
 
     return (data ?? []).map((item) => {
@@ -57,14 +57,14 @@ export class OrganizationService {
       return {
         ...org,
         role: row.role,
-      } as Organization;
+      } as OrganizationMembership;
     });
   }
 
   async createOrganization(
     name: string,
     type: 'fleet' | 'corporate' | 'agency' = 'fleet',
-  ): Promise<Organization> {
+  ): Promise<OrganizationMembership> {
     const {
       data: { user },
     } = await this.supabase.auth.getUser();

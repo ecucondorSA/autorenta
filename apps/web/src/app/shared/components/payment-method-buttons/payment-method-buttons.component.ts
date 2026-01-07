@@ -13,11 +13,10 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
+import type { PaymentMethod } from '@core/services/payments/payment-orchestration.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { MoneyPipe } from '../../pipes/money.pipe';
 import { IconComponent } from '../icon/icon.component';
-
-export type PaymentMethod = 'credit_card' | 'wallet';
 
 /**
  * Payment Method Buttons Component

@@ -32,7 +32,7 @@ export function isUser(obj: unknown): obj is User {
   return isObject(obj) && isString(obj['id']) && isString(obj['email']) && isString(obj['created_at']);
 }
 
-export interface Profile {
+export interface ProfileGuard {
   id: string;
   email: string;
   full_name?: string;
@@ -42,7 +42,7 @@ export interface Profile {
   created_at: string;
 }
 
-export function isProfile(obj: unknown): obj is Profile {
+export function isProfile(obj: unknown): obj is ProfileGuard {
   return (
     isObject(obj) &&
     isString(obj['id']) &&
@@ -63,7 +63,7 @@ export function isCarLocation(obj: unknown): obj is CarLocation {
   return isObject(obj);
 }
 
-export interface Car {
+export interface CarGuard {
   id: string;
   owner_id: string;
   brand: string;
@@ -76,7 +76,7 @@ export interface Car {
   created_at: string;
 }
 
-export function isCar(obj: unknown): obj is Car {
+export function isCar(obj: unknown): obj is CarGuard {
   return (
     isObject(obj) &&
     isString(obj['id']) &&
@@ -90,7 +90,7 @@ export function isCar(obj: unknown): obj is Car {
   );
 }
 
-export interface Booking {
+export interface BookingGuard {
   id: string;
   car_id: string;
   renter_id: string;
@@ -101,7 +101,7 @@ export interface Booking {
   created_at: string;
 }
 
-export function isBooking(obj: unknown): obj is Booking {
+export function isBooking(obj: unknown): obj is BookingGuard {
   return (
     isObject(obj) &&
     isString(obj['id']) &&

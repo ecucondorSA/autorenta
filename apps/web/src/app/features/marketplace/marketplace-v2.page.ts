@@ -54,21 +54,14 @@ import { CarLatestLocation, CarLocationService } from '@core/services/geo/car-lo
 import { MapboxPreloaderService } from '@core/services/geo/mapbox-preloader.service';
 import { SeoSchemaService } from '@core/services/ui/seo-schema.service';
 import { ThemeService } from '@core/services/ui/theme.service';
+import type { DateRange, LatLngBoundsLiteral, Stat } from '@core/models/marketplace.model';
 import {
-  DateRange,
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
 import { HdriBackgroundComponent } from '../../shared/components/hdri-background/hdri-background.component';
 import { Car } from '../../core/models';
 
-export interface LatLngBoundsLiteral {
-  north: number;
-  south: number;
-  east: number;
-  west: number;
-}
-
-export interface CarWithDistance extends Car {
+interface CarWithLatestLocation extends Car {
   distance?: number;
   distanceText?: string;
   latest_location?: {
@@ -80,12 +73,6 @@ export interface CarWithDistance extends Car {
 
 // Type alias for backward compatibility
 type ToastType = 'success' | 'info' | 'warning' | 'error';
-
-export interface Stat {
-  label: string;
-  value: string | number;
-  icon: string;
-}
 
 @Component({
   selector: 'app-marketplace-v2-page',
@@ -421,7 +408,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     { id: 'location', label: 'Mi ubicación', icon: 'location', color: 'secondary' },
   ];
 
-  readonly carsWithDistance = computed<CarWithDistance[]>(() => {
+  readonly carsWithDistance = computed<CarWithLatestLocation[]>(() => {
     const carsList = this.cars();
     const userLoc = this.userLocation();
 
@@ -1046,7 +1033,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   /**
    * Track by car ID for ngFor
    */
-  trackByCarId(_index: number, car: CarWithDistance): string {
+  trackByCarId(_index: number, car: CarWithLatestLocation): string {
     return car.id;
   }
 
@@ -1313,7 +1300,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     return Math.round(sum / cars.length);
   }
 
-  getCarInstantBooking(car: CarWithDistance): boolean {
+  getCarInstantBooking(car: CarWithLatestLocation): boolean {
     // Check if car has auto_approval enabled (closest equivalent to instant booking)
     return car.auto_approval === true;
   }

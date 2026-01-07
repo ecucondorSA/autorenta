@@ -11,7 +11,7 @@ import { CarCardComponent } from '../../../shared/components/car-card/car-card.c
 import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
 
 import { Car, CarStatus } from '../../../core/models';
-import { OrganizationService, Organization } from '../../organizations/services/organization.service';
+import { OrganizationService, OrganizationMembership } from '../../organizations/services/organization.service';
 
 @Component({
   standalone: true,
@@ -29,7 +29,7 @@ export class MyCarsPage {
   private readonly router = inject(Router);
 
   readonly cars = signal<Car[]>([]);
-  readonly organizations = signal<Organization[]>([]);
+  readonly organizations = signal<OrganizationMembership[]>([]);
   readonly bonuses = signal<BonusProgress[]>([]);
   readonly loading = signal(false);
 

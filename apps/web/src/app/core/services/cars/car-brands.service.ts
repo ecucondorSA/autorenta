@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 
-export interface CarBrand {
+export interface CarBrandOption {
   code: string
   name: string
   logoPath: string
@@ -10,7 +10,7 @@ export interface CarBrand {
   providedIn: 'root',
 })
 export class CarBrandsService {
-  private readonly BRANDS: CarBrand[] = [
+  private readonly BRANDS: CarBrandOption[] = [
     { code: 'toyota', name: 'Toyota', logoPath: '/assets/images/car-brands/toyota.svg' },
     { code: 'volkswagen', name: 'Volkswagen', logoPath: '/assets/images/car-brands/volkswagen.svg' },
     { code: 'ford', name: 'Ford', logoPath: '/assets/images/car-brands/ford.svg' },
@@ -28,7 +28,7 @@ export class CarBrandsService {
     { code: 'mazda', name: 'Mazda', logoPath: '/assets/images/car-brands/mazda.svg' },
   ]
 
-  private readonly INSURANCE_BRANDS: CarBrand[] = [
+  private readonly INSURANCE_BRANDS: CarBrandOption[] = [
     { code: 'lacaja', name: 'La Caja', logoPath: '/assets/images/car-brands/lacaja.svg' },
     { code: 'sancor', name: 'Sancor', logoPath: '/assets/images/car-brands/sancor.svg' },
     { code: 'federacion', name: 'Federación Patronal', logoPath: '/assets/images/car-brands/federacion.svg' },
@@ -38,28 +38,28 @@ export class CarBrandsService {
   /**
    * Get all car brands
    */
-  getCarBrands(): CarBrand[] {
+  getCarBrands(): CarBrandOption[] {
     return this.BRANDS
   }
 
   /**
    * Get car brand by code
    */
-  getCarBrandByCode(code: string): CarBrand | undefined {
+  getCarBrandByCode(code: string): CarBrandOption | undefined {
     return this.BRANDS.find((b) => b.code.toLowerCase() === code.toLowerCase())
   }
 
   /**
    * Get all insurance brands
    */
-  getInsuranceBrands(): CarBrand[] {
+  getInsuranceBrands(): CarBrandOption[] {
     return this.INSURANCE_BRANDS
   }
 
   /**
    * Get insurance brand by code
    */
-  getInsuranceBrandByCode(code: string): CarBrand | undefined {
+  getInsuranceBrandByCode(code: string): CarBrandOption | undefined {
     return this.INSURANCE_BRANDS.find((b) => b.code.toLowerCase() === code.toLowerCase())
   }
 

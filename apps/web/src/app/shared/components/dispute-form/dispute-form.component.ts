@@ -4,13 +4,13 @@ import {Component, input, output, signal, inject,
 import { FormsModule } from '@angular/forms';
 import { DisputesService, DisputeKind } from '@core/services/admin/disputes.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-import { EvidenceUploaderComponent } from '../../../features/disputes/components/evidence-uploader/evidence-uploader.component';
+import { DisputeEvidenceUploaderComponent } from '../../../features/disputes/components/evidence-uploader/evidence-uploader.component';
 
 @Component({
   selector: 'app-dispute-form',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, EvidenceUploaderComponent], // Añadir EvidenceUploaderComponent
+  imports: [FormsModule, DisputeEvidenceUploaderComponent], // Añadir EvidenceUploaderComponent
   template: `
     @if (isOpen()) {
       <div

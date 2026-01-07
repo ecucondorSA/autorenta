@@ -21,16 +21,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
-
-export interface DateRange {
-  from: string | null;
-  to: string | null;
-}
-
-export interface BlockedDateRange {
-  from: string;
-  to: string;
-}
+import type { DateRange } from '@core/models/marketplace.model';
+import type { DetailedBlockedRange } from '@core/services/cars/car-availability.service';
 
 interface DatePreset {
   label: string;
@@ -72,7 +64,7 @@ export class DateRangePickerComponent implements AfterViewInit, OnChanges, OnDes
   @Input() availabilityChecker:
     | ((carId: string, from: string, to: string) => Promise<boolean>)
     | null = null;
-  @Input() blockedRanges: BlockedDateRange[] = [];
+  @Input() blockedRanges: DetailedBlockedRange[] = [];
   @Output() readonly rangeChange = new EventEmitter<DateRange>();
   @Output() readonly availabilityChange = new EventEmitter<boolean>();
   @Output() readonly calendarClick = new EventEmitter<void>();

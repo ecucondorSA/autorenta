@@ -12,7 +12,8 @@ export const ACCOUNTING_ROUTES: Routes = [
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./pages/dashboard.page').then((m) => m.AccountingDashboardPage),
+    loadComponent: () =>
+      import('./pages/accounting-dashboard.page').then((m) => m.AccountingDashboardPage),
   },
   {
     path: 'balance-sheet',

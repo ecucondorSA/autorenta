@@ -3,20 +3,14 @@
  * Autorentar - Insurance System Models
  */
 
+import type { ClaimStatus } from '@core/types/database.types';
+export type { ClaimStatus } from '@core/types/database.types';
+
 export type PolicyType = 'platform_floating' | 'owner_byoi';
 export type Insurer = 'rio_uruguay' | 'sancor' | 'federacion_patronal' | 'other';
 export type DeductibleType = 'percentage' | 'fixed';
 export type PolicyStatus = 'active' | 'expired' | 'cancelled' | 'pending_verification';
 export type ClaimType = 'collision' | 'theft' | 'fire' | 'vandalism' | 'misappropriation' | 'other';
-export type ClaimStatus =
-  | 'reported'
-  | 'under_review'
-  | 'approved'
-  | 'rejected'
-  | 'paid'
-  | 'closed'
-  | 'pending'
-  | 'investigating';
 export type InspectionType = 'pre_rental' | 'post_rental';
 export type AddonType =
   | 'rc_ampliada'

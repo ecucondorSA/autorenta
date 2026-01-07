@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { ChatSuggestion, RentarfastAgentService } from '@core/services/ai/rentarfast-agent.service';
+import { AgentChatSuggestion, RentarfastAgentService } from '@core/services/ai/rentarfast-agent.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
@@ -144,7 +144,7 @@ export class RentarfastCapabilityService {
       const endDateStr = endDate.toISOString().split('T')[0];
 
       // Generate interactive suggestions (Supabase chatbot style)
-      const suggestions: ChatSuggestion[] = carsWithDistance.map((car, index) => {
+      const suggestions: AgentChatSuggestion[] = carsWithDistance.map((car, index) => {
         const title = car.title || `${car.brand} ${car.model}`;
         const price = car.price_per_day ? `$${car.price_per_day}/día` : '';
         const city = car.location_city ? ` - ${car.location_city}` : '';

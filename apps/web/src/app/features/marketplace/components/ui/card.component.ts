@@ -172,7 +172,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     `,
   ],
 })
-export class CardComponent {
+export class MarketplaceCardComponent {
   // Props
   elevation = input<'flat' | 'low' | 'medium' | 'high'>('low');
   clickable = input<boolean>(false);

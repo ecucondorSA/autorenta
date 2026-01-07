@@ -234,24 +234,3 @@ export interface CarPhoto {
   sort_order: number;
   created_at: string;
 }
-
-export type VehicleDocumentKind =
-  | 'registration' // Cédula verde/título de propiedad
-  | 'insurance' // Póliza de seguro
-  | 'technical_inspection' // Revisión técnica
-  | 'circulation_permit' // Permiso de circulación
-  | 'ownership_proof'; // Comprobante de titularidad
-
-export interface VehicleDocument {
-  id: string;
-  car_id: string;
-  kind: VehicleDocumentKind;
-  storage_path: string;
-  url?: string;
-  status: 'pending' | 'verified' | 'rejected';
-  expiry_date?: string | null;
-  notes?: string | null;
-  created_at: string;
-  verified_by?: string | null;
-  verified_at?: string | null;
-}

@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import {
-  CurrencyCode,
   FxSnapshot,
   isFxExpired,
   isFxVariationExceeded,
 } from '@core/models/booking-detail-payment.model';
+import type { CurrencyCode } from '@core/models/fgo-v1-1.model';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';

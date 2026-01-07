@@ -10,18 +10,10 @@
  * from Supabase. These types serve as temporary definitions until then.
  */
 
-// ============================================================================
-// ADMIN ROLE ENUM
-// ============================================================================
+import type { AdminRole } from './database.types';
 
-/**
- * Admin role types with hierarchical permissions
- * - super_admin: Full system access, manages other admins
- * - operations: User management, verifications, bookings
- * - support: User support, view-only access
- * - finance: Payment processing, refunds, financial reports
- */
-export type AdminRole = 'super_admin' | 'operations' | 'support' | 'finance';
+// Re-export AdminRole from DB enums for consistency
+export type { AdminRole } from './database.types';
 
 // ============================================================================
 // ADMIN USER
