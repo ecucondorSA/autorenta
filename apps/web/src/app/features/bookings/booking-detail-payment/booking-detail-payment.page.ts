@@ -681,7 +681,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       holdEstimatedArs,
       holdEstimatedUsd,
       creditSecurityUsd: 600,
-      bucket: vehicleValueUsd < 20000 ? 'economy' : (vehicleValueUsd < 40000 ? 'default' : 'premium'),
+      bucket: vehicleValueUsd < 20000 ? 'economy' : (vehicleValueUsd < 40000 ? 'standard' : 'premium'),
       vehicleValueUsd,
       country: 'AR',
       fxRate: fx.platformRate,

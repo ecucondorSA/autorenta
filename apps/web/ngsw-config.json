@@ -19,9 +19,9 @@
           "/index.html",
           "/offline.html",
           "/manifest.webmanifest",
-          "/env.js",
           "/*.css",
-          "/*.js"
+          "/*.js",
+          "!/env.js"
         ],
         "urls": [
           "/cars",
@@ -197,6 +197,7 @@
     "!/**/*.*",
     "!/**/*__*",
     "!/**/*__*/**",
+    "!/env.js",
     "!https://pisqjmoklivzpwufhscx.supabase.co/**",
     "!https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_*",
     "!https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/payment_*",
