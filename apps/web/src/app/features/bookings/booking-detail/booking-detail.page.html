@@ -129,6 +129,25 @@
             (confirmationRequested)="handleTimelineAction($event)"
           ></app-booking-confirmation-timeline>
            
+           <!-- URGENT ACTION: Guarantee Required -->
+           @if ((needsPayment() || booking()?.status === 'pending_payment') && isRenter()) {
+            <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-cta-default to-cta-hover text-cta-text shadow-xl animate-pulse">
+              <div class="flex items-center justify-between gap-4">
+                <div class="flex-1">
+                  <h3 class="text-base font-bold flex items-center gap-2">
+                    <ion-icon name="alert-circle" class="text-xl"></ion-icon>
+                    Acción Requerida
+                  </h3>
+                  <p class="text-sm opacity-90">Tu reserva está pausada. Debes garantizar la garantía para avanzar.</p>
+                </div>
+                <a [routerLink]="['/bookings', booking()?.id, 'detail-payment']" 
+                   class="px-6 py-3 bg-white text-cta-default font-bold rounded-xl shadow-lg hover:bg-opacity-90 transition-all whitespace-nowrap">
+                  Garantizar Ahora
+                </a>
+              </div>
+            </div>
+           }
+           
            <!-- Alerts integrated efficiently -->
            @if (flowAlert()) {
             <div class="mt-4 pt-4 border-t border-border-default">
@@ -423,17 +442,23 @@
               <!-- Contextual Action Buttons -->
               <div class="space-y-3">
 
-                <!-- Contribution Action (Viajero) -->
-                @if (booking()?.status === 'pending_payment' && isRenter()) {
+                <!-- Primary Payment/Guarantee Action (Viajero) -->
+                @if ((needsPayment() || booking()?.status === 'pending_payment') && isRenter()) {
                   <a [routerLink]="['/bookings', booking()?.id, 'detail-payment']"
-                     class="w-full flex items-center justify-between p-4 rounded-xl bg-warning-50 text-warning-900 hover:bg-warning-100 transition-colors border border-warning-200">
-                    <span class="font-semibold flex items-center gap-2">
-                      <ion-icon name="card-outline"></ion-icon>
-                      Contribuir
+                     class="w-full flex items-center justify-between p-4 rounded-xl bg-cta-default text-cta-text hover:bg-cta-hover transition-all shadow-lg transform hover:scale-[1.02] active:scale-95 border-2 border-white/20">
+                    <span class="font-bold flex items-center gap-2">
+                      <ion-icon name="shield-checkmark-outline"></ion-icon>
+                      Garantizar Reserva Ahora
                     </span>
                     <ion-icon name="arrow-forward"></ion-icon>
                   </a>
+                  <p class="text-[10px] text-center text-text-muted mt-2">
+                    Debes garantizar la reserva para que el anfitrión pueda aprobarla.
+                  </p>
                 }
+
+                <!-- Contribution Action (Legacy check - already covered by above but keeping for context if needed) -->
+                @if (booking()?.status === 'pending_payment' && isRenter() && false) {
 
                 <!-- Waiting for Contribution (Anfitrión) -->
                 @if (booking()?.status === 'pending_payment' && isOwner()) {
