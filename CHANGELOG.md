@@ -1,3 +1,10 @@
+## [1.6.6](https://github.com/ecucondorSA/autorenta/compare/v1.6.5...v1.6.6) (2026-01-07)
+
+
+### Bug Fixes
+
+* **chat:** remove fixed height, fill container properly ([488d741](https://github.com/ecucondorSA/autorenta/commit/488d741e276b8f69cf7b4b58772d26b978fd9ec1))
+
 ## [1.6.5](https://github.com/ecucondorSA/autorenta/compare/v1.6.4...v1.6.5) (2026-01-07)
 
 
