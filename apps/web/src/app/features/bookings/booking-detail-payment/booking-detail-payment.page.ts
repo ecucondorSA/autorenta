@@ -14,6 +14,7 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { MessagesService } from '@core/services/bookings/messages.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { PaymentAuthorizationService } from '@core/services/payments/payment-authorization.service';
+import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 
 // Models
 import {
@@ -23,6 +24,7 @@ import {
   PaymentMode,
 } from '@core/models/booking-detail-payment.model';
 import { Car } from '../../../core/models';
+import { SubscriptionCoverageCheck, PreauthorizationCalculation } from '@core/models/subscription.model';
 
 // Components
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';
@@ -61,6 +63,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   private messagesService = inject(MessagesService);
   private walletService = inject(WalletService);
   private paymentAuthorizationService = inject(PaymentAuthorizationService);
+  readonly subscriptionService = inject(SubscriptionService);
   private supabaseClient = inject(SupabaseClientService).getClient();
   private logger = inject(LoggerService).createChildLogger('BookingRequestPage');
 
@@ -78,6 +81,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
   // Preauthorization state
   readonly riskSnapshot = signal<RiskSnapshot | null>(null);
+  readonly subscriptionCoverage = signal<SubscriptionCoverageCheck | null>(null);
+  readonly preauthCalculation = signal<PreauthorizationCalculation | null>(null);
   readonly currentAuthorization = signal<PaymentAuthorization | null>(null);
   readonly currentUserId = signal<string>('');
 
@@ -94,7 +99,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   readonly showP2PDetails = signal(false);
 
   // Constants
-  readonly PRE_AUTH_AMOUNT_USD = 600;
+  readonly PRE_AUTH_AMOUNT_USD_DEFAULT = 600;
 
   // Wallet state (units, as returned by wallet_get_balance)
   readonly walletBalance = this.walletService.balance;
@@ -169,8 +174,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     if (!fx) return 0;
 
     // Guarantee uses calculated hold from risk snapshot (aligns with checkout flow)
-    // Fallback to PRE_AUTH_AMOUNT_USD if risk snapshot not yet calculated
-    const guaranteeArs = riskSnapshot?.holdEstimatedArs ?? (this.PRE_AUTH_AMOUNT_USD * fx.platformRate);
+    // Fallback to PRE_AUTH_AMOUNT_USD_DEFAULT if risk snapshot not yet calculated
+    const guaranteeArs = riskSnapshot?.holdEstimatedArs ?? (this.PRE_AUTH_AMOUNT_USD_DEFAULT * fx.platformRate);
 
     // Rental cost already handles currency conversion correctly
     // (uses binanceRate for USD cars, direct ARS for ARS cars)
@@ -271,7 +276,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     }
 
     // 4. Calculate risk snapshot after FX is loaded
-    this.calculateRiskSnapshot();
+    await this.calculateRiskSnapshot();
   }
 
   ngOnDestroy(): void {
@@ -646,36 +651,37 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   /**
    * Calculate risk snapshot for preauthorization
    */
-  private calculateRiskSnapshot(): void {
+  private async calculateRiskSnapshot(): Promise<void> {
     const fx = this.fxSnapshot();
     const car = this.car();
 
     if (!fx || !car) return;
 
-    // Estimate vehicle value (use price_per_day * 365 as rough estimate if not available)
-    const vehicleValueUsd = car.value_usd || (car.price_per_day * 365);
+    // Estimate vehicle value (use price_per_day * 125 as better estimate if value_usd is not available)
+    const vehicleValueUsd = car.value_usd || Math.round(car.price_per_day * 125);
 
-    // Calculate deductibles based on vehicle value (Argentina)
-    let deductibleUsd: number;
-    if (vehicleValueUsd <= 10000) deductibleUsd = 1000;
-    else if (vehicleValueUsd <= 20000) deductibleUsd = 1500;
-    else if (vehicleValueUsd <= 40000) deductibleUsd = 2000;
-    else deductibleUsd = 2500;
+    // 1. Get Subscription-aware preauthorization (Hold)
+    const preauth = await this.subscriptionService.calculatePreauthorizationForVehicle(vehicleValueUsd);
+    this.preauthCalculation.set(preauth);
 
-    const rolloverDeductibleUsd = deductibleUsd * 2;
+    // 2. Get Subscription coverage for franchise/deductibles
+    // Note: Deductibles are generally 10% of vehicle value or standard tiers
+    const standardDeductibleUsd = Math.round(vehicleValueUsd * 0.05); // Rough estimate
+    const rolloverDeductibleUsd = standardDeductibleUsd * 2;
 
-    // Calculate hold amount: 35% of rollover deductible, with minimum of PRE_AUTH_AMOUNT_USD
-    // This aligns with CheckoutRiskCalculator.calculateHoldUsd formula
-    const holdEstimatedUsd = Math.max(this.PRE_AUTH_AMOUNT_USD, Math.round(0.35 * rolloverDeductibleUsd));
+    const coverage = await this.subscriptionService.checkCoverage(Math.round(standardDeductibleUsd * 100));
+    this.subscriptionCoverage.set(coverage);
+
+    const holdEstimatedUsd = preauth.holdAmountUsd;
     const holdEstimatedArs = holdEstimatedUsd * fx.platformRate;
 
     const riskSnapshot: RiskSnapshot = {
-      deductibleUsd,
-      rolloverDeductibleUsd,
+      deductibleUsd: standardDeductibleUsd,
+      rolloverDeductibleUsd: rolloverDeductibleUsd,
       holdEstimatedArs,
       holdEstimatedUsd,
       creditSecurityUsd: 600,
-      bucket: 'standard',
+      bucket: vehicleValueUsd < 20000 ? 'economy' : (vehicleValueUsd < 40000 ? 'default' : 'premium'),
       vehicleValueUsd,
       country: 'AR',
       fxRate: fx.platformRate,
@@ -684,7 +690,11 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     };
 
     this.riskSnapshot.set(riskSnapshot);
-    this.logger.info('Risk snapshot calculated', { holdEstimatedArs, holdEstimatedUsd });
+    this.logger.info('Risk snapshot updated with subscription benefits', {
+      holdEstimatedUsd,
+      discountApplied: preauth.discountApplied,
+      coverageType: coverage.coverage_type
+    });
   }
 
   /**

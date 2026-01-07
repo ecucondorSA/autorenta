@@ -28,6 +28,7 @@ const mockSupabaseClient = {
 
 const mockSupabaseService = {
   client: mockSupabaseClient,
+  getClient: () => mockSupabaseClient,
   from: mockSupabaseClient.from,
   rpc: mockSupabaseClient.rpc,
   auth: mockSupabaseClient.auth,
