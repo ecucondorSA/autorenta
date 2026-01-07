@@ -10,6 +10,7 @@ import { WalletService } from '@core/services/payments/wallet.service';
 import { BankAccountsComponent } from './components/bank-accounts.component';
 import { PayoutHistoryComponent } from './components/payout-history.component';
 import { RequestPayoutModalComponent } from './components/request-payout-modal.component';
+import { MercadopagoConnectComponent } from '../profile/mercadopago-connect.component';
 
 /**
  * Payouts Page
@@ -30,6 +31,7 @@ import { RequestPayoutModalComponent } from './components/request-payout-modal.c
     BankAccountsComponent,
     PayoutHistoryComponent,
     RequestPayoutModalComponent,
+    MercadopagoConnectComponent,
   ],
   templateUrl: './payouts.page.html',
   styleUrls: ['./payouts.page.css'],

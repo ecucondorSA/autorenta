@@ -589,7 +589,7 @@
 @if (booking()) {
   <app-side-panel
     [isOpen]="chatPanelOpen()"
-    [title]="'Chat con ' + (isOwner() ? 'Locatario' : 'Anfitrión')"
+    [title]="'Chat con ' + (isOwner() ? 'Viajero' : 'Anfitrión')"
     width="min(450px, 100vw)"
     (closed)="closeChatPanel()"
   >
@@ -597,7 +597,7 @@
       <app-booking-chat
         [bookingId]="booking()!.id"
         [recipientId]="isOwner() ? booking()!.renter_id : carOwnerId()!"
-        [recipientName]="isOwner() ? (booking()!.renter_name || 'Locatario') : carOwnerName()"
+        [recipientName]="isOwner() ? (booking()!.renter_name || 'Viajero') : carOwnerName()"
         [booking]="booking()"
         class="h-full"
       ></app-booking-chat>

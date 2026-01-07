@@ -64,7 +64,7 @@ import {
       </div>
 
       <!-- Content -->
-      <div class="flex-1 overflow-y-auto">
+      <div class="flex-1 flex flex-col min-h-0">
         <ng-content></ng-content>
       </div>
     </div>
