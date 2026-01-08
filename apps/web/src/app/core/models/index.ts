@@ -6,6 +6,7 @@ import type {
   PaymentStatus
 } from '../types/database.types';
 import type { BookingDepositStatus } from './wallet.model';
+import type { Car } from './car.model';
 
 // Re-export enum types from database.types
 export type {

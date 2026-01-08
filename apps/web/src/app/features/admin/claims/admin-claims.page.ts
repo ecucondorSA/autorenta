@@ -338,20 +338,14 @@ export class AdminClaimsPage implements OnInit {
 
   getStatusBadgeClass(status: ClaimStatus): string {
     const classes: Record<ClaimStatus, string> = {
-      reported:
-        'bg-warning-light/20 text-warning-700',
-      pending:
-        'bg-warning-bg-hover text-warning-strong',
-      investigating: 'bg-purple-100 text-purple-800',
-      under_review:
-        'bg-cta-default/20 text-cta-default',
-      approved:
-        'bg-success-light/20 text-success-700',
+      draft: 'bg-surface-raised text-text-primary',
+      submitted: 'bg-warning-light/20 text-warning-700',
+      under_review: 'bg-cta-default/20 text-cta-default',
+      processing: 'bg-purple-100 text-purple-800',
+      approved: 'bg-success-light/20 text-success-700',
       rejected: 'bg-error-bg-hover text-error-strong',
       paid: 'bg-success-light/20 text-success-700',
-      closed:
-        'bg-surface-raised text-text-primary',
     };
-    return classes[status] || classes.closed;
+    return classes[status] || 'bg-surface-raised text-text-primary';
   }
 }

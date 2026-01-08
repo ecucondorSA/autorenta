@@ -224,12 +224,12 @@ export class ProfileService {
 
   async canPublishCars(): Promise<boolean> {
     const profile = await this.getCurrentProfile();
-    return profile?.['role'] === 'owner' || profile?.['role'] === 'both';
+    return (profile?.['role'] as string) === 'owner' || (profile?.['role'] as string) === 'both';
   }
 
   async canBookCars(): Promise<boolean> {
     const profile = await this.getCurrentProfile();
-    return profile?.['role'] === 'renter' || profile?.['role'] === 'both';
+    return (profile?.['role'] as string) === 'renter' || (profile?.['role'] as string) === 'both';
   }
 
   async getMe(): Promise<UserProfile> {

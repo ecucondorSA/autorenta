@@ -38,16 +38,16 @@
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 3h14" stroke-width="2" stroke-linecap="round"/><path d="M5 21h14" stroke-width="2" stroke-linecap="round"/><path d="M6 3v3c0 2.5 2 4 6 6-4 2-6 3.5-6 6v3M18 3v3c0 2.5-2 4-6 6 4 2 6 3.5 6 6v3" stroke-width="1.75" stroke-linejoin="round"/></svg>
       </div>
       <div class="stat-content">
-        <div class="stat-value">{{ stats().pending }}</div>
-        <div class="stat-label">Pendientes</div>
+        <div class="stat-value">{{ stats().submitted }}</div>
+        <div class="stat-label">Enviados</div>
       </div>
     </div>
 
     <div class="stat-card">
       <div class="stat-icon">🔍</div>
       <div class="stat-content">
-        <div class="stat-value">{{ stats().investigating }}</div>
-        <div class="stat-label">En Investigación</div>
+        <div class="stat-value">{{ stats().underReview }}</div>
+        <div class="stat-label">En Revisión</div>
       </div>
     </div>
 
@@ -76,15 +76,15 @@
           @if (filter.value !== 'all') {
             <span class="filter-count">
               {{
-              filter.value === 'pending'
-              ? stats().pending
-              : filter.value === 'investigating'
-              ? stats().investigating
+              filter.value === 'submitted'
+              ? stats().submitted
+              : filter.value === 'under_review'
+              ? stats().underReview
               : filter.value === 'approved'
               ? stats().approved
               : filter.value === 'rejected'
               ? stats().rejected
-              : stats().closed
+              : stats().paid
               }}
             </span>
           }

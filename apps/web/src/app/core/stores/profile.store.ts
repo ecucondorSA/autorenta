@@ -87,7 +87,7 @@ export class ProfileStore {
    * Can publish cars (owner or both)
    */
   readonly canPublishCars = computed(() => {
-    const role = this.profile()?.role;
+    const role = this.profile()?.role as string;
     return role === 'owner' || role === 'both';
   });
 
@@ -95,7 +95,7 @@ export class ProfileStore {
    * Can book cars (renter or both)
    */
   readonly canBookCars = computed(() => {
-    const role = this.profile()?.role;
+    const role = this.profile()?.role as string;
     return role === 'renter' || role === 'both';
   });
 

@@ -449,7 +449,7 @@ export class InsuranceService {
       updateData['resolution_notes'] = notes;
     }
 
-    if (status === 'closed') {
+    if (status === 'paid') {
       updateData['closed_at'] = new Date().toISOString();
     }
 

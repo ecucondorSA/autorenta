@@ -395,6 +395,103 @@ export class SubscriptionService {
     return this.fetchUsageHistory(undefined, limit);
   }
 
+  /**
+   * Calculate upgrade cost from current tier to a new tier.
+   * Returns the price difference and other upgrade info.
+   */
+  async calculateUpgrade(newTier: SubscriptionTier): Promise<{
+    canUpgrade: boolean;
+    reason?: string;
+    message?: string;
+    currentTier?: SubscriptionTier;
+    newTier: SubscriptionTier;
+    currentPriceUsd?: number;
+    newPriceUsd?: number;
+    priceDifferenceUsd?: number;
+    newCoverageUsd?: number;
+  }> {
+    try {
+      const { data: { session } } = await this.supabase.auth.getSession();
+      if (!session?.user) {
+        return {
+          canUpgrade: false,
+          reason: 'not_authenticated',
+          message: 'No estás autenticado',
+          newTier,
+        };
+      }
+
+      const { data, error } = await this.supabase.rpc('calculate_subscription_upgrade', {
+        p_user_id: session.user.id,
+        p_new_tier: newTier,
+      });
+
+      if (error) throw error;
+
+      if (!data?.can_upgrade) {
+        return {
+          canUpgrade: false,
+          reason: data?.reason,
+          message: data?.message,
+          newTier,
+        };
+      }
+
+      return {
+        canUpgrade: true,
+        currentTier: data.current_tier as SubscriptionTier,
+        newTier: data.new_tier as SubscriptionTier,
+        currentPriceUsd: data.current_price_cents / 100,
+        newPriceUsd: data.new_price_cents / 100,
+        priceDifferenceUsd: data.price_difference_usd,
+        newCoverageUsd: data.new_coverage_usd,
+        message: data.message,
+      };
+    } catch (err) {
+      this.handleError(err, 'Error al calcular upgrade');
+      return {
+        canUpgrade: false,
+        reason: 'error',
+        message: 'Error al calcular el upgrade',
+        newTier,
+      };
+    }
+  }
+
+  /**
+   * Upgrade subscription to a higher tier using wallet balance.
+   * Pays only the price difference.
+   */
+  async upgradeSubscriptionWithWallet(newTier: SubscriptionTier): Promise<string> {
+    try {
+      const tierConfig = SUBSCRIPTION_TIERS[newTier];
+      if (!tierConfig) {
+        throw new Error(`Invalid tier: ${newTier}`);
+      }
+
+      const { data, error } = await this.supabase.functions.invoke('upgrade-subscription-wallet', {
+        body: { new_tier: newTier },
+      });
+
+      if (error) throw error;
+      if (!data?.subscription_id) {
+        throw new Error(data?.error || data?.message || 'No subscription ID returned');
+      }
+
+      this.logger.info('Subscription upgraded with wallet', {
+        newTier,
+        subscriptionId: data.subscription_id,
+        pricePaidUsd: data.price_paid_usd,
+      });
+
+      await this.fetchSubscription(true);
+      return data.subscription_id as string;
+    } catch (err) {
+      this.handleError(err, 'Error al hacer upgrade con wallet');
+      throw err;
+    }
+  }
+
   // ============================================================================
   // PREAUTHORIZATION & VEHICLE VALUE METHODS
   // ============================================================================

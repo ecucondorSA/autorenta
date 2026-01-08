@@ -1407,15 +1407,14 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   }
 
   getClaimStatusColor(status: InsuranceClaim['status']): string {
-    const colorMap = {
-      reported: 'orange',
-      pending: 'yellow',
-      investigating: 'purple',
+    const colorMap: Record<InsuranceClaim['status'], string> = {
+      draft: 'gray',
+      submitted: 'orange',
       under_review: 'blue',
+      processing: 'purple',
       approved: 'green',
       rejected: 'red',
       paid: 'green',
-      closed: 'gray',
     };
     return colorMap[status] || 'gray';
   }

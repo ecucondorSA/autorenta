@@ -19,7 +19,7 @@ export interface CarHandoverPoint {
 export interface DetailedBlockedRange {
   from: string; // YYYY-MM-DD
   to: string; // YYYY-MM-DD
-  type: 'booking' | 'blackout' | 'manual_block';
+  type?: 'booking' | 'blackout' | 'manual_block'; // Optional for backward compatibility
   reason?: string | null;
   notes?: string | null;
   block_id?: string;

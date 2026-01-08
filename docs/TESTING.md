@@ -1,227 +1,172 @@
-# PROMPT PARA GEMINI - TESTING.md
+# ✅ Estrategia Integral de Calidad (QA) y Testing
 
-## Objetivo
-Documentar la estrategia y ejecucion de tests en Autorenta.
+> **Ingeniería de Fiabilidad**
+> Este documento define cómo garantizamos que Autorenta funcione correctamente en cada commit. Combinamos pruebas estáticas, unitarias, de integración y end-to-end (E2E) en un pipeline continuo.
 
-## Instrucciones para Gemini
+---
 
-Analiza la configuracion de testing:
+## 🏗️ La Pirámide de Testing
 
-### Archivos a analizar:
-1. `vitest.config.ts` o `vite.config.ts` - Config Vitest
-2. `playwright.config.ts` - Config Playwright E2E
-3. `karma.conf.js` - Si existe config Karma
-4. `apps/web/src/**/*.spec.ts` - Tests unitarios
-5. `apps/web/src/**/*.test.ts` - Tests adicionales
-6. `e2e/**` - Tests E2E
-7. `package.json` - Scripts de test
+| Tipo | Herramienta | Cobertura Objetivo | Frecuencia | Costo (Tiempo) |
+| :--- | :--- | :--- | :--- | :--- |
+| **E2E (UI)** | Playwright | Flujos Críticos (Checkout, Login) | Nightly / Release | Alto (Minutos) |
+| **Integración** | Vitest + Supabase | Interacción DB y Edge Functions | Pull Request | Medio (Segundos) |
+| **Unitarios** | Vitest | Reglas de Negocio (Servicios, Utils) | > 80% | En cada Commit | Bajo (Milisegundos) |
+| **Estáticos** | ESLint / TSC | Sintaxis y Tipos | 100% | En vivo (IDE) | Nulo |
 
-### Secciones requeridas:
+---
 
-```markdown
-# Testing Guide
+## 🧪 1. Tests Unitarios (Vitest)
 
-## Stack de Testing
+La base de la pirámide. Rápidos y aislados.
 
-| Tipo | Herramienta | Config |
-|------|-------------|--------|
-| Unit Tests | [Vitest/Jest/Karma] | [archivo config] |
-| E2E Tests | [Playwright] | [archivo config] |
-| Coverage | [v8/istanbul] | [config] |
+### Configuración (`vitest.config.ts`)
+Usamos `jsdom` para simular un navegador ligero.
 
-## Estructura de Tests
+### Ejemplo: Testeando `BookingOpsService`
+Validamos que el cálculo de precios sea exacto al centavo.
 
-```
-apps/web/src/
-  app/
-    core/
-      services/
-        bookings/
-          bookings.service.ts
-          bookings.service.spec.ts  <- Unit test
-    features/
-      bookings/
-        booking-list.component.ts
-        booking-list.component.spec.ts  <- Component test
-e2e/
-  booking-flow.spec.ts  <- E2E test
-```
-
-## Unit Tests
-
-### Ejecutar todos los tests
-```bash
-[comando encontrado en package.json]
-```
-
-### Ejecutar tests de un archivo
-```bash
-[comando]
-```
-
-### Ejecutar tests con coverage
-```bash
-[comando]
-```
-
-### Ejecutar tests en watch mode
-```bash
-[comando]
-```
-
-### Convenciones
-- Archivos: `*.spec.ts` o `*.test.ts`
-- Describe blocks: [patron usado]
-- Mocks: [como se mockean servicios]
-
-### Ejemplo de test unitario
 ```typescript
-[Ejemplo REAL de un test.spec.ts del proyecto]
+// apps/web/src/app/core/services/bookings/booking-ops.service.spec.ts
+import { BookingOpsService } from './booking-ops.service';
+
+describe('BookingOpsService', () => {
+  let service: BookingOpsService;
+
+  beforeEach(() => {
+    service = new BookingOpsService(); // Inyección simple
+  });
+
+  it('debe aplicar descuento del 10% para alquileres de 7 días', () => {
+    const price = service.calculateRentalPrice({
+      basePrice: 100, // $100/día
+      days: 7,
+    });
+    
+    // 7 * 100 = 700. Descuento 10% = 70. Total = 630.
+    expect(price.total).toBe(630);
+    expect(price.discountApplied).toBe(true);
+  });
+
+  it('debe lanzar error si la fecha de fin es anterior al inicio', () => {
+    expect(() => service.validateDates(today, yesterday)).toThrowError(/fechas inválidas/);
+  });
+});
 ```
 
-### Mocking Supabase
+### Mocking de Dependencias
+Para testear componentes que dependen de APIs externas, usamos Spies.
+
 ```typescript
-[Como se mockea el cliente de Supabase]
+// Mockear Supabase Client
+const supabaseSpy = vi.spyOn(supabaseClient, 'from').mockReturnValue({
+  select: vi.fn().mockResolvedValue({ data: [], error: null }),
+} as any);
 ```
 
-### Mocking HTTP
+---
+
+## 🔌 2. Tests de Integración (Backend)
+
+Validan que nuestras Edge Functions y Triggers de base de datos funcionen juntos.
+
+### Entorno Local
+Requiere Supabase corriendo localmente (`supabase start`).
+
+### Ejemplo: Testeando un Trigger RLS
+```sql
+-- supabase/tests/database/01_rls_bookings.sql
+BEGIN;
+  -- Crear usuarios de prueba
+  SELECT tests.create_supabase_user('renter');
+  SELECT tests.create_supabase_user('hacker');
+
+  -- Actuar como renter
+  SELECT tests.authenticate_as('renter');
+  INSERT INTO public.bookings (car_id, ...) VALUES (...); -- Debería pasar
+
+  -- Actuar como hacker
+  SELECT tests.authenticate_as('hacker');
+  SELECT * FROM public.bookings; -- Debería retornar 0 filas (o error)
+  
+  -- Aserción
+  SELECT is(count(*), 0, 'Hacker no debe ver bookings ajenos') FROM public.bookings;
+ROLLBACK;
+```
+
+---
+
+## 🎭 3. Tests End-to-End (Playwright)
+
+Simulan un usuario real navegando por el sitio. Son nuestra red de seguridad final.
+
+### Flujos Críticos Automatizados
+1.  **Renter Happy Path:** Login -> Buscar Auto -> Seleccionar Fechas -> Ver desglose de precio.
+2.  **Owner Happy Path:** Publicar auto -> Subir fotos -> Guardar.
+3.  **Auth:** Login fallido, Recuperar contraseña.
+
+### Ejemplo: Flujo de Reserva
 ```typescript
-[Como se mockean llamadas HTTP]
+// tests/e2e/booking.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('Usuario puede iniciar proceso de reserva', async ({ page }) => {
+  // 1. Navegar al detalle
+  await page.goto('/cars/uuid-auto-prueba');
+
+  // 2. Seleccionar fechas (interacción con DatePicker)
+  await page.click('[data-testid="date-picker-trigger"]');
+  await page.click('text=15'); // Día 15
+  await page.click('text=20'); // Día 20
+
+  // 3. Verificar precio calculado
+  await expect(page.locator('[data-testid="total-price"]')).toContainText('$500');
+
+  // 4. Click en reservar
+  await page.click('text=Solicitar Reserva');
+
+  // 5. Verificar redirección a login (si no estaba logueado)
+  await expect(page).toHaveURL(/.*\/auth\/login/);
+});
 ```
 
-## Component Tests
+### Configuración CI (`.github/workflows/e2e.yml`)
+Ejecutamos los tests en paralelo (sharding) para velocidad.
 
-### Setup de TestBed
-```typescript
-[Ejemplo de configuracion de TestBed]
+```yaml
+jobs:
+  e2e:
+    strategy:
+      matrix:
+        shard: [1/3, 2/3, 3/3]
+    steps:
+      - run: npx playwright test --shard ${{ matrix.shard }}
 ```
 
-### Testing con Signals
-```typescript
-[Como testear componentes con signals]
-```
+---
 
-### Testing de Forms
-```typescript
-[Ejemplo de test de formulario]
-```
+## 🚦 Quality Gates (Reglas de Merge)
 
-## E2E Tests (Playwright)
+Para que un Pull Request (PR) se fusione en `main`:
 
-### Ejecutar E2E tests
-```bash
-[comando]
-```
+1.  ✅ **Lint:** 0 errores de estilo.
+2.  ✅ **Unit:** 100% de tests pasando.
+3.  ✅ **Build:** La aplicación debe compilar sin errores en modo producción.
+4.  ✅ **Size Limit:** El bundle principal no debe exceder 500KB (gzip).
 
-### Ejecutar en modo UI
-```bash
-[comando]
-```
+---
 
-### Ejecutar test especifico
-```bash
-[comando]
-```
+## 🛠️ Comandos de Testing
 
-### Configuracion de browsers
-[Browsers configurados en playwright.config.ts]
+| Comando | Descripción |
+| :--- | :--- |
+| `pnpm test:unit` | Corre todos los tests unitarios una vez. |
+| `pnpm test:unit:watch` | Modo interactivo para desarrollo (TDD). |
+| `pnpm test:unit:coverage` | Genera reporte HTML de cobertura (`coverage/index.html`). |
+| `pnpm test:e2e` | Corre tests E2E en modo headless. |
+| `pnpm test:e2e:ui` | Abre la UI de Playwright para depurar paso a paso. |
+| `supabase test db` | Ejecuta la suite de pruebas SQL pgTAP. |
 
-### Ejemplo de test E2E
-```typescript
-[Ejemplo REAL de un test E2E del proyecto]
-```
+---
 
-### Page Objects
-[Si usan page objects, documentar]
-
-### Fixtures
-[Fixtures disponibles]
-
-## Coverage
-
-### Generar reporte de coverage
-```bash
-[comando]
-```
-
-### Ver reporte HTML
-```bash
-[comando o ubicacion]
-```
-
-### Umbrales de coverage
-| Metrica | Umbral |
-|---------|--------|
-| Lines | [%] |
-| Branches | [%] |
-| Functions | [%] |
-| Statements | [%] |
-
-## CI/CD Integration
-
-### Tests en GitHub Actions
-[Workflow que corre tests]
-
-### Cuando corren los tests
-- PR: [si/no]
-- Push a main: [si/no]
-- Nightly: [si/no]
-
-## Datos de Prueba
-
-### Usuarios de test
-| Email | Password | Rol |
-|-------|----------|-----|
-[Si existen usuarios de test]
-
-### Tarjetas de prueba MercadoPago
-| Numero | CVV | Vencimiento | Resultado |
-|--------|-----|-------------|-----------|
-| 5031 7557 3453 0604 | 123 | 11/25 | Aprobado |
-| 5031 7557 3453 0604 | 123 | 11/25 | Rechazado |
-[Tarjetas de test de MP]
-
-### Seeds de base de datos
-[Si existen seeds para testing]
-
-## Debugging Tests
-
-### Ejecutar con verbose
-```bash
-[comando]
-```
-
-### Debugging en VS Code
-[Configuracion de launch.json si existe]
-
-### Screenshots en E2E fallidos
-[Donde se guardan, como verlos]
-
-## Best Practices
-
-### Que testear
-- [Lista de que debe tener tests]
-
-### Que NO testear
-- [Lista de que no necesita tests]
-
-### Naming conventions
-- [Convencion de nombres de tests]
-
-## Tests Existentes
-
-### Servicios con tests
-[Lista de servicios que tienen .spec.ts]
-
-### Componentes con tests
-[Lista de componentes que tienen .spec.ts]
-
-### Coverage actual
-[Si se puede obtener el % actual]
-```
-
-### Formato de salida:
-- Comandos REALES del proyecto
-- Ejemplos de tests REALES del codigo
-- Configuracion especifica encontrada
-- Maximo 400 lineas
+**© 2026 Autorenta QA Team**

@@ -1,202 +1,156 @@
-# PROMPT PARA GEMINI - TROUBLESHOOTING.md
+# 🔧 Guía Maestra de Solución de Problemas (Troubleshooting)
 
-## Objetivo
-Documentar problemas comunes y sus soluciones en Autorenta.
+> **Enciclopedia de Errores y Diagnóstico Avanzado**
+> Esta guía no solo lista errores; explica la anatomía de los fallos en una arquitectura distribuida y provee árboles de decisión para resolver incidentes complejos en Autorenta.
 
-## Instrucciones para Gemini
+---
 
-Analiza el codigo para identificar posibles puntos de fallo:
+## 🧭 Metodología de Diagnóstico
 
-### Archivos a analizar:
-1. `apps/web/src/app/core/services/**` - Todos los servicios (manejo de errores)
-2. `supabase/functions/**` - Edge functions (try/catch, error handling)
-3. `apps/web/src/app/core/interceptors/**` - Interceptors HTTP
-4. `supabase/migrations/**` - Constraints y validaciones DB
-5. Buscar patrones: `catch`, `error`, `throw`, `console.error`
+Antes de actuar, sigue el protocolo **O.D.A.** (Observar, Diagnosticar, Actuar):
 
-### Secciones requeridas:
+1.  **Observar:** ¿Afecta a un usuario, a una región o a todos? ¿Es frontend (UI) o backend (API)?
+2.  **Diagnosticar:** Revisa los logs en este orden: Consola Navegador -> Sentry -> Supabase Logs -> MercadoPago Logs.
+3.  **Actuar:** Aplica la solución de menor impacto primero.
 
-```markdown
-# Troubleshooting Guide
+---
 
-## Errores de Autenticacion
+## 🔐 Autenticación y Seguridad (Auth)
 
-### "Session expired" / Token expirado
-- **Causa**: [JWT expirado]
-- **Solucion usuario**: [Reloguear]
-- **Solucion dev**: [Verificar refresh token logic]
+### Caso: "Refresh Token Loop" (Bucle de Login)
+*   **Síntoma:** La app recarga infinitamente o pide login cada 5 segundos.
+*   **Anatomía del fallo:**
+    *   El cliente envía un `refresh_token` antiguo.
+    *   Supabase detecta reutilización de token (Replay Attack).
+    *   Por seguridad, Supabase **revoca toda la familia de tokens** de ese usuario.
+*   **Solución Raíz:**
+    *   Limpiar LocalStorage: `localStorage.clear()` (instruir al usuario).
+    *   Verificar si hay dos pestañas abiertas compitiendo por el refresh.
 
-### "Invalid credentials"
-- **Causa**: [Email/password incorrectos]
-- **Verificar**: [Tabla auth.users]
+### Caso: RLS Policy Violation (Error 403 Silencioso)
+*   **Síntoma:** Una lista aparece vacía o una acción falla sin mensaje de error claro.
+*   **Diagnóstico SQL:**
+    Ejecutar la consulta como el usuario (impersonation):
+    ```sql
+    -- En Supabase SQL Editor
+    SET request.jwt.claim.sub = 'uuid-del-usuario';
+    SET request.jwt.claim.role = 'authenticated';
+    SELECT * FROM bookings; -- ¿Devuelve filas?
+    ```
+*   **Causa Común:** La política RLS usa `auth.uid()` pero el usuario no tiene la sesión correctamente establecida en el contexto de la query.
 
-### OAuth Google falla
-- **Causa**: [Configuracion OAuth]
-- **Verificar**: [Variables GOOGLE_*]
-- **Solucion**: [Pasos]
+---
 
-### OAuth MercadoPago falla
-- **Causa**: [Tokens MP]
-- **Verificar**: [Variables MP_*]
-- **Solucion**: [Pasos]
+## 💳 Pagos y Transacciones (Financial Core)
 
-## Errores de Pagos
+### Error `cc_rejected_high_risk` (Fraude)
+*   **Contexto:** MercadoPago rechazó el pago por scoring de fraude.
+*   **Acción:**
+    1.  No reintentar inmediatamente (bloqueará la tarjeta).
+    2.  Pedir al usuario que llame a su banco para autorizar "compra online inusual".
+    3.  Intentar con otro medio de pago.
 
-### Pre-autorizacion rechazada
-- **Causas posibles**:
-  - Tarjeta sin fondos
-  - Tarjeta bloqueada
-  - Limite de tarjeta
-- **Verificar**: [Logs de MP]
-- **Solucion**: [Usar otra tarjeta]
+### Error `cc_rejected_insufficient_amount` (Fondos)
+*   **Contexto:** El usuario jura que tiene fondos.
+*   **Causa Técnica:**
+    *   En tarjetas de **Débito**, el banco a veces bloquea pre-autorizaciones (holds) porque no son compras finales.
+    *   El monto incluye la garantía, que puede ser alto.
+*   **Solución:** Sugerir usar tarjeta de **Crédito** real, no prepaga/débito.
 
-### Webhook no llega
-- **Causa**: [URL incorrecta, firewall]
-- **Verificar**: [Panel MP > Webhooks]
-- **Solucion**: [Reconfigurar webhook URL]
+### Incidente: "Dinero Desaparecido" (Race Condition)
+*   **Síntoma:** El renter pagó, se debitó, pero la reserva dice "Pendiente de Pago".
+*   **Análisis Forense:**
+    1.  Buscar el `payment_intent_id` en la tabla `bookings`.
+    2.  Buscar ese ID en el Dashboard de MercadoPago.
+    3.  Si está `approved` en MP pero no en DB: **Fallo de Webhook**.
+*   **Recuperación (Script):**
+    Correr script de reconciliación manual:
+    `pnpm run script:reconcile-payment --booking=uuid`
 
-### Payment stuck in "pending"
-- **Causa**: [Webhook no procesado]
-- **Verificar**: [Tabla de payments, logs edge function]
-- **Solucion manual**: [SQL para actualizar estado]
+---
 
-### Wallet balance incorrecto
-- **Causa**: [Transaccion no registrada]
-- **Verificar**: [wallet_transactions]
-- **Solucion**: [Recalcular balance]
+## 🚗 Disponibilidad y Calendario (Concurrency)
 
-### Payout fallido
-- **Causa**: [Cuenta MP no vinculada]
-- **Verificar**: [mp_seller_credentials]
-- **Solucion**: [Re-vincular cuenta]
+### El Problema del "Booking Fantasma"
+*   **Síntoma:** El calendario muestra fechas bloqueadas pero no hay reserva visible.
+*   **Causa:** Una reserva entró en estado `pending_payment`, bloqueó fechas, pero el usuario abandonó el checkout. El job de limpieza (`expire-pending-deposits`) falló o aún no corrió.
+*   **Solución Inmediata:**
+    *   Buscar en `car_blocked_dates` donde `reason = 'booking'` y `booking_id` es una reserva expirada.
+    *   Borrar manualmente el bloqueo o correr el cron job manualmente desde Supabase Dashboard.
 
-## Errores de Reservas
+---
 
-### "Car not available"
-- **Causa**: [Fechas bloqueadas]
-- **Verificar**: [bookings table, car_availability]
-- **Solucion**: [Verificar calendario del auto]
+## ⚡ Edge Functions y Performance
 
-### Booking no cambia de estado
-- **Causa**: [Trigger no ejecuto]
-- **Verificar**: [Logs, triggers]
-- **Solucion**: [Update manual con precaucion]
+### "504 Gateway Time-out" en Generación de Contratos
+*   **Contexto:** `generate-booking-contract-pdf` falla.
+*   **Causa:** Puppeteer (la librería que genera el PDF) consume mucha RAM y CPU. Si el contrato es muy largo o incluye muchas fotos de alta resolución, el contenedor de Deno se queda sin memoria (OOM).
+*   **Optimización:**
+    *   Reducir calidad de imágenes antes de incrustarlas en el PDF.
+    *   Aumentar el tamaño de la instancia de la función en Supabase (requiere plan Pro/Enterprise).
 
-### Contrato no genera
-- **Causa**: [Edge function fallo]
-- **Verificar**: [Logs de contract-generate]
-- **Solucion**: [Re-invocar funcion]
+### Cold Starts (Latencia inicial)
+*   **Síntoma:** La primera petición tarda 2-3 segundos.
+*   **Mitigación:** Usar un "Keep-Alive" cron job que invoca las funciones críticas (`pinger`) cada 5 minutos para mantener el contenedor caliente.
 
-## Errores de Base de Datos
+---
 
-### "Row level security policy violation"
-- **Causa**: [Usuario sin permisos]
-- **Verificar**: [Policies de la tabla]
-- **Solucion**: [Verificar user_id, roles]
+## 📱 Mobile (Android/Capacitor)
 
-### "Foreign key constraint violation"
-- **Causa**: [Referencia a registro inexistente]
-- **Verificar**: [Tabla referenciada]
-- **Solucion**: [Crear registro padre primero]
+### Deep Links Rotos
+*   **Síntoma:** El email de "Confirmar Email" abre el navegador en vez de la App.
+*   **Diagnóstico:** Verificar archivo `assetlinks.json` en el dominio web (`.well-known/assetlinks.json`). Debe coincidir exactamente con el hash SHA-256 del certificado de firma de la App Android.
+*   **Herramienta:** Usar [Google Digital Asset Links Tools](https://developers.google.com/digital-asset-links/tools/generator).
 
-### "Unique constraint violation"
-- **Causa**: [Registro duplicado]
-- **Verificar**: [Constraint violado]
-- **Solucion**: [Usar upsert o verificar antes]
+### Geolocalización Imprecisa
+*   **Causa:** El modo "Ahorro de batería" de Android mata el proceso de GPS en segundo plano.
+*   **Solución:** No hay solución técnica perfecta. Mostrar aviso al usuario: "Para mejor experiencia, desactiva el ahorro de energía".
 
-### Migracion falla
-- **Causa**: [SQL invalido, constraint]
-- **Verificar**: [Contenido de migracion]
-- **Solucion**: [Corregir SQL, reset si es local]
+---
 
-## Errores de Edge Functions
+## 🚨 Árbol de Decisión: Sistema Caído
 
-### "Function not found"
-- **Causa**: [No deployada]
-- **Verificar**: [supabase functions list]
-- **Solucion**: [supabase functions deploy]
+**¿La web carga (`autorentar.com`)?**
+*   **NO:**
+    *   ¿Es DNS? (`nslookup autorentar.com`)
+    *   ¿Es Cloudflare? (Ver status.cloudflare.com)
+*   **SÍ, pero da error de conexión:**
+    *   ¿Supabase está caído? (Verificar conexión DB desde local).
+    *   ¿Las Edge Functions responden? (Probar `curl` a healthcheck).
 
-### "Internal server error" (500)
-- **Causa**: [Error en codigo]
-- **Verificar**: [Logs: supabase functions logs <name>]
-- **Solucion**: [Debugear segun log]
+**¿Los pagos fallan masivamente?**
+*   **SÍ:**
+    *   ¿Expiraron las credenciales de MP? (Rotarlas inmediatamente).
+    *   ¿Cambió la API de MP? (Revisar changelog).
 
-### Timeout
-- **Causa**: [Funcion muy lenta]
-- **Verificar**: [Tiempo de ejecucion]
-- **Solucion**: [Optimizar, aumentar timeout]
+---
 
-### "Missing environment variable"
-- **Causa**: [Secret no configurado]
-- **Verificar**: [supabase secrets list]
-- **Solucion**: [supabase secrets set KEY=value]
+## 🧰 Kit de Herramientas del Operador
 
-## Errores de Frontend
+### Scripts de Mantenimiento (`/tools/ops/`)
+*   `cleanup.sh`: Borra usuarios de prueba y datos basura.
+*   `monitor-health.sh`: Verifica endpoints críticos y envía alerta a Slack/Discord.
+*   `db-snapshot.sh`: Crea un dump rápido de la estructura (no datos) para análisis local.
 
-### Pagina en blanco
-- **Causa**: [Error JS, lazy load fallo]
-- **Verificar**: [Console del browser]
-- **Solucion**: [Segun error]
+### Consultas SQL Salvavidas
 
-### "Cannot read property of undefined"
-- **Causa**: [Dato no cargado]
-- **Verificar**: [Network tab, respuesta API]
-- **Solucion**: [Agregar null checks]
-
-### Mapa no carga
-- **Causa**: [Token Mapbox invalido]
-- **Verificar**: [MAPBOX_TOKEN]
-- **Solucion**: [Renovar token]
-
-### Imagenes no cargan
-- **Causa**: [Storage permissions]
-- **Verificar**: [Policies de storage]
-- **Solucion**: [Verificar bucket policies]
-
-## Errores de Mobile (Android)
-
-### App crashea al abrir
-- **Causa**: [Plugin no inicializado]
-- **Verificar**: [adb logcat]
-- **Solucion**: [Segun log]
-
-### Push notifications no llegan
-- **Causa**: [FCM mal configurado]
-- **Verificar**: [google-services.json]
-- **Solucion**: [Reconfigurar Firebase]
-
-## Comandos Utiles de Debug
-
-### Ver logs de Supabase
-```bash
-supabase functions logs <function-name> --project-ref <ref>
+**Desbloquear una Wallet manualmente (Emergency Unlock):**
+```sql
+UPDATE wallets 
+SET locked_balance = locked_balance - 50000, 
+    available_balance = available_balance + 50000 
+WHERE user_id = '...' AND locked_balance >= 50000;
+-- ¡CUIDADO! Esto debe ir acompañado de un registro de auditoría manual.
 ```
 
-### Conectar a DB produccion
-```bash
-psql <connection-string>
+**Verificar integridad de FGO:**
+```sql
+SELECT 
+  (SELECT SUM(amount) FROM fgo_transactions) as ledger_sum,
+  (SELECT balance FROM fgo_accounts WHERE id = 'main') as account_balance;
+-- Si difieren, hay corrupción de datos o race condition.
 ```
 
-### Ver estado de migraciones
-```bash
-supabase migration list
-```
+---
 
-### Limpiar cache Angular
-```bash
-rm -rf .angular/cache && pnpm build
-```
-
-## Contacto de Soporte
-
-### Problemas con MercadoPago
-[Link a documentacion MP, soporte]
-
-### Problemas con Supabase
-[Link a docs, Discord]
-```
-
-### Formato de salida:
-- Errores REALES encontrados en el codigo
-- Comandos especificos del proyecto
-- Maximo 500 lineas
+**© 2026 Autorenta Reliability Engineering**

@@ -227,7 +227,7 @@ import {
                     </div>
                     <!-- Action Buttons -->
                     <div class="flex flex-col gap-2">
-                      @if (claim()!.status === 'reported') {
+                      @if (claim()!.status === 'submitted') {
                         <button
                           (click)="updateStatus('under_review')"
                           [disabled]="submitting()"
@@ -241,7 +241,7 @@ import {
                           }
                         </button>
                       }
-                      @if (claim()!.status === 'reported' || claim()!.status === 'under_review') {
+                      @if (claim()!.status === 'submitted' || claim()!.status === 'under_review') {
                         <button
                           (click)="updateStatus('approved')"
                           [disabled]="submitting()"
@@ -255,7 +255,7 @@ import {
                           }
                         </button>
                       }
-                      @if (claim()!.status === 'reported' || claim()!.status === 'under_review') {
+                      @if (claim()!.status === 'submitted' || claim()!.status === 'under_review') {
                         <button
                           (click)="updateStatus('rejected')"
                           [disabled]="submitting()"
@@ -277,20 +277,6 @@ import {
                           >
                           @if (!submitting()) {
                             <span>Marcar como Pagado</span>
-                          }
-                          @if (submitting()) {
-                            <span>Procesando...</span>
-                          }
-                        </button>
-                      }
-                      @if (claim()!.status === 'paid' || claim()!.status === 'rejected') {
-                        <button
-                          (click)="updateStatus('closed')"
-                          [disabled]="submitting()"
-                          class="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-text-inverse rounded-lg font-medium transition-colors"
-                          >
-                          @if (!submitting()) {
-                            <span>Cerrar Siniestro</span>
                           }
                           @if (submitting()) {
                             <span>Procesando...</span>
@@ -423,8 +409,8 @@ export class AdminClaimDetailPage implements OnInit {
   canResolve(): boolean {
     const claim = this.claim();
     if (!claim) return false;
-    // Can resolve if not closed
-    return claim.status !== 'closed';
+    // Can resolve if not paid (final status)
+    return claim.status !== 'paid';
   }
 
   async updateStatus(newStatus: ClaimStatus) {
@@ -455,15 +441,14 @@ export class AdminClaimDetailPage implements OnInit {
   }
 
   private getConfirmMessage(status: ClaimStatus): string {
-    const messages: Partial<Record<ClaimStatus, string>> = {
-      reported: 'Confirmar cambio de estado?',
-      pending: '¿Marcar este siniestro como pendiente?',
-      investigating: '¿Marcar este siniestro como en investigación?',
+    const messages: Record<ClaimStatus, string> = {
+      draft: '¿Guardar como borrador?',
+      submitted: '¿Marcar este siniestro como enviado?',
       under_review: '¿Poner este siniestro en revisión?',
+      processing: '¿Marcar este siniestro como en proceso?',
       approved: '¿Aprobar este siniestro? Se notificará al usuario.',
       rejected: '¿Rechazar este siniestro? Se notificará al usuario.',
       paid: '¿Marcar como pagado? Confirma que el pago fue procesado.',
-      closed: '¿Cerrar este siniestro? No se podrá modificar después.',
     };
     return messages[status] || '¿Confirmar cambio de estado?';
   }
@@ -495,20 +480,14 @@ export class AdminClaimDetailPage implements OnInit {
 
   getStatusBadgeClass(status: ClaimStatus): string {
     const classes: Record<ClaimStatus, string> = {
-      reported:
-        'bg-warning-light/20 text-warning-700',
-      pending:
-        'bg-warning-bg-hover text-warning-strong',
-      investigating: 'bg-purple-100 text-purple-800',
-      under_review:
-        'bg-cta-default/20 text-cta-default',
-      approved:
-        'bg-success-light/20 text-success-700',
+      draft: 'bg-surface-raised text-text-primary',
+      submitted: 'bg-warning-light/20 text-warning-700',
+      under_review: 'bg-cta-default/20 text-cta-default',
+      processing: 'bg-purple-100 text-purple-800',
+      approved: 'bg-success-light/20 text-success-700',
       rejected: 'bg-error-bg-hover text-error-strong',
       paid: 'bg-success-light/20 text-success-700',
-      closed:
-        'bg-surface-raised text-text-primary',
     };
-    return classes[status] || classes.closed;
+    return classes[status] || 'bg-surface-raised text-text-primary';
   }
 }

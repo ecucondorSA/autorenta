@@ -380,6 +380,56 @@
           </section>
 
           <!-- ============================================ -->
+          <!-- SUBSCRIPTION TIER MISMATCH WARNING -->
+          <!-- Shows when user HAS subscription but it doesn't cover this vehicle -->
+          <!-- ============================================ -->
+          @if (subscriptionService.hasActiveSubscription() && preauthCalculation() && !preauthCalculation()!.discountApplied) {
+          <section class="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl border-2 border-red-300 overflow-hidden">
+            <div class="p-4 sm:p-5">
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+                  <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <h4 class="text-base font-bold text-red-800 font-satoshi">Tu suscripción no cubre este vehículo</h4>
+                  <p class="text-sm text-red-700 mt-1">
+                    Tenés <strong>{{ subscriptionService.tier() === 'club_standard' ? 'Club Access' : (subscriptionService.tier() === 'club_black' ? 'Silver Access' : 'Black Access') }}</strong>
+                    (vehículos hasta ${{ subscriptionService.tier() === 'club_standard' ? '20,000' : (subscriptionService.tier() === 'club_black' ? '40,000' : '∞') }})
+                    pero este auto vale <strong>${{ riskSnapshot()?.vehicleValueUsd | number: '1.0-0' }} USD</strong>.
+                  </p>
+                  <div class="mt-3 p-3 bg-white/70 rounded-lg border border-red-200">
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="text-red-700">Tier requerido:</span>
+                      <span class="font-bold text-red-800">
+                        {{ preauthCalculation()?.requiredTier === 'club_standard' ? 'Club Access' : (preauthCalculation()?.requiredTier === 'club_black' ? 'Silver Access' : 'Black Access') }}
+                      </span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm mt-1">
+                      <span class="text-red-700">Preauth a pagar:</span>
+                      <span class="font-bold text-red-800 font-mono">${{ preauthCalculation()?.holdAmountUsd | number: '1.0-0' }} USD</span>
+                    </div>
+                  </div>
+                  <div class="mt-3 flex flex-col sm:flex-row gap-2">
+                    <a routerLink="/wallet/club/plans"
+                      class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm rounded-lg shadow-sm transition-all">
+                      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M2.166 4.9L9.03 1.745a1 1 0 01.94 0l6.864 3.155a1 1 0 01.593.912v5.145a1 1 0 01-.19.589c-.131.181-.34.359-.623.535-1.156.719-2.924 1.258-4.614 1.487v2.126l.447.15a1 1 0 11-.64 1.898l-1.353-.451a1 1 0 01-.671-.948v-2.775c-1.69-.23-3.458-.768-4.614-1.487-.283-.176-.492-.354-.623-.535A1 1 0 012 10.957V5.812a1 1 0 01.166-.912z" clip-rule="evenodd" />
+                      </svg>
+                      Actualizar suscripción
+                    </a>
+                    <button type="button" class="flex-1 py-2.5 px-4 bg-white border border-red-300 text-red-700 font-medium text-sm rounded-lg hover:bg-red-50 transition-colors">
+                      Continuar con preauth completo
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          }
+
+          <!-- ============================================ -->
           <!-- SUBSCRIPTION SAVINGS COMPARISON (Inline) -->
           <!-- ============================================ -->
           @if (subscriptionSavings(); as savings) {
@@ -448,7 +498,7 @@
               </div>
 
               <!-- CTA Button -->
-              <a routerLink="/club"
+              <a routerLink="/wallet/club/plans"
                 class="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm rounded-xl shadow-md transition-all duration-200">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M2.166 4.9L9.03 1.745a1 1 0 01.94 0l6.864 3.155a1 1 0 01.593.912v5.145a1 1 0 01-.19.589c-.131.181-.34.359-.623.535-1.156.719-2.924 1.258-4.614 1.487v2.126l.447.15a1 1 0 11-.64 1.898l-1.353-.451a1 1 0 01-.671-.948v-2.775c-1.69-.23-3.458-.768-4.614-1.487-.283-.176-.492-.354-.623-.535A1 1 0 012 10.957V5.812a1 1 0 01.166-.912z" clip-rule="evenodd" />

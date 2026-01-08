@@ -34,21 +34,28 @@ const getMercadoPagoAccessToken = (): string => {
   return cleaned;
 };
 
-// Subscription tier configurations
+// Subscription tier configurations - ALL 3 TIERS
 const SUBSCRIPTION_TIERS = {
   club_standard: {
-    name: 'Club Estándar',
+    name: 'Club Access',
     price_cents: 30000,
     price_usd: 300,
-    coverage_limit_cents: 50000,
-    coverage_limit_usd: 500,
+    coverage_limit_cents: 80000,
+    coverage_limit_usd: 800,
   },
   club_black: {
-    name: 'Club Black',
+    name: 'Silver Access',
     price_cents: 60000,
     price_usd: 600,
-    coverage_limit_cents: 100000,
-    coverage_limit_usd: 1000,
+    coverage_limit_cents: 120000,
+    coverage_limit_usd: 1200,
+  },
+  club_luxury: {
+    name: 'Black Access',
+    price_cents: 120000,
+    price_usd: 1200,
+    coverage_limit_cents: 200000,
+    coverage_limit_usd: 2000,
   },
 } as const;
 
@@ -113,7 +120,7 @@ serve(async (req) => {
 
     if (!tier || !SUBSCRIPTION_TIERS[tier]) {
       return new Response(
-        JSON.stringify({ error: 'Invalid tier. Must be club_standard or club_black' }),
+        JSON.stringify({ error: 'Invalid tier. Must be club_standard, club_black, or club_luxury' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -123,15 +130,36 @@ serve(async (req) => {
     // Check if user already has active subscription
     const { data: existingSubscription } = await supabase.rpc('get_active_subscription');
 
+    // Calculate upgrade info if user has active subscription
+    let isUpgrade = false;
+    let upgradeInfo: any = null;
+    let finalPriceUsd = tierConfig.price_usd;
+    let finalPriceCents = tierConfig.price_cents;
+
     if (existingSubscription) {
-      return new Response(
-        JSON.stringify({
-          error: 'User already has an active subscription',
-          existing_tier: existingSubscription.tier,
-          expires_at: existingSubscription.expires_at,
-        }),
-        { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      // Calculate upgrade
+      const { data: upgradeCalc } = await supabase.rpc('calculate_subscription_upgrade', {
+        p_user_id: user.id,
+        p_new_tier: tier,
+      });
+
+      if (!upgradeCalc?.can_upgrade) {
+        return new Response(
+          JSON.stringify({
+            error: upgradeCalc?.reason || 'Cannot upgrade',
+            message: upgradeCalc?.message || 'No se puede realizar el upgrade',
+            existing_tier: existingSubscription.tier,
+            expires_at: existingSubscription.expires_at,
+          }),
+          { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // User can upgrade - use the difference price
+      isUpgrade = true;
+      upgradeInfo = upgradeCalc;
+      finalPriceUsd = upgradeCalc.price_difference_usd;
+      finalPriceCents = upgradeCalc.price_difference_cents;
     }
 
     // Get user profile for payer info
@@ -173,24 +201,34 @@ serve(async (req) => {
     }
 
     // Generate unique external reference
-    const externalReference = `subscription_${user.id}_${tier}_${Date.now()}`;
+    const externalReference = isUpgrade
+      ? `subscription_upgrade_${user.id}_${tier}_${Date.now()}`
+      : `subscription_${user.id}_${tier}_${Date.now()}`;
 
     // Create MercadoPago preference
+    const itemTitle = isUpgrade
+      ? `Upgrade Autorentar Club - ${tierConfig.name}`
+      : `Autorentar Club - ${tierConfig.name}`;
+
+    const itemDescription = isUpgrade
+      ? `Upgrade de ${upgradeInfo.current_tier} a ${tierConfig.name} - diferencia de suscripción`
+      : description || `Membresía anual ${tierConfig.name} con cobertura de $${tierConfig.coverage_limit_usd} USD`;
+
     const preferenceData = {
       purpose: 'wallet_purchase',
       items: [
         {
-          id: `subscription_${tier}`,
-          title: `Autorentar Club - ${tierConfig.name}`,
-          description: description || `Membresía anual ${tierConfig.name} con cobertura de $${tierConfig.coverage_limit_usd} USD`,
+          id: isUpgrade ? `subscription_upgrade_${tier}` : `subscription_${tier}`,
+          title: itemTitle,
+          description: itemDescription,
           category_id: 'services',
           quantity: 1,
-          unit_price: tierConfig.price_usd, // Price in USD
+          unit_price: finalPriceUsd, // Use calculated price (full or difference)
           currency_id: 'USD',
         },
       ],
       back_urls: {
-        success: `${APP_BASE_URL}/wallet/club/history?payment=success&tier=${tier}`,
+        success: `${APP_BASE_URL}/wallet/club/history?payment=success&tier=${tier}${isUpgrade ? '&upgrade=true' : ''}`,
         failure: `${APP_BASE_URL}/wallet/club/plans?payment=failure&tier=${tier}`,
         pending: `${APP_BASE_URL}/wallet/club/history?payment=pending&tier=${tier}`,
       },
@@ -198,10 +236,16 @@ serve(async (req) => {
       external_reference: externalReference,
       notification_url: `${SUPABASE_URL}/functions/v1/mercadopago-webhook`,
       metadata: {
-        type: 'subscription',
+        type: isUpgrade ? 'subscription_upgrade' : 'subscription',
         tier: tier,
         user_id: user.id,
         coverage_limit_cents: tierConfig.coverage_limit_cents,
+        is_upgrade: isUpgrade,
+        ...(isUpgrade && {
+          previous_tier: upgradeInfo.current_tier,
+          previous_subscription_id: upgradeInfo.current_subscription_id,
+          price_difference_cents: finalPriceCents,
+        }),
       },
       payer: {
         email: user.email || profile?.email || `${user.id}@autorenta.com`,
@@ -246,6 +290,8 @@ serve(async (req) => {
       preferenceId: mpData.id,
       tier,
       userId: user.id,
+      isUpgrade,
+      finalPriceUsd,
     });
 
     return new Response(
@@ -255,8 +301,14 @@ serve(async (req) => {
         init_point: mpData.init_point,
         sandbox_init_point: mpData.sandbox_init_point,
         tier: tier,
-        amount_usd: tierConfig.price_usd,
+        amount_usd: finalPriceUsd, // Actual amount to pay (full price or difference)
+        full_price_usd: tierConfig.price_usd,
         coverage_limit_usd: tierConfig.coverage_limit_usd,
+        is_upgrade: isUpgrade,
+        ...(isUpgrade && {
+          current_tier: upgradeInfo.current_tier,
+          price_difference_usd: finalPriceUsd,
+        }),
       }),
       {
         status: 200,

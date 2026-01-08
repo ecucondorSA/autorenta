@@ -185,7 +185,7 @@ export class ProfileExpandedPage implements OnInit {
    * Check if user can publish cars
    */
   canPublishCars(): boolean {
-    const role = this.profile()?.role;
+    const role = this.profile()?.role as string;
     return role === 'owner' || role === 'both';
   }
 
@@ -206,7 +206,7 @@ export class ProfileExpandedPage implements OnInit {
    * Check if user can book cars
    */
   canBookCars(): boolean {
-    const role = this.profile()?.role;
+    const role = this.profile()?.role as string;
     return role === 'renter' || role === 'both';
   }
 
