@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/ecucondorSA/autorenta/compare/v1.14.2...v1.15.0) (2026-01-08)
+
+
+### Features
+
+* **ci:** add ephemeral integration pipeline (zero-drift) ([951d9e1](https://github.com/ecucondorSA/autorenta/commit/951d9e135242d658d0fec882dec1f05c9ad42081))
+
 ## [1.14.2](https://github.com/ecucondorSA/autorenta/compare/v1.14.1...v1.14.2) (2026-01-08)
 
 
