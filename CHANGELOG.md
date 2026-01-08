@@ -1,3 +1,10 @@
+## [1.11.6](https://github.com/ecucondorSA/autorenta/compare/v1.11.5...v1.11.6) (2026-01-08)
+
+
+### Bug Fixes
+
+* **build:** fix TypeScript strict mode issues for production build ([3dbd45f](https://github.com/ecucondorSA/autorenta/commit/3dbd45f21c175694ec24240b72228cc233ca1ea9))
+
 ## [1.11.5](https://github.com/ecucondorSA/autorenta/compare/v1.11.4...v1.11.5) (2026-01-08)
 
 
