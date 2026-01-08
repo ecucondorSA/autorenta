@@ -1,3 +1,17 @@
+# [1.14.0](https://github.com/ecucondorSA/autorenta/compare/v1.13.0...v1.14.0) (2026-01-08)
+
+
+### Bug Fixes
+
+* **build:** invoke showMobileTips signal in template ([650ea06](https://github.com/ecucondorSA/autorenta/commit/650ea06c6141e9a17b98a2bfabc2c9df735d71bf))
+* **ci:** resolve lint and guardrails warnings ([f916713](https://github.com/ecucondorSA/autorenta/commit/f91671363eba3dee0a46d93ec63c0a0f52b3ac8f))
+
+
+### Features
+
+* **bookings:** add explicit payment detail button to booking detail page ([c42660d](https://github.com/ecucondorSA/autorenta/commit/c42660dfaaf7f375749784bcdc4e3228e31576fc))
+* **tools:** add seed-bookings script and improve payment page UX ([bf78026](https://github.com/ecucondorSA/autorenta/commit/bf7802610182eefeb423d58813cd672dd6df5087))
+
 ## [1.13.1](https://github.com/ecucondorSA/autorenta/compare/v1.13.0...v1.13.1) (2026-01-08)
 
 
