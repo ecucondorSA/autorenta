@@ -1,0 +1,12 @@
+:host {
+  display: contents;
+}
+
+.safe-area-pb {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+
+// Ensure backdrop blur works nicely
+.backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+}

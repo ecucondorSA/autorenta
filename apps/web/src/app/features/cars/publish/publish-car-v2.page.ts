@@ -1,25 +1,26 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
-  DestroyRef,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { CarsService } from '@core/services/cars/cars.service';
-import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-import { PricingService } from '@core/services/payments/pricing.service';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
+import { CarsService } from '@core/services/cars/cars.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { PricingService } from '@core/services/payments/pricing.service';
 import { VehicleDocumentsService } from '@core/services/verification/vehicle-documents.service';
+import { TranslateModule } from '@ngx-translate/core';
 import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-generator/ai-photo-generator.component';
+import { BottomSheetComponent } from '../../../shared/components/bottom-sheet/bottom-sheet.component';
 import { FipeAutocompleteComponent } from '../../../shared/components/fipe-autocomplete/fipe-autocomplete.component';
 import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
 import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
@@ -57,6 +58,7 @@ import { PublishCarPhotoService } from './services/publish-car-photo.service';
     AiPhotoGeneratorComponent,
     FipeAutocompleteComponent,
     HostSupportInfoPanelComponent,
+    BottomSheetComponent,
   ],
   templateUrl: './publish-car-v2.page.html',
   styleUrls: ['./publish-car-v2.page.scss'],
@@ -91,7 +93,9 @@ export class PublishCarV2Page implements OnInit {
   readonly editMode = signal(false);
   readonly showStockPhotosModal = signal(false);
   readonly showAIPhotosModal = signal(false);
+  readonly showMobileTips = signal(false); // ✅ NEW: For Bottom Sheet
   private carId: string | null = null;
+  private touchStartX = 0; // ✅ NEW: For Swipe Gesture
 
   // Form reference
   publishForm!: FormGroup;
@@ -629,6 +633,21 @@ export class PublishCarV2Page implements OnInit {
       this.allowManualValueEdit.set(true);
     } finally {
       this.isFetchingFIPEValue.set(false);
+    }
+  }
+
+  // ✅ NEW: Swipe to Delete Logic
+  handlePhotoTouchStart(event: TouchEvent, index: number): void {
+    this.touchStartX = event.touches[0].clientX;
+  }
+
+  handlePhotoTouchEnd(event: TouchEvent, index: number): void {
+    const touchEndX = event.changedTouches[0].clientX;
+    const diff = this.touchStartX - touchEndX;
+
+    // Swipe left threshold (e.g., 50px)
+    if (diff > 50) {
+      this.removePhoto(index);
     }
   }
 
@@ -1282,7 +1301,7 @@ export class PublishCarV2Page implements OnInit {
     // Check docs only if active
     if (carData['status'] === 'active' && !this.editMode()) {
       setTimeout(() => {
-        this.checkMissingDocuments(carId).catch(() => {});
+        this.checkMissingDocuments(carId).catch(() => { });
       }, 2000);
     }
 

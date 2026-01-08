@@ -5,6 +5,7 @@
   "scripts": {
     "_comment_dev": "=== DEVELOPMENT ===",
     "dev": "./tools/dev/dev.sh",
+    "dev:fast": "pnpm --filter autorenta-web ng serve -c development-low-spec",
     "dev:web": "./tools/run.sh dev:web",
     "dev:worker": "./tools/run.sh dev:worker",
     "dev:stop": "./tools/run.sh dev:stop",

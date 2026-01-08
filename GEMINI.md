@@ -14,6 +14,9 @@
 - **Comando de creación:** `ng generate component path/to/component --standalone`.
 - **Configuración:** TypeScript en modo estricto desde el inicio.
 - **Dependencias:** No añadir librerías hasta que sean estrictamente necesarias. Verifica `package.json` antes de sugerir instalaciones.
+- **Optimización Entorno:**
+  - Inicializar entorno: `./tools/setup/configure-antigravity.sh` (Tabula Rasa + Low Spec Tuning).
+  - Desarrollo rápido: `pnpm dev:fast` (Desactiva SourceMaps y AOT para velocidad).
 
 ## 3. Organización y Arquitectura
 - **Componentes:** Pequeños, con una sola responsabilidad (SRP).
