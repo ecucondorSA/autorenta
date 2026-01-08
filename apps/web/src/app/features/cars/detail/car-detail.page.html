@@ -74,6 +74,7 @@
               height="320"
               fetchpriority="high"
               (error)="onImgError($event)"
+              [style.view-transition-name]="'car-image-' + car()?.id"
             />
 
             <!-- Rating Badge -->

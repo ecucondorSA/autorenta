@@ -191,7 +191,6 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
             </tbody>
           </table>
         </div>
-
       } @else {
         <div class="card-premium p-12 text-center">
           <div

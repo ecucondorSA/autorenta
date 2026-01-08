@@ -209,7 +209,6 @@ interface SuspendedUser {
             </tbody>
           </table>
         </div>
-
       } @else {
         <div class="card-premium p-12 text-center">
           <div

@@ -59,7 +59,6 @@ import { VerificationPromptBannerComponent } from './shared/components/verificat
 import { ClickOutsideDirective } from './shared/directives/click-outside.directive';
 import { OfflineBannerComponent } from './shared/components/offline-banner/offline-banner.component';
 
-
 @Component({
   selector: 'app-root',
   standalone: true,

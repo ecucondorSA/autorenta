@@ -10,8 +10,12 @@
 
 // Scroll Animation
 @keyframes grow-progress {
-  from { width: 0%; }
-  to { width: 100%; }
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 .progress-bar {
@@ -135,9 +139,9 @@
 
 // Container Query Example: Adjusts checking card if sidebar gets squeezed
 @container publish-layout (max-width: 900px) {
-    aside {
-        display: none; // Example: Hide sidebar on smaller containers if needed, or adjust layout
-    }
+  aside {
+    display: none; // Example: Hide sidebar on smaller containers if needed, or adjust layout
+  }
 }
 
 :host-context(.dark) .benefit-card {

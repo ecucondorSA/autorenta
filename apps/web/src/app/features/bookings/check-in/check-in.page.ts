@@ -1,21 +1,21 @@
+import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   OnInit,
+  computed,
   inject,
   signal,
-  computed,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
-import { BookingsService } from '@core/services/bookings/bookings.service';
-import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
-import { AuthService } from '@core/services/auth/auth.service';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { firstValueFrom } from 'rxjs';
 import { Booking } from '../../../core/models';
+import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 
 /**
  * Página de Check-in para locatarios
@@ -151,9 +151,11 @@ export class CheckInPage implements OnInit {
       // Si el booking está en 'confirmed', actualizar a 'in_progress'
       const booking = this.booking();
       if (booking && booking.status === 'confirmed') {
-        await this.bookingsService.updateBooking(booking.id, {
-          status: 'in_progress',
-        });
+        const result = await this.bookingsService.startRental(booking.id);
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+
         // Recargar booking
         const updated = await this.bookingsService.getBookingById(booking.id);
         if (updated) {

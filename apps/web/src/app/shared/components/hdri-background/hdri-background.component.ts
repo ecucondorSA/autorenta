@@ -1,4 +1,3 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -12,6 +11,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * HDRI Background Component
@@ -119,7 +119,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   private targetRotationY = 0.3;
   private targetRotationX = 0;
   // Smoothing factor: lower = heavier/slower movement (0.05 = very smooth, 0.2 = responsive)
-  private readonly ROTATION_SMOOTHING = 0.08;
+  private rotationSmoothing = 0.08;
   // Drag sensitivity: lower = heavier feel (reduced from 0.005)
   private readonly DRAG_SENSITIVITY_X = 0.002;
   private readonly DRAG_SENSITIVITY_Y = 0.0012;
@@ -425,6 +425,10 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       this.hdriLoaded.emit();
       this.cdr.markForCheck(); // FORCE UPDATE
       this.startRenderLoop();
+
+      // Trigger "The Glance" animation to hint interactivity
+      this.triggerGlanceAnimation();
+
       // High-res is already loading in parallel (started below)
     };
 
@@ -577,8 +581,8 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
       // 5. Smooth interpolation (lerp) for weighted, cadenced movement
       // This creates the "heavy" feel - rotation gradually catches up to target
-      this.rotationY += (this.targetRotationY - this.rotationY) * this.ROTATION_SMOOTHING;
-      this.rotationX += (this.targetRotationX - this.rotationX) * this.ROTATION_SMOOTHING;
+      this.rotationY += (this.targetRotationY - this.rotationY) * this.rotationSmoothing;
+      this.rotationX += (this.targetRotationX - this.rotationX) * this.rotationSmoothing;
 
       // 6. Render frame
       this.draw();
@@ -798,16 +802,54 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
     // Clean up WebGL resources
     if (this.gl) {
-      if (this.texture) {
-        this.gl.deleteTexture(this.texture);
-      }
-      if (this.program) {
-        this.gl.deleteProgram(this.program);
-      }
+      this.gl.deleteProgram(this.program);
+      this.gl.deleteTexture(this.texture);
     }
-
-    this.gl = null;
-    this.program = null;
-    this.texture = null;
   }
+
+  /**
+   * "The Glance" (El Vistazo) - Saccadic movement animation
+   * mimics a human checking traffic (Left -> Right -> Center)
+   * to hint that the background is interactive.
+   */
+  private triggerGlanceAnimation(): void {
+    // Wait for fade-in to complete
+    setTimeout(() => {
+      if (this.isDragging || this.isDestroyed) return;
+
+      // 1. Prepare for movement (very slow, cinematic feel)
+      const originalSmoothing = this.rotationSmoothing;
+      this.rotationSmoothing = 0.02; // Significantly reduced speed
+
+      // 2. Look Left (90 degrees = 1.57 rad)
+      this.targetRotationY -= 1.57;
+
+      setTimeout(() => {
+        if (this.isDragging || this.isDestroyed) {
+          this.rotationSmoothing = originalSmoothing;
+          return;
+        }
+
+        // 3. Look Right (Sweep 180 degrees to +90)
+        this.targetRotationY += 3.14;
+
+        setTimeout(() => {
+          if (this.isDragging || this.isDestroyed) {
+            this.rotationSmoothing = originalSmoothing;
+            return;
+          }
+
+          // 4. Return to Center
+          this.targetRotationY -= 1.57;
+
+          // Restore heavy smoothing for "cinematic" feel
+          setTimeout(() => {
+            this.rotationSmoothing = originalSmoothing;
+          }, 2500);
+
+        }, 2500); // Hold right longer
+      }, 2500); // Hold left longer
+    }, 2000); // Start delay
+  }
+
 }

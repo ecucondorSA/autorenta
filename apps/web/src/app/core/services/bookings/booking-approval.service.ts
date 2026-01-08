@@ -31,7 +31,7 @@ export class BookingApprovalService {
     bookingId: string,
   ): Promise<{ success: boolean; error?: string; message?: string }> {
     try {
-      const { data, error } = await this.supabase.rpc('approve_booking', {
+      const { data, error } = await this.supabase.rpc('approve_booking_v2', {
         p_booking_id: bookingId,
       });
 

@@ -1,13 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  effect,
-  model
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output, effect, model } from '@angular/core';
 
 @Component({
   selector: 'app-bottom-sheet',

@@ -57,6 +57,7 @@ import { Car } from '../../core/models';
 import { DateRangePickerComponent } from '../../shared/components/date-range-picker/date-range-picker.component';
 import { HdriBackgroundComponent } from '../../shared/components/hdri-background/hdri-background.component';
 import { FilterState } from '../../shared/components/map-filters/map-filters.component';
+import { Tilt3dDirective } from '../../shared/directives/tilt-3d.directive';
 
 interface CarWithLatestLocation extends Car {
   distance?: number;
@@ -81,6 +82,7 @@ type ToastType = 'success' | 'info' | 'warning' | 'error';
     NgOptimizedImage,
     DateRangePickerComponent,
     HdriBackgroundComponent,
+    Tilt3dDirective,
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
@@ -218,31 +220,31 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     quote: string;
     earnings: number;
   }> = [
-      {
-        avatar: '/assets/images/avatars/avatar-2.jpg', // Martín (Hombre 40s)
-        name: 'Martín',
-        location: 'Buenos Aires',
-        quote:
-          'Empecé para pagar el seguro y ahora pago la cuota completa del auto. Es increíble que antes perdía plata teniéndolo estacionado.',
-        earnings: 450000,
-      },
-      {
-        avatar: '/assets/images/avatars/avatar-1.jpg', // Sofía (Mujer joven)
-        name: 'Sofía',
-        location: 'Córdoba',
-        quote:
-          'Lo uso para ir al trabajo y lo comparto los fines de semana. Con eso cubro el mantenimiento y me sobra para ahorrar.',
-        earnings: 280000,
-      },
-      {
-        avatar: '/assets/images/avatars/avatar-3.jpg', // Carlos (Hombre joven)
-        name: 'Carlos',
-        location: 'Rosario',
-        quote:
-          'Tengo una camioneta que uso poco. La puse en la plataforma y se convirtió en mi mejor inversión del año.',
-        earnings: 820000,
-      },
-    ];
+    {
+      avatar: '/assets/images/avatars/avatar-2.jpg', // Martín (Hombre 40s)
+      name: 'Martín',
+      location: 'Buenos Aires',
+      quote:
+        'Empecé para pagar el seguro y ahora pago la cuota completa del auto. Es increíble que antes perdía plata teniéndolo estacionado.',
+      earnings: 450000,
+    },
+    {
+      avatar: '/assets/images/avatars/avatar-1.jpg', // Sofía (Mujer joven)
+      name: 'Sofía',
+      location: 'Córdoba',
+      quote:
+        'Lo uso para ir al trabajo y lo comparto los fines de semana. Con eso cubro el mantenimiento y me sobra para ahorrar.',
+      earnings: 280000,
+    },
+    {
+      avatar: '/assets/images/avatars/avatar-3.jpg', // Carlos (Hombre joven)
+      name: 'Carlos',
+      location: 'Rosario',
+      quote:
+        'Tengo una camioneta que uso poco. La puse en la plataforma y se convirtió en mi mejor inversión del año.',
+      earnings: 820000,
+    },
+  ];
 
   // Pagination
   readonly currentPage = signal(1);
@@ -341,12 +343,27 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   // Splash Screen State
   readonly showSplash = signal(true);
 
+  // Scroll State for Glass Header
+  readonly isScrolled = signal(false);
+
   // Testimonial State (Mobile)
   readonly showFullTestimonial = signal(false);
 
   constructor() {
     // Hide splash immediately to show skeletons or content
     this.showSplash.set(false);
+
+    // Track scroll for glass header
+    if (this.isBrowser) {
+      // Use passive listener for performance
+      window.addEventListener(
+        'scroll',
+        () => {
+          this.isScrolled.set(window.scrollY > 20);
+        },
+        { passive: true },
+      );
+    }
   }
 
   onHdriLoaded(): void {
@@ -571,6 +588,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   // Realtime
   private realtimeChannel?: RealtimeChannel;
   private loadingInterval?: ReturnType<typeof setInterval>;
+  private observer?: IntersectionObserver;
 
   // Effects
   private readonly filtersEffect = effect(() => {
@@ -626,6 +644,29 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     if (this.isBrowser) {
       this.setupRealtimeSubscription();
       this.checkPriceTransparencyModal();
+
+      // Setup Scroll Reveal Observer
+      // We use a small timeout to ensure DOM elements are rendered
+      setTimeout(() => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target); // Trigger only once
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px',
+          },
+        );
+
+        const elements = document.querySelectorAll('.scroll-reveal');
+        elements.forEach((el) => observer.observe(el));
+        this.observer = observer;
+      }, 500);
     }
   }
 
@@ -648,6 +689,10 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     // Cleanup realtime channel
     if (this.realtimeChannel) {
       this.supabase.removeChannel(this.realtimeChannel);
+    }
+    // Cleanup observer
+    if (this.observer) {
+      this.observer.disconnect();
     }
   }
 

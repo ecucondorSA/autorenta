@@ -24,10 +24,12 @@ describe('BookingDetailPage (vitest)', () => {
   });
 
   const makeComponent = () => {
-    const updateBooking = vi.fn(async (_id: string, updates: { metadata?: Record<string, unknown> }) => ({
-      id: 'booking-1',
-      metadata: updates?.metadata ?? {},
-    }));
+    const updateBooking = vi.fn(
+      async (_id: string, updates: { metadata?: Record<string, unknown> }) => ({
+        id: 'booking-1',
+        metadata: updates?.metadata ?? {},
+      }),
+    );
 
     const logger = {
       warn: vi.fn(),
@@ -85,7 +87,9 @@ describe('BookingDetailPage (vitest)', () => {
     };
 
     component.booking.set(booking as import('@core/models').Booking);
-    (component as unknown as { loadReturnChecklist: (b: unknown) => void }).loadReturnChecklist(booking);
+    (component as unknown as { loadReturnChecklist: (b: unknown) => void }).loadReturnChecklist(
+      booking,
+    );
 
     const fuelItem = component.returnChecklistItems().find((i) => i.id === 'fuel');
     expect(fuelItem?.checked).toBe(true);
@@ -109,7 +113,9 @@ describe('BookingDetailPage (vitest)', () => {
     };
 
     component.booking.set(booking as import('@core/models').Booking);
-    (component as unknown as { loadReturnChecklist: (b: unknown) => void }).loadReturnChecklist(booking);
+    (component as unknown as { loadReturnChecklist: (b: unknown) => void }).loadReturnChecklist(
+      booking,
+    );
 
     component.toggleReturnChecklistItem('final-photos');
     vi.advanceTimersByTime(600);

@@ -1301,7 +1301,7 @@ export class PublishCarV2Page implements OnInit {
     // Check docs only if active
     if (carData['status'] === 'active' && !this.editMode()) {
       setTimeout(() => {
-        this.checkMissingDocuments(carId).catch(() => { });
+        this.checkMissingDocuments(carId).catch(() => {});
       }, 2000);
     }
 

@@ -9,6 +9,7 @@
         src="/assets/hdri/suburban_parking_area_8k.webp"
         [autoRotate]="true"
         [enableInteraction]="true"
+        [initialRotationY]="4.5"
         (hdriLoaded)="onHdriLoaded()"
         class="w-full h-full"
       >
@@ -25,6 +26,7 @@
 
   <!-- Floating Header -->
   <header
+    [class.glass-header]="isScrolled()"
     class="absolute top-0 left-0 right-0 z-50 px-6 py-4 pointer-events-none transition-all duration-300"
   >
     <div class="max-w-7xl mx-auto flex items-center justify-between pointer-events-auto">
@@ -84,7 +86,7 @@
     <div class="max-w-md pointer-events-auto">
       <!-- Headline -->
       <h1
-        class="text-4xl sm:text-5xl lg:text-6xl font-black font-friendly text-white leading-[0.95] tracking-tight mb-6 drop-shadow-2xl text-glow hero-text-contrast"
+        class="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-black font-friendly text-white leading-[0.95] tracking-tight mb-6 drop-shadow-2xl text-glow hero-text-contrast"
       >
         <span class="text-[#FFFF00]">Comparte</span> tu auto<br />
         <span class="block text-2xl sm:text-3xl lg:text-4xl font-bold mt-2 text-white/90"
@@ -95,7 +97,7 @@
 
       <!-- Subtext -->
       <p
-        class="text-white/80 text-lg sm:text-xl font-friendly mb-8 max-w-lg leading-relaxed font-medium drop-shadow-md"
+        class="animate-fade-in-up delay-100 text-white/80 text-lg sm:text-xl font-friendly mb-8 max-w-lg leading-relaxed font-medium drop-shadow-md"
       >
         ¿Por qué ir lejos? Hay autos increíbles estacionados muy cerca tuyo...
       </p>
@@ -103,7 +105,7 @@
       <!-- CTA Button -->
       <a
         routerLink="/cars"
-        class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-[#00D95F] to-[#00C553] hover:from-[#00C553] hover:to-[#00B048] text-black font-friendly font-bold text-base transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-[#00D95F]/30 w-full sm:w-auto max-w-xs sm:max-w-none justify-center"
+        class="btn-shimmer animate-fade-in-up delay-200 inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-[#00D95F] to-[#00C553] hover:from-[#00C553] hover:to-[#00B048] text-black font-friendly font-bold text-base transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-[#00D95F]/30 w-full sm:w-auto max-w-xs sm:max-w-none justify-center"
       >
         Ver autos de vecinos
         <svg
@@ -151,6 +153,9 @@
     class="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-[#020617] via-[#0f172a]/20 to-transparent"
   ></div>
 </section>
+
+<!-- ➖ Elegant Separator -->
+<div class="separator-fade"></div>
 
 <!-- CARS LISTING SECTION (Marketplace) -->
 <section class="py-16 lg:py-24 bg-surface-base">
@@ -259,10 +264,10 @@
                 @if (getCarInstantBooking(car)) {
                   <div class="absolute top-4 left-4">
                     <span
-                      class="inline-flex items-center gap-1.5 bg-cta-default/95 backdrop-blur-md text-cta-text text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border border-white/20"
+                      class="chip-refined text-white text-xs font-bold px-3 py-1.5 rounded-full"
                     >
                       <svg
-                        class="w-3.5 h-3.5"
+                        class="w-3.5 h-3.5 mr-1"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -376,7 +381,10 @@
             <div>
               <article
                 (click)="onCarSelected(car.id)"
-                class="group relative flex flex-col bg-surface-raised rounded-2xl overflow-hidden border border-border-default hover:border-cta-default/50 shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer h-full transform hover:-translate-y-1"
+                app3dTilt
+                [maxRotation]="8"
+                [scale]="1.02"
+                class="card-glow-hover group relative flex flex-col bg-surface-raised rounded-2xl overflow-hidden border border-border-default shadow-sm transition-all duration-300 cursor-pointer h-full"
               >
                 <!-- Image -->
                 <div class="relative aspect-[4/3] bg-surface-secondary overflow-hidden">
@@ -385,6 +393,7 @@
                     [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     [loading]="i < 4 ? 'eager' : 'lazy'"
+                    [style.view-transition-name]="'car-image-' + car.id"
                   />
                   <!-- Overlay Gradient -->
                   <div
@@ -394,7 +403,7 @@
                   <div class="absolute top-3 left-3 flex gap-2">
                     @if (getCarInstantBooking(car)) {
                       <span
-                        class="bg-cta-default/90 backdrop-blur-md text-cta-text text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg border border-white/10"
+                        class="chip-refined text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1"
                       >
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path
@@ -411,12 +420,12 @@
                   <!-- Price Badge (Bottom Right) -->
                   <div class="absolute bottom-3 right-3">
                     <div
-                      class="bg-surface-raised/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 shadow-lg group-hover:bg-cta-default group-hover:text-cta-text transition-colors duration-300"
+                      class="chip-refined px-3 py-1.5 rounded-xl group-hover:bg-cta-default group-hover:text-cta-text group-hover:bg-opacity-100 transition-colors duration-300 bg-black/60 text-white"
                     >
                       <span class="text-sm font-black tracking-tight">
                         ${{ car.price_per_day | number: '1.0-0' }}
                       </span>
-                      <span class="text-xs font-medium opacity-80">/día</span>
+                      <span class="text-xs font-medium opacity-80 ml-0.5">/día</span>
                     </div>
                   </div>
                 </div>
@@ -655,12 +664,26 @@
   <!-- This closes max-w-7xl -->
 </section>
 
-<!-- PARTNERS SECTION - Minimalista -->
-<section class="py-10 md:py-16 border-b border-border-default/30 bg-surface-base">
-  <div class="max-w-5xl mx-auto px-4">
-    <div class="flex flex-wrap items-center justify-center gap-6 md:gap-10 lg:gap-14">
-      <!-- MercadoPago - Icon only (handshake in circle) -->
-      <svg class="partner-logo" viewBox="0 0 48 48" aria-label="MercadoPago">
+<!-- PARTNERS SECTION - Infinite Marquee -->
+<section
+  class="py-12 md:py-20 border-b border-border-default/30 bg-surface-base overflow-hidden relative"
+>
+  <!-- Gradient Fade Masks -->
+  <div
+    class="absolute top-0 bottom-0 left-0 w-24 md:w-32 z-10 bg-gradient-to-r from-surface-base to-transparent pointer-events-none"
+  ></div>
+  <div
+    class="absolute top-0 bottom-0 right-0 w-24 md:w-32 z-10 bg-gradient-to-l from-surface-base to-transparent pointer-events-none"
+  ></div>
+
+  <div
+    class="w-full overflow-hidden"
+    style="overflow: hidden; width: 100%; position: relative; max-width: 100vw"
+  >
+    <div class="animate-marquee flex items-center gap-16 md:gap-32">
+      <!-- SET 1 -->
+      <!-- MercadoPago -->
+      <svg class="partner-logo shrink-0" viewBox="0 0 48 48" aria-label="MercadoPago">
         <circle cx="24" cy="24" r="22" fill="#009EE3" />
         <path
           d="M14 24c0-1 .5-2 1.5-2.5l5-2.5c1-.5 2-.5 3 0l5 2.5c1 .5 1.5 1.5 1.5 2.5v4c0 1-.5 2-1.5 2.5l-5 2.5c-1 .5-2 .5-3 0l-5-2.5c-1-.5-1.5-1.5-1.5-2.5v-4z"
@@ -675,8 +698,8 @@
         />
       </svg>
 
-      <!-- Mapbox - Location pin -->
-      <svg class="partner-logo" viewBox="0 0 48 48" aria-label="Mapbox">
+      <!-- Mapbox -->
+      <svg class="partner-logo shrink-0" viewBox="0 0 48 48" aria-label="Mapbox">
         <circle cx="24" cy="24" r="22" fill="#4264FB" />
         <path
           d="M24 12c-5.52 0-10 4.48-10 10 0 7.5 10 16 10 16s10-8.5 10-16c0-5.52-4.48-10-10-10zm0 14c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"
@@ -684,43 +707,35 @@
         />
       </svg>
 
-      <!-- EcuCondor - Detailed eagle head with flowing colorful feathers -->
-      <svg class="partner-logo" viewBox="0 0 48 48" fill="none" aria-label="EcuCondor">
+      <!-- EcuCondor -->
+      <svg class="partner-logo shrink-0" viewBox="0 0 48 48" fill="none" aria-label="EcuCondor">
         <defs>
-          <!-- Background gradient -->
           <radialGradient id="ecu-bg" cx="30%" cy="30%" r="70%">
             <stop offset="0%" stop-color="#1a237e" />
             <stop offset="100%" stop-color="#0d1421" />
           </radialGradient>
-          <!-- Red feathers gradient -->
           <linearGradient id="ecu-red" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#c62828" />
             <stop offset="100%" stop-color="#e53935" />
           </linearGradient>
-          <!-- Gold feathers gradient -->
           <linearGradient id="ecu-gold" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#f9a825" />
             <stop offset="100%" stop-color="#fdd835" />
           </linearGradient>
-          <!-- Blue feathers gradient -->
           <linearGradient id="ecu-blue" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#1565c0" />
             <stop offset="100%" stop-color="#42a5f5" />
           </linearGradient>
-          <!-- Purple feathers gradient -> Blue-dark -->
           <linearGradient id="ecu-purple" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#0284c7" />
             <stop offset="100%" stop-color="#0369a1" />
           </linearGradient>
         </defs>
-        <!-- Circular clip -->
         <clipPath id="ecu-circle">
           <circle cx="24" cy="24" r="22" />
         </clipPath>
         <g clip-path="url(#ecu-circle)">
-          <!-- Dark background -->
           <circle cx="24" cy="24" r="22" fill="url(#ecu-bg)" />
-          <!-- Flowing feathers - back layer (purple/blue swirl) -->
           <path
             d="M48 20c-8 4-14 12-16 22-1 4-3 6-6 6-8-2-14-10-14-20 0-4 1-8 4-12 6 8 16 12 32 4z"
             fill="url(#ecu-purple)"
@@ -731,13 +746,11 @@
             fill="url(#ecu-blue)"
             opacity="0.95"
           />
-          <!-- Red accent on left -->
           <path
             d="M4 28c4-6 6-14 4-22 2 2 6 4 10 4-2 6-2 14 2 22-6 1-12-1-16-4z"
             fill="url(#ecu-red)"
             opacity="0.9"
           />
-          <!-- Gold feathers - eagle body -->
           <path
             d="M12 8c4 1 8 4 10 8 2 6 1 12-2 18-2 4-4 6-6 6-4-2-8-6-10-12 0-8 4-16 8-20z"
             fill="url(#ecu-gold)"
@@ -746,22 +759,17 @@
             d="M16 10c3 1 6 3 8 7 2 5 2 10 0 15-1 3-3 5-5 5-3-2-6-6-7-12 0-6 2-12 4-15z"
             fill="#fdd835"
           />
-          <!-- Eagle head -->
           <ellipse cx="16" cy="14" rx="6" ry="5" fill="url(#ecu-gold)" />
           <ellipse cx="15" cy="13" rx="5" ry="4" fill="#ffeb3b" />
-          <!-- Eye area -->
           <circle cx="13" cy="12" r="2.5" fill="#fff" />
           <circle cx="13" cy="12" r="1.8" fill="#1565c0" />
           <circle cx="12.5" cy="11.5" r="0.6" fill="#fff" />
-          <!-- Beak -->
           <path d="M8 14c0-1 1-2 3-2 1 0 2 0 2 1l-2 4c-1 1-2 1-3 0-1-1-1-2 0-3z" fill="#e0e0e0" />
           <path d="M7 15c0-1 1-1 2-1l-1 2c-1 0-1 0-1-1z" fill="#9e9e9e" />
-          <!-- Feather texture lines -->
           <path d="M18 16c2 4 3 8 2 14" stroke="#e65100" stroke-width="0.5" opacity="0.4" />
           <path d="M20 14c3 4 4 10 2 16" stroke="#e65100" stroke-width="0.5" opacity="0.3" />
           <path d="M22 12c4 5 6 12 4 20" stroke="#1565c0" stroke-width="0.5" opacity="0.3" />
         </g>
-        <!-- Circle border -->
         <circle
           cx="24"
           cy="24"
@@ -774,7 +782,7 @@
       </svg>
 
       <!-- Visa -->
-      <svg class="partner-logo" viewBox="0 0 100 32" aria-label="Visa">
+      <svg class="partner-logo shrink-0" viewBox="0 0 100 32" aria-label="Visa">
         <path
           d="M42.5 10.16l-3.93 18.68h-4.99l3.93-18.68h4.99zm20.47 12.07l2.62-7.24 1.51 7.24h-4.13zm5.57 6.61h4.62l-4.03-18.68h-4.26c-.96 0-1.77.56-2.13 1.42l-7.5 17.26h5.25l1.04-2.89h6.41l.6 2.89zm-13.08-6.09c.02-4.93-6.82-5.2-6.77-7.4.01-.67.65-1.38 2.05-1.56.69-.09 2.6-.16 4.77.84l.85-3.97c-1.17-.42-2.67-.83-4.54-.83-4.8 0-8.17 2.55-8.2 6.2-.03 2.7 2.41 4.21 4.25 5.11 1.89.92 2.53 1.51 2.52 2.34-.01 1.26-1.51 1.82-2.91 1.84-2.44.04-3.86-.66-4.99-1.19l-.88 4.12c1.14.52 3.23.98 5.4 1 5.1 0 8.44-2.52 8.45-6.5zM32.31 10.16l-7.87 18.68h-5.28l-3.87-14.92c-.24-.93-.44-1.27-1.16-1.66-1.17-.64-3.11-1.24-4.81-1.61l.12-.49h8.48c1.08 0 2.05.72 2.3 1.96l2.1 11.16 5.19-13.12h5.8z"
           fill="#1A1F71"
@@ -782,7 +790,7 @@
       </svg>
 
       <!-- Mastercard -->
-      <svg class="partner-logo" viewBox="0 0 60 40" aria-label="Mastercard">
+      <svg class="partner-logo shrink-0" viewBox="0 0 60 40" aria-label="Mastercard">
         <circle cx="22" cy="20" r="12" fill="#EB001B" />
         <circle cx="38" cy="20" r="12" fill="#F79E1B" />
         <path
@@ -792,7 +800,7 @@
       </svg>
 
       <!-- American Express -->
-      <svg class="partner-logo" viewBox="0 0 60 40" aria-label="American Express">
+      <svg class="partner-logo shrink-0" viewBox="0 0 60 40" aria-label="American Express">
         <rect width="60" height="40" rx="4" fill="#006FCF" />
         <path
           d="M10 25h4l.5-1.2h1l.5 1.2h8v-.9l.7.9h4.1l.7-.9v.9h16.5v-2.1h-1.8c-.2 0-.2 0-.2-.2v-1.8h2v-2h-3.6l-.6.8-.6-.8H27.5v4.1h-1.4l-.7-1.7h-2.5l-.7 1.7h-1.6v-4.1h-4.2l-1.8 4.1h-2.4L10 25zm1.8-4.1h1.8l2 4.6v-4.6h2l1.5 3.2 1.4-3.2h2v4.6h-1.2v-3.6l-1.6 3.6h-1.1l-1.6-3.6v3.6h-2.5l-.5-1.2h-2.7l-.5 1.2h-1.3l2.3-4.6zm1.2 2.3l-.8-1.9-.8 1.9h1.6z"
@@ -801,7 +809,156 @@
       </svg>
 
       <!-- Wallet -->
-      <svg class="partner-logo" viewBox="0 0 40 40" aria-label="Autorentar Wallet">
+      <svg class="partner-logo shrink-0" viewBox="0 0 40 40" aria-label="Autorentar Wallet">
+        <rect
+          x="4"
+          y="10"
+          width="32"
+          height="22"
+          rx="3"
+          fill="none"
+          stroke="#A7D8F4"
+          stroke-width="2"
+        />
+        <path d="M4 16h32" stroke="#A7D8F4" stroke-width="2" />
+        <circle cx="30" cy="22" r="3" fill="#A7D8F4" />
+        <path
+          d="M8 8c0-2.2 1.8-4 4-4h16c2.2 0 4 1.8 4 4"
+          stroke="#A7D8F4"
+          stroke-width="2"
+          fill="none"
+        />
+      </svg>
+
+      <!-- SET 2 (DUPLICATE) -->
+      <!-- MercadoPago -->
+      <svg class="partner-logo shrink-0" viewBox="0 0 48 48" aria-label="MercadoPago">
+        <circle cx="24" cy="24" r="22" fill="#009EE3" />
+        <path
+          d="M14 24c0-1 .5-2 1.5-2.5l5-2.5c1-.5 2-.5 3 0l5 2.5c1 .5 1.5 1.5 1.5 2.5v4c0 1-.5 2-1.5 2.5l-5 2.5c-1 .5-2 .5-3 0l-5-2.5c-1-.5-1.5-1.5-1.5-2.5v-4z"
+          fill="#fff"
+        />
+        <path
+          d="M18 22l3-1.5c.5-.25 1-.25 1.5 0l3 1.5M18 26l3 1.5c.5.25 1 .25 1.5 0l3-1.5"
+          stroke="#009EE3"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          fill="none"
+        />
+      </svg>
+
+      <!-- Mapbox -->
+      <svg class="partner-logo shrink-0" viewBox="0 0 48 48" aria-label="Mapbox">
+        <circle cx="24" cy="24" r="22" fill="#4264FB" />
+        <path
+          d="M24 12c-5.52 0-10 4.48-10 10 0 7.5 10 16 10 16s10-8.5 10-16c0-5.52-4.48-10-10-10zm0 14c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"
+          fill="#fff"
+        />
+      </svg>
+
+      <!-- EcuCondor -->
+      <svg class="partner-logo shrink-0" viewBox="0 0 48 48" fill="none" aria-label="EcuCondor">
+        <defs>
+          <radialGradient id="ecu-bg-2" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#1a237e" />
+            <stop offset="100%" stop-color="#0d1421" />
+          </radialGradient>
+          <linearGradient id="ecu-red-2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#c62828" />
+            <stop offset="100%" stop-color="#e53935" />
+          </linearGradient>
+          <linearGradient id="ecu-gold-2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f9a825" />
+            <stop offset="100%" stop-color="#fdd835" />
+          </linearGradient>
+          <linearGradient id="ecu-blue-2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1565c0" />
+            <stop offset="100%" stop-color="#42a5f5" />
+          </linearGradient>
+          <linearGradient id="ecu-purple-2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0284c7" />
+            <stop offset="100%" stop-color="#0369a1" />
+          </linearGradient>
+        </defs>
+        <clipPath id="ecu-circle-2">
+          <circle cx="24" cy="24" r="22" />
+        </clipPath>
+        <g clip-path="url(#ecu-circle-2)">
+          <circle cx="24" cy="24" r="22" fill="url(#ecu-bg-2)" />
+          <path
+            d="M48 20c-8 4-14 12-16 22-1 4-3 6-6 6-8-2-14-10-14-20 0-4 1-8 4-12 6 8 16 12 32 4z"
+            fill="url(#ecu-purple-2)"
+            opacity="0.9"
+          />
+          <path
+            d="M44 16c-6 6-10 14-10 24-1 4-4 8-8 8-6-4-10-12-10-22 0-6 2-10 6-14 4 6 12 10 22 4z"
+            fill="url(#ecu-blue-2)"
+            opacity="0.95"
+          />
+          <path
+            d="M4 28c4-6 6-14 4-22 2 2 6 4 10 4-2 6-2 14 2 22-6 1-12-1-16-4z"
+            fill="url(#ecu-red-2)"
+            opacity="0.9"
+          />
+          <path
+            d="M12 8c4 1 8 4 10 8 2 6 1 12-2 18-2 4-4 6-6 6-4-2-8-6-10-12 0-8 4-16 8-20z"
+            fill="url(#ecu-gold-2)"
+          />
+          <path
+            d="M16 10c3 1 6 3 8 7 2 5 2 10 0 15-1 3-3 5-5 5-3-2-6-6-7-12 0-6 2-12 4-15z"
+            fill="#fdd835"
+          />
+          <ellipse cx="16" cy="14" rx="6" ry="5" fill="url(#ecu-gold-2)" />
+          <ellipse cx="15" cy="13" rx="5" ry="4" fill="#ffeb3b" />
+          <circle cx="13" cy="12" r="2.5" fill="#fff" />
+          <circle cx="13" cy="12" r="1.8" fill="#1565c0" />
+          <circle cx="12.5" cy="11.5" r="0.6" fill="#fff" />
+          <path d="M8 14c0-1 1-2 3-2 1 0 2 0 2 1l-2 4c-1 1-2 1-3 0-1-1-1-2 0-3z" fill="#e0e0e0" />
+          <path d="M7 15c0-1 1-1 2-1l-1 2c-1 0-1 0-1-1z" fill="#9e9e9e" />
+          <path d="M18 16c2 4 3 8 2 14" stroke="#e65100" stroke-width="0.5" opacity="0.4" />
+          <path d="M20 14c3 4 4 10 2 16" stroke="#e65100" stroke-width="0.5" opacity="0.3" />
+          <path d="M22 12c4 5 6 12 4 20" stroke="#1565c0" stroke-width="0.5" opacity="0.3" />
+        </g>
+        <circle
+          cx="24"
+          cy="24"
+          r="22"
+          fill="none"
+          stroke="#1a237e"
+          stroke-width="0.5"
+          opacity="0.5"
+        />
+      </svg>
+
+      <!-- Visa -->
+      <svg class="partner-logo shrink-0" viewBox="0 0 100 32" aria-label="Visa">
+        <path
+          d="M42.5 10.16l-3.93 18.68h-4.99l3.93-18.68h4.99zm20.47 12.07l2.62-7.24 1.51 7.24h-4.13zm5.57 6.61h4.62l-4.03-18.68h-4.26c-.96 0-1.77.56-2.13 1.42l-7.5 17.26h5.25l1.04-2.89h6.41l.6 2.89zm-13.08-6.09c.02-4.93-6.82-5.2-6.77-7.4.01-.67.65-1.38 2.05-1.56.69-.09 2.6-.16 4.77.84l.85-3.97c-1.17-.42-2.67-.83-4.54-.83-4.8 0-8.17 2.55-8.2 6.2-.03 2.7 2.41 4.21 4.25 5.11 1.89.92 2.53 1.51 2.52 2.34-.01 1.26-1.51 1.82-2.91 1.84-2.44.04-3.86-.66-4.99-1.19l-.88 4.12c1.14.52 3.23.98 5.4 1 5.1 0 8.44-2.52 8.45-6.5zM32.31 10.16l-7.87 18.68h-5.28l-3.87-14.92c-.24-.93-.44-1.27-1.16-1.66-1.17-.64-3.11-1.24-4.81-1.61l.12-.49h8.48c1.08 0 2.05.72 2.3 1.96l2.1 11.16 5.19-13.12h5.8z"
+          fill="#1A1F71"
+        />
+      </svg>
+
+      <!-- Mastercard -->
+      <svg class="partner-logo shrink-0" viewBox="0 0 60 40" aria-label="Mastercard">
+        <circle cx="22" cy="20" r="12" fill="#EB001B" />
+        <circle cx="38" cy="20" r="12" fill="#F79E1B" />
+        <path
+          d="M30 10.5c3.04 2.34 5 6.01 5 10.15s-1.96 7.81-5 10.15c-3.04-2.34-5-6.01-5-10.15s1.96-7.81 5-10.15z"
+          fill="#FF5F00"
+        />
+      </svg>
+
+      <!-- American Express -->
+      <svg class="partner-logo shrink-0" viewBox="0 0 60 40" aria-label="American Express">
+        <rect width="60" height="40" rx="4" fill="#006FCF" />
+        <path
+          d="M10 25h4l.5-1.2h1l.5 1.2h8v-.9l.7.9h4.1l.7-.9v.9h16.5v-2.1h-1.8c-.2 0-.2 0-.2-.2v-1.8h2v-2h-3.6l-.6.8-.6-.8H27.5v4.1h-1.4l-.7-1.7h-2.5l-.7 1.7h-1.6v-4.1h-4.2l-1.8 4.1h-2.4L10 25zm1.8-4.1h1.8l2 4.6v-4.6h2l1.5 3.2 1.4-3.2h2v4.6h-1.2v-3.6l-1.6 3.6h-1.1l-1.6-3.6v3.6h-2.5l-.5-1.2h-2.7l-.5 1.2h-1.3l2.3-4.6zm1.2 2.3l-.8-1.9-.8 1.9h1.6z"
+          fill="#fff"
+        />
+      </svg>
+
+      <!-- Wallet -->
+      <svg class="partner-logo shrink-0" viewBox="0 0 40 40" aria-label="Autorentar Wallet">
         <rect
           x="4"
           y="10"
@@ -867,7 +1024,7 @@
         </h2>
         <!-- Bloque Destacado de Martín -->
         <div
-          class="bg-surface-tertiary/50 border border-border-default rounded-xl p-4 md:p-6 mb-10 shadow-lg"
+          class="card-hud bg-surface-tertiary/50 border border-border-default rounded-xl p-4 md:p-6 mb-10 shadow-lg"
         >
           <div class="flex flex-col md:flex-row items-center md:items-start gap-4">
             <div class="flex-shrink-0">
@@ -964,8 +1121,38 @@
           </p>
         </div>
 
+        <!-- 👇 Community Avatar Stack -->
+        <div class="flex items-center gap-3 mb-8 pl-1">
+          <div class="avatar-group">
+            <img
+              src="https://i.pravatar.cc/100?img=33"
+              alt="Usuario 1"
+              class="border-surface-base"
+            />
+            <img
+              src="https://i.pravatar.cc/100?img=47"
+              alt="Usuario 2"
+              class="border-surface-base"
+            />
+            <img
+              src="https://i.pravatar.cc/100?img=12"
+              alt="Usuario 3"
+              class="border-surface-base"
+            />
+            <div
+              class="w-8 h-8 rounded-full bg-surface-raised border-2 border-surface-base flex items-center justify-center text-[10px] font-bold text-text-secondary z-20 -ml-2.5"
+            >
+              +4k
+            </div>
+          </div>
+          <p class="text-sm text-text-secondary font-medium">
+            Únete a <span class="text-text-primary font-bold">4.200+ anfitriones</span> que ya
+            generan ingresos
+          </p>
+        </div>
+
         <ul class="space-y-5 mb-10">
-          <li class="flex items-start gap-4">
+          <li class="scroll-reveal flex items-start gap-4">
             <div
               class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm"
             >
@@ -990,7 +1177,7 @@
               </p>
             </div>
           </li>
-          <li class="flex items-start gap-4">
+          <li class="scroll-reveal flex items-start gap-4">
             <div
               class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm"
             >
@@ -1016,7 +1203,7 @@
               </p>
             </div>
           </li>
-          <li class="flex items-start gap-4">
+          <li class="scroll-reveal flex items-start gap-4">
             <div
               class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm"
             >
@@ -1045,7 +1232,7 @@
 
         <button
           (click)="onPublishClick()"
-          class="btn-primary-glow px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-2 shadow-xl"
+          class="btn-shimmer btn-primary-glow px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-2 shadow-xl"
         >
           Compartir mi auto (registro sin cargo)
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

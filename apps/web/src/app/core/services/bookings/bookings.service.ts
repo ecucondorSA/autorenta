@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Booking, BookingExtensionRequest } from '@core/models';
-import { getErrorMessage } from '@core/utils/type-guards';
+import { ProfileService } from '@core/services/auth/profile.service';
 import { BookingApprovalService } from '@core/services/bookings/booking-approval.service';
 import { BookingCancellationService } from '@core/services/bookings/booking-cancellation.service';
 import { BookingCompletionService } from '@core/services/bookings/booking-completion.service';
@@ -8,19 +8,19 @@ import { BookingDataLoaderService } from '@core/services/bookings/booking-data-l
 import { BookingDisputeService } from '@core/services/bookings/booking-dispute.service';
 import { BookingExtensionService } from '@core/services/bookings/booking-extension.service';
 import { BookingInsuranceHelperService } from '@core/services/bookings/booking-insurance-helper.service';
+import { BookingNotificationsService } from '@core/services/bookings/booking-notifications.service';
 import { BookingOwnerPenaltyService } from '@core/services/bookings/booking-owner-penalty.service';
 import { BookingUtilsService } from '@core/services/bookings/booking-utils.service';
 import { BookingValidationService } from '@core/services/bookings/booking-validation.service';
 import { BookingWalletService } from '@core/services/bookings/booking-wallet.service';
 import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
-import { BookingNotificationsService } from '@core/services/bookings/booking-notifications.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { ProfileService } from '@core/services/auth/profile.service';
 import { PwaService } from '@core/services/infrastructure/pwa.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
 import { WalletService } from '@core/services/payments/wallet.service';
+import { getErrorMessage } from '@core/utils/type-guards';
 
 const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
@@ -753,6 +753,35 @@ export class BookingsService {
 
   async carRequiresApproval(carId: string): Promise<boolean> {
     return this.approvalService.carRequiresApproval(carId);
+  }
+
+  // Check-in / Start Operations
+  async startRental(
+    bookingId: string,
+  ): Promise<{ success: boolean; error?: string; message?: string }> {
+    try {
+      const { data: user } = await this.supabase.auth.getUser();
+      if (!user.user) throw new Error('Usuario no autenticado');
+
+      const { data, error } = await this.supabase.rpc('booking_v2_start_rental', {
+        p_booking_id: bookingId,
+        p_renter_id: user.user.id,
+      });
+
+      if (error) throw error;
+
+      if (data && !data.success) {
+        return { success: false, error: data.error || 'Error al iniciar renta' };
+      }
+
+      return { success: true, message: data?.message };
+    } catch (err) {
+      this.logger.error('startRental RPC failed', 'BookingsService', err);
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : 'Error inesperado',
+      };
+    }
   }
 
   // Completion Operations

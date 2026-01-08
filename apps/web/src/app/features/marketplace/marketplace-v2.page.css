@@ -1046,6 +1046,21 @@
   position: relative;
 }
 
+/* Partner Logo Grayscale Interaction */
+.partner-logo {
+  height: 2.5rem; /* Increased size slightly for better visibility */
+  width: auto;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: grayscale(100%) opacity(0.6);
+  cursor: pointer;
+}
+
+.partner-logo:hover {
+  filter: grayscale(0%) opacity(1);
+  transform: scale(1.15) translateY(-2px);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
 /* Forzar color oscuro en headings de partners-section */
 .partners-section h2,
 .partners-section h3 {
@@ -1589,6 +1604,25 @@
   transform: translateY(0);
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 60s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
 /* Premium loading skeleton */
 .skeleton-premium {
   position: relative;
@@ -1602,6 +1636,180 @@
   inset: 0;
   background: none;
   animation: none;
+}
+
+/* 🎬 Cinematic Entrance Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  opacity: 0; /* Start hidden */
+  will-change: transform, opacity;
+}
+
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-400 {
+  animation-delay: 400ms;
+}
+
+/* 🌫️ Glassmorphism Header */
+.glass-header {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+}
+
+/* 🌟 Neon Hover Glow for Cards */
+.card-glow-hover {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.card-glow-hover:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow:
+    0 10px 40px -10px rgba(0, 217, 95, 0.3),
+    0 0 20px rgba(0, 217, 95, 0.1) inset;
+  border-color: rgba(0, 217, 95, 0.4);
+}
+
+/* ✨ Button Metal Shimmer */
+@keyframes shimmer-btn {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.5;
+  }
+  20% {
+    left: 100%;
+    opacity: 0;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  transform: skewX(-20deg);
+  animation: shimmer-btn 4s infinite;
+  pointer-events: none;
+  left: -100%;
+}
+
+/* 🛸 HUD Card (Testimonial) */
+.card-hud {
+  background: rgba(13, 20, 33, 0.7) !important; /* Dark blue/black tint */
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(57, 255, 20, 0.2) !important; /* Subtle Neon Green border */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.card-hud::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(57, 255, 20, 0.5), transparent);
+}
+
+/* 📜 Scroll Reveal (Cascade) */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 🏷️ Professional Refined Chips */
+.chip-refined {
+  @apply backdrop-blur-md border border-white/10 shadow-sm flex items-center justify-center;
+  background: rgba(0, 0, 0, 0.6); /* Consistent dark tint */
+  letter-spacing: 0.02em;
+}
+
+.chip-refined.payment {
+  background: rgba(255, 255, 255, 0.95);
+  color: #000;
+  border: none;
+}
+
+/* 👥 Avatar Group (Social Proof) */
+.avatar-group {
+  display: flex;
+  align-items: center;
+}
+
+.avatar-group img {
+  @apply w-8 h-8 rounded-full border-2 border-surface-base object-cover;
+  margin-left: -10px;
+  transition: transform 0.2s ease;
+}
+
+.avatar-group img:first-child {
+  margin-left: 0;
+}
+
+.avatar-group img:hover {
+  transform: translateY(-4px);
+  z-index: 10;
+}
+
+/* ➖ Fade Separator (Apple Style) */
+.separator-fade {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  margin: 2rem 0;
+  border: none;
 }
 
 /* ===========================================
