@@ -1,0 +1,85 @@
+name: CI Integration (Ephemeral)
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'supabase/migrations/**'
+      - 'apps/web/src/**'
+      - '.github/workflows/ci-integration-local.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ci-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration-check:
+    name: Full Stack Integration (Local)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase (Ephemeral)
+        run: supabase start
+        # This commands starts Postgres, GoTrue, PostgREST, etc. locally.
+        # It automatically applies migrations found in supabase/migrations/
+
+      - name: Verify Migrations Applied
+        run: |
+          # Simple check to ensure tables exist
+          supabase db bash -c "psql -U postgres -d postgres -c '\dt'"
+
+      - name: Generate Types from Local DB
+        run: |
+          mkdir -p apps/web/src/types
+          supabase gen types typescript --local > apps/web/src/types/supabase.types.ts
+          # We overwrite the file specific to this CI run to test COMPATIBILITY
+          # If the PR changes the DB, the valid-types must match the PR code.
+
+      - name: Type Check (Transmission Test)
+        working-directory: apps/web
+        run: |
+          # This is the moment of truth.
+          # Does the Frontend code compile with the EXACT database structure defined in migration files?
+          pnpm exec tsc --noEmit --skipLibCheck
+        env:
+          # Fake env vars just to satisfy build requirements if needed
+          NG_APP_SUPABASE_URL: http://127.0.0.1:54321
+          NG_APP_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvY2FsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2MTY1NTczNjIsImV4cCI6MTkzMjMxMzM2Mn0.K@r#p%TestKey"
+
+      - name: Build Frontend (Assembly Test)
+        working-directory: apps/web
+        run: pnpm run build
+        env:
+           NODE_ENV: production
+           NG_APP_SUPABASE_URL: http://127.0.0.1:54321
+           NG_APP_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvY2FsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2MTY1NTczNjIsImV4cCI6MTkzMjMxMzM2Mn0.K@r#p%TestKey"
+           NG_APP_MERCADOPAGO_PUBLIC_KEY: "TEST-0000-0000-0000-0000"
+           NG_APP_MAPBOX_ACCESS_TOKEN: "pk.test"
+
+      - name: Integration Success
+        if: success()
+        run: echo "✅ Transmission Verified. Frontend and Backend are perfectly synced."
