@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/ecucondorSA/autorenta/compare/v1.11.0...v1.11.1) (2026-01-08)
+
+
+### Bug Fixes
+
+* **lint:** resolve TypeScript warnings and add audit remediations ([3d8abf8](https://github.com/ecucondorSA/autorenta/commit/3d8abf8dddd3e1f51962e437df55f186ac4526c9))
+
 # [1.11.0](https://github.com/ecucondorSA/autorenta/compare/v1.10.0...v1.11.0) (2026-01-08)
 
 
