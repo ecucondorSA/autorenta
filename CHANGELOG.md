@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/ecucondorSA/autorenta/compare/v1.14.0...v1.14.1) (2026-01-08)
+
+
+### Bug Fixes
+
+* optimize booking RPCs (async/no-lock) to prevent 504 timeouts, fix HDRI component duplicate code, and adjust glance animation ([c2fa841](https://github.com/ecucondorSA/autorenta/commit/c2fa8416ca8372a03d219f87c8514f063dc778c5))
+
 # [1.14.0](https://github.com/ecucondorSA/autorenta/compare/v1.13.0...v1.14.0) (2026-01-08)
 
 
