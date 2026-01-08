@@ -126,9 +126,22 @@ BEGIN
 END $$;
 
 -- Add index for finding expiring pre-auths efficiently
-CREATE INDEX IF NOT EXISTS idx_payment_intents_preauth_expiry
-ON public.payment_intents(created_at, status, type)
-WHERE type = 'preauth' AND status = 'authorized';
+-- Only create if payment_intents table has the expected columns
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'payment_intents'
+      AND column_name = 'type'
+  ) THEN
+    CREATE INDEX IF NOT EXISTS idx_payment_intents_preauth_expiry
+    ON public.payment_intents(created_at, status, type)
+    WHERE type = 'preauth' AND status = 'authorized';
+  ELSE
+    RAISE NOTICE 'Skipping idx_payment_intents_preauth_expiry: payment_intents.type column not found';
+  END IF;
+END $$;
 
 -- ============================================================================
 -- PART 4: Schedule Pre-auth Renewal Cron Job
