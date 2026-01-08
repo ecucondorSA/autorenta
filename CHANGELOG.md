@@ -1,3 +1,10 @@
+## [1.9.8](https://github.com/ecucondorSA/autorenta/compare/v1.9.7...v1.9.8) (2026-01-08)
+
+
+### Bug Fixes
+
+* **build:** resolve type errors in templates and strict null checks ([8bb93c7](https://github.com/ecucondorSA/autorenta/commit/8bb93c7d732b2e79c1f6f8edd1e12525bae69ad1))
+
 ## [1.9.7](https://github.com/ecucondorSA/autorenta/compare/v1.9.6...v1.9.7) (2026-01-08)
 
 
