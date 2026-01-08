@@ -171,14 +171,18 @@ export class BookingConfirmationService {
       if (!params.booking_id) throw this.createError('MISSING_ID', 'ID requerido');
 
       // Use V2 RPC
-      const { data, error } = await this.supabase.getClient().rpc('booking_v2_return_vehicle', {
+      const { error } = await this.supabase.getClient().rpc('booking_v2_return_vehicle', {
         p_booking_id: params.booking_id,
         p_returned_by: params.returned_by,
       });
 
       if (error) throw this.createError('RPC_ERROR', error.message, error);
 
-      return { success: true, message: 'Vehículo marcado como devuelto', completion_status: 'RETURNED' };
+      return {
+        success: true,
+        message: 'Vehículo marcado como devuelto',
+        completion_status: 'RETURNED',
+      };
     } catch (err) {
       throw this.handleError(err, 'Error al marcar devuelto');
     } finally {
@@ -224,7 +228,7 @@ export class BookingConfirmationService {
         p_has_damage: params.has_damage,
         p_damage_amount_cents: params.damage_amount ? Math.round(params.damage_amount * 100) : 0,
         p_description: params.damage_description,
-        p_evidence: params.evidence ?? []
+        p_evidence: params.evidence ?? [],
       });
 
       if (error) throw this.createError('INSPECTION_ERROR', error.message);
@@ -246,7 +250,7 @@ export class BookingConfirmationService {
       const { data, error } = await this.supabase.getClient().rpc('booking_v2_resolve_conclusion', {
         p_booking_id: params.booking_id,
         p_renter_id: params.renter_id,
-        p_accept_damage: params.accept_damage
+        p_accept_damage: params.accept_damage,
       });
 
       if (error) throw this.createError('RESOLUTION_ERROR', error.message);
@@ -266,8 +270,8 @@ export class BookingConfirmationService {
       inspector_id: params.confirming_user_id,
       has_damage: params.has_damages ?? false,
       damage_amount: params.damage_amount,
-      damage_description: params.damage_description
-    }) as any;
+      damage_description: params.damage_description,
+    }) as unknown as ConfirmAndReleaseResponse;
   }
 
   async confirmRenter(params: RenterConfirmParams): Promise<ConfirmAndReleaseResponse> {
@@ -277,8 +281,8 @@ export class BookingConfirmationService {
     return this.resolveConclusion({
       booking_id: params.booking_id,
       renter_id: params.confirming_user_id,
-      accept_damage: true // Implicit acceptance for legacy calls
-    }) as any;
+      accept_damage: true, // Implicit acceptance for legacy calls
+    }) as unknown as ConfirmAndReleaseResponse;
   }
 
   /**

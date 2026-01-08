@@ -1,9 +1,9 @@
-import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 interface OAuthClientInfo {
   name: string;
@@ -294,7 +294,15 @@ export class OAuthConsentPage implements OnInit {
     const client = this.supabaseClient.getClient();
 
     // Llamar al método de OAuth Server de Supabase
-    const oauth = (client.auth as any).oauth;
+    const oauth = (
+      client.auth as unknown as {
+        oauth?: {
+          getAuthorizationDetails?: (
+            id: string,
+          ) => Promise<{ data?: AuthorizationDetails; error?: { message?: string } }>;
+        };
+      }
+    ).oauth;
     if (!oauth?.getAuthorizationDetails) {
       throw new Error('OAuth get authorization details not available');
     }
@@ -332,7 +340,15 @@ export class OAuthConsentPage implements OnInit {
     try {
       const client = this.supabaseClient.getClient();
 
-      const oauth = (client.auth as any).oauth;
+      const oauth = (
+        client.auth as unknown as {
+          oauth?: {
+            approveAuthorization?: (
+              id: string,
+            ) => Promise<{ data?: { redirect_to?: string }; error?: { message?: string } }>;
+          };
+        }
+      ).oauth;
       if (!oauth?.approveAuthorization) {
         throw new Error('OAuth approve authorization not available');
       }
@@ -363,7 +379,15 @@ export class OAuthConsentPage implements OnInit {
     try {
       const client = this.supabaseClient.getClient();
 
-      const oauth = (client.auth as any).oauth;
+      const oauth = (
+        client.auth as unknown as {
+          oauth?: {
+            denyAuthorization?: (
+              id: string,
+            ) => Promise<{ data?: { redirect_to?: string }; error?: { message?: string } }>;
+          };
+        }
+      ).oauth;
       if (!oauth?.denyAuthorization) {
         throw new Error('OAuth deny authorization not available');
       }

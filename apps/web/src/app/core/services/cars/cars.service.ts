@@ -1,10 +1,10 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Injectable, inject } from '@angular/core';
-import { v4 as uuidv4 } from 'uuid';
 import { Car, CarFilters, CarPhoto } from '@core/models';
-import { optimizeImage } from '@core/utils/image.utils';
 import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { optimizeImage } from '@core/utils/image.utils';
+import { v4 as uuidv4 } from 'uuid';
 
 // Type for raw car data from Supabase with photos joined
 type CarWithPhotosRaw = Record<string, unknown> & {
@@ -651,6 +651,11 @@ export class CarsService {
       lng?: number;
       limit?: number;
       offset?: number;
+      minPrice?: number;
+      maxPrice?: number;
+      transmission?: string[];
+      verifiedOwner?: boolean;
+      noCreditCard?: boolean;
     } = {},
   ): Promise<CarWithScore[]> {
     const { lat, lng, limit = 12, offset = 0 } = options;
@@ -662,6 +667,11 @@ export class CarsService {
       p_lng: lng ?? null,
       p_limit: limit,
       p_offset: offset,
+      p_min_price: options.minPrice ?? null,
+      p_max_price: options.maxPrice ?? null,
+      p_transmission: options.transmission ?? null,
+      p_verified_owner: options.verifiedOwner ?? false,
+      p_no_credit_card: options.noCreditCard ?? false,
     });
 
     if (error) {

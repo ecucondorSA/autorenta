@@ -130,7 +130,8 @@ export class BookingStateMachineService {
       if (ownerConfirmed && renterConfirmed) return 'FUNDS_RELEASED';
 
       if (booking.has_damages) {
-        if (booking.dispute_status === 'open' || booking.inspection_status === 'disputed') return 'DISPUTED';
+        if (booking.dispute_status === 'open' || booking.inspection_status === 'disputed')
+          return 'DISPUTED';
         return 'DAMAGE_REPORTED';
       }
 

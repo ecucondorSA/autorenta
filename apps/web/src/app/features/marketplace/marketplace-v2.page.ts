@@ -1,4 +1,3 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -16,15 +15,16 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Meta, Title } from '@angular/platform-browser';
 import { Router, RouterModule } from '@angular/router';
-import { RealtimeChannel } from '@supabase/supabase-js';
-import { environment } from '@environment';
+import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
 import { GeocodingResult, GeocodingService } from '@core/services/geo/geocoding.service';
 import { LocationService } from '@core/services/geo/location.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
+import { environment } from '@environment';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 // QuickFilter interface defined locally (component was removed)
 interface QuickFilter {
@@ -41,22 +41,22 @@ interface FabAction {
   color?: 'primary' | 'secondary';
 }
 
-import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
-import { BreakpointService } from '@core/services/ui/breakpoint.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
+import { BreakpointService } from '@core/services/ui/breakpoint.service';
 
-import { AssetPreloaderService } from '@core/services/ui/asset-preloader.service';
+import type { DateRange, LatLngBoundsLiteral, Stat } from '@core/models/marketplace.model';
 import { CarLatestLocation, CarLocationService } from '@core/services/geo/car-location.service';
 import { MapboxPreloaderService } from '@core/services/geo/mapbox-preloader.service';
+import { AssetPreloaderService } from '@core/services/ui/asset-preloader.service';
 import { SeoSchemaService } from '@core/services/ui/seo-schema.service';
 import { ThemeService } from '@core/services/ui/theme.service';
-import type { DateRange, LatLngBoundsLiteral, Stat } from '@core/models/marketplace.model';
+import { Car } from '../../core/models';
 import { DateRangePickerComponent } from '../../shared/components/date-range-picker/date-range-picker.component';
 import { HdriBackgroundComponent } from '../../shared/components/hdri-background/hdri-background.component';
 import { FilterState } from '../../shared/components/map-filters/map-filters.component';
-import { Car } from '../../core/models';
 
 interface CarWithLatestLocation extends Car {
   distance?: number;
@@ -702,136 +702,80 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       const page = this.currentPage();
       const size = this.pageSize();
       const rangeStart = (page - 1) * size;
-      const rangeEnd = rangeStart + size - 1;
 
-      if (dateRange.from && dateRange.to) {
-        // Use RPC with PostGIS distance scoring when user has location
-        const userLoc = this.userLocation();
-        if (userLoc) {
-          // Server-side distance sorting with RPC
-          const items = await this.carsService.getAvailableCarsWithDistance(
-            dateRange.from,
-            dateRange.to,
-            {
-              lat: userLoc.lat,
-              lng: userLoc.lng,
-              limit: size,
-              offset: rangeStart,
-            },
-          );
-          // Map RPC result to Car format
-          const carsData = items.map((item) => ({
-            id: item.id,
-            owner_id: item.owner_id,
-            brand_text_backup: item.brand,
-            model_text_backup: item.model,
-            year: item.year,
-            plate: item.plate,
-            price_per_day: item.price_per_day / 100, // Ajustar de centavos a unidades
-            currency: item.currency,
-            status: item.status,
-            location_city: item.location?.city || '',
-            location_state: item.location?.state || '',
-            location_lat: item.location?.lat || 0,
-            location_lng: item.location?.lng || 0,
-            photos: item.images?.map((url: string) => ({ url })) || [],
-            car_photos: item.images?.map((url: string) => ({ url })) || [],
-            features: item.features,
-            created_at: item.created_at,
-            updated_at: item.updated_at,
-            rating_avg: item.avg_rating,
-            score: item.score,
-          })) as unknown as Car[];
-          this.cars.set(carsData);
-        } else {
-          // Fallback to availability service without distance
-          const items = await this.carsService.getAvailableCars(dateRange.from, dateRange.to, {
-            limit: size,
-            offset: rangeStart,
-          });
-          this.cars.set(items);
-          await this.loadLatestLocationsFor(items);
-        }
-        // For date-filtered queries, we need a separate count query
-        const { count } = await this.supabase
-          .from('cars')
-          .select('*', { count: 'exact', head: true })
-          .eq('status', 'active');
-        this.totalCarsCount.set(count || 0);
-      } else {
-        // Build query with server-side filters
-        let query = this.supabase
-          .from('cars')
-          .select(
-            `
-            *,
-            car_photos(*),
-            owner:profiles!cars_owner_id_fkey(
-              id,
-              full_name,
-              avatar_url,
-              rating_avg,
-              rating_count,
-              created_at,
-              email_verified,
-              phone_verified
-            )
-          `,
-            { count: 'exact' },
-          )
-          .eq('status', 'active');
+      // Prepare common filter options
+      const filterOptions = {
+        lat: this.userLocation()?.lat,
+        lng: this.userLocation()?.lng,
+        limit: size,
+        offset: rangeStart,
+        minPrice: filters.priceRange?.min,
+        maxPrice: filters.priceRange?.max,
+        transmission: filters.transmission || undefined,
+        verifiedOwner: quickFilters.has('verified'),
+        noCreditCard: quickFilters.has('no-card'),
+      };
 
-        // Apply server-side filters
-        if (filters.priceRange) {
-          query = query
-            .gte('price_per_day', filters.priceRange.min)
-            .lte('price_per_day', filters.priceRange.max);
-        }
+      // Default dates if not selected (e.g. tomorrow to next day) for availability check
+      // Or if RPC supports null dates (it does in our new version), we can pass null?
+      // Our optimized RPC requires dates to filter availability.
+      // If user hasn't selected dates, we just check "available now/future" or skip availability check?
+      // The RPC expects p_start_date. Let's provide a default "next 24h" window if none selected
+      // to ensure we only show cars that aren't booked NOW.
+      const searchFrom = dateRange.from ? dateRange.from : new Date().toISOString();
+      const searchTo = dateRange.to ? dateRange.to : new Date(Date.now() + 86400000).toISOString();
 
-        if (filters.transmission && filters.transmission.length > 0) {
-          query = query.in('transmission', filters.transmission);
-        }
+      // Call the optimized RPC
+      const items = await this.carsService.getAvailableCarsWithDistance(
+        searchFrom,
+        searchTo,
+        filterOptions,
+      );
 
-        if (filters.immediateOnly) {
-          query = query.eq('auto_approval', true);
-        }
+      // Map RPC result to Car format
+      const carsData = items.map((item) => ({
+        id: item.id,
+        owner_id: item.owner_id,
+        brand_text_backup: item.brand,
+        model_text_backup: item.model,
+        year: item.year,
+        plate: item.plate,
+        price_per_day: item.price_per_day / 100, // Ajustar de centavos a unidades
+        currency: item.currency,
+        status: item.status,
+        location_city: item.location?.city || '',
+        location_state: item.location?.state || '',
+        location_lat: item.location?.lat || 0,
+        location_lng: item.location?.lng || 0,
+        photos: item.images?.map((url: string) => ({ url })) || [],
+        car_photos: item.images?.map((url: string) => ({ url })) || [],
+        features: item.features,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+        rating_avg: item.avg_rating,
+        score: item.score,
+        // Map owner info if available in RPC or hydration needed?
+        // RPC v2 joins profile but we might need to conform to Car interface
+        // We can hydrate owner separately or relying on the join.
+        // For now, minimal owner mock or we need to update RPC to return owner JSON
+        owner: {
+          id: item.owner_id,
+          // RPC doesn't return full profile yet, assume partial hydration or refactor RPC further
+          // efficient list view doesn't need full profile usually.
+        },
+      })) as unknown as Car[];
 
-        // Quick filters
-        if (quickFilters.has('electric')) {
-          query = query.or('fuel_type.eq.electric,fuel.eq.electric');
-        }
+      this.cars.set(carsData);
 
-        // Apply sorting
-        const sort = this.sortOrder();
-        switch (sort) {
-          case 'price_asc':
-            query = query.order('price_per_day', { ascending: true });
-            break;
-          case 'price_desc':
-            query = query.order('price_per_day', { ascending: false });
-            break;
-          case 'rating':
-            query = query.order('rating_avg', { ascending: false, nullsFirst: false });
-            break;
-          default:
-            query = query.order('created_at', { ascending: false });
-        }
+      // We need a way to get total count from RPC or separate count query
+      // For now, simple count query (approximate)
+      const { count } = await this.supabase
+        .from('cars')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'active');
+      this.totalCarsCount.set(count || 0);
 
-        const { data, count, error } = await query.range(rangeStart, rangeEnd);
-
-        if (error) throw error;
-        const carsData = (data as Car[]) || [];
-
-        // DEBUG: Listar autos para generar fotos correctas
-        this.logger.debug(
-          '🚗 AUTOS EN GRID:',
-          carsData.map((c) => `${c.id}: ${c.brand_text_backup} ${c.model_text_backup}`),
-        );
-
-        this.cars.set(carsData);
-        await this.loadLatestLocationsFor(carsData);
-        this.totalCarsCount.set(count || 0);
-      }
+      await this.loadLatestLocationsFor(carsData);
 
       // Hide search button after loading
       this.showSearchAreaButton.set(false);
@@ -840,10 +784,14 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       if (this.cars().length > 0 && this.userLocation() && !this.drawerOpen()) {
         this.drawerOpen.set(true);
       }
-    } catch (err) {
-      console.error('Error loading cars:', err);
-      this.error.set('No se pudieron cargar los autos. Por favor, intenta de nuevo más tarde.');
-      this.showToast('Error al cargar los autos. Por favor intenta de nuevo.', 'error');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        this.error.set(err.message);
+        this.logger.error('Error loading cars', err);
+      } else {
+        this.error.set('Error loading cars');
+        console.error('Error loading cars', err);
+      }
     } finally {
       this.loading.set(false);
     }

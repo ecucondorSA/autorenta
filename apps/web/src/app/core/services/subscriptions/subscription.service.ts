@@ -388,7 +388,11 @@ export class SubscriptionService {
         let serverError = 'Error al crear suscripción';
         try {
           if (error instanceof Error) {
-            const body = await (error as any).context?.json();
+            const body = await (
+              error as Error & {
+                context?: { json: () => Promise<{ message?: string; error?: string }> };
+              }
+            ).context?.json();
             if (body?.message) serverError = body.message;
             else if (body?.error) serverError = body.error;
           }
@@ -718,7 +722,7 @@ export class SubscriptionService {
     let message = err instanceof Error ? err.message : 'Error desconocido';
 
     // Check if error is from Supabase Edge Function (FunctionsHttpError)
-    const errorObj = err as any;
+    const errorObj = err as Error & { context?: { message?: string }; message?: string };
     if (errorObj?.context?.message) {
       message = errorObj.context.message;
     } else if (errorObj?.message) {

@@ -299,7 +299,7 @@ export class VideoDamageDetectionService {
   /**
    * Mapea los datos de Supabase al formato del servicio
    */
-  private mapToVideoDamageAnalysis(data: any): VideoDamageAnalysis {
+  private mapToVideoDamageAnalysis(data: Record<string, unknown>): VideoDamageAnalysis {
     return {
       success: true,
       bookingId: data.booking_id,

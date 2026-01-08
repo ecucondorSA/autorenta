@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from '@environment';
-import { getErrorMessage } from '@core/utils/type-guards';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { getErrorMessage } from '@core/utils/type-guards';
+import { environment } from '@environment';
 
 /**
  * ✅ FIX: Public routes where auth errors should be silently ignored
@@ -153,10 +153,97 @@ export class ErrorHandlerService {
 
   /**
    * Handle payment errors with special handling
+   * ✅ FIX: Enhanced to handle PaymentBusinessError with specific MercadoPago rejection codes
    */
   handlePaymentError(error: unknown, context = 'Payment processing', showToUser = true): void {
-    // Payment errors are critical
+    // Check if it's a PaymentBusinessError with detailed rejection info
+    if (error instanceof PaymentBusinessError) {
+      const friendlyMessage = this.getPaymentBusinessErrorMessage(error);
+      this.logError(error, context, 'warning'); // Business errors are warnings, not critical
+
+      if (showToUser) {
+        this.toast.error('Error de Pago', friendlyMessage);
+      }
+      return;
+    }
+
+    // Non-business payment errors are critical
     this.handleError(error, context, showToUser, 'critical');
+  }
+
+  /**
+   * Get user-friendly message for PaymentBusinessError based on MercadoPago rejection codes
+   * @private
+   */
+  private getPaymentBusinessErrorMessage(error: PaymentBusinessError): string {
+    const response = error.paymentResponse;
+    const statusDetail = (response as { status_detail?: string }).status_detail || '';
+    const code = (response as { code?: string }).code || '';
+
+    // MercadoPago rejection code mappings
+    // Reference: https://www.mercadopago.com.ar/developers/es/docs/checkout-api/response-handling/collection-results
+    const rejectionMappings: Record<string, string> = {
+      // Card-related rejections
+      cc_rejected_bad_filled_card_number: 'El número de tarjeta es incorrecto. Verificá los datos.',
+      cc_rejected_bad_filled_date: 'La fecha de vencimiento es incorrecta.',
+      cc_rejected_bad_filled_other: 'Verificá los datos de la tarjeta.',
+      cc_rejected_bad_filled_security_code: 'El código de seguridad (CVV) es incorrecto.',
+      cc_rejected_blacklist: 'Tu tarjeta no puede ser utilizada. Contactá a tu banco.',
+      cc_rejected_call_for_authorize: 'Debés autorizar este pago con tu banco.',
+      cc_rejected_card_disabled: 'Tu tarjeta está deshabilitada. Contactá a tu banco.',
+      cc_rejected_card_error: 'No pudimos procesar tu tarjeta. Intentá con otra.',
+      cc_rejected_duplicated_payment: 'Ya procesaste un pago similar. Esperá unos minutos.',
+      cc_rejected_high_risk: 'Tu pago fue rechazado por seguridad. Intentá con otro medio.',
+      cc_rejected_insufficient_amount: 'Tu tarjeta no tiene fondos suficientes.',
+      cc_rejected_invalid_installments: 'Tu tarjeta no soporta esa cantidad de cuotas.',
+      cc_rejected_max_attempts: 'Alcanzaste el límite de intentos. Intentá mañana.',
+      cc_rejected_other_reason: 'Tu tarjeta no pudo procesar el pago. Probá con otra.',
+
+      // Account/wallet rejections
+      insufficient_amount: 'Fondos insuficientes. Cargá saldo o usá otra tarjeta.',
+      rejected_by_bank: 'Tu banco rechazó el pago. Contactalos para más información.',
+      rejected_by_regulations: 'El pago fue rechazado por regulaciones bancarias.',
+
+      // Fraud/security
+      pending_review_manual: 'Tu pago está en revisión. Te notificaremos pronto.',
+      pending_waiting_payment: 'Esperando confirmación del pago...',
+
+      // Generic
+      accredited: 'Pago acreditado correctamente.',
+    };
+
+    // Try to match status_detail first (most specific)
+    if (statusDetail && rejectionMappings[statusDetail]) {
+      return rejectionMappings[statusDetail];
+    }
+
+    // Try to match by code
+    if (code && rejectionMappings[code]) {
+      return rejectionMappings[code];
+    }
+
+    // Pattern matching for partial matches
+    const lowerDetail = statusDetail.toLowerCase();
+    if (lowerDetail.includes('insufficient')) {
+      return 'Fondos insuficientes. Verificá el saldo de tu cuenta o tarjeta.';
+    }
+    if (lowerDetail.includes('rejected') || lowerDetail.includes('declined')) {
+      return 'Tu tarjeta fue rechazada. Probá con otro medio de pago.';
+    }
+    if (lowerDetail.includes('expired')) {
+      return 'Tu tarjeta está vencida. Por favor usá otra.';
+    }
+    if (lowerDetail.includes('security') || lowerDetail.includes('cvv')) {
+      return 'Error de seguridad. Verificá el código CVV.';
+    }
+
+    // Fallback to original error message if it's user-friendly
+    if (error.message && !this.isTechnicalJargon(error.message)) {
+      return error.message;
+    }
+
+    // Ultimate fallback
+    return 'No pudimos procesar tu pago. Verificá los datos o intentá con otro medio de pago.';
   }
 
   /**

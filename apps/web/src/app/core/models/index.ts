@@ -18,7 +18,7 @@ export type {
   KycStatus,
   PaymentProvider,
   PaymentStatus,
-  Transmission
+  Transmission,
 } from '../types/database.types';
 
 // Admin types
@@ -38,7 +38,7 @@ export type {
   ReviewDB,
   WalletBalanceDB,
   WalletLedgerDB,
-  WalletTransactionDB
+  WalletTransactionDB,
 } from '../types/supabase-types';
 
 // Wallet domain models (preferred over DB row types)
@@ -67,7 +67,7 @@ export type {
   WithdrawalFilters,
   WithdrawalLoadingState,
   WithdrawalRequest,
-  WithdrawalStatus
+  WithdrawalStatus,
 } from './wallet.model';
 
 // Feature flag models
@@ -80,7 +80,7 @@ export {
   calculateDeductibleUsd,
   calculateHoldEstimatedArs,
   isFxExpired,
-  ValidationErrorCodes
+  ValidationErrorCodes,
 } from './booking-detail-payment.model';
 export type {
   AuthorizePaymentResult,
@@ -104,7 +104,7 @@ export type {
   UserConsents,
   ValidationError,
   WalletLock,
-  WalletLockResult
+  WalletLockResult,
 } from './booking-detail-payment.model';
 
 // Tripo AI models

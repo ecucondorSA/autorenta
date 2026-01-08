@@ -21,9 +21,7 @@ import { CarsService } from '@core/services/cars/cars.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
 import { GeocodingService } from '@core/services/geo/geocoding.service';
 import { LocationService } from '@core/services/geo/location.service';
-import {
-  CarAvailabilityService,
-} from '@core/services/cars/car-availability.service';
+import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { BreakpointService } from '@core/services/ui/breakpoint.service';

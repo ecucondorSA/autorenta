@@ -207,9 +207,9 @@ export class BookingConfirmationTimelineComponent {
         actionDescription: 'Verificar estado y confirmar recepción',
         metadata: booking.has_damages
           ? {
-            damageAmount: (booking.damage_amount_cents || 0) / 100,
-            damageDescription: booking.damage_description || undefined,
-          }
+              damageAmount: (booking.damage_amount_cents || 0) / 100,
+              damageDescription: booking.damage_description || undefined,
+            }
           : undefined,
       },
 
@@ -218,17 +218,23 @@ export class BookingConfirmationTimelineComponent {
       {
         key: 'damage_report',
         label: booking.inspection_status === 'disputed' ? 'En Disputa' : 'Resolución de Daños',
-        description: booking.inspection_status === 'disputed'
-          ? 'El caso está en mediación'
-          : booking.renter_confirmed_payment
-            ? 'El locatario aceptó los daños'
-            : 'El locatario debe revisar el reporte',
-        completed: !!booking.renter_confirmed_payment || booking.inspection_status === 'damage_accepted',
+        description:
+          booking.inspection_status === 'disputed'
+            ? 'El caso está en mediación'
+            : booking.renter_confirmed_payment
+              ? 'El locatario aceptó los daños'
+              : 'El locatario debe revisar el reporte',
+        completed:
+          !!booking.renter_confirmed_payment || booking.inspection_status === 'damage_accepted',
         timestamp: booking.renter_confirmed_at || null,
         actor: this.renterName(),
         actorId: booking.renter_id,
         isConditional: true,
-        requiresAction: booking.has_damages === true && !booking.renter_confirmed_payment && booking.inspection_status !== 'disputed' && this.isRenter(),
+        requiresAction:
+          booking.has_damages === true &&
+          !booking.renter_confirmed_payment &&
+          booking.inspection_status !== 'disputed' &&
+          this.isRenter(),
         actionLabel: 'Revisar Reporte',
         actionDescription: 'Aceptar daños o iniciar disputa',
         metadata: {

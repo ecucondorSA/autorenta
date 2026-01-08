@@ -1,28 +1,28 @@
-import {
-  Component,
-  inject,
-  signal,
-  computed,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
 import {
-  SubscriptionTier,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
   SUBSCRIPTION_TIERS,
+  SubscriptionTier,
   SubscriptionTierConfig,
 } from '@core/models/subscription.model';
-import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { WalletService } from '@core/services/payments/wallet.service';
+import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
+import { IonicModule } from '@ionic/angular';
 import { environment } from '../../../../environments/environment';
 
 declare global {
   interface Window {
-    MercadoPago: any;
+    MercadoPago: unknown;
   }
 }
 
@@ -239,7 +239,7 @@ export class ClubSubscribePage implements OnInit {
     return this.walletAvailableCents() >= tier.price_cents;
   });
 
-  private mp: any = null;
+  private mp: unknown = null;
 
   ngOnInit(): void {
     const tierParam = this.route.snapshot.queryParamMap.get('tier') as SubscriptionTier | null;
@@ -296,7 +296,7 @@ export class ClubSubscribePage implements OnInit {
           onSubmit: () => {
             this.analytics.trackEvent('club_payment_submitted', { tier: tier.tier });
           },
-          onError: (error: any) => {
+          onError: (error: unknown) => {
             console.error('MercadoPago error:', error);
             this.error.set('Error al procesar el pago. Por favor intenta nuevamente.');
             this.loading.set(false);
@@ -328,12 +328,15 @@ export class ClubSubscribePage implements OnInit {
       void this.router.navigate(['/wallet/club/history'], {
         queryParams: { payment: 'success', tier: tier.tier },
       });
-    } catch (err: any) {
-      const message = err.message || 'No se pudo procesar el pago con wallet.';
-      
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : 'No se pudo procesar el pago con wallet.';
+
       // Handle already subscribed case (409)
-      if (message.toLowerCase().includes('already subscribed') || 
-          message.toLowerCase().includes('ya tiene una suscripci')) {
+      if (
+        message.toLowerCase().includes('already subscribed') ||
+        message.toLowerCase().includes('ya tiene una suscripci')
+      ) {
         this.toast.info('Suscripción activa', 'Ya eres miembro de Autorentar Club.');
         void this.router.navigate(['/wallet/club/history']);
         return;

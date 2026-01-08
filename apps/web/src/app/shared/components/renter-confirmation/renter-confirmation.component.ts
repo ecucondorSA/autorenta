@@ -11,7 +11,7 @@ import {
 import { AuthService } from '@core/services/auth/auth.service';
 import {
   BookingConfirmationService,
-  ConfirmAndReleaseResponse
+  ConfirmAndReleaseResponse,
 } from '@core/services/bookings/booking-confirmation.service';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -127,7 +127,7 @@ export class RenterConfirmationComponent {
         await this.confirmationService.resolveConclusion({
           booking_id: this.bookingId,
           renter_id: userId,
-          accept_damage: true
+          accept_damage: true,
         });
         this.confirmationResult.set({
           success: true,
@@ -136,7 +136,7 @@ export class RenterConfirmationComponent {
           completion_status: 'COMPLETED',
           owner_confirmed: true,
           renter_confirmed: true,
-          waiting_for: 'none'
+          waiting_for: 'none',
         });
         this.message.set('Daños aceptados y pago liberado.');
         this.confirmed.emit(this.confirmationResult()!);
@@ -164,13 +164,14 @@ export class RenterConfirmationComponent {
     const userId = this.auth.sessionSignal()?.user?.id;
     if (!userId) return;
 
-    if (!confirm('¿Estás seguro de iniciar una disputa? El caso será revisado por soporte.')) return;
+    if (!confirm('¿Estás seguro de iniciar una disputa? El caso será revisado por soporte.'))
+      return;
 
     try {
       await this.confirmationService.resolveConclusion({
         booking_id: this.bookingId,
         renter_id: userId,
-        accept_damage: false
+        accept_damage: false,
       });
       this.message.set('Disputa iniciada. Soporte te contactará.');
       this.errorOccurred.emit('Disputa iniciada'); // Notify parent to reload/update status
