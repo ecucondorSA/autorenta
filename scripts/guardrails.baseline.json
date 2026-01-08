@@ -60,6 +60,9 @@
       "WithdrawalStatus"
     ],
     "rpcFunctions": [
+      "booking_v2_resolve_conclusion",
+      "create_subscription",
+      "create_subscription_with_wallet",
       "get_owner_penalties",
       "get_renter_profile_badge",
       "get_verification_progress",
