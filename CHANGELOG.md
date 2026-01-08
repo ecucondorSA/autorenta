@@ -1,3 +1,10 @@
+## [1.15.2](https://github.com/ecucondorSA/autorenta/compare/v1.15.1...v1.15.2) (2026-01-08)
+
+
+### Bug Fixes
+
+* **ci:** reorder init_baseline to create core tables first ([a8b3b64](https://github.com/ecucondorSA/autorenta/commit/a8b3b64e53b33e0dd1b6b59c419cf88442c6a1e0))
+
 ## [1.15.1](https://github.com/ecucondorSA/autorenta/compare/v1.15.0...v1.15.1) (2026-01-08)
 
 
