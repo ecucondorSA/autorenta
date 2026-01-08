@@ -302,13 +302,13 @@ export class VideoDamageDetectionService {
   private mapToVideoDamageAnalysis(data: Record<string, unknown>): VideoDamageAnalysis {
     return {
       success: true,
-      bookingId: data.booking_id,
-      inspectionType: data.inspection_type,
-      damages: data.damages || [],
-      summary: data.summary || '',
-      confidence: data.confidence || 0,
-      videoUrl: data.video_url || '',
-      processedAt: data.processed_at,
+      bookingId: data['booking_id'] as string,
+      inspectionType: data['inspection_type'] as 'checkin' | 'checkout',
+      damages: (data['damages'] as VideoDetectedDamage[]) || [],
+      summary: (data['summary'] as string) || '',
+      confidence: (data['confidence'] as number) || 0,
+      videoUrl: (data['video_url'] as string) || '',
+      processedAt: data['processed_at'] as string,
     };
   }
 

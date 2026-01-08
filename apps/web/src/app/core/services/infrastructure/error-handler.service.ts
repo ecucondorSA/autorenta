@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { PaymentBusinessError } from '@core/services/payments/mercadopago-payment.service';
 import { getErrorMessage } from '@core/utils/type-guards';
 import { environment } from '@environment';
 
