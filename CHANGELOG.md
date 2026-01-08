@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/ecucondorSA/autorenta/compare/v1.9.1...v1.9.2) (2026-01-08)
+
+
+### Bug Fixes
+
+* restore missing subscription and wallet database objects ([aa3e7f6](https://github.com/ecucondorSA/autorenta/commit/aa3e7f6c308d91caf969880853fba3d375ea6ffc))
+
 ## [1.9.1](https://github.com/ecucondorSA/autorenta/compare/v1.9.0...v1.9.1) (2026-01-07)
 
 
