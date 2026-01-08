@@ -1,4 +1,716 @@
 -- ============================================================================
+-- AUTORENTA CORE DATABASE MIGRATION
+-- Created: 2025-10-16
+-- Purpose: Complete database schema for car rental marketplace
+-- ============================================================================
+
+BEGIN;
+
+-- ============================================================================
+-- SECTION 1: ENUMS (Custom Types)
+-- ============================================================================
+
+CREATE TYPE booking_status AS ENUM (
+  'pending',      -- Esperando aprobación del dueño
+  'confirmed',    -- Confirmada, pago aprobado
+  'in_progress',  -- En curso (auto entregado)
+  'completed',    -- Completada exitosamente
+  'cancelled',    -- Cancelada
+  'no_show'       -- Cliente no se presentó
+);
+
+CREATE TYPE car_status AS ENUM (
+  'draft',        -- Borrador (no visible)
+  'pending',      -- Pendiente de aprobación admin
+  'active',       -- Activo y visible
+  'suspended',    -- Suspendido por admin
+  'deleted'       -- Soft delete
+);
+
+CREATE TYPE payment_status AS ENUM (
+  'pending',      -- Pendiente
+  'processing',   -- Procesando
+  'approved',     -- Aprobado
+  'rejected',     -- Rechazado
+  'refunded',     -- Reembolsado
+  'cancelled'     -- Cancelado
+);
+
+CREATE TYPE payment_provider AS ENUM (
+  'mock',         -- Mock para testing
+  'mercadopago',  -- Mercado Pago (future)
+  'stripe'        -- Stripe (future)
+);
+
+-- ============================================================================
+-- SECTION 2: CORE TABLES
+-- ============================================================================
+
+-- ----------------------------------------------------------------------------
+-- 2.1 CARS TABLE
+-- ----------------------------------------------------------------------------
+
+CREATE TABLE public.cars (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+
+  -- Basic Info
+  title TEXT NOT NULL,
+  description TEXT,
+  brand TEXT,
+  model TEXT,
+  year INTEGER CHECK (year >= 1900 AND year <= 2100),
+
+  -- Pricing
+  price_per_day NUMERIC(10, 2) NOT NULL CHECK (price_per_day >= 0),
+  currency TEXT NOT NULL DEFAULT 'ARS',
+
+  -- Location
+  city TEXT NOT NULL,
+  province TEXT NOT NULL,
+  country TEXT NOT NULL DEFAULT 'AR',
+  latitude NUMERIC(10, 8),
+  longitude NUMERIC(11, 8),
+
+  -- Status
+  status car_status NOT NULL DEFAULT 'draft',
+
+  -- Metadata
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  deleted_at TIMESTAMPTZ
+);
+
+-- Indexes for cars
+CREATE INDEX idx_cars_owner_id ON public.cars(owner_id);
+CREATE INDEX idx_cars_status ON public.cars(status);
+CREATE INDEX idx_cars_city ON public.cars(city);
+CREATE INDEX idx_cars_created_at ON public.cars(created_at DESC);
+
+-- Updated_at trigger for cars
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER set_cars_updated_at
+  BEFORE UPDATE ON public.cars
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- ----------------------------------------------------------------------------
+-- 2.2 CAR_PHOTOS TABLE
+-- ----------------------------------------------------------------------------
+
+CREATE TABLE public.car_photos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  car_id UUID NOT NULL REFERENCES public.cars(id) ON DELETE CASCADE,
+
+  -- Storage
+  stored_path TEXT NOT NULL,
+  url TEXT NOT NULL,
+
+  -- Order
+  position INTEGER NOT NULL DEFAULT 0,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  is_cover BOOLEAN NOT NULL DEFAULT false,
+
+  -- Metadata
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Indexes for car_photos
+CREATE INDEX idx_car_photos_car_id ON public.car_photos(car_id);
+CREATE INDEX idx_car_photos_sort_order ON public.car_photos(car_id, sort_order);
+
+-- ----------------------------------------------------------------------------
+-- 2.3 BOOKINGS TABLE
+-- ----------------------------------------------------------------------------
+
+CREATE TABLE public.bookings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  car_id UUID NOT NULL REFERENCES public.cars(id) ON DELETE RESTRICT,
+  renter_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE RESTRICT,
+
+  -- Dates
+  start_at TIMESTAMPTZ NOT NULL,
+  end_at TIMESTAMPTZ NOT NULL,
+
+  -- Status
+  status booking_status NOT NULL DEFAULT 'pending',
+
+  -- Pricing
+  total_amount NUMERIC(10, 2) NOT NULL CHECK (total_amount >= 0),
+  currency TEXT NOT NULL DEFAULT 'ARS',
+
+  -- Metadata
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+  -- Constraints
+  CHECK (end_at > start_at)
+);
+
+-- Indexes for bookings
+CREATE INDEX idx_bookings_car_id ON public.bookings(car_id);
+CREATE INDEX idx_bookings_renter_id ON public.bookings(renter_id);
+CREATE INDEX idx_bookings_status ON public.bookings(status);
+CREATE INDEX idx_bookings_dates ON public.bookings(start_at, end_at);
+CREATE INDEX idx_bookings_created_at ON public.bookings(created_at DESC);
+
+-- Updated_at trigger for bookings
+CREATE TRIGGER set_bookings_updated_at
+  BEFORE UPDATE ON public.bookings
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- ----------------------------------------------------------------------------
+-- 2.4 PAYMENT_INTENTS TABLE
+-- ----------------------------------------------------------------------------
+
+CREATE TABLE public.payment_intents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  booking_id UUID NOT NULL REFERENCES public.bookings(id) ON DELETE CASCADE,
+
+  -- Provider
+  provider payment_provider NOT NULL,
+  provider_intent_id TEXT,
+
+  -- Amount
+  amount NUMERIC(10, 2) NOT NULL CHECK (amount >= 0),
+  currency TEXT NOT NULL DEFAULT 'ARS',
+
+  -- Status
+  status payment_status NOT NULL DEFAULT 'pending',
+
+  -- Metadata
+  metadata JSONB,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Indexes for payment_intents
+CREATE INDEX idx_payment_intents_booking_id ON public.payment_intents(booking_id);
+CREATE INDEX idx_payment_intents_status ON public.payment_intents(status);
+CREATE INDEX idx_payment_intents_provider ON public.payment_intents(provider);
+
+-- Updated_at trigger for payment_intents
+CREATE TRIGGER set_payment_intents_updated_at
+  BEFORE UPDATE ON public.payment_intents
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- ----------------------------------------------------------------------------
+-- 2.5 PAYMENTS TABLE
+-- ----------------------------------------------------------------------------
+
+CREATE TABLE public.payments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  booking_id UUID NOT NULL REFERENCES public.bookings(id) ON DELETE CASCADE,
+  payment_intent_id UUID REFERENCES public.payment_intents(id) ON DELETE SET NULL,
+
+  -- Provider
+  provider payment_provider NOT NULL,
+  provider_payment_id TEXT,
+
+  -- Amount
+  amount NUMERIC(10, 2) NOT NULL CHECK (amount >= 0),
+  currency TEXT NOT NULL DEFAULT 'ARS',
+
+  -- Status
+  status payment_status NOT NULL DEFAULT 'pending',
+
+  -- Metadata
+  metadata JSONB,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Indexes for payments
+CREATE INDEX idx_payments_booking_id ON public.payments(booking_id);
+CREATE INDEX idx_payments_payment_intent_id ON public.payments(payment_intent_id);
+CREATE INDEX idx_payments_status ON public.payments(status);
+
+-- Updated_at trigger for payments
+CREATE TRIGGER set_payments_updated_at
+  BEFORE UPDATE ON public.payments
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- ----------------------------------------------------------------------------
+-- 2.6 REVIEWS TABLE
+-- ----------------------------------------------------------------------------
+
+CREATE TABLE public.reviews (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  booking_id UUID NOT NULL REFERENCES public.bookings(id) ON DELETE CASCADE,
+  reviewer_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  reviewee_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+
+  -- Review Content
+  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  comment TEXT,
+
+  -- Type
+  is_car_review BOOLEAN NOT NULL DEFAULT false,
+  is_renter_review BOOLEAN NOT NULL DEFAULT false,
+
+  -- Metadata
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+  -- Constraints
+  UNIQUE(booking_id, reviewer_id, reviewee_id)
+);
+
+-- Indexes for reviews
+CREATE INDEX idx_reviews_booking_id ON public.reviews(booking_id);
+CREATE INDEX idx_reviews_reviewer_id ON public.reviews(reviewer_id);
+CREATE INDEX idx_reviews_reviewee_id ON public.reviews(reviewee_id);
+CREATE INDEX idx_reviews_created_at ON public.reviews(created_at DESC);
+
+-- Updated_at trigger for reviews
+CREATE TRIGGER set_reviews_updated_at
+  BEFORE UPDATE ON public.reviews
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================================
+-- SECTION 3: RLS (Row Level Security) POLICIES
+-- ============================================================================
+
+-- Enable RLS on all tables
+ALTER TABLE public.cars ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.car_photos ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.bookings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.payment_intents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
+
+-- ----------------------------------------------------------------------------
+-- 3.1 CARS POLICIES
+-- ----------------------------------------------------------------------------
+
+-- Anyone can view active cars
+CREATE POLICY "Anyone can view active cars"
+ON public.cars FOR SELECT
+USING (status = 'active' OR auth.uid() = owner_id);
+
+-- Authenticated users can create their own cars
+CREATE POLICY "Users can create own cars"
+ON public.cars FOR INSERT
+WITH CHECK (auth.uid() = owner_id);
+
+-- Owners can update their own cars
+CREATE POLICY "Owners can update own cars"
+ON public.cars FOR UPDATE
+USING (auth.uid() = owner_id);
+
+-- Owners can delete their own cars (soft delete)
+CREATE POLICY "Owners can delete own cars"
+ON public.cars FOR DELETE
+USING (auth.uid() = owner_id);
+
+-- ----------------------------------------------------------------------------
+-- 3.2 CAR_PHOTOS POLICIES
+-- ----------------------------------------------------------------------------
+
+-- Anyone can view photos of active cars
+CREATE POLICY "Anyone can view car photos"
+ON public.car_photos FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM public.cars
+    WHERE cars.id = car_photos.car_id
+    AND (cars.status = 'active' OR cars.owner_id = auth.uid())
+  )
+);
+
+-- Car owners can insert photos
+CREATE POLICY "Car owners can insert photos"
+ON public.car_photos FOR INSERT
+WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM public.cars
+    WHERE cars.id = car_photos.car_id
+    AND cars.owner_id = auth.uid()
+  )
+);
+
+-- Car owners can delete photos
+CREATE POLICY "Car owners can delete photos"
+ON public.car_photos FOR DELETE
+USING (
+  EXISTS (
+    SELECT 1 FROM public.cars
+    WHERE cars.id = car_photos.car_id
+    AND cars.owner_id = auth.uid()
+  )
+);
+
+-- ----------------------------------------------------------------------------
+-- 3.3 BOOKINGS POLICIES
+-- ----------------------------------------------------------------------------
+
+-- Renters can view their own bookings
+CREATE POLICY "Renters can view own bookings"
+ON public.bookings FOR SELECT
+USING (auth.uid() = renter_id);
+
+-- Car owners can view bookings for their cars
+CREATE POLICY "Owners can view bookings for their cars"
+ON public.bookings FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM public.cars
+    WHERE cars.id = bookings.car_id
+    AND cars.owner_id = auth.uid()
+  )
+);
+
+-- Authenticated users can create bookings (via RPC function)
+CREATE POLICY "Authenticated users can request bookings"
+ON public.bookings FOR INSERT
+WITH CHECK (
+  auth.uid() = renter_id
+  AND status = 'pending'
+);
+
+-- Owners and renters can update bookings
+CREATE POLICY "Owners and renters can update bookings"
+ON public.bookings FOR UPDATE
+USING (
+  auth.uid() = renter_id
+  OR EXISTS (
+    SELECT 1 FROM public.cars
+    WHERE cars.id = bookings.car_id
+    AND cars.owner_id = auth.uid()
+  )
+);
+
+-- ----------------------------------------------------------------------------
+-- 3.4 PAYMENT_INTENTS POLICIES
+-- ----------------------------------------------------------------------------
+
+-- Users can view payment intents for their bookings
+CREATE POLICY "Users can view own payment intents"
+ON public.payment_intents FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM public.bookings
+    WHERE bookings.id = payment_intents.booking_id
+    AND (
+      bookings.renter_id = auth.uid()
+      OR EXISTS (
+        SELECT 1 FROM public.cars
+        WHERE cars.id = bookings.car_id
+        AND cars.owner_id = auth.uid()
+      )
+    )
+  )
+);
+
+-- Service role can insert payment intents
+CREATE POLICY "Service can insert payment intents"
+ON public.payment_intents FOR INSERT
+WITH CHECK (true);
+
+-- Service role can update payment intents
+CREATE POLICY "Service can update payment intents"
+ON public.payment_intents FOR UPDATE
+USING (true);
+
+-- ----------------------------------------------------------------------------
+-- 3.5 PAYMENTS POLICIES
+-- ----------------------------------------------------------------------------
+
+-- Users can view payments for their bookings
+CREATE POLICY "Users can view own payments"
+ON public.payments FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM public.bookings
+    WHERE bookings.id = payments.booking_id
+    AND (
+      bookings.renter_id = auth.uid()
+      OR EXISTS (
+        SELECT 1 FROM public.cars
+        WHERE cars.id = bookings.car_id
+        AND cars.owner_id = auth.uid()
+      )
+    )
+  )
+);
+
+-- Service role can insert payments
+CREATE POLICY "Service can insert payments"
+ON public.payments FOR INSERT
+WITH CHECK (true);
+
+-- Service role can update payments
+CREATE POLICY "Service can update payments"
+ON public.payments FOR UPDATE
+USING (true);
+
+-- ----------------------------------------------------------------------------
+-- 3.6 REVIEWS POLICIES
+-- ----------------------------------------------------------------------------
+
+-- Anyone can view reviews
+CREATE POLICY "Anyone can view reviews"
+ON public.reviews FOR SELECT
+USING (true);
+
+-- Booking participants can create reviews
+CREATE POLICY "Booking participants can create reviews"
+ON public.reviews FOR INSERT
+WITH CHECK (
+  auth.uid() = reviewer_id
+  AND EXISTS (
+    SELECT 1 FROM public.bookings
+    WHERE bookings.id = reviews.booking_id
+    AND bookings.status = 'completed'
+    AND (
+      bookings.renter_id = auth.uid()
+      OR EXISTS (
+        SELECT 1 FROM public.cars
+        WHERE cars.id = bookings.car_id
+        AND cars.owner_id = auth.uid()
+      )
+    )
+  )
+);
+
+-- Reviewers can update their own reviews
+CREATE POLICY "Reviewers can update own reviews"
+ON public.reviews FOR UPDATE
+USING (auth.uid() = reviewer_id);
+
+-- Reviewers can delete their own reviews
+CREATE POLICY "Reviewers can delete own reviews"
+ON public.reviews FOR DELETE
+USING (auth.uid() = reviewer_id);
+
+-- ============================================================================
+-- SECTION 4: RPC FUNCTIONS
+-- ============================================================================
+
+-- ----------------------------------------------------------------------------
+-- 4.1 REQUEST_BOOKING FUNCTION
+-- ----------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.request_booking(
+  p_car_id UUID,
+  p_start TIMESTAMPTZ,
+  p_end TIMESTAMPTZ
+)
+RETURNS public.bookings
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_booking public.bookings;
+  v_total NUMERIC(10, 2);
+  v_car public.cars;
+  v_days INTEGER;
+BEGIN
+  -- Validar que el usuario está autenticado
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'Usuario no autenticado';
+  END IF;
+
+  -- Validar que las fechas son válidas
+  IF p_start >= p_end THEN
+    RAISE EXCEPTION 'La fecha de fin debe ser posterior a la fecha de inicio';
+  END IF;
+
+  IF p_start < now() THEN
+    RAISE EXCEPTION 'No podés reservar en el pasado';
+  END IF;
+
+  -- Obtener información del auto
+  SELECT * INTO v_car
+  FROM public.cars
+  WHERE id = p_car_id AND status = 'active';
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Auto no disponible';
+  END IF;
+
+  -- Validar que el usuario no es el dueño del auto
+  IF v_car.owner_id = auth.uid() THEN
+    RAISE EXCEPTION 'No podés reservar tu propio auto';
+  END IF;
+
+  -- ✅ FIX: Validar disponibilidad incluyendo 'pending' para coincidir con constraint bookings_no_overlap
+  -- El constraint bookings_no_overlap previene overlaps de bookings con status: pending, confirmed, in_progress
+  -- Por lo tanto, la validación debe incluir también 'pending' para evitar race conditions
+  IF EXISTS (
+    SELECT 1 FROM public.bookings
+    WHERE car_id = p_car_id
+    AND status IN ('pending', 'confirmed', 'in_progress')
+    AND (start_at, end_at) OVERLAPS (p_start, p_end)
+  ) THEN
+    RAISE EXCEPTION 'Auto no disponible en esas fechas';
+  END IF;
+
+  -- Calcular días y total
+  v_days := EXTRACT(DAY FROM (p_end - p_start));
+  IF v_days < 1 THEN
+    v_days := 1;
+  END IF;
+
+  v_total := v_car.price_per_day * v_days;
+
+  -- Crear booking
+  INSERT INTO public.bookings (
+    car_id,
+    renter_id,
+    start_at,
+    end_at,
+    status,
+    total_amount,
+    currency
+  ) VALUES (
+    p_car_id,
+    auth.uid(),
+    p_start,
+    p_end,
+    'pending',
+    v_total,
+    v_car.currency
+  )
+  RETURNING * INTO v_booking;
+
+  RETURN v_booking;
+END;
+$$;
+
+-- Grant execute permission to authenticated users
+GRANT EXECUTE ON FUNCTION public.request_booking(UUID, TIMESTAMPTZ, TIMESTAMPTZ) TO authenticated;
+
+-- ----------------------------------------------------------------------------
+-- 4.2 QUOTE_BOOKING FUNCTION
+-- ----------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.quote_booking(
+  p_car_id UUID,
+  p_start TIMESTAMPTZ,
+  p_end TIMESTAMPTZ
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_car public.cars;
+  v_days INTEGER;
+  v_total NUMERIC(10, 2);
+  v_available BOOLEAN;
+BEGIN
+  -- Obtener información del auto
+  SELECT * INTO v_car
+  FROM public.cars
+  WHERE id = p_car_id AND status = 'active';
+
+  IF NOT FOUND THEN
+    RETURN jsonb_build_object(
+      'available', false,
+      'error', 'Auto no disponible'
+    );
+  END IF;
+
+  -- Validar fechas
+  IF p_start >= p_end THEN
+    RETURN jsonb_build_object(
+      'available', false,
+      'error', 'Fechas inválidas'
+    );
+  END IF;
+
+  -- Verificar disponibilidad
+  v_available := NOT EXISTS (
+    SELECT 1 FROM public.bookings
+    WHERE car_id = p_car_id
+    AND status IN ('confirmed', 'in_progress')
+    AND (start_at, end_at) OVERLAPS (p_start, p_end)
+  );
+
+  -- Calcular precio
+  v_days := EXTRACT(DAY FROM (p_end - p_start));
+  IF v_days < 1 THEN
+    v_days := 1;
+  END IF;
+
+  v_total := v_car.price_per_day * v_days;
+
+  RETURN jsonb_build_object(
+    'available', v_available,
+    'days', v_days,
+    'price_per_day', v_car.price_per_day,
+    'total_amount', v_total,
+    'currency', v_car.currency
+  );
+END;
+$$;
+
+-- Grant execute permission to authenticated users
+GRANT EXECUTE ON FUNCTION public.quote_booking(UUID, TIMESTAMPTZ, TIMESTAMPTZ) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.quote_booking(UUID, TIMESTAMPTZ, TIMESTAMPTZ) TO anon;
+
+-- ============================================================================
+-- SECTION 5: HELPER FUNCTIONS
+-- ============================================================================
+
+-- ----------------------------------------------------------------------------
+-- 5.1 IS_CAR_OWNER FUNCTION
+-- ----------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.is_car_owner(p_car_id UUID)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.cars
+    WHERE id = p_car_id
+    AND owner_id = auth.uid()
+  );
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.is_car_owner(UUID) TO authenticated;
+
+-- ============================================================================
+-- SECTION 6: COMMENTS (Documentation)
+-- ============================================================================
+
+COMMENT ON TABLE public.cars IS 'Car listings created by owners';
+COMMENT ON TABLE public.car_photos IS 'Photos associated with car listings';
+COMMENT ON TABLE public.bookings IS 'Rental bookings between renters and car owners';
+COMMENT ON TABLE public.payment_intents IS 'Payment intents created for bookings';
+COMMENT ON TABLE public.payments IS 'Payment records from payment providers';
+COMMENT ON TABLE public.reviews IS 'Reviews between renters and car owners';
+
+COMMENT ON FUNCTION public.request_booking IS 'Creates a new booking with validation';
+COMMENT ON FUNCTION public.quote_booking IS 'Calculates booking price without creating booking';
+COMMENT ON FUNCTION public.is_car_owner IS 'Checks if current user owns a car';
+
+-- ============================================================================
+-- MIGRATION COMPLETE
+-- ============================================================================
+
+COMMIT;
+-- ============================================================================
 -- BOOKING SYSTEM P0 FIXES - DATA CLEANUP
 -- ============================================================================
 -- Migration Date: 2025-01-25
@@ -1536,718 +2248,6 @@ BEGIN
     PERFORM public.pricing_recalculate(booking_record.id);
   END LOOP;
 END $$;
-
--- ============================================================================
--- MIGRATION COMPLETE
--- ============================================================================
-
-COMMIT;
--- ============================================================================
--- AUTORENTA CORE DATABASE MIGRATION
--- Created: 2025-10-16
--- Purpose: Complete database schema for car rental marketplace
--- ============================================================================
-
-BEGIN;
-
--- ============================================================================
--- SECTION 1: ENUMS (Custom Types)
--- ============================================================================
-
-CREATE TYPE booking_status AS ENUM (
-  'pending',      -- Esperando aprobación del dueño
-  'confirmed',    -- Confirmada, pago aprobado
-  'in_progress',  -- En curso (auto entregado)
-  'completed',    -- Completada exitosamente
-  'cancelled',    -- Cancelada
-  'no_show'       -- Cliente no se presentó
-);
-
-CREATE TYPE car_status AS ENUM (
-  'draft',        -- Borrador (no visible)
-  'pending',      -- Pendiente de aprobación admin
-  'active',       -- Activo y visible
-  'suspended',    -- Suspendido por admin
-  'deleted'       -- Soft delete
-);
-
-CREATE TYPE payment_status AS ENUM (
-  'pending',      -- Pendiente
-  'processing',   -- Procesando
-  'approved',     -- Aprobado
-  'rejected',     -- Rechazado
-  'refunded',     -- Reembolsado
-  'cancelled'     -- Cancelado
-);
-
-CREATE TYPE payment_provider AS ENUM (
-  'mock',         -- Mock para testing
-  'mercadopago',  -- Mercado Pago (future)
-  'stripe'        -- Stripe (future)
-);
-
--- ============================================================================
--- SECTION 2: CORE TABLES
--- ============================================================================
-
--- ----------------------------------------------------------------------------
--- 2.1 CARS TABLE
--- ----------------------------------------------------------------------------
-
-CREATE TABLE public.cars (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-
-  -- Basic Info
-  title TEXT NOT NULL,
-  description TEXT,
-  brand TEXT,
-  model TEXT,
-  year INTEGER CHECK (year >= 1900 AND year <= 2100),
-
-  -- Pricing
-  price_per_day NUMERIC(10, 2) NOT NULL CHECK (price_per_day >= 0),
-  currency TEXT NOT NULL DEFAULT 'ARS',
-
-  -- Location
-  city TEXT NOT NULL,
-  province TEXT NOT NULL,
-  country TEXT NOT NULL DEFAULT 'AR',
-  latitude NUMERIC(10, 8),
-  longitude NUMERIC(11, 8),
-
-  -- Status
-  status car_status NOT NULL DEFAULT 'draft',
-
-  -- Metadata
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  deleted_at TIMESTAMPTZ
-);
-
--- Indexes for cars
-CREATE INDEX idx_cars_owner_id ON public.cars(owner_id);
-CREATE INDEX idx_cars_status ON public.cars(status);
-CREATE INDEX idx_cars_city ON public.cars(city);
-CREATE INDEX idx_cars_created_at ON public.cars(created_at DESC);
-
--- Updated_at trigger for cars
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = now();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER set_cars_updated_at
-  BEFORE UPDATE ON public.cars
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
-
--- ----------------------------------------------------------------------------
--- 2.2 CAR_PHOTOS TABLE
--- ----------------------------------------------------------------------------
-
-CREATE TABLE public.car_photos (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  car_id UUID NOT NULL REFERENCES public.cars(id) ON DELETE CASCADE,
-
-  -- Storage
-  stored_path TEXT NOT NULL,
-  url TEXT NOT NULL,
-
-  -- Order
-  position INTEGER NOT NULL DEFAULT 0,
-  sort_order INTEGER NOT NULL DEFAULT 0,
-  is_cover BOOLEAN NOT NULL DEFAULT false,
-
-  -- Metadata
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-
--- Indexes for car_photos
-CREATE INDEX idx_car_photos_car_id ON public.car_photos(car_id);
-CREATE INDEX idx_car_photos_sort_order ON public.car_photos(car_id, sort_order);
-
--- ----------------------------------------------------------------------------
--- 2.3 BOOKINGS TABLE
--- ----------------------------------------------------------------------------
-
-CREATE TABLE public.bookings (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  car_id UUID NOT NULL REFERENCES public.cars(id) ON DELETE RESTRICT,
-  renter_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE RESTRICT,
-
-  -- Dates
-  start_at TIMESTAMPTZ NOT NULL,
-  end_at TIMESTAMPTZ NOT NULL,
-
-  -- Status
-  status booking_status NOT NULL DEFAULT 'pending',
-
-  -- Pricing
-  total_amount NUMERIC(10, 2) NOT NULL CHECK (total_amount >= 0),
-  currency TEXT NOT NULL DEFAULT 'ARS',
-
-  -- Metadata
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-
-  -- Constraints
-  CHECK (end_at > start_at)
-);
-
--- Indexes for bookings
-CREATE INDEX idx_bookings_car_id ON public.bookings(car_id);
-CREATE INDEX idx_bookings_renter_id ON public.bookings(renter_id);
-CREATE INDEX idx_bookings_status ON public.bookings(status);
-CREATE INDEX idx_bookings_dates ON public.bookings(start_at, end_at);
-CREATE INDEX idx_bookings_created_at ON public.bookings(created_at DESC);
-
--- Updated_at trigger for bookings
-CREATE TRIGGER set_bookings_updated_at
-  BEFORE UPDATE ON public.bookings
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
-
--- ----------------------------------------------------------------------------
--- 2.4 PAYMENT_INTENTS TABLE
--- ----------------------------------------------------------------------------
-
-CREATE TABLE public.payment_intents (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  booking_id UUID NOT NULL REFERENCES public.bookings(id) ON DELETE CASCADE,
-
-  -- Provider
-  provider payment_provider NOT NULL,
-  provider_intent_id TEXT,
-
-  -- Amount
-  amount NUMERIC(10, 2) NOT NULL CHECK (amount >= 0),
-  currency TEXT NOT NULL DEFAULT 'ARS',
-
-  -- Status
-  status payment_status NOT NULL DEFAULT 'pending',
-
-  -- Metadata
-  metadata JSONB,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-
--- Indexes for payment_intents
-CREATE INDEX idx_payment_intents_booking_id ON public.payment_intents(booking_id);
-CREATE INDEX idx_payment_intents_status ON public.payment_intents(status);
-CREATE INDEX idx_payment_intents_provider ON public.payment_intents(provider);
-
--- Updated_at trigger for payment_intents
-CREATE TRIGGER set_payment_intents_updated_at
-  BEFORE UPDATE ON public.payment_intents
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
-
--- ----------------------------------------------------------------------------
--- 2.5 PAYMENTS TABLE
--- ----------------------------------------------------------------------------
-
-CREATE TABLE public.payments (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  booking_id UUID NOT NULL REFERENCES public.bookings(id) ON DELETE CASCADE,
-  payment_intent_id UUID REFERENCES public.payment_intents(id) ON DELETE SET NULL,
-
-  -- Provider
-  provider payment_provider NOT NULL,
-  provider_payment_id TEXT,
-
-  -- Amount
-  amount NUMERIC(10, 2) NOT NULL CHECK (amount >= 0),
-  currency TEXT NOT NULL DEFAULT 'ARS',
-
-  -- Status
-  status payment_status NOT NULL DEFAULT 'pending',
-
-  -- Metadata
-  metadata JSONB,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-
--- Indexes for payments
-CREATE INDEX idx_payments_booking_id ON public.payments(booking_id);
-CREATE INDEX idx_payments_payment_intent_id ON public.payments(payment_intent_id);
-CREATE INDEX idx_payments_status ON public.payments(status);
-
--- Updated_at trigger for payments
-CREATE TRIGGER set_payments_updated_at
-  BEFORE UPDATE ON public.payments
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
-
--- ----------------------------------------------------------------------------
--- 2.6 REVIEWS TABLE
--- ----------------------------------------------------------------------------
-
-CREATE TABLE public.reviews (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  booking_id UUID NOT NULL REFERENCES public.bookings(id) ON DELETE CASCADE,
-  reviewer_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  reviewee_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-
-  -- Review Content
-  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
-  comment TEXT,
-
-  -- Type
-  is_car_review BOOLEAN NOT NULL DEFAULT false,
-  is_renter_review BOOLEAN NOT NULL DEFAULT false,
-
-  -- Metadata
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-
-  -- Constraints
-  UNIQUE(booking_id, reviewer_id, reviewee_id)
-);
-
--- Indexes for reviews
-CREATE INDEX idx_reviews_booking_id ON public.reviews(booking_id);
-CREATE INDEX idx_reviews_reviewer_id ON public.reviews(reviewer_id);
-CREATE INDEX idx_reviews_reviewee_id ON public.reviews(reviewee_id);
-CREATE INDEX idx_reviews_created_at ON public.reviews(created_at DESC);
-
--- Updated_at trigger for reviews
-CREATE TRIGGER set_reviews_updated_at
-  BEFORE UPDATE ON public.reviews
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
-
--- ============================================================================
--- SECTION 3: RLS (Row Level Security) POLICIES
--- ============================================================================
-
--- Enable RLS on all tables
-ALTER TABLE public.cars ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.car_photos ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.bookings ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.payment_intents ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
-
--- ----------------------------------------------------------------------------
--- 3.1 CARS POLICIES
--- ----------------------------------------------------------------------------
-
--- Anyone can view active cars
-CREATE POLICY "Anyone can view active cars"
-ON public.cars FOR SELECT
-USING (status = 'active' OR auth.uid() = owner_id);
-
--- Authenticated users can create their own cars
-CREATE POLICY "Users can create own cars"
-ON public.cars FOR INSERT
-WITH CHECK (auth.uid() = owner_id);
-
--- Owners can update their own cars
-CREATE POLICY "Owners can update own cars"
-ON public.cars FOR UPDATE
-USING (auth.uid() = owner_id);
-
--- Owners can delete their own cars (soft delete)
-CREATE POLICY "Owners can delete own cars"
-ON public.cars FOR DELETE
-USING (auth.uid() = owner_id);
-
--- ----------------------------------------------------------------------------
--- 3.2 CAR_PHOTOS POLICIES
--- ----------------------------------------------------------------------------
-
--- Anyone can view photos of active cars
-CREATE POLICY "Anyone can view car photos"
-ON public.car_photos FOR SELECT
-USING (
-  EXISTS (
-    SELECT 1 FROM public.cars
-    WHERE cars.id = car_photos.car_id
-    AND (cars.status = 'active' OR cars.owner_id = auth.uid())
-  )
-);
-
--- Car owners can insert photos
-CREATE POLICY "Car owners can insert photos"
-ON public.car_photos FOR INSERT
-WITH CHECK (
-  EXISTS (
-    SELECT 1 FROM public.cars
-    WHERE cars.id = car_photos.car_id
-    AND cars.owner_id = auth.uid()
-  )
-);
-
--- Car owners can delete photos
-CREATE POLICY "Car owners can delete photos"
-ON public.car_photos FOR DELETE
-USING (
-  EXISTS (
-    SELECT 1 FROM public.cars
-    WHERE cars.id = car_photos.car_id
-    AND cars.owner_id = auth.uid()
-  )
-);
-
--- ----------------------------------------------------------------------------
--- 3.3 BOOKINGS POLICIES
--- ----------------------------------------------------------------------------
-
--- Renters can view their own bookings
-CREATE POLICY "Renters can view own bookings"
-ON public.bookings FOR SELECT
-USING (auth.uid() = renter_id);
-
--- Car owners can view bookings for their cars
-CREATE POLICY "Owners can view bookings for their cars"
-ON public.bookings FOR SELECT
-USING (
-  EXISTS (
-    SELECT 1 FROM public.cars
-    WHERE cars.id = bookings.car_id
-    AND cars.owner_id = auth.uid()
-  )
-);
-
--- Authenticated users can create bookings (via RPC function)
-CREATE POLICY "Authenticated users can request bookings"
-ON public.bookings FOR INSERT
-WITH CHECK (
-  auth.uid() = renter_id
-  AND status = 'pending'
-);
-
--- Owners and renters can update bookings
-CREATE POLICY "Owners and renters can update bookings"
-ON public.bookings FOR UPDATE
-USING (
-  auth.uid() = renter_id
-  OR EXISTS (
-    SELECT 1 FROM public.cars
-    WHERE cars.id = bookings.car_id
-    AND cars.owner_id = auth.uid()
-  )
-);
-
--- ----------------------------------------------------------------------------
--- 3.4 PAYMENT_INTENTS POLICIES
--- ----------------------------------------------------------------------------
-
--- Users can view payment intents for their bookings
-CREATE POLICY "Users can view own payment intents"
-ON public.payment_intents FOR SELECT
-USING (
-  EXISTS (
-    SELECT 1 FROM public.bookings
-    WHERE bookings.id = payment_intents.booking_id
-    AND (
-      bookings.renter_id = auth.uid()
-      OR EXISTS (
-        SELECT 1 FROM public.cars
-        WHERE cars.id = bookings.car_id
-        AND cars.owner_id = auth.uid()
-      )
-    )
-  )
-);
-
--- Service role can insert payment intents
-CREATE POLICY "Service can insert payment intents"
-ON public.payment_intents FOR INSERT
-WITH CHECK (true);
-
--- Service role can update payment intents
-CREATE POLICY "Service can update payment intents"
-ON public.payment_intents FOR UPDATE
-USING (true);
-
--- ----------------------------------------------------------------------------
--- 3.5 PAYMENTS POLICIES
--- ----------------------------------------------------------------------------
-
--- Users can view payments for their bookings
-CREATE POLICY "Users can view own payments"
-ON public.payments FOR SELECT
-USING (
-  EXISTS (
-    SELECT 1 FROM public.bookings
-    WHERE bookings.id = payments.booking_id
-    AND (
-      bookings.renter_id = auth.uid()
-      OR EXISTS (
-        SELECT 1 FROM public.cars
-        WHERE cars.id = bookings.car_id
-        AND cars.owner_id = auth.uid()
-      )
-    )
-  )
-);
-
--- Service role can insert payments
-CREATE POLICY "Service can insert payments"
-ON public.payments FOR INSERT
-WITH CHECK (true);
-
--- Service role can update payments
-CREATE POLICY "Service can update payments"
-ON public.payments FOR UPDATE
-USING (true);
-
--- ----------------------------------------------------------------------------
--- 3.6 REVIEWS POLICIES
--- ----------------------------------------------------------------------------
-
--- Anyone can view reviews
-CREATE POLICY "Anyone can view reviews"
-ON public.reviews FOR SELECT
-USING (true);
-
--- Booking participants can create reviews
-CREATE POLICY "Booking participants can create reviews"
-ON public.reviews FOR INSERT
-WITH CHECK (
-  auth.uid() = reviewer_id
-  AND EXISTS (
-    SELECT 1 FROM public.bookings
-    WHERE bookings.id = reviews.booking_id
-    AND bookings.status = 'completed'
-    AND (
-      bookings.renter_id = auth.uid()
-      OR EXISTS (
-        SELECT 1 FROM public.cars
-        WHERE cars.id = bookings.car_id
-        AND cars.owner_id = auth.uid()
-      )
-    )
-  )
-);
-
--- Reviewers can update their own reviews
-CREATE POLICY "Reviewers can update own reviews"
-ON public.reviews FOR UPDATE
-USING (auth.uid() = reviewer_id);
-
--- Reviewers can delete their own reviews
-CREATE POLICY "Reviewers can delete own reviews"
-ON public.reviews FOR DELETE
-USING (auth.uid() = reviewer_id);
-
--- ============================================================================
--- SECTION 4: RPC FUNCTIONS
--- ============================================================================
-
--- ----------------------------------------------------------------------------
--- 4.1 REQUEST_BOOKING FUNCTION
--- ----------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.request_booking(
-  p_car_id UUID,
-  p_start TIMESTAMPTZ,
-  p_end TIMESTAMPTZ
-)
-RETURNS public.bookings
-LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public
-AS $$
-DECLARE
-  v_booking public.bookings;
-  v_total NUMERIC(10, 2);
-  v_car public.cars;
-  v_days INTEGER;
-BEGIN
-  -- Validar que el usuario está autenticado
-  IF auth.uid() IS NULL THEN
-    RAISE EXCEPTION 'Usuario no autenticado';
-  END IF;
-
-  -- Validar que las fechas son válidas
-  IF p_start >= p_end THEN
-    RAISE EXCEPTION 'La fecha de fin debe ser posterior a la fecha de inicio';
-  END IF;
-
-  IF p_start < now() THEN
-    RAISE EXCEPTION 'No podés reservar en el pasado';
-  END IF;
-
-  -- Obtener información del auto
-  SELECT * INTO v_car
-  FROM public.cars
-  WHERE id = p_car_id AND status = 'active';
-
-  IF NOT FOUND THEN
-    RAISE EXCEPTION 'Auto no disponible';
-  END IF;
-
-  -- Validar que el usuario no es el dueño del auto
-  IF v_car.owner_id = auth.uid() THEN
-    RAISE EXCEPTION 'No podés reservar tu propio auto';
-  END IF;
-
-  -- ✅ FIX: Validar disponibilidad incluyendo 'pending' para coincidir con constraint bookings_no_overlap
-  -- El constraint bookings_no_overlap previene overlaps de bookings con status: pending, confirmed, in_progress
-  -- Por lo tanto, la validación debe incluir también 'pending' para evitar race conditions
-  IF EXISTS (
-    SELECT 1 FROM public.bookings
-    WHERE car_id = p_car_id
-    AND status IN ('pending', 'confirmed', 'in_progress')
-    AND (start_at, end_at) OVERLAPS (p_start, p_end)
-  ) THEN
-    RAISE EXCEPTION 'Auto no disponible en esas fechas';
-  END IF;
-
-  -- Calcular días y total
-  v_days := EXTRACT(DAY FROM (p_end - p_start));
-  IF v_days < 1 THEN
-    v_days := 1;
-  END IF;
-
-  v_total := v_car.price_per_day * v_days;
-
-  -- Crear booking
-  INSERT INTO public.bookings (
-    car_id,
-    renter_id,
-    start_at,
-    end_at,
-    status,
-    total_amount,
-    currency
-  ) VALUES (
-    p_car_id,
-    auth.uid(),
-    p_start,
-    p_end,
-    'pending',
-    v_total,
-    v_car.currency
-  )
-  RETURNING * INTO v_booking;
-
-  RETURN v_booking;
-END;
-$$;
-
--- Grant execute permission to authenticated users
-GRANT EXECUTE ON FUNCTION public.request_booking(UUID, TIMESTAMPTZ, TIMESTAMPTZ) TO authenticated;
-
--- ----------------------------------------------------------------------------
--- 4.2 QUOTE_BOOKING FUNCTION
--- ----------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.quote_booking(
-  p_car_id UUID,
-  p_start TIMESTAMPTZ,
-  p_end TIMESTAMPTZ
-)
-RETURNS JSONB
-LANGUAGE plpgsql
-STABLE
-SECURITY DEFINER
-SET search_path = public
-AS $$
-DECLARE
-  v_car public.cars;
-  v_days INTEGER;
-  v_total NUMERIC(10, 2);
-  v_available BOOLEAN;
-BEGIN
-  -- Obtener información del auto
-  SELECT * INTO v_car
-  FROM public.cars
-  WHERE id = p_car_id AND status = 'active';
-
-  IF NOT FOUND THEN
-    RETURN jsonb_build_object(
-      'available', false,
-      'error', 'Auto no disponible'
-    );
-  END IF;
-
-  -- Validar fechas
-  IF p_start >= p_end THEN
-    RETURN jsonb_build_object(
-      'available', false,
-      'error', 'Fechas inválidas'
-    );
-  END IF;
-
-  -- Verificar disponibilidad
-  v_available := NOT EXISTS (
-    SELECT 1 FROM public.bookings
-    WHERE car_id = p_car_id
-    AND status IN ('confirmed', 'in_progress')
-    AND (start_at, end_at) OVERLAPS (p_start, p_end)
-  );
-
-  -- Calcular precio
-  v_days := EXTRACT(DAY FROM (p_end - p_start));
-  IF v_days < 1 THEN
-    v_days := 1;
-  END IF;
-
-  v_total := v_car.price_per_day * v_days;
-
-  RETURN jsonb_build_object(
-    'available', v_available,
-    'days', v_days,
-    'price_per_day', v_car.price_per_day,
-    'total_amount', v_total,
-    'currency', v_car.currency
-  );
-END;
-$$;
-
--- Grant execute permission to authenticated users
-GRANT EXECUTE ON FUNCTION public.quote_booking(UUID, TIMESTAMPTZ, TIMESTAMPTZ) TO authenticated;
-GRANT EXECUTE ON FUNCTION public.quote_booking(UUID, TIMESTAMPTZ, TIMESTAMPTZ) TO anon;
-
--- ============================================================================
--- SECTION 5: HELPER FUNCTIONS
--- ============================================================================
-
--- ----------------------------------------------------------------------------
--- 5.1 IS_CAR_OWNER FUNCTION
--- ----------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.is_car_owner(p_car_id UUID)
-RETURNS BOOLEAN
-LANGUAGE plpgsql
-STABLE
-SECURITY DEFINER
-SET search_path = public
-AS $$
-BEGIN
-  RETURN EXISTS (
-    SELECT 1 FROM public.cars
-    WHERE id = p_car_id
-    AND owner_id = auth.uid()
-  );
-END;
-$$;
-
-GRANT EXECUTE ON FUNCTION public.is_car_owner(UUID) TO authenticated;
-
--- ============================================================================
--- SECTION 6: COMMENTS (Documentation)
--- ============================================================================
-
-COMMENT ON TABLE public.cars IS 'Car listings created by owners';
-COMMENT ON TABLE public.car_photos IS 'Photos associated with car listings';
-COMMENT ON TABLE public.bookings IS 'Rental bookings between renters and car owners';
-COMMENT ON TABLE public.payment_intents IS 'Payment intents created for bookings';
-COMMENT ON TABLE public.payments IS 'Payment records from payment providers';
-COMMENT ON TABLE public.reviews IS 'Reviews between renters and car owners';
-
-COMMENT ON FUNCTION public.request_booking IS 'Creates a new booking with validation';
-COMMENT ON FUNCTION public.quote_booking IS 'Calculates booking price without creating booking';
-COMMENT ON FUNCTION public.is_car_owner IS 'Checks if current user owns a car';
 
 -- ============================================================================
 -- MIGRATION COMPLETE
@@ -52109,3 +52109,6705 @@ GRANT EXECUTE ON FUNCTION public.get_user_stats(UUID) TO anon, authenticated, se
 -- Add comment
 COMMENT ON FUNCTION public.get_user_stats(UUID) IS 'Get user stats with automatic creation if missing';
 
+-- =============================================================================
+-- DISPUTE SYSTEM FUNCTIONS
+-- =============================================================================
+-- open_dispute: Opens a dispute within 24h of checkout
+-- resolve_dispute: Admin resolves with funds distribution decision
+-- =============================================================================
+
+-- -----------------------------------------------------------------------------
+-- FUNCTION: open_dispute
+-- Opens a dispute on a booking within 24h of checkout (pending_review status)
+-- Can be called by owner or renter
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION public.open_dispute(
+  p_booking_id UUID,
+  p_reporter_id UUID,
+  p_reason TEXT,
+  p_evidence_urls TEXT[] DEFAULT NULL,
+  p_claimed_amount_cents BIGINT DEFAULT 0
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_booking RECORD;
+  v_is_owner BOOLEAN;
+  v_is_renter BOOLEAN;
+BEGIN
+  -- Get booking details
+  SELECT b.*, c.owner_id
+  INTO v_booking
+  FROM bookings b
+  JOIN cars c ON c.id = b.car_id
+  WHERE b.id = p_booking_id
+  FOR UPDATE;
+
+  IF NOT FOUND THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Reserva no encontrada');
+  END IF;
+
+  -- Verify reporter is owner or renter
+  v_is_owner := (v_booking.owner_id = p_reporter_id);
+  v_is_renter := (v_booking.renter_id = p_reporter_id);
+
+  IF NOT v_is_owner AND NOT v_is_renter THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Solo el dueño o arrendatario pueden abrir disputa');
+  END IF;
+
+  -- Verify booking is in pending_review status
+  IF v_booking.status != 'pending_review' THEN
+    RETURN jsonb_build_object(
+      'success', false,
+      'error', 'Solo se puede abrir disputa en reservas pendientes de revisión',
+      'current_status', v_booking.status::TEXT
+    );
+  END IF;
+
+  -- Verify within 24h of checkout (returned_at)
+  IF v_booking.returned_at IS NULL THEN
+    RETURN jsonb_build_object('success', false, 'error', 'La reserva no ha sido devuelta aún');
+  END IF;
+
+  IF NOW() > v_booking.returned_at + INTERVAL '24 hours' THEN
+    RETURN jsonb_build_object(
+      'success', false,
+      'error', 'El plazo de 24 horas para abrir disputa ha expirado',
+      'returned_at', v_booking.returned_at,
+      'deadline', v_booking.returned_at + INTERVAL '24 hours'
+    );
+  END IF;
+
+  -- Validate reason
+  IF p_reason IS NULL OR LENGTH(TRIM(p_reason)) < 10 THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Debe proporcionar una razón de al menos 10 caracteres');
+  END IF;
+
+  -- Update booking to disputed status
+  UPDATE bookings
+  SET
+    status = 'disputed',
+    dispute_opened_at = NOW(),
+    dispute_reason = p_reason,
+    dispute_evidence_urls = p_evidence_urls,
+    dispute_amount_cents = p_claimed_amount_cents,
+    updated_at = NOW()
+  WHERE id = p_booking_id;
+
+  RETURN jsonb_build_object(
+    'success', true,
+    'booking_id', p_booking_id,
+    'opened_by', CASE WHEN v_is_owner THEN 'owner' ELSE 'renter' END,
+    'opened_at', NOW(),
+    'reason', p_reason,
+    'claimed_amount_cents', p_claimed_amount_cents
+  );
+END;
+$$;
+
+-- -----------------------------------------------------------------------------
+-- FUNCTION: resolve_dispute
+-- Admin resolves a dispute with decision on funds
+-- resolution types: 'favor_owner', 'favor_renter', 'split', 'no_action'
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION public.resolve_dispute(
+  p_booking_id UUID,
+  p_admin_id UUID,
+  p_resolution TEXT,
+  p_resolution_notes TEXT DEFAULT NULL,
+  p_charge_renter_cents BIGINT DEFAULT 0,
+  p_refund_renter_cents BIGINT DEFAULT 0
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_booking RECORD;
+  v_owner_id UUID;
+  v_deposit_amount BIGINT;
+  v_owner_payout_cents BIGINT;
+  v_platform_fee_cents BIGINT;
+  v_renter_portion BIGINT;
+  v_owner_portion BIGINT;
+BEGIN
+  -- Validate resolution type
+  IF p_resolution NOT IN ('favor_owner', 'favor_renter', 'split', 'no_action') THEN
+    RETURN jsonb_build_object(
+      'success', false,
+      'error', 'Resolución inválida. Use: favor_owner, favor_renter, split, no_action'
+    );
+  END IF;
+
+  -- Get booking and owner
+  SELECT b.*, c.owner_id
+  INTO v_booking
+  FROM bookings b
+  JOIN cars c ON c.id = b.car_id
+  WHERE b.id = p_booking_id
+  FOR UPDATE;
+
+  IF NOT FOUND THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Reserva no encontrada');
+  END IF;
+
+  v_owner_id := v_booking.owner_id;
+
+  -- Verify booking is in disputed status
+  IF v_booking.status != 'disputed' THEN
+    RETURN jsonb_build_object(
+      'success', false,
+      'error', 'Solo se pueden resolver reservas en disputa',
+      'current_status', v_booking.status::TEXT
+    );
+  END IF;
+
+  -- Get deposit amount
+  v_deposit_amount := COALESCE(v_booking.deposit_amount_cents, 0);
+
+  -- Process based on resolution
+  IF p_resolution = 'favor_owner' THEN
+    -- Owner gets the deposit (or claimed amount)
+    -- Charge renter's wallet/card for the dispute amount
+    IF p_charge_renter_cents > 0 THEN
+      -- Create wallet debit for renter
+      INSERT INTO wallet_transactions (
+        user_id, type, amount, status,
+        reference_type, reference_id, description
+      )
+      VALUES (
+        v_booking.renter_id, 'debit', p_charge_renter_cents, 'completed',
+        'dispute', p_booking_id,
+        'Cargo por resolución de disputa a favor del dueño'
+      );
+
+      -- Credit owner (after platform fee)
+      v_platform_fee_cents := (p_charge_renter_cents * 20) / 100;
+      v_owner_payout_cents := p_charge_renter_cents - v_platform_fee_cents;
+
+      INSERT INTO wallet_transactions (
+        user_id, type, amount, status,
+        reference_type, reference_id, description
+      )
+      VALUES (
+        v_owner_id, 'credit', v_owner_payout_cents, 'completed',
+        'dispute', p_booking_id,
+        'Compensación por disputa resuelta a su favor'
+      );
+    END IF;
+
+    -- Release any locked deposit to owner
+    IF v_deposit_amount > 0 AND v_booking.deposit_lock_id IS NOT NULL THEN
+      UPDATE wallet_transactions
+      SET status = 'released',
+          description = description || ' - Liberado a favor del dueño por disputa'
+      WHERE id = v_booking.deposit_lock_id;
+
+      -- Credit deposit to owner
+      v_platform_fee_cents := (v_deposit_amount * 20) / 100;
+      v_owner_payout_cents := v_deposit_amount - v_platform_fee_cents;
+
+      INSERT INTO wallet_transactions (
+        user_id, type, amount, status,
+        reference_type, reference_id, description
+      )
+      VALUES (
+        v_owner_id, 'credit', v_owner_payout_cents, 'completed',
+        'deposit_claim', p_booking_id,
+        'Depósito reclamado por disputa resuelta a favor'
+      );
+    END IF;
+
+  ELSIF p_resolution = 'favor_renter' THEN
+    -- Renter gets deposit back
+    IF v_deposit_amount > 0 AND v_booking.deposit_lock_id IS NOT NULL THEN
+      UPDATE wallet_transactions
+      SET status = 'released',
+          description = description || ' - Liberado a favor del arrendatario'
+      WHERE id = v_booking.deposit_lock_id;
+    END IF;
+
+    -- If there's a refund due
+    IF p_refund_renter_cents > 0 THEN
+      INSERT INTO wallet_transactions (
+        user_id, type, amount, status,
+        reference_type, reference_id, description
+      )
+      VALUES (
+        v_booking.renter_id, 'credit', p_refund_renter_cents, 'completed',
+        'dispute_refund', p_booking_id,
+        'Reembolso por disputa resuelta a su favor'
+      );
+    END IF;
+
+  ELSIF p_resolution = 'split' THEN
+    -- Split the disputed amount
+    IF v_deposit_amount > 0 AND v_booking.deposit_lock_id IS NOT NULL THEN
+      -- Release lock
+      UPDATE wallet_transactions
+      SET status = 'released',
+          description = description || ' - Liberado parcialmente (split)'
+      WHERE id = v_booking.deposit_lock_id;
+
+      -- Split 50/50 by default
+      v_renter_portion := v_deposit_amount / 2;
+      v_owner_portion := v_deposit_amount - v_renter_portion;
+
+      -- Credit renter their portion
+      IF v_renter_portion > 0 THEN
+        INSERT INTO wallet_transactions (
+          user_id, type, amount, status,
+          reference_type, reference_id, description
+        )
+        VALUES (
+          v_booking.renter_id, 'credit', v_renter_portion, 'completed',
+          'dispute_split', p_booking_id,
+          'Porción del depósito por resolución split'
+        );
+      END IF;
+
+      -- Credit owner their portion (after platform fee)
+      IF v_owner_portion > 0 THEN
+        v_platform_fee_cents := (v_owner_portion * 20) / 100;
+        v_owner_payout_cents := v_owner_portion - v_platform_fee_cents;
+
+        INSERT INTO wallet_transactions (
+          user_id, type, amount, status,
+          reference_type, reference_id, description
+        )
+        VALUES (
+          v_owner_id, 'credit', v_owner_payout_cents, 'completed',
+          'dispute_split', p_booking_id,
+          'Porción del depósito por resolución split'
+        );
+      END IF;
+    END IF;
+
+  ELSIF p_resolution = 'no_action' THEN
+    -- Just release the deposit back to renter, no additional charges
+    IF v_deposit_amount > 0 AND v_booking.deposit_lock_id IS NOT NULL THEN
+      UPDATE wallet_transactions
+      SET status = 'released',
+          description = description || ' - Liberado sin cargo (no action)'
+      WHERE id = v_booking.deposit_lock_id;
+    END IF;
+  END IF;
+
+  -- Update booking to completed with resolution
+  UPDATE bookings
+  SET
+    status = 'completed',
+    dispute_resolved_at = NOW(),
+    dispute_resolution = p_resolution || COALESCE(': ' || p_resolution_notes, ''),
+    updated_at = NOW()
+  WHERE id = p_booking_id;
+
+  RETURN jsonb_build_object(
+    'success', true,
+    'booking_id', p_booking_id,
+    'resolution', p_resolution,
+    'resolved_at', NOW(),
+    'charge_renter_cents', p_charge_renter_cents,
+    'refund_renter_cents', p_refund_renter_cents,
+    'notes', p_resolution_notes
+  );
+END;
+$$;
+
+-- -----------------------------------------------------------------------------
+-- FUNCTION: get_dispute_details
+-- Get full details of a disputed booking for admin panel
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION public.get_dispute_details(p_booking_id UUID)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_result JSONB;
+BEGIN
+  SELECT jsonb_build_object(
+    'booking_id', b.id,
+    'status', b.status,
+    'car', jsonb_build_object(
+      'id', c.id,
+      'make', c.make,
+      'model', c.model,
+      'year', c.year,
+      'plate', c.plate
+    ),
+    'owner', jsonb_build_object(
+      'id', owner.id,
+      'name', owner.full_name,
+      'email', owner.email
+    ),
+    'renter', jsonb_build_object(
+      'id', renter.id,
+      'name', renter.full_name,
+      'email', renter.email
+    ),
+    'dates', jsonb_build_object(
+      'start', b.start_date,
+      'end', b.end_date,
+      'returned_at', b.returned_at
+    ),
+    'amounts', jsonb_build_object(
+      'total_cents', b.total_price_cents,
+      'deposit_cents', b.deposit_amount_cents,
+      'late_penalty_cents', b.late_return_penalty_cents
+    ),
+    'dispute', jsonb_build_object(
+      'opened_at', b.dispute_opened_at,
+      'reason', b.dispute_reason,
+      'evidence_urls', b.dispute_evidence_urls,
+      'claimed_amount_cents', b.dispute_amount_cents,
+      'resolved_at', b.dispute_resolved_at,
+      'resolution', b.dispute_resolution
+    ),
+    'hours_since_opened', EXTRACT(EPOCH FROM (NOW() - b.dispute_opened_at)) / 3600
+  )
+  INTO v_result
+  FROM bookings b
+  JOIN cars c ON c.id = b.car_id
+  JOIN profiles owner ON owner.id = c.owner_id
+  JOIN profiles renter ON renter.id = b.renter_id
+  WHERE b.id = p_booking_id;
+
+  IF v_result IS NULL THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Reserva no encontrada');
+  END IF;
+
+  RETURN jsonb_build_object('success', true, 'data', v_result);
+END;
+$$;
+
+-- Grant execute permissions
+GRANT EXECUTE ON FUNCTION open_dispute(UUID, UUID, TEXT, TEXT[], BIGINT) TO authenticated;
+GRANT EXECUTE ON FUNCTION resolve_dispute(UUID, UUID, TEXT, TEXT, BIGINT, BIGINT) TO service_role;
+GRANT EXECUTE ON FUNCTION get_dispute_details(UUID) TO service_role;
+
+COMMENT ON FUNCTION open_dispute IS 'Opens a dispute on a booking within 24h of checkout. Can be called by owner or renter.';
+COMMENT ON FUNCTION resolve_dispute IS 'Admin resolves a dispute with decision on funds distribution.';
+COMMENT ON FUNCTION get_dispute_details IS 'Get full details of a disputed booking for admin panel.';
+-- ============================================================================
+-- Migration: Create missing tables for booking operations
+-- Created: 2025-12-19
+-- Description: Creates tables that the frontend expects but don't exist yet
+-- ============================================================================
+
+-- ============================================================================
+-- 1. booking_extension_requests - Solicitudes de extensión de alquiler
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS booking_extension_requests (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    booking_id UUID NOT NULL REFERENCES bookings(id) ON DELETE CASCADE,
+    renter_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    owner_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    original_end_at TIMESTAMPTZ NOT NULL,
+    new_end_at TIMESTAMPTZ NOT NULL,
+    request_status TEXT NOT NULL DEFAULT 'pending' CHECK (request_status IN ('pending', 'approved', 'rejected', 'cancelled')),
+    estimated_cost_amount NUMERIC(12, 2),
+    estimated_cost_currency TEXT DEFAULT 'ARS',
+    renter_message TEXT,
+    owner_response TEXT,
+    requested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    responded_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_booking_extension_requests_booking_id ON booking_extension_requests(booking_id);
+CREATE INDEX IF NOT EXISTS idx_booking_extension_requests_status ON booking_extension_requests(request_status);
+
+-- RLS
+ALTER TABLE booking_extension_requests ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own extension requests"
+    ON booking_extension_requests FOR SELECT
+    USING (auth.uid() = renter_id OR auth.uid() = owner_id);
+
+CREATE POLICY "Renters can create extension requests"
+    ON booking_extension_requests FOR INSERT
+    WITH CHECK (auth.uid() = renter_id);
+
+CREATE POLICY "Owners can update extension requests"
+    ON booking_extension_requests FOR UPDATE
+    USING (auth.uid() = owner_id OR auth.uid() = renter_id);
+
+-- ============================================================================
+-- 2. insurance_claims - Reclamos de seguro
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS insurance_claims (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    booking_id UUID NOT NULL REFERENCES bookings(id) ON DELETE CASCADE,
+    policy_id UUID,
+    reported_by UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    reporter_role TEXT NOT NULL CHECK (reporter_role IN ('driver', 'owner')),
+    claim_type TEXT NOT NULL,
+    description TEXT NOT NULL,
+    location TEXT,
+    incident_location TEXT,
+    incident_date DATE NOT NULL,
+    photos JSONB DEFAULT '[]'::jsonb,
+    evidence_photos JSONB DEFAULT '[]'::jsonb,
+    police_report_number TEXT,
+    police_report_url TEXT,
+    estimated_damage_amount NUMERIC(12, 2),
+    deductible_charged NUMERIC(12, 2),
+    insurance_payout NUMERIC(12, 2),
+    assigned_adjuster TEXT,
+    adjuster_contact TEXT,
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'under_review', 'approved', 'rejected', 'paid', 'closed')),
+    resolution_notes TEXT,
+    closed_at TIMESTAMPTZ,
+    metadata JSONB DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_insurance_claims_booking_id ON insurance_claims(booking_id);
+CREATE INDEX IF NOT EXISTS idx_insurance_claims_reported_by ON insurance_claims(reported_by);
+CREATE INDEX IF NOT EXISTS idx_insurance_claims_status ON insurance_claims(status);
+
+-- RLS
+ALTER TABLE insurance_claims ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view claims they are involved in"
+    ON insurance_claims FOR SELECT
+    USING (
+        auth.uid() = reported_by
+        OR EXISTS (
+            SELECT 1 FROM bookings b
+            WHERE b.id = insurance_claims.booking_id
+            AND (b.renter_id = auth.uid() OR b.owner_id = auth.uid())
+        )
+    );
+
+CREATE POLICY "Users can create claims for their bookings"
+    ON insurance_claims FOR INSERT
+    WITH CHECK (auth.uid() = reported_by);
+
+CREATE POLICY "Users can update their own claims"
+    ON insurance_claims FOR UPDATE
+    USING (auth.uid() = reported_by);
+
+-- ============================================================================
+-- 3. bookings_pricing - Desglose de precios de reservas
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS bookings_pricing (
+    booking_id UUID PRIMARY KEY REFERENCES bookings(id) ON DELETE CASCADE,
+    nightly_rate_cents INTEGER,
+    days_count INTEGER,
+    subtotal_cents INTEGER,
+    fees_cents INTEGER DEFAULT 0,
+    discounts_cents INTEGER DEFAULT 0,
+    insurance_cents INTEGER DEFAULT 0,
+    total_cents INTEGER,
+    breakdown JSONB DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- RLS
+ALTER TABLE bookings_pricing ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view pricing for their bookings"
+    ON bookings_pricing FOR SELECT
+    USING (
+        EXISTS (
+            SELECT 1 FROM bookings b
+            WHERE b.id = bookings_pricing.booking_id
+            AND (b.renter_id = auth.uid() OR b.owner_id = auth.uid())
+        )
+    );
+
+CREATE POLICY "System can insert pricing"
+    ON bookings_pricing FOR INSERT
+    WITH CHECK (true);
+
+CREATE POLICY "System can update pricing"
+    ON bookings_pricing FOR UPDATE
+    USING (true);
+
+-- ============================================================================
+-- 4. bookings_insurance - Información de seguro de reservas
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS bookings_insurance (
+    booking_id UUID PRIMARY KEY REFERENCES bookings(id) ON DELETE CASCADE,
+    insurance_coverage_id UUID,
+    insurance_premium_total NUMERIC(12, 2),
+    guarantee_type TEXT CHECK (guarantee_type IN ('deposit', 'preauth', 'none', 'wallet')),
+    guarantee_amount_cents INTEGER,
+    coverage_upgrade TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- RLS
+ALTER TABLE bookings_insurance ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view insurance for their bookings"
+    ON bookings_insurance FOR SELECT
+    USING (
+        EXISTS (
+            SELECT 1 FROM bookings b
+            WHERE b.id = bookings_insurance.booking_id
+            AND (b.renter_id = auth.uid() OR b.owner_id = auth.uid())
+        )
+    );
+
+CREATE POLICY "System can insert insurance"
+    ON bookings_insurance FOR INSERT
+    WITH CHECK (true);
+
+-- ============================================================================
+-- 5. bookings_confirmation - Estado de confirmación de reservas
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS bookings_confirmation (
+    booking_id UUID PRIMARY KEY REFERENCES bookings(id) ON DELETE CASCADE,
+    pickup_confirmed_at TIMESTAMPTZ,
+    pickup_confirmed_by UUID REFERENCES profiles(id),
+    dropoff_confirmed_at TIMESTAMPTZ,
+    dropoff_confirmed_by UUID REFERENCES profiles(id),
+    owner_confirmation_at TIMESTAMPTZ,
+    renter_confirmation_at TIMESTAMPTZ,
+    returned_at TIMESTAMPTZ,
+    funds_released_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- RLS
+ALTER TABLE bookings_confirmation ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view confirmation for their bookings"
+    ON bookings_confirmation FOR SELECT
+    USING (
+        EXISTS (
+            SELECT 1 FROM bookings b
+            WHERE b.id = bookings_confirmation.booking_id
+            AND (b.renter_id = auth.uid() OR b.owner_id = auth.uid())
+        )
+    );
+
+CREATE POLICY "Users can update confirmation for their bookings"
+    ON bookings_confirmation FOR UPDATE
+    USING (
+        EXISTS (
+            SELECT 1 FROM bookings b
+            WHERE b.id = bookings_confirmation.booking_id
+            AND (b.renter_id = auth.uid() OR b.owner_id = auth.uid())
+        )
+    );
+
+CREATE POLICY "System can insert confirmation"
+    ON bookings_confirmation FOR INSERT
+    WITH CHECK (true);
+
+-- ============================================================================
+-- 6. bookings_cancellation - Información de cancelaciones
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS bookings_cancellation (
+    booking_id UUID PRIMARY KEY REFERENCES bookings(id) ON DELETE CASCADE,
+    cancellation_reason TEXT,
+    cancellation_fee_cents INTEGER DEFAULT 0,
+    cancelled_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    cancel_policy_id INTEGER,
+    cancelled_by UUID REFERENCES profiles(id),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- RLS
+ALTER TABLE bookings_cancellation ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view cancellation for their bookings"
+    ON bookings_cancellation FOR SELECT
+    USING (
+        EXISTS (
+            SELECT 1 FROM bookings b
+            WHERE b.id = bookings_cancellation.booking_id
+            AND (b.renter_id = auth.uid() OR b.owner_id = auth.uid())
+        )
+    );
+
+CREATE POLICY "Users can create cancellation for their bookings"
+    ON bookings_cancellation FOR INSERT
+    WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM bookings b
+            WHERE b.id = booking_id
+            AND (b.renter_id = auth.uid() OR b.owner_id = auth.uid())
+        )
+    );
+
+-- ============================================================================
+-- 7. bookings_payment - Estado de pagos de reservas
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS bookings_payment (
+    booking_id UUID PRIMARY KEY REFERENCES bookings(id) ON DELETE CASCADE,
+    paid_at TIMESTAMPTZ,
+    payment_method TEXT,
+    payment_mode TEXT CHECK (payment_mode IN ('card', 'wallet', 'cash', 'transfer')),
+    wallet_status TEXT CHECK (wallet_status IN ('pending', 'locked', 'charged', 'released', 'refunded')),
+    deposit_status TEXT CHECK (deposit_status IN ('pending', 'locked', 'released', 'claimed')),
+    wallet_charged_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- RLS
+ALTER TABLE bookings_payment ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view payment for their bookings"
+    ON bookings_payment FOR SELECT
+    USING (
+        EXISTS (
+            SELECT 1 FROM bookings b
+            WHERE b.id = bookings_payment.booking_id
+            AND (b.renter_id = auth.uid() OR b.owner_id = auth.uid())
+        )
+    );
+
+CREATE POLICY "System can manage payments"
+    ON bookings_payment FOR ALL
+    USING (true);
+
+-- ============================================================================
+-- 8. user_blocks - Bloqueos entre usuarios
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS user_blocks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    blocker_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    blocked_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    reason TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE(blocker_id, blocked_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_blocks_blocker ON user_blocks(blocker_id);
+CREATE INDEX IF NOT EXISTS idx_user_blocks_blocked ON user_blocks(blocked_id);
+
+-- RLS
+ALTER TABLE user_blocks ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own blocks"
+    ON user_blocks FOR SELECT
+    USING (auth.uid() = blocker_id OR auth.uid() = blocked_id);
+
+CREATE POLICY "Users can create blocks"
+    ON user_blocks FOR INSERT
+    WITH CHECK (auth.uid() = blocker_id);
+
+CREATE POLICY "Users can delete their own blocks"
+    ON user_blocks FOR DELETE
+    USING (auth.uid() = blocker_id);
+
+-- ============================================================================
+-- Trigger para updated_at automático
+-- ============================================================================
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Aplicar triggers
+DO $$
+DECLARE
+    t TEXT;
+BEGIN
+    FOR t IN SELECT unnest(ARRAY[
+        'booking_extension_requests',
+        'insurance_claims',
+        'bookings_pricing',
+        'bookings_insurance',
+        'bookings_confirmation',
+        'bookings_payment'
+    ])
+    LOOP
+        EXECUTE format('
+            DROP TRIGGER IF EXISTS update_%I_updated_at ON %I;
+            CREATE TRIGGER update_%I_updated_at
+                BEFORE UPDATE ON %I
+                FOR EACH ROW
+                EXECUTE FUNCTION update_updated_at_column();
+        ', t, t, t, t);
+    END LOOP;
+END;
+$$;
+
+-- ============================================================================
+-- Grant permissions
+-- ============================================================================
+GRANT SELECT, INSERT, UPDATE ON booking_extension_requests TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON insurance_claims TO authenticated;
+GRANT SELECT ON bookings_pricing TO authenticated;
+GRANT SELECT ON bookings_insurance TO authenticated;
+GRANT SELECT, UPDATE ON bookings_confirmation TO authenticated;
+GRANT SELECT ON bookings_cancellation TO authenticated;
+GRANT INSERT ON bookings_cancellation TO authenticated;
+GRANT SELECT ON bookings_payment TO authenticated;
+GRANT SELECT, INSERT, DELETE ON user_blocks TO authenticated;
+-- ============================================
+-- SISTEMA COMPLETO DE NOTIFICACIONES AUTOMATICAS
+-- ============================================
+
+-- 1. RECORDATORIO DE RESERVA PROXIMA (24h y 2h antes)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.send_booking_reminders()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  booking RECORD;
+  notification_title TEXT;
+  notification_body TEXT;
+BEGIN
+  -- Recordatorio 24 horas antes (para reservas que inician mañana)
+  FOR booking IN
+    SELECT
+      b.id,
+      b.renter_id,
+      b.owner_id,
+      b.start_at,
+      b.end_at,
+      c.brand,
+      c.model,
+      c.location_city,
+      p.full_name as renter_name
+    FROM bookings b
+    JOIN cars c ON c.id = b.car_id
+    JOIN profiles p ON p.id = b.renter_id
+    WHERE b.status = 'confirmed'
+      AND b.start_at > NOW()
+      AND b.start_at <= NOW() + INTERVAL '24 hours'
+      AND b.start_at > NOW() + INTERVAL '23 hours'
+      AND NOT EXISTS (
+        SELECT 1 FROM notifications n
+        WHERE n.user_id = b.renter_id
+          AND n.type = 'booking_reminder_24h'
+          AND n.metadata->>'booking_id' = b.id::text
+      )
+  LOOP
+    -- Notificar al RENTER
+    notification_title := '🚗 Tu viaje comienza mañana';
+    notification_body := format(
+      'Tu reserva del %s %s en %s comienza mañana a las %s. ¡Prepara tus documentos!',
+      booking.brand,
+      booking.model,
+      booking.location_city,
+      to_char(booking.start_at AT TIME ZONE 'America/Argentina/Buenos_Aires', 'HH24:MI')
+    );
+
+    INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+    VALUES (
+      booking.renter_id,
+      notification_title,
+      notification_body,
+      'booking_reminder_24h',
+      '/bookings/' || booking.id,
+      jsonb_build_object('booking_id', booking.id)
+    );
+
+    -- Notificar al OWNER
+    INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+    VALUES (
+      booking.owner_id,
+      '📅 Reserva mañana',
+      format('%s retirará tu %s %s mañana a las %s',
+        booking.renter_name, booking.brand, booking.model,
+        to_char(booking.start_at AT TIME ZONE 'America/Argentina/Buenos_Aires', 'HH24:MI')),
+      'booking_reminder_24h',
+      '/bookings/' || booking.id,
+      jsonb_build_object('booking_id', booking.id)
+    );
+  END LOOP;
+
+  -- Recordatorio 2 horas antes
+  FOR booking IN
+    SELECT
+      b.id,
+      b.renter_id,
+      b.owner_id,
+      b.start_at,
+      c.brand,
+      c.model,
+      c.location_city,
+      c.location_address
+    FROM bookings b
+    JOIN cars c ON c.id = b.car_id
+    WHERE b.status = 'confirmed'
+      AND b.start_at > NOW()
+      AND b.start_at <= NOW() + INTERVAL '2 hours'
+      AND b.start_at > NOW() + INTERVAL '1 hour 50 minutes'
+      AND NOT EXISTS (
+        SELECT 1 FROM notifications n
+        WHERE n.user_id = b.renter_id
+          AND n.type = 'booking_reminder_2h'
+          AND n.metadata->>'booking_id' = b.id::text
+      )
+  LOOP
+    INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+    VALUES (
+      booking.renter_id,
+      '⏰ Tu viaje comienza en 2 horas',
+      format('Retira el %s %s en %s. Dirección: %s',
+        booking.brand, booking.model, booking.location_city,
+        COALESCE(booking.location_address, 'Ver en la app')),
+      'booking_reminder_2h',
+      '/bookings/' || booking.id,
+      jsonb_build_object('booking_id', booking.id)
+    );
+
+    INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+    VALUES (
+      booking.owner_id,
+      '⏰ Entrega en 2 horas',
+      format('Prepara tu %s %s para la entrega', booking.brand, booking.model),
+      'booking_reminder_2h',
+      '/bookings/' || booking.id,
+      jsonb_build_object('booking_id', booking.id)
+    );
+  END LOOP;
+
+  RAISE NOTICE 'Booking reminders sent successfully';
+END;
+$$;
+
+
+-- 2. VENCIMIENTO DE DOCUMENTOS (7, 3, 1 días antes)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.send_document_expiry_reminders()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  doc RECORD;
+  days_until_expiry INTEGER;
+  notification_title TEXT;
+  notification_body TEXT;
+BEGIN
+  -- Verificar licencias de conducir por vencer
+  FOR doc IN
+    SELECT
+      p.id as user_id,
+      p.full_name,
+      p.driver_license_expiry,
+      (p.driver_license_expiry::date - CURRENT_DATE) as days_left
+    FROM profiles p
+    WHERE p.driver_license_expiry IS NOT NULL
+      AND p.driver_license_expiry::date >= CURRENT_DATE
+      AND p.driver_license_expiry::date <= CURRENT_DATE + INTERVAL '7 days'
+  LOOP
+    days_until_expiry := doc.days_left;
+
+    -- Solo notificar en días específicos: 7, 3, 1
+    IF days_until_expiry NOT IN (7, 3, 1, 0) THEN
+      CONTINUE;
+    END IF;
+
+    -- Verificar que no se haya enviado ya esta notificación
+    IF EXISTS (
+      SELECT 1 FROM notifications n
+      WHERE n.user_id = doc.user_id
+        AND n.type = 'document_expiry_license'
+        AND n.metadata->>'days_left' = days_until_expiry::text
+        AND n.created_at > NOW() - INTERVAL '20 hours'
+    ) THEN
+      CONTINUE;
+    END IF;
+
+    IF days_until_expiry = 0 THEN
+      notification_title := '🚨 Tu licencia venció HOY';
+      notification_body := 'Tu licencia de conducir venció hoy. No podrás realizar reservas hasta renovarla.';
+    ELSIF days_until_expiry = 1 THEN
+      notification_title := '⚠️ Tu licencia vence MAÑANA';
+      notification_body := 'Renueva tu licencia de conducir antes de que venza para no perder reservas.';
+    ELSIF days_until_expiry = 3 THEN
+      notification_title := '📋 Tu licencia vence en 3 días';
+      notification_body := 'Recuerda renovar tu licencia de conducir pronto.';
+    ELSE
+      notification_title := '📋 Tu licencia vence en 7 días';
+      notification_body := 'Tu licencia de conducir vence la próxima semana. Planifica su renovación.';
+    END IF;
+
+    INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+    VALUES (
+      doc.user_id,
+      notification_title,
+      notification_body,
+      'document_expiry_license',
+      '/profile/verification',
+      jsonb_build_object('days_left', days_until_expiry, 'document_type', 'license')
+    );
+  END LOOP;
+
+  -- Verificar verificaciones de perfil (DNI) por vencer (si aplica)
+  -- La mayoría de DNIs no vencen, pero podemos verificar si el documento fue subido hace mucho
+
+  RAISE NOTICE 'Document expiry reminders sent successfully';
+END;
+$$;
+
+
+-- 3. OWNERS SIN ACTIVIDAD (Semanal)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.send_inactive_owner_reminders()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  owner RECORD;
+BEGIN
+  -- Buscar owners con autos publicados pero sin reservas en 14+ días
+  FOR owner IN
+    SELECT DISTINCT
+      c.owner_id,
+      p.full_name,
+      COUNT(DISTINCT c.id) as car_count,
+      MAX(b.created_at) as last_booking_date,
+      EXTRACT(days FROM NOW() - MAX(b.created_at))::integer as days_since_booking
+    FROM cars c
+    JOIN profiles p ON p.id = c.owner_id
+    LEFT JOIN bookings b ON b.car_id = c.id AND b.status NOT IN ('cancelled', 'rejected')
+    WHERE c.status = 'active'
+    GROUP BY c.owner_id, p.full_name
+    HAVING (
+      MAX(b.created_at) IS NULL
+      OR MAX(b.created_at) < NOW() - INTERVAL '14 days'
+    )
+    AND NOT EXISTS (
+      SELECT 1 FROM notifications n
+      WHERE n.user_id = c.owner_id
+        AND n.type = 'owner_inactive_reminder'
+        AND n.created_at > NOW() - INTERVAL '6 days'
+    )
+  LOOP
+    IF owner.last_booking_date IS NULL THEN
+      INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+      VALUES (
+        owner.owner_id,
+        '🚗 ¡Tu auto te está esperando!',
+        format('Tienes %s auto(s) publicado(s) sin reservas aún. Optimiza tu precio o mejora tus fotos para atraer más clientes.', owner.car_count),
+        'owner_inactive_reminder',
+        '/cars/my',
+        jsonb_build_object('car_count', owner.car_count, 'days_inactive', 0)
+      );
+    ELSE
+      INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+      VALUES (
+        owner.owner_id,
+        '📊 Han pasado ' || owner.days_since_booking || ' días sin reservas',
+        'Considera ajustar tu precio o aumentar la disponibilidad de tu calendario para recibir más solicitudes.',
+        'owner_inactive_reminder',
+        '/cars/my',
+        jsonb_build_object('car_count', owner.car_count, 'days_inactive', owner.days_since_booking)
+      );
+    END IF;
+  END LOOP;
+
+  RAISE NOTICE 'Inactive owner reminders sent successfully';
+END;
+$$;
+
+
+-- 4. TIPS DE OPTIMIZACION (Quincenal)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.send_optimization_tips()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  owner RECORD;
+  tip_index INTEGER;
+  tips TEXT[] := ARRAY[
+    '💡 Los autos con 5+ fotos de calidad reciben 3x más reservas. ¿Ya subiste todas las fotos?',
+    '📸 Las fotos con buena iluminación aumentan las reservas un 40%. Considera actualizar tus imágenes.',
+    '💰 Los precios competitivos generan más reservas. Revisa los precios de autos similares en tu zona.',
+    '📅 Mantén tu calendario actualizado. Los autos con disponibilidad clara reciben más consultas.',
+    '⭐ Responde rápido a las consultas. Los owners que responden en <1h tienen 2x más reservas.',
+    '🎯 Completa tu perfil al 100%. Los perfiles verificados generan más confianza.',
+    '🚗 Ofrece extras como GPS o sillas para niños. Pueden aumentar tus ganancias un 15%.',
+    '📍 Una ubicación céntrica o cerca de aeropuertos/terminales atrae más clientes.'
+  ];
+BEGIN
+  -- Seleccionar un tip diferente cada vez basado en el día del año
+  tip_index := (EXTRACT(doy FROM CURRENT_DATE)::integer % array_length(tips, 1)) + 1;
+
+  -- Enviar tip a owners activos que no recibieron tip recientemente
+  FOR owner IN
+    SELECT DISTINCT c.owner_id
+    FROM cars c
+    WHERE c.status = 'active'
+      AND NOT EXISTS (
+        SELECT 1 FROM notifications n
+        WHERE n.user_id = c.owner_id
+          AND n.type = 'optimization_tip'
+          AND n.created_at > NOW() - INTERVAL '13 days'
+      )
+    LIMIT 100  -- Limitar para no sobrecargar
+  LOOP
+    INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+    VALUES (
+      owner.owner_id,
+      '🎯 Tip para aumentar tus reservas',
+      tips[tip_index],
+      'optimization_tip',
+      '/cars/my',
+      jsonb_build_object('tip_index', tip_index)
+    );
+  END LOOP;
+
+  RAISE NOTICE 'Optimization tips sent successfully (tip #%)', tip_index;
+END;
+$$;
+
+
+-- 5. NOTIFICACION FIN DE RESERVA (para review)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.send_booking_completion_reminders()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  booking RECORD;
+BEGIN
+  -- Reservas que terminaron hace 1 hora y no tienen review
+  FOR booking IN
+    SELECT
+      b.id,
+      b.renter_id,
+      b.owner_id,
+      b.end_at,
+      c.brand,
+      c.model,
+      p_renter.full_name as renter_name,
+      p_owner.full_name as owner_name
+    FROM bookings b
+    JOIN cars c ON c.id = b.car_id
+    JOIN profiles p_renter ON p_renter.id = b.renter_id
+    JOIN profiles p_owner ON p_owner.id = b.owner_id
+    WHERE b.status = 'in_progress'
+      AND b.end_at < NOW()
+      AND b.end_at > NOW() - INTERVAL '2 hours'
+      AND NOT EXISTS (
+        SELECT 1 FROM notifications n
+        WHERE n.user_id = b.renter_id
+          AND n.type = 'booking_ended_review'
+          AND n.metadata->>'booking_id' = b.id::text
+      )
+  LOOP
+    -- Notificar al RENTER para que deje review
+    INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+    VALUES (
+      booking.renter_id,
+      '⭐ ¿Cómo estuvo tu viaje?',
+      format('Tu reserva del %s %s ha finalizado. Dejá tu reseña para ayudar a otros usuarios.',
+        booking.brand, booking.model),
+      'booking_ended_review',
+      '/bookings/' || booking.id,
+      jsonb_build_object('booking_id', booking.id)
+    );
+
+    -- Notificar al OWNER
+    INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+    VALUES (
+      booking.owner_id,
+      '✅ Reserva finalizada',
+      format('La reserva de %s ha terminado. Confirma la devolución y deja tu reseña.', booking.renter_name),
+      'booking_ended_review',
+      '/bookings/' || booking.id,
+      jsonb_build_object('booking_id', booking.id)
+    );
+  END LOOP;
+
+  RAISE NOTICE 'Booking completion reminders sent successfully';
+END;
+$$;
+
+
+-- ============================================
+-- CONFIGURAR CRON JOBS
+-- ============================================
+
+-- Recordatorios de reserva: cada 30 minutos
+SELECT cron.schedule(
+  'booking-reminders-every-30min',
+  '*/30 * * * *',
+  $$SELECT public.send_booking_reminders()$$
+);
+
+-- Vencimiento documentos: diario a las 10 AM
+SELECT cron.schedule(
+  'document-expiry-daily',
+  '0 10 * * *',
+  $$SELECT public.send_document_expiry_reminders()$$
+);
+
+-- Owners inactivos: semanal (lunes 11 AM)
+SELECT cron.schedule(
+  'inactive-owners-weekly',
+  '0 11 * * 1',
+  $$SELECT public.send_inactive_owner_reminders()$$
+);
+
+-- Tips de optimización: quincenal (1 y 15 de cada mes, 10 AM)
+SELECT cron.schedule(
+  'optimization-tips-biweekly',
+  '0 10 1,15 * *',
+  $$SELECT public.send_optimization_tips()$$
+);
+
+-- Fin de reserva/review: cada hora
+SELECT cron.schedule(
+  'booking-completion-hourly',
+  '0 * * * *',
+  $$SELECT public.send_booking_completion_reminders()$$
+);
+
+
+-- ============================================
+-- VERIFICAR CRON JOBS CREADOS
+-- ============================================
+SELECT jobname, schedule, active
+FROM cron.job
+WHERE jobname LIKE '%booking%'
+   OR jobname LIKE '%document%'
+   OR jobname LIKE '%inactive%'
+   OR jobname LIKE '%optimization%'
+ORDER BY jobname;
+-- ============================================
+-- SISTEMA EXTENDIDO DE NOTIFICACIONES
+-- ============================================
+
+-- 1. NOTIFICACION DE BIENVENIDA (Trigger al crear usuario)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.send_welcome_notification()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  -- Enviar notificación de bienvenida al nuevo usuario
+  INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+  VALUES (
+    NEW.id,
+    '🎉 ¡Bienvenido a AutoRenta!',
+    'Gracias por unirte. Completa tu perfil para comenzar a alquilar o publicar tu auto.',
+    'welcome',
+    '/profile/verification',
+    jsonb_build_object('registered_at', NOW())
+  );
+
+  RETURN NEW;
+END;
+$$;
+
+-- Crear trigger en profiles (se ejecuta cuando se crea el perfil del usuario)
+DROP TRIGGER IF EXISTS trigger_welcome_notification ON profiles;
+CREATE TRIGGER trigger_welcome_notification
+  AFTER INSERT ON profiles
+  FOR EACH ROW
+  EXECUTE FUNCTION public.send_welcome_notification();
+
+
+-- 2. NOTIFICACION DE VERIFICACION (Trigger al cambiar estado)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.send_verification_notification()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  notification_title TEXT;
+  notification_body TEXT;
+  notification_type notification_type;
+BEGIN
+  -- Solo notificar si cambió el estado de verificación
+  IF OLD.verification_status IS DISTINCT FROM NEW.verification_status THEN
+
+    IF NEW.verification_status = 'verified' THEN
+      notification_title := '✅ ¡Perfil verificado!';
+      notification_body := 'Tu identidad ha sido verificada. Ahora puedes disfrutar de todas las funciones de AutoRenta.';
+      notification_type := 'verification_approved';
+    ELSIF NEW.verification_status = 'rejected' THEN
+      notification_title := '❌ Verificación rechazada';
+      notification_body := 'Tu documentación no pudo ser verificada. Por favor, revisa los requisitos y vuelve a intentarlo.';
+      notification_type := 'verification_rejected';
+    ELSIF NEW.verification_status = 'pending' THEN
+      -- No notificar cuando pasa a pending (ya sabe que subió docs)
+      RETURN NEW;
+    ELSE
+      RETURN NEW;
+    END IF;
+
+    INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+    VALUES (
+      NEW.id,
+      notification_title,
+      notification_body,
+      notification_type,
+      '/profile/verification',
+      jsonb_build_object('old_status', OLD.verification_status, 'new_status', NEW.verification_status)
+    );
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trigger_verification_notification ON profiles;
+CREATE TRIGGER trigger_verification_notification
+  AFTER UPDATE ON profiles
+  FOR EACH ROW
+  WHEN (OLD.verification_status IS DISTINCT FROM NEW.verification_status)
+  EXECUTE FUNCTION public.send_verification_notification();
+
+
+-- 3. NOTIFICACION DE AUTOS CERCANOS (Semanal)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.send_nearby_cars_notifications()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  user_rec RECORD;
+  car_count INTEGER;
+  sample_cars TEXT;
+BEGIN
+  -- Buscar usuarios con ubicación que no recibieron esta notificación recientemente
+  FOR user_rec IN
+    SELECT
+      p.id,
+      p.location_city,
+      p.location_lat,
+      p.location_lng
+    FROM profiles p
+    WHERE p.location_lat IS NOT NULL
+      AND p.location_lng IS NOT NULL
+      AND NOT EXISTS (
+        SELECT 1 FROM notifications n
+        WHERE n.user_id = p.id
+          AND n.type = 'nearby_cars'
+          AND n.created_at > NOW() - INTERVAL '6 days'
+      )
+    LIMIT 50
+  LOOP
+    -- Contar autos activos cerca del usuario (50km)
+    SELECT COUNT(*) INTO car_count
+    FROM cars c
+    WHERE c.status = 'active'
+      AND c.owner_id != user_rec.id
+      AND c.location_lat IS NOT NULL
+      AND c.location_lng IS NOT NULL
+      AND (
+        6371 * acos(
+          cos(radians(user_rec.location_lat)) * cos(radians(c.location_lat)) *
+          cos(radians(c.location_lng) - radians(user_rec.location_lng)) +
+          sin(radians(user_rec.location_lat)) * sin(radians(c.location_lat))
+        )
+      ) <= 50;
+
+    -- Solo notificar si hay autos disponibles
+    IF car_count > 0 THEN
+      -- Obtener algunos ejemplos de autos
+      SELECT string_agg(brand || ' ' || model, ', ' ORDER BY created_at DESC)
+      INTO sample_cars
+      FROM (
+        SELECT c.brand, c.model, c.created_at
+        FROM cars c
+        WHERE c.status = 'active'
+          AND c.owner_id != user_rec.id
+          AND c.location_lat IS NOT NULL
+          AND (
+            6371 * acos(
+              cos(radians(user_rec.location_lat)) * cos(radians(c.location_lat)) *
+              cos(radians(c.location_lng) - radians(user_rec.location_lng)) +
+              sin(radians(user_rec.location_lat)) * sin(radians(c.location_lat))
+            )
+          ) <= 50
+        ORDER BY c.created_at DESC
+        LIMIT 3
+      ) recent_cars;
+
+      INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+      VALUES (
+        user_rec.id,
+        '🚗 ' || car_count || ' autos disponibles cerca tuyo',
+        CASE
+          WHEN car_count = 1 THEN 'Hay un ' || sample_cars || ' disponible en tu zona.'
+          WHEN car_count <= 3 THEN 'Disponibles: ' || sample_cars
+          ELSE sample_cars || ' y ' || (car_count - 3) || ' más te esperan.'
+        END,
+        'nearby_cars',
+        '/marketplace',
+        jsonb_build_object('car_count', car_count, 'city', user_rec.location_city)
+      );
+    END IF;
+  END LOOP;
+
+  RAISE NOTICE 'Nearby cars notifications sent successfully';
+END;
+$$;
+
+
+-- 4. NOTIFICACION DE VISTAS DEL AUTO (Milestones)
+-- ============================================
+-- Primero necesitamos una tabla para trackear vistas si no existe
+CREATE TABLE IF NOT EXISTS car_views (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  car_id UUID NOT NULL REFERENCES cars(id) ON DELETE CASCADE,
+  viewer_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  viewer_ip TEXT,
+  viewed_at TIMESTAMPTZ DEFAULT NOW(),
+  session_id TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_car_views_car_id ON car_views(car_id);
+CREATE INDEX IF NOT EXISTS idx_car_views_viewed_at ON car_views(viewed_at);
+
+-- Enable RLS
+ALTER TABLE car_views ENABLE ROW LEVEL SECURITY;
+
+-- Política para insertar vistas (cualquiera puede ver un auto)
+DROP POLICY IF EXISTS "Anyone can insert car views" ON car_views;
+CREATE POLICY "Anyone can insert car views" ON car_views
+  FOR INSERT WITH CHECK (true);
+
+-- Política para que owners vean las vistas de sus autos
+DROP POLICY IF EXISTS "Owners can view their car views" ON car_views;
+CREATE POLICY "Owners can view their car views" ON car_views
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM cars c
+      WHERE c.id = car_views.car_id
+        AND c.owner_id = auth.uid()
+    )
+  );
+
+-- Función para notificar milestones de vistas
+CREATE OR REPLACE FUNCTION public.send_car_views_milestone_notification()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  car_rec RECORD;
+  view_count INTEGER;
+  last_milestone INTEGER;
+  new_milestone INTEGER;
+  milestones INTEGER[] := ARRAY[10, 25, 50, 100, 250, 500, 1000];
+BEGIN
+  -- Para cada auto activo
+  FOR car_rec IN
+    SELECT
+      c.id,
+      c.owner_id,
+      c.brand,
+      c.model
+    FROM cars c
+    WHERE c.status = 'active'
+  LOOP
+    -- Contar vistas totales
+    SELECT COUNT(*) INTO view_count
+    FROM car_views cv
+    WHERE cv.car_id = car_rec.id;
+
+    -- Encontrar el milestone alcanzado
+    new_milestone := 0;
+    FOR i IN 1..array_length(milestones, 1) LOOP
+      IF view_count >= milestones[i] THEN
+        new_milestone := milestones[i];
+      END IF;
+    END LOOP;
+
+    -- Si alcanzó un milestone, verificar si ya se notificó
+    IF new_milestone > 0 THEN
+      -- Obtener último milestone notificado
+      SELECT COALESCE((metadata->>'milestone')::integer, 0) INTO last_milestone
+      FROM notifications
+      WHERE user_id = car_rec.owner_id
+        AND type = 'car_views_milestone'
+        AND metadata->>'car_id' = car_rec.id::text
+      ORDER BY created_at DESC
+      LIMIT 1;
+
+      -- Solo notificar si es un nuevo milestone
+      IF new_milestone > COALESCE(last_milestone, 0) THEN
+        INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+        VALUES (
+          car_rec.owner_id,
+          '👀 ¡' || new_milestone || ' personas vieron tu auto!',
+          format('Tu %s %s está generando interés. ¡Sigue así!', car_rec.brand, car_rec.model),
+          'car_views_milestone',
+          '/cars/' || car_rec.id,
+          jsonb_build_object('car_id', car_rec.id, 'milestone', new_milestone, 'total_views', view_count)
+        );
+      END IF;
+    END IF;
+  END LOOP;
+
+  RAISE NOTICE 'Car views milestone notifications sent successfully';
+END;
+$$;
+
+
+-- 5. NOTIFICACION DE RECOMENDACION DE AUTO (Personalizada)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.send_car_recommendations()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  user_rec RECORD;
+  recommended_car RECORD;
+BEGIN
+  -- Buscar usuarios activos sin reservas recientes
+  FOR user_rec IN
+    SELECT
+      p.id,
+      p.full_name,
+      p.location_lat,
+      p.location_lng,
+      p.location_city
+    FROM profiles p
+    WHERE p.location_lat IS NOT NULL
+      AND NOT EXISTS (
+        -- No tiene reservas activas o recientes
+        SELECT 1 FROM bookings b
+        WHERE b.renter_id = p.id
+          AND b.created_at > NOW() - INTERVAL '30 days'
+      )
+      AND NOT EXISTS (
+        -- No recibió recomendación recientemente
+        SELECT 1 FROM notifications n
+        WHERE n.user_id = p.id
+          AND n.type = 'car_recommendation'
+          AND n.created_at > NOW() - INTERVAL '13 days'
+      )
+    LIMIT 30
+  LOOP
+    -- Buscar un auto destacado cerca del usuario
+    SELECT
+      c.id,
+      c.brand,
+      c.model,
+      c.price_per_day,
+      c.location_city,
+      COALESCE(AVG(r.rating), 0) as avg_rating,
+      COUNT(DISTINCT b.id) as booking_count
+    INTO recommended_car
+    FROM cars c
+    LEFT JOIN reviews r ON r.car_id = c.id
+    LEFT JOIN bookings b ON b.car_id = c.id AND b.status = 'completed'
+    WHERE c.status = 'active'
+      AND c.owner_id != user_rec.id
+      AND c.location_lat IS NOT NULL
+      AND (
+        6371 * acos(
+          cos(radians(user_rec.location_lat)) * cos(radians(c.location_lat)) *
+          cos(radians(c.location_lng) - radians(user_rec.location_lng)) +
+          sin(radians(user_rec.location_lat)) * sin(radians(c.location_lat))
+        )
+      ) <= 30
+    GROUP BY c.id, c.brand, c.model, c.price_per_day, c.location_city
+    ORDER BY COALESCE(AVG(r.rating), 0) DESC, COUNT(DISTINCT b.id) DESC
+    LIMIT 1;
+
+    IF recommended_car.id IS NOT NULL THEN
+      INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+      VALUES (
+        user_rec.id,
+        '⭐ Auto recomendado para ti',
+        format('%s %s en %s desde $%s/día. %s',
+          recommended_car.brand,
+          recommended_car.model,
+          recommended_car.location_city,
+          recommended_car.price_per_day::integer,
+          CASE
+            WHEN recommended_car.avg_rating >= 4.5 THEN '¡Muy bien valorado!'
+            WHEN recommended_car.booking_count >= 5 THEN '¡Popular en tu zona!'
+            ELSE '¡Disponible ahora!'
+          END
+        ),
+        'car_recommendation',
+        '/cars/' || recommended_car.id,
+        jsonb_build_object(
+          'car_id', recommended_car.id,
+          'price', recommended_car.price_per_day,
+          'rating', recommended_car.avg_rating
+        )
+      );
+    END IF;
+  END LOOP;
+
+  RAISE NOTICE 'Car recommendations sent successfully';
+END;
+$$;
+
+
+-- 6. TIPS PARA RENTERS (Quincenal)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.send_renter_tips()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  user_rec RECORD;
+  tip_index INTEGER;
+  tips TEXT[] := ARRAY[
+    '💡 Reserva con anticipación para obtener mejores precios y más opciones de autos.',
+    '📱 Activa las notificaciones para enterarte de ofertas especiales en tu zona.',
+    '⭐ Lee las reseñas antes de reservar. Los autos con 4.5+ estrellas garantizan buena experiencia.',
+    '📍 Busca autos cerca de tu ubicación para ahorrar tiempo en la recogida.',
+    '💰 Los fines de semana largos tienen alta demanda. ¡Reserva antes!',
+    '📋 Ten tus documentos listos: DNI, licencia vigente y comprobante de domicilio.',
+    '🔒 Revisa bien el auto antes de retirarlo y documenta cualquier daño existente.',
+    '💳 Completa tu perfil al 100% para agilizar futuras reservas.'
+  ];
+BEGIN
+  tip_index := (EXTRACT(doy FROM CURRENT_DATE)::integer % array_length(tips, 1)) + 1;
+
+  -- Enviar a usuarios que han sido renters o están buscando autos
+  FOR user_rec IN
+    SELECT DISTINCT p.id
+    FROM profiles p
+    WHERE EXISTS (
+      -- Ha hecho al menos una reserva como renter
+      SELECT 1 FROM bookings b WHERE b.renter_id = p.id
+    )
+    AND NOT EXISTS (
+      -- No recibió tip recientemente
+      SELECT 1 FROM notifications n
+      WHERE n.user_id = p.id
+        AND n.type = 'renter_tip'
+        AND n.created_at > NOW() - INTERVAL '13 days'
+    )
+    LIMIT 100
+  LOOP
+    INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+    VALUES (
+      user_rec.id,
+      '💡 Tip para tu próximo viaje',
+      tips[tip_index],
+      'renter_tip',
+      '/marketplace',
+      jsonb_build_object('tip_index', tip_index)
+    );
+  END LOOP;
+
+  RAISE NOTICE 'Renter tips sent successfully (tip #%)', tip_index;
+END;
+$$;
+
+
+-- 7. ALERTA DE BAJADA DE PRECIO (Para favoritos)
+-- ============================================
+-- Tabla de favoritos si no existe
+CREATE TABLE IF NOT EXISTS user_favorites (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  car_id UUID NOT NULL REFERENCES cars(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, car_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_favorites_user_id ON user_favorites(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_favorites_car_id ON user_favorites(car_id);
+
+ALTER TABLE user_favorites ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can manage their favorites" ON user_favorites;
+CREATE POLICY "Users can manage their favorites" ON user_favorites
+  FOR ALL USING (auth.uid() = user_id);
+
+-- Función para notificar bajada de precio
+CREATE OR REPLACE FUNCTION public.notify_price_drop()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  fav RECORD;
+  price_diff NUMERIC;
+  discount_pct INTEGER;
+BEGIN
+  -- Solo si el precio bajó
+  IF NEW.price_per_day < OLD.price_per_day THEN
+    price_diff := OLD.price_per_day - NEW.price_per_day;
+    discount_pct := ((price_diff / OLD.price_per_day) * 100)::integer;
+
+    -- Solo notificar si la bajada es significativa (>5%)
+    IF discount_pct >= 5 THEN
+      -- Notificar a todos los que tienen este auto en favoritos
+      FOR fav IN
+        SELECT uf.user_id
+        FROM user_favorites uf
+        WHERE uf.car_id = NEW.id
+          AND NOT EXISTS (
+            SELECT 1 FROM notifications n
+            WHERE n.user_id = uf.user_id
+              AND n.type = 'price_drop_alert'
+              AND n.metadata->>'car_id' = NEW.id::text
+              AND n.created_at > NOW() - INTERVAL '7 days'
+          )
+      LOOP
+        INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+        VALUES (
+          fav.user_id,
+          '🏷️ ¡Bajó de precio!',
+          format('%s %s ahora a $%s/día (-%s%%)',
+            NEW.brand, NEW.model, NEW.price_per_day::integer, discount_pct),
+          'price_drop_alert',
+          '/cars/' || NEW.id,
+          jsonb_build_object(
+            'car_id', NEW.id,
+            'old_price', OLD.price_per_day,
+            'new_price', NEW.price_per_day,
+            'discount_pct', discount_pct
+          )
+        );
+      END LOOP;
+    END IF;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trigger_price_drop_notification ON cars;
+CREATE TRIGGER trigger_price_drop_notification
+  AFTER UPDATE OF price_per_day ON cars
+  FOR EACH ROW
+  WHEN (NEW.price_per_day < OLD.price_per_day)
+  EXECUTE FUNCTION public.notify_price_drop();
+
+
+-- 8. AUTO FAVORITO DISPONIBLE (Cuando se desbloquea)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.send_favorite_car_available()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  fav RECORD;
+BEGIN
+  -- Buscar favoritos de autos que ahora están disponibles
+  FOR fav IN
+    SELECT
+      uf.user_id,
+      c.id as car_id,
+      c.brand,
+      c.model,
+      c.price_per_day
+    FROM user_favorites uf
+    JOIN cars c ON c.id = uf.car_id
+    WHERE c.status = 'active'
+      -- Auto tiene disponibilidad próxima (no bloqueado próximos 7 días)
+      AND NOT EXISTS (
+        SELECT 1 FROM car_blocked_dates cbd
+        WHERE cbd.car_id = c.id
+          AND cbd.from_date <= CURRENT_DATE + INTERVAL '7 days'
+          AND cbd.to_date >= CURRENT_DATE
+      )
+      AND NOT EXISTS (
+        SELECT 1 FROM bookings b
+        WHERE b.car_id = c.id
+          AND b.status IN ('confirmed', 'in_progress')
+          AND b.start_at <= CURRENT_DATE + INTERVAL '7 days'
+          AND b.end_at >= CURRENT_DATE
+      )
+      -- No notificó recientemente
+      AND NOT EXISTS (
+        SELECT 1 FROM notifications n
+        WHERE n.user_id = uf.user_id
+          AND n.type = 'favorite_car_available'
+          AND n.metadata->>'car_id' = c.id::text
+          AND n.created_at > NOW() - INTERVAL '14 days'
+      )
+    LIMIT 50
+  LOOP
+    INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+    VALUES (
+      fav.user_id,
+      '❤️ Tu favorito está disponible',
+      format('%s %s tiene fechas disponibles desde $%s/día',
+        fav.brand, fav.model, fav.price_per_day::integer),
+      'favorite_car_available',
+      '/cars/' || fav.car_id,
+      jsonb_build_object('car_id', fav.car_id)
+    );
+  END LOOP;
+
+  RAISE NOTICE 'Favorite car available notifications sent successfully';
+END;
+$$;
+
+
+-- ============================================
+-- CONFIGURAR CRON JOBS ADICIONALES
+-- ============================================
+
+-- Autos cercanos: semanal (miércoles 10 AM)
+SELECT cron.schedule(
+  'nearby-cars-weekly',
+  '0 10 * * 3',
+  $$SELECT public.send_nearby_cars_notifications()$$
+);
+
+-- Vistas milestone: diario a las 11 AM
+SELECT cron.schedule(
+  'car-views-milestone-daily',
+  '0 11 * * *',
+  $$SELECT public.send_car_views_milestone_notification()$$
+);
+
+-- Recomendaciones: quincenal (días 7 y 21 de cada mes)
+SELECT cron.schedule(
+  'car-recommendations-biweekly',
+  '0 10 7,21 * *',
+  $$SELECT public.send_car_recommendations()$$
+);
+
+-- Tips para renters: quincenal (días 8 y 22)
+SELECT cron.schedule(
+  'renter-tips-biweekly',
+  '0 10 8,22 * *',
+  $$SELECT public.send_renter_tips()$$
+);
+
+-- Favoritos disponibles: semanal (viernes 10 AM)
+SELECT cron.schedule(
+  'favorite-available-weekly',
+  '0 10 * * 5',
+  $$SELECT public.send_favorite_car_available()$$
+);
+
+
+-- 9. NOTIFICACION REVISAR SOLICITUDES PENDIENTES (Para owners)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.send_pending_requests_reminder()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  owner_rec RECORD;
+  pending_count INTEGER;
+  oldest_request TIMESTAMPTZ;
+  hours_waiting INTEGER;
+BEGIN
+  -- Buscar owners con solicitudes pendientes
+  FOR owner_rec IN
+    SELECT
+      c.owner_id,
+      p.full_name,
+      COUNT(DISTINCT b.id) as pending_count,
+      MIN(b.created_at) as oldest_request
+    FROM bookings b
+    JOIN cars c ON c.id = b.car_id
+    JOIN profiles p ON p.id = c.owner_id
+    WHERE b.status = 'pending_owner_confirmation'
+      AND b.created_at > NOW() - INTERVAL '48 hours'  -- Solo solicitudes de últimas 48h
+    GROUP BY c.owner_id, p.full_name
+    HAVING COUNT(DISTINCT b.id) > 0
+  LOOP
+    hours_waiting := EXTRACT(EPOCH FROM (NOW() - owner_rec.oldest_request)) / 3600;
+
+    -- Notificar si pasaron más de 2 horas y no se notificó recientemente
+    IF hours_waiting >= 2 AND NOT EXISTS (
+      SELECT 1 FROM notifications n
+      WHERE n.user_id = owner_rec.owner_id
+        AND n.type = 'pending_requests_reminder'
+        AND n.created_at > NOW() - INTERVAL '4 hours'
+    ) THEN
+      INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+      VALUES (
+        owner_rec.owner_id,
+        CASE
+          WHEN owner_rec.pending_count = 1 THEN '📬 Tienes 1 solicitud pendiente'
+          ELSE '📬 Tienes ' || owner_rec.pending_count || ' solicitudes pendientes'
+        END,
+        CASE
+          WHEN hours_waiting >= 24 THEN '¡Llevan más de 24h esperando! Responde pronto para no perder la reserva.'
+          WHEN hours_waiting >= 12 THEN 'Llevan ' || hours_waiting || 'h esperando. Los usuarios valoran respuestas rápidas.'
+          ELSE 'Revisa y confirma las solicitudes de reserva.'
+        END,
+        'pending_requests_reminder',
+        '/bookings?tab=requests',
+        jsonb_build_object(
+          'pending_count', owner_rec.pending_count,
+          'hours_waiting', hours_waiting
+        )
+      );
+    END IF;
+  END LOOP;
+
+  RAISE NOTICE 'Pending requests reminders sent successfully';
+END;
+$$;
+
+-- Agregar tipo de notificación
+DO $$
+BEGIN
+  ALTER TYPE notification_type ADD VALUE IF NOT EXISTS 'pending_requests_reminder';
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
+
+-- Cron: cada 4 horas
+SELECT cron.schedule(
+  'pending-requests-reminder',
+  '0 */4 * * *',
+  $$SELECT public.send_pending_requests_reminder()$$
+);
+
+
+-- 10. NOTIFICACION NUEVA SOLICITUD INMEDIATA (Trigger)
+-- ============================================
+CREATE OR REPLACE FUNCTION public.notify_owner_new_booking_request()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  car_info RECORD;
+  renter_info RECORD;
+BEGIN
+  -- Solo para nuevas reservas pendientes
+  IF NEW.status = 'pending_owner_confirmation' THEN
+    -- Obtener info del auto
+    SELECT brand, model, owner_id INTO car_info
+    FROM cars WHERE id = NEW.car_id;
+
+    -- Obtener info del renter
+    SELECT full_name INTO renter_info
+    FROM profiles WHERE id = NEW.renter_id;
+
+    -- Notificar al owner inmediatamente
+    INSERT INTO notifications (user_id, title, body, type, cta_link, metadata)
+    VALUES (
+      car_info.owner_id,
+      '🔔 Nueva solicitud de reserva',
+      format('%s quiere reservar tu %s %s del %s al %s',
+        COALESCE(renter_info.full_name, 'Un usuario'),
+        car_info.brand,
+        car_info.model,
+        to_char(NEW.start_at AT TIME ZONE 'America/Argentina/Buenos_Aires', 'DD/MM'),
+        to_char(NEW.end_at AT TIME ZONE 'America/Argentina/Buenos_Aires', 'DD/MM')
+      ),
+      'new_booking_for_owner',
+      '/bookings/' || NEW.id,
+      jsonb_build_object(
+        'booking_id', NEW.id,
+        'renter_name', renter_info.full_name,
+        'car_brand', car_info.brand,
+        'car_model', car_info.model
+      )
+    );
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trigger_new_booking_notification ON bookings;
+CREATE TRIGGER trigger_new_booking_notification
+  AFTER INSERT ON bookings
+  FOR EACH ROW
+  WHEN (NEW.status = 'pending_owner_confirmation')
+  EXECUTE FUNCTION public.notify_owner_new_booking_request();
+
+
+-- ============================================
+-- VERIFICAR TODOS LOS CRON JOBS
+-- ============================================
+SELECT jobname, schedule, active
+FROM cron.job
+ORDER BY jobname;
+-- =====================================================
+-- RENTER ANALYSIS SYSTEM
+-- Sistema completo para análisis de perfil del locatario
+-- Permite a propietarios tomar decisiones informadas
+-- =====================================================
+
+-- Función principal: Obtener análisis completo del renter
+CREATE OR REPLACE FUNCTION get_renter_analysis(p_renter_id UUID, p_booking_id UUID DEFAULT NULL)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_result JSONB;
+  v_profile RECORD;
+  v_stats RECORD;
+  v_risk RECORD;
+  v_reviews JSONB;
+  v_recent_bookings JSONB;
+  v_verification RECORD;
+  v_warnings JSONB := '[]'::JSONB;
+  v_is_authorized BOOLEAN := FALSE;
+  v_caller_id UUID := auth.uid();
+BEGIN
+  -- Autorización:
+  -- A) Si hay booking_id, el caller debe ser owner del auto.
+  -- B) Si no hay booking_id, debe existir relación owner<->renter o ser admin.
+  IF v_caller_id IS NULL THEN
+    RAISE EXCEPTION 'No autorizado para ver este análisis';
+  END IF;
+
+  IF p_booking_id IS NOT NULL THEN
+    SELECT EXISTS (
+      SELECT 1 FROM bookings b
+      JOIN cars c ON b.car_id = c.id
+      WHERE b.id = p_booking_id
+        AND c.owner_id = v_caller_id
+    ) INTO v_is_authorized;
+  ELSE
+    SELECT EXISTS (
+      SELECT 1 FROM bookings b
+      JOIN cars c ON b.car_id = c.id
+      WHERE b.renter_id = p_renter_id
+        AND c.owner_id = v_caller_id
+        AND b.status IN ('pending','confirmed','in_progress','completed','cancelled','expired')
+    ) INTO v_is_authorized;
+  END IF;
+
+  IF NOT v_is_authorized AND to_regclass('public.admin_users') IS NOT NULL THEN
+    SELECT EXISTS (
+      SELECT 1 FROM admin_users
+      WHERE user_id = v_caller_id AND is_active = TRUE
+    ) INTO v_is_authorized;
+  END IF;
+
+  IF NOT v_is_authorized THEN
+    RAISE EXCEPTION 'No autorizado para ver este análisis';
+  END IF;
+
+  -- 1. Obtener perfil básico del renter
+  SELECT
+    p.id,
+    p.full_name,
+    p.avatar_url,
+    p.created_at,
+    p.id_verified,
+    p.phone_verified,
+    p.email_verified,
+    p.phone,
+    EXTRACT(YEAR FROM AGE(NOW(), p.created_at))::INT AS years_as_member
+  INTO v_profile
+  FROM profiles p
+  WHERE p.id = p_renter_id;
+
+  IF v_profile IS NULL THEN
+    RETURN jsonb_build_object('error', 'Renter no encontrado');
+  END IF;
+
+  -- 2. Estadísticas de bookings
+  -- Preferimos cancelled_by_role cuando está disponible, con fallback a cancellation_reason
+  SELECT
+    COUNT(*) FILTER (WHERE status = 'completed') AS completed_rentals,
+    COUNT(*) FILTER (
+      WHERE status = 'cancelled'
+        AND (
+          cancelled_by_role = 'renter'
+          OR (
+            cancelled_by_role IS NULL AND (
+              cancellation_reason ILIKE '%user%' OR
+              cancellation_reason ILIKE '%renter%' OR
+              cancellation_reason ILIKE '%locatario%' OR
+              cancellation_reason ILIKE '%cancelled by user%' OR
+              cancellation_reason ILIKE '%cancelled by renter%'
+            )
+          )
+        )
+    ) AS cancellations_by_renter,
+    COUNT(*) FILTER (WHERE status = 'cancelled') AS total_cancellations,
+    COUNT(*) AS total_bookings,
+    COALESCE(AVG(CASE WHEN status = 'completed' THEN total_amount END), 0) AS avg_booking_value,
+    MAX(end_at) AS last_rental_date
+  INTO v_stats
+  FROM bookings
+  WHERE renter_id = p_renter_id;
+
+  -- 3. Perfil de riesgo (si existe)
+  SELECT
+    drp.class AS risk_class,
+    drp.good_years AS years_without_claims,
+    drp.updated_at AS risk_updated_at,
+    FALSE AS has_bonus_protection
+  INTO v_risk
+  FROM driver_risk_profile drp
+  WHERE drp.user_id = p_renter_id;
+
+  -- Bonus protector (si existe tabla driver_protection_addons)
+  IF to_regclass('public.driver_protection_addons') IS NOT NULL THEN
+    SELECT EXISTS (
+      SELECT 1 FROM driver_protection_addons dpa
+      WHERE dpa.user_id = p_renter_id
+        AND dpa.addon_type = 'bonus_protector'
+        AND dpa.is_active = true
+        AND (dpa.expires_at IS NULL OR dpa.expires_at > NOW())
+        AND dpa.claims_used < dpa.max_protected_claims
+    ) INTO v_risk.has_bonus_protection;
+  END IF;
+
+  -- 4. Reviews recibidas como renter (de propietarios)
+  SELECT COALESCE(
+    jsonb_agg(
+      jsonb_build_object(
+        'rating', r.rating,
+        'comment', r.comment,
+        'created_at', r.created_at,
+        'reviewer_name', LEFT(p.full_name, POSITION(' ' IN p.full_name || ' ')) || SUBSTRING(p.full_name FROM POSITION(' ' IN p.full_name || ' ') + 1 FOR 1) || '.',
+        'car_name', c.brand || ' ' || c.model
+      )
+      ORDER BY r.created_at DESC
+    ),
+    '[]'::JSONB
+  )
+  INTO v_reviews
+  FROM reviews r
+  JOIN profiles p ON r.reviewer_id = p.id
+  JOIN bookings b ON r.booking_id = b.id
+  JOIN cars c ON b.car_id = c.id
+  WHERE r.reviewee_id = p_renter_id
+  AND r.reviewer_id != p_renter_id -- Reviews de owners hacia el renter
+  LIMIT 10;
+
+  -- 5. Bookings recientes (últimos 5)
+  SELECT COALESCE(
+    jsonb_agg(
+      jsonb_build_object(
+        'id', b.id,
+        'car_name', c.brand || ' ' || c.model,
+        'start_at', b.start_at,
+        'end_at', b.end_at,
+        'status', b.status,
+        'total_amount', b.total_amount
+      )
+      ORDER BY b.created_at DESC
+    ),
+    '[]'::JSONB
+  )
+  INTO v_recent_bookings
+  FROM bookings b
+  JOIN cars c ON b.car_id = c.id
+  WHERE b.renter_id = p_renter_id
+  AND b.status IN ('completed', 'cancelled', 'confirmed')
+  LIMIT 5;
+
+  -- 6. Estado de verificación
+  SELECT
+    COALESCE(v_profile.id_verified, FALSE) AS id_verified,
+    COALESCE(v_profile.phone_verified, FALSE) AS phone_verified,
+    COALESCE(v_profile.email_verified, FALSE) AS email_verified,
+    EXISTS (
+      SELECT 1 FROM user_documents ud
+      WHERE ud.user_id = p_renter_id
+        AND ud.kind IN ('driver_license', 'license_front', 'license_back')
+        AND ud.status = 'verified'
+    ) AS license_verified
+  INTO v_verification;
+
+  -- 7. Generar advertencias si corresponde
+  -- Alta tasa de cancelaciones
+  IF v_stats.total_bookings > 2 AND
+     v_stats.cancellations_by_renter::FLOAT / NULLIF(v_stats.total_bookings, 0) > 0.3 THEN
+    v_warnings := v_warnings || jsonb_build_object(
+      'type', 'high_cancellation_rate',
+      'severity', 'warning',
+      'message', 'Este locatario tiene una tasa de cancelación alta (' ||
+                 ROUND((v_stats.cancellations_by_renter::FLOAT / v_stats.total_bookings * 100)::NUMERIC, 0) || '%)'
+    );
+  END IF;
+
+  -- Usuario nuevo (menos de 30 días)
+  IF v_profile.created_at > NOW() - INTERVAL '30 days' THEN
+    v_warnings := v_warnings || jsonb_build_object(
+      'type', 'new_user',
+      'severity', 'info',
+      'message', 'Usuario nuevo en la plataforma (menos de 30 días)'
+    );
+  END IF;
+
+  -- Sin verificación de identidad
+  IF NOT COALESCE(v_profile.id_verified, FALSE) THEN
+    v_warnings := v_warnings || jsonb_build_object(
+      'type', 'unverified_identity',
+      'severity', 'warning',
+      'message', 'El locatario no ha verificado su identidad'
+    );
+  END IF;
+
+  -- Sin alquileres previos
+  IF v_stats.completed_rentals = 0 THEN
+    v_warnings := v_warnings || jsonb_build_object(
+      'type', 'first_rental',
+      'severity', 'info',
+      'message', 'Este sería el primer alquiler del locatario'
+    );
+  END IF;
+
+  -- Clase de riesgo alta
+  IF v_risk.risk_class IS NOT NULL AND v_risk.risk_class >= 7 THEN
+    v_warnings := v_warnings || jsonb_build_object(
+      'type', 'high_risk_class',
+      'severity', 'alert',
+      'message', 'Perfil de riesgo elevado según historial de conducción'
+    );
+  END IF;
+
+  -- 8. Calcular score general (0-100)
+  DECLARE
+    v_score INT := 50; -- Base score
+  BEGIN
+    -- Bonus por alquileres completados (+2 por cada uno, máx +20)
+    v_score := v_score + LEAST(v_stats.completed_rentals * 2, 20);
+
+    -- Bonus por años como miembro (+5 por año, máx +15)
+    v_score := v_score + LEAST(v_profile.years_as_member * 5, 15);
+
+    -- Bonus por verificaciones (+5 cada una)
+    IF v_verification.id_verified THEN v_score := v_score + 5; END IF;
+    IF v_verification.phone_verified THEN v_score := v_score + 3; END IF;
+    IF v_verification.license_verified THEN v_score := v_score + 5; END IF;
+
+    -- Bonus por años sin siniestros (+3 por año, máx +12)
+    IF v_risk.years_without_claims IS NOT NULL THEN
+      v_score := v_score + LEAST(v_risk.years_without_claims * 3, 12);
+    END IF;
+
+    -- Penalización por cancelaciones (-10 por cada una del renter)
+    v_score := v_score - (v_stats.cancellations_by_renter * 10);
+
+    -- Penalización por clase de riesgo alta
+    IF v_risk.risk_class IS NOT NULL AND v_risk.risk_class >= 7 THEN
+      v_score := v_score - ((v_risk.risk_class - 6) * 5);
+    END IF;
+
+    -- Clamp entre 0 y 100
+    v_score := GREATEST(0, LEAST(100, v_score));
+
+    -- Construir resultado final
+    v_result := jsonb_build_object(
+      'renter_id', p_renter_id,
+      'profile', jsonb_build_object(
+        'full_name', v_profile.full_name,
+        'avatar_url', v_profile.avatar_url,
+        'member_since', v_profile.created_at,
+        'years_as_member', v_profile.years_as_member,
+        'phone', CASE
+          WHEN p_booking_id IS NOT NULL THEN v_profile.phone
+          ELSE NULL
+        END -- Solo mostrar teléfono si hay booking específico
+      ),
+      'verification', jsonb_build_object(
+        'id_verified', COALESCE(v_verification.id_verified, FALSE),
+        'phone_verified', COALESCE(v_verification.phone_verified, FALSE),
+        'email_verified', COALESCE(v_verification.email_verified, FALSE),
+        'license_verified', COALESCE(v_verification.license_verified, FALSE),
+        'verification_score', (
+          (CASE WHEN v_verification.id_verified THEN 1 ELSE 0 END) +
+          (CASE WHEN v_verification.phone_verified THEN 1 ELSE 0 END) +
+          (CASE WHEN v_verification.email_verified THEN 1 ELSE 0 END) +
+          (CASE WHEN v_verification.license_verified THEN 1 ELSE 0 END)
+        )
+      ),
+      'stats', jsonb_build_object(
+        'completed_rentals', v_stats.completed_rentals,
+        'total_bookings', v_stats.total_bookings,
+        'cancellations_by_renter', v_stats.cancellations_by_renter,
+        'cancellation_rate', CASE
+          WHEN v_stats.total_bookings > 0
+          THEN ROUND((v_stats.cancellations_by_renter::FLOAT / v_stats.total_bookings * 100)::NUMERIC, 1)
+          ELSE 0
+        END,
+        'avg_booking_value', ROUND(v_stats.avg_booking_value::NUMERIC, 2),
+        'last_rental_date', v_stats.last_rental_date
+      ),
+      'risk_profile', jsonb_build_object(
+        'risk_level', CASE
+          WHEN v_risk.risk_class IS NULL THEN 'unknown'
+          WHEN v_risk.risk_class <= 2 THEN 'excellent'
+          WHEN v_risk.risk_class <= 5 THEN 'good'
+          WHEN v_risk.risk_class <= 7 THEN 'regular'
+          ELSE 'attention'
+        END,
+        'years_without_claims', COALESCE(v_risk.years_without_claims, 0),
+        'has_bonus_protection', COALESCE(v_risk.has_bonus_protection, FALSE)
+      ),
+      'reviews', v_reviews,
+      'reviews_summary', jsonb_build_object(
+        'count', jsonb_array_length(v_reviews),
+        'avg_rating', (
+          SELECT COALESCE(ROUND(AVG(rating)::NUMERIC, 1), 0)
+          FROM reviews r
+          WHERE r.reviewee_id = p_renter_id
+          AND r.reviewer_id != p_renter_id
+        )
+      ),
+      'recent_bookings', v_recent_bookings,
+      'warnings', v_warnings,
+      'trust_score', v_score,
+      'trust_level', CASE
+        WHEN v_score >= 80 THEN 'excellent'
+        WHEN v_score >= 60 THEN 'good'
+        WHEN v_score >= 40 THEN 'regular'
+        ELSE 'new_or_risky'
+      END
+    );
+  END;
+
+  RETURN v_result;
+END;
+$$;
+
+-- Dar permisos
+GRANT EXECUTE ON FUNCTION get_renter_analysis(UUID, UUID) TO authenticated;
+
+-- Comentario
+COMMENT ON FUNCTION get_renter_analysis IS 'Obtiene análisis completo del perfil de un locatario para que el propietario tome decisiones informadas sobre aprobación de reservas';
+-- =====================================================
+-- Add cancelled_by_role to bookings_cancellation
+-- =====================================================
+
+ALTER TABLE bookings_cancellation
+ADD COLUMN IF NOT EXISTS cancelled_by_role booking_cancelled_by_role;
+
+-- Backfill from bookings table when possible
+UPDATE bookings_cancellation bc
+SET cancelled_by_role = b.cancelled_by_role
+FROM bookings b
+WHERE b.id = bc.booking_id
+  AND bc.cancelled_by_role IS NULL;
+ALTER TABLE public.booking_inspections
+  DROP CONSTRAINT IF EXISTS booking_inspections_stage_check;
+
+ALTER TABLE public.booking_inspections
+  ADD CONSTRAINT booking_inspections_stage_check
+  CHECK (stage = ANY (ARRAY['check_in'::text, 'check_out'::text, 'renter_check_in'::text]));
+UPDATE public.bookings b
+SET metadata = jsonb_set(
+  COALESCE(b.metadata, '{}'::jsonb),
+  '{renter_checkin_required}',
+  'true'::jsonb,
+  true
+)
+WHERE b.status = 'in_progress'
+  AND NOT EXISTS (
+    SELECT 1
+    FROM public.booking_inspections bi
+    WHERE bi.booking_id = b.id
+      AND bi.stage = 'renter_check_in'
+      AND bi.signed_at IS NOT NULL
+  );
+CREATE OR REPLACE FUNCTION public.enforce_renter_checkin_before_in_progress()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF NEW.status = 'in_progress' AND OLD.status IS DISTINCT FROM NEW.status THEN
+    IF NOT EXISTS (
+      SELECT 1
+      FROM public.booking_inspections bi
+      WHERE bi.booking_id = NEW.id
+        AND bi.stage = 'renter_check_in'
+        AND bi.signed_at IS NOT NULL
+      LIMIT 1
+    ) THEN
+      RAISE EXCEPTION 'renter_check_in_required' USING ERRCODE = 'P0001';
+    END IF;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_enforce_renter_checkin_before_in_progress ON public.bookings;
+
+CREATE TRIGGER trg_enforce_renter_checkin_before_in_progress
+BEFORE UPDATE OF status ON public.bookings
+FOR EACH ROW
+EXECUTE FUNCTION public.enforce_renter_checkin_before_in_progress();
+CREATE OR REPLACE FUNCTION public.get_renter_verification_for_owner(p_booking_id uuid)
+RETURNS TABLE(
+  renter_id uuid,
+  full_name text,
+  phone text,
+  whatsapp text,
+  gov_id_type text,
+  gov_id_number text,
+  driver_license_country text,
+  driver_license_expiry text,
+  driver_license_class text,
+  driver_license_professional boolean,
+  driver_license_points integer,
+  email_verified boolean,
+  phone_verified boolean,
+  id_verified boolean,
+  location_verified_at timestamptz,
+  driver_license_verified_at timestamptz,
+  driver_class integer,
+  driver_score integer,
+  fee_multiplier numeric,
+  guarantee_multiplier numeric,
+  class_description text,
+  documents jsonb
+)
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path TO public
+AS $$
+DECLARE
+  v_owner_id uuid;
+  v_renter_id uuid;
+BEGIN
+  SELECT c.owner_id, b.renter_id
+    INTO v_owner_id, v_renter_id
+  FROM bookings b
+  JOIN cars c ON c.id = b.car_id
+  WHERE b.id = p_booking_id;
+
+  IF v_owner_id IS NULL OR v_renter_id IS NULL THEN
+    RETURN;
+  END IF;
+
+  -- Si no es el owner, retornar vacío en lugar de error para evitar 400
+  IF v_owner_id <> auth.uid() THEN
+    RETURN;
+  END IF;
+
+  RETURN QUERY
+  SELECT
+    p.id AS renter_id,
+    p.full_name,
+    p.phone,
+    p.whatsapp,
+    p.gov_id_type,
+    p.gov_id_number,
+    p.driver_license_country,
+    p.driver_license_expiry,
+    p.driver_license_class,
+    p.driver_license_professional,
+    p.driver_license_points,
+    p.email_verified,
+    p.phone_verified,
+    p.id_verified,
+    p.location_verified_at,
+    uil.driver_license_verified_at,
+    drp.class AS driver_class,
+    drp.driver_score,
+    pcf.fee_multiplier,
+    pcf.guarantee_multiplier,
+    pcf.description AS class_description,
+    COALESCE(
+      (
+        SELECT jsonb_agg(
+          jsonb_build_object(
+            'kind', d.kind,
+            'status', d.status,
+            'created_at', d.created_at,
+            'reviewed_at', d.reviewed_at
+          ) ORDER BY d.kind
+        )
+        FROM (
+          SELECT DISTINCT ON (kind) kind, status, created_at, reviewed_at
+          FROM user_documents
+          WHERE user_id = p.id
+          ORDER BY kind, created_at DESC
+        ) d
+      ),
+      '[]'::jsonb
+    ) AS documents
+  FROM profiles p
+  LEFT JOIN user_identity_levels uil ON uil.user_id = p.id
+  LEFT JOIN driver_risk_profile drp ON drp.user_id = p.id
+  LEFT JOIN pricing_class_factors pcf ON pcf.class = drp.class
+  WHERE p.id = v_renter_id;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.get_renter_verification_for_owner(uuid) TO authenticated;
+-- Migration: Add Video Damage Detection Tables
+-- Description: Tablas para almacenar videos de inspección y resultados de análisis con IA
+-- Created: 2025-12-21
+
+-- ============================================
+-- 1. Tabla de videos de inspección
+-- ============================================
+CREATE TABLE IF NOT EXISTS public.inspection_videos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  booking_id UUID NOT NULL REFERENCES public.bookings(id) ON DELETE CASCADE,
+  car_id UUID NOT NULL REFERENCES public.cars(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  
+  -- Tipo de inspección
+  inspection_type TEXT NOT NULL CHECK (inspection_type IN ('checkin', 'checkout')),
+  
+  -- Ruta del video en Cloud Storage
+  video_path TEXT NOT NULL,
+  video_url TEXT, -- URL pública del video (opcional)
+  
+  -- Estado del procesamiento
+  status TEXT NOT NULL DEFAULT 'processing' 
+    CHECK (status IN ('processing', 'completed', 'failed')),
+  
+  -- Metadata
+  file_size_bytes BIGINT,
+  duration_seconds INTEGER,
+  video_codec TEXT,
+  resolution TEXT, -- e.g., "1920x1080"
+  
+  -- Timestamps
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  processed_at TIMESTAMPTZ,
+  
+  UNIQUE(booking_id, inspection_type)
+);
+
+-- Índices para búsquedas rápidas
+CREATE INDEX idx_inspection_videos_booking ON public.inspection_videos(booking_id);
+CREATE INDEX idx_inspection_videos_status ON public.inspection_videos(status);
+CREATE INDEX idx_inspection_videos_created ON public.inspection_videos(created_at DESC);
+
+-- RLS Policies
+ALTER TABLE public.inspection_videos ENABLE ROW LEVEL SECURITY;
+
+-- Users can view their own inspection videos (as renter or owner)
+CREATE POLICY "Users can view own inspection videos"
+  ON public.inspection_videos
+  FOR SELECT
+  USING (
+    auth.uid() = user_id OR
+    auth.uid() IN (
+      SELECT owner_id FROM public.cars WHERE id = car_id
+    ) OR
+    auth.uid() IN (
+      SELECT renter_id FROM public.bookings WHERE id = booking_id
+    )
+  );
+
+-- Users can upload inspection videos for their bookings
+CREATE POLICY "Users can upload inspection videos"
+  ON public.inspection_videos
+  FOR INSERT
+  WITH CHECK (
+    auth.uid() = user_id AND
+    (
+      -- Renter can upload checkout video
+      (inspection_type = 'checkout' AND auth.uid() IN (
+        SELECT renter_id FROM public.bookings WHERE id = booking_id
+      )) OR
+      -- Owner can upload checkin video
+      (inspection_type = 'checkin' AND auth.uid() IN (
+        SELECT owner_id FROM public.cars WHERE id = car_id
+      ))
+    )
+  );
+
+-- ============================================
+-- 2. Tabla de análisis de daños
+-- ============================================
+CREATE TABLE IF NOT EXISTS public.video_damage_analysis (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  booking_id UUID NOT NULL REFERENCES public.bookings(id) ON DELETE CASCADE,
+  inspection_video_id UUID NOT NULL REFERENCES public.inspection_videos(id) ON DELETE CASCADE,
+  
+  -- Tipo de inspección
+  inspection_type TEXT NOT NULL CHECK (inspection_type IN ('checkin', 'checkout')),
+  
+  -- Resultados del análisis (JSON array de daños detectados)
+  damages JSONB NOT NULL DEFAULT '[]'::jsonb,
+  
+  -- Resumen generado por IA
+  summary TEXT,
+  
+  -- Confianza general del análisis (0-1)
+  confidence DECIMAL(3,2) CHECK (confidence >= 0 AND confidence <= 1),
+  
+  -- Metadata del procesamiento
+  processing_time_ms INTEGER,
+  vertex_ai_model TEXT, -- e.g., "gemini-2.0-flash-exp"
+  
+  -- Timestamps
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  processed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  
+  UNIQUE(booking_id, inspection_type)
+);
+
+-- Índices
+CREATE INDEX idx_video_damage_analysis_booking ON public.video_damage_analysis(booking_id);
+CREATE INDEX idx_video_damage_analysis_created ON public.video_damage_analysis(created_at DESC);
+
+-- Índice GIN para búsquedas en el JSON de daños
+CREATE INDEX idx_video_damage_analysis_damages ON public.video_damage_analysis USING GIN (damages);
+
+-- RLS Policies
+ALTER TABLE public.video_damage_analysis ENABLE ROW LEVEL SECURITY;
+
+-- Users can view analysis for their bookings
+CREATE POLICY "Users can view video analysis"
+  ON public.video_damage_analysis
+  FOR SELECT
+  USING (
+    auth.uid() IN (
+      SELECT renter_id FROM public.bookings WHERE id = booking_id
+      UNION
+      SELECT owner_id FROM public.cars 
+      WHERE id = (SELECT car_id FROM public.bookings WHERE id = booking_id)
+    )
+  );
+
+-- ============================================
+-- 3. Tabla de comparación de inspecciones
+-- ============================================
+CREATE TABLE IF NOT EXISTS public.inspection_comparisons (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  booking_id UUID NOT NULL REFERENCES public.bookings(id) ON DELETE CASCADE UNIQUE,
+  
+  checkin_analysis_id UUID REFERENCES public.video_damage_analysis(id) ON DELETE SET NULL,
+  checkout_analysis_id UUID REFERENCES public.video_damage_analysis(id) ON DELETE SET NULL,
+  
+  -- Daños nuevos detectados (presentes en checkout pero no en checkin)
+  new_damages JSONB NOT NULL DEFAULT '[]'::jsonb,
+  
+  -- Costos estimados
+  total_estimated_cost_usd DECIMAL(10,2) DEFAULT 0,
+  
+  -- Resumen de la comparación
+  comparison_summary TEXT,
+  
+  -- Estado de la disputa (si aplica)
+  dispute_status TEXT CHECK (dispute_status IN (
+    'no_dispute', 'pending_review', 'owner_accepted', 'renter_contested', 'resolved'
+  )) DEFAULT 'no_dispute',
+  
+  -- Timestamps
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Índices
+CREATE INDEX idx_inspection_comparisons_booking ON public.inspection_comparisons(booking_id);
+CREATE INDEX idx_inspection_comparisons_dispute ON public.inspection_comparisons(dispute_status);
+
+-- RLS Policies
+ALTER TABLE public.inspection_comparisons ENABLE ROW LEVEL SECURITY;
+
+-- Users can view comparisons for their bookings
+CREATE POLICY "Users can view inspection comparisons"
+  ON public.inspection_comparisons
+  FOR SELECT
+  USING (
+    auth.uid() IN (
+      SELECT renter_id FROM public.bookings WHERE id = booking_id
+      UNION
+      SELECT owner_id FROM public.cars 
+      WHERE id = (SELECT car_id FROM public.bookings WHERE id = booking_id)
+    )
+  );
+
+-- ============================================
+-- 4. Función helper: Obtener análisis completo
+-- ============================================
+CREATE OR REPLACE FUNCTION public.get_inspection_analysis(p_booking_id UUID)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  result JSONB;
+BEGIN
+  SELECT jsonb_build_object(
+    'booking_id', p_booking_id,
+    'checkin', (
+      SELECT jsonb_build_object(
+        'video', row_to_json(iv.*),
+        'analysis', row_to_json(va.*)
+      )
+      FROM public.inspection_videos iv
+      LEFT JOIN public.video_damage_analysis va ON va.inspection_video_id = iv.id
+      WHERE iv.booking_id = p_booking_id AND iv.inspection_type = 'checkin'
+      LIMIT 1
+    ),
+    'checkout', (
+      SELECT jsonb_build_object(
+        'video', row_to_json(iv.*),
+        'analysis', row_to_json(va.*)
+      )
+      FROM public.inspection_videos iv
+      LEFT JOIN public.video_damage_analysis va ON va.inspection_video_id = iv.id
+      WHERE iv.booking_id = p_booking_id AND iv.inspection_type = 'checkout'
+      LIMIT 1
+    ),
+    'comparison', (
+      SELECT row_to_json(ic.*)
+      FROM public.inspection_comparisons ic
+      WHERE ic.booking_id = p_booking_id
+      LIMIT 1
+    )
+  ) INTO result;
+  
+  RETURN result;
+END;
+$$;
+
+-- ============================================
+-- 5. Trigger: Auto-update updated_at
+-- ============================================
+CREATE OR REPLACE FUNCTION public.update_inspection_comparison_updated_at()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_update_inspection_comparison_updated_at
+BEFORE UPDATE ON public.inspection_comparisons
+FOR EACH ROW
+EXECUTE FUNCTION public.update_inspection_comparison_updated_at();
+
+-- ============================================
+-- 6. Comentarios
+-- ============================================
+COMMENT ON TABLE public.inspection_videos IS 
+'Videos de inspección (check-in/check-out) almacenados en GCP Cloud Storage';
+
+COMMENT ON TABLE public.video_damage_analysis IS 
+'Resultados del análisis de daños con Vertex AI Gemini';
+
+COMMENT ON TABLE public.inspection_comparisons IS 
+'Comparación entre check-in y check-out para detectar daños nuevos';
+
+COMMENT ON FUNCTION public.get_inspection_analysis IS 
+'Obtiene análisis completo de inspecciones de un booking (checkin + checkout + comparison)';
+-- ============================================================================
+-- Migración: Fix Verificación Seguridad
+-- Fecha: 2025-12-26
+-- Descripción: Corrige problemas críticos de seguridad en sistema de verificación
+-- ============================================================================
+
+-- ============================================================================
+-- 1. RLS POLICIES PARA SERVICE_ROLE EN USER_DOCUMENTS
+-- ============================================================================
+-- El service_role necesita poder actualizar user_documents desde edge functions
+
+-- Verificar si la política ya existe antes de crearla
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'user_documents'
+    AND policyname = 'service_role_full_access'
+  ) THEN
+    CREATE POLICY "service_role_full_access"
+      ON public.user_documents
+      FOR ALL
+      USING (auth.role() = 'service_role')
+      WITH CHECK (auth.role() = 'service_role');
+  END IF;
+END $$;
+
+-- ============================================================================
+-- 2. RLS POLICIES PARA USER_VERIFICATIONS
+-- ============================================================================
+-- El service_role necesita INSERT, UPDATE, DELETE
+-- Los admins necesitan SELECT para revisar verificaciones
+
+-- Policy para service_role (INSERT)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'user_verifications'
+    AND policyname = 'service_role_insert'
+  ) THEN
+    CREATE POLICY "service_role_insert"
+      ON public.user_verifications
+      FOR INSERT
+      WITH CHECK (auth.role() = 'service_role');
+  END IF;
+END $$;
+
+-- Policy para service_role (UPDATE)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'user_verifications'
+    AND policyname = 'service_role_update'
+  ) THEN
+    CREATE POLICY "service_role_update"
+      ON public.user_verifications
+      FOR UPDATE
+      USING (auth.role() = 'service_role')
+      WITH CHECK (auth.role() = 'service_role');
+  END IF;
+END $$;
+
+-- Policy para service_role (DELETE)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'user_verifications'
+    AND policyname = 'service_role_delete'
+  ) THEN
+    CREATE POLICY "service_role_delete"
+      ON public.user_verifications
+      FOR DELETE
+      USING (auth.role() = 'service_role');
+  END IF;
+END $$;
+
+-- Policy para admins (SELECT)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'user_verifications'
+    AND policyname = 'admins_view_verifications'
+  ) THEN
+    CREATE POLICY "admins_view_verifications"
+      ON public.user_verifications
+      FOR SELECT
+      USING (
+        EXISTS (
+          SELECT 1 FROM profiles
+          WHERE profiles.id = auth.uid()
+          AND profiles.role = 'admin'
+        )
+      );
+  END IF;
+END $$;
+
+-- ============================================================================
+-- 3. UNIQUE CONSTRAINT PARA DOCUMENTOS
+-- ============================================================================
+-- Prevenir que el mismo número de documento sea usado por múltiples usuarios
+-- Esto previene fraude de identidad
+
+-- Primero verificar si hay duplicados
+DO $$
+DECLARE
+  duplicate_count INTEGER;
+BEGIN
+  SELECT COUNT(*) INTO duplicate_count
+  FROM (
+    SELECT document_number
+    FROM public.user_identity_levels
+    WHERE document_number IS NOT NULL
+    GROUP BY document_number
+    HAVING COUNT(*) > 1
+  ) AS duplicates;
+
+  IF duplicate_count > 0 THEN
+    RAISE NOTICE 'ADVERTENCIA: Existen % números de documento duplicados. El índice único no se creará.', duplicate_count;
+  END IF;
+END $$;
+
+-- Crear índice único solo si no hay duplicados
+DO $$
+BEGIN
+  -- Verificar que no existan duplicados antes de crear el índice
+  IF NOT EXISTS (
+    SELECT 1
+    FROM public.user_identity_levels
+    WHERE document_number IS NOT NULL
+    GROUP BY document_number
+    HAVING COUNT(*) > 1
+  ) THEN
+    -- Eliminar índice no-único existente si existe
+    DROP INDEX IF EXISTS idx_user_identity_levels_document_number;
+
+    -- Crear índice único
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_user_identity_unique_document
+      ON public.user_identity_levels(document_number)
+      WHERE document_number IS NOT NULL;
+
+    RAISE NOTICE 'Índice único idx_user_identity_unique_document creado exitosamente.';
+  ELSE
+    RAISE WARNING 'No se puede crear índice único: existen documentos duplicados.';
+  END IF;
+END $$;
+
+-- ============================================================================
+-- 4. TRIGGER PARA SINCRONIZAR user_identity_levels → user_verifications
+-- ============================================================================
+-- Cuando document_verified_at cambia, actualizar user_verifications automáticamente
+
+CREATE OR REPLACE FUNCTION public.sync_identity_to_verification()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_has_driver_verification BOOLEAN;
+  v_has_owner_verification BOOLEAN;
+BEGIN
+  -- Solo procesar si document_verified_at cambió
+  IF NEW.document_verified_at IS DISTINCT FROM OLD.document_verified_at THEN
+
+    -- Verificar si tiene verificación como driver
+    SELECT EXISTS (
+      SELECT 1 FROM user_verifications
+      WHERE user_id = NEW.user_id AND role = 'driver'
+    ) INTO v_has_driver_verification;
+
+    -- Verificar si tiene verificación como owner
+    SELECT EXISTS (
+      SELECT 1 FROM user_verifications
+      WHERE user_id = NEW.user_id AND role = 'owner'
+    ) INTO v_has_owner_verification;
+
+    -- Si el documento fue verificado (document_verified_at no es NULL)
+    IF NEW.document_verified_at IS NOT NULL THEN
+      -- Actualizar verificación de driver si existe
+      IF v_has_driver_verification THEN
+        UPDATE user_verifications
+        SET
+          updated_at = NOW(),
+          notes = COALESCE(notes, '') || ' | Documento verificado automáticamente ' || NOW()::TEXT
+        WHERE user_id = NEW.user_id AND role = 'driver';
+      END IF;
+
+      -- Actualizar verificación de owner si existe
+      IF v_has_owner_verification THEN
+        UPDATE user_verifications
+        SET
+          updated_at = NOW(),
+          notes = COALESCE(notes, '') || ' | Documento verificado automáticamente ' || NOW()::TEXT
+        WHERE user_id = NEW.user_id AND role = 'owner';
+      END IF;
+
+      -- Actualizar profiles.id_verified si ambos documentos están verificados
+      UPDATE profiles
+      SET id_verified = TRUE
+      WHERE id = NEW.user_id
+        AND NEW.document_verified_at IS NOT NULL
+        AND NEW.driver_license_verified_at IS NOT NULL;
+
+    END IF;
+
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+-- Crear trigger si no existe
+DROP TRIGGER IF EXISTS trg_sync_identity_verification ON public.user_identity_levels;
+CREATE TRIGGER trg_sync_identity_verification
+  AFTER UPDATE ON public.user_identity_levels
+  FOR EACH ROW
+  EXECUTE FUNCTION public.sync_identity_to_verification();
+
+-- ============================================================================
+-- 5. ÍNDICES DE PERFORMANCE
+-- ============================================================================
+-- Índices para mejorar queries de verificación
+
+-- Índice para user_documents (user_id, status)
+CREATE INDEX IF NOT EXISTS idx_user_documents_user_status
+  ON public.user_documents(user_id, status);
+
+-- Índice para user_identity_levels (document_verified_at) donde no es null
+CREATE INDEX IF NOT EXISTS idx_user_identity_levels_verified
+  ON public.user_identity_levels(document_verified_at)
+  WHERE document_verified_at IS NOT NULL;
+
+-- Índice para vehicle_documents (vehicle_id, insurance_expiry)
+CREATE INDEX IF NOT EXISTS idx_vehicle_documents_expiry
+  ON public.vehicle_documents(vehicle_id, insurance_expiry, vtv_expiry);
+
+-- ============================================================================
+-- 6. COMENTARIOS DE DOCUMENTACIÓN
+-- ============================================================================
+COMMENT ON POLICY "service_role_full_access" ON public.user_documents IS
+  'Permite a edge functions (service_role) gestionar documentos de usuarios';
+
+COMMENT ON TRIGGER trg_sync_identity_verification ON public.user_identity_levels IS
+  'Sincroniza automáticamente cambios en document_verified_at con user_verifications y profiles';
+
+-- ============================================================================
+-- VERIFICACIÓN FINAL
+-- ============================================================================
+DO $$
+DECLARE
+  policy_count INTEGER;
+  index_count INTEGER;
+BEGIN
+  -- Contar políticas en user_documents
+  SELECT COUNT(*) INTO policy_count
+  FROM pg_policies WHERE tablename = 'user_documents';
+
+  RAISE NOTICE 'Políticas en user_documents: %', policy_count;
+
+  -- Contar políticas en user_verifications
+  SELECT COUNT(*) INTO policy_count
+  FROM pg_policies WHERE tablename = 'user_verifications';
+
+  RAISE NOTICE 'Políticas en user_verifications: %', policy_count;
+
+  -- Contar índices en user_identity_levels
+  SELECT COUNT(*) INTO index_count
+  FROM pg_indexes WHERE tablename = 'user_identity_levels';
+
+  RAISE NOTICE 'Índices en user_identity_levels: %', index_count;
+END $$;
+-- Advisory Locks for AutoRenta
+-- Migration: 20251228_advisory_locks
+--
+-- Provides PostgreSQL advisory lock functions for application-level locking.
+-- Advisory locks are session-scoped and automatically released when connection closes.
+--
+-- Usage from frontend:
+--   const { data } = await supabase.rpc('try_advisory_lock', { p_lock_key: 123456789 });
+--   if (data === true) { /* lock acquired */ }
+--
+--   await supabase.rpc('release_advisory_lock', { p_lock_key: 123456789 });
+
+-- ============================================================
+-- Function: try_advisory_lock
+-- ============================================================
+-- Attempts to acquire a session-level advisory lock (non-blocking).
+-- Returns true if lock acquired, false if lock is held by another session.
+--
+-- Parameters:
+--   p_lock_key (bigint) - Unique lock identifier
+--
+-- Returns: boolean - true if lock acquired, false otherwise
+-- ============================================================
+CREATE OR REPLACE FUNCTION try_advisory_lock(p_lock_key BIGINT)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  -- pg_try_advisory_lock returns true if lock acquired, false if not
+  RETURN pg_try_advisory_lock(p_lock_key);
+END;
+$$;
+
+-- Grant execute to authenticated users
+GRANT EXECUTE ON FUNCTION try_advisory_lock(BIGINT) TO authenticated;
+
+COMMENT ON FUNCTION try_advisory_lock IS
+'Attempts to acquire a session-level advisory lock. Non-blocking.
+Returns true if lock acquired, false if already held by another session.
+Lock is automatically released when the session ends.';
+
+
+-- ============================================================
+-- Function: release_advisory_lock
+-- ============================================================
+-- Releases a session-level advisory lock.
+-- Returns true if lock was released, false if lock was not held.
+--
+-- Parameters:
+--   p_lock_key (bigint) - Unique lock identifier
+--
+-- Returns: boolean - true if lock released, false if not held
+-- ============================================================
+CREATE OR REPLACE FUNCTION release_advisory_lock(p_lock_key BIGINT)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  -- pg_advisory_unlock returns true if lock was held and released
+  RETURN pg_advisory_unlock(p_lock_key);
+END;
+$$;
+
+-- Grant execute to authenticated users
+GRANT EXECUTE ON FUNCTION release_advisory_lock(BIGINT) TO authenticated;
+
+COMMENT ON FUNCTION release_advisory_lock IS
+'Releases a session-level advisory lock.
+Returns true if lock was held and released, false if lock was not held.';
+
+
+-- ============================================================
+-- Function: try_advisory_lock_shared
+-- ============================================================
+-- Attempts to acquire a shared advisory lock (non-blocking).
+-- Multiple sessions can hold the same shared lock simultaneously.
+-- Useful for read operations that should block exclusive writes.
+--
+-- Parameters:
+--   p_lock_key (bigint) - Unique lock identifier
+--
+-- Returns: boolean - true if lock acquired, false otherwise
+-- ============================================================
+CREATE OR REPLACE FUNCTION try_advisory_lock_shared(p_lock_key BIGINT)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  RETURN pg_try_advisory_lock_shared(p_lock_key);
+END;
+$$;
+
+-- Grant execute to authenticated users
+GRANT EXECUTE ON FUNCTION try_advisory_lock_shared(BIGINT) TO authenticated;
+
+COMMENT ON FUNCTION try_advisory_lock_shared IS
+'Attempts to acquire a shared advisory lock. Multiple sessions can hold same shared lock.';
+
+
+-- ============================================================
+-- Function: release_advisory_lock_shared
+-- ============================================================
+-- Releases a shared advisory lock.
+--
+-- Parameters:
+--   p_lock_key (bigint) - Unique lock identifier
+--
+-- Returns: boolean - true if lock released, false if not held
+-- ============================================================
+CREATE OR REPLACE FUNCTION release_advisory_lock_shared(p_lock_key BIGINT)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  RETURN pg_advisory_unlock_shared(p_lock_key);
+END;
+$$;
+
+-- Grant execute to authenticated users
+GRANT EXECUTE ON FUNCTION release_advisory_lock_shared(BIGINT) TO authenticated;
+
+COMMENT ON FUNCTION release_advisory_lock_shared IS
+'Releases a shared advisory lock.';
+
+
+-- ============================================================
+-- View: v_advisory_locks_held
+-- ============================================================
+-- Shows all advisory locks currently held in the database.
+-- Useful for debugging and monitoring lock contention.
+-- ============================================================
+CREATE OR REPLACE VIEW v_advisory_locks_held AS
+SELECT
+  pid,
+  locktype,
+  objid AS lock_key,
+  granted,
+  mode,
+  now() AS queried_at
+FROM pg_locks
+WHERE locktype = 'advisory'
+ORDER BY pid, objid;
+
+COMMENT ON VIEW v_advisory_locks_held IS
+'Shows all advisory locks currently held. Useful for debugging lock contention.';
+
+
+-- ============================================================
+-- Log migration
+-- ============================================================
+DO $$
+BEGIN
+  RAISE NOTICE 'Advisory lock functions created successfully';
+  RAISE NOTICE 'Available functions: try_advisory_lock, release_advisory_lock';
+  RAISE NOTICE 'Available functions: try_advisory_lock_shared, release_advisory_lock_shared';
+  RAISE NOTICE 'View: v_advisory_locks_held';
+END $$;
+-- =============================================
+-- BOOKING PAYMENT EVENTS - AUDIT TRAIL
+-- Event Sourcing para historial de pagos
+-- =============================================
+
+-- Enum para tipos de eventos de pago
+DO $$ BEGIN
+  CREATE TYPE payment_event_type AS ENUM (
+    -- Lifecycle events
+    'payment_initiated',
+    'payment_processing',
+    'payment_approved',
+    'payment_rejected',
+    'payment_failed',
+    'payment_cancelled',
+
+    -- Hold/Authorization events
+    'hold_created',
+    'hold_captured',
+    'hold_released',
+    'hold_expired',
+    'hold_reauthorized',
+
+    -- Refund events
+    'refund_initiated',
+    'refund_processing',
+    'refund_completed',
+    'refund_failed',
+    'partial_refund_completed',
+
+    -- Split payment events
+    'split_initiated',
+    'split_owner_payment',
+    'split_platform_fee',
+    'split_completed',
+
+    -- Wallet events
+    'wallet_lock_created',
+    'wallet_lock_released',
+    'wallet_funds_transferred',
+
+    -- Dispute events
+    'dispute_opened',
+    'dispute_evidence_submitted',
+    'dispute_resolved',
+
+    -- System events
+    'webhook_received',
+    'status_sync',
+    'manual_intervention'
+  );
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
+
+-- Tabla principal de eventos de pago
+CREATE TABLE IF NOT EXISTS booking_payment_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+  -- Referencias
+  booking_id UUID NOT NULL REFERENCES bookings(id) ON DELETE CASCADE,
+
+  -- Evento
+  event_type payment_event_type NOT NULL,
+  event_data JSONB NOT NULL DEFAULT '{}',
+
+  -- Estado antes/después (para debugging)
+  previous_status TEXT,
+  new_status TEXT,
+
+  -- Proveedor de pago
+  payment_provider TEXT, -- 'mercadopago', 'paypal', 'wallet', etc.
+  provider_transaction_id TEXT, -- ID externo del proveedor
+  provider_response JSONB, -- Respuesta raw del proveedor (sanitizada)
+
+  -- Montos involucrados
+  amount_cents BIGINT,
+  currency TEXT DEFAULT 'USD',
+
+  -- Actor
+  actor_id UUID, -- Usuario que disparó el evento (null si es sistema)
+  actor_type TEXT DEFAULT 'system', -- 'renter', 'owner', 'admin', 'system', 'webhook'
+
+  -- Metadatos
+  ip_address INET,
+  user_agent TEXT,
+  idempotency_key TEXT,
+  correlation_id TEXT, -- Para trazar requests relacionados
+
+  -- Error info (si aplica)
+  error_code TEXT,
+  error_message TEXT,
+
+  -- Timestamps
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  processed_at TIMESTAMPTZ, -- Cuando se completó el procesamiento
+
+  -- Constraints
+  CONSTRAINT valid_amount CHECK (amount_cents IS NULL OR amount_cents >= 0)
+);
+
+-- Índices para queries comunes
+CREATE INDEX IF NOT EXISTS idx_payment_events_booking
+  ON booking_payment_events(booking_id, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_payment_events_type
+  ON booking_payment_events(event_type, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_payment_events_provider_tx
+  ON booking_payment_events(provider_transaction_id)
+  WHERE provider_transaction_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_payment_events_correlation
+  ON booking_payment_events(correlation_id)
+  WHERE correlation_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_payment_events_created
+  ON booking_payment_events(created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_payment_events_actor
+  ON booking_payment_events(actor_id, created_at DESC)
+  WHERE actor_id IS NOT NULL;
+
+-- RLS Policies
+ALTER TABLE booking_payment_events ENABLE ROW LEVEL SECURITY;
+
+-- Solo admins y service_role pueden leer eventos de pago
+CREATE POLICY "Admin and service can read payment events"
+  ON booking_payment_events
+  FOR SELECT
+  TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM admin_users
+      WHERE user_id = auth.uid()
+    )
+    OR
+    auth.jwt() ->> 'role' = 'service_role'
+  );
+
+-- Solo service_role puede insertar (desde Edge Functions)
+CREATE POLICY "Service role can insert payment events"
+  ON booking_payment_events
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    auth.jwt() ->> 'role' = 'service_role'
+  );
+
+-- Nadie puede update/delete (inmutabilidad)
+-- No policies for UPDATE/DELETE = denied by default
+
+-- =============================================
+-- FUNCIONES HELPER
+-- =============================================
+
+-- Función para registrar un evento de pago
+CREATE OR REPLACE FUNCTION log_payment_event(
+  p_booking_id UUID,
+  p_event_type TEXT,
+  p_event_data JSONB DEFAULT '{}',
+  p_payment_provider TEXT DEFAULT NULL,
+  p_provider_transaction_id TEXT DEFAULT NULL,
+  p_provider_response JSONB DEFAULT NULL,
+  p_amount_cents BIGINT DEFAULT NULL,
+  p_currency TEXT DEFAULT 'USD',
+  p_actor_id UUID DEFAULT NULL,
+  p_actor_type TEXT DEFAULT 'system',
+  p_previous_status TEXT DEFAULT NULL,
+  p_new_status TEXT DEFAULT NULL,
+  p_error_code TEXT DEFAULT NULL,
+  p_error_message TEXT DEFAULT NULL,
+  p_correlation_id TEXT DEFAULT NULL,
+  p_idempotency_key TEXT DEFAULT NULL
+)
+RETURNS UUID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_event_id UUID;
+  v_event_type_enum payment_event_type;
+BEGIN
+  -- Cast string to enum
+  v_event_type_enum := p_event_type::payment_event_type;
+
+  -- Insert event
+  INSERT INTO booking_payment_events (
+    booking_id,
+    event_type,
+    event_data,
+    previous_status,
+    new_status,
+    payment_provider,
+    provider_transaction_id,
+    provider_response,
+    amount_cents,
+    currency,
+    actor_id,
+    actor_type,
+    error_code,
+    error_message,
+    correlation_id,
+    idempotency_key,
+    processed_at
+  ) VALUES (
+    p_booking_id,
+    v_event_type_enum,
+    p_event_data,
+    p_previous_status,
+    p_new_status,
+    p_payment_provider,
+    p_provider_transaction_id,
+    p_provider_response,
+    p_amount_cents,
+    p_currency,
+    p_actor_id,
+    p_actor_type,
+    p_error_code,
+    p_error_message,
+    p_correlation_id,
+    p_idempotency_key,
+    NOW()
+  )
+  RETURNING id INTO v_event_id;
+
+  RETURN v_event_id;
+END;
+$$;
+
+-- Función para obtener historial de pagos de una reserva
+CREATE OR REPLACE FUNCTION get_booking_payment_history(p_booking_id UUID)
+RETURNS TABLE (
+  event_id UUID,
+  event_type TEXT,
+  event_data JSONB,
+  previous_status TEXT,
+  new_status TEXT,
+  payment_provider TEXT,
+  provider_transaction_id TEXT,
+  amount_cents BIGINT,
+  currency TEXT,
+  actor_type TEXT,
+  error_code TEXT,
+  error_message TEXT,
+  created_at TIMESTAMPTZ
+)
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT
+    id AS event_id,
+    event_type::TEXT,
+    event_data,
+    previous_status,
+    new_status,
+    payment_provider,
+    provider_transaction_id,
+    amount_cents,
+    currency,
+    actor_type,
+    error_code,
+    error_message,
+    created_at
+  FROM booking_payment_events
+  WHERE booking_id = p_booking_id
+  ORDER BY created_at ASC;
+$$;
+
+-- Función para obtener resumen de eventos por tipo
+CREATE OR REPLACE FUNCTION get_payment_events_summary(
+  p_start_date TIMESTAMPTZ DEFAULT NOW() - INTERVAL '30 days',
+  p_end_date TIMESTAMPTZ DEFAULT NOW()
+)
+RETURNS TABLE (
+  event_type TEXT,
+  event_count BIGINT,
+  total_amount_cents BIGINT,
+  avg_processing_time_ms NUMERIC,
+  error_count BIGINT
+)
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT
+    event_type::TEXT,
+    COUNT(*) AS event_count,
+    SUM(amount_cents) AS total_amount_cents,
+    AVG(EXTRACT(EPOCH FROM (processed_at - created_at)) * 1000) AS avg_processing_time_ms,
+    COUNT(*) FILTER (WHERE error_code IS NOT NULL) AS error_count
+  FROM booking_payment_events
+  WHERE created_at BETWEEN p_start_date AND p_end_date
+  GROUP BY event_type
+  ORDER BY event_count DESC;
+$$;
+
+-- Grant permisos
+GRANT EXECUTE ON FUNCTION log_payment_event TO authenticated;
+GRANT EXECUTE ON FUNCTION get_booking_payment_history TO authenticated;
+GRANT EXECUTE ON FUNCTION get_payment_events_summary TO authenticated;
+
+-- =============================================
+-- COMENTARIOS
+-- =============================================
+COMMENT ON TABLE booking_payment_events IS
+  'Event sourcing table for payment audit trail. Immutable log of all payment-related events.';
+
+COMMENT ON FUNCTION log_payment_event IS
+  'Records a payment event. Called from Edge Functions during payment processing.';
+
+COMMENT ON FUNCTION get_booking_payment_history IS
+  'Returns chronological payment history for a booking. Admin/service only.';
+
+COMMENT ON FUNCTION get_payment_events_summary IS
+  'Returns aggregated statistics of payment events. For admin dashboards.';
+-- Update get_available_cars to exclude cars without photos
+-- Cars without at least one photo should not appear in marketplace search results
+
+CREATE OR REPLACE FUNCTION public.get_available_cars(
+  p_start_date timestamp with time zone,
+  p_end_date timestamp with time zone,
+  p_lat double precision DEFAULT NULL::double precision,
+  p_lng double precision DEFAULT NULL::double precision,
+  p_limit integer DEFAULT 100,
+  p_offset integer DEFAULT 0
+)
+RETURNS TABLE(
+  id uuid,
+  owner_id uuid,
+  brand text,
+  model text,
+  year integer,
+  plate text,
+  price_per_day numeric,
+  currency character,
+  status text,
+  location jsonb,
+  images text[],
+  features jsonb,
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone,
+  total_bookings bigint,
+  avg_rating numeric,
+  score numeric
+)
+LANGUAGE plpgsql
+STABLE SECURITY DEFINER
+SET search_path TO 'public'
+AS $function$
+DECLARE
+  v_avg_price NUMERIC;
+BEGIN
+  SELECT COALESCE(AVG(c.price_per_day), 0) INTO v_avg_price FROM cars c WHERE c.status = 'active' AND c.price_per_day IS NOT NULL;
+
+  RETURN QUERY
+  WITH candidates AS (
+    SELECT
+      c.*,
+      COALESCE(AVG(r.rating) FILTER (WHERE r.id IS NOT NULL AND r.is_car_review = true), 0)::NUMERIC AS avg_rating_calc,
+      COUNT(DISTINCT b.id) FILTER (WHERE b.id IS NOT NULL) AS total_bookings_calc
+    FROM cars c
+    LEFT JOIN bookings b ON b.car_id = c.id
+    LEFT JOIN reviews r ON r.booking_id = b.id AND r.is_car_review = true
+    WHERE c.status = 'active'
+      -- NEW: Exclude cars without photos
+      AND EXISTS (
+        SELECT 1 FROM car_photos cp WHERE cp.car_id = c.id LIMIT 1
+      )
+      AND NOT EXISTS (
+        SELECT 1 FROM bookings b2
+        WHERE b2.car_id = c.id
+          AND b2.status IN ('pending','confirmed','in_progress')
+          AND (b2.start_at, b2.end_at) OVERLAPS (p_start_date, p_end_date)
+      )
+    GROUP BY c.id
+  ),
+  scored AS (
+    SELECT
+      c.*,
+      (COALESCE(c.avg_rating_calc, 0)::NUMERIC / 5.0) AS rating_component,
+      CASE
+        WHEN p_lat IS NULL OR p_lng IS NULL OR c.location_lat IS NULL OR c.location_lng IS NULL THEN NULL
+        ELSE ST_DistanceSphere(ST_MakePoint(p_lng, p_lat), ST_MakePoint(c.location_lng, c.location_lat)) / 1000.0
+      END AS distance_km,
+      CASE
+        WHEN p_lat IS NULL OR p_lng IS NULL OR c.location_lat IS NULL OR c.location_lng IS NULL THEN 0.5
+        ELSE GREATEST(
+          0.05,
+          1.0 - POWER(
+            LEAST((ST_DistanceSphere(ST_MakePoint(p_lng, p_lat), ST_MakePoint(c.location_lng, c.location_lat)) / 1000.0) / 30.0, 1.0),
+            0.5
+          )
+        )
+      END AS distance_component,
+      CASE
+        WHEN v_avg_price <= 0 OR c.price_per_day IS NULL THEN 0.5
+        WHEN c.price_per_day <= v_avg_price THEN 1.0
+        ELSE GREATEST(0.0, 1.0 - ((c.price_per_day - v_avg_price) / v_avg_price))
+      END AS price_component,
+      CASE WHEN c.auto_approval = TRUE THEN 1.0 ELSE 0.0 END AS auto_component,
+      CASE WHEN v_avg_price > 0 THEN ABS(c.price_per_day - v_avg_price) / v_avg_price ELSE 0 END AS price_dev_pct
+    FROM candidates c
+  ),
+  weighted AS (
+    SELECT
+      s.*,
+      0.40::NUMERIC AS w_rating_base,
+      0.35::NUMERIC AS w_distance_base,
+      0.15::NUMERIC AS w_price_base,
+      0.10::NUMERIC AS w_auto_base
+    FROM scored s
+  ),
+  final AS (
+    SELECT
+      w.id,
+      w.owner_id,
+      w.brand_text_backup AS brand,
+      w.model_text_backup AS model,
+      w.year,
+      w.plate,
+      w.price_per_day,
+      w.currency::CHAR(3),
+      w.status::TEXT AS status,
+      jsonb_build_object(
+        'city', w.location_city,
+        'state', w.location_state,
+        'province', w.location_province,
+        'country', w.location_country,
+        'lat', w.location_lat,
+        'lng', w.location_lng
+      ) AS location,
+      COALESCE(
+        ARRAY(
+          SELECT url FROM car_photos WHERE car_id = w.id ORDER BY sort_order LIMIT 10
+        ),
+        ARRAY[]::TEXT[]
+      ) AS images,
+      COALESCE(w.features, '{}'::jsonb) AS features,
+      w.created_at,
+      w.updated_at,
+      w.total_bookings_calc AS total_bookings,
+      w.avg_rating_calc AS avg_rating,
+      w.distance_km,
+      w.distance_component,
+      w.price_component,
+      w.rating_component,
+      w.auto_component,
+      w.price_dev_pct,
+      (CASE
+         WHEN w.distance_km IS NULL THEN w_distance_base
+         WHEN w.distance_km <= 1 THEN 0.90
+         WHEN w.distance_km <= 5 THEN 0.70
+         WHEN w.distance_km <= 15 THEN 0.60
+         WHEN w.distance_km > 15 THEN GREATEST(w_distance_base * 0.3, 0.10)
+         ELSE w_distance_base
+       END) AS w_distance_adj,
+      (CASE
+         WHEN w.distance_km IS NOT NULL AND w.distance_km <= 1 THEN
+           w_price_base * 0.1
+         WHEN w.price_dev_pct > 0.15 THEN w_price_base + 0.05
+         ELSE w_price_base
+       END) AS w_price_adj,
+      w_rating_base AS w_rating_adj_pre,
+      (CASE
+         WHEN w.distance_km IS NOT NULL AND w.distance_km <= 1 THEN
+           w_auto_base * 0.1
+         ELSE w_auto_base
+       END) AS w_auto_adj
+    FROM weighted w
+  ),
+  normalized AS (
+    SELECT
+      f.*,
+      f.w_rating_adj_pre AS w_rating_adj_raw,
+      f.w_distance_adj AS w_distance_raw,
+      f.w_price_adj AS w_price_raw,
+      f.w_auto_adj AS w_auto_raw
+    FROM final f
+  ),
+  normalized2 AS (
+    SELECT
+      n.*,
+      (n.w_rating_adj_raw + n.w_distance_raw + n.w_price_raw + n.w_auto_raw) AS sum_w_raw
+    FROM normalized n
+  )
+  SELECT
+    n2.id,
+    n2.owner_id,
+    n2.brand,
+    n2.model,
+    n2.year,
+    n2.plate,
+    n2.price_per_day,
+    n2.currency,
+    n2.status,
+    n2.location,
+    n2.images,
+    n2.features,
+    n2.created_at,
+    n2.updated_at,
+    n2.total_bookings,
+    n2.avg_rating,
+    (
+      ((n2.w_rating_adj_raw / NULLIF(n2.sum_w_raw, 0)) * n2.rating_component)
+      + ((n2.w_distance_raw / NULLIF(n2.sum_w_raw, 0)) * n2.distance_component)
+      + ((n2.w_price_raw / NULLIF(n2.sum_w_raw, 0)) * n2.price_component)
+      + ((n2.w_auto_raw / NULLIF(n2.sum_w_raw, 0)) * n2.auto_component)
+    )::NUMERIC AS score
+  FROM normalized2 n2
+  ORDER BY score DESC, n2.distance_km ASC NULLS LAST, n2.created_at DESC
+  LIMIT p_limit
+  OFFSET p_offset;
+END;
+$function$;
+
+COMMENT ON FUNCTION public.get_available_cars IS
+  'Returns available cars for marketplace search. Excludes cars without photos and with overlapping bookings.';
+-- ============================================================================
+-- FIX: function_search_path_mutable Security Warning
+-- ============================================================================
+-- This migration fixes the Supabase linter warning about functions with
+-- mutable search_path. Setting search_path = '' prevents search path hijacking
+-- attacks where a malicious schema could intercept function calls.
+--
+-- See: https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable
+-- ============================================================================
+
+-- Helper: For each function, we ALTER it to set search_path = ''
+-- This is the safest option as it requires explicit schema qualification
+
+-- ============================================================================
+-- PUBLIC SCHEMA FUNCTIONS
+-- ============================================================================
+
+ALTER FUNCTION public.report_renter_no_show SET search_path = '';
+ALTER FUNCTION public.send_booking_reminders SET search_path = '';
+ALTER FUNCTION public.compute_cancel_fee SET search_path = '';
+ALTER FUNCTION public.set_credit_expiration SET search_path = '';
+ALTER FUNCTION public.expire_pending_approvals SET search_path = '';
+ALTER FUNCTION public.get_expiring_locks SET search_path = '';
+ALTER FUNCTION public.send_welcome_notification SET search_path = '';
+ALTER FUNCTION public.auto_update_price_per_day SET search_path = '';
+ALTER FUNCTION public.measure_execution_time SET search_path = '';
+ALTER FUNCTION public.send_car_views_milestone_notification SET search_path = '';
+ALTER FUNCTION public.send_renter_tips SET search_path = '';
+ALTER FUNCTION public.report_owner_no_show SET search_path = '';
+ALTER FUNCTION public.maintenance_run_full_cleanup SET search_path = '';
+ALTER FUNCTION public.process_binance_response SET search_path = '';
+ALTER FUNCTION public.get_admin_roles SET search_path = '';
+ALTER FUNCTION public.update_transactions_updated_at SET search_path = '';
+ALTER FUNCTION public.pay_booking_extension SET search_path = '';
+ALTER FUNCTION public.update_car_blocked_dates_updated_at SET search_path = '';
+ALTER FUNCTION public.update_p2p_orders_updated_at SET search_path = '';
+-- quote_booking has multiple overloads
+ALTER FUNCTION public.quote_booking(p_car_id uuid, p_start date, p_end date, p_promo text) SET search_path = '';
+ALTER FUNCTION public.quote_booking(p_car_id uuid, p_start timestamp with time zone, p_end timestamp with time zone, p_promo_code text, p_user_lat numeric, p_user_lng numeric, p_delivery_required boolean) SET search_path = '';
+ALTER FUNCTION public.calculate_late_return_penalty SET search_path = '';
+ALTER FUNCTION public.complete_checkout SET search_path = '';
+ALTER FUNCTION public.update_feature_flags_updated_at SET search_path = '';
+ALTER FUNCTION public.log_feature_flag_changes SET search_path = '';
+ALTER FUNCTION public.generate_device_fingerprint SET search_path = '';
+ALTER FUNCTION public.complete_pending_review_bookings SET search_path = '';
+ALTER FUNCTION public.calculate_user_bonus_malus SET search_path = '';
+ALTER FUNCTION public.sync_email_verification SET search_path = '';
+ALTER FUNCTION public.send_inactive_owner_reminders SET search_path = '';
+ALTER FUNCTION public.maintenance_cleanup_orphaned_car_photos SET search_path = '';
+ALTER FUNCTION public.send_nearby_cars_notifications SET search_path = '';
+ALTER FUNCTION public.wallet_lock_funds_with_expiration SET search_path = '';
+ALTER FUNCTION public.maintenance_cleanup_old_notifications SET search_path = '';
+ALTER FUNCTION public.update_support_ticket_timestamp SET search_path = '';
+ALTER FUNCTION public.prevent_locked_identity_changes SET search_path = '';
+ALTER FUNCTION public.send_optimization_tips SET search_path = '';
+ALTER FUNCTION public.apply_late_return_penalty SET search_path = '';
+ALTER FUNCTION public.notify_price_drop SET search_path = '';
+ALTER FUNCTION public.autoclose_tracking_if_returned SET search_path = '';
+ALTER FUNCTION public.release_mp_preauth_order SET search_path = '';
+ALTER FUNCTION public.update_p2p_config_updated_at SET search_path = '';
+ALTER FUNCTION public.sync_profile_verification_status SET search_path = '';
+ALTER FUNCTION public.send_car_recommendations SET search_path = '';
+ALTER FUNCTION public.p2p_get_next_order SET search_path = '';
+ALTER FUNCTION public.send_document_expiry_reminders SET search_path = '';
+ALTER FUNCTION public.sync_phone_verification SET search_path = '';
+ALTER FUNCTION public.maintenance_get_data_health_report SET search_path = '';
+ALTER FUNCTION public.update_facturas_recibidas_updated_at SET search_path = '';
+ALTER FUNCTION public.maintenance_cleanup_draft_cars SET search_path = '';
+ALTER FUNCTION public.cleanup_old_performance_logs SET search_path = '';
+ALTER FUNCTION public.enforce_renter_checkin_before_in_progress SET search_path = '';
+ALTER FUNCTION public.respond_to_extension SET search_path = '';
+ALTER FUNCTION public.maintenance_identify_test_accounts SET search_path = '';
+ALTER FUNCTION public.trigger_calculate_platform_fee SET search_path = '';
+-- is_admin has multiple overloads
+ALTER FUNCTION public.is_admin() SET search_path = '';
+ALTER FUNCTION public.is_admin(check_user_id uuid) SET search_path = '';
+ALTER FUNCTION public.log_admin_action SET search_path = '';
+ALTER FUNCTION public.validate_contract_clauses_accepted SET search_path = '';
+ALTER FUNCTION public.send_pending_requests_reminder SET search_path = '';
+ALTER FUNCTION public.send_verification_notification SET search_path = '';
+ALTER FUNCTION public.encrypt_message SET search_path = '';
+ALTER FUNCTION public.maintenance_cleanup_old_conversion_events SET search_path = '';
+ALTER FUNCTION public.update_payment_references_updated_at SET search_path = '';
+ALTER FUNCTION public.update_updated_at_column SET search_path = '';
+ALTER FUNCTION public.update_booking_contracts_updated_at SET search_path = '';
+ALTER FUNCTION public.wallet_deposit_funds_admin SET search_path = '';
+ALTER FUNCTION public.request_booking_extension SET search_path = '';
+ALTER FUNCTION public.cancel_with_fee SET search_path = '';
+ALTER FUNCTION public.notify_owner_new_booking_request SET search_path = '';
+ALTER FUNCTION public.capture_mp_preauth_order SET search_path = '';
+ALTER FUNCTION public.prepare_booking_payment SET search_path = '';
+ALTER FUNCTION public.release_expired_card_preauths SET search_path = '';
+ALTER FUNCTION public.send_favorite_car_available SET search_path = '';
+ALTER FUNCTION public.update_binance_rates SET search_path = '';
+ALTER FUNCTION public.refresh_accounting_balances SET search_path = '';
+ALTER FUNCTION public.check_fleet_bonus_eligibility SET search_path = '';
+ALTER FUNCTION public.update_proveedores_updated_at SET search_path = '';
+ALTER FUNCTION public.set_approval_expires_at SET search_path = '';
+ALTER FUNCTION public.send_booking_completion_reminders SET search_path = '';
+ALTER FUNCTION public.estimate_vehicle_value_usd SET search_path = '';
+ALTER FUNCTION public.update_mp_onboarding_updated_at SET search_path = '';
+
+-- ============================================================================
+-- FUNCTIONS WITH OVERLOADS (handle carefully)
+-- ============================================================================
+
+-- wallet_lock_funds has multiple overloads, need to specify signature
+-- Check existing signatures first, then apply
+DO $$
+BEGIN
+  -- Try to alter all overloads of wallet_lock_funds
+  -- wallet_lock_funds overloads
+  BEGIN
+    EXECUTE 'ALTER FUNCTION public.wallet_lock_funds(uuid, numeric, text) SET search_path = ''''';
+  EXCEPTION WHEN undefined_function THEN NULL;
+  END;
+  BEGIN
+    EXECUTE 'ALTER FUNCTION public.wallet_lock_funds(uuid, numeric) SET search_path = ''''';
+  EXCEPTION WHEN undefined_function THEN NULL;
+  END;
+  BEGIN
+    EXECUTE 'ALTER FUNCTION public.wallet_lock_funds(p_booking_id uuid, p_amount_cents bigint) SET search_path = ''''';
+  EXCEPTION WHEN undefined_function THEN NULL;
+  END;
+
+  -- create_mp_preauth_order overloads
+  BEGIN
+    EXECUTE 'ALTER FUNCTION public.create_mp_preauth_order(p_intent_id uuid, p_amount_cents bigint, p_description text, p_booking_id uuid, p_token text) SET search_path = ''''';
+  EXCEPTION WHEN undefined_function THEN NULL;
+  END;
+  BEGIN
+    EXECUTE 'ALTER FUNCTION public.create_mp_preauth_order(p_intent_id uuid, p_amount_cents bigint, p_description text, p_booking_id uuid) SET search_path = ''''';
+  EXCEPTION WHEN undefined_function THEN NULL;
+  END;
+END $$;
+
+-- ============================================================================
+-- PRIVATE SCHEMA FUNCTIONS
+-- ============================================================================
+
+ALTER FUNCTION private.get_mp_token SET search_path = '';
+
+-- ============================================================================
+-- EXTENSIONS IN PUBLIC SCHEMA
+-- Note: Moving extensions requires careful handling. For postgis especially,
+-- many functions depend on it being in public. This is a known Supabase issue.
+--
+-- The safest approach is to create the extensions schema and move if possible,
+-- but for postgis this may break existing code. Leaving as documentation.
+-- ============================================================================
+
+-- Create extensions schema if not exists
+CREATE SCHEMA IF NOT EXISTS extensions;
+
+-- For btree_gist, we can try to move it (less impactful than postgis)
+-- Note: This may fail if objects depend on it in public schema
+-- DO $$
+-- BEGIN
+--   ALTER EXTENSION btree_gist SET SCHEMA extensions;
+-- EXCEPTION WHEN OTHERS THEN
+--   RAISE NOTICE 'Could not move btree_gist to extensions schema: %', SQLERRM;
+-- END $$;
+
+-- ============================================================================
+-- AUTH: Leaked Password Protection
+-- ============================================================================
+-- This setting must be enabled in Supabase Dashboard:
+-- 1. Go to Authentication > Settings > Security
+-- 2. Enable "Leaked Password Protection"
+--
+-- This cannot be done via SQL migration.
+-- ============================================================================
+
+-- Add comment to remind about this
+COMMENT ON SCHEMA public IS 'Standard public schema. Note: Enable Leaked Password Protection in Supabase Dashboard > Authentication > Settings > Security';
+-- =============================================
+-- QUERY PERFORMANCE MONITORING
+-- Monitoreo de performance de queries SQL
+-- =============================================
+
+-- Tabla para almacenar métricas de queries lentas
+CREATE TABLE IF NOT EXISTS query_performance_log (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+  -- Identificación del query
+  query_name TEXT NOT NULL, -- Nombre descriptivo (ej: 'get_available_cars')
+  query_hash TEXT, -- Hash del query para agrupar variantes
+
+  -- Métricas de tiempo
+  execution_time_ms NUMERIC(10,2) NOT NULL,
+  planning_time_ms NUMERIC(10,2),
+
+  -- Contexto
+  rows_returned INTEGER,
+  rows_scanned INTEGER,
+
+  -- Parámetros (sanitizados)
+  params_summary JSONB, -- Resumen de parámetros sin PII
+
+  -- Metadata
+  caller_function TEXT, -- RPC o Edge Function que lo llamó
+  user_id UUID, -- Para análisis por usuario (opcional)
+
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Índices
+CREATE INDEX IF NOT EXISTS idx_query_perf_name_time
+  ON query_performance_log(query_name, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_query_perf_slow
+  ON query_performance_log(execution_time_ms DESC)
+  WHERE execution_time_ms > 100;
+
+CREATE INDEX IF NOT EXISTS idx_query_perf_created
+  ON query_performance_log(created_at DESC);
+
+-- RLS
+ALTER TABLE query_performance_log ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Admin can read query performance"
+  ON query_performance_log FOR SELECT
+  TO authenticated
+  USING (
+    EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid())
+  );
+
+CREATE POLICY "Service role can insert query performance"
+  ON query_performance_log FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.jwt() ->> 'role' = 'service_role');
+
+-- =============================================
+-- FUNCIONES DE MONITOREO
+-- =============================================
+
+-- Función para loguear performance de un query
+CREATE OR REPLACE FUNCTION log_query_performance(
+  p_query_name TEXT,
+  p_execution_time_ms NUMERIC,
+  p_rows_returned INTEGER DEFAULT NULL,
+  p_caller_function TEXT DEFAULT NULL,
+  p_params_summary JSONB DEFAULT NULL
+)
+RETURNS UUID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_id UUID;
+BEGIN
+  -- Solo loguear queries que tarden más de 50ms
+  IF p_execution_time_ms < 50 THEN
+    RETURN NULL;
+  END IF;
+
+  INSERT INTO query_performance_log (
+    query_name,
+    execution_time_ms,
+    rows_returned,
+    caller_function,
+    params_summary
+  ) VALUES (
+    p_query_name,
+    p_execution_time_ms,
+    p_rows_returned,
+    p_caller_function,
+    p_params_summary
+  )
+  RETURNING id INTO v_id;
+
+  RETURN v_id;
+END;
+$$;
+
+-- Función para obtener estadísticas de performance
+CREATE OR REPLACE FUNCTION get_query_performance_stats(
+  p_hours INTEGER DEFAULT 24
+)
+RETURNS TABLE (
+  query_name TEXT,
+  total_calls BIGINT,
+  avg_time_ms NUMERIC,
+  max_time_ms NUMERIC,
+  min_time_ms NUMERIC,
+  p95_time_ms NUMERIC,
+  total_rows_returned BIGINT,
+  slow_calls BIGINT
+)
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT
+    query_name,
+    COUNT(*) AS total_calls,
+    ROUND(AVG(execution_time_ms), 2) AS avg_time_ms,
+    MAX(execution_time_ms) AS max_time_ms,
+    MIN(execution_time_ms) AS min_time_ms,
+    PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY execution_time_ms) AS p95_time_ms,
+    SUM(rows_returned) AS total_rows_returned,
+    COUNT(*) FILTER (WHERE execution_time_ms > 500) AS slow_calls
+  FROM query_performance_log
+  WHERE created_at > NOW() - (p_hours || ' hours')::INTERVAL
+  GROUP BY query_name
+  ORDER BY avg_time_ms DESC;
+$$;
+
+-- Función para obtener queries más lentas
+CREATE OR REPLACE FUNCTION get_slowest_queries(
+  p_limit INTEGER DEFAULT 20,
+  p_min_time_ms NUMERIC DEFAULT 100
+)
+RETURNS TABLE (
+  id UUID,
+  query_name TEXT,
+  execution_time_ms NUMERIC,
+  rows_returned INTEGER,
+  caller_function TEXT,
+  params_summary JSONB,
+  created_at TIMESTAMPTZ
+)
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT
+    id,
+    query_name,
+    execution_time_ms,
+    rows_returned,
+    caller_function,
+    params_summary,
+    created_at
+  FROM query_performance_log
+  WHERE execution_time_ms >= p_min_time_ms
+  ORDER BY execution_time_ms DESC
+  LIMIT p_limit;
+$$;
+
+-- Función para análisis de tendencias
+CREATE OR REPLACE FUNCTION get_query_performance_trends(
+  p_query_name TEXT,
+  p_days INTEGER DEFAULT 7
+)
+RETURNS TABLE (
+  hour_bucket TIMESTAMPTZ,
+  call_count BIGINT,
+  avg_time_ms NUMERIC,
+  max_time_ms NUMERIC
+)
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT
+    date_trunc('hour', created_at) AS hour_bucket,
+    COUNT(*) AS call_count,
+    ROUND(AVG(execution_time_ms), 2) AS avg_time_ms,
+    MAX(execution_time_ms) AS max_time_ms
+  FROM query_performance_log
+  WHERE query_name = p_query_name
+    AND created_at > NOW() - (p_days || ' days')::INTERVAL
+  GROUP BY date_trunc('hour', created_at)
+  ORDER BY hour_bucket DESC;
+$$;
+
+-- =============================================
+-- TRIGGERS PARA QUERIES CRÍTICAS
+-- =============================================
+
+-- Función para medir tiempo de ejecución de una función
+CREATE OR REPLACE FUNCTION measure_execution_time(
+  p_function_name TEXT,
+  p_start_time TIMESTAMPTZ
+)
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_elapsed_ms NUMERIC;
+BEGIN
+  v_elapsed_ms := EXTRACT(EPOCH FROM (clock_timestamp() - p_start_time)) * 1000;
+
+  -- Solo loguear si es significativo
+  IF v_elapsed_ms > 50 THEN
+    PERFORM log_query_performance(
+      p_function_name,
+      v_elapsed_ms,
+      NULL,
+      'auto_measure'
+    );
+  END IF;
+END;
+$$;
+
+-- =============================================
+-- LIMPIEZA AUTOMÁTICA
+-- =============================================
+
+-- Limpiar logs de performance antiguos (mantener 30 días)
+CREATE OR REPLACE FUNCTION cleanup_old_performance_logs()
+RETURNS INTEGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_deleted INTEGER;
+BEGIN
+  DELETE FROM query_performance_log
+  WHERE created_at < NOW() - INTERVAL '30 days';
+
+  GET DIAGNOSTICS v_deleted = ROW_COUNT;
+  RETURN v_deleted;
+END;
+$$;
+
+-- Grants
+GRANT EXECUTE ON FUNCTION log_query_performance TO authenticated;
+GRANT EXECUTE ON FUNCTION get_query_performance_stats TO authenticated;
+GRANT EXECUTE ON FUNCTION get_slowest_queries TO authenticated;
+GRANT EXECUTE ON FUNCTION get_query_performance_trends TO authenticated;
+
+-- Comentarios
+COMMENT ON TABLE query_performance_log IS
+  'Logs de performance de queries SQL para monitoreo y optimización';
+
+COMMENT ON FUNCTION get_query_performance_stats IS
+  'Obtiene estadísticas agregadas de performance por query';
+
+COMMENT ON FUNCTION get_slowest_queries IS
+  'Obtiene las queries más lentas para debugging';
+-- ============================================================================
+-- Migration: Wallet Usage Metrics
+-- Created: 2025-12-28
+-- Description: Adds RPCs and views for wallet usage analytics
+-- ============================================================================
+
+-- ============================================================================
+-- 1. RPC: Get Wallet Usage Summary
+-- Returns key metrics for admin dashboard
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION admin_get_wallet_metrics(
+  p_start_date TIMESTAMPTZ DEFAULT NOW() - INTERVAL '30 days',
+  p_end_date TIMESTAMPTZ DEFAULT NOW()
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_result JSONB;
+BEGIN
+  SELECT jsonb_build_object(
+    'period', jsonb_build_object(
+      'start_date', p_start_date,
+      'end_date', p_end_date
+    ),
+    'summary', (
+      SELECT jsonb_build_object(
+        'total_users_with_wallet', COUNT(DISTINCT user_id),
+        'active_users_period', COUNT(DISTINCT user_id) FILTER (
+          WHERE created_at BETWEEN p_start_date AND p_end_date
+        ),
+        'total_transactions', COUNT(*),
+        'transactions_in_period', COUNT(*) FILTER (
+          WHERE created_at BETWEEN p_start_date AND p_end_date
+        ),
+        'completed_transactions', COUNT(*) FILTER (WHERE status = 'completed'),
+        'pending_transactions', COUNT(*) FILTER (WHERE status = 'pending'),
+        'failed_transactions', COUNT(*) FILTER (WHERE status = 'failed')
+      )
+      FROM wallet_transactions
+    ),
+    'deposits', (
+      SELECT jsonb_build_object(
+        'total_count', COUNT(*),
+        'total_amount_ars', COALESCE(SUM(amount) / 100.0, 0),
+        'avg_amount_ars', COALESCE(AVG(amount) / 100.0, 0),
+        'period_count', COUNT(*) FILTER (
+          WHERE created_at BETWEEN p_start_date AND p_end_date
+        ),
+        'period_amount_ars', COALESCE(SUM(amount) FILTER (
+          WHERE created_at BETWEEN p_start_date AND p_end_date
+        ) / 100.0, 0)
+      )
+      FROM wallet_transactions
+      WHERE type = 'deposit' AND status = 'completed'
+    ),
+    'withdrawals', (
+      SELECT jsonb_build_object(
+        'total_count', COUNT(*),
+        'total_amount_ars', COALESCE(SUM(amount) / 100.0, 0),
+        'avg_amount_ars', COALESCE(AVG(amount) / 100.0, 0),
+        'period_count', COUNT(*) FILTER (
+          WHERE created_at BETWEEN p_start_date AND p_end_date
+        ),
+        'period_amount_ars', COALESCE(SUM(amount) FILTER (
+          WHERE created_at BETWEEN p_start_date AND p_end_date
+        ) / 100.0, 0)
+      )
+      FROM wallet_transactions
+      WHERE type = 'withdrawal' AND status = 'completed'
+    ),
+    'locks', (
+      SELECT jsonb_build_object(
+        'total_locked_amount_ars', COALESCE(SUM(amount) / 100.0, 0),
+        'active_locks', COUNT(*)
+      )
+      FROM wallet_transactions
+      WHERE type IN ('lock', 'security_deposit_lock') AND status = 'completed'
+    ),
+    'balances', (
+      SELECT jsonb_build_object(
+        'total_balance_all_users_ars', COALESCE(SUM(balance_cents) / 100.0, 0),
+        'users_with_positive_balance', COUNT(*) FILTER (WHERE balance_cents > 0),
+        'users_with_zero_balance', COUNT(*) FILTER (WHERE balance_cents = 0),
+        'max_balance_ars', COALESCE(MAX(balance_cents) / 100.0, 0),
+        'avg_balance_ars', COALESCE(AVG(balance_cents) / 100.0, 0)
+      )
+      FROM (
+        SELECT
+          user_id,
+          SUM(
+            CASE
+              WHEN type IN ('deposit', 'credit', 'refund', 'rental_income', 'unlock') THEN amount
+              WHEN type IN ('withdrawal', 'debit', 'lock', 'rental_payment') THEN -amount
+              ELSE 0
+            END
+          ) as balance_cents
+        FROM wallet_transactions
+        WHERE status = 'completed'
+        GROUP BY user_id
+      ) balances
+    ),
+    'by_provider', (
+      SELECT COALESCE(jsonb_object_agg(
+        COALESCE(provider, 'unknown'),
+        jsonb_build_object(
+          'count', cnt,
+          'amount_ars', amount_ars
+        )
+      ), '{}'::jsonb)
+      FROM (
+        SELECT
+          provider,
+          COUNT(*) as cnt,
+          SUM(amount) / 100.0 as amount_ars
+        FROM wallet_transactions
+        WHERE status = 'completed'
+          AND type = 'deposit'
+        GROUP BY provider
+      ) by_prov
+    ),
+    'daily_trend', (
+      SELECT COALESCE(jsonb_agg(
+        jsonb_build_object(
+          'date', day,
+          'deposits', deposits,
+          'withdrawals', withdrawals,
+          'deposit_amount_ars', deposit_amount,
+          'withdrawal_amount_ars', withdrawal_amount
+        )
+        ORDER BY day DESC
+      ), '[]'::jsonb)
+      FROM (
+        SELECT
+          DATE(created_at) as day,
+          COUNT(*) FILTER (WHERE type = 'deposit' AND status = 'completed') as deposits,
+          COUNT(*) FILTER (WHERE type = 'withdrawal' AND status = 'completed') as withdrawals,
+          COALESCE(SUM(amount) FILTER (WHERE type = 'deposit' AND status = 'completed') / 100.0, 0) as deposit_amount,
+          COALESCE(SUM(amount) FILTER (WHERE type = 'withdrawal' AND status = 'completed') / 100.0, 0) as withdrawal_amount
+        FROM wallet_transactions
+        WHERE created_at BETWEEN p_start_date AND p_end_date
+        GROUP BY DATE(created_at)
+        ORDER BY day DESC
+        LIMIT 30
+      ) daily
+    ),
+    'top_users_by_balance', (
+      SELECT COALESCE(jsonb_agg(
+        jsonb_build_object(
+          'user_id', user_id,
+          'email', email,
+          'balance_ars', balance_cents / 100.0,
+          'transaction_count', tx_count
+        )
+      ), '[]'::jsonb)
+      FROM (
+        SELECT
+          wt.user_id,
+          p.email,
+          SUM(
+            CASE
+              WHEN wt.type IN ('deposit', 'credit', 'refund', 'rental_income', 'unlock') THEN wt.amount
+              WHEN wt.type IN ('withdrawal', 'debit', 'lock', 'rental_payment') THEN -wt.amount
+              ELSE 0
+            END
+          ) as balance_cents,
+          COUNT(*) as tx_count
+        FROM wallet_transactions wt
+        LEFT JOIN profiles p ON p.id = wt.user_id
+        WHERE wt.status = 'completed'
+        GROUP BY wt.user_id, p.email
+        ORDER BY balance_cents DESC
+        LIMIT 10
+      ) top_users
+    ),
+    'generated_at', NOW()
+  ) INTO v_result;
+
+  RETURN v_result;
+END;
+$$;
+
+-- Grant execute permission
+GRANT EXECUTE ON FUNCTION admin_get_wallet_metrics TO authenticated;
+
+COMMENT ON FUNCTION admin_get_wallet_metrics IS
+'Returns comprehensive wallet usage metrics for admin dashboard.
+Includes deposits, withdrawals, balances, provider breakdown, and daily trends.';
+
+-- ============================================================================
+-- 2. RPC: Get User Wallet History
+-- Returns paginated transaction history for a specific user
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION get_user_wallet_history(
+  p_user_id UUID,
+  p_limit INT DEFAULT 50,
+  p_offset INT DEFAULT 0
+)
+RETURNS TABLE (
+  id UUID,
+  type TEXT,
+  amount NUMERIC,
+  status TEXT,
+  provider TEXT,
+  reference_id TEXT,
+  description TEXT,
+  created_at TIMESTAMPTZ,
+  metadata JSONB
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  -- Security check: user can only see their own history
+  IF auth.uid() IS NULL OR (auth.uid() != p_user_id AND NOT EXISTS (
+    SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'
+  )) THEN
+    RAISE EXCEPTION 'Unauthorized';
+  END IF;
+
+  RETURN QUERY
+  SELECT
+    wt.id,
+    wt.type,
+    wt.amount / 100.0 as amount,
+    wt.status,
+    wt.provider,
+    wt.reference_id,
+    wt.description,
+    wt.created_at,
+    wt.metadata
+  FROM wallet_transactions wt
+  WHERE wt.user_id = p_user_id
+  ORDER BY wt.created_at DESC
+  LIMIT p_limit
+  OFFSET p_offset;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION get_user_wallet_history TO authenticated;
+
+COMMENT ON FUNCTION get_user_wallet_history IS
+'Returns paginated wallet transaction history for a user.
+Admin users can view any user history.';
+
+-- ============================================================================
+-- 3. RPC: Get Wallet Health Check
+-- Returns health status of the wallet system
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION admin_wallet_health_check()
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_result JSONB;
+  v_negative_balances INT;
+  v_stuck_pending INT;
+  v_orphaned_txns INT;
+BEGIN
+  -- Count negative balances
+  SELECT COUNT(*) INTO v_negative_balances
+  FROM (
+    SELECT user_id, SUM(
+      CASE
+        WHEN type IN ('deposit', 'credit', 'refund', 'rental_income', 'unlock') THEN amount
+        WHEN type IN ('withdrawal', 'debit', 'lock', 'rental_payment') THEN -amount
+        ELSE 0
+      END
+    ) as balance
+    FROM wallet_transactions
+    WHERE status = 'completed'
+    GROUP BY user_id
+    HAVING SUM(
+      CASE
+        WHEN type IN ('deposit', 'credit', 'refund', 'rental_income', 'unlock') THEN amount
+        WHEN type IN ('withdrawal', 'debit', 'lock', 'rental_payment') THEN -amount
+        ELSE 0
+      END
+    ) < 0
+  ) neg;
+
+  -- Count stuck pending transactions (>24h)
+  SELECT COUNT(*) INTO v_stuck_pending
+  FROM wallet_transactions
+  WHERE status = 'pending'
+    AND created_at < NOW() - INTERVAL '24 hours';
+
+  -- Count orphaned transactions (no profile)
+  SELECT COUNT(*) INTO v_orphaned_txns
+  FROM wallet_transactions wt
+  LEFT JOIN profiles p ON p.id = wt.user_id
+  WHERE p.id IS NULL;
+
+  SELECT jsonb_build_object(
+    'status', CASE
+      WHEN v_negative_balances > 0 THEN 'critical'
+      WHEN v_stuck_pending > 10 THEN 'warning'
+      WHEN v_orphaned_txns > 0 THEN 'warning'
+      ELSE 'healthy'
+    END,
+    'checks', jsonb_build_object(
+      'negative_balances', jsonb_build_object(
+        'count', v_negative_balances,
+        'status', CASE WHEN v_negative_balances > 0 THEN 'fail' ELSE 'pass' END
+      ),
+      'stuck_pending_transactions', jsonb_build_object(
+        'count', v_stuck_pending,
+        'status', CASE WHEN v_stuck_pending > 10 THEN 'warning' ELSE 'pass' END
+      ),
+      'orphaned_transactions', jsonb_build_object(
+        'count', v_orphaned_txns,
+        'status', CASE WHEN v_orphaned_txns > 0 THEN 'warning' ELSE 'pass' END
+      )
+    ),
+    'checked_at', NOW()
+  ) INTO v_result;
+
+  RETURN v_result;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION admin_wallet_health_check TO authenticated;
+
+COMMENT ON FUNCTION admin_wallet_health_check IS
+'Returns health check status for the wallet system.
+Checks for negative balances, stuck transactions, and orphaned records.';
+
+-- ============================================================================
+-- Done
+-- ============================================================================
+-- ============================================================
+-- SISTEMA DE PROTOCOLO DE NO-DEVOLUCION
+-- ============================================================
+-- Este sistema implementa el protocolo automatico para convertir
+-- "apropiacion indebita" (no cubierta por seguros) en
+-- "sustraccion post-autorizacion vencida" (potencialmente cubierta)
+-- ============================================================
+
+-- ============================================================
+-- 1. TABLA: return_protocol_events
+-- Log inmutable de cada accion del protocolo de no-devolucion
+-- ============================================================
+CREATE TABLE IF NOT EXISTS return_protocol_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  booking_id UUID NOT NULL REFERENCES bookings(id),
+
+  -- Tipo de evento en el timeline
+  event_type TEXT NOT NULL CHECK (event_type IN (
+    'booking_ended',           -- T+0: Fin de reserva
+    'alert_yellow',            -- T+2h: Primera alerta
+    'alert_orange',            -- T+6h: Segunda alerta
+    'contact_attempt_push',    -- Intento de contacto push
+    'contact_attempt_email',   -- Intento de contacto email
+    'contact_attempt_sms',     -- Intento de contacto SMS
+    'contact_attempt_call',    -- Intento de contacto llamada
+    'renter_response',         -- Respuesta del renter
+    'user_suspended',          -- T+12h: Usuario suspendido
+    'owner_notified',          -- Owner notificado del estado
+    'owner_confirmed_no_return', -- Owner confirma no devolucion
+    'police_report_generated', -- T+24h: BO generado
+    'police_report_signed',    -- BO firmado por owner
+    'insurance_notified',      -- T+24h: Aseguradora notificada
+    'legal_escalation',        -- T+48h: Escalamiento legal
+    'vehicle_recovered',       -- Vehiculo recuperado
+    'case_closed'              -- Caso cerrado
+  )),
+
+  -- Timeline relativo al fin de booking
+  hours_since_end NUMERIC(10,2),
+  scheduled_for TIMESTAMPTZ,
+  executed_at TIMESTAMPTZ,
+
+  -- Estado del evento
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'scheduled', 'executed', 'failed', 'skipped')),
+  failure_reason TEXT,
+  retry_count INT DEFAULT 0,
+
+  -- Metadata del evento
+  metadata JSONB DEFAULT '{}',
+  -- Para contact_attempt: {channel, recipient, message_id}
+  -- Para renter_response: {response_text, response_channel}
+  -- Para police_report: {report_number, station, officer}
+  -- Para insurance: {insurer, policy_number, claim_id}
+
+  -- Actor que ejecuto
+  executed_by TEXT CHECK (executed_by IN ('system', 'admin', 'owner', 'renter')),
+  executed_by_user_id UUID REFERENCES profiles(id),
+
+  -- Auditoria
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_return_protocol_booking ON return_protocol_events(booking_id);
+CREATE INDEX idx_return_protocol_type ON return_protocol_events(event_type);
+CREATE INDEX idx_return_protocol_status ON return_protocol_events(status) WHERE status = 'pending';
+CREATE INDEX idx_return_protocol_scheduled ON return_protocol_events(scheduled_for) WHERE status = 'scheduled';
+
+-- RLS
+ALTER TABLE return_protocol_events ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Admins can manage protocol events" ON return_protocol_events
+  FOR ALL USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND is_admin = true)
+  );
+
+CREATE POLICY "Owners can view their booking protocol events" ON return_protocol_events
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM bookings b
+      JOIN cars c ON b.car_id = c.id
+      WHERE b.id = return_protocol_events.booking_id
+        AND c.owner_id = auth.uid()
+    )
+  );
+
+-- ============================================================
+-- 2. TABLA: police_reports
+-- Denuncias policiales generadas por no-devolucion
+-- ============================================================
+CREATE TABLE IF NOT EXISTS police_reports (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  booking_id UUID NOT NULL REFERENCES bookings(id),
+  protocol_event_id UUID REFERENCES return_protocol_events(id),
+
+  -- Datos del vehiculo (nullable porque pueden faltar datos)
+  car_id UUID NOT NULL REFERENCES cars(id),
+  license_plate TEXT,
+  vehicle_description TEXT,
+
+  -- Datos del renter (denunciado) - nullable porque datos pueden faltar
+  renter_id UUID NOT NULL REFERENCES profiles(id),
+  renter_full_name TEXT,
+  renter_document_type TEXT,
+  renter_document_number TEXT,
+  renter_address TEXT,
+  renter_phone TEXT,
+
+  -- Datos del owner (denunciante) - nullable porque datos pueden faltar
+  owner_id UUID NOT NULL REFERENCES profiles(id),
+  owner_full_name TEXT,
+  owner_document_type TEXT,
+  owner_document_number TEXT,
+
+  -- Hechos
+  booking_start_at TIMESTAMPTZ NOT NULL,
+  booking_end_at TIMESTAMPTZ NOT NULL,
+  last_known_location_lat NUMERIC(10,7),
+  last_known_location_lng NUMERIC(10,7),
+  last_known_location_address TEXT,
+  last_contact_at TIMESTAMPTZ,
+
+  -- Contenido del reporte
+  report_content TEXT, -- Texto completo del BO
+  report_hash TEXT, -- Hash para verificar integridad
+
+  -- Estado
+  status TEXT DEFAULT 'draft' CHECK (status IN (
+    'draft',           -- Borrador generado
+    'pending_owner',   -- Esperando firma del owner
+    'signed',          -- Firmado por owner
+    'submitted',       -- Enviado a policia
+    'accepted',        -- Aceptado por policia
+    'rejected'         -- Rechazado por policia
+  )),
+
+  -- Firma digital del owner
+  owner_signed_at TIMESTAMPTZ,
+  owner_signature_ip TEXT,
+  owner_signature_user_agent TEXT,
+  owner_signature_hash TEXT,
+
+  -- Datos de la denuncia oficial
+  official_report_number TEXT,
+  police_station TEXT,
+  officer_name TEXT,
+  submitted_at TIMESTAMPTZ,
+
+  -- Documentos adjuntos
+  attachments JSONB DEFAULT '[]',
+  -- [{type, url, name, uploaded_at}]
+
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_police_reports_booking ON police_reports(booking_id);
+CREATE INDEX idx_police_reports_status ON police_reports(status);
+CREATE INDEX idx_police_reports_owner ON police_reports(owner_id);
+
+-- RLS
+ALTER TABLE police_reports ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Admins can manage police reports" ON police_reports
+  FOR ALL USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND is_admin = true)
+  );
+
+CREATE POLICY "Owners can view and sign their reports" ON police_reports
+  FOR ALL USING (owner_id = auth.uid());
+
+-- ============================================================
+-- 3. TABLA: insurance_notifications
+-- Comunicaciones con aseguradoras
+-- ============================================================
+CREATE TABLE IF NOT EXISTS insurance_notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  booking_id UUID NOT NULL REFERENCES bookings(id),
+  protocol_event_id UUID REFERENCES return_protocol_events(id),
+  police_report_id UUID REFERENCES police_reports(id),
+
+  -- Datos del seguro
+  insurance_company TEXT NOT NULL,
+  policy_number TEXT,
+  broker_name TEXT,
+  broker_email TEXT,
+
+  -- Contenido de la notificacion
+  notification_type TEXT NOT NULL CHECK (notification_type IN (
+    'initial_report',      -- Reporte inicial del siniestro
+    'evidence_submission', -- Envio de evidencia adicional
+    'status_update',       -- Actualizacion de estado
+    'claim_follow_up',     -- Seguimiento del reclamo
+    'claim_resolution'     -- Resolucion del reclamo
+  )),
+
+  subject TEXT NOT NULL,
+  body TEXT NOT NULL,
+  body_hash TEXT,
+
+  -- Documentos adjuntos
+  attachments JSONB DEFAULT '[]',
+
+  -- Estado de envio
+  status TEXT DEFAULT 'draft' CHECK (status IN (
+    'draft',
+    'pending_review',
+    'sent',
+    'delivered',
+    'failed',
+    'responded'
+  )),
+
+  sent_at TIMESTAMPTZ,
+  sent_via TEXT CHECK (sent_via IN ('email', 'portal', 'phone', 'in_person')),
+  sent_to TEXT, -- Email o destinatario
+
+  -- Respuesta de la aseguradora
+  response_received_at TIMESTAMPTZ,
+  response_content TEXT,
+  claim_number TEXT, -- Numero de reclamo asignado
+  claim_status TEXT CHECK (claim_status IN (
+    'pending',
+    'under_review',
+    'additional_info_required',
+    'approved',
+    'partially_approved',
+    'rejected'
+  )),
+
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_insurance_notifications_booking ON insurance_notifications(booking_id);
+CREATE INDEX idx_insurance_notifications_status ON insurance_notifications(status);
+
+-- RLS
+ALTER TABLE insurance_notifications ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Admins can manage insurance notifications" ON insurance_notifications
+  FOR ALL USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND is_admin = true)
+  );
+
+CREATE POLICY "Owners can view their insurance notifications" ON insurance_notifications
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM bookings b
+      JOIN cars c ON b.car_id = c.id
+      WHERE b.id = insurance_notifications.booking_id
+        AND c.owner_id = auth.uid()
+    )
+  );
+
+-- ============================================================
+-- 4. COLUMNAS ADICIONALES EN BOOKINGS
+-- ============================================================
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS return_status TEXT DEFAULT 'pending'
+  CHECK (return_status IN (
+    'pending',           -- Booking activo o antes de fin
+    'returned',          -- Devuelto correctamente
+    'overdue',           -- Vencido, no devuelto
+    'protocol_active',   -- Protocolo de no-devolucion activo
+    'police_report',     -- Denuncia generada
+    'legal_action',      -- Accion legal en curso
+    'recovered',         -- Vehiculo recuperado
+    'total_loss'         -- Perdida total
+  ));
+
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS return_protocol_started_at TIMESTAMPTZ;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS actual_return_at TIMESTAMPTZ;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS overdue_hours NUMERIC(10,2);
+
+-- ============================================================
+-- 5. FUNCION: Iniciar protocolo de no-devolucion
+-- ============================================================
+CREATE OR REPLACE FUNCTION start_return_protocol(p_booking_id UUID)
+RETURNS JSONB AS $$
+DECLARE
+  v_booking bookings;
+  v_hours_overdue NUMERIC;
+BEGIN
+  -- Obtener booking
+  SELECT * INTO v_booking FROM bookings WHERE id = p_booking_id;
+
+  IF NOT FOUND THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Booking no encontrado');
+  END IF;
+
+  -- Verificar que esta vencido
+  IF v_booking.end_at > now() THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Booking aun no ha vencido');
+  END IF;
+
+  -- Calcular horas de retraso
+  v_hours_overdue := EXTRACT(EPOCH FROM (now() - v_booking.end_at)) / 3600;
+
+  -- Actualizar booking
+  UPDATE bookings SET
+    return_status = 'protocol_active',
+    return_protocol_started_at = now(),
+    overdue_hours = v_hours_overdue,
+    updated_at = now()
+  WHERE id = p_booking_id;
+
+  -- Registrar evento T+0
+  INSERT INTO return_protocol_events (
+    booking_id, event_type, hours_since_end, executed_at,
+    status, executed_by, metadata
+  ) VALUES (
+    p_booking_id, 'booking_ended', 0, v_booking.end_at,
+    'executed', 'system',
+    jsonb_build_object('booking_end_at', v_booking.end_at)
+  );
+
+  -- Programar eventos del timeline
+  -- T+2h: Alerta amarilla
+  INSERT INTO return_protocol_events (
+    booking_id, event_type, hours_since_end,
+    scheduled_for, status
+  ) VALUES (
+    p_booking_id, 'alert_yellow', 2,
+    v_booking.end_at + INTERVAL '2 hours', 'scheduled'
+  );
+
+  -- T+6h: Alerta naranja
+  INSERT INTO return_protocol_events (
+    booking_id, event_type, hours_since_end,
+    scheduled_for, status
+  ) VALUES (
+    p_booking_id, 'alert_orange', 6,
+    v_booking.end_at + INTERVAL '6 hours', 'scheduled'
+  );
+
+  -- T+12h: Suspension de usuario
+  INSERT INTO return_protocol_events (
+    booking_id, event_type, hours_since_end,
+    scheduled_for, status
+  ) VALUES (
+    p_booking_id, 'user_suspended', 12,
+    v_booking.end_at + INTERVAL '12 hours', 'scheduled'
+  );
+
+  -- T+24h: Denuncia policial
+  INSERT INTO return_protocol_events (
+    booking_id, event_type, hours_since_end,
+    scheduled_for, status
+  ) VALUES (
+    p_booking_id, 'police_report_generated', 24,
+    v_booking.end_at + INTERVAL '24 hours', 'scheduled'
+  );
+
+  -- T+24h: Notificacion a aseguradora
+  INSERT INTO return_protocol_events (
+    booking_id, event_type, hours_since_end,
+    scheduled_for, status
+  ) VALUES (
+    p_booking_id, 'insurance_notified', 24,
+    v_booking.end_at + INTERVAL '24 hours', 'scheduled'
+  );
+
+  -- T+48h: Escalamiento legal
+  INSERT INTO return_protocol_events (
+    booking_id, event_type, hours_since_end,
+    scheduled_for, status
+  ) VALUES (
+    p_booking_id, 'legal_escalation', 48,
+    v_booking.end_at + INTERVAL '48 hours', 'scheduled'
+  );
+
+  RETURN jsonb_build_object(
+    'success', true,
+    'booking_id', p_booking_id,
+    'hours_overdue', v_hours_overdue,
+    'events_scheduled', 6
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ============================================================
+-- 6. FUNCION: Ejecutar evento programado del protocolo
+-- ============================================================
+CREATE OR REPLACE FUNCTION execute_protocol_event(p_event_id UUID)
+RETURNS JSONB AS $$
+DECLARE
+  v_event return_protocol_events;
+  v_booking bookings;
+  v_car cars;
+  v_renter profiles;
+  v_owner profiles;
+  v_result JSONB;
+BEGIN
+  -- Obtener evento
+  SELECT * INTO v_event FROM return_protocol_events WHERE id = p_event_id;
+
+  IF NOT FOUND THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Evento no encontrado');
+  END IF;
+
+  IF v_event.status != 'scheduled' THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Evento no esta programado');
+  END IF;
+
+  -- Obtener datos relacionados
+  SELECT * INTO v_booking FROM bookings WHERE id = v_event.booking_id;
+  SELECT * INTO v_car FROM cars WHERE id = v_booking.car_id;
+  SELECT * INTO v_renter FROM profiles WHERE id = v_booking.renter_id;
+  SELECT * INTO v_owner FROM profiles WHERE id = v_car.owner_id;
+
+  -- Verificar que el booking sigue en protocolo activo
+  IF v_booking.return_status NOT IN ('overdue', 'protocol_active') THEN
+    -- Marcar evento como saltado
+    UPDATE return_protocol_events SET
+      status = 'skipped',
+      metadata = metadata || jsonb_build_object('skip_reason', 'Booking ya no esta en protocolo'),
+      updated_at = now()
+    WHERE id = p_event_id;
+
+    RETURN jsonb_build_object('success', true, 'skipped', true, 'reason', 'Booking ya no esta en protocolo');
+  END IF;
+
+  -- Ejecutar segun tipo de evento
+  CASE v_event.event_type
+    WHEN 'alert_yellow' THEN
+      -- T+2h: Primera alerta al renter
+      v_result := jsonb_build_object(
+        'action', 'send_notification',
+        'recipient', v_renter.id,
+        'channel', 'push_email',
+        'template', 'return_alert_yellow',
+        'data', jsonb_build_object(
+          'renter_name', v_renter.full_name,
+          'car_title', v_car.title,
+          'booking_end', v_booking.end_at,
+          'hours_overdue', v_event.hours_since_end
+        )
+      );
+
+    WHEN 'alert_orange' THEN
+      -- T+6h: Segunda alerta mas urgente
+      v_result := jsonb_build_object(
+        'action', 'send_notification',
+        'recipient', v_renter.id,
+        'channel', 'push_email_sms',
+        'template', 'return_alert_orange',
+        'urgent', true
+      );
+
+    WHEN 'user_suspended' THEN
+      -- T+12h: Marcar usuario como suspendido (la suspension real se maneja en el sistema)
+      -- TODO: Agregar columna is_suspended a profiles si se necesita suspension real
+
+      -- Notificar al owner
+      INSERT INTO return_protocol_events (
+        booking_id, event_type, hours_since_end,
+        executed_at, status, executed_by,
+        metadata
+      ) VALUES (
+        v_event.booking_id, 'owner_notified', v_event.hours_since_end,
+        now(), 'executed', 'system',
+        jsonb_build_object('notification_type', 'renter_suspended')
+      );
+
+      v_result := jsonb_build_object(
+        'action', 'user_suspended',
+        'renter_id', v_renter.id
+      );
+
+    WHEN 'police_report_generated' THEN
+      -- T+24h: Generar denuncia policial
+      INSERT INTO police_reports (
+        booking_id, protocol_event_id, car_id, license_plate,
+        vehicle_description, renter_id, renter_full_name,
+        renter_document_number, owner_id, owner_full_name,
+        booking_start_at, booking_end_at,
+        report_content, status
+      ) VALUES (
+        v_event.booking_id, p_event_id, v_car.id, v_car.plate,
+        v_car.brand || ' ' || v_car.model || ' ' || v_car.year,
+        v_renter.id, v_renter.full_name,
+        v_renter.identity_document_number, v_owner.id, v_owner.full_name,
+        v_booking.start_at, v_booking.end_at,
+        generate_police_report_content(v_event.booking_id),
+        'pending_owner'
+      );
+
+      -- Actualizar estado del booking
+      UPDATE bookings SET
+        return_status = 'police_report',
+        updated_at = now()
+      WHERE id = v_event.booking_id;
+
+      v_result := jsonb_build_object(
+        'action', 'police_report_generated',
+        'booking_id', v_event.booking_id
+      );
+
+    WHEN 'insurance_notified' THEN
+      -- T+24h: Notificar a aseguradora
+      INSERT INTO insurance_notifications (
+        booking_id, protocol_event_id,
+        insurance_company, notification_type,
+        subject, body, status
+      ) VALUES (
+        v_event.booking_id, p_event_id,
+        'A determinar', 'initial_report',
+        'Siniestro - Sustraccion de vehiculo post-autorizacion vencida',
+        generate_insurance_notification_content(v_event.booking_id),
+        'draft'
+      );
+
+      v_result := jsonb_build_object(
+        'action', 'insurance_notification_created',
+        'booking_id', v_event.booking_id
+      );
+
+    WHEN 'legal_escalation' THEN
+      -- T+48h: Escalamiento legal
+      UPDATE bookings SET
+        return_status = 'legal_action',
+        updated_at = now()
+      WHERE id = v_event.booking_id;
+
+      v_result := jsonb_build_object(
+        'action', 'legal_escalation',
+        'booking_id', v_event.booking_id
+      );
+
+    ELSE
+      v_result := jsonb_build_object('action', 'unknown');
+  END CASE;
+
+  -- Marcar evento como ejecutado
+  UPDATE return_protocol_events SET
+    status = 'executed',
+    executed_at = now(),
+    executed_by = 'system',
+    metadata = metadata || v_result,
+    updated_at = now()
+  WHERE id = p_event_id;
+
+  RETURN jsonb_build_object(
+    'success', true,
+    'event_id', p_event_id,
+    'event_type', v_event.event_type,
+    'result', v_result
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ============================================================
+-- 7. FUNCION: Generar contenido de denuncia policial
+-- ============================================================
+CREATE OR REPLACE FUNCTION generate_police_report_content(p_booking_id UUID)
+RETURNS TEXT AS $$
+DECLARE
+  v_booking bookings;
+  v_car cars;
+  v_renter profiles;
+  v_owner profiles;
+  v_content TEXT;
+BEGIN
+  SELECT * INTO v_booking FROM bookings WHERE id = p_booking_id;
+  SELECT * INTO v_car FROM cars WHERE id = v_booking.car_id;
+  SELECT * INTO v_renter FROM profiles WHERE id = v_booking.renter_id;
+  SELECT * INTO v_owner FROM profiles WHERE id = v_car.owner_id;
+
+  v_content := 'DENUNCIA POR SUSTRACCION DE VEHICULO' || E'\n\n';
+  v_content := v_content || '1. DATOS DEL DENUNCIANTE (PROPIETARIO)' || E'\n';
+  v_content := v_content || 'Nombre: ' || COALESCE(v_owner.full_name, 'N/A') || E'\n';
+  v_content := v_content || 'Documento: ' || COALESCE(v_owner.identity_document_number, 'N/A') || E'\n\n';
+
+  v_content := v_content || '2. DATOS DEL DENUNCIADO' || E'\n';
+  v_content := v_content || 'Nombre: ' || COALESCE(v_renter.full_name, 'N/A') || E'\n';
+  v_content := v_content || 'Documento: ' || COALESCE(v_renter.identity_document_number, 'N/A') || E'\n';
+  v_content := v_content || 'Telefono: ' || COALESCE(v_renter.phone, 'N/A') || E'\n\n';
+
+  v_content := v_content || '3. DATOS DEL VEHICULO' || E'\n';
+  v_content := v_content || 'Marca/Modelo: ' || v_car.brand || ' ' || v_car.model || E'\n';
+  v_content := v_content || 'Anio: ' || v_car.year || E'\n';
+  v_content := v_content || 'Patente: ' || COALESCE(v_car.plate, 'N/A') || E'\n';
+  v_content := v_content || 'Color: ' || COALESCE(v_car.color, 'N/A') || E'\n\n';
+
+  v_content := v_content || '4. HECHOS' || E'\n';
+  v_content := v_content || 'El vehiculo fue entregado a traves de la plataforma Autorenta para uso temporal.' || E'\n';
+  v_content := v_content || 'Fecha de inicio: ' || to_char(v_booking.start_at, 'DD/MM/YYYY HH24:MI') || E'\n';
+  v_content := v_content || 'Fecha de finalizacion acordada: ' || to_char(v_booking.end_at, 'DD/MM/YYYY HH24:MI') || E'\n';
+  v_content := v_content || 'El vehiculo NO fue devuelto al vencimiento del plazo.' || E'\n';
+  v_content := v_content || 'A partir de las ' || to_char(v_booking.end_at, 'HH24:MI') || ' del dia ' || to_char(v_booking.end_at, 'DD/MM/YYYY');
+  v_content := v_content || ' la autorizacion de posesion quedo REVOCADA automaticamente segun los terminos aceptados.' || E'\n\n';
+
+  v_content := v_content || '5. ACCIONES TOMADAS POR LA PLATAFORMA' || E'\n';
+  v_content := v_content || '- Se enviaron multiples alertas al usuario' || E'\n';
+  v_content := v_content || '- Se intento contacto por todos los medios disponibles' || E'\n';
+  v_content := v_content || '- El usuario fue suspendido de la plataforma' || E'\n';
+  v_content := v_content || '- Se genera la presente denuncia a las 24 horas del vencimiento' || E'\n\n';
+
+  v_content := v_content || '6. TIPIFICACION' || E'\n';
+  v_content := v_content || 'El usuario mantiene la posesion del vehiculo SIN autorizacion del propietario.' || E'\n';
+  v_content := v_content || 'Esto configura SUSTRACCION / APROPIACION CON DOLO.' || E'\n\n';
+
+  v_content := v_content || 'Fecha de generacion: ' || to_char(now(), 'DD/MM/YYYY HH24:MI') || E'\n';
+  v_content := v_content || 'Plataforma: Autorenta (autorentar.com)';
+
+  RETURN v_content;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ============================================================
+-- 8. FUNCION: Generar contenido de notificacion a aseguradora
+-- ============================================================
+CREATE OR REPLACE FUNCTION generate_insurance_notification_content(p_booking_id UUID)
+RETURNS TEXT AS $$
+DECLARE
+  v_booking bookings;
+  v_car cars;
+  v_renter profiles;
+  v_owner profiles;
+  v_content TEXT;
+BEGIN
+  SELECT * INTO v_booking FROM bookings WHERE id = p_booking_id;
+  SELECT * INTO v_car FROM cars WHERE id = v_booking.car_id;
+  SELECT * INTO v_renter FROM profiles WHERE id = v_booking.renter_id;
+  SELECT * INTO v_owner FROM profiles WHERE id = v_car.owner_id;
+
+  v_content := 'Estimado Corredor/Aseguradora,' || E'\n\n';
+  v_content := v_content || 'Reportamos un siniestro ocurrido en el siguiente vehiculo:' || E'\n\n';
+
+  v_content := v_content || 'DATOS DEL VEHICULO:' || E'\n';
+  v_content := v_content || '- Marca/Modelo: ' || v_car.brand || ' ' || v_car.model || E'\n';
+  v_content := v_content || '- Patente: ' || COALESCE(v_car.plate, 'N/A') || E'\n';
+  v_content := v_content || '- Propietario: ' || COALESCE(v_owner.full_name, 'N/A') || E'\n\n';
+
+  v_content := v_content || 'HECHOS:' || E'\n';
+  v_content := v_content || '- Vehiculo entregado a traves de plataforma de movilidad compartida' || E'\n';
+  v_content := v_content || '- Plazo de uso autorizado: ' || to_char(v_booking.start_at, 'DD/MM/YYYY') || ' a ' || to_char(v_booking.end_at, 'DD/MM/YYYY') || E'\n';
+  v_content := v_content || '- El vehiculo NO fue devuelto al vencimiento' || E'\n';
+  v_content := v_content || '- A las 24 horas del vencimiento se ejecuto protocolo de no-devolucion' || E'\n\n';
+
+  v_content := v_content || 'ACCIONES TOMADAS:' || E'\n';
+  v_content := v_content || '1. [T+2h] Alerta al usuario - sin respuesta' || E'\n';
+  v_content := v_content || '2. [T+12h] Suspension de cuenta - usuario no contactable' || E'\n';
+  v_content := v_content || '3. [T+24h] Denuncia policial realizada' || E'\n';
+  v_content := v_content || '4. [T+24h] Usuario declarado con posesion no autorizada' || E'\n\n';
+
+  v_content := v_content || 'CLASIFICACION DEL HECHO:' || E'\n';
+  v_content := v_content || '- Al vencimiento del plazo, la autorizacion de posesion quedo revocada' || E'\n';
+  v_content := v_content || '- El usuario mantiene el vehiculo SIN autorizacion del propietario' || E'\n';
+  v_content := v_content || '- Configuracion: Sustraccion / Apropiacion con dolo' || E'\n\n';
+
+  v_content := v_content || 'DOCUMENTACION ADJUNTA:' || E'\n';
+  v_content := v_content || '- Contrato de prestamo (comodato)' || E'\n';
+  v_content := v_content || '- Logs de comunicacion' || E'\n';
+  v_content := v_content || '- Boletin de denuncia policial' || E'\n';
+  v_content := v_content || '- Identificacion del usuario' || E'\n\n';
+
+  v_content := v_content || 'Quedamos a disposicion para cualquier informacion adicional.' || E'\n\n';
+  v_content := v_content || 'Atentamente,' || E'\n';
+  v_content := v_content || 'Autorenta - Equipo de Siniestros';
+
+  RETURN v_content;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ============================================================
+-- 9. FUNCION: Registrar devolucion del vehiculo
+-- ============================================================
+CREATE OR REPLACE FUNCTION register_vehicle_return(
+  p_booking_id UUID,
+  p_return_condition TEXT DEFAULT 'good',
+  p_notes TEXT DEFAULT NULL
+)
+RETURNS JSONB AS $$
+DECLARE
+  v_booking bookings;
+BEGIN
+  SELECT * INTO v_booking FROM bookings WHERE id = p_booking_id;
+
+  IF NOT FOUND THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Booking no encontrado');
+  END IF;
+
+  -- Actualizar booking
+  UPDATE bookings SET
+    return_status = 'returned',
+    actual_return_at = now(),
+    updated_at = now()
+  WHERE id = p_booking_id;
+
+  -- Registrar evento de recuperacion
+  INSERT INTO return_protocol_events (
+    booking_id, event_type, executed_at,
+    status, executed_by,
+    metadata
+  ) VALUES (
+    p_booking_id, 'vehicle_recovered', now(),
+    'executed', 'system',
+    jsonb_build_object(
+      'return_condition', p_return_condition,
+      'notes', p_notes,
+      'was_overdue', v_booking.return_status IN ('overdue', 'protocol_active', 'police_report', 'legal_action')
+    )
+  );
+
+  -- Marcar eventos pendientes como saltados
+  UPDATE return_protocol_events SET
+    status = 'skipped',
+    metadata = metadata || jsonb_build_object('skip_reason', 'Vehiculo devuelto'),
+    updated_at = now()
+  WHERE booking_id = p_booking_id
+    AND status IN ('pending', 'scheduled');
+
+  -- Cerrar caso
+  INSERT INTO return_protocol_events (
+    booking_id, event_type, executed_at,
+    status, executed_by
+  ) VALUES (
+    p_booking_id, 'case_closed', now(),
+    'executed', 'system'
+  );
+
+  RETURN jsonb_build_object(
+    'success', true,
+    'booking_id', p_booking_id,
+    'return_condition', p_return_condition
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ============================================================
+-- 10. VISTA: Estado de protocolos activos
+-- ============================================================
+CREATE OR REPLACE VIEW v_active_return_protocols AS
+SELECT
+  b.id as booking_id,
+  b.return_status,
+  b.return_protocol_started_at,
+  b.end_at as booking_end_at,
+  b.overdue_hours,
+  c.id as car_id,
+  c.title as car_title,
+  c.plate as license_plate,
+  c.owner_id,
+  o.full_name as owner_name,
+  b.renter_id,
+  r.full_name as renter_name,
+  (SELECT COUNT(*) FROM return_protocol_events rpe
+   WHERE rpe.booking_id = b.id AND rpe.status = 'executed') as events_executed,
+  (SELECT COUNT(*) FROM return_protocol_events rpe
+   WHERE rpe.booking_id = b.id AND rpe.status = 'scheduled') as events_pending,
+  (SELECT event_type FROM return_protocol_events rpe
+   WHERE rpe.booking_id = b.id AND rpe.status = 'executed'
+   ORDER BY executed_at DESC LIMIT 1) as last_event,
+  (SELECT EXISTS (SELECT 1 FROM police_reports pr WHERE pr.booking_id = b.id)) as has_police_report,
+  (SELECT EXISTS (SELECT 1 FROM insurance_notifications ins WHERE ins.booking_id = b.id)) as has_insurance_notification
+FROM bookings b
+JOIN cars c ON b.car_id = c.id
+JOIN profiles o ON c.owner_id = o.id
+JOIN profiles r ON b.renter_id = r.id
+WHERE b.return_status IN ('overdue', 'protocol_active', 'police_report', 'legal_action');
+
+-- ============================================================
+-- 11. FUNCION CRON: Detectar bookings vencidos sin devolucion
+-- ============================================================
+CREATE OR REPLACE FUNCTION cron_check_overdue_bookings()
+RETURNS INT AS $$
+DECLARE
+  v_booking RECORD;
+  v_count INT := 0;
+BEGIN
+  -- Buscar bookings vencidos hace mas de 1 hora sin devolucion registrada
+  -- Status: confirmed (esperando pickup) o in_progress (en curso)
+  FOR v_booking IN
+    SELECT id FROM bookings
+    WHERE status IN ('confirmed', 'in_progress')
+      AND end_at < now() - INTERVAL '1 hour'
+      AND return_status = 'pending'
+      AND actual_return_at IS NULL
+  LOOP
+    -- Actualizar a overdue
+    UPDATE bookings SET
+      return_status = 'overdue',
+      overdue_hours = EXTRACT(EPOCH FROM (now() - end_at)) / 3600,
+      updated_at = now()
+    WHERE id = v_booking.id;
+
+    -- Iniciar protocolo si lleva mas de 2 horas
+    IF (SELECT end_at FROM bookings WHERE id = v_booking.id) < now() - INTERVAL '2 hours' THEN
+      PERFORM start_return_protocol(v_booking.id);
+    END IF;
+
+    v_count := v_count + 1;
+  END LOOP;
+
+  RETURN v_count;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ============================================================
+-- 12. FUNCION CRON: Ejecutar eventos programados
+-- ============================================================
+CREATE OR REPLACE FUNCTION cron_execute_scheduled_events()
+RETURNS INT AS $$
+DECLARE
+  v_event RECORD;
+  v_count INT := 0;
+BEGIN
+  -- Ejecutar eventos cuyo tiempo ha llegado
+  FOR v_event IN
+    SELECT id FROM return_protocol_events
+    WHERE status = 'scheduled'
+      AND scheduled_for <= now()
+    ORDER BY scheduled_for ASC
+  LOOP
+    PERFORM execute_protocol_event(v_event.id);
+    v_count := v_count + 1;
+  END LOOP;
+
+  RETURN v_count;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ============================================================
+-- COMENTARIOS
+-- ============================================================
+COMMENT ON TABLE return_protocol_events IS 'Log inmutable de cada accion del protocolo de no-devolucion';
+COMMENT ON TABLE police_reports IS 'Denuncias policiales generadas automaticamente por no-devolucion';
+COMMENT ON TABLE insurance_notifications IS 'Comunicaciones estructuradas con aseguradoras';
+COMMENT ON FUNCTION start_return_protocol IS 'Inicia el protocolo automatico de no-devolucion con timeline programado';
+COMMENT ON FUNCTION execute_protocol_event IS 'Ejecuta un evento individual del protocolo';
+COMMENT ON FUNCTION register_vehicle_return IS 'Registra la devolucion del vehiculo y cierra el protocolo';
+-- =====================================================
+-- Autorentar Club: Claims Integration
+-- =====================================================
+-- Created: 2026-01-06
+-- Purpose: Integrate subscription coverage with claim processing
+-- =====================================================
+
+-- Add subscription charge tracking fields to insurance_claims
+ALTER TABLE insurance_claims ADD COLUMN IF NOT EXISTS
+    charge_source TEXT; -- 'subscription', 'wallet', 'subscription_plus_wallet', 'card'
+
+ALTER TABLE insurance_claims ADD COLUMN IF NOT EXISTS
+    subscription_deducted_cents BIGINT DEFAULT 0;
+
+ALTER TABLE insurance_claims ADD COLUMN IF NOT EXISTS
+    wallet_charged_cents BIGINT DEFAULT 0;
+
+ALTER TABLE insurance_claims ADD COLUMN IF NOT EXISTS
+    charged_at TIMESTAMPTZ;
+
+ALTER TABLE insurance_claims ADD COLUMN IF NOT EXISTS
+    charged_by UUID REFERENCES profiles(id);
+
+-- Create index for charge tracking
+CREATE INDEX IF NOT EXISTS idx_claims_charged_at
+    ON insurance_claims(charged_at)
+    WHERE charged_at IS NOT NULL;
+
+-- RPC: Process claim charge with subscription priority
+-- Called when admin approves a claim with financial responsibility
+CREATE OR REPLACE FUNCTION process_claim_charge(
+    p_claim_id UUID,
+    p_booking_id UUID,
+    p_renter_id UUID,
+    p_damage_amount_cents BIGINT,
+    p_description TEXT DEFAULT NULL,
+    p_performed_by UUID DEFAULT NULL
+)
+RETURNS JSON
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_subscription RECORD;
+    v_deduction_result JSON;
+    v_remaining_to_charge BIGINT;
+    v_subscription_deducted BIGINT := 0;
+    v_wallet_charged BIGINT := 0;
+    v_charge_source TEXT;
+    v_wallet_balance BIGINT;
+BEGIN
+    -- Validate inputs
+    IF p_damage_amount_cents <= 0 THEN
+        RAISE EXCEPTION 'Damage amount must be positive';
+    END IF;
+
+    -- 1. Check for active subscription
+    SELECT * INTO v_subscription
+    FROM subscriptions
+    WHERE user_id = p_renter_id
+      AND status IN ('active', 'depleted') -- Can still deduct from active subscriptions
+      AND remaining_balance_cents > 0
+    ORDER BY created_at DESC
+    LIMIT 1;
+
+    -- 2. Process based on subscription availability
+    IF FOUND AND v_subscription.remaining_balance_cents > 0 THEN
+        -- Deduct from subscription first
+        SELECT deduct_from_subscription(
+            v_subscription.id,
+            p_damage_amount_cents,
+            p_booking_id,
+            'claim_deduction',
+            COALESCE(p_description, 'Cargo por daño - Claim #' || p_claim_id::TEXT)
+        ) INTO v_deduction_result;
+
+        v_subscription_deducted := (v_deduction_result->>'deducted_cents')::BIGINT;
+        v_remaining_to_charge := (v_deduction_result->>'uncovered_cents')::BIGINT;
+
+        IF v_remaining_to_charge > 0 THEN
+            v_charge_source := 'subscription_plus_wallet';
+        ELSE
+            v_charge_source := 'subscription';
+        END IF;
+    ELSE
+        -- No subscription coverage
+        v_remaining_to_charge := p_damage_amount_cents;
+        v_charge_source := 'wallet';
+    END IF;
+
+    -- 3. If remaining amount, charge from wallet/deposit
+    IF v_remaining_to_charge > 0 THEN
+        -- Check wallet balance
+        SELECT COALESCE(SUM(
+            CASE WHEN kind IN ('deposit', 'bonus', 'refund', 'wallet_transfer_in') THEN amount_cents
+                 WHEN kind IN ('lock', 'franchise_user', 'withdrawal', 'wallet_transfer_out') THEN -amount_cents
+                 ELSE 0
+            END
+        ), 0) INTO v_wallet_balance
+        FROM wallet_ledger
+        WHERE user_id = p_renter_id;
+
+        -- If wallet has sufficient funds, deduct
+        IF v_wallet_balance >= v_remaining_to_charge THEN
+            -- Use existing wallet deduction function if available
+            -- For now, create a ledger entry
+            INSERT INTO wallet_ledger (
+                user_id,
+                kind,
+                amount_cents,
+                booking_id,
+                description
+            ) VALUES (
+                p_renter_id,
+                'franchise_user',
+                v_remaining_to_charge,
+                p_booking_id,
+                COALESCE(p_description, 'Cargo por daño - Claim #' || p_claim_id::TEXT)
+            );
+
+            v_wallet_charged := v_remaining_to_charge;
+        ELSE
+            -- Insufficient wallet balance - mark as requiring manual collection
+            v_charge_source := CASE
+                WHEN v_subscription_deducted > 0 THEN 'subscription_partial_pending'
+                ELSE 'pending_collection'
+            END;
+
+            -- Charge what's available in wallet
+            IF v_wallet_balance > 0 THEN
+                INSERT INTO wallet_ledger (
+                    user_id,
+                    kind,
+                    amount_cents,
+                    booking_id,
+                    description
+                ) VALUES (
+                    p_renter_id,
+                    'franchise_user',
+                    v_wallet_balance,
+                    p_booking_id,
+                    COALESCE(p_description, 'Cargo parcial por daño - Claim #' || p_claim_id::TEXT)
+                );
+
+                v_wallet_charged := v_wallet_balance;
+            END IF;
+        END IF;
+    END IF;
+
+    -- 4. Update claim with charge information
+    UPDATE insurance_claims
+    SET
+        charge_source = v_charge_source,
+        subscription_deducted_cents = v_subscription_deducted,
+        wallet_charged_cents = v_wallet_charged,
+        charged_at = NOW(),
+        charged_by = p_performed_by,
+        updated_at = NOW()
+    WHERE id = p_claim_id;
+
+    -- 5. Return result
+    RETURN json_build_object(
+        'success', true,
+        'charge_source', v_charge_source,
+        'total_damage_cents', p_damage_amount_cents,
+        'subscription_deducted_cents', v_subscription_deducted,
+        'wallet_charged_cents', v_wallet_charged,
+        'remaining_uncollected_cents', p_damage_amount_cents - v_subscription_deducted - v_wallet_charged,
+        'subscription_remaining_balance', CASE
+            WHEN v_deduction_result IS NOT NULL
+            THEN (v_deduction_result->>'remaining_balance_cents')::BIGINT
+            ELSE NULL
+        END
+    );
+END;
+$$;
+
+COMMENT ON FUNCTION process_claim_charge IS 'Processes claim charges with subscription coverage priority.
+Order of deduction:
+1. Active subscription balance (if available)
+2. Wallet balance (deposit/bonus)
+3. Mark as pending collection (if insufficient funds)
+
+Returns JSON with charge breakdown including source and amounts.';
+
+-- RPC: Get claim charge summary for admin
+CREATE OR REPLACE FUNCTION get_claim_charge_summary(p_claim_id UUID)
+RETURNS JSON
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_claim RECORD;
+BEGIN
+    SELECT * INTO v_claim
+    FROM insurance_claims
+    WHERE id = p_claim_id;
+
+    IF NOT FOUND THEN
+        RETURN json_build_object('error', 'Claim not found');
+    END IF;
+
+    RETURN json_build_object(
+        'claim_id', v_claim.id,
+        'status', v_claim.status,
+        'damage_amount_cents', v_claim.damage_amount_cents,
+        'charge_source', v_claim.charge_source,
+        'subscription_deducted_cents', COALESCE(v_claim.subscription_deducted_cents, 0),
+        'wallet_charged_cents', COALESCE(v_claim.wallet_charged_cents, 0),
+        'charged_at', v_claim.charged_at,
+        'is_fully_collected', (
+            COALESCE(v_claim.subscription_deducted_cents, 0) +
+            COALESCE(v_claim.wallet_charged_cents, 0)
+        ) >= COALESCE(v_claim.damage_amount_cents, 0)
+    );
+END;
+$$;
+
+-- Grant execute permissions
+GRANT EXECUTE ON FUNCTION process_claim_charge TO service_role;
+GRANT EXECUTE ON FUNCTION get_claim_charge_summary TO authenticated;
+-- ============================================================================
+-- MIGRATION: Autorentar Club - Subscription Model
+-- Description: Creates subscription system for deposit-free rentals
+-- Author: Claude Code
+-- Date: 2026-01-06
+-- ============================================================================
+
+-- ============================================================================
+-- PART 1: ENUM TYPES
+-- ============================================================================
+
+DO $$ BEGIN
+    CREATE TYPE subscription_status AS ENUM (
+        'active',       -- Suscripción vigente y usable
+        'inactive',     -- Desactivada manualmente
+        'depleted',     -- Saldo agotado (remaining_balance = 0)
+        'expired',      -- Pasó la fecha de expiración
+        'cancelled'     -- Cancelada (con posible reembolso)
+    );
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    CREATE TYPE subscription_tier AS ENUM (
+        'club_standard',  -- $300/año, cobertura hasta $500
+        'club_black'      -- $600/año, cobertura hasta $1000
+    );
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
+
+-- ============================================================================
+-- PART 2: SUBSCRIPTIONS TABLE
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS public.subscriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE RESTRICT,
+    tier subscription_tier NOT NULL DEFAULT 'club_standard',
+    status subscription_status NOT NULL DEFAULT 'active',
+
+    -- Finanzas (en centavos USD)
+    purchase_amount_cents BIGINT NOT NULL,           -- Monto pagado: 30000 ($300) o 60000 ($600)
+    coverage_limit_cents BIGINT NOT NULL,            -- Límite de cobertura según tier
+    remaining_balance_cents BIGINT NOT NULL,         -- Saldo disponible para cubrir daños
+    currency TEXT NOT NULL DEFAULT 'USD',
+
+    -- Vigencia
+    starts_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    expires_at TIMESTAMPTZ NOT NULL,                 -- +1 año desde starts_at
+
+    -- Pago
+    payment_transaction_id UUID,                     -- Ref a wallet_transactions si aplica
+    payment_provider TEXT,                           -- 'mercadopago', 'stripe', 'wallet'
+    payment_external_id TEXT,                        -- ID externo del pago (MP preference_id, etc.)
+
+    -- Metadatos
+    metadata JSONB NOT NULL DEFAULT '{}',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    cancelled_at TIMESTAMPTZ,
+    cancellation_reason TEXT,
+
+    -- Constraints
+    CONSTRAINT chk_balance_non_negative CHECK (remaining_balance_cents >= 0),
+    CONSTRAINT chk_balance_lte_limit CHECK (remaining_balance_cents <= coverage_limit_cents),
+    CONSTRAINT chk_expires_after_starts CHECK (expires_at > starts_at)
+);
+
+COMMENT ON TABLE subscriptions IS 'Autorentar Club memberships - provides deposit coverage for rentals';
+COMMENT ON COLUMN subscriptions.tier IS 'Membership level: club_standard ($300/yr, $500 coverage) or club_black ($600/yr, $1000 coverage)';
+COMMENT ON COLUMN subscriptions.coverage_limit_cents IS 'Maximum coverage amount based on tier';
+COMMENT ON COLUMN subscriptions.remaining_balance_cents IS 'Available balance to cover damages (decreases with claims)';
+
+-- ============================================================================
+-- PART 3: SUBSCRIPTION USAGE LOGS TABLE
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS public.subscription_usage_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    subscription_id UUID NOT NULL REFERENCES subscriptions(id) ON DELETE RESTRICT,
+    booking_id UUID REFERENCES bookings(id),
+    claim_id UUID,                                   -- Futuro: ref a tabla insurance_claims
+
+    -- Montos
+    amount_deducted_cents BIGINT NOT NULL,
+    balance_before_cents BIGINT NOT NULL,
+    balance_after_cents BIGINT NOT NULL,
+
+    -- Clasificación
+    reason TEXT NOT NULL,                            -- 'claim_deduction', 'admin_adjustment', 'refund', 'expiration_forfeit'
+    description TEXT,
+
+    -- Auditoría
+    performed_by UUID REFERENCES profiles(id),       -- NULL = sistema automático
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT chk_deduction_logic CHECK (
+        (reason = 'refund' AND amount_deducted_cents <= 0) OR
+        (reason != 'refund' AND amount_deducted_cents > 0)
+    )
+);
+
+COMMENT ON TABLE subscription_usage_logs IS 'Audit trail for subscription balance changes';
+COMMENT ON COLUMN subscription_usage_logs.reason IS 'Type of deduction: claim_deduction, admin_adjustment, refund, expiration_forfeit';
+
+-- ============================================================================
+-- PART 4: INDEXES
+-- ============================================================================
+
+-- Fast lookup of active subscription for user
+CREATE INDEX IF NOT EXISTS idx_subscriptions_user_active
+    ON subscriptions(user_id)
+    WHERE status = 'active';
+
+-- Find expiring subscriptions (for cron jobs)
+CREATE INDEX IF NOT EXISTS idx_subscriptions_expires
+    ON subscriptions(expires_at)
+    WHERE status = 'active';
+
+-- User subscription history
+CREATE INDEX IF NOT EXISTS idx_subscriptions_user_created
+    ON subscriptions(user_id, created_at DESC);
+
+-- Usage logs by subscription
+CREATE INDEX IF NOT EXISTS idx_subscription_usage_subscription
+    ON subscription_usage_logs(subscription_id, created_at DESC);
+
+-- Usage logs by booking (for claims integration)
+CREATE INDEX IF NOT EXISTS idx_subscription_usage_booking
+    ON subscription_usage_logs(booking_id)
+    WHERE booking_id IS NOT NULL;
+
+-- ============================================================================
+-- PART 5: TRIGGER FOR updated_at
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION update_subscriptions_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS set_subscriptions_updated_at ON subscriptions;
+CREATE TRIGGER set_subscriptions_updated_at
+    BEFORE UPDATE ON subscriptions
+    FOR EACH ROW
+    EXECUTE FUNCTION update_subscriptions_updated_at();
+
+-- ============================================================================
+-- PART 6: ROW LEVEL SECURITY
+-- ============================================================================
+
+ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE subscription_usage_logs ENABLE ROW LEVEL SECURITY;
+
+-- Users can only view their own subscriptions
+DROP POLICY IF EXISTS "Users can view own subscription" ON subscriptions;
+CREATE POLICY "Users can view own subscription"
+    ON subscriptions FOR SELECT
+    USING (user_id = auth.uid());
+
+-- Users can view their own usage logs
+DROP POLICY IF EXISTS "Users can view own usage logs" ON subscription_usage_logs;
+CREATE POLICY "Users can view own usage logs"
+    ON subscription_usage_logs FOR SELECT
+    USING (
+        subscription_id IN (
+            SELECT id FROM subscriptions WHERE user_id = auth.uid()
+        )
+    );
+
+-- Admins can view all subscriptions
+DROP POLICY IF EXISTS "Admins can view all subscriptions" ON subscriptions;
+CREATE POLICY "Admins can view all subscriptions"
+    ON subscriptions FOR SELECT
+    USING (
+        EXISTS (
+            SELECT 1 FROM profiles
+            WHERE id = auth.uid() AND is_admin = true
+        )
+    );
+
+-- Admins can view all usage logs
+DROP POLICY IF EXISTS "Admins can view all usage logs" ON subscription_usage_logs;
+CREATE POLICY "Admins can view all usage logs"
+    ON subscription_usage_logs FOR SELECT
+    USING (
+        EXISTS (
+            SELECT 1 FROM profiles
+            WHERE id = auth.uid() AND is_admin = true
+        )
+    );
+
+-- Service role has full access (for RPCs)
+-- No INSERT/UPDATE/DELETE policies for authenticated - only service_role can modify
+
+-- ============================================================================
+-- PART 7: RPC FUNCTIONS
+-- ============================================================================
+
+-- -----------------------------------------------------------------------------
+-- get_active_subscription: Get current user's active subscription
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION get_active_subscription()
+RETURNS JSON
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_subscription RECORD;
+BEGIN
+    SELECT
+        id,
+        tier,
+        status,
+        remaining_balance_cents,
+        coverage_limit_cents,
+        purchase_amount_cents,
+        starts_at,
+        expires_at,
+        created_at
+    INTO v_subscription
+    FROM subscriptions
+    WHERE user_id = auth.uid()
+      AND status = 'active'
+      AND expires_at > NOW()
+    ORDER BY created_at DESC
+    LIMIT 1;
+
+    IF NOT FOUND THEN
+        RETURN NULL;
+    END IF;
+
+    RETURN json_build_object(
+        'id', v_subscription.id,
+        'tier', v_subscription.tier,
+        'status', v_subscription.status,
+        'remaining_balance_cents', v_subscription.remaining_balance_cents,
+        'coverage_limit_cents', v_subscription.coverage_limit_cents,
+        'purchase_amount_cents', v_subscription.purchase_amount_cents,
+        'starts_at', v_subscription.starts_at,
+        'expires_at', v_subscription.expires_at,
+        'created_at', v_subscription.created_at,
+        'remaining_balance_usd', v_subscription.remaining_balance_cents / 100.0,
+        'coverage_limit_usd', v_subscription.coverage_limit_cents / 100.0,
+        'days_remaining', EXTRACT(DAY FROM (v_subscription.expires_at - NOW()))::INT
+    );
+END;
+$$;
+
+COMMENT ON FUNCTION get_active_subscription IS 'Returns the current user active subscription details or NULL if none';
+
+-- -----------------------------------------------------------------------------
+-- check_subscription_coverage: Verify if user has coverage for a franchise amount
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION check_subscription_coverage(
+    p_user_id UUID,
+    p_franchise_amount_cents BIGINT
+)
+RETURNS JSON
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_sub RECORD;
+    v_covered_cents BIGINT;
+    v_uncovered_cents BIGINT;
+BEGIN
+    -- Find active subscription
+    SELECT * INTO v_sub
+    FROM subscriptions
+    WHERE user_id = p_user_id
+      AND status = 'active'
+      AND expires_at > NOW()
+    ORDER BY created_at DESC
+    LIMIT 1;
+
+    -- No subscription found
+    IF NOT FOUND THEN
+        RETURN json_build_object(
+            'has_coverage', false,
+            'coverage_type', 'none',
+            'reason', 'no_active_subscription',
+            'subscription_id', NULL,
+            'available_cents', 0,
+            'covered_cents', 0,
+            'uncovered_cents', p_franchise_amount_cents,
+            'deposit_required_cents', p_franchise_amount_cents
+        );
+    END IF;
+
+    -- Calculate coverage (partial or full)
+    v_covered_cents := LEAST(v_sub.remaining_balance_cents, p_franchise_amount_cents);
+    v_uncovered_cents := p_franchise_amount_cents - v_covered_cents;
+
+    -- Full coverage
+    IF v_sub.remaining_balance_cents >= p_franchise_amount_cents THEN
+        RETURN json_build_object(
+            'has_coverage', true,
+            'coverage_type', 'full',
+            'reason', 'full_coverage',
+            'subscription_id', v_sub.id,
+            'tier', v_sub.tier,
+            'available_cents', v_sub.remaining_balance_cents,
+            'covered_cents', p_franchise_amount_cents,
+            'uncovered_cents', 0,
+            'deposit_required_cents', 0
+        );
+    END IF;
+
+    -- Partial coverage (some balance but less than franchise)
+    IF v_sub.remaining_balance_cents > 0 THEN
+        RETURN json_build_object(
+            'has_coverage', true,
+            'coverage_type', 'partial',
+            'reason', 'partial_coverage',
+            'subscription_id', v_sub.id,
+            'tier', v_sub.tier,
+            'available_cents', v_sub.remaining_balance_cents,
+            'covered_cents', v_covered_cents,
+            'uncovered_cents', v_uncovered_cents,
+            'deposit_required_cents', v_uncovered_cents
+        );
+    END IF;
+
+    -- Subscription exists but depleted
+    RETURN json_build_object(
+        'has_coverage', false,
+        'coverage_type', 'depleted',
+        'reason', 'subscription_depleted',
+        'subscription_id', v_sub.id,
+        'tier', v_sub.tier,
+        'available_cents', 0,
+        'covered_cents', 0,
+        'uncovered_cents', p_franchise_amount_cents,
+        'deposit_required_cents', p_franchise_amount_cents
+    );
+END;
+$$;
+
+COMMENT ON FUNCTION check_subscription_coverage IS 'Check if user has subscription coverage for a given franchise amount. Returns coverage details including partial coverage.';
+
+-- -----------------------------------------------------------------------------
+-- create_subscription: Create a new subscription (service_role only)
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION create_subscription(
+    p_user_id UUID,
+    p_tier subscription_tier,
+    p_payment_provider TEXT,
+    p_payment_external_id TEXT DEFAULT NULL,
+    p_metadata JSONB DEFAULT '{}'
+)
+RETURNS UUID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_subscription_id UUID;
+    v_amount_cents BIGINT;
+    v_coverage_cents BIGINT;
+BEGIN
+    -- Determine pricing based on tier
+    CASE p_tier
+        WHEN 'club_standard' THEN
+            v_amount_cents := 30000;    -- $300
+            v_coverage_cents := 50000;  -- $500 coverage
+        WHEN 'club_black' THEN
+            v_amount_cents := 60000;    -- $600
+            v_coverage_cents := 100000; -- $1000 coverage
+        ELSE
+            RAISE EXCEPTION 'Invalid subscription tier: %', p_tier;
+    END CASE;
+
+    -- Check for existing active subscription
+    IF EXISTS (
+        SELECT 1 FROM subscriptions
+        WHERE user_id = p_user_id
+        AND status = 'active'
+        AND expires_at > NOW()
+    ) THEN
+        RAISE EXCEPTION 'User already has an active subscription. Cancel or wait for expiration.';
+    END IF;
+
+    -- Create subscription
+    INSERT INTO subscriptions (
+        user_id,
+        tier,
+        status,
+        purchase_amount_cents,
+        coverage_limit_cents,
+        remaining_balance_cents,
+        starts_at,
+        expires_at,
+        payment_provider,
+        payment_external_id,
+        metadata
+    ) VALUES (
+        p_user_id,
+        p_tier,
+        'active',
+        v_amount_cents,
+        v_coverage_cents,
+        v_coverage_cents, -- Initial balance = coverage limit
+        NOW(),
+        NOW() + INTERVAL '1 year',
+        p_payment_provider,
+        p_payment_external_id,
+        p_metadata
+    )
+    RETURNING id INTO v_subscription_id;
+
+    RETURN v_subscription_id;
+END;
+$$;
+
+COMMENT ON FUNCTION create_subscription IS 'Create a new subscription after payment confirmation. Service role only.';
+
+-- -----------------------------------------------------------------------------
+-- deduct_from_subscription: Deduct amount from subscription (for claims)
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION deduct_from_subscription(
+    p_subscription_id UUID,
+    p_amount_cents BIGINT,
+    p_booking_id UUID,
+    p_reason TEXT,
+    p_description TEXT DEFAULT NULL,
+    p_performed_by UUID DEFAULT NULL
+)
+RETURNS JSON
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_sub RECORD;
+    v_new_balance BIGINT;
+    v_actual_deduction BIGINT;
+    v_new_status subscription_status;
+BEGIN
+    -- Lock the subscription row to prevent race conditions
+    SELECT * INTO v_sub
+    FROM subscriptions
+    WHERE id = p_subscription_id
+    FOR UPDATE;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Subscription not found: %', p_subscription_id;
+    END IF;
+
+    IF v_sub.status != 'active' THEN
+        RAISE EXCEPTION 'Cannot deduct from non-active subscription. Status: %', v_sub.status;
+    END IF;
+
+    -- Calculate actual deduction (cannot exceed balance)
+    v_actual_deduction := LEAST(p_amount_cents, v_sub.remaining_balance_cents);
+    v_new_balance := v_sub.remaining_balance_cents - v_actual_deduction;
+
+    -- Determine new status
+    IF v_new_balance = 0 THEN
+        v_new_status := 'depleted';
+    ELSE
+        v_new_status := 'active';
+    END IF;
+
+    -- Update subscription
+    UPDATE subscriptions
+    SET remaining_balance_cents = v_new_balance,
+        status = v_new_status,
+        updated_at = NOW()
+    WHERE id = p_subscription_id;
+
+    -- Create usage log
+    INSERT INTO subscription_usage_logs (
+        subscription_id,
+        booking_id,
+        amount_deducted_cents,
+        balance_before_cents,
+        balance_after_cents,
+        reason,
+        description,
+        performed_by
+    ) VALUES (
+        p_subscription_id,
+        p_booking_id,
+        v_actual_deduction,
+        v_sub.remaining_balance_cents,
+        v_new_balance,
+        p_reason,
+        p_description,
+        p_performed_by
+    );
+
+    RETURN json_build_object(
+        'success', true,
+        'deducted_cents', v_actual_deduction,
+        'remaining_balance_cents', v_new_balance,
+        'uncovered_cents', p_amount_cents - v_actual_deduction,
+        'new_status', v_new_status,
+        'was_fully_covered', (p_amount_cents - v_actual_deduction) = 0
+    );
+END;
+$$;
+
+COMMENT ON FUNCTION deduct_from_subscription IS 'Deduct an amount from subscription balance. Used when processing damage claims.';
+
+-- -----------------------------------------------------------------------------
+-- get_subscription_usage_history: Get usage history for user's subscription
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION get_subscription_usage_history(
+    p_subscription_id UUID DEFAULT NULL,
+    p_limit INT DEFAULT 50
+)
+RETURNS JSON
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_user_id UUID;
+    v_result JSON;
+BEGIN
+    v_user_id := auth.uid();
+
+    SELECT json_agg(row_to_json(t))
+    INTO v_result
+    FROM (
+        SELECT
+            sul.id,
+            sul.subscription_id,
+            sul.booking_id,
+            sul.amount_deducted_cents,
+            sul.balance_before_cents,
+            sul.balance_after_cents,
+            sul.reason,
+            sul.description,
+            sul.created_at,
+            b.start_at as booking_start,
+            c.brand || ' ' || c.model as car_name
+        FROM subscription_usage_logs sul
+        JOIN subscriptions s ON s.id = sul.subscription_id
+        LEFT JOIN bookings b ON b.id = sul.booking_id
+        LEFT JOIN cars c ON c.id = b.car_id
+        WHERE s.user_id = v_user_id
+          AND (p_subscription_id IS NULL OR sul.subscription_id = p_subscription_id)
+        ORDER BY sul.created_at DESC
+        LIMIT p_limit
+    ) t;
+
+    RETURN COALESCE(v_result, '[]'::JSON);
+END;
+$$;
+
+COMMENT ON FUNCTION get_subscription_usage_history IS 'Get usage history for the current user subscriptions';
+
+-- -----------------------------------------------------------------------------
+-- process_claim_charge: Process a claim charge (integrates with claims system)
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION process_claim_charge(
+    p_claim_id UUID,
+    p_booking_id UUID,
+    p_renter_id UUID,
+    p_damage_amount_cents BIGINT,
+    p_description TEXT DEFAULT NULL
+)
+RETURNS JSON
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_subscription RECORD;
+    v_deduction_result JSON;
+    v_remaining_to_charge BIGINT;
+    v_subscription_deducted BIGINT := 0;
+    v_wallet_charged BIGINT := 0;
+BEGIN
+    -- 1. Find active subscription for renter
+    SELECT * INTO v_subscription
+    FROM subscriptions
+    WHERE user_id = p_renter_id
+      AND status = 'active'
+      AND expires_at > NOW()
+      AND remaining_balance_cents > 0
+    ORDER BY created_at DESC
+    LIMIT 1
+    FOR UPDATE;
+
+    IF FOUND THEN
+        -- 2. Deduct from subscription first
+        SELECT deduct_from_subscription(
+            v_subscription.id,
+            p_damage_amount_cents,
+            p_booking_id,
+            'claim_deduction',
+            p_description,
+            NULL -- system action
+        ) INTO v_deduction_result;
+
+        v_subscription_deducted := (v_deduction_result->>'deducted_cents')::BIGINT;
+        v_remaining_to_charge := (v_deduction_result->>'uncovered_cents')::BIGINT;
+
+        -- 3. If there's remaining amount, charge from wallet/deposit
+        IF v_remaining_to_charge > 0 THEN
+            -- Call existing wallet damage deduction function
+            -- This handles the remaining amount from wallet or credit card hold
+            PERFORM wallet_deduct_damage_atomic(
+                p_booking_id,
+                p_renter_id,
+                NULL, -- owner_id obtained from booking
+                v_remaining_to_charge,
+                'Daño no cubierto por suscripción: ' || COALESCE(p_description, 'Sin descripción'),
+                NULL  -- car_id
+            );
+            v_wallet_charged := v_remaining_to_charge;
+        END IF;
+
+        RETURN json_build_object(
+            'success', true,
+            'source', CASE
+                WHEN v_wallet_charged > 0 THEN 'subscription_plus_wallet'
+                ELSE 'subscription_only'
+            END,
+            'total_charged_cents', p_damage_amount_cents,
+            'subscription_deducted_cents', v_subscription_deducted,
+            'wallet_charged_cents', v_wallet_charged,
+            'subscription_remaining_cents', (v_deduction_result->>'remaining_balance_cents')::BIGINT,
+            'subscription_id', v_subscription.id
+        );
+    ELSE
+        -- 4. No active subscription: charge entirely from wallet/deposit
+        PERFORM wallet_deduct_damage_atomic(
+            p_booking_id,
+            p_renter_id,
+            NULL,
+            p_damage_amount_cents,
+            COALESCE(p_description, 'Cargo por daños'),
+            NULL
+        );
+
+        RETURN json_build_object(
+            'success', true,
+            'source', 'wallet_only',
+            'total_charged_cents', p_damage_amount_cents,
+            'subscription_deducted_cents', 0,
+            'wallet_charged_cents', p_damage_amount_cents,
+            'subscription_remaining_cents', NULL,
+            'subscription_id', NULL
+        );
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        RETURN json_build_object(
+            'success', false,
+            'error', SQLERRM,
+            'error_detail', SQLSTATE
+        );
+END;
+$$;
+
+COMMENT ON FUNCTION process_claim_charge IS 'Process a damage claim charge. First tries subscription, then wallet/deposit for remaining.';
+
+-- -----------------------------------------------------------------------------
+-- expire_subscriptions: Cron job to expire old subscriptions
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION expire_subscriptions()
+RETURNS INT
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_count INT;
+BEGIN
+    UPDATE subscriptions
+    SET status = 'expired',
+        updated_at = NOW()
+    WHERE status = 'active'
+      AND expires_at <= NOW();
+
+    GET DIAGNOSTICS v_count = ROW_COUNT;
+    RETURN v_count;
+END;
+$$;
+
+COMMENT ON FUNCTION expire_subscriptions IS 'Cron job function to mark expired subscriptions. Run daily.';
+
+-- ============================================================================
+-- PART 8: GRANTS
+-- ============================================================================
+
+GRANT SELECT ON subscriptions TO authenticated;
+GRANT SELECT ON subscription_usage_logs TO authenticated;
+
+GRANT EXECUTE ON FUNCTION get_active_subscription TO authenticated;
+GRANT EXECUTE ON FUNCTION check_subscription_coverage TO authenticated;
+GRANT EXECUTE ON FUNCTION get_subscription_usage_history TO authenticated;
+
+-- These functions are for service_role only (backend/webhooks)
+-- No GRANT to authenticated for: create_subscription, deduct_from_subscription, process_claim_charge, expire_subscriptions
+
+-- ============================================================================
+-- PART 9: BOOKINGS TABLE EXTENSION (Optional columns for subscription tracking)
+-- ============================================================================
+
+DO $$
+BEGIN
+    -- Add subscription_id to track which subscription covered the deposit
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'bookings' AND column_name = 'subscription_id'
+    ) THEN
+        ALTER TABLE bookings ADD COLUMN subscription_id UUID REFERENCES subscriptions(id);
+        COMMENT ON COLUMN bookings.subscription_id IS 'Reference to subscription that covered the deposit (if any)';
+    END IF;
+
+    -- Add deposit_covered_by to indicate coverage source
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'bookings' AND column_name = 'deposit_covered_by'
+    ) THEN
+        ALTER TABLE bookings ADD COLUMN deposit_covered_by TEXT;
+        COMMENT ON COLUMN bookings.deposit_covered_by IS 'Source of deposit coverage: subscription, wallet, card, partial_subscription';
+    END IF;
+
+    -- Add subscription_coverage_cents for partial coverage tracking
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'bookings' AND column_name = 'subscription_coverage_cents'
+    ) THEN
+        ALTER TABLE bookings ADD COLUMN subscription_coverage_cents BIGINT DEFAULT 0;
+        COMMENT ON COLUMN bookings.subscription_coverage_cents IS 'Amount covered by subscription for this booking';
+    END IF;
+END $$;
+
+-- Index for finding bookings by subscription
+CREATE INDEX IF NOT EXISTS idx_bookings_subscription
+    ON bookings(subscription_id)
+    WHERE subscription_id IS NOT NULL;
+
+-- ============================================================================
+-- PART 10: SUBSCRIPTION TIERS CONFIGURATION VIEW
+-- ============================================================================
+
+CREATE OR REPLACE VIEW v_subscription_tiers AS
+SELECT
+    'club_standard'::subscription_tier as tier,
+    'Club Estándar' as name,
+    'Ideal para autos económicos y medios' as description,
+    30000 as price_cents,
+    300.00 as price_usd,
+    50000 as coverage_limit_cents,
+    500.00 as coverage_limit_usd,
+    'Autos con valor < $20,000' as target_segment
+UNION ALL
+SELECT
+    'club_black'::subscription_tier as tier,
+    'Club Black' as name,
+    'Para autos premium y de lujo' as description,
+    60000 as price_cents,
+    600.00 as price_usd,
+    100000 as coverage_limit_cents,
+    1000.00 as coverage_limit_usd,
+    'Autos con valor > $20,000' as target_segment;
+
+COMMENT ON VIEW v_subscription_tiers IS 'Reference view for subscription tier pricing and benefits';
+
+GRANT SELECT ON v_subscription_tiers TO authenticated;
+
+-- ============================================================================
+-- MIGRATION COMPLETE
+-- ============================================================================
+-- =====================================================
+-- Autorentar Club: Additional RPC Functions
+-- =====================================================
+-- Created: 2026-01-06
+-- Purpose: Support functions for subscription management
+-- =====================================================
+
+-- RPC: Get active subscription for a specific user (admin/service use)
+CREATE OR REPLACE FUNCTION get_active_subscription_for_user(p_user_id UUID)
+RETURNS JSON
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_subscription RECORD;
+BEGIN
+    SELECT * INTO v_subscription
+    FROM subscriptions
+    WHERE user_id = p_user_id
+      AND status = 'active'
+      AND expires_at > NOW()
+    ORDER BY created_at DESC
+    LIMIT 1;
+
+    IF NOT FOUND THEN
+        RETURN NULL;
+    END IF;
+
+    RETURN json_build_object(
+        'id', v_subscription.id,
+        'tier', v_subscription.tier,
+        'status', v_subscription.status,
+        'remaining_balance_cents', v_subscription.remaining_balance_cents,
+        'coverage_limit_cents', v_subscription.coverage_limit_cents,
+        'starts_at', v_subscription.starts_at,
+        'expires_at', v_subscription.expires_at
+    );
+END;
+$$;
+
+-- RPC: Get subscription usage history
+CREATE OR REPLACE FUNCTION get_subscription_usage_history(
+    p_subscription_id UUID DEFAULT NULL,
+    p_limit INT DEFAULT 50
+)
+RETURNS TABLE (
+    id UUID,
+    subscription_id UUID,
+    booking_id UUID,
+    claim_id UUID,
+    amount_deducted_cents BIGINT,
+    balance_before_cents BIGINT,
+    balance_after_cents BIGINT,
+    reason TEXT,
+    description TEXT,
+    performed_by UUID,
+    created_at TIMESTAMPTZ
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_user_id UUID;
+    v_target_subscription_id UUID;
+BEGIN
+    -- Get current user
+    v_user_id := auth.uid();
+
+    IF v_user_id IS NULL THEN
+        RAISE EXCEPTION 'Not authenticated';
+    END IF;
+
+    -- If subscription_id provided, verify ownership
+    IF p_subscription_id IS NOT NULL THEN
+        SELECT s.id INTO v_target_subscription_id
+        FROM subscriptions s
+        WHERE s.id = p_subscription_id AND s.user_id = v_user_id;
+
+        IF v_target_subscription_id IS NULL THEN
+            RAISE EXCEPTION 'Subscription not found or access denied';
+        END IF;
+    ELSE
+        -- Get user's active subscription
+        SELECT s.id INTO v_target_subscription_id
+        FROM subscriptions s
+        WHERE s.user_id = v_user_id
+        ORDER BY s.created_at DESC
+        LIMIT 1;
+    END IF;
+
+    -- Return empty if no subscription
+    IF v_target_subscription_id IS NULL THEN
+        RETURN;
+    END IF;
+
+    -- Return usage logs
+    RETURN QUERY
+    SELECT
+        ul.id,
+        ul.subscription_id,
+        ul.booking_id,
+        ul.claim_id,
+        ul.amount_deducted_cents,
+        ul.balance_before_cents,
+        ul.balance_after_cents,
+        ul.reason,
+        ul.description,
+        ul.performed_by,
+        ul.created_at
+    FROM subscription_usage_logs ul
+    WHERE ul.subscription_id = v_target_subscription_id
+    ORDER BY ul.created_at DESC
+    LIMIT p_limit;
+END;
+$$;
+
+-- RPC: Enhanced check_subscription_coverage with partial coverage support
+CREATE OR REPLACE FUNCTION check_subscription_coverage(
+    p_user_id UUID,
+    p_franchise_amount_cents BIGINT
+)
+RETURNS JSON
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_sub RECORD;
+    v_covered_cents BIGINT;
+    v_uncovered_cents BIGINT;
+    v_coverage_type TEXT;
+BEGIN
+    -- Get active subscription
+    SELECT * INTO v_sub
+    FROM subscriptions
+    WHERE user_id = p_user_id
+      AND status = 'active'
+      AND expires_at > NOW()
+    ORDER BY created_at DESC
+    LIMIT 1;
+
+    -- No subscription found
+    IF NOT FOUND THEN
+        RETURN json_build_object(
+            'has_coverage', false,
+            'coverage_type', 'none',
+            'reason', 'no_active_subscription',
+            'subscription_id', NULL,
+            'available_cents', 0,
+            'covered_cents', 0,
+            'uncovered_cents', p_franchise_amount_cents,
+            'deposit_required_cents', p_franchise_amount_cents
+        );
+    END IF;
+
+    -- Check if balance is sufficient for any coverage
+    IF v_sub.remaining_balance_cents <= 0 THEN
+        RETURN json_build_object(
+            'has_coverage', false,
+            'coverage_type', 'none',
+            'reason', 'balance_depleted',
+            'subscription_id', v_sub.id,
+            'available_cents', 0,
+            'covered_cents', 0,
+            'uncovered_cents', p_franchise_amount_cents,
+            'deposit_required_cents', p_franchise_amount_cents
+        );
+    END IF;
+
+    -- Calculate coverage
+    IF v_sub.remaining_balance_cents >= p_franchise_amount_cents THEN
+        -- Full coverage
+        v_covered_cents := p_franchise_amount_cents;
+        v_uncovered_cents := 0;
+        v_coverage_type := 'full';
+    ELSE
+        -- Partial coverage
+        v_covered_cents := v_sub.remaining_balance_cents;
+        v_uncovered_cents := p_franchise_amount_cents - v_sub.remaining_balance_cents;
+        v_coverage_type := 'partial';
+    END IF;
+
+    RETURN json_build_object(
+        'has_coverage', true,
+        'coverage_type', v_coverage_type,
+        'subscription_id', v_sub.id,
+        'tier', v_sub.tier,
+        'available_cents', v_sub.remaining_balance_cents,
+        'covered_cents', v_covered_cents,
+        'uncovered_cents', v_uncovered_cents,
+        'deposit_required_cents', v_uncovered_cents
+    );
+END;
+$$;
+
+-- GRANTS
+GRANT EXECUTE ON FUNCTION get_subscription_usage_history TO authenticated;
+-- get_active_subscription_for_user is SECURITY DEFINER, accessible via service_role only in webhook
+-- Create RPC to charge wallet balance for subscription purchases
+-- Uses user_wallets as source of truth and writes a completed wallet_transactions entry.
+
+CREATE OR REPLACE FUNCTION public.wallet_charge_subscription(
+    p_user_id UUID,
+    p_amount_cents BIGINT,
+    p_ref TEXT,
+    p_description TEXT DEFAULT NULL,
+    p_meta JSONB DEFAULT '{}'::jsonb
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO 'public'
+AS $$
+DECLARE
+    v_wallet RECORD;
+    v_transaction_id UUID;
+    v_currency TEXT;
+BEGIN
+    IF p_amount_cents <= 0 THEN
+        RAISE EXCEPTION 'El monto debe ser mayor a 0';
+    END IF;
+
+    SELECT * INTO v_wallet
+    FROM user_wallets
+    WHERE user_id = p_user_id
+    FOR UPDATE;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Wallet no encontrada para usuario: %', p_user_id;
+    END IF;
+
+    IF v_wallet.available_balance_cents < p_amount_cents THEN
+        RAISE EXCEPTION 'Saldo insuficiente. Disponible: %, Requerido: %',
+            v_wallet.available_balance_cents, p_amount_cents;
+    END IF;
+
+    IF EXISTS (
+        SELECT 1
+        FROM wallet_transactions
+        WHERE provider_transaction_id = p_ref
+          AND type = 'charge'
+          AND status = 'completed'
+    ) THEN
+        SELECT id INTO v_transaction_id
+        FROM wallet_transactions
+        WHERE provider_transaction_id = p_ref
+          AND type = 'charge'
+          AND status = 'completed'
+        LIMIT 1;
+
+        RETURN jsonb_build_object(
+            'ok', true,
+            'status', 'duplicate',
+            'transaction_id', v_transaction_id
+        );
+    END IF;
+
+    UPDATE user_wallets
+    SET available_balance_cents = available_balance_cents - p_amount_cents,
+        balance_cents = balance_cents - p_amount_cents,
+        updated_at = NOW()
+    WHERE user_id = p_user_id;
+
+    v_transaction_id := gen_random_uuid();
+    v_currency := COALESCE(v_wallet.currency, 'USD');
+
+    INSERT INTO wallet_transactions (
+        id,
+        user_id,
+        type,
+        amount,
+        currency,
+        status,
+        description,
+        provider,
+        provider_transaction_id,
+        metadata,
+        completed_at
+    ) VALUES (
+        v_transaction_id,
+        p_user_id,
+        'charge',
+        -p_amount_cents,
+        v_currency,
+        'completed',
+        p_description,
+        'wallet',
+        p_ref,
+        p_meta,
+        NOW()
+    );
+
+    RETURN jsonb_build_object(
+        'ok', true,
+        'status', 'completed',
+        'transaction_id', v_transaction_id
+    );
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.wallet_charge_subscription(UUID, BIGINT, TEXT, TEXT, JSONB) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.wallet_charge_subscription(UUID, BIGINT, TEXT, TEXT, JSONB) TO service_role;
+
+COMMENT ON FUNCTION public.wallet_charge_subscription(UUID, BIGINT, TEXT, TEXT, JSONB) IS
+'Charge user wallet balance for subscription purchases (service_role only).';
+
+-- Atomic helper: charge wallet and create subscription in one transaction
+CREATE OR REPLACE FUNCTION public.create_subscription_with_wallet(
+    p_user_id UUID,
+    p_tier subscription_tier,
+    p_ref TEXT,
+    p_description TEXT DEFAULT NULL,
+    p_meta JSONB DEFAULT '{}'::jsonb
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO 'public'
+AS $$
+DECLARE
+    v_amount_cents BIGINT;
+    v_wallet RECORD;
+    v_transaction_id UUID;
+    v_subscription_id UUID;
+    v_currency TEXT;
+BEGIN
+    CASE p_tier
+        WHEN 'club_standard' THEN
+            v_amount_cents := 30000;
+        WHEN 'club_black' THEN
+            v_amount_cents := 60000;
+        ELSE
+            RAISE EXCEPTION 'Invalid subscription tier: %', p_tier;
+    END CASE;
+
+    -- Idempotency by reference
+    SELECT id INTO v_subscription_id
+    FROM subscriptions
+    WHERE user_id = p_user_id
+      AND payment_external_id = p_ref
+    ORDER BY created_at DESC
+    LIMIT 1;
+
+    IF v_subscription_id IS NOT NULL THEN
+        RETURN jsonb_build_object(
+            'ok', true,
+            'status', 'duplicate',
+            'subscription_id', v_subscription_id
+        );
+    END IF;
+
+    -- Prevent multiple active subscriptions
+    IF EXISTS (
+        SELECT 1 FROM subscriptions
+        WHERE user_id = p_user_id
+          AND status = 'active'
+          AND expires_at > NOW()
+    ) THEN
+        RAISE EXCEPTION 'User already has an active subscription. Cancel or wait for expiration.';
+    END IF;
+
+    -- Lock wallet and validate balance
+    SELECT * INTO v_wallet
+    FROM user_wallets
+    WHERE user_id = p_user_id
+    FOR UPDATE;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Wallet not found for user: %', p_user_id;
+    END IF;
+
+    IF v_wallet.available_balance_cents < v_amount_cents THEN
+        RAISE EXCEPTION 'Insufficient balance. Available: %, Required: %',
+            v_wallet.available_balance_cents, v_amount_cents;
+    END IF;
+
+    UPDATE user_wallets
+    SET available_balance_cents = available_balance_cents - v_amount_cents,
+        balance_cents = balance_cents - v_amount_cents,
+        updated_at = NOW()
+    WHERE user_id = p_user_id;
+
+    v_transaction_id := gen_random_uuid();
+    v_currency := COALESCE(v_wallet.currency, 'USD');
+
+    INSERT INTO wallet_transactions (
+        id,
+        user_id,
+        type,
+        amount,
+        currency,
+        status,
+        description,
+        provider,
+        provider_transaction_id,
+        metadata,
+        completed_at
+    ) VALUES (
+        v_transaction_id,
+        p_user_id,
+        'charge',
+        -v_amount_cents,
+        v_currency,
+        'completed',
+        COALESCE(p_description, 'Suscripción Autorentar Club'),
+        'wallet',
+        p_ref,
+        jsonb_build_object('subscription_tier', p_tier) || p_meta,
+        NOW()
+    );
+
+    v_subscription_id := create_subscription(
+        p_user_id,
+        p_tier,
+        'wallet',
+        p_ref,
+        jsonb_build_object(
+            'wallet_transaction_id', v_transaction_id,
+            'wallet_charge_ref', p_ref
+        ) || p_meta
+    );
+
+    UPDATE subscriptions
+    SET payment_transaction_id = v_transaction_id
+    WHERE id = v_subscription_id;
+
+    RETURN jsonb_build_object(
+        'ok', true,
+        'status', 'completed',
+        'subscription_id', v_subscription_id,
+        'transaction_id', v_transaction_id
+    );
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.create_subscription_with_wallet(UUID, subscription_tier, TEXT, TEXT, JSONB) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.create_subscription_with_wallet(UUID, subscription_tier, TEXT, TEXT, JSONB) TO service_role;
+
+COMMENT ON FUNCTION public.create_subscription_with_wallet(UUID, subscription_tier, TEXT, TEXT, JSONB) IS
+'Atomically charge wallet and create Autorentar Club subscription (service_role only).';
