@@ -2,6 +2,9 @@
 -- Implements "Option A": Pay difference and restart year
 -- Date: 2026-01-08
 
+-- Drop existing function to handle return type changes
+DROP FUNCTION IF EXISTS public.upgrade_subscription_with_wallet(UUID, subscription_tier, TEXT, TEXT, JSONB) CASCADE;
+
 CREATE OR REPLACE FUNCTION public.upgrade_subscription_with_wallet(
     p_user_id UUID,
     p_new_tier subscription_tier,
