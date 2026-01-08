@@ -1,3 +1,15 @@
+# [1.12.0](https://github.com/ecucondorSA/autorenta/compare/v1.11.6...v1.12.0) (2026-01-08)
+
+
+### Bug Fixes
+
+* **market:** correct porsche price (37), fix display logic, update edge functions and migrations ([c43b49d](https://github.com/ecucondorSA/autorenta/commit/c43b49da854befff23892e01b69368d5e1ba6ebf))
+
+
+### Features
+
+* **web:** implement advanced responsive design for publish-car-v2 ([7b9c66c](https://github.com/ecucondorSA/autorenta/commit/7b9c66c972895da176b86ad82cabf82899d4933e))
+
 ## [1.11.6](https://github.com/ecucondorSA/autorenta/compare/v1.11.5...v1.11.6) (2026-01-08)
 
 
