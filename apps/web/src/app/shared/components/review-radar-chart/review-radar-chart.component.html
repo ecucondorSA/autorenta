@@ -4,11 +4,7 @@
     @if (showGrid) {
       <g class="grid-levels">
         @for (levelPath of gridLevels; track levelPath; let i = $index) {
-          <path
-            [attr.d]="levelPath"
-            [attr.stroke-opacity]="0.2 - i * 0.03"
-            class="grid-line"
-            />
+          <path [attr.d]="levelPath" [attr.stroke-opacity]="0.2 - i * 0.03" class="grid-line" />
         }
       </g>
     }
@@ -22,7 +18,7 @@
           [attr.x2]="axis.x2"
           [attr.y2]="axis.y2"
           class="axis-line"
-          />
+        />
       }
     </g>
 
@@ -35,12 +31,7 @@
     <!-- Data points -->
     <g class="data-points">
       @for (point of dataPoints; track point) {
-        <circle
-          [attr.cx]="point.x"
-          [attr.cy]="point.y"
-          r="4"
-          class="data-point"
-          />
+        <circle [attr.cx]="point.x" [attr.cy]="point.y" r="4" class="data-point" />
       }
     </g>
 
@@ -54,7 +45,7 @@
             [attr.text-anchor]="getTextAnchor(i)"
             [attr.dy]="getTextDy(i)"
             class="label-text"
-            >
+          >
             <tspan class="label-name">{{ label.label }}</tspan>
             <tspan [attr.x]="label.x" [attr.dy]="'1.2em'" class="label-value">
               {{ label.value.toFixed(1) }}

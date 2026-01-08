@@ -8,17 +8,17 @@ import { Booking } from '@core/models';
  * Todos los componentes deben usar deriveState() para determinar el estado.
  */
 export type BookingState =
-  | 'DRAFT'           // Solicitud creada, no pagada
+  | 'DRAFT' // Solicitud creada, no pagada
   | 'PENDING_PAYMENT' // Esperando pago/autorizacion
-  | 'CONFIRMED'       // Pagado, esperando check-in
-  | 'ACTIVE'          // En progreso (vehiculo entregado)
-  | 'RETURNED'        // Vehiculo devuelto, esperando confirmaciones
-  | 'PENDING_OWNER'   // Esperando confirmacion del propietario
-  | 'PENDING_RENTER'  // Esperando confirmacion del locatario
-  | 'FUNDS_RELEASED'  // Fondos liberados
-  | 'COMPLETED'       // Finalizado exitosamente
-  | 'CANCELLED'       // Cancelado
-  | 'DISPUTED';       // En disputa
+  | 'CONFIRMED' // Pagado, esperando check-in
+  | 'ACTIVE' // En progreso (vehiculo entregado)
+  | 'RETURNED' // Vehiculo devuelto, esperando confirmaciones
+  | 'PENDING_OWNER' // Esperando confirmacion del propietario
+  | 'PENDING_RENTER' // Esperando confirmacion del locatario
+  | 'FUNDS_RELEASED' // Fondos liberados
+  | 'COMPLETED' // Finalizado exitosamente
+  | 'CANCELLED' // Cancelado
+  | 'DISPUTED'; // En disputa
 
 /**
  * Transiciones validas entre estados
@@ -27,51 +27,51 @@ export type BookingState =
  * Usar canTransition() para validar antes de cambiar estado.
  */
 export const VALID_TRANSITIONS: Record<BookingState, BookingState[]> = {
-  DRAFT:           ['PENDING_PAYMENT', 'CANCELLED'],
+  DRAFT: ['PENDING_PAYMENT', 'CANCELLED'],
   PENDING_PAYMENT: ['CONFIRMED', 'CANCELLED'],
-  CONFIRMED:       ['ACTIVE', 'CANCELLED'],
-  ACTIVE:          ['RETURNED', 'DISPUTED'],
-  RETURNED:        ['PENDING_OWNER', 'PENDING_RENTER', 'DISPUTED'],
-  PENDING_OWNER:   ['FUNDS_RELEASED', 'DISPUTED'],
-  PENDING_RENTER:  ['FUNDS_RELEASED', 'DISPUTED'],
-  FUNDS_RELEASED:  ['COMPLETED'],
-  COMPLETED:       [],
-  CANCELLED:       [],
-  DISPUTED:        ['FUNDS_RELEASED', 'CANCELLED'],
+  CONFIRMED: ['ACTIVE', 'CANCELLED'],
+  ACTIVE: ['RETURNED', 'DISPUTED'],
+  RETURNED: ['PENDING_OWNER', 'PENDING_RENTER', 'DISPUTED'],
+  PENDING_OWNER: ['FUNDS_RELEASED', 'DISPUTED'],
+  PENDING_RENTER: ['FUNDS_RELEASED', 'DISPUTED'],
+  FUNDS_RELEASED: ['COMPLETED'],
+  COMPLETED: [],
+  CANCELLED: [],
+  DISPUTED: ['FUNDS_RELEASED', 'CANCELLED'],
 };
 
 /**
  * Mapeo de estados FSM a labels en espanol para UI
  */
 export const STATE_LABELS: Record<BookingState, string> = {
-  DRAFT:           'Borrador',
+  DRAFT: 'Borrador',
   PENDING_PAYMENT: 'Pago Pendiente',
-  CONFIRMED:       'Confirmada',
-  ACTIVE:          'En Progreso',
-  RETURNED:        'Vehiculo Devuelto',
-  PENDING_OWNER:   'Esperando Propietario',
-  PENDING_RENTER:  'Esperando Locatario',
-  FUNDS_RELEASED:  'Fondos Liberados',
-  COMPLETED:       'Completada',
-  CANCELLED:       'Cancelada',
-  DISPUTED:        'En Disputa',
+  CONFIRMED: 'Confirmada',
+  ACTIVE: 'En Progreso',
+  RETURNED: 'Vehiculo Devuelto',
+  PENDING_OWNER: 'Esperando Propietario',
+  PENDING_RENTER: 'Esperando Locatario',
+  FUNDS_RELEASED: 'Fondos Liberados',
+  COMPLETED: 'Completada',
+  CANCELLED: 'Cancelada',
+  DISPUTED: 'En Disputa',
 };
 
 /**
  * Acciones disponibles por estado y rol
  */
 export const STATE_ACTIONS: Record<BookingState, { owner: string[]; renter: string[] }> = {
-  DRAFT:           { owner: ['approve', 'reject'], renter: ['cancel'] },
+  DRAFT: { owner: ['approve', 'reject'], renter: ['cancel'] },
   PENDING_PAYMENT: { owner: [], renter: ['pay', 'cancel'] },
-  CONFIRMED:       { owner: ['check_in'], renter: ['check_in'] },
-  ACTIVE:          { owner: ['mark_returned'], renter: ['mark_returned'] },
-  RETURNED:        { owner: ['confirm'], renter: ['confirm'] },
-  PENDING_OWNER:   { owner: ['confirm'], renter: [] },
-  PENDING_RENTER:  { owner: [], renter: ['confirm'] },
-  FUNDS_RELEASED:  { owner: [], renter: [] },
-  COMPLETED:       { owner: ['review'], renter: ['review'] },
-  CANCELLED:       { owner: [], renter: [] },
-  DISPUTED:        { owner: ['provide_evidence'], renter: ['provide_evidence'] },
+  CONFIRMED: { owner: ['check_in'], renter: ['check_in'] },
+  ACTIVE: { owner: ['mark_returned'], renter: ['mark_returned'] },
+  RETURNED: { owner: ['confirm'], renter: ['confirm'] },
+  PENDING_OWNER: { owner: ['confirm'], renter: [] },
+  PENDING_RENTER: { owner: [], renter: ['confirm'] },
+  FUNDS_RELEASED: { owner: [], renter: [] },
+  COMPLETED: { owner: ['review'], renter: ['review'] },
+  CANCELLED: { owner: [], renter: [] },
+  DISPUTED: { owner: ['provide_evidence'], renter: ['provide_evidence'] },
 };
 
 /**
@@ -91,7 +91,6 @@ export const STATE_ACTIONS: Record<BookingState, { owner: string[]; renter: stri
  */
 @Injectable({ providedIn: 'root' })
 export class BookingStateMachineService {
-
   /**
    * Deriva el estado canonico desde los campos del booking.
    * Esta es la UNICA funcion que debe usarse para determinar el estado.
@@ -200,17 +199,17 @@ export class BookingStateMachineService {
    */
   getTimelineStepIndex(state: BookingState): number {
     const stateToStep: Record<BookingState, number> = {
-      DRAFT:           0,
+      DRAFT: 0,
       PENDING_PAYMENT: 1,
-      CONFIRMED:       2,
-      ACTIVE:          3,
-      RETURNED:        4,
-      PENDING_OWNER:   5,
-      PENDING_RENTER:  5,
-      FUNDS_RELEASED:  7,
-      COMPLETED:       8,
-      CANCELLED:       -1,
-      DISPUTED:        -1,
+      CONFIRMED: 2,
+      ACTIVE: 3,
+      RETURNED: 4,
+      PENDING_OWNER: 5,
+      PENDING_RENTER: 5,
+      FUNDS_RELEASED: 7,
+      COMPLETED: 8,
+      CANCELLED: -1,
+      DISPUTED: -1,
     };
     return stateToStep[state] ?? 0;
   }

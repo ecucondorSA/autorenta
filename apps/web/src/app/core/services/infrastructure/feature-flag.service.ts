@@ -471,5 +471,4 @@ export class FeatureFlagService {
     if (error) throw error;
     return data || [];
   }
-
 }

@@ -6,7 +6,7 @@ describe('CarBrandsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CarBrandsService]
+      providers: [CarBrandsService],
     });
     service = TestBed.inject(CarBrandsService);
   });
@@ -34,5 +34,4 @@ describe('CarBrandsService', () => {
   it('should have getCarBrandLogoPath method', () => {
     expect(typeof service.getCarBrandLogoPath).toBe('function');
   });
-
 });

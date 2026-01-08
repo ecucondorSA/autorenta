@@ -6,7 +6,7 @@ describe('ToastService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ToastService]
+      providers: [ToastService],
     });
     service = TestBed.inject(ToastService);
   });
@@ -42,5 +42,4 @@ describe('ToastService', () => {
   it('should have clear method', () => {
     expect(typeof service.clear).toBe('function');
   });
-
 });

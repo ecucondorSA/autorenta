@@ -1,5 +1,5 @@
-
-import {AfterViewInit,
+import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -9,7 +9,8 @@ import {AfterViewInit,
   Output,
   signal,
   ViewChild,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import type mapboxgl from 'mapbox-gl';
 import { environment } from '@environment';
@@ -27,7 +28,7 @@ import type { LocationCoordinates } from '@core/services/geo/location.service';
     <div class="location-map-picker">
       <!-- Map container -->
       <div #mapContainer class="map-container"></div>
-    
+
       <!-- Info panel -->
       <div class="info-panel">
         <div class="flex items-start gap-2">
@@ -38,22 +39,18 @@ import type { LocationCoordinates } from '@core/services/geo/location.service';
             </p>
             <p class="text-xs text-text-secondary mt-1">
               {{
-              isLoading()
-              ? 'Por favor espera...'
-              : 'Arrastra el marcador para ajustar la ubicación exacta de tu auto'
+                isLoading()
+                  ? 'Por favor espera...'
+                  : 'Arrastra el marcador para ajustar la ubicación exacta de tu auto'
               }}
             </p>
             @if (currentAddress()) {
-              <div
-                class="mt-2 text-xs text-text-primary bg-surface-base p-2 rounded"
-                >
+              <div class="mt-2 text-xs text-text-primary bg-surface-base p-2 rounded">
                 📍 {{ currentAddress() }}
               </div>
             }
             @if (coordinates()) {
-              <div
-                class="mt-1 text-xs text-text-secondary"
-                >
+              <div class="mt-1 text-xs text-text-secondary">
                 Lat: {{ coordinates()!.lat.toFixed(6) }}, Lng:
                 {{ coordinates()!.lng.toFixed(6) }}
               </div>
@@ -62,7 +59,7 @@ import type { LocationCoordinates } from '@core/services/geo/location.service';
         </div>
       </div>
     </div>
-    `,
+  `,
   styles: [
     `
       .location-map-picker {

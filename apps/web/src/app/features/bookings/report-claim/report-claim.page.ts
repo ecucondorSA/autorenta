@@ -1,7 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component, OnInit, inject
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -44,7 +41,7 @@ import { AlertController, IonicModule, ToastController } from '@ionic/angular';
                   color="light"
                   href="tel:0800-AUTORENTAR"
                   class="emergency-button"
-                  >
+                >
                   <ion-icon slot="start" name="call"></ion-icon>
                   0800-AUTORENTAR (24/7)
                 </ion-button>
@@ -71,7 +68,7 @@ import { AlertController, IonicModule, ToastController } from '@ionic/angular';
                 required
                 interface="action-sheet"
                 placeholder="Selecciona el tipo"
-                >
+              >
                 @for (type of claimTypes; track type) {
                   <ion-select-option [value]="type.value">
                     {{ type.label }}
@@ -92,7 +89,7 @@ import { AlertController, IonicModule, ToastController } from '@ionic/angular';
                 presentation="date-time"
                 [max]="maxDate"
                 required
-                >
+              >
               </ion-datetime>
             </ion-item>
 
@@ -107,14 +104,14 @@ import { AlertController, IonicModule, ToastController } from '@ionic/angular';
                 name="location"
                 placeholder="Ej: Av. Corrientes 1234, CABA"
                 type="text"
-                >
+              >
               </ion-input>
               <ion-button
                 slot="end"
                 fill="clear"
                 (click)="useCurrentLocation()"
                 [disabled]="gettingLocation"
-                >
+              >
                 <ion-icon [name]="gettingLocation ? 'hourglass' : 'location'" slot="icon-only">
                 </ion-icon>
               </ion-button>
@@ -136,7 +133,7 @@ import { AlertController, IonicModule, ToastController } from '@ionic/angular';
                 required
                 counter="true"
                 maxlength="1000"
-                >
+              >
               </ion-textarea>
             </ion-item>
 
@@ -155,21 +152,21 @@ import { AlertController, IonicModule, ToastController } from '@ionic/angular';
                 (change)="onPhotosSelected($event)"
                 #fileInput
                 style="display: none;"
-                />
+              />
 
               <ion-button
                 expand="block"
                 fill="outline"
                 (click)="fileInput.click()"
                 [disabled]="uploadedPhotoPreviews.length >= 10 || uploadingPhotos"
-                >
+              >
                 <ion-icon slot="start" [name]="uploadingPhotos ? 'hourglass' : 'camera'"></ion-icon>
                 {{
-                uploadingPhotos
-                ? 'Subiendo...'
-                : uploadedPhotoPreviews.length > 0
-                ? 'Agregar más fotos'
-                : 'Tomar/Subir Fotos'
+                  uploadingPhotos
+                    ? 'Subiendo...'
+                    : uploadedPhotoPreviews.length > 0
+                      ? 'Agregar más fotos'
+                      : 'Tomar/Subir Fotos'
                 }}
                 ({{ uploadedPhotoPreviews.length }}/10)
               </ion-button>
@@ -184,7 +181,7 @@ import { AlertController, IonicModule, ToastController } from '@ionic/angular';
                         color="danger"
                         class="delete-photo"
                         (click)="removePhoto(i)"
-                        >
+                      >
                         <ion-icon name="close-circle" slot="icon-only"></ion-icon>
                       </ion-button>
                     </div>
@@ -204,7 +201,7 @@ import { AlertController, IonicModule, ToastController } from '@ionic/angular';
                 name="policeReport"
                 placeholder="Ej: 12345/2025"
                 type="text"
-                >
+              >
               </ion-input>
             </ion-item>
 
@@ -222,14 +219,14 @@ import { AlertController, IonicModule, ToastController } from '@ionic/angular';
               [disabled]="!claimForm.valid || submitting || uploadingPhotos || !confirmDeclaration"
               color="danger"
               class="submit-button"
-              >
+            >
               <ion-icon slot="start" [name]="submitting ? 'hourglass' : 'alert-circle'"></ion-icon>
               {{
-              submitting
-              ? 'Enviando...'
-              : uploadingPhotos
-              ? 'Subiendo fotos...'
-              : 'Reportar Siniestro'
+                submitting
+                  ? 'Enviando...'
+                  : uploadingPhotos
+                    ? 'Subiendo fotos...'
+                    : 'Reportar Siniestro'
               }}
             </ion-button>
 
@@ -279,7 +276,7 @@ import { AlertController, IonicModule, ToastController } from '@ionic/angular';
         </ion-card>
       </form>
     </ion-content>
-    `,
+  `,
   styles: [
     `
       :host {

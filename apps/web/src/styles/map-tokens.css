@@ -14,7 +14,7 @@
   --map-marker-photo-border-color: #ffffff;
   --map-marker-photo-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   --map-marker-photo-hover-scale: 1.12;
-  --map-marker-photo-hover-shadow: 0 8px 16px #7B7B7B;
+  --map-marker-photo-hover-shadow: 0 8px 16px #7b7b7b;
 
   /* Price Mode Tokens (price comparison) */
   --map-marker-price-size: 50px;
@@ -43,7 +43,7 @@
   --map-marker-unavailable-shadow: rgba(178, 94, 94, 0.2);
 
   /* Map Controls */
-  --map-control-bg: #E3E3E3;
+  --map-control-bg: #e3e3e3;
   --map-control-border: rgba(0, 0, 0, 0.1);
   --map-control-text: var(--text-primary, #1f2937);
   --map-control-hover-bg: rgba(0, 0, 0, 0.05);
@@ -71,8 +71,8 @@
   :root {
     /* Photo Mode - Dark */
     --map-marker-photo-border-color: var(--text-primary-dark, #1f2937);
-    --map-marker-photo-shadow: 0 4px 8px #7B7B7B;
-    --map-marker-photo-hover-shadow: 0 8px 16px #4E4E4E;
+    --map-marker-photo-shadow: 0 4px 8px #7b7b7b;
+    --map-marker-photo-hover-shadow: 0 8px 16px #4e4e4e;
 
     /* Price Mode - Dark */
     --map-marker-price-border-color: var(--surface-raised);
@@ -84,13 +84,13 @@
     --map-control-border: rgba(255, 255, 255, 0.1);
     --map-control-text: #f0f0f0;
     --map-control-hover-bg: rgba(255, 255, 255, 0.1);
-    --map-control-shadow: 0 4px 12px #7B7B7B;
+    --map-control-shadow: 0 4px 12px #7b7b7b;
 
     /* Map Popup - Dark */
     --map-popup-bg: rgba(20, 20, 20, 0.95);
     --map-popup-text: #f0f0f0;
     --map-popup-border: rgba(255, 255, 255, 0.1);
-    --map-popup-shadow: 0 4px 12px #7B7B7B;
+    --map-popup-shadow: 0 4px 12px #7b7b7b;
 
     /* Map Canvas - Dark */
     --map-canvas-brightness: 0.95;
@@ -102,8 +102,8 @@
 .dark {
   /* Photo Mode - Dark (class-based override) */
   --map-marker-photo-border-color: var(--text-primary-dark, #1f2937);
-  --map-marker-photo-shadow: 0 4px 8px #7B7B7B;
-  --map-marker-photo-hover-shadow: 0 8px 16px #4E4E4E;
+  --map-marker-photo-shadow: 0 4px 8px #7b7b7b;
+  --map-marker-photo-hover-shadow: 0 8px 16px #4e4e4e;
 
   /* Price Mode - Dark */
   --map-marker-price-border-color: var(--surface-raised);
@@ -115,13 +115,13 @@
   --map-control-border: rgba(255, 255, 255, 0.1);
   --map-control-text: #f0f0f0;
   --map-control-hover-bg: rgba(255, 255, 255, 0.1);
-  --map-control-shadow: 0 4px 12px #7B7B7B;
+  --map-control-shadow: 0 4px 12px #7b7b7b;
 
   /* Map Popup - Dark */
   --map-popup-bg: rgba(20, 20, 20, 0.95);
   --map-popup-text: #f0f0f0;
   --map-popup-border: rgba(255, 255, 255, 0.1);
-  --map-popup-shadow: 0 4px 12px #7B7B7B;
+  --map-popup-shadow: 0 4px 12px #7b7b7b;
 
   /* Map Canvas - Dark */
   --map-canvas-brightness: 0.95;

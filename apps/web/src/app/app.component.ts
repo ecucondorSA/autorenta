@@ -86,7 +86,7 @@ import { routeAnimations } from '@core/animations/route-animations'; // Importar
     HeaderIconComponent,
     ClickOutsideDirective,
     DebugPanelComponent,
-    OfflineBannerComponent
+    OfflineBannerComponent,
   ],
   templateUrl: './app.component.html',
   styles: [
@@ -119,18 +119,14 @@ import { routeAnimations } from '@core/animations/route-animations'; // Importar
       }
 
       [data-profile-menu]::-webkit-scrollbar-thumb:hover {
-        background: #7B7B7B;
+        background: #7b7b7b;
       }
-
-
 
       /* Firefox scrollbar */
       [data-profile-menu] {
         scrollbar-width: thin;
         scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
       }
-
-
 
       /* Header en home: usa colores de tokens, sin forzar blanco ni gradientes */
       .header-transparent {
@@ -183,7 +179,6 @@ export class AppComponent implements OnInit {
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
-
 
   private readonly authService = inject(AuthService);
   private readonly profileService = inject(ProfileService);
@@ -244,7 +239,6 @@ export class AppComponent implements OnInit {
 
   year = new Date().getFullYear();
 
-
   toggleSidebar(): void {
     this.sidebarOpen.update((v) => !v);
     this.syncSidebarSideEffects(this.sidebarOpen());
@@ -266,8 +260,6 @@ export class AppComponent implements OnInit {
       this.closeSidebar();
     }
   }
-
-
 
   toggleProfileMenu(): void {
     this.profileMenuOpen.update((v) => !v);

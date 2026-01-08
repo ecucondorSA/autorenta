@@ -1,6 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Component, OnInit, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { MercadoPagoOAuthService } from '@core/services/payments/mercadopago-oauth.service';

@@ -1,5 +1,4 @@
-import {Component, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { OfflineManagerService } from '@core/services/infrastructure/offline-manager.service';
 

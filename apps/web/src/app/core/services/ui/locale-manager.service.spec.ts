@@ -6,7 +6,7 @@ describe('LocaleManagerService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LocaleManagerService]
+      providers: [LocaleManagerService],
     });
     service = TestBed.inject(LocaleManagerService);
   });
@@ -26,5 +26,4 @@ describe('LocaleManagerService', () => {
   it('should have getCurrentLocale method', () => {
     expect(typeof service.getCurrentLocale).toBe('function');
   });
-
 });

@@ -1,7 +1,12 @@
 import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  Component, computed, inject, OnInit, PLATFORM_ID, signal
+  Component,
+  computed,
+  inject,
+  OnInit,
+  PLATFORM_ID,
+  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -128,7 +133,7 @@ interface PreparedBookingData {
     BookingExtrasStepComponent,
     BookingDriverStepComponent,
     BookingPaymentStepComponent,
-    BookingReviewStepComponent
+    BookingReviewStepComponent,
   ],
   templateUrl: './booking-wizard.page.html',
   styleUrls: ['./booking-wizard.page.scss'],
@@ -196,7 +201,7 @@ export class BookingWizardPage implements OnInit {
     private errorHandler: ErrorHandlerService,
     private emailVerificationService: EmailVerificationService,
     private distanceCalculator: DistanceCalculatorService,
-  ) { }
+  ) {}
 
   async ngOnInit() {
     // Get car ID from route params

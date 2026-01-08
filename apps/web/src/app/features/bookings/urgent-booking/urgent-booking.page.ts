@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {Component, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CarsService } from '@core/services/cars/cars.service';

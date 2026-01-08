@@ -1,5 +1,4 @@
-import {Component, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,11 +24,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
         title="Centro de ayuda"
         type="button"
       >
-        <app-header-icon
-          name="help"
-          [size]="22"
-          cssClass="lg:w-6 lg:h-6"
-        />
+        <app-header-icon name="help" [size]="22" cssClass="lg:w-6 lg:h-6" />
       </button>
 
       @if (showMenu()) {
@@ -42,9 +37,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
           role="menu"
           aria-labelledby="help-center"
         >
-          <h3 class="text-sm font-semibold mb-3 text-text-primary">
-            Centro de ayuda
-          </h3>
+          <h3 class="text-sm font-semibold mb-3 text-text-primary">Centro de ayuda</h3>
 
           <!-- Convertite en Renter (destacado) -->
           <button
@@ -55,12 +48,8 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
             <div class="flex items-start gap-3">
               <div class="text-xl">🏠</div>
               <div class="flex-1">
-                <div class="font-semibold text-sm text-cta-default mb-1">
-                  Convertite en Renter
-                </div>
-                <div class="text-xs text-text-muted">
-                  Publicá tu auto y generá ingresos extras
-                </div>
+                <div class="font-semibold text-sm text-cta-default mb-1">Convertite en Renter</div>
+                <div class="text-xs text-text-muted">Publicá tu auto y generá ingresos extras</div>
               </div>
             </div>
           </button>
@@ -80,9 +69,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
           <hr class="my-2 border-border-default/40" />
 
           <!-- Tours guiados -->
-          <div class="text-xs font-medium text-text-muted px-3 mb-2">
-            Tours guiados
-          </div>
+          <div class="text-xs font-medium text-text-muted px-3 mb-2">Tours guiados</div>
 
           <button
             (click)="showTour('welcome')"

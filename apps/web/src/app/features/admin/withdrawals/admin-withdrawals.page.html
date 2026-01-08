@@ -2,7 +2,9 @@
   <div class="max-w-7xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-text-primary tracking-tight font-satoshi">Gestión de Retiros</h1>
+      <h1 class="text-3xl font-bold text-text-primary tracking-tight font-satoshi">
+        Gestión de Retiros
+      </h1>
       <p class="mt-2 text-text-secondary">
         Administra las solicitudes de retiro de fondos de los locadores
       </p>
@@ -28,9 +30,7 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-text-secondary">
-              Retiros Pendientes
-            </p>
+            <p class="text-sm font-medium text-text-secondary">Retiros Pendientes</p>
             <p class="text-2xl font-semibold text-text-primary">{{ pendingCount() }}</p>
           </div>
         </div>
@@ -54,9 +54,7 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-text-secondary">
-              Monto Total Pendiente
-            </p>
+            <p class="text-sm font-medium text-text-secondary">Monto Total Pendiente</p>
             <p class="text-2xl font-semibold text-text-primary">
               {{ totalPendingAmount() | money: 'ARS' }}
             </p>
@@ -82,9 +80,7 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-text-secondary">
-              Total Solicitudes
-            </p>
+            <p class="text-sm font-medium text-text-secondary">Total Solicitudes</p>
             <p class="text-2xl font-semibold text-text-primary">{{ withdrawals().length }}</p>
           </div>
         </div>
@@ -179,7 +175,9 @@
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-text-primary font-satoshi">No hay solicitudes de retiro</h3>
+          <h3 class="mt-2 text-sm font-medium text-text-primary font-satoshi">
+            No hay solicitudes de retiro
+          </h3>
           <p class="mt-1 text-sm text-text-secondary">
             @if (filterStatus()) {
               Prueba cambiando el filtro.
@@ -193,44 +191,28 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-surface-base">
               <tr>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase"
-                >
+                <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">
                   Fecha
                 </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase"
-                >
+                <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">
                   Usuario
                 </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase"
-                >
+                <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">
                   Cuenta Bancaria
                 </th>
-                <th
-                  class="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase"
-                >
+                <th class="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase">
                   Monto
                 </th>
-                <th
-                  class="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase"
-                >
+                <th class="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase">
                   Comisión
                 </th>
-                <th
-                  class="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase"
-                >
+                <th class="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase">
                   Neto
                 </th>
-                <th
-                  class="px-6 py-3 text-center text-xs font-medium text-text-secondary uppercase"
-                >
+                <th class="px-6 py-3 text-center text-xs font-medium text-text-secondary uppercase">
                   Estado
                 </th>
-                <th
-                  class="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase"
-                >
+                <th class="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase">
                   Acciones
                 </th>
               </tr>
@@ -261,9 +243,7 @@
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-text-primary">
                     {{ withdrawal.amount | money: withdrawal.currency }}
                   </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap text-sm text-right text-text-secondary"
-                  >
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-text-secondary">
                     -{{ withdrawal.fee_amount | money: withdrawal.currency }}
                   </td>
                   <td
@@ -307,11 +287,10 @@
     >
       <div class="px-6 py-4 border-b border-border-default">
         <div class="flex justify-between items-start">
-          <h3 class="text-lg font-medium text-text-primary font-satoshi">Detalles de Solicitud de Retiro</h3>
-          <button
-            (click)="closeModal()"
-            class="text-text-muted hover:text-text-secondary"
-          >
+          <h3 class="text-lg font-medium text-text-primary font-satoshi">
+            Detalles de Solicitud de Retiro
+          </h3>
+          <button (click)="closeModal()" class="text-text-muted hover:text-text-secondary">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
@@ -419,7 +398,9 @@
         <!-- User Notes -->
         @if (selectedWithdrawal()!.user_notes) {
           <div class="mb-6">
-            <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Notas del Usuario</h4>
+            <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">
+              Notas del Usuario
+            </h4>
             <p class="text-sm text-text-primary bg-cta-default/10 rounded p-3">
               {{ selectedWithdrawal()!.user_notes }}
             </p>
@@ -457,9 +438,7 @@
       </div>
 
       <!-- Actions -->
-      <div
-        class="px-6 py-4 bg-surface-base border-t border-border-default flex justify-end gap-2"
-      >
+      <div class="px-6 py-4 bg-surface-base border-t border-border-default flex justify-end gap-2">
         @if (selectedWithdrawal()!.status === 'pending') {
           <button
             (click)="rejectWithdrawal(selectedWithdrawal()!)"

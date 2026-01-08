@@ -10,4 +10,3 @@ export class ExternalNavigationService {
     window.location.href = url;
   }
 }
-

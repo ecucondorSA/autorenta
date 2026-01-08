@@ -46,9 +46,7 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-text-secondary">
-              Pendientes
-            </p>
+            <p class="text-sm font-medium text-text-secondary">Pendientes</p>
             <p class="text-2xl font-semibold text-text-primary">
               {{ pendingCount() }}
             </p>
@@ -74,9 +72,7 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-text-secondary">
-              Monto Pendiente
-            </p>
+            <p class="text-sm font-medium text-text-secondary">Monto Pendiente</p>
             <p class="text-2xl font-semibold text-text-primary">
               {{ totalPendingAmount() | money: 'ARS' }}
             </p>
@@ -102,9 +98,7 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-text-secondary">
-              Completados Hoy
-            </p>
+            <p class="text-sm font-medium text-text-secondary">Completados Hoy</p>
             <p class="text-2xl font-semibold text-text-primary">
               {{ completedToday() }}
             </p>
@@ -201,12 +195,8 @@
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-text-primary font-satoshi">
-            No hay reembolsos
-          </h3>
-          <p class="mt-1 text-sm text-text-secondary">
-            Comienza procesando un nuevo reembolso
-          </p>
+          <h3 class="mt-2 text-sm font-medium text-text-primary font-satoshi">No hay reembolsos</h3>
+          <p class="mt-1 text-sm text-text-secondary">Comienza procesando un nuevo reembolso</p>
         </div>
       } @else {
         <div class="overflow-x-auto">
@@ -250,14 +240,10 @@
                 </th>
               </tr>
             </thead>
-            <tbody
-              class="bg-surface-raised divide-y divide-gray-200"
-            >
+            <tbody class="bg-surface-raised divide-y divide-gray-200">
               @for (refund of refundRequests(); track refund.id) {
                 <tr class="hover:bg-surface-base">
-                  <td
-                    class="px-6 py-4 whitespace-nowrap text-sm text-text-primary"
-                  >
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-text-primary">
                     {{ formatDate(refund.created_at) }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
@@ -276,14 +262,10 @@
                       ID: {{ refund.booking_id.substring(0, 8) }}...
                     </div>
                   </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary"
-                  >
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary">
                     {{ refund.refund_amount | money: refund.currency }}
                   </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary"
-                  >
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">
                     {{ getDestinationText(refund.destination) }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
@@ -323,13 +305,8 @@
       <div
         class="sticky top-0 bg-surface-raised border-b border-border-default px-6 py-4 flex justify-between items-center"
       >
-        <h2 class="text-xl font-semibold text-text-primary font-satoshi">
-          Detalle del Reembolso
-        </h2>
-        <button
-          (click)="closeDetailModal()"
-          class="text-text-muted hover:text-text-secondary"
-        >
+        <h2 class="text-xl font-semibold text-text-primary font-satoshi">Detalle del Reembolso</h2>
+        <button (click)="closeDetailModal()" class="text-text-muted hover:text-text-secondary">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -388,15 +365,11 @@
 
         <!-- Timestamps -->
         <div class="border-t border-border-default pt-4">
-          <h3 class="text-sm font-medium text-text-primary mb-2 font-satoshi">
-            Cronología
-          </h3>
+          <h3 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Cronología</h3>
           <div class="space-y-2 text-sm">
             <div class="flex justify-between">
               <span class="text-text-secondary">Creado:</span>
-              <span class="text-text-primary">{{
-                formatDate(selectedRefund()!.created_at)
-              }}</span>
+              <span class="text-text-primary">{{ formatDate(selectedRefund()!.created_at) }}</span>
             </div>
             @if (selectedRefund()!.approved_at) {
               <div class="flex justify-between">
@@ -428,9 +401,7 @@
         <!-- Reason/Notes -->
         @if (selectedRefund()!.request_reason) {
           <div class="border-t border-border-default pt-4">
-            <h3 class="text-sm font-medium text-text-primary mb-2 font-satoshi">
-              Motivo
-            </h3>
+            <h3 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Motivo</h3>
             <p class="text-sm text-text-primary">
               {{ selectedRefund()!.request_reason }}
             </p>
@@ -438,9 +409,7 @@
         }
         @if (selectedRefund()!.admin_notes) {
           <div class="border-t border-border-default pt-4">
-            <h3 class="text-sm font-medium text-text-primary mb-2 font-satoshi">
-              Notas del Admin
-            </h3>
+            <h3 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Notas del Admin</h3>
             <p class="text-sm text-text-primary">
               {{ selectedRefund()!.admin_notes }}
             </p>
@@ -448,9 +417,7 @@
         }
       </div>
 
-      <div
-        class="sticky bottom-0 bg-surface-base px-6 py-4 flex justify-end gap-3"
-      >
+      <div class="sticky bottom-0 bg-surface-base px-6 py-4 flex justify-end gap-3">
         <button
           (click)="closeDetailModal()"
           class="px-4 py-2 border border-border-muted rounded-md text-text-primary hover:bg-surface-base font-medium transition-colors"
@@ -476,10 +443,7 @@
         <h2 class="text-xl font-semibold text-text-primary font-satoshi">
           Procesar Nuevo Reembolso
         </h2>
-        <button
-          (click)="closeNewRefundModal()"
-          class="text-text-muted hover:text-text-secondary"
-        >
+        <button (click)="closeNewRefundModal()" class="text-text-muted hover:text-text-secondary">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -494,9 +458,7 @@
       <div class="px-6 py-4 space-y-6">
         <!-- Step 1: Search Booking -->
         <div>
-          <h3 class="text-lg font-medium text-text-primary mb-4 font-satoshi">
-            1. Buscar Booking
-          </h3>
+          <h3 class="text-lg font-medium text-text-primary mb-4 font-satoshi">1. Buscar Booking</h3>
           <div class="flex gap-2">
             <input
               type="text"
@@ -539,9 +501,7 @@
                       <p class="font-medium text-text-primary">
                         {{ booking.car_title || 'N/A' }}
                       </p>
-                      <p class="text-sm text-text-secondary">
-                        ID: {{ booking.id }}
-                      </p>
+                      <p class="text-sm text-text-secondary">ID: {{ booking.id }}</p>
                       <p class="text-sm text-text-secondary">
                         Total: {{ booking.total_amount | money: booking.currency }}
                       </p>
@@ -580,9 +540,7 @@
 
             <div class="space-y-4">
               <div>
-                <label
-                  class="block text-sm font-medium text-text-primary mb-2"
-                >
+                <label class="block text-sm font-medium text-text-primary mb-2">
                   Monto a Reembolsar
                 </label>
                 <input
@@ -596,9 +554,7 @@
               </div>
 
               <div>
-                <label
-                  class="block text-sm font-medium text-text-primary mb-2"
-                >
+                <label class="block text-sm font-medium text-text-primary mb-2">
                   Destino del Reembolso
                 </label>
                 <select
@@ -614,9 +570,7 @@
               </div>
 
               <div>
-                <label
-                  class="block text-sm font-medium text-text-primary mb-2"
-                >
+                <label class="block text-sm font-medium text-text-primary mb-2">
                   Motivo del Reembolso *
                 </label>
                 <textarea
@@ -632,9 +586,7 @@
         }
       </div>
 
-      <div
-        class="sticky bottom-0 bg-surface-base px-6 py-4 flex justify-end gap-3"
-      >
+      <div class="sticky bottom-0 bg-surface-base px-6 py-4 flex justify-end gap-3">
         <button
           (click)="closeNewRefundModal()"
           [disabled]="processing()"

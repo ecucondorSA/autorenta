@@ -111,8 +111,8 @@ export class VideoDamageDetectionService {
    * URL del servicio de ingesta de videos en GCP Cloud Run
    * Configurable via env: NG_APP_VIDEO_INGESTION_URL
    */
-  private readonly VIDEO_INGESTION_URL = environment.videoIngestionUrl ||
-    'https://video-ingestion-service-XXXXX.run.app';
+  private readonly VIDEO_INGESTION_URL =
+    environment.videoIngestionUrl || 'https://video-ingestion-service-XXXXX.run.app';
 
   /**
    * Estado de análisis en progreso
@@ -175,10 +175,7 @@ export class VideoDamageDetectionService {
       this.uploadProgress.set(10);
 
       // PASO 2: Subir video directamente a Cloud Storage
-      await this.uploadToCloudStorage(
-        signedUrlResponse.uploadUrl,
-        params.videoFile
-      );
+      await this.uploadToCloudStorage(signedUrlResponse.uploadUrl, params.videoFile);
 
       this.uploadProgress.set(90);
 
@@ -196,7 +193,6 @@ export class VideoDamageDetectionService {
       this.isProcessing.set(false);
 
       return signedUrlResponse.videoPath;
-
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Error al subir video';
       this.lastError.set(errorMsg);
@@ -218,10 +214,7 @@ export class VideoDamageDetectionService {
     contentType: string;
   }): Promise<SignedUploadUrlResponse> {
     const response = await firstValueFrom(
-      this.http.post<SignedUploadUrlResponse>(
-        `${this.VIDEO_INGESTION_URL}/api/upload-url`,
-        params
-      )
+      this.http.post<SignedUploadUrlResponse>(`${this.VIDEO_INGESTION_URL}/api/upload-url`, params),
     );
 
     return response;
@@ -230,10 +223,7 @@ export class VideoDamageDetectionService {
   /**
    * Sube el video a Cloud Storage usando la URL firmada
    */
-  private async uploadToCloudStorage(
-    signedUrl: string,
-    videoFile: File
-  ): Promise<void> {
+  private async uploadToCloudStorage(signedUrl: string, videoFile: File): Promise<void> {
     const headers = new HttpHeaders({
       'Content-Type': videoFile.type,
     });
@@ -243,7 +233,7 @@ export class VideoDamageDetectionService {
         headers,
         reportProgress: true,
         observe: 'events',
-      })
+      }),
     );
   }
 
@@ -258,17 +248,15 @@ export class VideoDamageDetectionService {
     userId: string;
     status: 'processing' | 'completed' | 'failed';
   }): Promise<void> {
-    const { error } = await this.supabase.getClient()
-      .from('inspection_videos')
-      .insert({
-        booking_id: params.bookingId,
-        inspection_type: params.inspectionType,
-        video_path: params.videoPath,
-        car_id: params.carId,
-        user_id: params.userId,
-        status: params.status,
-        created_at: new Date().toISOString(),
-      });
+    const { error } = await this.supabase.getClient().from('inspection_videos').insert({
+      booking_id: params.bookingId,
+      inspection_type: params.inspectionType,
+      video_path: params.videoPath,
+      car_id: params.carId,
+      user_id: params.userId,
+      status: params.status,
+      created_at: new Date().toISOString(),
+    });
 
     if (error) {
       throw new Error(`Error al registrar video: ${error.message}`);
@@ -291,9 +279,10 @@ export class VideoDamageDetectionService {
    */
   async getAnalysisResults(
     bookingId: string,
-    inspectionType: 'checkin' | 'checkout'
+    inspectionType: 'checkin' | 'checkout',
   ): Promise<VideoDamageAnalysis | null> {
-    const { data, error } = await this.supabase.getClient()
+    const { data, error } = await this.supabase
+      .getClient()
       .from('video_damage_analysis')
       .select('*')
       .eq('booking_id', bookingId)
@@ -350,15 +339,9 @@ export class VideoDamageDetectionService {
     }
 
     // Detectar daños nuevos (presentes en checkout pero no en checkin)
-    const newDamages = this.detectNewDamages(
-      checkinAnalysis.damages,
-      checkoutAnalysis.damages
-    );
+    const newDamages = this.detectNewDamages(checkinAnalysis.damages, checkoutAnalysis.damages);
 
-    const totalEstimatedCost = newDamages.reduce(
-      (sum, damage) => sum + damage.estimatedCostUsd,
-      0
-    );
+    const totalEstimatedCost = newDamages.reduce((sum, damage) => sum + damage.estimatedCostUsd, 0);
 
     const summary = this.generateDamageSummary(newDamages);
 
@@ -374,14 +357,15 @@ export class VideoDamageDetectionService {
    */
   private detectNewDamages(
     checkinDamages: VideoDetectedDamage[],
-    checkoutDamages: VideoDetectedDamage[]
+    checkoutDamages: VideoDetectedDamage[],
   ): VideoDetectedDamage[] {
     // Simple heurística: buscar daños en checkout que no están en checkin
     // basándose en type + location
-    return checkoutDamages.filter(checkoutDamage => {
-      const existsInCheckin = checkinDamages.some(checkinDamage =>
-        checkinDamage.type === checkoutDamage.type &&
-        checkinDamage.location === checkoutDamage.location
+    return checkoutDamages.filter((checkoutDamage) => {
+      const existsInCheckin = checkinDamages.some(
+        (checkinDamage) =>
+          checkinDamage.type === checkoutDamage.type &&
+          checkinDamage.location === checkoutDamage.location,
       );
       return !existsInCheckin;
     });
@@ -395,9 +379,9 @@ export class VideoDamageDetectionService {
       return 'No se detectaron daños nuevos.';
     }
 
-    const summary = damages.map(d =>
-      `${d.type} ${d.severity} en ${d.location} (${d.confidence * 100}% confianza)`
-    ).join(', ');
+    const summary = damages
+      .map((d) => `${d.type} ${d.severity} en ${d.location} (${d.confidence * 100}% confianza)`)
+      .join(', ');
 
     return `Se detectaron ${damages.length} daño(s) nuevo(s): ${summary}`;
   }
@@ -412,11 +396,9 @@ export class VideoDamageDetectionService {
    * Útil para mostrar resultados en tiempo real cuando
    * el video-processing-service termina el análisis
    */
-  subscribeToAnalysisResults(
-    bookingId: string,
-    callback: (analysis: VideoDamageAnalysis) => void
-  ) {
-    return this.supabase.getClient()
+  subscribeToAnalysisResults(bookingId: string, callback: (analysis: VideoDamageAnalysis) => void) {
+    return this.supabase
+      .getClient()
       .channel(`video_analysis_${bookingId}`)
       .on(
         'postgres_changes',
@@ -429,7 +411,7 @@ export class VideoDamageDetectionService {
         (payload) => {
           const analysis = this.mapToVideoDamageAnalysis(payload.new);
           callback(analysis);
-        }
+        },
       )
       .subscribe();
   }

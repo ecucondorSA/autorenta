@@ -50,10 +50,7 @@ export class OfflineManagerService {
     const offline$ = fromEvent(window, 'offline').pipe(map(() => false));
 
     merge(online$, offline$)
-      .pipe(
-        startWith(navigator.onLine),
-        takeUntilDestroyed(this.destroyRef)
-      )
+      .pipe(startWith(navigator.onLine), takeUntilDestroyed(this.destroyRef))
       .subscribe((isOnline) => {
         this.isOnlineSignal.set(isOnline);
 

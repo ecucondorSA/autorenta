@@ -34,7 +34,7 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 12px;
-  box-shadow: var(--map-control-shadow, 0 4px 12px var(--shadow-dark-alpha-30, #7B7B7B));
+  box-shadow: var(--map-control-shadow, 0 4px 12px var(--shadow-dark-alpha-30, #7b7b7b));
   border: 1px solid
     var(--map-control-border, var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)));
 }
@@ -97,7 +97,7 @@
   transform: scale(1.2);
   box-shadow:
     0 4px 12px rgba(79, 70, 229, 0.6),
-    0 8px 24px var(--shadow-dark-alpha-30, #7B7B7B);
+    0 8px 24px var(--shadow-dark-alpha-30, #7b7b7b);
 }
 
 .car-marker--active {
@@ -105,7 +105,7 @@
   box-shadow:
     0 0 0 4px rgba(79, 70, 229, 0.3),
     0 4px 12px rgba(79, 70, 229, 0.6),
-    0 8px 24px var(--shadow-dark-alpha-30, #7B7B7B);
+    0 8px 24px var(--shadow-dark-alpha-30, #7b7b7b);
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -152,7 +152,7 @@
 
 .car-marker-photo:hover {
   transform: scale(1.12) translateY(-4px);
-  filter: drop-shadow(0 8px 16px var(--shadow-dark-alpha-30, #7B7B7B));
+  filter: drop-shadow(0 8px 16px var(--shadow-dark-alpha-30, #7b7b7b));
   z-index: 1000;
 }
 
@@ -172,7 +172,7 @@
   inset: 0;
   background-color: var(
     --shadow-dark-alpha-40,
-    #7B7B7B
+    #7b7b7b
   ); /* Replaced gradient with solid color token */
   pointer-events: none;
 }
@@ -281,7 +281,7 @@
 }
 
 .car-marker-price:hover {
-  border-color: var(--cta-default, #A7D8F4);
+  border-color: var(--cta-default, #a7d8f4);
   box-shadow:
     0 4px 12px rgba(167, 216, 244, 0.3),
     0 2px 6px var(--shadow-dark-alpha-15, rgba(0, 0, 0, 0.15));
@@ -289,9 +289,9 @@
 }
 
 .car-marker-price--active {
-  background: var(--cta-default, #A7D8F4);
+  background: var(--cta-default, #a7d8f4);
   color: var(--cta-text, #050505);
-  border-color: var(--cta-default, #A7D8F4);
+  border-color: var(--cta-default, #a7d8f4);
   transform: scale(1.1);
 }
 
@@ -318,7 +318,7 @@
   50% {
     box-shadow:
       0 0 0 8px rgba(59, 130, 246, 0.1),
-      0 2px 12px var(--shadow-dark-alpha-30, #7B7B7B);
+      0 2px 12px var(--shadow-dark-alpha-30, #7b7b7b);
   }
 }
 
@@ -339,9 +339,9 @@
   font-size: 0.9rem;
   border-radius: 12px;
   padding: 12px 16px;
-  box-shadow: var(--map-popup-shadow, 0 4px 12px var(--shadow-dark-alpha-40, #7B7B7B));
+  box-shadow: var(--map-popup-shadow, 0 4px 12px var(--shadow-dark-alpha-40, #7b7b7b));
   border: 1px solid var(--map-popup-border, var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)));
-  border-top: 3px solid var(--cta-default, #A7D8F4);
+  border-top: 3px solid var(--cta-default, #a7d8f4);
 }
 
 .mapboxgl-popup-content h3 {
@@ -386,7 +386,7 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow:
-    0 4px 12px var(--shadow-dark-alpha-30, #7B7B7B),
+    0 4px 12px var(--shadow-dark-alpha-30, #7b7b7b),
     0 0 1px var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)) !important;
   border: 1px solid var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)) !important;
 }
@@ -414,7 +414,7 @@
   backdrop-filter: blur(10px);
   border-radius: 8px;
   margin-top: 8px;
-  box-shadow: 0 4px 12px var(--shadow-dark-alpha-30, #7B7B7B);
+  box-shadow: 0 4px 12px var(--shadow-dark-alpha-30, #7b7b7b);
   border: 1px solid var(--border-light-alpha-10, rgba(255, 255, 255, 0.1));
 }
 
@@ -480,10 +480,7 @@
   }
 
   .mapboxgl-control-container .mapboxgl-ctrl-group {
-    background-color: var(
-      --map-control-bg,
-      var(--surface-primary-alpha-95, #E3E3E3)
-    );
+    background-color: var(--map-control-bg, var(--surface-primary-alpha-95, #e3e3e3));
     border: 1px solid var(--map-control-border, var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1)));
   }
 
@@ -657,7 +654,7 @@
 .map-carousel-container:has(.map-carousel-heading__pill.recommended) .map-carousel-card:hover {
   box-shadow:
     0 12px 40px rgba(245, 158, 11, 0.3),
-    0 8px 32px var(--shadow-dark-alpha-30, #7B7B7B);
+    0 8px 32px var(--shadow-dark-alpha-30, #7b7b7b);
 }
 
 /* Top Rated card enhancements */
@@ -683,7 +680,7 @@
   font-size: 12px;
   font-weight: bold;
   z-index: 10;
-  box-shadow: 0 2px 6px #7B7B7B;
+  box-shadow: 0 2px 6px #7b7b7b;
   border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -695,6 +692,6 @@
 .map-carousel-card-wrapper.top-rated:hover .map-carousel-card {
   box-shadow:
     0 16px 48px rgba(245, 158, 11, 0.5),
-    0 12px 40px var(--shadow-dark-alpha-30, #7B7B7B) !important;
+    0 12px 40px var(--shadow-dark-alpha-30, #7b7b7b) !important;
   transform: translateY(-6px) scale(1.03) !important;
 }

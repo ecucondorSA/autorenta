@@ -1,4 +1,3 @@
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -25,7 +24,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
           <div
             class="w-10 h-10 rounded-full flex items-center justify-center text-lg"
             [class]="getStatusBadgeClass()"
-            >
+          >
             {{ getStatusIcon() }}
           </div>
           <div>
@@ -39,19 +38,17 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
           {{ getStatusLabel() }}
         </span>
       </div>
-    
+
       <!-- Verified State -->
       @if (status().isVerified) {
-        <div
-          class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg"
-          >
+        <div class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg">
           <div class="flex items-center gap-2 text-success-strong">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                 clip-rule="evenodd"
-                />
+              />
             </svg>
             <span class="text-sm font-medium">Teléfono verificado exitosamente</span>
           </div>
@@ -60,7 +57,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
           </p>
         </div>
       }
-    
+
       <!-- Pending State -->
       @if (!status().isVerified) {
         <div class="space-y-4">
@@ -80,7 +77,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                   <select
                     [(ngModel)]="countryCode"
                     class="block w-24 rounded-lg border-border-muted shadow-sm focus:ring-cta-default focus:border-cta-default text-sm"
-                    >
+                  >
                     <option value="+54">🇦🇷 +54</option>
                     <option value="+1">🇺🇸 +1</option>
                     <option value="+52">🇲🇽 +52</option>
@@ -95,7 +92,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                     maxlength="15"
                     class="flex-grow block rounded-lg border-border-muted shadow-sm focus:ring-cta-default focus:border-cta-default text-sm"
                     [disabled]="loading()"
-                    />
+                  />
                 </div>
                 <p class="text-xs text-text-secondary mt-1">
                   Formato: sin el 0 inicial. Ej: 11 2345 6789
@@ -106,12 +103,12 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                 (click)="sendOTP()"
                 [disabled]="!canSendOTP() || loading()"
                 class="w-full px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            [class]="
-              canSendOTP()
-                ? 'bg-cta-default text-cta-text hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2'
-                : 'bg-surface-hover text-text-secondary cursor-not-allowed'
-            "
-                >
+                [class]="
+                  canSendOTP()
+                    ? 'bg-cta-default text-cta-text hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2'
+                    : 'bg-surface-hover text-text-secondary cursor-not-allowed'
+                "
+              >
                 @if (!loading()) {
                   <span class="flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,10 +117,12 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                         stroke-linejoin="round"
                         stroke-width="2"
                         d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-                        />
+                      />
                     </svg>
                     <span>{{
-                      cooldownRemaining() > 0 ? 'Espera ' + cooldownRemaining() + 's' : 'Enviar código'
+                      cooldownRemaining() > 0
+                        ? 'Espera ' + cooldownRemaining() + 's'
+                        : 'Enviar código'
                     }}</span>
                   </span>
                 }
@@ -138,7 +137,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
               @if (remainingAttempts() < 3) {
                 <div
                   class="p-3 bg-warning-light/10 border border-warning-light/40 rounded-lg text-sm text-warning-strong"
-                  >
+                >
                   ⚠️ Te quedan {{ remainingAttempts() }} intentos en esta hora
                 </div>
               }
@@ -170,10 +169,8 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                   class="block w-full rounded-lg border-border-muted shadow-sm focus:ring-cta-default focus:border-cta-default text-center h4 tracking-widest font-mono"
                   [disabled]="loading()"
                   (input)="onOTPInput($event)"
-                  />
-                <p class="text-xs text-text-secondary mt-1 text-center">
-                  Solo números, 6 dígitos
-                </p>
+                />
+                <p class="text-xs text-text-secondary mt-1 text-center">Solo números, 6 dígitos</p>
               </div>
               <div class="flex gap-2">
                 <button
@@ -181,12 +178,12 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                   (click)="verifyOTP()"
                   [disabled]="!canVerifyOTP() || loading()"
                   class="flex-grow px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              [class]="
-                canVerifyOTP()
-                  ? 'bg-success-light text-text-primary hover:bg-success-light focus:ring-2 focus:ring-success-light focus:ring-offset-2'
-                  : 'bg-surface-hover text-text-secondary cursor-not-allowed'
-              "
-                  >
+                  [class]="
+                    canVerifyOTP()
+                      ? 'bg-success-light text-text-primary hover:bg-success-light focus:ring-2 focus:ring-success-light focus:ring-offset-2'
+                      : 'bg-surface-hover text-text-secondary cursor-not-allowed'
+                  "
+                >
                   @if (!loading()) {
                     <span class="flex items-center justify-center gap-2">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -195,7 +192,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                           stroke-linejoin="round"
                           stroke-width="2"
                           d="M5 13l4 4L19 7"
-                          />
+                        />
                       </svg>
                       <span>Verificar código</span>
                     </span>
@@ -212,7 +209,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                   (click)="cancelOTP()"
                   [disabled]="loading()"
                   class="px-4 py-3 text-sm font-medium text-text-primary bg-surface-raised border border-border-muted rounded-lg hover:bg-surface-base focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:opacity-50"
-                  >
+                >
                   Cambiar número
                 </button>
               </div>
@@ -221,11 +218,11 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                 (click)="resendOTP()"
                 [disabled]="!canResend() || loading()"
                 class="w-full px-4 py-2 text-sm text-cta-default hover:text-cta-default disabled:text-text-muted"
-                >
+              >
                 {{
-                cooldownRemaining() > 0
-                ? 'Reenviar en ' + cooldownRemaining() + 's'
-                : '¿No recibiste el código? Reenviar'
+                  cooldownRemaining() > 0
+                    ? 'Reenviar en ' + cooldownRemaining() + 's'
+                    : '¿No recibiste el código? Reenviar'
                 }}
               </button>
             </div>
@@ -234,7 +231,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
           @if (successMessage()) {
             <div
               class="p-3 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-strong"
-              >
+            >
               {{ successMessage() }}
             </div>
           }
@@ -242,7 +239,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
           @if (error()) {
             <div
               class="p-3 bg-error-bg border border-error-border rounded-lg text-sm text-error-strong"
-              >
+            >
               {{ error() }}
             </div>
           }
@@ -255,7 +252,7 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
         </div>
       }
     </div>
-    `,
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneVerificationComponent implements OnInit, OnDestroy {

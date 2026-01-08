@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-
 /**
  * Badge Component V2
  * Small notification or status indicator

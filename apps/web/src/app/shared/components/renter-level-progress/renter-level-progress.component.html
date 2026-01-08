@@ -1,5 +1,4 @@
 <div class="h-full flex flex-col p-4 rounded-xl border border-border-default/60 bg-white">
-
   @if (loading()) {
     <div class="flex-1 flex items-center justify-center">
       <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-cta-default"></div>
@@ -60,7 +59,9 @@
       </div>
       @if (nextLevelInfo()!.progress === 100) {
         <div class="mt-4 p-3 bg-emerald-50/50 border border-emerald-100 rounded-lg text-center">
-          <p class="text-xs text-emerald-700 font-medium">🎉 ¡Felicidades! Has alcanzado el nivel máximo.</p>
+          <p class="text-xs text-emerald-700 font-medium">
+            🎉 ¡Felicidades! Has alcanzado el nivel máximo.
+          </p>
         </div>
       }
     </div>

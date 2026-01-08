@@ -101,7 +101,7 @@ export class AdvisoryLockService {
   async tryLock(
     lockType: LockType,
     resourceId: string,
-    timeoutMs: number = LOCK_TIMEOUT_MS
+    timeoutMs: number = LOCK_TIMEOUT_MS,
   ): Promise<LockResult> {
     const lockId = this.generateLockId(lockType, resourceId);
 
@@ -126,9 +126,12 @@ export class AdvisoryLockService {
 
       if (acquired) {
         // Set up timeout to automatically release the lock
-        const timeoutId = timeoutMs > 0 ? setTimeout(() => {
-          this.handleLockTimeout(lockType, resourceId, lockId);
-        }, timeoutMs) : undefined;
+        const timeoutId =
+          timeoutMs > 0
+            ? setTimeout(() => {
+                this.handleLockTimeout(lockType, resourceId, lockId);
+              }, timeoutMs)
+            : undefined;
 
         this.activeLocks.set(lockId, {
           type: lockType,
@@ -237,7 +240,7 @@ export class AdvisoryLockService {
       retryDelayMs?: number;
       /** Timeout in ms for the lock (default: LOCK_TIMEOUT_MS) */
       timeoutMs?: number;
-    } = {}
+    } = {},
   ): Promise<T> {
     const {
       lockFailMessage = 'Resource is currently being processed',
@@ -301,7 +304,7 @@ export class AdvisoryLockService {
     let released = 0;
     const locks = Array.from(this.activeLocks.entries());
 
-    for (const [_, data] of locks) {
+    for (const [, data] of locks) {
       const success = await this.unlock(data.type, data.resourceId);
       if (success) released++;
     }
@@ -322,18 +325,18 @@ export class AdvisoryLockService {
     // Simple hash function (djb2 algorithm)
     let hash = 5381;
     for (let i = 0; i < keyString.length; i++) {
-      hash = ((hash << 5) + hash) + keyString.charCodeAt(i);
+      hash = (hash << 5) + hash + keyString.charCodeAt(i);
       hash = hash & hash; // Convert to 32-bit integer
     }
 
     // Add lock type prefix to avoid collisions between different lock types
     // Shift type to upper bits
-    const fullKey = (lockType * 1000000000) + Math.abs(hash % 1000000000);
+    const fullKey = lockType * 1000000000 + Math.abs(hash % 1000000000);
 
     return fullKey;
   }
 
   private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

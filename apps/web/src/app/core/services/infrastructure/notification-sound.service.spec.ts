@@ -6,7 +6,7 @@ describe('NotificationSoundService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [NotificationSoundService]
+      providers: [NotificationSoundService],
     });
     service = TestBed.inject(NotificationSoundService);
   });
@@ -38,5 +38,4 @@ describe('NotificationSoundService', () => {
   it('should have disableSound method', () => {
     expect(typeof service.disableSound).toBe('function');
   });
-
 });

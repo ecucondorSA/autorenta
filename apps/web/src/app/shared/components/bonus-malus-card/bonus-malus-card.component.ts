@@ -1,5 +1,11 @@
-import {Component, OnInit, inject, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { BonusMalusService, TierDisplay } from '@core/services/payments/bonus-malus.service';
@@ -14,12 +20,16 @@ import type { UserBonusMalus, BonusMalusDisplay } from '../../../core/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   templateUrl: './bonus-malus-card.component.html',
-  styles: [`
-    :host { display: block; }
-    .tier-badge {
-      @apply px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+      .tier-badge {
+        @apply px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider;
+      }
+    `,
+  ],
 })
 export class BonusMalusCardComponent implements OnInit {
   private readonly bonusMalusService = inject(BonusMalusService);
@@ -48,11 +58,14 @@ export class BonusMalusCardComponent implements OnInit {
   readonly depositBenefit = computed(() => {
     const bm = this.bonusMalus();
     if (!bm || !bm.tier) return 'Depósito estándar';
-    
-    switch(bm.tier) {
-      case 'elite': return '✨ Sin Depósito';
-      case 'trusted': return '50% OFF en Depósito';
-      default: return 'Depósito estándar';
+
+    switch (bm.tier) {
+      case 'elite':
+        return '✨ Sin Depósito';
+      case 'trusted':
+        return '50% OFF en Depósito';
+      default:
+        return 'Depósito estándar';
     }
   });
 
@@ -65,7 +78,7 @@ export class BonusMalusCardComponent implements OnInit {
     // +0.20 => 40 (Poor)
     const factor = bm.total_factor;
     // Formula aproximada
-    let score = 70 - (factor * 100); 
+    let score = 70 - factor * 100;
     return Math.max(0, Math.min(100, score));
   });
 
@@ -99,7 +112,7 @@ export class BonusMalusCardComponent implements OnInit {
       this.logger.error('BonusMalusCard: Error loading bonus-malus', error);
       this.notificationService.warning(
         'Aviso',
-        'No pudimos cargar tu información de reputación. Intenta más tarde.'
+        'No pudimos cargar tu información de reputación. Intenta más tarde.',
       );
     } finally {
       this.loading.set(false);
@@ -117,21 +130,18 @@ export class BonusMalusCardComponent implements OnInit {
         // FIX 2025-12-28: Notify user if recalculation failed
         this.notificationService.warning(
           'Aviso',
-          'No pudimos recalcular tu reputación. Intenta más tarde.'
+          'No pudimos recalcular tu reputación. Intenta más tarde.',
         );
       }
     } catch (error) {
       this.logger.error('BonusMalusCard: Error recalculating bonus-malus', error);
-      this.notificationService.error(
-        'Error',
-        'Hubo un error al recalcular tu reputación.'
-      );
+      this.notificationService.error('Error', 'Hubo un error al recalcular tu reputación.');
     } finally {
       this.loading.set(false);
     }
   }
 
   toggleDetails(): void {
-    this.showDetails.update(v => !v);
+    this.showDetails.update((v) => !v);
   }
 }

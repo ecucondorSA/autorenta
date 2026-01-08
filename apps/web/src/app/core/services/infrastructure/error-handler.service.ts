@@ -11,17 +11,17 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
  * show "Tu sesión expiró" errors when browsing without login
  */
 const PUBLIC_ROUTES = [
-  '/cars',           // Car listings
-  '/cars/',          // Car detail (with ID)
-  '/marketplace',    // Marketplace
-  '/how-it-works',   // How it works
-  '/about',          // About page
-  '/contact',        // Contact
-  '/faq',            // FAQ
-  '/terms',          // Terms
-  '/privacy',        // Privacy
-  '/auth',           // Auth pages
-  '/',               // Home
+  '/cars', // Car listings
+  '/cars/', // Car detail (with ID)
+  '/marketplace', // Marketplace
+  '/how-it-works', // How it works
+  '/about', // About page
+  '/contact', // Contact
+  '/faq', // FAQ
+  '/terms', // Terms
+  '/privacy', // Privacy
+  '/auth', // Auth pages
+  '/', // Home
 ];
 
 /**
@@ -57,7 +57,7 @@ export class ErrorHandlerService {
    */
   private isPublicRoute(): boolean {
     const currentUrl = this.router.url || '/';
-    return PUBLIC_ROUTES.some(route => {
+    return PUBLIC_ROUTES.some((route) => {
       if (route === '/') {
         return currentUrl === '/';
       }
@@ -102,11 +102,10 @@ export class ErrorHandlerService {
     // ✅ FIX: Skip showing auth errors on public routes
     // Users browsing without login shouldn't see "Tu sesión expiró" messages
     if (this.isAuthError(error) && this.isPublicRoute()) {
-      this.logger.debug(
-        'Suppressing auth error on public route',
-        'ErrorHandlerService',
-        { context, route: this.router.url }
-      );
+      this.logger.debug('Suppressing auth error on public route', 'ErrorHandlerService', {
+        context,
+        route: this.router.url,
+      });
       // Still log for debugging, but don't show toast to user
       this.logError(error, context, 'warning');
       return;

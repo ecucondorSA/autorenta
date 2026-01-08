@@ -28,7 +28,8 @@ export interface ServiceSuccessResponse<T> extends ServiceResponse<T> {
 /**
  * Utility type for a failed API response.
  */
-export interface ServiceErrorResponse extends ServiceResponse<never> { // 'never' indicates no data on error
+export interface ServiceErrorResponse extends ServiceResponse<never> {
+  // 'never' indicates no data on error
   success: false;
   message: string;
   errorCode?: string;

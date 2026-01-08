@@ -1,5 +1,4 @@
-import {Component, computed, inject, OnInit,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, computed, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import {
   IonHeader,
@@ -76,7 +75,7 @@ import { MetaService } from '@core/services/ui/meta.service';
         <!-- Help button removed - NO MODALS rule -->
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content class="profile-content">
       <!-- Loading State -->
       @if (driverService.loading()) {
@@ -89,7 +88,7 @@ import { MetaService } from '@core/services/ui/meta.service';
           </ion-card>
         </div>
       }
-    
+
       <!-- Profile Loaded -->
       @if (!driverService.loading() && profile()) {
         <div>
@@ -136,11 +135,7 @@ import { MetaService } from '@core/services/ui/meta.service';
                       <p>{{ getProtectionMessage() }}</p>
                     </div>
                     @if (needsProtection()) {
-                      <ion-button
-                        fill="solid"
-                        size="small"
-                        (click)="buyProtection()"
-                        >
+                      <ion-button fill="solid" size="small" (click)="buyProtection()">
                         Proteger
                       </ion-button>
                     }
@@ -290,9 +285,9 @@ import { MetaService } from '@core/services/ui/meta.service';
                         <p>{{ formatDate(profile()?.last_claim_at) }}</p>
                         <ion-badge [color]="profile()?.last_claim_with_fault ? 'danger' : 'medium'">
                           {{
-                          profile()?.last_claim_with_fault
-                          ? 'Con responsabilidad'
-                          : 'Sin responsabilidad'
+                            profile()?.last_claim_with_fault
+                              ? 'Con responsabilidad'
+                              : 'Sin responsabilidad'
                           }}
                         </ion-badge>
                       </div>
@@ -325,7 +320,7 @@ import { MetaService } from '@core/services/ui/meta.service';
                       [class.current]="classItem.class === driverClass()"
                       [class.better]="classItem.class < driverClass()"
                       [class.worse]="classItem.class > driverClass()"
-                      >
+                    >
                       <div class="ladder-class">{{ classItem.class }}</div>
                       <div class="ladder-info">
                         <h4>{{ classItem.title }}</h4>
@@ -333,22 +328,13 @@ import { MetaService } from '@core/services/ui/meta.service';
                       </div>
                       <div class="ladder-status">
                         @if (classItem.class === driverClass()) {
-                          <ion-icon
-                            name="location"
-                            color="primary"
-                          ></ion-icon>
+                          <ion-icon name="location" color="primary"></ion-icon>
                         }
                         @if (classItem.class < driverClass()) {
-                          <ion-icon
-                            name="arrow-up"
-                            color="success"
-                          ></ion-icon>
+                          <ion-icon name="arrow-up" color="success"></ion-icon>
                         }
                         @if (classItem.class > driverClass()) {
-                          <ion-icon
-                            name="arrow-down"
-                            color="danger"
-                          ></ion-icon>
+                          <ion-icon name="arrow-down" color="danger"></ion-icon>
                         }
                       </div>
                     </div>
@@ -359,7 +345,9 @@ import { MetaService } from '@core/services/ui/meta.service';
                     <ion-icon name="information-circle-outline" color="primary"></ion-icon>
                     <p>
                       Mantén un historial limpio por
-                      <strong>{{ yearsToImprove() }} año{{ yearsToImprove() > 1 ? 's' : '' }}</strong>
+                      <strong
+                        >{{ yearsToImprove() }} año{{ yearsToImprove() > 1 ? 's' : '' }}</strong
+                      >
                       para mejorar a Clase {{ getNextBetterClass() }}
                     </p>
                   </div>
@@ -388,7 +376,7 @@ import { MetaService } from '@core/services/ui/meta.service';
           </div>
         </div>
       }
-    
+
       <!-- No Profile State -->
       @if (!driverService.loading() && !profile()) {
         <div class="no-profile-section">
@@ -403,7 +391,7 @@ import { MetaService } from '@core/services/ui/meta.service';
         </div>
       }
     </ion-content>
-    `,
+  `,
   styles: [
     `
       /* ===== GLOBAL VARIABLES ===== */
@@ -474,7 +462,7 @@ import { MetaService } from '@core/services/ui/meta.service';
       .no-profile-content {
         text-align: center;
         padding: var(--spacing-xl) var(--spacing-lg);
-        background: #E3E3E3;
+        background: #e3e3e3;
         backdrop-filter: blur(10px);
         border-radius: var(--border-radius-large);
         box-shadow: var(--shadow-medium);
@@ -509,7 +497,7 @@ import { MetaService } from '@core/services/ui/meta.service';
       }
 
       .hero-card {
-        background: #E3E3E3;
+        background: #e3e3e3;
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.2);
         box-shadow: var(--shadow-strong);

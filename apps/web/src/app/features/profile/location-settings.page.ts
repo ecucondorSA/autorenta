@@ -17,9 +17,7 @@ import { LocationService, type LocationCoordinates } from '@core/services/geo/lo
 import { ProfileService } from '@core/services/auth/profile.service';
 import { GeocodingService } from '@core/services/geo/geocoding.service';
 import { UserProfile } from '../../core/models';
-import {
-  LocationMapPickerComponent,
-} from '../../shared/components/location-map-picker/location-map-picker.component';
+import { LocationMapPickerComponent } from '../../shared/components/location-map-picker/location-map-picker.component';
 
 @Component({
   standalone: true,
@@ -240,11 +238,7 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
 
     try {
       // Save location
-      await this.locationService.saveHomeLocation(
-      coords.lat,
-      coords.lng,
-        coords.address,
-      );
+      await this.locationService.saveHomeLocation(coords.lat, coords.lng, coords.address);
 
       // Update preferred search radius
       const radiusValue = this.form.value.preferred_search_radius_km ?? 50;
@@ -289,8 +283,8 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
 
       // Calculate distance between saved location and current location
       const distance = this.calculateDistance(
-      coords.lat,
-      coords.lng,
+        coords.lat,
+        coords.lng,
         currentPos.lat,
         currentPos.lng,
       );
@@ -300,11 +294,7 @@ export class LocationSettingsPage implements OnInit, OnDestroy {
 
       if (distance <= VERIFICATION_THRESHOLD_KM) {
         // Save with verification timestamp
-        await this.locationService.saveHomeLocation(
-          coords.lat,
-          coords.lng,
-          coords.address,
-        );
+        await this.locationService.saveHomeLocation(coords.lat, coords.lng, coords.address);
 
         await this.loadProfile();
 

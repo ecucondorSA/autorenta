@@ -1,5 +1,4 @@
-import {Component, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
@@ -37,12 +36,8 @@ interface WalletLedgerEntry {
     <div class="max-w-6xl mx-auto p-6">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-text-primary mb-2">
-          📊 Fondo de Cobertura
-        </h1>
-        <p class="text-text-secondary">
-          Administración del fondo de franquicias para incidentes
-        </p>
+        <h1 class="text-3xl font-bold text-text-primary mb-2">📊 Fondo de Cobertura</h1>
+        <p class="text-text-secondary">Administración del fondo de franquicias para incidentes</p>
       </div>
 
       <!-- Loading State -->
@@ -51,17 +46,13 @@ interface WalletLedgerEntry {
           <div
             class="animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default mx-auto mb-4"
           ></div>
-          <p class="text-text-secondary">
-            Cargando datos del fondo...
-          </p>
+          <p class="text-text-secondary">Cargando datos del fondo...</p>
         </div>
       }
 
       <!-- Error State -->
       @else if (error()) {
-        <div
-          class="bg-error-bg border border-error-border rounded-lg p-6"
-        >
+        <div class="bg-error-bg border border-error-border rounded-lg p-6">
           <h3 class="text-lg font-semibold text-error-strong mb-2">Error</h3>
           <p class="text-error-strong">{{ error() }}</p>
           <button
@@ -111,81 +102,49 @@ interface WalletLedgerEntry {
               <!-- Total Collected -->
               <div class="bg-surface-raised rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p
-                    class="text-sm text-text-secondary"
-                  >
-                    Total Recaudado
-                  </p>
+                  <p class="text-sm text-text-secondary">Total Recaudado</p>
                   <span class="text-2xl">📥</span>
                 </div>
                 <p class="text-2xl font-bold text-text-primary">
                   {{ stats()!.total_franchises_collected }}
                 </p>
-                <p
-                  class="text-xs text-text-secondary mt-1"
-                >
-                  franquicias cobradas
-                </p>
+                <p class="text-xs text-text-secondary mt-1">franquicias cobradas</p>
               </div>
 
               <!-- Total Disbursed -->
               <div class="bg-surface-raised rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p
-                    class="text-sm text-text-secondary"
-                  >
-                    Total Desembolsado
-                  </p>
+                  <p class="text-sm text-text-secondary">Total Desembolsado</p>
                   <span class="text-2xl">📤</span>
                 </div>
                 <p class="text-2xl font-bold text-text-primary">
                   {{ stats()!.total_franchises_disbursed }}
                 </p>
-                <p
-                  class="text-xs text-text-secondary mt-1"
-                >
-                  franquicias pagadas
-                </p>
+                <p class="text-xs text-text-secondary mt-1">franquicias pagadas</p>
               </div>
 
               <!-- Total Entries -->
               <div class="bg-surface-raised rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p
-                    class="text-sm text-text-secondary"
-                  >
-                    Entradas en Ledger
-                  </p>
+                  <p class="text-sm text-text-secondary">Entradas en Ledger</p>
                   <span class="text-2xl">📝</span>
                 </div>
                 <p class="text-2xl font-bold text-text-primary">
                   {{ stats()!.total_ledger_entries }}
                 </p>
-                <p
-                  class="text-xs text-text-secondary mt-1"
-                >
-                  movimientos totales
-                </p>
+                <p class="text-xs text-text-secondary mt-1">movimientos totales</p>
               </div>
 
               <!-- Average Amount -->
               <div class="bg-surface-raised rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <p
-                    class="text-sm text-text-secondary"
-                  >
-                    Promedio Franquicia
-                  </p>
+                  <p class="text-sm text-text-secondary">Promedio Franquicia</p>
                   <span class="text-2xl">💰</span>
                 </div>
                 <p class="text-2xl font-bold text-text-primary">
                   {{ formatAmount(stats()!.avg_franchise_amount) }}
                 </p>
-                <p
-                  class="text-xs text-text-secondary mt-1"
-                >
-                  por incidente
-                </p>
+                <p class="text-xs text-text-secondary mt-1">por incidente</p>
               </div>
             </div>
           }
@@ -194,27 +153,20 @@ interface WalletLedgerEntry {
           @if (fund()!.meta && Object.keys(fund()!.meta).length > 0) {
             <div class="bg-surface-raised rounded-lg shadow">
               <div class="px-6 py-4 border-b border-border-default">
-                <h2 class="text-lg font-semibold text-text-primary">
-                  Metadata del Fondo
-                </h2>
+                <h2 class="text-lg font-semibold text-text-primary">Metadata del Fondo</h2>
               </div>
               <div class="p-6">
-                <pre
-                  class="bg-surface-raised rounded p-4 text-sm overflow-x-auto"
-                  >{{ JSON.stringify(fund()!.meta, null, 2) }}</pre
-                >
+                <pre class="bg-surface-raised rounded p-4 text-sm overflow-x-auto">{{
+                  JSON.stringify(fund()!.meta, null, 2)
+                }}</pre>
               </div>
             </div>
           }
 
           <!-- Recent Activity -->
           <div class="bg-surface-raised rounded-lg shadow">
-            <div
-              class="px-6 py-4 border-b border-border-default flex items-center justify-between"
-            >
-              <h2 class="text-lg font-semibold text-text-primary">
-                Actividad Reciente
-              </h2>
+            <div class="px-6 py-4 border-b border-border-default flex items-center justify-between">
+              <h2 class="text-lg font-semibold text-text-primary">Actividad Reciente</h2>
               <button
                 (click)="loadRecentActivity()"
                 [disabled]="loadingActivity()"
@@ -232,16 +184,12 @@ interface WalletLedgerEntry {
               </div>
             } @else if (recentActivity().length === 0) {
               <div class="p-8 text-center">
-                <p class="text-text-secondary">
-                  No hay actividad reciente
-                </p>
+                <p class="text-text-secondary">No hay actividad reciente</p>
               </div>
             } @else {
               <div class="divide-y divide-gray-200">
                 @for (entry of recentActivity(); track entry.id) {
-                  <div
-                    class="p-6 hover:bg-surface-base transition-colors"
-                  >
+                  <div class="p-6 hover:bg-surface-base transition-colors">
                     <div class="flex items-start justify-between">
                       <div class="flex items-start space-x-3">
                         <span class="text-2xl">
@@ -252,15 +200,11 @@ interface WalletLedgerEntry {
                             {{ getKindLabel(entry.kind) }}
                           </p>
                           @if (entry.meta && entry.meta['description']) {
-                            <p
-                              class="text-sm text-text-secondary mt-1"
-                            >
+                            <p class="text-sm text-text-secondary mt-1">
                               {{ entry.meta!['description'] }}
                             </p>
                           }
-                          <div
-                            class="flex items-center space-x-4 mt-2 text-xs text-text-secondary"
-                          >
+                          <div class="flex items-center space-x-4 mt-2 text-xs text-text-secondary">
                             <span>Ref: {{ entry.ref }}</span>
                             @if (entry.booking_id) {
                               <span>Reserva: {{ entry.booking_id.substring(0, 8) }}...</span>
@@ -287,9 +231,7 @@ interface WalletLedgerEntry {
           </div>
 
           <!-- Action Buttons (Admin Only) -->
-          <div
-            class="bg-warning-bg border border-warning-border rounded-lg p-6"
-          >
+          <div class="bg-warning-bg border border-warning-border rounded-lg p-6">
             <h3 class="text-lg font-semibold text-warning-strong mb-4">
               ⚠️ Acciones Administrativas
             </h3>

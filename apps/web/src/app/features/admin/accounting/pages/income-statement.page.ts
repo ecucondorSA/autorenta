@@ -1,5 +1,11 @@
-import {Component, OnInit, inject, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
@@ -29,22 +35,20 @@ import { AccountingService, IncomeStatement } from '@core/services/payments/acco
           <ion-select [(ngModel)]="selectedPeriod" (ionChange)="loadData()" interface="popover">
             <ion-select-option [value]="null">Todos los períodos</ion-select-option>
             @for (p of availablePeriods(); track p) {
-              <ion-select-option [value]="p">{{
-                p
-              }}</ion-select-option>
+              <ion-select-option [value]="p">{{ p }}</ion-select-option>
             }
           </ion-select>
         </ion-item>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content class="ion-padding">
       @if (loading()) {
         <div class="flex justify-center py-8">
           <ion-spinner></ion-spinner>
         </div>
       }
-    
+
       @if (!loading()) {
         <div>
           <!-- Summary Card -->
@@ -133,7 +137,7 @@ import { AccountingService, IncomeStatement } from '@core/services/payments/acco
         </div>
       }
     </ion-content>
-    `,
+  `,
   styles: [
     `
       .flex {

@@ -1,6 +1,5 @@
 import { Component, Output, EventEmitter, ChangeDetectionStrategy, signal } from '@angular/core';
 
-
 /**
  * 🔄 Pull to Refresh Component
  *

@@ -10,9 +10,17 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { AdvisoryLockService, LOCK_TYPES, LockType } from '@core/services/infrastructure/advisory-lock.service';
-import { CircuitBreakerService, CircuitStats } from '@core/services/infrastructure/circuit-breaker.service';
-import { PaymentMetricsService, PaymentStats, CircuitStatus, AlertRecord } from '@core/services/payments/payment-metrics.service';
+import {
+  AdvisoryLockService,
+  LOCK_TYPES,
+  LockType,
+} from '@core/services/infrastructure/advisory-lock.service';
+import {
+  CircuitBreakerService,
+} from '@core/services/infrastructure/circuit-breaker.service';
+import {
+  PaymentMetricsService,
+} from '@core/services/payments/payment-metrics.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
@@ -35,10 +43,14 @@ interface DatabaseLock {
           <button
             (click)="refresh()"
             [disabled]="loading()"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+          >
             {{ loading() ? 'Actualizando...' : 'Actualizar' }}
           </button>
-          <a routerLink="/admin" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+          <a
+            routerLink="/admin"
+            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+          >
             Volver
           </a>
         </div>
@@ -62,7 +74,10 @@ interface DatabaseLock {
         </div>
         <div class="bg-white rounded-lg shadow p-4">
           <div class="text-sm text-gray-500">Circuitos Abiertos</div>
-          <div [class]="openCircuitsCount() > 0 ? 'text-red-600' : 'text-green-600'" class="text-2xl font-bold">
+          <div
+            [class]="openCircuitsCount() > 0 ? 'text-red-600' : 'text-green-600'"
+            class="text-2xl font-bold"
+          >
             {{ openCircuitsCount() }}
           </div>
         </div>
@@ -77,7 +92,9 @@ interface DatabaseLock {
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <!-- Client Locks -->
             <div>
-              <h3 class="text-sm font-medium text-gray-700 mb-2">Locks del Cliente (esta sesión)</h3>
+              <h3 class="text-sm font-medium text-gray-700 mb-2">
+                Locks del Cliente (esta sesión)
+              </h3>
               @if (clientLocks().length === 0) {
                 <div class="text-gray-500 text-sm py-4 text-center bg-gray-50 rounded">
                   Sin locks activos
@@ -87,11 +104,15 @@ interface DatabaseLock {
                   @for (lock of clientLocks(); track lock.lockId) {
                     <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div>
-                        <div class="font-medium text-gray-900">{{ getLockTypeName(lock.type) }}</div>
+                        <div class="font-medium text-gray-900">
+                          {{ getLockTypeName(lock.type) }}
+                        </div>
                         <div class="text-sm text-gray-500">{{ lock.resourceId }}</div>
                       </div>
                       <div class="text-right">
-                        <div class="text-xs text-gray-400">{{ lock.acquiredAt | date:'HH:mm:ss' }}</div>
+                        <div class="text-xs text-gray-400">
+                          {{ lock.acquiredAt | date: 'HH:mm:ss' }}
+                        </div>
                         <div class="text-xs text-gray-500">{{ getTimeAgo(lock.acquiredAt) }}</div>
                       </div>
                     </div>
@@ -102,7 +123,9 @@ interface DatabaseLock {
 
             <!-- Database Locks -->
             <div>
-              <h3 class="text-sm font-medium text-gray-700 mb-2">Locks en Base de Datos (global)</h3>
+              <h3 class="text-sm font-medium text-gray-700 mb-2">
+                Locks en Base de Datos (global)
+              </h3>
               @if (databaseLocks().length === 0) {
                 <div class="text-gray-500 text-sm py-4 text-center bg-gray-50 rounded">
                   Sin locks activos en la base de datos
@@ -116,8 +139,14 @@ interface DatabaseLock {
                         <div class="text-sm text-gray-500">Lock ID: {{ lock.lock_id }}</div>
                       </div>
                       <div class="text-right">
-                        <span [class]="lock.granted ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'"
-                              class="px-2 py-1 text-xs rounded">
+                        <span
+                          [class]="
+                            lock.granted
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                          "
+                          class="px-2 py-1 text-xs rounded"
+                        >
                           {{ lock.granted ? 'Granted' : 'Waiting' }}
                         </span>
                         <div class="text-xs text-gray-400 mt-1">PID: {{ lock.pid }}</div>
@@ -144,11 +173,13 @@ interface DatabaseLock {
           } @else {
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               @for (circuit of circuitStatuses(); track circuit.name) {
-                <div class="p-4 rounded-lg border-2"
-                     [class]="getCircuitBorderClass(circuit.state)">
+                <div class="p-4 rounded-lg border-2" [class]="getCircuitBorderClass(circuit.state)">
                   <div class="flex items-center justify-between mb-2">
                     <div class="font-medium text-gray-900">{{ circuit.name }}</div>
-                    <span [class]="getCircuitBadgeClass(circuit.state)" class="px-2 py-1 text-xs rounded font-medium">
+                    <span
+                      [class]="getCircuitBadgeClass(circuit.state)"
+                      class="px-2 py-1 text-xs rounded font-medium"
+                    >
                       {{ circuit.state }}
                     </span>
                   </div>
@@ -164,7 +195,7 @@ interface DatabaseLock {
                   </div>
                   @if (circuit.lastFailure) {
                     <div class="text-xs text-gray-400 mt-2">
-                      Último fallo: {{ circuit.lastFailure | date:'HH:mm:ss' }}
+                      Último fallo: {{ circuit.lastFailure | date: 'HH:mm:ss' }}
                     </div>
                   }
                 </div>
@@ -241,18 +272,20 @@ interface DatabaseLock {
         </div>
         <div class="p-4">
           @if (recentAlerts().length === 0) {
-            <div class="text-gray-500 text-sm py-4 text-center">
-              Sin alertas recientes ✅
-            </div>
+            <div class="text-gray-500 text-sm py-4 text-center">Sin alertas recientes ✅</div>
           } @else {
             <div class="space-y-2">
               @for (alert of recentAlerts(); track alert.timestamp) {
-                <div class="flex items-start gap-3 p-3 rounded-lg"
-                     [class]="getAlertBgClass(alert.type)">
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg"
+                  [class]="getAlertBgClass(alert.type)"
+                >
                   <span class="text-lg">{{ getAlertIcon(alert.type) }}</span>
                   <div class="flex-1">
                     <div class="font-medium text-gray-900">{{ alert.message }}</div>
-                    <div class="text-xs text-gray-500">{{ alert.timestamp | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+                    <div class="text-xs text-gray-500">
+                      {{ alert.timestamp | date: 'yyyy-MM-dd HH:mm:ss' }}
+                    </div>
                   </div>
                   <span class="px-2 py-1 text-xs rounded bg-gray-200 text-gray-700">
                     {{ alert.type }}
@@ -266,7 +299,8 @@ interface DatabaseLock {
 
       <!-- Auto-refresh indicator -->
       <div class="mt-4 text-center text-sm text-gray-400">
-        Auto-actualiza cada 30 segundos • Última actualización: {{ lastUpdated() | date:'HH:mm:ss' }}
+        Auto-actualiza cada 30 segundos • Última actualización:
+        {{ lastUpdated() | date: 'HH:mm:ss' }}
       </div>
     </div>
   `,
@@ -292,8 +326,8 @@ export class SystemMonitoringPage implements OnInit, OnDestroy {
   readonly recentAlerts = computed(() => this.paymentMetricsService.recentAlerts());
   readonly isHealthy = computed(() => this.paymentMetricsService.isHealthy());
 
-  readonly openCircuitsCount = computed(() =>
-    this.circuitStatuses().filter(c => c.state === 'OPEN').length
+  readonly openCircuitsCount = computed(
+    () => this.circuitStatuses().filter((c) => c.state === 'OPEN').length,
   );
 
   // For template access
@@ -347,39 +381,57 @@ export class SystemMonitoringPage implements OnInit, OnDestroy {
 
   getCircuitBorderClass(state: string): string {
     switch (state) {
-      case 'CLOSED': return 'border-green-200 bg-green-50';
-      case 'OPEN': return 'border-red-200 bg-red-50';
-      case 'HALF_OPEN': return 'border-yellow-200 bg-yellow-50';
-      default: return 'border-gray-200';
+      case 'CLOSED':
+        return 'border-green-200 bg-green-50';
+      case 'OPEN':
+        return 'border-red-200 bg-red-50';
+      case 'HALF_OPEN':
+        return 'border-yellow-200 bg-yellow-50';
+      default:
+        return 'border-gray-200';
     }
   }
 
   getCircuitBadgeClass(state: string): string {
     switch (state) {
-      case 'CLOSED': return 'bg-green-100 text-green-800';
-      case 'OPEN': return 'bg-red-100 text-red-800';
-      case 'HALF_OPEN': return 'bg-yellow-100 text-yellow-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'CLOSED':
+        return 'bg-green-100 text-green-800';
+      case 'OPEN':
+        return 'bg-red-100 text-red-800';
+      case 'HALF_OPEN':
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   }
 
   getAlertIcon(type: string): string {
     switch (type) {
-      case 'low_success_rate': return '📉';
-      case 'high_latency': return '🐌';
-      case 'circuit_open': return '🔴';
-      case 'error_spike': return '📈';
-      default: return '⚠️';
+      case 'low_success_rate':
+        return '📉';
+      case 'high_latency':
+        return '🐌';
+      case 'circuit_open':
+        return '🔴';
+      case 'error_spike':
+        return '📈';
+      default:
+        return '⚠️';
     }
   }
 
   getAlertBgClass(type: string): string {
     switch (type) {
-      case 'circuit_open': return 'bg-red-50';
-      case 'error_spike': return 'bg-orange-50';
-      case 'low_success_rate': return 'bg-yellow-50';
-      case 'high_latency': return 'bg-blue-50';
-      default: return 'bg-gray-50';
+      case 'circuit_open':
+        return 'bg-red-50';
+      case 'error_spike':
+        return 'bg-orange-50';
+      case 'low_success_rate':
+        return 'bg-yellow-50';
+      case 'high_latency':
+        return 'bg-blue-50';
+      default:
+        return 'bg-gray-50';
     }
   }
 
@@ -388,9 +440,7 @@ export class SystemMonitoringPage implements OnInit, OnDestroy {
       const supabase = this.supabaseService.getClient();
 
       // Query the advisory locks view
-      const { data, error } = await supabase
-        .from('v_advisory_locks_held')
-        .select('*');
+      const { data, error } = await supabase.from('v_advisory_locks_held').select('*');
 
       if (error) {
         this.logger.warn('Failed to load database locks', { error: error.message });

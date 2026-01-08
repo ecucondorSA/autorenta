@@ -1,5 +1,11 @@
-import {Component, OnInit, inject, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -105,7 +111,7 @@ export class CheckOutPage implements OnInit {
       liters: Math.round(litersNeeded * 10) / 10,
       baseCost: Math.round(baseCost * 100) / 100,
       totalCost: Math.round(totalCost * 100) / 100,
-      percentageMissing: Math.abs(diff)
+      percentageMissing: Math.abs(diff),
     };
   });
 

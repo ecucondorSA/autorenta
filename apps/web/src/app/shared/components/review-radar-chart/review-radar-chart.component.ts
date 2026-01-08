@@ -1,6 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges,
-  ChangeDetectionStrategy} from '@angular/core';
-
+import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
 export interface RadarChartData {
   cleanliness: number;

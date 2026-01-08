@@ -1,6 +1,13 @@
-
-import {Component, EventEmitter, inject, Output, signal, DestroyRef, OnInit,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Output,
+  signal,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProfileService } from '@core/services/auth/profile.service';
@@ -22,23 +29,19 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
       <div
         class="w-full max-w-md rounded-2xl bg-white shadow-xl"
         (click)="$event.stopPropagation()"
-        >
+      >
         <!-- Header -->
         <div class="px-6 pt-6 pb-4 border-b border-border-default">
-          <h2 class="text-xl font-bold text-text-primary">
-            Necesitamos tu fecha de nacimiento
-          </h2>
+          <h2 class="text-xl font-bold text-text-primary">Necesitamos tu fecha de nacimiento</h2>
           <p class="mt-2 text-sm text-text-secondary">
             Para calcular el precio exacto del seguro, necesitamos conocer tu edad
           </p>
         </div>
-    
+
         <!-- Body -->
         <form [formGroup]="form" class="p-6 space-y-4">
           <div>
-            <label
-              class="block text-sm font-semibold text-text-primary mb-2"
-              >
+            <label class="block text-sm font-semibold text-text-primary mb-2">
               Fecha de Nacimiento
             </label>
             <input
@@ -47,49 +50,43 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
               [max]="getMaxBirthDate()"
               class="w-full px-4 py-2.5 rounded-lg border border-border-default bg-surface-base text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default/50 focus:border-cta-default transition-colors"
               [class.border-error-text]="showError()"
-              />
-    
+            />
+
             <!-- Age Display -->
             @if (calculatedAge()) {
-              <p class="mt-2 text-sm text-success-strong">
-                ✓ Edad: {{ calculatedAge() }} años
-              </p>
+              <p class="mt-2 text-sm text-success-strong">✓ Edad: {{ calculatedAge() }} años</p>
             }
-    
+
             <!-- Validation Error -->
             @if (showError()) {
               <p class="mt-2 text-sm text-error-text">
                 {{ errorMessage() }}
               </p>
             }
-    
+
             <!-- Helper Text -->
             @if (!form.value.date_of_birth) {
-              <p
-                class="mt-2 text-xs text-text-secondary"
-                >
+              <p class="mt-2 text-xs text-text-secondary">
                 Debes tener al menos 18 años para usar la plataforma
               </p>
             }
           </div>
-    
+
           <!-- Privacy Notice -->
-          <div
-            class="rounded-lg bg-surface-hover p-4 border border-border-default"
-            >
+          <div class="rounded-lg bg-surface-hover p-4 border border-border-default">
             <div class="flex gap-3">
               <svg
                 class="h-5 w-5 text-cta-default flex-shrink-0 mt-0.5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                >
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
+                />
               </svg>
               <div>
                 <h4 class="text-sm font-semibold text-text-primary">
@@ -103,7 +100,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
             </div>
           </div>
         </form>
-    
+
         <!-- Footer -->
         <div class="flex gap-3 px-6 pb-6">
           <button
@@ -111,7 +108,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
             (click)="onCancel()"
             [disabled]="saving()"
             class="flex-1 px-4 py-2.5 rounded-lg border border-border-default text-text-primary hover:bg-surface-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
-            >
+          >
             Cancelar
           </button>
           <button
@@ -119,7 +116,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
             (click)="onSubmit()"
             [disabled]="!canSubmit() || saving()"
             class="flex-1 px-4 py-2.5 rounded-lg bg-cta-default hover:bg-cta-hover text-text-inverse-pure font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
+          >
             @if (saving()) {
               <span>Guardando...</span>
             }
@@ -130,7 +127,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
         </div>
       </div>
     </div>
-    `,
+  `,
   styles: [
     `
       :host {
@@ -165,8 +162,9 @@ export class BirthDateModalComponent implements OnInit {
 
   ngOnInit(): void {
     // Watch form value changes
-    this.form.get('date_of_birth')?.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    this.form
+      .get('date_of_birth')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((value) => {
         this.updateValidation(value);
       });

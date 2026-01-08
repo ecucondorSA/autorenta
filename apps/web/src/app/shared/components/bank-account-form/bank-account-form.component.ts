@@ -1,6 +1,15 @@
 import { CommonModule } from '@angular/common';
-import {Component, computed, EventEmitter, inject, OnInit, Output, signal, DestroyRef,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  OnInit,
+  Output,
+  signal,
+  DestroyRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -76,8 +85,9 @@ export class BankAccountFormComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     // Actualizar validaciones cuando cambia el tipo
-    this.form.get('account_type')?.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    this.form
+      .get('account_type')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((type: BankAccountType) => {
         this.selectedType.set(type);
         this.updateAccountNumberValidators(type);

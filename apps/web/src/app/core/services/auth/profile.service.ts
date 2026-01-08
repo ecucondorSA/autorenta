@@ -8,12 +8,7 @@ import {
   UserDocument,
   UserProfile,
 } from '@core/models';
-import {
-  isNotFoundError,
-  isPermissionError,
-  handleSupabaseError,
-  AuthError,
-} from '@core/errors';
+import { isNotFoundError, isPermissionError, handleSupabaseError, AuthError } from '@core/errors';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 

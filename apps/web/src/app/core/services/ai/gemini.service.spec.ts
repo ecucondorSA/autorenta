@@ -6,7 +6,7 @@ describe('GeminiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [GeminiService]
+      providers: [GeminiService],
     });
     service = TestBed.inject(GeminiService);
   });
@@ -38,5 +38,4 @@ describe('GeminiService', () => {
   it('should have getCarRecommendation method', () => {
     expect(typeof service.getCarRecommendation).toBe('function');
   });
-
 });

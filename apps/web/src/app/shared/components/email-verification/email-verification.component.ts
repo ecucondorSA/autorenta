@@ -1,4 +1,3 @@
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -24,7 +23,7 @@ import { EmailVerificationService } from '@core/services/auth/email-verification
           <div
             class="w-10 h-10 rounded-full flex items-center justify-center text-lg"
             [class]="getStatusBadgeClass()"
-            >
+          >
             {{ getStatusIcon() }}
           </div>
           <div>
@@ -38,19 +37,17 @@ import { EmailVerificationService } from '@core/services/auth/email-verification
           {{ getStatusLabel() }}
         </span>
       </div>
-    
+
       <!-- Verified State -->
       @if (status().isVerified) {
-        <div
-          class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg"
-          >
+        <div class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg">
           <div class="flex items-center gap-2 text-success-strong">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                 clip-rule="evenodd"
-                />
+              />
             </svg>
             <span class="text-sm font-medium">Email verificado exitosamente</span>
           </div>
@@ -59,7 +56,7 @@ import { EmailVerificationService } from '@core/services/auth/email-verification
           </p>
         </div>
       }
-    
+
       <!-- Pending State -->
       @if (!status().isVerified) {
         <div class="space-y-4">
@@ -67,71 +64,73 @@ import { EmailVerificationService } from '@core/services/auth/email-verification
             <p class="text-sm text-warning-strong">
               Te enviamos un email de verificación a
               <strong>{{ status().value }}</strong
-                >. Por favor revisa tu bandeja de entrada y haz click en el link de confirmación.
-              </p>
-            </div>
-            <!-- Resend Button -->
-            <div class="flex items-center gap-3">
-              <button
-                type="button"
-                (click)="resendEmail()"
-                [disabled]="!canResend() || loading()"
-                class="flex-grow px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            [class]="
-              canResend()
-                ? 'bg-cta-default text-cta-text hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2'
-                : 'bg-surface-hover text-text-secondary cursor-not-allowed'
-            "
-                >
-                @if (!loading()) {
-                  <span class="flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                        />
-                    </svg>
-                    <span>{{
-                      cooldownRemaining() > 0 ? 'Espera ' + cooldownRemaining() + 's' : 'Reenviar email'
-                    }}</span>
-                  </span>
-                }
-                @if (loading()) {
-                  <span class="flex items-center justify-center gap-2">
-                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    <span>Enviando...</span>
-                  </span>
-                }
-              </button>
-            </div>
-            <!-- Success Message -->
-            @if (successMessage()) {
-              <div
-                class="p-3 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-strong"
-                >
-                {{ successMessage() }}
-              </div>
-            }
-            <!-- Error Message -->
-            @if (error()) {
-              <div
-                class="p-3 bg-error-bg border border-error-border rounded-lg text-sm text-error-strong"
-                >
-                {{ error() }}
-              </div>
-            }
-            <!-- Help Text -->
-            <div class="text-xs text-text-secondary">
-              <p>• Revisa tu carpeta de spam si no encuentras el email</p>
-              <p>• El link de verificación expira en 24 horas</p>
-              <p>• Puedes reenviar el email cada 60 segundos</p>
-            </div>
+              >. Por favor revisa tu bandeja de entrada y haz click en el link de confirmación.
+            </p>
           </div>
-        }
-      </div>
-    `,
+          <!-- Resend Button -->
+          <div class="flex items-center gap-3">
+            <button
+              type="button"
+              (click)="resendEmail()"
+              [disabled]="!canResend() || loading()"
+              class="flex-grow px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              [class]="
+                canResend()
+                  ? 'bg-cta-default text-cta-text hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2'
+                  : 'bg-surface-hover text-text-secondary cursor-not-allowed'
+              "
+            >
+              @if (!loading()) {
+                <span class="flex items-center justify-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span>{{
+                    cooldownRemaining() > 0
+                      ? 'Espera ' + cooldownRemaining() + 's'
+                      : 'Reenviar email'
+                  }}</span>
+                </span>
+              }
+              @if (loading()) {
+                <span class="flex items-center justify-center gap-2">
+                  <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>Enviando...</span>
+                </span>
+              }
+            </button>
+          </div>
+          <!-- Success Message -->
+          @if (successMessage()) {
+            <div
+              class="p-3 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-strong"
+            >
+              {{ successMessage() }}
+            </div>
+          }
+          <!-- Error Message -->
+          @if (error()) {
+            <div
+              class="p-3 bg-error-bg border border-error-border rounded-lg text-sm text-error-strong"
+            >
+              {{ error() }}
+            </div>
+          }
+          <!-- Help Text -->
+          <div class="text-xs text-text-secondary">
+            <p>• Revisa tu carpeta de spam si no encuentras el email</p>
+            <p>• El link de verificación expira en 24 horas</p>
+            <p>• Puedes reenviar el email cada 60 segundos</p>
+          </div>
+        </div>
+      }
+    </div>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmailVerificationComponent implements OnInit, OnDestroy {

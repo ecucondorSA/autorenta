@@ -1,9 +1,22 @@
-import {Component, OnInit, inject, input, output, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  input,
+  output,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DisputesService, Dispute, DisputeEvidence, DisputeStatus } from '@core/services/admin/disputes.service';
+import {
+  DisputesService,
+  Dispute,
+  DisputeEvidence,
+  DisputeStatus,
+} from '@core/services/admin/disputes.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { WalletService } from '@core/services/payments/wallet.service';
@@ -16,7 +29,7 @@ import { DisputeEvidenceUploaderComponent } from '../evidence-uploader/evidence-
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, DisputeEvidenceUploaderComponent],
   templateUrl: './dispute-detail.component.html',
-  styleUrls: ['./dispute-detail.component.css']
+  styleUrls: ['./dispute-detail.component.css'],
 })
 export class DisputeDetailComponent implements OnInit {
   private readonly disputesService = inject(DisputesService);
@@ -52,7 +65,7 @@ export class DisputeDetailComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     const user = await this.authService.getCurrentUser();
     this.currentUserId.set(user?.id || null);
-    
+
     if (user) {
       try {
         const profile = await this.profileService.getProfileById(user.id);
@@ -106,16 +119,26 @@ export class DisputeDetailComponent implements OnInit {
 
     if (dispute.resolution_amount && dispute.resolution_amount > 0) {
       this.router.navigate(['/wallet/deposit'], {
-        queryParams: { amount: dispute.resolution_amount, purpose: 'dispute_resolution', disputeId: dispute.id }
+        queryParams: {
+          amount: dispute.resolution_amount,
+          purpose: 'dispute_resolution',
+          disputeId: dispute.id,
+        },
       });
-      this.toastService.info('Redirigiendo para pagar resolución', 'Completa el pago en tu wallet.');
+      this.toastService.info(
+        'Redirigiendo para pagar resolución',
+        'Completa el pago en tu wallet.',
+      );
       this.closeDetail.emit();
     } else {
       if (confirm('¿Confirmas que aceptas la resolución de esta disputa?')) {
         this.loading.set(true);
         try {
           await this.disputesService.resolveDispute(dispute.id, 'resolved');
-          this.toastService.success('Resolución aceptada', 'La disputa ha sido marcada como resuelta.');
+          this.toastService.success(
+            'Resolución aceptada',
+            'La disputa ha sido marcada como resuelta.',
+          );
           this.closeDetail.emit();
         } catch (error) {
           console.error('Error accepting dispute resolution:', error);
@@ -134,7 +157,11 @@ export class DisputeDetailComponent implements OnInit {
       return;
     }
 
-    if (confirm(`¿Confirmas resolver esta disputa como ${status === 'resolved' ? 'Aprobada' : 'Rechazada'}?`)) {
+    if (
+      confirm(
+        `¿Confirmas resolver esta disputa como ${status === 'resolved' ? 'Aprobada' : 'Rechazada'}?`,
+      )
+    ) {
       this.loading.set(true);
       try {
         const dispute = this.dispute();
@@ -153,21 +180,25 @@ export class DisputeDetailComponent implements OnInit {
           // Esto es frágil. Lo ideal es obtener la reserva.
           // Vamos a cargar la reserva en ngOnInit o aquí.
         }
-        
+
         // Simplemente pasamos lo que tenemos, la lógica completa de admin debería ser más robusta
         // Para este MVP, si el admin elige 'renter', intentaremos inferirlo o dejarlo nulo si no podemos.
         // Pero necesitamos IDs reales.
-        
+
         // REVISIÓN: El backend o el servicio deberían encargarse de esto, o traer la reserva completa.
         // Asumiremos que el admin conoce los IDs o que el componente carga la reserva.
         // Vamos a modificar loadDisputeDetails para traer la reserva si es necesario, o hacer un fetch rápido aquí.
-        
+
         // Fetch booking to get participants
-        const { data: booking } = await this.disputesService['supabase'].from('bookings').select('owner_id, renter_id').eq('id', dispute.booking_id).single();
-        
+        const { data: booking } = await this.disputesService['supabase']
+          .from('bookings')
+          .select('owner_id, renter_id')
+          .eq('id', dispute.booking_id)
+          .single();
+
         if (booking) {
-           if (this.adminResolutionParty === 'owner') responsiblePartyId = booking.owner_id;
-           if (this.adminResolutionParty === 'renter') responsiblePartyId = booking.renter_id;
+          if (this.adminResolutionParty === 'owner') responsiblePartyId = booking.owner_id;
+          if (this.adminResolutionParty === 'renter') responsiblePartyId = booking.renter_id;
         }
 
         await this.disputesService.resolveDispute(
@@ -175,9 +206,9 @@ export class DisputeDetailComponent implements OnInit {
           status,
           this.adminResolutionAmount,
           'USD', // Default currency
-          responsiblePartyId
+          responsiblePartyId,
         );
-        
+
         this.toastService.success('Disputa resuelta por admin', '');
         this.closeDetail.emit();
       } catch (error) {
@@ -210,6 +241,6 @@ export class DisputeDetailComponent implements OnInit {
   }
 
   isMyMessage(evidence: DisputeEvidence): boolean {
-    return !evidence.path; 
+    return !evidence.path;
   }
 }

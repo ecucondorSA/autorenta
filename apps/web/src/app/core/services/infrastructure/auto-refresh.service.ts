@@ -47,9 +47,12 @@ export class AutoRefreshService {
         switchMap(() => this.refreshWalletSafe()),
         takeUntilDestroyed(this.destroyRef),
         catchError((err: unknown) => {
-          this.logger.error('Wallet refresh error', err instanceof Error ? err.message : String(err));
+          this.logger.error(
+            'Wallet refresh error',
+            err instanceof Error ? err.message : String(err),
+          );
           return of(null);
-        })
+        }),
       )
       .subscribe();
   }
@@ -67,9 +70,12 @@ export class AutoRefreshService {
         switchMap(() => this.refreshBookingsSafe()),
         takeUntilDestroyed(this.destroyRef),
         catchError((err: unknown) => {
-          this.logger.error('Bookings refresh error', err instanceof Error ? err.message : String(err));
+          this.logger.error(
+            'Bookings refresh error',
+            err instanceof Error ? err.message : String(err),
+          );
           return of(null);
-        })
+        }),
       )
       .subscribe();
   }
@@ -110,7 +116,10 @@ export class AutoRefreshService {
     return from(this.walletService.fetchBalance()).pipe(
       map(() => null),
       catchError((error: unknown) => {
-        this.logger.error('Failed to refresh wallet', error instanceof Error ? error.message : String(error));
+        this.logger.error(
+          'Failed to refresh wallet',
+          error instanceof Error ? error.message : String(error),
+        );
         return of(null);
       }),
       finalize(() => {
@@ -131,7 +140,10 @@ export class AutoRefreshService {
     return from(this.bookingsService.getMyBookings()).pipe(
       map(() => null),
       catchError((error: unknown) => {
-        this.logger.error('Failed to refresh bookings', error instanceof Error ? error.message : String(error));
+        this.logger.error(
+          'Failed to refresh bookings',
+          error instanceof Error ? error.message : String(error),
+        );
         return of(null);
       }),
       finalize(() => {
@@ -150,7 +162,10 @@ export class AutoRefreshService {
       this.isRefreshingWallet = true;
       await this.walletService.fetchBalance(true);
     } catch (error) {
-      this.logger.error('Failed to refresh wallet', error instanceof Error ? error.message : String(error));
+      this.logger.error(
+        'Failed to refresh wallet',
+        error instanceof Error ? error.message : String(error),
+      );
     } finally {
       this.isRefreshingWallet = false;
     }
@@ -166,7 +181,10 @@ export class AutoRefreshService {
       this.isRefreshingBookings = true;
       await this.bookingsService.getMyBookings();
     } catch (error) {
-      this.logger.error('Failed to refresh bookings', error instanceof Error ? error.message : String(error));
+      this.logger.error(
+        'Failed to refresh bookings',
+        error instanceof Error ? error.message : String(error),
+      );
     } finally {
       this.isRefreshingBookings = false;
     }

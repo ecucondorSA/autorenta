@@ -1,5 +1,4 @@
-import {Component, OnInit, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -119,7 +118,9 @@ export class AdminDisputesPage implements OnInit {
         const result = await this.disputesService.resolveDisputeRpc({
           disputeId,
           resolution: resolutionMap[newStatus] || 'rejected',
-          resolutionAmountCents: this.resolutionAmount() ? Math.round(this.resolutionAmount()! * 100) : undefined,
+          resolutionAmountCents: this.resolutionAmount()
+            ? Math.round(this.resolutionAmount()! * 100)
+            : undefined,
           resolutionNotes: this.resolutionReason().trim() || undefined,
         });
 
@@ -136,7 +137,10 @@ export class AdminDisputesPage implements OnInit {
       this.toastService.success('Estado de disputa actualizado', '');
     } catch (err) {
       console.error('Error updating status:', err);
-      this.toastService.error('Error', err instanceof Error ? err.message : 'Error al actualizar el estado de la disputa');
+      this.toastService.error(
+        'Error',
+        err instanceof Error ? err.message : 'Error al actualizar el estado de la disputa',
+      );
     } finally {
       this.loading.set(false);
     }

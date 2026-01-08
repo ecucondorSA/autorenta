@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, DestroyRef, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  DestroyRef,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -83,8 +92,8 @@ export class ProfileExpandedPage implements OnInit {
   readonly driverLicenseStatus = computed(() => {
     const docs = this.userDocuments();
     // Check for license_front and license_back (DB enum values)
-    const frontDoc = docs.find(d => d.kind === 'license_front');
-    const backDoc = docs.find(d => d.kind === 'license_back');
+    const frontDoc = docs.find((d) => d.kind === 'license_front');
+    const backDoc = docs.find((d) => d.kind === 'license_back');
 
     // Both must be uploaded and verified
     if (!frontDoc && !backDoc) return 'not_started' as KycStatus;
@@ -102,7 +111,7 @@ export class ProfileExpandedPage implements OnInit {
 
   readonly vehicleRegistrationStatus = computed(() => {
     const docs = this.userDocuments();
-    const vehicleDoc = docs.find(d => d.kind === 'vehicle_registration');
+    const vehicleDoc = docs.find((d) => d.kind === 'vehicle_registration');
     if (!vehicleDoc) return 'not_started' as KycStatus;
     if (vehicleDoc.status === 'verified') return 'verified' as KycStatus;
     if (vehicleDoc.status === 'pending') return 'pending' as KycStatus;
@@ -127,7 +136,9 @@ export class ProfileExpandedPage implements OnInit {
 
   // Avatar and user info
   readonly avatarUrl = computed(() => this.profile()?.avatar_url);
-  readonly userEmail = computed(() => this.authService.session$()?.user?.email ?? this.profile()?.id);
+  readonly userEmail = computed(
+    () => this.authService.session$()?.user?.email ?? this.profile()?.id,
+  );
   readonly govIdLabel = computed(() => {
     const type = this.profile()?.gov_id_type?.toLowerCase();
     if (!type) return 'Documento';
@@ -170,15 +181,13 @@ export class ProfileExpandedPage implements OnInit {
 
   ngOnInit(): void {
     // Handle document upload query param
-    this.route.queryParams
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params) => {
-        const docType = params['doc'];
-        if (docType) {
-          this.documentType.set(docType);
-          this.showDocumentModal.set(true);
-        }
-      });
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const docType = params['doc'];
+      if (docType) {
+        this.documentType.set(docType);
+        this.showDocumentModal.set(true);
+      }
+    });
   }
 
   /**

@@ -1,11 +1,7 @@
 <ion-header>
   <ion-toolbar class="bg-surface-raised border-b border-border-default">
     <ion-buttons slot="start">
-      <ion-back-button
-        defaultHref="/"
-        text="Inicio"
-        class="text-text-primary"
-      ></ion-back-button>
+      <ion-back-button defaultHref="/" text="Inicio" class="text-text-primary"></ion-back-button>
     </ion-buttons>
     <ion-title class="text-text-primary">Soporte</ion-title>
   </ion-toolbar>
@@ -15,9 +11,7 @@
   <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
     <!-- Page Header -->
     <div class="mb-6">
-      <h1 class="text-2xl font-bold text-text-primary mb-2 font-satoshi">
-        Centro de Soporte
-      </h1>
+      <h1 class="text-2xl font-bold text-text-primary mb-2 font-satoshi">Centro de Soporte</h1>
       <p class="text-sm text-text-secondary">
         Crea un ticket de soporte o revisa el estado de tus consultas anteriores.
       </p>
@@ -59,7 +53,9 @@
       <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <!-- Category Selection -->
         <div class="card-premium p-6">
-          <h2 class="text-lg font-semibold mb-4 font-satoshi text-text-primary">Tipo de consulta</h2>
+          <h2 class="text-lg font-semibold mb-4 font-satoshi text-text-primary">
+            Tipo de consulta
+          </h2>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             @for (cat of categories; track cat.value) {
               <label
@@ -100,7 +96,9 @@
                 [class]="
                   ticketForm.get('urgency')?.value === level.value ? 'ring-2 ring-cta-default' : ''
                 "
-                class="flex items-center gap-2 px-4 py-2 rounded-full border cursor-pointer {{ level.color }}"
+                class="flex items-center gap-2 px-4 py-2 rounded-full border cursor-pointer {{
+                  level.color
+                }}"
               >
                 <input
                   type="radio"
@@ -187,9 +185,7 @@
           @if (pendingAttachments().length > 0) {
             <div class="mt-4 space-y-2">
               @for (url of pendingAttachments(); track url; let i = $index) {
-                <div
-                  class="flex items-center justify-between p-2 rounded bg-surface-secondary"
-                >
+                <div class="flex items-center justify-between p-2 rounded bg-surface-secondary">
                   <span class="text-sm text-text-primary truncate max-w-[200px]">
                     Archivo {{ i + 1 }}
                   </span>
@@ -234,10 +230,7 @@
         </div>
       } @else if (tickets().length === 0) {
         <div class="card-premium p-12 text-center">
-          <ion-icon
-            name="mail-unread-outline"
-            class="text-5xl text-text-muted mb-4"
-          ></ion-icon>
+          <ion-icon name="mail-unread-outline" class="text-5xl text-text-muted mb-4"></ion-icon>
           <h3 class="text-lg font-semibold text-text-primary mb-2">No tienes tickets</h3>
           <p class="text-sm text-text-secondary mb-4">
             Crea tu primer ticket de soporte usando el formulario.

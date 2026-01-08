@@ -34,7 +34,10 @@ import { WalletService } from '@core/services/payments/wallet.service';
 // Models
 import { calculateCreditSecurityUsd } from '@core/models/booking-detail-payment.model';
 import { BookingPaymentMethod } from '@core/models/wallet.model';
-import { RiskCalculation, RiskCalculatorService } from '@core/services/verification/risk-calculator.service';
+import {
+  RiskCalculation,
+  RiskCalculatorService,
+} from '@core/services/verification/risk-calculator.service';
 import { Car, CarPhoto, CarStats, Review } from '../../../core/models';
 
 // Components
@@ -45,18 +48,14 @@ import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/a
 import { CarInquiryChatComponent } from '../../../shared/components/car-inquiry-chat/car-inquiry-chat.component';
 import { CarReviewsSectionComponent } from '../../../shared/components/car-reviews-section/car-reviews-section.component';
 import type { DateRange } from '@core/models/marketplace.model';
-import {
-  DateRangePickerComponent,
-} from '../../../shared/components/date-range-picker/date-range-picker.component';
+import { DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { type PaymentMethod } from '../../../shared/components/payment-method-buttons/payment-method-buttons.component';
 import { AvailabilityMiniCalendarComponent } from '../../../shared/components/availability-mini-calendar/availability-mini-calendar.component';
 import { RiskCalculatorViewerComponent } from '../../../shared/components/risk-calculator-viewer/risk-calculator-viewer.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import { ReviewSummaryComponent } from '../../../shared/components/review-summary/review-summary.component';
-import {
-  BookingLocationData,
-} from '../../bookings/components/booking-location-form/booking-location-form.component';
+import { BookingLocationData } from '../../bookings/components/booking-location-form/booking-location-form.component';
 
 // Temporary interfaces until components are created
 export interface Photo {
@@ -198,7 +197,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   readonly expandedAiPanel = signal<'legal' | 'trip' | 'checklist' | null>(null);
 
   toggleAiPanel(panel: 'legal' | 'trip' | 'checklist'): void {
-    this.expandedAiPanel.update(current => current === panel ? null : panel);
+    this.expandedAiPanel.update((current) => (current === panel ? null : panel));
   }
 
   private readonly carId$ = this.route.paramMap.pipe(map((params) => params.get('id')));
@@ -260,14 +259,15 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
           let errorMessage = 'Error al cargar el auto';
           if (err?.code === 'PGRST116') {
             errorMessage = 'Auto no encontrado';
-          } else if (err?.code === 'PGRST200') { // Ignore missing relationship error
+          } else if (err?.code === 'PGRST200') {
+            // Ignore missing relationship error
             console.warn('Review relationship missing (PGRST200), returning empty reviews');
             return of({
               car: null, // This will trigger the overall error state if car is also null
               reviews: [],
               stats: null,
               loading: false,
-              error: null // Allow loading to complete if it was just reviews failing
+              error: null, // Allow loading to complete if it was just reviews failing
             });
           } else if (err?.message?.includes('permission') || err?.code === '42501') {
             errorMessage = 'No tienes permiso para ver este auto';
@@ -469,10 +469,10 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
    */
   getFuelPolicyLabel(policy: string | null | undefined): string {
     const labels: Record<string, string> = {
-      'full_to_full': 'Lleno a lleno',
-      'same_to_same': 'Igual a igual',
-      'prepaid': 'Prepago',
-      'free_tank': 'Tanque incluido',
+      full_to_full: 'Lleno a lleno',
+      same_to_same: 'Igual a igual',
+      prepaid: 'Prepago',
+      free_tank: 'Tanque incluido',
     };
     return labels[policy || ''] || 'Lleno a lleno';
   }
@@ -482,9 +482,9 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
    */
   getCancelPolicyLabel(policy: string | undefined): string {
     const labels: Record<string, string> = {
-      'flexible': 'Flexible - 100% reembolso hasta 24h antes del inicio',
-      'moderate': 'Moderada - 50% reembolso hasta 48h antes del inicio',
-      'strict': 'Estricta - Sin reembolso en los 7 días previos',
+      flexible: 'Flexible - 100% reembolso hasta 24h antes del inicio',
+      moderate: 'Moderada - 50% reembolso hasta 48h antes del inicio',
+      strict: 'Estricta - Sin reembolso en los 7 días previos',
     };
     return labels[policy || 'moderate'] || 'Moderada';
   }
@@ -723,7 +723,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       fromEvent(window, 'scroll')
         .pipe(
           throttleTime(100, undefined, { leading: true, trailing: true }),
-          takeUntil(this.destroy$)
+          takeUntil(this.destroy$),
         )
         .subscribe(() => {
           const currentScrollY = window.scrollY;
@@ -1330,8 +1330,12 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       const rows = (data ?? []) as Array<{ status: string; expires_at: string | null }>;
       const nowMs = Date.now();
 
-      const pendingRows = rows.filter((r) => r.status === 'pending' || r.status === 'pending_payment');
-      const confirmedRows = rows.filter((r) => r.status === 'confirmed' || r.status === 'in_progress');
+      const pendingRows = rows.filter(
+        (r) => r.status === 'pending' || r.status === 'pending_payment',
+      );
+      const confirmedRows = rows.filter(
+        (r) => r.status === 'confirmed' || r.status === 'in_progress',
+      );
 
       const activePending = pendingRows.filter((r) => {
         if (!r.expires_at) return true;

@@ -1,6 +1,4 @@
-import {Component, signal,
-  ChangeDetectionStrategy} from '@angular/core';
-
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 
 interface FaqItem {
   question: string;
@@ -14,9 +12,7 @@ interface FaqItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   template: `
-    <div
-      class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6"
-      >
+    <div class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6">
       <!-- Header -->
       <div class="mb-6">
         <h2 class="text-2xl font-bold text-text-primary mb-2">
@@ -26,7 +22,7 @@ interface FaqItem {
           Todo lo que necesitás saber sobre cómo funciona tu billetera virtual
         </p>
       </div>
-    
+
       <!-- FAQ Items -->
       <div class="space-y-3">
         @for (item of faqItems(); track item; let i = $index) {
@@ -34,13 +30,13 @@ interface FaqItem {
             class="border border-border-default rounded-lg overflow-hidden transition-all duration-200"
             [class.ring-2]="item.expanded"
             [class.ring-cta-default]="item.expanded"
-            >
+          >
             <!-- Question -->
             <button
               type="button"
               (click)="toggleItem(i)"
               class="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-border-default/20 transition-colors duration-200"
-              >
+            >
               <span class="font-semibold text-text-primary pr-4">
                 {{ item.question }}
               </span>
@@ -50,20 +46,18 @@ interface FaqItem {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                >
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M19 9l-7 7-7-7"
-                  />
+                />
               </svg>
             </button>
             <!-- Answer -->
             @if (item.expanded) {
-              <div
-                class="px-4 pb-4 pt-2 bg-border-default/10 border-t border-border-default"
-                >
+              <div class="px-4 pb-4 pt-2 bg-border-default/10 border-t border-border-default">
                 <p
                   class="text-sm text-text-secondary leading-relaxed"
                   [innerHTML]="item.answer"
@@ -73,38 +67,34 @@ interface FaqItem {
           </div>
         }
       </div>
-    
+
       <!-- Additional Help -->
-      <div
-        class="mt-6 p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg"
-        >
+      <div class="mt-6 p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg">
         <div class="flex items-start gap-3">
           <svg
             class="w-5 h-5 text-cta-default flex-shrink-0 mt-0.5"
             fill="currentColor"
             viewBox="0 0 20 20"
-            >
+          >
             <path
               fill-rule="evenodd"
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
               clip-rule="evenodd"
-              />
+            />
           </svg>
           <div>
-            <h3 class="font-semibold text-cta-default mb-1">
-              ¿Necesitás más ayuda?
-            </h3>
+            <h3 class="font-semibold text-cta-default mb-1">¿Necesitás más ayuda?</h3>
             <p class="text-sm text-cta-default">
               Contactá a nuestro equipo de soporte en
               <a href="mailto:autorentardev@gmail.com" class="underline hover:text-cta-default"
                 >autorentardev&#64;gmail.com</a
-                >
-              </p>
-            </div>
+              >
+            </p>
           </div>
         </div>
       </div>
-    `,
+    </div>
+  `,
 })
 export class WalletFaqComponent {
   readonly faqItems = signal<FaqItem[]>([

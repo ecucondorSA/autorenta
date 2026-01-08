@@ -177,7 +177,8 @@ export class ProfileStore {
 
       // Load wallet balance if profile loaded successfully
       if (profile) {
-        this.walletService.getBalance()
+        this.walletService
+          .getBalance()
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             error: () => {

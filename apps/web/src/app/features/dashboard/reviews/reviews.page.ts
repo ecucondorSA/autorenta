@@ -1,6 +1,4 @@
-
-import {Component, inject, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';

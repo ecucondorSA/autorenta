@@ -1,6 +1,4 @@
-import {Component, Input,
-  ChangeDetectionStrategy} from '@angular/core';
-
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * Badge simple para indicar que un auto usa pricing dinámico

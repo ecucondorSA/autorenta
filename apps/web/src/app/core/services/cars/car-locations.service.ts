@@ -172,7 +172,9 @@ export class CarLocationsService {
 
             if (daysUntilAvailable <= 7) {
               // Get current booking end date
-              const blockedDates = await this.availabilityService.getBlockedDates(location['carId']);
+              const blockedDates = await this.availabilityService.getBlockedDates(
+                location['carId'],
+              );
               const currentBlock = blockedDates.find(
                 (block) => new Date(block.to) >= today && new Date(block.from) <= today,
               );
@@ -545,7 +547,8 @@ export class CarLocationsService {
     const stateRaw = car['location_state'] ?? record['state'] ?? record['location_state'] ?? null;
     const state = typeof stateRaw === 'string' ? stateRaw : null;
 
-    const countryRaw = car['location_country'] ?? record['country'] ?? record['location_country'] ?? null;
+    const countryRaw =
+      car['location_country'] ?? record['country'] ?? record['location_country'] ?? null;
     const country = typeof countryRaw === 'string' ? countryRaw : null;
 
     const formattedAddressRaw =
@@ -556,7 +559,8 @@ export class CarLocationsService {
 
     // Get photo URL with fallback logic
     // La vista v_cars_with_main_photo ahora incluye photo_gallery como JSONB array
-    const photoUrlRaw = car['main_photo_url'] ?? record['main_photo_url'] ?? record['photo_url'] ?? null;
+    const photoUrlRaw =
+      car['main_photo_url'] ?? record['main_photo_url'] ?? record['photo_url'] ?? null;
     let photoUrl =
       typeof photoUrlRaw === 'string' && photoUrlRaw.trim() ? photoUrlRaw.trim() : null;
 
@@ -600,7 +604,8 @@ export class CarLocationsService {
     const description = this.buildSummary(typeof descriptionRaw === 'string' ? descriptionRaw : '');
 
     // Extract instant booking and rental terms
-    const autoApprovalRaw = car['auto_approval'] ?? record['auto_approval'] ?? meta['auto_approval'] ?? null;
+    const autoApprovalRaw =
+      car['auto_approval'] ?? record['auto_approval'] ?? meta['auto_approval'] ?? null;
     const instantBooking =
       typeof autoApprovalRaw === 'boolean'
         ? autoApprovalRaw
@@ -641,14 +646,20 @@ export class CarLocationsService {
           : undefined;
 
     const insuranceIncludedRaw =
-      car['insurance_included'] ?? record['insurance_included'] ?? meta['insurance_included'] ?? null;
+      car['insurance_included'] ??
+      record['insurance_included'] ??
+      meta['insurance_included'] ??
+      null;
     const insuranceIncluded =
       typeof insuranceIncludedRaw === 'boolean'
         ? insuranceIncludedRaw
         : insuranceIncludedRaw === 'true' || insuranceIncludedRaw === true;
 
     const usesDynamicPricingRaw =
-      car['uses_dynamic_pricing'] ?? record['uses_dynamic_pricing'] ?? meta['uses_dynamic_pricing'] ?? null;
+      car['uses_dynamic_pricing'] ??
+      record['uses_dynamic_pricing'] ??
+      meta['uses_dynamic_pricing'] ??
+      null;
     const usesDynamicPricing =
       typeof usesDynamicPricingRaw === 'boolean'
         ? usesDynamicPricingRaw

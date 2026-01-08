@@ -1,5 +1,4 @@
-import {Component, OnInit, OnDestroy,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil, interval, firstValueFrom } from 'rxjs';

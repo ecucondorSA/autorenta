@@ -211,11 +211,11 @@
 /* ===== Dark Mode ===== */
 @media (prefers-color-scheme: dark) {
   .p-toast .p-toast-message {
-    box-shadow: 0 10px 25px #4E4E4E;
+    box-shadow: 0 10px 25px #4e4e4e;
   }
 
   .p-toast .p-toast-message:hover {
-    box-shadow: 0 12px 30px #4E4E4E;
+    box-shadow: 0 12px 30px #4e4e4e;
   }
 
   /* Success - Dark */
@@ -296,11 +296,11 @@
 
 /* Dark mode class-based (for .dark class) */
 .dark .p-toast .p-toast-message {
-  box-shadow: 0 10px 25px #4E4E4E;
+  box-shadow: 0 10px 25px #4e4e4e;
 }
 
 .dark .p-toast .p-toast-message:hover {
-  box-shadow: 0 12px 30px #4E4E4E;
+  box-shadow: 0 12px 30px #4e4e4e;
 }
 
 /* Success - Dark */

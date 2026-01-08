@@ -1,6 +1,4 @@
-
-import {Component, inject, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { CarBlockingService } from '@core/services/cars/car-blocking.service';

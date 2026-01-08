@@ -1,4 +1,3 @@
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -70,7 +69,12 @@ export class MobileMenuDrawerComponent {
       iconBgColor: 'bg-blue-500/10',
       iconTextColor: 'text-blue-600',
       items: [
-        { label: 'Verificacion', route: '/profile/verification', icon: 'check-circle', badge: 'IMPORTANTE' },
+        {
+          label: 'Verificacion',
+          route: '/profile/verification',
+          icon: 'check-circle',
+          badge: 'IMPORTANTE',
+        },
         { label: 'Mis Reservas', route: '/bookings', icon: 'calendar' },
         { label: 'Mis Autos', route: '/cars/my', icon: 'archive' },
         { label: 'Calendario', route: '/bookings/calendar', icon: 'calendar-days' },
@@ -125,7 +129,6 @@ export class MobileMenuDrawerComponent {
 
   private touchStartY = 0;
   private isDragging = false;
-
 
   private animateIn(): void {
     this.isAnimating.set(true);

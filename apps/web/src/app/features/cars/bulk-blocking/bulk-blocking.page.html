@@ -99,7 +99,7 @@
                   button
                   (click)="toggleCarSelection(car.id)"
                   [class.selected]="isCarSelected(car.id)"
-                  >
+                >
                   <ion-checkbox
                     slot="start"
                     [checked]="isCarSelected(car.id)"
@@ -165,7 +165,7 @@
         type="submit"
         [disabled]="loading() || selectedCarIds().length === 0 || !startDate() || !endDate()"
         class="mb-4"
-        >
+      >
         <ion-icon name="lock-closed" slot="start"></ion-icon>
         Bloquear Fechas
       </ion-button>
@@ -176,7 +176,7 @@
         color="medium"
         (click)="resetForm()"
         [disabled]="loading()"
-        >
+      >
         <ion-icon name="refresh" slot="start"></ion-icon>
         Limpiar Formulario
       </ion-button>

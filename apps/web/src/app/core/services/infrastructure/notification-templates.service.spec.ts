@@ -6,7 +6,7 @@ describe('NotificationTemplatesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [NotificationTemplatesService]
+      providers: [NotificationTemplatesService],
     });
     service = TestBed.inject(NotificationTemplatesService);
   });
@@ -22,5 +22,4 @@ describe('NotificationTemplatesService', () => {
   it('should have validateVariables method', () => {
     expect(typeof service.validateVariables).toBe('function');
   });
-
 });

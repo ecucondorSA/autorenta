@@ -51,7 +51,7 @@ export const authRefreshInterceptor: HttpInterceptorFn = (req, next) => {
                 refreshTokenSubject.next(session.access_token);
                 // Mark request as retried to prevent infinite loops
                 const retriedReq = addToken(req, session.access_token).clone({
-                  headers: req.headers.set('X-Retry-Attempt', '1')
+                  headers: req.headers.set('X-Retry-Attempt', '1'),
                 });
                 return next(retriedReq);
               }
@@ -72,7 +72,7 @@ export const authRefreshInterceptor: HttpInterceptorFn = (req, next) => {
             take(1),
             switchMap((token) => {
               const retriedReq = addToken(req, token!).clone({
-                headers: req.headers.set('X-Retry-Attempt', '1')
+                headers: req.headers.set('X-Retry-Attempt', '1'),
               });
               return next(retriedReq);
             }),

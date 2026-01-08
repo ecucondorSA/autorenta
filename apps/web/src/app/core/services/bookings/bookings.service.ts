@@ -104,16 +104,16 @@ export class BookingsService {
 
       this.logger.error(
         'request_booking RPC failed: ' +
-        JSON.stringify({
-          error,
-          carId,
-          start,
-          end,
-          message: errorMessage,
-          code: error.code,
-          details: error.details,
-          hint: error.hint,
-        }),
+          JSON.stringify({
+            error,
+            carId,
+            start,
+            end,
+            message: errorMessage,
+            code: error.code,
+            details: error.details,
+            hint: error.hint,
+          }),
       );
 
       // Fallback para entornos desactualizados o cambios de esquema
@@ -160,7 +160,11 @@ export class BookingsService {
     }
 
     // ✅ P0-003 FIX: Activate insurance coverage with retry and BLOCK if fails
-    await this.insuranceHelper.activateInsuranceWithRetry(bookingId, [], this.updateBooking.bind(this));
+    await this.insuranceHelper.activateInsuranceWithRetry(
+      bookingId,
+      [],
+      this.updateBooking.bind(this),
+    );
 
     // Recalculate pricing breakdown
     await this.recalculatePricing(bookingId);
@@ -230,17 +234,17 @@ export class BookingsService {
 
       this.logger.error(
         'requestBookingWithLocation RPC failed: ' +
-        JSON.stringify({
-          error,
-          carId,
-          start,
-          end,
-          locationData,
-          message: errorMessage,
-          code: error.code,
-          details: error.details,
-          hint: error.hint,
-        }),
+          JSON.stringify({
+            error,
+            carId,
+            start,
+            end,
+            locationData,
+            message: errorMessage,
+            code: error.code,
+            details: error.details,
+            hint: error.hint,
+          }),
       );
 
       throw new Error(errorMessage);
@@ -252,7 +256,11 @@ export class BookingsService {
     }
 
     // ✅ P0-003 FIX: Activate insurance coverage with retry and BLOCK if fails
-    await this.insuranceHelper.activateInsuranceWithRetry(bookingId, [], this.updateBooking.bind(this));
+    await this.insuranceHelper.activateInsuranceWithRetry(
+      bookingId,
+      [],
+      this.updateBooking.bind(this),
+    );
 
     // Recalculate pricing breakdown
     await this.recalculatePricing(bookingId);
@@ -365,7 +373,9 @@ export class BookingsService {
       }
 
       if (!data) return null;
-      return Array.isArray(data) ? (data[0] as Record<string, unknown> | null) : (data as Record<string, unknown> | null);
+      return Array.isArray(data)
+        ? (data[0] as Record<string, unknown> | null)
+        : (data as Record<string, unknown> | null);
     } catch {
       // Silently handle RPC errors (e.g., 400 when user is not the owner)
       return null;
@@ -604,7 +614,11 @@ export class BookingsService {
       }
 
       // ✅ P0-003: Insurance is mandatory — block booking if it fails
-      await this.insuranceHelper.activateInsuranceWithRetry(result.booking_id, [], this.updateBooking.bind(this));
+      await this.insuranceHelper.activateInsuranceWithRetry(
+        result.booking_id,
+        [],
+        this.updateBooking.bind(this),
+      );
 
       return {
         success: true,
@@ -791,7 +805,7 @@ export class BookingsService {
     // ✅ NEW: Use requestBookingWithLocation if location data is provided
     const requestBookingCallback = locationData
       ? (carId: string, startDate: string, endDate: string) =>
-        this.requestBookingWithLocation(carId, startDate, endDate, locationData)
+          this.requestBookingWithLocation(carId, startDate, endDate, locationData)
       : this.requestBooking.bind(this);
 
     return this.validationService.createBookingWithValidation(
@@ -965,7 +979,6 @@ export class BookingsService {
     return this.extensionService.estimateExtensionCost(booking, newEndDate);
   }
 
-
   // Insurance Operations (delegated to BookingInsuranceHelperService)
   async activateInsuranceCoverage(
     bookingId: string,
@@ -1084,9 +1097,7 @@ export class BookingsService {
     const currency = (car?.currency as string | null) || 'ARS';
     const days = Math.max(
       1,
-      Math.ceil(
-        (new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24),
-      ),
+      Math.ceil((new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24)),
     );
     const totalAmount = pricePerDay * days;
 

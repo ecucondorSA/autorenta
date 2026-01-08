@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  OnDestroy,
+  computed,
+  signal,
+} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TranslateModule } from '@ngx-translate/core';
@@ -35,14 +42,7 @@ interface BookingSection {
 @Component({
   standalone: true,
   selector: 'app-my-bookings-page',
-  imports: [
-    CommonModule,
-    MoneyPipe,
-    RouterLink,
-    ScrollingModule,
-    TranslateModule,
-    IconComponent,
-  ],
+  imports: [CommonModule, MoneyPipe, RouterLink, ScrollingModule, TranslateModule, IconComponent],
   templateUrl: './my-bookings.page.html',
   styleUrl: './my-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -120,8 +120,11 @@ export class MyBookingsPage implements OnInit, OnDestroy {
 
     return sectionList.map((section) => ({
       ...section,
-      bookings: filteredBookings.filter((b) => section.statuses.includes(this.getEffectiveStatus(b))),
-      count: filteredBookings.filter((b) => section.statuses.includes(this.getEffectiveStatus(b))).length,
+      bookings: filteredBookings.filter((b) =>
+        section.statuses.includes(this.getEffectiveStatus(b)),
+      ),
+      count: filteredBookings.filter((b) => section.statuses.includes(this.getEffectiveStatus(b)))
+        .length,
     }));
   });
 
@@ -131,7 +134,8 @@ export class MyBookingsPage implements OnInit, OnDestroy {
     return {
       all: bookings.length,
       pending: bookings.filter((b) => this.getEffectiveStatus(b) === 'pending').length,
-      pending_review: bookings.filter((b) => this.getEffectiveStatus(b) === 'pending_review').length,
+      pending_review: bookings.filter((b) => this.getEffectiveStatus(b) === 'pending_review')
+        .length,
       confirmed: bookings.filter((b) => this.getEffectiveStatus(b) === 'confirmed').length,
       in_progress: bookings.filter((b) => this.getEffectiveStatus(b) === 'in_progress').length,
       completed: bookings.filter((b) => this.getEffectiveStatus(b) === 'completed').length,
@@ -239,10 +243,16 @@ export class MyBookingsPage implements OnInit, OnDestroy {
         return 'Aprobada';
       case 'in_progress':
         // FIX: Consider completion_status for detailed status
-        if (booking.completion_status === 'pending_renter' || booking.completion_status === 'pending_both') {
+        if (
+          booking.completion_status === 'pending_renter' ||
+          booking.completion_status === 'pending_both'
+        ) {
           return 'Confirmar devolución';
         }
-        if (booking.completion_status === 'pending_owner' || booking.completion_status === 'returned') {
+        if (
+          booking.completion_status === 'pending_owner' ||
+          booking.completion_status === 'returned'
+        ) {
           return 'Esperando al propietario';
         }
         return 'En uso';
@@ -281,10 +291,16 @@ export class MyBookingsPage implements OnInit, OnDestroy {
         return 'Tu reserva fue aprobada. Coordiná el check-in con el propietario.';
       case 'in_progress':
         // FIX: Consider completion_status for detailed hint
-        if (booking.completion_status === 'pending_renter' || booking.completion_status === 'pending_both') {
+        if (
+          booking.completion_status === 'pending_renter' ||
+          booking.completion_status === 'pending_both'
+        ) {
           return 'El propietario ya confirmó. Ingresá al detalle para confirmar la devolución.';
         }
-        if (booking.completion_status === 'pending_owner' || booking.completion_status === 'returned') {
+        if (
+          booking.completion_status === 'pending_owner' ||
+          booking.completion_status === 'returned'
+        ) {
           return 'Tu confirmación fue registrada. El propietario está verificando el vehículo.';
         }
         return 'Disfrutá tu viaje. Recordá devolver el auto en las condiciones acordadas.';
@@ -395,10 +411,16 @@ export class MyBookingsPage implements OnInit, OnDestroy {
         return 'Aprobada';
       case 'in_progress':
         // FIX: Consider completion_status for short label
-        if (booking.completion_status === 'pending_renter' || booking.completion_status === 'pending_both') {
+        if (
+          booking.completion_status === 'pending_renter' ||
+          booking.completion_status === 'pending_both'
+        ) {
           return 'Confirmar';
         }
-        if (booking.completion_status === 'pending_owner' || booking.completion_status === 'returned') {
+        if (
+          booking.completion_status === 'pending_owner' ||
+          booking.completion_status === 'returned'
+        ) {
           return 'Verificando';
         }
         return 'En uso';
@@ -494,7 +516,11 @@ export class MyBookingsPage implements OnInit, OnDestroy {
    * Check if booking is pending owner approval (P2P flow)
    */
   isPendingApproval(booking: Booking): boolean {
-    return booking.status === 'pending' && this.isWalletBooking(booking) && !this.isStartDatePassed(booking);
+    return (
+      booking.status === 'pending' &&
+      this.isWalletBooking(booking) &&
+      !this.isStartDatePassed(booking)
+    );
   }
 
   /**
@@ -542,12 +568,12 @@ export class MyBookingsPage implements OnInit, OnDestroy {
       booking.car_city && booking.car_province
         ? `${booking.car_city}, ${booking.car_province}`
         : 'Ver en detalle';
-    
+
     // Usar Toast info en lugar de alert
     this.toastService.info(
       'Instrucciones de Retiro',
-      `Ubicación: ${location}. Recordá llevar tu DNI y Licencia de Conducir.`, 
-      8000
+      `Ubicación: ${location}. Recordá llevar tu DNI y Licencia de Conducir.`,
+      8000,
     );
   }
 
@@ -585,7 +611,10 @@ export class MyBookingsPage implements OnInit, OnDestroy {
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
       window.open(mapsUrl, '_blank');
     } else {
-      this.toastService.warning('Ubicación no disponible', 'No tenemos la ubicación exacta para esta reserva.');
+      this.toastService.warning(
+        'Ubicación no disponible',
+        'No tenemos la ubicación exacta para esta reserva.',
+      );
     }
   }
 

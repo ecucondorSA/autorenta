@@ -6,7 +6,7 @@ describe('GeocodingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [GeocodingService]
+      providers: [GeocodingService],
     });
     service = TestBed.inject(GeocodingService);
   });
@@ -34,5 +34,4 @@ describe('GeocodingService', () => {
   it('should have reverseGeocode method', () => {
     expect(typeof service.reverseGeocode).toBe('function');
   });
-
 });

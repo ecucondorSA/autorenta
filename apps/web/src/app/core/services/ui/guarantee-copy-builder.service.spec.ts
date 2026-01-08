@@ -6,7 +6,7 @@ describe('GuaranteeCopyBuilderService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [GuaranteeCopyBuilderService]
+      providers: [GuaranteeCopyBuilderService],
     });
     service = TestBed.inject(GuaranteeCopyBuilderService);
   });
@@ -22,5 +22,4 @@ describe('GuaranteeCopyBuilderService', () => {
   it('should have buildSummaryLine method', () => {
     expect(typeof service.buildSummaryLine).toBe('function');
   });
-
 });

@@ -57,7 +57,9 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
               </div>
               <div class="flex flex-col items-end gap-2">
                 @if (tier.tier === 'club_black') {
-                  <span class="px-2 py-0.5 rounded-full bg-gray-700 text-white text-[10px] font-bold">
+                  <span
+                    class="px-2 py-0.5 rounded-full bg-gray-700 text-white text-[10px] font-bold"
+                  >
                     MAS POPULAR
                   </span>
                 }
@@ -69,7 +71,9 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
                   </span>
                 }
                 @if (isCurrentTier(tier.tier)) {
-                  <span class="px-2 py-0.5 rounded-full bg-success-strong/10 text-success-strong text-[10px] font-bold">
+                  <span
+                    class="px-2 py-0.5 rounded-full bg-success-strong/10 text-success-strong text-[10px] font-bold"
+                  >
                     ACTUAL
                   </span>
                 }

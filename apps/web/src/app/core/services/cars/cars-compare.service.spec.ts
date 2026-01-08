@@ -6,7 +6,7 @@ describe('CarsCompareService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CarsCompareService]
+      providers: [CarsCompareService],
     });
     service = TestBed.inject(CarsCompareService);
   });
@@ -34,5 +34,4 @@ describe('CarsCompareService', () => {
   it('should have generateComparisonRows method', () => {
     expect(typeof service.generateComparisonRows).toBe('function');
   });
-
 });

@@ -72,7 +72,7 @@ export class PaymentError extends AutoRentaError {
       paymentId?: string;
       bookingId?: string;
       context?: Record<string, unknown>;
-    }
+    },
   ) {
     super(message, options?.context);
     this.code = code;
@@ -84,7 +84,7 @@ export class PaymentError extends AutoRentaError {
     return new PaymentError(
       'PAYMENT_DECLINED',
       'Tu tarjeta fue rechazada. Verifica los datos o usa otro método de pago.',
-      { bookingId }
+      { bookingId },
     );
   }
 
@@ -92,7 +92,7 @@ export class PaymentError extends AutoRentaError {
     return new PaymentError(
       'PRICE_LOCK_EXPIRED',
       'El precio ha expirado. Por favor recarga la página para ver el precio actualizado.',
-      { bookingId }
+      { bookingId },
     );
   }
 
@@ -100,7 +100,7 @@ export class PaymentError extends AutoRentaError {
     return new PaymentError(
       'PAYMENT_ALREADY_PROCESSED',
       'Este pago ya fue procesado anteriormente.',
-      { bookingId, paymentId }
+      { bookingId, paymentId },
     );
   }
 
@@ -140,7 +140,7 @@ export class BookingError extends AutoRentaError {
       bookingId?: string;
       carId?: string;
       context?: Record<string, unknown>;
-    }
+    },
   ) {
     super(message, options?.context);
     this.code = code;
@@ -164,18 +164,22 @@ export class BookingError extends AutoRentaError {
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),
         },
-      }
+      },
     );
   }
 
-  static invalidStatus(bookingId: string, currentStatus: string, expectedStatus: string): BookingError {
+  static invalidStatus(
+    bookingId: string,
+    currentStatus: string,
+    expectedStatus: string,
+  ): BookingError {
     return new BookingError(
       'BOOKING_INVALID_STATUS',
       `La reserva no está en estado válido para esta operación.`,
       {
         bookingId,
         context: { currentStatus, expectedStatus },
-      }
+      },
     );
   }
 
@@ -186,7 +190,7 @@ export class BookingError extends AutoRentaError {
       {
         carId,
         context: { conflictingBookingId },
-      }
+      },
     );
   }
 }
@@ -219,7 +223,7 @@ export class WalletError extends AutoRentaError {
       userId?: string;
       transactionId?: string;
       context?: Record<string, unknown>;
-    }
+    },
   ) {
     super(message, options?.context);
     this.code = code;
@@ -234,7 +238,7 @@ export class WalletError extends AutoRentaError {
       {
         userId,
         context: { required, available },
-      }
+      },
     );
   }
 
@@ -242,7 +246,7 @@ export class WalletError extends AutoRentaError {
     return new WalletError(
       'RATE_LIMITED',
       'Demasiados intentos de bloqueo. Por favor espera un momento.',
-      { userId }
+      { userId },
     );
   }
 
@@ -250,7 +254,7 @@ export class WalletError extends AutoRentaError {
     return new WalletError(
       'LOCK_FAILED',
       reason || 'No se pudieron bloquear los fondos para esta reserva.',
-      { context: { bookingId } }
+      { context: { bookingId } },
     );
   }
 }
@@ -278,7 +282,7 @@ export class AuthError extends AutoRentaError {
     options?: {
       userId?: string;
       context?: Record<string, unknown>;
-    }
+    },
   ) {
     super(message, options?.context);
     this.code = code;
@@ -286,7 +290,10 @@ export class AuthError extends AutoRentaError {
   }
 
   static sessionExpired(): AuthError {
-    return new AuthError('SESSION_EXPIRED', 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.');
+    return new AuthError(
+      'SESSION_EXPIRED',
+      'Tu sesión ha expirado. Por favor inicia sesión nuevamente.',
+    );
   }
 
   static permissionDenied(action: string): AuthError {
@@ -299,7 +306,7 @@ export class AuthError extends AutoRentaError {
     return new AuthError(
       'ACCOUNT_SUSPENDED',
       'Tu cuenta ha sido suspendida. Contacta soporte para más información.',
-      { userId, context: { reason } }
+      { userId, context: { reason } },
     );
   }
 }
@@ -327,7 +334,7 @@ export class ValidationError extends AutoRentaError {
     options?: {
       field?: string;
       context?: Record<string, unknown>;
-    }
+    },
   ) {
     super(message, options?.context);
     this.code = code;
@@ -381,7 +388,7 @@ export class NetworkError extends AutoRentaError {
     options?: {
       statusCode?: number;
       context?: Record<string, unknown>;
-    }
+    },
   ) {
     super(message, options?.context);
     this.code = code;
@@ -391,21 +398,25 @@ export class NetworkError extends AutoRentaError {
   static connectionFailed(): NetworkError {
     return new NetworkError(
       'CONNECTION_FAILED',
-      'Error de conexión. Verifica tu internet e intenta nuevamente.'
+      'Error de conexión. Verifica tu internet e intenta nuevamente.',
     );
   }
 
   static timeout(operation: string): NetworkError {
-    return new NetworkError('TIMEOUT', `La operación "${operation}" tardó demasiado. Intenta nuevamente.`, {
-      context: { operation },
-    });
+    return new NetworkError(
+      'TIMEOUT',
+      `La operación "${operation}" tardó demasiado. Intenta nuevamente.`,
+      {
+        context: { operation },
+      },
+    );
   }
 
   static serverError(statusCode: number): NetworkError {
     return new NetworkError(
       'SERVER_ERROR',
       'Error del servidor. Nuestro equipo ha sido notificado.',
-      { statusCode }
+      { statusCode },
     );
   }
 }
@@ -461,50 +472,91 @@ export interface SupabaseError {
  * Check if error is a Supabase/PostgresREST error
  */
 export function isSupabaseError(error: unknown): error is SupabaseError {
-  return (
-    error !== null &&
-    typeof error === 'object' &&
-    ('code' in error || 'message' in error)
-  );
+  return error !== null && typeof error === 'object' && ('code' in error || 'message' in error);
 }
 
 /**
  * PostgreSQL error code mapping
  * See: https://www.postgresql.org/docs/current/errcodes-appendix.html
  */
-const PG_ERROR_CODES: Record<string, { type: 'auth' | 'validation' | 'network' | 'booking'; factory: (msg: string) => AutoRentaError }> = {
+const PG_ERROR_CODES: Record<
+  string,
+  { type: 'auth' | 'validation' | 'network' | 'booking'; factory: (msg: string) => AutoRentaError }
+> = {
   // Not found
-  'PGRST116': { type: 'booking', factory: (msg) => new BookingError('BOOKING_NOT_FOUND', msg || 'Recurso no encontrado.') },
+  PGRST116: {
+    type: 'booking',
+    factory: (msg) => new BookingError('BOOKING_NOT_FOUND', msg || 'Recurso no encontrado.'),
+  },
 
   // Permission denied
-  '42501': { type: 'auth', factory: (msg) => new AuthError('PERMISSION_DENIED', msg || 'No tienes permisos para realizar esta acción.') },
+  '42501': {
+    type: 'auth',
+    factory: (msg) =>
+      new AuthError('PERMISSION_DENIED', msg || 'No tienes permisos para realizar esta acción.'),
+  },
 
   // Unique violation (duplicate)
-  '23505': { type: 'validation', factory: (msg) => new ValidationError('DUPLICATE_VALUE', msg || 'Este registro ya existe.') },
+  '23505': {
+    type: 'validation',
+    factory: (msg) => new ValidationError('DUPLICATE_VALUE', msg || 'Este registro ya existe.'),
+  },
 
   // Foreign key violation
-  '23503': { type: 'validation', factory: (msg) => new ValidationError('INVALID_FORMAT', msg || 'Referencia inválida a otro registro.') },
+  '23503': {
+    type: 'validation',
+    factory: (msg) =>
+      new ValidationError('INVALID_FORMAT', msg || 'Referencia inválida a otro registro.'),
+  },
 
   // Not null violation
-  '23502': { type: 'validation', factory: (msg) => new ValidationError('REQUIRED_FIELD', msg || 'Falta un campo requerido.') },
+  '23502': {
+    type: 'validation',
+    factory: (msg) => new ValidationError('REQUIRED_FIELD', msg || 'Falta un campo requerido.'),
+  },
 
   // Check constraint violation
-  '23514': { type: 'validation', factory: (msg) => new ValidationError('OUT_OF_RANGE', msg || 'Valor fuera de rango permitido.') },
+  '23514': {
+    type: 'validation',
+    factory: (msg) => new ValidationError('OUT_OF_RANGE', msg || 'Valor fuera de rango permitido.'),
+  },
 
   // Insufficient privilege
-  '42000': { type: 'auth', factory: (msg) => new AuthError('PERMISSION_DENIED', msg || 'Privilegios insuficientes.') },
+  '42000': {
+    type: 'auth',
+    factory: (msg) => new AuthError('PERMISSION_DENIED', msg || 'Privilegios insuficientes.'),
+  },
 
   // Connection errors
-  '08000': { type: 'network', factory: (msg) => new NetworkError('CONNECTION_FAILED', msg || 'Error de conexión a la base de datos.') },
-  '08003': { type: 'network', factory: (msg) => new NetworkError('CONNECTION_FAILED', msg || 'Conexión no existe.') },
-  '08006': { type: 'network', factory: (msg) => new NetworkError('CONNECTION_FAILED', msg || 'Error de conexión.') },
+  '08000': {
+    type: 'network',
+    factory: (msg) =>
+      new NetworkError('CONNECTION_FAILED', msg || 'Error de conexión a la base de datos.'),
+  },
+  '08003': {
+    type: 'network',
+    factory: (msg) => new NetworkError('CONNECTION_FAILED', msg || 'Conexión no existe.'),
+  },
+  '08006': {
+    type: 'network',
+    factory: (msg) => new NetworkError('CONNECTION_FAILED', msg || 'Error de conexión.'),
+  },
 
   // Query timeout
-  '57014': { type: 'network', factory: (msg) => new NetworkError('TIMEOUT', msg || 'La consulta tardó demasiado.') },
+  '57014': {
+    type: 'network',
+    factory: (msg) => new NetworkError('TIMEOUT', msg || 'La consulta tardó demasiado.'),
+  },
 
   // Column/table doesn't exist (schema mismatch)
-  '42703': { type: 'network', factory: (msg) => new NetworkError('SERVER_ERROR', msg || 'Error de esquema de base de datos.') },
-  '42P01': { type: 'network', factory: (msg) => new NetworkError('SERVER_ERROR', msg || 'Tabla no encontrada.') },
+  '42703': {
+    type: 'network',
+    factory: (msg) => new NetworkError('SERVER_ERROR', msg || 'Error de esquema de base de datos.'),
+  },
+  '42P01': {
+    type: 'network',
+    factory: (msg) => new NetworkError('SERVER_ERROR', msg || 'Tabla no encontrada.'),
+  },
 };
 
 /**
@@ -542,26 +594,32 @@ export function handleSupabaseError(error: SupabaseError, context?: string): Aut
       return new BookingError('BOOKING_NOT_FOUND', 'No se encontró el recurso solicitado.');
     }
     // Other PostgREST errors
-    return new NetworkError('SERVER_ERROR', `Error de API: ${message}`, { context: { pgrstCode: code } });
+    return new NetworkError('SERVER_ERROR', `Error de API: ${message}`, {
+      context: { pgrstCode: code },
+    });
   }
 
   // Handle RLS (Row Level Security) errors
-  if (message.toLowerCase().includes('row-level security') ||
-      message.toLowerCase().includes('rls') ||
-      message.toLowerCase().includes('policy')) {
+  if (
+    message.toLowerCase().includes('row-level security') ||
+    message.toLowerCase().includes('rls') ||
+    message.toLowerCase().includes('policy')
+  ) {
     return new AuthError('PERMISSION_DENIED', 'No tienes permisos para acceder a este recurso.');
   }
 
   // Handle network-like errors
-  if (message.toLowerCase().includes('network') ||
-      message.toLowerCase().includes('connection') ||
-      message.toLowerCase().includes('timeout')) {
+  if (
+    message.toLowerCase().includes('network') ||
+    message.toLowerCase().includes('connection') ||
+    message.toLowerCase().includes('timeout')
+  ) {
     return NetworkError.connectionFailed();
   }
 
   // Default: return as network/server error with context
   return new NetworkError('SERVER_ERROR', context ? `Error en ${context}: ${message}` : message, {
-    context: { originalCode: code, hint: error.hint, details: error.details }
+    context: { originalCode: code, hint: error.hint, details: error.details },
   });
 }
 

@@ -6,7 +6,7 @@ describe('PwaInstallService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PwaInstallService]
+      providers: [PwaInstallService],
     });
     service = TestBed.inject(PwaInstallService);
   });
@@ -30,5 +30,4 @@ describe('PwaInstallService', () => {
   it('should have getPlatformCapabilities method', () => {
     expect(typeof service.getPlatformCapabilities).toBe('function');
   });
-
 });

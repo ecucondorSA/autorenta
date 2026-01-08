@@ -6,7 +6,7 @@ describe('MapboxDirectionsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MapboxDirectionsService]
+      providers: [MapboxDirectionsService],
     });
     service = TestBed.inject(MapboxDirectionsService);
   });
@@ -30,5 +30,4 @@ describe('MapboxDirectionsService', () => {
   it('should have getRouteInstructions method', () => {
     expect(typeof service.getRouteInstructions).toBe('function');
   });
-
 });

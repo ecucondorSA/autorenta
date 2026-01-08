@@ -1,9 +1,4 @@
-import type {
-  CancelPolicy,
-  CarStatus,
-  FuelType,
-  Transmission
-} from '@core/types/database.types';
+import type { CancelPolicy, CarStatus, FuelType, Transmission } from '@core/types/database.types';
 
 export interface CarOwner {
   id: string;
@@ -148,11 +143,11 @@ export interface Car {
  * Insurance verification status for BYOI policy
  */
 export type InsuranceVerificationStatus =
-  | 'not_uploaded'  // No insurance document uploaded
-  | 'pending'       // Document uploaded, awaiting admin review
-  | 'verified'      // Admin verified, insurance is valid
-  | 'rejected'      // Admin rejected (invalid document/coverage)
-  | 'expired';      // Insurance has expired
+  | 'not_uploaded' // No insurance document uploaded
+  | 'pending' // Document uploaded, awaiting admin review
+  | 'verified' // Admin verified, insurance is valid
+  | 'rejected' // Admin rejected (invalid document/coverage)
+  | 'expired'; // Insurance has expired
 
 /**
  * Insurance verification submission

@@ -48,7 +48,7 @@ export const environment = buildEnvironment({
   // NG_APP_PAYPAL_CLIENT_ID - Client ID de PayPal Production
   // P0-027 FIX: Only public client ID - secret is backend-only
   paypalClientId: '', // Se configura via NG_APP_PAYPAL_CLIENT_ID
-  
+
   // GCP Video Damage Detection (Vertex AI + Cloud Run)
   // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages después de desplegar GCP
   // NG_APP_VIDEO_INGESTION_URL - URL del Cloud Run service video-ingestion-service

@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, signal, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  signal,
+  OnInit,
+} from '@angular/core';
 
 import { IonicModule } from '@ionic/angular';
 import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';

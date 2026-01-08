@@ -14,7 +14,7 @@
             stroke-linejoin="round"
             stroke-width="2"
             d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
+          />
         </svg>
         Reportar Nuevo Siniestro
       </button>
@@ -25,7 +25,14 @@
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke-width="1.75"/><rect x="8" y="2" width="8" height="4" rx="1" stroke-width="1.75"/><path d="M8 10h8M8 14h8M8 18h5" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+            stroke-width="1.75"
+          />
+          <rect x="8" y="2" width="8" height="4" rx="1" stroke-width="1.75" />
+          <path d="M8 10h8M8 14h8M8 18h5" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
       </div>
       <div class="stat-content">
         <div class="stat-value">{{ stats().total }}</div>
@@ -35,7 +42,15 @@
 
     <div class="stat-card">
       <div class="stat-icon">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 3h14" stroke-width="2" stroke-linecap="round"/><path d="M5 21h14" stroke-width="2" stroke-linecap="round"/><path d="M6 3v3c0 2.5 2 4 6 6-4 2-6 3.5-6 6v3M18 3v3c0 2.5-2 4-6 6 4 2 6 3.5 6 6v3" stroke-width="1.75" stroke-linejoin="round"/></svg>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M5 3h14" stroke-width="2" stroke-linecap="round" />
+          <path d="M5 21h14" stroke-width="2" stroke-linecap="round" />
+          <path
+            d="M6 3v3c0 2.5 2 4 6 6-4 2-6 3.5-6 6v3M18 3v3c0 2.5-2 4-6 6 4 2 6 3.5 6 6v3"
+            stroke-width="1.75"
+            stroke-linejoin="round"
+          />
+        </svg>
       </div>
       <div class="stat-content">
         <div class="stat-value">{{ stats().submitted }}</div>
@@ -53,7 +68,14 @@
 
     <div class="stat-card">
       <div class="stat-icon">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M20 6L9 17l-5-5"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
       </div>
       <div class="stat-content">
         <div class="stat-value">{{ stats().approved }}</div>
@@ -70,21 +92,21 @@
           class="filter-btn"
           [class.active]="filterStatus() === filter.value"
           (click)="setFilter(filter.value)"
-          >
+        >
           <span class="filter-icon">{{ filter.icon }}</span>
           {{ filter.label }}
           @if (filter.value !== 'all') {
             <span class="filter-count">
               {{
-              filter.value === 'submitted'
-              ? stats().submitted
-              : filter.value === 'under_review'
-              ? stats().underReview
-              : filter.value === 'approved'
-              ? stats().approved
-              : filter.value === 'rejected'
-              ? stats().rejected
-              : stats().paid
+                filter.value === 'submitted'
+                  ? stats().submitted
+                  : filter.value === 'under_review'
+                    ? stats().underReview
+                    : filter.value === 'approved'
+                      ? stats().approved
+                      : filter.value === 'rejected'
+                        ? stats().rejected
+                        : stats().paid
               }}
             </span>
           }
@@ -110,7 +132,7 @@
           stroke-linejoin="round"
           stroke-width="2"
           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-          />
+        />
       </svg>
       <h3 class="empty-title font-bold font-satoshi">No hay siniestros reportados</h3>
       <p class="empty-description">
@@ -130,10 +152,15 @@
             <div class="claim-header">
               <div class="claim-icon">{{ getClaimTypeIcon(claim.claim_type) }}</div>
               <div class="claim-info">
-                <h3 class="claim-title font-bold font-satoshi">{{ getClaimTypeLabel(claim.claim_type) }}</h3>
+                <h3 class="claim-title font-bold font-satoshi">
+                  {{ getClaimTypeLabel(claim.claim_type) }}
+                </h3>
                 <p class="claim-booking">
                   Reserva:
-                  <a [routerLink]="['/bookings', claim.booking_id]" (click)="$event.stopPropagation()">
+                  <a
+                    [routerLink]="['/bookings', claim.booking_id]"
+                    (click)="$event.stopPropagation()"
+                  >
                     #{{ claim.booking_id.substring(0, 8) }}
                   </a>
                 </p>
@@ -153,7 +180,7 @@
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
+                    />
                   </svg>
                   <span>{{ formatDate(claim.incident_date || claim.created_at) }}</span>
                 </div>
@@ -165,13 +192,13 @@
                         stroke-linejoin="round"
                         stroke-width="2"
                         d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
+                      />
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
+                      />
                     </svg>
                     <span>{{ claim.incident_location }}</span>
                   </div>
@@ -184,7 +211,7 @@
                         stroke-linejoin="round"
                         stroke-width="2"
                         d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
+                      />
                     </svg>
                     <span>{{ formatCurrency(claim.estimated_damage_amount) }}</span>
                   </div>
@@ -192,11 +219,15 @@
               </div>
               <!-- Photos Preview -->
               @if (claim.evidence_photos && claim.evidence_photos.length > 0) {
-                <div
-                  class="claim-photos"
-                  >
+                <div class="claim-photos">
                   <div class="photos-label flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke-width="1.75"/><circle cx="12" cy="13" r="3" stroke-width="1.75"/></svg>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                        stroke-width="1.75"
+                      />
+                      <circle cx="12" cy="13" r="3" stroke-width="1.75" />
+                    </svg>
                     {{ claim.evidence_photos.length }} foto(s)
                   </div>
                 </div>
@@ -213,7 +244,7 @@
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M9 5l7 7-7 7"
-                    />
+                  />
                 </svg>
               </button>
             </div>

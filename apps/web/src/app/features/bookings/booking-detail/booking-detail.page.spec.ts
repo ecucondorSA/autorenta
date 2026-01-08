@@ -76,7 +76,10 @@ describe('BookingDetailPage - return checklist', () => {
             ensureSession: () => Promise.resolve({ user: { id: 'renter-1' } }),
           },
         },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({ id: 'booking-1' }) } } },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { paramMap: convertToParamMap({ id: 'booking-1' }) } },
+        },
         { provide: Router, useValue: jasmine.createSpyObj('Router', ['navigate']) },
         { provide: PaymentsService, useValue: {} },
         { provide: ReviewsService, useValue: {} },

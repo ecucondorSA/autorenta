@@ -1,5 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, inject, input, OnDestroy, output, signal, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+  output,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { VideoDamageDetectionService } from '@core/services/verification/video-damage-detection.service';
 import { IonicModule } from '@ionic/angular';
 
@@ -35,7 +45,8 @@ import { IonicModule } from '@ionic/angular';
                 <div class="area-item" [class.completed]="area.completed">
                   <ion-icon
                     [name]="area.completed ? 'checkmark-circle' : 'ellipse-outline'"
-                    [color]="area.completed ? 'success' : 'medium'">
+                    [color]="area.completed ? 'success' : 'medium'"
+                  >
                   </ion-icon>
                   <span>{{ area.label }}</span>
                 </div>
@@ -67,7 +78,8 @@ import { IonicModule } from '@ionic/angular';
             expand="block"
             color="success"
             [disabled]="recordingDuration() < 90"
-            (click)="stopRecording()">
+            (click)="stopRecording()"
+          >
             <ion-icon slot="start" name="stop-circle"></ion-icon>
             Finalizar (mín. 90s)
           </ion-button>
@@ -101,106 +113,113 @@ import { IonicModule } from '@ionic/angular';
       }
     </div>
   `,
-  styles: [`
-    .video-recorder-container {
-      padding: 16px;
-    }
-    .video-preview {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: #000;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-    .video-preview.recording {
-      border: 3px solid var(--ion-color-danger);
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { border-color: var(--ion-color-danger); }
-      50% { border-color: rgba(var(--ion-color-danger-rgb), 0.5); }
-    }
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .recording-indicator {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 8px 16px;
-      border-radius: 20px;
-      color: white;
-      font-weight: bold;
-    }
-    .inspection-guide {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: rgba(0, 0, 0, 0.8);
-      padding: 16px;
-      border-radius: 8px;
-      max-width: 250px;
-    }
-    .guide-text {
-      color: white;
-      font-size: 14px;
-      margin-bottom: 12px;
-      font-weight: 500;
-    }
-    .guide-checklist {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .area-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 12px;
-    }
-    .area-item.completed {
-      color: var(--ion-color-success);
-    }
-    .quality-warning {
-      position: absolute;
-      bottom: 16px;
-      left: 16px;
-      right: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255, 193, 7, 0.9);
-      padding: 12px 16px;
-      border-radius: 8px;
-      color: #000;
-      font-weight: 500;
-    }
-    .upload-progress {
-      padding: 16px;
-      text-align: center;
-    }
-    .upload-progress p {
-      margin-top: 8px;
-      color: var(--ion-color-medium);
-    }
-    .instructions ul {
-      margin: 0;
-      padding-left: 20px;
-    }
-    .instructions li {
-      margin-bottom: 8px;
-      line-height: 1.5;
-    }
-  `]
+  styles: [
+    `
+      .video-recorder-container {
+        padding: 16px;
+      }
+      .video-preview {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/9;
+        background: #000;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 16px;
+      }
+      .video-preview.recording {
+        border: 3px solid var(--ion-color-danger);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          border-color: var(--ion-color-danger);
+        }
+        50% {
+          border-color: rgba(var(--ion-color-danger-rgb), 0.5);
+        }
+      }
+      video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .recording-indicator {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 8px 16px;
+        border-radius: 20px;
+        color: white;
+        font-weight: bold;
+      }
+      .inspection-guide {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 16px;
+        border-radius: 8px;
+        max-width: 250px;
+      }
+      .guide-text {
+        color: white;
+        font-size: 14px;
+        margin-bottom: 12px;
+        font-weight: 500;
+      }
+      .guide-checklist {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .area-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 12px;
+      }
+      .area-item.completed {
+        color: var(--ion-color-success);
+      }
+      .quality-warning {
+        position: absolute;
+        bottom: 16px;
+        left: 16px;
+        right: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 193, 7, 0.9);
+        padding: 12px 16px;
+        border-radius: 8px;
+        color: #000;
+        font-weight: 500;
+      }
+      .upload-progress {
+        padding: 16px;
+        text-align: center;
+      }
+      .upload-progress p {
+        margin-top: 8px;
+        color: var(--ion-color-medium);
+      }
+      .instructions ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+      .instructions li {
+        margin-bottom: 8px;
+        line-height: 1.5;
+      }
+    `,
+  ],
 })
 export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestroy {
   private readonly videoService = inject(VideoDamageDetectionService);
@@ -227,7 +246,7 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
     { id: 'right', label: 'Lateral Der', completed: false },
     { id: 'hood', label: 'Capó', completed: false },
     { id: 'roof', label: 'Techo', completed: false },
-    { id: 'interior', label: 'Interior', completed: false }
+    { id: 'interior', label: 'Interior', completed: false },
   ];
 
   currentGuide = signal({ text: 'Comienza por el frente del vehículo' });
@@ -249,7 +268,7 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } },
-        audio: true
+        audio: true,
       });
 
       if (this.videoElement) {
@@ -267,7 +286,7 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
       this.recordedChunks = [];
       this.mediaRecorder = new MediaRecorder(this.stream!, {
         mimeType: 'video/webm;codecs=vp9',
-        videoBitsPerSecond: 2500000
+        videoBitsPerSecond: 2500000,
       });
 
       this.mediaRecorder.ondataavailable = (event) => {
@@ -315,7 +334,7 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
         inspectionType: this.inspectionType(),
         videoFile: file,
         carId: this.carId(),
-        userId: 'current-user-id'
+        userId: 'current-user-id',
       });
 
       this.videoUploaded.emit(videoPath);
@@ -334,13 +353,13 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
       { time: 45, text: 'Lateral derecho', area: 'right' },
       { time: 60, text: 'Capó y motor', area: 'hood' },
       { time: 75, text: 'Techo del vehículo', area: 'roof' },
-      { time: 90, text: 'Interior: asientos y tablero', area: 'interior' }
+      { time: 90, text: 'Interior: asientos y tablero', area: 'interior' },
     ];
 
-    const currentGuideItem = [...guides].reverse().find(g => duration >= g.time);
+    const currentGuideItem = [...guides].reverse().find((g) => duration >= g.time);
     if (currentGuideItem) {
       this.currentGuide.set({ text: currentGuideItem.text });
-      const area = this.inspectionAreas.find(a => a.id === currentGuideItem.area);
+      const area = this.inspectionAreas.find((a) => a.id === currentGuideItem.area);
       if (area) area.completed = true;
     }
   }
@@ -355,7 +374,7 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
 
   private stopCamera() {
     if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
+      this.stream.getTracks().forEach((track) => track.stop());
     }
   }
 

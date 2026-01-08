@@ -6,7 +6,7 @@ describe('BreakpointService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BreakpointService]
+      providers: [BreakpointService],
     });
     service = TestBed.inject(BreakpointService);
   });
@@ -26,5 +26,4 @@ describe('BreakpointService', () => {
   it('should have isBetween method', () => {
     expect(typeof service.isBetween).toBe('function');
   });
-
 });

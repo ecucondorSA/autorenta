@@ -1,6 +1,13 @@
 import { CommonModule } from '@angular/common';
-import {Component, Input, OnDestroy, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
 import {
   UrgentRentalAvailability,
@@ -17,7 +24,7 @@ import {
     @if (expressMode() && availability()) {
       <div
         class="bg-gradient-to-r from-cta-default/10 via-warning-light/10 to-cta-default/10 border-2 border-cta-default/30 rounded-xl p-4 mb-4 animate-pulse-subtle"
-        >
+      >
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-2">
             <svg
@@ -25,22 +32,22 @@ import {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              >
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
+              />
             </svg>
             <h4 class="font-bold text-cta-default text-lg">🚀 Modo Express</h4>
           </div>
           <div class="text-right">
             <div class="h4 text-cta-default">
               {{
-              quote()?.hourlyRate
-              ? (quote()!.hourlyRate | currency: 'ARS' : 'symbol' : '1.0-0')
-              : '...'
+                quote()?.hourlyRate
+                  ? (quote()!.hourlyRate | currency: 'ARS' : 'symbol' : '1.0-0')
+                  : '...'
               }}
             </div>
             <div class="text-xs text-text-secondary">/hora</div>
@@ -50,43 +57,37 @@ import {
         @if (availability()?.available) {
           <div class="flex items-center gap-4 text-sm mb-3">
             @if (availability()!.distance) {
-              <span
-                class="flex items-center gap-1.5 text-cta-default font-semibold"
-                >
+              <span class="flex items-center gap-1.5 text-cta-default font-semibold">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fill-rule="evenodd"
                     d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
                     clip-rule="evenodd"
-                    />
+                  />
                 </svg>
                 A {{ formatDistance(availability()!.distance!) }} de distancia
               </span>
             }
             @if (availability()!.eta) {
-              <span
-                class="flex items-center gap-1.5 text-warning-strong font-semibold"
-                >
+              <span class="flex items-center gap-1.5 text-warning-strong font-semibold">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fill-rule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
                     clip-rule="evenodd"
-                    />
+                  />
                 </svg>
                 Llega en {{ formatTime(availability()!.eta!) }}
               </span>
             }
             @if (availability()!.batteryLevel !== undefined) {
-              <span
-                class="flex items-center gap-1.5 text-success-strong font-semibold"
-                >
+              <span class="flex items-center gap-1.5 text-success-strong font-semibold">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fill-rule="evenodd"
                     d="M3.5 2.75a.75.75 0 00-1.5 0v12.5a2 2 0 002 2h14.5a.75.75 0 000-1.5H3.5v-1h14.5a.75.75 0 000-1.5H3.5v-1h14.5a.75.75 0 000-1.5H3.5V2.75z"
                     clip-rule="evenodd"
-                    />
+                  />
                 </svg>
                 {{ availability()!.batteryLevel }}% batería
               </span>
@@ -97,7 +98,7 @@ import {
         @if (!availability()?.available) {
           <div
             class="bg-error-bg border border-error-border rounded-lg p-3 text-sm text-error-strong"
-            >
+          >
             <p class="font-semibold">⚠️ No disponible ahora</p>
             @if (availability()?.reason) {
               <p>{{ availability()!.reason }}</p>
@@ -106,9 +107,7 @@ import {
         }
         <!-- Loading state -->
         @if (loading()) {
-          <div
-            class="flex items-center gap-2 text-sm text-text-secondary"
-            >
+          <div class="flex items-center gap-2 text-sm text-text-secondary">
             <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
               <circle
                 class="opacity-25"
@@ -129,7 +128,7 @@ import {
         }
       </div>
     }
-    `,
+  `,
   styles: [
     `
       @keyframes pulse-subtle {

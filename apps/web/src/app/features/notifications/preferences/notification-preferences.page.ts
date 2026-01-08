@@ -1,5 +1,12 @@
-import {Component, OnInit, inject, signal, effect, PLATFORM_ID,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  effect,
+  PLATFORM_ID,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -36,11 +43,7 @@ interface NotificationPreferencesPayload {
       <div class="sticky top-0 z-10 bg-surface-raised shadow">
         <div class="mx-auto max-w-4xl px-4 py-4">
           <div class="flex items-center gap-3">
-            <button
-              (click)="goBack()"
-              class="rounded-lg p-2 hover:bg-surface-raised"
-              type="button"
-            >
+            <button (click)="goBack()" class="rounded-lg p-2 hover:bg-surface-raised" type="button">
               <svg
                 class="h-6 w-6 text-text-secondary"
                 fill="none"
@@ -56,9 +59,7 @@ interface NotificationPreferencesPayload {
               </svg>
             </button>
             <div>
-              <h1 class="text-2xl font-bold text-text-primary">
-                Preferencias de notificaciones
-              </h1>
+              <h1 class="text-2xl font-bold text-text-primary">Preferencias de notificaciones</h1>
               <p class="text-sm text-text-secondary">
                 Personaliza qué notificaciones quieres recibir
               </p>
@@ -89,9 +90,7 @@ interface NotificationPreferencesPayload {
                   🔔
                 </div>
                 <div>
-                  <h3 class="font-semibold text-text-primary">
-                    Notificaciones del navegador
-                  </h3>
+                  <h3 class="font-semibold text-text-primary">Notificaciones del navegador</h3>
                   <p class="text-sm text-text-secondary">
                     Recibe notificaciones incluso cuando no estés en la app
                   </p>
@@ -132,9 +131,7 @@ interface NotificationPreferencesPayload {
                   🔊
                 </div>
                 <div>
-                  <h3 class="font-semibold text-text-primary">
-                    Sonido de notificaciones
-                  </h3>
+                  <h3 class="font-semibold text-text-primary">Sonido de notificaciones</h3>
                   <p class="text-sm text-text-secondary">
                     Reproducir un sonido cuando llegue una notificacion
                   </p>
@@ -158,9 +155,7 @@ interface NotificationPreferencesPayload {
 
           <!-- Notification types -->
           <div class="rounded-lg bg-surface-raised p-6 shadow">
-            <h2 class="mb-4 text-lg font-semibold text-text-primary">
-              Tipos de notificaciones
-            </h2>
+            <h2 class="mb-4 text-lg font-semibold text-text-primary">Tipos de notificaciones</h2>
             <p class="mb-6 text-sm text-text-secondary">
               Selecciona que tipos de notificaciones quieres recibir
             </p>

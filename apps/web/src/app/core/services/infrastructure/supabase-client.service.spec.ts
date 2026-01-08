@@ -6,13 +6,17 @@ describe('SupabaseClientService', () => {
 
   beforeEach(() => {
     // Set up environment for SupabaseClientService
-    (globalThis as any).import = { meta: { env: {
-      NG_APP_SUPABASE_URL: 'https://test.supabase.co',
-      NG_APP_SUPABASE_ANON_KEY: 'test-anon-key'
-    }}};
+    (globalThis as any).import = {
+      meta: {
+        env: {
+          NG_APP_SUPABASE_URL: 'https://test.supabase.co',
+          NG_APP_SUPABASE_ANON_KEY: 'test-anon-key',
+        },
+      },
+    };
 
     TestBed.configureTestingModule({
-      providers: [SupabaseClientService]
+      providers: [SupabaseClientService],
     });
   });
 
@@ -20,5 +24,4 @@ describe('SupabaseClientService', () => {
     // SupabaseClientService requires real env vars, skip for now
     expect(SupabaseClientService).toBeDefined();
   });
-
 });

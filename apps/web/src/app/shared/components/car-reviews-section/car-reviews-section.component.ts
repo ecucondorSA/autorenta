@@ -1,7 +1,6 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule } from '@angular/common';
-import {Component, Input, OnInit, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { ReviewCardComponent } from '../review-card/review-card.component';
 

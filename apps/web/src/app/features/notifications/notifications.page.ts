@@ -1,5 +1,12 @@
-import {Component, OnInit, OnDestroy, inject, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -84,7 +91,12 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
               class="flex flex-shrink-0 items-center gap-1.5 rounded-lg bg-surface-raised px-2.5 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-hover sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
               aria-label="Preferencias de notificaciones"
             >
-              <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                class="h-4 w-4 sm:h-5 sm:w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -239,14 +251,10 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                             <div
                               class="flex h-8 w-8 items-center justify-center rounded-full text-lg sm:h-10 sm:w-10 sm:text-2xl"
                               [ngClass]="{
-                                'bg-success-light/20':
-                                  notification.type === 'success',
-                                'bg-warning-bg-hover':
-                                  notification.type === 'warning',
-                                'bg-error-bg-hover':
-                                  notification.type === 'error',
-                                'bg-cta-default/20':
-                                  notification.type === 'info',
+                                'bg-success-light/20': notification.type === 'success',
+                                'bg-warning-bg-hover': notification.type === 'warning',
+                                'bg-error-bg-hover': notification.type === 'error',
+                                'bg-cta-default/20': notification.type === 'info',
                               }"
                             >
                               {{ getNotificationIcon(notification.type) }}
@@ -255,7 +263,9 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
 
                           <!-- Content -->
                           <div class="min-w-0 flex-1">
-                            <div class="flex flex-col gap-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
+                            <div
+                              class="flex flex-col gap-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-2"
+                            >
                               <div class="min-w-0 flex-1">
                                 <h3 class="text-sm font-semibold text-text-primary sm:text-base">
                                   {{ notification.title }}
@@ -361,7 +371,9 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
 
                           <!-- Content -->
                           <div class="min-w-0 flex-1">
-                            <div class="flex flex-col gap-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
+                            <div
+                              class="flex flex-col gap-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-2"
+                            >
                               <div class="min-w-0 flex-1">
                                 <h3 class="text-sm font-semibold text-text-primary sm:text-base">
                                   {{ notification.title }}
@@ -452,7 +464,9 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
 
                       <!-- Content -->
                       <div class="min-w-0 flex-1">
-                        <div class="flex flex-col gap-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
+                        <div
+                          class="flex flex-col gap-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-2"
+                        >
                           <div class="min-w-0 flex-1">
                             <h3 class="text-sm font-semibold text-text-primary sm:text-base">
                               {{ notification.title }}
@@ -463,7 +477,9 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
 
                             <!-- Metadata -->
                             @if (notification.metadata) {
-                              <div class="mt-1 truncate text-xs text-text-secondary sm:mt-2 sm:text-xs">
+                              <div
+                                class="mt-1 truncate text-xs text-text-secondary sm:mt-2 sm:text-xs"
+                              >
                                 {{ renderMetadata(notification) }}
                               </div>
                             }
@@ -504,7 +520,12 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                         type="button"
                         title="Eliminar"
                       >
-                        <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg
+                          class="h-4 w-4 sm:h-5 sm:w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
                           <path
                             stroke-linecap="round"
                             stroke-linejoin="round"

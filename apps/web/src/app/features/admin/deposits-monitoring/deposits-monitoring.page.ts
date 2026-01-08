@@ -1,6 +1,11 @@
-
-import {Component, computed, OnDestroy, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  computed,
+  OnDestroy,
+  OnInit,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environment';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';

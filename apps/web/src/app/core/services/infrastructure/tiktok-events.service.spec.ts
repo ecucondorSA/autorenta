@@ -6,7 +6,7 @@ describe('TikTokEventsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [TikTokEventsService]
+      providers: [TikTokEventsService],
     });
     service = TestBed.inject(TikTokEventsService);
   });
@@ -50,5 +50,4 @@ describe('TikTokEventsService', () => {
   it('should have trackPurchase method', () => {
     expect(typeof service.trackPurchase).toBe('function');
   });
-
 });

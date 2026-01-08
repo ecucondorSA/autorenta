@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  Component, OnDestroy, OnInit, computed, inject, signal
+  Component,
+  OnDestroy,
+  OnInit,
+  computed,
+  inject,
+  signal,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Booking, BookingExtensionRequest, BookingStatus, TrafficInfraction } from '@core/models';
@@ -470,7 +475,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   });
 
   toggleShowAllSteps(): void {
-    this.showAllSteps.update(v => !v);
+    this.showAllSteps.update((v) => !v);
   }
 
   readonly flowStatusInfo = computed(() => {
@@ -821,7 +826,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   /** Toggle AI panel accordion */
   toggleAiPanel(panel: 'legal' | 'trip' | 'checklist'): void {
-    this.expandedAiPanel.update(current => current === panel ? null : panel);
+    this.expandedAiPanel.update((current) => (current === panel ? null : panel));
   }
 
   /** Show trip planner only for confirmed/in_progress bookings */
@@ -931,7 +936,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const booking = this.booking();
     const status = this.effectiveStatus();
     if (!booking || !this.isRenter() || !status) return false;
-    const validStatus = status === 'confirmed' || status === 'in_progress' || status === 'renter_checkin';
+    const validStatus =
+      status === 'confirmed' || status === 'in_progress' || status === 'renter_checkin';
     return validStatus && this.hasOwnerCheckIn() && !this.hasRenterCheckIn();
   });
 
@@ -964,8 +970,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     if (!booking || !this.isOwner()) return false;
     // Owner can report damage after vehicle return (completed status or returned_at is set)
     const canReport =
-      (booking.status === 'completed' || booking.returned_at !== null) &&
-      !booking.has_damages;  // CORRECTO: usa nombre de columna BD real
+      (booking.status === 'completed' || booking.returned_at !== null) && !booking.has_damages; // CORRECTO: usa nombre de columna BD real
     return canReport;
   });
 
@@ -992,7 +997,11 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const newEndDate = new Date(currentEndDate);
     newEndDate.setDate(newEndDate.getDate() + days);
 
-    if (!confirm(`¿Confirmas solicitar extender la reserva hasta el ${newEndDate.toLocaleDateString()}? El anfitrión deberá aprobarla.`)) {
+    if (
+      !confirm(
+        `¿Confirmas solicitar extender la reserva hasta el ${newEndDate.toLocaleDateString()}? El anfitrión deberá aprobarla.`,
+      )
+    ) {
       return;
     }
 
@@ -1000,7 +1009,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     try {
       const result = await this.bookingsService.requestExtension(booking.id, newEndDate);
       if (result.success) {
-        alert(`Solicitud de extensión enviada exitosamente por un costo estimado de ${result.additionalCost}. Esperando aprobación del anfitrión.`);
+        alert(
+          `Solicitud de extensión enviada exitosamente por un costo estimado de ${result.additionalCost}. Esperando aprobación del anfitrión.`,
+        );
         // Reload booking to show pending extension status
         const updated = await this.bookingsService.getBookingById(booking.id);
         this.booking.set(updated);
@@ -1043,7 +1054,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   async rejectExtension(requestId: string): Promise<void> {
     const reason = prompt('¿Por qué rechazas esta solicitud de extensión? (Opcional)');
 
-    const confirmRejection = confirm('¿Confirmas que quieres rechazar esta solicitud de extensión?');
+    const confirmRejection = confirm(
+      '¿Confirmas que quieres rechazar esta solicitud de extensión?',
+    );
     if (!confirmRejection) return;
 
     this.loading.set(true);
@@ -1173,9 +1186,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     if (!booking) return;
 
     this.returnChecklistItems.update((items) =>
-      items.map((item) =>
-        item.id === itemId ? { ...item, checked: !item.checked } : item,
-      ),
+      items.map((item) => (item.id === itemId ? { ...item, checked: !item.checked } : item)),
     );
     this.persistReturnChecklist(booking.id);
     this.scheduleReturnChecklistSave(booking.id);
@@ -1256,7 +1267,11 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   private buildReturnChecklist(): ReturnChecklistItem[] {
     return [
-      { id: 'final-photos', label: 'Subir fotos finales (exterior, interior, odómetro)', checked: false },
+      {
+        id: 'final-photos',
+        label: 'Subir fotos finales (exterior, interior, odómetro)',
+        checked: false,
+      },
       { id: 'fuel', label: 'Dejar el combustible según la política del auto', checked: false },
       { id: 'clean', label: 'Retirar objetos personales y basura', checked: false },
       { id: 'accessories', label: 'Devolver llaves y accesorios completos', checked: false },
@@ -1482,7 +1497,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         this.updateDeliveryCountdown();
       }, 30000);
     }
-
   }
 
   private stopCountdown() {
@@ -1737,9 +1751,11 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     this.logger.debug('Owner No-Show reported:', result);
     this.showReportOwnerNoShowModal.set(false);
     if (result.success) {
-      const alert = this.alertController.create({ // Assuming alertController is available
+      const alert = this.alertController.create({
+        // Assuming alertController is available
         header: '✅ No-Show Reportado',
-        message: 'Hemos registrado tu reporte de no-show. Nuestro equipo ha sido notificado y se pondrá en contacto contigo a la brevedad para asistirte en buscar una alternativa o procesar un reembolso.',
+        message:
+          'Hemos registrado tu reporte de no-show. Nuestro equipo ha sido notificado y se pondrá en contacto contigo a la brevedad para asistirte en buscar una alternativa o procesar un reembolso.',
         buttons: [
           {
             text: 'Buscar otro auto',
@@ -1767,14 +1783,14 @@ export class BookingDetailPage implements OnInit, OnDestroy {
             role: 'cancel',
             handler: () => {
               // Reload booking data to reflect any status changes
-              this.bookingsService.getBookingById(this.booking()!.id).then(updated => {
+              this.bookingsService.getBookingById(this.booking()!.id).then((updated) => {
                 if (updated) this.booking.set(updated);
               });
             },
           },
         ],
       });
-      alert.then(a => a.present());
+      alert.then((a) => a.present());
     } else {
       alert('Error al reportar no-show: ' + (result.message || 'Error desconocido.'));
     }
@@ -1784,9 +1800,11 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     this.logger.debug('Renter No-Show reported:', result);
     this.showReportRenterNoShowModal.set(false);
     if (result.success) {
-      alert('Reporte de no-show enviado. Nuestro equipo se pondrá en contacto para validar la situación y aplicar las penalidades correspondientes.');
+      alert(
+        'Reporte de no-show enviado. Nuestro equipo se pondrá en contacto para validar la situación y aplicar las penalidades correspondientes.',
+      );
       // For now, reload booking data to reflect any status changes
-      this.bookingsService.getBookingById(this.booking()!.id).then(updated => {
+      this.bookingsService.getBookingById(this.booking()!.id).then((updated) => {
         if (updated) this.booking.set(updated);
       });
     } else {
@@ -1802,7 +1820,11 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const booking = this.booking();
     if (!booking || !this.isOwner()) return false;
     // Owner can cancel confirmed or pending bookings
-    return booking.status === 'confirmed' || booking.status === 'pending' || booking.status === 'pending_payment';
+    return (
+      booking.status === 'confirmed' ||
+      booking.status === 'pending' ||
+      booking.status === 'pending_payment'
+    );
   });
 
   async ownerCancelBooking(): Promise<void> {
@@ -1843,7 +1865,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
             this.loading.set(true);
             try {
-              const result = await this.bookingsService.ownerCancelBooking(booking.id, data.reason.trim());
+              const result = await this.bookingsService.ownerCancelBooking(
+                booking.id,
+                data.reason.trim(),
+              );
 
               if (result.success) {
                 const updated = await this.bookingsService.getBookingById(booking.id);
@@ -1907,25 +1932,24 @@ export class BookingDetailPage implements OnInit, OnDestroy {
             this.loading.set(true);
             try {
               await this.bookingsService.cancelBooking(booking.id);
-              
+
               const updated = await this.bookingsService.getBookingById(bookingId);
               this.booking.set(updated);
-              
+
               const successAlert = await this.alertController.create({
                 header: 'Reserva Cancelada',
                 message: 'La reserva ha sido cancelada exitosamente.',
-                buttons: ['OK']
+                buttons: ['OK'],
               });
               await successAlert.present();
-
             } catch (error) {
               console.error('Error cancelling booking:', error);
-               const errorAlert = await this.alertController.create({
-                  header: 'Error',
-                  message: 'No se pudo cancelar la reserva. Intentalo de nuevo.',
-                  buttons: ['OK']
-                 });
-                 await errorAlert.present();
+              const errorAlert = await this.alertController.create({
+                header: 'Error',
+                message: 'No se pudo cancelar la reserva. Intentalo de nuevo.',
+                buttons: ['OK'],
+              });
+              await errorAlert.present();
             } finally {
               this.loading.set(false);
             }
@@ -1945,15 +1969,23 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   readonly renterDriverScore = computed(() => this.renterVerification()?.driver_score ?? null);
   readonly renterDriverClass = computed(() => this.renterVerification()?.driver_class ?? null);
-  readonly renterClassDescription = computed(() => this.renterVerification()?.class_description ?? null);
+  readonly renterClassDescription = computed(
+    () => this.renterVerification()?.class_description ?? null,
+  );
   readonly renterFeeMultiplier = computed(() => this.renterVerification()?.fee_multiplier ?? null);
   readonly renterPhone = computed(() => this.renterVerification()?.phone ?? null);
   readonly renterWhatsApp = computed(() => this.renterVerification()?.whatsapp ?? null);
   readonly renterDni = computed(() => this.renterVerification()?.gov_id_number ?? null);
   readonly renterDniType = computed(() => this.renterVerification()?.gov_id_type ?? 'DNI');
-  readonly renterLicenseExpiry = computed(() => this.renterVerification()?.driver_license_expiry ?? null);
-  readonly renterLicenseClass = computed(() => this.renterVerification()?.driver_license_class ?? null);
-  readonly renterLicenseVerified = computed(() => this.renterVerification()?.driver_license_verified_at ?? null);
+  readonly renterLicenseExpiry = computed(
+    () => this.renterVerification()?.driver_license_expiry ?? null,
+  );
+  readonly renterLicenseClass = computed(
+    () => this.renterVerification()?.driver_license_class ?? null,
+  );
+  readonly renterLicenseVerified = computed(
+    () => this.renterVerification()?.driver_license_verified_at ?? null,
+  );
   readonly renterIdVerified = computed(() => this.renterVerification()?.id_verified ?? null);
 
   readonly videoCallUrl = computed(() => {

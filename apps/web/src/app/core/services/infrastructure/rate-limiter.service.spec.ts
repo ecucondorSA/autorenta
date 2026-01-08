@@ -6,7 +6,7 @@ describe('RateLimiterService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RateLimiterService]
+      providers: [RateLimiterService],
     });
     service = TestBed.inject(RateLimiterService);
   });
@@ -42,5 +42,4 @@ describe('RateLimiterService', () => {
   it('should have logViolation method', () => {
     expect(typeof service.logViolation).toBe('function');
   });
-
 });

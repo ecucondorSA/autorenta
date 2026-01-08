@@ -1,5 +1,11 @@
-import {Component, OnInit, inject, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
@@ -15,9 +21,7 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
     <div class="p-6 max-w-7xl mx-auto">
       <!-- Header -->
       <div class="mb-6">
-        <h1 class="text-2xl font-bold text-text-primary">
-          Multas de Tránsito
-        </h1>
+        <h1 class="text-2xl font-bold text-text-primary">Multas de Tránsito</h1>
         <p class="text-text-secondary mt-1">
           Gestiona las multas de tránsito reportadas por propietarios
         </p>
@@ -44,7 +48,7 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
         <div class="card-premium p-4">
           <p class="text-sm text-text-muted">Monto Total Pendiente</p>
           <p class="text-2xl font-bold text-error-strong">
-            {{ totalPendingAmount() | currency:'USD':'symbol':'1.0-0' }}
+            {{ totalPendingAmount() | currency: 'USD' : 'symbol' : '1.0-0' }}
           </p>
         </div>
       </div>
@@ -64,11 +68,7 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
             </select>
           </div>
           <div class="flex-1"></div>
-          <button
-            (click)="loadInfractions()"
-            class="btn-secondary"
-            [disabled]="loading()"
-          >
+          <button (click)="loadInfractions()" class="btn-secondary" [disabled]="loading()">
             Actualizar
           </button>
         </div>
@@ -77,7 +77,9 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
       <!-- Loading -->
       @if (loading()) {
         <div class="text-center py-12">
-          <div class="inline-block h-10 w-10 animate-spin rounded-full border-4 border-border-muted border-t-cta-default"></div>
+          <div
+            class="inline-block h-10 w-10 animate-spin rounded-full border-4 border-border-muted border-t-cta-default"
+          ></div>
           <p class="text-text-secondary mt-4">Cargando multas...</p>
         </div>
       }
@@ -88,13 +90,27 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
           <table class="w-full">
             <thead class="bg-surface-secondary">
               <tr>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Fecha</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Renter</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Owner</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Monto</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Descripción</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Estado</th>
-                <th class="px-4 py-3 text-right text-xs font-semibold text-text-muted uppercase">Acciones</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">
+                  Fecha
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">
+                  Renter
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">
+                  Owner
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">
+                  Monto
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">
+                  Descripción
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">
+                  Estado
+                </th>
+                <th class="px-4 py-3 text-right text-xs font-semibold text-text-muted uppercase">
+                  Acciones
+                </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-border-default">
@@ -103,10 +119,10 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
                   <td class="px-4 py-4">
                     <div>
                       <p class="text-sm text-text-primary">
-                        {{ infraction.infraction_date | date:'dd/MM/yyyy' }}
+                        {{ infraction.infraction_date | date: 'dd/MM/yyyy' }}
                       </p>
                       <p class="text-xs text-text-muted">
-                        Reportado: {{ infraction.created_at | date:'dd/MM/yyyy' }}
+                        Reportado: {{ infraction.created_at | date: 'dd/MM/yyyy' }}
                       </p>
                     </div>
                   </td>
@@ -118,7 +134,10 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
                   </td>
                   <td class="px-4 py-4">
                     <span class="font-semibold text-text-primary">
-                      {{ (infraction.amount_cents / 100) | currency:infraction.currency:'symbol':'1.2-2' }}
+                      {{
+                        infraction.amount_cents / 100
+                          | currency: infraction.currency : 'symbol' : '1.2-2'
+                      }}
                     </span>
                   </td>
                   <td class="px-4 py-4 max-w-xs">
@@ -137,7 +156,10 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
                       {{ getStatusLabel(infraction.status) }}
                     </span>
                     @if (infraction.dispute_reason) {
-                      <p class="text-xs text-error-strong mt-1 truncate max-w-[150px]" [title]="infraction.dispute_reason">
+                      <p
+                        class="text-xs text-error-strong mt-1 truncate max-w-[150px]"
+                        [title]="infraction.dispute_reason"
+                      >
                         {{ infraction.dispute_reason }}
                       </p>
                     }
@@ -169,13 +191,24 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
             </tbody>
           </table>
         </div>
-      }
 
-      @else {
+      } @else {
         <div class="card-premium p-12 text-center">
-          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-surface-secondary flex items-center justify-center">
-            <svg class="w-8 h-8 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <div
+            class="w-16 h-16 mx-auto mb-4 rounded-full bg-surface-secondary flex items-center justify-center"
+          >
+            <svg
+              class="w-8 h-8 text-text-muted"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
           </div>
           <h3 class="text-lg font-semibold text-text-primary mb-2">
@@ -184,7 +217,7 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
         </div>
       }
     </div>
-  `
+  `,
 })
 export class AdminTrafficInfractionsPage implements OnInit {
   private readonly supabase = inject(SupabaseClientService).getClient();
@@ -198,17 +231,25 @@ export class AdminTrafficInfractionsPage implements OnInit {
   readonly filteredInfractions = computed(() => {
     const all = this.infractions();
     if (this.filterStatus === 'all') return all;
-    return all.filter(i => i.status === this.filterStatus);
+    return all.filter((i) => i.status === this.filterStatus);
   });
 
-  readonly pendingCount = computed(() => this.infractions().filter(i => i.status === 'pending').length);
-  readonly disputedCount = computed(() => this.infractions().filter(i => i.status === 'disputed').length);
-  readonly acceptedCount = computed(() => this.infractions().filter(i => i.status === 'accepted').length);
-  readonly chargedCount = computed(() => this.infractions().filter(i => i.status === 'charged').length);
+  readonly pendingCount = computed(
+    () => this.infractions().filter((i) => i.status === 'pending').length,
+  );
+  readonly disputedCount = computed(
+    () => this.infractions().filter((i) => i.status === 'disputed').length,
+  );
+  readonly acceptedCount = computed(
+    () => this.infractions().filter((i) => i.status === 'accepted').length,
+  );
+  readonly chargedCount = computed(
+    () => this.infractions().filter((i) => i.status === 'charged').length,
+  );
 
   readonly totalPendingAmount = computed(() => {
     return this.infractions()
-      .filter(i => ['pending', 'accepted', 'disputed'].includes(i.status))
+      .filter((i) => ['pending', 'accepted', 'disputed'].includes(i.status))
       .reduce((sum, i) => sum + i.amount_cents / 100, 0);
   });
 
@@ -221,23 +262,29 @@ export class AdminTrafficInfractionsPage implements OnInit {
     try {
       const { data, error } = await this.supabase
         .from('traffic_infractions')
-        .select(`
+        .select(
+          `
           *,
           renter:profiles!traffic_infractions_renter_id_fkey(full_name),
           owner:profiles!traffic_infractions_owner_id_fkey(full_name)
-        `)
+        `,
+        )
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      const mapped = (data || []).map((i: {
-        renter?: { full_name: string };
-        owner?: { full_name: string };
-      } & Partial<TrafficInfraction>) => ({
-        ...i,
-        renter_name: i.renter?.full_name,
-        owner_name: i.owner?.full_name
-      })) as unknown as TrafficInfraction[];
+      const mapped = (data || []).map(
+        (
+          i: {
+            renter?: { full_name: string };
+            owner?: { full_name: string };
+          } & Partial<TrafficInfraction>,
+        ) => ({
+          ...i,
+          renter_name: i.renter?.full_name,
+          owner_name: i.owner?.full_name,
+        }),
+      ) as unknown as TrafficInfraction[];
 
       this.infractions.set(mapped);
     } catch (err) {
@@ -250,23 +297,35 @@ export class AdminTrafficInfractionsPage implements OnInit {
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'pending': return 'bg-warning-bg text-warning-strong';
-      case 'disputed': return 'bg-cta-default/10 text-cta-default';
-      case 'accepted': return 'bg-success-bg text-success-strong';
-      case 'charged': return 'bg-surface-secondary text-text-secondary';
-      case 'resolved': return 'bg-success-bg text-success-strong';
-      default: return 'bg-surface-secondary text-text-secondary';
+      case 'pending':
+        return 'bg-warning-bg text-warning-strong';
+      case 'disputed':
+        return 'bg-cta-default/10 text-cta-default';
+      case 'accepted':
+        return 'bg-success-bg text-success-strong';
+      case 'charged':
+        return 'bg-surface-secondary text-text-secondary';
+      case 'resolved':
+        return 'bg-success-bg text-success-strong';
+      default:
+        return 'bg-surface-secondary text-text-secondary';
     }
   }
 
   getStatusLabel(status: string): string {
     switch (status) {
-      case 'pending': return 'Pendiente';
-      case 'disputed': return 'Disputada';
-      case 'accepted': return 'Aceptada';
-      case 'charged': return 'Cobrada';
-      case 'resolved': return 'Resuelta';
-      default: return status;
+      case 'pending':
+        return 'Pendiente';
+      case 'disputed':
+        return 'Disputada';
+      case 'accepted':
+        return 'Aceptada';
+      case 'charged':
+        return 'Cobrada';
+      case 'resolved':
+        return 'Resuelta';
+      default:
+        return status;
     }
   }
 
@@ -298,12 +357,15 @@ ${infraction.resolution_notes ? `\nNotas de resolución: ${infraction.resolution
       const { error } = await this.supabase.rpc('resolve_traffic_infraction_dispute', {
         p_infraction_id: infraction.id,
         p_in_favor_of_renter: inFavorOfRenter,
-        p_resolution_notes: notes
+        p_resolution_notes: notes,
       });
 
       if (error) throw error;
 
-      this.toast.success('Disputa resuelta', `La disputa ha sido resuelta a favor del ${inFavorOfRenter ? 'renter' : 'owner'}`);
+      this.toast.success(
+        'Disputa resuelta',
+        `La disputa ha sido resuelta a favor del ${inFavorOfRenter ? 'renter' : 'owner'}`,
+      );
       await this.loadInfractions();
     } catch (err) {
       console.error('Error resolving dispute:', err);

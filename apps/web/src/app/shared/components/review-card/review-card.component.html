@@ -1,6 +1,6 @@
 <div
   class="review-card bg-surface-raised rounded-lg border border-border-default p-6 hover:shadow-lg transition-all duration-300 animate-slide-in-left"
-  >
+>
   <!-- Header with user info and rating -->
   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
     <div class="flex items-center space-x-3">
@@ -8,12 +8,12 @@
       <a
         [routerLink]="['/users', review.reviewer_id]"
         class="flex-shrink-0 transition-opacity hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-cta-default focus:ring-offset-2 rounded-full relative"
-        >
+      >
         <!-- Skeleton loader mientras carga avatar -->
         @if (!review.reviewer_avatar) {
           <div
             class="w-12 h-12 bg-gradient-to-br from-cta-default to-cta-default rounded-full flex items-center justify-center text-cta-text font-semibold text-lg shadow-md"
-            >
+          >
             {{ getAvatarInitials(review.reviewer_name || 'Usuario') }}
           </div>
         }
@@ -26,17 +26,17 @@
             width="48"
             height="48"
             class="w-12 h-12 rounded-full object-cover shadow-md ring-2 ring-gray-100"
-          onerror="
-            this.style.display = 'none';
-            this.nextElementSibling.style.display = 'flex';
-          "
-            />
+            onerror="
+              this.style.display = 'none';
+              this.nextElementSibling.style.display = 'flex';
+            "
+          />
         }
         <!-- Fallback si imagen falla -->
         @if (review.reviewer_avatar) {
           <div
             class="w-12 h-12 bg-gradient-to-br from-cta-default to-cta-default rounded-full flex items-center justify-center text-cta-text font-semibold text-lg shadow-md hidden"
-            >
+          >
             {{ getAvatarInitials(review.reviewer_name || 'Usuario') }}
           </div>
         }
@@ -47,7 +47,7 @@
         <a
           [routerLink]="['/users', review.reviewer_id]"
           class="font-semibold text-text-primary hover:text-cta-default transition-colors focus:outline-none focus:underline"
-          >
+        >
           {{ review.reviewer_name || 'Usuario' }}
         </a>
         <p class="text-sm text-text-secondary flex items-center gap-1">
@@ -57,14 +57,12 @@
               stroke-linejoin="round"
               stroke-width="2"
               d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
+            />
           </svg>
           {{ getTimeSince(review.created_at) }}
         </p>
         @if (showCarTitle && review.car_title) {
-          <p
-            class="text-xs text-text-muted mt-1"
-            >
+          <p class="text-xs text-text-muted mt-1">
             {{ review.car_title }}
           </p>
         }
@@ -73,9 +71,7 @@
 
     <div class="flex flex-col items-end gap-2">
       <!-- Overall rating -->
-      <div
-        class="flex items-center space-x-2 bg-surface-base rounded-lg px-3 py-2"
-        >
+      <div class="flex items-center space-x-2 bg-surface-base rounded-lg px-3 py-2">
         <span class="h4 text-text-primary">{{ getOverallRating() }}</span>
         <div class="flex items-center">
           @for (star of getRatingStars(getOverallRating()); track $index) {
@@ -86,10 +82,10 @@
               fill="currentColor"
               viewBox="0 0 20 20"
               aria-label="Estrella {{ $index + 1 }}"
-              >
+            >
               <path
                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                />
+              />
             </svg>
           }
         </div>
@@ -100,7 +96,7 @@
         <span
           [class]="getModerationBadgeClass()"
           class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
-          >
+        >
           {{ getModerationStatusLabel() }}
         </span>
       }
@@ -109,57 +105,55 @@
 
   <!-- Public comment -->
   @if (review.comment_public) {
-    <div
-      class="mb-4 p-4 bg-surface-base rounded-lg border-l-4 border-cta-default"
-      >
+    <div class="mb-4 p-4 bg-surface-base rounded-lg border-l-4 border-cta-default">
       <p class="text-text-primary leading-relaxed">{{ review.comment_public }}</p>
     </div>
   }
 
   <!-- Category ratings (hidden in compact mode) -->
   @if (!compact && activeCategories.length > 0) {
-  <div
-    class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 p-4 bg-surface-base rounded-lg"
-    >
-    <!-- Review type badge -->
-    <div class="col-span-2 sm:col-span-3 mb-2">
-      <span class="text-xs font-medium px-2 py-1 rounded-full"
-        [class.bg-primary-100]="!isOwnerToRenterReview"
-        [class.text-primary-700]="!isOwnerToRenterReview"
-        [class.bg-success-light]="isOwnerToRenterReview"
-        [class.text-success-700]="isOwnerToRenterReview">
-        @if (isOwnerToRenterReview) {
-          Evaluación del arrendatario
-        } @else {
-          Evaluación del auto/propietario
-        }
-      </span>
-    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 p-4 bg-surface-base rounded-lg">
+      <!-- Review type badge -->
+      <div class="col-span-2 sm:col-span-3 mb-2">
+        <span
+          class="text-xs font-medium px-2 py-1 rounded-full"
+          [class.bg-primary-100]="!isOwnerToRenterReview"
+          [class.text-primary-700]="!isOwnerToRenterReview"
+          [class.bg-success-light]="isOwnerToRenterReview"
+          [class.text-success-700]="isOwnerToRenterReview"
+        >
+          @if (isOwnerToRenterReview) {
+            Evaluación del arrendatario
+          } @else {
+            Evaluación del auto/propietario
+          }
+        </span>
+      </div>
 
-    <!-- Dynamic category ratings -->
-    @for (category of activeCategories; track category.key) {
-      <div class="category-rating">
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-text-secondary">{{ category.label }}</span>
-          <div class="flex">
-            @for (star of getRatingStars(category.value ?? 0); track $index) {
-              <svg
-                class="w-4 h-4"
-                [class.text-warning-400]="star === 'filled'"
-                [class.text-gray-500]="star === 'empty'"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+      <!-- Dynamic category ratings -->
+      @for (category of activeCategories; track category.key) {
+        <div class="category-rating">
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-text-secondary">{{ category.label }}</span>
+            <div class="flex">
+              @for (star of getRatingStars(category.value ?? 0); track $index) {
+                <svg
+                  class="w-4 h-4"
+                  [class.text-warning-400]="star === 'filled'"
+                  [class.text-gray-500]="star === 'empty'"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                  <path
+                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
                   />
-              </svg>
-            }
+                </svg>
+              }
+            </div>
           </div>
         </div>
-      </div>
-    }
-  </div>
+      }
+    </div>
   }
 
   <!-- Flag button -->
@@ -168,14 +162,14 @@
       <button
         (click)="onFlagReview()"
         class="text-sm text-text-secondary hover:text-error-text transition-colors flex items-center space-x-1"
-        >
+      >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
-            />
+          />
         </svg>
         <span>Reportar review</span>
       </button>

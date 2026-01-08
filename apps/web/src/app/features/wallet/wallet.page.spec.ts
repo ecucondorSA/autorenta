@@ -592,5 +592,4 @@ describe('WalletPage', () => {
       expect(walletServiceMock.refreshPendingDepositsCount).toHaveBeenCalled();
     });
   });
-
 });

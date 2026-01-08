@@ -14,7 +14,7 @@ export const GuestGuard: CanActivateFn = async () => {
 
   // Ensure session is loaded
   await auth.ensureSession();
-  
+
   const isAuthenticated = auth.isAuthenticated();
   logger.debug(`Triggered. Is Authenticated: ${isAuthenticated}`, 'GuestGuard');
 

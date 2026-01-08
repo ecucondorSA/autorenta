@@ -6,7 +6,7 @@ describe('VerificationNotificationsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [VerificationNotificationsService]
+      providers: [VerificationNotificationsService],
     });
     service = TestBed.inject(VerificationNotificationsService);
   });
@@ -18,5 +18,4 @@ describe('VerificationNotificationsService', () => {
   it('should have initialize method', () => {
     expect(typeof service.initialize).toBe('function');
   });
-
 });

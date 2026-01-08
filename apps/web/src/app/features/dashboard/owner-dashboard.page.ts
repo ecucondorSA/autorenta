@@ -1,6 +1,13 @@
 import { CommonModule } from '@angular/common';
-import {Component, computed, inject, OnDestroy, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';

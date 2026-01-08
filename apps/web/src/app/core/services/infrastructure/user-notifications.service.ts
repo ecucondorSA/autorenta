@@ -142,13 +142,11 @@ export class NotificationsService implements OnDestroy {
     } = await this.supabase.auth.getUser();
     if (!user) return;
 
-    const { error } = await this.supabase
-      .from('notification_settings')
-      .upsert({
-        user_id: user.id,
-        preferences,
-        updated_at: new Date().toISOString(),
-      });
+    const { error } = await this.supabase.from('notification_settings').upsert({
+      user_id: user.id,
+      preferences,
+      updated_at: new Date().toISOString(),
+    });
 
     if (error) {
       this.logger.error('Failed to save notification settings', 'NotificationsService', error);
@@ -223,7 +221,10 @@ export class NotificationsService implements OnDestroy {
             filter: `user_id=eq.${user.id}`,
           },
           (payload: RealtimePostgresInsertPayload<NotificationRow>) => {
-            this.logger.debug('[NotificationsService] New notification received via Realtime:', payload);
+            this.logger.debug(
+              '[NotificationsService] New notification received via Realtime:',
+              payload,
+            );
             this.addNotification(payload.new);
             this.onChangeCallbacks.forEach((cb) => cb());
           },

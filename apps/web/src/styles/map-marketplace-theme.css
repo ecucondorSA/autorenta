@@ -12,10 +12,7 @@
 
 /* Neutral map controls - Using tokens */
 .mapboxgl-ctrl-group {
-  background-color: var(
-    --map-control-bg,
-    var(--surface-primary-alpha-95, #E3E3E3)
-  );
+  background-color: var(--map-control-bg, var(--surface-primary-alpha-95, #e3e3e3));
   border: 1px solid var(--map-control-border, var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1)));
   box-shadow: var(
     --map-control-shadow,
@@ -91,7 +88,7 @@
   box-shadow:
     0 0 0 4px var(--map-marker-available-shadow, rgba(44, 122, 123, 0.3)),
     0 4px 12px var(--map-marker-available-shadow, rgba(44, 122, 123, 0.6)),
-    0 8px 24px var(--shadow-dark-alpha-30, #7B7B7B);
+    0 8px 24px var(--shadow-dark-alpha-30, #7b7b7b);
   animation: pulse-marker 2s ease-in-out infinite;
 }
 
@@ -142,7 +139,7 @@
   @apply absolute w-5 h-5 rounded-full;
   background: var(--cta-default); /* Replaced hardcoded hex with solid color token */
   border: 3px solid white;
-  box-shadow: 0 2px 8px #7B7B7B;
+  box-shadow: 0 2px 8px #7b7b7b;
   z-index: 2;
 }
 

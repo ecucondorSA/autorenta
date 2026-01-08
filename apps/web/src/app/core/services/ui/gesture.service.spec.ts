@@ -6,7 +6,7 @@ describe('GestureService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [GestureService]
+      providers: [GestureService],
     });
     service = TestBed.inject(GestureService);
   });
@@ -22,5 +22,4 @@ describe('GestureService', () => {
   it('should have reset method', () => {
     expect(typeof service.reset).toBe('function');
   });
-
 });

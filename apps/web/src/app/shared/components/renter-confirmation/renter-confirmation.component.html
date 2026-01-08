@@ -22,7 +22,7 @@
           class="text-sm"
           [class.text-success-strong]="ownerConfirmed"
           [class.text-slate-500]="!ownerConfirmed"
-          >
+        >
           Propietario
           <span class="font-medium">{{ ownerConfirmed ? 'confirmó' : 'pendiente' }}</span>
         </span>
@@ -37,7 +37,7 @@
           class="text-sm"
           [class.text-success-strong]="renterConfirmed"
           [class.text-slate-500]="!renterConfirmed"
-          >
+        >
           Locatario
           <span class="font-medium">{{ renterConfirmed ? 'confirmó' : 'pendiente' }}</span>
         </span>
@@ -53,20 +53,18 @@
 
   <!-- Información de daños (si aplica) -->
   @if (ownerConfirmed && damageAmount && damageAmount > 0) {
-    <div
-      class="mb-6 p-4 bg-warning-bg border border-warning-border rounded-lg"
-      >
+    <div class="mb-6 p-4 bg-warning-bg border border-warning-border rounded-lg">
       <div class="flex items-start gap-3">
         <svg
           class="w-5 h-5 text-warning-text mt-0.5 flex-shrink-0"
           fill="currentColor"
           viewBox="0 0 20 20"
-          >
+        >
           <path
             fill-rule="evenodd"
             d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
             clip-rule="evenodd"
-            />
+          />
         </svg>
         <div class="flex-1">
           <h4 class="text-sm font-semibold text-warning-strong mb-2 font-satoshi">
@@ -81,23 +79,15 @@
               <span>Depósito original:</span>
               <span>${{ depositAmount }} USD</span>
             </div>
-            <div
-              class="flex justify-between items-center pt-2 border-t border-warning-border"
-              >
+            <div class="flex justify-between items-center pt-2 border-t border-warning-border">
               <span class="font-semibold">Devolveremos a tu wallet:</span>
-              <span class="font-bold text-lg text-warning-strong">
-                ${{ amountToReturn }} USD
-              </span>
+              <span class="font-bold text-lg text-warning-strong"> ${{ amountToReturn }} USD </span>
             </div>
           </div>
           <!-- Descripción de daños -->
           @if (damageDescription) {
-            <div
-              class="mt-3 pt-3 border-t border-warning-border"
-              >
-              <p class="text-xs font-semibold text-warning-strong mb-1">
-                Descripción de daños:
-              </p>
+            <div class="mt-3 pt-3 border-t border-warning-border">
+              <p class="text-xs font-semibold text-warning-strong mb-1">Descripción de daños:</p>
               <p class="text-xs text-warning-strong whitespace-pre-wrap">
                 {{ damageDescription }}
               </p>
@@ -110,20 +100,18 @@
 
   <!-- Resumen de devolución (sin daños) -->
   @if (!renterConfirmed && (!damageAmount || damageAmount === 0)) {
-    <div
-      class="mb-6 p-4 bg-success-light/10 border border-success-light/40 rounded-lg"
-      >
+    <div class="mb-6 p-4 bg-success-light/10 border border-success-light/40 rounded-lg">
       <div class="flex items-start gap-3">
         <svg
           class="w-5 h-5 text-success-700 mt-0.5 flex-shrink-0"
           fill="currentColor"
           viewBox="0 0 20 20"
-          >
+        >
           <path
             fill-rule="evenodd"
             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
             clip-rule="evenodd"
-            />
+          />
         </svg>
         <div class="flex-1">
           <h4 class="text-sm font-semibold text-success-700 mb-2 font-satoshi">
@@ -140,18 +128,14 @@
 
   <!-- Información importante -->
   @if (!renterConfirmed) {
-    <div
-      class="mb-6 p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg"
-      >
-      <h4
-        class="text-sm font-semibold text-cta-default mb-2 flex items-center gap-2"
-        >
+    <div class="mb-6 p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg">
+      <h4 class="text-sm font-semibold text-cta-default mb-2 flex items-center gap-2">
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path
             fill-rule="evenodd"
             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
             clip-rule="evenodd"
-            />
+          />
         </svg>
         Importante
       </h4>
@@ -165,156 +149,138 @@
           <span
             >Tu garantía{{ damageAmount ? ' (menos daños)' : '' }} se devolverá a tu
             <strong>wallet</strong>, no a tu cuenta bancaria</span
+          >
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-cta-default">•</span>
+          <span>Podrás usar los fondos del wallet para futuras reservas</span>
+        </li>
+        @if (ownerConfirmed) {
+          <li class="flex items-start gap-2">
+            <span class="text-success-700">✓</span>
+            <span
+              >El propietario ya confirmó. Al confirmar tú, los fondos se liberarán
+              <strong>inmediatamente</strong></span
             >
           </li>
-          <li class="flex items-start gap-2">
-            <span class="text-cta-default">•</span>
-            <span>Podrás usar los fondos del wallet para futuras reservas</span>
-          </li>
-          @if (ownerConfirmed) {
-            <li class="flex items-start gap-2">
-              <span class="text-success-700">✓</span>
-              <span
-                >El propietario ya confirmó. Al confirmar tú, los fondos se liberarán
-                <strong>inmediatamente</strong></span
-                >
-              </li>
+        }
+      </ul>
+    </div>
+  }
+
+  <!-- Botón de confirmación -->
+  @if (!renterConfirmed) {
+    <div class="flex justify-end">
+      <button
+        type="button"
+        (click)="confirm()"
+        class="px-6 py-3 text-sm font-medium text-text-primary bg-success-light hover:bg-success-light rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"
+        [disabled]="loading().confirmingRenter"
+      >
+        @if (loading().confirmingRenter) {
+          <svg
+            class="animate-spin h-4 w-4 text-text-inverse"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+        }
+        @if (!loading().confirmingRenter) {
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            ></path>
+          </svg>
+        }
+        <span>{{
+          loading().confirmingRenter ? 'Confirmando...' : 'Confirmar y liberar pago'
+        }}</span>
+      </button>
+    </div>
+  }
+
+  <!-- Estado ya confirmado -->
+  @if (renterConfirmed) {
+    <div class="text-center py-8">
+      <div
+        class="inline-flex items-center justify-center w-16 h-16 bg-success-light/20 rounded-full mb-4"
+      >
+        <svg class="w-8 h-8 text-success-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          ></path>
+        </svg>
+      </div>
+      <h4 class="text-lg font-semibold text-slate-900 mb-2 font-satoshi">
+        Ya confirmaste liberar el pago
+      </h4>
+      <p class="text-sm text-slate-600 mb-4">
+        @if (!ownerConfirmed) {
+          <span> Esperando confirmación del propietario para liberar fondos. </span>
+        }
+        @if (ownerConfirmed) {
+          <span> El propietario también confirmó. Los fondos se liberaron automáticamente. </span>
+        }
+      </p>
+      <!-- Resumen de fondos devueltos -->
+      @if (ownerConfirmed) {
+        <div class="mt-4 p-4 bg-success-light/10 rounded-lg inline-block">
+          <p class="text-xs text-success-700 mb-2">Fondos devueltos a tu wallet:</p>
+          <p class="h4 text-success-700 font-mono">${{ amountToReturn }} USD</p>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Mensaje de resultado -->
+  @if (message()) {
+    <div
+      class="mt-4 p-4 rounded-lg"
+      [class.bg-success-light/10]="confirmationResult()?.success"
+      [class.bg-error-bg]="!confirmationResult()?.success"
+    >
+      <p
+        class="text-sm"
+        [class.text-success-strong]="confirmationResult()?.success"
+        [class.text-error-strong]="!confirmationResult()?.success"
+      >
+        {{ message() }}
+      </p>
+      <!-- Detalles de liberación de fondos -->
+      @if (confirmationResult()?.funds_released) {
+        <div class="mt-3 pt-3 border-t border-success-light/40">
+          <p class="text-xs font-semibold text-success-700 mb-2">
+            Fondos liberados automáticamente:
+          </p>
+          <ul class="text-xs text-success-700 space-y-1">
+            <li>✓ Reserva completada exitosamente</li>
+            <li>✓ Garantía de ${{ amountToReturn }} USD devuelta a tu wallet</li>
+            @if (damageAmount && damageAmount > 0) {
+              <li>ℹ Cargo por daños: ${{ damageAmount }} USD</li>
             }
           </ul>
         </div>
       }
-
-      <!-- Botón de confirmación -->
-      @if (!renterConfirmed) {
-        <div class="flex justify-end">
-          <button
-            type="button"
-            (click)="confirm()"
-            class="px-6 py-3 text-sm font-medium text-text-primary bg-success-light hover:bg-success-light rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"
-            [disabled]="loading().confirmingRenter"
-            >
-            @if (loading().confirmingRenter) {
-              <svg
-                class="animate-spin h-4 w-4 text-text-inverse"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-            }
-            @if (!loading().confirmingRenter) {
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                ></path>
-              </svg>
-            }
-            <span>{{ loading().confirmingRenter ? 'Confirmando...' : 'Confirmar y liberar pago' }}</span>
-          </button>
-        </div>
-      }
-
-      <!-- Estado ya confirmado -->
-      @if (renterConfirmed) {
-        <div class="text-center py-8">
-          <div
-            class="inline-flex items-center justify-center w-16 h-16 bg-success-light/20 rounded-full mb-4"
-            >
-            <svg
-              class="w-8 h-8 text-success-700"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              ></path>
-            </svg>
-          </div>
-          <h4 class="text-lg font-semibold text-slate-900 mb-2 font-satoshi">
-            Ya confirmaste liberar el pago
-          </h4>
-          <p class="text-sm text-slate-600 mb-4">
-            @if (!ownerConfirmed) {
-              <span>
-                Esperando confirmación del propietario para liberar fondos.
-              </span>
-            }
-            @if (ownerConfirmed) {
-              <span>
-                El propietario también confirmó. Los fondos se liberaron automáticamente.
-              </span>
-            }
-          </p>
-          <!-- Resumen de fondos devueltos -->
-          @if (ownerConfirmed) {
-            <div
-              class="mt-4 p-4 bg-success-light/10 rounded-lg inline-block"
-              >
-              <p class="text-xs text-success-700 mb-2">
-                Fondos devueltos a tu wallet:
-              </p>
-              <p class="h4 text-success-700 font-mono">${{ amountToReturn }} USD</p>
-            </div>
-          }
-        </div>
-      }
-
-      <!-- Mensaje de resultado -->
-      @if (message()) {
-        <div
-          class="mt-4 p-4 rounded-lg"
-          [class.bg-success-light/10]="confirmationResult()?.success"
-                    [class.bg-error-bg]="!confirmationResult()?.success"
-                    >
-          <p
-            class="text-sm"
-            [class.text-success-strong]="confirmationResult()?.success"
-                        [class.text-error-strong]="!confirmationResult()?.success"
-                        >
-            {{ message() }}
-          </p>
-          <!-- Detalles de liberación de fondos -->
-          @if (confirmationResult()?.funds_released) {
-            <div
-              class="mt-3 pt-3 border-t border-success-light/40"
-              >
-              <p class="text-xs font-semibold text-success-700 mb-2">
-                Fondos liberados automáticamente:
-              </p>
-              <ul class="text-xs text-success-700 space-y-1">
-                <li>✓ Reserva completada exitosamente</li>
-                <li>✓ Garantía de ${{ amountToReturn }} USD devuelta a tu wallet</li>
-                @if (damageAmount && damageAmount > 0) {
-                  <li>ℹ Cargo por daños: ${{ damageAmount }} USD</li>
-                }
-              </ul>
-            </div>
-          }
-        </div>
-      }
     </div>
+  }
+</div>

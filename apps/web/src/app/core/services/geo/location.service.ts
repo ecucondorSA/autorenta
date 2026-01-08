@@ -143,7 +143,10 @@ export class LocationService {
 
     // 1) Best-effort high-accuracy (keeps the best reading within a time window)
     try {
-      const best = await this.getBestPositionViaWatch({ desiredAccuracyMeters: 25, maxWaitMs: 15000 });
+      const best = await this.getBestPositionViaWatch({
+        desiredAccuracyMeters: 25,
+        maxWaitMs: 15000,
+      });
       return {
         lat: best.coords.latitude,
         lng: best.coords.longitude,
@@ -156,7 +159,11 @@ export class LocationService {
 
     // 2) Fallback: single low-accuracy reading (often succeeds when GPS is flaky)
     try {
-      const pos = await this.getSinglePosition({ enableHighAccuracy: false, timeout: 12000, maximumAge: 300000 });
+      const pos = await this.getSinglePosition({
+        enableHighAccuracy: false,
+        timeout: 12000,
+        maximumAge: 300000,
+      });
       return {
         lat: pos.coords.latitude,
         lng: pos.coords.longitude,

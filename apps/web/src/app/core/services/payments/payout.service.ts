@@ -152,7 +152,10 @@ export class PayoutService {
     ).pipe(
       map(({ data }) => (data as BankAccount) || null),
       catchError((error) => {
-        this.logger.warn('PayoutService.getDefaultBankAccount - no default account', { userId, error });
+        this.logger.warn('PayoutService.getDefaultBankAccount - no default account', {
+          userId,
+          error,
+        });
         return of(null); // No default account found
       }),
     );
@@ -221,7 +224,10 @@ export class PayoutService {
       ),
       map(({ data }) => data as BankAccount),
       catchError((error) => {
-        this.logger.error('PayoutService.setDefaultBankAccount failed', error, { userId, accountId });
+        this.logger.error('PayoutService.setDefaultBankAccount failed', error, {
+          userId,
+          accountId,
+        });
         return throwError(() => new Error('Failed to set default bank account'));
       }),
     );

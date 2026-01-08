@@ -190,7 +190,9 @@ export function validateBookingPayload(payload: unknown): ValidationResult<Booki
   }
 
   if (!isValidBookingStatus(data['status'])) {
-    errors.push(`Invalid status: "${data['status']}". Valid values: ${VALID_BOOKING_STATUSES.join(', ')}`);
+    errors.push(
+      `Invalid status: "${data['status']}". Valid values: ${VALID_BOOKING_STATUSES.join(', ')}`,
+    );
   }
 
   if (!isValidISODate(data['start_at'])) {

@@ -1,5 +1,12 @@
-import {Component, signal, inject, computed, ViewChild, ElementRef,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  signal,
+  inject,
+  computed,
+  ViewChild,
+  ElementRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { Router } from '@angular/router';
 import {

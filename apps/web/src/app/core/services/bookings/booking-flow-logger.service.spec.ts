@@ -6,7 +6,7 @@ describe('BookingFlowLoggerService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BookingFlowLoggerService]
+      providers: [BookingFlowLoggerService],
     });
     service = TestBed.inject(BookingFlowLoggerService);
   });
@@ -34,5 +34,4 @@ describe('BookingFlowLoggerService', () => {
   it('should have logPerformance method', () => {
     expect(typeof service.logPerformance).toBe('function');
   });
-
 });

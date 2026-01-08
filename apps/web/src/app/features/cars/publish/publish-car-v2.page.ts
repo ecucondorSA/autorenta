@@ -2,7 +2,12 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  Component, computed, inject, OnInit, signal, DestroyRef
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+  DestroyRef,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -278,15 +283,16 @@ export class PublishCarV2Page implements OnInit {
     this.publishForm = this.formService.initForm();
 
     // ✅ NEW: Listen to category_id changes to update selectedCategoryName
-    this.publishForm.get('category_id')?.valueChanges.pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(async (categoryId) => {
-      if (categoryId) {
-        await this.updateCategoryName(categoryId);
-      } else {
-        this.selectedCategoryName.set('');
-      }
-    });
+    this.publishForm
+      .get('category_id')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(async (categoryId) => {
+        if (categoryId) {
+          await this.updateCategoryName(categoryId);
+        } else {
+          this.selectedCategoryName.set('');
+        }
+      });
 
     // Check if editing
     this['carId'] = this.route.snapshot.paramMap.get('id');
@@ -326,7 +332,8 @@ export class PublishCarV2Page implements OnInit {
       this.logger.debug('[PublishCarV2] Loaded categories:', categories.length);
       const category = categories.find((c) => c['id'] === categoryId);
       if (category) {
-        const categoryName = (category as { name_es?: string; name: string }).name_es || category.name;
+        const categoryName =
+          (category as { name_es?: string; name: string }).name_es || category.name;
         this.logger.debug('[PublishCarV2] ✅ Category name updated:', categoryName);
         this.selectedCategoryName.set(categoryName);
       } else {
@@ -637,7 +644,12 @@ export class PublishCarV2Page implements OnInit {
     model: string,
     year: number,
   ): Promise<void> {
-    this.logger.debug('[PublishCarV2] Auto-categorizing vehicle:', { valueUsd, brand, model, year });
+    this.logger.debug('[PublishCarV2] Auto-categorizing vehicle:', {
+      valueUsd,
+      brand,
+      model,
+      year,
+    });
 
     // Validate inputs
     if (!valueUsd || valueUsd <= 0) {
@@ -720,7 +732,8 @@ export class PublishCarV2Page implements OnInit {
 
     const category = categories.find((c) => c.code === categoryCode);
     if (category) {
-      const categoryName = (category as { name_es?: string; name: string }).name_es || category.name;
+      const categoryName =
+        (category as { name_es?: string; name: string }).name_es || category.name;
       this.logger.debug(
         '[PublishCarV2] ✅ Category from value USD:',
         categoryName,
@@ -950,7 +963,9 @@ export class PublishCarV2Page implements OnInit {
       return;
     }
 
-    await this.photoService.generateAIPhotos(brand.name, model.name, year, { color: color || undefined });
+    await this.photoService.generateAIPhotos(brand.name, model.name, year, {
+      color: color || undefined,
+    });
   }
 
   /**
@@ -1149,7 +1164,7 @@ export class PublishCarV2Page implements OnInit {
         // ✅ FIXED: city/province are NOT NULL in DB, ensure valid defaults
         location_city: formData['location_city'] || 'Buenos Aires',
         location_state: formData['location_state'] || 'Buenos Aires',
-        location_country: formData['location_country'] || 'AR'
+        location_country: formData['location_country'] || 'AR',
       };
 
       // Get coordinates (manual or from address)
@@ -1221,7 +1236,7 @@ export class PublishCarV2Page implements OnInit {
 
       this.notificationManager.success(
         'Borrador guardado',
-        'Tu progreso ha sido guardado. Puedes continuar editando más tarde.'
+        'Tu progreso ha sido guardado. Puedes continuar editando más tarde.',
       );
     } catch (error) {
       this.handleSubmissionError(error);
@@ -1267,7 +1282,7 @@ export class PublishCarV2Page implements OnInit {
     // Check docs only if active
     if (carData['status'] === 'active' && !this.editMode()) {
       setTimeout(() => {
-        this.checkMissingDocuments(carId).catch(() => { });
+        this.checkMissingDocuments(carId).catch(() => {});
       }, 2000);
     }
 
@@ -1316,7 +1331,8 @@ export class PublishCarV2Page implements OnInit {
         const car = await this.carsService.getCarById(carId);
         if (!car) return;
 
-        const carName = car['title'] || `${car['brand'] || ''} ${car['model'] || ''}`.trim() || 'tu auto';
+        const carName =
+          car['title'] || `${car['brand'] || ''} ${car['model'] || ''}`.trim() || 'tu auto';
         const documentsUrl = `/cars/${carId}/documents`;
 
         // Notificar sobre cada documento faltante

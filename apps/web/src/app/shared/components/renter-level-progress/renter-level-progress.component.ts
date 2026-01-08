@@ -1,5 +1,11 @@
-import {Component, OnInit, inject, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { BonusMalusService } from '@core/services/payments/bonus-malus.service';
@@ -37,13 +43,13 @@ export class RenterLevelProgressComponent implements OnInit {
       return {
         label: '¡Nivel Máximo!',
         progress: 100,
-        requirements: []
+        requirements: [],
       };
     }
 
     const isStandard = tier === 'standard';
     const targetLabel = isStandard ? 'Trusted' : 'Elite';
-    
+
     // Requirements
     const reqs: LevelRequirement[] = [];
 
@@ -55,7 +61,7 @@ export class RenterLevelProgressComponent implements OnInit {
         current: bm.metrics.is_verified,
         target: true,
         met: bm.metrics.is_verified,
-        type: 'boolean'
+        type: 'boolean',
       });
       // 2. Rating > 4.0 (if has ratings)
       if (bm.metrics.average_rating > 0) {
@@ -64,7 +70,7 @@ export class RenterLevelProgressComponent implements OnInit {
           current: bm.metrics.average_rating,
           target: 4.0,
           met: bm.metrics.average_rating >= 4.0,
-          type: 'rating'
+          type: 'rating',
         });
       }
     } else {
@@ -75,7 +81,7 @@ export class RenterLevelProgressComponent implements OnInit {
         current: bm.metrics.average_rating,
         target: 4.8,
         met: bm.metrics.average_rating >= 4.8,
-        type: 'rating'
+        type: 'rating',
       });
       // 2. 20+ Rentals
       reqs.push({
@@ -83,7 +89,7 @@ export class RenterLevelProgressComponent implements OnInit {
         current: bm.metrics.completed_rentals,
         target: 20,
         met: bm.metrics.completed_rentals >= 20,
-        type: 'count'
+        type: 'count',
       });
       // 3. Low Cancellation (< 5%)
       reqs.push({
@@ -91,18 +97,18 @@ export class RenterLevelProgressComponent implements OnInit {
         current: bm.metrics.cancellation_rate * 100, // display as %
         target: 5, // < 5%
         met: bm.metrics.cancellation_rate <= 0.05,
-        type: 'count' // inverted logic handled in template
+        type: 'count', // inverted logic handled in template
       });
     }
 
     // Calculate progress based on met requirements count vs total
-    const metCount = reqs.filter(r => r.met).length;
+    const metCount = reqs.filter((r) => r.met).length;
     const progress = reqs.length > 0 ? (metCount / reqs.length) * 100 : 0;
 
     return {
       label: targetLabel,
       progress,
-      requirements: reqs
+      requirements: reqs,
     };
   });
 
@@ -115,7 +121,7 @@ export class RenterLevelProgressComponent implements OnInit {
     try {
       const bm = await this.bonusMalusService.getUserBonusMalus();
       this.bonusMalus.set(bm);
-      
+
       if (bm) {
         this.currentTier.set(await this.bonusMalusService.getUserTier());
       }
@@ -125,6 +131,6 @@ export class RenterLevelProgressComponent implements OnInit {
   }
 
   toggleDetails(): void {
-    this.showDetails.update(v => !v);
+    this.showDetails.update((v) => !v);
   }
 }

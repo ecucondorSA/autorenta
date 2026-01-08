@@ -1,8 +1,7 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
-import {Component, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -33,9 +32,7 @@ import { environment } from '@environment';
   selector: 'app-auth-callback-page',
   imports: [NgOptimizedImage],
   template: `
-    <div
-      class="min-h-screen bg-surface-base flex items-center justify-center py-12 px-4"
-      >
+    <div class="min-h-screen bg-surface-base flex items-center justify-center py-12 px-4">
       <div class="w-full max-w-md text-center">
         <!-- Loading State -->
         @if (!error()) {
@@ -48,7 +45,7 @@ import { environment } from '@environment';
                 height="500"
                 priority
                 class="h-full w-auto object-contain scale-[2]"
-                />
+              />
             </div>
             <div class="flex justify-center">
               <svg
@@ -56,7 +53,7 @@ import { environment } from '@environment';
                 fill="none"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
-                >
+              >
                 <circle
                   class="opacity-25"
                   cx="12"
@@ -73,22 +70,18 @@ import { environment } from '@environment';
               </svg>
             </div>
             <div class="space-y-2">
-              <h1 class="text-2xl font-bold text-text-primary">
-                Completando inicio de sesión...
-              </h1>
+              <h1 class="text-2xl font-bold text-text-primary">Completando inicio de sesión...</h1>
               <p class="text-text-secondary">
                 Por favor esperá mientras procesamos tu autenticación
               </p>
             </div>
           </div>
         }
-    
+
         <!-- Error State -->
         @if (error()) {
           <div class="space-y-6">
-            <div
-              class="bg-error-bg border-2 border-error-border rounded-lg p-6"
-              >
+            <div class="bg-error-bg border-2 border-error-border rounded-lg p-6">
               <h2 class="text-xl font-bold text-error-strong mb-2">Error de autenticación</h2>
               <p class="text-error-text mb-4">
                 {{ error() }}
@@ -96,7 +89,7 @@ import { environment } from '@environment';
               <button
                 (click)="redirectToLogin()"
                 class="rounded-lg bg-cta-default text-cta-text hover:opacity-90 transition-all shadow-md"
-                >
+              >
                 Volver al inicio de sesión
               </button>
             </div>
@@ -104,7 +97,7 @@ import { environment } from '@environment';
         }
       </div>
     </div>
-    `,
+  `,
 })
 export class AuthCallbackPage implements OnInit {
   private readonly logger = inject(LoggerService);

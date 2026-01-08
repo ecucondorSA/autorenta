@@ -60,8 +60,12 @@
                     @for (row of franchiseTable()!.rows; track row) {
                       <tr class="border-b">
                         <td class="py-2 px-3 text-sm">{{ row.label }}</td>
-                        <td class="py-2 px-3 text-sm text-right font-semibold">{{ row.amountUsd }}</td>
-                        <td class="py-2 px-3 text-sm text-right font-semibold">{{ row.amountArs }}</td>
+                        <td class="py-2 px-3 text-sm text-right font-semibold">
+                          {{ row.amountUsd }}
+                        </td>
+                        <td class="py-2 px-3 text-sm text-right font-semibold">
+                          {{ row.amountArs }}
+                        </td>
                       </tr>
                     }
                   </tbody>
@@ -78,11 +82,11 @@
               <span class="text-sm font-medium">Tipo de Garantía</span>
               <ion-badge
                 [color]="riskCalculation()!.guaranteeType === 'hold' ? 'primary' : 'warning'"
-                >
+              >
                 {{
-                riskCalculation()!.guaranteeType === 'hold'
-                ? 'Preautorización (Hold)'
-                : 'Crédito de Seguridad'
+                  riskCalculation()!.guaranteeType === 'hold'
+                    ? 'Preautorización (Hold)'
+                    : 'Crédito de Seguridad'
                 }}
               </ion-badge>
             </div>
@@ -101,9 +105,7 @@
               ></ion-icon>
             </div>
             @if (riskCalculation()!.driverClass !== undefined) {
-              <div
-                class="flex items-center justify-between p-3 bg-surface-base rounded"
-                >
+              <div class="flex items-center justify-between p-3 bg-surface-base rounded">
                 <span class="text-sm font-medium">Clase del Conductor</span>
                 <ion-badge [color]="getClassColor(riskCalculation()!.driverClass!)">
                   Clase {{ riskCalculation()!.driverClass }}
@@ -111,24 +113,22 @@
               </div>
             }
             @if (riskCalculation()!.guaranteeMultiplier !== undefined) {
-              <div
-                class="flex items-center justify-between p-3 bg-surface-base rounded"
-                >
+              <div class="flex items-center justify-between p-3 bg-surface-base rounded">
                 <span class="text-sm font-medium">Multiplicador de Garantía</span>
                 <span class="text-sm font-semibold"
                   >{{ riskCalculation()!.guaranteeMultiplier!.toFixed(2) }}x</span
-                  >
-                </div>
-              }
-              <div class="p-3 bg-cta-default/10 rounded">
-                <p class="text-xs text-cta-default">
-                  <strong>Tasa de cambio:</strong> {{ riskCalculation()!.fxRate.toFixed(2) }} ARS/USD
-                  ({{ riskCalculation()!.fxSnapshotDate | date: 'short' }})
-                </p>
+                >
               </div>
+            }
+            <div class="p-3 bg-cta-default/10 rounded">
+              <p class="text-xs text-cta-default">
+                <strong>Tasa de cambio:</strong> {{ riskCalculation()!.fxRate.toFixed(2) }} ARS/USD
+                ({{ riskCalculation()!.fxSnapshotDate | date: 'short' }})
+              </p>
             </div>
           </div>
-        </ion-card-content>
-      </ion-card>
-    </div>
-  }
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+}

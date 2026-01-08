@@ -6,7 +6,7 @@ describe('MetaService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MetaService]
+      providers: [MetaService],
     });
     service = TestBed.inject(MetaService);
   });
@@ -50,5 +50,4 @@ describe('MetaService', () => {
   it('should have resetMeta method', () => {
     expect(typeof service.resetMeta).toBe('function');
   });
-
 });

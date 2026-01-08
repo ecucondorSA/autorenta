@@ -6,7 +6,7 @@ describe('FgoPolicyEngineService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [FgoPolicyEngineService]
+      providers: [FgoPolicyEngineService],
     });
     service = TestBed.inject(FgoPolicyEngineService);
   });
@@ -26,5 +26,4 @@ describe('FgoPolicyEngineService', () => {
   it('should have validatePayout method', () => {
     expect(typeof service.validatePayout).toBe('function');
   });
-
 });

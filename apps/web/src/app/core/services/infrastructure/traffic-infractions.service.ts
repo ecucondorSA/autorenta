@@ -36,7 +36,10 @@ export class TrafficInfractionsService {
       console.error('Error creating traffic infraction:', error);
       throw new Error('No se pudo reportar la multa de tránsito.');
     }
-    this.toastService.success('Multa reportada', 'La multa de tránsito ha sido reportada con éxito.');
+    this.toastService.success(
+      'Multa reportada',
+      'La multa de tránsito ha sido reportada con éxito.',
+    );
     return newInfraction as TrafficInfraction;
   }
 

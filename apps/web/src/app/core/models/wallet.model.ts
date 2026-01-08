@@ -10,7 +10,7 @@
 export type {
   WalletBalanceDB,
   WalletLedgerDB,
-  WalletTransactionDB
+  WalletTransactionDB,
 } from '@core/types/supabase-types';
 
 /**

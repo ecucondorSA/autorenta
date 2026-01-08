@@ -1,6 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Component, computed, inject, input,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, computed, inject, input, ChangeDetectionStrategy } from '@angular/core';
 
 import { AuthService } from '@core/services/auth/auth.service';
 import type { AiBookingContext, Booking } from '../../../core/models';

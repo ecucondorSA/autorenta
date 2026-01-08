@@ -6,7 +6,7 @@ describe('ExchangeRateService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ExchangeRateService]
+      providers: [ExchangeRateService],
     });
     service = TestBed.inject(ExchangeRateService);
   });
@@ -54,5 +54,4 @@ describe('ExchangeRateService', () => {
   it('should have isCacheValid method', () => {
     expect(typeof service.isCacheValid).toBe('function');
   });
-
 });

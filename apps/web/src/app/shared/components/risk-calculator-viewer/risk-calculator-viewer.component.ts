@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
-import {Component, computed, CUSTOM_ELEMENTS_SCHEMA, inject, input,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  computed,
+  CUSTOM_ELEMENTS_SCHEMA,
+  inject,
+  input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   RiskCalculation,
   RiskCalculatorService,

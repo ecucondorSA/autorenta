@@ -89,7 +89,7 @@
 }
 
 .titlebar-search-input::placeholder {
-  color: #BCBCBC;
+  color: #bcbcbc;
 }
 
 .titlebar-search-input:hover {
@@ -100,7 +100,7 @@
 .titlebar-search-input:focus {
   outline: none;
   background: rgba(255, 255, 255, 0.25);
-  border-color: #7B7B7B;
+  border-color: #7b7b7b;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 

@@ -51,12 +51,26 @@ export class ReviewsService {
       // Get valid ratings based on review type
       let ratings: (number | null | undefined)[];
       if (r.review_type === 'owner_to_renter') {
-        ratings = [r.rating_communication, r.rating_punctuality, r.rating_care, r.rating_rules, r.rating_recommend];
+        ratings = [
+          r.rating_communication,
+          r.rating_punctuality,
+          r.rating_care,
+          r.rating_rules,
+          r.rating_recommend,
+        ];
       } else {
-        ratings = [r.rating_cleanliness, r.rating_communication, r.rating_accuracy, r.rating_location, r.rating_checkin, r.rating_value];
+        ratings = [
+          r.rating_cleanliness,
+          r.rating_communication,
+          r.rating_accuracy,
+          r.rating_location,
+          r.rating_checkin,
+          r.rating_value,
+        ];
       }
       const validRatings = ratings.filter((val): val is number => val != null && val > 0);
-      const avg = validRatings.length > 0 ? validRatings.reduce((a, b) => a + b, 0) / validRatings.length : 0;
+      const avg =
+        validRatings.length > 0 ? validRatings.reduce((a, b) => a + b, 0) / validRatings.length : 0;
       return sum + avg;
     }, 0);
     return Number((total / reviews.length).toFixed(1));
@@ -415,7 +429,7 @@ export class ReviewsService {
             r.rating_location +
             r.rating_checkin +
             r.rating_value) /
-          6,
+            6,
         );
         distribution[avg as keyof typeof distribution]++;
       });

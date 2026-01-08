@@ -1,6 +1,13 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import {Component, computed, inject, OnInit, signal,
-  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+  ChangeDetectionStrategy,
+  DestroyRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import type { DashboardStats } from '@core/models/dashboard.model';
@@ -106,10 +113,25 @@ export class EarningsPage implements OnInit {
   });
 
   // Chart data for CSS bar charts
-  readonly months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+  readonly months = [
+    'Ene',
+    'Feb',
+    'Mar',
+    'Abr',
+    'May',
+    'Jun',
+    'Jul',
+    'Ago',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dic',
+  ];
 
   // CSS chart data signals
-  readonly depreciationChartData = signal<{ month: string; value: number; percentage: number }[]>([]);
+  readonly depreciationChartData = signal<{ month: string; value: number; percentage: number }[]>(
+    [],
+  );
   readonly incomeChartData = signal<{ month: string; value: number; percentage: number }[]>([]);
 
   async ngOnInit(): Promise<void> {
@@ -120,19 +142,20 @@ export class EarningsPage implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.dashboardService.getDashboardStats(false).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (stats) => {
-        this.stats.set(stats);
-        this.updateCharts();
-        this.loading.set(false);
-      },
-      error: (_err) => {
-        this.error.set('No pudimos cargar las ganancias. Intentá de nuevo.');
-        this.loading.set(false);
-      },
-    });
+    this.dashboardService
+      .getDashboardStats(false)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (stats) => {
+          this.stats.set(stats);
+          this.updateCharts();
+          this.loading.set(false);
+        },
+        error: (_err) => {
+          this.error.set('No pudimos cargar las ganancias. Intentá de nuevo.');
+          this.loading.set(false);
+        },
+      });
   }
 
   async loadCars(): Promise<void> {

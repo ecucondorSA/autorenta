@@ -1,6 +1,13 @@
-
-import {Component, EventEmitter, inject, Input, OnInit, Output, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { BankAccount, PayoutService } from '@core/services/payments/payout.service';
@@ -25,10 +32,7 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
       @if (accounts().length > 0) {
         <div class="accounts-list">
           @for (account of accounts(); track account) {
-            <div
-              class="account-card"
-              [class.default]="account.isDefault"
-              >
+            <div class="account-card" [class.default]="account.isDefault">
               <div class="account-info">
                 <div class="account-header">
                   <h4 class="account-holder">{{ account.accountHolder }}</h4>
@@ -53,7 +57,7 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                     [class.verified]="account.status === 'verified'"
                     [class.unverified]="account.status === 'unverified'"
                     [class.invalid]="account.status === 'invalid'"
-                    >
+                  >
                     {{ getStatusText(account.status) }}
                   </span>
                 </div>
@@ -65,7 +69,7 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                     class="btn-text"
                     (click)="setAsDefault(account.id)"
                     [disabled]="loading()"
-                    >
+                  >
                     Usar como predeterminada
                   </button>
                 }
@@ -74,7 +78,7 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
           }
         </div>
       }
-    
+
       <!-- Empty State -->
       @if (accounts().length === 0) {
         <div class="empty-state">
@@ -84,13 +88,13 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
               stroke-linejoin="round"
               stroke-width="2"
               d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-              />
+            />
           </svg>
           <p class="empty-text">No tenés cuentas bancarias configuradas</p>
           <p class="empty-hint">Agregá una cuenta para poder retirar fondos</p>
         </div>
       }
-    
+
       <!-- Add Account Button -->
       @if (!showAddForm()) {
         <button type="button" class="btn-secondary" (click)="toggleAddForm()">
@@ -100,12 +104,12 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
               stroke-linejoin="round"
               stroke-width="2"
               d="M12 4v16m8-8H4"
-              />
+            />
           </svg>
           Agregar Cuenta Bancaria
         </button>
       }
-    
+
       <!-- Add Account Form -->
       @if (showAddForm()) {
         <div class="add-form">
@@ -118,13 +122,9 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                 formControlName="accountHolder"
                 placeholder="Juan Pérez"
                 class="form-input"
-                />
+              />
               @if (form.controls.accountHolder.invalid && form.controls.accountHolder.touched) {
-                <span
-                  class="error-text"
-                  >
-                  El nombre del titular es requerido
-                </span>
+                <span class="error-text"> El nombre del titular es requerido </span>
               }
             </div>
             <div class="form-group">
@@ -135,14 +135,10 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                 placeholder="0000003100010000000000"
                 maxlength="22"
                 class="form-input"
-                />
+              />
               <span class="hint-text">22 dígitos sin espacios</span>
               @if (form.controls.accountNumber.invalid && form.controls.accountNumber.touched) {
-                <span
-                  class="error-text"
-                  >
-                  CBU/CVU debe tener 22 dígitos
-                </span>
+                <span class="error-text"> CBU/CVU debe tener 22 dígitos </span>
               }
             </div>
             <div class="form-group">
@@ -159,7 +155,12 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
               </label>
             </div>
             <div class="form-actions">
-              <button type="button" class="btn-text" (click)="toggleAddForm()" [disabled]="loading()">
+              <button
+                type="button"
+                class="btn-text"
+                (click)="toggleAddForm()"
+                [disabled]="loading()"
+              >
                 Cancelar
               </button>
               <button type="submit" class="btn-primary" [disabled]="form.invalid || loading()">
@@ -169,14 +170,14 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
           </form>
         </div>
       }
-    
+
       <!-- Error Message -->
       @if (error()) {
         <div class="alert alert-error">
           {{ error() }}
         </div>
       }
-    
+
       <!-- Success Message -->
       @if (success()) {
         <div class="alert alert-success">
@@ -184,7 +185,7 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
         </div>
       }
     </div>
-    `,
+  `,
   styles: [
     `
       .bank-accounts {

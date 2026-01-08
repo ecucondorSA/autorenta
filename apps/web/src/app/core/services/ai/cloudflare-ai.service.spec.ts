@@ -6,7 +6,7 @@ describe('CloudflareAiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CloudflareAiService]
+      providers: [CloudflareAiService],
     });
     service = TestBed.inject(CloudflareAiService);
   });
@@ -26,5 +26,4 @@ describe('CloudflareAiService', () => {
   it('should have healthCheck method', () => {
     expect(typeof service.healthCheck).toBe('function');
   });
-
 });

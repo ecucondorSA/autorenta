@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter, inject,
-  Input, Output
+  EventEmitter,
+  inject,
+  Input,
+  Output,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';

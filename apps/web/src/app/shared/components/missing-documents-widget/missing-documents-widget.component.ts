@@ -1,5 +1,11 @@
-import {Component, OnInit, signal, computed, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  signal,
+  computed,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -16,17 +22,13 @@ import { getDocumentEmoji, getDocumentLabel } from '@core/config/document-types.
       @if (hasVerificationStatus()) {
         @if (missingDocsCount() > 0) {
           <!-- Missing Documents Alert -->
-          <div
-            class="bg-warning-bg border border-warning-border rounded-lg p-4 mb-6"
-          >
+          <div class="bg-warning-bg border border-warning-border rounded-lg p-4 mb-6">
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 text-xl">
                 <span>⚠️</span>
               </div>
               <div class="flex-1">
-                <h3 class="font-semibold text-warning-strong mb-2">
-                  Documentos Faltantes
-                </h3>
+                <h3 class="font-semibold text-warning-strong mb-2">Documentos Faltantes</h3>
                 <p class="text-sm text-warning-strong mb-3">
                   Necesitas completar tu verificación para publicar autos y recibir reservas.
                 </p>
@@ -62,26 +64,18 @@ import { getDocumentEmoji, getDocumentLabel } from '@core/config/document-types.
           </div>
         } @else if (currentStatus()?.status === 'VERIFICADO') {
           <!-- Verified Badge -->
-          <div
-            class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mb-6"
-          >
+          <div class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mb-6">
             <div class="flex items-center gap-3">
               <span class="text-xl">✅</span>
               <div>
-                <p class="font-semibold text-success-700">
-                  Verificación Completada
-                </p>
-                <p class="text-sm text-success-700">
-                  Tu cuenta está completamente verificada
-                </p>
+                <p class="font-semibold text-success-700">Verificación Completada</p>
+                <p class="text-sm text-success-700">Tu cuenta está completamente verificada</p>
               </div>
             </div>
           </div>
         } @else if (currentStatus()?.status === 'RECHAZADO') {
           <!-- Rejected Status -->
-          <div
-            class="bg-error-bg border border-error-border rounded-lg p-4 mb-6"
-          >
+          <div class="bg-error-bg border border-error-border rounded-lg p-4 mb-6">
             <div class="flex items-start gap-4">
               <span class="text-xl flex-shrink-0">❌</span>
               <div class="flex-1">

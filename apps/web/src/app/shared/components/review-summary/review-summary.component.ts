@@ -1,6 +1,4 @@
-
-import {Component, Input, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, Input, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import type { ReviewSummary } from '../../../core/models';
 

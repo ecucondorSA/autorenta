@@ -6,7 +6,7 @@ describe('NavigationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [NavigationService]
+      providers: [NavigationService],
     });
     service = TestBed.inject(NavigationService);
   });
@@ -38,5 +38,4 @@ describe('NavigationService', () => {
   it('should have getRecommendedApp method', () => {
     expect(typeof service.getRecommendedApp).toBe('function');
   });
-
 });

@@ -6,7 +6,7 @@ describe('RentarfastAgentService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RentarfastAgentService]
+      providers: [RentarfastAgentService],
     });
     service = TestBed.inject(RentarfastAgentService);
   });
@@ -54,5 +54,4 @@ describe('RentarfastAgentService', () => {
   it('should have clearHistory method', () => {
     expect(typeof service.clearHistory).toBe('function');
   });
-
 });

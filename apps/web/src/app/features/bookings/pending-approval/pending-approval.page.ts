@@ -1,6 +1,14 @@
 import { CommonModule } from '@angular/common';
-import {Component, OnDestroy, OnInit, computed, inject, signal, ViewChild,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { IonicModule, ViewWillEnter } from '@ionic/angular';
@@ -34,7 +42,17 @@ interface PendingApproval {
   selector: 'app-pending-approval',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, RouterModule, TranslateModule, IonicModule, RenterProfileBadgeComponent, SkeletonLoaderComponent, RenterAnalysisPanelComponent, IconComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    TranslateModule,
+    IonicModule,
+    RenterProfileBadgeComponent,
+    SkeletonLoaderComponent,
+    RenterAnalysisPanelComponent,
+    IconComponent,
+  ],
   templateUrl: './pending-approval.page.html',
   styleUrl: './pending-approval.page.scss',
 })

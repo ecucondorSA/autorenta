@@ -8,7 +8,7 @@ export class BiometricAuthService {
       const result = await NativeBiometric.isAvailable();
       return {
         available: result.isAvailable,
-        type: result.biometryType // fingerprint, face, iris
+        type: result.biometryType, // fingerprint, face, iris
       };
     } catch {
       return { available: false, type: BiometryType.NONE };
@@ -21,7 +21,7 @@ export class BiometricAuthService {
         reason,
         title: 'AutoRenta',
         subtitle: 'Confirma tu identidad',
-        description: reason
+        description: reason,
       });
       return true;
     } catch (error) {
@@ -33,7 +33,7 @@ export class BiometricAuthService {
   async authenticatePayment(amount: number, currency: string): Promise<boolean> {
     const formatted = new Intl.NumberFormat('es-AR', {
       style: 'currency',
-      currency
+      currency,
     }).format(amount);
 
     return this.authenticate(`Confirmar pago de ${formatted}`);

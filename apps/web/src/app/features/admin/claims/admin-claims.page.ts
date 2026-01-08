@@ -1,5 +1,11 @@
-import {Component, OnInit, inject, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -29,26 +35,22 @@ import {
         <button
           routerLink="/admin"
           class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-strong transition-base mb-4"
-          >
+        >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
+            />
           </svg>
           Volver al Dashboard
         </button>
-    
+
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-text-primary">
-              Gestión de Siniestros
-            </h1>
-            <p class="text-text-secondary mt-1">
-              Administra y resuelve los siniestros reportados
-            </p>
+            <h1 class="text-3xl font-bold text-text-primary">Gestión de Siniestros</h1>
+            <p class="text-text-secondary mt-1">Administra y resuelve los siniestros reportados</p>
           </div>
           <div class="text-right">
             <p class="text-sm text-text-secondary">Total de siniestros</p>
@@ -58,27 +60,19 @@ import {
           </div>
         </div>
       </div>
-    
+
       <!-- Filters -->
-      <div
-        class="bg-surface-raised rounded-lg border border-border-default p-4 mb-6 shadow-sm"
-        >
-        <h3 class="text-sm font-semibold text-text-primary mb-3">
-          Filtros
-        </h3>
+      <div class="bg-surface-raised rounded-lg border border-border-default p-4 mb-6 shadow-sm">
+        <h3 class="text-sm font-semibold text-text-primary mb-3">Filtros</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- Status Filter -->
           <div>
-            <label
-              class="block text-sm font-medium text-text-primary mb-1"
-              >
-              Estado
-            </label>
+            <label class="block text-sm font-medium text-text-primary mb-1"> Estado </label>
             <select
               [(ngModel)]="filterStatus"
               (ngModelChange)="onFilterChange()"
               class="w-full rounded-lg border border-border-muted bg-surface-raised px-3 py-2 text-sm"
-              >
+            >
               <option value="">Todos los estados</option>
               @for (status of claimStatuses; track status) {
                 <option [value]="status.value">
@@ -87,19 +81,15 @@ import {
               }
             </select>
           </div>
-    
+
           <!-- Type Filter -->
           <div>
-            <label
-              class="block text-sm font-medium text-text-primary mb-1"
-              >
-              Tipo
-            </label>
+            <label class="block text-sm font-medium text-text-primary mb-1"> Tipo </label>
             <select
               [(ngModel)]="filterType"
               (ngModelChange)="onFilterChange()"
               class="w-full rounded-lg border border-border-muted bg-surface-raised px-3 py-2 text-sm"
-              >
+            >
               <option value="">Todos los tipos</option>
               @for (type of claimTypes; track type) {
                 <option [value]="type.value">
@@ -108,65 +98,55 @@ import {
               }
             </select>
           </div>
-    
+
           <!-- Search -->
           <div>
-            <label
-              class="block text-sm font-medium text-text-primary mb-1"
-              >
-              Buscar
-            </label>
+            <label class="block text-sm font-medium text-text-primary mb-1"> Buscar </label>
             <input
               type="text"
               [(ngModel)]="searchQuery"
               (ngModelChange)="onFilterChange()"
               placeholder="ID o descripción..."
               class="w-full rounded-lg border border-border-muted bg-surface-raised px-3 py-2 text-sm"
-              />
+            />
           </div>
         </div>
       </div>
-    
+
       <!-- Loading State -->
       @if (loading()) {
         <div class="text-center py-12">
           <p class="text-text-secondary">Cargando siniestros...</p>
         </div>
       }
-    
+
       <!-- Error State -->
       @if (error() && !loading()) {
-        <div
-          class="bg-error-bg border border-error-border rounded-xl p-6"
-          >
+        <div class="bg-error-bg border border-error-border rounded-xl p-6">
           <p class="text-error-strong">{{ error() }}</p>
         </div>
       }
-    
+
       <!-- Claims List -->
       @if (!loading() && !error()) {
         <div class="space-y-4">
           <!-- Empty State -->
           @if (filteredClaims().length === 0) {
-            <div
-              class="bg-surface-base rounded-xl p-12 text-center"
-              >
+            <div class="bg-surface-base rounded-xl p-12 text-center">
               <svg
                 class="w-16 h-16 mx-auto text-text-muted mb-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                >
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
+                />
               </svg>
-              <p class="text-text-secondary text-lg font-medium">
-                No se encontraron siniestros
-              </p>
+              <p class="text-text-secondary text-lg font-medium">No se encontraron siniestros</p>
               <p class="text-text-secondary text-sm mt-1">
                 Intenta cambiar los filtros o buscar otro término
               </p>
@@ -177,7 +157,7 @@ import {
             <div
               class="bg-surface-raised rounded-lg border border-border-default p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
               [routerLink]="['/admin/claims', claim.id]"
-              >
+            >
               <div class="flex items-start justify-between gap-4">
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-3 mb-2">
@@ -185,13 +165,13 @@ import {
                     <span
                       class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full"
                       [ngClass]="getStatusBadgeClass(claim.status)"
-                      >
+                    >
                       {{ CLAIM_STATUS_LABELS[claim.status] }}
                     </span>
                     <!-- Type Badge -->
                     <span
                       class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-surface-raised text-text-primary"
-                      >
+                    >
                       {{ CLAIM_TYPE_LABELS[claim.claim_type] }}
                     </span>
                     <!-- ID -->
@@ -199,22 +179,16 @@ import {
                       #{{ claim.id | slice: 0 : 8 }}
                     </span>
                   </div>
-                  <h3
-                    class="text-sm font-semibold text-text-primary mb-1 line-clamp-2"
-                    >
+                  <h3 class="text-sm font-semibold text-text-primary mb-1 line-clamp-2">
                     {{ claim.description }}
                   </h3>
-                  <div
-                    class="flex items-center gap-4 text-xs text-text-secondary mt-2"
-                    >
+                  <div class="flex items-center gap-4 text-xs text-text-secondary mt-2">
                     <span>📅 {{ formatDate(claim.created_at) }}</span>
                     @if (claim.location) {
                       <span>📍 {{ claim.location }}</span>
                     }
                     @if (claim.photos && claim.photos.length > 0) {
-                      <span>
-                        📸 {{ claim.photos.length }} fotos
-                      </span>
+                      <span> 📸 {{ claim.photos.length }} fotos </span>
                     }
                   </div>
                 </div>
@@ -224,13 +198,13 @@ import {
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    >
+                  >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M9 5l7 7-7 7"
-                      />
+                    />
                   </svg>
                 </div>
               </div>
@@ -239,7 +213,7 @@ import {
         </div>
       }
     </div>
-    `,
+  `,
   styles: [
     `
       :host {

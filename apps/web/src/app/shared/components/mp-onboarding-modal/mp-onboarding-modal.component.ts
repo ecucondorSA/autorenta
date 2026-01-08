@@ -1,6 +1,4 @@
-
-import {Component, inject, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { AuthService } from '@core/services/auth/auth.service';
 import {
@@ -42,7 +40,7 @@ import {
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content class="ion-padding">
       <!-- Loading State -->
       @if (loading()) {
@@ -51,7 +49,7 @@ import {
           <p>Preparando conexión...</p>
         </div>
       }
-    
+
       <!-- Main Content -->
       @if (!loading()) {
         <div class="onboarding-content">
@@ -66,27 +64,32 @@ import {
                     height="80"
                     rx="16"
                     fill="var(--brand-mercadopago-default, #00B4E5)"
-                    />
+                  />
                   <path d="M20 20h40v40H20z" fill="white" />
                   <path
                     d="M32 32h16v4H32v-4zm0 8h16v4H32v-4zm0 8h12v4H32v-4z"
                     fill="var(--brand-mercadopago-default, #00B4E5)"
-                    />
+                  />
                 </svg>
                 <span class="logo-label">Mercado Pago</span>
               </div>
               <!-- PayPal -->
               <div class="payment-logo-item">
                 <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                  <rect width="60" height="60" rx="12" fill="var(--brand-paypal-default, #0070BA)" />
+                  <rect
+                    width="60"
+                    height="60"
+                    rx="12"
+                    fill="var(--brand-paypal-default, #0070BA)"
+                  />
                   <path
                     d="M8.5 15.5h12.5c6.5 0 11.5 5 11.5 11.5 0 6.5-5 11.5-11.5 11.5H14v7.5H8.5V15.5zm6.5 15h6c3.5 0 6-2.5 6-6s-2.5-6-6-6h-6v12z"
                     fill="white"
-                    />
+                  />
                   <path
                     d="M35.5 15.5h12.5c6.5 0 11.5 5 11.5 11.5 0 6.5-5 11.5-11.5 11.5H41v7.5h-5.5V15.5zm6.5 15h6c3.5 0 6-2.5 6-6s-2.5-6-6-6h-6v12z"
                     fill="white"
-                    />
+                  />
                 </svg>
                 <span class="logo-label">PayPal</span>
               </div>
@@ -147,7 +150,7 @@ import {
               class="primary-cta"
               (click)="startOnboarding()"
               [disabled]="processing()"
-              >
+            >
               @if (!processing()) {
                 <ion-icon slot="start" name="logo-mercadopago"></ion-icon>
               }
@@ -169,7 +172,7 @@ import {
               (click)="refreshStatus()"
               [disabled]="processing() || loading()"
               class="secondary-btn"
-              >
+            >
               <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
               Ya conecté mi cuenta
             </ion-button>
@@ -183,7 +186,7 @@ import {
           </div>
         </div>
       }
-    
+
       <!-- Error State -->
       @if (error()) {
         <ion-card color="danger" class="error-card">
@@ -200,7 +203,7 @@ import {
         </ion-card>
       }
     </ion-content>
-    `,
+  `,
   styles: [
     `
       .loading-container {

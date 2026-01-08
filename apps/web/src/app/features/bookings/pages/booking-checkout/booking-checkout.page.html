@@ -1,7 +1,9 @@
 <div class="checkout-container">
   <!-- Header -->
   <div class="checkout-header">
-    <h1 class="text-2xl font-bold text-text-primary mb-2 font-satoshi font-luxury">Completar Pago</h1>
+    <h1 class="text-2xl font-bold text-text-primary mb-2 font-satoshi font-luxury">
+      Completar Pago
+    </h1>
     <p class="text-sm text-text-secondary">
       Selecciona tu método de pago preferido y completa la reserva
     </p>
@@ -24,7 +26,7 @@
           stroke-linejoin="round"
           stroke-width="2"
           d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
+        />
       </svg>
       <h3 class="error-title font-bold font-satoshi">Error</h3>
       <p class="error-message">{{ error() }}</p>
@@ -47,374 +49,375 @@
                   <span class="detail-label">Vehículo</span>
                   <span class="detail-value"
                     >{{ booking().car?.brand }} {{ booking().car?.model }}</span
-                    >
-                  </div>
-                  <!-- Date Range -->
-                  <div class="detail-row">
-                    <span class="detail-label">Desde</span>
-                    <span class="detail-value">{{ booking().start_date | date: 'dd/MM/yyyy' }}</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="detail-label">Hasta</span>
-                    <span class="detail-value">{{ booking().end_date | date: 'dd/MM/yyyy' }}</span>
-                  </div>
-                  <!-- Total Original (en moneda del booking) -->
-                  <div class="detail-row total-row">
-                    <span class="detail-label font-semibold">Total Original</span>
-                    <span class="detail-value font-bold text-lg">
-                      {{ formatCurrency(booking().total_price, booking().currency || 'ARS') }}
-                    </span>
-                  </div>
+                  >
                 </div>
-              }
-            </div>
-            <!-- Driver Profile Info -->
-            @if (driverProfileService.profile() && !driverProfileService.loading()) {
-              <div
-                class="driver-profile-card"
-                >
-                <h2 class="card-title font-bold font-satoshi">Tu Perfil de Conductor</h2>
-                <div class="driver-profile-content">
-                  <!-- Class Badge -->
-                  <div class="class-badge-section">
-                    <div class="badge-container" [style.background-color]="classBadge().color">
-                      <span class="badge-icon">{{ classBadge().icon }}</span>
-                      <span class="badge-label">Clase {{ driverClass() }}</span>
-                    </div>
-                    <a [routerLink]="['/profile/driver-profile']" class="view-profile-link">
-                      Ver perfil completo →
-                    </a>
+                <!-- Date Range -->
+                <div class="detail-row">
+                  <span class="detail-label">Desde</span>
+                  <span class="detail-value">{{ booking().start_date | date: 'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Hasta</span>
+                  <span class="detail-value">{{ booking().end_date | date: 'dd/MM/yyyy' }}</span>
+                </div>
+                <!-- Total Original (en moneda del booking) -->
+                <div class="detail-row total-row">
+                  <span class="detail-label font-semibold">Total Original</span>
+                  <span class="detail-value font-bold text-lg">
+                    {{ formatCurrency(booking().total_price, booking().currency || 'ARS') }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+          <!-- Driver Profile Info -->
+          @if (driverProfileService.profile() && !driverProfileService.loading()) {
+            <div class="driver-profile-card">
+              <h2 class="card-title font-bold font-satoshi">Tu Perfil de Conductor</h2>
+              <div class="driver-profile-content">
+                <!-- Class Badge -->
+                <div class="class-badge-section">
+                  <div class="badge-container" [style.background-color]="classBadge().color">
+                    <span class="badge-icon">{{ classBadge().icon }}</span>
+                    <span class="badge-label">Clase {{ driverClass() }}</span>
                   </div>
-                  <!-- Applied Multipliers -->
-                  <div class="multipliers-section">
-                    <h3 class="multipliers-title font-bold font-satoshi">Multiplicadores Aplicados</h3>
-                    <!-- Fee Multiplier -->
-                    <div class="multiplier-row">
-                      <div class="multiplier-info">
-                        <svg
-                          class="multiplier-icon"
-                          [class.discount]="hasDiscount()"
-                          [class.surcharge]="hasSurcharge()"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          >
-                          @if (hasDiscount()) {
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                              />
-                          }
-                          @if (!hasDiscount()) {
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
-                              />
-                          }
-                        </svg>
-                        <div>
-                          <span class="multiplier-label">Tarifa de Servicio</span>
-                          <p class="multiplier-description">
-                            {{
-                            hasDiscount()
-                            ? 'Descuento por buena conducción'
-                            : hasSurcharge()
-                            ? 'Recargo por clase de riesgo'
-                            : 'Sin ajuste'
-                            }}
-                          </p>
-                        </div>
-                      </div>
-                      <span
-                        class="multiplier-value"
+                  <a [routerLink]="['/profile/driver-profile']" class="view-profile-link">
+                    Ver perfil completo →
+                  </a>
+                </div>
+                <!-- Applied Multipliers -->
+                <div class="multipliers-section">
+                  <h3 class="multipliers-title font-bold font-satoshi">
+                    Multiplicadores Aplicados
+                  </h3>
+                  <!-- Fee Multiplier -->
+                  <div class="multiplier-row">
+                    <div class="multiplier-info">
+                      <svg
+                        class="multiplier-icon"
                         [class.discount]="hasDiscount()"
                         [class.surcharge]="hasSurcharge()"
-                        >
-                        {{ feeDiscountPct() > 0 ? '-' : feeDiscountPct() < 0 ? '+' : ''
-                        }}{{ Math.abs(feeDiscountPct()) }}%
-                      </span>
-                    </div>
-                    <!-- Guarantee Multiplier -->
-                    <div class="multiplier-row">
-                      <div class="multiplier-info">
-                        <svg
-                          class="multiplier-icon"
-                          [class.discount]="hasDiscount()"
-                          [class.surcharge]="hasSurcharge()"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          >
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        @if (hasDiscount()) {
                           <path
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
-                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                            />
-                        </svg>
-                        <div>
-                          <span class="multiplier-label">Garantía</span>
-                          <p class="multiplier-description">
-                            {{
+                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                          />
+                        }
+                        @if (!hasDiscount()) {
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
+                          />
+                        }
+                      </svg>
+                      <div>
+                        <span class="multiplier-label">Tarifa de Servicio</span>
+                        <p class="multiplier-description">
+                          {{
                             hasDiscount()
-                            ? 'Descuento en garantía bloqueada'
-                            : hasSurcharge()
-                            ? 'Recargo en garantía bloqueada'
-                            : 'Sin ajuste'
-                            }}
-                          </p>
-                        </div>
+                              ? 'Descuento por buena conducción'
+                              : hasSurcharge()
+                                ? 'Recargo por clase de riesgo'
+                                : 'Sin ajuste'
+                          }}
+                        </p>
                       </div>
-                      <span
-                        class="multiplier-value"
+                    </div>
+                    <span
+                      class="multiplier-value"
+                      [class.discount]="hasDiscount()"
+                      [class.surcharge]="hasSurcharge()"
+                    >
+                      {{ feeDiscountPct() > 0 ? '-' : feeDiscountPct() < 0 ? '+' : ''
+                      }}{{ Math.abs(feeDiscountPct()) }}%
+                    </span>
+                  </div>
+                  <!-- Guarantee Multiplier -->
+                  <div class="multiplier-row">
+                    <div class="multiplier-info">
+                      <svg
+                        class="multiplier-icon"
                         [class.discount]="hasDiscount()"
                         [class.surcharge]="hasSurcharge()"
-                        >
-                        {{ guaranteeDiscountPct() > 0 ? '-' : guaranteeDiscountPct() < 0 ? '+' : ''
-                        }}{{ Math.abs(guaranteeDiscountPct()) }}%
-                      </span>
-                    </div>
-                  </div>
-                  <!-- Explanation -->
-                  <div class="explanation-section">
-                    <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                         />
-                    </svg>
-                    <p class="explanation-text">
-                      @if (hasDiscount()) {
-                        <span>
-                          ¡Felicitaciones! Por tu excelente historial de conducción estás recibiendo
-                          descuentos en esta reserva.
-                        </span>
-                      }
-                      @if (hasSurcharge()) {
-                        <span>
-                          Debido a tu clase de riesgo actual, se aplican recargos en esta reserva. Mejora tu
-                          clase conduciendo sin siniestros.
-                        </span>
-                      }
-                      @if (!hasDiscount() && !hasSurcharge()) {
-                        <span>
-                          Actualmente tienes la clase base (5). Conduce sin siniestros para obtener
-                          descuentos.
-                        </span>
-                      }
-                    </p>
+                      </svg>
+                      <div>
+                        <span class="multiplier-label">Garantía</span>
+                        <p class="multiplier-description">
+                          {{
+                            hasDiscount()
+                              ? 'Descuento en garantía bloqueada'
+                              : hasSurcharge()
+                                ? 'Recargo en garantía bloqueada'
+                                : 'Sin ajuste'
+                          }}
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      class="multiplier-value"
+                      [class.discount]="hasDiscount()"
+                      [class.surcharge]="hasSurcharge()"
+                    >
+                      {{ guaranteeDiscountPct() > 0 ? '-' : guaranteeDiscountPct() < 0 ? '+' : ''
+                      }}{{ Math.abs(guaranteeDiscountPct()) }}%
+                    </span>
                   </div>
                 </div>
-              </div>
-            }
-            <!-- Bonus Protector Offer (Optional) -->
-            @if (driverProfileService.profile() && hasSurcharge()) {
-              <div class="protector-offer-card">
-                <div class="protector-header" (click)="toggleProtectorOffer()">
-                  <div class="protector-title">
-                    <svg class="shield-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                        />
-                    </svg>
-                    <div>
-                      <h3>¿Quieres proteger tu clase?</h3>
-                      <p class="protector-subtitle">Evita que tu clase suba tras un siniestro</p>
-                    </div>
-                  </div>
-                  <svg
-                    class="chevron-icon"
-                    [class.expanded]="showProtectorOffer()"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    >
+                <!-- Explanation -->
+                <div class="explanation-section">
+                  <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M19 9l-7 7-7-7"
-                      />
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
-                </div>
-                <div class="protector-content" [class.show]="showProtectorOffer()">
-                  <p class="protector-description">
-                    El <strong>Bonus Protector</strong> es un seguro opcional que protege tu clase de
-                    conductor de subir en caso de siniestros. Ideal si tienes recargos actualmente.
+                  <p class="explanation-text">
+                    @if (hasDiscount()) {
+                      <span>
+                        ¡Felicitaciones! Por tu excelente historial de conducción estás recibiendo
+                        descuentos en esta reserva.
+                      </span>
+                    }
+                    @if (hasSurcharge()) {
+                      <span>
+                        Debido a tu clase de riesgo actual, se aplican recargos en esta reserva.
+                        Mejora tu clase conduciendo sin siniestros.
+                      </span>
+                    }
+                    @if (!hasDiscount() && !hasSurcharge()) {
+                      <span>
+                        Actualmente tienes la clase base (5). Conduce sin siniestros para obtener
+                        descuentos.
+                      </span>
+                    }
                   </p>
-                  <div class="quick-options">
-                    <div class="quick-option">
-                      <div class="option-info">
-                        <span class="option-level">⭐ Básico</span>
-                        <span class="option-coverage">1 siniestro leve</span>
-                      </div>
-                      <div class="option-action">
-                        <span class="option-price">$15 USD</span>
-                      </div>
-                    </div>
-                    <div class="quick-option highlighted">
-                      <div class="quick-option-badge">Recomendado</div>
-                      <div class="option-info">
-                        <span class="option-level">⭐⭐ Estándar</span>
-                        <span class="option-coverage">2 leves o 1 moderado</span>
-                      </div>
-                      <div class="option-action">
-                        <span class="option-price">$25 USD</span>
-                      </div>
-                    </div>
-                    <div class="quick-option">
-                      <div class="option-info">
-                        <span class="option-level font-luxury">⭐⭐⭐ Premium</span>
-                        <span class="option-coverage">3 leves, 2 moderados o 1 grave</span>
-                      </div>
-                      <div class="option-action">
-                        <span class="option-price">$40 USD</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="protector-cta">
-                    <a [routerLink]="['/protections']" class="view-details-btn">
-                      Ver detalles completos y comprar →
-                    </a>
-                    <button class="skip-protector-btn" (click)="toggleProtectorOffer()">
-                      Continuar sin protector
-                    </button>
-                  </div>
                 </div>
               </div>
-            }
-          </div>
-          <div class="checkout-side space-y-6 lg:w-5/12">
-            <!-- Payment Provider Selector -->
-            <div class="payment-section">
-              <app-payment-provider-selector
-                [amount]="booking()?.total_price || 0"
-                [currency]="booking()?.currency || 'ARS'"
-                [defaultProvider]="selectedProvider()"
-                (providerChange)="handleProviderChange($event)"
+            </div>
+          }
+          <!-- Bonus Protector Offer (Optional) -->
+          @if (driverProfileService.profile() && hasSurcharge()) {
+            <div class="protector-offer-card">
+              <div class="protector-header" (click)="toggleProtectorOffer()">
+                <div class="protector-title">
+                  <svg class="shield-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
+                  </svg>
+                  <div>
+                    <h3>¿Quieres proteger tu clase?</h3>
+                    <p class="protector-subtitle">Evita que tu clase suba tras un siniestro</p>
+                  </div>
+                </div>
+                <svg
+                  class="chevron-icon"
+                  [class.expanded]="showProtectorOffer()"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-              </app-payment-provider-selector>
-            </div>
-            <!-- Payment Amount Display -->
-            @if (amountInProviderCurrency() > 0) {
-              <div class="amount-display-card">
-                <div class="amount-display">
-                  <p class="amount-label">
-                    Total a pagar con {{ selectedProvider() === 'paypal' ? 'PayPal' : 'MercadoPago' }}:
-                  </p>
-                  <p class="amount-value">
-                    {{ formatCurrency(amountInProviderCurrency(), providerCurrency()) }}
-                  </p>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+              <div class="protector-content" [class.show]="showProtectorOffer()">
+                <p class="protector-description">
+                  El <strong>Bonus Protector</strong> es un seguro opcional que protege tu clase de
+                  conductor de subir en caso de siniestros. Ideal si tienes recargos actualmente.
+                </p>
+                <div class="quick-options">
+                  <div class="quick-option">
+                    <div class="option-info">
+                      <span class="option-level">⭐ Básico</span>
+                      <span class="option-coverage">1 siniestro leve</span>
+                    </div>
+                    <div class="option-action">
+                      <span class="option-price">$15 USD</span>
+                    </div>
+                  </div>
+                  <div class="quick-option highlighted">
+                    <div class="quick-option-badge">Recomendado</div>
+                    <div class="option-info">
+                      <span class="option-level">⭐⭐ Estándar</span>
+                      <span class="option-coverage">2 leves o 1 moderado</span>
+                    </div>
+                    <div class="option-action">
+                      <span class="option-price">$25 USD</span>
+                    </div>
+                  </div>
+                  <div class="quick-option">
+                    <div class="option-info">
+                      <span class="option-level font-luxury">⭐⭐⭐ Premium</span>
+                      <span class="option-coverage">3 leves, 2 moderados o 1 grave</span>
+                    </div>
+                    <div class="option-action">
+                      <span class="option-price">$40 USD</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="protector-cta">
+                  <a [routerLink]="['/protections']" class="view-details-btn">
+                    Ver detalles completos y comprar →
+                  </a>
+                  <button class="skip-protector-btn" (click)="toggleProtectorOffer()">
+                    Continuar sin protector
+                  </button>
                 </div>
               </div>
-            }
-            <!-- Payment Buttons Section -->
-            <div class="payment-buttons-section">
-              <!-- MercadoPago Payment Button -->
-              @if (isMercadoPago()) {
-                <div class="payment-button-container">
-                  <button
-                    class="btn-primary mercadopago-btn"
-                    [disabled]="!isPaymentButtonEnabled() || isProcessingPayment()"
-                    (click)="handleMercadoPagoPayment()"
-                    >
-                    @if (isProcessingPayment()) {
-                      <svg class="spinner-small" viewBox="0 0 24 24">
-                        <circle
-                          class="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          stroke-width="4"
-                          fill="none"
-                          />
-                        <path
-                          class="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          />
-                      </svg>
-                    }
-                    @if (!isProcessingPayment()) {
-                      <span>Pagar con MercadoPago</span>
-                    }
-                    @if (isProcessingPayment()) {
-                      <span>Procesando...</span>
-                    }
-                  </button>
-                  <p class="payment-info">
-                    <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                    </svg>
-                    Serás redirigido a MercadoPago para completar el pago de forma segura
-                  </p>
-                </div>
-              }
-              <!-- PayPal Payment Button -->
-              @if (isPayPal()) {
-                <div class="payment-button-container">
-                  <app-paypal-button
-                    [bookingId]="bookingId()"
-                    [useSplitPayment]="true"
-                    [disabled]="!isPaymentButtonEnabled()"
-                    (paymentApproved)="handlePayPalApprove($event)"
-                    (paymentError)="handlePayPalError($event)"
-                    >
-                  </app-paypal-button>
-                  <p class="payment-info">
-                    <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                        />
-                    </svg>
-                    Pago seguro procesado por PayPal
-                  </p>
-                </div>
-              }
             </div>
-            <div class="security-notice">
-              <svg class="lock-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2h-1V9a5 5 0 00-10 0v2H6a2 2 0 00-2 2v6a2 2 0 002 2z"
-                  />
-              </svg>
-              <div class="security-text">
-                <p class="font-medium font-luxury">Pago 100% Seguro</p>
-                <p class="text-xs text-text-secondary">
-                  Tus datos están protegidos mediante encriptación SSL
+          }
+        </div>
+        <div class="checkout-side space-y-6 lg:w-5/12">
+          <!-- Payment Provider Selector -->
+          <div class="payment-section">
+            <app-payment-provider-selector
+              [amount]="booking()?.total_price || 0"
+              [currency]="booking()?.currency || 'ARS'"
+              [defaultProvider]="selectedProvider()"
+              (providerChange)="handleProviderChange($event)"
+            >
+            </app-payment-provider-selector>
+          </div>
+          <!-- Payment Amount Display -->
+          @if (amountInProviderCurrency() > 0) {
+            <div class="amount-display-card">
+              <div class="amount-display">
+                <p class="amount-label">
+                  Total a pagar con
+                  {{ selectedProvider() === 'paypal' ? 'PayPal' : 'MercadoPago' }}:
+                </p>
+                <p class="amount-value">
+                  {{ formatCurrency(amountInProviderCurrency(), providerCurrency()) }}
                 </p>
               </div>
             </div>
+          }
+          <!-- Payment Buttons Section -->
+          <div class="payment-buttons-section">
+            <!-- MercadoPago Payment Button -->
+            @if (isMercadoPago()) {
+              <div class="payment-button-container">
+                <button
+                  class="btn-primary mercadopago-btn"
+                  [disabled]="!isPaymentButtonEnabled() || isProcessingPayment()"
+                  (click)="handleMercadoPagoPayment()"
+                >
+                  @if (isProcessingPayment()) {
+                    <svg class="spinner-small" viewBox="0 0 24 24">
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        fill="none"
+                      />
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                  }
+                  @if (!isProcessingPayment()) {
+                    <span>Pagar con MercadoPago</span>
+                  }
+                  @if (isProcessingPayment()) {
+                    <span>Procesando...</span>
+                  }
+                </button>
+                <p class="payment-info">
+                  <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  Serás redirigido a MercadoPago para completar el pago de forma segura
+                </p>
+              </div>
+            }
+            <!-- PayPal Payment Button -->
+            @if (isPayPal()) {
+              <div class="payment-button-container">
+                <app-paypal-button
+                  [bookingId]="bookingId()"
+                  [useSplitPayment]="true"
+                  [disabled]="!isPaymentButtonEnabled()"
+                  (paymentApproved)="handlePayPalApprove($event)"
+                  (paymentError)="handlePayPalError($event)"
+                >
+                </app-paypal-button>
+                <p class="payment-info">
+                  <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
+                  </svg>
+                  Pago seguro procesado por PayPal
+                </p>
+              </div>
+            }
+          </div>
+          <div class="security-notice">
+            <svg class="lock-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2h-1V9a5 5 0 00-10 0v2H6a2 2 0 00-2 2v6a2 2 0 002 2z"
+              />
+            </svg>
+            <div class="security-text">
+              <p class="font-medium font-luxury">Pago 100% Seguro</p>
+              <p class="text-xs text-text-secondary">
+                Tus datos están protegidos mediante encriptación SSL
+              </p>
+            </div>
           </div>
         </div>
-        <!-- Cancel Button -->
-        <div class="cancel-section">
-          <button class="btn-secondary" [disabled]="isProcessingPayment()" (click)="cancelPayment()">
-            Cancelar y Volver
-          </button>
-        </div>
-        <!-- Security Notice -->
       </div>
-    }
-  </div>
+      <!-- Cancel Button -->
+      <div class="cancel-section">
+        <button class="btn-secondary" [disabled]="isProcessingPayment()" (click)="cancelPayment()">
+          Cancelar y Volver
+        </button>
+      </div>
+      <!-- Security Notice -->
+    </div>
+  }
+</div>

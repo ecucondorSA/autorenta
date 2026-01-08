@@ -169,12 +169,7 @@ export class BookingInsuranceHelperService {
     }
 
     // All retries failed - CRITICAL ERROR
-    await this.handleInsuranceActivationFailure(
-      bookingId,
-      addonIds,
-      lastError,
-      updateBookingFn,
-    );
+    await this.handleInsuranceActivationFailure(bookingId, addonIds, lastError, updateBookingFn);
   }
 
   // ============================================================================
@@ -303,9 +298,9 @@ export class BookingInsuranceHelperService {
     // 5. THROW ERROR - BLOCK booking creation
     throw new Error(
       `CRITICAL: Cannot create booking without insurance coverage. ` +
-      `Insurance activation failed after ${this.MAX_RETRIES} attempts. ` +
-      `Error: ${errorMessage}. ` +
-      `Booking has been auto-cancelled for legal compliance.`,
+        `Insurance activation failed after ${this.MAX_RETRIES} attempts. ` +
+        `Error: ${errorMessage}. ` +
+        `Booking has been auto-cancelled for legal compliance.`,
     );
   }
 

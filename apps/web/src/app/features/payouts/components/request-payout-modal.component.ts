@@ -1,6 +1,14 @@
 import { CommonModule } from '@angular/common';
-import {Component, computed, EventEmitter, inject, Input, Output, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { BankAccount, PayoutService } from '@core/services/payments/payout.service';
@@ -27,11 +35,11 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M6 18L18 6M6 6l12 12"
-                />
+              />
             </svg>
           </button>
         </div>
-    
+
         <div class="modal-body">
           <!-- Bank Account Info -->
           @if (defaultBankAccount) {
@@ -44,15 +52,15 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                 </div>
                 <div class="bank-type">
                   {{
-                  defaultBankAccount.accountType === 'checking'
-                  ? 'Cuenta Corriente'
-                  : 'Caja de Ahorro'
+                    defaultBankAccount.accountType === 'checking'
+                      ? 'Cuenta Corriente'
+                      : 'Caja de Ahorro'
                   }}
                 </div>
               </div>
             </div>
           }
-    
+
           <!-- Request Form -->
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="form-group">
@@ -67,35 +75,27 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                   step="100"
                   placeholder="1000"
                   class="form-input"
-                  />
+                />
               </div>
               <div class="form-hints">
                 <span class="hint-text">Disponible: {{ formattedMaxAmount() }}</span>
                 <span class="hint-text">Mínimo: ARS 1.000</span>
               </div>
               @if (form.controls.amount.invalid && form.controls.amount.touched) {
-                <div
-                  class="error-messages"
-                  >
+                <div class="error-messages">
                   @if (form.controls.amount.errors?.['required']) {
-                    <span class="error-text">
-                      El monto es requerido
-                    </span>
+                    <span class="error-text"> El monto es requerido </span>
                   }
                   @if (form.controls.amount.errors?.['min']) {
-                    <span class="error-text">
-                      El monto mínimo es ARS 1.000
-                    </span>
+                    <span class="error-text"> El monto mínimo es ARS 1.000 </span>
                   }
                   @if (form.controls.amount.errors?.['max']) {
-                    <span class="error-text">
-                      No tenés suficiente saldo disponible
-                    </span>
+                    <span class="error-text"> No tenés suficiente saldo disponible </span>
                   }
                 </div>
               }
             </div>
-    
+
             <!-- Quick Amount Buttons -->
             <div class="quick-amounts">
               @for (preset of quickAmounts(); track preset) {
@@ -104,12 +104,12 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                   class="quick-amount-btn"
                   (click)="setAmount(preset.value)"
                   [disabled]="preset.value > maxAmount"
-                  >
+                >
                   {{ preset.label }}
                 </button>
               }
             </div>
-    
+
             <!-- Preview -->
             @if (form.value.amount && form.value.amount >= 1000) {
               <div class="preview-card">
@@ -135,7 +135,7 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                 <p class="preview-hint">El depósito se procesará en 1-3 días hábiles</p>
               </div>
             }
-    
+
             <!-- Error Message -->
             @if (error()) {
               <div class="alert alert-error">
@@ -144,12 +144,12 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                     fill-rule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                     clip-rule="evenodd"
-                    />
+                  />
                 </svg>
                 {{ error() }}
               </div>
             }
-    
+
             <!-- Actions -->
             <div class="modal-actions">
               <button
@@ -157,7 +157,7 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                 class="btn-secondary"
                 (click)="onClose()"
                 [disabled]="submitting()"
-                >
+              >
                 Cancelar
               </button>
               <button type="submit" class="btn-primary" [disabled]="form.invalid || submitting()">
@@ -171,13 +171,13 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
         </div>
       </div>
     </div>
-    `,
+  `,
   styles: [
     `
       .modal-overlay {
         position: fixed;
         inset: 0;
-        background: #4E4E4E;
+        background: #4e4e4e;
         display: flex;
         align-items: center;
         justify-content: center;

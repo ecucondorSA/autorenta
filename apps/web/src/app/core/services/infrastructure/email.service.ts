@@ -1,5 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Injectable, inject} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 

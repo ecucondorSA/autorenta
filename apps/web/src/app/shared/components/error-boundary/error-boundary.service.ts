@@ -42,10 +42,9 @@ export class ErrorBoundaryService {
   captureError(error: unknown, context = 'Unknown'): void {
     const errorObj = error instanceof Error ? error : new Error(String(error));
 
-    this.logger.warn(
-      `ErrorBoundaryService captured error in ${context}`,
-      { error: errorObj.message },
-    );
+    this.logger.warn(`ErrorBoundaryService captured error in ${context}`, {
+      error: errorObj.message,
+    });
 
     this._errors$.next({
       error: errorObj,
@@ -73,10 +72,7 @@ export class ErrorBoundaryService {
   /**
    * Create a wrapped version of a function that captures errors
    */
-  wrapAsync<T extends (...args: unknown[]) => Promise<unknown>>(
-    fn: T,
-    context: string,
-  ): T {
+  wrapAsync<T extends (...args: unknown[]) => Promise<unknown>>(fn: T, context: string): T {
     return (async (...args: Parameters<T>) => {
       try {
         return await fn(...args);

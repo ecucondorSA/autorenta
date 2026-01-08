@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  Component, OnInit, computed, inject, signal
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -84,7 +88,7 @@ export class OwnerCheckOutPage implements OnInit {
         hasCar: !!booking?.car,
         carOwnerId: booking?.car?.owner_id,
         currentUserId: this.currentUserId(),
-        status: booking?.status
+        status: booking?.status,
       });
       if (!booking) {
         this.toastService.error('Error', 'Reserva no encontrada');
@@ -97,7 +101,7 @@ export class OwnerCheckOutPage implements OnInit {
       this.logger.debug(`[OwnerCheckOut] Validating owner:`, 'OwnerCheckOut', {
         carOwnerId: booking.car?.owner_id,
         currentUserId,
-        isOwner: booking.car?.owner_id === currentUserId
+        isOwner: booking.car?.owner_id === currentUserId,
       });
       if (!booking.car?.owner_id || !currentUserId || booking.car.owner_id !== currentUserId) {
         this.logger.warn(`[OwnerCheckOut] Owner validation FAILED`, 'OwnerCheckOut');
@@ -120,7 +124,7 @@ export class OwnerCheckOutPage implements OnInit {
 
       // Cargar datos del check-in del renter para comparación
       const renterCheckIn = await firstValueFrom(
-        this.fgoService.getInspectionByStage(bookingId, 'renter_check_in')
+        this.fgoService.getInspectionByStage(bookingId, 'renter_check_in'),
       );
       if (renterCheckIn) {
         this.checkInData.set({
@@ -140,7 +144,9 @@ export class OwnerCheckOutPage implements OnInit {
   }
 
   // Señal para daños detectados por AI
-  readonly aiDetectedDamages = signal<{ type: string; description: string; severity: string }[]>([]);
+  readonly aiDetectedDamages = signal<{ type: string; description: string; severity: string }[]>(
+    [],
+  );
   readonly analyzingDamages = signal(false);
 
   /**
@@ -170,7 +176,7 @@ export class OwnerCheckOutPage implements OnInit {
               pair_index: 1,
               booking_id: this.booking()?.id,
             }),
-          }
+          },
         );
 
         if (response.ok) {
@@ -181,7 +187,7 @@ export class OwnerCheckOutPage implements OnInit {
             this.damagesNotes.set(result.summary || '');
             this.toastService.info(
               'Daños detectados',
-              `Se encontraron ${result.damages.length} posible(s) daño(s). Por favor revisa.`
+              `Se encontraron ${result.damages.length} posible(s) daño(s). Por favor revisa.`,
             );
           } else {
             this.toastService.success('Sin daños', 'No se detectaron daños nuevos');

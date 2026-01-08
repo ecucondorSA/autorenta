@@ -1,6 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
-
 /**
  * Componente de iconos SVG reutilizable usando sprite sheet.
  *

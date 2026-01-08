@@ -1,4 +1,11 @@
-import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  computed,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -44,7 +51,10 @@ declare global {
           <!-- Selected plan summary -->
           <div [class]="getSummaryCardClass()" class="rounded-2xl p-6 space-y-4">
             <div class="flex items-center gap-4">
-              <div [class]="getTierIconClass()" class="w-14 h-14 rounded-full flex items-center justify-center">
+              <div
+                [class]="getTierIconClass()"
+                class="w-14 h-14 rounded-full flex items-center justify-center"
+              >
                 <ion-icon name="shield-checkmark" class="text-2xl"></ion-icon>
               </div>
               <div class="flex-1">
@@ -52,7 +62,9 @@ declare global {
                 <p class="text-sm opacity-70">Membresia anual</p>
               </div>
               <div class="text-right">
-                <p class="text-2xl font-bold" [class]="getTierTextClass()">\${{ tier.price_usd }}</p>
+                <p class="text-2xl font-bold" [class]="getTierTextClass()">
+                  \${{ tier.price_usd }}
+                </p>
                 <p class="text-xs opacity-70">USD/ano</p>
               </div>
             </div>
@@ -97,7 +109,9 @@ declare global {
                   <p class="text-sm font-semibold text-text-primary">Pagar con tu wallet</p>
                   <p class="text-xs text-text-muted">
                     Saldo disponible:
-                    <span class="font-medium text-text-primary">{{ formatCurrency(walletAvailableCents()) }}</span>
+                    <span class="font-medium text-text-primary">{{
+                      formatCurrency(walletAvailableCents())
+                    }}</span>
                   </p>
                 </div>
                 <button
@@ -315,7 +329,8 @@ export class ClubSubscribePage implements OnInit {
         queryParams: { payment: 'success', tier: tier.tier },
       });
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'No se pudo procesar el pago con wallet.';
+      const message =
+        err instanceof Error ? err.message : 'No se pudo procesar el pago con wallet.';
       this.error.set(message);
     } finally {
       this.loading.set(false);

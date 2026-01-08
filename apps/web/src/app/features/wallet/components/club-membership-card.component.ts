@@ -3,7 +3,6 @@ import {
   Component,
   OnInit,
   inject,
-  signal,
   computed,
   ChangeDetectionStrategy,
   input,
@@ -12,7 +11,6 @@ import {
 import { IonicModule } from '@ionic/angular';
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 import {
-  ActiveSubscription,
   SubscriptionTier,
   SUBSCRIPTION_TIERS,
   SUBSCRIPTION_STATUS_LABELS,
@@ -26,7 +24,9 @@ import {
   template: `
     <!-- Loading State -->
     @if (loading()) {
-      <div class="rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 p-6 animate-pulse">
+      <div
+        class="rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 p-6 animate-pulse"
+      >
         <div class="h-6 w-32 bg-amber-500/30 rounded mb-4"></div>
         <div class="h-4 w-48 bg-amber-500/20 rounded"></div>
       </div>
@@ -81,14 +81,15 @@ import {
 
     <!-- Active Subscription Card -->
     @if (!loading() && hasSubscription()) {
-      <div
-        [class]="cardClasses()"
-        class="rounded-2xl p-6 space-y-4 relative overflow-hidden"
-      >
+      <div [class]="cardClasses()" class="rounded-2xl p-6 space-y-4 relative overflow-hidden">
         <!-- Premium Pattern Background -->
         <div class="absolute inset-0 opacity-10">
-          <div class="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-          <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+          <div
+            class="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -translate-y-1/2 translate-x-1/2"
+          ></div>
+          <div
+            class="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"
+          ></div>
         </div>
 
         <!-- Header -->
@@ -99,13 +100,12 @@ import {
             </div>
             <div>
               <h3 class="text-lg font-bold text-white">{{ tierName() }}</h3>
-              <p class="text-sm text-white/70">Miembro desde {{ memberSince() | date:'MMM yyyy' }}</p>
+              <p class="text-sm text-white/70">
+                Miembro desde {{ memberSince() | date: 'MMM yyyy' }}
+              </p>
             </div>
           </div>
-          <div
-            [class]="statusBadgeClasses()"
-            class="px-3 py-1 rounded-full text-xs font-semibold"
-          >
+          <div [class]="statusBadgeClasses()" class="px-3 py-1 rounded-full text-xs font-semibold">
             {{ statusLabel() }}
           </div>
         </div>
@@ -114,10 +114,10 @@ import {
         <div class="relative space-y-2">
           <div class="flex items-baseline justify-between">
             <span class="text-3xl font-bold text-white">
-              \${{ balanceUsd() | number:'1.0-0' }}
+              \${{ balanceUsd() | number: '1.0-0' }}
             </span>
             <span class="text-sm text-white/70">
-              de \${{ coverageLimitUsd() | number:'1.0-0' }} disponibles
+              de \${{ coverageLimitUsd() | number: '1.0-0' }} disponibles
             </span>
           </div>
 
@@ -129,9 +129,7 @@ import {
             ></div>
           </div>
 
-          <p class="text-xs text-white/60">
-            {{ balancePercent() }}% de cobertura disponible
-          </p>
+          <p class="text-xs text-white/60">{{ balancePercent() }}% de cobertura disponible</p>
         </div>
 
         <!-- Expiration Warning -->

@@ -19,10 +19,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
       <div class="max-w-2xl mx-auto space-y-6">
         <!-- Header -->
         <div class="flex items-center gap-4">
-          <button
-            (click)="goBack()"
-            class="p-2 rounded-lg hover:bg-surface-raised transition"
-          >
+          <button (click)="goBack()" class="p-2 rounded-lg hover:bg-surface-raised transition">
             <ion-icon name="arrow-back" class="text-xl text-text-primary"></ion-icon>
           </button>
           <div>
@@ -46,7 +43,10 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
                   </p>
                 </div>
               </div>
-              <div [class]="getStatusBadgeClass(sub.status)" class="px-3 py-1 rounded-full text-xs font-semibold">
+              <div
+                [class]="getStatusBadgeClass(sub.status)"
+                class="px-3 py-1 rounded-full text-xs font-semibold"
+              >
                 {{ SUBSCRIPTION_STATUS_LABELS[sub.status] }}
               </div>
             </div>
@@ -55,7 +55,9 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
             <div class="space-y-2">
               <div class="flex justify-between text-sm text-white">
                 <span>Saldo disponible</span>
-                <span class="font-bold">\${{ sub.remaining_balance_usd }} / \${{ sub.coverage_limit_usd }} USD</span>
+                <span class="font-bold"
+                  >\${{ sub.remaining_balance_usd }} / \${{ sub.coverage_limit_usd }} USD</span
+                >
               </div>
               <div class="h-3 bg-white/20 rounded-full overflow-hidden">
                 <div
@@ -67,13 +69,15 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
 
             <!-- Dates -->
             <div class="flex justify-between text-xs text-white/70">
-              <span>Activa desde {{ sub.starts_at | date:'dd MMM yyyy' }}</span>
-              <span>Vence {{ sub.expires_at | date:'dd MMM yyyy' }}</span>
+              <span>Activa desde {{ sub.starts_at | date: 'dd MMM yyyy' }}</span>
+              <span>Vence {{ sub.expires_at | date: 'dd MMM yyyy' }}</span>
             </div>
           </div>
         } @else {
           <!-- No subscription -->
-          <div class="rounded-2xl border-2 border-dashed border-amber-500/50 bg-amber-500/5 p-8 text-center">
+          <div
+            class="rounded-2xl border-2 border-dashed border-amber-500/50 bg-amber-500/5 p-8 text-center"
+          >
             <ion-icon name="shield-outline" class="text-5xl text-amber-500/50"></ion-icon>
             <h3 class="mt-4 font-bold text-text-primary">Sin membresia activa</h3>
             <p class="text-sm text-text-secondary mt-2">
@@ -100,9 +104,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
             <div class="rounded-xl border border-border-default bg-surface-raised p-8 text-center">
               <ion-icon name="time-outline" class="text-4xl text-text-muted"></ion-icon>
               <p class="text-text-secondary mt-2">No hay movimientos registrados</p>
-              <p class="text-xs text-text-muted mt-1">
-                Los usos de tu cobertura apareceran aqui
-              </p>
+              <p class="text-xs text-text-muted mt-1">Los usos de tu cobertura apareceran aqui</p>
             </div>
           } @else {
             <div class="space-y-3">
@@ -110,24 +112,30 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
                 <div class="rounded-xl border border-border-default bg-surface-raised p-4">
                   <div class="flex items-start justify-between">
                     <div class="flex items-start gap-3">
-                      <div [class]="getLogIconClass(log.reason)" class="w-10 h-10 rounded-full flex items-center justify-center">
+                      <div
+                        [class]="getLogIconClass(log.reason)"
+                        class="w-10 h-10 rounded-full flex items-center justify-center"
+                      >
                         <ion-icon [name]="getLogIcon(log.reason)" class="text-lg"></ion-icon>
                       </div>
                       <div>
                         <p class="font-medium text-text-primary">{{ getLogTitle(log.reason) }}</p>
                         <p class="text-sm text-text-secondary">{{ log.description }}</p>
                         <p class="text-xs text-text-muted mt-1">
-                          {{ log.created_at | date:'dd MMM yyyy, HH:mm' }}
+                          {{ log.created_at | date: 'dd MMM yyyy, HH:mm' }}
                         </p>
                       </div>
                     </div>
                     <div class="text-right">
-                      <p [class]="log.reason === 'refund' ? 'text-success-strong' : 'text-error-strong'" class="font-bold">
+                      <p
+                        [class]="
+                          log.reason === 'refund' ? 'text-success-strong' : 'text-error-strong'
+                        "
+                        class="font-bold"
+                      >
                         {{ log.reason === 'refund' ? '+' : '-' }}\${{ log.amount_deducted_usd }}
                       </p>
-                      <p class="text-xs text-text-muted">
-                        Saldo: \${{ log.balance_after_usd }}
-                      </p>
+                      <p class="text-xs text-text-muted">Saldo: \${{ log.balance_after_usd }}</p>
                     </div>
                   </div>
 
@@ -154,7 +162,8 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
               <div class="flex-1">
                 <p class="font-medium text-warning-strong">Saldo de cobertura agotado</p>
                 <p class="text-sm text-warning-strong/80 mt-1">
-                  Tu saldo se ha agotado. Renueva tu membresia para seguir disfrutando de alquileres sin deposito.
+                  Tu saldo se ha agotado. Renueva tu membresia para seguir disfrutando de alquileres
+                  sin deposito.
                 </p>
                 <button
                   (click)="goToPlans()"
@@ -175,7 +184,9 @@ export class ClubHistoryPage implements OnInit {
   private readonly subscriptionService = inject(SubscriptionService);
 
   readonly loading = signal(false);
-  readonly usageLogs = signal<(SubscriptionUsageLogWithDetails & { amount_deducted_usd: number; balance_after_usd: number })[]>([]);
+  readonly usageLogs = signal<
+    (SubscriptionUsageLogWithDetails & { amount_deducted_usd: number; balance_after_usd: number })[]
+  >([]);
   readonly subscription = this.subscriptionService.subscription;
   readonly SUBSCRIPTION_STATUS_LABELS = SUBSCRIPTION_STATUS_LABELS;
 
@@ -188,7 +199,7 @@ export class ClubHistoryPage implements OnInit {
     try {
       const logs = await this.subscriptionService.getUsageHistory();
       // Map cents to USD for display
-      const logsWithUsd = logs.map(log => ({
+      const logsWithUsd = logs.map((log) => ({
         ...log,
         amount_deducted_usd: log.amount_deducted_cents / 100,
         balance_after_usd: log.balance_after_cents / 100,
@@ -225,7 +236,10 @@ export class ClubHistoryPage implements OnInit {
     }
   }
 
-  getBalancePercent(sub: { remaining_balance_cents: number; coverage_limit_cents: number }): number {
+  getBalancePercent(sub: {
+    remaining_balance_cents: number;
+    coverage_limit_cents: number;
+  }): number {
     if (sub.coverage_limit_cents === 0) return 0;
     return Math.round((sub.remaining_balance_cents / sub.coverage_limit_cents) * 100);
   }

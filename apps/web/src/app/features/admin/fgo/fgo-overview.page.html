@@ -159,9 +159,7 @@
     }
 
     @if (!loadingMovements && recentMovements.length > 0) {
-      <div
-        class="movements-table-container overflow-x-auto"
-        >
+      <div class="movements-table-container overflow-x-auto">
         <table class="movements-table min-w-full">
           <thead>
             <tr>
@@ -179,7 +177,7 @@
               <tr
                 [class.movement-credit]="movement.operation === 'credit'"
                 [class.movement-debit]="movement.operation === 'debit'"
-                >
+              >
                 <td class="movement-date">{{ formatDate(movement.timestamp) }}</td>
                 <td class="movement-type">{{ getMovementTypeName(movement.movementType) }}</td>
                 <td class="movement-subfund">{{ getSubfundName(movement.subfundType) }}</td>
@@ -187,8 +185,10 @@
                   class="movement-amount"
                   [class.positive]="movement.operation === 'credit'"
                   [class.negative]="movement.operation === 'debit'"
-                  >
-                  <span class="operation-sign">{{ movement.operation === 'credit' ? '+' : '-' }}</span>
+                >
+                  <span class="operation-sign">{{
+                    movement.operation === 'credit' ? '+' : '-'
+                  }}</span>
                   {{ formatUsd(movement.amount) }}
                 </td>
                 <td class="movement-operation">
@@ -196,7 +196,7 @@
                     class="badge"
                     [class.badge-credit]="movement.operation === 'credit'"
                     [class.badge-debit]="movement.operation === 'debit'"
-                    >
+                  >
                     {{ movement.operation === 'credit' ? 'Crédito' : 'Débito' }}
                   </span>
                 </td>
@@ -270,7 +270,7 @@
                 min="0"
                 step="0.01"
                 placeholder="0.00"
-                />
+              />
             </div>
             <div class="form-group">
               <label for="reason">Motivo</label>
@@ -290,7 +290,7 @@
             class="btn-primary"
             (click)="submitTransfer()"
             [disabled]="!isTransferFormValid() || processingTransfer"
-            >
+          >
             {{ processingTransfer ? 'Procesando...' : 'Transferir' }}
           </button>
         </div>
@@ -316,7 +316,7 @@
                 [(ngModel)]="siniestroForm.bookingId"
                 name="bookingId"
                 placeholder="UUID de la reserva"
-                />
+              />
             </div>
             <div class="form-group">
               <label for="siniestroAmount">Monto (USD)</label>
@@ -328,7 +328,7 @@
                 min="0"
                 step="0.01"
                 placeholder="0.00"
-                />
+              />
             </div>
             <div class="form-group">
               <label for="description">Descripción</label>
@@ -341,8 +341,8 @@
               ></textarea>
             </div>
             <div class="alert-warning">
-              ⚠️ Esta acción debitará <strong>{{ formatUsd(siniestroForm.amount || 0) }}</strong> del
-              subfondo de Liquidez.
+              ⚠️ Esta acción debitará
+              <strong>{{ formatUsd(siniestroForm.amount || 0) }}</strong> del subfondo de Liquidez.
             </div>
           </form>
         </div>
@@ -352,7 +352,7 @@
             class="btn-danger"
             (click)="submitSiniestro()"
             [disabled]="!isSiniestroFormValid() || processingSiniestro"
-            >
+          >
             {{ processingSiniestro ? 'Procesando...' : 'Pagar Siniestro' }}
           </button>
         </div>

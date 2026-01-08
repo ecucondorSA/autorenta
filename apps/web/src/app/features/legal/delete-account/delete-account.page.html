@@ -1,19 +1,11 @@
-<section
-  class="delete-account-page terms-page min-h-screen bg-surface-base text-text-primary"
->
+<section class="delete-account-page terms-page min-h-screen bg-surface-base text-text-primary">
   <div class="max-w-2xl mx-auto px-6 py-16 space-y-8">
     <header class="space-y-4">
-      <p
-        class="text-sm uppercase tracking-wide text-red-600 font-semibold"
-      >
-        Cuenta
-      </p>
-      <h1 class="text-3xl font-bold tracking-tight font-satoshi">
-        Eliminar Cuenta
-      </h1>
+      <p class="text-sm uppercase tracking-wide text-red-600 font-semibold">Cuenta</p>
+      <h1 class="text-3xl font-bold tracking-tight font-satoshi">Eliminar Cuenta</h1>
       <p class="text-lg text-text-secondary leading-relaxed">
-        Si deseas eliminar tu cuenta de Autorentar, puedes hacerlo desde esta pagina.
-        Ten en cuenta que esta accion es irreversible.
+        Si deseas eliminar tu cuenta de Autorentar, puedes hacerlo desde esta pagina. Ten en cuenta
+        que esta accion es irreversible.
       </p>
     </header>
 
@@ -24,16 +16,29 @@
         @if (step() === 'confirm') {
           <article class="card border-red-200">
             <div class="flex items-start gap-4">
-              <div class="flex-shrink-0 w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <div
+                class="flex-shrink-0 w-12 h-12 bg-red-100 rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-red-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
                 </svg>
               </div>
               <div class="flex-1">
                 <h2 class="text-xl font-semibold text-red-700">Advertencia</h2>
                 <p class="mt-2 text-text-secondary">
                   Estas a punto de eliminar permanentemente tu cuenta asociada a
-                  <strong class="text-text-primary">{{ userEmail() }}</strong>.
+                  <strong class="text-text-primary">{{ userEmail() }}</strong
+                  >.
                 </p>
               </div>
             </div>
@@ -52,7 +57,9 @@
           </article>
 
           <article class="card">
-            <h3 class="font-semibold text-lg mb-4">Datos que se conservaran por obligacion legal:</h3>
+            <h3 class="font-semibold text-lg mb-4">
+              Datos que se conservaran por obligacion legal:
+            </h3>
             <ul class="list-disc list-inside space-y-2 text-text-secondary">
               <li>Registros de transacciones financieras (5 anos)</li>
               <li>Informacion fiscal requerida por ley</li>
@@ -60,7 +67,7 @@
             </ul>
           </article>
 
-          <div class="card bg-yellow-50 border-yellow-200 ">
+          <div class="card bg-yellow-50 border-yellow-200">
             <label class="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
@@ -69,8 +76,8 @@
                 class="mt-1 w-5 h-5 rounded border-gray-300 text-red-600 focus:ring-red-500"
               />
               <span class="text-sm text-yellow-800">
-                Entiendo que esta accion es <strong>permanente e irreversible</strong>.
-                Confirmo que deseo eliminar mi cuenta y todos mis datos de Autorentar.
+                Entiendo que esta accion es <strong>permanente e irreversible</strong>. Confirmo que
+                deseo eliminar mi cuenta y todos mis datos de Autorentar.
               </span>
             </label>
           </div>
@@ -84,8 +91,20 @@
               @if (isLoading()) {
                 <span class="flex items-center justify-center gap-2">
                   <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      fill="none"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Procesando...
                 </span>
@@ -106,20 +125,46 @@
         @if (step() === 'processing') {
           <article class="card text-center py-12">
             <svg class="animate-spin h-12 w-12 mx-auto text-cta-default" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+                fill="none"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
             <h2 class="mt-6 text-xl font-semibold">Eliminando tu cuenta...</h2>
-            <p class="mt-2 text-text-secondary">Por favor espera mientras procesamos tu solicitud.</p>
+            <p class="mt-2 text-text-secondary">
+              Por favor espera mientras procesamos tu solicitud.
+            </p>
           </article>
         }
 
         <!-- Step: Success -->
         @if (step() === 'success') {
           <article class="card text-center py-12 border-green-200">
-            <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-              <svg class="w-8 h-8 text-green-600 " fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            <div
+              class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center"
+            >
+              <svg
+                class="w-8 h-8 text-green-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
             <h2 class="mt-6 text-xl font-semibold text-green-700">
@@ -138,13 +183,21 @@
         @if (step() === 'error') {
           <article class="card text-center py-12 border-red-200">
             <div class="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center">
-              <svg class="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                class="w-8 h-8 text-red-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </div>
-            <h2 class="mt-6 text-xl font-semibold text-red-700">
-              Error al eliminar la cuenta
-            </h2>
+            <h2 class="mt-6 text-xl font-semibold text-red-700">Error al eliminar la cuenta</h2>
             <p class="mt-2 text-text-secondary">
               {{ errorMessage() || 'Ocurrio un error inesperado. Por favor intenta nuevamente.' }}
             </p>
@@ -166,8 +219,8 @@
           <article class="card">
             <h2 class="text-xl font-semibold">Solicitar eliminacion de cuenta</h2>
             <p class="mt-2 text-text-secondary">
-              Para eliminar tu cuenta, puedes iniciar sesion o enviar una solicitud
-              proporcionando el email asociado a tu cuenta.
+              Para eliminar tu cuenta, puedes iniciar sesion o enviar una solicitud proporcionando
+              el email asociado a tu cuenta.
             </p>
 
             <button
@@ -248,8 +301,20 @@
                 @if (isLoading()) {
                   <span class="flex items-center justify-center gap-2">
                     <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        fill="none"
+                      ></circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Enviando...
                   </span>
@@ -263,20 +328,31 @@
 
         @if (requestSubmitted()) {
           <article class="card text-center py-12 border-green-200">
-            <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-              <svg class="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            <div
+              class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center"
+            >
+              <svg
+                class="w-8 h-8 text-green-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
               </svg>
             </div>
-            <h2 class="mt-6 text-xl font-semibold text-green-700">
-              Solicitud enviada
-            </h2>
+            <h2 class="mt-6 text-xl font-semibold text-green-700">Solicitud enviada</h2>
             <p class="mt-2 text-text-secondary">
-              Hemos enviado un enlace de confirmacion a <strong>{{ requestEmail() }}</strong>.
+              Hemos enviado un enlace de confirmacion a <strong>{{ requestEmail() }}</strong
+              >.
             </p>
             <p class="mt-4 text-sm text-text-secondary">
-              Si no recibes el email en los proximos minutos, revisa tu carpeta de spam.
-              La solicitud expira en 24 horas.
+              Si no recibes el email en los proximos minutos, revisa tu carpeta de spam. La
+              solicitud expira en 24 horas.
             </p>
             <a
               href="/"
@@ -293,15 +369,14 @@
     <article class="card">
       <h2 class="font-semibold text-lg">Necesitas ayuda?</h2>
       <p class="mt-2 text-text-secondary">
-        Si tienes problemas para eliminar tu cuenta o necesitas asistencia,
-        contactanos en:
+        Si tienes problemas para eliminar tu cuenta o necesitas asistencia, contactanos en:
         <a href="mailto:soporte&#64;autorentar.com" class="link font-semibold">
           soporte&#64;autorentar.com
         </a>
       </p>
       <p class="mt-4 text-sm text-text-secondary">
-        Procesamos las solicitudes de eliminacion en un plazo maximo de 30 dias,
-        conforme a las regulaciones de proteccion de datos.
+        Procesamos las solicitudes de eliminacion en un plazo maximo de 30 dias, conforme a las
+        regulaciones de proteccion de datos.
       </p>
     </article>
   </div>

@@ -1,5 +1,13 @@
-import {Component, Input, OnInit, Output, EventEmitter, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  signal,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { DisputesService, Dispute, DisputeEvidence } from '@core/services/admin/disputes.service';
 import { DisputeDetailComponent } from '../../../features/disputes/components/dispute-detail/dispute-detail.component';
@@ -13,35 +21,31 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
     <div class="space-y-4">
       <!-- Header -->
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold text-text-primary">
-          Disputas ({{ disputes().length }})
-        </h3>
+        <h3 class="text-lg font-semibold text-text-primary">Disputas ({{ disputes().length }})</h3>
         @if (showCreateButton) {
           <button
             (click)="createDispute.emit()"
             class="text-sm px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default transition-colors"
-            >
+          >
             + Crear Disputa
           </button>
         }
       </div>
-    
+
       <!-- Loading State -->
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default"></div>
         </div>
       }
-    
+
       <!-- Empty State -->
       @if (!loading() && disputes().length === 0) {
         <div class="bg-surface-base rounded-lg p-6 text-center">
-          <p class="text-text-secondary">
-            No hay disputas para esta reserva.
-          </p>
+          <p class="text-text-secondary">No hay disputas para esta reserva.</p>
         </div>
       }
-    
+
       <!-- Disputes List -->
       @if (!loading() && disputes().length > 0) {
         <div class="space-y-3">
@@ -49,7 +53,7 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
             <div
               (click)="openDetail(dispute.id)"
               class="bg-surface-raised rounded-lg border border-border-default p-4 cursor-pointer hover:border-cta-default transition-colors group"
-              >
+            >
               <div class="flex items-start justify-between mb-3">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 mb-2">
@@ -63,14 +67,16 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
                       [class.text-success-strong]="dispute.status === 'resolved'"
                       [class.bg-error-bg-hover]="dispute.status === 'rejected'"
                       [class.text-error-strong]="dispute.status === 'rejected'"
-                      >
+                    >
                       {{ getStatusLabel(dispute.status) }}
                     </span>
                     <span class="text-xs text-text-secondary">
                       {{ getKindLabel(dispute.kind) }}
                     </span>
                   </div>
-                  <p class="text-sm text-text-primary group-hover:text-cta-default transition-colors">
+                  <p
+                    class="text-sm text-text-primary group-hover:text-cta-default transition-colors"
+                  >
                     {{ dispute.description || 'Sin descripción' }}
                   </p>
                 </div>
@@ -78,10 +84,13 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
                   <span class="text-xs text-text-secondary">
                     {{ formatDate(dispute.created_at) }}
                   </span>
-                  <span class="text-xs text-cta-default opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</span>
+                  <span
+                    class="text-xs text-cta-default opacity-0 group-hover:opacity-100 transition-opacity"
+                    >Ver detalle →</span
+                  >
                 </div>
               </div>
-    
+
               <!-- Evidence Section -->
               @if (disputeEvidenceMap().has(dispute.id)) {
                 <div class="mt-3 pt-3 border-t border-border-default">
@@ -101,7 +110,7 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
           }
         </div>
       }
-    
+
       <!-- Detail Modal -->
       @if (selectedDisputeId()) {
         <app-dispute-detail
@@ -110,7 +119,7 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
         ></app-dispute-detail>
       }
     </div>
-    `,
+  `,
 })
 export class DisputesListComponent implements OnInit {
   @Input() bookingId!: string;

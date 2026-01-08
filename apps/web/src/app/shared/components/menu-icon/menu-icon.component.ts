@@ -1,6 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
-
 /**
  * Componente de iconos SVG premium para el menú drawer.
  * Usa el sprite sheet dedicado menu-icons.svg con iconos de alta calidad.

@@ -1,4 +1,5 @@
-import {Component,
+import {
+  Component,
   signal,
   output,
   input,
@@ -9,7 +10,8 @@ import {Component,
   effect,
   inject,
   PLATFORM_ID,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import flatpickr from 'flatpickr';
@@ -36,7 +38,7 @@ export interface BlockDateRequest {
       <div
         class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
         (click)="onBackdropClick($event)"
-        >
+      >
         <div
           class="bg-surface-raised rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all"
           (click)="$event.stopPropagation()"
@@ -44,13 +46,10 @@ export interface BlockDateRequest {
           role="dialog"
           aria-modal="true"
           [attr.aria-labelledby]="'block-date-modal-title'"
-          >
+        >
           <!-- Header -->
           <div class="flex items-center justify-between mb-6">
-            <h2
-              id="block-date-modal-title"
-              class="text-xl font-bold text-text-primary"
-              >
+            <h2 id="block-date-modal-title" class="text-xl font-bold text-text-primary">
               {{ title() || 'Bloquear Fechas' }}
             </h2>
             <button
@@ -58,14 +57,14 @@ export interface BlockDateRequest {
               (click)="close()"
               class="text-text-secondary hover:text-text-primary transition-colors"
               aria-label="Cerrar"
-              >
+            >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M6 18L18 6M6 6l12 12"
-                  />
+                />
               </svg>
             </button>
           </div>
@@ -73,9 +72,7 @@ export interface BlockDateRequest {
           <div class="space-y-4">
             <!-- Date Range Picker -->
             <div>
-              <label
-                class="block text-sm font-medium text-text-primary mb-2"
-                >
+              <label class="block text-sm font-medium text-text-primary mb-2">
                 Rango de Fechas *
               </label>
               <input
@@ -84,22 +81,18 @@ export interface BlockDateRequest {
                 placeholder="Seleccionar fechas"
                 readonly
                 class="w-full px-4 py-3 rounded-xl border-2 border-border-default bg-surface-raised focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all cursor-pointer"
-                />
+              />
               <p class="text-xs text-text-secondary mt-1">
                 {{ dateRangeText() }}
               </p>
             </div>
             <!-- Reason Selector -->
             <div>
-              <label
-                class="block text-sm font-medium text-text-primary mb-2"
-                >
-                Motivo *
-              </label>
+              <label class="block text-sm font-medium text-text-primary mb-2"> Motivo * </label>
               <select
                 [(ngModel)]="selectedReason"
                 class="w-full px-4 py-3 rounded-xl border-2 border-border-default bg-surface-raised focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
-                >
+              >
                 <option value="">-- Seleccionar motivo --</option>
                 <option value="maintenance">🔧 Mantenimiento</option>
                 <option value="personal_use">🚗 Uso Personal</option>
@@ -109,9 +102,7 @@ export interface BlockDateRequest {
             </div>
             <!-- Notes (Optional) -->
             <div>
-              <label
-                class="block text-sm font-medium text-text-primary mb-2"
-                >
+              <label class="block text-sm font-medium text-text-primary mb-2">
                 Notas (opcional)
               </label>
               <textarea
@@ -123,19 +114,14 @@ export interface BlockDateRequest {
             </div>
             <!-- Apply to All Cars (only show if has multiple cars) -->
             @if (hasMultipleCars()) {
-              <div
-                class="flex items-start gap-3 p-4 bg-warning-bg rounded-xl"
-                >
+              <div class="flex items-start gap-3 p-4 bg-warning-bg rounded-xl">
                 <input
                   type="checkbox"
                   id="applyToAll"
                   [(ngModel)]="applyToAllCars"
                   class="mt-1 w-4 h-4 text-cta-default border-border-default rounded focus:ring-cta-default"
-                  />
-                <label
-                  for="applyToAll"
-                  class="flex-1 text-sm text-text-primary cursor-pointer"
-                  >
+                />
+                <label for="applyToAll" class="flex-1 text-sm text-text-primary cursor-pointer">
                   <span class="font-semibold">Aplicar a todos mis autos</span>
                   <p class="text-xs text-text-muted mt-0.5">
                     Bloqueará estas fechas en todos tus vehículos
@@ -147,7 +133,7 @@ export interface BlockDateRequest {
             @if (errorMessage()) {
               <div
                 class="p-3 bg-error-bg border border-error-border rounded-xl text-sm text-error-strong"
-                >
+              >
                 {{ errorMessage() }}
               </div>
             }
@@ -158,7 +144,7 @@ export interface BlockDateRequest {
               type="button"
               (click)="close()"
               class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default text-text-secondary hover:bg-surface-hover transition-all font-medium"
-              >
+            >
               Cancelar
             </button>
             <button
@@ -168,14 +154,14 @@ export interface BlockDateRequest {
               [class.opacity-50]="!canSubmit() || loading()"
               [class.cursor-not-allowed]="!canSubmit() || loading()"
               class="flex-1 px-4 py-3 rounded-xl bg-cta-default text-cta-text hover:bg-cta-default/90 transition-all font-medium flex items-center justify-center gap-2"
-              >
+            >
               @if (loading()) {
                 <svg
                   class="animate-spin h-5 w-5 text-text-inverse"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  >
+                >
                   <circle
                     class="opacity-25"
                     cx="12"
@@ -197,7 +183,7 @@ export interface BlockDateRequest {
         </div>
       </div>
     }
-    `,
+  `,
   styles: [
     `
       /* Flatpickr theme override for this modal */

@@ -1,6 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
-
 /**
  * Componente de iconos SVG premium para la navegación inferior.
  * Usa el sprite sheet dedicado bottom-nav.svg con iconos de alta calidad.

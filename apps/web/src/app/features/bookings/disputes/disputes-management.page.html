@@ -58,7 +58,9 @@
         <ion-card class="mb-4">
           <ion-card-header>
             <div class="flex items-center justify-between">
-              <ion-card-title class="text-base"> Disputa #{{ dispute.id.slice(0, 8) }} </ion-card-title>
+              <ion-card-title class="text-base">
+                Disputa #{{ dispute.id.slice(0, 8) }}
+              </ion-card-title>
               <ion-badge [color]="getStatusColor(dispute.status)">
                 {{ getStatusLabel(dispute.status) }}
               </ion-badge>
@@ -93,11 +95,11 @@
     <div
       class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
       (click)="closeCreateModal()"
-      >
+    >
       <ion-card
         class="max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         (click)="$event.stopPropagation()"
-        >
+      >
         <ion-card-header>
           <ion-card-title>Crear Disputa</ion-card-title>
         </ion-card-header>
@@ -110,7 +112,7 @@
                 [ngModelOptions]="{ standalone: true }"
                 name="kind"
                 required
-                >
+              >
                 <ion-select-option value="damage">Daños al vehículo</ion-select-option>
                 <ion-select-option value="no_show">No se presentó</ion-select-option>
                 <ion-select-option value="late_return">Devolución tardía</ion-select-option>
@@ -159,119 +161,129 @@
     <div
       class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
       (click)="closeEvidenceModal()"
-      >
+    >
       <ion-card
         class="max-w-4xl w-full max-h-[90vh] overflow-y-auto"
         (click)="$event.stopPropagation()"
-        >
+      >
         <ion-card-header>
           <ion-card-title
             >Evidencias - Disputa #{{ selectedDispute()?.id?.slice(0, 8) }}</ion-card-title
-            >
-          </ion-card-header>
-          <ion-card-content>
-            <!-- Evidence Gallery -->
-            @if (evidence().length > 0) {
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                @for (item of evidence(); track item) {
-                  <div class="relative p-3 rounded-lg border border-border-default bg-surface-base">
-                    @if (item.path) {
-                      <div class="h-48">
-                        @if (isImage(item.path)) {
-                          <img
-                            [src]="item.path"
-                            [alt]="item.note || 'Evidencia'"
-                            class="w-full h-full object-cover rounded"
-                            />
-                        }
-                        @if (!isImage(item.path)) {
-                          <div
-                            class="w-full h-full bg-surface-raised rounded flex items-center justify-center"
-                            >
-                            <ion-icon name="document" class="text-4xl text-text-muted"></ion-icon>
-                          </div>
-                        }
-                        @if (item.note) {
-                          <p class="text-xs text-text-secondary mt-2">{{ item.note }}</p>
-                        }
-                        <a [href]="item.path" target="_blank" class="text-xs text-cta-default mt-1 block">
-                          Ver completo
-                        </a>
-                      </div>
-                    } @else {
-                      <div class="flex flex-col h-full justify-between">
-                        <div>
-                          <h4 class="font-semibold text-text-primary mb-1 font-satoshi">Comentario:</h4>
-                          <p class="text-sm text-text-secondary whitespace-pre-wrap">{{ item.note }}</p>
+          >
+        </ion-card-header>
+        <ion-card-content>
+          <!-- Evidence Gallery -->
+          @if (evidence().length > 0) {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+              @for (item of evidence(); track item) {
+                <div class="relative p-3 rounded-lg border border-border-default bg-surface-base">
+                  @if (item.path) {
+                    <div class="h-48">
+                      @if (isImage(item.path)) {
+                        <img
+                          [src]="item.path"
+                          [alt]="item.note || 'Evidencia'"
+                          class="w-full h-full object-cover rounded"
+                        />
+                      }
+                      @if (!isImage(item.path)) {
+                        <div
+                          class="w-full h-full bg-surface-raised rounded flex items-center justify-center"
+                        >
+                          <ion-icon name="document" class="text-4xl text-text-muted"></ion-icon>
                         </div>
-                        <p class="text-xs text-text-muted mt-2 text-right">{{ formatDate(item.created_at) }}</p>
+                      }
+                      @if (item.note) {
+                        <p class="text-xs text-text-secondary mt-2">{{ item.note }}</p>
+                      }
+                      <a
+                        [href]="item.path"
+                        target="_blank"
+                        class="text-xs text-cta-default mt-1 block"
+                      >
+                        Ver completo
+                      </a>
+                    </div>
+                  } @else {
+                    <div class="flex flex-col h-full justify-between">
+                      <div>
+                        <h4 class="font-semibold text-text-primary mb-1 font-satoshi">
+                          Comentario:
+                        </h4>
+                        <p class="text-sm text-text-secondary whitespace-pre-wrap">
+                          {{ item.note }}
+                        </p>
                       </div>
-                    }
-                  </div>
-                }
-              </div>
-            }
-            @if (evidence().length === 0) {
-              <div class="text-center py-8 text-text-secondary">
-                <p>No hay evidencias para esta disputa</p>
-              </div>
-            }
-            <!-- Add Evidence Form -->
-            <div class="mt-6 pt-6 border-t">
-              <h3 class="text-lg font-semibold mb-3 font-satoshi">Agregar Evidencia</h3>
-              <ion-item class="mb-4">
-                <ion-label position="stacked">Archivos</ion-label>
-                <ion-input
-                  type="file"
-                  multiple
-                  accept="image/*,.pdf"
-                  (change)="onEvidenceFilesSelected($event)"
-                ></ion-input>
-              </ion-item>
-              <ion-item class="mb-4">
-                <ion-label position="stacked">Nota (opcional)</ion-label>
-                <ion-input
-                  [(ngModel)]="evidenceNote"
-                  name="evidenceNote"
-                  placeholder="Descripción de la evidencia"
-                ></ion-input>
-              </ion-item>
-              <ion-button
-                expand="block"
-                (click)="addEvidenceToSelectedDispute()"
-                [disabled]="evidenceFiles().length === 0 || uploadingEvidence()"
-                >
-                <ion-icon name="cloud-upload" slot="start"></ion-icon>
-                {{ uploadingEvidence() ? 'Subiendo...' : 'Subir Evidencias' }}
-              </ion-button>
+                      <p class="text-xs text-text-muted mt-2 text-right">
+                        {{ formatDate(item.created_at) }}
+                      </p>
+                    </div>
+                  }
+                </div>
+              }
             </div>
-            <!-- NEW: Add Comment Section -->
-            <div class="mt-6 pt-6 border-t">
-              <h3 class="text-lg font-semibold mb-3 font-satoshi">Agregar Comentario</h3>
-              <ion-item class="mb-4">
-                <ion-label position="stacked">Tu Comentario</ion-label>
-                <ion-textarea
-                  [(ngModel)]="newComment"
-                  name="newComment"
-                  rows="3"
-                  placeholder="Escribe tu respuesta o comentario..."
-                ></ion-textarea>
-              </ion-item>
-              <ion-button
-                expand="block"
-                (click)="addCommentToSelectedDispute()"
-                [disabled]="!newComment() || newComment().trim() === '' || uploadingEvidence()"
-                >
-                <ion-icon name="send" slot="start"></ion-icon>
-                Enviar Comentario
-              </ion-button>
+          }
+          @if (evidence().length === 0) {
+            <div class="text-center py-8 text-text-secondary">
+              <p>No hay evidencias para esta disputa</p>
             </div>
-            <!-- END NEW -->
-            <ion-button expand="block" fill="outline" class="mt-4" (click)="closeEvidenceModal()">
-              Cerrar
+          }
+          <!-- Add Evidence Form -->
+          <div class="mt-6 pt-6 border-t">
+            <h3 class="text-lg font-semibold mb-3 font-satoshi">Agregar Evidencia</h3>
+            <ion-item class="mb-4">
+              <ion-label position="stacked">Archivos</ion-label>
+              <ion-input
+                type="file"
+                multiple
+                accept="image/*,.pdf"
+                (change)="onEvidenceFilesSelected($event)"
+              ></ion-input>
+            </ion-item>
+            <ion-item class="mb-4">
+              <ion-label position="stacked">Nota (opcional)</ion-label>
+              <ion-input
+                [(ngModel)]="evidenceNote"
+                name="evidenceNote"
+                placeholder="Descripción de la evidencia"
+              ></ion-input>
+            </ion-item>
+            <ion-button
+              expand="block"
+              (click)="addEvidenceToSelectedDispute()"
+              [disabled]="evidenceFiles().length === 0 || uploadingEvidence()"
+            >
+              <ion-icon name="cloud-upload" slot="start"></ion-icon>
+              {{ uploadingEvidence() ? 'Subiendo...' : 'Subir Evidencias' }}
             </ion-button>
-          </ion-card-content>
-        </ion-card>
-      </div>
-    }
-  </ion-content>
+          </div>
+          <!-- NEW: Add Comment Section -->
+          <div class="mt-6 pt-6 border-t">
+            <h3 class="text-lg font-semibold mb-3 font-satoshi">Agregar Comentario</h3>
+            <ion-item class="mb-4">
+              <ion-label position="stacked">Tu Comentario</ion-label>
+              <ion-textarea
+                [(ngModel)]="newComment"
+                name="newComment"
+                rows="3"
+                placeholder="Escribe tu respuesta o comentario..."
+              ></ion-textarea>
+            </ion-item>
+            <ion-button
+              expand="block"
+              (click)="addCommentToSelectedDispute()"
+              [disabled]="!newComment() || newComment().trim() === '' || uploadingEvidence()"
+            >
+              <ion-icon name="send" slot="start"></ion-icon>
+              Enviar Comentario
+            </ion-button>
+          </div>
+          <!-- END NEW -->
+          <ion-button expand="block" fill="outline" class="mt-4" (click)="closeEvidenceModal()">
+            Cerrar
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  }
+</ion-content>

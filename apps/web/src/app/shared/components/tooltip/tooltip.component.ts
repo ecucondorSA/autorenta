@@ -1,6 +1,4 @@
-import {Component, input, signal,
-  ChangeDetectionStrategy} from '@angular/core';
-
+import { Component, input, signal, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * TooltipComponent - Generic tooltip for displaying help text

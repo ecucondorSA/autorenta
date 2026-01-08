@@ -89,7 +89,7 @@
   border-top-color: rgba(167, 216, 244, 0.15);
   box-shadow:
     0 -8px 32px rgba(167, 216, 244, 0.1),
-    0 -4px 16px #7B7B7B,
+    0 -4px 16px #7b7b7b,
     0 -1px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -467,17 +467,14 @@
   position: absolute;
   inset: -8px;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(167, 216, 244, 0.4) 0%,
-    rgba(167, 216, 244, 0) 70%
-  );
+  background: radial-gradient(circle, rgba(167, 216, 244, 0.4) 0%, rgba(167, 216, 244, 0) 70%);
   z-index: -1;
   animation: fabGlow 2s ease-in-out infinite;
 }
 
 @keyframes fabGlow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.6;
     transform: scale(1);
   }

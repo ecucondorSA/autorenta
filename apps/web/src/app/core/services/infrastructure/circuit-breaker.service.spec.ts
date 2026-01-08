@@ -1,9 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  CircuitBreakerService,
-  CircuitOpenError,
-  CircuitState,
-} from './circuit-breaker.service';
+import { CircuitBreakerService, CircuitOpenError, CircuitState } from './circuit-breaker.service';
 import { LoggerService } from './logger.service';
 
 describe('CircuitBreakerService', () => {
@@ -14,10 +10,7 @@ describe('CircuitBreakerService', () => {
     mockLogger = jasmine.createSpyObj('LoggerService', ['info', 'warn', 'error', 'debug']);
 
     TestBed.configureTestingModule({
-      providers: [
-        CircuitBreakerService,
-        { provide: LoggerService, useValue: mockLogger },
-      ],
+      providers: [CircuitBreakerService, { provide: LoggerService, useValue: mockLogger }],
     });
 
     service = TestBed.inject(CircuitBreakerService);
@@ -44,7 +37,7 @@ describe('CircuitBreakerService', () => {
       await expectAsync(
         service.execute('test-circuit', async () => {
           throw new Error('Test error');
-        })
+        }),
       ).toBeRejectedWithError('Test error');
     });
 
@@ -68,7 +61,7 @@ describe('CircuitBreakerService', () => {
         await expectAsync(
           service.execute(circuitName, async () => {
             throw new Error(`Failure ${i + 1}`);
-          })
+          }),
         ).toBeRejected();
       }
 
@@ -77,7 +70,7 @@ describe('CircuitBreakerService', () => {
 
       // Next call should fail with CircuitOpenError
       await expectAsync(
-        service.execute(circuitName, async () => 'should not reach')
+        service.execute(circuitName, async () => 'should not reach'),
       ).toBeRejectedWith(jasmine.any(CircuitOpenError));
     });
 
@@ -89,7 +82,7 @@ describe('CircuitBreakerService', () => {
         await expectAsync(
           service.execute(circuitName, async () => {
             throw new Error(`Failure ${i + 1}`);
-          })
+          }),
         ).toBeRejected();
       }
 
@@ -109,7 +102,7 @@ describe('CircuitBreakerService', () => {
         await expectAsync(
           service.execute(circuitName, async () => {
             throw new Error('Failure');
-          })
+          }),
         ).toBeRejected();
       }
 
@@ -121,7 +114,7 @@ describe('CircuitBreakerService', () => {
         await expectAsync(
           service.execute(circuitName, async () => {
             throw new Error('Failure');
-          })
+          }),
         ).toBeRejected();
       }
 
@@ -138,16 +131,20 @@ describe('CircuitBreakerService', () => {
       // Configure with short timeout
       for (let i = 0; i < 3; i++) {
         await expectAsync(
-          service.execute(circuitName, async () => {
-            throw new Error('Failure');
-          }, { resetTimeout: shortTimeout, failureThreshold: 3 })
+          service.execute(
+            circuitName,
+            async () => {
+              throw new Error('Failure');
+            },
+            { resetTimeout: shortTimeout, failureThreshold: 3 },
+          ),
         ).toBeRejected();
       }
 
       expect(service.isOpen(circuitName)).toBeTrue();
 
       // Wait for reset timeout
-      await new Promise(resolve => setTimeout(resolve, shortTimeout + 50));
+      await new Promise((resolve) => setTimeout(resolve, shortTimeout + 50));
 
       // Next call should attempt (half-open state)
       const result = await service.execute(circuitName, async () => 'recovered');
@@ -161,14 +158,18 @@ describe('CircuitBreakerService', () => {
       // Open the circuit
       for (let i = 0; i < 3; i++) {
         await expectAsync(
-          service.execute(circuitName, async () => {
-            throw new Error('Failure');
-          }, { resetTimeout: shortTimeout, failureThreshold: 3, successThreshold: 2 })
+          service.execute(
+            circuitName,
+            async () => {
+              throw new Error('Failure');
+            },
+            { resetTimeout: shortTimeout, failureThreshold: 3, successThreshold: 2 },
+          ),
         ).toBeRejected();
       }
 
       // Wait for reset
-      await new Promise(resolve => setTimeout(resolve, shortTimeout + 50));
+      await new Promise((resolve) => setTimeout(resolve, shortTimeout + 50));
 
       // Two successful calls should close the circuit
       await service.execute(circuitName, async () => 'success 1');
@@ -185,20 +186,24 @@ describe('CircuitBreakerService', () => {
       // Open the circuit
       for (let i = 0; i < 3; i++) {
         await expectAsync(
-          service.execute(circuitName, async () => {
-            throw new Error('Failure');
-          }, { resetTimeout: shortTimeout, failureThreshold: 3 })
+          service.execute(
+            circuitName,
+            async () => {
+              throw new Error('Failure');
+            },
+            { resetTimeout: shortTimeout, failureThreshold: 3 },
+          ),
         ).toBeRejected();
       }
 
       // Wait for reset
-      await new Promise(resolve => setTimeout(resolve, shortTimeout + 50));
+      await new Promise((resolve) => setTimeout(resolve, shortTimeout + 50));
 
       // Fail during half-open - should re-open
       await expectAsync(
         service.execute(circuitName, async () => {
           throw new Error('Failed during recovery');
-        })
+        }),
       ).toBeRejected();
 
       expect(service.isOpen(circuitName)).toBeTrue();
@@ -212,9 +217,13 @@ describe('CircuitBreakerService', () => {
       // Fail 5 times with threshold of 5
       for (let i = 0; i < 5; i++) {
         await expectAsync(
-          service.execute(circuitName, async () => {
-            throw new Error('Failure');
-          }, { failureThreshold: 5 })
+          service.execute(
+            circuitName,
+            async () => {
+              throw new Error('Failure');
+            },
+            { failureThreshold: 5 },
+          ),
         ).toBeRejected();
       }
 
@@ -229,7 +238,7 @@ describe('CircuitBreakerService', () => {
         await expectAsync(
           service.execute(circuitName, async () => {
             throw new Error('MP Failure');
-          })
+          }),
         ).toBeRejected();
       }
 
@@ -246,7 +255,7 @@ describe('CircuitBreakerService', () => {
         await expectAsync(
           service.execute(circuitName, async () => {
             throw new Error('Failure');
-          })
+          }),
         ).toBeRejected();
       }
 
@@ -265,8 +274,16 @@ describe('CircuitBreakerService', () => {
     it('should reset all circuits', async () => {
       // Open two circuits
       for (let i = 0; i < 3; i++) {
-        await expectAsync(service.execute('circuit-1', async () => { throw new Error('Fail'); })).toBeRejected();
-        await expectAsync(service.execute('circuit-2', async () => { throw new Error('Fail'); })).toBeRejected();
+        await expectAsync(
+          service.execute('circuit-1', async () => {
+            throw new Error('Fail');
+          }),
+        ).toBeRejected();
+        await expectAsync(
+          service.execute('circuit-2', async () => {
+            throw new Error('Fail');
+          }),
+        ).toBeRejected();
       }
 
       expect(service.isOpen('circuit-1')).toBeTrue();
@@ -293,7 +310,7 @@ describe('CircuitBreakerService', () => {
         await expectAsync(
           service.execute(circuitName, async () => {
             throw new Error('Failure');
-          })
+          }),
         ).toBeRejected();
       }
 
@@ -310,7 +327,7 @@ describe('CircuitBreakerService', () => {
 
       const allStats = service.getAllStats();
       expect(allStats.length).toBe(3);
-      expect(allStats.map(s => s.name).sort()).toEqual(['circuit-a', 'circuit-b', 'circuit-c']);
+      expect(allStats.map((s) => s.name).sort()).toEqual(['circuit-a', 'circuit-b', 'circuit-c']);
     });
 
     it('should return null for non-existent circuit', () => {
@@ -328,7 +345,7 @@ describe('CircuitBreakerService', () => {
         await expectAsync(
           service.execute(circuitName, async () => {
             throw new Error('Failure');
-          })
+          }),
         ).toBeRejected();
       }
 
@@ -350,7 +367,7 @@ describe('CircuitBreakerService', () => {
 
       expect(mockLogger.info).toHaveBeenCalledWith(
         'Circuit "new-circuit" created',
-        jasmine.any(Object)
+        jasmine.any(Object),
       );
     });
 
@@ -358,12 +375,12 @@ describe('CircuitBreakerService', () => {
       await expectAsync(
         service.execute('log-failure', async () => {
           throw new Error('Test failure');
-        })
+        }),
       ).toBeRejected();
 
       expect(mockLogger.warn).toHaveBeenCalledWith(
         'Circuit "log-failure" failure #1',
-        jasmine.objectContaining({ error: 'Test failure' })
+        jasmine.objectContaining({ error: 'Test failure' }),
       );
     });
 
@@ -374,13 +391,13 @@ describe('CircuitBreakerService', () => {
         await expectAsync(
           service.execute(circuitName, async () => {
             throw new Error('Failure');
-          })
+          }),
         ).toBeRejected();
       }
 
       expect(mockLogger.info).toHaveBeenCalledWith(
         `Circuit "${circuitName}" transitioned: CLOSED -> OPEN`,
-        jasmine.any(Object)
+        jasmine.any(Object),
       );
     });
   });

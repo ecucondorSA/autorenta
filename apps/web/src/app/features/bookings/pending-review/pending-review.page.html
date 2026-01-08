@@ -21,9 +21,7 @@
       <div class="empty-icon">✅</div>
       <h2>No hay revisiones pendientes</h2>
       <p>Todas las devoluciones han sido confirmadas</p>
-      <button class="btn-primary" routerLink="/bookings/owner">
-        Ver mis reservas
-      </button>
+      <button class="btn-primary" routerLink="/bookings/owner">Ver mis reservas</button>
     </div>
   }
 
@@ -50,7 +48,9 @@
           <div class="booking-details">
             <div class="detail-item">
               <span class="label">Total:</span>
-              <span class="value amount">{{ booking.total_amount | money }} {{ booking.currency }}</span>
+              <span class="value amount"
+                >{{ booking.total_amount | money }} {{ booking.currency }}</span
+              >
             </div>
             @if (booking.returned_at) {
               <div class="detail-item">

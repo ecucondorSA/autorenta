@@ -16,9 +16,9 @@ export interface FranchiseInfo {
  * Result of deposit calculation with subscription coverage
  */
 export interface DepositWithSubscriptionResult {
-  depositRequiredUsd: number;           // Amount user must pay
-  coveredBySubscriptionUsd: number;     // Amount covered by subscription
-  franchiseUsd: number;                 // Original franchise amount
+  depositRequiredUsd: number; // Amount user must pay
+  coveredBySubscriptionUsd: number; // Amount covered by subscription
+  franchiseUsd: number; // Original franchise amount
   coverageType: 'full_subscription' | 'partial_subscription' | 'none';
   subscriptionId?: string;
   subscriptionBalanceUsd?: number;
@@ -125,7 +125,7 @@ export class BookingFranchiseService {
         depositRequiredUsd: franchise.standardDeductibleUsd,
         coveredBySubscriptionUsd: 0,
         franchiseUsd: franchise.standardDeductibleUsd,
-        coverageType: 'none'
+        coverageType: 'none',
       };
     }
 
@@ -140,7 +140,7 @@ export class BookingFranchiseService {
         franchiseUsd: franchise.standardDeductibleUsd,
         coverageType: 'full_subscription',
         subscriptionId: coverage.subscription_id ?? undefined,
-        subscriptionBalanceUsd: coverage.available_cents / 100
+        subscriptionBalanceUsd: coverage.available_cents / 100,
       };
     }
 
@@ -151,20 +151,22 @@ export class BookingFranchiseService {
       franchiseUsd: franchise.standardDeductibleUsd,
       coverageType: 'partial_subscription',
       subscriptionId: coverage.subscription_id ?? undefined,
-      subscriptionBalanceUsd: coverage.available_cents / 100
+      subscriptionBalanceUsd: coverage.available_cents / 100,
     };
   }
 
   /**
    * Get franchise info with subscription coverage for display in UI
    */
-  async getFranchiseWithCoverage(booking: Booking): Promise<FranchiseInfo & DepositWithSubscriptionResult> {
+  async getFranchiseWithCoverage(
+    booking: Booking,
+  ): Promise<FranchiseInfo & DepositWithSubscriptionResult> {
     const franchise = this.getFranchiseForBooking(booking);
     const depositResult = await this.calculateDepositWithSubscription(booking);
 
     return {
       ...franchise,
-      ...depositResult
+      ...depositResult,
     };
   }
 }

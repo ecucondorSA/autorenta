@@ -10,7 +10,7 @@ import {
   NgZone,
   ElementRef,
   ViewChild,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { environment } from '@environment';
@@ -146,7 +146,9 @@ export interface MercadoPagoCardTokenGeneratedEvent {
           </svg>
           <p class="text-sm text-text-secondary">Cargando formulario de pago seguro...</p>
           @if (initAttempt() > 1) {
-            <p class="text-xs text-text-secondary mt-1">Intento {{ initAttempt() }} de {{ maxInitAttempts }}</p>
+            <p class="text-xs text-text-secondary mt-1">
+              Intento {{ initAttempt() }} de {{ maxInitAttempts }}
+            </p>
           }
         </div>
       }
@@ -162,8 +164,18 @@ export interface MercadoPagoCardTokenGeneratedEvent {
       @if (errorMessage()) {
         <div class="mt-4 p-4 bg-error-bg border border-error-border rounded-lg">
           <div class="flex items-start gap-3">
-            <svg class="w-5 h-5 text-error-strong flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              class="w-5 h-5 text-error-strong flex-shrink-0 mt-0.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <div>
               <p class="text-sm font-medium text-error-strong">{{ errorMessage() }}</p>
@@ -178,12 +190,25 @@ export interface MercadoPagoCardTokenGeneratedEvent {
         </div>
       }
 
-      <div class="mt-4 p-3 bg-cta-default/10 border border-cta-default/40 rounded-lg flex items-center gap-2">
-        <svg class="w-4 h-4 text-cta-default flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+      <div
+        class="mt-4 p-3 bg-cta-default/10 border border-cta-default/40 rounded-lg flex items-center gap-2"
+      >
+        <svg
+          class="w-4 h-4 text-cta-default flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+          />
         </svg>
         <p class="text-xs text-cta-default">
-          Tus datos están protegidos por Mercado Pago. No guardamos información sensible de tu tarjeta.
+          Tus datos están protegidos por Mercado Pago. No guardamos información sensible de tu
+          tarjeta.
         </p>
       </div>
     </div>
@@ -216,18 +241,18 @@ export interface MercadoPagoCardTokenGeneratedEvent {
         width: 100% !important;
       }
 
-      :host ::ng-deep [data-testid="payment-form"] {
+      :host ::ng-deep [data-testid='payment-form'] {
         padding: 0 !important;
       }
 
-      :host ::ng-deep [data-testid="payment-form"] label {
+      :host ::ng-deep [data-testid='payment-form'] label {
         white-space: normal !important;
         line-height: 1.2 !important;
       }
 
-      :host ::ng-deep [data-testid="payment-form"] input,
-      :host ::ng-deep [data-testid="payment-form"] select,
-      :host ::ng-deep [data-testid="payment-form"] textarea {
+      :host ::ng-deep [data-testid='payment-form'] input,
+      :host ::ng-deep [data-testid='payment-form'] select,
+      :host ::ng-deep [data-testid='payment-form'] textarea {
         width: 100% !important;
         max-width: 100% !important;
       }
@@ -264,7 +289,8 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
   @Output() cardError = new EventEmitter<string>();
 
   // SECURITY: Use @ViewChild for DOM references instead of getElementById
-  @ViewChild('paymentBrickContainer', { static: true }) brickContainerRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('paymentBrickContainer', { static: true })
+  brickContainerRef!: ElementRef<HTMLDivElement>;
 
   readonly isInitializing = signal(true);
   readonly errorMessage = signal<string | null>(null);
@@ -344,7 +370,9 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
       // 1. Get and validate public key
       const publicKey = this.getPublicKey();
       if (!publicKey) {
-        throw new Error('MercadoPago public key no configurada. Verifica NG_APP_MERCADOPAGO_PUBLIC_KEY.');
+        throw new Error(
+          'MercadoPago public key no configurada. Verifica NG_APP_MERCADOPAGO_PUBLIC_KEY.',
+        );
       }
 
       // 2. Verify container element exists
@@ -404,7 +432,6 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
           },
         },
       });
-
     } catch (error) {
       // Don't continue if component was destroyed
       if (this.isDestroyed) {
@@ -481,7 +508,9 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
       const payer = cardFormData?.payer;
 
       if (!token || typeof token !== 'string' || token.length === 0) {
-        throw new Error('No se generó el token de la tarjeta. Verifica los datos e intenta nuevamente.');
+        throw new Error(
+          'No se generó el token de la tarjeta. Verifica los datos e intenta nuevamente.',
+        );
       }
 
       // Emit token to parent component
@@ -491,13 +520,12 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
           last4: 'XXXX', // Card Payment Brick doesn't expose last4 directly
           payer: payer
             ? {
-              email: payer.email,
-              identification: payer.identification,
-            }
+                email: payer.email,
+                identification: payer.identification,
+              }
             : undefined,
         });
       });
-
     } catch (error) {
       this.ngZone.run(() => {
         const errorMsg = error instanceof Error ? error['message'] : 'Error al procesar la tarjeta';
@@ -521,11 +549,11 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
 
     // Map common error types to user-friendly messages
     const errorTypeMessages: Record<string, string> = {
-      'invalid_card_number': 'El número de tarjeta no es válido.',
-      'invalid_expiration_date': 'La fecha de vencimiento no es válida.',
-      'invalid_security_code': 'El código de seguridad no es válido.',
-      'empty_card_holder_name': 'Ingresa el nombre del titular de la tarjeta.',
-      'invalid_identification_number': 'El número de documento no es válido.',
+      invalid_card_number: 'El número de tarjeta no es válido.',
+      invalid_expiration_date: 'La fecha de vencimiento no es válida.',
+      invalid_security_code: 'El código de seguridad no es válido.',
+      empty_card_holder_name: 'Ingresa el nombre del titular de la tarjeta.',
+      invalid_identification_number: 'El número de documento no es válido.',
     };
 
     if (error?.type && errorTypeMessages[error.type]) {

@@ -50,7 +50,9 @@ describe('AdvisoryLockService', () => {
 
       expect(result.acquired).toBeTrue();
       expect(result.lockId).toBeDefined();
-      expect(mockRpc).toHaveBeenCalledWith('try_advisory_lock', { p_lock_key: jasmine.any(Number) });
+      expect(mockRpc).toHaveBeenCalledWith('try_advisory_lock', {
+        p_lock_key: jasmine.any(Number),
+      });
     });
 
     it('should return false when lock not available', async () => {
@@ -62,10 +64,12 @@ describe('AdvisoryLockService', () => {
     });
 
     it('should handle RPC errors', async () => {
-      mockRpc.and.returnValue(Promise.resolve({
-        data: null,
-        error: { message: 'Database error' }
-      }));
+      mockRpc.and.returnValue(
+        Promise.resolve({
+          data: null,
+          error: { message: 'Database error' },
+        }),
+      );
 
       const result = await service.tryLock(LOCK_TYPES.PAYMENT_PROCESSING, 'booking-789');
 
@@ -106,7 +110,9 @@ describe('AdvisoryLockService', () => {
       const result = await service.unlock(LOCK_TYPES.PAYMENT_PROCESSING, 'booking-123');
 
       expect(result).toBeTrue();
-      expect(mockRpc).toHaveBeenCalledWith('release_advisory_lock', { p_lock_key: jasmine.any(Number) });
+      expect(mockRpc).toHaveBeenCalledWith('release_advisory_lock', {
+        p_lock_key: jasmine.any(Number),
+      });
     });
 
     it('should return false when lock not held', async () => {
@@ -118,10 +124,12 @@ describe('AdvisoryLockService', () => {
     });
 
     it('should handle unlock errors', async () => {
-      mockRpc.and.returnValue(Promise.resolve({
-        data: null,
-        error: { message: 'Unlock failed' }
-      }));
+      mockRpc.and.returnValue(
+        Promise.resolve({
+          data: null,
+          error: { message: 'Unlock failed' },
+        }),
+      );
 
       const result = await service.unlock(LOCK_TYPES.PAYMENT_PROCESSING, 'booking-123');
 
@@ -154,7 +162,7 @@ describe('AdvisoryLockService', () => {
         async () => {
           executed = true;
           return 'success';
-        }
+        },
       );
 
       expect(executed).toBeTrue();
@@ -165,17 +173,15 @@ describe('AdvisoryLockService', () => {
       mockRpc.and.returnValue(Promise.resolve({ data: true, error: null }));
 
       await expectAsync(
-        service.withLock(
-          LOCK_TYPES.PAYMENT_PROCESSING,
-          'booking-error',
-          async () => {
-            throw new Error('Function error');
-          }
-        )
+        service.withLock(LOCK_TYPES.PAYMENT_PROCESSING, 'booking-error', async () => {
+          throw new Error('Function error');
+        }),
       ).toBeRejectedWithError('Function error');
 
       // Lock should have been released
-      expect(mockRpc).toHaveBeenCalledWith('release_advisory_lock', { p_lock_key: jasmine.any(Number) });
+      expect(mockRpc).toHaveBeenCalledWith('release_advisory_lock', {
+        p_lock_key: jasmine.any(Number),
+      });
     });
 
     it('should throw if lock cannot be acquired', async () => {
@@ -186,8 +192,8 @@ describe('AdvisoryLockService', () => {
           LOCK_TYPES.PAYMENT_PROCESSING,
           'contested-resource',
           async () => 'should not execute',
-          { lockFailMessage: 'Resource busy' }
-        )
+          { lockFailMessage: 'Resource busy' },
+        ),
       ).toBeRejectedWithError('Resource busy');
     });
 
@@ -203,7 +209,7 @@ describe('AdvisoryLockService', () => {
         LOCK_TYPES.PAYMENT_PROCESSING,
         'retry-resource',
         async () => 'eventually succeeded',
-        { retryAttempts: 3, retryDelayMs: 10 }
+        { retryAttempts: 3, retryDelayMs: 10 },
       );
 
       expect(result).toBe('eventually succeeded');
@@ -222,9 +228,9 @@ describe('AdvisoryLockService', () => {
       const activeLocks = service.getActiveLocks();
 
       expect(activeLocks.length).toBe(3);
-      expect(activeLocks.some(l => l.type === LOCK_TYPES.PAYMENT_PROCESSING)).toBeTrue();
-      expect(activeLocks.some(l => l.type === LOCK_TYPES.WALLET_OPERATION)).toBeTrue();
-      expect(activeLocks.some(l => l.type === LOCK_TYPES.CAR_AVAILABILITY)).toBeTrue();
+      expect(activeLocks.some((l) => l.type === LOCK_TYPES.PAYMENT_PROCESSING)).toBeTrue();
+      expect(activeLocks.some((l) => l.type === LOCK_TYPES.WALLET_OPERATION)).toBeTrue();
+      expect(activeLocks.some((l) => l.type === LOCK_TYPES.CAR_AVAILABILITY)).toBeTrue();
     });
   });
 
@@ -297,7 +303,7 @@ describe('AdvisoryLockService', () => {
       jasmine.clock().tick(1001);
 
       // Wait for the async unlock to be triggered
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       // Lock should have been released via unlock call
       expect(mockRpc).toHaveBeenCalledWith('release_advisory_lock', jasmine.any(Object));
@@ -328,7 +334,7 @@ describe('AdvisoryLockService', () => {
         LOCK_TYPES.PAYMENT_PROCESSING,
         'booking-with-timeout',
         async () => 'success',
-        { timeoutMs: 10000 }
+        { timeoutMs: 10000 },
       );
 
       expect(result).toBe('success');

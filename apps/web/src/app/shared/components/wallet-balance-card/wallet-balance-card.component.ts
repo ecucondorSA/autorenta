@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import {Component,
+import {
+  Component,
   computed,
   effect,
   EffectRef,
@@ -9,7 +10,8 @@ import {Component,
   OnInit,
   runInInjectionContext,
   signal,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '@core/services/payments/wallet.service';
 

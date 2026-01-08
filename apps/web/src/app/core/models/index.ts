@@ -3,7 +3,7 @@ import type {
   DocumentKind,
   KycStatus,
   PaymentProvider,
-  PaymentStatus
+  PaymentStatus,
 } from '../types/database.types';
 import type { BookingDepositStatus } from './wallet.model';
 import type { Car } from './car.model';
@@ -38,7 +38,7 @@ export type {
   ReviewDB,
   WalletBalanceDB,
   WalletLedgerDB,
-  WalletTransactionDB
+  WalletTransactionDB,
 } from '../types/supabase-types';
 
 // Wallet domain models (preferred over DB row types)
@@ -67,7 +67,7 @@ export type {
   WithdrawalFilters,
   WithdrawalLoadingState,
   WithdrawalRequest,
-  WithdrawalStatus
+  WithdrawalStatus,
 } from './wallet.model';
 
 // Feature flag models
@@ -80,17 +80,23 @@ export {
   calculateDeductibleUsd,
   calculateHoldEstimatedArs,
   isFxExpired,
-  ValidationErrorCodes
+  ValidationErrorCodes,
 } from './booking-detail-payment.model';
 export type {
-  AuthorizePaymentResult, BookingDates, BookingDetailPaymentState,
-  BookingDetailRiskSnapshotDb, BookingInput,
+  AuthorizePaymentResult,
+  BookingDates,
+  BookingDetailPaymentState,
+  BookingDetailRiskSnapshotDb,
+  BookingInput,
   BookingPriceBreakdown,
   BookingVoucher,
   CalculatePricingParams,
-  CalculateRiskSnapshotParams, CountryCode, CoverageUpgrade,
+  CalculateRiskSnapshotParams,
+  CountryCode,
+  CoverageUpgrade,
   CreateBookingParams,
-  CreateBookingResult, FxSnapshot,
+  CreateBookingResult,
+  FxSnapshot,
   FxSnapshotDb,
   PaymentAuthorization,
   PaymentMode,
@@ -98,7 +104,7 @@ export type {
   UserConsents,
   ValidationError,
   WalletLock,
-  WalletLockResult
+  WalletLockResult,
 } from './booking-detail-payment.model';
 
 // Tripo AI models
@@ -360,12 +366,12 @@ export interface Booking {
   // IMPORTANTE: Estos nombres deben coincidir EXACTAMENTE con las columnas de BD
   returned_at?: string | null;
   owner_confirmed_delivery?: boolean | null;
-  owner_confirmed_at?: string | null;           // Timestamp confirmacion owner (BD: owner_confirmed_at)
-  has_damages?: boolean | null;                 // Si reporto danos (BD: has_damages)
-  damage_amount_cents?: number | null;          // Monto danos en CENTAVOS (BD: damage_amount_cents)
-  damage_description?: string | null;           // Descripcion danos (BD: damage_description)
+  owner_confirmed_at?: string | null; // Timestamp confirmacion owner (BD: owner_confirmed_at)
+  has_damages?: boolean | null; // Si reporto danos (BD: has_damages)
+  damage_amount_cents?: number | null; // Monto danos en CENTAVOS (BD: damage_amount_cents)
+  damage_description?: string | null; // Descripcion danos (BD: damage_description)
   renter_confirmed_payment?: boolean | null;
-  renter_confirmed_at?: string | null;          // Timestamp confirmacion renter (BD: renter_confirmed_at)
+  renter_confirmed_at?: string | null; // Timestamp confirmacion renter (BD: renter_confirmed_at)
   funds_released_at?: string | null;
   completion_status?: BookingCompletionStatus | null;
 
@@ -442,9 +448,8 @@ export interface Booking {
   extension_responded_at?: string | null;
 }
 
-
-
-export interface BookingExtensionRequest { // NEW
+export interface BookingExtensionRequest {
+  // NEW
 
   id: string;
 
@@ -471,7 +476,6 @@ export interface BookingExtensionRequest { // NEW
   requested_at: string;
 
   responded_at: string | null;
-
 }
 
 export interface PaymentIntent {
@@ -523,25 +527,25 @@ export interface Review {
   // ============================================
   // RENTER → OWNER ratings (evaluating car/owner)
   // ============================================
-  rating_cleanliness?: number | null;  // Limpieza del vehículo
-  rating_accuracy?: number | null;     // Descripción vs realidad
-  rating_location?: number | null;     // Punto de entrega
-  rating_checkin?: number | null;      // Proceso de entrega
-  rating_value?: number | null;        // Relación precio-calidad
+  rating_cleanliness?: number | null; // Limpieza del vehículo
+  rating_accuracy?: number | null; // Descripción vs realidad
+  rating_location?: number | null; // Punto de entrega
+  rating_checkin?: number | null; // Proceso de entrega
+  rating_value?: number | null; // Relación precio-calidad
 
   // ============================================
   // OWNER → RENTER ratings (evaluating renter)
   // ============================================
-  rating_punctuality?: number | null;  // Puntualidad
-  rating_care?: number | null;         // Cuidado del vehículo
-  rating_rules?: number | null;        // Respeto de reglas
-  rating_recommend?: number | null;    // ¿Lo recomendarías?
+  rating_punctuality?: number | null; // Puntualidad
+  rating_care?: number | null; // Cuidado del vehículo
+  rating_rules?: number | null; // Respeto de reglas
+  rating_recommend?: number | null; // ¿Lo recomendarías?
 
   // ============================================
   // SHARED ratings (both types)
   // ============================================
   rating_communication?: number | null; // Comunicación
-  rating?: number | null;               // Legacy: rating general
+  rating?: number | null; // Legacy: rating general
 
   // Overall rating (calculated)
   rating_overall?: number;

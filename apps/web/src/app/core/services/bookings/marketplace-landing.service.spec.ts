@@ -6,7 +6,7 @@ describe('MarketplaceLandingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MarketplaceLandingService]
+      providers: [MarketplaceLandingService],
     });
     service = TestBed.inject(MarketplaceLandingService);
   });
@@ -54,5 +54,4 @@ describe('MarketplaceLandingService', () => {
   it('should have setUserLocation method', () => {
     expect(typeof service.setUserLocation).toBe('function');
   });
-
 });

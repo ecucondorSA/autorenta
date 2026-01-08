@@ -20,7 +20,7 @@ import {
   signal,
   SimpleChanges,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import type { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { MapboxDirectionsService } from '@core/services/geo/mapbox-directions.service';
@@ -184,11 +184,7 @@ class QuadTree {
   selector: 'app-cars-map',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    MapBookingPanelComponent,
-    MapDetailsPanelComponent,
-    MapLayersControlComponent
-  ],
+  imports: [MapBookingPanelComponent, MapDetailsPanelComponent, MapLayersControlComponent],
   templateUrl: './cars-map.component.html',
   styleUrls: ['./cars-map.component.css'],
   encapsulation: ViewEncapsulation.None,
@@ -502,7 +498,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         zoom: 4, // Zoom amplio para ver los 3 países
         maxBounds: [
           [-75, -56], // Southwest: Sur de Argentina
-          [-34, -5],  // Northeast: Norte de Brasil
+          [-34, -5], // Northeast: Norte de Brasil
         ],
         // Mapbox Standard configuration - OPTIMIZED for car marketplace
         config: {
@@ -570,9 +566,11 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         console.error('[CarsMap] Map error:', event);
 
         const errorStatus =
-          (event['error'] && 'status' in event['error'] ? event['error']['status'] : undefined) ?? event['status'];
+          (event['error'] && 'status' in event['error'] ? event['error']['status'] : undefined) ??
+          event['status'];
         const errorMessage =
-          (event['error'] && event['error']['message']) || ('message' in event ? event['message'] : '');
+          (event['error'] && event['error']['message']) ||
+          ('message' in event ? event['message'] : '');
 
         if (
           errorStatus === 401 ||
@@ -596,7 +594,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       const errorMessage = err instanceof Error ? err['message'] : String(err);
 
       if (errorMessage.includes('WebGL')) {
-        this['error'].set('El mapa requiere aceleración de hardware (WebGL). Por favor, actívala en tu navegador.');
+        this['error'].set(
+          'El mapa requiere aceleración de hardware (WebGL). Por favor, actívala en tu navegador.',
+        );
       } else {
         this['error'].set(errorMessage || 'Error al inicializar el mapa');
       }
@@ -759,7 +759,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
             ['to-string', ['round', ['/', ['get', 'sum'], ['get', 'point_count']]]],
             '\n',
             ['to-string', ['get', 'point_count']],
-            ' autos'
+            ' autos',
           ],
           'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
           'text-size': 13,
@@ -814,7 +814,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
       const properties = (features[0].properties || {}) as Record<string, unknown>;
       const clusterId =
-        typeof properties['cluster_id'] === 'number' ? (properties['cluster_id'] as number) : undefined;
+        typeof properties['cluster_id'] === 'number'
+          ? (properties['cluster_id'] as number)
+          : undefined;
 
       if (clusterId === undefined) {
         return;
@@ -838,7 +840,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     this.map.on('click', 'cars-unclustered', (event: MapLayerMouseEvent) => {
       const carFeature = event.features?.[0] as MapboxGeoJSONFeature | undefined;
       const properties = (carFeature?.properties || {}) as Record<string, unknown>;
-      const carId = typeof properties['carId'] === 'string' ? (properties['carId'] as string) : undefined;
+      const carId =
+        typeof properties['carId'] === 'string' ? (properties['carId'] as string) : undefined;
       if (carId) {
         this.carSelected.emit(carId);
         const car = this.cars.find((c) => c['carId'] === carId);
@@ -1865,9 +1868,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.deg2rad(lat1)) *
-      Math.cos(this.deg2rad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+        Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c; // Distance in km
     return d;
@@ -2117,7 +2120,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     const lat2 = Math.asin(
       Math.sin(lat1) * Math.cos(distanceMeters / R) +
-      Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
+        Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
     );
 
     const lng2 =

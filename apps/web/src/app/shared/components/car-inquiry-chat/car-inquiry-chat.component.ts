@@ -31,7 +31,9 @@ export class CarInquiryChatComponent {
     contextId: this.carId(),
     recipientId: this.ownerId(),
     recipientName: this.ownerName(),
-    headerSubtitle: this.carTitle() ? `Consulta sobre ${this.carTitle()}` : 'Consulta previa a reserva',
+    headerSubtitle: this.carTitle()
+      ? `Consulta sobre ${this.carTitle()}`
+      : 'Consulta previa a reserva',
   }));
 
   onMessageSent(_event: { messageId: string; context: ChatContext }): void {

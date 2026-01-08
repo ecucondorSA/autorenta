@@ -40,7 +40,7 @@
     [disabled]="loading() || comparing() || !validationResult()?.valid"
     (click)="compareDamages()"
     class="mb-4"
-    >
+  >
     <ion-icon name="camera" slot="start"></ion-icon>
     @if (!comparing()) {
       <span>Comparar Daños (Check-in vs Check-out)</span>
@@ -93,7 +93,7 @@
                         [src]="photo"
                         [alt]="damage.description"
                         class="w-full h-32 object-cover rounded"
-                        />
+                      />
                     }
                   </div>
                 </div>
@@ -116,10 +116,7 @@
 
   <!-- No Damages Message -->
   @if (!comparing() && !loading() && damages().length === 0 && validationResult()?.valid) {
-    <ion-card
-      color="success"
-      class="mt-4"
-      >
+    <ion-card color="success" class="mt-4">
       <ion-card-content>
         <div class="flex items-center">
           <ion-icon name="checkmark-circle" class="text-xl mr-2"></ion-icon>

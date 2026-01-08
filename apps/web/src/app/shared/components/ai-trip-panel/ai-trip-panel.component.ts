@@ -91,7 +91,10 @@ import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core
             <div class="space-y-3">
               <!-- Days -->
               <div>
-                <label for="tripDaysSelect" class="mb-1 block text-xs font-medium text-text-secondary">
+                <label
+                  for="tripDaysSelect"
+                  class="mb-1 block text-xs font-medium text-text-secondary"
+                >
                   Duracion del viaje
                 </label>
                 <select
@@ -108,7 +111,10 @@ import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core
 
               <!-- Start Location -->
               <div>
-                <label for="tripStartLocation" class="mb-1 block text-xs font-medium text-text-secondary">
+                <label
+                  for="tripStartLocation"
+                  class="mb-1 block text-xs font-medium text-text-secondary"
+                >
                   Punto de partida
                 </label>
                 <input
@@ -232,9 +238,7 @@ import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core
               <!-- Tips -->
               @if (itinerary()!.tips.length > 0) {
                 <div class="rounded-lg bg-amber-50 p-3">
-                  <h4 class="mb-2 text-xs font-semibold text-amber-700">
-                    Tips para el viaje
-                  </h4>
+                  <h4 class="mb-2 text-xs font-semibold text-amber-700">Tips para el viaje</h4>
                   <ul class="space-y-1 text-xs text-amber-800">
                     @for (tip of itinerary()!.tips; track tip) {
                       <li>{{ tip }}</li>
@@ -246,9 +250,7 @@ import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core
               <!-- Warnings -->
               @if (itinerary()!.warnings?.length) {
                 <div class="rounded-lg bg-red-50 p-3">
-                  <h4 class="mb-2 text-xs font-semibold text-red-700">
-                    Advertencias
-                  </h4>
+                  <h4 class="mb-2 text-xs font-semibold text-red-700">Advertencias</h4>
                   <ul class="space-y-1 text-xs text-red-800">
                     @for (warning of itinerary()!.warnings; track warning) {
                       <li>{{ warning }}</li>

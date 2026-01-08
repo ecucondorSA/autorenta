@@ -33,8 +33,18 @@ import type { Booking } from '../../../core/models';
       <!-- Header -->
       <div class="px-4 py-3 border-b border-border-default flex items-center justify-between">
         <h3 class="font-bold text-text-primary flex items-center gap-2">
-          <svg class="w-5 h-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          <svg
+            class="w-5 h-5 text-cta-default"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+            />
           </svg>
           Historial de Viajes
         </h3>
@@ -63,15 +73,28 @@ import type { Booking } from '../../../core/models';
       <!-- Empty State -->
       @if (!loading() && bookings().length === 0) {
         <div class="p-8 text-center">
-          <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          <div
+            class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3"
+          >
+            <svg
+              class="w-6 h-6 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
             </svg>
           </div>
-          <p class="text-sm text-text-secondary">
-            No tienes viajes registrados
-          </p>
-          <a routerLink="/marketplace" class="text-xs text-cta-default hover:underline mt-2 inline-block">
+          <p class="text-sm text-text-secondary">No tienes viajes registrados</p>
+          <a
+            routerLink="/marketplace"
+            class="text-xs text-cta-default hover:underline mt-2 inline-block"
+          >
             Explorar autos disponibles
           </a>
         </div>
@@ -93,8 +116,18 @@ import type { Booking } from '../../../core/models';
                   />
                 } @else {
                   <div class="w-full h-full flex items-center justify-center">
-                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10" />
+                    <svg
+                      class="w-6 h-6 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10"
+                      />
                     </svg>
                   </div>
                 }
@@ -131,9 +164,13 @@ import type { Booking } from '../../../core/models';
       }
     </div>
   `,
-  styles: [`
-    :host { display: block; }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class BookingHistoryListComponent implements OnInit {
   private readonly bookingsService = inject(BookingsService);

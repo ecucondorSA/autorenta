@@ -1,6 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { AuthVerificationStatus, VerificationBaseService } from '@core/services/verification/verification-base.service';
+import {
+  AuthVerificationStatus,
+  VerificationBaseService,
+} from '@core/services/verification/verification-base.service';
 import type { AuthError } from '@supabase/supabase-js';
 
 /**

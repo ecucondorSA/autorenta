@@ -35,20 +35,16 @@
                   fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                   clip-rule="evenodd"
-                  />
+                />
               </svg>
             }
             @if (!isLocationVerified() && hasHomeLocation()) {
-              <svg
-                class="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fill-rule="evenodd"
                   d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
                   clip-rule="evenodd"
-                  />
+                />
               </svg>
             }
             @if (!hasHomeLocation()) {
@@ -57,7 +53,7 @@
                   fill-rule="evenodd"
                   d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
                   clip-rule="evenodd"
-                  />
+                />
               </svg>
             }
           </span>
@@ -74,9 +70,7 @@
               </p>
             }
             @if (!hasHomeLocation()) {
-              <p class="badge-description">
-                Configura tu ubicación de referencia para comenzar
-              </p>
+              <p class="badge-description">Configura tu ubicación de referencia para comenzar</p>
             }
           </div>
         </div>
@@ -96,20 +90,20 @@
               placeholder="Ej: Av. Corrientes 1234, CABA"
               class="address-input"
               (keyup.enter)="searchAddress()"
-              />
+            />
             <button
               type="button"
               (click)="searchAddress()"
               [disabled]="loading()"
               class="search-button"
-              >
+            >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
+                />
               </svg>
               Buscar
             </button>
@@ -119,20 +113,20 @@
             (click)="useCurrentLocation()"
             [disabled]="loading()"
             class="current-location-button"
-            >
+          >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
+              />
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
+              />
             </svg>
             Usar Mi Ubicación Actual
           </button>
@@ -142,13 +136,12 @@
       <div class="section">
         <h2 class="section-title font-bold font-satoshi">Ubicación en el Mapa</h2>
         <p class="section-description">
-          Arrastra el marcador para ajustar tu ubicación exacta. Esta será tu ubicación de referencia.
+          Arrastra el marcador para ajustar tu ubicación exacta. Esta será tu ubicación de
+          referencia.
         </p>
         <app-location-map-picker
           [initialLatitude]="selectedCoordinates()?.lat ?? profile()?.home_latitude ?? undefined"
-        [initialLongitude]="
-          selectedCoordinates()?.lng ?? profile()?.home_longitude ?? undefined
-        "
+          [initialLongitude]="selectedCoordinates()?.lng ?? profile()?.home_longitude ?? undefined"
           [initialAddress]="selectedCoordinates()?.address ?? profile()?.address_line1 ?? undefined"
           (locationChange)="onMapLocationChange($event)"
         ></app-location-map-picker>
@@ -169,7 +162,7 @@
               max="100"
               step="5"
               class="radius-slider"
-              />
+            />
             <div class="radius-markers">
               <span>5 km</span>
               <span>100 km</span>
@@ -179,24 +172,16 @@
           @if (
             form.controls.preferred_search_radius_km.invalid &&
             form.controls.preferred_search_radius_km.touched
-            ) {
-            <div
-              class="validation-error"
-              >
+          ) {
+            <div class="validation-error">
               @if (form.controls.preferred_search_radius_km.errors?.['required']) {
-                <p>
-                  El radio de búsqueda es requerido
-                </p>
+                <p>El radio de búsqueda es requerido</p>
               }
               @if (form.controls.preferred_search_radius_km.errors?.['min']) {
-                <p>
-                  El radio mínimo es 5 km
-                </p>
+                <p>El radio mínimo es 5 km</p>
               }
               @if (form.controls.preferred_search_radius_km.errors?.['max']) {
-                <p>
-                  El radio máximo es 100 km
-                </p>
+                <p>El radio máximo es 100 km</p>
               }
             </div>
           }
@@ -216,12 +201,13 @@
                 fill-rule="evenodd"
                 d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                 clip-rule="evenodd"
-                />
+              />
             </svg>
             <div>
               <h4 class="info-title font-bold font-satoshi">Ubicación Privada</h4>
               <p class="info-text">
-                Tu ubicación exacta solo se usa para cálculos internos de distancia y recomendaciones.
+                Tu ubicación exacta solo se usa para cálculos internos de distancia y
+                recomendaciones.
               </p>
             </div>
           </div>
@@ -231,7 +217,7 @@
                 fill-rule="evenodd"
                 d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
                 clip-rule="evenodd"
-                />
+              />
             </svg>
             <div>
               <h4 class="info-title font-bold font-satoshi">Información Pública</h4>
@@ -246,7 +232,7 @@
                 fill-rule="evenodd"
                 d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                 clip-rule="evenodd"
-                />
+              />
             </svg>
             <div>
               <h4 class="info-title font-bold font-satoshi font-luxury">Datos Seguros</h4>
@@ -267,7 +253,7 @@
                 fill-rule="evenodd"
                 d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
                 clip-rule="evenodd"
-                />
+              />
             </svg>
             <span>Selecciona una ubicación en el mapa o busca una dirección para continuar</span>
           </div>
@@ -278,20 +264,15 @@
             (click)="saveLocation()"
             [disabled]="saving() || !selectedCoordinates()"
             class="btn-primary"
-            >
+          >
             @if (!saving()) {
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M5 13l4 4L19 7"
-                  />
+                />
               </svg>
             }
             @if (saving()) {
@@ -305,20 +286,15 @@
               (click)="verifyLocation()"
               [disabled]="verifying() || !hasHomeLocation() || isLocationVerified()"
               class="btn-secondary"
-              >
+            >
               @if (!verifying()) {
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
+                  />
                 </svg>
               }
               @if (verifying()) {
@@ -333,14 +309,14 @@
               (click)="clearLocation()"
               [disabled]="saving() || !hasHomeLocation()"
               class="btn-danger"
-              >
+            >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
+                />
               </svg>
               Eliminar Ubicación
             </button>
@@ -355,7 +331,7 @@
               fill-rule="evenodd"
               d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
               clip-rule="evenodd"
-              />
+            />
           </svg>
           {{ message() }}
         </div>
@@ -367,7 +343,7 @@
               fill-rule="evenodd"
               d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
               clip-rule="evenodd"
-              />
+            />
           </svg>
           {{ error() }}
         </div>

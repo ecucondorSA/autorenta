@@ -1,5 +1,6 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Component,
+import {
+  Component,
   Input,
   OnInit,
   OnChanges,
@@ -8,7 +9,8 @@ import {Component,
   PLATFORM_ID,
   signal,
   computed,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
@@ -57,15 +59,13 @@ export interface WazeMapOptions {
     <div class="waze-live-map-container relative w-full h-full">
       <!-- Loading State -->
       @if (isLoading()) {
-        <div
-          class="absolute inset-0 flex items-center justify-center bg-surface-base z-10"
-          >
+        <div class="absolute inset-0 flex items-center justify-center bg-surface-base z-10">
           <div class="text-center space-y-3">
             <svg
               class="animate-spin h-10 w-10 text-cta-default mx-auto"
               fill="none"
               viewBox="0 0 24 24"
-              >
+            >
               <circle
                 class="opacity-25"
                 cx="12"
@@ -84,7 +84,7 @@ export interface WazeMapOptions {
           </div>
         </div>
       }
-    
+
       <!-- Waze Live Map Iframe -->
       @if (wazeMapUrl()) {
         <iframe
@@ -97,25 +97,23 @@ export interface WazeMapOptions {
           loading="lazy"
         ></iframe>
       }
-    
+
       <!-- Error State -->
       @if (hasError()) {
-        <div
-          class="absolute inset-0 flex items-center justify-center bg-surface-base"
-          >
+        <div class="absolute inset-0 flex items-center justify-center bg-surface-base">
           <div class="text-center space-y-3 p-6">
             <svg
               class="h-12 w-12 text-error mx-auto"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              >
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
+              />
             </svg>
             <p class="text-text-primary font-medium">Error al cargar el mapa de Waze</p>
             <p class="text-text-secondary text-sm">
@@ -124,32 +122,32 @@ export interface WazeMapOptions {
           </div>
         </div>
       }
-    
+
       <!-- Waze Branding Badge -->
       <div
         class="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg px-3 py-2 flex items-center gap-2 z-20"
-        >
+      >
         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="#33CCFF">
           <path
             d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"
-            />
+          />
           <path
             d="M12 6c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"
-            />
+          />
         </svg>
         <span class="text-xs font-semibold text-text-primary">Tráfico en tiempo real - Waze</span>
       </div>
-    
+
       <!-- Info Badge (optional) -->
       @if (showInfoBadge) {
         <div
           class="absolute top-4 right-4 bg-cta-default text-cta-text rounded-lg shadow-lg px-3 py-2 text-xs font-medium z-20"
-          >
+        >
           Datos de comunidad Waze
         </div>
       }
     </div>
-    `,
+  `,
   styles: [
     `
       :host {

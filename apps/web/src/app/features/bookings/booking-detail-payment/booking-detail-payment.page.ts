@@ -1,7 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {Component, OnDestroy, OnInit, computed, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subject, firstValueFrom } from 'rxjs';
 
@@ -28,7 +35,7 @@ import {
   SubscriptionCoverageCheck,
   PreauthorizationCalculation,
   SUBSCRIPTION_TIERS,
-  type SubscriptionTier
+  type SubscriptionTier,
 } from '@core/models/subscription.model';
 
 // Components
@@ -140,7 +147,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         userTier: this.subscriptionService.tier(),
         userTierName: this.subscriptionService.tier()
           ? SUBSCRIPTION_TIERS[this.subscriptionService.tier()!]?.name
-          : null
+          : null,
       };
     }
 
@@ -157,7 +164,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       recommendedTier: requiredTier,
       recommendedTierName: tierConfig.name,
       tierPriceUsd: tierConfig.price_usd,
-      fgoCap: preauth.fgoCap
+      fgoCap: preauth.fgoCap,
     };
   });
 
@@ -247,7 +254,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
     // Guarantee uses calculated hold from risk snapshot (aligns with checkout flow)
     // Fallback to PRE_AUTH_AMOUNT_USD_DEFAULT if risk snapshot not yet calculated
-    const guaranteeArs = riskSnapshot?.holdEstimatedArs ?? (this.PRE_AUTH_AMOUNT_USD_DEFAULT * fx.platformRate);
+    const guaranteeArs =
+      riskSnapshot?.holdEstimatedArs ?? this.PRE_AUTH_AMOUNT_USD_DEFAULT * fx.platformRate;
 
     // Rental cost already handles currency conversion correctly
     // (uses binanceRate for USD cars, direct ARS for ARS cars)
@@ -362,7 +370,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     const carId = queryParams.get('carId');
     const startDate = queryParams.get('startDate');
     const endDate = queryParams.get('endDate');
-    const bookingIdParam = queryParams.get('bookingId') || this.route.snapshot.paramMap.get('bookingId');
+    const bookingIdParam =
+      queryParams.get('bookingId') || this.route.snapshot.paramMap.get('bookingId');
 
     // Mode 1: Direct booking params (carId + dates)
     if (carId && startDate && endDate) {
@@ -379,20 +388,26 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       try {
         const { data: booking, error } = await this.supabaseClient
           .from('bookings')
-          .select('id, car_id, start_at, end_at, status, payment_mode, wallet_lock_id, authorized_payment_id, paid_at')
+          .select(
+            'id, car_id, start_at, end_at, status, payment_mode, wallet_lock_id, authorized_payment_id, paid_at',
+          )
           .eq('id', bookingIdParam)
           .single();
 
         if (error || !booking) {
           this.logger.error('Error loading booking', { bookingId: bookingIdParam, error });
-          this.error.set('No se encontró la reserva. Puede que haya sido cancelada o el enlace sea incorrecto.');
+          this.error.set(
+            'No se encontró la reserva. Puede que haya sido cancelada o el enlace sea incorrecto.',
+          );
           return;
         }
 
         // FIX: Validate booking is in a modifiable state
         const validStates = ['pending', 'pending_payment', 'draft'];
         if (!validStates.includes(booking.status)) {
-          this.error.set(`Este booking está en estado "${booking.status}" y no se puede modificar.`);
+          this.error.set(
+            `Este booking está en estado "${booking.status}" y no se puede modificar.`,
+          );
           return;
         }
 
@@ -425,7 +440,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         if (booking.authorized_payment_id) {
           try {
             const auth = await firstValueFrom(
-              this.paymentAuthorizationService.getAuthorizationStatus(booking.authorized_payment_id),
+              this.paymentAuthorizationService.getAuthorizationStatus(
+                booking.authorized_payment_id,
+              ),
             );
             if (auth) {
               this.currentAuthorization.set(auth);
@@ -447,7 +464,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     }
 
     // No valid params found
-    this.error.set('Faltan parámetros de reserva. Por favor, selecciona un vehículo y fechas desde el catálogo.');
+    this.error.set(
+      'Faltan parámetros de reserva. Por favor, selecciona un vehículo y fechas desde el catálogo.',
+    );
   }
 
   private async loadCarInfo(): Promise<void> {
@@ -549,7 +568,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       const requiredArs = requiredUsd * fx.platformRate;
       amountCents = Math.round(requiredArs * 100);
     } else {
-      throw new Error('No se pudo calcular el monto de la garantía (tipo de cambio no disponible).');
+      throw new Error(
+        'No se pudo calcular el monto de la garantía (tipo de cambio no disponible).',
+      );
     }
 
     if (!requiredUsd || amountCents <= 0) {
@@ -560,15 +581,13 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
     try {
       // Prefer the new function with expiration if available
-      const { data: lockWithExpiration, error: lockWithExpirationError } = await this.supabaseClient.rpc(
-        'wallet_lock_funds_with_expiration',
-        {
+      const { data: lockWithExpiration, error: lockWithExpirationError } =
+        await this.supabaseClient.rpc('wallet_lock_funds_with_expiration', {
           p_booking_id: bookingId,
           p_amount_cents: amountCents,
           p_lock_type: 'security_deposit_lock',
           p_expires_in_days: 90,
-        },
-      );
+        });
 
       if (!lockWithExpirationError && lockWithExpiration) {
         this.walletLockId.set(lockWithExpiration as string);
@@ -580,10 +599,13 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       }
 
       // Fallback: legacy function
-      const { data: lockId, error: lockError } = await this.supabaseClient.rpc('wallet_lock_funds', {
-        p_booking_id: bookingId,
-        p_amount_cents: amountCents,
-      });
+      const { data: lockId, error: lockError } = await this.supabaseClient.rpc(
+        'wallet_lock_funds',
+        {
+          p_booking_id: bookingId,
+          p_amount_cents: amountCents,
+        },
+      );
 
       if (lockError || !lockId) {
         throw lockError || new Error('No se pudo bloquear la garantía en wallet.');
@@ -618,7 +640,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
     if (mode === 'card') {
       if (!authorization || authorization.status !== 'authorized') {
-        this.error.set('Debes completar la pre-autorización de la garantía antes de enviar la solicitud.');
+        this.error.set(
+          'Debes completar la pre-autorización de la garantía antes de enviar la solicitud.',
+        );
         return;
       }
     } else {
@@ -722,7 +746,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     const vehicleValueUsd = car.value_usd || Math.round(car.price_per_day * 125);
 
     // 1. Get Subscription-aware preauthorization (Hold)
-    const preauth = await this.subscriptionService.calculatePreauthorizationForVehicle(vehicleValueUsd);
+    const preauth =
+      await this.subscriptionService.calculatePreauthorizationForVehicle(vehicleValueUsd);
     this.preauthCalculation.set(preauth);
 
     // 2. Get Subscription coverage for franchise/deductibles
@@ -730,7 +755,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     const standardDeductibleUsd = Math.round(vehicleValueUsd * 0.05); // Rough estimate
     const rolloverDeductibleUsd = standardDeductibleUsd * 2;
 
-    const coverage = await this.subscriptionService.checkCoverage(Math.round(standardDeductibleUsd * 100));
+    const coverage = await this.subscriptionService.checkCoverage(
+      Math.round(standardDeductibleUsd * 100),
+    );
     this.subscriptionCoverage.set(coverage);
 
     const holdEstimatedUsd = preauth.holdAmountUsd;
@@ -742,7 +769,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       holdEstimatedArs,
       holdEstimatedUsd,
       creditSecurityUsd: holdEstimatedUsd, // Dynamic from subscription RPC (no more hardcoded $600)
-      bucket: vehicleValueUsd < 20000 ? 'economy' : (vehicleValueUsd < 40000 ? 'standard' : 'premium'),
+      bucket:
+        vehicleValueUsd < 20000 ? 'economy' : vehicleValueUsd < 40000 ? 'standard' : 'premium',
       vehicleValueUsd,
       country: 'AR',
       fxRate: fx.platformRate,
@@ -754,7 +782,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     this.logger.info('Risk snapshot updated with subscription benefits', {
       holdEstimatedUsd,
       discountApplied: preauth.discountApplied,
-      coverageType: coverage.coverage_type
+      coverageType: coverage.coverage_type,
     });
   }
 

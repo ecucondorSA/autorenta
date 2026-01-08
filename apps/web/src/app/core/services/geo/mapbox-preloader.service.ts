@@ -1,5 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Injectable, signal, inject} from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { environment } from '@environment';
 
 /**
@@ -159,7 +159,7 @@ export class MapboxPreloaderService {
     for (const zoom of zoomLevels) {
       this.preloadedMap.setZoom(zoom);
       // Wait for tiles to load
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
     }
 
     // Reset to default zoom
@@ -192,7 +192,6 @@ export class MapboxPreloaderService {
     }
 
     try {
-
       const mapContainer = this.preloadedMap.getContainer();
 
       // Move the map container to the target
@@ -224,10 +223,13 @@ export class MapboxPreloaderService {
    * Create a new map in the target container using the preloaded Mapbox GL module
    * Use this if transfer doesn't work well
    */
-  createMapInContainer(container: HTMLElement, options?: Partial<{
-    center: [number, number];
-    zoom: number;
-  }>): MapboxMap | null {
+  createMapInContainer(
+    container: HTMLElement,
+    options?: Partial<{
+      center: [number, number];
+      zoom: number;
+    }>,
+  ): MapboxMap | null {
     if (!this.mapboxgl) {
       console.warn('[MapboxPreloader] Mapbox GL not loaded');
       return null;

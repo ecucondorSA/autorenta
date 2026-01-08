@@ -136,7 +136,9 @@ export class BookingsStore {
    * Pending bookings (awaiting payment or approval)
    */
   readonly pendingBookings = computed(() =>
-    this.myBookings().filter((b) => ['pending', 'pending_payment', 'pending_approval'].includes(b.status)),
+    this.myBookings().filter((b) =>
+      ['pending', 'pending_payment', 'pending_approval'].includes(b.status),
+    ),
   );
 
   /**
@@ -149,15 +151,16 @@ export class BookingsStore {
   /**
    * Owner's pending approval count
    */
-  readonly pendingApprovalCount = computed(() =>
-    this.ownerBookings().filter((b) => b.status === 'pending').length,
+  readonly pendingApprovalCount = computed(
+    () => this.ownerBookings().filter((b) => b.status === 'pending').length,
   );
 
   /**
    * Owner's active rentals count
    */
-  readonly ownerActiveCount = computed(() =>
-    this.ownerBookings().filter((b) => ['confirmed', 'in_progress'].includes(b.status)).length,
+  readonly ownerActiveCount = computed(
+    () =>
+      this.ownerBookings().filter((b) => ['confirmed', 'in_progress'].includes(b.status)).length,
   );
 
   /**
@@ -188,11 +191,7 @@ export class BookingsStore {
   async loadBooking(bookingId: string, force = false): Promise<Booking | null> {
     // Check cache if not forcing refresh
     const currentBooking = this.currentBooking();
-    if (
-      !force &&
-      currentBooking?.id === bookingId &&
-      this.isCurrentBookingCacheValid()
-    ) {
+    if (!force && currentBooking?.id === bookingId && this.isCurrentBookingCacheValid()) {
       return currentBooking;
     }
 
@@ -234,7 +233,12 @@ export class BookingsStore {
     const force = options?.force ?? false;
 
     // Check cache if not forcing refresh and no pagination
-    if (!force && !options?.offset && this.isMyBookingsCacheValid() && this.myBookings().length > 0) {
+    if (
+      !force &&
+      !options?.offset &&
+      this.isMyBookingsCacheValid() &&
+      this.myBookings().length > 0
+    ) {
       return;
     }
 
@@ -292,7 +296,12 @@ export class BookingsStore {
     const force = options?.force ?? false;
 
     // Check cache if not forcing refresh and no pagination
-    if (!force && !options?.offset && this.isOwnerBookingsCacheValid() && this.ownerBookings().length > 0) {
+    if (
+      !force &&
+      !options?.offset &&
+      this.isOwnerBookingsCacheValid() &&
+      this.ownerBookings().length > 0
+    ) {
       return;
     }
 
@@ -329,7 +338,8 @@ export class BookingsStore {
 
       this.ownerBookingsTotal.set(total);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'No pudimos cargar tus reservas de propietario.';
+      const errorMessage =
+        err instanceof Error ? err.message : 'No pudimos cargar tus reservas de propietario.';
       this.error.set(errorMessage);
       throw err;
     } finally {
@@ -343,10 +353,7 @@ export class BookingsStore {
   /**
    * Update current booking with optimistic update and rollback on error
    */
-  async updateCurrentBooking(
-    bookingId: string,
-    updates: Partial<Booking>,
-  ): Promise<Booking> {
+  async updateCurrentBooking(bookingId: string, updates: Partial<Booking>): Promise<Booking> {
     this.loading.set(true);
     this.error.set(null);
 
@@ -405,10 +412,7 @@ export class BookingsStore {
   /**
    * Update booking status with optimistic update
    */
-  async updateBookingStatus(
-    bookingId: string,
-    status: BookingStatus,
-  ): Promise<void> {
+  async updateBookingStatus(bookingId: string, status: BookingStatus): Promise<void> {
     await this.updateCurrentBooking(bookingId, { status });
   }
 

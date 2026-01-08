@@ -49,9 +49,7 @@ describe('DepositPage', () => {
           }),
         ),
       },
-      rpc: jasmine.createSpy('rpc').and.returnValue(
-        Promise.resolve({ data: null, error: null }),
-      ),
+      rpc: jasmine.createSpy('rpc').and.returnValue(Promise.resolve({ data: null, error: null })),
     };
 
     const supabaseClientServiceMock = jasmine.createSpyObj('SupabaseClientService', ['getClient'], {
@@ -364,7 +362,7 @@ describe('DepositPage', () => {
     });
 
     it('should set isProcessing to true during submission', () => {
-      walletService.createDepositPreference.and.returnValue(new Promise(() => { })); // Never resolves
+      walletService.createDepositPreference.and.returnValue(new Promise(() => {})); // Never resolves
       component.onSubmit();
       expect(component.isProcessing()).toBe(true);
     });

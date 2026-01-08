@@ -1,11 +1,20 @@
 import { isPlatformBrowser } from '@angular/common';
-import {Component, inject, OnInit, PLATFORM_ID, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  PLATFORM_ID,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-import { NotificationPreferences, NotificationsService } from '@core/services/infrastructure/user-notifications.service';
+import {
+  NotificationPreferences,
+  NotificationsService,
+} from '@core/services/infrastructure/user-notifications.service';
 
 /**
  * NotificationsSettingsPage
@@ -83,7 +92,11 @@ export class NotificationsSettingsPage implements OnInit {
         return;
       }
     } catch (error) {
-      this.logger.warn('Error loading notification settings from backend', 'NotificationsSettings', error);
+      this.logger.warn(
+        'Error loading notification settings from backend',
+        'NotificationsSettings',
+        error,
+      );
     }
 
     const savedSettings = localStorage.getItem('notification_settings');
@@ -92,7 +105,11 @@ export class NotificationsSettingsPage implements OnInit {
       const parsed = JSON.parse(savedSettings) as NotificationPreferences;
       this.settings.set({ ...this.settings(), ...parsed });
     } catch (error) {
-      this.logger.warn('Error loading notification settings from localStorage', 'NotificationsSettings', error);
+      this.logger.warn(
+        'Error loading notification settings from localStorage',
+        'NotificationsSettings',
+        error,
+      );
     }
   }
 

@@ -316,11 +316,15 @@ export class BookingExtensionService {
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : getErrorMessage(error);
-      this.logger.warn('Failed to extend insurance coverage; recorded issue', 'BookingExtensionService', {
-        booking_id: bookingId,
-        new_end_at: newEndAt,
-        error: message,
-      });
+      this.logger.warn(
+        'Failed to extend insurance coverage; recorded issue',
+        'BookingExtensionService',
+        {
+          booking_id: bookingId,
+          new_end_at: newEndAt,
+          error: message,
+        },
+      );
 
       if (createPaymentIssueCallback) {
         try {
@@ -335,7 +339,11 @@ export class BookingExtensionService {
             },
           });
         } catch (issueError) {
-          this.logger.error('Failed to create insurance extension issue', 'BookingExtensionService', issueError);
+          this.logger.error(
+            'Failed to create insurance extension issue',
+            'BookingExtensionService',
+            issueError,
+          );
         }
       }
     }

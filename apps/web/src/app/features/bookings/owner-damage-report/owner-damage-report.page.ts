@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  Component, OnInit, computed, inject, signal
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -109,7 +113,8 @@ export class OwnerDamageReportPage implements OnInit {
       }
 
       // Validar que no haya reportado daños ya
-      if (booking.has_damages) {  // CORRECTO: usa nombre de columna BD real
+      if (booking.has_damages) {
+        // CORRECTO: usa nombre de columna BD real
         this.toastService.error('Error', 'Ya has reportado daños para esta reserva');
         this.router.navigate(['/bookings/owner', bookingId]);
         return;
@@ -224,9 +229,9 @@ export class OwnerDamageReportPage implements OnInit {
 
       // CORRECTO: usar nombres de columnas reales de BD
       await this.bookingsService.updateBooking(booking.id, {
-        has_damages: true,                              // BD: has_damages
-        damage_amount_cents: damageAmountCents,         // BD: damage_amount_cents
-        damage_description: this.damageDescription().trim(),  // BD: damage_description
+        has_damages: true, // BD: has_damages
+        damage_amount_cents: damageAmountCents, // BD: damage_amount_cents
+        damage_description: this.damageDescription().trim(), // BD: damage_description
       });
 
       // 3. Store photo references in database (create a damage_reports table entry or store in metadata)

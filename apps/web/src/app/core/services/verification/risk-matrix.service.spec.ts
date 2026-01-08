@@ -6,7 +6,7 @@ describe('RiskMatrixService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RiskMatrixService]
+      providers: [RiskMatrixService],
     });
     service = TestBed.inject(RiskMatrixService);
   });
@@ -26,5 +26,4 @@ describe('RiskMatrixService', () => {
   it('should have calculateGuarantee method', () => {
     expect(typeof service.calculateGuarantee).toBe('function');
   });
-
 });

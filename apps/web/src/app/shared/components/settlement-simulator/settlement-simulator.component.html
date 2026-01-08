@@ -1,5 +1,7 @@
 <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
-  <h3 class="mb-4 text-lg font-semibold text-text-primary font-satoshi">Simulador de Liquidación</h3>
+  <h3 class="mb-4 text-lg font-semibold text-text-primary font-satoshi">
+    Simulador de Liquidación
+  </h3>
 
   <div class="mb-4 space-y-4">
     <div>
@@ -93,11 +95,15 @@
                 >
               </div>
             }
-            @if (result.estimatedBreakdown && (result.estimatedBreakdown.remainingUncovered ?? 0) > 0) {
+            @if (
+              result.estimatedBreakdown && (result.estimatedBreakdown.remainingUncovered ?? 0) > 0
+            ) {
               <div class="flex justify-between border-t pt-2 font-semibold text-error-text">
                 <span>Sin Cubrir:</span>
                 <span
-                  >${{ formatCurrency((result.estimatedBreakdown.remainingUncovered ?? 0) / 100) }}</span
+                  >${{
+                    formatCurrency((result.estimatedBreakdown.remainingUncovered ?? 0) / 100)
+                  }}</span
                 >
               </div>
             }

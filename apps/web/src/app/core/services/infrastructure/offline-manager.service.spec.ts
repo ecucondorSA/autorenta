@@ -6,7 +6,7 @@ describe('OfflineManagerService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [OfflineManagerService]
+      providers: [OfflineManagerService],
     });
     service = TestBed.inject(OfflineManagerService);
   });
@@ -30,5 +30,4 @@ describe('OfflineManagerService', () => {
   it('should have clearQueue method', () => {
     expect(typeof service.clearQueue).toBe('function');
   });
-
 });

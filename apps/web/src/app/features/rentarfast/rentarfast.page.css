@@ -97,8 +97,13 @@
 }
 
 @keyframes pulse-green {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -190,8 +195,15 @@
 }
 
 @keyframes voicePulse {
-  0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.2); opacity: 0; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
 }
 
 .voice-button-large--listening {
@@ -204,8 +216,13 @@
 }
 
 @keyframes listeningGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
-  50% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
+  }
 }
 
 .voice-hint {
@@ -295,7 +312,11 @@
   }
 
   .capability-item--clickable:active {
-    background: linear-gradient(135deg, rgba(167, 216, 244, 0.25) 0%, rgba(91, 163, 201, 0.25) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(167, 216, 244, 0.25) 0%,
+      rgba(91, 163, 201, 0.25) 100%
+    );
     border-color: var(--cta-default, #a7d8f4);
     transform: scale(0.98);
   }
@@ -340,12 +361,23 @@
   animation: listeningBounce 1.2s ease-in-out infinite;
 }
 
-.listening-circle:nth-child(2) { animation-delay: 0.2s; }
-.listening-circle:nth-child(3) { animation-delay: 0.4s; }
+.listening-circle:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.listening-circle:nth-child(3) {
+  animation-delay: 0.4s;
+}
 
 @keyframes listeningBounce {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.5); opacity: 0.5; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
 }
 
 .listening-state h2 {
@@ -393,8 +425,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .message--user {
@@ -560,13 +598,27 @@
   animation: bounce 1.4s infinite ease-in-out;
 }
 
-.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-.typing-indicator span:nth-child(3) { animation-delay: 0s; }
+.typing-indicator span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.typing-indicator span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0s;
+}
 
 @keyframes bounce {
-  0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
-  40% { transform: scale(1); opacity: 1; }
+  0%,
+  80%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -623,8 +675,13 @@
 }
 
 @keyframes smallButtonPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
-  50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
 }
 
 .message-input {
@@ -636,7 +693,9 @@
   background: var(--surface-secondary, #f5f5f5);
   color: var(--text-primary, #1a1a1a);
   outline: none;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 
 .message-input:focus {
@@ -664,7 +723,9 @@
   background: linear-gradient(135deg, var(--cta-default, #a7d8f4) 0%, #5ba3c9 100%);
   color: white;
   cursor: pointer;
-  transition: transform 0.2s, opacity 0.2s;
+  transition:
+    transform 0.2s,
+    opacity 0.2s;
   flex-shrink: 0;
 }
 

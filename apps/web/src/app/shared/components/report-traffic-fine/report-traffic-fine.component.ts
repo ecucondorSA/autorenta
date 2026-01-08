@@ -1,9 +1,13 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  Component, EventEmitter,
+  Component,
+  EventEmitter,
   inject,
-  Input, OnInit, Output, signal
+  Input,
+  OnInit,
+  Output,
+  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TrafficInfraction } from '@core/models'; // Re-use the interface

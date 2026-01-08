@@ -108,9 +108,7 @@ import { FeatureFlagService } from '@core/services/infrastructure/feature-flag.s
               </p>
 
               <div class="flex gap-2 pt-2 px-4">
-                <ion-button fill="outline" (click)="cancelForm()">
-                  Cancelar
-                </ion-button>
+                <ion-button fill="outline" (click)="cancelForm()"> Cancelar </ion-button>
                 <ion-button (click)="saveFlag()" [disabled]="saving()">
                   @if (saving()) {
                     <ion-spinner name="crescent" class="w-4 h-4 mr-2"></ion-spinner>
@@ -144,9 +142,7 @@ import { FeatureFlagService } from '@core/services/infrastructure/feature-flag.s
               <ion-spinner name="crescent"></ion-spinner>
             </div>
           } @else if (flags().length === 0) {
-            <div class="text-center py-8 text-gray-500">
-              No hay feature flags configuradas
-            </div>
+            <div class="text-center py-8 text-gray-500">No hay feature flags configuradas</div>
           } @else {
             <ion-list>
               @for (flag of flags(); track flag.id) {
@@ -166,8 +162,12 @@ import { FeatureFlagService } from '@core/services/infrastructure/feature-flag.s
                       <span
                         class="px-2 py-0.5 rounded-full text-white"
                         [class.bg-green-500]="flag.rollout_percentage === 100"
-                        [class.bg-blue-500]="flag.rollout_percentage >= 50 && flag.rollout_percentage < 100"
-                        [class.bg-orange-500]="flag.rollout_percentage > 0 && flag.rollout_percentage < 50"
+                        [class.bg-blue-500]="
+                          flag.rollout_percentage >= 50 && flag.rollout_percentage < 100
+                        "
+                        [class.bg-orange-500]="
+                          flag.rollout_percentage > 0 && flag.rollout_percentage < 50
+                        "
                         [class.bg-red-500]="flag.rollout_percentage === 0"
                       >
                         {{ flag.rollout_percentage }}%
@@ -201,13 +201,12 @@ import { FeatureFlagService } from '@core/services/infrastructure/feature-flag.s
           <ion-card-content>
             <p class="mb-2">
               Estas seguro de eliminar la flag
-              <strong class="font-mono">{{ flagToDelete()?.name }}</strong>?
+              <strong class="font-mono">{{ flagToDelete()?.name }}</strong
+              >?
             </p>
             <p class="text-sm text-red-500 mb-4">Esta accion no se puede deshacer.</p>
             <div class="flex gap-2">
-              <ion-button fill="outline" (click)="flagToDelete.set(null)">
-                Cancelar
-              </ion-button>
+              <ion-button fill="outline" (click)="flagToDelete.set(null)"> Cancelar </ion-button>
               <ion-button color="danger" (click)="deleteFlag()" [disabled]="deleting()">
                 @if (deleting()) {
                   <ion-spinner name="crescent" class="w-4 h-4 mr-2"></ion-spinner>
@@ -253,7 +252,9 @@ import { FeatureFlagService } from '@core/services/infrastructure/feature-flag.s
                         @if (log.old_value.enabled !== log.new_value.enabled) {
                           enabled: {{ log.old_value.enabled }} → {{ log.new_value.enabled }}
                         }
-                        @if (log.old_value.rollout_percentage !== log.new_value.rollout_percentage) {
+                        @if (
+                          log.old_value.rollout_percentage !== log.new_value.rollout_percentage
+                        ) {
                           rollout: {{ log.old_value.rollout_percentage }}% →
                           {{ log.new_value.rollout_percentage }}%
                         }
@@ -289,7 +290,7 @@ export class AdminFeatureFlagsPage implements OnInit {
   readonly enabledFlags = computed(() => this.flags().filter((f) => f.enabled).length);
   readonly disabledFlags = computed(() => this.flags().filter((f) => !f.enabled).length);
   readonly partialRolloutFlags = computed(
-    () => this.flags().filter((f) => f.enabled && f.rollout_percentage < 100).length
+    () => this.flags().filter((f) => f.enabled && f.rollout_percentage < 100).length,
   );
 
   // Form data
@@ -367,10 +368,7 @@ export class AdminFeatureFlagsPage implements OnInit {
       this.editingFlag.set(null);
       await this.loadAuditLog();
     } catch (err) {
-      await this.showToast(
-        err instanceof Error ? err.message : 'Error al guardar',
-        'danger'
-      );
+      await this.showToast(err instanceof Error ? err.message : 'Error al guardar', 'danger');
     } finally {
       this.saving.set(false);
     }
@@ -381,7 +379,7 @@ export class AdminFeatureFlagsPage implements OnInit {
       await this.featureFlagService.toggleFlag(flag.id, flag.enabled);
       await this.showToast(
         `${flag.name} ${flag.enabled ? 'habilitada' : 'deshabilitada'}`,
-        'success'
+        'success',
       );
       await this.loadAuditLog();
     } catch {
@@ -412,10 +410,7 @@ export class AdminFeatureFlagsPage implements OnInit {
     }
   }
 
-  private async showToast(
-    message: string,
-    color: 'success' | 'warning' | 'danger'
-  ): Promise<void> {
+  private async showToast(message: string, color: 'success' | 'warning' | 'danger'): Promise<void> {
     const toast = await this.toastController.create({
       message,
       duration: 3000,

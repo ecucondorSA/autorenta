@@ -58,7 +58,7 @@ export class PublishCarFormService {
       description: ['', [Validators.required, Validators.minLength(40), Validators.maxLength(800)]],
       availability_start_date: [this.todayISO(), [Validators.required]],
       availability_end_date: [this.nextMonthISO(), [Validators.required]],
-      
+
       // Reglas de Alquiler (Owner Preferences)
       mileage_limit: [200, [Validators.min(0)]], // 0 = Ilimitado
       extra_km_price: [5, [Validators.min(0)]],
@@ -69,11 +69,14 @@ export class PublishCarFormService {
 
       // Pricing - Opcional (se calcula automáticamente si es dinámico)
       pricing_strategy: ['dynamic'],
-      price_per_day: [null, [
-        Validators.required,
-        Validators.min(APP_CONSTANTS.MIN_DAILY_RATE_USD),
-        Validators.max(APP_CONSTANTS.MAX_DAILY_RATE_USD),
-      ]], // USD: $10-$500/day
+      price_per_day: [
+        null,
+        [
+          Validators.required,
+          Validators.min(APP_CONSTANTS.MIN_DAILY_RATE_USD),
+          Validators.max(APP_CONSTANTS.MAX_DAILY_RATE_USD),
+        ],
+      ], // USD: $10-$500/day
       currency: ['USD', Validators.required],
       value_usd: [null, [Validators.required, Validators.min(5000), Validators.max(500000)]], // Opcional
       category_id: [null], // Opcional (se auto-categoriza)
@@ -172,7 +175,7 @@ export class PublishCarFormService {
           location_city: lastCar.location_city,
           location_state: lastCar.location_state,
           location_country: lastCar.location_country,
-          
+
           // Reglas
           mileage_limit: lastCar.mileage_limit ?? 200,
           extra_km_price: lastCar.extra_km_price ?? 5,
@@ -342,7 +345,7 @@ export class PublishCarFormService {
       location_city,
       location_state,
       location_country,
-      
+
       // Reglas de Alquiler
       mileage_limit,
       extra_km_price,

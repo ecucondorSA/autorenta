@@ -1,6 +1,13 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Component, inject, OnInit, OnDestroy, signal, effect,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+  signal,
+  effect,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -26,9 +33,7 @@ import { ProfileStore } from '@core/stores/profile.store';
   imports: [IonicModule, ReactiveFormsModule],
   template: `
     <ion-header>
-      <ion-toolbar
-        class="bg-surface-raised border-b border-border-default"
-        >
+      <ion-toolbar class="bg-surface-raised border-b border-border-default">
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
@@ -39,17 +44,13 @@ import { ProfileStore } from '@core/stores/profile.store';
         <ion-title class="text-text-primary"> Preferencias </ion-title>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content class="bg-surface-base">
       <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
         <!-- Header -->
         <div class="mb-6">
-          <h1 class="text-2xl font-bold text-text-primary mb-2">
-            Preferencias
-          </h1>
-          <p class="text-sm text-text-secondary">
-            Personaliza tu experiencia en AutoRenta.
-          </p>
+          <h1 class="text-2xl font-bold text-text-primary mb-2">Preferencias</h1>
+          <p class="text-sm text-text-secondary">Personaliza tu experiencia en AutoRenta.</p>
           <!-- Auto-save indicator -->
           @if (autoSaving()) {
             <div class="mt-2 flex items-center gap-2 text-xs text-text-muted">
@@ -60,25 +61,25 @@ import { ProfileStore } from '@core/stores/profile.store';
             </div>
           }
         </div>
-    
+
         <!-- Error Message -->
         @if (error()) {
           <div
             class="mb-4 p-3 rounded-lg bg-error-bg border border-error-border text-sm text-error-text"
-            >
+          >
             {{ error() }}
           </div>
         }
-    
+
         <!-- Success Message -->
         @if (successMessage()) {
           <div
             class="mb-4 p-3 rounded-lg bg-success-light/10 border border-success-light/40 text-sm text-success-text"
-            >
+          >
             {{ successMessage() }}
           </div>
         }
-    
+
         <!-- Loading State -->
         @if (loading()) {
           <div class="flex justify-center py-12">
@@ -87,19 +88,17 @@ import { ProfileStore } from '@core/stores/profile.store';
             ></div>
           </div>
         }
-    
+
         <!-- Preferences Form -->
         @if (!loading()) {
           <form [formGroup]="preferencesForm" class="space-y-6">
             <!-- Timezone -->
             <div class="card-premium p-4">
-              <h3 class="text-sm font-semibold text-text-primary mb-3">
-                Zona Horaria
-              </h3>
+              <h3 class="text-sm font-semibold text-text-primary mb-3">Zona Horaria</h3>
               <select
                 formControlName="timezone"
                 class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-raised text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
-                >
+              >
                 <option value="America/Buenos_Aires">Buenos Aires (UTC-3)</option>
                 <option value="America/Montevideo">Montevideo (UTC-3)</option>
                 <option value="America/Santiago">Santiago (UTC-3/UTC-4)</option>
@@ -111,13 +110,11 @@ import { ProfileStore } from '@core/stores/profile.store';
             </div>
             <!-- Language/Locale -->
             <div class="card-premium p-4">
-              <h3 class="text-sm font-semibold text-text-primary mb-3">
-                Idioma
-              </h3>
+              <h3 class="text-sm font-semibold text-text-primary mb-3">Idioma</h3>
               <select
                 formControlName="locale"
                 class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-raised text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
-                >
+              >
                 <option value="es-AR">Español (Argentina)</option>
                 <option value="es-UY">Español (Uruguay)</option>
                 <option value="es-CL">Español (Chile)</option>
@@ -130,13 +127,11 @@ import { ProfileStore } from '@core/stores/profile.store';
             </div>
             <!-- Currency -->
             <div class="card-premium p-4">
-              <h3 class="text-sm font-semibold text-text-primary mb-3">
-                Moneda Preferida
-              </h3>
+              <h3 class="text-sm font-semibold text-text-primary mb-3">Moneda Preferida</h3>
               <select
                 formControlName="currency"
                 class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-raised text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
-                >
+              >
                 <option value="ARS">Pesos Argentinos (ARS)</option>
                 <option value="UYU">Pesos Uruguayos (UYU)</option>
                 <option value="CLP">Pesos Chilenos (CLP)</option>
@@ -157,7 +152,7 @@ import { ProfileStore } from '@core/stores/profile.store';
                   type="checkbox"
                   formControlName="marketing_opt_in"
                   class="mt-0.5 h-5 w-5 rounded border-border-default text-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-0"
-                  />
+                />
                 <div class="flex-1">
                   <span class="text-sm text-text-primary">
                     Recibir ofertas y promociones especiales
@@ -176,7 +171,7 @@ import { ProfileStore } from '@core/stores/profile.store';
                 (click)="onSave()"
                 [disabled]="loading() || autoSaving() || !preferencesForm.dirty"
                 class="px-6 py-2.5 rounded-lg font-semibold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-cta-default hover:bg-cta-hover text-cta-text shadow-sm hover:shadow-md"
-                >
+              >
                 @if (!loading()) {
                   <span>Guardar Cambios</span>
                 }
@@ -187,7 +182,7 @@ import { ProfileStore } from '@core/stores/profile.store';
             </div>
           </form>
         }
-    
+
         <!-- Help Section -->
         <div class="mt-8 p-4 rounded-lg bg-info-bg border border-info-border">
           <h4 class="text-sm font-semibold text-info-text mb-2 flex items-center gap-2">
@@ -197,7 +192,7 @@ import { ProfileStore } from '@core/stores/profile.store';
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+              />
             </svg>
             Sobre las preferencias
           </h4>
@@ -218,7 +213,7 @@ import { ProfileStore } from '@core/stores/profile.store';
         </div>
       </div>
     </ion-content>
-    `,
+  `,
   styles: [
     `
       :host {

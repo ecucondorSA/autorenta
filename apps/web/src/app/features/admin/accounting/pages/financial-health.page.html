@@ -62,9 +62,9 @@
                   <p class="font-semibold">Conciliación Wallet</p>
                   <p class="text-sm text-text-secondary">
                     {{
-                    health()!.walletReconciled
-                    ? 'OK - Sin diferencias'
-                    : 'Error - Verificar conciliación'
+                      health()!.walletReconciled
+                        ? 'OK - Sin diferencias'
+                        : 'Error - Verificar conciliación'
                     }}
                   </p>
                 </div>
@@ -85,7 +85,9 @@
                   <p class="font-semibold">Provisión FGO</p>
                   <p class="text-sm text-text-secondary">
                     {{
-                    health()!.fgoAdequate ? 'Adecuada (≥5% de depósitos)' : 'Insuficiente - Revisar'
+                      health()!.fgoAdequate
+                        ? 'Adecuada (≥5% de depósitos)'
+                        : 'Insuficiente - Revisar'
                     }}
                   </p>
                 </div>
@@ -103,11 +105,11 @@
                   <p class="font-semibold font-luxury">Rentabilidad</p>
                   <p class="text-sm text-text-secondary">
                     {{
-                    health()!.profitability === 'GOOD'
-                    ? 'Buena (margen ≥5%)'
-                    : health()!.profitability === 'WARNING'
-                    ? 'Regular (margen <5%)'
-                    : 'Crítica (pérdidas)'
+                      health()!.profitability === 'GOOD'
+                        ? 'Buena (margen ≥5%)'
+                        : health()!.profitability === 'WARNING'
+                          ? 'Regular (margen <5%)'
+                          : 'Crítica (pérdidas)'
                     }}
                   </p>
                 </div>

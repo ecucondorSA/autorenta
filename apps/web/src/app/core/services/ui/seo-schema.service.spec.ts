@@ -6,7 +6,7 @@ describe('SeoSchemaService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SeoSchemaService]
+      providers: [SeoSchemaService],
     });
     service = TestBed.inject(SeoSchemaService);
   });
@@ -50,5 +50,4 @@ describe('SeoSchemaService', () => {
   it('should have initializeLandingPageSchemas method', () => {
     expect(typeof service.initializeLandingPageSchemas).toBe('function');
   });
-
 });

@@ -28,7 +28,7 @@
   align-items: center;
   justify-content: center;
   z-index: 10;
-  background: var(--surface-primary-alpha-80, #E3E3E3);
+  background: var(--surface-primary-alpha-80, #e3e3e3);
 }
 
 .cars-map-loading-overlay {
@@ -115,7 +115,7 @@
   font-size: 12px;
   font-weight: 700;
   color: white;
-  box-shadow: 0 3px 8px var(--shadow-dark-alpha-40, #7B7B7B);
+  box-shadow: 0 3px 8px var(--shadow-dark-alpha-40, #7b7b7b);
   z-index: 15;
   animation: badge-appear 0.3s ease-out;
   border: 2px solid white;
@@ -165,7 +165,7 @@
   background: var(--map-marker-instant-booking-color, var(--success-default, #10b981));
   border: 3px solid white;
   border-radius: 50%;
-  box-shadow: 0 2px 8px var(--shadow-dark-alpha-40, #7B7B7B);
+  box-shadow: 0 2px 8px var(--shadow-dark-alpha-40, #7b7b7b);
   z-index: 20;
   animation: instant-booking-glow 1.5s ease-in-out infinite;
   display: flex;
@@ -245,7 +245,7 @@
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  box-shadow: 0 12px 30px #7B7B7B;
+  box-shadow: 0 12px 30px #7b7b7b;
   transition:
     opacity 0.2s ease,
     transform 0.2s ease;
@@ -258,7 +258,7 @@
 }
 
 .car-marker-- {
-  background: var(--surface-overlay-light, var(--surface-overlay-light, #E3E3E3));
+  background: var(--surface-overlay-light, var(--surface-overlay-light, #e3e3e3));
   color: var(--text-primary-dark, var(--text-primary-dark, #0f172a));
   box-shadow: var(--shadow-lg-dark, 0 14px 34px rgba(15, 23, 42, 0.25));
 }
@@ -363,7 +363,7 @@
   color: var(--text-dark, #1a1a1a) !important; /* Texto oscuro para contraste */
   box-shadow: var(
     --shadow-sm-dark,
-    0 1px 3px var(--shadow-dark-alpha-40, #7B7B7B)
+    0 1px 3px var(--shadow-dark-alpha-40, #7b7b7b)
   ) !important; /* Reducido 4x */
   z-index: 1000 !important; /* Asegurar que esté por encima */
   border: none !important; /* Eliminar cualquier borde que pueda interferir */
@@ -372,7 +372,6 @@
   box-sizing: border-box !important; /* Incluir padding en el ancho */
   width: auto !important; /* Ancho automático */
 }
-
 
 .car-popup-content {
   display: flex;
@@ -431,7 +430,6 @@ img.car-popup-image {
   color: var(--text-dark, #1a1a1a) !important; /* Color base oscuro para light mode */
 }
 
-
 /* Selectores específicos para sobrescribir estilos globales de map-theme.css - REDUCIDO 4x */
 .car-popup .mapboxgl-popup-content .car-popup-info h4,
 .car-popup-info h4,
@@ -449,14 +447,12 @@ img.car-popup-image {
   opacity: 1 !important;
 }
 
-
 .car-popup-info p:not(.car-popup-price) {
   color: var(--text-muted, #4b4b4b) !important; /* Gris medio para texto secundario en light mode */
   margin: 0;
   font-size: 3.25px; /* Reducido 4x (antes 13px) */
   line-height: 1.4;
 }
-
 
 .car-popup-price {
   margin: 0;
@@ -465,7 +461,6 @@ img.car-popup-image {
   color: var(--cta-default) !important; /* Azul pastel del sistema */
   line-height: 1.4;
 }
-
 
 /* Responsive: Mejorar contraste y tamaño en móvil - REDUCCIÓN AL 1/8 (8x más pequeño) */
 @media (max-width: 640px) {
@@ -566,7 +561,6 @@ img.car-popup-image {
   ) !important;
 }
 
-
 /* Desktop: Asegurar visibilidad en pantallas grandes - REDUCIDO 4x */
 @media (min-width: 641px) {
   .car-popup .mapboxgl-popup-content {
@@ -584,7 +578,6 @@ img.car-popup-image {
   .car-popup-price {
     font-size: 4.25px; /* Reducido 4x (antes 17px) */
   }
-
 }
 
 /* Botón de geolocalización */
@@ -617,7 +610,6 @@ img.car-popup-image {
   transform: scale(0.95);
 }
 
-
 .mapbox-ctrl-geolocate svg {
   width: 20px;
   height: 20px;
@@ -642,7 +634,7 @@ img.car-popup-image {
     /* cta-default con opacidad */ 0 4px 12px
       var(--cta-alpha-60, var(--cta-alpha-60, rgba(167, 216, 244, 0.6))),
     /* cta-default con opacidad */ 0 8px 24px
-      var(--shadow-dark-alpha-30, var(--shadow-dark-alpha-30, #7B7B7B));
+      var(--shadow-dark-alpha-30, var(--shadow-dark-alpha-30, #7b7b7b));
   animation: pulse-marker 2s ease-in-out infinite;
 }
 
@@ -664,10 +656,7 @@ img.car-popup-image {
   height: var(--map-marker-photo-size, 80px);
   border-radius: 50%;
   border: var(--map-marker-photo-border, 3px) solid var(--map-marker-photo-border-color, white);
-  box-shadow: var(
-    --map-marker-photo-shadow,
-    0 6px 20px var(--shadow-dark-alpha-30, #7B7B7B)
-  );
+  box-shadow: var(--map-marker-photo-shadow, 0 6px 20px var(--shadow-dark-alpha-30, #7b7b7b));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -735,7 +724,7 @@ img.car-popup-image {
   padding: 3px 8px;
   border-radius: 12px;
   white-space: nowrap;
-  box-shadow: 0 2px 8px var(--shadow-dark-alpha-30, #7B7B7B);
+  box-shadow: 0 2px 8px var(--shadow-dark-alpha-30, #7b7b7b);
   border: 2px solid white;
   z-index: 15;
   pointer-events: none;
@@ -743,16 +732,13 @@ img.car-popup-image {
 }
 .car-marker-simple:hover .marker-photo-price-badge {
   transform: translateX(-50%) scale(1.1);
-  box-shadow: 0 4px 12px var(--shadow-dark-alpha-40, #7B7B7B);
+  box-shadow: 0 4px 12px var(--shadow-dark-alpha-40, #7b7b7b);
 }
 
 /* Hover effects for photo marker - Using Tokens */
 .car-marker-simple:hover .marker-circle-photo {
   transform: scale(var(--map-marker-photo-hover-scale, 1.12));
-  box-shadow: var(
-    --map-marker-photo-hover-shadow,
-    0 8px 16px var(--shadow-dark-alpha-30, #7B7B7B)
-  );
+  box-shadow: var(--map-marker-photo-hover-shadow, 0 8px 16px var(--shadow-dark-alpha-30, #7b7b7b));
   border-width: calc(var(--map-marker-photo-border, 2.5px) * 1.6);
 }
 
@@ -765,7 +751,7 @@ img.car-popup-image {
   box-shadow:
     0 0 0 4px var(--cta-alpha-30, rgba(167, 216, 244, 0.3)),
     0 4px 12px var(--cta-alpha-60, rgba(167, 216, 244, 0.6)),
-    0 8px 24px var(--shadow-dark-alpha-30, #7B7B7B);
+    0 8px 24px var(--shadow-dark-alpha-30, #7b7b7b);
   animation: pulse-marker-photo 2s ease-in-out infinite;
   border-color: var(--cta-default);
 }
@@ -839,7 +825,7 @@ img.car-popup-image {
   border-radius: 50%;
   border: 3px solid white;
   box-shadow:
-    0 2px 8px var(--shadow-dark-alpha-30, #7B7B7B),
+    0 2px 8px var(--shadow-dark-alpha-30, #7b7b7b),
     0 0 0 2px var(--system-blue-default, #4285f4);
   position: relative;
   z-index: 10;
@@ -859,7 +845,9 @@ img.car-popup-image {
   border: 1px solid var(--system-blue-alpha-30, rgba(66, 133, 244, 0.3));
   z-index: 1;
   pointer-events: none;
-  transition: width 0.5s ease, height 0.5s ease;
+  transition:
+    width 0.5s ease,
+    height 0.5s ease;
 }
 
 /* Ondas múltiples tipo radar */
@@ -940,7 +928,8 @@ img.car-popup-image {
 }
 
 @keyframes tracking-pulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow:
       0 2px 12px rgba(16, 185, 129, 0.4),
       0 0 0 3px rgba(16, 185, 129, 0.2);
@@ -1110,7 +1099,6 @@ img.car-popup-image {
   transform: translateY(0);
 }
 
-
 /* 🎯 Tooltip Container */
 .map-tooltip-container {
   width: 100%;
@@ -1161,7 +1149,6 @@ img.car-popup-image {
   width: 20px;
   height: 20px;
 }
-
 
 /* Map Feature Controls - All controls unified */
 .cars-map-feature-controls {
@@ -1237,7 +1224,6 @@ img.car-popup-image {
   white-space: nowrap;
 }
 
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .cars-map-feature-controls {
@@ -1308,7 +1294,6 @@ img.car-popup-image {
   transition: all 0.3s ease;
 }
 
-
 .info-card:hover {
   box-shadow:
     0 10px 15px -3px var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1)),
@@ -1325,7 +1310,6 @@ img.car-popup-image {
   border-bottom: 1px solid var(--surface-muted, #f1f5f9);
 }
 
-
 .info-icon {
   width: 20px;
   height: 20px;
@@ -1340,7 +1324,6 @@ img.car-popup-image {
   margin: 0;
   letter-spacing: -0.01em;
 }
-
 
 .info-content {
   display: flex;
@@ -1364,7 +1347,6 @@ img.car-popup-image {
   margin: -4px -8px 4px;
 }
 
-
 .info-label {
   color: var(--text-secondary, var(--text-secondary, #64748b));
   font-weight: 450;
@@ -1373,12 +1355,10 @@ img.car-popup-image {
   gap: 6px;
 }
 
-
 .info-value {
   color: var(--text-primary, #0f172a);
   font-weight: 550;
 }
-
 
 .info-badge {
   background: var(--cta-default, #0284c7);
@@ -1437,13 +1417,11 @@ img.car-popup-image {
     0 0 8px rgba(2, 132, 199, 0.4);
 }
 
-
 .legend-marker.car-available {
   background: var(--map-marker-available-color, var(--success-default, #10b981));
   border-color: var(--surface-primary);
   box-shadow: 0 0 0 1px var(--map-marker-available-color, var(--success-default, #10b981));
 }
-
 
 .legend-marker.car-soon {
   background: var(--map-marker-soon-available-color, var(--warning-default, #f59e0b));
@@ -1452,14 +1430,12 @@ img.car-popup-image {
   animation: pulse-subtle 2s ease-in-out infinite;
 }
 
-
 .legend-marker.car-in-use {
   background: var(--map-marker-in-use-color, var(--info-default, #6366f1));
   border-color: var(--surface-primary);
   box-shadow: 0 0 0 1px var(--map-marker-in-use-color, var(--info-default, #6366f1));
   opacity: 0.7;
 }
-
 
 .legend-marker.search-radius {
   background: var(--cta-alpha-30, rgba(167, 216, 244, 0.3));
@@ -1472,7 +1448,6 @@ img.car-popup-image {
   color: var(--text-secondary, var(--text-secondary, #64748b));
   font-weight: 450;
 }
-
 
 @keyframes pulse-subtle {
   0%,

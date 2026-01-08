@@ -179,7 +179,8 @@ export class AutorentarCreditService {
         this.getCreditInfo()
           .pipe(take(1), takeUntilDestroyed(this.destroyRef))
           .subscribe({
-            error: (err) => this.logger.error('Failed to refresh credit info after consumption', err),
+            error: (err) =>
+              this.logger.error('Failed to refresh credit info after consumption', err),
           });
 
         return result;
@@ -258,7 +259,8 @@ export class AutorentarCreditService {
           this.getCreditInfo()
             .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe({
-              error: (err) => this.logger.error('Failed to refresh credit info after breakage', err),
+              error: (err) =>
+                this.logger.error('Failed to refresh credit info after breakage', err),
             });
         }
 

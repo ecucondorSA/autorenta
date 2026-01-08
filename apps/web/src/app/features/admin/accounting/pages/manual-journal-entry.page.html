@@ -79,9 +79,7 @@
         <ion-card-content>
           <div class="space-y-4">
             @for (line of entryLines(); track line; let i = $index) {
-              <div
-                class="border rounded-lg p-4 bg-surface-base"
-                >
+              <div class="border rounded-lg p-4 bg-surface-base">
                 <div class="flex justify-between items-center mb-3">
                   <h3 class="font-semibold font-satoshi">Línea {{ i + 1 }}</h3>
                   @if (entryLines().length > 2) {
@@ -90,7 +88,7 @@
                       color="danger"
                       size="small"
                       (click)="removeEntryLine(i)"
-                      >
+                    >
                       <ion-icon name="trash" slot="icon-only"></ion-icon>
                     </ion-button>
                   }
@@ -103,7 +101,7 @@
                     name="account_code_{{ i }}"
                     placeholder="Seleccionar cuenta"
                     required
-                    >
+                  >
                     @for (account of accounts(); track account) {
                       <ion-select-option [value]="account.code">
                         {{ account.code }} - {{ account.name }}
@@ -194,7 +192,7 @@
         color="medium"
         (click)="resetForm()"
         [disabled]="loading()"
-        >
+      >
         <ion-icon name="refresh" slot="start"></ion-icon>
         Limpiar Formulario
       </ion-button>

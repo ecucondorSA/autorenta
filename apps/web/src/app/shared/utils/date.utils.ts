@@ -16,10 +16,14 @@ export const DEFAULT_TIMEZONE = 'America/Argentina/Buenos_Aires';
  * Format a date range for display
  * @example formatDateRange('2024-01-15', '2024-01-20') => '15 ene - 20 ene 2024'
  */
-export function formatDateRange(from: string | Date, to: string | Date, options?: {
-  locale?: string;
-  includeYear?: boolean;
-}): string {
+export function formatDateRange(
+  from: string | Date,
+  to: string | Date,
+  options?: {
+    locale?: string;
+    includeYear?: boolean;
+  },
+): string {
   const { locale = DEFAULT_LOCALE, includeYear = true } = options || {};
 
   const start = new Date(from);
@@ -31,7 +35,7 @@ export function formatDateRange(from: string | Date, to: string | Date, options?
   const startFormat: Intl.DateTimeFormatOptions = {
     day: 'numeric',
     month: 'short',
-    year: (!sameYear || !includeYear) ? undefined : undefined,
+    year: !sameYear || !includeYear ? undefined : undefined,
   };
 
   const endFormat: Intl.DateTimeFormatOptions = {
@@ -50,10 +54,13 @@ export function formatDateRange(from: string | Date, to: string | Date, options?
  * Format a single date for display
  * @example formatDate('2024-01-15') => '15 de enero de 2024'
  */
-export function formatDate(date: string | Date, options?: {
-  locale?: string;
-  format?: 'short' | 'medium' | 'long' | 'full';
-}): string {
+export function formatDate(
+  date: string | Date,
+  options?: {
+    locale?: string;
+    format?: 'short' | 'medium' | 'long' | 'full';
+  },
+): string {
   const { locale = DEFAULT_LOCALE, format = 'medium' } = options || {};
 
   const d = new Date(date);
@@ -72,10 +79,13 @@ export function formatDate(date: string | Date, options?: {
  * Format a date with time
  * @example formatDateTime('2024-01-15T14:30:00Z') => '15 ene 2024, 14:30'
  */
-export function formatDateTime(date: string | Date, options?: {
-  locale?: string;
-  includeSeconds?: boolean;
-}): string {
+export function formatDateTime(
+  date: string | Date,
+  options?: {
+    locale?: string;
+    includeSeconds?: boolean;
+  },
+): string {
   const { locale = DEFAULT_LOCALE, includeSeconds = false } = options || {};
 
   const d = new Date(date);
@@ -97,10 +107,13 @@ export function formatDateTime(date: string | Date, options?: {
  * Format time only
  * @example formatTime('2024-01-15T14:30:00Z') => '14:30'
  */
-export function formatTime(date: string | Date, options?: {
-  locale?: string;
-  includeSeconds?: boolean;
-}): string {
+export function formatTime(
+  date: string | Date,
+  options?: {
+    locale?: string;
+    includeSeconds?: boolean;
+  },
+): string {
   const { locale = DEFAULT_LOCALE, includeSeconds = false } = options || {};
 
   const d = new Date(date);
@@ -119,9 +132,12 @@ export function formatTime(date: string | Date, options?: {
  * Format relative time (time ago)
  * @example formatRelativeTime(new Date(Date.now() - 3600000)) => 'hace 1 hora'
  */
-export function formatRelativeTime(date: string | Date, options?: {
-  locale?: string;
-}): string {
+export function formatRelativeTime(
+  date: string | Date,
+  options?: {
+    locale?: string;
+  },
+): string {
   const { locale = DEFAULT_LOCALE } = options || {};
 
   const d = new Date(date);
@@ -169,9 +185,11 @@ export function isToday(date: string | Date): boolean {
   const d = new Date(date);
   const today = new Date();
 
-  return d.getDate() === today.getDate() &&
+  return (
+    d.getDate() === today.getDate() &&
     d.getMonth() === today.getMonth() &&
-    d.getFullYear() === today.getFullYear();
+    d.getFullYear() === today.getFullYear()
+  );
 }
 
 /**
@@ -246,7 +264,7 @@ export function doRangesOverlap(
   range1Start: string | Date,
   range1End: string | Date,
   range2Start: string | Date,
-  range2End: string | Date
+  range2End: string | Date,
 ): boolean {
   const start1 = new Date(range1Start).getTime();
   const end1 = new Date(range1End).getTime();

@@ -132,7 +132,7 @@ export class RegisterPage {
   }
 
   toggleMagicLinkMode(): void {
-    this.magicLinkMode.update(v => !v);
+    this.magicLinkMode.update((v) => !v);
     this.error.set(null);
     this.message.set(null);
     this.magicLinkSent.set(false);

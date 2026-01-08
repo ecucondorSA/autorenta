@@ -1,4 +1,5 @@
-import {Component,
+import {
+  Component,
   Output,
   EventEmitter,
   Input,
@@ -6,7 +7,8 @@ import {Component,
   inject,
   computed,
   effect,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';

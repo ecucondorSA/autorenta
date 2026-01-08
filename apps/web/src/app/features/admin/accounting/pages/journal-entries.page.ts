@@ -1,5 +1,4 @@
-import {Component, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { AccountingService, JournalEntry } from '@core/services/payments/accounting.service';
@@ -18,7 +17,7 @@ import { AccountingService, JournalEntry } from '@core/services/payments/account
         <ion-title>Libro Diario</ion-title>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content class="ion-padding">
       @if (entries().length > 0) {
         <ion-list>
@@ -38,7 +37,7 @@ import { AccountingService, JournalEntry } from '@core/services/payments/account
         </ion-list>
       }
     </ion-content>
-    `,
+  `,
 })
 export class JournalEntriesPage implements OnInit {
   private readonly accountingService = inject(AccountingService);

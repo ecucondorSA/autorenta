@@ -9,7 +9,7 @@
           (click)="retry()"
           [disabled]="isLoading()"
           class="px-4 py-2 bg-ferrari-red text-text-inverse rounded-lg hover:bg-ferrari-red/90 disabled:opacity-50"
-          >
+        >
           Actualizar
         </button>
       </div>
@@ -23,7 +23,7 @@
             [value]="filterType()"
             (change)="onFilterTypeChange($any($event.target).value)"
             class="w-full px-4 py-2 rounded-lg border border-ash-gray bg-surface-raised text-text-primary"
-            >
+          >
             @for (type of transactionTypes; track type) {
               <option [value]="type.value">
                 {{ type.label }}
@@ -39,7 +39,7 @@
             [value]="filterStatus()"
             (change)="onFilterStatusChange($any($event.target).value)"
             class="w-full px-4 py-2 rounded-lg border border-ash-gray bg-surface-raised text-text-primary"
-            >
+          >
             @for (status of transactionStatuses; track status) {
               <option [value]="status.value">
                 {{ status.label }}
@@ -59,18 +59,18 @@
       }
       <!-- Error State -->
       @if (error() && !isLoading()) {
-        <div
-          class="bg-error-bg-hover border border-error-300 rounded-lg p-4 mb-4"
-          >
+        <div class="bg-error-bg-hover border border-error-300 rounded-lg p-4 mb-4">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-error-strong font-semibold font-satoshi">Error al cargar transacciones</h3>
+              <h3 class="text-error-strong font-semibold font-satoshi">
+                Error al cargar transacciones
+              </h3>
               <p class="text-error-strong text-sm mt-1">{{ error()?.message }}</p>
             </div>
             <button
               (click)="retry()"
               class="px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700"
-              >
+            >
               Reintentar
             </button>
           </div>
@@ -78,22 +78,19 @@
       }
       <!-- Empty State -->
       @if (!isLoading() && filteredTransactions().length === 0) {
-        <div
-          class="text-center py-12"
-          data-testid="empty-transactions"
-          >
+        <div class="text-center py-12" data-testid="empty-transactions">
           <svg
             class="mx-auto h-16 w-16 text-text-muted"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
+            />
           </svg>
           <h3 class="mt-4 text-lg font-medium text-charcoal-dark font-satoshi">
             No hay transacciones
@@ -105,35 +102,34 @@
       }
       <!-- Transactions List -->
       @if (!isLoading() && filteredTransactions().length > 0) {
-        <div
-          class="space-y-4"
-          data-testid="transaction-table"
-          >
-          @for (transaction of filteredTransactions(); track trackByTransactionId($index, transaction)) {
+        <div class="space-y-4" data-testid="transaction-table">
+          @for (
+            transaction of filteredTransactions();
+            track trackByTransactionId($index, transaction)
+          ) {
             <div
               class="bg-surface-raised rounded-lg border border-ash-gray hover:shadow-lg transition-shadow"
               data-testid="transaction-item"
-              >
+            >
               <div class="p-4 cursor-pointer" (click)="toggleTransactionDetails(transaction.id)">
                 <div class="flex items-center justify-between">
                   <!-- Left: Type and Date -->
                   <div class="flex-1">
                     <div class="flex items-center gap-2 mb-1">
-                      <span class="text-xl">{{ getTypeIcon(getTransactionType(transaction)) }}</span>
+                      <span class="text-xl">{{
+                        getTypeIcon(getTransactionType(transaction))
+                      }}</span>
                       <span class="font-semibold text-text-primary">
                         {{ translateType(getTransactionType(transaction)) }}
                       </span>
                       <span
                         class="px-2 py-1 rounded-full text-xs font-medium"
                         [ngClass]="getTypeColor(getTransactionType(transaction))"
-                        >
+                      >
                         {{ translateType(getTransactionType(transaction)) }}
                       </span>
                     </div>
-                    <p
-                      class="text-sm text-text-secondary"
-                      data-testid="transaction-date"
-                      >
+                    <p class="text-sm text-text-secondary" data-testid="transaction-date">
                       {{ formatDate(transaction.transaction_date) }}
                     </p>
                   </div>
@@ -141,12 +137,14 @@
                   <div class="text-right">
                     <div
                       class="text-lg font-bold"
-                [ngClass]="{
-                  'text-success-text': !isOutgoingTransaction(getTransactionType(transaction)),
-                  'text-error-text': isOutgoingTransaction(getTransactionType(transaction))
-                }"
+                      [ngClass]="{
+                        'text-success-text': !isOutgoingTransaction(
+                          getTransactionType(transaction)
+                        ),
+                        'text-error-text': isOutgoingTransaction(getTransactionType(transaction)),
+                      }"
                       data-testid="transaction-amount"
-                      >
+                    >
                       {{ isOutgoingTransaction(getTransactionType(transaction)) ? '-' : '+' }}
                       {{ formatCurrency(transaction.amount_cents, transaction.currency) }}
                     </div>
@@ -154,31 +152,25 @@
                       class="inline-block px-2 py-1 rounded-full text-xs font-medium mt-1"
                       [ngClass]="getStatusColor(getTransactionStatus(transaction))"
                       data-testid="transaction-status"
-                      >
+                    >
                       {{ translateStatus(getTransactionStatus(transaction)) }}
                     </span>
                   </div>
                 </div>
                 <!-- Description -->
                 @if (transaction.metadata['description']) {
-                  <div
-                    class="mt-2 text-sm text-text-secondary"
-                    >
+                  <div class="mt-2 text-sm text-text-secondary">
                     {{ transaction.metadata['description'] }}
                   </div>
                 }
               </div>
               <!-- Expanded Details -->
               @if (expandedTransactionId() === transaction.id) {
-                <div
-                  class="px-4 pb-4 border-t border-ash-gray"
-                  >
+                <div class="px-4 pb-4 border-t border-ash-gray">
                   <div class="mt-4 space-y-2 text-sm">
                     <div class="flex justify-between">
                       <span class="text-text-secondary">ID:</span>
-                      <span class="font-mono text-xs text-text-primary">{{
-                        transaction.id
-                      }}</span>
+                      <span class="font-mono text-xs text-text-primary">{{ transaction.id }}</span>
                     </div>
                     @if (transaction.booking_id) {
                       <div>
@@ -187,48 +179,42 @@
                           <a
                             [routerLink]="['/bookings', transaction.booking_id]"
                             class="font-mono text-xs text-cta-default hover:text-warning-strong transition-colors underline"
-                            >
+                          >
                             {{ transaction.booking_id | slice: 0 : 8 }}...
                           </a>
                         </div>
                         @if (
                           isDepositRelatedTransaction(transaction) &&
                           getDepositStatus(transaction.booking_id)
-                          ) {
-                          <div
-                            class="flex justify-between items-center"
-                            >
-                            <span class="text-text-secondary"
-                              >Estado del depósito:</span
-                              >
-                              <app-deposit-status-badge
-                                [status]="getDepositStatus(transaction.booking_id)!"
-                              ></app-deposit-status-badge>
-                            </div>
-                          }
-                        </div>
-                      }
+                        ) {
+                          <div class="flex justify-between items-center">
+                            <span class="text-text-secondary">Estado del depósito:</span>
+                            <app-deposit-status-badge
+                              [status]="getDepositStatus(transaction.booking_id)!"
+                            ></app-deposit-status-badge>
+                          </div>
+                        }
+                      </div>
+                    }
+                    <div class="flex justify-between">
+                      <span class="text-text-secondary">Sistema:</span>
+                      <span class="text-text-primary">{{ transaction.source_system }}</span>
+                    </div>
+                    @if (transaction.metadata['provider']) {
                       <div class="flex justify-between">
-                        <span class="text-text-secondary">Sistema:</span>
+                        <span class="text-text-secondary">Proveedor:</span>
                         <span class="text-text-primary">{{
-                          transaction.source_system
+                          transaction.metadata['provider']
                         }}</span>
                       </div>
-                      @if (transaction.metadata['provider']) {
-                        <div class="flex justify-between">
-                          <span class="text-text-secondary">Proveedor:</span>
-                          <span class="text-text-primary">{{
-                            transaction.metadata['provider']
-                          }}</span>
-                        </div>
-                      }
-                    </div>
+                    }
                   </div>
-                }
-              </div>
-            }
-          </div>
-        }
-      </div>
-    }
-  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -6,7 +6,7 @@ describe('PdfGeneratorService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PdfGeneratorService]
+      providers: [PdfGeneratorService],
     });
     service = TestBed.inject(PdfGeneratorService);
   });
@@ -22,5 +22,4 @@ describe('PdfGeneratorService', () => {
   it('should have generateMultiPagePdf method', () => {
     expect(typeof service.generateMultiPagePdf).toBe('function');
   });
-
 });

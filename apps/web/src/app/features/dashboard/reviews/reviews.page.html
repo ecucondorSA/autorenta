@@ -1,22 +1,20 @@
-<div
-  class="reviews-page bg-surface-base min-h-screen transition-colors duration-300"
->
+<div class="reviews-page bg-surface-base min-h-screen transition-colors duration-300">
   <!-- Header -->
-  <div
-    class="bg-surface-raised border-b border-border-default transition-colors duration-300"
-  >
+  <div class="bg-surface-raised border-b border-border-default transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-text-primary flex items-center gap-2 tracking-tight font-satoshi">
+          <h1
+            class="text-3xl font-bold text-text-primary flex items-center gap-2 tracking-tight font-satoshi"
+          >
             <svg class="w-8 h-8 text-warning-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              <path
+                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+              />
             </svg>
             Reseñas
           </h1>
-          <p class="mt-2 text-text-secondary">
-            Todas tus calificaciones y comentarios
-          </p>
+          <p class="mt-2 text-text-secondary">Todas tus calificaciones y comentarios</p>
         </div>
         <a
           routerLink="/dashboard"
@@ -92,9 +90,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <!-- Owner Reviews Summary -->
         @if (userRole() === 'owner' || userRole() === 'both') {
-          <div
-            class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
-          >
+          <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6">
             <h2 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">
               Reseñas como Locador
             </h2>
@@ -132,9 +128,7 @@
 
         <!-- Renter Reviews Summary -->
         @if (userRole() === 'renter' || userRole() === 'both') {
-          <div
-            class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
-          >
+          <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6">
             <h2 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">
               Reseñas como Locatario
             </h2>
@@ -177,9 +171,7 @@
       </div>
 
       <!-- Reviews List -->
-      <div
-        class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6"
-      >
+      <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6">
         <h2 class="text-xl font-semibold text-text-primary mb-4 font-satoshi">
           @if (activeTab() === 'owner' || userRole() === 'owner') {
             Reseñas como Locador
@@ -207,9 +199,7 @@
             @if (activeTab() === 'owner' || userRole() === 'owner') {
               @if (ownerReviews().length === 0) {
                 <div class="text-center py-12">
-                  <p class="text-text-secondary">
-                    Aún no tenés reseñas como locador
-                  </p>
+                  <p class="text-text-secondary">Aún no tenés reseñas como locador</p>
                 </div>
               } @else {
                 @for (review of ownerReviews(); track review.id) {
@@ -219,9 +209,7 @@
             } @else {
               @if (renterReviews().length === 0) {
                 <div class="text-center py-12">
-                  <p class="text-text-secondary">
-                    Aún no tenés reseñas como locatario
-                  </p>
+                  <p class="text-text-secondary">Aún no tenés reseñas como locatario</p>
                 </div>
               } @else {
                 @for (review of renterReviews(); track review.id) {

@@ -26,7 +26,7 @@
             [(ngModel)]="filters"
             [ngModelOptions]="{ standalone: true }"
             name="periodType"
-            >
+          >
             <ion-select-option value="">Todos</ion-select-option>
             <ion-select-option value="daily">Diario</ion-select-option>
             <ion-select-option value="monthly">Mensual</ion-select-option>
@@ -98,7 +98,8 @@
                 <ion-label>
                   <h3>{{ closure.period_code }} - {{ closure.period_type }}</h3>
                   <p class="text-sm">
-                    {{ closure.start_date | date: 'short' }} - {{ closure.end_date | date: 'short' }}
+                    {{ closure.start_date | date: 'short' }} -
+                    {{ closure.end_date | date: 'short' }}
                   </p>
                   <div class="mt-2 grid grid-cols-2 gap-2 text-xs">
                     <div>
@@ -132,7 +133,7 @@
     <div
       class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
       (click)="closeCreateModal()"
-      >
+    >
       <ion-card class="max-w-md w-full" (click)="$event.stopPropagation()">
         <ion-card-header>
           <ion-card-title>Ejecutar Cierre de Período</ion-card-title>
@@ -146,7 +147,7 @@
                 [ngModelOptions]="{ standalone: true }"
                 name="periodType"
                 (ionChange)="openCreateModal()"
-                >
+              >
                 <ion-select-option value="daily">Diario</ion-select-option>
                 <ion-select-option value="monthly">Mensual</ion-select-option>
                 <ion-select-option value="yearly">Anual</ion-select-option>

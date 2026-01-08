@@ -9,7 +9,11 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
 import { BucketType, FgoParameters } from '@core/models/fgo-v1-1.model';
 import { SubscriptionCoverageCheck } from '@core/models/subscription.model';
 import { Booking } from '../../../../core/models';
-import { FranchiseInfo, BookingFranchiseService, DepositWithSubscriptionResult } from '../support/booking-franchise.service';
+import {
+  FranchiseInfo,
+  BookingFranchiseService,
+  DepositWithSubscriptionResult,
+} from '../support/booking-franchise.service';
 import { GuaranteeCopySummary, GuaranteeCopyBuilder } from '../support/guarantee-copy.builder';
 import { CheckoutRiskCalculator, GuaranteeBreakdown } from '../support/risk-calculator';
 
@@ -228,7 +232,7 @@ export class CheckoutStateService {
     await Promise.all([
       this.loadFgoParameters(),
       this.loadExchangeRate(),
-      this.loadSubscriptionCoverage()
+      this.loadSubscriptionCoverage(),
     ]);
   }
 

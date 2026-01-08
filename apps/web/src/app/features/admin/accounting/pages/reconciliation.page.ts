@@ -1,5 +1,4 @@
-import {Component, OnInit, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { IonicModule } from '@ionic/angular';
 import {
@@ -21,7 +20,7 @@ import {
         <ion-title>Conciliación Wallet</ion-title>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content class="ion-padding">
       @if (reconciliation().length > 0) {
         <ion-card>
@@ -41,7 +40,7 @@ import {
         </ion-card>
       }
     </ion-content>
-    `,
+  `,
 })
 export class ReconciliationPage implements OnInit {
   private readonly accountingService = inject(AccountingService);

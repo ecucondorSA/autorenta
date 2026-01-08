@@ -1,5 +1,4 @@
-import {Component, inject, signal, OnInit,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -33,7 +32,9 @@ export class CarsConversionPage implements OnInit {
       const cars = await this.carsService.listActiveCars({});
       // Ordenar por rating y tomar los 6 mejores
       const sorted = cars
-        .filter(car => (car.photos?.length || car.car_photos?.length) && (car.price_per_day ?? 0) > 0)
+        .filter(
+          (car) => (car.photos?.length || car.car_photos?.length) && (car.price_per_day ?? 0) > 0,
+        )
         .sort((a, b) => (b.rating_avg || 0) - (a.rating_avg || 0))
         .slice(0, 6);
       this.featuredCars.set(sorted);

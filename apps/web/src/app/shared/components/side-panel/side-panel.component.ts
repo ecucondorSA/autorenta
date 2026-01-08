@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * SidePanelComponent
@@ -47,7 +40,9 @@ import {
       [style.width]="width"
     >
       <!-- Header -->
-      <div class="flex items-center justify-between px-4 py-3 border-b border-border-default bg-surface-raised">
+      <div
+        class="flex items-center justify-between px-4 py-3 border-b border-border-default bg-surface-raised"
+      >
         <h2 class="text-base font-semibold text-text-primary truncate">
           {{ title }}
         </h2>
@@ -58,7 +53,12 @@ import {
           aria-label="Cerrar panel"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
@@ -69,20 +69,26 @@ import {
       </div>
     </div>
   `,
-  styles: [`
-    :host {
-      display: contents;
-    }
+  styles: [
+    `
+      :host {
+        display: contents;
+      }
 
-    .animate-fade-in {
-      animation: fadeIn 200ms ease-out;
-    }
+      .animate-fade-in {
+        animation: fadeIn 200ms ease-out;
+      }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-  `],
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    `,
+  ],
 })
 export class SidePanelComponent {
   @Input() isOpen = false;

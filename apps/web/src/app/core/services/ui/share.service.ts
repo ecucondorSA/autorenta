@@ -1,5 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Injectable, inject} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 type NavigatorWithAdvancedShare = Navigator & {
   canShare?: (data?: ShareData | { files: File[] }) => boolean;

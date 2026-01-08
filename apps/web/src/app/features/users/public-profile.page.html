@@ -1,20 +1,18 @@
 <div class="min-h-screen bg-surface-base pb-20 transition-colors duration-300">
   <!-- Header with back button -->
-  <div
-    class="bg-surface-raised border-b border-border-default transition-colors"
-    >
+  <div class="bg-surface-raised border-b border-border-default transition-colors">
     <div class="mx-auto max-w-5xl px-6 py-6">
       <button
         (click)="goBack()"
         class="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
-        >
+      >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             d="M15 19l-7-7 7-7"
-            />
+          />
         </svg>
         {{ 'common.back' | translate }}
       </button>
@@ -36,9 +34,7 @@
   <!-- Error State -->
   @if (error() && !loading()) {
     <div class="mx-auto max-w-5xl px-6 py-12">
-      <div
-        class="rounded-xl bg-error-bg border border-error-border p-6 text-center"
-        >
+      <div class="rounded-xl bg-error-bg border border-error-border p-6 text-center">
         <p class="text-error-strong font-medium">{{ error() }}</p>
         <button (click)="goBack()" class="mt-4 btn-secondary px-6 py-2">
           {{ 'common.back' | translate }}
@@ -65,48 +61,46 @@
                 [src]="profile()?.avatar_url || '/assets/avatar-placeholder.png'"
                 [alt]="profile()?.full_name"
                 class="h-32 w-32 rounded-full object-cover bg-surface-secondary ring-4 ring-white-pure transition-colors shadow-lg"
-                />
+              />
             </div>
             <!-- Name and Stats -->
             <div class="flex-1 pt-16 sm:pt-0">
               <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                  <h1
-                    class="text-3xl font-bold text-text-primary tracking-tight"
-                    >
+                  <h1 class="text-3xl font-bold text-text-primary tracking-tight">
                     {{ profile()?.full_name }}
                   </h1>
                   <div class="mt-2 flex flex-wrap items-center gap-2">
                     <!-- Role Badge -->
                     <span
                       class="inline-flex items-center gap-1.5 rounded-full bg-surface-secondary px-3 py-1 text-sm font-semibold text-text-primary border border-border-default"
-                      >
+                    >
                       {{
-                      profile()?.role === 'renter'
-                      ? '🚗 Locatario'
-                      : profile()?.role === 'owner'
-                      ? '🏠 Locador'
-                      : '🔄 Ambos'
+                        profile()?.role === 'renter'
+                          ? '🚗 Locatario'
+                          : profile()?.role === 'owner'
+                            ? '🏠 Locador'
+                            : '🔄 Ambos'
                       }}
                     </span>
                     <!-- Verification Badge -->
                     <span
-                    [class]="
-                      'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold border ' +
-                      getVerificationBadgeClass()
-                    "
-                      >
+                      [class]="
+                        'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold border ' +
+                        getVerificationBadgeClass()
+                      "
+                    >
                       <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                         <path
                           fill-rule="evenodd"
                           d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                           clip-rule="evenodd"
-                          />
+                        />
                       </svg>
                       {{
-                      profile()?.email_verified && profile()?.phone_verified
-                      ? 'Verificado'
-                      : 'Sin verificar'
+                        profile()?.email_verified && profile()?.phone_verified
+                          ? 'Verificado'
+                          : 'Sin verificar'
                       }}
                     </span>
                   </div>
@@ -123,7 +117,7 @@
             <!-- Owner Rating -->
             <div
               class="rounded-xl bg-gradient-to-br from-cta-default/10 to-cta-default/5 border border-cta-default/20 p-4 transition-colors"
-              >
+            >
               <p class="text-xs font-medium text-text-secondary mb-1">
                 {{ 'publicProfile.asOwner' | translate }}
               </p>
@@ -140,7 +134,7 @@
             <!-- Renter Rating -->
             <div
               class="rounded-xl bg-gradient-to-br from-warning-light/10 to-warning-light/5 border border-warning-light/20 p-4 transition-colors"
-              >
+            >
               <p class="text-xs font-medium text-text-secondary mb-1">
                 {{ 'publicProfile.asRenter' | translate }}
               </p>
@@ -157,7 +151,7 @@
             <!-- Total Cars -->
             <div
               class="rounded-xl bg-surface-secondary border border-border-default p-4 transition-colors"
-              >
+            >
               <p class="text-xs font-medium text-text-secondary mb-1">
                 {{ 'publicProfile.activeCars' | translate }}
               </p>
@@ -171,7 +165,7 @@
             <!-- Average Price -->
             <div
               class="rounded-xl bg-gradient-to-br from-success-50 to-success-100/50 border border-success-border p-4 transition-colors"
-              >
+            >
               <p class="text-xs font-medium text-text-secondary mb-1">
                 {{ 'publicProfile.avgPrice' | translate }}
               </p>
@@ -190,42 +184,44 @@
         <nav class="-mb-px flex gap-6 overflow-x-auto" aria-label="Tabs">
           <button
             (click)="setActiveTab('cars')"
-          [ngClass]="{
-            'text-cta-default': activeTab() === 'cars',
-            'border-cta-default': activeTab() === 'cars',
-            'text-text-secondary': activeTab() !== 'cars',
-            'border-transparent': activeTab() !== 'cars',
-          }"
+            [ngClass]="{
+              'text-cta-default': activeTab() === 'cars',
+              'border-cta-default': activeTab() === 'cars',
+              'text-text-secondary': activeTab() !== 'cars',
+              'border-transparent': activeTab() !== 'cars',
+            }"
             class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-text-primary"
-            >
+          >
             {{ 'publicProfile.tabs.cars' | translate }} ({{ userCars().length }})
           </button>
           @if (hasOwnerReviews()) {
             <button
               (click)="setActiveTab('reviews-owner')"
-          [ngClass]="{
-            'text-cta-default': activeTab() === 'reviews-owner',
-            'border-cta-default': activeTab() === 'reviews-owner',
-            'text-text-secondary': activeTab() !== 'reviews-owner',
-            'border-transparent': activeTab() !== 'reviews-owner',
-          }"
+              [ngClass]="{
+                'text-cta-default': activeTab() === 'reviews-owner',
+                'border-cta-default': activeTab() === 'reviews-owner',
+                'text-text-secondary': activeTab() !== 'reviews-owner',
+                'border-transparent': activeTab() !== 'reviews-owner',
+              }"
               class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-text-primary"
-              >
+            >
               {{ 'publicProfile.tabs.reviewsAsOwner' | translate }} ({{ reviewsAsOwner().length }})
             </button>
           }
           @if (hasRenterReviews()) {
             <button
               (click)="setActiveTab('reviews-renter')"
-          [ngClass]="{
-            'text-cta-default': activeTab() === 'reviews-renter',
-            'border-cta-default': activeTab() === 'reviews-renter',
-            'text-text-secondary': activeTab() !== 'reviews-renter',
-            'border-transparent': activeTab() !== 'reviews-renter',
-          }"
+              [ngClass]="{
+                'text-cta-default': activeTab() === 'reviews-renter',
+                'border-cta-default': activeTab() === 'reviews-renter',
+                'text-text-secondary': activeTab() !== 'reviews-renter',
+                'border-transparent': activeTab() !== 'reviews-renter',
+              }"
               class="whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition-colors hover:text-text-primary"
-              >
-              {{ 'publicProfile.tabs.reviewsAsRenter' | translate }} ({{ reviewsAsRenter().length }})
+            >
+              {{ 'publicProfile.tabs.reviewsAsRenter' | translate }} ({{
+                reviewsAsRenter().length
+              }})
             </button>
           }
         </nav>
@@ -247,21 +243,19 @@
                 <a
                   [routerLink]="['/cars', car.id]"
                   class="card-premium overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 group"
-                  >
-                  <div
-                    class="aspect-[4/3] overflow-hidden bg-surface-secondary"
-                    >
+                >
+                  <div class="aspect-[4/3] overflow-hidden bg-surface-secondary">
                     <img
                       [src]="getCarPhotoUrl(car)"
                       [alt]="car.title"
                       class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
-                      />
+                    />
                   </div>
                   <div class="p-4">
                     <h3
                       class="font-bold text-text-primary group-hover:text-cta-default transition-colors"
-                      >
+                    >
                       {{ car.brand }} {{ car.model }}
                     </h3>
                     <p class="text-sm text-text-secondary mt-1">
@@ -275,9 +269,7 @@
                       } @else {
                         <p class="text-sm font-semibold text-primary-600">Consultar precio</p>
                       }
-                      <span class="text-xs text-text-secondary">{{
-                        car.location_city
-                      }}</span>
+                      <span class="text-xs text-text-secondary">{{ car.location_city }}</span>
                     </div>
                   </div>
                 </a>
@@ -308,9 +300,7 @@
           }
           <!-- Reviews List -->
           <div class="space-y-4">
-            <h3 class="text-lg font-semibold text-text-primary font-satoshi">
-              Reseñas Recibidas
-            </h3>
+            <h3 class="text-lg font-semibold text-text-primary font-satoshi">Reseñas Recibidas</h3>
             @for (review of displayedReviewsOwner(); track review) {
               <div class="card-premium p-6">
                 <div class="flex items-start gap-4">
@@ -318,7 +308,7 @@
                     [src]="review.reviewer_avatar || '/assets/avatar-placeholder.png'"
                     [alt]="review.reviewer_name"
                     class="h-12 w-12 rounded-full object-cover"
-                    />
+                  />
                   <div class="flex-1">
                     <div class="flex items-start justify-between">
                       <div>
@@ -337,9 +327,7 @@
                       </div>
                     </div>
                     @if (review.comment_public) {
-                      <p
-                        class="mt-2 text-sm text-text-primary"
-                        >
+                      <p class="mt-2 text-sm text-text-primary">
                         {{ review.comment_public }}
                       </p>
                     }
@@ -364,9 +352,7 @@
           }
           <!-- Reviews List -->
           <div class="space-y-4">
-            <h3 class="text-lg font-semibold text-text-primary font-satoshi">
-              Reseñas Recibidas
-            </h3>
+            <h3 class="text-lg font-semibold text-text-primary font-satoshi">Reseñas Recibidas</h3>
             @for (review of displayedReviewsRenter(); track review) {
               <div class="card-premium p-6">
                 <div class="flex items-start gap-4">
@@ -374,7 +360,7 @@
                     [src]="review.reviewer_avatar || '/assets/avatar-placeholder.png'"
                     [alt]="review.reviewer_name"
                     class="h-12 w-12 rounded-full object-cover"
-                    />
+                  />
                   <div class="flex-1">
                     <div class="flex items-start justify-between">
                       <div>
@@ -393,9 +379,7 @@
                       </div>
                     </div>
                     @if (review.comment_public) {
-                      <p
-                        class="mt-2 text-sm text-text-primary"
-                        >
+                      <p class="mt-2 text-sm text-text-primary">
                         {{ review.comment_public }}
                       </p>
                     }

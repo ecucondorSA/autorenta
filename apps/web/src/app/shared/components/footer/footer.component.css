@@ -68,7 +68,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--cta-default, #00D95F);
+  border-bottom: 2px solid var(--cta-default, #00d95f);
   display: inline-block;
 }
 
@@ -307,7 +307,9 @@
   height: 44px;
   color: #4b5563;
   text-decoration: none;
-  transition: all 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    all 0.2s ease,
+    box-shadow 0.2s ease;
   border-radius: 50%;
   box-shadow: 0 0 0 1px transparent;
 }

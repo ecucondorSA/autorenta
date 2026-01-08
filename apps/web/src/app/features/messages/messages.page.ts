@@ -1,5 +1,12 @@
-import {Component, OnInit, OnDestroy, inject, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -45,12 +52,8 @@ import { CarChatComponent } from './components/car-chat.component';
             </button>
 
             <div>
-              <h1 class="text-xl font-semibold text-text-primary">
-                Mensajes
-              </h1>
-              <p
-                class="text-sm text-text-secondary"
-              >
+              <h1 class="text-xl font-semibold text-text-primary">Mensajes</h1>
+              <p class="text-sm text-text-secondary">
                 @if (bookingId()) {
                   Conversación sobre reserva
                 } @else if (carId()) {
@@ -68,9 +71,7 @@ import { CarChatComponent } from './components/car-chat.component';
       <div class="mx-auto max-w-4xl p-4">
         <!-- Booking Context Card -->
         @if (hasBookingContext() && bookingContext()) {
-          <div
-            class="mb-4 rounded-lg border border-cta-default/40 bg-cta-default/10 p-4"
-          >
+          <div class="mb-4 rounded-lg border border-cta-default/40 bg-cta-default/10 p-4">
             <div class="flex items-start gap-3">
               <div class="flex-shrink-0">
                 <svg
@@ -92,9 +93,7 @@ import { CarChatComponent } from './components/car-chat.component';
                   Reserva: {{ bookingContext()!.carTitle }}
                 </h3>
                 @if (bookingContext()!.dates) {
-                  <p class="text-xs text-cta-default mb-2">
-                    📅 {{ bookingContext()!.dates }}
-                  </p>
+                  <p class="text-xs text-cta-default mb-2">📅 {{ bookingContext()!.dates }}</p>
                 }
                 <div class="flex items-center gap-2">
                   <span
@@ -132,9 +131,7 @@ import { CarChatComponent } from './components/car-chat.component';
               <div
                 class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500"
               ></div>
-              <p class="text-text-secondary">
-                Cargando chat...
-              </p>
+              <p class="text-text-secondary">Cargando chat...</p>
             </div>
           </div>
         } @else if (error()) {
@@ -164,9 +161,7 @@ import { CarChatComponent } from './components/car-chat.component';
           />
         } @else {
           <div class="rounded-lg bg-warning-bg p-4">
-            <p class="text-sm text-warning-strong">
-              ⚠️ Faltan parámetros para iniciar el chat
-            </p>
+            <p class="text-sm text-warning-strong">⚠️ Faltan parámetros para iniciar el chat</p>
             <button
               (click)="goBack()"
               class="mt-2 text-sm text-warning-text underline hover:text-warning-strong"

@@ -4,12 +4,8 @@
 >
   <!-- Background decorative elements -->
   <div class="absolute inset-0 pointer-events-none">
-    <div
-      class="absolute top-0 right-0 w-96 h-96 bg-cta-default/10 rounded-full blur-3xl"
-    ></div>
-    <div
-      class="absolute bottom-0 left-0 w-96 h-96 bg-cta-hover/10 rounded-full blur-3xl"
-    ></div>
+    <div class="absolute top-0 right-0 w-96 h-96 bg-cta-default/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-cta-hover/10 rounded-full blur-3xl"></div>
   </div>
 
   <div class="container-page px-container relative z-10">
@@ -19,18 +15,23 @@
         <div
           class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised border border-cta-default/20 mb-6"
         >
-          <svg class="w-6 h-6 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z" stroke-width="1.75" stroke-linejoin="round"/>
-            <path d="M9 22V12h6v10" stroke-width="1.75"/>
-          </svg>
-          <span class="text-sm font-medium text-cta-default"
-            >Programa de Renters</span
+          <svg
+            class="w-6 h-6 text-cta-default"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
+            <path
+              d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"
+              stroke-width="1.75"
+              stroke-linejoin="round"
+            />
+            <path d="M9 22V12h6v10" stroke-width="1.75" />
+          </svg>
+          <span class="text-sm font-medium text-cta-default">Programa de Renters</span>
         </div>
 
-        <h1
-          class="text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 text-text-primary leading-tight"
-        >
+        <h1 class="text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 text-text-primary leading-tight">
           Convertí tu auto en una
           <span
             class="text-transparent bg-clip-text bg-gradient-to-r from-cta-default to-cta-hover"
@@ -41,8 +42,8 @@
 
         <p class="text-lg lg:text-xl text-text-secondary mb-8 leading-relaxed">
           Publicá tu auto en Autorentar y generá entre
-          <strong class="text-cta-default">$50,000 y $200,000</strong> por mes.
-          Miles de personas están buscando rentar un auto como el tuyo.
+          <strong class="text-cta-default">$50,000 y $200,000</strong> por mes. Miles de personas
+          están buscando rentar un auto como el tuyo.
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4 mb-8">
@@ -76,27 +77,23 @@
               Basado en tus valores actuales. Ajustá la calculadora para ver otros escenarios.
             </p>
           </div>
-          <button class="btn-tertiary" (click)="scrollToSection('calculator')">Ajustar montos</button>
+          <button class="btn-tertiary" (click)="scrollToSection('calculator')">
+            Ajustar montos
+          </button>
         </div>
 
         <!-- Stats -->
         <div class="grid grid-cols-3 gap-4">
           <div class="text-center">
-            <div class="text-2xl lg:text-3xl font-bold text-cta-default">
-              1,500+
-            </div>
+            <div class="text-2xl lg:text-3xl font-bold text-cta-default">1,500+</div>
             <div class="text-xs lg:text-sm text-text-muted">Renters activos</div>
           </div>
           <div class="text-center">
-            <div class="text-2xl lg:text-3xl font-bold text-cta-default">
-              $120k
-            </div>
+            <div class="text-2xl lg:text-3xl font-bold text-cta-default">$120k</div>
             <div class="text-xs lg:text-sm text-text-muted">Promedio/mes</div>
           </div>
           <div class="text-center">
-            <div class="text-2xl lg:text-3xl font-bold text-cta-default">
-              24hs
-            </div>
+            <div class="text-2xl lg:text-3xl font-bold text-cta-default">24hs</div>
             <div class="text-xs lg:text-sm text-text-muted">Para activar</div>
           </div>
         </div>
@@ -118,21 +115,30 @@
             class="absolute bottom-6 left-6 right-6 bg-surface-raised/95 backdrop-blur-md rounded-xl p-4 border border-border-default/50 shadow-lg"
           >
             <div class="flex items-center gap-3 mb-2">
-              <svg class="w-8 h-8 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M6 10c0-1 1-2 2-3l1-2h6l1 2c1 1 2 2 2 3v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8z" stroke-width="1.75" stroke-linejoin="round"/>
-                <path d="M9 5h6" stroke-width="1.5" stroke-linecap="round"/>
-                <path d="M12 11v6M10 12.5c0-.83.9-1.5 2-1.5s2 .67 2 1.5-.9 1.5-2 1.5-2 .67-2 1.5.9 1.5 2 1.5" stroke-width="1.25" stroke-linecap="round"/>
+              <svg
+                class="w-8 h-8 text-cta-default"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M6 10c0-1 1-2 2-3l1-2h6l1 2c1 1 2 2 2 3v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8z"
+                  stroke-width="1.75"
+                  stroke-linejoin="round"
+                />
+                <path d="M9 5h6" stroke-width="1.5" stroke-linecap="round" />
+                <path
+                  d="M12 11v6M10 12.5c0-.83.9-1.5 2-1.5s2 .67 2 1.5-.9 1.5-2 1.5-2 .67-2 1.5.9 1.5 2 1.5"
+                  stroke-width="1.25"
+                  stroke-linecap="round"
+                />
               </svg>
               <div>
-                <div class="text-sm font-medium text-text-muted">
-                  Ganancia promedio
-                </div>
+                <div class="text-sm font-medium text-text-muted">Ganancia promedio</div>
                 <div class="text-2xl font-bold text-text-primary">$120,000/mes</div>
               </div>
             </div>
-            <div class="text-xs text-text-muted">
-              Basado en datos de 1,500+ Renters activos
-            </div>
+            <div class="text-xs text-text-muted">Basado en datos de 1,500+ Renters activos</div>
           </div>
         </div>
       </div>
@@ -145,12 +151,12 @@
   <div class="container-page px-container">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary tracking-tight font-satoshi">
+        <h2
+          class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary tracking-tight font-satoshi"
+        >
           Calculá tus ingresos potenciales
         </h2>
-        <p class="text-lg text-text-secondary">
-          Estimá cuánto podés ganar rentando tu auto
-        </p>
+        <p class="text-lg text-text-secondary">Estimá cuánto podés ganar rentando tu auto</p>
       </div>
 
       <div data-tour-step="income-calculator" class="card-premium p-8">
@@ -193,10 +199,10 @@
 
             <div>
               <div class="slider-label">
-                <label class="block text-sm font-medium text-text-primary">
-                  Precio por día
-                </label>
-                <span class="value-chip font-mono">{{ pricePerDay() | number: '1.0-0' }} ARS/día</span>
+                <label class="block text-sm font-medium text-text-primary"> Precio por día </label>
+                <span class="value-chip font-mono"
+                  >{{ pricePerDay() | number: '1.0-0' }} ARS/día</span
+                >
               </div>
               <input
                 type="range"
@@ -224,9 +230,7 @@
 
             <div class="space-y-4">
               <div class="flex justify-between items-center">
-                <span class="text-sm text-text-secondary"
-                  >Ingresos anuales:</span
-                >
+                <span class="text-sm text-text-secondary">Ingresos anuales:</span>
                 <span class="text-lg font-semibold font-mono text-text-primary">
                   ${{ estimatedYearlyIncome() | number: '1.0-0' }}
                 </span>
@@ -274,37 +278,104 @@
         <div class="card-premium p-6 hover:scale-[1.02] transition-transform">
           <div class="mb-4">
             @if (benefit.icon === 'dollar-bill') {
-              <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.75"/>
-                <circle cx="12" cy="12" r="3.5" stroke-width="1.5"/>
-                <path d="M12 9.5v5M10.5 10.5c0-.5.67-1 1.5-1s1.5.5 1.5 1-.67 1-1.5 1-1.5.5-1.5 1 .67 1 1.5 1 1.5-.5 1.5-1" stroke-width="1.25" stroke-linecap="round"/>
+              <svg
+                class="w-10 h-10 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.75" />
+                <circle cx="12" cy="12" r="3.5" stroke-width="1.5" />
+                <path
+                  d="M12 9.5v5M10.5 10.5c0-.5.67-1 1.5-1s1.5.5 1.5 1-.67 1-1.5 1-1.5.5-1.5 1 .67 1 1.5 1 1.5-.5 1.5-1"
+                  stroke-width="1.25"
+                  stroke-linecap="round"
+                />
               </svg>
             } @else if (benefit.icon === 'target') {
-              <svg class="w-10 h-10 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" stroke-width="1.75"/>
-                <circle cx="12" cy="12" r="6" stroke-width="1.5"/>
-                <circle cx="12" cy="12" r="2" stroke-width="1.5"/>
+              <svg
+                class="w-10 h-10 text-cta-default"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="12" cy="12" r="10" stroke-width="1.75" />
+                <circle cx="12" cy="12" r="6" stroke-width="1.5" />
+                <circle cx="12" cy="12" r="2" stroke-width="1.5" />
               </svg>
             } @else if (benefit.icon === 'shield') {
-              <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2L4 6v5c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6l-8-4z" stroke-width="1.75" stroke-linejoin="round"/>
-                <path d="M9 12l2 2 4-4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg
+                class="w-10 h-10 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2L4 6v5c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6l-8-4z"
+                  stroke-width="1.75"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M9 12l2 2 4-4"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             } @else if (benefit.icon === 'handshake') {
-              <svg class="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M12 12l-2-2m2 2l2-2m-2 2v6m-4-4l4 4m0 0l4-4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3 7h5l4 4m4 0l4-4h5" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg
+                class="w-10 h-10 text-orange-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 12l-2-2m2 2l2-2m-2 2v6m-4-4l4 4m0 0l4-4"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M3 7h5l4 4m4 0l4-4h5"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             } @else if (benefit.icon === 'lightning') {
-              <svg class="w-10 h-10 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" stroke-width="1.75" stroke-linejoin="round"/>
+              <svg
+                class="w-10 h-10 text-yellow-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"
+                  stroke-width="1.75"
+                  stroke-linejoin="round"
+                />
               </svg>
             } @else if (benefit.icon === 'gift') {
-              <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 3v11m0-11L8 7m4-4l4 4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M21 8h-3M6 8H3" stroke-width="1.75" stroke-linecap="round"/>
-                <path d="M12 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke-width="1.5"/>
+              <svg
+                class="w-10 h-10 text-purple-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M12 3v11m0-11L8 7m4-4l4 4"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path d="M21 8h-3M6 8H3" stroke-width="1.75" stroke-linecap="round" />
+                <path d="M12 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke-width="1.5" />
               </svg>
             }
           </div>
@@ -339,24 +410,71 @@
             <div class="card-premium p-6 text-center h-full">
               <div class="mb-4 flex justify-center">
                 @if (step.icon === 'pencil') {
-                  <svg class="w-12 h-12 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                  <svg
+                    class="w-12 h-12 text-cta-default"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </svg>
                 } @else if (step.icon === 'camera') {
-                  <svg class="w-12 h-12 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2v11z" stroke-width="1.75" stroke-linejoin="round"/>
-                    <circle cx="12" cy="13" r="4" stroke-width="1.5"/>
+                  <svg
+                    class="w-12 h-12 text-cta-default"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2v11z"
+                      stroke-width="1.75"
+                      stroke-linejoin="round"
+                    />
+                    <circle cx="12" cy="13" r="4" stroke-width="1.5" />
                   </svg>
                 } @else if (step.icon === 'checkmark') {
-                  <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <svg
+                    class="w-12 h-12 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M20 6L9 17l-5-5"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </svg>
                 } @else if (step.icon === 'money-bag') {
-                  <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M6 10c0-1 1-2 2-3l1-2h6l1 2c1 1 2 2 2 3v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8z" stroke-width="1.75" stroke-linejoin="round"/>
-                    <path d="M9 5h6" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M12 11v6M10 12.5c0-.83.9-1.5 2-1.5s2 .67 2 1.5-.9 1.5-2 1.5-2 .67-2 1.5.9 1.5 2 1.5" stroke-width="1.25" stroke-linecap="round"/>
+                  <svg
+                    class="w-12 h-12 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M6 10c0-1 1-2 2-3l1-2h6l1 2c1 1 2 2 2 3v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8z"
+                      stroke-width="1.75"
+                      stroke-linejoin="round"
+                    />
+                    <path d="M9 5h6" stroke-width="1.5" stroke-linecap="round" />
+                    <path
+                      d="M12 11v6M10 12.5c0-.83.9-1.5 2-1.5s2 .67 2 1.5-.9 1.5-2 1.5-2 .67-2 1.5.9 1.5 2 1.5"
+                      stroke-width="1.25"
+                      stroke-linecap="round"
+                    />
                   </svg>
                 }
               </div>
@@ -378,11 +496,7 @@
               <div
                 class="hidden lg:block absolute top-1/2 -right-3 transform -translate-y-1/2 z-10"
               >
-                <svg
-                  class="w-6 h-6 text-cta-default"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg class="w-6 h-6 text-cta-default" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fill-rule="evenodd"
                     d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
@@ -427,9 +541,7 @@
             }
           </div>
 
-          <p class="text-text-secondary mb-6 italic">
-            "{{ testimonial.quote }}"
-          </p>
+          <p class="text-text-secondary mb-6 italic">"{{ testimonial.quote }}"</p>
 
           <div class="flex items-center gap-3">
             <div
@@ -459,49 +571,81 @@
 </section>
 
 <!-- Programa de Referidos -->
-<section
-  class="py-16 bg-gradient-to-br from-cta-default/10 via-surface-base to-cta-hover/10"
->
+<section class="py-16 bg-gradient-to-br from-cta-default/10 via-surface-base to-cta-hover/10">
   <div class="container-page px-container">
     <div data-tour-step="referral-program" class="max-w-4xl mx-auto text-center">
-      <svg class="w-14 h-14 text-cta-default mb-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M12 3v11m0-11L8 7m4-4l4 4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M21 8h-3M6 8H3" stroke-width="1.75" stroke-linecap="round"/>
-        <path d="M12 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke-width="1.5"/>
+      <svg
+        class="w-14 h-14 text-cta-default mb-6 mx-auto"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M12 3v11m0-11L8 7m4-4l4 4"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path d="M21 8h-3M6 8H3" stroke-width="1.75" stroke-linecap="round" />
+        <path d="M12 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke-width="1.5" />
       </svg>
       <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary tracking-tight font-satoshi">
         Ganás más con nuestro programa de referidos
       </h2>
       <p class="text-lg text-text-secondary mb-8">
         Invitá a tus amigos propietarios y ganás
-        <strong class="text-cta-default">$1,500 ARS</strong> por cada uno que
-        publique su auto. Ellos también reciben
-        <strong class="text-cta-default">$500 ARS</strong> de bienvenida.
+        <strong class="text-cta-default">$1,500 ARS</strong> por cada uno que publique su auto.
+        Ellos también reciben <strong class="text-cta-default">$500 ARS</strong> de bienvenida.
       </p>
 
       <div class="grid md:grid-cols-2 gap-6 mb-8">
         <div class="card-premium p-6">
-          <svg class="w-8 h-8 text-green-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.75"/>
-            <circle cx="12" cy="12" r="3.5" stroke-width="1.5"/>
-            <path d="M12 9.5v5M10.5 10.5c0-.5.67-1 1.5-1s1.5.5 1.5 1-.67 1-1.5 1-1.5.5-1.5 1 .67 1 1.5 1 1.5-.5 1.5-1" stroke-width="1.25" stroke-linecap="round"/>
+          <svg
+            class="w-8 h-8 text-green-600 mb-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.75" />
+            <circle cx="12" cy="12" r="3.5" stroke-width="1.5" />
+            <path
+              d="M12 9.5v5M10.5 10.5c0-.5.67-1 1.5-1s1.5.5 1.5 1-.67 1-1.5 1-1.5.5-1.5 1 .67 1 1.5 1 1.5-.5 1.5-1"
+              stroke-width="1.25"
+              stroke-linecap="round"
+            />
           </svg>
           <div class="text-2xl font-bold text-cta-default mb-2">$1,500</div>
-          <div class="text-sm text-text-secondary">
-            Por cada amigo que publique su auto
-          </div>
+          <div class="text-sm text-text-secondary">Por cada amigo que publique su auto</div>
         </div>
 
         <div class="card-premium p-6">
-          <svg class="w-8 h-8 text-cta-default mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2L12 14M12 2L8 6M12 2L16 6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M18 11L21 14L18 22L12 19L6 22L3 14L6 11" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            class="w-8 h-8 text-cta-default mb-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 2L12 14M12 2L8 6M12 2L16 6"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M18 11L21 14L18 22L12 19L6 22L3 14L6 11"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           <div class="text-2xl font-bold text-cta-default mb-2">Sin límites</div>
-          <div class="text-sm text-text-secondary">
-            Invitá a todos tus amigos y seguí ganando
-          </div>
+          <div class="text-sm text-text-secondary">Invitá a todos tus amigos y seguí ganando</div>
         </div>
       </div>
 
@@ -517,7 +661,9 @@
   <div class="container-page px-container">
     <div class="max-w-3xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary tracking-tight font-satoshi">
+        <h2
+          class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary tracking-tight font-satoshi"
+        >
           Preguntas frecuentes
         </h2>
       </div>
@@ -529,9 +675,7 @@
               (click)="toggleFAQ($index)"
               class="w-full text-left px-6 py-4 flex items-center justify-between hover:bg-surface-secondary transition-colors"
             >
-              <span class="font-semibold text-text-primary">{{
-                faq.question
-              }}</span>
+              <span class="font-semibold text-text-primary">{{ faq.question }}</span>
               <svg
                 class="w-5 h-5 text-text-muted transition-transform"
                 [class.rotate-180]="faq.open"
@@ -561,12 +705,12 @@
 </section>
 
 <!-- Final CTA -->
-<section
-  class="py-20 bg-gradient-to-br from-cta-default to-cta-hover text-cta-text"
->
+<section class="py-20 bg-gradient-to-br from-cta-default to-cta-hover text-cta-text">
   <div class="container-page px-container">
     <div class="max-w-3xl mx-auto text-center">
-      <h2 class="text-3xl lg:text-5xl font-bold mb-6 tracking-tight font-satoshi">¿Listo para comenzar a ganar?</h2>
+      <h2 class="text-3xl lg:text-5xl font-bold mb-6 tracking-tight font-satoshi">
+        ¿Listo para comenzar a ganar?
+      </h2>
       <p class="text-xl mb-8 opacity-90">
         Unite a miles de Renters que ya están generando ingresos con sus autos.
       </p>
@@ -582,19 +726,34 @@
       <div class="mt-8 text-sm opacity-75 flex items-center justify-center gap-6 flex-wrap">
         <span class="flex items-center gap-2">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path
+              d="M20 6L9 17l-5-5"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           Sin costos iniciales
         </span>
         <span class="flex items-center gap-2">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path
+              d="M20 6L9 17l-5-5"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           Sin contratos
         </span>
         <span class="flex items-center gap-2">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path
+              d="M20 6L9 17l-5-5"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           Cancelás cuando quieras
         </span>

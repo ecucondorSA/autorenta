@@ -1,5 +1,11 @@
-import {Component, Input, Output, EventEmitter, OnInit,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -116,15 +122,16 @@ export class ReviewFormComponent implements OnInit {
 
   ngOnInit(): void {
     // Seleccionar categorías según el tipo de review
-    this.ratingCategories = this.reviewType === 'renter_to_owner'
-      ? this.renterToOwnerCategories
-      : this.ownerToRenterCategories;
+    this.ratingCategories =
+      this.reviewType === 'renter_to_owner'
+        ? this.renterToOwnerCategories
+        : this.ownerToRenterCategories;
 
     // Debug: Log which categories are loaded
     console.log('[ReviewForm] Categories loaded:', {
       reviewType: this.reviewType,
       categoriesCount: this.ratingCategories.length,
-      categoryKeys: this.ratingCategories.map(c => c.key),
+      categoryKeys: this.ratingCategories.map((c) => c.key),
     });
 
     this.initForm();
@@ -154,7 +161,7 @@ export class ReviewFormComponent implements OnInit {
 
   getAverageRating(): number {
     // Calcular promedio dinámicamente según las categorías activas
-    const ratings = this.ratingCategories.map(cat => this.getRating(cat.key));
+    const ratings = this.ratingCategories.map((cat) => this.getRating(cat.key));
 
     const validRatings = ratings.filter((r) => r > 0);
     if (validRatings.length === 0) return 0;

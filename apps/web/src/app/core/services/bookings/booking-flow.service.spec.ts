@@ -6,7 +6,7 @@ describe('BookingFlowService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BookingFlowService]
+      providers: [BookingFlowService],
     });
     service = TestBed.inject(BookingFlowService);
   });
@@ -34,5 +34,4 @@ describe('BookingFlowService', () => {
   it('should have validateStatusTransition method', () => {
     expect(typeof service.validateStatusTransition).toBe('function');
   });
-
 });

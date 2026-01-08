@@ -1,5 +1,4 @@
-import {Component, inject, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -23,9 +22,7 @@ import { AuthService } from '@core/services/auth/auth.service';
   imports: [IonicModule, ReactiveFormsModule],
   template: `
     <ion-header>
-      <ion-toolbar
-        class="bg-surface-raised border-b border-border-default"
-        >
+      <ion-toolbar class="bg-surface-raised border-b border-border-default">
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
@@ -36,50 +33,41 @@ import { AuthService } from '@core/services/auth/auth.service';
         <ion-title class="text-text-primary"> Seguridad </ion-title>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content class="bg-surface-base">
       <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
         <!-- Header -->
         <div class="mb-6">
-          <h1 class="text-2xl font-bold text-text-primary mb-2">
-            Configuración de Seguridad
-          </h1>
-          <p class="text-sm text-text-secondary">
-            Gestiona la seguridad de tu cuenta.
-          </p>
+          <h1 class="text-2xl font-bold text-text-primary mb-2">Configuración de Seguridad</h1>
+          <p class="text-sm text-text-secondary">Gestiona la seguridad de tu cuenta.</p>
         </div>
-    
+
         <!-- Change Password Section -->
         <div class="card-premium p-6 mb-6">
-          <h2 class="text-lg font-semibold text-text-primary mb-4">
-            Cambiar Contraseña
-          </h2>
-    
+          <h2 class="text-lg font-semibold text-text-primary mb-4">Cambiar Contraseña</h2>
+
           <!-- Success Message -->
           @if (passwordChangeSuccess()) {
             <div
               class="mb-4 p-3 rounded-lg bg-success-light/10 border border-success-light/40 text-sm text-success-text"
-              >
+            >
               ✅ Contraseña actualizada correctamente
             </div>
           }
-    
+
           <!-- Error Message -->
           @if (passwordError()) {
             <div
               class="mb-4 p-3 rounded-lg bg-error-bg border border-error-border text-sm text-error-text"
-              >
+            >
               {{ passwordError() }}
             </div>
           }
-    
+
           <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" class="space-y-4">
             <!-- Current Password -->
             <div>
-              <label
-                for="currentPassword"
-                class="block text-sm font-medium text-text-primary mb-1"
-                >
+              <label for="currentPassword" class="block text-sm font-medium text-text-primary mb-1">
                 Contraseña Actual
               </label>
               <input
@@ -88,25 +76,18 @@ import { AuthService } from '@core/services/auth/auth.service';
                 formControlName="currentPassword"
                 class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-raised text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
                 placeholder="Tu contraseña actual"
-                />
+              />
               @if (
                 passwordForm.get('currentPassword')?.invalid &&
                 passwordForm.get('currentPassword')?.touched
-                ) {
-                <p
-                  class="mt-1 text-xs text-error-text"
-                  >
-                  La contraseña actual es requerida
-                </p>
+              ) {
+                <p class="mt-1 text-xs text-error-text">La contraseña actual es requerida</p>
               }
             </div>
-    
+
             <!-- New Password -->
             <div>
-              <label
-                for="newPassword"
-                class="block text-sm font-medium text-text-primary mb-1"
-                >
+              <label for="newPassword" class="block text-sm font-medium text-text-primary mb-1">
                 Nueva Contraseña
               </label>
               <input
@@ -115,25 +96,19 @@ import { AuthService } from '@core/services/auth/auth.service';
                 formControlName="newPassword"
                 class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-raised text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
                 placeholder="Mínimo 8 caracteres"
-                />
+              />
               @if (
-                passwordForm.get('newPassword')?.invalid &&
-                passwordForm.get('newPassword')?.touched
-                ) {
-                <p
-                  class="mt-1 text-xs text-error-text"
-                  >
+                passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched
+              ) {
+                <p class="mt-1 text-xs text-error-text">
                   La contraseña debe tener al menos 8 caracteres
                 </p>
               }
             </div>
-    
+
             <!-- Confirm New Password -->
             <div>
-              <label
-                for="confirmPassword"
-                class="block text-sm font-medium text-text-primary mb-1"
-                >
+              <label for="confirmPassword" class="block text-sm font-medium text-text-primary mb-1">
                 Confirmar Nueva Contraseña
               </label>
               <input
@@ -142,25 +117,21 @@ import { AuthService } from '@core/services/auth/auth.service';
                 formControlName="confirmPassword"
                 class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-raised text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default"
                 placeholder="Repite la nueva contraseña"
-                />
+              />
               @if (
                 passwordForm.hasError('passwordMismatch') &&
                 passwordForm.get('confirmPassword')?.touched
-                ) {
-                <p
-                  class="mt-1 text-xs text-error-text"
-                  >
-                  Las contraseñas no coinciden
-                </p>
+              ) {
+                <p class="mt-1 text-xs text-error-text">Las contraseñas no coinciden</p>
               }
             </div>
-    
+
             <!-- Submit Button -->
             <button
               type="submit"
               [disabled]="changingPassword() || passwordForm.invalid"
               class="w-full px-6 py-2.5 rounded-lg font-semibold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-cta-default hover:bg-cta-hover text-cta-text shadow-sm hover:shadow-md"
-              >
+            >
               @if (!changingPassword()) {
                 <span>Cambiar Contraseña</span>
               }
@@ -170,25 +141,23 @@ import { AuthService } from '@core/services/auth/auth.service';
             </button>
           </form>
         </div>
-    
+
         <!-- Terms of Service -->
         <div class="card-premium p-6 mb-6">
-          <h2 class="text-lg font-semibold text-text-primary mb-4">
-            Términos y Condiciones
-          </h2>
+          <h2 class="text-lg font-semibold text-text-primary mb-4">Términos y Condiciones</h2>
           <div class="flex items-start gap-3">
             <svg
               class="h-5 w-5 text-success-text flex-shrink-0 mt-0.5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              >
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+              />
             </svg>
             <div>
               <p class="text-sm text-text-primary">
@@ -199,18 +168,16 @@ import { AuthService } from '@core/services/auth/auth.service';
                 href="/legal/terms"
                 target="_blank"
                 class="mt-2 inline-block text-xs text-cta-default hover:text-cta-hover underline"
-                >
+              >
                 Ver Términos y Condiciones →
               </a>
             </div>
           </div>
         </div>
-    
+
         <!-- Verification Status -->
         <div class="card-premium p-6">
-          <h2 class="text-lg font-semibold text-text-primary mb-4">
-            Estado de Verificación
-          </h2>
+          <h2 class="text-lg font-semibold text-text-primary mb-4">Estado de Verificación</h2>
           <div class="space-y-3">
             <!-- Email -->
             <div class="flex items-center justify-between">
@@ -221,11 +188,11 @@ import { AuthService } from '@core/services/auth/auth.service';
                     ? 'text-success-text font-semibold text-sm'
                     : 'text-text-muted text-sm'
                 "
-                >
+              >
                 {{ profile()?.email_verified ? '✓ Verificado' : '✗ Sin verificar' }}
               </span>
             </div>
-    
+
             <!-- Phone -->
             <div class="flex items-center justify-between">
               <span class="text-sm text-text-primary">Teléfono</span>
@@ -235,38 +202,36 @@ import { AuthService } from '@core/services/auth/auth.service';
                     ? 'text-success-text font-semibold text-sm'
                     : 'text-text-muted text-sm'
                 "
-                >
+              >
                 {{ profile()?.phone_verified ? '✓ Verificado' : '✗ Sin verificar' }}
               </span>
             </div>
-    
+
             <!-- Driver License -->
             <div class="flex items-center justify-between">
-              <span class="text-sm text-text-primary"
-                >Licencia de Conducir</span
-                >
-                <span
+              <span class="text-sm text-text-primary">Licencia de Conducir</span>
+              <span
                 [class]="
                   profile()?.id_verified
                     ? 'text-success-text font-semibold text-sm'
                     : 'text-text-muted text-sm'
                 "
-                  >
-                  {{ profile()?.id_verified ? '✓ Verificado' : '✗ Sin verificar' }}
-                </span>
-              </div>
-            </div>
-    
-            <a
-              routerLink="/profile/verification"
-              class="mt-4 inline-block text-sm text-cta-default hover:text-cta-hover font-semibold"
               >
-              Gestionar verificaciones →
-            </a>
+                {{ profile()?.id_verified ? '✓ Verificado' : '✗ Sin verificar' }}
+              </span>
+            </div>
           </div>
-    
-          <!-- Future: Active Sessions -->
-          <!-- <div class="card-premium p-6 mt-6">
+
+          <a
+            routerLink="/profile/verification"
+            class="mt-4 inline-block text-sm text-cta-default hover:text-cta-hover font-semibold"
+          >
+            Gestionar verificaciones →
+          </a>
+        </div>
+
+        <!-- Future: Active Sessions -->
+        <!-- <div class="card-premium p-6 mt-6">
           <h2 class="text-lg font-semibold text-text-primary mb-4">
             Sesiones Activas
           </h2>
@@ -274,7 +239,7 @@ import { AuthService } from '@core/services/auth/auth.service';
         </div> -->
       </div>
     </ion-content>
-    `,
+  `,
   styles: [
     `
       :host {

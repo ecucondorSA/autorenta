@@ -8,7 +8,9 @@
         Vencido
       </span>
     } @else if (isUrgent()) {
-      <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-medium animate-pulse">
+      <span
+        class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-medium animate-pulse"
+      >
         Poco tiempo
       </span>
     } @else {
@@ -39,25 +41,33 @@
       <div class="flex justify-center gap-3">
         @if (timeRemaining().days > 0) {
           <div class="text-center">
-            <span class="text-3xl font-bold text-text-primary font-satoshi">{{ timeRemaining().days }}</span>
+            <span class="text-3xl font-bold text-text-primary font-satoshi">{{
+              timeRemaining().days
+            }}</span>
             <p class="text-xs text-text-secondary uppercase">dias</p>
           </div>
           <span class="text-2xl text-text-secondary self-start mt-1">:</span>
         }
         <div class="text-center">
-          <span class="text-3xl font-bold text-text-primary font-satoshi">{{ padZero(timeRemaining().hours) }}</span>
+          <span class="text-3xl font-bold text-text-primary font-satoshi">{{
+            padZero(timeRemaining().hours)
+          }}</span>
           <p class="text-xs text-text-secondary uppercase">horas</p>
         </div>
         <span class="text-2xl text-text-secondary self-start mt-1">:</span>
         <div class="text-center">
-          <span class="text-3xl font-bold text-text-primary font-satoshi">{{ padZero(timeRemaining().minutes) }}</span>
+          <span class="text-3xl font-bold text-text-primary font-satoshi">{{
+            padZero(timeRemaining().minutes)
+          }}</span>
           <p class="text-xs text-text-secondary uppercase">min</p>
         </div>
         <span class="text-2xl text-text-secondary self-start mt-1">:</span>
         <div class="text-center">
-          <span class="text-3xl font-bold font-satoshi"
-                [class.text-text-primary]="!isUrgent()"
-                [class.text-amber-600]="isUrgent()">
+          <span
+            class="text-3xl font-bold font-satoshi"
+            [class.text-text-primary]="!isUrgent()"
+            [class.text-amber-600]="isUrgent()"
+          >
             {{ padZero(timeRemaining().seconds) }}
           </span>
           <p class="text-xs text-text-secondary uppercase">seg</p>

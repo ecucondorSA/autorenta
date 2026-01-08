@@ -1,5 +1,11 @@
-import {Component, inject, signal, OnInit, OnDestroy,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  OnInit,
+  OnDestroy,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -48,7 +54,9 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
   readonly loading = signal(true);
   readonly uploading = signal(false);
   readonly documents = signal<VehicleDocument[]>([]);
-  readonly expiringDocs = signal<{ type: VehicleDocumentKind; expiryDate: Date; daysLeft: number }[]>([]);
+  readonly expiringDocs = signal<
+    { type: VehicleDocumentKind; expiryDate: Date; daysLeft: number }[]
+  >([]);
   readonly showUploadModal = signal(false);
   private documentStatusTeardown?: () => void;
 
@@ -372,11 +380,12 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
       const documentsUrl = `/cars/${this.carId()}/documents`;
 
       for (const doc of expiringDocs) {
-        const docLabel = doc.type === 'technical_inspection'
-          ? 'Revisión Técnica (VTV)'
-          : doc.type === 'insurance'
-            ? 'Póliza de Seguro'
-            : this.documentsService.getDocumentKindLabel(doc.type);
+        const docLabel =
+          doc.type === 'technical_inspection'
+            ? 'Revisión Técnica (VTV)'
+            : doc.type === 'insurance'
+              ? 'Póliza de Seguro'
+              : this.documentsService.getDocumentKindLabel(doc.type);
 
         this.carOwnerNotifications.notifyDocumentExpiring(
           docLabel,

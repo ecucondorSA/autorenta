@@ -1,8 +1,4 @@
-
-import {
-  ChangeDetectionStrategy,
-  Component, OnInit, inject, signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { FavoritesService } from '@core/services/cars/favorites.service';

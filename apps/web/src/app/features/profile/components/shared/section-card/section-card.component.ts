@@ -32,8 +32,15 @@
  * ```
  */
 
-import {Component, Input, Output, EventEmitter, signal, WritableSignal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  signal,
+  WritableSignal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { IonicModule } from '@ionic/angular';
 

@@ -37,7 +37,9 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
     <div class="relative group/panel">
       <!-- Animated gradient border when expanded -->
       @if (isExpanded()) {
-        <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 rounded-2xl opacity-75 blur-sm transition-opacity duration-500 animate-gradient-xy"></div>
+        <div
+          class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 rounded-2xl opacity-75 blur-sm transition-opacity duration-500 animate-gradient-xy"
+        ></div>
       }
 
       <!-- Main card -->
@@ -85,7 +87,9 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
             <div>
               <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2">
                 Checklist de {{ inspectionType() === 'check_in' ? 'Recepcion' : 'Devolucion' }}
-                <span class="text-xs bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                <span
+                  class="text-xs bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider"
+                >
                   AI
                 </span>
               </h3>
@@ -102,7 +106,9 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
                     [style.width.%]="totalCount() > 0 ? (completedCount() / totalCount()) * 100 : 0"
                   ></div>
                 </div>
-                <span class="text-xs font-medium text-gray-500">{{ completedCount() }}/{{ totalCount() }}</span>
+                <span class="text-xs font-medium text-gray-500"
+                  >{{ completedCount() }}/{{ totalCount() }}</span
+                >
               </div>
             }
             <svg
@@ -137,15 +143,18 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
             @if (loading()) {
               <div class="flex flex-col items-center justify-center py-10">
                 <div class="relative">
-                  <div class="w-12 h-12 border-3 border-teal-200 border-t-teal-500 rounded-full animate-spin"></div>
-                  <div class="absolute inset-0 w-12 h-12 border-3 border-transparent border-b-cyan-500 rounded-full animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
+                  <div
+                    class="w-12 h-12 border-3 border-teal-200 border-t-teal-500 rounded-full animate-spin"
+                  ></div>
+                  <div
+                    class="absolute inset-0 w-12 h-12 border-3 border-transparent border-b-cyan-500 rounded-full animate-spin"
+                    style="animation-direction: reverse; animation-duration: 1.5s;"
+                  ></div>
                 </div>
                 <p class="mt-4 text-sm font-medium text-gray-700">
                   Generando checklist personalizado...
                 </p>
-                <p class="text-xs text-gray-500 mt-1">
-                  Analizando {{ vehicleName() }}
-                </p>
+                <p class="text-xs text-gray-500 mt-1">Analizando {{ vehicleName() }}</p>
               </div>
             }
 
@@ -153,12 +162,26 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
             @if (checklist()) {
               <div class="space-y-4">
                 <!-- Progress Card -->
-                <div class="relative overflow-hidden bg-gradient-to-br from-cyan-50 to-teal-50 rounded-xl p-4 border border-teal-200/50">
+                <div
+                  class="relative overflow-hidden bg-gradient-to-br from-cyan-50 to-teal-50 rounded-xl p-4 border border-teal-200/50"
+                >
                   <div class="flex items-center justify-between mb-3">
                     <div class="flex items-center gap-2">
-                      <div class="w-8 h-8 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <div
+                        class="w-8 h-8 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-lg flex items-center justify-center"
+                      >
+                        <svg
+                          class="w-4 h-4 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
                         </svg>
                       </div>
                       <div>
@@ -173,8 +196,18 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
                       class="text-xs text-teal-600 hover:text-teal-700 font-medium flex items-center gap-1 hover:underline"
                       (click)="regenerate()"
                     >
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      <svg
+                        class="w-3.5 h-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                        />
                       </svg>
                       Regenerar
                     </button>
@@ -183,15 +216,19 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
                   <div class="h-3 bg-white/50 rounded-full overflow-hidden">
                     <div
                       class="h-full bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 rounded-full transition-all duration-700 ease-out relative overflow-hidden"
-                      [style.width.%]="totalCount() > 0 ? (completedCount() / totalCount()) * 100 : 0"
+                      [style.width.%]="
+                        totalCount() > 0 ? (completedCount() / totalCount()) * 100 : 0
+                      "
                     >
-                      <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 animate-shimmer"></div>
+                      <div
+                        class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 animate-shimmer"
+                      ></div>
                     </div>
                   </div>
                   @if (completedCount() === totalCount() && totalCount() > 0) {
                     <div class="mt-2 flex items-center gap-1.5 text-emerald-600">
                       <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/>
+                        <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z" />
                       </svg>
                       <span class="text-xs font-bold">Inspeccion completa!</span>
                     </div>
@@ -201,7 +238,9 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
                 <!-- Categories -->
                 @for (category of checklist()!.categories; track category.name; let i = $index) {
                   <div class="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-                    <div class="flex items-center justify-between bg-gray-50 px-4 py-3 border-b border-gray-200">
+                    <div
+                      class="flex items-center justify-between bg-gray-50 px-4 py-3 border-b border-gray-200"
+                    >
                       <div class="flex items-center gap-2">
                         <div
                           class="w-6 h-6 rounded-lg flex items-center justify-center text-white text-xs font-bold"
@@ -221,7 +260,13 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
                         <div class="w-12 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                           <div
                             class="h-full bg-gradient-to-r from-cyan-500 to-teal-500 rounded-full transition-all duration-500"
-                            [style.width.%]="category.items.length > 0 ? (getCategoryCompletedCount(category.name) / category.items.length) * 100 : 0"
+                            [style.width.%]="
+                              category.items.length > 0
+                                ? (getCategoryCompletedCount(category.name) /
+                                    category.items.length) *
+                                  100
+                                : 0
+                            "
                           ></div>
                         </div>
                         <span class="text-xs font-medium text-gray-500">
@@ -252,8 +297,18 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
                               [class.bg-emerald-500]="checkedItems()[item.id]"
                             >
                               @if (checkedItems()[item.id]) {
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                                <svg
+                                  class="w-3 h-3 text-white"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="3"
+                                    d="M5 13l4 4L19 7"
+                                  />
                                 </svg>
                               }
                             </div>
@@ -269,17 +324,33 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
                                 {{ item.label }}
                               </span>
                               @if (item.critical) {
-                                <span class="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-bold text-red-700 uppercase">
+                                <span
+                                  class="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-bold text-red-700 uppercase"
+                                >
                                   <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2L2 22h20L12 2zm0 4l7.53 14H4.47L12 6zm-1 6v4h2v-4h-2zm0 6v2h2v-2h-2z"/>
+                                    <path
+                                      d="M12 2L2 22h20L12 2zm0 4l7.53 14H4.47L12 6zm-1 6v4h2v-4h-2zm0 6v2h2v-2h-2z"
+                                    />
                                   </svg>
                                   Critico
                                 </span>
                               }
                               @if (item.modelSpecific) {
-                                <span class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700 uppercase">
-                                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                <span
+                                  class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700 uppercase"
+                                >
+                                  <svg
+                                    class="w-3 h-3"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                                    />
                                   </svg>
                                   Modelo
                                 </span>
@@ -297,16 +368,24 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
 
                 <!-- Tips -->
                 @if (checklist()!.tips.length > 0) {
-                  <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-50 to-yellow-50 p-4 border border-amber-200/50">
+                  <div
+                    class="relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-50 to-yellow-50 p-4 border border-amber-200/50"
+                  >
                     <div class="absolute top-2 right-2 w-8 h-8 opacity-20">
                       <svg fill="currentColor" class="text-amber-500" viewBox="0 0 24 24">
-                        <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        <path
+                          d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                        />
                       </svg>
                     </div>
                     <div class="flex items-center gap-2 mb-3">
-                      <div class="w-7 h-7 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-lg flex items-center justify-center">
+                      <div
+                        class="w-7 h-7 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-lg flex items-center justify-center"
+                      >
                         <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                          <path
+                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                          />
                         </svg>
                       </div>
                       <h4 class="text-sm font-bold text-amber-800">
@@ -316,8 +395,14 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
                     <ul class="space-y-2">
                       @for (tip of checklist()!.tips; track tip) {
                         <li class="flex items-start gap-2 text-xs text-amber-800">
-                          <svg class="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/>
+                          <svg
+                            class="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"
+                            />
                           </svg>
                           {{ tip }}
                         </li>
@@ -332,9 +417,21 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
             @if (error()) {
               <div class="space-y-4">
                 <div class="flex flex-col items-center py-6">
-                  <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mb-3 ring-4 ring-red-100">
-                    <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <div
+                    class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mb-3 ring-4 ring-red-100"
+                  >
+                    <svg
+                      class="w-7 h-7 text-red-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                   </div>
                   <p class="text-sm font-medium text-red-600 text-center mb-4">
@@ -346,7 +443,12 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
                     (click)="generateChecklist()"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
                     </svg>
                     Reintentar
                   </button>
@@ -358,28 +460,41 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
       </div>
     </div>
   `,
-  styles: [`
-    :host { display: block; }
+  styles: [
+    `
+      :host {
+        display: block;
+      }
 
-    @keyframes gradient-xy {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
+      @keyframes gradient-xy {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
 
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
 
-    .animate-gradient-xy {
-      animation: gradient-xy 3s ease infinite;
-      background-size: 200% 200%;
-    }
+      .animate-gradient-xy {
+        animation: gradient-xy 3s ease infinite;
+        background-size: 200% 200%;
+      }
 
-    .animate-shimmer {
-      animation: shimmer 2s ease-in-out infinite;
-    }
-  `],
+      .animate-shimmer {
+        animation: shimmer 2s ease-in-out infinite;
+      }
+    `,
+  ],
 })
 export class AiChecklistPanelComponent {
   private readonly gemini = inject(GeminiService);

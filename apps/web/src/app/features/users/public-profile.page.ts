@@ -1,6 +1,13 @@
 import { CommonModule } from '@angular/common';
-import {Component, computed, inject, signal, DestroyRef, OnInit,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  signal,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -139,9 +146,7 @@ export class PublicProfilePage implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.data$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.loading.set(false));
+    this.data$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.loading.set(false));
   }
 
   setActiveTab(tab: 'cars' | 'reviews-owner' | 'reviews-renter'): void {
@@ -191,9 +196,22 @@ export class PublicProfilePage implements OnInit {
   getOverallRating(review: Review): number {
     let ratings: (number | null | undefined)[];
     if (review.review_type === 'owner_to_renter') {
-      ratings = [review.rating_communication, review.rating_punctuality, review.rating_care, review.rating_rules, review.rating_recommend];
+      ratings = [
+        review.rating_communication,
+        review.rating_punctuality,
+        review.rating_care,
+        review.rating_rules,
+        review.rating_recommend,
+      ];
     } else {
-      ratings = [review.rating_cleanliness, review.rating_communication, review.rating_accuracy, review.rating_location, review.rating_checkin, review.rating_value];
+      ratings = [
+        review.rating_cleanliness,
+        review.rating_communication,
+        review.rating_accuracy,
+        review.rating_location,
+        review.rating_checkin,
+        review.rating_value,
+      ];
     }
     const validRatings = ratings.filter((val): val is number => val != null && val > 0);
     if (validRatings.length === 0) return 0;

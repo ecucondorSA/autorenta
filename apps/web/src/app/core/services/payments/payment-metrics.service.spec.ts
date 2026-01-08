@@ -95,7 +95,7 @@ describe('PaymentMetricsService', () => {
           bookingId: 'booking-123',
           method: 'card',
           outcome: 'success',
-        })
+        }),
       );
     });
   });
@@ -125,9 +125,24 @@ describe('PaymentMetricsService', () => {
     });
 
     it('should calculate average duration', () => {
-      service.recordPayment({ bookingId: 'b1', method: 'card', outcome: 'success', durationMs: 1000 });
-      service.recordPayment({ bookingId: 'b2', method: 'card', outcome: 'success', durationMs: 2000 });
-      service.recordPayment({ bookingId: 'b3', method: 'card', outcome: 'success', durationMs: 3000 });
+      service.recordPayment({
+        bookingId: 'b1',
+        method: 'card',
+        outcome: 'success',
+        durationMs: 1000,
+      });
+      service.recordPayment({
+        bookingId: 'b2',
+        method: 'card',
+        outcome: 'success',
+        durationMs: 2000,
+      });
+      service.recordPayment({
+        bookingId: 'b3',
+        method: 'card',
+        outcome: 'success',
+        durationMs: 3000,
+      });
 
       const stats = service.getStats();
       expect(stats.averageDurationMs).toBe(2000);
@@ -510,7 +525,7 @@ describe('PaymentMetricsService', () => {
       });
 
       const alerts = service.getAlerts();
-      expect(alerts.some(a => a.type === 'circuit_open')).toBeTrue();
+      expect(alerts.some((a) => a.type === 'circuit_open')).toBeTrue();
     });
 
     it('should trigger alert when success rate drops below threshold', () => {
@@ -541,7 +556,7 @@ describe('PaymentMetricsService', () => {
       }
 
       const alerts = service.getAlerts();
-      expect(alerts.some(a => a.type === 'low_success_rate')).toBeTrue();
+      expect(alerts.some((a) => a.type === 'low_success_rate')).toBeTrue();
     });
 
     it('should trigger alert when latency exceeds threshold', () => {
@@ -562,7 +577,7 @@ describe('PaymentMetricsService', () => {
       }
 
       const alerts = service.getAlerts();
-      expect(alerts.some(a => a.type === 'high_latency')).toBeTrue();
+      expect(alerts.some((a) => a.type === 'high_latency')).toBeTrue();
     });
 
     it('should trigger alert on error spike', () => {
@@ -593,7 +608,7 @@ describe('PaymentMetricsService', () => {
       }
 
       const alerts = service.getAlerts();
-      expect(alerts.some(a => a.type === 'error_spike')).toBeTrue();
+      expect(alerts.some((a) => a.type === 'error_spike')).toBeTrue();
     });
 
     it('should log alerts with warning level', () => {
@@ -617,7 +632,7 @@ describe('PaymentMetricsService', () => {
 
       expect(mockLogger.warn).toHaveBeenCalledWith(
         jasmine.stringMatching(/PAYMENT ALERT \[circuit_open\]/),
-        jasmine.any(Object)
+        jasmine.any(Object),
       );
     });
   });
@@ -656,7 +671,7 @@ describe('PaymentMetricsService', () => {
       });
 
       const alerts = service.getAlerts();
-      const circuitOpenAlerts = alerts.filter(a => a.type === 'circuit_open');
+      const circuitOpenAlerts = alerts.filter((a) => a.type === 'circuit_open');
       expect(circuitOpenAlerts.length).toBe(1);
     });
 
@@ -679,8 +694,8 @@ describe('PaymentMetricsService', () => {
       }
 
       const alerts = service.getAlerts();
-      expect(alerts.some(a => a.type === 'low_success_rate')).toBeTrue();
-      expect(alerts.some(a => a.type === 'high_latency')).toBeTrue();
+      expect(alerts.some((a) => a.type === 'low_success_rate')).toBeTrue();
+      expect(alerts.some((a) => a.type === 'high_latency')).toBeTrue();
     });
   });
 

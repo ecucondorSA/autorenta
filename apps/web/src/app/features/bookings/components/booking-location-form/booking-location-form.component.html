@@ -1,6 +1,4 @@
-<div
-  class="booking-location-form bg-surface-raised rounded-lg shadow-lg p-6"
->
+<div class="booking-location-form bg-surface-raised rounded-lg shadow-lg p-6">
   <!-- Header -->
   <div class="mb-6">
     <h2 class="text-2xl font-bold text-text-primary mb-2 font-satoshi">
@@ -13,9 +11,7 @@
 
   <!-- Pickup Location -->
   <div class="mb-8">
-    <h3 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">
-      Lugar de retiro
-    </h3>
+    <h3 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">Lugar de retiro</h3>
     <div class="location-input-group">
       <!-- Address Input -->
       <input
@@ -28,9 +24,7 @@
         [disabled]="loading()"
       />
       @if (pickupSuggestions().length > 0) {
-        <div
-          class="mt-2 border border-border-default rounded-lg overflow-hidden"
-        >
+        <div class="mt-2 border border-border-default rounded-lg overflow-hidden">
           @for (suggestion of pickupSuggestions(); track suggestion.address) {
             <button
               type="button"
@@ -56,9 +50,7 @@
 
   <!-- Dropoff Location -->
   <div class="mb-8">
-    <h3 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">
-      Lugar de devolucion
-    </h3>
+    <h3 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">Lugar de devolucion</h3>
     <div class="location-input-group">
       <!-- Address Input -->
       <input
@@ -70,9 +62,7 @@
         [disabled]="loading()"
       />
       @if (dropoffSuggestions().length > 0) {
-        <div
-          class="mt-2 border border-border-default rounded-lg overflow-hidden"
-        >
+        <div class="mt-2 border border-border-default rounded-lg overflow-hidden">
           @for (suggestion of dropoffSuggestions(); track suggestion.address) {
             <button
               type="button"
@@ -98,9 +88,7 @@
 
   <!-- Distance Display -->
   @if (distanceKm() !== null) {
-    <div
-      class="mb-8 p-4 bg-cta-default/10 rounded-lg border border-cta-default/40"
-    >
+    <div class="mb-8 p-4 bg-cta-default/10 rounded-lg border border-cta-default/40">
       <div class="text-lg font-semibold text-cta-default">
         Distancia: {{ distanceKm()! | number: '1.0-2' }} km
       </div>
@@ -128,12 +116,8 @@
         class="w-5 h-5 text-cta-default rounded focus:ring-2 focus:ring-cta-default"
       />
       <div class="ml-3 flex-1">
-        <div class="font-semibold text-text-primary">
-          Necesitas delivery del auto?
-        </div>
-        <div class="text-sm text-text-secondary">
-          Entrega del auto en tu ubicacion de retiro
-        </div>
+        <div class="font-semibold text-text-primary">Necesitas delivery del auto?</div>
+        <div class="text-sm text-text-secondary">Entrega del auto en tu ubicacion de retiro</div>
         @if (!isWithinDeliveryRange()) {
           <div class="text-xs text-warning-700 mt-1">
             La distancia excede el rango de delivery (max. 50 km)
@@ -157,9 +141,7 @@
 
   <!-- Error Messages -->
   @if (errorMessage()) {
-    <div
-      class="mb-6 p-4 bg-error-bg rounded-lg border border-error-border"
-    >
+    <div class="mb-6 p-4 bg-error-bg rounded-lg border border-error-border">
       <div class="text-error-strong">{{ errorMessage() }}</div>
     </div>
   }

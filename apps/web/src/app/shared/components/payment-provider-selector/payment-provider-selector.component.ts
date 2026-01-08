@@ -1,4 +1,5 @@
-import {Component,
+import {
+  Component,
   OnInit,
   Input,
   Output,
@@ -6,7 +7,8 @@ import {Component,
   signal,
   inject,
   computed,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaymentProvider } from '@core/interfaces/payment-gateway.interface';

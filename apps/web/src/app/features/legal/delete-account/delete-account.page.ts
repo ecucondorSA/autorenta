@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ChangeDetectionStrategy,
-  signal,
-  inject,
-  computed,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -62,19 +56,16 @@ export class DeleteAccountPage {
     try {
       // Call Edge Function to delete account
       const session = await this.supabase.auth.getSession();
-      const response = await fetch(
-        `${environment.supabaseUrl}/functions/v1/delete-account`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session.data.session?.access_token}`,
-          },
-          body: JSON.stringify({
-            confirm: true,
-          }),
-        }
-      );
+      const response = await fetch(`${environment.supabaseUrl}/functions/v1/delete-account`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.data.session?.access_token}`,
+        },
+        body: JSON.stringify({
+          confirm: true,
+        }),
+      });
 
       const result = await response.json();
 
@@ -95,9 +86,7 @@ export class DeleteAccountPage {
       }, 3000);
     } catch (error) {
       this.step.set('error');
-      this.errorMessage.set(
-        error instanceof Error ? error.message : 'Error desconocido'
-      );
+      this.errorMessage.set(error instanceof Error ? error.message : 'Error desconocido');
       this.toast.error('Error', 'No se pudo eliminar la cuenta');
     } finally {
       this.isLoading.set(false);
@@ -124,7 +113,7 @@ export class DeleteAccountPage {
             email: this.requestEmail(),
             reason: this.requestReason() || 'No especificado',
           }),
-        }
+        },
       );
 
       const result = await response.json();
@@ -136,9 +125,7 @@ export class DeleteAccountPage {
       this.requestSubmitted.set(true);
       this.toast.success('Solicitud enviada', 'Revisa tu correo para confirmar');
     } catch (error) {
-      this.errorMessage.set(
-        error instanceof Error ? error.message : 'Error desconocido'
-      );
+      this.errorMessage.set(error instanceof Error ? error.message : 'Error desconocido');
       this.toast.error('Error', 'No se pudo enviar la solicitud');
     } finally {
       this.isLoading.set(false);

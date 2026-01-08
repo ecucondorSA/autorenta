@@ -175,9 +175,7 @@ export class ReferralsService {
   async getMyStats(): Promise<ReferralStats> {
     this.loading.set(true);
     try {
-      const response = await this.supabase
-        .rpc('get_referral_stats_by_user')
-        .single();
+      const response = await this.supabase.rpc('get_referral_stats_by_user').single();
 
       const { data, error } = response;
 

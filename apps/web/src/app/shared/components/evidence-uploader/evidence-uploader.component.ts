@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { v4 as uuidv4 } from 'uuid';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
@@ -79,7 +87,10 @@ export class EvidenceUploaderComponent {
           continue;
         }
 
-        const { data } = this.supabaseService.getClient().storage.from('documents').getPublicUrl(filePath);
+        const { data } = this.supabaseService
+          .getClient()
+          .storage.from('documents')
+          .getPublicUrl(filePath);
         const url = data.publicUrl;
         this.uploaded.update((current) => [...current, { name: file.name, url }]);
         this.emitUrls();

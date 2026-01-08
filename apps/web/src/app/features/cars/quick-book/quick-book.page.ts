@@ -1,4 +1,3 @@
-
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -26,8 +25,8 @@ import { CarChatComponent } from '../../messages/components/car-chat.component';
     CarChatComponent,
     PaymentMethodButtonsComponent,
     TranslateModule,
-    MoneyPipe
-],
+    MoneyPipe,
+  ],
   templateUrl: './quick-book.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

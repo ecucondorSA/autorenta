@@ -23,7 +23,10 @@ import {
 } from '@core/services/ai/rentarfast-agent.service';
 import { ProfileStore } from '@core/stores/profile.store';
 import { RentarfastIntentService } from './services/rentarfast-intent.service';
-import { CapabilityAction, RentarfastCapabilityService } from './services/rentarfast-capability.service';
+import {
+  CapabilityAction,
+  RentarfastCapabilityService,
+} from './services/rentarfast-capability.service';
 
 // Web Speech API types
 interface SpeechRecognitionEvent extends Event {
@@ -216,7 +219,9 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
     }
 
     if (this.isListening() || this.voiceStartInFlight) {
-      this.agentService.addLocalAgentMessage('Ya estoy escuchando. Hablame ahora.', ['local_voice']);
+      this.agentService.addLocalAgentMessage('Ya estoy escuchando. Hablame ahora.', [
+        'local_voice',
+      ]);
       return;
     }
 
@@ -251,14 +256,20 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
     this.lastVoiceErrorAt = now;
 
     const message =
-      typeof err === 'string' ? err :
-      err instanceof Error ? err.message :
-      (err as { error?: string })?.error ? String((err as { error?: string }).error) : null;
+      typeof err === 'string'
+        ? err
+        : err instanceof Error
+          ? err.message
+          : (err as { error?: string })?.error
+            ? String((err as { error?: string }).error)
+            : null;
 
     const lowerMessage = message?.toLowerCase() ?? '';
 
     if (lowerMessage.includes('recognition has already started')) {
-      this.agentService.addLocalAgentMessage('Ya estoy escuchando. Hablame ahora.', ['local_voice']);
+      this.agentService.addLocalAgentMessage('Ya estoy escuchando. Hablame ahora.', [
+        'local_voice',
+      ]);
       return;
     }
 
@@ -290,8 +301,11 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
       return;
     }
 
-    const hint = 'No pude activar el micrófono. Revisá permisos del navegador y que estés en HTTPS (o localhost).';
-    this.agentService.addLocalAgentMessage(message ? `${hint} Detalle: ${message}` : hint, ['local_voice']);
+    const hint =
+      'No pude activar el micrófono. Revisá permisos del navegador y que estés en HTTPS (o localhost).';
+    this.agentService.addLocalAgentMessage(message ? `${hint} Detalle: ${message}` : hint, [
+      'local_voice',
+    ]);
   }
 
   // ============================================
@@ -354,7 +368,9 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
 
   private isVoiceHelpQuery(text: string): boolean {
     const normalized = this.intentService.normalizeInput(text);
-    return /(no me escuch|no me entiende|no estas escuch|no est[aá]s escuch|microfono|micr[oó]fono|voz no funciona|no anda la voz)/.test(normalized);
+    return /(no me escuch|no me entiende|no estas escuch|no est[aá]s escuch|microfono|micr[oó]fono|voz no funciona|no anda la voz)/.test(
+      normalized,
+    );
   }
 
   private isBookFirstCarQuery(text: string): boolean {
@@ -364,7 +380,9 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
     }
     const normalized = this.intentService.normalizeInput(text);
     // More specific pattern: only match "1" or "1ro" as standalone words for "first"
-    return /(alquilar|reservar|rentar).*(primero|primer auto|primera opcion|el 1\b|el 1ro)/.test(normalized);
+    return /(alquilar|reservar|rentar).*(primero|primer auto|primera opcion|el 1\b|el 1ro)/.test(
+      normalized,
+    );
   }
 
   private async respondWithVoiceHelp(originalText: string): Promise<void> {
@@ -484,9 +502,10 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
     if (profile?.city?.toLowerCase()?.includes('buenos')) return true;
 
     const locale = typeof navigator !== 'undefined' ? navigator.language.toLowerCase() : '';
-    const timezone = typeof Intl !== 'undefined'
-      ? Intl.DateTimeFormat().resolvedOptions().timeZone.toLowerCase()
-      : '';
+    const timezone =
+      typeof Intl !== 'undefined'
+        ? Intl.DateTimeFormat().resolvedOptions().timeZone.toLowerCase()
+        : '';
 
     if (locale.startsWith('es-ar')) return true;
     if (timezone.includes('argentina') || timezone.includes('buenos_aires')) return true;

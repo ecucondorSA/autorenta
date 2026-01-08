@@ -1,5 +1,4 @@
-import {Component, input, output, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, input, output, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { DisputesService, DisputeKind } from '@core/services/admin/disputes.service';
@@ -16,11 +15,11 @@ import { DisputeEvidenceUploaderComponent } from '../../../features/disputes/com
       <div
         class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
         (click)="onBackdropClick($event)"
-        >
+      >
         <div
           class="bg-surface-raised rounded-2xl shadow-2xl max-w-2xl w-full p-6 transform transition-all max-h-[90vh] overflow-y-auto"
           (click)="$event.stopPropagation()"
-          >
+        >
           <!-- Header -->
           <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold text-text-primary">
@@ -31,14 +30,14 @@ import { DisputeEvidenceUploaderComponent } from '../../../features/disputes/com
               (click)="close()"
               class="text-text-secondary hover:text-text-primary transition-colors"
               aria-label="Cerrar"
-              >
+            >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M6 18L18 6M6 6l12 12"
-                  />
+                />
               </svg>
             </button>
           </div>
@@ -46,24 +45,22 @@ import { DisputeEvidenceUploaderComponent } from '../../../features/disputes/com
           <div class="space-y-4">
             <p class="text-sm text-text-secondary">
               {{
-              createdDisputeId()
-              ? 'Ahora puedes subir archivos para respaldar tu disputa.'
-              : 'Si tienes un problema con esta reserva, puedes crear una disputa. Nuestro equipo la revisará y te ayudará a resolverla.'
+                createdDisputeId()
+                  ? 'Ahora puedes subir archivos para respaldar tu disputa.'
+                  : 'Si tienes un problema con esta reserva, puedes crear una disputa. Nuestro equipo la revisará y te ayudará a resolverla.'
               }}
             </p>
             @if (!createdDisputeId()) {
               <div>
                 <!-- Dispute Kind Selector -->
                 <div>
-                  <label
-                    class="block text-sm font-medium text-text-primary mb-2"
-                    >
+                  <label class="block text-sm font-medium text-text-primary mb-2">
                     Tipo de Disputa *
                   </label>
                   <select
                     [(ngModel)]="selectedKind"
                     class="w-full px-4 py-3 rounded-xl border-2 border-border-default bg-surface-raised focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
-                    >
+                  >
                     <option value="">-- Seleccionar tipo --</option>
                     <option value="damage">Daños al vehículo</option>
                     <option value="no_show">No se presentó</option>
@@ -73,9 +70,7 @@ import { DisputeEvidenceUploaderComponent } from '../../../features/disputes/com
                 </div>
                 <!-- Description -->
                 <div>
-                  <label
-                    class="block text-sm font-medium text-text-primary mb-2"
-                    >
+                  <label class="block text-sm font-medium text-text-primary mb-2">
                     Descripción *
                   </label>
                   <textarea
@@ -86,22 +81,24 @@ import { DisputeEvidenceUploaderComponent } from '../../../features/disputes/com
                     required
                   ></textarea>
                   <p class="text-xs text-text-secondary mt-1">
-                    Proporciona todos los detalles relevantes para ayudar a nuestro equipo a entender el
-                    problema.
+                    Proporciona todos los detalles relevantes para ayudar a nuestro equipo a
+                    entender el problema.
                   </p>
                 </div>
               </div>
             }
             @if (createdDisputeId()) {
               <div class_selector="mt-4">
-                <app-dispute-evidence-uploader [disputeId]="disputeIdNonNull"></app-dispute-evidence-uploader>
+                <app-dispute-evidence-uploader
+                  [disputeId]="disputeIdNonNull"
+                ></app-dispute-evidence-uploader>
               </div>
             }
             <!-- Error Message -->
             @if (error()) {
               <div
                 class="p-3 bg-error-bg border border-error-border rounded-xl text-sm text-error-strong"
-                >
+              >
                 {{ error() }}
               </div>
             }
@@ -112,7 +109,7 @@ import { DisputeEvidenceUploaderComponent } from '../../../features/disputes/com
               type="button"
               (click)="close()"
               class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default text-text-secondary hover:bg-surface-hover transition-all font-medium"
-              >
+            >
               {{ createdDisputeId() ? 'Finalizar' : 'Cancelar' }}
             </button>
             @if (!createdDisputeId()) {
@@ -123,14 +120,14 @@ import { DisputeEvidenceUploaderComponent } from '../../../features/disputes/com
                 [class.opacity-50]="!canSubmit() || loading()"
                 [class.cursor-not-allowed]="!canSubmit() || loading()"
                 class="flex-1 px-4 py-3 rounded-xl bg-cta-default text-cta-text hover:bg-cta-default/90 transition-all font-medium flex items-center justify-center gap-2"
-                >
+              >
                 @if (loading()) {
                   <svg
                     class="animate-spin h-5 w-5 text-text-inverse"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
-                    >
+                  >
                     <circle
                       class="opacity-25"
                       cx="12"
@@ -153,7 +150,7 @@ import { DisputeEvidenceUploaderComponent } from '../../../features/disputes/com
         </div>
       </div>
     }
-    `,
+  `,
 })
 export class DisputeFormComponent {
   private readonly disputesService = inject(DisputesService);

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone, PLATFORM_ID, inject, signal } from '@angular/core';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { Observable, Subject, catchError, from, map, of, switchMap, tap } from 'rxjs';
+import { Observable, Subject, catchError, from, map, of, tap } from 'rxjs';
 import { Socket, io } from 'socket.io-client';
 
 export interface AIAgentUserLocation {
@@ -67,9 +67,9 @@ export interface AgentChatResponse {
 }
 
 export interface AgentChatSuggestion {
-  label: string;        // Texto visible: "1. Toyota Corolla - $74/día"
-  action: string;       // Comando a ejecutar: "reservar 7a895b42..."
-  icon?: string;        // Emoji opcional: "🚗"
+  label: string; // Texto visible: "1. Toyota Corolla - $74/día"
+  action: string; // Comando a ejecutar: "reservar 7a895b42..."
+  icon?: string; // Emoji opcional: "🚗"
 }
 
 export interface ChatMessage {
@@ -79,7 +79,7 @@ export interface ChatMessage {
   timestamp: Date;
   toolsUsed?: string[];
   isStreaming?: boolean;
-  suggestions?: AgentChatSuggestion[];  // Opciones clickeables
+  suggestions?: AgentChatSuggestion[]; // Opciones clickeables
 }
 
 export interface TranscriptionEvent {
@@ -199,7 +199,7 @@ export class RentarfastAgentService {
           timestamp: new Date(),
           toolsUsed: data.toolsUsed,
         };
-        this._messages.update(msgs => [...msgs, agentMessage]);
+        this._messages.update((msgs) => [...msgs, agentMessage]);
         this._isLoading.set(false);
       });
     });
@@ -314,7 +314,7 @@ export class RentarfastAgentService {
       content: message,
       timestamp: new Date(),
     };
-    this._messages.update(msgs => [...msgs, userMessage]);
+    this._messages.update((msgs) => [...msgs, userMessage]);
 
     // Send via WebSocket
     this.socket.emit('send_message', {
@@ -347,7 +347,7 @@ export class RentarfastAgentService {
       content: message,
       timestamp: new Date(),
     };
-    this._messages.update(msgs => [...msgs, userMessage]);
+    this._messages.update((msgs) => [...msgs, userMessage]);
 
     this.socket.emit('send_message', {
       message,
@@ -356,7 +356,11 @@ export class RentarfastAgentService {
     });
   }
 
-  addLocalAgentMessage(content: string, toolsUsed: string[] = [], suggestions?: AgentChatSuggestion[]): string {
+  addLocalAgentMessage(
+    content: string,
+    toolsUsed: string[] = [],
+    suggestions?: AgentChatSuggestion[],
+  ): string {
     const agentMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: 'agent',
@@ -365,7 +369,7 @@ export class RentarfastAgentService {
       toolsUsed,
       suggestions,
     };
-    this._messages.update(msgs => [...msgs, agentMessage]);
+    this._messages.update((msgs) => [...msgs, agentMessage]);
     return agentMessage.id;
   }
 
@@ -376,20 +380,25 @@ export class RentarfastAgentService {
       content,
       timestamp: new Date(),
     };
-    this._messages.update(msgs => [...msgs, userMessage]);
+    this._messages.update((msgs) => [...msgs, userMessage]);
     return userMessage.id;
   }
 
-  updateMessageContent(messageId: string, content: string, toolsUsed?: string[], suggestions?: AgentChatSuggestion[]): void {
-    this._messages.update(msgs =>
+  updateMessageContent(
+    messageId: string,
+    content: string,
+    toolsUsed?: string[],
+    suggestions?: AgentChatSuggestion[],
+  ): void {
+    this._messages.update((msgs) =>
       msgs.map((msg) =>
         msg.id === messageId
           ? {
-            ...msg,
-            content,
-            toolsUsed: toolsUsed ?? msg.toolsUsed,
-            suggestions: suggestions ?? msg.suggestions,
-          }
+              ...msg,
+              content,
+              toolsUsed: toolsUsed ?? msg.toolsUsed,
+              suggestions: suggestions ?? msg.suggestions,
+            }
           : msg,
       ),
     );
@@ -439,7 +448,7 @@ export class RentarfastAgentService {
       content: message,
       timestamp: new Date(),
     };
-    this._messages.update(msgs => [...msgs, userMessage]);
+    this._messages.update((msgs) => [...msgs, userMessage]);
 
     if (this.USE_EDGE_FUNCTION) {
       return this.sendViaEdgeFunction(message, context);
@@ -452,7 +461,10 @@ export class RentarfastAgentService {
    * Send message via Supabase Edge Function
    * Uses Gemini 2.0 Flash with Function Calling for database access
    */
-  private sendViaEdgeFunction(message: string, context?: AgentChatContext): Observable<AgentChatResponse> {
+  private sendViaEdgeFunction(
+    message: string,
+    context?: AgentChatContext,
+  ): Observable<AgentChatResponse> {
     const request = {
       message,
       sessionId: this._sessionId() ?? undefined,
@@ -462,15 +474,15 @@ export class RentarfastAgentService {
     return from(
       this.supabase.getClient().functions.invoke<AgentChatResponse>('rentarfast-agent', {
         body: request,
-      })
+      }),
     ).pipe(
-      map(result => {
+      map((result) => {
         if (result.error) {
           throw new Error(result.error.message || 'Edge Function error');
         }
         return result.data as AgentChatResponse;
       }),
-      tap(response => {
+      tap((response) => {
         if (response.sessionId) {
           this._sessionId.set(response.sessionId);
         }
@@ -483,7 +495,7 @@ export class RentarfastAgentService {
           toolsUsed: response.toolsUsed,
           suggestions: response.suggestions,
         };
-        this._messages.update(msgs => [...msgs, agentMessage]);
+        this._messages.update((msgs) => [...msgs, agentMessage]);
 
         this.logger.debug('[Rentarfast] Edge Function response', {
           toolsUsed: response.toolsUsed,
@@ -491,12 +503,12 @@ export class RentarfastAgentService {
           suggestions: response.suggestions?.length ?? 0,
         });
       }),
-      catchError(error => {
+      catchError((error) => {
         this.logger.warn('[Rentarfast] Edge Function failed, falling back to Cloud Run', error);
         // Fallback to Cloud Run if Edge Function fails
         return this.sendViaCloudRun(message, context);
       }),
-      tap(() => this._isLoading.set(false))
+      tap(() => this._isLoading.set(false)),
     );
   }
 
@@ -504,7 +516,10 @@ export class RentarfastAgentService {
    * Send message via Cloud Run (fallback)
    * Legacy method without database access
    */
-  private sendViaCloudRun(message: string, context?: AgentChatContext): Observable<AgentChatResponse> {
+  private sendViaCloudRun(
+    message: string,
+    context?: AgentChatContext,
+  ): Observable<AgentChatResponse> {
     const request: AgentChatRequest = {
       message,
       sessionId: this._sessionId() ?? undefined,
@@ -512,7 +527,7 @@ export class RentarfastAgentService {
     };
 
     return this.http.post<AgentChatResponse>(`${this.CLOUD_RUN_URL}/api/chat`, request).pipe(
-      tap(response => {
+      tap((response) => {
         if (response.sessionId) {
           this._sessionId.set(response.sessionId);
         }
@@ -524,9 +539,9 @@ export class RentarfastAgentService {
           timestamp: new Date(),
           toolsUsed: response.toolsUsed,
         };
-        this._messages.update(msgs => [...msgs, agentMessage]);
+        this._messages.update((msgs) => [...msgs, agentMessage]);
       }),
-      catchError(error => {
+      catchError((error) => {
         this.logger.error('[Rentarfast] Cloud Run error', error);
 
         const errorMessage: ChatMessage = {
@@ -535,7 +550,7 @@ export class RentarfastAgentService {
           content: 'Lo siento, hubo un error al procesar tu mensaje. Por favor intenta de nuevo.',
           timestamp: new Date(),
         };
-        this._messages.update(msgs => [...msgs, errorMessage]);
+        this._messages.update((msgs) => [...msgs, errorMessage]);
 
         return of({
           success: false,
@@ -546,7 +561,7 @@ export class RentarfastAgentService {
           error: error.message,
         });
       }),
-      tap(() => this._isLoading.set(false))
+      tap(() => this._isLoading.set(false)),
     );
   }
 
@@ -567,16 +582,16 @@ export class RentarfastAgentService {
     return from(
       this.supabase.getClient().functions.invoke('rentarfast-agent', {
         body: { healthCheck: true },
-      })
+      }),
     ).pipe(
-      map(result => !result.error && result.data?.status === 'ok'),
+      map((result) => !result.error && result.data?.status === 'ok'),
       catchError(() => {
         // Fallback to Cloud Run health check
         return this.http.get<{ status: string }>(`${this.CLOUD_RUN_URL}/health`).pipe(
-          map(response => response.status === 'ok'),
-          catchError(() => of(false))
+          map((response) => response.status === 'ok'),
+          catchError(() => of(false)),
         );
-      })
+      }),
     );
   }
 

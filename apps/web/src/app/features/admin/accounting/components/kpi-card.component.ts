@@ -1,5 +1,4 @@
-import {Component, Input,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -34,9 +33,9 @@ import { IonicModule } from '@ionic/angular';
             @if (change !== undefined) {
               <div class="flex items-center text-sm">
                 <ion-icon
-                [name]="
-                  trend === 'up' ? 'trending-up' : trend === 'down' ? 'trending-down' : 'remove'
-                "
+                  [name]="
+                    trend === 'up' ? 'trending-up' : trend === 'down' ? 'trending-down' : 'remove'
+                  "
                   [class.text-success-strong]="trend === 'up'"
                   [class.text-error-500]="trend === 'down'"
                   [class.text-text-secondary]="trend === 'neutral'"
@@ -46,7 +45,7 @@ import { IonicModule } from '@ionic/angular';
                   [class.text-success-strong]="trend === 'up'"
                   [class.text-error-500]="trend === 'down'"
                   [class.text-text-secondary]="trend === 'neutral'"
-                  >
+                >
                   {{ change }}%
                 </span>
                 @if (changeLabel) {
@@ -63,7 +62,7 @@ import { IonicModule } from '@ionic/angular';
         </div>
       </ion-card-content>
     </ion-card>
-    `,
+  `,
   styles: [
     `
       .kpi-card {

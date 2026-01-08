@@ -1,5 +1,11 @@
-import {Component, OnInit, OnDestroy, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  signal,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -255,7 +261,7 @@ export class DisputesManagementPage implements OnInit, OnDestroy {
       await this.disputesService.addEvidence(
         dispute.id,
         '', // Empty path for text-only comment
-        comment.trim()
+        comment.trim(),
       );
       this.toastService.success('Comentario agregado exitosamente', '');
       this.newComment.set(''); // Clear comment input

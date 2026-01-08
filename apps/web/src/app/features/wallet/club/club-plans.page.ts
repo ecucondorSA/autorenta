@@ -28,7 +28,9 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
             Volver a Wallet
           </button>
 
-          <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center">
+          <div
+            class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center"
+          >
             <ion-icon name="shield-checkmark" class="text-3xl text-white"></ion-icon>
           </div>
 
@@ -40,7 +42,9 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
 
         <!-- Already subscribed banner -->
         @if (hasActiveSubscription()) {
-          <div class="rounded-2xl bg-gradient-to-r from-amber-500/20 to-amber-600/10 border border-amber-500/40 p-6">
+          <div
+            class="rounded-2xl bg-gradient-to-r from-amber-500/20 to-amber-600/10 border border-amber-500/40 p-6"
+          >
             <div class="flex items-center gap-4">
               <div class="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
                 <ion-icon name="checkmark-circle" class="text-2xl text-amber-600"></ion-icon>
@@ -48,7 +52,8 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
               <div class="flex-1">
                 <h3 class="font-bold text-text-primary">Ya eres miembro del Club</h3>
                 <p class="text-sm text-text-secondary">
-                  Tu membresia {{ currentTierName() }} esta activa hasta {{ subscriptionExpiry() | date:'dd MMM yyyy' }}
+                  Tu membresia {{ currentTierName() }} esta activa hasta
+                  {{ subscriptionExpiry() | date: 'dd MMM yyyy' }}
                 </p>
               </div>
               <button
@@ -78,7 +83,9 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
               }
               @if (tier.tier === 'club_luxury') {
                 <div class="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span class="px-4 py-1 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-black text-xs font-bold">
+                  <span
+                    class="px-4 py-1 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-black text-xs font-bold"
+                  >
                     PREMIUM
                   </span>
                 </div>
@@ -86,7 +93,10 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
 
               <!-- Tier header -->
               <div class="text-center space-y-2">
-                <div [class]="getTierIconClass(tier)" class="w-14 h-14 mx-auto rounded-full flex items-center justify-center">
+                <div
+                  [class]="getTierIconClass(tier)"
+                  class="w-14 h-14 mx-auto rounded-full flex items-center justify-center"
+                >
                   <ion-icon name="shield-checkmark" class="text-2xl"></ion-icon>
                 </div>
                 <h3 class="text-xl font-bold text-text-primary">{{ tier.name }}</h3>
@@ -100,7 +110,7 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
                   <span class="text-text-secondary">/ano</span>
                 </div>
                 <p class="text-xs text-text-muted mt-1">
-                  \${{ (tier.price_usd / 12) | number:'1.0-0' }}/mes aproximadamente
+                  \${{ tier.price_usd / 12 | number: '1.0-0' }}/mes aproximadamente
                 </p>
               </div>
 
@@ -114,7 +124,10 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
               <ul class="space-y-3">
                 @for (feature of tier.features; track feature) {
                   <li class="flex items-start gap-3">
-                    <ion-icon name="checkmark-circle" class="text-lg text-success-strong mt-0.5"></ion-icon>
+                    <ion-icon
+                      name="checkmark-circle"
+                      class="text-lg text-success-strong mt-0.5"
+                    ></ion-icon>
                     <span class="text-sm text-text-secondary">{{ feature }}</span>
                   </li>
                 }
@@ -205,23 +218,28 @@ export class ClubPlansPage {
   readonly faqs = [
     {
       question: 'Como funciona la cobertura del Club?',
-      answer: 'Tu membresia incluye un saldo de cobertura que se usa para cubrir el deposito de garantia en tus alquileres. Si el deposito es menor o igual a tu saldo, no pagas nada. Si es mayor, solo pagas la diferencia.'
+      answer:
+        'Tu membresia incluye un saldo de cobertura que se usa para cubrir el deposito de garantia en tus alquileres. Si el deposito es menor o igual a tu saldo, no pagas nada. Si es mayor, solo pagas la diferencia.',
     },
     {
       question: 'Que pasa si tengo un dano durante el alquiler?',
-      answer: 'Si hay un dano, el monto se deduce de tu saldo de cobertura. Si el dano supera tu saldo disponible, la diferencia se cobra de tu wallet o tarjeta.'
+      answer:
+        'Si hay un dano, el monto se deduce de tu saldo de cobertura. Si el dano supera tu saldo disponible, la diferencia se cobra de tu wallet o tarjeta.',
     },
     {
       question: 'Puedo cancelar mi membresia?',
-      answer: 'Si, puedes cancelar en cualquier momento. Tu membresia seguira activa hasta la fecha de vencimiento. No hay reembolsos por el tiempo no utilizado.'
+      answer:
+        'Si, puedes cancelar en cualquier momento. Tu membresia seguira activa hasta la fecha de vencimiento. No hay reembolsos por el tiempo no utilizado.',
     },
     {
       question: 'Que pasa cuando se agota mi saldo de cobertura?',
-      answer: 'Puedes recargar tu saldo comprando una nueva membresia o pagando el deposito normalmente hasta que renueves.'
+      answer:
+        'Puedes recargar tu saldo comprando una nueva membresia o pagando el deposito normalmente hasta que renueves.',
     },
     {
       question: 'Puedo cambiar de plan?',
-      answer: 'Si, puedes upgradearte a Club Black en cualquier momento. El nuevo plan reemplaza al anterior y se extiende por un ano desde la fecha de compra.'
+      answer:
+        'Si, puedes upgradearte a Club Black en cualquier momento. El nuevo plan reemplaza al anterior y se extiende por un ano desde la fecha de compra.',
     },
   ];
 
@@ -255,7 +273,7 @@ export class ClubPlansPage {
     const tierHierarchy: Record<SubscriptionTier, number> = {
       club_standard: 1,
       club_black: 2,
-      club_luxury: 3
+      club_luxury: 3,
     };
 
     return tierHierarchy[tier] < tierHierarchy[sub.tier];

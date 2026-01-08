@@ -23,9 +23,7 @@
       <app-icon name="car" [size]="48" />
       <h2>No tienes autos registrados</h2>
       <p>Registra tu primer auto para comenzar a gestionar tu disponibilidad</p>
-      <a routerLink="/cars/publish" class="btn-primary">
-        Publicar auto
-      </a>
+      <a routerLink="/cars/publish" class="btn-primary"> Publicar auto </a>
     </div>
   }
 
@@ -56,7 +54,9 @@
           <div class="car-photo">
             @if (car.photos?.length || car.car_photos?.length) {
               <img
-                [src]="car.photos?.[0]?.url || car.car_photos?.[0]?.url || '/assets/placeholder-car.webp'"
+                [src]="
+                  car.photos?.[0]?.url || car.car_photos?.[0]?.url || '/assets/placeholder-car.webp'
+                "
                 [alt]="car.brand + ' ' + car.model"
               />
             } @else {
@@ -76,11 +76,23 @@
       <div class="calendar-widget">
         <!-- Calendar Header -->
         <div class="widget-header">
-          <button type="button" class="nav-btn" (click)="previousMonth()" title="Mes anterior" aria-label="Mes anterior">
+          <button
+            type="button"
+            class="nav-btn"
+            (click)="previousMonth()"
+            title="Mes anterior"
+            aria-label="Mes anterior"
+          >
             <app-icon name="chevron-left" [size]="20" />
           </button>
           <h3 class="month-name font-bold font-satoshi">{{ monthName() }}</h3>
-          <button type="button" class="nav-btn" (click)="nextMonth()" title="Mes siguiente" aria-label="Mes siguiente">
+          <button
+            type="button"
+            class="nav-btn"
+            (click)="nextMonth()"
+            title="Mes siguiente"
+            aria-label="Mes siguiente"
+          >
             <app-icon name="chevron-right" [size]="20" />
           </button>
         </div>
@@ -114,7 +126,9 @@
               [class.booking]="day.blockType === 'booking'"
               [class.blackout]="day.blockType === 'blackout' || day.blockType === 'manual_block'"
               [class.selected]="day.isSelected"
-              [disabled]="day.day === null || day.isPast || (day.isBlocked && day.blockType === 'booking')"
+              [disabled]="
+                day.day === null || day.isPast || (day.isBlocked && day.blockType === 'booking')
+              "
               (click)="onDateClick(day)"
               [title]="day.blockReason || ''"
             >
@@ -160,9 +174,7 @@
         <div class="selection-actions">
           <p class="selection-count">{{ selectedDates().size }} dia(s) seleccionado(s)</p>
           <div class="action-buttons">
-            <button type="button" class="btn-secondary" (click)="clearSelection()">
-              Cancelar
-            </button>
+            <button type="button" class="btn-secondary" (click)="clearSelection()">Cancelar</button>
             <button type="button" class="btn-primary" (click)="startAddBlackout()">
               <app-icon name="x" [size]="16" />
               Bloquear fechas
@@ -175,9 +187,7 @@
       @if (isAddingBlackout()) {
         <div class="blackout-form">
           <h4>Bloquear fechas seleccionadas</h4>
-          <p class="form-description">
-            Estas fechas no estaran disponibles para reservas
-          </p>
+          <p class="form-description">Estas fechas no estaran disponibles para reservas</p>
           <div class="form-group">
             <label for="blackout-reason">Motivo (opcional)</label>
             <input

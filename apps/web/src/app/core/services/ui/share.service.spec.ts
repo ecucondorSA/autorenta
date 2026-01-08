@@ -6,7 +6,7 @@ describe('ShareService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ShareService]
+      providers: [ShareService],
     });
     service = TestBed.inject(ShareService);
   });
@@ -38,5 +38,4 @@ describe('ShareService', () => {
   it('should have canShareFiles method', () => {
     expect(typeof service.canShareFiles).toBe('function');
   });
-
 });

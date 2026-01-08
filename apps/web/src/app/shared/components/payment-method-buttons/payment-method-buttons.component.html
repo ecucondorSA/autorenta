@@ -8,14 +8,16 @@
     [class.ring-cta-default]="isSelected('credit_card')"
     [class.bg-cta-default/5]="isSelected('credit_card')"
     class="w-full p-4 rounded-xl border-2 border-border-default bg-surface-raised hover:border-cta-default hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
-    >
+  >
     <!-- Recommended Badge -->
     @if (isRecommended('credit_card')) {
       <div
         class="absolute -top-2 left-4 px-2 py-0.5 bg-warning-light text-text-primary text-xs font-semibold rounded-full flex items-center gap-1"
-        >
+      >
         <svg class="w-3 h-3 text-warning-default" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+          <path
+            d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+          />
         </svg>
         Recomendado
       </div>
@@ -27,7 +29,7 @@
         class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
         [class.bg-cta-default]="isSelected('credit_card')"
         [class.bg-cta-default/10]="!isSelected('credit_card')"
-        >
+      >
         <svg
           class="w-6 h-6"
           [class.text-cta-text]="isSelected('credit_card')"
@@ -35,13 +37,13 @@
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
-          >
+        >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-            />
+          />
         </svg>
       </div>
 
@@ -51,9 +53,7 @@
           <app-icon name="credit-card" [size]="16" cssClass="inline-block mr-1" /> Tarjeta de
           Crédito/Débito
         </h3>
-        <p class="text-sm text-text-secondary">
-          Pre-autorización segura con MercadoPago
-        </p>
+        <p class="text-sm text-text-secondary">Pre-autorización segura con MercadoPago</p>
       </div>
 
       <!-- Radio indicator -->
@@ -62,7 +62,7 @@
         [class.border-cta-default]="isSelected('credit_card')"
         [class.bg-cta-default]="isSelected('credit_card')"
         [class.border-border-default]="!isSelected('credit_card')"
-        >
+      >
         @if (isSelected('credit_card')) {
           <div class="w-3 h-3 bg-surface-raised rounded-full"></div>
         }
@@ -79,14 +79,16 @@
     [class.ring-cta-default]="isSelected('wallet')"
     [class.bg-cta-default/5]="isSelected('wallet')"
     class="w-full p-4 rounded-xl border-2 border-border-default bg-surface-raised hover:border-cta-default hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-left group relative"
-    >
+  >
     <!-- Recommended Badge -->
     @if (isRecommended('wallet')) {
       <div
         class="absolute -top-2 left-4 px-2 py-0.5 bg-warning-light text-text-primary text-xs font-semibold rounded-full flex items-center gap-1"
-        >
+      >
         <svg class="w-3 h-3 text-warning-default" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+          <path
+            d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+          />
         </svg>
         Recomendado
       </div>
@@ -98,7 +100,7 @@
         class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
         [class.bg-cta-default]="isSelected('wallet')"
         [class.bg-cta-default/10]="!isSelected('wallet')"
-        >
+      >
         <svg
           class="w-6 h-6"
           [class.text-cta-text]="isSelected('wallet')"
@@ -106,13 +108,13 @@
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
-          >
+        >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-            />
+          />
         </svg>
       </div>
 
@@ -133,7 +135,7 @@
                 fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                 clip-rule="evenodd"
-                />
+              />
             </svg>
             <span>Recibe tus pagos como locador directamente aquí</span>
           </div>
@@ -143,7 +145,7 @@
                 fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                 clip-rule="evenodd"
-                />
+              />
             </svg>
             <span>Garantía reutilizable en futuras reservas</span>
           </div>
@@ -153,7 +155,7 @@
                 fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                 clip-rule="evenodd"
-                />
+              />
             </svg>
             <span>Carga saldo con MercadoPago, transferencia o efectivo</span>
           </div>
@@ -167,7 +169,7 @@
               class="flex items-center gap-2 px-3 py-2 rounded-lg"
               [class.bg-success-light/10]="hasSufficientFunds()"
               [class.bg-error-bg]="!hasSufficientFunds()"
-              >
+            >
               <svg
                 class="w-4 h-4"
                 [class.text-success-strong]="hasSufficientFunds()"
@@ -175,14 +177,14 @@
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                >
+              >
                 @if (hasSufficientFunds()) {
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
+                  />
                 }
                 @if (!hasSufficientFunds()) {
                   <path
@@ -190,22 +192,20 @@
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
+                  />
                 }
               </svg>
               <span
                 class="text-xs font-medium"
                 [class.text-success-strong]="hasSufficientFunds()"
                 [class.text-error-strong]="!hasSufficientFunds()"
-                >
+              >
                 Balance disponible: <strong>{{ walletBalance() | money }}</strong>
               </span>
             </div>
             <!-- Price Breakdown (if sufficient funds) -->
             @if (hasSufficientFunds()) {
-              <div
-                class="text-xs text-text-secondary space-y-0.5"
-                >
+              <div class="text-xs text-text-secondary space-y-0.5">
                 <div class="flex justify-between">
                   <span>Bloqueo de reserva:</span>
                   <span class="font-semibold">{{ rentalAmount | money }}</span>
@@ -214,9 +214,7 @@
                   <span>Bloqueo de garantía:</span>
                   <span class="font-semibold">{{ depositAmount | money }}</span>
                 </div>
-                <div
-                  class="flex justify-between pt-1 border-t border-border-default"
-                  >
+                <div class="flex justify-between pt-1 border-t border-border-default">
                   <span class="font-semibold">Total bloqueado:</span>
                   <span class="font-bold text-cta-default">{{ totalRequired() | money }}</span>
                 </div>
@@ -224,22 +222,20 @@
             }
             <!-- Insufficient Funds Warning -->
             @if (!hasSufficientFunds()) {
-              <div
-                class="px-3 py-2 bg-error-bg border border-error-border rounded-lg"
-                >
+              <div class="px-3 py-2 bg-error-bg border border-error-border rounded-lg">
                 <p class="text-xs text-error-strong">
                   <svg
                     class="inline w-4 h-4 mr-1"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    >
+                  >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                      />
+                    />
                   </svg>
                   Fondos insuficientes. Recarga tu wallet para usar esta opción.
                 </p>
@@ -247,16 +243,14 @@
             }
             <!-- Success Badge (if sufficient funds) -->
             @if (hasSufficientFunds()) {
-              <div
-                class="flex items-center gap-1 text-xs text-success-strong"
-                >
+              <div class="flex items-center gap-1 text-xs text-success-strong">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M13 10V3L4 14h7v7l9-11h-7z"
-                    />
+                  />
                 </svg>
                 <span>Confirmación instantánea</span>
               </div>
@@ -278,7 +272,7 @@
         [class.border-cta-default]="isSelected('wallet')"
         [class.bg-cta-default]="isSelected('wallet')"
         [class.border-border-default]="!isSelected('wallet')"
-        >
+      >
         @if (isSelected('wallet')) {
           <div class="w-3 h-3 bg-surface-raised rounded-full"></div>
         }

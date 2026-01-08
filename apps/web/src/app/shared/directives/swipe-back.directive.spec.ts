@@ -56,7 +56,9 @@ describe('SwipeBackDirective', () => {
 
   afterEach(() => {
     // Clean up overlays
-    document.querySelectorAll('.swipe-back-overlay, .swipe-back-indicator').forEach((el) => el.remove());
+    document
+      .querySelectorAll('.swipe-back-overlay, .swipe-back-indicator')
+      .forEach((el) => el.remove());
   });
 
   it('should create directive on elements with appSwipeBack', () => {

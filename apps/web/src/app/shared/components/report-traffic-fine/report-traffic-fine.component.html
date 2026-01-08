@@ -12,7 +12,7 @@
       <h3 class="ion-text-center font-bold font-satoshi">Reportar multa para la reserva:</h3>
       <p class="ion-text-center ion-text-primary ion-text-bold">{{ booking.car_title }}</p>
       <p class="ion-text-center ion-text-secondary">
-        ID de Reserva: {{ booking.id | slice:0:8 }}
+        ID de Reserva: {{ booking.id | slice: 0 : 8 }}
       </p>
 
       <form (ngSubmit)="onSubmit()">
@@ -28,7 +28,9 @@
         </ion-item>
 
         <ion-item>
-          <ion-label position="stacked">Monto de la Multa (en {{ booking.currency || 'ARS' }}) *</ion-label>
+          <ion-label position="stacked"
+            >Monto de la Multa (en {{ booking.currency || 'ARS' }}) *</ion-label
+          >
           <ion-input
             type="number"
             [(ngModel)]="amount"
@@ -65,12 +67,7 @@
           </div>
         }
 
-        <ion-button
-          expand="block"
-          class="ion-margin-top"
-          type="submit"
-          [disabled]="loading()"
-          >
+        <ion-button expand="block" class="ion-margin-top" type="submit" [disabled]="loading()">
           @if (loading()) {
             <ion-spinner name="crescent"></ion-spinner>
           }
@@ -83,7 +80,7 @@
           class="ion-margin-top"
           (click)="onCancel()"
           [disabled]="loading()"
-          >
+        >
           Cancelar
         </ion-button>
       </form>

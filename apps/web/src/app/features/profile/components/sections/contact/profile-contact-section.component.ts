@@ -19,8 +19,16 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
  * - Country-specific postal code validation
  */
 
-import {Component, Input, OnDestroy, OnInit, computed, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';

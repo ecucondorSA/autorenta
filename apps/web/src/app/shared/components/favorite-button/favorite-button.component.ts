@@ -1,5 +1,12 @@
-import {Component, Input, Output, EventEmitter, inject, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  inject,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { FavoritesService } from '@core/services/cars/favorites.service';
 
@@ -33,7 +40,7 @@ import { FavoritesService } from '@core/services/cars/favorites.service';
         width: 40px;
         height: 40px;
         border: none;
-        background: #E3E3E3;
+        background: #e3e3e3;
         backdrop-filter: blur(8px);
         border-radius: 50%;
         cursor: pointer;

@@ -1,6 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Component, computed, input,
-  ChangeDetectionStrategy, inject} from '@angular/core';
+import { Component, computed, input, ChangeDetectionStrategy, inject } from '@angular/core';
 
 import {
   BaseChatComponent,

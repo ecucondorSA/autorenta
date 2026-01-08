@@ -11,14 +11,14 @@ export interface PhotoPreview {
 export interface GenerateAIPhotosOptions {
   color?: string;
   body_type?:
-  | 'sedan'
-  | 'hatchback'
-  | 'suv'
-  | 'crossover'
-  | 'pickup'
-  | 'coupe'
-  | 'wagon'
-  | 'minivan';
+    | 'sedan'
+    | 'hatchback'
+    | 'suv'
+    | 'crossover'
+    | 'pickup'
+    | 'coupe'
+    | 'wagon'
+    | 'minivan';
   trim_level?: 'base' | 'lx' | 'ex' | 'sport' | 'touring' | 'limited' | 'type-r';
   /** Same set id for the 3 photos so context/color stays consistent. */
   setId?: string;
@@ -209,7 +209,9 @@ export class PublishCarPhotoService {
       if (generatedPhotos.length > 0) {
         this.uploadedPhotos.set([...currentPhotos, ...generatedPhotos]);
         const errorMsg = errors.length ? ` (algunas fallaron: ${errors.join('; ')})` : '';
-        alert(`✨ Se generaron ${generatedPhotos.length} foto(s) con IA${errorMsg}. Revisa consola para ver el modelo usado.`);
+        alert(
+          `✨ Se generaron ${generatedPhotos.length} foto(s) con IA${errorMsg}. Revisa consola para ver el modelo usado.`,
+        );
       } else {
         const msg = errors.length
           ? `No se generaron fotos. Errores: ${errors.join('; ')}`

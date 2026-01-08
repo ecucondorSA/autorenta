@@ -60,9 +60,7 @@ export class ClaimLockService {
 
       // Atomic lock acquisition: only succeeds if claim is in 'approved' status
       // and not already locked (locked_at is null or expired > 5 minutes)
-      const lockExpiry = new Date(
-        Date.now() - this.LOCK_EXPIRY_MINUTES * 60 * 1000,
-      ).toISOString();
+      const lockExpiry = new Date(Date.now() - this.LOCK_EXPIRY_MINUTES * 60 * 1000).toISOString();
 
       const { data, error } = await this.supabaseClient
         .from('claims')
@@ -209,9 +207,7 @@ export class ClaimLockService {
    */
   async forceReleaseLock(claimId: string): Promise<ClaimLockResult> {
     try {
-      const lockExpiry = new Date(
-        Date.now() - this.LOCK_EXPIRY_MINUTES * 60 * 1000,
-      ).toISOString();
+      const lockExpiry = new Date(Date.now() - this.LOCK_EXPIRY_MINUTES * 60 * 1000).toISOString();
 
       const { data, error } = await this.supabaseClient
         .from('claims')

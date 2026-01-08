@@ -6,7 +6,7 @@ describe('ErrorHandlerService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ErrorHandlerService]
+      providers: [ErrorHandlerService],
     });
     service = TestBed.inject(ErrorHandlerService);
   });
@@ -38,5 +38,4 @@ describe('ErrorHandlerService', () => {
   it('should have handleBookingError method', () => {
     expect(typeof service.handleBookingError).toBe('function');
   });
-
 });

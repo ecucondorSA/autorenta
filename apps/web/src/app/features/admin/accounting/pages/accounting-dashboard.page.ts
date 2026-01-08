@@ -1,5 +1,11 @@
-import {Component, OnInit, signal, computed, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  signal,
+  computed,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';

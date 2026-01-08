@@ -1,6 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { CircuitBreakerService, CircuitOpenError } from '@core/services/infrastructure/circuit-breaker.service';
+import {
+  CircuitBreakerService,
+  CircuitOpenError,
+} from '@core/services/infrastructure/circuit-breaker.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { environment } from '../../../../environments/environment';
 import { PaymentMetricsService } from './payment-metrics.service';
@@ -104,7 +107,7 @@ export class MercadoPagoPaymentService {
           retryAfter: error.retryAfter?.toISOString(),
         });
         throw new Error(
-          'El servicio de pagos no está disponible temporalmente. Por favor, intenta nuevamente en unos segundos.'
+          'El servicio de pagos no está disponible temporalmente. Por favor, intenta nuevamente en unos segundos.',
         );
       }
 
@@ -236,7 +239,7 @@ export class MercadoPagoPaymentService {
 export class PaymentBusinessError extends Error {
   constructor(
     message: string,
-    public readonly paymentResponse: ProcessBookingPaymentResponse
+    public readonly paymentResponse: ProcessBookingPaymentResponse,
   ) {
     super(message);
     this.name = 'PaymentBusinessError';

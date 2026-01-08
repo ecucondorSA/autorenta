@@ -13,9 +13,7 @@ import { PullToRefreshDirective } from './pull-to-refresh.directive';
 // Test host component
 @Component({
   template: `
-    <div appPullToRefresh
-         [pullToRefreshEnabled]="enabled"
-         (refreshTriggered)="onRefresh($event)">
+    <div appPullToRefresh [pullToRefreshEnabled]="enabled" (refreshTriggered)="onRefresh($event)">
       Content
     </div>
   `,
@@ -53,11 +51,7 @@ describe('PullToRefreshDirective', () => {
     (PullToRefreshDirective as any).stylesInjected = false;
     (PullToRefreshDirective as any).instanceCount = 0;
 
-    mockHaptic = jasmine.createSpyObj('HapticFeedbackService', [
-      'light',
-      'medium',
-      'success',
-    ]);
+    mockHaptic = jasmine.createSpyObj('HapticFeedbackService', ['light', 'medium', 'success']);
   });
 
   afterEach(() => {

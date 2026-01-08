@@ -1,6 +1,13 @@
 import { CommonModule } from '@angular/common';
-import {Component, computed, inject, OnInit, OnDestroy, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  OnDestroy,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { take } from 'rxjs/operators';
 import type { RealtimeChannel } from '@supabase/supabase-js';

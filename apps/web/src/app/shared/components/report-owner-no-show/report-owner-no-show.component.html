@@ -12,13 +12,13 @@
       <h3 class="ion-text-center font-bold font-satoshi">Reportar no-show para la reserva:</h3>
       <p class="ion-text-center ion-text-primary ion-text-bold">{{ booking.car_title }}</p>
       <p class="ion-text-center ion-text-secondary">
-        ID de Reserva: {{ booking.id | slice:0:8 }}
+        ID de Reserva: {{ booking.id | slice: 0 : 8 }}
       </p>
 
       <div class="ion-padding-vertical">
         <p>
-          Si el propietario no se presentó en el lugar y hora acordados para la entrega del vehículo,
-          puedes reportar la situación aquí. Esto iniciará el protocolo de no-show.
+          Si el propietario no se presentó en el lugar y hora acordados para la entrega del
+          vehículo, puedes reportar la situación aquí. Esto iniciará el protocolo de no-show.
         </p>
         <p class="ion-text-danger">
           <strong>¡Importante!</strong> No abandones el lugar de encuentro hasta que se te indique.
@@ -52,12 +52,7 @@
           </div>
         }
 
-        <ion-button
-          expand="block"
-          class="ion-margin-top"
-          type="submit"
-          [disabled]="loading()"
-          >
+        <ion-button expand="block" class="ion-margin-top" type="submit" [disabled]="loading()">
           @if (loading()) {
             <ion-spinner name="crescent"></ion-spinner>
           }
@@ -70,7 +65,7 @@
           class="ion-margin-top"
           (click)="onCancel()"
           [disabled]="loading()"
-          >
+        >
           Cancelar
         </ion-button>
       </form>

@@ -6,7 +6,7 @@ describe('NotificationManagerService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [NotificationManagerService]
+      providers: [NotificationManagerService],
     });
     service = TestBed.inject(NotificationManagerService);
   });
@@ -50,5 +50,4 @@ describe('NotificationManagerService', () => {
   it('should have getQueuedCount method', () => {
     expect(typeof service.getQueuedCount).toBe('function');
   });
-
 });

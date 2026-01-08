@@ -1,4 +1,3 @@
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -26,33 +25,29 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
           <div
             class="w-10 h-10 rounded-full flex items-center justify-center text-lg"
             [class]="getStatusBadgeClass()"
-            >
+          >
             {{ getStatusIcon() }}
           </div>
           <div>
             <h4 class="font-semibold text-text-primary">Verificación Facial (Level 3)</h4>
-            <p class="text-sm text-text-secondary">
-              Verifica tu identidad con un selfie en video
-            </p>
+            <p class="text-sm text-text-secondary">Verifica tu identidad con un selfie en video</p>
           </div>
         </div>
         <span class="text-xs font-medium px-2 py-1 rounded-full" [class]="getStatusLabelClass()">
           {{ getStatusLabel() }}
         </span>
       </div>
-    
+
       <!-- Verified State -->
       @if (status().isVerified) {
-        <div
-          class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg"
-          >
+        <div class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg">
           <div class="flex items-center gap-2 text-success-strong">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                 clip-rule="evenodd"
-                />
+              />
             </svg>
             <span class="text-sm font-medium">Identidad verificada exitosamente</span>
           </div>
@@ -62,26 +57,22 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
           </div>
         </div>
       }
-    
+
       <!-- Level 2 Required -->
       @if (status().requiresLevel2) {
-        <div
-          class="p-4 bg-warning-light/10 border border-warning-light/40 rounded-lg"
-          >
+        <div class="p-4 bg-warning-light/10 border border-warning-light/40 rounded-lg">
           <p class="text-sm text-warning-strong">
             ⚠️ Debes completar Level 2 (documentos) antes de verificar tu identidad con selfie.
           </p>
         </div>
       }
-    
+
       <!-- Capture State -->
       @if (!status().isVerified && !status().requiresLevel2) {
         <div class="space-y-4">
           <!-- Instructions -->
           @if (!isRecording() && !hasVideo()) {
-            <div
-              class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg space-y-2"
-              >
+            <div class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg space-y-2">
               <p class="text-sm font-medium text-cta-default">Instrucciones:</p>
               <ul class="text-sm text-cta-default space-y-1 ml-4 list-disc">
                 <li>Asegúrate de estar en un lugar bien iluminado</li>
@@ -95,7 +86,7 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
           <div
             class="relative rounded-lg overflow-hidden bg-surface-raised"
             style="aspect-ratio: 4/3;"
-            >
+          >
             <video
               #videoPreview
               [hidden]="!isRecording() && !hasVideo()"
@@ -109,16 +100,14 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
             @if (isRecording()) {
               <div
                 class="absolute top-4 right-4 flex items-center gap-2 bg-error-600 text-text-inverse px-3 py-2 rounded-full text-sm font-medium animate-pulse"
-                >
+              >
                 <span class="w-2 h-2 bg-surface-raised rounded-full"></span>
                 <span>REC {{ recordingSeconds() }}s</span>
               </div>
             }
             <!-- Face Frame Overlay -->
             @if (isRecording()) {
-              <div
-                class="absolute inset-0 flex items-center justify-center pointer-events-none"
-                >
+              <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div
                   class="border-4 border-white rounded-full"
                   style="width: 200px; height: 250px;"
@@ -129,19 +118,19 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
             @if (!isRecording() && !hasVideo()) {
               <div
                 class="absolute inset-0 flex flex-col items-center justify-center text-text-inverse"
-                >
+              >
                 <svg
                   class="w-20 h-20 mb-4 opacity-50"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
-                  >
+                >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                    />
+                  />
                 </svg>
                 <p class="text-sm opacity-75">Cámara lista para grabar</p>
               </div>
@@ -156,12 +145,12 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
                 (click)="startRecording()"
                 [disabled]="processing()"
                 class="flex-grow px-6 py-3 bg-cta-default text-cta-text rounded-lg font-medium hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                >
+              >
                 <span class="flex items-center justify-center gap-2">
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"
-                      />
+                    />
                   </svg>
                   <span>Iniciar Grabación</span>
                 </span>
@@ -173,7 +162,7 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
                 type="button"
                 (click)="submitVideo()"
                 class="flex-grow px-6 py-3 bg-success-light text-text-primary rounded-lg font-medium hover:bg-success-light focus:ring-2 focus:ring-success-light focus:ring-offset-2 transition-all"
-                >
+              >
                 <span class="flex items-center justify-center gap-2">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
@@ -181,7 +170,7 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M5 13l4 4L19 7"
-                      />
+                    />
                   </svg>
                   <span>Verificar Identidad</span>
                 </span>
@@ -193,20 +182,20 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
                 type="button"
                 (click)="retake()"
                 class="px-6 py-3 bg-surface-raised border border-border-muted text-text-primary rounded-lg font-medium hover:bg-surface-base focus:ring-2 focus:ring-cta-default focus:ring-offset-2 transition-all"
-                >
+              >
                 Volver a Grabar
               </button>
             }
           </div>
           <!-- Processing State -->
           @if (processing()) {
-            <div
-              class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg"
-              >
+            <div class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg">
               <div class="flex items-center gap-3">
                 <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-cta-default"></div>
                 <div class="flex-grow">
-                  <p class="text-sm font-medium text-cta-default">Procesando verificación facial...</p>
+                  <p class="text-sm font-medium text-cta-default">
+                    Procesando verificación facial...
+                  </p>
                   <p class="text-xs text-cta-default mt-1">Esto puede tardar unos segundos</p>
                 </div>
               </div>
@@ -216,7 +205,7 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
           @if (successMessage()) {
             <div
               class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-strong"
-              >
+            >
               {{ successMessage() }}
             </div>
           }
@@ -224,14 +213,10 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
           @if (error()) {
             <div
               class="p-4 bg-error-bg border border-error-border rounded-lg text-sm text-error-strong"
-              >
+            >
               {{ error() }}
               @if (hasVideo()) {
-                <button
-                  type="button"
-                  (click)="retake()"
-                  class="mt-2 text-sm font-medium underline"
-                  >
+                <button type="button" (click)="retake()" class="mt-2 text-sm font-medium underline">
                   Intentar nuevamente
                 </button>
               }
@@ -240,7 +225,7 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
         </div>
       }
     </div>
-    `,
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelfieCaptureComponent implements OnInit, OnDestroy {
@@ -363,7 +348,9 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
       const videoUrl = await this.faceVerificationService.uploadSelfieVideo(file);
 
       // Get current user ID
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       if (!user) {
         throw new Error('No hay usuario autenticado.');
       }
@@ -383,7 +370,9 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
       }
 
       if (!docs?.length) {
-        throw new Error('No se encontró documento verificado para comparar. Completa Level 2 primero.');
+        throw new Error(
+          'No se encontró documento verificado para comparar. Completa Level 2 primero.',
+        );
       }
 
       // Get public URL from storage

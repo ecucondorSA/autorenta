@@ -1,5 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Injectable, inject} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '@environment';
 
 /**
@@ -119,10 +119,7 @@ export class PerformanceMonitoringService {
   /**
    * Send warning to Sentry (lazy-loaded)
    */
-  private async sendWarningToSentry(
-    message: string,
-    tags: Record<string, string>,
-  ): Promise<void> {
+  private async sendWarningToSentry(message: string, tags: Record<string, string>): Promise<void> {
     if (!environment.sentryDsn || !environment.production) return;
 
     const Sentry = await this.getSentry();
@@ -381,17 +378,17 @@ export class PerformanceMonitoringService {
       platform: navigator.platform,
       memory: performanceMemory
         ? {
-          used: (performanceMemory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
-          total: (performanceMemory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
-          limit: (performanceMemory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
-        }
+            used: (performanceMemory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
+            total: (performanceMemory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
+            limit: (performanceMemory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
+          }
         : 'Not available',
       connection: networkConnection
         ? {
-          effectiveType: networkConnection.effectiveType,
-          downlink: `${networkConnection.downlink} Mbps`,
-          rtt: `${networkConnection.rtt} ms`,
-        }
+            effectiveType: networkConnection.effectiveType,
+            downlink: `${networkConnection.downlink} Mbps`,
+            rtt: `${networkConnection.rtt} ms`,
+          }
         : 'Not available',
       screen: {
         width: window.screen.width,
@@ -419,13 +416,10 @@ export class PerformanceMonitoringService {
 
       if (duration > 100) {
         console.warn(`⚠️ Slow operation detected: ${name} took ${duration.toFixed(2)}ms`);
-        void this.sendWarningToSentry(
-          `Slow operation: ${name} took ${duration.toFixed(2)}ms`,
-          {
-            metric: 'operation_duration',
-            operation: name,
-          },
-        );
+        void this.sendWarningToSentry(`Slow operation: ${name} took ${duration.toFixed(2)}ms`, {
+          metric: 'operation_duration',
+          operation: name,
+        });
       }
     };
 

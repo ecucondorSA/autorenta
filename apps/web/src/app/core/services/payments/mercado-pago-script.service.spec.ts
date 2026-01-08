@@ -6,7 +6,7 @@ describe('MercadoPagoScriptService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MercadoPagoScriptService]
+      providers: [MercadoPagoScriptService],
     });
     service = TestBed.inject(MercadoPagoScriptService);
   });
@@ -18,5 +18,4 @@ describe('MercadoPagoScriptService', () => {
   it('should have getMercadoPago method', () => {
     expect(typeof service.getMercadoPago).toBe('function');
   });
-
 });

@@ -154,14 +154,8 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   enableAnalytics: defaults.enableAnalytics ?? defaults.production ?? false,
   distanceConfig: defaults.distanceConfig ?? defaultDistanceConfig,
   docVerifierUrl: resolve('NG_APP_DOC_VERIFIER_URL', defaults.docVerifierUrl),
-  cloudflareWorkerUrl: resolve(
-    'NG_APP_CLOUDFLARE_WORKER_URL',
-    defaults.cloudflareWorkerUrl ?? '',
-  ),
-  geminiTextWorkerUrl: resolve(
-    'NG_APP_GEMINI_TEXT_WORKER_URL',
-    defaults.geminiTextWorkerUrl ?? '',
-  ),
+  cloudflareWorkerUrl: resolve('NG_APP_CLOUDFLARE_WORKER_URL', defaults.cloudflareWorkerUrl ?? ''),
+  geminiTextWorkerUrl: resolve('NG_APP_GEMINI_TEXT_WORKER_URL', defaults.geminiTextWorkerUrl ?? ''),
   googleAiImageUrl: resolve('NG_APP_GOOGLE_AI_IMAGE_URL', defaults.googleAiImageUrl),
   sentryDsn: resolve('NG_APP_SENTRY_DSN', defaults.sentryDsn),
   sentryEnvironment: resolve(
@@ -185,9 +179,13 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   // GCP Video Damage Detection
   videoIngestionUrl: resolve('NG_APP_VIDEO_INGESTION_URL', defaults.videoIngestionUrl ?? ''),
   gcpProjectId: resolve('NG_APP_GCP_PROJECT_ID', defaults.gcpProjectId ?? 'autorenta-prod'),
-  gcpBucketName: resolve('NG_APP_GCP_BUCKET_NAME', defaults.gcpBucketName ?? 'autorenta-inspection-videos'),
+  gcpBucketName: resolve(
+    'NG_APP_GCP_BUCKET_NAME',
+    defaults.gcpBucketName ?? 'autorenta-inspection-videos',
+  ),
   // Logging configuration - configurable via env var
-  logLevel: (resolve('NG_APP_LOG_LEVEL', defaults.logLevel) || (defaults.production ? 'warn' : 'debug')) as LogLevel,
+  logLevel: (resolve('NG_APP_LOG_LEVEL', defaults.logLevel) ||
+    (defaults.production ? 'warn' : 'debug')) as LogLevel,
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;

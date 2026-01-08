@@ -1,6 +1,14 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 
-import { ChangeDetectionStrategy, Component, effect, ElementRef, input, output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  ElementRef,
+  input,
+  output,
+  ViewChild,
+} from '@angular/core';
 import { FocusTrapDirective } from '@core/directives/focus-trap.directive';
 
 /**
@@ -110,7 +118,7 @@ import { FocusTrapDirective } from '@core/directives/focus-trap.directive';
       .modal-backdrop {
         position: fixed;
         inset: 0;
-        background: #4E4E4E;
+        background: #4e4e4e;
         backdrop-filter: blur(4px);
         z-index: 50;
       }

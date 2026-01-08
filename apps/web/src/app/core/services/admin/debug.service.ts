@@ -1,5 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Injectable, signal, computed, inject} from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { environment } from '@environment';
 
 /**
@@ -57,7 +57,7 @@ export interface HttpLogEntry {
  * - Programmatically: debugService.enable()
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DebugService {
   private readonly logger = inject(LoggerService);
@@ -79,13 +79,11 @@ export class DebugService {
   readonly isEnabled = computed(() => this._isEnabled());
   readonly isPanelOpen = computed(() => this._isPanelOpen());
 
-  readonly errorCount = computed(() =>
-    this._logs().filter(l => l.level === 'ERROR' || l.level === 'CRITICAL').length
+  readonly errorCount = computed(
+    () => this._logs().filter((l) => l.level === 'ERROR' || l.level === 'CRITICAL').length,
   );
 
-  readonly warnCount = computed(() =>
-    this._logs().filter(l => l.level === 'WARN').length
-  );
+  readonly warnCount = computed(() => this._logs().filter((l) => l.level === 'WARN').length);
 
   // Session info
   readonly sessionInfo = {
@@ -93,7 +91,8 @@ export class DebugService {
     userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
     platform: typeof navigator !== 'undefined' ? navigator.platform : 'unknown',
     language: typeof navigator !== 'undefined' ? navigator.language : 'unknown',
-    screenSize: typeof window !== 'undefined' ? `${window.innerWidth}x${window.innerHeight}` : 'unknown',
+    screenSize:
+      typeof window !== 'undefined' ? `${window.innerWidth}x${window.innerHeight}` : 'unknown',
     environment: environment.production ? 'production' : 'development',
   };
 
@@ -176,7 +175,7 @@ export class DebugService {
    * Toggle debug panel visibility
    */
   togglePanel(): void {
-    this._isPanelOpen.update(v => !v);
+    this._isPanelOpen.update((v) => !v);
   }
 
   /**
@@ -196,12 +195,7 @@ export class DebugService {
   /**
    * Add a log entry
    */
-  log(
-    level: DebugLogEntry['level'],
-    context: string,
-    message: string,
-    data?: unknown
-  ): void {
+  log(level: DebugLogEntry['level'], context: string, message: string, data?: unknown): void {
     const entry: DebugLogEntry = {
       id: ++this.logIdCounter,
       timestamp: new Date(),
@@ -212,7 +206,7 @@ export class DebugService {
     };
 
     // Add to circular buffer
-    this._logs.update(logs => {
+    this._logs.update((logs) => {
       const newLogs = [...logs, entry];
       if (newLogs.length > this.MAX_LOGS) {
         return newLogs.slice(-this.MAX_LOGS);
@@ -236,7 +230,7 @@ export class DebugService {
       url,
     };
 
-    this._httpLogs.update(logs => {
+    this._httpLogs.update((logs) => {
       const newLogs = [...logs, entry];
       if (newLogs.length > this.MAX_HTTP_LOGS) {
         return newLogs.slice(-this.MAX_HTTP_LOGS);
@@ -250,18 +244,20 @@ export class DebugService {
   /**
    * Log HTTP request completion
    */
-  logHttpEnd(id: number, status: number, duration: number, responseSize?: number, error?: string): void {
-    this._httpLogs.update(logs =>
-      logs.map(log =>
-        log.id === id
-          ? { ...log, status, duration, responseSize, error }
-          : log
-      )
+  logHttpEnd(
+    id: number,
+    status: number,
+    duration: number,
+    responseSize?: number,
+    error?: string,
+  ): void {
+    this._httpLogs.update((logs) =>
+      logs.map((log) => (log.id === id ? { ...log, status, duration, responseSize, error } : log)),
     );
 
     // Log slow requests
     if (duration > 3000) {
-      const log = this._httpLogs().find(l => l.id === id);
+      const log = this._httpLogs().find((l) => l.id === id);
       if (log) {
         this.log('WARN', 'HTTP', `Slow request: ${log.method} ${log.url}`, { duration, status });
       }
@@ -272,7 +268,7 @@ export class DebugService {
    * Start a performance measurement
    */
   startMetric(name: string): void {
-    this._activeMetrics.update(metrics => {
+    this._activeMetrics.update((metrics) => {
       const newMetrics = new Map(metrics);
       newMetrics.set(name, {
         name,
@@ -293,7 +289,7 @@ export class DebugService {
 
     const duration = performance.now() - metric.startTime;
 
-    this._activeMetrics.update(m => {
+    this._activeMetrics.update((m) => {
       const newMetrics = new Map(m);
       newMetrics.delete(name);
       return newMetrics;
@@ -301,7 +297,9 @@ export class DebugService {
 
     // Log slow operations
     if (duration > 1000) {
-      this.log('WARN', 'Performance', `Slow operation: ${name}`, { duration: `${duration.toFixed(2)}ms` });
+      this.log('WARN', 'Performance', `Slow operation: ${name}`, {
+        duration: `${duration.toFixed(2)}ms`,
+      });
     } else {
       this.log('DEBUG', 'Performance', `${name}`, { duration: `${duration.toFixed(2)}ms` });
     }
@@ -355,14 +353,14 @@ export class DebugService {
    * Get logs filtered by level
    */
   getLogsByLevel(level: DebugLogEntry['level']): DebugLogEntry[] {
-    return this._logs().filter(l => l.level === level);
+    return this._logs().filter((l) => l.level === level);
   }
 
   /**
    * Get logs filtered by context
    */
   getLogsByContext(context: string): DebugLogEntry[] {
-    return this._logs().filter(l => l.context.toLowerCase().includes(context.toLowerCase()));
+    return this._logs().filter((l) => l.context.toLowerCase().includes(context.toLowerCase()));
   }
 
   /**
@@ -370,9 +368,8 @@ export class DebugService {
    */
   searchLogs(query: string): DebugLogEntry[] {
     const q = query.toLowerCase();
-    return this._logs().filter(l =>
-      l.message.toLowerCase().includes(q) ||
-      l.context.toLowerCase().includes(q)
+    return this._logs().filter(
+      (l) => l.message.toLowerCase().includes(q) || l.context.toLowerCase().includes(q),
     );
   }
 

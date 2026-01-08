@@ -41,10 +41,7 @@
     <div>
       <!-- Financial Health Alerts -->
       @if (healthCheck()?.alerts && healthCheck()!.alerts.length > 0) {
-        <ion-card
-          [color]="getHealthColor(healthCheck()?.profitability)"
-          class="mb-4"
-          >
+        <ion-card [color]="getHealthColor(healthCheck()?.profitability)" class="mb-4">
           <ion-card-header>
             <div class="flex items-center">
               <ion-icon
@@ -109,19 +106,19 @@
           [value]="dashboard()!.total_assets"
           icon="cash-outline"
           color="success"
-          />
+        />
         <app-kpi-card
           title="Total Pasivos"
           [value]="dashboard()!.total_liabilities"
           icon="document-text-outline"
           color="warning"
-          />
+        />
         <app-kpi-card
           title="Patrimonio"
           [value]="dashboard()!.total_equity"
           icon="business-outline"
           color="primary"
-          />
+        />
       </div>
       <!-- Ecuación Contable -->
       <ion-card [color]="accountingEquationVerified() ? 'success' : 'danger'" class="mb-6">
@@ -146,26 +143,26 @@
           [value]="dashboard()!.monthly_income"
           icon="arrow-down-circle-outline"
           color="success"
-          />
+        />
         <app-kpi-card
           title="Gastos Operativos"
           [value]="dashboard()!.monthly_expenses"
           icon="arrow-up-circle-outline"
           color="danger"
-          />
+        />
         <app-kpi-card
           title="Utilidad Neta"
           [value]="dashboard()!.monthly_profit"
           icon="trending-up-outline"
           [color]="(dashboard()!.monthly_profit || 0) >= 0 ? 'success' : 'danger'"
-          />
+        />
         <app-kpi-card
           title="Margen de Utilidad"
           [value]="profitMargin()"
           format="percent"
           icon="analytics-outline"
           [color]="profitMargin() >= 10 ? 'success' : profitMargin() >= 5 ? 'warning' : 'danger'"
-          />
+        />
       </div>
       <!-- Pasivos Específicos NIIF 15 & 37 -->
       <h2 class="text-xl font-bold mb-3 mt-6 font-satoshi">Pasivos Específicos (NIIF 15 & 37)</h2>
@@ -175,19 +172,19 @@
           [value]="dashboard()!.wallet_liability"
           icon="wallet-outline"
           color="tertiary"
-          />
+        />
         <app-kpi-card
           title="Provisión FGO"
           [value]="dashboard()!.fgo_provision"
           icon="shield-checkmark-outline"
           color="warning"
-          />
+        />
         <app-kpi-card
           title="Depósitos de Garantía"
           [value]="dashboard()!.active_security_deposits"
           icon="lock-closed-outline"
           color="primary"
-          />
+        />
       </div>
       <!-- Health Indicators -->
       <h2 class="text-xl font-bold mb-3 mt-6 font-satoshi">Indicadores de Salud Financiera</h2>
@@ -206,9 +203,9 @@
                   <h3 class="font-semibold font-satoshi">Conciliación Wallet</h3>
                   <p>
                     {{
-                    healthCheck()?.walletReconciled
-                    ? 'OK - Sin diferencias'
-                    : 'Error - Verificar conciliación'
+                      healthCheck()?.walletReconciled
+                        ? 'OK - Sin diferencias'
+                        : 'Error - Verificar conciliación'
                     }}
                   </p>
                 </ion-label>
@@ -224,9 +221,9 @@
                   <h3 class="font-semibold font-satoshi">Provisión FGO</h3>
                   <p>
                     {{
-                    healthCheck()?.fgoAdequate
-                    ? 'Adecuada (≥5% de depósitos)'
-                    : 'Insuficiente - Revisar'
+                      healthCheck()?.fgoAdequate
+                        ? 'Adecuada (≥5% de depósitos)'
+                        : 'Insuficiente - Revisar'
                     }}
                   </p>
                 </ion-label>
@@ -242,11 +239,11 @@
                   <h3 class="font-semibold font-satoshi font-luxury">Rentabilidad</h3>
                   <p>
                     {{
-                    healthCheck()?.profitability === 'GOOD'
-                    ? 'Buena (margen ≥5%)'
-                    : healthCheck()?.profitability === 'WARNING'
-                    ? 'Regular (margen <5%)'
-                    : 'Crítica (pérdidas)'
+                      healthCheck()?.profitability === 'GOOD'
+                        ? 'Buena (margen ≥5%)'
+                        : healthCheck()?.profitability === 'WARNING'
+                          ? 'Regular (margen <5%)'
+                          : 'Crítica (pérdidas)'
                     }}
                   </p>
                 </ion-label>

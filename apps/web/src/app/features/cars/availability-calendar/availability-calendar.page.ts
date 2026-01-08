@@ -1,5 +1,6 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import {AfterViewInit,
+import {
+  AfterViewInit,
   Component,
   computed,
   ElementRef,
@@ -8,7 +9,8 @@ import {AfterViewInit,
   PLATFORM_ID,
   signal,
   ViewChild,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { es } from 'date-fns/locale';

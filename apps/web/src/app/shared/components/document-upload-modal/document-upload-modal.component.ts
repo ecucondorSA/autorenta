@@ -1,5 +1,12 @@
-import {Component, EventEmitter, Input, Output, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { VerificationService } from '@core/services/verification/verification.service';
 
@@ -21,8 +28,8 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
     description: 'Sube el frente y dorso de tu licencia de conducir vigente',
     emoji: '🪪',
     hasFrontBack: true,
-    frontKind: 'license_front',  // DB enum: license_front
-    backKind: 'license_back',    // DB enum: license_back
+    frontKind: 'license_front', // DB enum: license_front
+    backKind: 'license_back', // DB enum: license_back
   },
   gov_id: {
     id: 'gov_id',
@@ -30,8 +37,8 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
     description: 'Sube el frente y dorso de tu documento de identidad',
     emoji: '🆔',
     hasFrontBack: true,
-    frontKind: 'gov_id_front',   // DB enum: gov_id_front
-    backKind: 'gov_id_back',     // DB enum: gov_id_back
+    frontKind: 'gov_id_front', // DB enum: gov_id_front
+    backKind: 'gov_id_back', // DB enum: gov_id_back
   },
   gov_id_front: {
     id: 'gov_id_front',
@@ -97,7 +104,12 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
             class="p-2 hover:bg-gray-100 rounded-full transition-colors"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -124,7 +136,9 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
                   }
                   @if (uploadingFront()) {
                     <div class="absolute inset-0 bg-white/80 flex items-center justify-center">
-                      <div class="animate-spin w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full"></div>
+                      <div
+                        class="animate-spin w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full"
+                      ></div>
                     </div>
                   }
                 </div>
@@ -154,7 +168,9 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
                   }
                   @if (uploadingBack()) {
                     <div class="absolute inset-0 bg-white/80 flex items-center justify-center">
-                      <div class="animate-spin w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full"></div>
+                      <div
+                        class="animate-spin w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full"
+                      ></div>
                     </div>
                   }
                 </div>
@@ -184,7 +200,9 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
                 }
                 @if (uploadingSingle()) {
                   <div class="absolute inset-0 bg-white/80 flex items-center justify-center">
-                    <div class="animate-spin w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full"></div>
+                    <div
+                      class="animate-spin w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full"
+                    ></div>
                   </div>
                 }
               </div>
@@ -200,9 +218,16 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
 
           <!-- Success Message -->
           @if (uploadSuccess()) {
-            <div class="mt-4 p-3 bg-green-50 text-green-700 rounded-lg text-sm flex items-center gap-2">
+            <div
+              class="mt-4 p-3 bg-green-50 text-green-700 rounded-lg text-sm flex items-center gap-2"
+            >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
               Documento subido correctamente
             </div>
@@ -217,8 +242,18 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
 
           <!-- Info -->
           <div class="mt-4 p-3 bg-blue-50 text-blue-700 rounded-lg text-sm flex items-start gap-2">
-            <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <svg
+              class="w-5 h-5 shrink-0 mt-0.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <span>Asegurate que la imagen sea clara, sin reflejos y que el texto sea legible.</span>
           </div>
@@ -296,9 +331,10 @@ export class DocumentUploadModalComponent {
       let kind: string;
       if (this.config?.hasFrontBack) {
         // Use explicit DB enum kinds if defined, otherwise fallback to generated
-        kind = position === 'front'
-          ? (this.config.frontKind ?? `${this.docType}_front`)
-          : (this.config.backKind ?? `${this.docType}_back`);
+        kind =
+          position === 'front'
+            ? (this.config.frontKind ?? `${this.docType}_front`)
+            : (this.config.backKind ?? `${this.docType}_back`);
       } else {
         kind = this.docType;
       }

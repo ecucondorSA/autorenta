@@ -161,7 +161,7 @@ export const appConfig: ApplicationConfig = {
         },
         // Use fallbackLang instead of deprecated defaultLanguage
         fallbackLang: 'es',
-      })
+      }),
     ),
     // ✅ Route Reuse Strategy - keeps Marketplace & Map in memory for instant navigation
     routeReuseStrategyProvider,
@@ -170,11 +170,11 @@ export const appConfig: ApplicationConfig = {
     // ✅ Performance Monitoring (solo en desarrollo)
     isDevMode()
       ? {
-        provide: APP_INITIALIZER,
-        useFactory: initializePerformanceMonitoring,
-        deps: [PerformanceMonitoringService, LoggerService],
-        multi: true,
-      }
+          provide: APP_INITIALIZER,
+          useFactory: initializePerformanceMonitoring,
+          deps: [PerformanceMonitoringService, LoggerService],
+          multi: true,
+        }
       : [],
     // ✅ Debug Service initialization (para e2e tests)
     // Siempre inicializar para exponer window.__AR_DEBUG__

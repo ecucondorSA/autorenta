@@ -1,5 +1,4 @@
-import {Component, inject, OnInit,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -24,9 +23,7 @@ import { ProfileContactSectionComponent } from '../components/sections/contact/p
   imports: [IonicModule, ProfileContactSectionComponent],
   template: `
     <ion-header>
-      <ion-toolbar
-        class="bg-surface-raised border-b border-border-default"
-        >
+      <ion-toolbar class="bg-surface-raised border-b border-border-default">
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
@@ -34,24 +31,20 @@ import { ProfileContactSectionComponent } from '../components/sections/contact/p
             class="text-text-primary"
           ></ion-back-button>
         </ion-buttons>
-        <ion-title class="text-text-primary">
-          Información de Contacto
-        </ion-title>
+        <ion-title class="text-text-primary"> Información de Contacto </ion-title>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content class="bg-surface-base">
       <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
         <!-- Header -->
         <div class="mb-6">
-          <h1 class="text-2xl font-bold text-text-primary mb-2">
-            Contacto y Dirección
-          </h1>
+          <h1 class="text-2xl font-bold text-text-primary mb-2">Contacto y Dirección</h1>
           <p class="text-sm text-text-secondary">
             Mantén tu información de contacto actualizada para una mejor comunicación.
           </p>
         </div>
-    
+
         <!-- Loading State -->
         @if (loading()) {
           <div class="flex justify-center py-12">
@@ -60,12 +53,12 @@ import { ProfileContactSectionComponent } from '../components/sections/contact/p
             ></div>
           </div>
         }
-    
+
         <!-- Contact Section Component -->
         @if (!loading()) {
           <app-profile-contact-section [profile]="profile()" />
         }
-    
+
         <!-- Help Text -->
         <div class="mt-8 p-4 rounded-lg bg-info-bg border border-info-border">
           <h4 class="text-sm font-semibold text-info-text mb-2 flex items-center gap-2">
@@ -75,7 +68,7 @@ import { ProfileContactSectionComponent } from '../components/sections/contact/p
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+              />
             </svg>
             ¿Por qué necesitamos esta información?
           </h4>
@@ -85,24 +78,24 @@ import { ProfileContactSectionComponent } from '../components/sections/contact/p
               <span
                 ><strong>Teléfono:</strong> Para coordinar entregas y devoluciones de
                 vehículos</span
-                >
-              </li>
-              <li class="flex gap-2">
-                <span>•</span>
-                <span><strong>WhatsApp:</strong> Comunicación rápida durante las reservas</span>
-              </li>
-              <li class="flex gap-2">
-                <span>•</span>
-                <span
-                  ><strong>Dirección:</strong> Para servicios de entrega a domicilio (cuando estén
-                  disponibles)</span
-                  >
-                </li>
-              </ul>
-            </div>
-          </div>
-        </ion-content>
-    `,
+              >
+            </li>
+            <li class="flex gap-2">
+              <span>•</span>
+              <span><strong>WhatsApp:</strong> Comunicación rápida durante las reservas</span>
+            </li>
+            <li class="flex gap-2">
+              <span>•</span>
+              <span
+                ><strong>Dirección:</strong> Para servicios de entrega a domicilio (cuando estén
+                disponibles)</span
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </ion-content>
+  `,
   styles: [
     `
       :host {

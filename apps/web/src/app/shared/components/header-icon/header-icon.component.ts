@@ -1,6 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
-
 /**
  * Componente de iconos SVG premium para el header.
  * Usa el sprite sheet dedicado header-icons.svg con iconos de alta calidad.
@@ -35,7 +34,9 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
       }
       svg {
         flex-shrink: 0;
-        transition: transform 0.15s ease, opacity 0.15s ease;
+        transition:
+          transform 0.15s ease,
+          opacity 0.15s ease;
       }
       :host:hover svg {
         transform: scale(1.05);

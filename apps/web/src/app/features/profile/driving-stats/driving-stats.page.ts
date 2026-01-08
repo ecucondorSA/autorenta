@@ -1,5 +1,11 @@
-import {Component, inject, signal, computed, OnInit,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  computed,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TelemetryService } from '@core/services/infrastructure/telemetry.service';

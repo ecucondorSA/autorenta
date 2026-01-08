@@ -1,7 +1,13 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule } from '@angular/common';
-import {Component, computed, inject, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -374,7 +380,10 @@ export class DepositPage implements OnInit {
     return {
       stage,
       message: errorMessage,
-      user_id: this.supabase.auth.getUser().then((u) => u.data.user?.id).catch(() => null),
+      user_id: this.supabase.auth
+        .getUser()
+        .then((u) => u.data.user?.id)
+        .catch(() => null),
       amount_ars: this.arsAmount(),
       amount_usd_cents: this.usdAmount(),
       transaction_id: transactionId,

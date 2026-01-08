@@ -1,5 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Injectable, signal, inject} from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { environment } from '@environment';
 
 export interface GeoLocation {
@@ -167,7 +167,9 @@ export class PublishCarLocationService {
       // Watch position and wait for good accuracy
       watchId = navigator.geolocation.watchPosition(
         (position) => {
-          this.logger.debug(`[Geolocation] Got position with accuracy: ${position.coords.accuracy}m`);
+          this.logger.debug(
+            `[Geolocation] Got position with accuracy: ${position.coords.accuracy}m`,
+          );
 
           // Keep the best (most accurate) position
           if (!bestPosition || position.coords.accuracy < bestPosition.coords.accuracy) {
@@ -178,7 +180,9 @@ export class PublishCarLocationService {
           if (position.coords.accuracy <= desiredAccuracy) {
             clearTimeout(timeoutId);
             cleanup();
-            this.logger.debug(`[Geolocation] ✅ Achieved target accuracy: ${position.coords.accuracy}m`);
+            this.logger.debug(
+              `[Geolocation] ✅ Achieved target accuracy: ${position.coords.accuracy}m`,
+            );
             resolve(position);
           }
         },

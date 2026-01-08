@@ -35,9 +35,9 @@ export class AuthService implements OnDestroy {
   }
 
   /**
-    * Supabase client (SSR-safe)
-    * - Browser: real client
-    * - SSR: stub client that returns empty results
+   * Supabase client (SSR-safe)
+   * - Browser: real client
+   * - SSR: stub client that returns empty results
    */
   private readonly state = signal<AuthState>({ session: null, loading: true });
   private restoreSessionPromise: Promise<void> | null = null;

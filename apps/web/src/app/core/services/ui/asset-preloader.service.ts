@@ -1,5 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Injectable, signal, inject} from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 
 /**
  * Asset Preloader Service
@@ -83,7 +83,9 @@ export class AssetPreloaderService {
     this._errors.set(errors);
     this._isPreloading.set(false);
 
-    this.logger.debug(`[Preloader] Complete. Errors: ${errors.length > 0 ? errors.join(', ') : 'none'}`);
+    this.logger.debug(
+      `[Preloader] Complete. Errors: ${errors.length > 0 ? errors.join(', ') : 'none'}`,
+    );
   }
 
   /**

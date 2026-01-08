@@ -6,7 +6,7 @@ describe('BiometricAuthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BiometricAuthService]
+      providers: [BiometricAuthService],
     });
     service = TestBed.inject(BiometricAuthService);
   });
@@ -26,5 +26,4 @@ describe('BiometricAuthService', () => {
   it('should have authenticatePayment method', () => {
     expect(typeof service.authenticatePayment).toBe('function');
   });
-
 });

@@ -1,10 +1,6 @@
 <!-- Mobile Menu Drawer - Bottom Sheet Style -->
 @if (isOpen()) {
-  <div
-    class="drawer-overlay"
-    (click)="onBackdropClick()"
-    aria-hidden="true">
-  </div>
+  <div class="drawer-overlay" (click)="onBackdropClick()" aria-hidden="true"></div>
 }
 
 @if (isOpen()) {
@@ -17,7 +13,8 @@
     aria-label="Menu de navegacion"
     (touchstart)="onTouchStart($event)"
     (touchmove)="onTouchMove($event)"
-    (touchend)="onTouchEnd($event)">
+    (touchend)="onTouchEnd($event)"
+  >
     <!-- Drag Handle -->
     <div class="drawer-handle" aria-hidden="true">
       <div class="drawer-handle__bar"></div>
@@ -30,13 +27,11 @@
             <img
               [src]="userProfile!.avatar_url"
               [alt]="userProfile?.full_name || 'Profile'"
-              class="drawer-header__avatar-img" />
+              class="drawer-header__avatar-img"
+            />
           }
           @if (!userProfile?.avatar_url) {
-            <app-menu-icon
-              name="user-circle"
-              [size]="28"
-              cssClass="text-gray-400" />
+            <app-menu-icon name="user-circle" [size]="28" cssClass="text-gray-400" />
           }
         </div>
         <div class="drawer-header__info">
@@ -47,11 +42,7 @@
           <p class="drawer-header__email">{{ userEmail() || '' }}</p>
         </div>
       </div>
-      <button
-        type="button"
-        class="drawer-header__close"
-        (click)="close()"
-        aria-label="Cerrar menu">
+      <button type="button" class="drawer-header__close" (click)="close()" aria-label="Cerrar menu">
         <app-menu-icon name="close" [size]="24" />
       </button>
     </div>
@@ -64,36 +55,32 @@
             {{ section.title }}
           </p>
           @for (item of section.items; track trackByItem($index, item)) {
-            <a
-              class="drawer-item group"
-              (click)="navigateAndClose(item.route)">
+            <a class="drawer-item group" (click)="navigateAndClose(item.route)">
               <div
                 class="drawer-item__icon"
-                [class]="section.iconBgColor + ' ' + section.iconTextColor + ' group-hover:opacity-80'">
+                [class]="
+                  section.iconBgColor + ' ' + section.iconTextColor + ' group-hover:opacity-80'
+                "
+              >
                 <app-menu-icon [name]="item.icon" [size]="20" />
               </div>
               <span class="drawer-item__label">{{ item.label }}</span>
               @if (item.badge) {
                 <span
                   class="drawer-item__badge"
-                  [class.drawer-item__badge--new]="item.badge === 'NEW'">
+                  [class.drawer-item__badge--new]="item.badge === 'NEW'"
+                >
                   {{ item.badge }}
                 </span>
               }
-              <app-menu-icon
-                name="chevron-right"
-                [size]="18"
-                cssClass="drawer-item__chevron" />
+              <app-menu-icon name="chevron-right" [size]="18" cssClass="drawer-item__chevron" />
             </a>
           }
         </div>
         <div class="drawer-divider"></div>
       }
       <!-- Sign Out Button -->
-      <button
-        type="button"
-        class="drawer-item drawer-item--logout group"
-        (click)="signOut()">
+      <button type="button" class="drawer-item drawer-item--logout group" (click)="signOut()">
         <div class="drawer-item__icon bg-red-500/10 text-red-600 group-hover:bg-red-500/20">
           <app-menu-icon name="logout" [size]="20" />
         </div>

@@ -13,7 +13,7 @@ registerLocaleData(localeEsAr);
 
 bootstrapApplication(AppComponent, {
   ...appConfig,
-  providers: [ ...(appConfig.providers ?? []), provideAnimations() ],
+  providers: [...(appConfig.providers ?? []), provideAnimations()],
 }).catch((err) => {
   console.error('Bootstrap failed', err);
 });

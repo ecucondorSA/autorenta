@@ -1,5 +1,12 @@
-import {Component, Input, Output, EventEmitter, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  signal,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { TranslateModule } from '@ngx-translate/core';
 import {

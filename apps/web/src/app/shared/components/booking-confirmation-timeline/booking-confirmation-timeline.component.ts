@@ -1,10 +1,19 @@
-
-import {Component, computed, inject, input, output, Signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  Signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
-import { BookingStateMachineService, BookingState } from '@core/services/bookings/booking-state-machine.service';
+import {
+  BookingStateMachineService,
+  BookingState,
+} from '@core/services/bookings/booking-state-machine.service';
 import { Booking } from '../../../core/models';
 
 /**

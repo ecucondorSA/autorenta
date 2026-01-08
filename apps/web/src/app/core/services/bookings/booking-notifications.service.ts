@@ -1,5 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Injectable, inject} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import type { Booking } from '@core/models';
 import { getErrorMessage } from '@core/utils/type-guards';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
@@ -171,7 +171,9 @@ export class BookingNotificationsService {
 
         default:
           // No notification for other status changes
-          this.logger.debug(`[BookingNotifications] No notification configured for status: ${newStatus}`);
+          this.logger.debug(
+            `[BookingNotifications] No notification configured for status: ${newStatus}`,
+          );
           break;
       }
     } catch (error) {
@@ -292,7 +294,11 @@ export class BookingNotificationsService {
         },
       });
     } catch (error) {
-      this.logger.warn('Error creating extension request notification', 'BookingNotifications', error);
+      this.logger.warn(
+        'Error creating extension request notification',
+        'BookingNotifications',
+        error,
+      );
     }
   }
 
@@ -322,7 +328,11 @@ export class BookingNotificationsService {
         },
       });
     } catch (error) {
-      this.logger.warn('Error creating extension rejection notification', 'BookingNotifications', error);
+      this.logger.warn(
+        'Error creating extension rejection notification',
+        'BookingNotifications',
+        error,
+      );
     }
   }
 

@@ -1,5 +1,12 @@
-import {Component, OnInit, signal, computed, inject,
-  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  signal,
+  computed,
+  inject,
+  ChangeDetectionStrategy,
+  DestroyRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { RouterLink } from '@angular/router';
@@ -56,17 +63,18 @@ export class StatsPage implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.dashboardService.getDashboardStats(false).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (stats) => {
-        this.stats.set(stats);
-        this.loading.set(false);
-      },
-      error: (_err) => {
-        this.error.set('No pudimos cargar las estadísticas. Intentá de nuevo.');
-        this.loading.set(false);
-      },
-    });
+    this.dashboardService
+      .getDashboardStats(false)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (stats) => {
+          this.stats.set(stats);
+          this.loading.set(false);
+        },
+        error: (_err) => {
+          this.error.set('No pudimos cargar las estadísticas. Intentá de nuevo.');
+          this.loading.set(false);
+        },
+      });
   }
 }

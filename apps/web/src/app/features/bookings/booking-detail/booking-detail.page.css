@@ -299,22 +299,22 @@
 
 .payment-summary-card--warning {
   border-color: #ffb648;
-  background: linear-gradient(135deg, rgba(255, 182, 72, 0.18), #E3E3E3);
+  background: linear-gradient(135deg, rgba(255, 182, 72, 0.18), #e3e3e3);
 }
 
 .payment-summary-card--success {
   border-color: #219653;
-  background: linear-gradient(135deg, rgba(33, 150, 83, 0.14), #E3E3E3);
+  background: linear-gradient(135deg, rgba(33, 150, 83, 0.14), #e3e3e3);
 }
 
 .payment-summary-card--neutral {
   border-color: #475569;
-  background: linear-gradient(135deg, rgba(71, 85, 105, 0.12), #E3E3E3);
+  background: linear-gradient(135deg, rgba(71, 85, 105, 0.12), #e3e3e3);
 }
 
 .payment-summary-card--danger {
   border-color: #dc4a55;
-  background: linear-gradient(135deg, rgba(220, 74, 85, 0.16), #E3E3E3);
+  background: linear-gradient(135deg, rgba(220, 74, 85, 0.16), #e3e3e3);
 }
 
 :host-context(.dark) .payment-summary-card {
@@ -334,12 +334,12 @@
 
 :host-context(.dark) .payment-summary-card--neutral {
   border-color: rgba(148, 163, 184, 0.45);
-  background: linear-gradient(135deg, rgba(71, 85, 105, 0.3), #2B2B2B);
+  background: linear-gradient(135deg, rgba(71, 85, 105, 0.3), #2b2b2b);
 }
 
 :host-context(.dark) .payment-summary-card--danger {
   border-color: rgba(220, 74, 85, 0.6);
-  background: linear-gradient(135deg, rgba(220, 74, 85, 0.32), #2B2B2B);
+  background: linear-gradient(135deg, rgba(220, 74, 85, 0.32), #2b2b2b);
 }
 
 :host-context(.dark) .payment-summary-card__label {
@@ -935,7 +935,7 @@
     background: #e2e8f0; /* slate-200 */
     z-index: 0;
   }
-  
+
   :host-context(.dark) .step:not(:last-child)::after {
     background: #334155; /* slate-700 */
   }
@@ -946,14 +946,14 @@
   .step:not(:last-child)::before {
     content: '';
     position: absolute;
-    top: 2.5rem; 
+    top: 2.5rem;
     left: 1.25rem; /* Center of 2.5rem circle */
     width: 2px;
     height: calc(100% - 10px);
     background: #e2e8f0;
     z-index: 0;
   }
-  
+
   :host-context(.dark) .step:not(:last-child)::before {
     background: #334155;
   }
@@ -1026,7 +1026,9 @@
 }
 
 .step-desc {
-  transition: opacity 0.2s ease, max-height 0.3s ease;
+  transition:
+    opacity 0.2s ease,
+    max-height 0.3s ease;
 }
 
 /* Indicadores de pasos ocultos */

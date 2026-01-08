@@ -45,17 +45,27 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WV2PWTKG2E"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
       gtag('config', 'G-WV2PWTKG2E', {
         send_page_view: true,
-        cookie_flags: 'SameSite=None;Secure'
+        cookie_flags: 'SameSite=None;Secure',
       });
     </script>
 
     <!-- Ionicons - Loaded async to not block LCP -->
-    <script type="module" async src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule async src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script
+      type="module"
+      async
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      async
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -148,14 +158,12 @@
 
   <body>
     <!-- Skip Link - Accessibility (WCAG 2.4.1) -->
-    <a href="#main-content" class="skip-link">
-      Saltar al contenido principal
-    </a>
+    <a href="#main-content" class="skip-link"> Saltar al contenido principal </a>
 
     <!-- Runtime environment configuration (loaded before Angular) -->
     <!-- Inline fetch+eval workaround for Vite dev server script execution bug -->
     <script>
-      (function() {
+      (function () {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', '/env.js?v=' + Date.now(), false); // Synchronous
         xhr.send();
@@ -168,52 +176,81 @@
     <!-- Debug API stub for e2e tests - populated by DebugService -->
     <script>
       // Early stub for e2e tests - DebugService will replace this with full implementation
-      if (new URLSearchParams(window.location.search).get('debug') === '1' ||
-          localStorage.getItem('autorentar_debug') === 'true') {
+      if (
+        new URLSearchParams(window.location.search).get('debug') === '1' ||
+        localStorage.getItem('autorentar_debug') === 'true'
+      ) {
         window.__AR_DEBUG__ = window.__AR_DEBUG__ || {
           _logs: [],
           _httpLogs: [],
           _isEnabled: true,
-          getLogs: function() { return this._logs; },
-          getHttpLogs: function() { return this._httpLogs; },
-          getLogsByContext: function(ctx) {
-            return this._logs.filter(function(l) {
+          getLogs: function () {
+            return this._logs;
+          },
+          getHttpLogs: function () {
+            return this._httpLogs;
+          },
+          getLogsByContext: function (ctx) {
+            return this._logs.filter(function (l) {
               return l.context && l.context.toLowerCase().includes(ctx.toLowerCase());
             });
           },
-          getLogsByLevel: function(level) {
-            return this._logs.filter(function(l) { return l.level === level; });
+          getLogsByLevel: function (level) {
+            return this._logs.filter(function (l) {
+              return l.level === level;
+            });
           },
-          getErrorCount: function() {
-            return this._logs.filter(function(l) {
+          getErrorCount: function () {
+            return this._logs.filter(function (l) {
               return l.level === 'ERROR' || l.level === 'CRITICAL';
             }).length;
           },
-          getWarnCount: function() {
-            return this._logs.filter(function(l) { return l.level === 'WARN'; }).length;
+          getWarnCount: function () {
+            return this._logs.filter(function (l) {
+              return l.level === 'WARN';
+            }).length;
           },
-          isEnabled: function() { return this._isEnabled; },
-          enable: function() { this._isEnabled = true; localStorage.setItem('autorentar_debug', 'true'); },
-          disable: function() { this._isEnabled = false; localStorage.removeItem('autorentar_debug'); },
-          clear: function() { this._logs = []; this._httpLogs = []; },
-          exportLogs: function() {
-            return JSON.stringify({
-              exportTime: new Date().toISOString(),
-              logs: this._logs,
-              httpLogs: this._httpLogs
-            }, null, 2);
+          isEnabled: function () {
+            return this._isEnabled;
+          },
+          enable: function () {
+            this._isEnabled = true;
+            localStorage.setItem('autorentar_debug', 'true');
+          },
+          disable: function () {
+            this._isEnabled = false;
+            localStorage.removeItem('autorentar_debug');
+          },
+          clear: function () {
+            this._logs = [];
+            this._httpLogs = [];
+          },
+          exportLogs: function () {
+            return JSON.stringify(
+              {
+                exportTime: new Date().toISOString(),
+                logs: this._logs,
+                httpLogs: this._httpLogs,
+              },
+              null,
+              2,
+            );
           },
           // Stub method - DebugService will add entries via _addLog
-          _addLog: function(entry) { this._logs.push(entry); },
-          _addHttpLog: function(entry) { this._httpLogs.push(entry); },
+          _addLog: function (entry) {
+            this._logs.push(entry);
+          },
+          _addHttpLog: function (entry) {
+            this._httpLogs.push(entry);
+          },
           sessionInfo: {
             startTime: new Date(),
             userAgent: navigator.userAgent,
             platform: navigator.platform,
             language: navigator.language,
             screenSize: window.innerWidth + 'x' + window.innerHeight,
-            environment: 'development'
-          }
+            environment: 'development',
+          },
         };
         console.log('[AR] Debug API stub initialized');
       }

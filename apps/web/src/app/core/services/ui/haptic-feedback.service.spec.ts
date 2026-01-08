@@ -6,7 +6,7 @@ describe('HapticFeedbackService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [HapticFeedbackService]
+      providers: [HapticFeedbackService],
     });
     service = TestBed.inject(HapticFeedbackService);
   });
@@ -54,5 +54,4 @@ describe('HapticFeedbackService', () => {
   it('should have isAvailable method', () => {
     expect(typeof service.isAvailable).toBe('function');
   });
-
 });

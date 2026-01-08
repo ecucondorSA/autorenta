@@ -303,7 +303,9 @@ export class BookingRealtimeService implements OnDestroy {
   unsubscribeUserBookings(): void {
     if (this.userChannels.length === 0) return;
 
-    this.logger.debug(`[BookingRealtime] Unsubscribing from ${this.userChannels.length} user channels`);
+    this.logger.debug(
+      `[BookingRealtime] Unsubscribing from ${this.userChannels.length} user channels`,
+    );
 
     for (const channel of this.userChannels) {
       this.realtimeConnection.unsubscribe(channel.topic);

@@ -2,22 +2,20 @@
   <!-- Header -->
   <div class="mb-6">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-2xl font-bold text-text-primary font-satoshi">
-        Calendario Multi-Auto
-      </h2>
+      <h2 class="text-2xl font-bold text-text-primary font-satoshi">Calendario Multi-Auto</h2>
       <div class="flex items-center gap-2">
         @if (selectedCars().length > 0) {
           <button
             (click)="showBlockModal.set(true)"
             class="px-4 py-2 bg-cta-default text-cta-text rounded-xl hover:bg-cta-default/90 transition-all font-medium flex items-center gap-2"
-            >
+          >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M12 4v16m8-8H4"
-                />
+              />
             </svg>
             Bloquear en {{ selectedCars().length }} auto(s)
           </button>
@@ -27,27 +25,19 @@
 
     <!-- Stats -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <div
-        class="bg-surface-raised rounded-xl p-4 border border-border-default"
-        >
+      <div class="bg-surface-raised rounded-xl p-4 border border-border-default">
         <p class="text-sm text-text-secondary">Total Autos</p>
         <p class="text-2xl font-bold text-cta-default mt-1">{{ stats().total }}</p>
       </div>
-      <div
-        class="bg-surface-raised rounded-xl p-4 border border-border-default"
-        >
+      <div class="bg-surface-raised rounded-xl p-4 border border-border-default">
         <p class="text-sm text-text-secondary">Con Reservas</p>
         <p class="text-2xl font-bold text-success-strong mt-1">{{ stats().withBookings }}</p>
       </div>
-      <div
-        class="bg-surface-raised rounded-xl p-4 border border-border-default"
-        >
+      <div class="bg-surface-raised rounded-xl p-4 border border-border-default">
         <p class="text-sm text-text-secondary">Con Bloqueos</p>
         <p class="text-2xl font-bold text-error-text mt-1">{{ stats().withBlocks }}</p>
       </div>
-      <div
-        class="bg-surface-raised rounded-xl p-4 border border-border-default"
-        >
+      <div class="bg-surface-raised rounded-xl p-4 border border-border-default">
         <p class="text-sm text-text-secondary">Totalmente Disponibles</p>
         <p class="text-2xl font-bold text-cta-default mt-1">{{ stats().fullyAvailable }}</p>
       </div>
@@ -56,7 +46,7 @@
     <!-- Selection Controls -->
     <div
       class="flex items-center justify-between p-4 bg-surface-raised rounded-xl border border-border-default"
-      >
+    >
       <div class="flex items-center gap-4">
         <span class="text-sm text-text-secondary">
           {{ selectedCars().length }} de {{ cars().length }} seleccionados
@@ -64,14 +54,11 @@
         <button
           (click)="selectAllCars()"
           class="text-sm text-cta-default hover:underline font-medium"
-          >
+        >
           Seleccionar Todos
         </button>
         @if (selectedCars().length > 0) {
-          <button
-            (click)="deselectAllCars()"
-            class="text-sm text-text-secondary hover:underline"
-            >
+          <button (click)="deselectAllCars()" class="text-sm text-text-secondary hover:underline">
             Deseleccionar Todos
           </button>
         }
@@ -83,49 +70,47 @@
           (click)="previousMonth()"
           class="p-2 rounded-lg hover:bg-surface-secondary transition-colors"
           aria-label="Mes anterior"
-          >
+        >
           <svg
             class="w-5 h-5 text-text-primary"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M15 19l-7-7 7-7"
-              />
+            />
           </svg>
         </button>
-        <span
-          class="text-sm font-medium text-text-primary capitalize min-w-[120px] text-center"
-          >
+        <span class="text-sm font-medium text-text-primary capitalize min-w-[120px] text-center">
           {{ monthName() }}
         </span>
         <button
           (click)="nextMonth()"
           class="p-2 rounded-lg hover:bg-surface-secondary transition-colors"
           aria-label="Mes siguiente"
-          >
+        >
           <svg
             class="w-5 h-5 text-text-primary"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M9 5l7 7-7 7"
-              />
+            />
           </svg>
         </button>
         <button
           (click)="goToToday()"
           class="ml-2 px-3 py-1.5 text-sm font-medium text-cta-default hover:bg-cta-default/10 rounded-lg transition-colors"
-          >
+        >
           Hoy
         </button>
       </div>
@@ -152,7 +137,7 @@
           class="bg-surface-raised rounded-2xl border-2 transition-all"
           [class.border-cta-default]="car.selected"
           [class.border-border-default]="!car.selected"
-          >
+        >
           <!-- Car Header -->
           <div class="p-4 border-b border-border-default">
             <div class="flex items-start gap-3">
@@ -161,14 +146,12 @@
                 [checked]="car.selected"
                 (change)="toggleCarSelection(car.carId)"
                 class="mt-1 w-5 h-5 text-cta-default border-border-default rounded focus:ring-cta-default cursor-pointer"
-                />
+              />
               <div class="flex-1 min-w-0">
                 <h3 class="font-semibold text-text-primary truncate font-satoshi">
                   {{ car.carTitle }}
                 </h3>
-                <div
-                  class="flex items-center gap-2 mt-1 text-xs text-text-secondary"
-                  >
+                <div class="flex items-center gap-2 mt-1 text-xs text-text-secondary">
                   <span class="flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-success-light"></span>
                     {{ getBookingsCount(car) }} reservas
@@ -183,20 +166,20 @@
                 (click)="goToCarCalendar(car.carId)"
                 class="text-cta-default hover:bg-cta-default/10 p-2 rounded-lg transition-colors"
                 title="Ver calendario completo"
-                >
+              >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
+                  />
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                    />
+                  />
                 </svg>
               </button>
             </div>
@@ -205,9 +188,7 @@
           <div class="p-4">
             <div class="grid grid-cols-7 gap-1 mb-2">
               @for (day of ['D', 'L', 'M', 'M', 'J', 'V', 'S']; track day) {
-                <div
-                  class="text-center text-xs font-semibold text-text-secondary"
-                  >
+                <div class="text-center text-xs font-semibold text-text-secondary">
                   {{ day }}
                 </div>
               }
@@ -216,15 +197,15 @@
               @for (day of monthDays(); track day) {
                 <div
                   class="aspect-square flex items-center justify-center text-xs rounded-lg transition-all"
-            [ngClass]="{
-              'bg-success-light text-text-primary font-medium': getDayStatus(car, day) === 'booked',
-              'bg-error-bg0 text-text-inverse font-medium': getDayStatus(car, day) === 'blocked',
-              'bg-surface-hover text-text-muted':
-                getDayStatus(car, day) === 'past',
-              'hover:bg-surface-secondary':
-                getDayStatus(car, day) === 'available',
-            }"
-                  >
+                  [ngClass]="{
+                    'bg-success-light text-text-primary font-medium':
+                      getDayStatus(car, day) === 'booked',
+                    'bg-error-bg0 text-text-inverse font-medium':
+                      getDayStatus(car, day) === 'blocked',
+                    'bg-surface-hover text-text-muted': getDayStatus(car, day) === 'past',
+                    'hover:bg-surface-secondary': getDayStatus(car, day) === 'available',
+                  }"
+                >
                   {{ day.getDate() }}
                 </div>
               }
@@ -243,13 +224,13 @@
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
-        >
+      >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
+        />
       </svg>
       <h3 class="mt-4 text-xl font-semibold text-text-primary font-satoshi">
         No tienes autos activos
@@ -267,5 +248,5 @@
     [hasMultipleCars]="true"
     (closeModal)="showBlockModal.set(false)"
     (blockDates)="handleBulkBlockDates($event)"
-    />
+  />
 </div>

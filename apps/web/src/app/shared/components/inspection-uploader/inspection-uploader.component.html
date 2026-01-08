@@ -62,7 +62,10 @@
       <div class="photo-grid">
         @for (photo of photos(); track photo.url; let i = $index) {
           <div class="photo-item">
-            <img [src]="photo.url" [alt]="'Foto de inspección del vehículo ' + (i + 1) + ' de ' + photos().length" />
+            <img
+              [src]="photo.url"
+              [alt]="'Foto de inspección del vehículo ' + (i + 1) + ' de ' + photos().length"
+            />
             <button class="remove-photo" (click)="removePhoto(i)" [disabled]="saving()">
               <app-icon name="trash" [size]="18" />
             </button>
@@ -123,12 +126,16 @@
   @if (showPhotoWarning()) {
     <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
       <div class="flex items-start gap-3">
-        <app-icon name="alert-triangle" [size]="20" cssClass="text-amber-600 flex-shrink-0 mt-0.5" />
+        <app-icon
+          name="alert-triangle"
+          [size]="20"
+          cssClass="text-amber-600 flex-shrink-0 mt-0.5"
+        />
         <div>
           <p class="font-medium text-amber-800">Advertencia: Sin fotos documentadas</p>
           <p class="text-sm text-amber-700 mt-1">
-            Continuar sin fotos significa asumir el riesgo en caso de disputas.
-            Recomendamos subir al menos 8 fotos del vehículo para proteger tus intereses.
+            Continuar sin fotos significa asumir el riesgo en caso de disputas. Recomendamos subir
+            al menos 8 fotos del vehículo para proteger tus intereses.
           </p>
         </div>
       </div>

@@ -9,12 +9,12 @@
   --ion-color-primary-tint: #a7d8f4;
 
   /** Neon Green - Alto Impacto (synced with colors.ts accent.neon) */
-  --ion-color-neon: #00D95F;
+  --ion-color-neon: #00d95f;
   --ion-color-neon-rgb: 0, 217, 95;
   --ion-color-neon-contrast: #000000;
   --ion-color-neon-contrast-rgb: 0, 0, 0;
-  --ion-color-neon-shade: #00C553;
-  --ion-color-neon-tint: #00D95F;
+  --ion-color-neon-shade: #00c553;
+  --ion-color-neon-tint: #00d95f;
 
   /** Secondary - surface secondary */
   --ion-color-secondary: #dfd2bf;
@@ -49,7 +49,7 @@
   --ion-color-danger-tint: #dfd2bf;
 
   /** Dark */
-  --ion-color- #050505;
+  --ion-color-dark: #050505;
   --ion-color-dark-rgb: 5, 5, 5;
   --ion-color-dark-contrast: #f8f4ec;
   --ion-color-dark-contrast-rgb: 248, 244, 236;

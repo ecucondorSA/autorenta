@@ -26,8 +26,8 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
    * Add route paths here (without leading slash)
    */
   private readonly routesToCache = new Set([
-    '',           // Marketplace with 3D model
-    'cars/list',  // Cars list with Mapbox map
+    '', // Marketplace with 3D model
+    'cars/list', // Cars list with Mapbox map
   ]);
 
   /**
@@ -47,8 +47,8 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
   private getPath(route: ActivatedRouteSnapshot): string {
     // Build full path from route tree
     const path = route.pathFromRoot
-      .filter(r => r.url.length > 0)
-      .map(r => r.url.map(segment => segment.path).join('/'))
+      .filter((r) => r.url.length > 0)
+      .map((r) => r.url.map((segment) => segment.path).join('/'))
       .join('/');
     return path;
   }

@@ -328,14 +328,14 @@ export class BookingPaymentPage implements OnInit {
     this.bonusMalusLoading.set(true);
     try {
       const result = await this.bonusMalusService.applyBonusMalusToDeposit(
-        bookingData.deposit_amount_cents
+        bookingData.deposit_amount_cents,
       );
       this.bonusMalusData.set(result);
 
       // Log for debugging
       if (result.savings > 0) {
         this.logger.debug(
-          `[BookingPayment] Bonus-malus applied: factor=${result.factor}, savings=${result.savings / 100} USD`
+          `[BookingPayment] Bonus-malus applied: factor=${result.factor}, savings=${result.savings / 100} USD`,
         );
       }
     } catch (error) {
@@ -344,7 +344,7 @@ export class BookingPaymentPage implements OnInit {
       // User can still proceed with payment but won't get potential discount
       this.toastService.warning(
         'Aviso',
-        'No pudimos calcular tu descuento de reputación. Se aplicará el depósito estándar.'
+        'No pudimos calcular tu descuento de reputación. Se aplicará el depósito estándar.',
       );
       // Continue without bonus-malus adjustment - user pays full deposit
     } finally {
@@ -405,7 +405,10 @@ export class BookingPaymentPage implements OnInit {
       .subscribe({
         next: async (response) => {
           if (!response.success) {
-            this.toastService.error('Error de pago', response.message || 'No se pudo bloquear los fondos');
+            this.toastService.error(
+              'Error de pago',
+              response.message || 'No se pudo bloquear los fondos',
+            );
             return;
           }
 

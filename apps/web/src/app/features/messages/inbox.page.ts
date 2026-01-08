@@ -1,7 +1,13 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
-import {Component, OnDestroy, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import type { ConversationDTO } from '@core/repositories/messages.repository';
@@ -70,7 +76,11 @@ import { UnreadMessagesService } from '@core/services/bookings/unread-messages.s
           </div>
         } @else if (conversations().length === 0) {
           <div class="empty-state">
-            <img src="/assets/images/empty-states/empty-messages.svg" alt="No hay mensajes" class="w-48 h-48 mx-auto mb-4">
+            <img
+              src="/assets/images/empty-states/empty-messages.svg"
+              alt="No hay mensajes"
+              class="w-48 h-48 mx-auto mb-4"
+            />
             <h3 class="empty-title">No hay mensajes</h3>
             <p class="empty-subtitle">Cuando recibas mensajes aparecerán aquí</p>
           </div>

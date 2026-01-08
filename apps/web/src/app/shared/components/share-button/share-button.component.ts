@@ -1,5 +1,4 @@
-import {Component, Input, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, Input, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { ShareService } from '@core/services/ui/share.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';

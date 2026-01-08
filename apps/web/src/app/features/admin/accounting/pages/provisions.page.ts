@@ -1,5 +1,4 @@
-import {Component, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { IonicModule } from '@ionic/angular';
 import { AccountingService, ProvisionDetail } from '@core/services/payments/accounting.service';
@@ -18,7 +17,7 @@ import { AccountingService, ProvisionDetail } from '@core/services/payments/acco
         <ion-title>Provisiones NIIF 37</ion-title>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content class="ion-padding">
       @if (provisions().length > 0) {
         <ion-list>
@@ -36,7 +35,7 @@ import { AccountingService, ProvisionDetail } from '@core/services/payments/acco
         </ion-list>
       }
     </ion-content>
-    `,
+  `,
 })
 export class ProvisionsPage implements OnInit {
   private readonly accountingService = inject(AccountingService);

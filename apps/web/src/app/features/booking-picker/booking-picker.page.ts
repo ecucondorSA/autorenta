@@ -1,6 +1,4 @@
-
-import {Component, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { format, parseISO } from 'date-fns';
 

@@ -48,16 +48,13 @@ import { BreakpointService } from '@core/services/ui/breakpoint.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
 
-
 import { AssetPreloaderService } from '@core/services/ui/asset-preloader.service';
 import { CarLatestLocation, CarLocationService } from '@core/services/geo/car-location.service';
 import { MapboxPreloaderService } from '@core/services/geo/mapbox-preloader.service';
 import { SeoSchemaService } from '@core/services/ui/seo-schema.service';
 import { ThemeService } from '@core/services/ui/theme.service';
 import type { DateRange, LatLngBoundsLiteral, Stat } from '@core/models/marketplace.model';
-import {
-  DateRangePickerComponent,
-} from '../../shared/components/date-range-picker/date-range-picker.component';
+import { DateRangePickerComponent } from '../../shared/components/date-range-picker/date-range-picker.component';
 import { HdriBackgroundComponent } from '../../shared/components/hdri-background/hdri-background.component';
 import { Car } from '../../core/models';
 
@@ -128,18 +125,18 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   // Calculator State - Business Simulator Logic
   readonly calculatorCarValue = signal(15000000); // Valor de mercado
   readonly calculatorDays = signal(12); // Días disponibles (Default: Fines de semana + extras)
-  
+
   // New: Financing Logic
   readonly isFinanced = signal(false); // ¿Paga cuota?
   readonly monthlyQuota = signal(350000); // Cuota promedio ARS
 
   // Constants for calculation
   private readonly CALC_CONSTANTS = {
-    dailyRateFactor: 0.0035,    // 0.35% del valor del auto (Ajustado a inflación)
-    platformFee: 0.15,          // 15% comisión
-    avgWashCost: 8000,          // Costo lavado ARS
-    insuranceAvg: 60000,        // Seguro promedio mensual ARS
-    maxDailyRateArs: 120000     // Tope razonable por día
+    dailyRateFactor: 0.0035, // 0.35% del valor del auto (Ajustado a inflación)
+    platformFee: 0.15, // 15% comisión
+    avgWashCost: 8000, // Costo lavado ARS
+    insuranceAvg: 60000, // Seguro promedio mensual ARS
+    maxDailyRateArs: 120000, // Tope razonable por día
   };
 
   readonly calculatorEstimate = computed(() => {
@@ -159,7 +156,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     // 3. Calcular Costos Operativos Visibles
     const platformFee = grossIncome * this.CALC_CONSTANTS.platformFee;
     // Estimamos 1 lavado cada 3 días de uso
-    const estimatedWashes = Math.ceil(days / 3) * this.CALC_CONSTANTS.avgWashCost; 
+    const estimatedWashes = Math.ceil(days / 3) * this.CALC_CONSTANTS.avgWashCost;
     // Seguro proporcional al uso (o fijo mensual, usamos fijo para ser conservadores/realistas)
     const insuranceCost = this.CALC_CONSTANTS.insuranceAvg;
 
@@ -182,10 +179,12 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       } else {
         // Cuántos días faltan para cubrir
         // Profit por día extra = tarifa - comisión - lavado/3
-        const profitPerDay = estimatedDailyRate * (1 - this.CALC_CONSTANTS.platformFee) - (this.CALC_CONSTANTS.avgWashCost / 3);
+        const profitPerDay =
+          estimatedDailyRate * (1 - this.CALC_CONSTANTS.platformFee) -
+          this.CALC_CONSTANTS.avgWashCost / 3;
         const missing = Math.abs(balance);
         const missingDays = Math.ceil(missing / profitPerDay);
-        
+
         financingMessage = `Cubres el ${Math.round(coveragePercent)}% de la cuota. Comparte ${missingDays} días más para que se pague solo.`;
         healthScore = 'yellow';
       }
@@ -204,8 +203,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       breakdown: {
         platformFee,
         insurance: insuranceCost,
-        washes: estimatedWashes
-      }
+        washes: estimatedWashes,
+      },
     };
   });
 
@@ -223,21 +222,24 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       avatar: '/assets/images/avatars/avatar-2.jpg', // Martín (Hombre 40s)
       name: 'Martín',
       location: 'Buenos Aires',
-      quote: 'Empecé para pagar el seguro y ahora pago la cuota completa del auto. Es increíble que antes perdía plata teniéndolo estacionado.',
+      quote:
+        'Empecé para pagar el seguro y ahora pago la cuota completa del auto. Es increíble que antes perdía plata teniéndolo estacionado.',
       earnings: 450000,
     },
     {
       avatar: '/assets/images/avatars/avatar-1.jpg', // Sofía (Mujer joven)
       name: 'Sofía',
       location: 'Córdoba',
-      quote: 'Lo uso para ir al trabajo y lo comparto los fines de semana. Con eso cubro el mantenimiento y me sobra para ahorrar.',
+      quote:
+        'Lo uso para ir al trabajo y lo comparto los fines de semana. Con eso cubro el mantenimiento y me sobra para ahorrar.',
       earnings: 280000,
     },
     {
       avatar: '/assets/images/avatars/avatar-3.jpg', // Carlos (Hombre joven)
       name: 'Carlos',
       location: 'Rosario',
-      quote: 'Tengo una camioneta que uso poco. La puse en la plataforma y se convirtió en mi mejor inversión del año.',
+      quote:
+        'Tengo una camioneta que uso poco. La puse en la plataforma y se convirtió en mi mejor inversión del año.',
       earnings: 820000,
     },
   ];
@@ -381,9 +383,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     }
   }
 
-
-
-
   // Computed - Ahora usa BreakpointService
   readonly isMobile = this.breakpoint.isMobile;
   readonly isTablet = this.breakpoint.isTablet;
@@ -497,7 +496,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     const generatedIds = this.generatedPhotoIds(); // Obtener el Set de IDs
 
     // 1. Filtrar solo autos con fotos IA generadas
-    cars = cars.filter(car => generatedIds.has(car.id));
+    cars = cars.filter((car) => generatedIds.has(car.id));
 
     // Client-only filters (can't be done server-side due to nested relations)
     if (quickFilters.has('verified')) {
@@ -592,9 +591,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // SEO Meta Tags
-    this.titleService.setTitle(
-      'Autorentar | Alquiler de Autos entre Personas - Renta Segura',
-    );
+    this.titleService.setTitle('Autorentar | Alquiler de Autos entre Personas - Renta Segura');
     this.meta.updateTag({
       name: 'description',
       content:
@@ -605,7 +602,10 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       content:
         'alquiler autos, renta de autos, alquiler sin tarjeta, autos particulares, alquiler entre personas, Argentina',
     });
-    this.meta.updateTag({ property: 'og:title', content: 'Autorentar - Alquiler de Autos entre Personas' });
+    this.meta.updateTag({
+      property: 'og:title',
+      content: 'Autorentar - Alquiler de Autos entre Personas',
+    });
     this.meta.updateTag({
       property: 'og:description',
       content: 'Conectamos personas con vehículos verificados. Sin intermediarios, 100% asegurado.',
@@ -659,7 +659,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     try {
       const response = await fetch('/assets/generated_photos_manifest.json');
       if (!response.ok) {
-        console.warn('No se encontró generated_photos_manifest.json. Posiblemente no se han generado fotos IA.');
+        console.warn(
+          'No se encontró generated_photos_manifest.json. Posiblemente no se han generado fotos IA.',
+        );
         return;
       }
       const ids: string[] = await response.json();
@@ -819,9 +821,12 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
         if (error) throw error;
         const carsData = (data as Car[]) || [];
-        
+
         // DEBUG: Listar autos para generar fotos correctas
-        this.logger.debug('🚗 AUTOS EN GRID:', carsData.map(c => `${c.id}: ${c.brand_text_backup} ${c.model_text_backup}`));
+        this.logger.debug(
+          '🚗 AUTOS EN GRID:',
+          carsData.map((c) => `${c.id}: ${c.brand_text_backup} ${c.model_text_backup}`),
+        );
 
         this.cars.set(carsData);
         await this.loadLatestLocationsFor(carsData);

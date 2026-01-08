@@ -6,7 +6,7 @@ describe('ExternalNavigationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ExternalNavigationService]
+      providers: [ExternalNavigationService],
     });
     service = TestBed.inject(ExternalNavigationService);
   });
@@ -18,5 +18,4 @@ describe('ExternalNavigationService', () => {
   it('should have redirect method', () => {
     expect(typeof service.redirect).toBe('function');
   });
-
 });

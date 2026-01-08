@@ -1,5 +1,4 @@
-import {Component, EventEmitter, Input, Output,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import type { WithdrawalRequest, WithdrawalStatus } from '@core/models/wallet.model';

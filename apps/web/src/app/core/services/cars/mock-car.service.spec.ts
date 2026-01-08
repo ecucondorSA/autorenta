@@ -6,7 +6,7 @@ describe('MockCarService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MockCarService]
+      providers: [MockCarService],
     });
     service = TestBed.inject(MockCarService);
   });
@@ -22,5 +22,4 @@ describe('MockCarService', () => {
   it('should have getCar method', () => {
     expect(typeof service.getCar).toBe('function');
   });
-
 });

@@ -104,7 +104,9 @@ export class OwnerBookingDetailPage implements OnInit, OnDestroy {
   readonly driverClass = computed(() => this.renterVerification()?.driver_class ?? null);
   readonly classDescription = computed(() => this.renterVerification()?.class_description ?? null);
   readonly feeMultiplier = computed(() => this.renterVerification()?.fee_multiplier ?? null);
-  readonly guaranteeMultiplier = computed(() => this.renterVerification()?.guarantee_multiplier ?? null);
+  readonly guaranteeMultiplier = computed(
+    () => this.renterVerification()?.guarantee_multiplier ?? null,
+  );
 
   readonly renterPhone = computed(() => this.renterVerification()?.phone ?? null);
   readonly renterWhatsApp = computed(() => this.renterVerification()?.whatsapp ?? null);
@@ -116,7 +118,9 @@ export class OwnerBookingDetailPage implements OnInit, OnDestroy {
   readonly renterLicenseExpiry = computed(
     () => this.renterVerification()?.driver_license_expiry ?? null,
   );
-  readonly renterLicenseClass = computed(() => this.renterVerification()?.driver_license_class ?? null);
+  readonly renterLicenseClass = computed(
+    () => this.renterVerification()?.driver_license_class ?? null,
+  );
   readonly renterLicenseProfessional = computed(
     () => this.renterVerification()?.driver_license_professional ?? null,
   );

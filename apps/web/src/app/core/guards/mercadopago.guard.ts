@@ -20,10 +20,7 @@ export const MercadoPagoGuard: CanMatchFn = async () => {
       return true;
     }
 
-    logger.warn(
-      'User attempted to access without MercadoPago connected',
-      'MercadoPagoGuard',
-    );
+    logger.warn('User attempted to access without MercadoPago connected', 'MercadoPagoGuard');
 
     // Usuario no puede publicar autos sin MercadoPago conectado
     return router.createUrlTree(['/profile/mercadopago-connect'], {

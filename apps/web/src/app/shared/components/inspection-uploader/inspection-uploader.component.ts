@@ -1,5 +1,5 @@
-
-import {Component,
+import {
+  Component,
   EventEmitter,
   Input,
   OnInit,
@@ -7,13 +7,10 @@ import {Component,
   computed,
   inject,
   signal,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import {
-  BookingInspection,
-  InspectionPhoto,
-  InspectionStage,
-} from '@core/models/fgo-v1-1.model';
+import { BookingInspection, InspectionPhoto, InspectionStage } from '@core/models/fgo-v1-1.model';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import {
@@ -76,9 +73,7 @@ export class InspectionUploaderComponent implements OnInit {
   // Computed properties
   readonly isValid = computed(() => {
     // Photos are optional - users assume risk for disputes if no photos
-    return (
-      this.odometer() > 0 && this.fuelLevel() >= 0 && this.fuelLevel() <= 100
-    );
+    return this.odometer() > 0 && this.fuelLevel() >= 0 && this.fuelLevel() <= 100;
   });
 
   readonly hasMinPhotos = computed(() => this.photos().length >= 8);

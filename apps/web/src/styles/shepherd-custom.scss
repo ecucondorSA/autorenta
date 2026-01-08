@@ -14,15 +14,15 @@
    ══════════════════════════════════════════════════════════════════════ */
 
 :root {
-  --shepherd-primary: var(--cta-default, #00D95F);
-  --shepherd-primary-hover: var(--cta-hover, #00C553);
-  --shepherd-accent-warm: var(--surface-secondary, #F9FAFB);
-  --shepherd-bg-light: #FFFFFF;
-  --shepherd-bg-secondary-light: var(--surface-raised, #FFFFFF);
+  --shepherd-primary: var(--cta-default, #00d95f);
+  --shepherd-primary-hover: var(--cta-hover, #00c553);
+  --shepherd-accent-warm: var(--surface-secondary, #f9fafb);
+  --shepherd-bg-light: #ffffff;
+  --shepherd-bg-secondary-light: var(--surface-raised, #ffffff);
   --shepherd-text-dark: var(--text-primary, #000000);
   --shepherd-text-medium: var(--text-secondary, #4b4b4b);
   --shepherd-text-light: var(--text-muted, #8e8e8e);
-  --shepherd-border-light: var(--border-muted, #F3F4F6);
+  --shepherd-border-light: var(--border-muted, #f3f4f6);
   --shepherd-shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.08);
   --shepherd-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
@@ -49,7 +49,11 @@
   box-shadow: var(--shepherd-shadow-elevated);
   max-width: 280px;
   z-index: 10000;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 @media (max-width: 768px) {
@@ -257,7 +261,6 @@
   transition: box-shadow 0.2s ease;
   border-radius: 8px;
 }
-
 
 /* ══════════════════════════════════════════════════════════════════════
    MOBILE

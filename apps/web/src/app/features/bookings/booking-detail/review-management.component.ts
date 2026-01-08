@@ -1,5 +1,14 @@
-import {Component, Input, OnInit, OnChanges, SimpleChanges, computed, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -28,7 +37,7 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
           <button
             (click)="handleShowReviewForm()"
             class="btn-primary flex-1 px-6 py-3 font-semibold shadow-soft"
-            >
+          >
             ⭐ Dejar reseña
           </button>
         }
@@ -36,14 +45,14 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
           <button
             class="info-card-petrol flex-1 px-6 py-3 font-semibold cursor-default text-center"
             disabled
-            >
+          >
             ✅ Ya calificaste esta reserva
           </button>
         }
         <button class="btn-secondary flex-1 px-6 py-3 font-semibold">📄 Ver factura</button>
       </div>
     }
-    
+
     <!-- Review Form Section (Inline - NO MODAL per design rules) -->
     @if (showReviewForm() && reviewData()) {
       <div class="mt-6 card-premium rounded-2xl p-4 sm:p-6 shadow-soft animate-fade-in">
@@ -52,7 +61,8 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
           <button
             (click)="handleCancelReview()"
             class="btn-secondary-sm p-2 rounded-full hover:bg-gray-100"
-            aria-label="Cancelar resena">
+            aria-label="Cancelar resena"
+          >
             <span class="text-lg">✕</span>
           </button>
         </div>
@@ -68,15 +78,15 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
         ></app-review-form>
       </div>
     }
-    
+
     <!-- Existing Review Display -->
     @if (existingReview() && !showReviewForm()) {
-      <div
-        class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft"
-        >
+      <div class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft">
         <h3 class="h5 mb-4">📝 Tu Calificación</h3>
         <div class="info-card-warm p-4 mb-4">
-          <p class="text-sm font-semibold text-warning-strong">⏳ Review pendiente de publicación</p>
+          <p class="text-sm font-semibold text-warning-strong">
+            ⏳ Review pendiente de publicación
+          </p>
           <p class="text-xs text-text-secondary mt-1">
             Se publicará cuando ambas partes hayan calificado, o después de 14 días.
           </p>
@@ -84,7 +94,7 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
         <app-review-card [review]="existingReview()!" [showCarTitle]="false"></app-review-card>
       </div>
     }
-    `,
+  `,
 })
 export class ReviewManagementComponent implements OnInit, OnChanges {
   @Input({ required: true }) booking!: Booking;
@@ -108,8 +118,8 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
   } | null>(null);
 
   // Allow reviews for both pending_review and completed statuses
-  showCompletedActions = computed(() =>
-    this.booking?.status === 'completed' || this.booking?.status === 'pending_review'
+  showCompletedActions = computed(
+    () => this.booking?.status === 'completed' || this.booking?.status === 'pending_review',
   );
 
   async ngOnInit() {
@@ -153,7 +163,7 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
         return session.user;
       }
       // Wait 100ms before checking again
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     return null;

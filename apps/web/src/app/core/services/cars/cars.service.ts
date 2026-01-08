@@ -30,7 +30,9 @@ export class CarsService {
     }
 
     // Example: "Could not find the 'allow_second_driver' column of 'cars' in the schema cache"
-    const match = anyError.message.match(/Could not find the '([^']+)' column of 'cars' in the schema cache/);
+    const match = anyError.message.match(
+      /Could not find the '([^']+)' column of 'cars' in the schema cache/,
+    );
     return match?.[1] ?? null;
   }
 
@@ -465,7 +467,10 @@ export class CarsService {
       updateData['city'] = inputRecord['location_city'];
     }
     // Mapear location_state/location_province a province si existe
-    if ((inputRecord['location_state'] || inputRecord['location_province']) && !inputRecord['province']) {
+    if (
+      (inputRecord['location_state'] || inputRecord['location_province']) &&
+      !inputRecord['province']
+    ) {
       updateData['province'] = inputRecord['location_state'] || inputRecord['location_province'];
     }
     // Mapear location_country a country si existe

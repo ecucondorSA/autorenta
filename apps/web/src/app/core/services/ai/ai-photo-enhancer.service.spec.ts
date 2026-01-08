@@ -6,7 +6,7 @@ describe('AiPhotoEnhancerService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AiPhotoEnhancerService]
+      providers: [AiPhotoEnhancerService],
     });
     service = TestBed.inject(AiPhotoEnhancerService);
   });
@@ -30,5 +30,4 @@ describe('AiPhotoEnhancerService', () => {
   it('should have cleanupPreviews method', () => {
     expect(typeof service.cleanupPreviews).toBe('function');
   });
-
 });

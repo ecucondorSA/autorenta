@@ -29,7 +29,9 @@ export interface User {
 }
 
 export function isUser(obj: unknown): obj is User {
-  return isObject(obj) && isString(obj['id']) && isString(obj['email']) && isString(obj['created_at']);
+  return (
+    isObject(obj) && isString(obj['id']) && isString(obj['email']) && isString(obj['created_at'])
+  );
 }
 
 export interface ProfileGuard {

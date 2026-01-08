@@ -6,7 +6,7 @@ describe('MapCacheService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MapCacheService]
+      providers: [MapCacheService],
     });
     service = TestBed.inject(MapCacheService);
   });
@@ -42,5 +42,4 @@ describe('MapCacheService', () => {
   it('should have getStats method', () => {
     expect(typeof service.getStats).toBe('function');
   });
-
 });

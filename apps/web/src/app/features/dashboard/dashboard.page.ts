@@ -1,6 +1,4 @@
-
-import {Component,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CalendarWidgetComponent } from './widgets/calendar.component';
 import { PayoutsWidgetComponent } from './widgets/payouts.component';
 import { StatisticsWidgetComponent } from './widgets/statistics.component';
@@ -9,11 +7,7 @@ import { StatisticsWidgetComponent } from './widgets/statistics.component';
   selector: 'app-dashboard-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    StatisticsWidgetComponent,
-    CalendarWidgetComponent,
-    PayoutsWidgetComponent
-],
+  imports: [StatisticsWidgetComponent, CalendarWidgetComponent, PayoutsWidgetComponent],
   template: `
     <div class="p-4">
       <h1 class="text-2xl font-semibold mb-4">Dashboard — Locadores / Locatarios</h1>

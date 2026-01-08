@@ -3,12 +3,8 @@
   <div class="timeline-header">
     <div class="flex items-center justify-between flex-wrap gap-2">
       <div>
-        <h3 class="text-lg font-bold text-text-primary font-satoshi">
-          Progreso de Confirmacion
-        </h3>
-        <p class="text-sm text-text-secondary">
-          Seguimiento bilateral del proceso de devolución
-        </p>
+        <h3 class="text-lg font-bold text-text-primary font-satoshi">Progreso de Confirmacion</h3>
+        <p class="text-sm text-text-secondary">Seguimiento bilateral del proceso de devolución</p>
       </div>
       <div class="flex items-center gap-2">
         <span class="text-xs font-medium text-cta-default">
@@ -17,14 +13,14 @@
         @if (isTimelineComplete()) {
           <span
             class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-success-light/20 text-success-700 rounded-full"
-            >
+          >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+              />
             </svg>
             Completado
           </span>
@@ -34,27 +30,23 @@
 
     <!-- Pending Action Alert -->
     @if (pendingActionMessage()) {
-      <div
-        class="mt-4 p-4 rounded-xl bg-warning-light/10 border border-warning-light/40"
-        >
+      <div class="mt-4 p-4 rounded-xl bg-warning-light/10 border border-warning-light/40">
         <div class="flex items-start gap-3">
           <svg
             class="w-5 h-5 text-warning-700 flex-shrink-0 mt-0.5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
+            />
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-semibold text-warning-700">
-              Accion requerida
-            </p>
+            <p class="text-sm font-semibold text-warning-700">Accion requerida</p>
             <p class="text-sm text-warning-700">
               {{ pendingActionMessage() }}
             </p>
@@ -74,7 +66,7 @@
           [class.timeline-item--current]="isStepCurrent(i)"
           [class.timeline-item--upcoming]="isStepUpcoming(i)"
           [class.timeline-item--conditional]="step.isConditional"
-          >
+        >
           <!-- Timeline Line (left side on desktop, top on mobile) -->
           <div class="timeline-line-wrapper">
             @if (i > 0) {
@@ -88,7 +80,7 @@
               [class.timeline-marker--completed]="step.completed"
               [class.timeline-marker--current]="isStepCurrent(i)"
               [class.timeline-marker--pending]="!step.completed"
-              >
+            >
               <!-- Checkmark for completed steps -->
               @if (step.completed) {
                 <svg
@@ -96,13 +88,13 @@
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
-                  >
+                >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M5 13l4 4L19 7"
-                    />
+                  />
                 </svg>
               }
               <!-- Step number for pending steps -->
@@ -126,40 +118,36 @@
                 class="timeline-step-title"
                 [class.text-text-primary]="step.completed || isStepCurrent(i)"
                 [class.text-text-secondary]="isStepUpcoming(i)"
-                >
+              >
                 {{ step.label }}
               </h4>
               @if (step.completed) {
-                <span
-                  class="timeline-step-badge timeline-step-badge--completed"
-                  >
+                <span class="timeline-step-badge timeline-step-badge--completed">
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M5 13l4 4L19 7"
-                      />
+                    />
                   </svg>
                   Completado
                 </span>
               }
               @if (!step.completed && isStepCurrent(i)) {
-                <span
-                  class="timeline-step-badge timeline-step-badge--pending"
-                  >
+                <span class="timeline-step-badge timeline-step-badge--pending">
                   <svg
                     class="w-3 h-3 animate-pulse"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    >
+                  >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
+                    />
                   </svg>
                   En progreso
                 </span>
@@ -177,13 +165,13 @@
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    >
+                  >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
+                    />
                   </svg>
                   <span>{{ formatTimestamp(step.timestamp) }}</span>
                 </div>
@@ -195,13 +183,13 @@
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    >
+                  >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
+                    />
                   </svg>
                   <span>{{ step.actor }}</span>
                 </div>
@@ -209,22 +197,20 @@
             </div>
             <!-- Damage Report Details -->
             @if (step.key === 'damage_report' && step.metadata) {
-              <div
-                class="mt-3 p-3 rounded-lg bg-error-bg border border-error-border"
-                >
+              <div class="mt-3 p-3 rounded-lg bg-error-bg border border-error-border">
                 <div class="flex items-start gap-2">
                   <svg
                     class="w-5 h-5 text-error-text flex-shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    >
+                  >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                      />
+                    />
                   </svg>
                   <div class="flex-1">
                     <p class="text-sm font-semibold text-error-strong">
@@ -249,7 +235,7 @@
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
+                    />
                   </svg>
                   <span>{{ step.actionLabel }}</span>
                 </button>
@@ -266,22 +252,20 @@
 
   <!-- Footer with Info -->
   <div class="timeline-footer">
-    <div
-      class="p-4 rounded-lg bg-cta-default/10 border border-cta-default/40"
-      >
+    <div class="p-4 rounded-lg bg-cta-default/10 border border-cta-default/40">
       <div class="flex items-start gap-3">
         <svg
           class="w-5 h-5 text-cta-default flex-shrink-0 mt-0.5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
-          >
+        >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
+          />
         </svg>
         <div class="flex-1 text-sm text-cta-default">
           <p class="font-semibold mb-1">Sistema de confirmacion bilateral</p>

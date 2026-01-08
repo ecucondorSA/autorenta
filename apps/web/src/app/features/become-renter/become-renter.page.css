@@ -36,7 +36,7 @@ input[type='range']::-webkit-slider-thumb {
 
 input[type='range']::-webkit-slider-thumb:hover {
   transform: scale(1.15);
-  box-shadow: 0 3px 8px #7B7B7B;
+  box-shadow: 0 3px 8px #7b7b7b;
 }
 
 input[type='range']::-moz-range-thumb {
@@ -52,7 +52,7 @@ input[type='range']::-moz-range-thumb {
 
 input[type='range']::-moz-range-thumb:hover {
   transform: scale(1.15);
-  box-shadow: 0 3px 8px #7B7B7B;
+  box-shadow: 0 3px 8px #7b7b7b;
 }
 
 .slider-label {
@@ -192,7 +192,7 @@ html {
 }
 
 .dark .card-premium:hover {
-  box-shadow: 0 12px 24px -8px #4E4E4E;
+  box-shadow: 0 12px 24px -8px #4e4e4e;
 }
 
 /* Responsive adjustments */

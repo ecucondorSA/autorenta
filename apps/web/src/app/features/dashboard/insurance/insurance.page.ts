@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {Component, inject, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 

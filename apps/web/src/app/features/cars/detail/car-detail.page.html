@@ -1,603 +1,790 @@
 @if (car()) {
-<!-- ✅ HEADER & TITLE SECTION -->
-<header class="max-w-7xl mx-auto px-3 sm:px-4 pt-3 sm:pt-4 md:pt-6 pb-3 sm:pb-4">
-  <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary mb-1.5 sm:mb-2 text-balance font-satoshi">
-    {{ displayTitle() }}
-  </h1>
-  <div class="flex flex-wrap items-center justify-between gap-2 sm:gap-4 text-xs sm:text-sm">
-    <!-- Location -->
-    <div class="flex items-center flex-wrap gap-1.5 sm:gap-2 text-xs sm:text-sm min-w-0 flex-1">
-      <app-icon name="map-pin" [size]="14" cssClass="text-text-secondary flex-shrink-0 sm:[&>svg]:w-4 sm:[&>svg]:h-4" />
-      <span class="text-text-primary font-medium truncate max-w-[200px] sm:max-w-[300px] md:max-w-none">
-        @if (car()?.location_formatted_address) {
-          {{ car()?.location_formatted_address }}
-        } @else {
-          {{ car()?.location_city }}, {{ car()?.location_state }}
-        }
-      </span>
-      @if (distanceKm() !== null && distanceKm() !== undefined) {
-        <span class="px-1.5 sm:px-2 py-0.5 bg-surface-raised border border-border-default rounded text-xs sm:text-xs text-text-secondary whitespace-nowrap flex-shrink-0">
-          a {{ distanceKm() | number: '1.1-1' }} km
+  <!-- ✅ HEADER & TITLE SECTION -->
+  <header class="max-w-7xl mx-auto px-3 sm:px-4 pt-3 sm:pt-4 md:pt-6 pb-3 sm:pb-4">
+    <h1
+      class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary mb-1.5 sm:mb-2 text-balance font-satoshi"
+    >
+      {{ displayTitle() }}
+    </h1>
+    <div class="flex flex-wrap items-center justify-between gap-2 sm:gap-4 text-xs sm:text-sm">
+      <!-- Location -->
+      <div class="flex items-center flex-wrap gap-1.5 sm:gap-2 text-xs sm:text-sm min-w-0 flex-1">
+        <app-icon
+          name="map-pin"
+          [size]="14"
+          cssClass="text-text-secondary flex-shrink-0 sm:[&>svg]:w-4 sm:[&>svg]:h-4"
+        />
+        <span
+          class="text-text-primary font-medium truncate max-w-[200px] sm:max-w-[300px] md:max-w-none"
+        >
+          @if (car()?.location_formatted_address) {
+            {{ car()?.location_formatted_address }}
+          } @else {
+            {{ car()?.location_city }}, {{ car()?.location_state }}
+          }
         </span>
-      }
+        @if (distanceKm() !== null && distanceKm() !== undefined) {
+          <span
+            class="px-1.5 sm:px-2 py-0.5 bg-surface-raised border border-border-default rounded text-xs sm:text-xs text-text-secondary whitespace-nowrap flex-shrink-0"
+          >
+            a {{ distanceKm() | number: '1.1-1' }} km
+          </span>
+        }
+      </div>
+      <!-- Share Buttons -->
+      <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+        <button
+          class="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2 md:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-xs sm:text-sm font-medium"
+          aria-label="Compartir"
+        >
+          <app-icon name="share" [size]="18" cssClass="sm:[&>svg]:w-5 sm:[&>svg]:h-5" />
+          <span class="hidden md:inline">Compartir</span>
+        </button>
+        <button
+          class="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2 md:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-xs sm:text-sm font-medium"
+          aria-label="Guardar en favoritos"
+        >
+          <app-icon name="heart" [size]="18" cssClass="sm:[&>svg]:w-5 sm:[&>svg]:h-5" />
+          <span class="hidden md:inline">Guardar</span>
+        </button>
+      </div>
     </div>
-    <!-- Share Buttons -->
-    <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-      <button class="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2 md:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-xs sm:text-sm font-medium" aria-label="Compartir">
-        <app-icon name="share" [size]="18" cssClass="sm:[&>svg]:w-5 sm:[&>svg]:h-5" />
-        <span class="hidden md:inline">Compartir</span>
-      </button>
-      <button class="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2 md:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-xs sm:text-sm font-medium" aria-label="Guardar en favoritos">
-        <app-icon name="heart" [size]="18" cssClass="sm:[&>svg]:w-5 sm:[&>svg]:h-5" />
-        <span class="hidden md:inline">Guardar</span>
-      </button>
-    </div>
-  </div>
-</header>
+  </header>
 
-<!-- ✅ 3-COLUMN DASHBOARD -->
-<div class="max-w-7xl mx-auto px-3 sm:px-4 pb-[calc(6rem+env(safe-area-inset-bottom))]">
-  <div class="dashboard-grid">
-    <!-- ═══════════════════════════════════════════════ -->
-    <!-- LEFT COLUMN: Car Info Card -->
-    <!-- ═══════════════════════════════════════════════ -->
-    <div class="dashboard-left">
-      <div class="rounded-xl sm:rounded-2xl border border-border-default bg-surface-raised overflow-hidden">
-        <!-- Car Image Carousel -->
-        <div class="relative h-52 sm:h-64 md:h-72 lg:h-80 bg-surface-secondary overflow-hidden group">
-          <!-- Main Image -->
-          <img
-            [src]="heroPhotoUrls()[currentPhotoIndex()]"
-            [alt]="displayTitle() + ' - Foto ' + (currentPhotoIndex() + 1)"
-            class="w-full h-full object-cover transition-opacity duration-300"
-            width="800"
-            height="320"
-            fetchpriority="high"
-            (error)="onImgError($event)"
-          />
+  <!-- ✅ 3-COLUMN DASHBOARD -->
+  <div class="max-w-7xl mx-auto px-3 sm:px-4 pb-[calc(6rem+env(safe-area-inset-bottom))]">
+    <div class="dashboard-grid">
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- LEFT COLUMN: Car Info Card -->
+      <!-- ═══════════════════════════════════════════════ -->
+      <div class="dashboard-left">
+        <div
+          class="rounded-xl sm:rounded-2xl border border-border-default bg-surface-raised overflow-hidden"
+        >
+          <!-- Car Image Carousel -->
+          <div
+            class="relative h-52 sm:h-64 md:h-72 lg:h-80 bg-surface-secondary overflow-hidden group"
+          >
+            <!-- Main Image -->
+            <img
+              [src]="heroPhotoUrls()[currentPhotoIndex()]"
+              [alt]="displayTitle() + ' - Foto ' + (currentPhotoIndex() + 1)"
+              class="w-full h-full object-cover transition-opacity duration-300"
+              width="800"
+              height="320"
+              fetchpriority="high"
+              (error)="onImgError($event)"
+            />
 
-          <!-- Rating Badge -->
-          <div class="absolute top-2 left-2 sm:top-3 sm:left-3 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-black/70 backdrop-blur-md text-white rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-1 sm:gap-1.5">
-            <app-icon name="star-filled" [size]="12" cssClass="text-warning-default sm:[&>svg]:w-3.5 sm:[&>svg]:h-3.5" />
-            <span>{{ carStats()?.rating_avg || car()?.rating_avg || 'Nuevo' }}</span>
-          </div>
-
-          <!-- Photo Counter Badge -->
-          @if (allPhotos().length > 1) {
-            <div class="absolute top-2 right-2 sm:top-3 sm:right-3 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-black/70 backdrop-blur-md text-white rounded-md sm:rounded-lg text-xs sm:text-xs font-medium">
-              {{ currentPhotoIndex() + 1 }} / {{ allPhotos().length }}
+            <!-- Rating Badge -->
+            <div
+              class="absolute top-2 left-2 sm:top-3 sm:left-3 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-black/70 backdrop-blur-md text-white rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-1 sm:gap-1.5"
+            >
+              <app-icon
+                name="star-filled"
+                [size]="12"
+                cssClass="text-warning-default sm:[&>svg]:w-3.5 sm:[&>svg]:h-3.5"
+              />
+              <span>{{ carStats()?.rating_avg || car()?.rating_avg || 'Nuevo' }}</span>
             </div>
-          }
 
-          <!-- Navigation Arrows -->
-          @if (hasMultiplePhotos()) {
-            <!-- Previous Button -->
-            <button
-              (click)="previousPhoto()"
-              class="absolute left-1.5 sm:left-2 top-1/2 -translate-y-1/2 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 focus:opacity-100"
-              aria-label="Foto anterior"
-            >
-              <app-icon name="chevron-left" [size]="16" cssClass="text-gray-800 sm:[&>svg]:w-5 sm:[&>svg]:h-5" />
-            </button>
+            <!-- Photo Counter Badge -->
+            @if (allPhotos().length > 1) {
+              <div
+                class="absolute top-2 right-2 sm:top-3 sm:right-3 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-black/70 backdrop-blur-md text-white rounded-md sm:rounded-lg text-xs sm:text-xs font-medium"
+              >
+                {{ currentPhotoIndex() + 1 }} / {{ allPhotos().length }}
+              </div>
+            }
 
-            <!-- Next Button -->
-            <button
-              (click)="nextPhoto()"
-              class="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 focus:opacity-100"
-              aria-label="Foto siguiente"
-            >
-              <app-icon name="chevron-right" [size]="16" cssClass="text-gray-800 sm:[&>svg]:w-5 sm:[&>svg]:h-5" />
-            </button>
-          }
+            <!-- Navigation Arrows -->
+            @if (hasMultiplePhotos()) {
+              <!-- Previous Button -->
+              <button
+                (click)="previousPhoto()"
+                class="absolute left-1.5 sm:left-2 top-1/2 -translate-y-1/2 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 focus:opacity-100"
+                aria-label="Foto anterior"
+              >
+                <app-icon
+                  name="chevron-left"
+                  [size]="16"
+                  cssClass="text-gray-800 sm:[&>svg]:w-5 sm:[&>svg]:h-5"
+                />
+              </button>
 
-          <!-- Dot Indicators -->
-          @if (allPhotos().length > 1) {
-            <div class="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-1.5">
-              @for (photo of allPhotos(); track $index; let i = $index) {
-                @if (i < 5) {
-                  <button
-                    (click)="goToPhoto(i)"
-                    [class]="'w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-200 ' + (currentPhotoIndex() === i ? 'bg-white w-2 sm:w-3' : 'bg-white/60 hover:bg-white/80')"
-                    [attr.aria-label]="'Ir a foto ' + (i + 1)"
-                  ></button>
+              <!-- Next Button -->
+              <button
+                (click)="nextPhoto()"
+                class="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 focus:opacity-100"
+                aria-label="Foto siguiente"
+              >
+                <app-icon
+                  name="chevron-right"
+                  [size]="16"
+                  cssClass="text-gray-800 sm:[&>svg]:w-5 sm:[&>svg]:h-5"
+                />
+              </button>
+            }
+
+            <!-- Dot Indicators -->
+            @if (allPhotos().length > 1) {
+              <div
+                class="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-1.5"
+              >
+                @for (photo of allPhotos(); track $index; let i = $index) {
+                  @if (i < 5) {
+                    <button
+                      (click)="goToPhoto(i)"
+                      [class]="
+                        'w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-200 ' +
+                        (currentPhotoIndex() === i
+                          ? 'bg-white w-2 sm:w-3'
+                          : 'bg-white/60 hover:bg-white/80')
+                      "
+                      [attr.aria-label]="'Ir a foto ' + (i + 1)"
+                    ></button>
+                  }
                 }
-              }
-              @if (allPhotos().length > 5) {
-                <span class="text-white/80 text-xs sm:text-xs ml-0.5 sm:ml-1">+{{ allPhotos().length - 5 }}</span>
-              }
-            </div>
-          }
-        </div>
-
-        <div class="p-3 sm:p-4 space-y-3 sm:space-y-4">
-          <!-- Car Title & Year -->
-          <div>
-            <h2 class="text-base sm:text-lg font-bold text-text-primary font-satoshi">{{ car()?.brand }} {{ car()?.model }}</h2>
-            <p class="text-xs sm:text-sm text-text-secondary">{{ car()?.year }} · {{ car()?.transmission }}</p>
-          </div>
-
-          <!-- Date Range (if selected) -->
-          @if (dateRange().from && dateRange().to) {
-            <div class="flex items-center gap-2 p-2.5 sm:p-3 bg-surface-base rounded-lg sm:rounded-xl border border-border-default">
-              <app-icon name="calendar" [size]="16" cssClass="text-cta-default sm:[&>svg]:w-[18px] sm:[&>svg]:h-[18px]" />
-              <span class="text-xs sm:text-sm text-text-primary font-medium">
-                {{ dateRange().from | date:'dd MMM' }} - {{ dateRange().to | date:'dd MMM' }}
-              </span>
-            </div>
-          }
-
-          <!-- Badges -->
-          <div class="flex flex-wrap gap-1.5 sm:gap-2">
-            @if (car()?.fuel_policy === 'full_full') {
-              <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-xs font-medium bg-cta-default/10 text-cta-default">
-                <app-icon name="lightning" [size]="10" cssClass="sm:[&>svg]:w-3 sm:[&>svg]:h-3" />
-                Lleno/Lleno
-              </span>
-            }
-            @if (!car()?.mileage_limit || car()?.mileage_limit === 0) {
-              <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-xs font-medium bg-success-default/10 text-success-default">
-                <app-icon name="infinity" [size]="10" cssClass="sm:[&>svg]:w-3 sm:[&>svg]:h-3" />
-                Km Ilimitado
-              </span>
+                @if (allPhotos().length > 5) {
+                  <span class="text-white/80 text-xs sm:text-xs ml-0.5 sm:ml-1"
+                    >+{{ allPhotos().length - 5 }}</span
+                  >
+                }
+              </div>
             }
           </div>
 
-          <!-- Quick Features -->
-          <div class="grid grid-cols-2 gap-1.5 sm:gap-2 text-xs sm:text-xs text-text-secondary">
-            <div class="flex items-center gap-1.5 sm:gap-2">
-              <app-icon name="users" [size]="12" cssClass="sm:[&>svg]:w-3.5 sm:[&>svg]:h-3.5" />
-              <span>{{ car()?.seats }} asientos</span>
+          <div class="p-3 sm:p-4 space-y-3 sm:space-y-4">
+            <!-- Car Title & Year -->
+            <div>
+              <h2 class="text-base sm:text-lg font-bold text-text-primary font-satoshi">
+                {{ car()?.brand }} {{ car()?.model }}
+              </h2>
+              <p class="text-xs sm:text-sm text-text-secondary">
+                {{ car()?.year }} · {{ car()?.transmission }}
+              </p>
             </div>
-            <div class="flex items-center gap-1.5 sm:gap-2">
-              <app-icon name="settings" [size]="12" cssClass="sm:[&>svg]:w-3.5 sm:[&>svg]:h-3.5" />
-              <span>{{ car()?.doors }} puertas</span>
-            </div>
-          </div>
 
-          <!-- AI Panel Buttons -->
-          <div class="flex flex-col gap-1.5 sm:gap-2 pt-3 sm:pt-4 border-t border-border-default">
-            <button class="flex items-center gap-2 sm:gap-3 w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all bg-surface-base hover:bg-surface-hover border border-border-default text-text-primary hover:border-cta-default/50" (click)="toggleAiPanel('trip')">
-              <app-icon name="map-pin" [size]="16" cssClass="text-cta-default sm:[&>svg]:w-[18px] sm:[&>svg]:h-[18px]" />
-              <span>Planear Ruta</span>
-              <app-icon name="chevron-right" [size]="14" cssClass="ml-auto text-text-muted sm:[&>svg]:w-4 sm:[&>svg]:h-4" />
-            </button>
-            <button class="flex items-center gap-2 sm:gap-3 w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all bg-surface-base hover:bg-surface-hover border border-border-default text-text-primary hover:border-success-default/50" (click)="toggleAiPanel('checklist')">
-              <app-icon name="check-circle" [size]="16" cssClass="text-success-default sm:[&>svg]:w-[18px] sm:[&>svg]:h-[18px]" />
-              <span>Checklist IA</span>
-              <app-icon name="chevron-right" [size]="14" cssClass="ml-auto text-text-muted sm:[&>svg]:w-4 sm:[&>svg]:h-4" />
-            </button>
+            <!-- Date Range (if selected) -->
+            @if (dateRange().from && dateRange().to) {
+              <div
+                class="flex items-center gap-2 p-2.5 sm:p-3 bg-surface-base rounded-lg sm:rounded-xl border border-border-default"
+              >
+                <app-icon
+                  name="calendar"
+                  [size]="16"
+                  cssClass="text-cta-default sm:[&>svg]:w-[18px] sm:[&>svg]:h-[18px]"
+                />
+                <span class="text-xs sm:text-sm text-text-primary font-medium">
+                  {{ dateRange().from | date: 'dd MMM' }} - {{ dateRange().to | date: 'dd MMM' }}
+                </span>
+              </div>
+            }
+
+            <!-- Badges -->
+            <div class="flex flex-wrap gap-1.5 sm:gap-2">
+              @if (car()?.fuel_policy === 'full_full') {
+                <span
+                  class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-xs font-medium bg-cta-default/10 text-cta-default"
+                >
+                  <app-icon name="lightning" [size]="10" cssClass="sm:[&>svg]:w-3 sm:[&>svg]:h-3" />
+                  Lleno/Lleno
+                </span>
+              }
+              @if (!car()?.mileage_limit || car()?.mileage_limit === 0) {
+                <span
+                  class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-xs font-medium bg-success-default/10 text-success-default"
+                >
+                  <app-icon name="infinity" [size]="10" cssClass="sm:[&>svg]:w-3 sm:[&>svg]:h-3" />
+                  Km Ilimitado
+                </span>
+              }
+            </div>
+
+            <!-- Quick Features -->
+            <div class="grid grid-cols-2 gap-1.5 sm:gap-2 text-xs sm:text-xs text-text-secondary">
+              <div class="flex items-center gap-1.5 sm:gap-2">
+                <app-icon name="users" [size]="12" cssClass="sm:[&>svg]:w-3.5 sm:[&>svg]:h-3.5" />
+                <span>{{ car()?.seats }} asientos</span>
+              </div>
+              <div class="flex items-center gap-1.5 sm:gap-2">
+                <app-icon
+                  name="settings"
+                  [size]="12"
+                  cssClass="sm:[&>svg]:w-3.5 sm:[&>svg]:h-3.5"
+                />
+                <span>{{ car()?.doors }} puertas</span>
+              </div>
+            </div>
+
+            <!-- AI Panel Buttons -->
+            <div class="flex flex-col gap-1.5 sm:gap-2 pt-3 sm:pt-4 border-t border-border-default">
+              <button
+                class="flex items-center gap-2 sm:gap-3 w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all bg-surface-base hover:bg-surface-hover border border-border-default text-text-primary hover:border-cta-default/50"
+                (click)="toggleAiPanel('trip')"
+              >
+                <app-icon
+                  name="map-pin"
+                  [size]="16"
+                  cssClass="text-cta-default sm:[&>svg]:w-[18px] sm:[&>svg]:h-[18px]"
+                />
+                <span>Planear Ruta</span>
+                <app-icon
+                  name="chevron-right"
+                  [size]="14"
+                  cssClass="ml-auto text-text-muted sm:[&>svg]:w-4 sm:[&>svg]:h-4"
+                />
+              </button>
+              <button
+                class="flex items-center gap-2 sm:gap-3 w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all bg-surface-base hover:bg-surface-hover border border-border-default text-text-primary hover:border-success-default/50"
+                (click)="toggleAiPanel('checklist')"
+              >
+                <app-icon
+                  name="check-circle"
+                  [size]="16"
+                  cssClass="text-success-default sm:[&>svg]:w-[18px] sm:[&>svg]:h-[18px]"
+                />
+                <span>Checklist IA</span>
+                <app-icon
+                  name="chevron-right"
+                  [size]="14"
+                  cssClass="ml-auto text-text-muted sm:[&>svg]:w-4 sm:[&>svg]:h-4"
+                />
+              </button>
+            </div>
           </div>
         </div>
+
+        <!-- AI Panels (expandable below car card) -->
+        @if (expandedAiPanel()) {
+          <div class="mt-4 animate-fadeIn">
+            @if (expandedAiPanel() === 'trip') {
+              <app-ai-trip-panel
+                [car]="car()"
+                [suggestedDays]="daysCount() || 3"
+                [isExpanded]="true"
+                (togglePanel)="toggleAiPanel('trip')"
+              />
+            }
+            @if (expandedAiPanel() === 'checklist') {
+              <app-ai-checklist-panel
+                [car]="car()"
+                inspectionType="check_in"
+                [isExpanded]="true"
+                (togglePanel)="toggleAiPanel('checklist')"
+              />
+            }
+            @if (expandedAiPanel() === 'legal') {
+              <app-ai-legal-panel
+                [car]="car()"
+                [isExpanded]="true"
+                (togglePanel)="toggleAiPanel('legal')"
+              />
+            }
+          </div>
+        }
       </div>
 
-      <!-- AI Panels (expandable below car card) -->
-      @if (expandedAiPanel()) {
-        <div class="mt-4 animate-fadeIn">
-          @if (expandedAiPanel() === 'trip') {
-            <app-ai-trip-panel
-              [car]="car()"
-              [suggestedDays]="daysCount() || 3"
-              [isExpanded]="true"
-              (togglePanel)="toggleAiPanel('trip')"
-            />
-          }
-          @if (expandedAiPanel() === 'checklist') {
-            <app-ai-checklist-panel
-              [car]="car()"
-              inspectionType="check_in"
-              [isExpanded]="true"
-              (togglePanel)="toggleAiPanel('checklist')"
-            />
-          }
-          @if (expandedAiPanel() === 'legal') {
-            <app-ai-legal-panel
-              [car]="car()"
-              [isExpanded]="true"
-              (togglePanel)="toggleAiPanel('legal')"
-            />
-          }
-        </div>
-      }
-    </div>
-
-    <!-- ═══════════════════════════════════════════════ -->
-    <!-- CENTER COLUMN: Chat with Owner -->
-    <!-- ═══════════════════════════════════════════════ -->
-    <div class="dashboard-center">
-      <!-- Chat Component -->
-      @if (authService.isAuthenticated() && car()?.owner_id && !isCurrentUserOwner()) {
-        <app-car-inquiry-chat
-          [carId]="car()!.id"
-          [ownerId]="car()!.owner_id"
-          [ownerName]="ownerFirstName() || 'Propietario'"
-          [carTitle]="displayTitle()"
-        />
-      } @else if (!authService.isAuthenticated()) {
-        <!-- Login prompt for chat -->
-        <div class="rounded-2xl border border-border-default bg-surface-raised overflow-hidden">
-          <div class="flex items-center gap-3 p-4 border-b border-border-default bg-cta-default/10">
-            <div class="w-12 h-12 rounded-full bg-surface-base flex items-center justify-center">
-              <app-icon name="message" [size]="24" cssClass="text-cta-default" />
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- CENTER COLUMN: Chat with Owner -->
+      <!-- ═══════════════════════════════════════════════ -->
+      <div class="dashboard-center">
+        <!-- Chat Component -->
+        @if (authService.isAuthenticated() && car()?.owner_id && !isCurrentUserOwner()) {
+          <app-car-inquiry-chat
+            [carId]="car()!.id"
+            [ownerId]="car()!.owner_id"
+            [ownerName]="ownerFirstName() || 'Propietario'"
+            [carTitle]="displayTitle()"
+          />
+        } @else if (!authService.isAuthenticated()) {
+          <!-- Login prompt for chat -->
+          <div class="rounded-2xl border border-border-default bg-surface-raised overflow-hidden">
+            <div
+              class="flex items-center gap-3 p-4 border-b border-border-default bg-cta-default/10"
+            >
+              <div class="w-12 h-12 rounded-full bg-surface-base flex items-center justify-center">
+                <app-icon name="message" [size]="24" cssClass="text-cta-default" />
+              </div>
+              <div>
+                <h3 class="font-semibold text-text-primary">Chat con el propietario</h3>
+                <p class="text-xs text-text-secondary">Consulta tus dudas antes de reservar</p>
+              </div>
             </div>
-            <div>
-              <h3 class="font-semibold text-text-primary">Chat con el propietario</h3>
-              <p class="text-xs text-text-secondary">Consulta tus dudas antes de reservar</p>
+            <div class="p-8 text-center">
+              <p class="text-text-secondary mb-4">
+                Iniciá sesión para chatear con {{ ownerFirstName() || 'el propietario' }}
+              </p>
+              <a
+                routerLink="/auth/login"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-cta-default text-cta-text rounded-xl font-semibold hover:bg-cta-hover transition-colors"
+              >
+                <app-icon name="user" [size]="18" />
+                Iniciar Sesión
+              </a>
             </div>
           </div>
-          <div class="p-8 text-center">
-            <p class="text-text-secondary mb-4">Iniciá sesión para chatear con {{ ownerFirstName() || 'el propietario' }}</p>
-            <a routerLink="/auth/login" class="inline-flex items-center gap-2 px-6 py-3 bg-cta-default text-cta-text rounded-xl font-semibold hover:bg-cta-hover transition-colors">
-              <app-icon name="user" [size]="18" />
-              Iniciar Sesión
-            </a>
-          </div>
-        </div>
-      } @else {
-        <!-- Owner viewing their own car -->
-        <div class="rounded-2xl border border-border-default bg-surface-raised overflow-hidden p-4">
-          <div class="text-center">
-            <app-icon name="car" [size]="48" cssClass="text-text-muted mx-auto mb-4" />
-            <h3 class="font-semibold text-text-primary mb-2">Este es tu auto</h3>
-            <p class="text-sm text-text-secondary">
-              Los interesados te contactarán aquí para consultas.
-            </p>
-          </div>
-        </div>
-      }
-
-      <!-- Features Card (below chat) -->
-      <div class="mt-6 rounded-2xl border border-border-default bg-surface-raised p-4">
-        <h3 class="font-semibold text-text-primary mb-4 flex items-center gap-2">
-          <app-icon name="star-filled" [size]="18" cssClass="text-cta-default" />
-          Características destacadas
-        </h3>
-        <div class="space-y-4">
-          <div class="flex items-start gap-3">
-            <app-icon name="calendar" [size]="20" cssClass="text-cta-default mt-0.5" />
-            <div>
-              <p class="font-medium text-text-primary text-sm">Arrepentimiento sin costo</p>
-              <p class="text-xs text-text-secondary">Cancelá gratis en las primeras 24hs después de reservar.</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3">
-            <app-icon name="lock" [size]="20" cssClass="text-cta-default mt-0.5" />
-            <div>
-              <p class="font-medium text-text-primary text-sm">Check-in autónomo o presencial</p>
-              <p class="text-xs text-text-secondary">
-                @if (ownerFirstName()) {
-                  Coordina fácilmente la entrega con {{ ownerFirstName() }}.
-                } @else {
-                  Coordina fácilmente la entrega con el propietario.
-                }
+        } @else {
+          <!-- Owner viewing their own car -->
+          <div
+            class="rounded-2xl border border-border-default bg-surface-raised overflow-hidden p-4"
+          >
+            <div class="text-center">
+              <app-icon name="car" [size]="48" cssClass="text-text-muted mx-auto mb-4" />
+              <h3 class="font-semibold text-text-primary mb-2">Este es tu auto</h3>
+              <p class="text-sm text-text-secondary">
+                Los interesados te contactarán aquí para consultas.
               </p>
             </div>
           </div>
-          <div class="flex items-start gap-3">
-            <app-icon name="shield" [size]="20" cssClass="text-cta-default mt-0.5" />
-            <div>
-              <p class="font-medium text-text-primary text-sm">Seguro incluido</p>
-              <p class="text-xs text-text-secondary">Viajá tranquilo con cobertura contra todo riesgo.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Owner Reputation (above reviews) -->
-      @if (car()?.owner_id) {
-        <div class="mt-6">
-          <app-review-summary [userId]="car()!.owner_id" [asOwner]="true" />
-        </div>
-        <div class="mt-6">
-          <app-ai-reputation-card [userId]="car()!.owner_id" />
-        </div>
-      }
-
-      <!-- Reviews Section (below reputation) -->
-      <div id="reviews" class="mt-6">
-        @if (car()?.id) {
-          <app-car-reviews-section [carId]="car()!.id" />
         }
-      </div>
-    </div>
 
-    <!-- ═══════════════════════════════════════════════ -->
-    <!-- RIGHT COLUMN: Terms & Booking -->
-    <!-- ═══════════════════════════════════════════════ -->
-    <div class="dashboard-right">
-      <!-- ══════════════════════════════════════════════════════════════════ -->
-      <!-- GARANTÍA DEL ALQUILER - Información clara sobre depósito -->
-      <!-- ══════════════════════════════════════════════════════════════════ -->
-      <div class="rounded-2xl border-2 border-cta-default/30 bg-gradient-to-b from-cta-default/5 to-surface-raised overflow-hidden mb-4">
-        <div class="p-4 border-b border-cta-default/20 bg-cta-default/10">
-          <h3 class="font-bold text-text-primary flex items-center gap-2">
-            <app-icon name="shield" [size]="20" cssClass="text-cta-default" />
-            Garantía del Alquiler
+        <!-- Features Card (below chat) -->
+        <div class="mt-6 rounded-2xl border border-border-default bg-surface-raised p-4">
+          <h3 class="font-semibold text-text-primary mb-4 flex items-center gap-2">
+            <app-icon name="star-filled" [size]="18" cssClass="text-cta-default" />
+            Características destacadas
           </h3>
-          <p class="text-xs text-text-secondary mt-1">Se retiene al inicio y se libera al devolver el auto sin daños</p>
-        </div>
-
-        <div class="p-4">
-          <!-- Monto de garantía -->
-          <div class="flex items-center justify-between mb-4 pb-4 border-b border-border-default">
-            <span class="text-sm text-text-secondary">Monto de garantía</span>
-            <span class="text-lg font-bold text-text-primary">USD ${{ car()?.security_deposit_usd || 250 }}</span>
-          </div>
-
-          <!-- Opciones de pago de garantía -->
-          <p class="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3">Formas de pago aceptadas</p>
-          <div class="space-y-2">
-            <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-base border border-border-default">
-              <div class="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                <app-icon name="credit-card" [size]="16" cssClass="text-blue-600" />
-              </div>
-              <div class="flex-1">
-                <p class="text-sm font-medium text-text-primary">Tarjeta de crédito</p>
-                <p class="text-xs text-text-secondary">Retención temporal (no se debita)</p>
-              </div>
-              <app-icon name="check-circle" [size]="18" cssClass="text-cta-default" />
-            </div>
-            <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-base border border-border-default">
-              <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-                <app-icon name="wallet" [size]="16" cssClass="text-emerald-600" />
-              </div>
-              <div class="flex-1">
-                <p class="text-sm font-medium text-text-primary">Saldo en Wallet</p>
-                <p class="text-xs text-text-secondary">Se bloquea y libera automáticamente</p>
-              </div>
-              <app-icon name="check-circle" [size]="18" cssClass="text-cta-default" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ══════════════════════════════════════════════════════════════════ -->
-      <!-- CONDICIONES DEL PROPIETARIO - Lo que define el dueño del auto -->
-      <!-- ══════════════════════════════════════════════════════════════════ -->
-      <div class="rounded-2xl border border-border-default bg-surface-raised overflow-hidden mb-4">
-        <div class="flex items-center justify-between p-4 border-b border-border-default">
-          <h3 class="font-semibold text-text-primary flex items-center gap-2">
-            <app-icon name="user" [size]="18" />
-            Condiciones del Propietario
-          </h3>
-          <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-cta-default/10 text-cta-default hover:bg-cta-default/20 transition-all duration-200" (click)="toggleAiPanel('legal')">
-            <app-icon name="sparkles" [size]="14" />
-            Consultar IA
-          </button>
-        </div>
-
-        <div class="p-4 space-y-3">
-          <!-- Combustible -->
-          <div class="flex items-start gap-3">
-            <app-icon name="lightning" [size]="18" cssClass="w-5 h-5 mt-0.5 text-text-secondary flex-shrink-0" />
-            <div>
-              <p class="text-sm font-medium text-text-primary">Combustible</p>
-              <p class="text-xs text-text-secondary">{{ getFuelPolicyLabel(car()?.fuel_policy) }}</p>
-            </div>
-          </div>
-
-          <!-- Límite geográfico -->
-          @if (car()?.allowed_provinces?.length) {
+          <div class="space-y-4">
             <div class="flex items-start gap-3">
-              <app-icon name="map-pin" [size]="18" cssClass="w-5 h-5 mt-0.5 text-text-secondary flex-shrink-0" />
+              <app-icon name="calendar" [size]="20" cssClass="text-cta-default mt-0.5" />
               <div>
-                <p class="text-sm font-medium text-text-primary">Zonas permitidas</p>
-                <p class="text-xs text-text-secondary">{{ car()?.allowed_provinces?.join(', ') }}</p>
-              </div>
-            </div>
-          }
-
-          <!-- Kilometraje (solo si hay límite) -->
-          @if (car()?.mileage_limit) {
-            <div class="flex items-start gap-3">
-              <app-icon name="speedometer" [size]="18" cssClass="w-5 h-5 mt-0.5 text-text-secondary flex-shrink-0" />
-              <div>
-                <p class="text-sm font-medium text-text-primary">Límite de kilometraje</p>
+                <p class="font-medium text-text-primary text-sm">Arrepentimiento sin costo</p>
                 <p class="text-xs text-text-secondary">
-                  {{ car()?.mileage_limit }} km/día
-                  @if (car()?.extra_km_price) {
-                    · +${{ car()?.extra_km_price }} USD por km extra
+                  Cancelá gratis en las primeras 24hs después de reservar.
+                </p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <app-icon name="lock" [size]="20" cssClass="text-cta-default mt-0.5" />
+              <div>
+                <p class="font-medium text-text-primary text-sm">Check-in autónomo o presencial</p>
+                <p class="text-xs text-text-secondary">
+                  @if (ownerFirstName()) {
+                    Coordina fácilmente la entrega con {{ ownerFirstName() }}.
+                  } @else {
+                    Coordina fácilmente la entrega con el propietario.
                   }
                 </p>
               </div>
             </div>
+            <div class="flex items-start gap-3">
+              <app-icon name="shield" [size]="20" cssClass="text-cta-default mt-0.5" />
+              <div>
+                <p class="font-medium text-text-primary text-sm">Seguro incluido</p>
+                <p class="text-xs text-text-secondary">
+                  Viajá tranquilo con cobertura contra todo riesgo.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Owner Reputation (above reviews) -->
+        @if (car()?.owner_id) {
+          <div class="mt-6">
+            <app-review-summary [userId]="car()!.owner_id" [asOwner]="true" />
+          </div>
+          <div class="mt-6">
+            <app-ai-reputation-card [userId]="car()!.owner_id" />
+          </div>
+        }
+
+        <!-- Reviews Section (below reputation) -->
+        <div id="reviews" class="mt-6">
+          @if (car()?.id) {
+            <app-car-reviews-section [carId]="car()!.id" />
           }
-
-          <!-- Cancelación -->
-          <div class="flex items-start gap-3">
-            <app-icon name="calendar" [size]="18" cssClass="w-5 h-5 mt-0.5 text-text-secondary flex-shrink-0" />
-            <div>
-              <p class="text-sm font-medium text-text-primary">Política de cancelación</p>
-              <p class="text-xs text-text-secondary">{{ getCancelPolicyLabel(car()?.cancel_policy) }}</p>
-            </div>
-          </div>
         </div>
       </div>
 
-      <!-- ══════════════════════════════════════════════════════════════════ -->
-      <!-- REQUISITOS - Documentación necesaria -->
-      <!-- ══════════════════════════════════════════════════════════════════ -->
-      <div class="rounded-2xl border border-border-default bg-surface-raised overflow-hidden mb-4">
-        <div class="p-4 border-b border-border-default">
-          <h3 class="font-semibold text-text-primary flex items-center gap-2">
-            <app-icon name="document" [size]="18" />
-            Requisitos para Alquilar
-          </h3>
-        </div>
-        <div class="p-4 space-y-2">
-          <div class="flex items-center gap-3 py-2">
-            <app-icon name="check-circle" [size]="18" cssClass="text-cta-default flex-shrink-0" />
-            <span class="text-sm text-text-primary">DNI o Pasaporte vigente</span>
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- RIGHT COLUMN: Terms & Booking -->
+      <!-- ═══════════════════════════════════════════════ -->
+      <div class="dashboard-right">
+        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <!-- GARANTÍA DEL ALQUILER - Información clara sobre depósito -->
+        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <div
+          class="rounded-2xl border-2 border-cta-default/30 bg-gradient-to-b from-cta-default/5 to-surface-raised overflow-hidden mb-4"
+        >
+          <div class="p-4 border-b border-cta-default/20 bg-cta-default/10">
+            <h3 class="font-bold text-text-primary flex items-center gap-2">
+              <app-icon name="shield" [size]="20" cssClass="text-cta-default" />
+              Garantía del Alquiler
+            </h3>
+            <p class="text-xs text-text-secondary mt-1">
+              Se retiene al inicio y se libera al devolver el auto sin daños
+            </p>
           </div>
-          <div class="flex items-center gap-3 py-2">
-            <app-icon name="check-circle" [size]="18" cssClass="text-cta-default flex-shrink-0" />
-            <span class="text-sm text-text-primary">Licencia de conducir vigente</span>
-          </div>
-          <div class="flex items-center gap-3 py-2">
-            <app-icon name="check-circle" [size]="18" cssClass="text-cta-default flex-shrink-0" />
-            <span class="text-sm text-text-primary">Ser mayor de 18 años</span>
-          </div>
-        </div>
-      </div>
 
-      <!-- Availability Mini Calendar -->
-      @if (car()?.id) {
-        <div class="mb-4">
-          <app-availability-mini-calendar [carId]="car()!.id" />
-        </div>
-      }
-
-      <!-- Booking Widget (hidden on mobile - sticky CTA handles it) -->
-      <div class="hidden lg:block rounded-2xl border border-border-default bg-surface-raised p-4 shadow-lg">
-        <!-- Price Header -->
-        <div class="flex items-baseline justify-between mb-4">
-          <div class="flex items-baseline gap-1">
-            @if (formattedPrice()) {
-              <span class="text-2xl font-bold text-text-primary">{{ formattedPrice() }}</span>
-              <span class="text-text-secondary font-normal"> / día</span>
-            } @else {
-              <span class="text-xl font-semibold text-text-secondary">Próximamente</span>
-            }
-          </div>
-          <div class="flex items-center gap-1 text-sm">
-            <app-icon name="star-filled" [size]="14" cssClass="text-warning-default" />
-            <span class="font-semibold text-text-primary">{{ carStats()?.rating_avg || car()?.rating_avg || 'Nuevo' }}</span>
-          </div>
-        </div>
-
-        <!-- Date Picker -->
-        <div class="rounded-xl border border-text-secondary/30 overflow-hidden mb-4">
-          <app-date-range-picker
-            #bookingDatePicker
-            [label]="expressMode() ? 'Duración de alquiler' : 'Llegada - Salida'"
-            (rangeChange)="onRangeChange($event)"
-            [initialFrom]="dateRange().from"
-            [initialTo]="dateRange().to"
-            [dailyPrice]="displayPrice()"
-            [showPrices]="!expressMode()"
-            [carId]="car()?.id ?? null"
-            [availabilityChecker]="!expressMode() ? checkAvailability : null"
-            [blockedRanges]="blockedRanges()"
-          />
-        </div>
-
-        <!-- Terms & Conditions Checkbox -->
-        @if (authService.isAuthenticated() && canBook()) {
-          <div class="flex items-start gap-3 mb-4 cursor-pointer group">
-            <input
-              type="checkbox"
-              id="termsCheckbox"
-              name="termsCheckbox"
-              [checked]="termsAccepted()"
-              (change)="termsAccepted.set($any($event.target).checked)"
-              class="mt-1 w-4 h-4 rounded border-2 border-border-default text-cta-default focus:ring-cta-default focus:ring-2 cursor-pointer"
-              aria-describedby="termsDescription"
-            />
-            <label for="termsCheckbox" id="termsDescription" class="text-sm text-text-secondary leading-relaxed cursor-pointer">
-              Acepto los
-              <a href="/terminos" target="_blank" class="text-cta-default hover:underline font-medium">Términos y Condiciones</a>
-              y la
-              <a href="/politica-seguros" target="_blank" class="text-cta-default hover:underline font-medium">Póliza de Seguro</a>
-              de AutoRenta.
-            </label>
-          </div>
-        }
-
-        <!-- Reserve Button -->
-        @if (authService.isAuthenticated()) {
-          <button
-            id="book-now"
-            (click)="onBookClick()"
-            [disabled]="bookingInProgress() || isCarOwner() || (canBook() && !termsAccepted())"
-            class="w-full py-4 bg-gradient-to-r from-cta-default to-cta-hover text-cta-text font-bold rounded-xl text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center gap-2"
-            [ngClass]="{ 'opacity-50 cursor-not-allowed': bookingInProgress() || isCarOwner() || (canBook() && !termsAccepted()) }"
-          >
-            @if (!bookingInProgress()) {
-              <span>{{ canBook() ? 'Solicitar Reserva' : 'Ver Disponibilidad' }}</span>
-            } @else {
-              <span class="flex items-center gap-2">
-                <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Enviando solicitud...
-              </span>
-            }
-          </button>
-        }
-
-        @if (canBook()) {
-          <p class="text-center text-xs text-text-secondary mt-3">
-            No se te cobrará nada todavía. Solo se pre-autoriza la garantía hasta que el anfitrión apruebe.
-          </p>
-        }
-
-        @if (bookingError()) {
-          <div class="mt-4 rounded-lg border border-error-border/60 bg-error-bg/15 px-4 py-3 text-sm text-error-text">
-            <div class="flex items-start gap-2">
-              <app-icon name="alert-triangle" [size]="16" cssClass="mt-0.5" />
-              <span>{{ bookingError() }}</span>
-            </div>
-          </div>
-        }
-
-        @if (isCarOwner()) {
-          <p class="text-center text-sm text-error-text mt-3">
-            Parece que ese auto te pertenece. No podés reservar tu propio vehículo.
-          </p>
-        }
-
-        <!-- Price Breakdown -->
-        @if (totalPrice() && hasValidPrice()) {
-          <div class="space-y-3 pt-4 mt-4 border-t border-border-default">
-            <div class="flex justify-between text-text-primary text-sm">
-              <span>{{ formattedPrice() }} x {{ daysCount() }} días</span>
-              <span>{{ totalPrice() | number:'1.0-0':'en-US' }}</span>
-            </div>
-            <div class="flex justify-between text-text-primary text-sm">
-              <span
-                class="underline decoration-text-secondary/30 cursor-pointer"
-                (click)="showRiskCalculator.set(!showRiskCalculator())"
+          <div class="p-4">
+            <!-- Monto de garantía -->
+            <div class="flex items-center justify-between mb-4 pb-4 border-b border-border-default">
+              <span class="text-sm text-text-secondary">Monto de garantía</span>
+              <span class="text-lg font-bold text-text-primary"
+                >USD ${{ car()?.security_deposit_usd || 250 }}</span
               >
-                Seguro y protección
-                <span class="text-xs ml-1">{{ showRiskCalculator() ? '▲' : '▼' }}</span>
-              </span>
-              <span class="text-success-default font-medium">¡Incluido!</span>
             </div>
-            @if (showRiskCalculator() && riskCalculation()) {
-              <div class="mt-3 animate-fadeIn">
-                <app-risk-calculator-viewer
-                  [riskCalculation]="riskCalculation()"
-                  [carValueUsd]="car()?.value_usd || 0"
+
+            <!-- Opciones de pago de garantía -->
+            <p class="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3">
+              Formas de pago aceptadas
+            </p>
+            <div class="space-y-2">
+              <div
+                class="flex items-center gap-3 p-3 rounded-xl bg-surface-base border border-border-default"
+              >
+                <div
+                  class="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0"
+                >
+                  <app-icon name="credit-card" [size]="16" cssClass="text-blue-600" />
+                </div>
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-text-primary">Tarjeta de crédito</p>
+                  <p class="text-xs text-text-secondary">Retención temporal (no se debita)</p>
+                </div>
+                <app-icon name="check-circle" [size]="18" cssClass="text-cta-default" />
+              </div>
+              <div
+                class="flex items-center gap-3 p-3 rounded-xl bg-surface-base border border-border-default"
+              >
+                <div
+                  class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0"
+                >
+                  <app-icon name="wallet" [size]="16" cssClass="text-emerald-600" />
+                </div>
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-text-primary">Saldo en Wallet</p>
+                  <p class="text-xs text-text-secondary">Se bloquea y libera automáticamente</p>
+                </div>
+                <app-icon name="check-circle" [size]="18" cssClass="text-cta-default" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <!-- CONDICIONES DEL PROPIETARIO - Lo que define el dueño del auto -->
+        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <div
+          class="rounded-2xl border border-border-default bg-surface-raised overflow-hidden mb-4"
+        >
+          <div class="flex items-center justify-between p-4 border-b border-border-default">
+            <h3 class="font-semibold text-text-primary flex items-center gap-2">
+              <app-icon name="user" [size]="18" />
+              Condiciones del Propietario
+            </h3>
+            <button
+              class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-cta-default/10 text-cta-default hover:bg-cta-default/20 transition-all duration-200"
+              (click)="toggleAiPanel('legal')"
+            >
+              <app-icon name="sparkles" [size]="14" />
+              Consultar IA
+            </button>
+          </div>
+
+          <div class="p-4 space-y-3">
+            <!-- Combustible -->
+            <div class="flex items-start gap-3">
+              <app-icon
+                name="lightning"
+                [size]="18"
+                cssClass="w-5 h-5 mt-0.5 text-text-secondary flex-shrink-0"
+              />
+              <div>
+                <p class="text-sm font-medium text-text-primary">Combustible</p>
+                <p class="text-xs text-text-secondary">
+                  {{ getFuelPolicyLabel(car()?.fuel_policy) }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Límite geográfico -->
+            @if (car()?.allowed_provinces?.length) {
+              <div class="flex items-start gap-3">
+                <app-icon
+                  name="map-pin"
+                  [size]="18"
+                  cssClass="w-5 h-5 mt-0.5 text-text-secondary flex-shrink-0"
                 />
+                <div>
+                  <p class="text-sm font-medium text-text-primary">Zonas permitidas</p>
+                  <p class="text-xs text-text-secondary">
+                    {{ car()?.allowed_provinces?.join(', ') }}
+                  </p>
+                </div>
               </div>
             }
-            <div class="border-t border-border-default my-2"></div>
-            <div class="flex justify-between text-lg font-bold text-text-primary">
-              <span>Total</span>
-              <span>{{ totalPrice() | number:'1.0-0':'en-US' }}</span>
+
+            <!-- Kilometraje (solo si hay límite) -->
+            @if (car()?.mileage_limit) {
+              <div class="flex items-start gap-3">
+                <app-icon
+                  name="speedometer"
+                  [size]="18"
+                  cssClass="w-5 h-5 mt-0.5 text-text-secondary flex-shrink-0"
+                />
+                <div>
+                  <p class="text-sm font-medium text-text-primary">Límite de kilometraje</p>
+                  <p class="text-xs text-text-secondary">
+                    {{ car()?.mileage_limit }} km/día
+                    @if (car()?.extra_km_price) {
+                      · +${{ car()?.extra_km_price }} USD por km extra
+                    }
+                  </p>
+                </div>
+              </div>
+            }
+
+            <!-- Cancelación -->
+            <div class="flex items-start gap-3">
+              <app-icon
+                name="calendar"
+                [size]="18"
+                cssClass="w-5 h-5 mt-0.5 text-text-secondary flex-shrink-0"
+              />
+              <div>
+                <p class="text-sm font-medium text-text-primary">Política de cancelación</p>
+                <p class="text-xs text-text-secondary">
+                  {{ getCancelPolicyLabel(car()?.cancel_policy) }}
+                </p>
+              </div>
             </div>
           </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <!-- REQUISITOS - Documentación necesaria -->
+        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <div
+          class="rounded-2xl border border-border-default bg-surface-raised overflow-hidden mb-4"
+        >
+          <div class="p-4 border-b border-border-default">
+            <h3 class="font-semibold text-text-primary flex items-center gap-2">
+              <app-icon name="document" [size]="18" />
+              Requisitos para Alquilar
+            </h3>
+          </div>
+          <div class="p-4 space-y-2">
+            <div class="flex items-center gap-3 py-2">
+              <app-icon name="check-circle" [size]="18" cssClass="text-cta-default flex-shrink-0" />
+              <span class="text-sm text-text-primary">DNI o Pasaporte vigente</span>
+            </div>
+            <div class="flex items-center gap-3 py-2">
+              <app-icon name="check-circle" [size]="18" cssClass="text-cta-default flex-shrink-0" />
+              <span class="text-sm text-text-primary">Licencia de conducir vigente</span>
+            </div>
+            <div class="flex items-center gap-3 py-2">
+              <app-icon name="check-circle" [size]="18" cssClass="text-cta-default flex-shrink-0" />
+              <span class="text-sm text-text-primary">Ser mayor de 18 años</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Availability Mini Calendar -->
+        @if (car()?.id) {
+          <div class="mb-4">
+            <app-availability-mini-calendar [carId]="car()!.id" />
+          </div>
         }
+
+        <!-- Booking Widget (hidden on mobile - sticky CTA handles it) -->
+        <div
+          class="hidden lg:block rounded-2xl border border-border-default bg-surface-raised p-4 shadow-lg"
+        >
+          <!-- Price Header -->
+          <div class="flex items-baseline justify-between mb-4">
+            <div class="flex items-baseline gap-1">
+              @if (formattedPrice()) {
+                <span class="text-2xl font-bold text-text-primary">{{ formattedPrice() }}</span>
+                <span class="text-text-secondary font-normal"> / día</span>
+              } @else {
+                <span class="text-xl font-semibold text-text-secondary">Próximamente</span>
+              }
+            </div>
+            <div class="flex items-center gap-1 text-sm">
+              <app-icon name="star-filled" [size]="14" cssClass="text-warning-default" />
+              <span class="font-semibold text-text-primary">{{
+                carStats()?.rating_avg || car()?.rating_avg || 'Nuevo'
+              }}</span>
+            </div>
+          </div>
+
+          <!-- Date Picker -->
+          <div class="rounded-xl border border-text-secondary/30 overflow-hidden mb-4">
+            <app-date-range-picker
+              #bookingDatePicker
+              [label]="expressMode() ? 'Duración de alquiler' : 'Llegada - Salida'"
+              (rangeChange)="onRangeChange($event)"
+              [initialFrom]="dateRange().from"
+              [initialTo]="dateRange().to"
+              [dailyPrice]="displayPrice()"
+              [showPrices]="!expressMode()"
+              [carId]="car()?.id ?? null"
+              [availabilityChecker]="!expressMode() ? checkAvailability : null"
+              [blockedRanges]="blockedRanges()"
+            />
+          </div>
+
+          <!-- Terms & Conditions Checkbox -->
+          @if (authService.isAuthenticated() && canBook()) {
+            <div class="flex items-start gap-3 mb-4 cursor-pointer group">
+              <input
+                type="checkbox"
+                id="termsCheckbox"
+                name="termsCheckbox"
+                [checked]="termsAccepted()"
+                (change)="termsAccepted.set($any($event.target).checked)"
+                class="mt-1 w-4 h-4 rounded border-2 border-border-default text-cta-default focus:ring-cta-default focus:ring-2 cursor-pointer"
+                aria-describedby="termsDescription"
+              />
+              <label
+                for="termsCheckbox"
+                id="termsDescription"
+                class="text-sm text-text-secondary leading-relaxed cursor-pointer"
+              >
+                Acepto los
+                <a
+                  href="/terminos"
+                  target="_blank"
+                  class="text-cta-default hover:underline font-medium"
+                  >Términos y Condiciones</a
+                >
+                y la
+                <a
+                  href="/politica-seguros"
+                  target="_blank"
+                  class="text-cta-default hover:underline font-medium"
+                  >Póliza de Seguro</a
+                >
+                de AutoRenta.
+              </label>
+            </div>
+          }
+
+          <!-- Reserve Button -->
+          @if (authService.isAuthenticated()) {
+            <button
+              id="book-now"
+              (click)="onBookClick()"
+              [disabled]="bookingInProgress() || isCarOwner() || (canBook() && !termsAccepted())"
+              class="w-full py-4 bg-gradient-to-r from-cta-default to-cta-hover text-cta-text font-bold rounded-xl text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center gap-2"
+              [ngClass]="{
+                'opacity-50 cursor-not-allowed':
+                  bookingInProgress() || isCarOwner() || (canBook() && !termsAccepted()),
+              }"
+            >
+              @if (!bookingInProgress()) {
+                <span>{{ canBook() ? 'Solicitar Reserva' : 'Ver Disponibilidad' }}</span>
+              } @else {
+                <span class="flex items-center gap-2">
+                  <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Enviando solicitud...
+                </span>
+              }
+            </button>
+          }
+
+          @if (canBook()) {
+            <p class="text-center text-xs text-text-secondary mt-3">
+              No se te cobrará nada todavía. Solo se pre-autoriza la garantía hasta que el anfitrión
+              apruebe.
+            </p>
+          }
+
+          @if (bookingError()) {
+            <div
+              class="mt-4 rounded-lg border border-error-border/60 bg-error-bg/15 px-4 py-3 text-sm text-error-text"
+            >
+              <div class="flex items-start gap-2">
+                <app-icon name="alert-triangle" [size]="16" cssClass="mt-0.5" />
+                <span>{{ bookingError() }}</span>
+              </div>
+            </div>
+          }
+
+          @if (isCarOwner()) {
+            <p class="text-center text-sm text-error-text mt-3">
+              Parece que ese auto te pertenece. No podés reservar tu propio vehículo.
+            </p>
+          }
+
+          <!-- Price Breakdown -->
+          @if (totalPrice() && hasValidPrice()) {
+            <div class="space-y-3 pt-4 mt-4 border-t border-border-default">
+              <div class="flex justify-between text-text-primary text-sm">
+                <span>{{ formattedPrice() }} x {{ daysCount() }} días</span>
+                <span>{{ totalPrice() | number: '1.0-0' : 'en-US' }}</span>
+              </div>
+              <div class="flex justify-between text-text-primary text-sm">
+                <span
+                  class="underline decoration-text-secondary/30 cursor-pointer"
+                  (click)="showRiskCalculator.set(!showRiskCalculator())"
+                >
+                  Seguro y protección
+                  <span class="text-xs ml-1">{{ showRiskCalculator() ? '▲' : '▼' }}</span>
+                </span>
+                <span class="text-success-default font-medium">¡Incluido!</span>
+              </div>
+              @if (showRiskCalculator() && riskCalculation()) {
+                <div class="mt-3 animate-fadeIn">
+                  <app-risk-calculator-viewer
+                    [riskCalculation]="riskCalculation()"
+                    [carValueUsd]="car()?.value_usd || 0"
+                  />
+                </div>
+              }
+              <div class="border-t border-border-default my-2"></div>
+              <div class="flex justify-between text-lg font-bold text-text-primary">
+                <span>Total</span>
+                <span>{{ totalPrice() | number: '1.0-0' : 'en-US' }}</span>
+              </div>
+            </div>
+          }
+        </div>
       </div>
     </div>
   </div>
-</div>
 } @else {
-<div class="flex flex-col items-center justify-center py-32 space-y-6">
-  <div class="relative">
-    <div class="w-16 h-16 rounded-full border-4 border-primary-100 border-t-primary-600 animate-spin"></div>
+  <div class="flex flex-col items-center justify-center py-32 space-y-6">
+    <div class="relative">
+      <div
+        class="w-16 h-16 rounded-full border-4 border-primary-100 border-t-primary-600 animate-spin"
+      ></div>
+    </div>
+    <div class="text-center space-y-2">
+      <p class="text-text-primary font-medium animate-pulse">Cargando vehículo...</p>
+    </div>
   </div>
-  <div class="text-center space-y-2">
-    <p class="text-text-primary font-medium animate-pulse">Cargando vehículo...</p>
-  </div>
-</div>
 }
 
 <ng-template #errorTpl>
-  <div class="max-w-2xl mx-auto mt-12 p-8 bg-error-bg/10 border border-error-border/50 rounded-2xl text-center">
+  <div
+    class="max-w-2xl mx-auto mt-12 p-8 bg-error-bg/10 border border-error-border/50 rounded-2xl text-center"
+  >
     <h3 class="text-lg font-bold text-error-strong">No pudimos encontrar este auto</h3>
-    <p class="text-text-secondary mt-2">{{ error() ?? 'El vehículo no existe o fue eliminado.' }}</p>
-    <a routerLink="/cars" class="mt-4 inline-block px-6 py-2 bg-surface-raised border border-border-default rounded-lg font-medium hover:bg-surface-base">
+    <p class="text-text-secondary mt-2">
+      {{ error() ?? 'El vehículo no existe o fue eliminado.' }}
+    </p>
+    <a
+      routerLink="/cars"
+      class="mt-4 inline-block px-6 py-2 bg-surface-raised border border-border-default rounded-lg font-medium hover:bg-surface-base"
+    >
       Volver al catálogo
     </a>
   </div>

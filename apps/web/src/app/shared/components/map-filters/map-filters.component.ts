@@ -13,12 +13,13 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CarAvailabilityService, type DetailedBlockedRange } from '@core/services/cars/car-availability.service';
+import {
+  CarAvailabilityService,
+  type DetailedBlockedRange,
+} from '@core/services/cars/car-availability.service';
 import type { CarMapLocation } from '@core/services/cars/car-locations.service';
 import type { FilterState } from '@core/models/marketplace.model';
-import {
-  DateRangePickerComponent,
-} from '../date-range-picker/date-range-picker.component';
+import { DateRangePickerComponent } from '../date-range-picker/date-range-picker.component';
 import { IconComponent } from '../icon/icon.component';
 
 // Re-export FilterState for backwards compatibility with existing imports

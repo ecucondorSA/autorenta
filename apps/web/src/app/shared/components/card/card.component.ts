@@ -1,6 +1,4 @@
-import {Component, computed, input,
-  ChangeDetectionStrategy} from '@angular/core';
-
+import { Component, computed, input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-card',

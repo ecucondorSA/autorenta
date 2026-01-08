@@ -6,7 +6,7 @@ describe('LanguageService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LanguageService]
+      providers: [LanguageService],
     });
     service = TestBed.inject(LanguageService);
   });
@@ -30,5 +30,4 @@ describe('LanguageService', () => {
   it('should have getCurrentLanguageFlag method', () => {
     expect(typeof service.getCurrentLanguageFlag).toBe('function');
   });
-
 });

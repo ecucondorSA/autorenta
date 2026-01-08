@@ -165,7 +165,10 @@ export class OwnerBookingsPage implements OnInit, OnDestroy, ViewWillEnter {
         return 'Confirmada';
       case 'in_progress':
         // FIX: Consider completion_status for detailed status
-        if (booking.completion_status === 'pending_owner' || booking.completion_status === 'pending_both') {
+        if (
+          booking.completion_status === 'pending_owner' ||
+          booking.completion_status === 'pending_both'
+        ) {
           return 'Confirmar devolución';
         }
         if (booking.completion_status === 'returned') {
@@ -199,7 +202,10 @@ export class OwnerBookingsPage implements OnInit, OnDestroy, ViewWillEnter {
         return 'Coordiná la entrega del auto con el locatario.';
       case 'in_progress':
         // FIX: Consider completion_status for detailed hint
-        if (booking.completion_status === 'pending_owner' || booking.completion_status === 'pending_both') {
+        if (
+          booking.completion_status === 'pending_owner' ||
+          booking.completion_status === 'pending_both'
+        ) {
           return 'El locatario devolvió el auto. Ingresá al detalle para confirmar.';
         }
         if (booking.completion_status === 'returned') {
@@ -283,7 +289,8 @@ export class OwnerBookingsPage implements OnInit, OnDestroy, ViewWillEnter {
     const validStatusForDispute = ['completed', 'in_progress'].includes(booking.status);
 
     // Check if a dispute is already open or in review
-    const existingDisputeActive = booking.dispute_status && ['open', 'in_review'].includes(booking.dispute_status);
+    const existingDisputeActive =
+      booking.dispute_status && ['open', 'in_review'].includes(booking.dispute_status);
 
     return validStatusForDispute && !existingDisputeActive;
   }

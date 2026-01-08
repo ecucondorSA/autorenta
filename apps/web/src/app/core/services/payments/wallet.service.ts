@@ -63,18 +63,21 @@ export class WalletService {
   private lockTimestamps: number[] = [];
 
   constructor() {
-    this.supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.['user']) {
-        this.fetchBalance().catch((err) => {
-          this.logger.warn('Failed to fetch wallet balance on init', err);
-        });
-        this.fetchTransactions().catch((err) => {
-          this.logger.warn('Failed to fetch wallet transactions on init', err);
-        });
-      }
-    }).catch((err) => {
-      this.logger.warn('Failed to get session on wallet service init', err);
-    });
+    this.supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        if (session?.['user']) {
+          this.fetchBalance().catch((err) => {
+            this.logger.warn('Failed to fetch wallet balance on init', err);
+          });
+          this.fetchTransactions().catch((err) => {
+            this.logger.warn('Failed to fetch wallet transactions on init', err);
+          });
+        }
+      })
+      .catch((err) => {
+        this.logger.warn('Failed to get session on wallet service init', err);
+      });
   }
 
   // ============================================================================
@@ -94,7 +97,7 @@ export class WalletService {
     // 🚀 PERF: Return cached data if still fresh (SWR pattern)
     const now = Date.now();
     const cachedBalance = this.balance();
-    if (!forceRefresh && cachedBalance && (now - this.lastFetchTimestamp) < WALLET_STALE_TIME_MS) {
+    if (!forceRefresh && cachedBalance && now - this.lastFetchTimestamp < WALLET_STALE_TIME_MS) {
       return cachedBalance;
     }
 
@@ -281,8 +284,8 @@ export class WalletService {
 
       if (!result.success) throw new Error(result.error_message || 'Fallo al depositar fondos');
 
-      this.fetchBalance().catch(() => { });
-      this.fetchTransactions().catch(() => { });
+      this.fetchBalance().catch(() => {});
+      this.fetchTransactions().catch(() => {});
 
       return { success: true, transactionId: result.transaction_id };
     } catch (err) {
@@ -327,9 +330,7 @@ export class WalletService {
   private isLockRateLimited(): boolean {
     const now = Date.now();
     // Remove timestamps older than the window
-    this.lockTimestamps = this.lockTimestamps.filter(
-      (ts) => now - ts < RATE_LIMIT_WINDOW_MS
-    );
+    this.lockTimestamps = this.lockTimestamps.filter((ts) => now - ts < RATE_LIMIT_WINDOW_MS);
     return this.lockTimestamps.length >= MAX_WALLET_LOCKS_PER_MINUTE;
   }
 
@@ -365,7 +366,7 @@ export class WalletService {
         if (response['error']) throw response['error'];
         // FIX 2025-12-27: Invalidate cache and force refresh after lock
         this.invalidateCache();
-        this.fetchBalance(true).catch(() => { });
+        this.fetchBalance(true).catch(() => {});
       }),
       map((response) => response.data![0] as WalletLockFundsResponse),
     );
@@ -382,7 +383,7 @@ export class WalletService {
         if (response['error']) throw response['error'];
         // FIX 2025-12-27: Invalidate cache and force refresh after unlock
         this.invalidateCache();
-        this.fetchBalance(true).catch(() => { });
+        this.fetchBalance(true).catch(() => {});
       }),
       map((response) => response.data![0] as WalletUnlockFundsResponse),
     );
@@ -417,7 +418,7 @@ export class WalletService {
         if (response['error']) throw response['error'];
         // FIX 2025-12-27: Invalidate cache and force refresh after lock
         this.invalidateCache();
-        this.fetchBalance(true).catch(() => { });
+        this.fetchBalance(true).catch(() => {});
       }),
       map((response) => response.data![0] as WalletLockRentalAndDepositResponse),
     );
@@ -451,7 +452,10 @@ export class WalletService {
             const balance = await this.fetchBalance();
             onBalanceChange(balance);
           } catch (error) {
-            this.logger.warn('Failed to refresh wallet balance after transaction', error instanceof Error ? error.message : String(error));
+            this.logger.warn(
+              'Failed to refresh wallet balance after transaction',
+              error instanceof Error ? error.message : String(error),
+            );
           }
         },
       )
@@ -465,7 +469,9 @@ export class WalletService {
   async unsubscribeFromWalletChanges(): Promise<void> {
     const { data } = await this.supabase.auth.getSession();
     if (!data.session?.['user']) return;
-    await this.supabase.removeChannel(this.supabase.channel(`wallet:${data.session['user']['id']}`));
+    await this.supabase.removeChannel(
+      this.supabase.channel(`wallet:${data.session['user']['id']}`),
+    );
   }
 
   // ============================================================================
@@ -481,8 +487,8 @@ export class WalletService {
     try {
       const { data, error } = await this.supabase.rpc('wallet_poll_pending_payments');
       if (error) throw error;
-      this.fetchBalance().catch(() => { });
-      this.fetchTransactions().catch(() => { });
+      this.fetchBalance().catch(() => {});
+      this.fetchTransactions().catch(() => {});
       return (data ?? { success: false, confirmed: 0, message: 'No data returned' }) as {
         success: boolean;
         confirmed: number;
@@ -528,7 +534,7 @@ export class WalletService {
       });
 
       if (error) throw error;
-      this.fetchBalance().catch(() => { });
+      this.fetchBalance().catch(() => {});
       return data;
     } catch (err) {
       this.handleError(err, 'Error al emitir Crédito de Protección');
@@ -597,14 +603,14 @@ export class WalletService {
    * Computed: tiene créditos por vencer en 7 días o menos (urgente)
    */
   readonly hasUrgentExpiringCredits = computed(() =>
-    this.expiringCredits().some(c => c.days_until_expiry <= 7)
+    this.expiringCredits().some((c) => c.days_until_expiry <= 7),
   );
 
   /**
    * Computed: total de créditos por vencer
    */
   readonly totalExpiringAmount = computed(() =>
-    this.expiringCredits().reduce((sum, c) => sum + c.amount_cents, 0)
+    this.expiringCredits().reduce((sum, c) => sum + c.amount_cents, 0),
   );
 
   /**
@@ -613,7 +619,7 @@ export class WalletService {
   async fetchExpiringCredits(daysAhead: number = 30): Promise<ExpiringCredit[]> {
     try {
       const { data, error } = await this.supabase.rpc('get_expiring_credits', {
-        p_days_ahead: daysAhead
+        p_days_ahead: daysAhead,
       });
 
       if (error) throw error;

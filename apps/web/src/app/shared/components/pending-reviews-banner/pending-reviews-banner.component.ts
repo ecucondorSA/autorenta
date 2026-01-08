@@ -1,6 +1,4 @@
-
-import {Component, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ReviewsService } from '@core/services/cars/reviews.service';

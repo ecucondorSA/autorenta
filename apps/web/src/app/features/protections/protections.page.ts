@@ -1,5 +1,4 @@
-import {Component, inject, OnInit, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, OnInit, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
@@ -53,7 +52,9 @@ import { BonusProtectorPurchaseComponent } from '../../shared/components/bonus-p
               </div>
               <div class="wallet-details">
                 <span class="wallet-label">Saldo disponible</span>
-                <span class="wallet-amount">{{ walletBalance() | currency:'USD':'symbol':'1.2-2' }}</span>
+                <span class="wallet-amount">{{
+                  walletBalance() | currency: 'USD' : 'symbol' : '1.2-2'
+                }}</span>
               </div>
               <ion-button size="small" fill="outline" [routerLink]="['/wallet']">
                 <ion-icon slot="start" name="add-outline"></ion-icon>

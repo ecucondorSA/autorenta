@@ -27,8 +27,10 @@ export type SubscriptionRow = Database['public']['Tables']['subscriptions']['Row
 export type SubscriptionInsert = Database['public']['Tables']['subscriptions']['Insert'];
 export type SubscriptionUpdate = Database['public']['Tables']['subscriptions']['Update'];
 
-export type SubscriptionUsageLogRow = Database['public']['Tables']['subscription_usage_logs']['Row'];
-export type SubscriptionUsageLogInsert = Database['public']['Tables']['subscription_usage_logs']['Insert'];
+export type SubscriptionUsageLogRow =
+  Database['public']['Tables']['subscription_usage_logs']['Row'];
+export type SubscriptionUsageLogInsert =
+  Database['public']['Tables']['subscription_usage_logs']['Insert'];
 
 export type SubscriptionStatus = Database['public']['Enums']['subscription_status'];
 export type SubscriptionTier = Database['public']['Enums']['subscription_tier'];
@@ -120,9 +122,9 @@ export interface SubscriptionUsageLogWithDetails {
  * Subscription usage reasons
  */
 export type SubscriptionUsageReason =
-  | 'claim_deduction'      // Deducted for damage claim
-  | 'admin_adjustment'     // Manual adjustment by admin
-  | 'refund'              // Refund to balance
+  | 'claim_deduction' // Deducted for damage claim
+  | 'admin_adjustment' // Manual adjustment by admin
+  | 'refund' // Refund to balance
   | 'expiration_forfeit'; // Forfeited on expiration
 
 /**
@@ -152,15 +154,15 @@ export interface SubscriptionTierConfig {
  * Vehicle value tier thresholds
  */
 export const VEHICLE_VALUE_THRESHOLDS = {
-  ECONOMY_MAX: 20000,      // < $20,000
-  STANDARD_MAX: 40000,     // $20,000 - $40,000
-  LUXURY_MIN: 40000,       // > $40,000
+  ECONOMY_MAX: 20000, // < $20,000
+  STANDARD_MAX: 40000, // $20,000 - $40,000
+  LUXURY_MIN: 40000, // > $40,000
 } as const;
 
 /**
  * Preauthorization formula: 10% of vehicle value
  */
-export const PREAUTH_PERCENTAGE = 0.10;
+export const PREAUTH_PERCENTAGE = 0.1;
 
 /**
  * Tier configurations (matches v_subscription_tiers view)
@@ -181,7 +183,7 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
     fgo_cap_usd: 800,
     min_vehicle_value_usd: 0,
     max_vehicle_value_usd: 20000,
-    preauth_hold_cents: 100000,           // $1,000 sin suscripción
+    preauth_hold_cents: 100000, // $1,000 sin suscripción
     preauth_hold_usd: 1000,
     preauth_with_subscription_cents: 50000, // $500 con suscripción
     preauth_with_subscription_usd: 500,
@@ -192,8 +194,8 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
       'Uso ilimitado de reservas en autos económicos',
       'Preautorización reducida a $500 (vs $1,000)',
       'Sin cargos ocultos ni auto-renovación',
-      'Soporte prioritario 24/7'
-    ]
+      'Soporte prioritario 24/7',
+    ],
   },
   club_black: {
     tier: 'club_black',
@@ -207,7 +209,7 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
     fgo_cap_usd: 1200,
     min_vehicle_value_usd: 20000,
     max_vehicle_value_usd: 40000,
-    preauth_hold_cents: 250000,           // $2,500 sin suscripción
+    preauth_hold_cents: 250000, // $2,500 sin suscripción
     preauth_hold_usd: 2500,
     preauth_with_subscription_cents: 80000, // $800 con suscripción
     preauth_with_subscription_usd: 800,
@@ -218,8 +220,8 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
       'Acceso a autos económicos y de gama media',
       'Preautorización reducida a $800 (vs $2,500)',
       'Sin cargos ocultos ni auto-renovación',
-      'Soporte VIP prioritario 24/7'
-    ]
+      'Soporte VIP prioritario 24/7',
+    ],
   },
   club_luxury: {
     tier: 'club_luxury',
@@ -233,7 +235,7 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
     fgo_cap_usd: 2000,
     min_vehicle_value_usd: 40000,
     max_vehicle_value_usd: null, // Sin límite superior
-    preauth_hold_cents: 500000,           // $5,000 sin suscripción
+    preauth_hold_cents: 500000, // $5,000 sin suscripción
     preauth_hold_usd: 5000,
     preauth_with_subscription_cents: 100000, // $1,000 con suscripción
     preauth_with_subscription_usd: 1000,
@@ -245,9 +247,9 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
       'Preautorización reducida a $1,000 (vs $5,000)',
       'Sin cargos ocultos ni auto-renovación',
       'Soporte VIP exclusivo 24/7',
-      'Prioridad en reservas de vehículos premium'
-    ]
-  }
+      'Prioridad en reservas de vehículos premium',
+    ],
+  },
 };
 
 /**
@@ -282,8 +284,8 @@ export interface SubscriptionPurchaseResult {
  * Deposit calculation result with subscription coverage
  */
 export interface DepositWithSubscriptionCoverage {
-  depositRequired: number;           // Amount user must pay (in USD)
-  coveredBySubscription: number;     // Amount covered by subscription (in USD)
+  depositRequired: number; // Amount user must pay (in USD)
+  coveredBySubscription: number; // Amount covered by subscription (in USD)
   coveredBy: 'full_subscription' | 'partial_subscription' | 'wallet' | 'card';
   subscriptionId?: string;
   subscriptionBalance?: number;
@@ -301,7 +303,7 @@ export interface SubscriptionDisplayState {
   isActive: boolean;
   tier?: SubscriptionTier;
   tierConfig?: SubscriptionTierConfig;
-  balancePercent: number;            // 0-100
+  balancePercent: number; // 0-100
   balanceUsd: number;
   coverageLimitUsd: number;
   daysRemaining: number;
@@ -319,7 +321,7 @@ export function toDisplayState(sub: ActiveSubscription | null): SubscriptionDisp
       balancePercent: 0,
       balanceUsd: 0,
       coverageLimitUsd: 0,
-      daysRemaining: 0
+      daysRemaining: 0,
     };
   }
 
@@ -335,7 +337,7 @@ export function toDisplayState(sub: ActiveSubscription | null): SubscriptionDisp
     balanceUsd: sub.remaining_balance_usd,
     coverageLimitUsd: sub.coverage_limit_usd,
     daysRemaining: sub.days_remaining,
-    expiresAt: new Date(sub.expires_at)
+    expiresAt: new Date(sub.expires_at),
   };
 }
 
@@ -348,14 +350,14 @@ export const SUBSCRIPTION_STATUS_LABELS: Record<SubscriptionStatus, string> = {
   inactive: 'Inactiva',
   depleted: 'Saldo agotado',
   expired: 'Expirada',
-  cancelled: 'Cancelada'
+  cancelled: 'Cancelada',
 };
 
 export const SUBSCRIPTION_USAGE_REASON_LABELS: Record<SubscriptionUsageReason, string> = {
   claim_deduction: 'Cargo por daños',
   admin_adjustment: 'Ajuste administrativo',
   refund: 'Reembolso',
-  expiration_forfeit: 'Saldo no utilizado'
+  expiration_forfeit: 'Saldo no utilizado',
 };
 
 // ============================================================================
@@ -393,8 +395,13 @@ export function getTierConfigByVehicleValue(vehicleValueUsd: number): Subscripti
  */
 export function canAccessVehicle(
   userTier: SubscriptionTier | null,
-  vehicleValueUsd: number
-): { allowed: boolean; requiredTier: SubscriptionTier; userTier: SubscriptionTier | null; reason?: string } {
+  vehicleValueUsd: number,
+): {
+  allowed: boolean;
+  requiredTier: SubscriptionTier;
+  userTier: SubscriptionTier | null;
+  reason?: string;
+} {
   const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
 
   // No subscription - can still rent but with higher preauth
@@ -403,7 +410,7 @@ export function canAccessVehicle(
       allowed: true,
       requiredTier,
       userTier: null,
-      reason: 'Sin suscripción: se requiere preautorización completa'
+      reason: 'Sin suscripción: se requiere preautorización completa',
     };
   }
 
@@ -411,7 +418,7 @@ export function canAccessVehicle(
   const tierHierarchy: Record<SubscriptionTier, number> = {
     club_standard: 1,
     club_black: 2,
-    club_luxury: 3
+    club_luxury: 3,
   };
 
   const userLevel = tierHierarchy[userTier];
@@ -421,7 +428,7 @@ export function canAccessVehicle(
     return {
       allowed: true,
       requiredTier,
-      userTier
+      userTier,
     };
   }
 
@@ -429,7 +436,7 @@ export function canAccessVehicle(
     allowed: true, // Allowed but with higher preauth
     requiredTier,
     userTier,
-    reason: `Tu suscripción ${SUBSCRIPTION_TIERS[userTier].name} no cubre autos de este valor. Se aplicará preautorización estándar de ${SUBSCRIPTION_TIERS[requiredTier].name}.`
+    reason: `Tu suscripción ${SUBSCRIPTION_TIERS[userTier].name} no cubre autos de este valor. Se aplicará preautorización estándar de ${SUBSCRIPTION_TIERS[requiredTier].name}.`,
   };
 }
 
@@ -453,7 +460,7 @@ export interface PreauthorizationCalculation {
 
 export function calculatePreauthorization(
   vehicleValueUsd: number,
-  userTier: SubscriptionTier | null
+  userTier: SubscriptionTier | null,
 ): PreauthorizationCalculation {
   const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
   const tierConfig = SUBSCRIPTION_TIERS[requiredTier];
@@ -467,7 +474,7 @@ export function calculatePreauthorization(
   const tierHierarchy: Record<SubscriptionTier, number> = {
     club_standard: 1,
     club_black: 2,
-    club_luxury: 3
+    club_luxury: 3,
   };
 
   let holdAmountCents = baseHoldCents;
@@ -497,7 +504,7 @@ export function calculatePreauthorization(
     fgoCap: tierConfig.fgo_cap_usd,
     formula: discountApplied
       ? `Hold reducido con ${SUBSCRIPTION_TIERS[userTier!].name}`
-      : `Hold = max(${tierConfig.preauth_hold_usd}, ${vehicleValueUsd} × 10%)`
+      : `Hold = max(${tierConfig.preauth_hold_usd}, ${vehicleValueUsd} × 10%)`,
   };
 }
 
@@ -517,7 +524,7 @@ export interface UpgradeRecommendation {
 
 export function getUpgradeRecommendation(
   vehicleValueUsd: number,
-  currentTier: SubscriptionTier | null
+  currentTier: SubscriptionTier | null,
 ): UpgradeRecommendation {
   const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
   const requiredConfig = SUBSCRIPTION_TIERS[requiredTier];
@@ -537,11 +544,11 @@ export function getUpgradeRecommendation(
   const tierHierarchy: Record<SubscriptionTier, number> = {
     club_standard: 1,
     club_black: 2,
-    club_luxury: 3
+    club_luxury: 3,
   };
 
-  const shouldUpgrade = !currentTier ||
-    (currentTier && tierHierarchy[currentTier] < tierHierarchy[requiredTier]);
+  const shouldUpgrade =
+    !currentTier || (currentTier && tierHierarchy[currentTier] < tierHierarchy[requiredTier]);
 
   return {
     shouldUpgrade,
@@ -551,7 +558,7 @@ export function getUpgradeRecommendation(
     upgradedHoldUsd: upgradedPreauth.holdAmountUsd,
     savingsUsd: savingsPerTrip,
     upgradeCostUsd: upgradeCost,
-    breakEvenTrips
+    breakEvenTrips,
   };
 }
 
@@ -570,6 +577,6 @@ export function formatPreauthorizationInfo(preauth: PreauthorizationCalculation)
     discountDisplay: preauth.discountApplied
       ? `Descuento aplicado: ${preauth.discountReason}`
       : null,
-    fgoCapDisplay: `Cobertura FGO máxima: $${preauth.fgoCap} USD`
+    fgoCapDisplay: `Cobertura FGO máxima: $${preauth.fgoCap} USD`,
   };
 }

@@ -1,12 +1,13 @@
-
-import {Component,
+import {
+  Component,
   CUSTOM_ELEMENTS_SCHEMA,
   inject,
   input,
   OnInit,
   output,
   signal,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { DamageItem, SettlementService } from '@core/services/payments/settlement.service';
 

@@ -1,5 +1,12 @@
-import {Component, OnInit, inject, signal, computed,
-  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+  DestroyRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -86,19 +93,20 @@ export class MyClaimsPage implements OnInit {
   async loadClaims() {
     this.loading.set(true);
     try {
-      this.insuranceService.getMyClaims().pipe(
-        takeUntilDestroyed(this.destroyRef)
-      ).subscribe({
-        next: (claims) => {
-          this.claims.set(claims);
-          this.loading.set(false);
-        },
-        error: (error) => {
-          console.error('Error loading claims:', error);
-          this.toastService.error('Error al cargar siniestros', '');
-          this.loading.set(false);
-        },
-      });
+      this.insuranceService
+        .getMyClaims()
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (claims) => {
+            this.claims.set(claims);
+            this.loading.set(false);
+          },
+          error: (error) => {
+            console.error('Error loading claims:', error);
+            this.toastService.error('Error al cargar siniestros', '');
+            this.loading.set(false);
+          },
+        });
     } catch (error) {
       console.error('Error loading claims:', error);
       this.toastService.error('Error al cargar siniestros', '');

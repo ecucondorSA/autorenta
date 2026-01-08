@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-
 /**
  * Card Component V2
  * Flexible card container with header, content, and footer slots

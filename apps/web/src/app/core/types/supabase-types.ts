@@ -10,15 +10,13 @@ import { Database } from '../../../types/supabase.types';
 // TABLE TYPES - Direct exports from generated types
 // ============================================================================
 
-type Tables<T extends keyof Database['public']['Tables']> =
-  Database['public']['Tables'][T]['Row'];
+type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];
 type TablesInsert<T extends keyof Database['public']['Tables']> =
   Database['public']['Tables'][T]['Insert'];
 type TablesUpdate<T extends keyof Database['public']['Tables']> =
   Database['public']['Tables'][T]['Update'];
 
-type Views<T extends keyof Database['public']['Views']> =
-  Database['public']['Views'][T]['Row'];
+type Views<T extends keyof Database['public']['Views']> = Database['public']['Views'][T]['Row'];
 
 // ============================================================================
 // COMMONLY USED TYPES

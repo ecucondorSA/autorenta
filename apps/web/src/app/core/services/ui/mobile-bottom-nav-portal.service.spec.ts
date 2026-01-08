@@ -6,7 +6,7 @@ describe('MobileBottomNavPortalService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MobileBottomNavPortalService]
+      providers: [MobileBottomNavPortalService],
     });
     service = TestBed.inject(MobileBottomNavPortalService);
   });
@@ -26,5 +26,4 @@ describe('MobileBottomNavPortalService', () => {
   it('should have setHidden method', () => {
     expect(typeof service.setHidden).toBe('function');
   });
-
 });

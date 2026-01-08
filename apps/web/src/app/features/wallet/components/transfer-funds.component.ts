@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import {Component, computed, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TransferResponse, WalletLedgerService } from '@core/services/payments/wallet-ledger.service';
+import {
+  TransferResponse,
+  WalletLedgerService,
+} from '@core/services/payments/wallet-ledger.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { toSignalOrNull } from '@core/utils/signal-helpers';
 

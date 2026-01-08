@@ -119,7 +119,10 @@ export function initializeSentry(): void {
     beforeBreadcrumb(breadcrumb: Breadcrumb): Breadcrumb | null {
       // Don't log sensitive URLs
       if (breadcrumb.category === 'fetch' || breadcrumb.category === 'xhr') {
-        if (breadcrumb.data?.['url']?.includes('token') || breadcrumb.data?.['url']?.includes('auth')) {
+        if (
+          breadcrumb.data?.['url']?.includes('token') ||
+          breadcrumb.data?.['url']?.includes('auth')
+        ) {
           breadcrumb.data['url'] = '[REDACTED]';
         }
       }

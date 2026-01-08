@@ -2,7 +2,10 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { AnalyticsService, ConversionEventType } from '@core/services/infrastructure/analytics.service';
+import {
+  AnalyticsService,
+  ConversionEventType,
+} from '@core/services/infrastructure/analytics.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 interface EventStats {

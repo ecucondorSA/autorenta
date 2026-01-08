@@ -21,7 +21,7 @@
                     target="_blank"
                     rel="noopener noreferrer"
                     class="footer-link"
-                    >
+                  >
                     {{ link.label }}
                     <span class="external-icon">↗</span>
                   </a>
@@ -39,15 +39,18 @@
     <div class="footer-bottom-content">
       <!-- Left: Copyright and Legal Links -->
       <div class="footer-bottom-left">
-        <img ngSrc="/assets/images/autorentar-logo.svg" alt="Autorentar Logo" class="footer-logo" width="120" height="30" />
+        <img
+          ngSrc="/assets/images/autorentar-logo.svg"
+          alt="Autorentar Logo"
+          class="footer-logo"
+          width="120"
+          height="30"
+        />
         <p class="copyright">© {{ currentYear }} Autorentar · Hecho en Buenos Aires, Argentina</p>
         <span class="separator">·</span>
         <nav class="legal-links" aria-label="Vínculos legales">
           @for (link of legalLinks(); track link; let isLast = $last) {
-            <a
-              [routerLink]="link.url"
-              class="legal-link"
-              >
+            <a [routerLink]="link.url" class="legal-link">
               {{ link.label }}
               @if (!isLast) {
                 <span class="separator">·</span>
@@ -65,7 +68,7 @@
           class="selector-button"
           (click)="onLanguageChange()"
           aria-label="Elegir idioma"
-          >
+        >
           <app-icon name="globe" [size]="16" cssClass="selector-icon" />
           <span class="selector-text">{{ currentLanguage() }}</span>
         </button>
@@ -76,7 +79,7 @@
           class="selector-button"
           (click)="onCurrencyChange()"
           aria-label="Elegir moneda"
-          >
+        >
           <app-icon name="money" [size]="16" cssClass="selector-icon" />
           <span class="selector-text">{{ currentCurrency() }}</span>
         </button>
@@ -90,7 +93,7 @@
               rel="noopener noreferrer"
               class="social-link"
               [attr.aria-label]="social.ariaLabel"
-              >
+            >
               <app-icon [name]="social.icon" [size]="18" cssClass="social-icon" />
             </a>
           }

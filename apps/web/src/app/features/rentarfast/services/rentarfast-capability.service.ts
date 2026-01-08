@@ -1,6 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AgentChatSuggestion, RentarfastAgentService } from '@core/services/ai/rentarfast-agent.service';
+import {
+  AgentChatSuggestion,
+  RentarfastAgentService,
+} from '@core/services/ai/rentarfast-agent.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
@@ -62,7 +65,9 @@ export class RentarfastCapabilityService {
    */
   async searchNearbyCars(): Promise<void> {
     this.agentService.addLocalUserMessage('Buscar autos disponibles cerca de mí');
-    const msgId = this.agentService.addLocalAgentMessage('Obteniendo tu ubicación...', ['local_nearby']);
+    const msgId = this.agentService.addLocalAgentMessage('Obteniendo tu ubicación...', [
+      'local_nearby',
+    ]);
 
     try {
       let location = this.intentService.getLastLocation();
@@ -74,7 +79,7 @@ export class RentarfastCapabilityService {
         this.agentService.updateMessageContent(
           msgId,
           'Necesito tu ubicación para encontrar autos cercanos.\n\nPor favor, permite el acceso a tu ubicación en el navegador o decime una dirección.',
-          ['local_nearby']
+          ['local_nearby'],
         );
         return;
       }
@@ -85,7 +90,7 @@ export class RentarfastCapabilityService {
       this.agentService.updateMessageContent(
         msgId,
         `Ubicación: ${location.address || 'Obtenida'}\nBuscando autos cercanos...`,
-        ['local_nearby']
+        ['local_nearby'],
       );
 
       const radiusKm = 50;
@@ -109,7 +114,7 @@ export class RentarfastCapabilityService {
             location!.lat,
             location!.lng,
             car.location_lat!,
-            car.location_lng!
+            car.location_lng!,
           ),
         }))
         .sort((a, b) => a.distance_km - b.distance_km)
@@ -119,7 +124,7 @@ export class RentarfastCapabilityService {
         this.agentService.updateMessageContent(
           msgId,
           'No encontré autos disponibles cerca de tu ubicación.\n\n¿Querés que busque en toda la plataforma?',
-          ['local_nearby']
+          ['local_nearby'],
         );
         return;
       }
@@ -159,7 +164,7 @@ export class RentarfastCapabilityService {
         msgId,
         `**Los ${carsWithDistance.length} autos más cercanos:**\n\n${carsList}\n\nTocá un botón para reservar por 3 días:`,
         ['local_nearby', 'search_cars'],
-        suggestions
+        suggestions,
       );
 
       this.storeNearestCar({
@@ -173,7 +178,7 @@ export class RentarfastCapabilityService {
       this.agentService.updateMessageContent(
         msgId,
         'No pude obtener tu ubicación. Por favor, habilitá los permisos de ubicación o decime una dirección.',
-        ['local_nearby']
+        ['local_nearby'],
       );
     }
   }
@@ -183,7 +188,9 @@ export class RentarfastCapabilityService {
    */
   async calculatePrice(): Promise<void> {
     this.agentService.addLocalUserMessage('Calcular precios de alquiler');
-    const msgId = this.agentService.addLocalAgentMessage('Calculando precios...', ['local_pricing']);
+    const msgId = this.agentService.addLocalAgentMessage('Calculando precios...', [
+      'local_pricing',
+    ]);
 
     const storedCar = this.getStoredNearestCar();
 
@@ -191,7 +198,7 @@ export class RentarfastCapabilityService {
       this.agentService.updateMessageContent(
         msgId,
         'Primero necesito buscar autos disponibles.\n\nTocá "Buscar autos disponibles" para ver opciones cerca tuyo, o decime qué auto te interesa.',
-        ['local_pricing']
+        ['local_pricing'],
       );
       return;
     }
@@ -204,7 +211,7 @@ export class RentarfastCapabilityService {
       this.agentService.updateMessageContent(
         msgId,
         `No hay precio disponible para **${storedCar.title}**.\n\nContactá al propietario para conocer el precio.`,
-        ['local_pricing']
+        ['local_pricing'],
       );
       return;
     }
@@ -226,7 +233,7 @@ export class RentarfastCapabilityService {
     this.agentService.updateMessageContent(
       msgId,
       `**Precios para ${storedCar.title}:**\n\n${priceList}\n\nPara reservar por 3 días desde hoy:\nDecí "alquilar el primero" o "reservar ${storedCar.id} ${today.toISOString().split('T')[0]} ${endDate3Days.toISOString().split('T')[0]}"`,
-      ['local_pricing', 'calculate_price']
+      ['local_pricing', 'calculate_price'],
     );
   }
 
@@ -235,14 +242,16 @@ export class RentarfastCapabilityService {
    */
   async showStats(): Promise<void> {
     this.agentService.addLocalUserMessage('Ver estadísticas');
-    const msgId = this.agentService.addLocalAgentMessage('Cargando estadísticas...', ['local_stats']);
+    const msgId = this.agentService.addLocalAgentMessage('Cargando estadísticas...', [
+      'local_stats',
+    ]);
 
     const auth = await this.intentService.getAuthSnapshot();
     if (!auth) {
       this.agentService.updateMessageContent(
         msgId,
         'Necesitás iniciar sesión para ver tus estadísticas.\n\n¿Querés que abra el login?',
-        ['local_stats']
+        ['local_stats'],
       );
       return;
     }
@@ -251,7 +260,7 @@ export class RentarfastCapabilityService {
       const { bookings: renterBookings } = await this.bookingsService.getMyBookings({ limit: 100 });
       const completedRentals = renterBookings.filter((b) => b.status === 'completed').length;
       const activeRentals = renterBookings.filter(
-        (b) => b.status === 'in_progress' || b.status === 'confirmed'
+        (b) => b.status === 'in_progress' || b.status === 'confirmed',
       ).length;
       const pendingRentals = renterBookings.filter((b) => b.status === 'pending').length;
 
@@ -280,14 +289,14 @@ export class RentarfastCapabilityService {
           `**Como propietario:**\n` +
           `• Autos publicados: ${publishedCars}/${myCars.length}` +
           walletInfo,
-        ['local_stats', 'stats']
+        ['local_stats', 'stats'],
       );
     } catch (error) {
       this.logger.error('[RentarfastCapability] Error loading stats', error);
       this.agentService.updateMessageContent(
         msgId,
         'Error al cargar estadísticas. Intentalo de nuevo.',
-        ['local_stats']
+        ['local_stats'],
       );
     }
   }
@@ -299,7 +308,9 @@ export class RentarfastCapabilityService {
     this.agentService.addLocalUserMessage('¿Qué puedo hacer?');
 
     const auth = await this.intentService.getAuthSnapshot();
-    const loginStatus = auth ? 'Estás logueado' : 'No estás logueado (algunas funciones requieren login)';
+    const loginStatus = auth
+      ? 'Estás logueado'
+      : 'No estás logueado (algunas funciones requieren login)';
 
     this.agentService.addLocalAgentMessage(
       `**Soy Rentarfast, tu asistente de AutoRentar**\n\n${loginStatus}\n\n` +
@@ -309,7 +320,7 @@ export class RentarfastCapabilityService {
         `**Tu cuenta:**\n• "Mi wallet" / "Mi saldo"\n• "Mis reservas"\n• "Mis autos"\n• "Mi perfil"\n\n` +
         `**Acciones rápidas:**\n• "Publicar un auto"\n• "Ver documentos"\n• "Abrir verificación"\n\n` +
         `También podés hablarme usando el micrófono.`,
-      ['local_help', 'help']
+      ['local_help', 'help'],
     );
   }
 
@@ -318,14 +329,16 @@ export class RentarfastCapabilityService {
    */
   async bookFirstCar(originalText: string): Promise<void> {
     this.agentService.addLocalUserMessage(originalText);
-    const msgId = this.agentService.addLocalAgentMessage('Preparando tu reserva...', ['local_booking']);
+    const msgId = this.agentService.addLocalAgentMessage('Preparando tu reserva...', [
+      'local_booking',
+    ]);
 
     const auth = await this.intentService.getAuthSnapshot();
     if (!auth) {
       this.agentService.updateMessageContent(
         msgId,
         'Necesitás iniciar sesión para hacer una reserva.\n\n¿Querés que abra el login?',
-        ['local_booking']
+        ['local_booking'],
       );
       return;
     }
@@ -336,7 +349,7 @@ export class RentarfastCapabilityService {
       this.agentService.updateMessageContent(
         msgId,
         'Primero necesito buscar autos disponibles.\n\nTocá "Buscar autos disponibles" para ver opciones cerca tuyo.',
-        ['local_booking']
+        ['local_booking'],
       );
       return;
     }
@@ -353,21 +366,21 @@ export class RentarfastCapabilityService {
     this.agentService.updateMessageContent(
       msgId,
       `**Reservando ${storedCar.title}**\n\nDel ${startDateStr} al ${endDateStr} (3 días)\nTotal estimado: ${storedCar.currency} ${totalPrice.toFixed(0)}\n\nCreando reserva...`,
-      ['local_booking']
+      ['local_booking'],
     );
 
     try {
       const result = await this.bookingsService.createBookingWithValidation(
         storedCar.id,
         startDateStr,
-        endDateStr
+        endDateStr,
       );
 
       if (!result.success || !result.booking) {
         this.agentService.updateMessageContent(
           msgId,
           `${result.error || 'No pude crear la reserva.'}\n\nPosibles causas:\n• El auto no está disponible en esas fechas\n• Ya tenés una reserva activa con este auto\n\n¿Querés buscar otros autos?`,
-          ['local_booking']
+          ['local_booking'],
         );
         return;
       }
@@ -375,7 +388,7 @@ export class RentarfastCapabilityService {
       this.agentService.updateMessageContent(
         msgId,
         `**Reserva creada exitosamente**\n\n${storedCar.title}\n${startDateStr} → ${endDateStr}\nTotal: ${storedCar.currency} ${totalPrice.toFixed(0)}\n\nTe llevo al pago para confirmar tu reserva...`,
-        ['local_booking', 'booking_created']
+        ['local_booking', 'booking_created'],
       );
 
       this.clearStoredNearestCar();
@@ -388,7 +401,7 @@ export class RentarfastCapabilityService {
       this.agentService.updateMessageContent(
         msgId,
         'Error al crear la reserva. El auto puede no estar disponible en esas fechas.\n\n¿Querés buscar otros autos disponibles?',
-        ['local_booking']
+        ['local_booking'],
       );
     }
   }

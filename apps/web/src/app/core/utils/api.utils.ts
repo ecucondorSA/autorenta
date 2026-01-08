@@ -2,7 +2,11 @@
  * @fileoverview Utility functions for wrapping Supabase API calls with a standardized response format.
  */
 
-import { ServiceResponse, ServiceErrorResponse, ServiceSuccessResponse } from '@core/types/service-response';
+import {
+  ServiceResponse,
+  ServiceErrorResponse,
+  ServiceSuccessResponse,
+} from '@core/types/service-response';
 
 /**
  * Wraps an asynchronous Supabase API call to return a standardized ServiceResponse.
@@ -13,7 +17,10 @@ import { ServiceResponse, ServiceErrorResponse, ServiceSuccessResponse } from '@
  * @returns {Promise<ServiceResponse<T>>} A promise that resolves to a ServiceResponse.
  */
 export async function wrapSupabaseCall<T>(
-  apiCall: () => PromiseLike<{ data: T | null; error: import('@supabase/supabase-js').PostgrestError | null }>
+  apiCall: () => PromiseLike<{
+    data: T | null;
+    error: import('@supabase/supabase-js').PostgrestError | null;
+  }>,
 ): Promise<ServiceResponse<T>> {
   try {
     const { data, error } = await apiCall();
@@ -36,7 +43,6 @@ export async function wrapSupabaseCall<T>(
       message: 'Operation successful',
       statusCode: 200, // Assuming 200 for successful operations
     } as ServiceSuccessResponse<T>;
-
   } catch (e: unknown) {
     console.error('Unexpected API Call Exception:', e);
     const message = e instanceof Error ? e.message : 'An unexpected client-side error occurred.';

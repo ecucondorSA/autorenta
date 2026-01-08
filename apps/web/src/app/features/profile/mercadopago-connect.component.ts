@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {Component, inject, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import {
   MercadoPagoOAuthService,

@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {Component, OnInit, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 import { AccountingService, CashFlowEntry } from '@core/services/payments/accounting.service';
 
 @Component({

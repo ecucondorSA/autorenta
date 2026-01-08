@@ -137,7 +137,10 @@ export class ClaimValidationService {
       // Convertir resultados a DamageItem[]
       return this.damageDetectionService.convertToDamageItems(analysisResult.damages);
     } catch (error) {
-      this.logger.error(`compareDamages: Error analyzing damages for booking ${bookingId}`, String(error));
+      this.logger.error(
+        `compareDamages: Error analyzing damages for booking ${bookingId}`,
+        String(error),
+      );
       return [];
     }
   }

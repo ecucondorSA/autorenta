@@ -6,7 +6,7 @@ describe('BookingInitiationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BookingInitiationService]
+      providers: [BookingInitiationService],
     });
     service = TestBed.inject(BookingInitiationService);
   });
@@ -18,5 +18,4 @@ describe('BookingInitiationService', () => {
   it('should have startFromCar method', () => {
     expect(typeof service.startFromCar).toBe('function');
   });
-
 });

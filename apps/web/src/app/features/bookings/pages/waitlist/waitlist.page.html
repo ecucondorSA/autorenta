@@ -9,7 +9,7 @@
             stroke-linejoin="round"
             stroke-width="2"
             d="M15 19l-7-7 7-7"
-            />
+          />
         </svg>
         Volver a Reservas
       </a>
@@ -36,7 +36,7 @@
           fill-rule="evenodd"
           d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
           clip-rule="evenodd"
-          />
+        />
       </svg>
       {{ error() }}
     </div>
@@ -51,12 +51,12 @@
           stroke-linejoin="round"
           stroke-width="2"
           d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-          />
+        />
       </svg>
       <h2 class="empty-title font-bold font-satoshi">No tienes autos en lista de espera</h2>
       <p class="empty-description">
-        Cuando un auto que quieres reservar no esté disponible, podrás unirte a la lista de espera. Te
-        notificaremos cuando esté libre.
+        Cuando un auto que quieres reservar no esté disponible, podrás unirte a la lista de espera.
+        Te notificaremos cuando esté libre.
       </p>
       <a routerLink="/cars" class="btn-primary"> Buscar Autos </a>
     </div>
@@ -69,105 +69,102 @@
         <span class="entries-count"
           >{{ waitlistEntries().length }}
           {{ waitlistEntries().length === 1 ? 'auto en espera' : 'autos en espera' }}</span
-          >
-        </div>
-        <div class="entries-list">
-          @for (entry of waitlistEntries(); track entry) {
-            <div class="entry-card">
-              <!-- Status Badge -->
-              <div class="entry-status">
-                <span class="status-badge" [ngClass]="getStatusBadgeClass(entry.status)">
-                  {{ getStatusText(entry.status) }}
+        >
+      </div>
+      <div class="entries-list">
+        @for (entry of waitlistEntries(); track entry) {
+          <div class="entry-card">
+            <!-- Status Badge -->
+            <div class="entry-status">
+              <span class="status-badge" [ngClass]="getStatusBadgeClass(entry.status)">
+                {{ getStatusText(entry.status) }}
+              </span>
+              @if (entry.notified_at) {
+                <span class="notified-date">
+                  Notificado el {{ formatDate(entry.notified_at) }}
                 </span>
-                @if (entry.notified_at) {
-                  <span class="notified-date">
-                    Notificado el {{ formatDate(entry.notified_at) }}
-                  </span>
-                }
-              </div>
-              <!-- Car Info -->
-              <div class="entry-content">
-                <div class="car-info">
-                  <h3 class="car-name font-bold font-satoshi">{{ entry.car_brand }} {{ entry.car_model }}</h3>
-                  <div class="dates-info">
+              }
+            </div>
+            <!-- Car Info -->
+            <div class="entry-content">
+              <div class="car-info">
+                <h3 class="car-name font-bold font-satoshi">
+                  {{ entry.car_brand }} {{ entry.car_model }}
+                </h3>
+                <div class="dates-info">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span>{{ formatDate(entry.start_date) }} - {{ formatDate(entry.end_date) }}</span>
+                </div>
+                <div class="meta-info">
+                  <span class="days-waiting">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
-                    <span>{{ formatDate(entry.start_date) }} - {{ formatDate(entry.end_date) }}</span>
-                  </div>
-                  <div class="meta-info">
-                    <span class="days-waiting">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                      </svg>
-                      {{ getDaysInWaitlist(entry.created_at) }}
-                      {{ getDaysInWaitlist(entry.created_at) === 1 ? 'día' : 'días' }} en espera
-                    </span>
-                  </div>
+                    {{ getDaysInWaitlist(entry.created_at) }}
+                    {{ getDaysInWaitlist(entry.created_at) === 1 ? 'día' : 'días' }} en espera
+                  </span>
                 </div>
-                <!-- Actions -->
-                <div class="entry-actions">
-                  <a
-                    [routerLink]="'/cars/' + entry.car_id"
-                    [queryParams]="{ start: entry.start_date, end: entry.end_date }"
-                    class="btn-secondary"
-                    >
+              </div>
+              <!-- Actions -->
+              <div class="entry-actions">
+                <a
+                  [routerLink]="'/cars/' + entry.car_id"
+                  [queryParams]="{ start: entry.start_date, end: entry.end_date }"
+                  class="btn-secondary"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                  Ver Auto
+                </a>
+                <button
+                  (click)="cancelEntry(entry.id)"
+                  [disabled]="cancelling() === entry.id"
+                  class="btn-danger"
+                >
+                  @if (cancelling() !== entry.id) {
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                        />
+                        d="M6 18L18 6M6 6l12 12"
+                      />
                     </svg>
-                    Ver Auto
-                  </a>
-                  <button
-                    (click)="cancelEntry(entry.id)"
-                    [disabled]="cancelling() === entry.id"
-                    class="btn-danger"
-                    >
-                    @if (cancelling() !== entry.id) {
-                      <svg
-                        class="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M6 18L18 6M6 6l12 12"
-                          />
-                      </svg>
-                    }
-                    @if (cancelling() === entry.id) {
-                      <div class="spinner-small"></div>
-                    }
-                    {{ cancelling() === entry.id ? 'Cancelando...' : 'Cancelar' }}
-                  </button>
-                </div>
+                  }
+                  @if (cancelling() === entry.id) {
+                    <div class="spinner-small"></div>
+                  }
+                  {{ cancelling() === entry.id ? 'Cancelando...' : 'Cancelar' }}
+                </button>
               </div>
             </div>
-          }
-        </div>
+          </div>
+        }
       </div>
-    }
-  </div>
+    </div>
+  }
+</div>

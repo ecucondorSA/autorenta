@@ -248,7 +248,8 @@ export class PaymentOrchestrationService {
             .pipe(takeUntilDestroyedInterop(this.destroyRef))
             .subscribe({
               next: () => this.logger.info('Wallet funds unlocked after payment failure'),
-              error: (err) => this.logger.error('Failed to unlock wallet funds after payment error', err)
+              error: (err) =>
+                this.logger.error('Failed to unlock wallet funds after payment error', err),
             });
 
           return of({
@@ -313,7 +314,8 @@ export class PaymentOrchestrationService {
           .pipe(takeUntilDestroyedInterop(this.destroyRef))
           .subscribe({
             next: () => this.logger.info('Funds released after payment failure'),
-            error: (err) => this.logger.error('Failed to unlock funds after payment rejection', err)
+            error: (err) =>
+              this.logger.error('Failed to unlock funds after payment rejection', err),
           });
       }
 

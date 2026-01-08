@@ -220,8 +220,16 @@ export type MockRpcCall = jasmine.Spy<
 export interface MockRealtimeChannel {
   subscribe: jasmine.Spy<(callback?: (status: string) => void) => MockRealtimeChannel>;
   unsubscribe: jasmine.Spy<() => void>;
-  on: jasmine.Spy<(event: string, filter: any, callback: (payload: any) => void) => MockRealtimeChannel>;
-  send: jasmine.Spy<(payload: { type: string; event: string; payload?: any }) => Promise<'ok' | 'error' | 'timed out'>>;
+  on: jasmine.Spy<
+    (event: string, filter: any, callback: (payload: any) => void) => MockRealtimeChannel
+  >;
+  send: jasmine.Spy<
+    (payload: {
+      type: string;
+      event: string;
+      payload?: any;
+    }) => Promise<'ok' | 'error' | 'timed out'>
+  >;
 }
 
 /**
@@ -235,8 +243,12 @@ export interface MockSupabaseClient {
   auth: MockAuth;
   functions: MockFunctions;
   rpc: MockRpcCall;
-  channel: jasmine.Spy<(name: string, opts?: { config?: { broadcast?: { self?: boolean } } }) => MockRealtimeChannel>;
-  removeChannel: jasmine.Spy<(channel: MockRealtimeChannel) => Promise<'ok' | 'timed out' | 'error'>>;
+  channel: jasmine.Spy<
+    (name: string, opts?: { config?: { broadcast?: { self?: boolean } } }) => MockRealtimeChannel
+  >;
+  removeChannel: jasmine.Spy<
+    (channel: MockRealtimeChannel) => Promise<'ok' | 'timed out' | 'error'>
+  >;
 }
 
 // ============================================================================
@@ -334,13 +346,15 @@ export function createMockStorageBucket(): MockStorageBucket {
 export function createMockRealtimeChannel(): MockRealtimeChannel {
   const channel: any = {};
 
-  channel.subscribe = jasmine.createSpy('subscribe').and.callFake((callback?: (status: string) => void) => {
-    if (callback) {
-      // Simulate successful subscription
-      setTimeout(() => callback('SUBSCRIBED'), 0);
-    }
-    return channel;
-  });
+  channel.subscribe = jasmine
+    .createSpy('subscribe')
+    .and.callFake((callback?: (status: string) => void) => {
+      if (callback) {
+        // Simulate successful subscription
+        setTimeout(() => callback('SUBSCRIBED'), 0);
+      }
+      return channel;
+    });
 
   channel.unsubscribe = jasmine.createSpy('unsubscribe');
 

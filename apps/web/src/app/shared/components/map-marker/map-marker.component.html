@@ -3,23 +3,23 @@
     class="relative cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group"
     [class.scale-110]="isSelected"
     [class.z-50]="isSelected"
-    >
+  >
     <!-- Car Photo Circle -->
     <div
       class="w-14 h-14 rounded-full bg-surface-raised p-0.5 shadow-xl transition-all duration-300 border border-border-default group-hover:border-black dark:group-hover:border-cta-default"
       [class.ring-4]="isSelected"
       [class.ring-cta-default]="isSelected"
       [class.shadow-neon-glow]="isSelected"
-      >
+    >
       <img
         class="w-full h-full rounded-full object-cover"
         [src]="car.photoUrl || '/assets/images/car-placeholder.svg'"
         [alt]="car.title || 'Auto'"
-        />
+      />
     </div>
 
     <!-- Price Tag (Floating below - Modern Tech Style) -->
-    <div 
+    <div
       class="absolute -bottom-2 left-1/2 -translate-x-1/2 transition-all duration-300"
       [class.scale-110]="isSelected"
     >
@@ -28,14 +28,16 @@
         [class.bg-cta-default]="isSelected"
         [class.text-black]="isSelected"
         [class.dark:bg-cta-default]="isSelected"
-        >
+      >
         <span class="font-tech">\${{ car.pricePerDay | number: '1.0-0' }}</span>
       </div>
     </div>
 
     <!-- Selection Glow -->
     @if (isSelected) {
-      <div class="absolute inset-0 bg-cta-default/20 blur-xl rounded-full -z-10 animate-pulse"></div>
+      <div
+        class="absolute inset-0 bg-cta-default/20 blur-xl rounded-full -z-10 animate-pulse"
+      ></div>
     }
   </div>
 }

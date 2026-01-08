@@ -7,7 +7,10 @@ import {
   PaginatedConversations,
 } from '@core/repositories/messages.repository';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeConnectionService, ConnectionStatus } from '@core/services/infrastructure/realtime-connection.service';
+import {
+  RealtimeConnectionService,
+  ConnectionStatus,
+} from '@core/services/infrastructure/realtime-connection.service';
 import { OfflineMessagesService } from '@core/services/infrastructure/offline-messages.service';
 import { RateLimiterService } from '@core/services/infrastructure/rate-limiter.service';
 
@@ -574,13 +577,15 @@ export class MessagesService implements OnDestroy {
     const { data, error } = await this.supabase
       .from('user_blocks')
       .select('blocker_id, blocked_id')
-      .or(`and(blocker_id.eq.${user.id},blocked_id.eq.${userId}),and(blocker_id.eq.${userId},blocked_id.eq.${user.id})`);
+      .or(
+        `and(blocker_id.eq.${user.id},blocked_id.eq.${userId}),and(blocker_id.eq.${userId},blocked_id.eq.${user.id})`,
+      );
 
     if (error) return { blocked: false, blockedBy: false };
 
     const rows = data ?? [];
-    const blocked = rows.some(r => r.blocker_id === user.id && r.blocked_id === userId);
-    const blockedBy = rows.some(r => r.blocker_id === userId && r.blocked_id === user.id);
+    const blocked = rows.some((r) => r.blocker_id === user.id && r.blocked_id === userId);
+    const blockedBy = rows.some((r) => r.blocker_id === userId && r.blocked_id === user.id);
 
     return { blocked, blockedBy };
   }

@@ -1,14 +1,17 @@
-import {Component, OnInit, OnDestroy, inject, signal,
-  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+  DestroyRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import {
-  DisputesService,
-  Dispute,
-  DisputeStatus,
-} from '@core/services/admin/disputes.service';
+import { DisputesService, Dispute, DisputeStatus } from '@core/services/admin/disputes.service';
 import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import { DisputeEvidenceUploaderComponent } from '../../components/evidence-uploader/evidence-uploader.component'; // Importar el uploader
 
@@ -29,15 +32,15 @@ import { DisputeEvidenceUploaderComponent } from '../../components/evidence-uplo
             'badge-success': dispute()?.status === 'resolved',
             'badge-error': dispute()?.status === 'rejected',
           }"
-          >
+        >
           {{ dispute()?.status | titlecase }}
         </div>
       </div>
-    
+
       @if (loading()) {
         <div class="loading loading-spinner loading-lg"></div>
       }
-    
+
       @if (dispute()) {
         <div>
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -56,56 +59,58 @@ import { DisputeEvidenceUploaderComponent } from '../../components/evidence-uplo
                   <div class="flex flex-wrap gap-2 text-sm">
                     <span class="badge badge-ghost"
                       >Abierta por: {{ dispute()?.opened_by | slice: 0 : 8 }}...</span
-                      >
-                      <span class="badge badge-ghost"
-                        >Reserva ID: {{ dispute()?.booking_id | slice: 0 : 8 }}...</span
-                        >
-                      </div>
-                    </div>
+                    >
+                    <span class="badge badge-ghost"
+                      >Reserva ID: {{ dispute()?.booking_id | slice: 0 : 8 }}...</span
+                    >
                   </div>
-                  <app-dispute-evidence-uploader [disputeId]="disputeId()"></app-dispute-evidence-uploader>
                 </div>
-                <!-- Columna Lateral: Acciones Admin -->
-                <div class="lg:col-span-1">
-                  <div class="card bg-base-100 shadow-xl sticky top-6">
-                    <div class="card-body">
-                      <h3 class="card-title text-lg">Acciones de Admin</h3>
-                      <p class="text-sm text-gray-500 mb-4">Cambiar el estado de la disputa.</p>
-                      <div class="flex flex-col gap-2">
-                        <button
-                          class="btn btn-success btn-sm text-white"
-                          (click)="updateStatus('resolved')"
-                          [disabled]="updating() || dispute()?.status === 'resolved'"
-                          >
-                          Resolver (Aprobar)
-                        </button>
-                        <button
-                          class="btn btn-error btn-sm text-white"
-                          (click)="updateStatus('rejected')"
-                          [disabled]="updating() || dispute()?.status === 'rejected'"
-                          >
-                          Rechazar
-                        </button>
-                        <button
-                          class="btn btn-info btn-sm text-white"
-                          (click)="updateStatus('in_review')"
-                          [disabled]="updating() || dispute()?.status === 'in_review'"
-                          >
-                          Marcar en Revisión
-                        </button>
-                      </div>
-                    </div>
+              </div>
+              <app-dispute-evidence-uploader
+                [disputeId]="disputeId()"
+              ></app-dispute-evidence-uploader>
+            </div>
+            <!-- Columna Lateral: Acciones Admin -->
+            <div class="lg:col-span-1">
+              <div class="card bg-base-100 shadow-xl sticky top-6">
+                <div class="card-body">
+                  <h3 class="card-title text-lg">Acciones de Admin</h3>
+                  <p class="text-sm text-gray-500 mb-4">Cambiar el estado de la disputa.</p>
+                  <div class="flex flex-col gap-2">
+                    <button
+                      class="btn btn-success btn-sm text-white"
+                      (click)="updateStatus('resolved')"
+                      [disabled]="updating() || dispute()?.status === 'resolved'"
+                    >
+                      Resolver (Aprobar)
+                    </button>
+                    <button
+                      class="btn btn-error btn-sm text-white"
+                      (click)="updateStatus('rejected')"
+                      [disabled]="updating() || dispute()?.status === 'rejected'"
+                    >
+                      Rechazar
+                    </button>
+                    <button
+                      class="btn btn-info btn-sm text-white"
+                      (click)="updateStatus('in_review')"
+                      [disabled]="updating() || dispute()?.status === 'in_review'"
+                    >
+                      Marcar en Revisión
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
-          }
-    
-          @if (!loading() && !dispute()) {
-            <div class="alert alert-warning">Disputa no encontrada.</div>
-          }
+          </div>
         </div>
-    `,
+      }
+
+      @if (!loading() && !dispute()) {
+        <div class="alert alert-warning">Disputa no encontrada.</div>
+      }
+    </div>
+  `,
 })
 export class DisputeDetailPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
@@ -121,18 +126,16 @@ export class DisputeDetailPage implements OnInit, OnDestroy {
   updating = signal(false);
 
   ngOnInit() {
-    this.route.paramMap
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params) => {
-        const id = params.get('id');
-        if (id) {
-          this.disputeId.set(id);
-          this.loadDispute(id);
-          this.setupRealtimeSubscription(id);
-        } else {
-          this.loading.set(false);
-        }
-      });
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.disputeId.set(id);
+        this.loadDispute(id);
+        this.setupRealtimeSubscription(id);
+      } else {
+        this.loading.set(false);
+      }
+    });
   }
 
   ngOnDestroy(): void {

@@ -53,7 +53,11 @@ export class RentarfastIntentService {
     return {
       market: this.lastMarket ?? undefined,
       location: this.lastLocation
-        ? { lat: this.lastLocation.lat, lng: this.lastLocation.lng, address: this.lastLocation.address }
+        ? {
+            lat: this.lastLocation.lat,
+            lng: this.lastLocation.lng,
+            address: this.lastLocation.address,
+          }
         : undefined,
       pickupPreference: this.lastPickupPreference ?? undefined,
       dropoffPreference: this.lastDropoffPreference ?? undefined,
@@ -88,7 +92,9 @@ export class RentarfastIntentService {
           ? {
               pickup: this.lastPickupPreference ?? undefined,
               dropoff: this.lastDropoffPreference ?? undefined,
-              sameLocation: this.lastPickupPreference !== null && this.lastPickupPreference === this.lastDropoffPreference,
+              sameLocation:
+                this.lastPickupPreference !== null &&
+                this.lastPickupPreference === this.lastDropoffPreference,
               addressHint: this.lastAddressHint ?? undefined,
             }
           : undefined,
@@ -150,7 +156,9 @@ export class RentarfastIntentService {
     // Navigation: publish car
     if (/(publicar|publica|subir).*(auto|veh[ií]culo)/.test(normalized)) {
       this.agentService.addLocalUserMessage(text);
-      this.agentService.addLocalAgentMessage('Listo, te llevo a publicar tu auto.', ['local_navigation']);
+      this.agentService.addLocalAgentMessage('Listo, te llevo a publicar tu auto.', [
+        'local_navigation',
+      ]);
       return { handled: true, navigateTo: '/cars/publish' };
     }
 
@@ -165,13 +173,15 @@ export class RentarfastIntentService {
       this.agentService.addLocalUserMessage(text);
       this.agentService.addLocalAgentMessage(
         'Te llevo a buscar autos disponibles. Ahí podés elegir fechas y reservar.',
-        ['local_navigation']
+        ['local_navigation'],
       );
       return { handled: true, navigateTo: '/cars/list' };
     }
 
     // Navigation: my bookings
-    if (/(mis reservas|mis reservaciones|estado de mis reservas|estado de reservas)/.test(normalized)) {
+    if (
+      /(mis reservas|mis reservaciones|estado de mis reservas|estado de reservas)/.test(normalized)
+    ) {
       this.agentService.addLocalUserMessage(text);
       this.agentService.addLocalAgentMessage('Te llevo a tus reservas.', ['local_navigation']);
       return { handled: true, navigateTo: '/bookings' };
@@ -207,7 +217,7 @@ export class RentarfastIntentService {
           location.address
             ? `Listo, tomaré esa ubicación: ${location.address}.`
             : 'Listo, tomaré esa ubicación.',
-          ['local_location']
+          ['local_location'],
         );
         return { handled: true };
       }
@@ -219,7 +229,7 @@ export class RentarfastIntentService {
       this.lastMarket = { country: 'AR', city: 'Buenos Aires' };
       this.agentService.addLocalAgentMessage(
         'Perfecto, usaré Buenos Aires, Argentina para las búsquedas.',
-        ['local_location']
+        ['local_location'],
       );
       return { handled: true };
     }
@@ -230,7 +240,7 @@ export class RentarfastIntentService {
       this.lastMarket = { country: 'AR' };
       this.agentService.addLocalAgentMessage(
         'Perfecto, uso Argentina como país. Si querés, decime ciudad o uso tu ubicación actual para ordenar por distancia.',
-        ['local_location']
+        ['local_location'],
       );
       return { handled: true };
     }
@@ -267,8 +277,14 @@ export class RentarfastIntentService {
     }
 
     // Simple wallet queries (complex ones go to AI agent with Function Calling)
-    const isComplexWalletQuestion = /(por que|porque|razon|motivo|explicar|explica|detalle|detalles|bloqueado|bloqueados|retenido|retenidos|liberan|liberar|devuelven|devolver)/.test(normalized);
-    if (!isComplexWalletQuestion && /(mi wallet|mi billetera|saldo|balance|saldo disponible)/.test(normalized)) {
+    const isComplexWalletQuestion =
+      /(por que|porque|razon|motivo|explicar|explica|detalle|detalles|bloqueado|bloqueados|retenido|retenidos|liberan|liberar|devuelven|devolver)/.test(
+        normalized,
+      );
+    if (
+      !isComplexWalletQuestion &&
+      /(mi wallet|mi billetera|saldo|balance|saldo disponible)/.test(normalized)
+    ) {
       await this.respondWithWalletSummary(text);
       return { handled: true };
     }
@@ -333,7 +349,9 @@ export class RentarfastIntentService {
   // ========================================
 
   private matchesVoiceHelpIntent(normalized: string): boolean {
-    return /(no me escuch|no me entiende|no estas escuch|no est[aá]s escuch|microfono|micr[oó]fono|voz no funciona|no anda la voz)/.test(normalized);
+    return /(no me escuch|no me entiende|no estas escuch|no est[aá]s escuch|microfono|micr[oó]fono|voz no funciona|no anda la voz)/.test(
+      normalized,
+    );
   }
 
   private matchesBookingSearchIntent(normalized: string, originalText?: string): boolean {
@@ -343,31 +361,43 @@ export class RentarfastIntentService {
     if (/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(textToCheckUuid)) {
       return false;
     }
-    return /(crear|hacer|iniciar).*(reserva|reservar)/.test(normalized) ||
-           /(buscar|alquilar|rentar).*(auto|veh[ií]culo)/.test(normalized);
+    return (
+      /(crear|hacer|iniciar).*(reserva|reservar)/.test(normalized) ||
+      /(buscar|alquilar|rentar).*(auto|veh[ií]culo)/.test(normalized)
+    );
   }
 
   private matchesToolsIntent(normalized: string): boolean {
-    return /(herramientas|que puedes hacer|qué puedes hacer|que podes hacer|qué podés hacer|capacidades)/.test(normalized);
+    return /(herramientas|que puedes hacer|qué puedes hacer|que podes hacer|qué podés hacer|capacidades)/.test(
+      normalized,
+    );
   }
 
   private matchesNearestCarIntent(normalized: string): boolean {
-    return /(cual|dime|diga|indica|indicame|indiqueme).*(mas cercan|cerca)/.test(normalized) ||
-           /(el auto|un auto).*(mas cercan|cerca)/.test(normalized) ||
-           /auto mas cerca/.test(normalized) ||
-           /el mas cercano/.test(normalized);
+    return (
+      /(cual|dime|diga|indica|indicame|indiqueme).*(mas cercan|cerca)/.test(normalized) ||
+      /(el auto|un auto).*(mas cercan|cerca)/.test(normalized) ||
+      /auto mas cerca/.test(normalized) ||
+      /el mas cercano/.test(normalized)
+    );
   }
 
   private matchesFollowUpIntent(normalized: string): boolean {
-    return /^(cual es|cual|indiqueme|indicame|dime cual|dimelo|muestra|mostrame|cual seria)\??$/.test(normalized.trim());
+    return /^(cual es|cual|indiqueme|indicame|dime cual|dimelo|muestra|mostrame|cual seria)\??$/.test(
+      normalized.trim(),
+    );
   }
 
   private matchesAccountIntent(normalized: string): boolean {
-    return /(mi cuenta|mi perfil|quien soy|quién soy|estoy logueado|estoy logueada|mi usuario)/.test(normalized);
+    return /(mi cuenta|mi perfil|quien soy|quién soy|estoy logueado|estoy logueada|mi usuario)/.test(
+      normalized,
+    );
   }
 
   private matchesAccessLimitationsIntent(normalized: string): boolean {
-    return /(a que no tenes acceso|a que no tienes acceso|que no tenes acceso|que no tienes acceso|no tenes acceso|no tienes acceso|limitaciones|privacidad)/.test(normalized);
+    return /(a que no tenes acceso|a que no tienes acceso|que no tenes acceso|que no tienes acceso|no tenes acceso|no tienes acceso|limitaciones|privacidad)/.test(
+      normalized,
+    );
   }
 
   // ========================================
@@ -382,7 +412,7 @@ export class RentarfastIntentService {
         'Si no arranca, el navegador puede estar bloqueando permisos de micrófono.',
         'Probá: permitir micrófono en el candadito del navegador y recargar la página.',
       ].join(' '),
-      ['local_voice']
+      ['local_voice'],
     );
   }
 
@@ -411,7 +441,7 @@ export class RentarfastIntentService {
       } else {
         this.agentService.addLocalAgentMessage(
           'No pude acceder a tu ubicación. ¿Podés habilitar permisos o decirme una dirección?',
-          ['local_location']
+          ['local_location'],
         );
       }
     }
@@ -452,11 +482,17 @@ export class RentarfastIntentService {
 
   private async respondWithAccountSummary(originalText: string): Promise<void> {
     this.agentService.addLocalUserMessage(originalText);
-    const msgId = this.agentService.addLocalAgentMessage('Estoy revisando tu cuenta...', ['local_profile']);
+    const msgId = this.agentService.addLocalAgentMessage('Estoy revisando tu cuenta...', [
+      'local_profile',
+    ]);
 
     const auth = await this.getAuthSnapshot();
     if (!auth) {
-      this.agentService.updateMessageContent(msgId, 'No estás logueado. ¿Querés que abra la pantalla de login?', ['local_profile']);
+      this.agentService.updateMessageContent(
+        msgId,
+        'No estás logueado. ¿Querés que abra la pantalla de login?',
+        ['local_profile'],
+      );
       return;
     }
 
@@ -482,18 +518,21 @@ export class RentarfastIntentService {
       this.agentService.updateMessageContent(
         msgId,
         'No pude cargar tu perfil en este momento. ¿Querés intentarlo de nuevo?',
-        ['local_profile']
+        ['local_profile'],
       );
     }
   }
 
-  private async respondWithPersonalInfo(originalText: string, kind: PersonalInfoKind): Promise<void> {
+  private async respondWithPersonalInfo(
+    originalText: string,
+    kind: PersonalInfoKind,
+  ): Promise<void> {
     this.agentService.addLocalUserMessage(originalText);
     const auth = await this.getAuthSnapshot();
     if (!auth) {
       this.agentService.addLocalAgentMessage(
         'Para ver tus datos necesito que estés logueado. ¿Querés que abra el login?',
-        ['local_profile']
+        ['local_profile'],
       );
       return;
     }
@@ -512,7 +551,7 @@ export class RentarfastIntentService {
         auth.email
           ? `Tu email es: ${auth.email}.`
           : 'No tengo un email disponible en tu sesión. Podés revisarlo en tu perfil.',
-        ['local_profile']
+        ['local_profile'],
       );
       return;
     }
@@ -523,23 +562,24 @@ export class RentarfastIntentService {
         name
           ? `Tu nombre (según tu perfil) es: ${name}.`
           : 'No veo tu nombre cargado en el perfil. Si querés, abrimos tu perfil para completarlo.',
-        ['local_profile']
+        ['local_profile'],
       );
       return;
     }
 
-    const dniCandidate = profile?.gov_id_number ?? (profile as unknown as { dni?: string | null }).dni ?? null;
+    const dniCandidate =
+      profile?.gov_id_number ?? (profile as unknown as { dni?: string | null }).dni ?? null;
     if (!dniCandidate) {
       this.agentService.addLocalAgentMessage(
         'No tengo un DNI cargado/visible en tu perfil. Podés revisarlo o completarlo desde tu perfil.',
-        ['local_profile']
+        ['local_profile'],
       );
       return;
     }
 
     this.agentService.addLocalAgentMessage(
       `DNI (enmascarado): ${this.maskSensitiveNumber(dniCandidate)}.`,
-      ['local_profile']
+      ['local_profile'],
     );
   }
 
@@ -556,7 +596,9 @@ export class RentarfastIntentService {
       canReadAccount
         ? '• Tu perfil (por ejemplo nombre si está cargado).'
         : '• Autos públicos (marketplace) y navegación dentro de la app.',
-      canReadAccount ? '• Tu wallet (saldos) y tus reservas.' : '• Búsqueda de autos y estimaciones sin cuenta.',
+      canReadAccount
+        ? '• Tu wallet (saldos) y tus reservas.'
+        : '• Búsqueda de autos y estimaciones sin cuenta.',
       '• Tu ubicación SOLO si das permiso al navegador o me das una dirección.',
       '',
       'Acceso que NO tengo:',
@@ -571,14 +613,20 @@ export class RentarfastIntentService {
 
   private async respondWithWalletSummary(originalText: string): Promise<void> {
     this.agentService.addLocalUserMessage(originalText);
-    const msgId = this.agentService.addLocalAgentMessage('Consultando tu wallet...', ['local_wallet']);
+    const msgId = this.agentService.addLocalAgentMessage('Consultando tu wallet...', [
+      'local_wallet',
+    ]);
     await this.fillWalletSummary(msgId);
   }
 
   async fillWalletSummary(messageId: string): Promise<void> {
     const auth = await this.getAuthSnapshot();
     if (!auth) {
-      this.agentService.updateMessageContent(messageId, 'Necesitás iniciar sesión para ver tu wallet.', ['local_wallet']);
+      this.agentService.updateMessageContent(
+        messageId,
+        'Necesitás iniciar sesión para ver tu wallet.',
+        ['local_wallet'],
+      );
       return;
     }
 
@@ -596,7 +644,7 @@ export class RentarfastIntentService {
       this.agentService.updateMessageContent(
         messageId,
         'No pude obtener tu saldo en este momento. ¿Querés abrir la wallet?',
-        ['local_wallet']
+        ['local_wallet'],
       );
     }
   }
@@ -607,7 +655,11 @@ export class RentarfastIntentService {
 
     const auth = await this.getAuthSnapshot();
     if (!auth) {
-      this.agentService.updateMessageContent(msgId, 'Necesitás iniciar sesión para ver tus autos.', ['local_cars']);
+      this.agentService.updateMessageContent(
+        msgId,
+        'Necesitás iniciar sesión para ver tus autos.',
+        ['local_cars'],
+      );
       return;
     }
 
@@ -617,7 +669,7 @@ export class RentarfastIntentService {
         this.agentService.updateMessageContent(
           msgId,
           'No tenés autos publicados todavía. ¿Querés publicar uno ahora?',
-          ['local_cars']
+          ['local_cars'],
         );
         return;
       }
@@ -631,21 +683,31 @@ export class RentarfastIntentService {
         `Tenés ${cars.length} auto(s) publicados.`,
         preview.length ? `Ejemplos: ${preview.join(', ')}.` : '',
         '¿Querés abrir "Mis autos"?',
-      ].filter(Boolean).join(' ');
+      ]
+        .filter(Boolean)
+        .join(' ');
 
       this.agentService.updateMessageContent(msgId, response, ['local_cars']);
     } catch {
-      this.agentService.updateMessageContent(msgId, 'No pude cargar tus autos en este momento.', ['local_cars']);
+      this.agentService.updateMessageContent(msgId, 'No pude cargar tus autos en este momento.', [
+        'local_cars',
+      ]);
     }
   }
 
   private async respondWithDocumentsSummary(originalText: string): Promise<void> {
     this.agentService.addLocalUserMessage(originalText);
-    const msgId = this.agentService.addLocalAgentMessage('Revisando tus documentos...', ['local_documents']);
+    const msgId = this.agentService.addLocalAgentMessage('Revisando tus documentos...', [
+      'local_documents',
+    ]);
 
     const auth = await this.getAuthSnapshot();
     if (!auth) {
-      this.agentService.updateMessageContent(msgId, 'Necesitás iniciar sesión para ver tus documentos.', ['local_documents']);
+      this.agentService.updateMessageContent(
+        msgId,
+        'Necesitás iniciar sesión para ver tus documentos.',
+        ['local_documents'],
+      );
       return;
     }
 
@@ -655,15 +717,18 @@ export class RentarfastIntentService {
         this.agentService.updateMessageContent(
           msgId,
           'No encuentro documentos cargados aún. ¿Querés ir a verificación?',
-          ['local_documents']
+          ['local_documents'],
         );
         return;
       }
 
-      const counts = docs.reduce((acc, doc) => {
-        acc[doc.status] = (acc[doc.status] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      const counts = docs.reduce(
+        (acc, doc) => {
+          acc[doc.status] = (acc[doc.status] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
 
       const response = [
         `Documentos: ${docs.length} en total.`,
@@ -671,17 +736,26 @@ export class RentarfastIntentService {
         counts['pending'] ? `En revisión: ${counts['pending']}.` : '',
         counts['rejected'] ? `Rechazados: ${counts['rejected']}.` : '',
         '¿Querés abrir la sección de verificación?',
-      ].filter(Boolean).join(' ');
+      ]
+        .filter(Boolean)
+        .join(' ');
 
       this.agentService.updateMessageContent(msgId, response, ['local_documents']);
     } catch {
-      this.agentService.updateMessageContent(msgId, 'No pude cargar tus documentos en este momento.', ['local_documents']);
+      this.agentService.updateMessageContent(
+        msgId,
+        'No pude cargar tus documentos en este momento.',
+        ['local_documents'],
+      );
     }
   }
 
   private async navigateToNearbyCars(originalText: string): Promise<IntentResult> {
     this.agentService.addLocalUserMessage(originalText);
-    const msgId = this.agentService.addLocalAgentMessage('Buscando autos cercanos a tu ubicación...', ['local_nearby']);
+    const msgId = this.agentService.addLocalAgentMessage(
+      'Buscando autos cercanos a tu ubicación...',
+      ['local_nearby'],
+    );
 
     try {
       const location = this.lastLocation ?? (await this.locationService.getUserLocation());
@@ -689,7 +763,7 @@ export class RentarfastIntentService {
         this.agentService.updateMessageContent(
           msgId,
           'Necesito tu ubicación para ordenar por distancia. Podés decir "usar ubicación actual" o indicar una dirección.',
-          ['local_nearby']
+          ['local_nearby'],
         );
         return { handled: true };
       }
@@ -701,7 +775,9 @@ export class RentarfastIntentService {
         localStorage.setItem('autorenta:list-sort', 'distance');
       }
 
-      this.agentService.updateMessageContent(msgId, 'Listo. Te muestro los autos más cercanos.', ['local_nearby']);
+      this.agentService.updateMessageContent(msgId, 'Listo. Te muestro los autos más cercanos.', [
+        'local_nearby',
+      ]);
 
       return {
         handled: true,
@@ -717,7 +793,7 @@ export class RentarfastIntentService {
       this.agentService.updateMessageContent(
         msgId,
         'No pude obtener tu ubicación. ¿Querés usar tu ubicación actual o decirme una dirección?',
-        ['local_nearby']
+        ['local_nearby'],
       );
       return { handled: true };
     }
@@ -725,7 +801,10 @@ export class RentarfastIntentService {
 
   private async respondWithNearestCar(originalText: string): Promise<void> {
     this.agentService.addLocalUserMessage(originalText);
-    const msgId = this.agentService.addLocalAgentMessage('Buscando el auto más cercano a tu ubicación...', ['local_nearby']);
+    const msgId = this.agentService.addLocalAgentMessage(
+      'Buscando el auto más cercano a tu ubicación...',
+      ['local_nearby'],
+    );
 
     try {
       const location = this.lastLocation ?? (await this.locationService.getUserLocation());
@@ -733,7 +812,7 @@ export class RentarfastIntentService {
         this.agentService.updateMessageContent(
           msgId,
           'Necesito tu ubicación para decirte cuál es el más cercano. Podés decir "usar ubicación actual" o indicar una dirección.',
-          ['local_nearby']
+          ['local_nearby'],
         );
         return;
       }
@@ -758,7 +837,12 @@ export class RentarfastIntentService {
         .filter((car) => car.location_lat && car.location_lng)
         .map((car) => ({
           ...car,
-          distance_km: this.calculateDistanceKm(location.lat, location.lng, car.location_lat!, car.location_lng!),
+          distance_km: this.calculateDistanceKm(
+            location.lat,
+            location.lng,
+            car.location_lat!,
+            car.location_lng!,
+          ),
         }))
         .sort((a, b) => a.distance_km - b.distance_km);
 
@@ -767,7 +851,7 @@ export class RentarfastIntentService {
         this.agentService.updateMessageContent(
           msgId,
           'No encontré autos cerca de tu ubicación. Te muestro el listado para que veas más opciones.',
-          ['local_nearby']
+          ['local_nearby'],
         );
         this.router.navigate(['/cars/list']);
         return;
@@ -784,7 +868,9 @@ export class RentarfastIntentService {
         `El auto más cercano es "${carTitle}" a ${distanceText}.`,
         priceText ? `Precio: ${priceText}.` : '',
         'Te abro la lista ordenada por distancia.',
-      ].filter(Boolean).join(' ');
+      ]
+        .filter(Boolean)
+        .join(' ');
 
       this.agentService.updateMessageContent(msgId, response, ['local_nearby']);
 
@@ -802,7 +888,7 @@ export class RentarfastIntentService {
       this.agentService.updateMessageContent(
         msgId,
         'No pude obtener el auto más cercano en este momento. ¿Querés usar tu ubicación actual o decirme una dirección?',
-        ['local_nearby']
+        ['local_nearby'],
       );
     }
   }
@@ -837,11 +923,14 @@ export class RentarfastIntentService {
     this.agentService.addLocalAgentMessage(response, ['local_location']);
   }
 
-  private async createBookingFromCommand(originalText: string, command: BookingCommand): Promise<void> {
+  private async createBookingFromCommand(
+    originalText: string,
+    command: BookingCommand,
+  ): Promise<void> {
     this.agentService.addLocalUserMessage(originalText);
     const msgId = this.agentService.addLocalAgentMessage(
       `Creando tu reserva para ${command.startDate} → ${command.endDate}...`,
-      ['local_booking']
+      ['local_booking'],
     );
 
     const auth = await this.getAuthSnapshot();
@@ -849,7 +938,7 @@ export class RentarfastIntentService {
       this.agentService.updateMessageContent(
         msgId,
         'Necesitás iniciar sesión para crear una reserva. ¿Querés que abra el login?',
-        ['local_booking']
+        ['local_booking'],
       );
       return;
     }
@@ -858,14 +947,14 @@ export class RentarfastIntentService {
       const result = await this.bookingsService.createBookingWithValidation(
         command.carId,
         command.startDate,
-        command.endDate
+        command.endDate,
       );
 
       if (!result.success || !result.booking) {
         this.agentService.updateMessageContent(
           msgId,
           result.error || 'No pude crear la reserva. Probá con otro auto o cambiá fechas.',
-          ['local_booking']
+          ['local_booking'],
         );
         return;
       }
@@ -873,7 +962,7 @@ export class RentarfastIntentService {
       this.agentService.updateMessageContent(
         msgId,
         `Listo. Creé la reserva en tu cuenta (ID: ${result.booking.id}). Te llevo al pago/detalle.`,
-        ['local_booking']
+        ['local_booking'],
       );
 
       this.router.navigate(['/bookings', result.booking.id, 'detail-payment']);
@@ -881,7 +970,7 @@ export class RentarfastIntentService {
       this.agentService.updateMessageContent(
         msgId,
         'Error al crear la reserva. Si el auto ya está reservado en esas fechas, probá con otras.',
-        ['local_booking']
+        ['local_booking'],
       );
     }
   }
@@ -905,7 +994,9 @@ export class RentarfastIntentService {
   }
 
   private extractFirstUuid(text: string): string | null {
-    const match = text.match(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/);
+    const match = text.match(
+      /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/,
+    );
     return match?.[0] ?? null;
   }
 
@@ -941,27 +1032,43 @@ export class RentarfastIntentService {
       /(casa|domicilio).*(due[ñn]o|propietario|anfitri[oó]n)/.test(normalized) ||
       /(en la casa del due[ñn]o|en el domicilio del due[ñn]o)/.test(normalized);
     const mentionsSame =
-      /(mismo lugar|misma direcci[oó]n|igual que lo retir(e|e)|igual que lo retiro)/.test(normalized);
+      /(mismo lugar|misma direcci[oó]n|igual que lo retir(e|e)|igual que lo retiro)/.test(
+        normalized,
+      );
     const mentionsAirport = /(aeropuerto|airport)/.test(normalized);
     const mentionsOffice = /(oficina|sucursal|centro)/.test(normalized);
     const mentionsHome = /(entrega a domicilio|retiro en domicilio|domicilio)/.test(normalized);
 
     if (mentionsOwner || mentionsHome) {
-      return { pickup: 'owner_address', dropoff: mentionsSame ? 'owner_address' : undefined, sameLocation: mentionsSame };
+      return {
+        pickup: 'owner_address',
+        dropoff: mentionsSame ? 'owner_address' : undefined,
+        sameLocation: mentionsSame,
+      };
     }
     if (mentionsAirport) {
-      return { pickup: 'airport', dropoff: mentionsSame ? 'airport' : undefined, sameLocation: mentionsSame };
+      return {
+        pickup: 'airport',
+        dropoff: mentionsSame ? 'airport' : undefined,
+        sameLocation: mentionsSame,
+      };
     }
     if (mentionsOffice) {
-      return { pickup: 'office', dropoff: mentionsSame ? 'office' : undefined, sameLocation: mentionsSame };
+      return {
+        pickup: 'office',
+        dropoff: mentionsSame ? 'office' : undefined,
+        sameLocation: mentionsSame,
+      };
     }
     return null;
   }
 
   getPersonalInfoQueryKind(normalized: string): PersonalInfoKind | null {
     if (/(mi nombre|como me llamo|cu[aá]l es mi nombre)/.test(normalized)) return 'name';
-    if (/(mi email|mi correo|mi mail|cu[aá]l es mi correo|cu[aá]l es mi email)/.test(normalized)) return 'email';
-    if (/(mi dni|mi documento|n[uú]mero de documento|documento nacional)/.test(normalized)) return 'dni';
+    if (/(mi email|mi correo|mi mail|cu[aá]l es mi correo|cu[aá]l es mi email)/.test(normalized))
+      return 'email';
+    if (/(mi dni|mi documento|n[uú]mero de documento|documento nacional)/.test(normalized))
+      return 'dni';
     return null;
   }
 
@@ -973,11 +1080,15 @@ export class RentarfastIntentService {
     const normalized = this.normalizeInput(text);
     if (/(auto|autos|vehiculo|vehiculos|coche|coches)/.test(normalized)) return false;
 
-    const mentionsLocationWord = /(ubic|ubica|ubicac|ubicaic|ubicaicon|ubication|ubicasion)/.test(normalized);
+    const mentionsLocationWord = /(ubic|ubica|ubicac|ubicaic|ubicaicon|ubication|ubicasion)/.test(
+      normalized,
+    );
     const mentionsUse = /(usar|usa|usemos|dame|dime|quiero)/.test(normalized);
     const mentionsNow = /(actual|ahora|en este momento)/.test(normalized);
     const explicit =
-      /ubicacion actual|usar mi ubicacion|usar ubicacion actual|mi ubicacion actual|mi ubicacion|cual es mi ubicacion|donde estoy/.test(normalized);
+      /ubicacion actual|usar mi ubicacion|usar ubicacion actual|mi ubicacion actual|mi ubicacion|cual es mi ubicacion|donde estoy/.test(
+        normalized,
+      );
 
     if (mentionsUse && mentionsLocationWord) return true;
     return explicit || (mentionsLocationWord && mentionsNow);
@@ -1001,7 +1112,12 @@ export class RentarfastIntentService {
         const profile = this.profileStore.profile();
         const countryHint = profile?.country ?? 'AR';
         const result = await this.geocodingService.geocodeAddress(text, countryHint);
-        return { lat: result.latitude, lng: result.longitude, source: 'address', address: result.fullAddress };
+        return {
+          lat: result.latitude,
+          lng: result.longitude,
+          source: 'address',
+          address: result.fullAddress,
+        };
       } catch {
         // Fallback
       }
@@ -1010,9 +1126,9 @@ export class RentarfastIntentService {
     if (this.wantsLocationContext(normalized)) {
       const home = await this.locationService.getHomeLocation();
       if (home) return home;
-      return await this.locationService.getCurrentPosition().then((loc) =>
-        loc ? { ...loc, source: 'gps' } : null
-      );
+      return await this.locationService
+        .getCurrentPosition()
+        .then((loc) => (loc ? { ...loc, source: 'gps' } : null));
     }
 
     return await this.locationService.getHomeLocation();
@@ -1068,7 +1184,9 @@ export class RentarfastIntentService {
       const carTitle = nearest.title || `${nearest.brand} ${nearest.model}`;
       const distanceText = `${nearest.distance_km.toFixed(1)} km`;
       const priceText =
-        typeof nearest.price_per_day === 'number' ? `${nearest.currency || 'USD'} ${nearest.price_per_day}/día` : '';
+        typeof nearest.price_per_day === 'number'
+          ? `${nearest.currency || 'USD'} ${nearest.price_per_day}/día`
+          : '';
 
       return `El auto más cercano a ti es "${carTitle}" a ${distanceText}.${priceText ? ` Precio: ${priceText}.` : ''}`;
     } catch {
@@ -1096,7 +1214,10 @@ export class RentarfastIntentService {
     const dLng = ((lng2 - lng1) * Math.PI) / 180;
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   }
@@ -1140,7 +1261,11 @@ export class RentarfastIntentService {
     return this.lastMarket;
   }
 
-  getPickupPreferences(): { pickup: PickupPreference['pickup'] | null; dropoff: PickupPreference['dropoff'] | null; addressHint: string | null } {
+  getPickupPreferences(): {
+    pickup: PickupPreference['pickup'] | null;
+    dropoff: PickupPreference['dropoff'] | null;
+    addressHint: string | null;
+  } {
     return {
       pickup: this.lastPickupPreference,
       dropoff: this.lastDropoffPreference,

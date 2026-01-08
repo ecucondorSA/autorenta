@@ -64,9 +64,7 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
             </svg>
           </div>
 
-          <h3 class="text-lg font-semibold text-text-primary mb-2">
-            Algo salió mal
-          </h3>
+          <h3 class="text-lg font-semibold text-text-primary mb-2">Algo salió mal</h3>
 
           <p class="text-sm text-text-secondary text-center max-w-sm mb-4">
             {{ userMessage() }}
@@ -83,10 +81,10 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 
           @if (showDetails && error()) {
             <details class="mt-4 text-xs text-text-secondary">
-              <summary class="cursor-pointer hover:text-text-primary">
-                Detalles técnicos
-              </summary>
-              <pre class="mt-2 p-2 bg-surface-base rounded text-left overflow-auto max-w-full">{{ errorDetails() }}</pre>
+              <summary class="cursor-pointer hover:text-text-primary">Detalles técnicos</summary>
+              <pre class="mt-2 p-2 bg-surface-base rounded text-left overflow-auto max-w-full">{{
+                errorDetails()
+              }}</pre>
             </details>
           }
         </div>
@@ -130,11 +128,7 @@ export class ErrorBoundaryComponent implements OnDestroy {
   captureError(error: unknown): void {
     const errorObj = error instanceof Error ? error : new Error(String(error));
 
-    this.logger.error(
-      `ErrorBoundary caught error in ${this.context}`,
-      'ErrorBoundary',
-      errorObj,
-    );
+    this.logger.error(`ErrorBoundary caught error in ${this.context}`, 'ErrorBoundary', errorObj);
 
     this.error.set(errorObj);
     this.hasError.set(true);

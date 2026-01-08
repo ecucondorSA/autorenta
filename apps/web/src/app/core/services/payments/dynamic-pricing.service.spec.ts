@@ -82,30 +82,50 @@ const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({
     select: jasmine.createSpy('select').and.returnValue({
       eq: jasmine.createSpy('eq').and.returnValue(Promise.resolve({ data: [], error: null })),
-      single: jasmine.createSpy('single').and.returnValue(Promise.resolve({ data: null, error: null })),
+      single: jasmine
+        .createSpy('single')
+        .and.returnValue(Promise.resolve({ data: null, error: null })),
       order: jasmine.createSpy('order').and.returnValue({
-        limit: jasmine.createSpy('limit').and.returnValue(Promise.resolve({ data: [], error: null })),
+        limit: jasmine
+          .createSpy('limit')
+          .and.returnValue(Promise.resolve({ data: [], error: null })),
       }),
       lte: jasmine.createSpy('lte').and.returnValue({
         gte: jasmine.createSpy('gte').and.returnValue(Promise.resolve({ data: [], error: null })),
       }),
     }),
-    insert: jasmine.createSpy('insert').and.returnValue(Promise.resolve({ data: null, error: null })),
-    update: jasmine.createSpy('update').and.returnValue(Promise.resolve({ data: null, error: null })),
-    delete: jasmine.createSpy('delete').and.returnValue(Promise.resolve({ data: null, error: null })),
+    insert: jasmine
+      .createSpy('insert')
+      .and.returnValue(Promise.resolve({ data: null, error: null })),
+    update: jasmine
+      .createSpy('update')
+      .and.returnValue(Promise.resolve({ data: null, error: null })),
+    delete: jasmine
+      .createSpy('delete')
+      .and.returnValue(Promise.resolve({ data: null, error: null })),
   }),
   rpc: jasmine.createSpy('rpc').and.returnValue(Promise.resolve({ data: null, error: null })),
   functions: {
-    invoke: jasmine.createSpy('invoke').and.returnValue(Promise.resolve({ data: null, error: null })),
+    invoke: jasmine
+      .createSpy('invoke')
+      .and.returnValue(Promise.resolve({ data: null, error: null })),
   },
   auth: {
-    getUser: jasmine.createSpy('getUser').and.returnValue(Promise.resolve({ data: { user: null }, error: null })),
-    getSession: jasmine.createSpy('getSession').and.returnValue(Promise.resolve({ data: { session: null }, error: null })),
-    onAuthStateChange: jasmine.createSpy('onAuthStateChange').and.returnValue({ data: { subscription: { unsubscribe: jasmine.createSpy() } } }),
+    getUser: jasmine
+      .createSpy('getUser')
+      .and.returnValue(Promise.resolve({ data: { user: null }, error: null })),
+    getSession: jasmine
+      .createSpy('getSession')
+      .and.returnValue(Promise.resolve({ data: { session: null }, error: null })),
+    onAuthStateChange: jasmine
+      .createSpy('onAuthStateChange')
+      .and.returnValue({ data: { subscription: { unsubscribe: jasmine.createSpy() } } }),
   },
   storage: {
     from: jasmine.createSpy('from').and.returnValue({
-      upload: jasmine.createSpy('upload').and.returnValue(Promise.resolve({ data: null, error: null })),
+      upload: jasmine
+        .createSpy('upload')
+        .and.returnValue(Promise.resolve({ data: null, error: null })),
       getPublicUrl: jasmine.createSpy('getPublicUrl').and.returnValue({ data: { publicUrl: '' } }),
     }),
   },
@@ -124,8 +144,10 @@ describe('DynamicPricingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DynamicPricingService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService }]
+      providers: [
+        DynamicPricingService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(DynamicPricingService);
   });
@@ -344,20 +366,20 @@ describe('DynamicPricingService', () => {
 
       it('should return medium for demandFactor >= 0.05 and < 0.15', () => {
         expect(calculateSurgeTier(0.05)).toBe('medium');
-        expect(calculateSurgeTier(0.10)).toBe('medium');
+        expect(calculateSurgeTier(0.1)).toBe('medium');
         expect(calculateSurgeTier(0.14)).toBe('medium');
       });
 
       it('should return high for demandFactor >= 0.15 and < 0.25', () => {
         expect(calculateSurgeTier(0.15)).toBe('high');
-        expect(calculateSurgeTier(0.20)).toBe('high');
+        expect(calculateSurgeTier(0.2)).toBe('high');
         expect(calculateSurgeTier(0.24)).toBe('high');
       });
 
       it('should return extreme for demandFactor >= 0.25', () => {
         expect(calculateSurgeTier(0.25)).toBe('extreme');
-        expect(calculateSurgeTier(0.30)).toBe('extreme');
-        expect(calculateSurgeTier(0.50)).toBe('extreme');
+        expect(calculateSurgeTier(0.3)).toBe('extreme');
+        expect(calculateSurgeTier(0.5)).toBe('extreme');
       });
     });
 
@@ -375,7 +397,7 @@ describe('DynamicPricingService', () => {
 
       it('should return red badge for high surge', () => {
         const snapshot = createMockPriceLock().priceSnapshot;
-        snapshot.breakdown.demandFactor = 0.20;
+        snapshot.breakdown.demandFactor = 0.2;
         snapshot.surgeTier = 'high';
 
         const info = generateSurgeInfo(snapshot);
@@ -387,7 +409,7 @@ describe('DynamicPricingService', () => {
 
       it('should return correct message for extreme surge', () => {
         const snapshot = createMockPriceLock().priceSnapshot;
-        snapshot.breakdown.demandFactor = 0.30;
+        snapshot.breakdown.demandFactor = 0.3;
         snapshot.surgeTier = 'extreme';
 
         const info = generateSurgeInfo(snapshot);
@@ -415,7 +437,7 @@ describe('DynamicPricingService', () => {
             currency: 'USD',
             breakdown: {
               basePrice: 10,
-              dayFactor: 0.10,
+              dayFactor: 0.1,
               hourFactor: 0.05,
               userFactor: -0.05,
               demandFactor: 0.15,
@@ -530,5 +552,4 @@ describe('DynamicPricingService', () => {
       expect(countdown).toBe('00:00');
     });
   });
-
 });

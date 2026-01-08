@@ -58,7 +58,7 @@ class Circuit {
 
   constructor(
     private readonly config: CircuitBreakerConfig,
-    private readonly logger: LoggerService
+    private readonly logger: LoggerService,
   ) {}
 
   /**
@@ -74,7 +74,7 @@ class Circuit {
       } else {
         throw new CircuitOpenError(
           `Circuit "${this.config.name}" is OPEN. Try again later.`,
-          this.nextAttempt
+          this.nextAttempt,
         );
       }
     }
@@ -173,10 +173,13 @@ class Circuit {
       this.successes = 0;
     }
 
-    this.logger.info(`Circuit "${this.config.name}" transitioned: ${previousState} -> ${newState}`, {
-      failures: this.failures,
-      nextAttempt: this.nextAttempt?.toISOString(),
-    });
+    this.logger.info(
+      `Circuit "${this.config.name}" transitioned: ${previousState} -> ${newState}`,
+      {
+        failures: this.failures,
+        nextAttempt: this.nextAttempt?.toISOString(),
+      },
+    );
   }
 }
 
@@ -186,7 +189,7 @@ class Circuit {
 export class CircuitOpenError extends Error {
   constructor(
     message: string,
-    public readonly retryAfter: Date | null
+    public readonly retryAfter: Date | null,
   ) {
     super(message);
     this.name = 'CircuitOpenError';
@@ -257,7 +260,7 @@ export class CircuitBreakerService {
   async execute<T>(
     circuitName: string,
     fn: () => Promise<T>,
-    config?: Partial<CircuitBreakerConfig>
+    config?: Partial<CircuitBreakerConfig>,
   ): Promise<T> {
     const circuit = this.getOrCreateCircuit(circuitName, config);
     return circuit.execute(fn);
@@ -275,7 +278,7 @@ export class CircuitBreakerService {
    * Get statistics for all circuits
    */
   getAllStats(): CircuitStats[] {
-    return Array.from(this.circuits.values()).map(c => c.getStats());
+    return Array.from(this.circuits.values()).map((c) => c.getStats());
   }
 
   /**
@@ -300,22 +303,26 @@ export class CircuitBreakerService {
    * Reset all circuits
    */
   resetAll(): void {
-    this.circuits.forEach(circuit => circuit.reset());
+    this.circuits.forEach((circuit) => circuit.reset());
   }
 
-  private getOrCreateCircuit(
-    name: string,
-    customConfig?: Partial<CircuitBreakerConfig>
-  ): Circuit {
+  private getOrCreateCircuit(name: string, customConfig?: Partial<CircuitBreakerConfig>): Circuit {
     let circuit = this.circuits.get(name);
 
     if (!circuit) {
       const defaultConfig = this.defaultConfigs[name] || {};
       const config: CircuitBreakerConfig = {
         name,
-        failureThreshold: customConfig?.failureThreshold ?? defaultConfig.failureThreshold ?? CIRCUIT_FAILURE_THRESHOLD,
-        resetTimeout: customConfig?.resetTimeout ?? defaultConfig.resetTimeout ?? CIRCUIT_RESET_TIMEOUT_MS,
-        successThreshold: customConfig?.successThreshold ?? defaultConfig.successThreshold ?? CIRCUIT_SUCCESS_THRESHOLD,
+        failureThreshold:
+          customConfig?.failureThreshold ??
+          defaultConfig.failureThreshold ??
+          CIRCUIT_FAILURE_THRESHOLD,
+        resetTimeout:
+          customConfig?.resetTimeout ?? defaultConfig.resetTimeout ?? CIRCUIT_RESET_TIMEOUT_MS,
+        successThreshold:
+          customConfig?.successThreshold ??
+          defaultConfig.successThreshold ??
+          CIRCUIT_SUCCESS_THRESHOLD,
       };
 
       circuit = new Circuit(config, this.logger);

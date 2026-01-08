@@ -39,7 +39,13 @@ import {
   selector: 'app-hdri-background',
   standalone: true,
   template: `
-    <canvas #canvas class="w-full h-full block transition-opacity duration-1000" [class.opacity-0]="!isLoaded" [class.opacity-100]="isLoaded" [style.background-image]="backgroundImage"></canvas>
+    <canvas
+      #canvas
+      class="w-full h-full block transition-opacity duration-1000"
+      [class.opacity-0]="!isLoaded"
+      [class.opacity-100]="isLoaded"
+      [style.background-image]="backgroundImage"
+    ></canvas>
   `,
   styles: [
     `
@@ -105,7 +111,6 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   private texture: WebGLTexture | null = null;
   private animationId: number | null = null;
   private isDestroyed = false;
-
 
   // Rotation state - start at initial position (showing the star)
   private rotationY = 0.3;
@@ -274,7 +279,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       this.cdr.markForCheck(); // FORCE UPDATE
       return;
     }
-    
+
     // Setup viewport
     this.resizeCanvas();
 
@@ -424,7 +429,11 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     };
 
     lowResImage.onerror = (err) => {
-      console.warn('[HdriBackground] Failed to load low-res, falling back to high-res:', sources.low, err);
+      console.warn(
+        '[HdriBackground] Failed to load low-res, falling back to high-res:',
+        sources.low,
+        err,
+      );
       // Fallback: load high-res directly
       this.loadHighResTexture(sources.high);
     };
@@ -484,7 +493,12 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     // Check if image needs to be resized
     let textureSource: HTMLImageElement | HTMLCanvasElement = image;
 
-    if (image.width > maxTextureSize || image.height > maxTextureSize || image.width === 0 || image.height === 0) {
+    if (
+      image.width > maxTextureSize ||
+      image.height > maxTextureSize ||
+      image.width === 0 ||
+      image.height === 0
+    ) {
       // Skip if image has invalid dimensions
       if (image.width === 0 || image.height === 0) {
         console.warn('[HdriBackground] Image has invalid dimensions, skipping texture update');
@@ -496,7 +510,9 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       const newWidth = Math.floor(image.width * scale);
       const newHeight = Math.floor(image.height * scale);
 
-      this.logger.debug(`[HdriBackground] Resizing texture from ${image.width}x${image.height} to ${newWidth}x${newHeight} (max: ${maxTextureSize})`);
+      this.logger.debug(
+        `[HdriBackground] Resizing texture from ${image.width}x${image.height} to ${newWidth}x${newHeight} (max: ${maxTextureSize})`,
+      );
 
       const canvas = document.createElement('canvas');
       canvas.width = newWidth;
@@ -509,7 +525,14 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     }
 
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
-    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, textureSource);
+    this.gl.texImage2D(
+      this.gl.TEXTURE_2D,
+      0,
+      this.gl.RGBA,
+      this.gl.RGBA,
+      this.gl.UNSIGNED_BYTE,
+      textureSource,
+    );
 
     // Use linear filtering for smooth appearance
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
@@ -643,7 +666,10 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
     // Update target rotation (actual rotation is smoothed in render loop)
     this.targetRotationY -= deltaX * this.DRAG_SENSITIVITY_X;
-    this.targetRotationX = Math.max(-0.5, Math.min(0.5, this.targetRotationX + deltaY * this.DRAG_SENSITIVITY_Y));
+    this.targetRotationX = Math.max(
+      -0.5,
+      Math.min(0.5, this.targetRotationX + deltaY * this.DRAG_SENSITIVITY_Y),
+    );
 
     this.lastMouseX = e.clientX;
     this.lastMouseY = e.clientY;
@@ -672,7 +698,10 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
     // Update target rotation (actual rotation is smoothed in render loop)
     this.targetRotationY -= deltaX * this.DRAG_SENSITIVITY_X;
-    this.targetRotationX = Math.max(-0.5, Math.min(0.5, this.targetRotationX + deltaY * this.DRAG_SENSITIVITY_Y));
+    this.targetRotationX = Math.max(
+      -0.5,
+      Math.min(0.5, this.targetRotationX + deltaY * this.DRAG_SENSITIVITY_Y),
+    );
 
     this.lastMouseX = e.touches[0].clientX;
     this.lastMouseY = e.touches[0].clientY;

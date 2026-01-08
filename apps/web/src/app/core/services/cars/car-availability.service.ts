@@ -111,9 +111,11 @@ export class CarAvailabilityService {
         .gte('blocked_to', fromDateOnly),
     ]);
 
-    const bookings = bookingsResult.data as
-      | Array<{ start_date: string; end_date: string; status: string }>
-      | null;
+    const bookings = bookingsResult.data as Array<{
+      start_date: string;
+      end_date: string;
+      status: string;
+    }> | null;
     const manualRows = (manualBlocksResult.data || []) as ManualBlockRow[];
 
     const ranges: DetailedBlockedRange[] = [];

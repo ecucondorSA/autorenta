@@ -1,5 +1,4 @@
-import {Component, input, output, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, input, output, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { RefundService } from '@core/services/payments/refund.service';
@@ -15,29 +14,27 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
       <div
         class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
         (click)="onBackdropClick($event)"
-        >
+      >
         <div
           class="bg-surface-raised rounded-2xl shadow-2xl max-w-2xl w-full p-6 transform transition-all max-h-[90vh] overflow-y-auto"
           (click)="$event.stopPropagation()"
-          >
+        >
           <!-- Header -->
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-text-primary">
-              Solicitar Reembolso
-            </h2>
+            <h2 class="text-xl font-bold text-text-primary">Solicitar Reembolso</h2>
             <button
               type="button"
               (click)="close()"
               class="text-text-secondary hover:text-text-primary transition-colors"
               aria-label="Cerrar"
-              >
+            >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M6 18L18 6M6 6l12 12"
-                  />
+                />
               </svg>
             </button>
           </div>
@@ -49,9 +46,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
             </p>
             <!-- Refund Type Selector -->
             <div>
-              <label
-                class="block text-sm font-medium text-text-primary mb-2"
-                >
+              <label class="block text-sm font-medium text-text-primary mb-2">
                 Tipo de Reembolso *
               </label>
               <div class="space-y-2">
@@ -59,17 +54,15 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
                   class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-surface-base transition-colors"
                   [class.border-cta-default]="refundType() === 'full'"
                   [class.border-border-muted]="refundType() !== 'full'"
-                  >
+                >
                   <input
                     type="radio"
                     [checked]="refundType() === 'full'"
                     (change)="refundType.set('full')"
                     class="mr-3"
-                    />
+                  />
                   <div class="flex-1">
-                    <div class="font-medium text-text-primary">
-                      Reembolso Completo
-                    </div>
+                    <div class="font-medium text-text-primary">Reembolso Completo</div>
                     <div class="text-xs text-text-secondary">
                       Se reembolsará el monto total de la reserva
                     </div>
@@ -79,20 +72,16 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
                   class="flex items-center p-3 border-2 rounded-xl cursor-pointer hover:bg-surface-base transition-colors"
                   [class.border-cta-default]="refundType() === 'partial'"
                   [class.border-border-muted]="refundType() !== 'partial'"
-                  >
+                >
                   <input
                     type="radio"
                     [checked]="refundType() === 'partial'"
                     (change)="refundType.set('partial')"
                     class="mr-3"
-                    />
+                  />
                   <div class="flex-1">
-                    <div class="font-medium text-text-primary">
-                      Reembolso Parcial
-                    </div>
-                    <div class="text-xs text-text-secondary">
-                      Especifica el monto a reembolsar
-                    </div>
+                    <div class="font-medium text-text-primary">Reembolso Parcial</div>
+                    <div class="text-xs text-text-secondary">Especifica el monto a reembolsar</div>
                   </div>
                 </label>
               </div>
@@ -100,9 +89,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
             <!-- Partial Amount Input -->
             @if (refundType() === 'partial') {
               <div>
-                <label
-                  class="block text-sm font-medium text-text-primary mb-2"
-                  >
+                <label class="block text-sm font-medium text-text-primary mb-2">
                   Monto a Reembolsar (USD) *
                 </label>
                 <input
@@ -112,14 +99,12 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
                   step="0.01"
                   placeholder="0.00"
                   class="w-full px-4 py-3 rounded-xl border-2 border-border-default bg-surface-raised focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
-                  />
+                />
               </div>
             }
             <!-- Reason -->
             <div>
-              <label
-                class="block text-sm font-medium text-text-primary mb-2"
-                >
+              <label class="block text-sm font-medium text-text-primary mb-2">
                 Motivo del Reembolso *
               </label>
               <textarea
@@ -134,7 +119,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
             @if (error()) {
               <div
                 class="p-3 bg-error-bg border border-error-border rounded-xl text-sm text-error-strong"
-                >
+              >
                 {{ error() }}
               </div>
             }
@@ -145,7 +130,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
               type="button"
               (click)="close()"
               class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default text-text-secondary hover:bg-surface-raised transition-all font-medium"
-              >
+            >
               Cancelar
             </button>
             <button
@@ -155,14 +140,14 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
               [class.opacity-50]="!canSubmit() || loading()"
               [class.cursor-not-allowed]="!canSubmit() || loading()"
               class="flex-1 px-4 py-3 rounded-xl bg-cta-default text-cta-text hover:bg-cta-default/90 transition-all font-medium flex items-center justify-center gap-2"
-              >
+            >
               @if (loading()) {
                 <svg
                   class="animate-spin h-5 w-5 text-text-inverse"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  >
+                >
                   <circle
                     class="opacity-25"
                     cx="12"
@@ -184,7 +169,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
         </div>
       </div>
     }
-    `,
+  `,
 })
 export class RefundRequestComponent {
   private readonly refundService = inject(RefundService);

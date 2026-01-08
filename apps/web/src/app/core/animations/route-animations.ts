@@ -27,11 +27,9 @@ export const routeAnimations = trigger('routeAnimations', [
     query(':enter', [style({ opacity: 0, transform: 'translateY(10px)' })], {
       optional: true,
     }),
-    query(
-      ':leave',
-      [style({ opacity: 1, transform: 'translateY(0)' }), animateChild()],
-      { optional: true },
-    ),
+    query(':leave', [style({ opacity: 1, transform: 'translateY(0)' }), animateChild()], {
+      optional: true,
+    }),
     group([
       query(
         ':leave',

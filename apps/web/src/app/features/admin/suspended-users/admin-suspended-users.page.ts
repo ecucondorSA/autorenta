@@ -1,5 +1,11 @@
-import {Component, OnInit, inject, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '@core/services/admin/admin.service';
@@ -25,14 +31,12 @@ interface SuspendedUser {
     <div class="p-6 max-w-7xl mx-auto">
       <!-- Header -->
       <div class="mb-6">
-        <h1 class="text-2xl font-bold text-text-primary">
-          Usuarios Suspendidos
-        </h1>
+        <h1 class="text-2xl font-bold text-text-primary">Usuarios Suspendidos</h1>
         <p class="text-text-secondary mt-1">
           Gestiona cuentas suspendidas por deuda u otras razones
         </p>
       </div>
-    
+
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="card-premium p-4">
@@ -42,7 +46,7 @@ interface SuspendedUser {
         <div class="card-premium p-4">
           <p class="text-sm text-text-muted">Deuda Total</p>
           <p class="text-2xl font-bold text-error-strong">
-            {{ totalDebt() | currency:'USD':'symbol':'1.0-0' }}
+            {{ totalDebt() | currency: 'USD' : 'symbol' : '1.0-0' }}
           </p>
         </div>
         <div class="card-premium p-4">
@@ -54,148 +58,183 @@ interface SuspendedUser {
           <p class="text-2xl font-bold text-cta-default">{{ nearSuspensionUsers().length }}</p>
         </div>
       </div>
-    
+
       <!-- Filters -->
       <div class="card-premium p-4 mb-6">
         <div class="flex flex-wrap gap-4 items-center">
           <div>
             <label class="text-sm text-text-muted mb-1 block">Filtrar por estado</label>
-            <select
-              [(ngModel)]="filterStatus"
-              (ngModelChange)="loadUsers()"
-              class="input-field"
-              >
+            <select [(ngModel)]="filterStatus" (ngModelChange)="loadUsers()" class="input-field">
               <option value="suspended">Solo Suspendidos</option>
               <option value="warning">Con Warning</option>
               <option value="all">Todos con Deuda</option>
             </select>
           </div>
           <div class="flex-1"></div>
-          <button
-            (click)="loadUsers()"
-            class="btn-secondary"
-            [disabled]="loading()"
-            >
+          <button (click)="loadUsers()" class="btn-secondary" [disabled]="loading()">
             @if (loading()) {
               <svg class="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                ></path>
               </svg>
             }
             Actualizar
           </button>
         </div>
       </div>
-    
+
       <!-- Loading -->
       @if (loading()) {
         <div class="text-center py-12">
-          <div class="inline-block h-10 w-10 animate-spin rounded-full border-4 border-border-muted border-t-cta-default"></div>
+          <div
+            class="inline-block h-10 w-10 animate-spin rounded-full border-4 border-border-muted border-t-cta-default"
+          ></div>
           <p class="text-text-secondary mt-4">Cargando usuarios...</p>
         </div>
       }
-    
+
       <!-- Users Table -->
       @else if (filteredUsers().length > 0) {
-      <div class="card-premium overflow-hidden">
-        <table class="w-full">
-          <thead class="bg-surface-secondary">
-            <tr>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Usuario</th>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Deuda</th>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Días en Deuda</th>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Estado</th>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">Razón</th>
-              <th class="px-4 py-3 text-right text-xs font-semibold text-text-muted uppercase">Acciones</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-border-default">
-            @for (user of filteredUsers(); track user.id) {
-              <tr class="hover:bg-surface-secondary/50">
-                <td class="px-4 py-4">
-                  <div>
-                    <p class="font-medium text-text-primary">{{ user.full_name }}</p>
-                    <p class="text-sm text-text-muted">{{ user.email }}</p>
-                  </div>
-                </td>
-                <td class="px-4 py-4">
-                  <span class="font-semibold text-error-strong">
-                    {{ (user.wallet_balance / 100) | currency:'USD':'symbol':'1.2-2' }}
-                  </span>
-                </td>
-                <td class="px-4 py-4">
-                  <span
-                    class="px-2 py-1 rounded-full text-xs font-medium"
+        <div class="card-premium overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-surface-secondary">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">
+                  Usuario
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">
+                  Deuda
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">
+                  Días en Deuda
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">
+                  Estado
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase">
+                  Razón
+                </th>
+                <th class="px-4 py-3 text-right text-xs font-semibold text-text-muted uppercase">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-border-default">
+              @for (user of filteredUsers(); track user.id) {
+                <tr class="hover:bg-surface-secondary/50">
+                  <td class="px-4 py-4">
+                    <div>
+                      <p class="font-medium text-text-primary">{{ user.full_name }}</p>
+                      <p class="text-sm text-text-muted">{{ user.email }}</p>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="font-semibold text-error-strong">
+                      {{ user.wallet_balance / 100 | currency: 'USD' : 'symbol' : '1.2-2' }}
+                    </span>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span
+                      class="px-2 py-1 rounded-full text-xs font-medium"
                       [ngClass]="{
                         'bg-error-bg text-error-strong': user.days_in_debt >= 30,
-                        'bg-warning-bg text-warning-strong': user.days_in_debt >= 20 && user.days_in_debt < 30,
-                        'bg-surface-secondary text-text-secondary': user.days_in_debt < 20
+                        'bg-warning-bg text-warning-strong':
+                          user.days_in_debt >= 20 && user.days_in_debt < 30,
+                        'bg-surface-secondary text-text-secondary': user.days_in_debt < 20,
                       }"
                     >
-                    {{ user.days_in_debt }} días
-                  </span>
-                </td>
-                <td class="px-4 py-4">
-                  @if (user.suspended_at) {
-                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-error-bg text-error-strong">
-                      Suspendido
+                      {{ user.days_in_debt }} días
                     </span>
-                  } @else if (user.days_in_debt >= 20) {
-                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-warning-bg text-warning-strong">
-                      Warning
-                    </span>
-                  } @else {
-                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-surface-secondary text-text-secondary">
-                      En deuda
-                    </span>
-                  }
-                </td>
-                <td class="px-4 py-4 max-w-xs truncate text-sm text-text-secondary">
-                  {{ user.suspension_reason || '-' }}
-                </td>
-                <td class="px-4 py-4 text-right">
-                  @if (user.suspended_at) {
-                    <button
-                      (click)="unsuspendUser(user)"
-                      class="text-sm text-success-strong hover:text-success-700 font-medium"
-                      [disabled]="user.wallet_balance < 0"
-                      [title]="user.wallet_balance < 0 ? 'Usuario debe pagar su deuda primero' : 'Reactivar cuenta'"
+                  </td>
+                  <td class="px-4 py-4">
+                    @if (user.suspended_at) {
+                      <span
+                        class="px-2 py-1 rounded-full text-xs font-medium bg-error-bg text-error-strong"
                       >
-                      Reactivar
-                    </button>
-                  } @else {
-                    <button
-                      (click)="viewUserDetails(user)"
-                      class="text-sm text-cta-default hover:text-cta-hover font-medium"
+                        Suspendido
+                      </span>
+                    } @else if (user.days_in_debt >= 20) {
+                      <span
+                        class="px-2 py-1 rounded-full text-xs font-medium bg-warning-bg text-warning-strong"
                       >
-                      Ver detalles
-                    </button>
-                  }
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    }
-    
-    @else {
-    <div class="card-premium p-12 text-center">
-      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-success-bg flex items-center justify-center">
-        <svg class="w-8 h-8 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-      </div>
-      <h3 class="text-lg font-semibold text-text-primary mb-2">
-        No hay usuarios suspendidos
-      </h3>
-      <p class="text-text-secondary">
-        Todos los usuarios están al día con sus pagos.
-      </p>
+                        Warning
+                      </span>
+                    } @else {
+                      <span
+                        class="px-2 py-1 rounded-full text-xs font-medium bg-surface-secondary text-text-secondary"
+                      >
+                        En deuda
+                      </span>
+                    }
+                  </td>
+                  <td class="px-4 py-4 max-w-xs truncate text-sm text-text-secondary">
+                    {{ user.suspension_reason || '-' }}
+                  </td>
+                  <td class="px-4 py-4 text-right">
+                    @if (user.suspended_at) {
+                      <button
+                        (click)="unsuspendUser(user)"
+                        class="text-sm text-success-strong hover:text-success-700 font-medium"
+                        [disabled]="user.wallet_balance < 0"
+                        [title]="
+                          user.wallet_balance < 0
+                            ? 'Usuario debe pagar su deuda primero'
+                            : 'Reactivar cuenta'
+                        "
+                      >
+                        Reactivar
+                      </button>
+                    } @else {
+                      <button
+                        (click)="viewUserDetails(user)"
+                        class="text-sm text-cta-default hover:text-cta-hover font-medium"
+                      >
+                        Ver detalles
+                      </button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+      } @else {
+        <div class="card-premium p-12 text-center">
+          <div
+            class="w-16 h-16 mx-auto mb-4 rounded-full bg-success-bg flex items-center justify-center"
+          >
+            <svg
+              class="w-8 h-8 text-success-strong"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-text-primary mb-2">No hay usuarios suspendidos</h3>
+          <p class="text-text-secondary">Todos los usuarios están al día con sus pagos.</p>
+        </div>
+      }
     </div>
-    }
-    </div>
-    `
+  `,
 })
 export class AdminSuspendedUsersPage implements OnInit {
   private readonly adminService = inject(AdminService);
@@ -212,9 +251,12 @@ export class AdminSuspendedUsersPage implements OnInit {
   readonly filteredUsers = computed(() => {
     const all = [...this.suspendedUsers(), ...this.warningUsers()];
     switch (this.filterStatus) {
-      case 'suspended': return this.suspendedUsers();
-      case 'warning': return this.warningUsers();
-      default: return all;
+      case 'suspended':
+        return this.suspendedUsers();
+      case 'warning':
+        return this.warningUsers();
+      default:
+        return all;
     }
   });
 
@@ -239,7 +281,7 @@ export class AdminSuspendedUsersPage implements OnInit {
       this.totalUsers.set(result.total);
 
       // Map to our interface and categorize
-      const allUsers: SuspendedUser[] = result.users.map(u => ({
+      const allUsers: SuspendedUser[] = result.users.map((u) => ({
         id: u.userId,
         email: u.email,
         full_name: u.fullName,
@@ -251,14 +293,15 @@ export class AdminSuspendedUsersPage implements OnInit {
       }));
 
       // Categorize users
-      const suspended = allUsers.filter(u => u.suspended_at !== null);
-      const warning = allUsers.filter(u => u.suspended_at === null && u.days_in_debt >= 20);
-      const nearSuspension = allUsers.filter(u => u.suspended_at === null && u.days_in_debt >= 15 && u.days_in_debt < 20);
+      const suspended = allUsers.filter((u) => u.suspended_at !== null);
+      const warning = allUsers.filter((u) => u.suspended_at === null && u.days_in_debt >= 20);
+      const nearSuspension = allUsers.filter(
+        (u) => u.suspended_at === null && u.days_in_debt >= 15 && u.days_in_debt < 20,
+      );
 
       this.suspendedUsers.set(suspended);
       this.warningUsers.set(warning);
       this.nearSuspensionUsers.set(nearSuspension);
-
     } catch (err) {
       console.error('Error loading suspended users:', err);
       this.toast.error('Error', 'No se pudieron cargar los usuarios');
@@ -286,7 +329,10 @@ export class AdminSuspendedUsersPage implements OnInit {
       await this.loadUsers();
     } catch (err) {
       console.error('Error unsuspending user:', err);
-      this.toast.error('Error', err instanceof Error ? err.message : 'No se pudo reactivar la cuenta');
+      this.toast.error(
+        'Error',
+        err instanceof Error ? err.message : 'No se pudo reactivar la cuenta',
+      );
     }
   }
 
@@ -305,11 +351,16 @@ export class AdminSuspendedUsersPage implements OnInit {
       await this.loadUsers();
     } catch (err) {
       console.error('Error suspending user:', err);
-      this.toast.error('Error', err instanceof Error ? err.message : 'No se pudo suspender la cuenta');
+      this.toast.error(
+        'Error',
+        err instanceof Error ? err.message : 'No se pudo suspender la cuenta',
+      );
     }
   }
 
   viewUserDetails(user: SuspendedUser): void {
-    alert(`Usuario: ${user.full_name}\nEmail: ${user.email}\nDeuda: $${Math.abs(user.wallet_balance / 100).toFixed(2)}\nDías en deuda: ${user.days_in_debt}\nSuspendido: ${user.suspended_at ? 'Sí' : 'No'}\nRazón: ${user.suspension_reason || 'N/A'}`);
+    alert(
+      `Usuario: ${user.full_name}\nEmail: ${user.email}\nDeuda: $${Math.abs(user.wallet_balance / 100).toFixed(2)}\nDías en deuda: ${user.days_in_debt}\nSuspendido: ${user.suspended_at ? 'Sí' : 'No'}\nRazón: ${user.suspension_reason || 'N/A'}`,
+    );
   }
 }

@@ -229,10 +229,10 @@ export class MarketplaceOnboardingService {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session.session.access_token}`,
+              Authorization: `Bearer ${session.session.access_token}`,
             },
             body: JSON.stringify({ user_id: userId }),
-          }
+          },
         );
 
         if (!response.ok) {

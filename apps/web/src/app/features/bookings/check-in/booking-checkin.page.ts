@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { VideoDamageAnalysis, VideoDamageDetectionService } from '@core/services/verification/video-damage-detection.service';
+import {
+  VideoDamageAnalysis,
+  VideoDamageDetectionService,
+} from '@core/services/verification/video-damage-detection.service';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { DamageReportComponent } from '../../../shared/components/damage-report/damage-report.component';
 import { VideoInspectionRecorderComponent } from '../../../shared/components/video-inspection-recorder/video-inspection-recorder.component';
@@ -12,12 +15,7 @@ import { VideoInspectionRecorderComponent } from '../../../shared/components/vid
 @Component({
   selector: 'app-booking-checkin',
   standalone: true,
-  imports: [
-    CommonModule,
-    IonicModule,
-    VideoInspectionRecorderComponent,
-    DamageReportComponent
-  ],
+  imports: [CommonModule, IonicModule, VideoInspectionRecorderComponent, DamageReportComponent],
   template: `
     <ion-header>
       <ion-toolbar>
@@ -30,7 +28,6 @@ import { VideoInspectionRecorderComponent } from '../../../shared/components/vid
 
     <ion-content>
       <div class="checkin-container">
-
         <!-- Header Info -->
         <ion-card class="info-card">
           <ion-card-content>
@@ -38,10 +35,12 @@ import { VideoInspectionRecorderComponent } from '../../../shared/components/vid
               <ion-icon name="car-sport"></ion-icon>
               {{ carBrand() }} {{ carModel() }}
             </h2>
-            <p>Booking ID: <strong>{{ bookingId() }}</strong></p>
+            <p>
+              Booking ID: <strong>{{ bookingId() }}</strong>
+            </p>
             <ion-note>
-              Graba un video completo del vehículo antes de entregarlo.
-              La IA detectará automáticamente cualquier daño existente.
+              Graba un video completo del vehículo antes de entregarlo. La IA detectará
+              automáticamente cualquier daño existente.
             </ion-note>
           </ion-card-content>
         </ion-card>
@@ -53,7 +52,8 @@ import { VideoInspectionRecorderComponent } from '../../../shared/components/vid
             [carId]="carId()"
             [inspectionType]="'checkin'"
             (videoUploaded)="onVideoUploaded($event)"
-            (recorderError)="onError($event)">
+            (recorderError)="onError($event)"
+          >
           </app-video-inspection-recorder>
         }
 
@@ -96,7 +96,8 @@ import { VideoInspectionRecorderComponent } from '../../../shared/components/vid
               expand="block"
               color="primary"
               (click)="confirmInspection()"
-              [disabled]="isSubmitting()">
+              [disabled]="isSubmitting()"
+            >
               @if (!isSubmitting()) {
                 <ion-icon slot="start" name="checkmark-circle"></ion-icon>
                 Confirmar Inspección de Check-In
@@ -106,103 +107,101 @@ import { VideoInspectionRecorderComponent } from '../../../shared/components/vid
               }
             </ion-button>
 
-            <ion-button
-              expand="block"
-              fill="outline"
-              (click)="retakeVideo()">
+            <ion-button expand="block" fill="outline" (click)="retakeVideo()">
               <ion-icon slot="start" name="videocam"></ion-icon>
               Grabar Nuevo Video
             </ion-button>
           </div>
         }
-
       </div>
     </ion-content>
   `,
-  styles: [`
-    .checkin-container {
-      padding: 16px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
+  styles: [
+    `
+      .checkin-container {
+        padding: 16px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
 
-    .info-card h2 {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0 0 8px 0;
-    }
+      .info-card h2 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 8px 0;
+      }
 
-    .info-card ion-note {
-      display: block;
-      margin-top: 12px;
-      line-height: 1.5;
-    }
+      .info-card ion-note {
+        display: block;
+        margin-top: 12px;
+        line-height: 1.5;
+      }
 
-    .analyzing-card {
-      margin-top: 16px;
-    }
+      .analyzing-card {
+        margin-top: 16px;
+      }
 
-    .analyzing {
-      text-align: center;
-      padding: 32px 16px;
-    }
+      .analyzing {
+        text-align: center;
+        padding: 32px 16px;
+      }
 
-    .analyzing ion-spinner {
-      font-size: 48px;
-      margin-bottom: 16px;
-    }
+      .analyzing ion-spinner {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
 
-    .analyzing h3 {
-      margin: 16px 0 8px 0;
-    }
+      .analyzing h3 {
+        margin: 16px 0 8px 0;
+      }
 
-    .analyzing p {
-      margin: 4px 0;
-      color: var(--ion-color-medium);
-    }
+      .analyzing p {
+        margin: 4px 0;
+        color: var(--ion-color-medium);
+      }
 
-    .analyzing .small {
-      font-size: 14px;
-    }
+      .analyzing .small {
+        font-size: 14px;
+      }
 
-    .analyzing ion-progress-bar {
-      margin: 16px 0;
-    }
+      .analyzing ion-progress-bar {
+        margin: 16px 0;
+      }
 
-    .tips {
-      margin-top: 24px;
-      text-align: left;
-      background: var(--ion-color-light);
-      padding: 16px;
-      border-radius: 8px;
-    }
+      .tips {
+        margin-top: 24px;
+        text-align: left;
+        background: var(--ion-color-light);
+        padding: 16px;
+        border-radius: 8px;
+      }
 
-    .tips ion-note {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
+      .tips ion-note {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: bold;
+        margin-bottom: 12px;
+      }
 
-    .tips ul {
-      margin: 0;
-      padding-left: 20px;
-    }
+      .tips ul {
+        margin: 0;
+        padding-left: 20px;
+      }
 
-    .tips li {
-      margin-bottom: 8px;
-      line-height: 1.5;
-    }
+      .tips li {
+        margin-bottom: 8px;
+        line-height: 1.5;
+      }
 
-    .actions {
-      margin-top: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-  `]
+      .actions {
+        margin-top: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+    `,
+  ],
 })
 export class BookingCheckinPage implements OnInit {
   private route = inject(ActivatedRoute);
@@ -234,37 +233,35 @@ export class BookingCheckinPage implements OnInit {
     const toast = await this.toastCtrl.create({
       message: '✅ Video subido. Analizando con IA...',
       duration: 3000,
-      color: 'success'
+      color: 'success',
     });
     await toast.present();
 
-    this.videoService.subscribeToAnalysisResults(
-      this.bookingId(),
-      (analysis) => {
-        this.analysisResult.set(analysis);
-        this.showAnalysisToast(analysis);
-      }
-    );
+    this.videoService.subscribeToAnalysisResults(this.bookingId(), (analysis) => {
+      this.analysisResult.set(analysis);
+      this.showAnalysisToast(analysis);
+    });
   }
 
   async onError(error: string) {
     const toast = await this.toastCtrl.create({
       message: `❌ Error: ${error}`,
       duration: 5000,
-      color: 'danger'
+      color: 'danger',
     });
     await toast.present();
   }
 
   async showAnalysisToast(analysis: VideoDamageAnalysis) {
-    const message = analysis.damages.length > 0
-      ? `⚠️ Se detectaron ${analysis.damages.length} daño(s)`
-      : '✅ No se detectaron daños';
+    const message =
+      analysis.damages.length > 0
+        ? `⚠️ Se detectaron ${analysis.damages.length} daño(s)`
+        : '✅ No se detectaron daños';
 
     const toast = await this.toastCtrl.create({
       message,
       duration: 5000,
-      color: analysis.damages.length > 0 ? 'warning' : 'success'
+      color: analysis.damages.length > 0 ? 'warning' : 'success',
     });
     await toast.present();
   }
@@ -276,19 +273,18 @@ export class BookingCheckinPage implements OnInit {
       const toast = await this.toastCtrl.create({
         message: '✅ Check-In confirmado exitosamente',
         duration: 3000,
-        color: 'success'
+        color: 'success',
       });
       await toast.present();
 
       setTimeout(() => {
         this.router.navigate(['/bookings', this.bookingId()]);
       }, 1000);
-
     } catch (error) {
       const toast = await this.toastCtrl.create({
         message: '❌ Error al confirmar check-in',
         duration: 5000,
-        color: 'danger'
+        color: 'danger',
       });
       await toast.present();
     } finally {

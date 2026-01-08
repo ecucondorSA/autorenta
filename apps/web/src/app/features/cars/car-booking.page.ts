@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {Component, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CalendarComponent } from '../../shared/calendar.component';
 
@@ -13,7 +12,7 @@ import { CalendarComponent } from '../../shared/calendar.component';
     <div class="p-6">
       <h2 class="text-xl font-bold">Reservar coche</h2>
       <app-calendar [carId]="carId" (rangeSelected)="onRange($event)"></app-calendar>
-    
+
       @if (selectedRange) {
         <div class="mt-4">
           <p>Rango seleccionado: {{ selectedRange.start }} → {{ selectedRange.end }}</p>
@@ -22,19 +21,15 @@ import { CalendarComponent } from '../../shared/calendar.component';
           </button>
         </div>
       }
-    
+
       @if (result) {
-        <div class="mt-4 p-3 border rounded bg-gray-50">
-          Result: {{ result | json }}
-        </div>
+        <div class="mt-4 p-3 border rounded bg-gray-50">Result: {{ result | json }}</div>
       }
       @if (error) {
-        <div class="mt-4 p-3 border rounded bg-red-50 text-red-700">
-          Error: {{ error }}
-        </div>
+        <div class="mt-4 p-3 border rounded bg-red-50 text-red-700">Error: {{ error }}</div>
       }
     </div>
-    `,
+  `,
 })
 export class CarBookingPage {
   carId = '11111111-1111-1111-1111-111111111111';

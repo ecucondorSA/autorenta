@@ -53,17 +53,13 @@ export class SubscriptionService {
 
   readonly tier = computed(() => this.subscription()?.tier ?? null);
 
-  readonly remainingBalanceCents = computed(() =>
-    this.subscription()?.remaining_balance_cents ?? 0
+  readonly remainingBalanceCents = computed(
+    () => this.subscription()?.remaining_balance_cents ?? 0,
   );
 
-  readonly remainingBalanceUsd = computed(() =>
-    this.subscription()?.remaining_balance_usd ?? 0
-  );
+  readonly remainingBalanceUsd = computed(() => this.subscription()?.remaining_balance_usd ?? 0);
 
-  readonly coverageLimitUsd = computed(() =>
-    this.subscription()?.coverage_limit_usd ?? 0
-  );
+  readonly coverageLimitUsd = computed(() => this.subscription()?.coverage_limit_usd ?? 0);
 
   readonly balancePercent = computed(() => {
     const sub = this.subscription();
@@ -71,9 +67,7 @@ export class SubscriptionService {
     return Math.round((sub.remaining_balance_cents / sub.coverage_limit_cents) * 100);
   });
 
-  readonly daysRemaining = computed(() =>
-    this.subscription()?.days_remaining ?? 0
-  );
+  readonly daysRemaining = computed(() => this.subscription()?.days_remaining ?? 0);
 
   readonly displayState = computed<SubscriptionDisplayState>(() => {
     const sub = this.subscription();
@@ -84,12 +78,14 @@ export class SubscriptionService {
         balancePercent: 0,
         balanceUsd: 0,
         coverageLimitUsd: 0,
-        daysRemaining: 0
+        daysRemaining: 0,
       };
     }
 
     const tierConfig = SUBSCRIPTION_TIERS[sub.tier];
-    const balancePercent = Math.round((sub.remaining_balance_cents / sub.coverage_limit_cents) * 100);
+    const balancePercent = Math.round(
+      (sub.remaining_balance_cents / sub.coverage_limit_cents) * 100,
+    );
 
     return {
       hasSubscription: true,
@@ -100,7 +96,7 @@ export class SubscriptionService {
       balanceUsd: sub.remaining_balance_usd,
       coverageLimitUsd: sub.coverage_limit_usd,
       daysRemaining: sub.days_remaining,
-      expiresAt: new Date(sub.expires_at)
+      expiresAt: new Date(sub.expires_at),
     };
   });
 
@@ -110,15 +106,18 @@ export class SubscriptionService {
 
   constructor() {
     // Auto-fetch subscription on init if user is authenticated
-    this.supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        this.fetchSubscription().catch((err) => {
-          this.logger.warn('Failed to fetch subscription on init', err);
-        });
-      }
-    }).catch((err) => {
-      this.logger.warn('Failed to get session on subscription service init', err);
-    });
+    this.supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        if (session?.user) {
+          this.fetchSubscription().catch((err) => {
+            this.logger.warn('Failed to fetch subscription on init', err);
+          });
+        }
+      })
+      .catch((err) => {
+        this.logger.warn('Failed to get session on subscription service init', err);
+      });
   }
 
   // ============================================================================
@@ -134,7 +133,7 @@ export class SubscriptionService {
     const cached = this.subscription();
 
     // Return cached if fresh
-    if (!forceRefresh && cached && (now - this.lastFetchTimestamp) < SUBSCRIPTION_STALE_TIME_MS) {
+    if (!forceRefresh && cached && now - this.lastFetchTimestamp < SUBSCRIPTION_STALE_TIME_MS) {
       return cached;
     }
 
@@ -161,7 +160,9 @@ export class SubscriptionService {
    */
   async checkCoverage(franchiseAmountCents: number): Promise<SubscriptionCoverageCheck> {
     try {
-      const { data: { session } } = await this.supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await this.supabase.auth.getSession();
       if (!session?.user) {
         return {
           has_coverage: false,
@@ -171,13 +172,13 @@ export class SubscriptionService {
           available_cents: 0,
           covered_cents: 0,
           uncovered_cents: franchiseAmountCents,
-          deposit_required_cents: franchiseAmountCents
+          deposit_required_cents: franchiseAmountCents,
         };
       }
 
       const { data, error } = await this.supabase.rpc('check_subscription_coverage', {
         p_user_id: session.user.id,
-        p_franchise_amount_cents: franchiseAmountCents
+        p_franchise_amount_cents: franchiseAmountCents,
       });
 
       if (error) {
@@ -197,7 +198,7 @@ export class SubscriptionService {
         available_cents: 0,
         covered_cents: 0,
         uncovered_cents: franchiseAmountCents,
-        deposit_required_cents: franchiseAmountCents
+        deposit_required_cents: franchiseAmountCents,
       };
     }
   }
@@ -205,11 +206,14 @@ export class SubscriptionService {
   /**
    * Check coverage for a specific user (admin use)
    */
-  async checkCoverageForUser(userId: string, franchiseAmountCents: number): Promise<SubscriptionCoverageCheck> {
+  async checkCoverageForUser(
+    userId: string,
+    franchiseAmountCents: number,
+  ): Promise<SubscriptionCoverageCheck> {
     try {
       const { data, error } = await this.supabase.rpc('check_subscription_coverage', {
         p_user_id: userId,
-        p_franchise_amount_cents: franchiseAmountCents
+        p_franchise_amount_cents: franchiseAmountCents,
       });
 
       if (error) throw error;
@@ -223,13 +227,16 @@ export class SubscriptionService {
   /**
    * Get subscription usage history
    */
-  async fetchUsageHistory(subscriptionId?: string, limit = 50): Promise<SubscriptionUsageLogWithDetails[]> {
+  async fetchUsageHistory(
+    subscriptionId?: string,
+    limit = 50,
+  ): Promise<SubscriptionUsageLogWithDetails[]> {
     this.loading.set(true);
 
     try {
       const { data, error } = await this.supabase.rpc('get_subscription_usage_history', {
         p_subscription_id: subscriptionId ?? null,
-        p_limit: limit
+        p_limit: limit,
       });
 
       if (error) throw error;
@@ -263,9 +270,7 @@ export class SubscriptionService {
    * Calculate deposit amount considering subscription coverage
    * This is used by checkout to determine how much deposit user needs to pay
    */
-  async calculateDepositWithCoverage(
-    franchiseAmountCents: number
-  ): Promise<{
+  async calculateDepositWithCoverage(franchiseAmountCents: number): Promise<{
     depositRequiredCents: number;
     coveredBySubscriptionCents: number;
     coverageType: 'full' | 'partial' | 'none';
@@ -277,7 +282,7 @@ export class SubscriptionService {
       return {
         depositRequiredCents: franchiseAmountCents,
         coveredBySubscriptionCents: 0,
-        coverageType: 'none'
+        coverageType: 'none',
       };
     }
 
@@ -285,16 +290,14 @@ export class SubscriptionService {
       depositRequiredCents: coverage.uncovered_cents,
       coveredBySubscriptionCents: coverage.covered_cents,
       coverageType: coverage.coverage_type === 'full' ? 'full' : 'partial',
-      subscriptionId: coverage.subscription_id ?? undefined
+      subscriptionId: coverage.subscription_id ?? undefined,
     };
   }
 
   /**
    * Subscribe to real-time subscription changes
    */
-  subscribeToChanges(
-    onUpdate?: (subscription: ActiveSubscription | null) => void
-  ): () => void {
+  subscribeToChanges(onUpdate?: (subscription: ActiveSubscription | null) => void): () => void {
     const channel = this.supabase
       .channel('subscription-changes')
       .on(
@@ -308,7 +311,7 @@ export class SubscriptionService {
           this.logger.debug('Subscription change detected', payload);
           const updated = await this.fetchSubscription(true);
           onUpdate?.(updated);
-        }
+        },
       )
       .subscribe();
 
@@ -338,20 +341,26 @@ export class SubscriptionService {
         throw new Error(`Invalid tier: ${tier}`);
       }
 
-      const { data, error } = await this.supabase.functions.invoke('create-subscription-preference', {
-        body: {
-          tier,
-          amount_cents: tierConfig.price_cents,
-          description: `Autorentar Club - ${tierConfig.name}`,
+      const { data, error } = await this.supabase.functions.invoke(
+        'create-subscription-preference',
+        {
+          body: {
+            tier,
+            amount_cents: tierConfig.price_cents,
+            description: `Autorentar Club - ${tierConfig.name}`,
+          },
         },
-      });
+      );
 
       if (error) throw error;
       if (!data?.preference_id) {
         throw new Error('No preference ID returned');
       }
 
-      this.logger.info('Subscription preference created', { tier, preferenceId: data.preference_id });
+      this.logger.info('Subscription preference created', {
+        tier,
+        preferenceId: data.preference_id,
+      });
       return data.preference_id;
     } catch (err) {
       this.handleError(err, 'Error al crear preferencia de pago');
@@ -379,7 +388,10 @@ export class SubscriptionService {
         throw new Error(data?.error || 'No subscription ID returned');
       }
 
-      this.logger.info('Subscription created with wallet', { tier, subscriptionId: data.subscription_id });
+      this.logger.info('Subscription created with wallet', {
+        tier,
+        subscriptionId: data.subscription_id,
+      });
       await this.fetchSubscription(true);
       return data.subscription_id as string;
     } catch (err) {
@@ -411,7 +423,9 @@ export class SubscriptionService {
     newCoverageUsd?: number;
   }> {
     try {
-      const { data: { session } } = await this.supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await this.supabase.auth.getSession();
       if (!session?.user) {
         return {
           canUpgrade: false,
@@ -503,14 +517,16 @@ export class SubscriptionService {
    * @returns Preauthorization details
    */
   async calculatePreauthorizationForVehicle(
-    vehicleValueUsd: number
+    vehicleValueUsd: number,
   ): Promise<PreauthorizationCalculation> {
     try {
-      const { data: { session } } = await this.supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await this.supabase.auth.getSession();
 
       const { data, error } = await this.supabase.rpc('calculate_preauthorization', {
         p_vehicle_value_usd: vehicleValueUsd,
-        p_user_id: session?.user?.id ?? null
+        p_user_id: session?.user?.id ?? null,
       });
 
       if (error) throw error;
@@ -527,7 +543,7 @@ export class SubscriptionService {
         fgoCap: data.fgo_cap_usd,
         formula: data.discount_applied
           ? `Hold reducido con suscripción ${data.user_tier}`
-          : `Hold = max($${data.base_hold_usd}, $${vehicleValueUsd} × 10%)`
+          : `Hold = max($${data.base_hold_usd}, $${vehicleValueUsd} × 10%)`,
       };
     } catch (err) {
       this.logger.error('Error calculating preauthorization from server', err);
@@ -548,9 +564,7 @@ export class SubscriptionService {
    * Validate if user's subscription allows access to a vehicle
    * Uses server-side validation for authoritative result
    */
-  async validateSubscriptionForVehicle(
-    vehicleValueUsd: number
-  ): Promise<{
+  async validateSubscriptionForVehicle(vehicleValueUsd: number): Promise<{
     hasSubscription: boolean;
     canBook: boolean;
     requiresFullPreauth: boolean;
@@ -562,7 +576,9 @@ export class SubscriptionService {
     message: string;
   }> {
     try {
-      const { data: { session } } = await this.supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await this.supabase.auth.getSession();
       if (!session?.user) {
         const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
         return {
@@ -571,13 +587,13 @@ export class SubscriptionService {
           requiresFullPreauth: true,
           requiredTier,
           userTier: null,
-          message: `Sin sesión: se requiere preautorización completa de $${SUBSCRIPTION_TIERS[requiredTier].preauth_hold_usd} USD`
+          message: `Sin sesión: se requiere preautorización completa de $${SUBSCRIPTION_TIERS[requiredTier].preauth_hold_usd} USD`,
         };
       }
 
       const { data, error } = await this.supabase.rpc('validate_subscription_for_vehicle', {
         p_user_id: session.user.id,
-        p_vehicle_value_usd: vehicleValueUsd
+        p_vehicle_value_usd: vehicleValueUsd,
       });
 
       if (error) throw error;
@@ -591,7 +607,7 @@ export class SubscriptionService {
         subscriptionId: data.subscription_id ?? undefined,
         remainingBalanceCents: data.remaining_balance_cents ?? undefined,
         upgradeRecommended: data.upgrade_recommended ?? false,
-        message: data.message
+        message: data.message,
       };
     } catch (err) {
       this.logger.error('Error validating subscription for vehicle', err);
@@ -603,7 +619,7 @@ export class SubscriptionService {
         requiresFullPreauth: !access.allowed || access.reason !== undefined,
         requiredTier: access.requiredTier,
         userTier: access.userTier,
-        message: access.reason ?? 'Validación local'
+        message: access.reason ?? 'Validación local',
       };
     }
   }
@@ -645,9 +661,9 @@ export class SubscriptionService {
    * Get all tier configurations with preauth info
    */
   getAllTiersWithPreauth() {
-    return Object.values(SUBSCRIPTION_TIERS).map(tier => ({
+    return Object.values(SUBSCRIPTION_TIERS).map((tier) => ({
       ...tier,
-      savingsMessage: `Reduce preautorización de $${tier.preauth_hold_usd} a $${tier.preauth_with_subscription_usd}`
+      savingsMessage: `Reduce preautorización de $${tier.preauth_hold_usd} a $${tier.preauth_with_subscription_usd}`,
     }));
   }
 
@@ -660,7 +676,9 @@ export class SubscriptionService {
     this.error.set(null);
 
     try {
-      const { data: { session } } = await this.supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await this.supabase.auth.getSession();
       if (!session?.user) {
         this.subscription.set(null);
         return null;

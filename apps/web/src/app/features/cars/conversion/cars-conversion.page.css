@@ -567,7 +567,11 @@
 /* Final CTA Section */
 .cta-final {
   padding: 6rem 1.5rem;
-  background: linear-gradient(135deg, var(--cta-default, #a7d8f4) 0%, var(--cta-hover, #75bae4) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--cta-default, #a7d8f4) 0%,
+    var(--cta-hover, #75bae4) 100%
+  );
 }
 
 .cta-content {

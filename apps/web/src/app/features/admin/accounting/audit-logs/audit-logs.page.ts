@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {Component, OnInit, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 import { AccountingService } from '@core/services/payments/accounting.service';
 import type { AuditLog, PaginatedResult } from '@core/services/payments/accounting.service';
 

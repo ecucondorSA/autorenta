@@ -1,5 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {ErrorHandler, Injectable, inject} from '@angular/core';
+import { ErrorHandler, Injectable, inject } from '@angular/core';
 import { environment } from '@environment';
 
 /**

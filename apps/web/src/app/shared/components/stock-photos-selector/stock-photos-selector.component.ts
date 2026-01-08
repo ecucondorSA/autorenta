@@ -1,6 +1,14 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Component, Input, Output, EventEmitter, signal, inject, OnInit,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  signal,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { StockPhotosService, StockPhoto } from '@core/services/ai/stock-photos.service';

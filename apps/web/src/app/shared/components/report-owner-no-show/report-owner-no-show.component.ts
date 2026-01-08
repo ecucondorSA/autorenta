@@ -1,6 +1,13 @@
 import { CommonModule } from '@angular/common';
-import {Component, EventEmitter, Input, Output, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  signal,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BookingsService } from '@core/services/bookings/bookings.service';
@@ -32,8 +39,6 @@ export class ReportOwnerNoShowComponent {
   details = signal<string>('');
   evidenceUrls = signal<string[]>([]); // To be populated by EvidenceUploader
 
-
-
   onEvidenceUploaded(urls: string[]): void {
     this.evidenceUrls.set(urls);
   }
@@ -50,7 +55,7 @@ export class ReportOwnerNoShowComponent {
       const result = await this.bookingsService.reportOwnerNoShow(
         this.booking.id,
         this.details(),
-        this.evidenceUrls()
+        this.evidenceUrls(),
       );
       this.noShowReported.emit(result);
       this.closeModal.emit();

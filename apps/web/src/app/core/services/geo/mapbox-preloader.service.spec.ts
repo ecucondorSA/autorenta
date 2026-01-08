@@ -6,7 +6,7 @@ describe('MapboxPreloaderService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MapboxPreloaderService]
+      providers: [MapboxPreloaderService],
     });
     service = TestBed.inject(MapboxPreloaderService);
   });
@@ -42,5 +42,4 @@ describe('MapboxPreloaderService', () => {
   it('should have destroy method', () => {
     expect(typeof service.destroy).toBe('function');
   });
-
 });

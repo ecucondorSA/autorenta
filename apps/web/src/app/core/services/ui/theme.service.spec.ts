@@ -6,7 +6,7 @@ describe('ThemeService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ThemeService]
+      providers: [ThemeService],
     });
     service = TestBed.inject(ThemeService);
   });
@@ -34,5 +34,4 @@ describe('ThemeService', () => {
   it('should have getThemeLabel method', () => {
     expect(typeof service.getThemeLabel).toBe('function');
   });
-
 });

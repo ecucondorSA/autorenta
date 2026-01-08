@@ -1,6 +1,11 @@
-
-import {Component, EventEmitter, Input, Output, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 
 @Component({
@@ -25,15 +30,13 @@ import { CarAvailabilityService } from '@core/services/cars/car-availability.ser
         </button>
       </div>
       @if (available === false) {
-        <div class="text-red-600 mt-2">
-          El rango seleccionado no está disponible.
-        </div>
+        <div class="text-red-600 mt-2">El rango seleccionado no está disponible.</div>
       }
       @if (available === true) {
         <div class="text-green-600 mt-2">Rango disponible.</div>
       }
     </div>
-    `,
+  `,
   styles: [],
 })
 export class CalendarComponent {

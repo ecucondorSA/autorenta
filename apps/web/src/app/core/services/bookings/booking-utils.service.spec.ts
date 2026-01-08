@@ -6,7 +6,7 @@ describe('BookingUtilsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BookingUtilsService]
+      providers: [BookingUtilsService],
     });
     service = TestBed.inject(BookingUtilsService);
   });
@@ -46,5 +46,4 @@ describe('BookingUtilsService', () => {
   it('should have isUpcoming method', () => {
     expect(typeof service.isUpcoming).toBe('function');
   });
-
 });

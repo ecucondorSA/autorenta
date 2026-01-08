@@ -1,5 +1,14 @@
-import {Component, EventEmitter, Input, Output, signal, computed, DestroyRef, OnInit,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  signal,
+  computed,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -71,7 +80,10 @@ export class WithdrawalRequestFormComponent implements OnInit {
     return this.accounts.find((acc) => acc.id === id) || null;
   });
 
-  constructor(private readonly fb: FormBuilder, private readonly destroyRef: DestroyRef) {
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly destroyRef: DestroyRef,
+  ) {
     this.form = this.fb.group({
       bank_account_id: ['', Validators.required],
       amount: [

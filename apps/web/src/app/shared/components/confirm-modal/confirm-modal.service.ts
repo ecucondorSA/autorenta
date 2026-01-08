@@ -61,11 +61,7 @@ export class ConfirmModalService {
   /**
    * Shortcut for danger confirmation (delete, cancel, etc.)
    */
-  async confirmDanger(
-    title: string,
-    message: string,
-    confirmText = 'Eliminar'
-  ): Promise<boolean> {
+  async confirmDanger(title: string, message: string, confirmText = 'Eliminar'): Promise<boolean> {
     return this.confirm({
       title,
       message,
@@ -81,7 +77,7 @@ export class ConfirmModalService {
   async confirmWarning(
     title: string,
     message: string,
-    confirmText = 'Continuar'
+    confirmText = 'Continuar',
   ): Promise<boolean> {
     return this.confirm({
       title,

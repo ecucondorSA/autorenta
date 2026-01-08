@@ -85,7 +85,7 @@ export class IncidentDetectorService {
       x,
       y,
       z,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     // Keep buffer size limited
@@ -117,7 +117,7 @@ export class IncidentDetectorService {
       locationData = {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
-        speed: position.coords.speed || 0
+        speed: position.coords.speed || 0,
       };
     } catch (e) {
       console.warn('Could not get location during incident', e);
@@ -135,7 +135,7 @@ export class IncidentDetectorService {
         location_lng: locationData.longitude,
         speed_mps: locationData.speed,
         acceleration_buffer: this.accelerationBuffer,
-        status: 'pending_review'
+        status: 'pending_review',
       })
       .select()
       .single();
@@ -147,15 +147,17 @@ export class IncidentDetectorService {
 
     // Show notification
     await LocalNotifications.schedule({
-      notifications: [{
-        title: '⚠️ Posible Incidente Detectado',
-        body: `Se detectó un impacto de ${gForce.toFixed(1)}G. ¿Ocurrió un accidente?`,
-        id: Date.now(),
-        extra: {
-          incident_id: incident['id'],
-          booking_id: this.currentBookingId
-        }
-      }]
+      notifications: [
+        {
+          title: '⚠️ Posible Incidente Detectado',
+          body: `Se detectó un impacto de ${gForce.toFixed(1)}G. ¿Ocurrió un accidente?`,
+          id: Date.now(),
+          extra: {
+            incident_id: incident['id'],
+            booking_id: this.currentBookingId,
+          },
+        },
+      ],
     });
 
     // Send push to owner
@@ -164,7 +166,7 @@ export class IncidentDetectorService {
     console.warn('🚨 INCIDENT DETECTED:', {
       gForce,
       location: locationData,
-      incidentId: incident.id
+      incidentId: incident.id,
     });
   }
 
@@ -186,8 +188,7 @@ export class IncidentDetectorService {
       } | null;
     } | null;
 
-    const ownerFcmToken =
-      (booking as unknown as BookingJoin)?.['car']?.owner?.fcm_token ?? null;
+    const ownerFcmToken = (booking as unknown as BookingJoin)?.['car']?.owner?.fcm_token ?? null;
 
     if (ownerFcmToken) {
       // Send FCM notification via edge function
@@ -196,8 +197,8 @@ export class IncidentDetectorService {
           token: ownerFcmToken,
           title: 'Incidente Detectado en tu Auto',
           body: 'Se detectó un posible accidente. Revisa los detalles.',
-          data: { incident_id: incidentId }
-        }
+          data: { incident_id: incidentId },
+        },
       });
     }
   }

@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {Component, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { WalletLedgerService } from '@core/services/payments/wallet-ledger.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
@@ -11,9 +10,7 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   template: `
-    <div
-      class="rounded-2xl border border-border-default bg-surface-raised p-4 space-y-3"
-      >
+    <div class="rounded-2xl border border-border-default bg-surface-raised p-4 space-y-3">
       <div class="flex items-center justify-between">
         <div>
           <h3 class="text-base font-semibold text-text-primary">Transferencias</h3>
@@ -23,25 +20,23 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
           <ion-spinner name="crescent"></ion-spinner>
         }
       </div>
-    
+
       @if (error()) {
         <div class="text-sm text-error-strong">
           {{ error() }}
         </div>
       }
-    
+
       @if (!loading() && !transfers().length) {
-        <div class="text-sm text-text-secondary">
-          Aún no tienes transferencias.
-        </div>
+        <div class="text-sm text-text-secondary">Aún no tienes transferencias.</div>
       }
-    
+
       @if (transfers().length) {
         <div class="space-y-3">
           @for (t of transfers(); track t) {
             <div
               class="flex items-center justify-between rounded-xl border border-border-default/60 p-3"
-              >
+            >
               <div class="space-y-0.5">
                 <p class="text-sm font-semibold text-text-primary">
                   {{ directionLabel(t) }}
@@ -54,11 +49,11 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
               </div>
               <div class="text-right">
                 <p
-              [ngClass]="
-                t.from_user === currentUserId() ? 'text-error-strong' : 'text-success-strong'
-              "
+                  [ngClass]="
+                    t.from_user === currentUserId() ? 'text-error-strong' : 'text-success-strong'
+                  "
                   class="font-semibold"
-                  >
+                >
                   {{ amountLabel(t.amount_cents, t.from_user === currentUserId()) }}
                 </p>
                 <p class="text-xs text-text-secondary">Ref: {{ t.ref }}</p>
@@ -68,7 +63,7 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
         </div>
       }
     </div>
-    `,
+  `,
 })
 export class WalletTransfersComponent implements OnInit {
   private readonly ledger = inject(WalletLedgerService);

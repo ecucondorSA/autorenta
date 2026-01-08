@@ -35,9 +35,7 @@ describe('ErrorBoundaryComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TestHostComponent],
-      providers: [
-        { provide: LoggerService, useValue: mockLogger },
-      ],
+      providers: [{ provide: LoggerService, useValue: mockLogger }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestHostComponent);

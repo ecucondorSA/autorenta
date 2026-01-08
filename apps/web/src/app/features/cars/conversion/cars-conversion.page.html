@@ -3,7 +3,10 @@
   <div class="hero-content">
     <div class="hero-text">
       <h1 class="hero-title font-bold font-satoshi">Encuentra el auto ideal, cerca de ti.</h1>
-      <p class="hero-subtitle font-luxury">Conecta con dueños locales y conduce el auto que realmente quieres. Seguro incluido en cada viaje.</p>
+      <p class="hero-subtitle font-luxury">
+        Conecta con dueños locales y conduce el auto que realmente quieres. Seguro incluido en cada
+        viaje.
+      </p>
       <p class="hero-price font-luxury">Desde económicos a $15.000 hasta lujo.</p>
       <div class="hero-cta">
         <a routerLink="/cars/list" class="btn-primary btn-large font-friendly">Explorar autos</a>
@@ -63,7 +66,7 @@
     @if (loading()) {
       <div class="cars-loading">
         <div class="skeleton-grid">
-          @for (i of [1,2,3,4,5,6]; track i) {
+          @for (i of [1, 2, 3, 4, 5, 6]; track i) {
             <div class="skeleton-card">
               <div class="skeleton-image"></div>
               <div class="skeleton-content">
@@ -204,9 +207,7 @@
     <div class="cta-content">
       <h2 class="cta-title font-bold font-satoshi font-friendly">¿Listo para tu próximo viaje?</h2>
       <p class="cta-subtitle">Encuentra el auto perfecto ahora mismo</p>
-      <a routerLink="/cars/list" class="btn-primary btn-large">
-        Ver todos los autos disponibles
-      </a>
+      <a routerLink="/cars/list" class="btn-primary btn-large"> Ver todos los autos disponibles </a>
     </div>
   </div>
 </section>

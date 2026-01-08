@@ -86,17 +86,15 @@ export class MobileBottomNavComponent implements OnInit {
 
   ngOnInit(): void {
     // Detectar ruta actual con cleanup automático
-    this.router.events
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.currentRoute.set(this.router.url);
-      });
+    this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.currentRoute.set(this.router.url);
+    });
 
     // Reset nav visibility on route change
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(() => {
         this.isHidden.set(false);

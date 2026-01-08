@@ -27,7 +27,7 @@ import type { VideoDamageAnalysis } from '@core/services/verification/video-dama
             </ion-badge>
           </ion-card-content>
         </ion-card>
-        
+
         @if (data.damages.length > 0) {
           <ion-card>
             <ion-card-header>
@@ -42,7 +42,10 @@ import type { VideoDamageAnalysis } from '@core/services/verification/video-dama
                       <p>{{ damage.description }}</p>
                       <p class="meta">{{ damage.location }} • {{ damage.timestamp }}s</p>
                     </ion-label>
-                    <ion-badge slot="end" [color]="damage.severity === 'severe' ? 'danger' : 'warning'">
+                    <ion-badge
+                      slot="end"
+                      [color]="damage.severity === 'severe' ? 'danger' : 'warning'"
+                    >
                       {{ damage.severity }}
                     </ion-badge>
                   </ion-item>
@@ -72,13 +75,29 @@ import type { VideoDamageAnalysis } from '@core/services/verification/video-dama
       }
     </div>
   `,
-  styles: [`
-    .damage-report { padding: 16px; }
-    .meta { font-size: 12px; color: var(--ion-color-medium); }
-    .no-damages { text-align: center; padding: 32px 16px; }
-    .no-damages ion-icon { font-size: 64px; margin-bottom: 16px; }
-    .loading { text-align: center; padding: 32px 16px; }
-  `]
+  styles: [
+    `
+      .damage-report {
+        padding: 16px;
+      }
+      .meta {
+        font-size: 12px;
+        color: var(--ion-color-medium);
+      }
+      .no-damages {
+        text-align: center;
+        padding: 32px 16px;
+      }
+      .no-damages ion-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+      }
+      .loading {
+        text-align: center;
+        padding: 32px 16px;
+      }
+    `,
+  ],
 })
 export class DamageReportComponent {
   analysis = input<VideoDamageAnalysis | null>(null);

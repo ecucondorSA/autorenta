@@ -18,16 +18,19 @@ import { PwaInstallService } from '@core/services/infrastructure/pwa-install.ser
         <div class="content">
           <div class="icon">
             <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <rect width="48" height="48" rx="10" fill="#d4f542"/>
+              <rect width="48" height="48" rx="10" fill="#d4f542" />
               <g transform="translate(4, 14)">
-                <path fill="#1f2937" d="M 3,18 C 3,16 5,12 8,10 L 11,8 C 14,6 17,4 21,4 L 29,4 C 32,4 34,5 36,8 L 38,11 C 39,12 40,14 40,17 L 40,20 C 40,21 39,21 38,21 L 35,21 C 34,19 32,17 29,17 C 26,17 24,20 24,21 L 16,21 C 15,20 13,17 10,17 C 7,17 6,20 5,21 L 3,21 C 2,21 1,20 1,19 Z"/>
-                <path fill="#7dd3fc" d="M 12,6 C 11,7 10,9 9,11 L 15,11 L 15,6 Z"/>
-                <path fill="#7dd3fc" d="M 17,5 L 26,5 C 29,6 31,8 33,11 L 17,11 Z"/>
-                <circle cx="10" cy="21" r="4" fill="#0f172a"/>
-                <circle cx="10" cy="21" r="2" fill="#64748b"/>
-                <circle cx="29" cy="21" r="4" fill="#0f172a"/>
-                <circle cx="29" cy="21" r="2" fill="#64748b"/>
-                <ellipse cx="38" cy="14" rx="1.5" ry="2" fill="#fef9c3"/>
+                <path
+                  fill="#1f2937"
+                  d="M 3,18 C 3,16 5,12 8,10 L 11,8 C 14,6 17,4 21,4 L 29,4 C 32,4 34,5 36,8 L 38,11 C 39,12 40,14 40,17 L 40,20 C 40,21 39,21 38,21 L 35,21 C 34,19 32,17 29,17 C 26,17 24,20 24,21 L 16,21 C 15,20 13,17 10,17 C 7,17 6,20 5,21 L 3,21 C 2,21 1,20 1,19 Z"
+                />
+                <path fill="#7dd3fc" d="M 12,6 C 11,7 10,9 9,11 L 15,11 L 15,6 Z" />
+                <path fill="#7dd3fc" d="M 17,5 L 26,5 C 29,6 31,8 33,11 L 17,11 Z" />
+                <circle cx="10" cy="21" r="4" fill="#0f172a" />
+                <circle cx="10" cy="21" r="2" fill="#64748b" />
+                <circle cx="29" cy="21" r="4" fill="#0f172a" />
+                <circle cx="29" cy="21" r="2" fill="#64748b" />
+                <ellipse cx="38" cy="14" rx="1.5" ry="2" fill="#fef9c3" />
               </g>
             </svg>
           </div>
@@ -39,7 +42,7 @@ import { PwaInstallService } from '@core/services/infrastructure/pwa-install.ser
         </div>
       </div>
     }
-    `,
+  `,
   styles: [
     `
       .pwa-install-banner {
@@ -55,7 +58,7 @@ import { PwaInstallService } from '@core/services/infrastructure/pwa-install.ser
         ); /* Replaced gradient with solid color token */
         color: white;
         border-radius: 16px;
-        box-shadow: 0 8px 32px #7B7B7B;
+        box-shadow: 0 8px 32px #7b7b7b;
         padding: 20px;
         z-index: 1000;
         animation: slideUp 0.4s ease;

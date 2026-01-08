@@ -138,11 +138,11 @@
     <div
       class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
       (click)="closeDetailModal()"
-      >
+    >
       <ion-card
         class="max-w-4xl w-full max-h-[90vh] overflow-y-auto"
         (click)="$event.stopPropagation()"
-        >
+      >
         <ion-card-header>
           <ion-card-title>Detalles de Disputa</ion-card-title>
           <ion-card-subtitle>#{{ selectedDispute()?.id?.slice(0, 8) }}</ion-card-subtitle>
@@ -172,30 +172,42 @@
                   </p>
                   @if (selectedDispute()?.resolved_at) {
                     <p class="text-sm">
-                      <strong>Resuelta:</strong> {{ formatDate(selectedDispute()?.resolved_at ?? null) }}
+                      <strong>Resuelta:</strong>
+                      {{ formatDate(selectedDispute()?.resolved_at ?? null) }}
                     </p>
                   }
                   <!-- NEW: Display Resolution Details -->
                   @if (selectedDispute()?.dispute_resolution) {
                     <p class="text-sm">
-                      <strong>Razón de Resolución:</strong> {{ selectedDispute()!.dispute_resolution }}
+                      <strong>Razón de Resolución:</strong>
+                      {{ selectedDispute()!.dispute_resolution }}
                     </p>
                   }
                   @if (selectedDispute()?.resolution_amount) {
                     <p class="text-sm">
                       <strong>Monto de Resolución:</strong>
-                      {{ (selectedDispute()!.resolution_amount ?? 0) | currency:(selectedDispute()!.resolution_currency ?? 'USD'):'symbol':'1.2-2' }}
+                      {{
+                        selectedDispute()!.resolution_amount ?? 0
+                          | currency
+                            : selectedDispute()!.resolution_currency ?? 'USD'
+                            : 'symbol'
+                            : '1.2-2'
+                      }}
                     </p>
                   }
                 </div>
               </div>
               <!-- Evidence Gallery -->
               <div>
-                <h3 class="text-lg font-semibold mb-2 font-satoshi">Evidencias ({{ evidence().length }})</h3>
+                <h3 class="text-lg font-semibold mb-2 font-satoshi">
+                  Evidencias ({{ evidence().length }})
+                </h3>
                 @if (evidence().length > 0) {
                   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @for (item of evidence(); track item) {
-                      <div class="relative p-3 rounded-lg border border-border-default bg-surface-base">
+                      <div
+                        class="relative p-3 rounded-lg border border-border-default bg-surface-base"
+                      >
                         @if (item.path) {
                           <div class="h-48">
                             @if (isImage(item.path)) {
@@ -203,29 +215,42 @@
                                 [src]="item.path"
                                 [alt]="item.note || 'Evidencia'"
                                 class="w-full h-full object-cover rounded"
-                                />
+                              />
                             }
                             @if (!isImage(item.path)) {
                               <div
                                 class="w-full h-full bg-surface-raised rounded flex items-center justify-center"
-                                >
-                                <ion-icon name="document" class="text-4xl text-text-muted"></ion-icon>
+                              >
+                                <ion-icon
+                                  name="document"
+                                  class="text-4xl text-text-muted"
+                                ></ion-icon>
                               </div>
                             }
                             @if (item.note) {
                               <p class="text-xs text-text-secondary mt-2">{{ item.note }}</p>
                             }
-                            <a [href]="item.path" target="_blank" class="text-xs text-cta-default mt-1 block">
+                            <a
+                              [href]="item.path"
+                              target="_blank"
+                              class="text-xs text-cta-default mt-1 block"
+                            >
                               Ver completo
                             </a>
                           </div>
                         } @else {
                           <div class="flex flex-col h-full justify-between">
                             <div>
-                              <h4 class="font-semibold text-text-primary mb-1 font-satoshi">Comentario:</h4>
-                              <p class="text-sm text-text-secondary whitespace-pre-wrap">{{ item.note }}</p>
+                              <h4 class="font-semibold text-text-primary mb-1 font-satoshi">
+                                Comentario:
+                              </h4>
+                              <p class="text-sm text-text-secondary whitespace-pre-wrap">
+                                {{ item.note }}
+                              </p>
                             </div>
-                            <p class="text-xs text-text-muted mt-2 text-right">{{ formatDate(item.created_at) }}</p>
+                            <p class="text-xs text-text-muted mt-2 text-right">
+                              {{ formatDate(item.created_at) }}
+                            </p>
                           </div>
                         }
                       </div>
@@ -242,7 +267,9 @@
               <div class="pt-4 border-t">
                 <h3 class="text-lg font-semibold mb-3 font-satoshi">Acciones</h3>
                 <!-- Resolution Inputs (conditional visibility) -->
-                @if (selectedDispute() && ['open', 'in_review'].includes(selectedDispute()!.status)) {
+                @if (
+                  selectedDispute() && ['open', 'in_review'].includes(selectedDispute()!.status)
+                ) {
                   <div>
                     <ion-item class="mb-3">
                       <ion-label position="stacked">Razón de Resolución (Opcional)</ion-label>
@@ -269,7 +296,7 @@
                     <ion-button
                       color="primary"
                       (click)="updateStatus(selectedDispute()!.id, 'in_review')"
-                      >
+                    >
                       Marcar en Revisión
                     </ion-button>
                   }
@@ -277,7 +304,7 @@
                     <ion-button
                       color="success"
                       (click)="updateStatus(selectedDispute()!.id, 'resolved')"
-                      >
+                    >
                       Resolver
                     </ion-button>
                   }
@@ -285,7 +312,7 @@
                     <ion-button
                       color="danger"
                       (click)="updateStatus(selectedDispute()!.id, 'rejected')"
-                      >
+                    >
                       Rechazar
                     </ion-button>
                   }

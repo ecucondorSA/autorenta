@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {Component, inject, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // Importar FormsModule
 import { RouterModule } from '@angular/router';
 import { OrganizationService, OrganizationMembership } from '../services/organization.service';
@@ -15,12 +14,10 @@ import { OrganizationService, OrganizationMembership } from '../services/organiz
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold">Gestión de Flota</h1>
         @if (!isCreating()) {
-          <button class="btn btn-primary" (click)="startCreating()">
-            + Nueva Organización
-          </button>
+          <button class="btn btn-primary" (click)="startCreating()">+ Nueva Organización</button>
         }
       </div>
-    
+
       <!-- Creation Form -->
       @if (isCreating()) {
         <div class="card bg-base-200 mb-8 p-4 animate-fade-in">
@@ -32,7 +29,7 @@ import { OrganizationService, OrganizationMembership } from '../services/organiz
               placeholder="Nombre de la empresa/flota"
               class="input input-bordered flex-grow"
               [disabled]="creatingLoading()"
-              />
+            />
             <select [(ngModel)]="newOrgType" class="select select-bordered">
               <option value="fleet">Flota Privada</option>
               <option value="agency">Agencia</option>
@@ -42,25 +39,25 @@ import { OrganizationService, OrganizationMembership } from '../services/organiz
               class="btn btn-success"
               (click)="createOrg()"
               [disabled]="!newOrgName || creatingLoading()"
-              >
+            >
               {{ creatingLoading() ? 'Creando...' : 'Confirmar' }}
             </button>
             <button class="btn btn-ghost" (click)="cancelCreating()">Cancelar</button>
           </div>
         </div>
       }
-    
+
       @if (loading()) {
         <div class="loading loading-spinner loading-lg"></div>
       }
-    
+
       @if (!loading()) {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- Lista de Organizaciones -->
           @for (org of orgs(); track org) {
             <div
               class="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all"
-              >
+            >
               <div class="card-body">
                 <div class="flex justify-between items-start">
                   <h2 class="card-title">{{ org.name }}</h2>
@@ -87,7 +84,7 @@ import { OrganizationService, OrganizationMembership } from '../services/organiz
         </div>
       }
     </div>
-    `,
+  `,
 })
 export class OrganizationDashboardComponent implements OnInit {
   private orgService = inject(OrganizationService);

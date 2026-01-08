@@ -1,6 +1,4 @@
-
-import {Component, computed, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -24,22 +22,22 @@ import { FxService } from '@core/services/payments/fx.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, IonicModule],
   templateUrl: './earnings-calculator.component.html',
-  styleUrls: ['./earnings-calculator.component.scss']
+  styleUrls: ['./earnings-calculator.component.scss'],
 })
 export class EarningsCalculatorComponent {
   private router = inject(Router);
   private fxService = inject(FxService);
 
   // Inputs (Signals)
-  carValue = signal(15000000);      // $15M default (typical sedan)
-  daysAvailable = signal(15);       // 15 days default (half month)
+  carValue = signal(15000000); // $15M default (typical sedan)
+  daysAvailable = signal(15); // 15 days default (half month)
   isFinanced = signal(false);
   monthlyQuota = signal(0);
 
   // Constants
-  private readonly DAILY_RATE_FACTOR = 0.003;    // 0.3% of car value
-  private readonly PLATFORM_FEE_PERCENT = 0.15;  // 15%
-  private readonly AVG_WASH_COST_ARS = 12000;    // $12k per wash
+  private readonly DAILY_RATE_FACTOR = 0.003; // 0.3% of car value
+  private readonly PLATFORM_FEE_PERCENT = 0.15; // 15%
+  private readonly AVG_WASH_COST_ARS = 12000; // $12k per wash
   private readonly INSURANCE_BUFFER_ARS = 80000; // $80k insurance estimate
 
   // Computed Values
@@ -194,8 +192,8 @@ export class EarningsCalculatorComponent {
         queryParams: {
           source: 'earnings_calculator',
           quota: this.monthlyQuota(),
-          coverage: Math.round(this.financingCoverage())
-        }
+          coverage: Math.round(this.financingCoverage()),
+        },
       });
     }
   }

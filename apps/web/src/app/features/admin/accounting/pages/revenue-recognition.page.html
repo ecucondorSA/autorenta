@@ -53,7 +53,7 @@
             [(ngModel)]="filters"
             [ngModelOptions]="{ standalone: true }"
             name="isRecognized"
-            >
+          >
             <ion-select-option value="">Todos</ion-select-option>
             <ion-select-option value="true">Reconocido</ion-select-option>
             <ion-select-option value="false">Pendiente</ion-select-option>
@@ -117,7 +117,8 @@
                 <ion-label>
                   <h3>Booking: {{ record.booking_id.slice(0, 8) }}</h3>
                   <p class="text-sm">
-                    Tipo: {{ record.revenue_type }} • Fecha: {{ record.recognition_date | date: 'short' }}
+                    Tipo: {{ record.revenue_type }} • Fecha:
+                    {{ record.recognition_date | date: 'short' }}
                   </p>
                   <div class="mt-2 grid grid-cols-3 gap-2 text-xs">
                     <div>
@@ -126,7 +127,9 @@
                     </div>
                     <div>
                       <p class="text-text-secondary">Comisión</p>
-                      <p class="font-semibold font-mono">${{ record.commission_amount.toFixed(2) }}</p>
+                      <p class="font-semibold font-mono">
+                        ${{ record.commission_amount.toFixed(2) }}
+                      </p>
                     </div>
                     <div>
                       <p class="text-text-secondary">Locador</p>

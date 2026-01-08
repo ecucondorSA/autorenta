@@ -212,7 +212,7 @@ export class ActiveRentalPage implements OnInit {
     if (location) {
       window.open(
         `https://www.google.com/maps/search/?api=1&query=${location.lat},${location.lng}`,
-        '_blank'
+        '_blank',
       );
     } else {
       // Fallback to booking detail with tracking
@@ -228,7 +228,7 @@ export class ActiveRentalPage implements OnInit {
     if (location) {
       window.open(
         `https://www.google.com/maps/search/estacion+de+servicio/@${location.lat},${location.lng},14z`,
-        '_blank'
+        '_blank',
       );
     } else {
       window.open('https://www.google.com/maps/search/estacion+de+servicio', '_blank');

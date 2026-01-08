@@ -270,7 +270,7 @@ export class InsuranceService {
    */
   private detectCoverageCountries(addonsList: BookingInsuranceAddon[]): string[] {
     const hasLimitrofesAddon = addonsList.some(
-      (a) => a.addon && a.addon.addon_type === 'paises_limitrofes'
+      (a) => a.addon && a.addon.addon_type === 'paises_limitrofes',
     );
 
     if (hasLimitrofesAddon) {
@@ -683,7 +683,8 @@ export class InsuranceService {
   } | null> {
     const { data, error } = await this.supabase
       .from('cars')
-      .select(`
+      .select(
+        `
         insurance_status,
         insurance_document_url,
         insurance_policy_number,
@@ -691,7 +692,8 @@ export class InsuranceService {
         insurance_expires_at,
         insurance_rejection_reason,
         insurance_verified_at
-      `)
+      `,
+      )
       .eq('id', carId)
       .single();
 
@@ -743,7 +745,8 @@ export class InsuranceService {
     const reasons: Record<string, string> = {
       not_uploaded: 'Debes subir tu póliza de seguro para activar el auto.',
       pending: 'Tu seguro está siendo verificado. Te notificaremos cuando esté listo.',
-      rejected: status.rejectionReason || 'Tu seguro fue rechazado. Por favor sube un nuevo documento.',
+      rejected:
+        status.rejectionReason || 'Tu seguro fue rechazado. Por favor sube un nuevo documento.',
       expired: 'El seguro ha vencido. Por favor actualiza tu póliza.',
     };
 

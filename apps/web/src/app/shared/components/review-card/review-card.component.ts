@@ -1,5 +1,11 @@
-import {Component, Input, Output, EventEmitter, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -57,21 +63,29 @@ export class ReviewCardComponent {
   get activeCategories(): { key: string; label: string; value: number | null | undefined }[] {
     if (this.isOwnerToRenterReview) {
       return [
-        { key: 'rating_communication', label: 'Comunicación', value: this.review.rating_communication },
+        {
+          key: 'rating_communication',
+          label: 'Comunicación',
+          value: this.review.rating_communication,
+        },
         { key: 'rating_punctuality', label: 'Puntualidad', value: this.review.rating_punctuality },
         { key: 'rating_care', label: 'Cuidado', value: this.review.rating_care },
         { key: 'rating_rules', label: 'Reglas', value: this.review.rating_rules },
         { key: 'rating_recommend', label: 'Recomendación', value: this.review.rating_recommend },
-      ].filter(cat => cat.value != null && cat.value > 0);
+      ].filter((cat) => cat.value != null && cat.value > 0);
     } else {
       return [
         { key: 'rating_cleanliness', label: 'Limpieza', value: this.review.rating_cleanliness },
-        { key: 'rating_communication', label: 'Comunicación', value: this.review.rating_communication },
+        {
+          key: 'rating_communication',
+          label: 'Comunicación',
+          value: this.review.rating_communication,
+        },
         { key: 'rating_accuracy', label: 'Precisión', value: this.review.rating_accuracy },
         { key: 'rating_location', label: 'Ubicación', value: this.review.rating_location },
         { key: 'rating_checkin', label: 'Check-in', value: this.review.rating_checkin },
         { key: 'rating_value', label: 'Valor', value: this.review.rating_value },
-      ].filter(cat => cat.value != null && cat.value > 0);
+      ].filter((cat) => cat.value != null && cat.value > 0);
     }
   }
 
@@ -159,10 +173,8 @@ export class ReviewCardComponent {
     const status = this.review.moderation_status || 'pending';
 
     const classes: Record<string, string> = {
-      pending:
-        'bg-warning-bg-hover text-warning-strong',
-      approved:
-        'bg-success-light/20 text-success-700',
+      pending: 'bg-warning-bg-hover text-warning-strong',
+      approved: 'bg-success-light/20 text-success-700',
       rejected: 'bg-error-bg-hover text-error-strong',
     };
 

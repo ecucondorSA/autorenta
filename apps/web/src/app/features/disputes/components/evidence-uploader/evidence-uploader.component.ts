@@ -1,5 +1,4 @@
-import {Component, Input, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, Input, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { DisputeEvidenceService, EvidenceItem } from '../../services/dispute-evidence.service';
 
@@ -11,18 +10,18 @@ import { DisputeEvidenceService, EvidenceItem } from '../../services/dispute-evi
   template: `
     <div class="evidence-upload p-4 border rounded-lg bg-base-100">
       <h3 class="font-bold mb-2">Evidencia (Fotos/Docs)</h3>
-    
+
       <input
         type="file"
         (change)="onFileSelected($event)"
         class="file-input file-input-bordered w-full max-w-xs"
         [disabled]="uploading()"
-        />
-    
+      />
+
       @if (uploading()) {
         <div class="mt-2">Subiendo...</div>
       }
-    
+
       <ul class="mt-4 list-disc pl-4">
         @for (item of evidenceList(); track item) {
           <li>
@@ -31,7 +30,7 @@ import { DisputeEvidenceService, EvidenceItem } from '../../services/dispute-evi
         }
       </ul>
     </div>
-    `,
+  `,
 })
 export class DisputeEvidenceUploaderComponent {
   @Input({ required: true }) disputeId!: string;

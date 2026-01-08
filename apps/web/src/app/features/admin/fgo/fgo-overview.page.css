@@ -216,7 +216,7 @@ section h2 {
 }
 
 .card-primary .card-header h3 {
-  color: #E3E3E3;
+  color: #e3e3e3;
 }
 
 .card-header .icon,
@@ -265,7 +265,7 @@ section h2 {
 }
 
 .card-primary .meta-item .label {
-  color: #E3E3E3;
+  color: #e3e3e3;
 }
 
 .meta-item .value {
@@ -592,7 +592,7 @@ section h2 {
   left: 0;
   right: 0;
   bottom: 0;
-  background: #4E4E4E;
+  background: #4e4e4e;
   display: flex;
   align-items: center;
   justify-content: center;

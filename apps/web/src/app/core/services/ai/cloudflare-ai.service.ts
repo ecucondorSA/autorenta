@@ -9,14 +9,14 @@ export interface CloudflareAIRequest {
   year?: number;
   color?: string;
   body_type?:
-  | 'sedan'
-  | 'hatchback'
-  | 'suv'
-  | 'crossover'
-  | 'pickup'
-  | 'coupe'
-  | 'wagon'
-  | 'minivan';
+    | 'sedan'
+    | 'hatchback'
+    | 'suv'
+    | 'crossover'
+    | 'pickup'
+    | 'coupe'
+    | 'wagon'
+    | 'minivan';
   trim_level?: 'base' | 'lx' | 'ex' | 'sport' | 'touring' | 'limited' | 'type-r';
   angle?: 'front' | 'side' | 'rear' | '3/4-front' | 'interior';
   style?: 'showroom' | 'street' | 'studio' | 'outdoor' | string;
@@ -59,7 +59,7 @@ export class CloudflareAiService {
     'craigslist car ad photo, parked in driveway, suburbs, boring lighting, unedited, daily driver car, leaves on ground',
     'gas station parking lot, night time, fluorescent lights, grainy phone photo, reflection on hood, wet ground',
     'random street parking, trees reflection on window, sunny day, lens flare, shot from sidewalk, real life, used car',
-    'parking garage, concrete background, dim lighting, flash photography, dust particles, raw photo, no filter'
+    'parking garage, concrete background, dim lighting, flash photography, dust particles, raw photo, no filter',
   ];
 
   /**
@@ -97,14 +97,14 @@ export class CloudflareAiService {
     year?: number;
     color?: string;
     body_type?:
-    | 'sedan'
-    | 'hatchback'
-    | 'suv'
-    | 'crossover'
-    | 'pickup'
-    | 'coupe'
-    | 'wagon'
-    | 'minivan';
+      | 'sedan'
+      | 'hatchback'
+      | 'suv'
+      | 'crossover'
+      | 'pickup'
+      | 'coupe'
+      | 'wagon'
+      | 'minivan';
     trim_level?: 'base' | 'lx' | 'ex' | 'sport' | 'touring' | 'limited' | 'type-r';
     angles?: Array<'front' | 'side' | 'rear' | '3/4-front' | 'interior'>;
   }): Promise<Blob[]> {

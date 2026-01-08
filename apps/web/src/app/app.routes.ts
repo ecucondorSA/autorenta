@@ -480,8 +480,7 @@ export const routes: Routes = [
   },
   {
     path: 'privacy',
-    loadComponent: () =>
-      import('./features/legal/privacy/privacy.page').then((m) => m.PrivacyPage),
+    loadComponent: () => import('./features/legal/privacy/privacy.page').then((m) => m.PrivacyPage),
   },
   {
     path: 'delete-account',

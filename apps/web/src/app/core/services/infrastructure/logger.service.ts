@@ -209,7 +209,7 @@ export class LoggerService {
     level: 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'CRITICAL',
     context: string,
     message: string,
-    data?: unknown
+    data?: unknown,
   ): void {
     try {
       const debug = this.getDebugService();
@@ -453,7 +453,7 @@ export class LoggerService {
 
     // Reuse existing load promise to avoid duplicate imports
     if (!this.sentryLoadPromise) {
-      this.sentryLoadPromise = (import('@sentry/angular')
+      this.sentryLoadPromise = import('@sentry/angular')
         .then((module) => {
           this.sentryModule = module;
           return module;
@@ -462,7 +462,7 @@ export class LoggerService {
           console.error('Failed to load Sentry:', err);
           this.sentryLoadPromise = null;
           return null;
-        }) as unknown) as Promise<SentryModule>;
+        }) as unknown as Promise<SentryModule>;
     }
 
     return this.sentryLoadPromise;

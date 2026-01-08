@@ -33,10 +33,11 @@ export class SupportService {
   /**
    * Get count of open tickets (for badges)
    */
-  readonly openTicketsCount = computed(() =>
-    this.state().tickets.filter(
-      (t) => t.status === 'open' || t.status === 'in_progress' || t.status === 'waiting_user',
-    ).length,
+  readonly openTicketsCount = computed(
+    () =>
+      this.state().tickets.filter(
+        (t) => t.status === 'open' || t.status === 'in_progress' || t.status === 'waiting_user',
+      ).length,
   );
 
   /**
@@ -133,7 +134,10 @@ export class SupportService {
     const safeFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
     const filePath = `support/${userId}/${timestamp}_${safeFileName}`;
 
-    this.logger.debug('Uploading attachment', 'SupportService', { fileName: file.name, size: file.size });
+    this.logger.debug('Uploading attachment', 'SupportService', {
+      fileName: file.name,
+      size: file.size,
+    });
 
     const { error: uploadError } = await this.supabase.storage
       .from('support-attachments')

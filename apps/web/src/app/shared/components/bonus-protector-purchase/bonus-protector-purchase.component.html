@@ -1,7 +1,4 @@
-<div
-  class="bg-surface-raised rounded-lg shadow-md p-6"
-  [class.p-4]="compact"
->
+<div class="bg-surface-raised rounded-lg shadow-md p-6" [class.p-4]="compact">
   <!-- Header -->
   <div class="mb-6">
     <div class="flex items-center mb-2">
@@ -16,9 +13,7 @@
         Protector de Bonus
       </h3>
     </div>
-    <p class="text-sm text-text-secondary">
-      Protege tu clase de conductor de reclamos inesperados
-    </p>
+    <p class="text-sm text-text-secondary">Protege tu clase de conductor de reclamos inesperados</p>
   </div>
 
   <!-- Active Protector Notice -->
@@ -78,9 +73,7 @@
           />
           <div class="ml-3">
             <p class="text-sm font-semibold text-text-primary">{{ level.name }}</p>
-            <p class="text-xs text-text-secondary">
-              Nivel {{ level.level }}
-            </p>
+            <p class="text-xs text-text-secondary">Nivel {{ level.level }}</p>
           </div>
         </div>
 
@@ -141,9 +134,7 @@
     </div>
 
     <!-- Balance Info -->
-    <div
-      class="bg-surface-base border border-border-default rounded-lg p-4 mb-4"
-    >
+    <div class="bg-surface-base border border-border-default rounded-lg p-4 mb-4">
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm text-text-secondary">Tu saldo disponible</p>
@@ -282,3 +273,4 @@
       Comprar por {{ formatPrice(protectionLevels[selectedLevel - 1].priceCents) }}
     </button>
   </div>
+</div>

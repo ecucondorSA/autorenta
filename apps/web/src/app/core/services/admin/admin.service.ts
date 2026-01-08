@@ -213,7 +213,11 @@ export class AdminService {
       // Check if any of user's roles has this permission
       return roles.some((role) => PERMISSIONS_MATRIX[role]?.includes(permission));
     } catch (error) {
-      this.logger['error'](`Error checking permission ${permission}`, 'AdminService', error as Error);
+      this.logger['error'](
+        `Error checking permission ${permission}`,
+        'AdminService',
+        error as Error,
+      );
       return false;
     }
   }
@@ -1065,11 +1069,7 @@ export class AdminService {
    * Obtiene usuarios con deuda (balance negativo)
    * Para el panel de administración de suspensiones
    */
-  async getUsersWithDebt(options?: {
-    minDays?: number;
-    limit?: number;
-    offset?: number;
-  }): Promise<{
+  async getUsersWithDebt(options?: { minDays?: number; limit?: number; offset?: number }): Promise<{
     users: Array<{
       userId: string;
       fullName: string;

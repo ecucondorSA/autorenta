@@ -21,7 +21,10 @@ import { CarsService } from '@core/services/cars/cars.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
 import { GeocodingService } from '@core/services/geo/geocoding.service';
 import { LocationCoordinates, LocationService } from '@core/services/geo/location.service';
-import { CarAvailabilityService, CarWithAvailability } from '@core/services/cars/car-availability.service';
+import {
+  CarAvailabilityService,
+  CarWithAvailability,
+} from '@core/services/cars/car-availability.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { BreakpointService } from '@core/services/ui/breakpoint.service';
@@ -99,7 +102,8 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
 
   getCarImageSrcset(imageUrl: string | null | undefined): string | null {
     if (!imageUrl) return null;
-    if (!imageUrl.includes('unsplash.com') && !imageUrl.includes('images.unsplash.com')) return null;
+    if (!imageUrl.includes('unsplash.com') && !imageUrl.includes('images.unsplash.com'))
+      return null;
 
     const widths = [320, 480, 640, 960, 1280];
     const parts: string[] = [];
@@ -270,20 +274,22 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
   );
 
   // Efecto para resetear la página al cambiar filtros
-  private readonly resetPageEffect = effect(() => {
-    // Dependencias que deben resetear la paginación
-    this.sortBy();
-    this.searchQuery();
-    this.minPrice();
-    this.maxPrice();
-    this.minRating();
-    this.maxDistance();
-    this.dateRange();
+  private readonly resetPageEffect = effect(
+    () => {
+      // Dependencias que deben resetear la paginación
+      this.sortBy();
+      this.searchQuery();
+      this.minPrice();
+      this.maxPrice();
+      this.minRating();
+      this.maxDistance();
+      this.dateRange();
 
-    // Resetear a página 1 (allowSignalWrites true es necesario en effects)
-    this.page.set(1);
-  }, { allowSignalWrites: true });
-
+      // Resetear a página 1 (allowSignalWrites true es necesario en effects)
+      this.page.set(1);
+    },
+    { allowSignalWrites: true },
+  );
 
   // Contadores para badge de resultados
   readonly totalCount = computed(() => this.cars().length);
@@ -397,8 +403,12 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
         const city = (car['location_city'] || '').toLowerCase();
         const title = (car['title'] || '').toLowerCase();
 
-        if (!brand.includes(query) && !model.includes(query) &&
-          !city.includes(query) && !title.includes(query)) {
+        if (
+          !brand.includes(query) &&
+          !model.includes(query) &&
+          !city.includes(query) &&
+          !title.includes(query)
+        ) {
           continue;
         }
       }
@@ -434,7 +444,8 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
       for (const car of filteredCars) {
         const priceNormalized = (car['price_per_day'] - minPrice) / priceRange;
         const ratingNormalized = Math.min((car.owner?.rating_avg ?? 0) / 5, 1);
-        const score = priceNormalized * PREMIUM_SCORE_PRICE_WEIGHT +
+        const score =
+          priceNormalized * PREMIUM_SCORE_PRICE_WEIGHT +
           ratingNormalized * PREMIUM_SCORE_RATING_WEIGHT;
         carScores.set(car['id'], score);
       }
@@ -599,8 +610,12 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
         const city = (car['location_city'] || '').toLowerCase();
         const title = (car['title'] || '').toLowerCase();
 
-        if (!brand.includes(query) && !model.includes(query) &&
-          !city.includes(query) && !title.includes(query)) {
+        if (
+          !brand.includes(query) &&
+          !model.includes(query) &&
+          !city.includes(query) &&
+          !title.includes(query)
+        ) {
           continue;
         }
       }
@@ -630,7 +645,10 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
   // Antes: 48+ function calls/render (isTopRated + hasInstantBooking × 24 cars)
   // Después: 0 function calls (Map lookup O(1))
   readonly carBadges = computed(() => {
-    const badges = new Map<string, { topRated: boolean; popular: boolean; instantBooking: boolean }>();
+    const badges = new Map<
+      string,
+      { topRated: boolean; popular: boolean; instantBooking: boolean }
+    >();
     for (const car of this.premiumCars()) {
       const ratingAvg = car.rating_avg || 0;
       const ratingCount = car.rating_count || 0;
@@ -645,7 +663,7 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
 
   // Método para cargar más autos
   loadMore(): void {
-    this.page.update(p => p + 1);
+    this.page.update((p) => p + 1);
   }
 
   readonly recommendedCars = computed<CarWithDistance[]>(() => {
@@ -736,7 +754,7 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
   private readonly extractCarCitiesEffect = effect(() => {
     const cars = this.cars();
     const uniqueCities = new Set<string>();
-    cars.forEach(car => {
+    cars.forEach((car) => {
       if (car['location_city']) {
         uniqueCities.add(car['location_city']);
       }
@@ -939,11 +957,10 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
 
         // Move map camera to the user's location (north-up) so the UI matches the intent
         // of the "Mi ubicación" control.
-        this.carsMapComponent?.flyTo(
-          { lat: gpsLocation.lat, lng: gpsLocation.lng },
-          15,
-          { bearing: 0, pitch: 0 },
-        );
+        this.carsMapComponent?.flyTo({ lat: gpsLocation.lat, lng: gpsLocation.lng }, 15, {
+          bearing: 0,
+          pitch: 0,
+        });
       } catch (error) {
         this.toastService.error('Error', 'Verifica los permisos de geolocalización');
       } finally {
@@ -1203,7 +1220,12 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
       this.infiniteScrollObserver = new IntersectionObserver(
         (entries) => {
           const entry = entries[0];
-          if (entry.isIntersecting && this.serverHasMore() && !this.loadingMore() && !this.loading()) {
+          if (
+            entry.isIntersecting &&
+            this.serverHasMore() &&
+            !this.loadingMore() &&
+            !this.loading()
+          ) {
             this.loadMoreCarsFromServer();
           }
         },

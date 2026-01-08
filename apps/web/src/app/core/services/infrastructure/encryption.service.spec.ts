@@ -6,7 +6,7 @@ describe('EncryptionService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [EncryptionService]
+      providers: [EncryptionService],
     });
     service = TestBed.inject(EncryptionService);
   });
@@ -22,5 +22,4 @@ describe('EncryptionService', () => {
   it('should have decrypt method', () => {
     expect(typeof service.decrypt).toBe('function');
   });
-
 });

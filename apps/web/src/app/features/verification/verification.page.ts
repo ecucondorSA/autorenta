@@ -1,13 +1,17 @@
-import {Component, OnInit, signal, computed, inject, effect,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  signal,
+  computed,
+  inject,
+  effect,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { VerificationService } from '@core/services/verification/verification.service';
-import {
-  DocumentTypeConfig,
-  getDocumentsByCategory,
-} from '@core/config/document-types.config';
+import { DocumentTypeConfig, getDocumentsByCategory } from '@core/config/document-types.config';
 import { ProfileStore } from '@core/stores/profile.store';
 import type { UserProfile, VerificationStatus, UserDocument } from '../../core/models';
 
@@ -104,9 +108,7 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink, TranslateModule],
   template: `
-    <div
-      class="verification-page bg-surface-base min-h-screen transition-colors duration-300"
-    >
+    <div class="verification-page bg-surface-base min-h-screen transition-colors duration-300">
       <section
         class="relative overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white"
       >
@@ -148,14 +150,10 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         @if (currentStatus(); as status) {
           <section class="grid gap-4 md:grid-cols-3 mb-8">
-            <div
-              class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm"
-            >
+            <div class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
               <div class="flex items-start justify-between gap-4">
                 <div>
-                  <p class="text-sm text-text-secondary">
-                    Estado actual
-                  </p>
+                  <p class="text-sm text-text-secondary">Estado actual</p>
                   <p class="text-2xl font-semibold text-text-primary mt-1">
                     {{ getStatusLabel(status.status) }}
                   </p>
@@ -182,18 +180,12 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
                 </div>
               }
             </div>
-            <div
-              class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm"
-            >
-              <h3 class="text-lg font-semibold text-text-primary">
-                Revisión y progreso
-              </h3>
+            <div class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
+              <h3 class="text-lg font-semibold text-text-primary">Revisión y progreso</h3>
               <ul class="mt-4 space-y-3 text-sm text-text-secondary">
                 <li class="flex items-center justify-between gap-4">
                   <span>Documentos listos</span>
-                  <span class="font-semibold text-text-primary">{{
-                    completedDocs()
-                  }}</span>
+                  <span class="font-semibold text-text-primary">{{ completedDocs() }}</span>
                 </li>
                 <li class="flex items-center justify-between gap-4">
                   <span>Pendientes</span>
@@ -209,9 +201,7 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
               class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm flex flex-col gap-4"
             >
               <div>
-                <h3 class="text-lg font-semibold text-text-primary">
-                  Acciones inmediatas
-                </h3>
+                <h3 class="text-lg font-semibold text-text-primary">Acciones inmediatas</h3>
                 <p class="text-sm text-text-secondary">
                   Completa los documentos marcados como pendientes y solicitaremos una revisión
                   automática.
@@ -235,170 +225,150 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
           </section>
         }
         <section id="verification-docs" class="mt-10 grid gap-8 lg:grid-cols-[2fr_1fr]">
-            <div class="space-y-6">
-              @for (category of docCategories; track category.id) {
-                <div
-                  class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm"
-                >
-                  <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                    <div>
-                      <h2 class="text-xl font-semibold text-text-primary">
-                        {{ category.title }}
-                      </h2>
-                      <p class="text-sm text-text-secondary">
-                        {{ category.description }}
-                      </p>
-                    </div>
-                    <div
-                      class="rounded-full bg-surface-base px-4 py-1 text-sm font-semibold text-text-secondary"
-                    >
-                      {{ getCategoryStats(category.docs).completed }}/{{ category.docs.length }}
-                      completado
-                    </div>
+          <div class="space-y-6">
+            @for (category of docCategories; track category.id) {
+              <div class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
+                <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <h2 class="text-xl font-semibold text-text-primary">
+                      {{ category.title }}
+                    </h2>
+                    <p class="text-sm text-text-secondary">
+                      {{ category.description }}
+                    </p>
                   </div>
-                  <div class="mt-5 space-y-4">
-                    @for (doc of category.docs; track doc.id) {
+                  <div
+                    class="rounded-full bg-surface-base px-4 py-1 text-sm font-semibold text-text-secondary"
+                  >
+                    {{ getCategoryStats(category.docs).completed }}/{{ category.docs.length }}
+                    completado
+                  </div>
+                </div>
+                <div class="mt-5 space-y-4">
+                  @for (doc of category.docs; track doc.id) {
+                    <div
+                      class="rounded-2xl border border-border-default bg-white/70 px-4 py-4 shadow-sm"
+                    >
                       <div
-                        class="rounded-2xl border border-border-default bg-white/70 px-4 py-4 shadow-sm"
+                        class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between"
                       >
-                        <div
-                          class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between"
-                        >
-                          <div>
-                            <p
-                              class="text-base font-semibold text-text-primary"
-                            >
-                              {{ doc.emoji }} {{ doc.label }}
-                            </p>
-                            <p class="text-sm text-text-secondary">
-                              {{ doc.description }}
-                            </p>
-                            @if (getDocPrefillLabels(doc.id).length > 0) {
-                              <p class="mt-2 text-xs text-primary-600">
-                                Autocompletamos: {{ getDocPrefillLabels(doc.id).join(', ') }}
-                              </p>
-                            }
-                            @if (getDocStatusHelperText(doc.id); as helperText) {
-                              <p class="mt-2 text-xs" [class]="getDocStatusHelperClasses(doc.id)">
-                                {{ helperText }}
-                              </p>
-                            }
-                          </div>
-                          <span
-                            class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"
-                            [ngClass]="getDocStatusClasses(doc.id)"
-                          >
-                            {{ getDocStatusLabel(doc.id) }}
-                          </span>
-                        </div>
-                        <div class="mt-4 flex flex-wrap gap-3">
-                          <a
-                            routerLink="/profile"
-                            [queryParams]="{ doc: doc.id }"
-                            class="inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors"
-                          >
-                            {{ isDocCompleted(doc.id) ? 'Revisar documento' : 'Subir documento' }}
-                          </a>
+                        <div>
+                          <p class="text-base font-semibold text-text-primary">
+                            {{ doc.emoji }} {{ doc.label }}
+                          </p>
+                          <p class="text-sm text-text-secondary">
+                            {{ doc.description }}
+                          </p>
                           @if (getDocPrefillLabels(doc.id).length > 0) {
-                            <button
-                              type="button"
-                              (click)="prefillDoc(doc.id)"
-                              class="inline-flex items-center gap-2 rounded-xl bg-surface-base/60 px-3 py-1.5 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
-                            >
-                              ✨ Autocompletar
-                            </button>
+                            <p class="mt-2 text-xs text-primary-600">
+                              Autocompletamos: {{ getDocPrefillLabels(doc.id).join(', ') }}
+                            </p>
+                          }
+                          @if (getDocStatusHelperText(doc.id); as helperText) {
+                            <p class="mt-2 text-xs" [class]="getDocStatusHelperClasses(doc.id)">
+                              {{ helperText }}
+                            </p>
                           }
                         </div>
-                      </div>
-                    }
-                  </div>
-                </div>
-              }
-            </div>
-            <aside class="space-y-6">
-              <div
-                class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm"
-              >
-                <h3 class="text-lg font-semibold text-text-primary">
-                  Datos importados del perfil
-                </h3>
-                <p class="text-sm text-text-secondary">
-                  Reutilizamos la información que ya completaste para evitar que escribas todo de
-                  nuevo.
-                </p>
-                <ul class="mt-4 space-y-2 text-sm">
-                  @if (prefilledFields().length > 0) {
-                    @for (hint of prefilledFields(); track hint.label) {
-                      <li class="flex items-start gap-2">
-                        <span class="text-primary-500">•</span>
-                        <span>
-                          <span class="font-medium text-text-primary">{{
-                            hint.label
-                          }}</span>
-                          <span class="ml-1 text-text-secondary">{{
-                            hint.value
-                          }}</span>
+                        <span
+                          class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"
+                          [ngClass]="getDocStatusClasses(doc.id)"
+                        >
+                          {{ getDocStatusLabel(doc.id) }}
                         </span>
-                      </li>
-                    }
-                  } @else {
-                    <li class="text-text-secondary">
-                      Completa tu perfil para habilitar el autollenado automático.
+                      </div>
+                      <div class="mt-4 flex flex-wrap gap-3">
+                        <a
+                          routerLink="/profile"
+                          [queryParams]="{ doc: doc.id }"
+                          class="inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors"
+                        >
+                          {{ isDocCompleted(doc.id) ? 'Revisar documento' : 'Subir documento' }}
+                        </a>
+                        @if (getDocPrefillLabels(doc.id).length > 0) {
+                          <button
+                            type="button"
+                            (click)="prefillDoc(doc.id)"
+                            class="inline-flex items-center gap-2 rounded-xl bg-surface-base/60 px-3 py-1.5 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
+                          >
+                            ✨ Autocompletar
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          <aside class="space-y-6">
+            <div class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
+              <h3 class="text-lg font-semibold text-text-primary">Datos importados del perfil</h3>
+              <p class="text-sm text-text-secondary">
+                Reutilizamos la información que ya completaste para evitar que escribas todo de
+                nuevo.
+              </p>
+              <ul class="mt-4 space-y-2 text-sm">
+                @if (prefilledFields().length > 0) {
+                  @for (hint of prefilledFields(); track hint.label) {
+                    <li class="flex items-start gap-2">
+                      <span class="text-primary-500">•</span>
+                      <span>
+                        <span class="font-medium text-text-primary">{{ hint.label }}</span>
+                        <span class="ml-1 text-text-secondary">{{ hint.value }}</span>
+                      </span>
                     </li>
                   }
-                </ul>
-                <a
-                  routerLink="/profile"
-                  class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700"
-                >
-                  Actualizar perfil →
-                </a>
-              </div>
-              <div
-                class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm"
+                } @else {
+                  <li class="text-text-secondary">
+                    Completa tu perfil para habilitar el autollenado automático.
+                  </li>
+                }
+              </ul>
+              <a
+                routerLink="/profile"
+                class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700"
               >
-                <h3 class="text-lg font-semibold text-text-primary">
-                  ¿Necesitas ayuda?
-                </h3>
-                <p class="text-sm text-text-secondary">
-                  Nuestro equipo monitorea las verificaciones todos los días. Si detectamos un
-                  problema te avisamos por WhatsApp.
-                </p>
-                <a
-                  href="mailto:hola@autorenta.com"
-                  class="mt-4 inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors"
-                >
-                  Escribir a soporte
-                </a>
+                Actualizar perfil →
+              </a>
+            </div>
+            <div class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
+              <h3 class="text-lg font-semibold text-text-primary">¿Necesitas ayuda?</h3>
+              <p class="text-sm text-text-secondary">
+                Nuestro equipo monitorea las verificaciones todos los días. Si detectamos un
+                problema te avisamos por WhatsApp.
+              </p>
+              <a
+                href="mailto:hola@autorenta.com"
+                class="mt-4 inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors"
+              >
+                Escribir a soporte
+              </a>
+            </div>
+          </aside>
+        </section>
+        @if (showFaq()) {
+          <section class="mt-10">
+            <div class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
+              <h2 class="text-xl font-semibold text-text-primary mb-4">Preguntas frecuentes</h2>
+              <div class="divide-y divide-border-default">
+                @for (faq of faqItems; track faq.question) {
+                  <details class="group py-3">
+                    <summary
+                      class="flex cursor-pointer items-center justify-between text-base font-semibold text-text-primary"
+                    >
+                      {{ faq.question }}
+                      <span class="text-lg transition-transform group-open:rotate-180">⌄</span>
+                    </summary>
+                    <p class="mt-2 text-sm text-text-secondary">
+                      {{ faq.answer }}
+                    </p>
+                  </details>
+                }
               </div>
-            </aside>
+            </div>
           </section>
-          @if (showFaq()) {
-            <section class="mt-10">
-              <div
-                class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm"
-              >
-                <h2 class="text-xl font-semibold text-text-primary mb-4">
-                  Preguntas frecuentes
-                </h2>
-                <div class="divide-y divide-border-default">
-                  @for (faq of faqItems; track faq.question) {
-                    <details class="group py-3">
-                      <summary
-                        class="flex cursor-pointer items-center justify-between text-base font-semibold text-text-primary"
-                      >
-                        {{ faq.question }}
-                        <span class="text-lg transition-transform group-open:rotate-180">⌄</span>
-                      </summary>
-                      <p class="mt-2 text-sm text-text-secondary">
-                        {{ faq.answer }}
-                      </p>
-                    </details>
-                  }
-                </div>
-              </div>
-            </section>
-          }
+        }
       </div>
     </div>
   `,

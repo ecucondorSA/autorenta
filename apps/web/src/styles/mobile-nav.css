@@ -1,4 +1,3 @@
-
 /* 📱 Mobile Navigation System - Modern Bottom Bar
    Reemplaza el menú hamburguesa con una navegación ergonómica
    Optimizado para pulgares y áreas seguras de iOS/Android */
@@ -19,7 +18,7 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Ocultar en desktop */
@@ -90,8 +89,12 @@
 
 /* Animación de entrada */
 @keyframes slideUpNav {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .mobile-bottom-nav {

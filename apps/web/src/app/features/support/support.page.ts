@@ -171,5 +171,4 @@ export class SupportPage implements OnInit {
   getUrgencyInfo(urgency: string): TicketUrgencyOption | undefined {
     return TICKET_URGENCY_LEVELS.find((u) => u.value === urgency);
   }
-
 }

@@ -41,8 +41,7 @@ type ValidDocType = (typeof VALID_DOC_TYPES)[number];
 function validateDocType(docType: string): asserts docType is ValidDocType {
   if (!VALID_DOC_TYPES.includes(docType as ValidDocType)) {
     throw new Error(
-      `Tipo de documento inválido: "${docType}". ` +
-      `Tipos válidos: ${VALID_DOC_TYPES.join(', ')}`
+      `Tipo de documento inválido: "${docType}". ` + `Tipos válidos: ${VALID_DOC_TYPES.join(', ')}`,
     );
   }
 }
@@ -88,7 +87,9 @@ export class VerificationService implements OnDestroy {
    * Setup realtime subscriptions for verification status and documents
    */
   private async setupRealtimeSubscriptions(): Promise<void> {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) return;
 
     // Avoid duplicate subscriptions
@@ -165,10 +166,7 @@ export class VerificationService implements OnDestroy {
    * @returns Path del archivo subido
    * @throws Error si el tipo de documento es inválido o si falla la operación
    */
-  async uploadDocument(
-    file: File,
-    docType: string,
-  ): Promise<string> {
+  async uploadDocument(file: File, docType: string): Promise<string> {
     // SECURITY FIX #1: Validar docType contra whitelist antes de usar
     validateDocType(docType);
 
@@ -189,13 +187,12 @@ export class VerificationService implements OnDestroy {
 
     // Create or update user_documents record using RPC
     // (workaround: PostgREST no expone la tabla directamente)
-    const { error: upsertError } = await this.supabase
-      .rpc('upsert_user_document', {
-        p_user_id: user.id,
-        p_kind: docType,
-        p_storage_path: filePath,
-        p_status: 'pending',
-      });
+    const { error: upsertError } = await this.supabase.rpc('upsert_user_document', {
+      p_user_id: user.id,
+      p_kind: docType,
+      p_storage_path: filePath,
+      p_status: 'pending',
+    });
 
     // SECURITY FIX #2: Rollback - eliminar archivo si el registro en DB falla
     if (upsertError) {
@@ -203,9 +200,7 @@ export class VerificationService implements OnDestroy {
 
       // Intentar eliminar el archivo subido para mantener consistencia
       try {
-        await this.supabase.storage
-          .from('verification-docs')
-          .remove([filePath]);
+        await this.supabase.storage.from('verification-docs').remove([filePath]);
         this.logger.debug('Rollback successful: file removed from storage');
       } catch (rollbackError) {
         // Log pero no fallar - el archivo huérfano se puede limpiar después
@@ -213,7 +208,7 @@ export class VerificationService implements OnDestroy {
       }
 
       throw new Error(
-        'Error al registrar documento. El archivo fue eliminado. Por favor, intenta de nuevo.'
+        'Error al registrar documento. El archivo fue eliminado. Por favor, intenta de nuevo.',
       );
     }
 
@@ -281,8 +276,7 @@ export class VerificationService implements OnDestroy {
 
     try {
       // Usar RPC ya que PostgREST no expone la tabla directamente
-      const { data, error } = await this.supabase
-        .rpc('get_user_documents', { p_user_id: user.id });
+      const { data, error } = await this.supabase.rpc('get_user_documents', { p_user_id: user.id });
 
       if (error) throw error;
 
@@ -320,7 +314,7 @@ export class VerificationService implements OnDestroy {
         if (error) throw error;
         return true;
       },
-      { maxAttempts: 3, baseDelayMs: 200, operationName: 'triggerVerification' }
+      { maxAttempts: 3, baseDelayMs: 200, operationName: 'triggerVerification' },
     );
 
     if (!result) {
@@ -343,7 +337,7 @@ export class VerificationService implements OnDestroy {
       maxAttempts?: number;
       baseDelayMs?: number;
       operationName?: string;
-    } = {}
+    } = {},
   ): Promise<T | null> {
     const { maxAttempts = 3, baseDelayMs = 200, operationName = 'operation' } = options;
 
@@ -360,7 +354,10 @@ export class VerificationService implements OnDestroy {
 
         // Exponential backoff: 200 → 400 → 800ms
         const delayMs = baseDelayMs * Math.pow(2, attempt - 1);
-        this.logger.warn(`${operationName} attempt ${attempt} failed, retrying in ${delayMs}ms`, error);
+        this.logger.warn(
+          `${operationName} attempt ${attempt} failed, retrying in ${delayMs}ms`,
+          error,
+        );
         await this.sleep(delayMs);
       }
     }
@@ -372,7 +369,7 @@ export class VerificationService implements OnDestroy {
    * Espera un tiempo determinado.
    */
   private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   /**
@@ -389,7 +386,7 @@ export class VerificationService implements OnDestroy {
     imageBase64: string,
     documentType: 'dni' | 'license',
     side: 'front' | 'back',
-    country: 'AR' | 'EC'
+    country: 'AR' | 'EC',
   ): Promise<{
     success: boolean;
     ocr_confidence: number;
@@ -424,7 +421,7 @@ export class VerificationService implements OnDestroy {
         if (error) throw error;
         return data;
       },
-      { maxAttempts: 3, baseDelayMs: 200, operationName: 'verifyDocumentOcr' }
+      { maxAttempts: 3, baseDelayMs: 200, operationName: 'verifyDocumentOcr' },
     );
 
     if (!result) {
@@ -447,7 +444,7 @@ export class VerificationService implements OnDestroy {
   async uploadAndVerifyDocument(
     file: File,
     docType: string,
-    country: 'AR' | 'EC'
+    country: 'AR' | 'EC',
   ): Promise<{
     storagePath: string;
     ocrResult: {
@@ -478,12 +475,7 @@ export class VerificationService implements OnDestroy {
     // 3. Llamar a verify-document para OCR con base64
     let ocrResult = null;
     try {
-      ocrResult = await this.verifyDocumentOcr(
-        base64,
-        documentType,
-        side,
-        country
-      );
+      ocrResult = await this.verifyDocumentOcr(base64, documentType, side, country);
 
       this.logger.info('Document OCR verification completed', {
         docType,

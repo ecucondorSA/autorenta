@@ -1,6 +1,7 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { isPlatformBrowser } from '@angular/common';
-import {AfterViewInit,
+import {
+  AfterViewInit,
   Component,
   EventEmitter,
   inject,
@@ -9,7 +10,8 @@ import {AfterViewInit,
   OnInit,
   Output,
   PLATFORM_ID,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { environment } from '@environment';
 import { PayPalBookingGatewayService } from '@core/services/payments/paypal-booking-gateway.service';
 

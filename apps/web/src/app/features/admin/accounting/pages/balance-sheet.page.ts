@@ -1,5 +1,11 @@
-import {Component, OnInit, inject, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { IonicModule } from '@ionic/angular';
 import { AccountingService, BalanceSheet } from '@core/services/payments/accounting.service';
@@ -23,14 +29,14 @@ import { AccountingService, BalanceSheet } from '@core/services/payments/account
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content class="ion-padding">
       @if (loading()) {
         <div class="flex justify-center py-8">
           <ion-spinner></ion-spinner>
         </div>
       }
-    
+
       @if (!loading() && balanceSheet().length > 0) {
         <div>
           <!-- Accounting Equation Summary -->
@@ -129,7 +135,7 @@ import { AccountingService, BalanceSheet } from '@core/services/payments/account
         </div>
       }
     </ion-content>
-    `,
+  `,
   styles: [
     `
       .flex {

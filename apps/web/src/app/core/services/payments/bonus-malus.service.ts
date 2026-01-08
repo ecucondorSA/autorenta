@@ -76,13 +76,13 @@ export class BonusMalusService {
    */
   private calculateTierFallback(data: UserBonusMalus): AutorentaTier {
     const isVerified = data.metrics?.is_verified ?? false;
-    
+
     // Elite: Factor excelente Y verificado
     if (isVerified && data.total_factor <= -0.05) return 'elite';
-    
+
     // Trusted: Factor bueno/neutral Y verificado
     if (isVerified && data.total_factor <= 0.0) return 'trusted';
-    
+
     // Standard: Todo lo demas
     return 'standard';
   }
@@ -109,9 +109,12 @@ export class BonusMalusService {
   async getDepositDiscount(userId?: string): Promise<number> {
     const tier = await this.getUserTier(userId);
     switch (tier) {
-      case 'elite': return 1.0;   // 100% OFF (Sin depósito)
-      case 'trusted': return 0.5; // 50% OFF
-      default: return 0.0;        // 0% OFF (Full depósito)
+      case 'elite':
+        return 1.0; // 100% OFF (Sin depósito)
+      case 'trusted':
+        return 0.5; // 50% OFF
+      default:
+        return 0.0; // 0% OFF (Full depósito)
     }
   }
 
@@ -127,7 +130,11 @@ export class BonusMalusService {
           icon: 'trophy',
           badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
           description: 'Nivel máximo de confianza',
-          benefits: ['Sin depósito de garantía', 'Descuento máximo en tarifas', 'Soporte prioritario']
+          benefits: [
+            'Sin depósito de garantía',
+            'Descuento máximo en tarifas',
+            'Soporte prioritario',
+          ],
         };
       case 'trusted':
         return {
@@ -136,7 +143,7 @@ export class BonusMalusService {
           icon: 'shield-checkmark',
           badgeClass: 'bg-violet-100 text-violet-800 border-violet-200',
           description: 'Usuario verificado y confiable',
-          benefits: ['50% descuento en depósito', 'Acceso a mejores autos']
+          benefits: ['50% descuento en depósito', 'Acceso a mejores autos'],
         };
       default:
         return {
@@ -145,7 +152,7 @@ export class BonusMalusService {
           icon: 'person',
           badgeClass: 'bg-gray-100 text-gray-800 border-gray-200',
           description: 'Nivel inicial',
-          benefits: ['Acceso básico a la plataforma']
+          benefits: ['Acceso básico a la plataforma'],
         };
     }
   }
@@ -187,7 +194,10 @@ export class BonusMalusService {
       const bonusMalus = await this.getUserBonusMalus(userId);
       return bonusMalus?.total_factor ?? 0;
     } catch (error) {
-      this.logger.warn('BonusMalusService.getBonusMalusFactor failed, returning neutral factor', { userId, error });
+      this.logger.warn('BonusMalusService.getBonusMalusFactor failed, returning neutral factor', {
+        userId,
+        error,
+      });
       return 0;
     }
   }
@@ -432,20 +442,24 @@ export class BonusMalusService {
       // Nueva lógica basada en Tiers
       const tier = await this.getUserTier(userId);
       let discount = 0;
-      
+
       if (tier === 'elite') discount = 1.0;
       else if (tier === 'trusted') discount = 0.5;
-      
+
       const savings = Math.round(baseDepositCents * discount);
       const adjustedDepositCents = baseDepositCents - savings;
-      
+
       return {
         adjustedDepositCents,
         factor: -discount, // Factor negativo para indicar descuento
-        savings
+        savings,
       };
     } catch (error) {
-      this.logger.warn('BonusMalusService.applyBonusMalusToDeposit failed, using full deposit', { userId, baseDepositCents, error });
+      this.logger.warn('BonusMalusService.applyBonusMalusToDeposit failed, using full deposit', {
+        userId,
+        baseDepositCents,
+        error,
+      });
       return {
         adjustedDepositCents: baseDepositCents,
         factor: 0,
@@ -468,7 +482,9 @@ export class BonusMalusService {
     try {
       let targetUserId = userId;
       if (!targetUserId) {
-        const { data: { user } } = await this.supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await this.supabase.auth.getUser();
         targetUserId = user?.id;
       }
 
@@ -521,7 +537,9 @@ export class BonusMalusService {
     try {
       let targetUserId = userId;
       if (!targetUserId) {
-        const { data: { user } } = await this.supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await this.supabase.auth.getUser();
         targetUserId = user?.id;
       }
 

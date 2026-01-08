@@ -6,7 +6,7 @@ describe('FranchiseTableService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [FranchiseTableService]
+      providers: [FranchiseTableService],
     });
     service = TestBed.inject(FranchiseTableService);
   });
@@ -46,5 +46,4 @@ describe('FranchiseTableService', () => {
   it('should have formatUsd method', () => {
     expect(typeof service.formatUsd).toBe('function');
   });
-
 });

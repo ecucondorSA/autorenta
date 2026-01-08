@@ -6,7 +6,10 @@ import {
   MAX_AVG_DURATION_MS,
 } from '@core/constants';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { CircuitBreakerService, CircuitStats } from '@core/services/infrastructure/circuit-breaker.service';
+import {
+  CircuitBreakerService,
+  CircuitStats,
+} from '@core/services/infrastructure/circuit-breaker.service';
 import { environment } from '../../../../environments/environment';
 
 /**
@@ -174,7 +177,7 @@ export class PaymentMetricsService {
   /** Quick health check - true if all circuits healthy */
   readonly isHealthy = computed(() => {
     const statuses = this.circuitStatuses();
-    return statuses.every(s => s.state === 'CLOSED');
+    return statuses.every((s) => s.state === 'CLOSED');
   });
 
   /** Recent alerts signal */
@@ -194,7 +197,7 @@ export class PaymentMetricsService {
     };
 
     // Add to rolling window
-    this.records.update(current => {
+    this.records.update((current) => {
       const updated = [...current, record];
       // Keep only last METRICS_WINDOW_SIZE records
       if (updated.length > METRICS_WINDOW_SIZE) {
@@ -298,7 +301,6 @@ export class PaymentMetricsService {
    */
   private checkAlertConditions(record: PaymentMetricRecord): void {
     const stats = this.stats();
-    const now = Date.now();
 
     // Skip if not enough data
     if (stats.totalPayments < this.alertConfig.minPaymentsForEvaluation) {
@@ -323,7 +325,7 @@ export class PaymentMetricsService {
           threshold: this.alertConfig.minSuccessRatePercent,
           totalPayments: stats.totalPayments,
           failures: stats.rejectedCount + stats.errorCount,
-        }
+        },
       );
     }
 
@@ -336,14 +338,14 @@ export class PaymentMetricsService {
           averageDurationMs: stats.averageDurationMs,
           p95DurationMs: stats.p95DurationMs,
           threshold: this.alertConfig.maxAvgDurationMs,
-        }
+        },
       );
     }
 
     // Check for error spike (more than 3 consecutive errors)
     const recentRecords = this.records().slice(-5);
     const consecutiveErrors = recentRecords.filter(
-      r => r.outcome === 'error' || r.outcome === 'timeout'
+      (r) => r.outcome === 'error' || r.outcome === 'timeout',
     ).length;
     if (consecutiveErrors >= 3) {
       this.triggerAlert(
@@ -352,9 +354,9 @@ export class PaymentMetricsService {
         {
           consecutiveErrors,
           recentErrors: recentRecords
-            .filter(r => r.outcome === 'error' || r.outcome === 'timeout')
-            .map(r => ({ errorCode: r.errorCode, errorMessage: r.errorMessage })),
-        }
+            .filter((r) => r.outcome === 'error' || r.outcome === 'timeout')
+            .map((r) => ({ errorCode: r.errorCode, errorMessage: r.errorMessage })),
+        },
       );
     }
   }
@@ -362,11 +364,7 @@ export class PaymentMetricsService {
   /**
    * Trigger an alert if not in cooldown
    */
-  private triggerAlert(
-    type: AlertType,
-    message: string,
-    data: Record<string, unknown>
-  ): void {
+  private triggerAlert(type: AlertType, message: string, data: Record<string, unknown>): void {
     const now = Date.now();
     const lastAlert = this.lastAlertByType.get(type) || 0;
 
@@ -384,7 +382,7 @@ export class PaymentMetricsService {
     };
 
     // Add to history
-    this.alerts.update(current => [...current.slice(-99), alert]);
+    this.alerts.update((current) => [...current.slice(-99), alert]);
 
     // Update last alert timestamp
     this.lastAlertByType.set(type, now);
@@ -439,21 +437,21 @@ export class PaymentMetricsService {
       };
     }
 
-    const successCount = records.filter(r => r.outcome === 'success').length;
-    const rejectedCount = records.filter(r => r.outcome === 'rejected').length;
-    const errorCount = records.filter(r => r.outcome === 'error').length;
-    const timeoutCount = records.filter(r => r.outcome === 'timeout').length;
-    const circuitOpenCount = records.filter(r => r.outcome === 'circuit_open').length;
+    const successCount = records.filter((r) => r.outcome === 'success').length;
+    const rejectedCount = records.filter((r) => r.outcome === 'rejected').length;
+    const errorCount = records.filter((r) => r.outcome === 'error').length;
+    const timeoutCount = records.filter((r) => r.outcome === 'timeout').length;
+    const circuitOpenCount = records.filter((r) => r.outcome === 'circuit_open').length;
 
-    const durations = records.map(r => r.durationMs).sort((a, b) => a - b);
+    const durations = records.map((r) => r.durationMs).sort((a, b) => a - b);
     const avgDuration = durations.reduce((sum, d) => sum + d, 0) / total;
     const p95Index = Math.floor(total * 0.95);
     const p95Duration = durations[p95Index] || durations[durations.length - 1];
 
     const errorsByCode: Record<string, number> = {};
     records
-      .filter(r => r.errorCode)
-      .forEach(r => {
+      .filter((r) => r.errorCode)
+      .forEach((r) => {
         const code = r.errorCode!;
         errorsByCode[code] = (errorsByCode[code] || 0) + 1;
       });
@@ -503,11 +501,11 @@ export class PaymentMetricsService {
 
     if (!this.sentryLoadPromise) {
       this.sentryLoadPromise = import('@sentry/angular')
-        .then(module => {
+        .then((module) => {
           this.sentryModule = module;
           return module;
         })
-        .catch(err => {
+        .catch((err) => {
           this.logger.error('Failed to load Sentry for metrics', err);
           this.sentryLoadPromise = null;
           return null;

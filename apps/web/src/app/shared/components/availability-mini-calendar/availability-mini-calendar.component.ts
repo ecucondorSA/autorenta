@@ -39,17 +39,31 @@ interface CalendarDay {
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="availability-mini-calendar rounded-xl border border-border-default bg-surface-raised overflow-hidden min-w-[280px] w-full max-w-full">
+    <div
+      class="availability-mini-calendar rounded-xl border border-border-default bg-surface-raised overflow-hidden min-w-[280px] w-full max-w-full"
+    >
       <!-- Header -->
-      <div class="flex items-center justify-between p-3 border-b border-border-default bg-surface-base">
+      <div
+        class="flex items-center justify-between p-3 border-b border-border-default bg-surface-base"
+      >
         <button
           type="button"
           (click)="previousMonth()"
           class="p-1.5 rounded-lg hover:bg-surface-hover transition-colors"
           aria-label="Mes anterior"
         >
-          <svg class="w-4 h-4 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          <svg
+            class="w-4 h-4 text-text-secondary"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
         </button>
 
@@ -63,8 +77,18 @@ interface CalendarDay {
           class="p-1.5 rounded-lg hover:bg-surface-hover transition-colors"
           aria-label="Mes siguiente"
         >
-          <svg class="w-4 h-4 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          <svg
+            class="w-4 h-4 text-text-secondary"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         </button>
       </div>
@@ -86,7 +110,9 @@ interface CalendarDay {
         <!-- Days Grid -->
         @if (loading()) {
           <div class="flex items-center justify-center py-8">
-            <div class="w-5 h-5 border-2 border-cta-default/30 border-t-cta-default rounded-full animate-spin"></div>
+            <div
+              class="w-5 h-5 border-2 border-cta-default/30 border-t-cta-default rounded-full animate-spin"
+            ></div>
           </div>
         } @else {
           <div
@@ -107,7 +133,9 @@ interface CalendarDay {
       </div>
 
       <!-- Legend -->
-      <div class="flex items-center justify-center gap-4 p-2 border-t border-border-default bg-surface-base text-xs">
+      <div
+        class="flex items-center justify-center gap-4 p-2 border-t border-border-default bg-surface-base text-xs"
+      >
         <div class="flex items-center gap-1.5">
           <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
           <span class="text-text-primary font-medium">Disponible</span>
@@ -232,7 +260,7 @@ export class AvailabilityMiniCalendarComponent implements OnInit {
       const ranges = await this.availabilityService.getBlockedRangesWithDetails(
         this.carId,
         startDate,
-        endDate
+        endDate,
       );
 
       this.blockedRanges.set(ranges);
@@ -245,7 +273,7 @@ export class AvailabilityMiniCalendarComponent implements OnInit {
 
   private getDateStatus(
     date: Date,
-    ranges: DetailedBlockedRange[]
+    ranges: DetailedBlockedRange[],
   ): 'available' | 'booked' | 'blocked' {
     for (const range of ranges) {
       // FIX: Parse dates without timezone shift

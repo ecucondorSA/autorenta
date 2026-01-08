@@ -1,6 +1,4 @@
-
-import {Component, computed, inject, input, output,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, computed, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
 
 /**

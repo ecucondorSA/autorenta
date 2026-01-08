@@ -3,7 +3,6 @@ import { firstValueFrom } from 'rxjs';
 import { SupabaseClient } from '@supabase/supabase-js';
 import {
   EligibilityResult,
-  WaterfallResult,
   WaterfallBreakdown,
   CurrencyCode,
   centsToUsd,

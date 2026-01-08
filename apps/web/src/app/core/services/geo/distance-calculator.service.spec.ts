@@ -6,7 +6,7 @@ describe('DistanceCalculatorService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DistanceCalculatorService]
+      providers: [DistanceCalculatorService],
     });
     service = TestBed.inject(DistanceCalculatorService);
   });
@@ -54,5 +54,4 @@ describe('DistanceCalculatorService', () => {
   it('should have isNearLocation method', () => {
     expect(typeof service.isNearLocation).toBe('function');
   });
-
 });

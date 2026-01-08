@@ -1,19 +1,13 @@
-<section
-  class="space-y-6 text-text-primary transition-colors duration-300"
-  >
+<section class="space-y-6 text-text-primary transition-colors duration-300">
   <header>
     <h1 class="text-3xl font-semibold text-slate-900 tracking-tight font-satoshi">
       Panel de administración
     </h1>
-    <p class="text-sm text-slate-500">
-      Aprobá vehículos y controlá las reservas recientes.
-    </p>
+    <p class="text-sm text-slate-500">Aprobá vehículos y controlá las reservas recientes.</p>
   </header>
 
   <!-- Admin Navigation -->
-  <nav
-    class="bg-surface-raised rounded-xl border border-slate-200 shadow-sm p-4 transition-colors"
-    >
+  <nav class="bg-surface-raised rounded-xl border border-slate-200 shadow-sm p-4 transition-colors">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <a
         routerLink="/admin"
@@ -21,20 +15,20 @@
         [routerLinkActiveOptions]="{ exact: true }"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-dashboard-link"
-        >
+      >
         <div class="flex-shrink-0 bg-cta-default rounded-md p-3 shadow-sm shadow-blue-500/40">
           <svg
             class="h-6 w-6 text-text-inverse"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-              />
+            />
           </svg>
         </div>
         <div>
@@ -48,27 +42,25 @@
         routerLinkActive="bg-success-light/10 border-success-light"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-withdrawals-link"
-        >
+      >
         <div class="flex-shrink-0 bg-success-light rounded-md p-3 shadow-sm shadow-success-500/40">
           <svg
             class="h-6 w-6 text-text-inverse"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-              />
+            />
           </svg>
         </div>
         <div>
           <h3 class="font-semibold text-slate-900 font-satoshi">Retiros</h3>
-          <p class="text-sm text-slate-500">
-            Gestionar retiros de fondos
-          </p>
+          <p class="text-sm text-slate-500">Gestionar retiros de fondos</p>
         </div>
       </a>
 
@@ -77,20 +69,20 @@
         routerLinkActive="bg-purple-50 border-purple-500"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-exchange-rates-link"
-        >
+      >
         <div class="flex-shrink-0 bg-purple-500 rounded-md p-3 shadow-sm shadow-purple-500/40">
           <svg
             class="h-6 w-6 text-text-inverse"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
+            />
           </svg>
         </div>
         <div>
@@ -104,27 +96,25 @@
         routerLinkActive="bg-error-bg border-error-border"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-claims-link"
-        >
+      >
         <div class="flex-shrink-0 bg-error-bg0 rounded-md p-3 shadow-sm shadow-red-500/40">
           <svg
             class="h-6 w-6 text-text-inverse"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
+            />
           </svg>
         </div>
         <div>
           <h3 class="font-semibold text-slate-900 font-satoshi">Siniestros</h3>
-          <p class="text-sm text-slate-500">
-            Gestionar claims reportados
-          </p>
+          <p class="text-sm text-slate-500">Gestionar claims reportados</p>
         </div>
       </a>
 
@@ -133,27 +123,25 @@
         routerLinkActive="bg-purple-50 border-purple-500"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-reviews-link"
-        >
+      >
         <div class="flex-shrink-0 bg-purple-500 rounded-md p-3 shadow-sm shadow-purple-500/40">
           <svg
             class="h-6 w-6 text-text-inverse"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-              />
+            />
           </svg>
         </div>
         <div>
           <h3 class="font-semibold text-slate-900 font-satoshi">Reseñas</h3>
-          <p class="text-sm text-slate-500">
-            Moderar reseñas reportadas
-          </p>
+          <p class="text-sm text-slate-500">Moderar reseñas reportadas</p>
         </div>
       </a>
 
@@ -162,27 +150,25 @@
         routerLinkActive="bg-teal-50 border-teal-500"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-accounting-link"
-        >
+      >
         <div class="flex-shrink-0 bg-teal-500 rounded-md p-3 shadow-sm shadow-teal-500/40">
           <svg
             class="h-6 w-6 text-text-inverse"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-              />
+            />
           </svg>
         </div>
         <div>
           <h3 class="font-semibold text-slate-900 font-satoshi">Contabilidad</h3>
-          <p class="text-sm text-slate-500">
-            Estados financieros y reportes
-          </p>
+          <p class="text-sm text-slate-500">Estados financieros y reportes</p>
         </div>
       </a>
 
@@ -191,27 +177,25 @@
         routerLinkActive="bg-blue-50 border-blue-500"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-verifications-link"
-        >
+      >
         <div class="flex-shrink-0 bg-blue-500 rounded-md p-3 shadow-sm shadow-blue-500/40">
           <svg
             class="h-6 w-6 text-text-inverse"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-              />
+            />
           </svg>
         </div>
         <div>
           <h3 class="font-semibold text-slate-900 font-satoshi">Verificaciones</h3>
-          <p class="text-sm text-slate-500">
-            Aprobar documentos de usuarios
-          </p>
+          <p class="text-sm text-slate-500">Aprobar documentos de usuarios</p>
         </div>
       </a>
 
@@ -220,27 +204,25 @@
         routerLinkActive="bg-orange-50 border-orange-500"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-disputes-link"
-        >
+      >
         <div class="flex-shrink-0 bg-orange-500 rounded-md p-3 shadow-sm shadow-orange-500/40">
           <svg
             class="h-6 w-6 text-text-inverse"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-              />
+            />
           </svg>
         </div>
         <div>
           <h3 class="font-semibold text-slate-900 font-satoshi">Disputas</h3>
-          <p class="text-sm text-slate-500">
-            Resolver disputas entre usuarios
-          </p>
+          <p class="text-sm text-slate-500">Resolver disputas entre usuarios</p>
         </div>
       </a>
 
@@ -249,27 +231,25 @@
         routerLinkActive="bg-red-50 border-red-500"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-suspended-users-link"
-        >
+      >
         <div class="flex-shrink-0 bg-red-500 rounded-md p-3 shadow-sm shadow-red-500/40">
           <svg
             class="h-6 w-6 text-text-inverse"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-              />
+            />
           </svg>
         </div>
         <div>
           <h3 class="font-semibold text-slate-900 font-satoshi">Usuarios Suspendidos</h3>
-          <p class="text-sm text-slate-500">
-            Gestionar cuentas suspendidas
-          </p>
+          <p class="text-sm text-slate-500">Gestionar cuentas suspendidas</p>
         </div>
       </a>
 
@@ -278,27 +258,25 @@
         routerLinkActive="bg-amber-50 border-amber-500"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-traffic-infractions-link"
-        >
+      >
         <div class="flex-shrink-0 bg-amber-500 rounded-md p-3 shadow-sm shadow-amber-500/40">
           <svg
             class="h-6 w-6 text-text-inverse"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
+            />
           </svg>
         </div>
         <div>
           <h3 class="font-semibold text-slate-900 font-satoshi">Multas de Tránsito</h3>
-          <p class="text-sm text-slate-500">
-            Gestionar multas reportadas
-          </p>
+          <p class="text-sm text-slate-500">Gestionar multas reportadas</p>
         </div>
       </a>
 
@@ -307,27 +285,25 @@
         routerLinkActive="bg-rose-50 border-rose-500"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-accidents-link"
-        >
+      >
         <div class="flex-shrink-0 bg-rose-500 rounded-md p-3 shadow-sm shadow-rose-500/40">
           <svg
             class="h-6 w-6 text-text-inverse"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
+            />
           </svg>
         </div>
         <div>
           <h3 class="font-semibold text-slate-900 font-satoshi">Accidentes</h3>
-          <p class="text-sm text-slate-500">
-            Seguimiento de accidentes
-          </p>
+          <p class="text-sm text-slate-500">Seguimiento de accidentes</p>
         </div>
       </a>
 
@@ -336,27 +312,25 @@
         routerLinkActive="bg-slate-50 border-slate-500"
         class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
         data-testid="admin-system-monitoring-link"
-        >
+      >
         <div class="flex-shrink-0 bg-slate-600 rounded-md p-3 shadow-sm shadow-slate-500/40">
           <svg
             class="h-6 w-6 text-text-inverse"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              />
+            />
           </svg>
         </div>
         <div>
           <h3 class="font-semibold text-slate-900 font-satoshi">Monitoreo</h3>
-          <p class="text-sm text-slate-500">
-            Locks, circuitos y métricas
-          </p>
+          <p class="text-sm text-slate-500">Locks, circuitos y métricas</p>
         </div>
       </a>
     </div>
@@ -365,19 +339,17 @@
   @if (loading()) {
     <div
       class="rounded-xl border border-slate-200 bg-surface-raised p-5 text-sm text-slate-500 shadow-sm"
-      >
+    >
       Cargando datos…
     </div>
   }
 
   <section
     class="space-y-4 rounded-xl border border-slate-200 bg-surface-raised p-5 shadow-sm transition-colors"
-    >
+  >
     <header class="flex items-center justify-between">
       <div>
-        <h2 class="text-xl font-semibold text-slate-900 font-satoshi">
-          Autos pendientes
-        </h2>
+        <h2 class="text-xl font-semibold text-slate-900 font-satoshi">Autos pendientes</h2>
         <p class="text-sm text-slate-500">
           Revisá y aprobá nuevos vehículos antes de que salgan al aire.
         </p>
@@ -385,9 +357,7 @@
     </header>
 
     @if (pendingCars().length === 0) {
-      <div
-        class="rounded-lg border border-dashed border-slate-200 p-4 text-sm text-slate-500"
-        >
+      <div class="rounded-lg border border-dashed border-slate-200 p-4 text-sm text-slate-500">
         No hay autos pendientes de aprobación.
       </div>
     }
@@ -396,7 +366,7 @@
       @for (car of pendingCars(); track car.id) {
         <article
           class="space-y-2 rounded-xl border border-slate-200 p-4 shadow-sm bg-surface-raised transition-colors"
-          >
+        >
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-semibold text-slate-900 font-satoshi">
               {{ car.title }}
@@ -405,17 +375,13 @@
               car.price_per_day | money
             }}</span>
           </div>
-          <p class="text-sm text-slate-500">
-            {{ car.brand }} • {{ car.model }} • {{ car.year }}
-          </p>
-          <p class="text-sm text-slate-500">
-            {{ car.location_city }}, {{ car.location_province }}
-          </p>
+          <p class="text-sm text-slate-500">{{ car.brand }} • {{ car.model }} • {{ car.year }}</p>
+          <p class="text-sm text-slate-500">{{ car.location_city }}, {{ car.location_province }}</p>
           <button
             type="button"
             class="rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-text-inverse hover:bg-primary-700 transition"
             (click)="approveCar(car.id)"
-            >
+          >
             Aprobar auto
           </button>
         </article>
@@ -425,17 +391,13 @@
 
   <section
     class="space-y-4 rounded-xl border border-slate-200 bg-surface-raised p-5 shadow-sm transition-colors"
-    >
+  >
     <header>
-      <h2 class="text-xl font-semibold text-slate-900 font-satoshi">
-        Reservas recientes
-      </h2>
+      <h2 class="text-xl font-semibold text-slate-900 font-satoshi">Reservas recientes</h2>
     </header>
 
     @if (bookings().length === 0) {
-      <div
-        class="rounded-lg border border-dashed border-slate-200 p-4 text-sm text-slate-500"
-        >
+      <div class="rounded-lg border border-dashed border-slate-200 p-4 text-sm text-slate-500">
         No hay reservas registradas aún.
       </div>
     }
@@ -444,40 +406,40 @@
       @for (booking of bookings(); track booking.id) {
         <article
           class="rounded-xl border border-slate-200 p-4 bg-surface-raised shadow-sm transition-colors"
-          >
-          <div
-            class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600"
+        >
+          <div class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600">
+            <span class="font-semibold text-slate-700">Reserva #{{ booking.id }}</span>
+            <span
+              class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-500"
             >
-            <span class="font-semibold text-slate-700"
-              >Reserva #{{ booking.id }}</span
-              >
-              <span
-                class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-500"
-                >
-                {{ booking.status }}
-              </span>
-            </div>
-            <div
-              class="mt-2 grid gap-2 text-xs text-slate-500 md:grid-cols-3"
-              >
-              <div>Inicio: {{ booking.start_at | date: 'dd/MM/yyyy' }}</div>
-              <div>Fin: {{ booking.end_at | date: 'dd/MM/yyyy' }}</div>
-              <div>Total: {{ booking.total_amount | money: booking.currency }}</div>
-            </div>
-            @if (booking.status === 'cancelled' || booking.status === 'cancelled_owner' || booking.status === 'expired') {
-              <div class="mt-3 grid gap-2 text-xs text-slate-600 md:grid-cols-2">
-                <div>
-                  Cancelado por:
-                  <span class="font-semibold">{{ formatCancelledByRole(booking.cancelled_by_role) }}</span>
-                </div>
-                <div>
-                  Motivo:
-                  <span class="font-semibold">{{ booking.cancellation_reason || '—' }}</span>
-                </div>
+              {{ booking.status }}
+            </span>
+          </div>
+          <div class="mt-2 grid gap-2 text-xs text-slate-500 md:grid-cols-3">
+            <div>Inicio: {{ booking.start_at | date: 'dd/MM/yyyy' }}</div>
+            <div>Fin: {{ booking.end_at | date: 'dd/MM/yyyy' }}</div>
+            <div>Total: {{ booking.total_amount | money: booking.currency }}</div>
+          </div>
+          @if (
+            booking.status === 'cancelled' ||
+            booking.status === 'cancelled_owner' ||
+            booking.status === 'expired'
+          ) {
+            <div class="mt-3 grid gap-2 text-xs text-slate-600 md:grid-cols-2">
+              <div>
+                Cancelado por:
+                <span class="font-semibold">{{
+                  formatCancelledByRole(booking.cancelled_by_role)
+                }}</span>
               </div>
-            }
-          </article>
-        }
-      </div>
-    </section>
+              <div>
+                Motivo:
+                <span class="font-semibold">{{ booking.cancellation_reason || '—' }}</span>
+              </div>
+            </div>
+          }
+        </article>
+      }
+    </div>
   </section>
+</section>

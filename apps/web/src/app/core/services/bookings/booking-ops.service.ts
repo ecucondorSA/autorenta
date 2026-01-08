@@ -36,8 +36,8 @@ export interface BookingConfirmationRow {
   pickup_confirmed_by: string | null;
   dropoff_confirmed_at: string | null;
   dropoff_confirmed_by: string | null;
-  owner_confirmed_at: string | null;    // CORRECTO: nombre de columna BD
-  renter_confirmed_at: string | null;   // CORRECTO: nombre de columna BD
+  owner_confirmed_at: string | null; // CORRECTO: nombre de columna BD
+  renter_confirmed_at: string | null; // CORRECTO: nombre de columna BD
   returned_at: string | null;
   funds_released_at: string | null;
   created_at: string | null;

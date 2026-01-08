@@ -2,26 +2,40 @@
   <!-- Header with icon and label -->
   <div class="date-picker-header">
     <div class="header-content">
-      <svg class="calendar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <svg
+        class="calendar-icon"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
+        />
       </svg>
       <label for="dateRangeInput" class="label-text">{{ label }}</label>
     </div>
 
     @if (from() || to()) {
       <button type="button" (click)="clearRange()" class="clear-button">
-        <svg class="clear-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <svg
+          class="clear-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             d="M6 18L18 6M6 6l12 12"
-            />
+          />
         </svg>
         <span>Limpiar</span>
       </button>
@@ -34,7 +48,7 @@
     (click)="handleDateInputClick()"
     (keydown.enter)="handleDateInputClick()"
     tabindex="0"
-    >
+  >
     <!-- Hidden Flatpickr Input (Covers the entire wrapper) -->
     <input
       type="text"
@@ -44,19 +58,26 @@
       placeholder="Fecha inicio  →  Fecha fin"
       aria-label="Seleccionar fechas de recogida y devolución"
       #dateRangeInput
-      />
+    />
 
     <div class="date-display">
       @if (!from() && !to()) {
         <div class="date-placeholder">
           <span class="placeholder-text">Recogida y Devolución</span>
-          <svg class="chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <svg
+            class="chevron-icon"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M19 9l-7 7-7-7"
-              />
+            />
           </svg>
         </div>
       }
@@ -67,13 +88,20 @@
             <span class="date-from" data-testid="date-from">{{
               from() ? (from() | date: 'dd MMM yyyy') : 'Fecha inicio'
             }}</span>
-            <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <svg
+              class="arrow-icon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
+              />
             </svg>
             <span class="date-to" data-testid="date-to">{{
               to() ? (to() | date: 'dd MMM yyyy') : 'Fecha fin'
@@ -94,10 +122,15 @@
     <div class="mt-1">
       <!-- Loading state -->
       @if (isCheckingAvailability()) {
-        <div
-          class="flex items-center gap-2 text-xs text-text-secondary"
+        <div class="flex items-center gap-2 text-xs text-text-secondary">
+          <svg
+            class="h-4 w-4 animate-spin"
+            fill="none"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+            role="presentation"
           >
-          <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true" focusable="false" role="presentation">
             <circle
               class="opacity-25"
               cx="12"
@@ -117,9 +150,7 @@
       }
       <!-- Available -->
       @if (!isCheckingAvailability() && isAvailable() === true) {
-        <div
-          class="flex items-center gap-2 text-xs font-medium text-success-strong"
-          >
+        <div class="flex items-center gap-2 text-xs font-medium text-success-strong">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -133,9 +164,7 @@
       }
       <!-- Not available -->
       @if (!isCheckingAvailability() && isAvailable() === false) {
-        <div
-          class="flex items-center gap-2 text-xs font-medium text-error-text"
-          >
+        <div class="flex items-center gap-2 text-xs font-medium text-error-text">
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -149,37 +178,42 @@
       }
       <!-- Alternative Date Suggestions -->
       @if (showingSuggestions() && alternativeSuggestions().length > 0) {
-        <div
-          class="mt-3 rounded-xl border border-cta-default/40 bg-cta-default/10 p-4"
-          >
+        <div class="mt-3 rounded-xl border border-cta-default/40 bg-cta-default/10 p-4">
           <div class="flex items-center gap-2 mb-3">
-            <svg class="h-5 w-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              class="h-5 w-5 text-cta-default"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+              />
             </svg>
             <h4 class="text-sm font-bold text-cta-default font-satoshi">
               Fechas similares disponibles ({{ selectedDays() }} días):
             </h4>
           </div>
           <div class="space-y-2">
-            @for (suggestion of alternativeSuggestions().slice(0, 3); track suggestion; let i = $index) {
+            @for (
+              suggestion of alternativeSuggestions().slice(0, 3);
+              track suggestion;
+              let i = $index
+            ) {
               <button
                 type="button"
                 (click)="applySuggestion(suggestion)"
                 class="w-full flex items-center justify-between p-3 bg-surface-raised rounded-lg border border-cta-default/40 hover:border-cta-default hover:shadow-md transition-all group"
-                >
+              >
                 <div class="flex flex-col items-start gap-1">
                   <div class="flex items-center gap-2">
                     <span class="text-sm font-semibold text-text-primary">
                       {{ suggestion.from | date: 'dd MMM' }} - {{ suggestion.to | date: 'dd MMM' }}
                     </span>
-                    <span class="text-xs text-text-secondary">
-                      ({{ suggestion.days }} días)
-                    </span>
+                    <span class="text-xs text-text-secondary"> ({{ suggestion.days }} días) </span>
                   </div>
                   <div class="flex items-center gap-2">
                     @if (suggestion.totalPrice) {
@@ -190,14 +224,12 @@
                     @if (suggestion.discount > 0) {
                       <span
                         class="text-xs px-2 py-0.5 bg-success-light/20 text-success-700 rounded-full font-medium"
-                        >
+                      >
                         -{{ suggestion.discount }}% OFF
                       </span>
                     }
                     @if (suggestion.savings) {
-                      <span
-                        class="text-xs text-success-700"
-                        >
+                      <span class="text-xs text-success-700">
                         (Ahorrás ${{ suggestion.savings | number: '1.0-0' }})
                       </span>
                     }
@@ -209,26 +241,26 @@
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    >
+                  >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M5 13l4 4L19 7"
-                      />
+                    />
                   </svg>
                   <svg
                     class="h-5 w-5 text-cta-default opacity-0 group-hover:opacity-100 transition-opacity"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    >
+                  >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M9 5l7 7-7 7"
-                      />
+                    />
                   </svg>
                 </div>
               </button>
@@ -242,7 +274,7 @@
       @if (availabilityHint()) {
         <div
           class="mt-2 flex items-start gap-2 rounded-lg border border-cta-default/30 bg-cta-default/10 px-3 py-2 text-xs text-cta-default"
-          >
+        >
           <svg class="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -261,13 +293,9 @@
 </div>
 
 <ng-template #fromPlaceholder>
-  <span class="text-base font-semibold text-text-secondary"
-    >Elegí fecha</span
-    >
-  </ng-template>
+  <span class="text-base font-semibold text-text-secondary">Elegí fecha</span>
+</ng-template>
 
-  <ng-template #toPlaceholder>
-    <span class="text-base font-semibold text-text-secondary"
-      >Elegí fecha</span
-      >
-    </ng-template>
+<ng-template #toPlaceholder>
+  <span class="text-base font-semibold text-text-secondary">Elegí fecha</span>
+</ng-template>

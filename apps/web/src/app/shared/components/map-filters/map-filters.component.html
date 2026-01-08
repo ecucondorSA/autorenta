@@ -12,9 +12,9 @@
         <span class="separator">—</span>
         <span>
           {{
-          (priceRange()?.max ?? 0) >= priceMax()
-          ? formatPrice(priceRange()?.max ?? priceMax()) + '+'
-          : formatPrice(priceRange()?.max ?? priceMax())
+            (priceRange()?.max ?? 0) >= priceMax()
+              ? formatPrice(priceRange()?.max ?? priceMax()) + '+'
+              : formatPrice(priceRange()?.max ?? priceMax())
           }}
         </span>
       </div>
@@ -26,7 +26,9 @@
           class="price-bar"
           [class.price-bar--active]="bar.active"
           [style.height.%]="bar.height"
-          [attr.title]="formatPrice(Math.round(bar.start)) + ' - ' + formatPrice(Math.round(bar.end))"
+          [attr.title]="
+            formatPrice(Math.round(bar.start)) + ' - ' + formatPrice(Math.round(bar.end))
+          "
         ></div>
       }
     </div>
@@ -46,7 +48,7 @@
         [step]="getPriceStep()"
         [value]="priceRange()?.min ?? priceMin()"
         (input)="onPriceSliderInput('min', +$any($event.target).value)"
-        />
+      />
       <input
         type="range"
         [min]="priceMin()"
@@ -54,7 +56,7 @@
         [step]="getPriceStep()"
         [value]="priceRange()?.max ?? priceMax()"
         (input)="onPriceSliderInput('max', +$any($event.target).value)"
-        />
+      />
     </div>
 
     <div class="price-range-footer">
@@ -66,9 +68,9 @@
         <span>Máximo</span>
         <strong>
           {{
-          (priceRange()?.max ?? priceMax()) >= priceMax()
-          ? formatPrice(priceRange()?.max ?? priceMax()) + '+'
-          : formatPrice(priceRange()?.max ?? priceMax())
+            (priceRange()?.max ?? priceMax()) >= priceMax()
+              ? formatPrice(priceRange()?.max ?? priceMax()) + '+'
+              : formatPrice(priceRange()?.max ?? priceMax())
           }}
         </strong>
       </div>
@@ -78,23 +80,21 @@
 
 <!-- Desktop: Floating Chips Top-Left -->
 @if (!isMobile()) {
-  <div
-    class="map-filters-desktop fixed top-safe-top left-4 z-20 flex gap-2 pt-16"
-    >
+  <div class="map-filters-desktop fixed top-safe-top left-4 z-20 flex gap-2 pt-16">
     <!-- Dates Chip -->
     <button
       (click)="togglePanel('dates')"
       [class.active]="dateRange() !== null"
       class="filter-chip"
       type="button"
-      >
+    >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
+        />
       </svg>
       <span class="text-xs font-semibold">Fechas</span>
       @if (dateRange()) {
@@ -107,14 +107,14 @@
       [class.active]="priceRange() !== null"
       class="filter-chip"
       type="button"
-      >
+    >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
           d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
+        />
       </svg>
       <span class="text-xs font-semibold">Precio</span>
       @if (priceRange()) {
@@ -127,14 +127,14 @@
       [class.active]="vehicleTypes().length > 0"
       class="filter-chip"
       type="button"
-      >
+    >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
           d="M16 17v-2m-4 0v-2m-4 0v-2m0 10h12a2 2 0 002-2V9a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2z"
-          />
+        />
       </svg>
       <span class="text-xs font-semibold">Tipo</span>
       @if (vehicleTypes().length > 0) {
@@ -148,14 +148,14 @@
       class="filter-chip"
       type="button"
       title="Solo autos disponibles hoy"
-      >
+    >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
           d="M13 10V3L4 14h7v7l9-11h-7z"
-          />
+        />
       </svg>
       <span class="text-xs font-semibold">Hoy</span>
     </button>
@@ -166,14 +166,14 @@
         class="filter-chip filter-chip--clear"
         type="button"
         title="Limpiar todos los filtros"
-        >
+      >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             d="M6 18L18 6M6 6l12 12"
-            />
+          />
         </svg>
       </button>
     }
@@ -207,13 +207,13 @@
                 [min]="priceMin()"
                 [max]="priceMax()"
                 class="w-full"
-            (change)="
-              onPriceRangeChange({
-                min: +$any($event.target).value,
-                max: priceRange()?.max || priceMax(),
-              })
-            "
-                />
+                (change)="
+                  onPriceRangeChange({
+                    min: +$any($event.target).value,
+                    max: priceRange()?.max || priceMax(),
+                  })
+                "
+              />
               <div class="text-sm font-semibold text-cta-default">
                 {{ formatPrice(priceRange()?.min || priceMin()) }}
               </div>
@@ -226,13 +226,13 @@
                 [min]="priceMin()"
                 [max]="priceMax()"
                 class="w-full"
-            (change)="
-              onPriceRangeChange({
-                min: priceRange()?.min || priceMin(),
-                max: +$any($event.target).value,
-              })
-            "
-                />
+                (change)="
+                  onPriceRangeChange({
+                    min: priceRange()?.min || priceMin(),
+                    max: +$any($event.target).value,
+                  })
+                "
+              />
               <div class="text-sm font-semibold text-cta-default">
                 {{ formatPrice(priceRange()?.max || priceMax()) }}
               </div>
@@ -248,15 +248,13 @@
           <h3 class="text-sm font-semibold text-text-primary font-satoshi">Tipo de vehículo</h3>
           <div class="space-y-2">
             @for (option of vehicleTypeOptions; track option) {
-              <label
-                class="flex items-center gap-2 cursor-pointer"
-                >
+              <label class="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   [checked]="vehicleTypes().includes(option.id)"
                   (change)="toggleVehicleType(option.id)"
                   class="w-4 h-4 rounded"
-                  />
+                />
                 <span class="text-sm text-text-primary">{{ option.label }}</span>
               </label>
             }
@@ -271,7 +269,7 @@
 @if (isMobile()) {
   <div
     class="map-filters-mobile sticky top-safe-top z-15 bg-surface-raised shadow-sm border-b border-border-default p-3"
-    >
+  >
     <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
       <!-- Dates Chip -->
       <button
@@ -279,7 +277,7 @@
         [class.active]="dateRange() !== null"
         class="filter-chip filter-chip--mobile"
         type="button"
-        >
+      >
         <app-icon name="calendar" [size]="14" cssClass="inline-block mr-1" />
         <span class="text-xs font-semibold whitespace-nowrap">Fechas</span>
         @if (dateRange()) {
@@ -292,7 +290,7 @@
         [class.active]="priceRange() !== null"
         class="filter-chip filter-chip--mobile"
         type="button"
-        >
+      >
         <app-icon name="wallet" [size]="14" cssClass="inline-block mr-1" />
         <span class="text-xs font-semibold whitespace-nowrap">Precio</span>
         @if (priceRange()) {
@@ -305,7 +303,7 @@
         [class.active]="vehicleTypes().length > 0"
         class="filter-chip filter-chip--mobile"
         type="button"
-        >
+      >
         <app-icon name="car" [size]="14" cssClass="inline-block mr-1" />
         <span class="text-xs font-semibold whitespace-nowrap">Tipo</span>
         @if (vehicleTypes().length > 0) {
@@ -318,7 +316,7 @@
         [class.active]="immediateOnly()"
         class="filter-chip filter-chip--mobile"
         type="button"
-        >
+      >
         <app-icon name="lightning" [size]="14" cssClass="inline-block mr-1" />
         <span class="text-xs font-semibold whitespace-nowrap">Hoy</span>
       </button>
@@ -328,21 +326,21 @@
           (click)="clearAllFilters()"
           class="filter-chip filter-chip--mobile filter-chip--clear"
           type="button"
-          >
+        >
           <span class="text-xs font-semibold whitespace-nowrap">Limpiar</span>
         </button>
       }
     </div>
     <!-- Inline Panels (Mobile) -->
     @if (openPanel()) {
-      <div
-        class="mt-2 p-3 bg-surface-secondary rounded-lg border border-border-default"
-        >
+      <div class="mt-2 p-3 bg-surface-secondary rounded-lg border border-border-default">
         <!-- Dates Panel Mobile -->
         @if (openPanel() === 'dates') {
           <div>
             <app-date-range-picker
-              [initialFrom]="dateRange()?.start ? dateRange()!.start.toISOString().split('T')[0] : null"
+              [initialFrom]="
+                dateRange()?.start ? dateRange()!.start.toISOString().split('T')[0] : null
+              "
               [initialTo]="dateRange()?.end ? dateRange()!.end.toISOString().split('T')[0] : null"
               (rangeChange)="onDateRangePickerChange($event)"
             ></app-date-range-picker>
@@ -359,13 +357,13 @@
                 [min]="priceMin()"
                 [max]="priceMax()"
                 class="w-full"
-          (change)="
-            onPriceRangeChange({
-              min: +$any($event.target).value,
-              max: priceRange()?.max || priceMax(),
-            })
-          "
-                />
+                (change)="
+                  onPriceRangeChange({
+                    min: +$any($event.target).value,
+                    max: priceRange()?.max || priceMax(),
+                  })
+                "
+              />
               <div class="text-xs font-semibold text-cta-default">
                 {{ formatPrice(priceRange()?.min || priceMin()) }}
               </div>
@@ -377,13 +375,13 @@
                 [min]="priceMin()"
                 [max]="priceMax()"
                 class="w-full"
-          (change)="
-            onPriceRangeChange({
-              min: priceRange()?.min || priceMin(),
-              max: +$any($event.target).value,
-            })
-          "
-                />
+                (change)="
+                  onPriceRangeChange({
+                    min: priceRange()?.min || priceMin(),
+                    max: +$any($event.target).value,
+                  })
+                "
+              />
               <div class="text-xs font-semibold text-cta-default">
                 {{ formatPrice(priceRange()?.max || priceMax()) }}
               </div>
@@ -395,15 +393,13 @@
           <div class="space-y-2">
             <h4 class="text-xs font-semibold text-text-primary font-satoshi">Tipo de vehículo</h4>
             @for (option of vehicleTypeOptions; track option) {
-              <label
-                class="flex items-center gap-2 cursor-pointer"
-                >
+              <label class="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   [checked]="vehicleTypes().includes(option.id)"
                   (change)="toggleVehicleType(option.id)"
                   class="w-4 h-4 rounded"
-                  />
+                />
                 <span class="text-xs text-text-primary">{{ option.label }}</span>
               </label>
             }

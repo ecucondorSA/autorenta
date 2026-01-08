@@ -2,7 +2,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { SwPush } from '@angular/service-worker';
 import { Capacitor } from '@capacitor/core';
-import { ActionPerformed, PushNotifications, PushNotificationSchema, Token } from '@capacitor/push-notifications';
+import {
+  ActionPerformed,
+  PushNotifications,
+  PushNotificationSchema,
+  Token,
+} from '@capacitor/push-notifications';
 import { Subject } from 'rxjs';
 import { AuthService } from '@core/services/auth/auth.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
@@ -135,16 +140,22 @@ export class PushNotificationService {
       });
 
       // Listen for push notifications received
-      PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
-        this.logger.debug('Push notification received:', notification);
-        this.nativeMessages$.next(notification);
-      });
+      PushNotifications.addListener(
+        'pushNotificationReceived',
+        (notification: PushNotificationSchema) => {
+          this.logger.debug('Push notification received:', notification);
+          this.nativeMessages$.next(notification);
+        },
+      );
 
       // Listen for notification action performed (user tapped notification)
-      PushNotifications.addListener('pushNotificationActionPerformed', (action: ActionPerformed) => {
-        this.logger.debug('Push notification action performed:', action);
-        this.nativeNotificationClicks$.next(action);
-      });
+      PushNotifications.addListener(
+        'pushNotificationActionPerformed',
+        (action: ActionPerformed) => {
+          this.logger.debug('Push notification action performed:', action);
+          this.nativeNotificationClicks$.next(action);
+        },
+      );
     } catch (error) {
       console.error('Error initializing native push:', error);
     }
@@ -212,10 +223,7 @@ export class PushNotificationService {
     if (this.isNative) {
       // For native, we need to get the token from storage or registration
       // This is handled by removing all tokens for the user on logout
-      await this.supabase
-        .from('push_tokens')
-        .delete()
-        .eq('user_id', user.id);
+      await this.supabase.from('push_tokens').delete().eq('user_id', user.id);
     }
   }
 

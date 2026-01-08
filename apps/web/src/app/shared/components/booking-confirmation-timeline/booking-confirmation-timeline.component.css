@@ -67,7 +67,6 @@
   background-color: var(--cta-default);
 }
 
-
 /* Timeline Marker (Circle) */
 .timeline-marker {
   @apply relative z-10;

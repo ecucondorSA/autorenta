@@ -1,8 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component, Input, computed
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, computed } from '@angular/core';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { Booking } from '../../../core/models';
 
@@ -22,13 +19,11 @@ import { Booking } from '../../../core/models';
       <div class="status-badge" [ngClass]="statusClass()">
         {{ statusIcon() }} {{ statusLabel() }}
         @if (showDeliveryCountdown()) {
-          <span class="delivery-countdown">
-            ⏱ {{ deliveryCountdown }}
-          </span>
+          <span class="delivery-countdown"> ⏱ {{ deliveryCountdown }} </span>
         }
       </div>
     }
-    `,
+  `,
   styles: [
     `
       .status-badge {
@@ -56,7 +51,7 @@ export class BookingStatusComponent {
   @Input({ required: true }) booking!: Booking;
   @Input() deliveryCountdown: string | null = null;
 
-  constructor(private bookingsService: BookingsService) { }
+  constructor(private bookingsService: BookingsService) {}
 
   isExpired = computed(() => {
     return this.bookingsService.isExpired(this.booking);

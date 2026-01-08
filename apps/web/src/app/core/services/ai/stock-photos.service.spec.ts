@@ -6,7 +6,7 @@ describe('StockPhotosService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [StockPhotosService]
+      providers: [StockPhotosService],
     });
     service = TestBed.inject(StockPhotosService);
   });
@@ -26,5 +26,4 @@ describe('StockPhotosService', () => {
   it('should have trackDownload method', () => {
     expect(typeof service.trackDownload).toBe('function');
   });
-
 });

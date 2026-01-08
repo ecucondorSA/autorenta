@@ -1,11 +1,7 @@
 <!-- WhatsApp-style Chat Container -->
-<div
-  class="whatsapp-chat-container flex h-full flex-col overflow-hidden bg-surface-raised"
->
+<div class="whatsapp-chat-container flex h-full flex-col overflow-hidden bg-surface-raised">
   <!-- Header estilo WhatsApp -->
-  <div
-    class="whatsapp-header flex items-center gap-3 bg-whatsapp-teal px-4 py-3 text-text-inverse"
-  >
+  <div class="whatsapp-header flex items-center gap-3 bg-whatsapp-teal px-4 py-3 text-text-inverse">
     <!-- Avatar -->
     <div
       class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface-raised/20"
@@ -57,9 +53,7 @@
         <div
           class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-muted border-t-whatsapp-teal"
         ></div>
-        <p class="text-sm text-text-secondary">
-          Cargando mensajes...
-        </p>
+        <p class="text-sm text-text-secondary">Cargando mensajes...</p>
       </div>
     </div>
 
@@ -93,12 +87,8 @@
           />
         </svg>
       </div>
-      <p class="mb-2 text-base font-medium text-text-primary">
-        No hay mensajes todavía
-      </p>
-      <p class="text-sm text-text-secondary">
-        Envía un mensaje para empezar la conversación
-      </p>
+      <p class="mb-2 text-base font-medium text-text-primary">No hay mensajes todavía</p>
+      <p class="text-sm text-text-secondary">Envía un mensaje para empezar la conversación</p>
     </div>
 
     <!-- Messages -->
@@ -118,10 +108,7 @@
             {{ message.body }}
           </p>
           <div class="mt-1 flex items-center justify-end gap-1">
-            <span
-              class="text-xs text-text-secondary"
-              >{{ formatTime(message.created_at) }}</span
-            >
+            <span class="text-xs text-text-secondary">{{ formatTime(message.created_at) }}</span>
           </div>
           <!-- Tail izquierdo -->
           <div
@@ -138,9 +125,7 @@
             {{ message.body }}
           </p>
           <div class="mt-1 flex items-center justify-end gap-1">
-            <span class="text-xs text-text-secondary">{{
-              formatTime(message.created_at)
-            }}</span>
+            <span class="text-xs text-text-secondary">{{ formatTime(message.created_at) }}</span>
 
             <!-- Check marks - Single check (sent) -->
             <svg
@@ -187,9 +172,7 @@
 
       <!-- Typing indicator -->
       <div *ngIf="recipientTyping()" class="flex justify-start px-4 py-2">
-        <div
-          class="rounded-lg rounded-tl-none bg-surface-raised px-4 py-3 shadow-sm"
-        >
+        <div class="rounded-lg rounded-tl-none bg-surface-raised px-4 py-3 shadow-sm">
           <div class="flex items-center gap-1">
             <div
               class="h-2 w-2 animate-bounce rounded-full bg-gray-400"
@@ -210,9 +193,7 @@
   </div>
 
   <!-- Input estilo WhatsApp -->
-  <div
-    class="whatsapp-input flex items-center gap-2 bg-whatsapp-bg-light px-3 py-2"
-  >
+  <div class="whatsapp-input flex items-center gap-2 bg-whatsapp-bg-light px-3 py-2">
     <!-- Emoji button -->
     <button
       type="button"

@@ -6,21 +6,37 @@ const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({
     select: jasmine.createSpy('select').and.returnValue({
       eq: jasmine.createSpy('eq').and.returnValue(Promise.resolve({ data: [], error: null })),
-      single: jasmine.createSpy('single').and.returnValue(Promise.resolve({ data: null, error: null })),
+      single: jasmine
+        .createSpy('single')
+        .and.returnValue(Promise.resolve({ data: null, error: null })),
     }),
-    insert: jasmine.createSpy('insert').and.returnValue(Promise.resolve({ data: null, error: null })),
-    update: jasmine.createSpy('update').and.returnValue(Promise.resolve({ data: null, error: null })),
-    delete: jasmine.createSpy('delete').and.returnValue(Promise.resolve({ data: null, error: null })),
+    insert: jasmine
+      .createSpy('insert')
+      .and.returnValue(Promise.resolve({ data: null, error: null })),
+    update: jasmine
+      .createSpy('update')
+      .and.returnValue(Promise.resolve({ data: null, error: null })),
+    delete: jasmine
+      .createSpy('delete')
+      .and.returnValue(Promise.resolve({ data: null, error: null })),
   }),
   rpc: jasmine.createSpy('rpc').and.returnValue(Promise.resolve({ data: null, error: null })),
   auth: {
-    getUser: jasmine.createSpy('getUser').and.returnValue(Promise.resolve({ data: { user: null }, error: null })),
-    getSession: jasmine.createSpy('getSession').and.returnValue(Promise.resolve({ data: { session: null }, error: null })),
-    onAuthStateChange: jasmine.createSpy('onAuthStateChange').and.returnValue({ data: { subscription: { unsubscribe: jasmine.createSpy() } } }),
+    getUser: jasmine
+      .createSpy('getUser')
+      .and.returnValue(Promise.resolve({ data: { user: null }, error: null })),
+    getSession: jasmine
+      .createSpy('getSession')
+      .and.returnValue(Promise.resolve({ data: { session: null }, error: null })),
+    onAuthStateChange: jasmine
+      .createSpy('onAuthStateChange')
+      .and.returnValue({ data: { subscription: { unsubscribe: jasmine.createSpy() } } }),
   },
   storage: {
     from: jasmine.createSpy('from').and.returnValue({
-      upload: jasmine.createSpy('upload').and.returnValue(Promise.resolve({ data: null, error: null })),
+      upload: jasmine
+        .createSpy('upload')
+        .and.returnValue(Promise.resolve({ data: null, error: null })),
       getPublicUrl: jasmine.createSpy('getPublicUrl').and.returnValue({ data: { publicUrl: '' } }),
     }),
   },
@@ -39,8 +55,10 @@ describe('BonusMalusService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BonusMalusService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService }]
+      providers: [
+        BonusMalusService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(BonusMalusService);
   });
@@ -181,26 +199,25 @@ describe('BonusMalusService', () => {
         from: jasmine.createSpy('from').and.returnValue({
           select: jasmine.createSpy('select').and.returnValue({
             eq: jasmine.createSpy('eq').and.returnValue({
-              maybeSingle: jasmine.createSpy('maybeSingle').and.returnValue(
-                Promise.resolve({ data: null, error: { message: 'Database error' } })
-              ),
+              maybeSingle: jasmine
+                .createSpy('maybeSingle')
+                .and.returnValue(
+                  Promise.resolve({ data: null, error: { message: 'Database error' } }),
+                ),
             }),
           }),
         }),
         rpc: jasmine.createSpy('rpc'),
         auth: {
-          getUser: jasmine.createSpy('getUser').and.returnValue(
-            Promise.resolve({ data: { user: { id: 'test-user' } }, error: null })
-          ),
+          getUser: jasmine
+            .createSpy('getUser')
+            .and.returnValue(Promise.resolve({ data: { user: { id: 'test-user' } }, error: null })),
         },
       };
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          BonusMalusService,
-          { provide: SupabaseClientService, useValue: errorMock }
-        ]
+        providers: [BonusMalusService, { provide: SupabaseClientService, useValue: errorMock }],
       });
 
       const freshService = TestBed.inject(BonusMalusService);
@@ -212,22 +229,19 @@ describe('BonusMalusService', () => {
 
     it('should return null on calculateBonusMalus RPC error', async () => {
       const errorMock = {
-        rpc: jasmine.createSpy('rpc').and.returnValue(
-          Promise.resolve({ data: null, error: { message: 'RPC error' } })
-        ),
+        rpc: jasmine
+          .createSpy('rpc')
+          .and.returnValue(Promise.resolve({ data: null, error: { message: 'RPC error' } })),
         auth: {
-          getUser: jasmine.createSpy('getUser').and.returnValue(
-            Promise.resolve({ data: { user: { id: 'test-user' } }, error: null })
-          ),
+          getUser: jasmine
+            .createSpy('getUser')
+            .and.returnValue(Promise.resolve({ data: { user: { id: 'test-user' } }, error: null })),
         },
       };
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          BonusMalusService,
-          { provide: SupabaseClientService, useValue: errorMock }
-        ]
+        providers: [BonusMalusService, { provide: SupabaseClientService, useValue: errorMock }],
       });
 
       const freshService = TestBed.inject(BonusMalusService);
@@ -255,33 +269,30 @@ describe('BonusMalusService', () => {
         user_id: 'user-123',
         total_factor: -0.05,
         metrics: { is_verified: true },
-        tier: null
+        tier: null,
       };
 
       const mockClient = {
         from: jasmine.createSpy('from').and.returnValue({
           select: jasmine.createSpy('select').and.returnValue({
             eq: jasmine.createSpy('eq').and.returnValue({
-              maybeSingle: jasmine.createSpy('maybeSingle').and.returnValue(
-                Promise.resolve({ data: mockData, error: null })
-              ),
+              maybeSingle: jasmine
+                .createSpy('maybeSingle')
+                .and.returnValue(Promise.resolve({ data: mockData, error: null })),
             }),
           }),
         }),
         rpc: jasmine.createSpy('rpc'),
         auth: {
-          getUser: jasmine.createSpy('getUser').and.returnValue(
-            Promise.resolve({ data: { user: { id: 'user-123' } }, error: null })
-          ),
+          getUser: jasmine
+            .createSpy('getUser')
+            .and.returnValue(Promise.resolve({ data: { user: { id: 'user-123' } }, error: null })),
         },
       };
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          BonusMalusService,
-          { provide: SupabaseClientService, useValue: mockClient }
-        ]
+        providers: [BonusMalusService, { provide: SupabaseClientService, useValue: mockClient }],
       });
 
       const freshService = TestBed.inject(BonusMalusService);
@@ -296,18 +307,15 @@ describe('BonusMalusService', () => {
       const unauthMock = {
         rpc: jasmine.createSpy('rpc'),
         auth: {
-          getUser: jasmine.createSpy('getUser').and.returnValue(
-            Promise.resolve({ data: { user: null }, error: null })
-          ),
+          getUser: jasmine
+            .createSpy('getUser')
+            .and.returnValue(Promise.resolve({ data: { user: null }, error: null })),
         },
       };
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          BonusMalusService,
-          { provide: SupabaseClientService, useValue: unauthMock }
-        ]
+        providers: [BonusMalusService, { provide: SupabaseClientService, useValue: unauthMock }],
       });
 
       const freshService = TestBed.inject(BonusMalusService);
@@ -317,5 +325,4 @@ describe('BonusMalusService', () => {
       expect(result).toBeNull();
     });
   });
-
 });

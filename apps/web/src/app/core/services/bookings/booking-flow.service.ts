@@ -178,7 +178,11 @@ export class BookingFlowService {
       }
       if (isOwner) {
         // FIX: Consider completion_status for owner actions
-        if (completionStatus === 'pending_owner' || completionStatus === 'pending_both' || completionStatus === 'returned') {
+        if (
+          completionStatus === 'pending_owner' ||
+          completionStatus === 'pending_both' ||
+          completionStatus === 'returned'
+        ) {
           actions.push({
             label: 'Confirmar Devolución',
             action: 'owner-check-out',
@@ -329,7 +333,8 @@ export class BookingFlowService {
         if (completionStatus === 'pending_owner' || completionStatus === 'pending_both') {
           return {
             title: 'Confirmar Devolución',
-            description: 'El locatario devolvió el auto. Confirmá la recepción para liberar los fondos.',
+            description:
+              'El locatario devolvió el auto. Confirmá la recepción para liberar los fondos.',
             action: 'Confirmar Check-Out',
             route: `/bookings/${booking.id}/owner-check-out`,
             priority: 'high',
@@ -366,7 +371,11 @@ export class BookingFlowService {
           };
         }
       }
-      if (status === 'pending_dispute_resolution' || status === 'disputed' || status === 'resolved') {
+      if (
+        status === 'pending_dispute_resolution' ||
+        status === 'disputed' ||
+        status === 'resolved'
+      ) {
         return {
           title: 'Revisar Disputa',
           description: 'Hay un reclamo asociado a esta reserva.',
@@ -434,7 +443,8 @@ export class BookingFlowService {
         if (completionStatus === 'returned' || completionStatus === 'pending_owner') {
           return {
             title: 'Devolución en proceso',
-            description: 'El propietario está verificando el vehículo. Te avisaremos cuando confirme.',
+            description:
+              'El propietario está verificando el vehículo. Te avisaremos cuando confirme.',
             action: 'Ver Estado',
             route: `/bookings/${booking.id}`,
             priority: 'medium',
@@ -461,7 +471,11 @@ export class BookingFlowService {
           };
         }
       }
-      if (status === 'pending_dispute_resolution' || status === 'disputed' || status === 'resolved') {
+      if (
+        status === 'pending_dispute_resolution' ||
+        status === 'disputed' ||
+        status === 'resolved'
+      ) {
         return {
           title: 'Revisar Disputa',
           description: 'Hay un reclamo asociado a esta reserva.',

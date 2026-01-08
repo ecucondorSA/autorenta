@@ -6,7 +6,7 @@ describe('DebugService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DebugService]
+      providers: [DebugService],
     });
     service = TestBed.inject(DebugService);
   });
@@ -54,5 +54,4 @@ describe('DebugService', () => {
   it('should have logHttpEnd method', () => {
     expect(typeof service.logHttpEnd).toBe('function');
   });
-
 });

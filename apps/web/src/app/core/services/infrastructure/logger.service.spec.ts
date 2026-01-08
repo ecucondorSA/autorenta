@@ -6,7 +6,7 @@ describe('LoggerService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LoggerService]
+      providers: [LoggerService],
     });
     service = TestBed.inject(LoggerService);
   });
@@ -54,5 +54,4 @@ describe('LoggerService', () => {
   it('should have logPerformance method', () => {
     expect(typeof service.logPerformance).toBe('function');
   });
-
 });

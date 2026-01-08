@@ -318,9 +318,10 @@ export class BookingDisputeService {
 
       // Process settlement based on resolution
       if (settlementAction === 'full_refund' || settlementAction === 'partial_refund') {
-        const refundAmount = settlementAction === 'full_refund'
-          ? dispute.disputed_amount_cents
-          : (dispute.disputed_amount_cents || 0) - (finalCharges || 0);
+        const refundAmount =
+          settlementAction === 'full_refund'
+            ? dispute.disputed_amount_cents
+            : (dispute.disputed_amount_cents || 0) - (finalCharges || 0);
 
         if (refundAmount > 0) {
           // Get booking to find renter

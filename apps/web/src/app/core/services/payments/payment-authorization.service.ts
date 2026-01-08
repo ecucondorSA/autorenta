@@ -1,8 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import {
-  AuthorizePaymentResult,
-  CurrencyCode,
-} from '@core/models';
+import { AuthorizePaymentResult, CurrencyCode } from '@core/models';
 import { PaymentAuthorization } from '@core/models/booking-detail-payment.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';

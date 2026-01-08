@@ -15,8 +15,8 @@ import { HdriBackgroundComponent } from '../../../shared/components/hdri-backgro
     RouterLink,
     ReactiveFormsModule,
     TranslateModule,
-    HdriBackgroundComponent
-],
+    HdriBackgroundComponent,
+  ],
   templateUrl: './login.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

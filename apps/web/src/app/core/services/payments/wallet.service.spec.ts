@@ -36,22 +36,42 @@ function createMockSupabaseClient() {
     from: jasmine.createSpy('from').and.returnValue({
       select: jasmine.createSpy('select').and.returnValue({
         eq: jasmine.createSpy('eq').and.returnValue(Promise.resolve({ data: [], error: null })),
-        single: jasmine.createSpy('single').and.returnValue(Promise.resolve({ data: null, error: null })),
+        single: jasmine
+          .createSpy('single')
+          .and.returnValue(Promise.resolve({ data: null, error: null })),
       }),
-      insert: jasmine.createSpy('insert').and.returnValue(Promise.resolve({ data: null, error: null })),
-      update: jasmine.createSpy('update').and.returnValue(Promise.resolve({ data: null, error: null })),
-      delete: jasmine.createSpy('delete').and.returnValue(Promise.resolve({ data: null, error: null })),
+      insert: jasmine
+        .createSpy('insert')
+        .and.returnValue(Promise.resolve({ data: null, error: null })),
+      update: jasmine
+        .createSpy('update')
+        .and.returnValue(Promise.resolve({ data: null, error: null })),
+      delete: jasmine
+        .createSpy('delete')
+        .and.returnValue(Promise.resolve({ data: null, error: null })),
     }),
-    rpc: jasmine.createSpy('rpc').and.returnValue(Promise.resolve({ data: [{ success: true }], error: null })),
+    rpc: jasmine
+      .createSpy('rpc')
+      .and.returnValue(Promise.resolve({ data: [{ success: true }], error: null })),
     auth: {
-      getUser: jasmine.createSpy('getUser').and.returnValue(Promise.resolve({ data: { user: { id: 'test-user' } }, error: null })),
-      getSession: jasmine.createSpy('getSession').and.returnValue(Promise.resolve({ data: { session: null }, error: null })),
-      onAuthStateChange: jasmine.createSpy('onAuthStateChange').and.returnValue({ data: { subscription: { unsubscribe: jasmine.createSpy() } } }),
+      getUser: jasmine
+        .createSpy('getUser')
+        .and.returnValue(Promise.resolve({ data: { user: { id: 'test-user' } }, error: null })),
+      getSession: jasmine
+        .createSpy('getSession')
+        .and.returnValue(Promise.resolve({ data: { session: null }, error: null })),
+      onAuthStateChange: jasmine
+        .createSpy('onAuthStateChange')
+        .and.returnValue({ data: { subscription: { unsubscribe: jasmine.createSpy() } } }),
     },
     storage: {
       from: jasmine.createSpy('from').and.returnValue({
-        upload: jasmine.createSpy('upload').and.returnValue(Promise.resolve({ data: null, error: null })),
-        getPublicUrl: jasmine.createSpy('getPublicUrl').and.returnValue({ data: { publicUrl: '' } }),
+        upload: jasmine
+          .createSpy('upload')
+          .and.returnValue(Promise.resolve({ data: null, error: null })),
+        getPublicUrl: jasmine
+          .createSpy('getPublicUrl')
+          .and.returnValue({ data: { publicUrl: '' } }),
       }),
     },
   };
@@ -69,8 +89,8 @@ describe('WalletService', () => {
       providers: [
         WalletService,
         { provide: SupabaseClientService, useValue: mockSupabaseService },
-        { provide: LoggerService, useValue: mockLoggerService }
-      ]
+        { provide: LoggerService, useValue: mockLoggerService },
+      ],
     });
     service = TestBed.inject(WalletService);
   });
@@ -127,18 +147,20 @@ describe('WalletService', () => {
     it('should allow lockFunds when under rate limit', (done) => {
       // Reset rate limit state by creating fresh service
       const freshMock = createMockSupabaseClient();
-      freshMock.rpc.and.returnValue(Promise.resolve({
-        data: [{ success: true, transaction_id: 'tx-123' }],
-        error: null
-      }));
+      freshMock.rpc.and.returnValue(
+        Promise.resolve({
+          data: [{ success: true, transaction_id: 'tx-123' }],
+          error: null,
+        }),
+      );
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
           WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService }
-        ]
+          { provide: LoggerService, useValue: mockLoggerService },
+        ],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -149,25 +171,27 @@ describe('WalletService', () => {
           expect(result.success).toBeTrue();
           done();
         },
-        error: done.fail
+        error: done.fail,
       });
     });
 
     it('should reject lockFunds when rate limit exceeded (5+ calls per minute)', (done) => {
       // Reset rate limit state by creating fresh service
       const freshMock = createMockSupabaseClient();
-      freshMock.rpc.and.returnValue(Promise.resolve({
-        data: [{ success: true, transaction_id: 'tx-123' }],
-        error: null
-      }));
+      freshMock.rpc.and.returnValue(
+        Promise.resolve({
+          data: [{ success: true, transaction_id: 'tx-123' }],
+          error: null,
+        }),
+      );
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
           WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService }
-        ]
+          { provide: LoggerService, useValue: mockLoggerService },
+        ],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -188,29 +212,31 @@ describe('WalletService', () => {
                   expect(isWalletError(err)).toBeTrue();
                   expect(err.code).toBe('RATE_LIMITED');
                   done();
-                }
+                },
               });
             }
           },
-          error: done.fail
+          error: done.fail,
         });
       }
     });
 
     it('should reject lockRentalAndDeposit when rate limit exceeded', (done) => {
       const freshMock = createMockSupabaseClient();
-      freshMock.rpc.and.returnValue(Promise.resolve({
-        data: [{ success: true }],
-        error: null
-      }));
+      freshMock.rpc.and.returnValue(
+        Promise.resolve({
+          data: [{ success: true }],
+          error: null,
+        }),
+      );
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
           WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService }
-        ]
+          { provide: LoggerService, useValue: mockLoggerService },
+        ],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -229,29 +255,31 @@ describe('WalletService', () => {
                   expect(isWalletError(err)).toBeTrue();
                   expect(err.code).toBe('RATE_LIMITED');
                   done();
-                }
+                },
               });
             }
           },
-          error: done.fail
+          error: done.fail,
         });
       }
     });
 
     it('should share rate limit between lockFunds and lockRentalAndDeposit', (done) => {
       const freshMock = createMockSupabaseClient();
-      freshMock.rpc.and.returnValue(Promise.resolve({
-        data: [{ success: true }],
-        error: null
-      }));
+      freshMock.rpc.and.returnValue(
+        Promise.resolve({
+          data: [{ success: true }],
+          error: null,
+        }),
+      );
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
           WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService }
-        ]
+          { provide: LoggerService, useValue: mockLoggerService },
+        ],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -274,17 +302,17 @@ describe('WalletService', () => {
                         error: (err) => {
                           expect(err.code).toBe('RATE_LIMITED');
                           done();
-                        }
+                        },
                       });
                     },
-                    error: done.fail
+                    error: done.fail,
                   });
                 },
-                error: done.fail
+                error: done.fail,
               });
             }
           },
-          error: done.fail
+          error: done.fail,
         });
       }
     });
@@ -359,7 +387,7 @@ describe('WalletService', () => {
         callCount++;
         return Promise.resolve({
           data: [{ success: true, transaction_id: `tx-${callCount}` }],
-          error: null
+          error: null,
         });
       });
 
@@ -368,8 +396,8 @@ describe('WalletService', () => {
         providers: [
           WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService }
-        ]
+          { provide: LoggerService, useValue: mockLoggerService },
+        ],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -398,18 +426,20 @@ describe('WalletService', () => {
 
     it('should enforce rate limit across concurrent requests', (done) => {
       const freshMock = createMockSupabaseClient();
-      freshMock.rpc.and.returnValue(Promise.resolve({
-        data: [{ success: true, transaction_id: 'tx-ok' }],
-        error: null
-      }));
+      freshMock.rpc.and.returnValue(
+        Promise.resolve({
+          data: [{ success: true, transaction_id: 'tx-ok' }],
+          error: null,
+        }),
+      );
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
           WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService }
-        ]
+          { provide: LoggerService, useValue: mockLoggerService },
+        ],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -419,22 +449,22 @@ describe('WalletService', () => {
       for (let i = 0; i < 7; i++) {
         promises.push(
           firstValueFrom(freshService.lockFunds(`booking-${i}`, 100))
-            .then(result => ({ success: true, result }))
-            .catch(error => ({ success: false, error }))
+            .then((result) => ({ success: true, result }))
+            .catch((error) => ({ success: false, error })),
         );
       }
 
       Promise.all(promises)
         .then((outcomes) => {
-          const successes = outcomes.filter(o => o.success);
-          const failures = outcomes.filter(o => !o.success);
+          const successes = outcomes.filter((o) => o.success);
+          const failures = outcomes.filter((o) => !o.success);
 
           // First 5 should succeed, remaining 2 should be rate limited
           expect(successes.length).toBe(5);
           expect(failures.length).toBe(2);
 
           // Verify failures are RATE_LIMITED errors
-          failures.forEach(f => {
+          failures.forEach((f) => {
             expect(f.error.code).toBe('RATE_LIMITED');
           });
 
@@ -452,13 +482,13 @@ describe('WalletService', () => {
           firstCallMade = true;
           return Promise.resolve({
             data: [{ success: true, transaction_id: 'tx-first', is_existing: false }],
-            error: null
+            error: null,
           });
         }
         // Subsequent calls return existing transaction (idempotency)
         return Promise.resolve({
           data: [{ success: true, transaction_id: 'tx-first', is_existing: true }],
-          error: null
+          error: null,
         });
       });
 
@@ -467,8 +497,8 @@ describe('WalletService', () => {
         providers: [
           WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService }
-        ]
+          { provide: LoggerService, useValue: mockLoggerService },
+        ],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -495,18 +525,20 @@ describe('WalletService', () => {
 
     it('should handle concurrent unlock requests gracefully', (done) => {
       const freshMock = createMockSupabaseClient();
-      freshMock.rpc.and.returnValue(Promise.resolve({
-        data: [{ success: true, amount_unlocked: 100 }],
-        error: null
-      }));
+      freshMock.rpc.and.returnValue(
+        Promise.resolve({
+          data: [{ success: true, amount_unlocked: 100 }],
+          error: null,
+        }),
+      );
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
           WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService }
-        ]
+          { provide: LoggerService, useValue: mockLoggerService },
+        ],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -520,7 +552,7 @@ describe('WalletService', () => {
       Promise.all(promises)
         .then((results) => {
           // Both should complete (DB handles idempotency)
-          results.forEach(result => {
+          results.forEach((result) => {
             expect(result.success).toBeTrue();
           });
           done();
@@ -537,12 +569,12 @@ describe('WalletService', () => {
         if (callCount <= 2) {
           return Promise.resolve({
             data: [{ success: true, transaction_id: `tx-${callCount}` }],
-            error: null
+            error: null,
           });
         }
         return Promise.resolve({
           data: null,
-          error: { message: 'Database timeout', code: '57014' }
+          error: { message: 'Database timeout', code: '57014' },
         });
       });
 
@@ -551,28 +583,28 @@ describe('WalletService', () => {
         providers: [
           WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService }
-        ]
+          { provide: LoggerService, useValue: mockLoggerService },
+        ],
       });
 
       const freshService = TestBed.inject(WalletService);
 
       const promises: Promise<any>[] = [
         firstValueFrom(freshService.lockFunds('booking-1', 100))
-          .then(result => ({ success: true, result }))
-          .catch(error => ({ success: false, error })),
+          .then((result) => ({ success: true, result }))
+          .catch((error) => ({ success: false, error })),
         firstValueFrom(freshService.lockFunds('booking-2', 100))
-          .then(result => ({ success: true, result }))
-          .catch(error => ({ success: false, error })),
+          .then((result) => ({ success: true, result }))
+          .catch((error) => ({ success: false, error })),
         firstValueFrom(freshService.lockFunds('booking-3', 100))
-          .then(result => ({ success: true, result }))
-          .catch(error => ({ success: false, error })),
+          .then((result) => ({ success: true, result }))
+          .catch((error) => ({ success: false, error })),
       ];
 
       Promise.all(promises)
         .then((outcomes) => {
-          const successes = outcomes.filter(o => o.success);
-          const failures = outcomes.filter(o => !o.success);
+          const successes = outcomes.filter((o) => o.success);
+          const failures = outcomes.filter((o) => !o.success);
 
           expect(successes.length).toBe(2);
           expect(failures.length).toBe(1);
@@ -584,5 +616,4 @@ describe('WalletService', () => {
         .catch(done.fail);
     });
   });
-
 });

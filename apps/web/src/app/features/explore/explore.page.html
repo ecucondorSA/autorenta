@@ -1,12 +1,9 @@
 <!-- Desktop Header with View Toggles -->
-<ion-header
-  [translucent]="true"
-  class="bg-surface-base border-b border-border-default"
-  >
+<ion-header [translucent]="true" class="bg-surface-base border-b border-border-default">
   <ion-toolbar class="--background: transparent; --min-height: 80px;">
     <div
       class="max-w-[1920px] mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 py-3 pt-[calc(0.75rem+env(safe-area-inset-top))]"
-      >
+    >
       <!-- Search Bar (Expanded style) -->
       <div class="flex-1 max-w-2xl">
         <input
@@ -15,7 +12,7 @@
           (input)="onSearch()"
           placeholder="Buscar por marca, modelo o ciudad..."
           class="w-full px-4 py-3 bg-surface-secondary border-2 border-transparent focus:border-cta-default rounded-xl focus:outline-none focus:ring-4 focus:ring-cta-default/10 text-text-primary placeholder:text-text-placeholder transition-all duration-200 shadow-sm"
-          />
+        />
       </div>
 
       <!-- View Toggles & Filters -->
@@ -24,7 +21,7 @@
         @if (viewMode() === 'map') {
           <div
             class="bg-surface-secondary p-1 rounded-xl flex items-center border border-border-default"
-            >
+          >
             <button
               [class.bg-surface-raised]="mapProvider() === 'mapbox'"
               [class.shadow-soft]="mapProvider() === 'mapbox'"
@@ -33,11 +30,11 @@
               (click)="mapProvider.set('mapbox')"
               class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-text-primary flex items-center gap-1.5 text-sm font-medium"
               title="Mapa Mapbox"
-              >
+            >
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                  />
+                />
               </svg>
               <span>Mapbox</span>
             </button>
@@ -49,14 +46,14 @@
               (click)="mapProvider.set('waze')"
               class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-text-primary flex items-center gap-1.5 text-sm font-medium"
               title="Tráfico en tiempo real - Waze"
-              >
+            >
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"
-                  />
+                />
                 <path
                   d="M12 6c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"
-                  />
+                />
               </svg>
               <span>Waze</span>
             </button>
@@ -66,7 +63,7 @@
         <!-- View Toggle -->
         <div
           class="bg-surface-secondary p-1 rounded-xl flex items-center border border-border-default"
-          >
+        >
           <button
             [class.bg-surface-raised]="viewMode() === 'map'"
             [class.shadow-soft]="viewMode() === 'map'"
@@ -75,7 +72,7 @@
             (click)="viewMode.set('map')"
             class="p-2 rounded-lg transition-all duration-200 hover:text-text-primary"
             title="Vista Mapa"
-            >
+          >
             <ion-icon name="map-outline" class="text-xl"></ion-icon>
           </button>
           <button
@@ -86,7 +83,7 @@
             (click)="viewMode.set('grid')"
             class="p-2 rounded-lg transition-all duration-200 hover:text-text-primary"
             title="Vista Cuadrícula"
-            >
+          >
             <ion-icon name="grid-outline" class="text-xl"></ion-icon>
           </button>
           <button
@@ -97,7 +94,7 @@
             (click)="viewMode.set('list')"
             class="p-2 rounded-lg transition-all duration-200 hover:text-text-primary"
             title="Vista Lista"
-            >
+          >
             <ion-icon name="list-outline" class="text-xl"></ion-icon>
           </button>
         </div>
@@ -109,9 +106,7 @@
 <ion-content [fullscreen]="true" class="bg-surface-secondary">
   <!-- 🗺️ MAP VIEW -->
   @if (viewMode() === 'map') {
-    <div
-      class="h-full w-full relative flex flex-col md:flex-row overflow-hidden"
-      >
+    <div class="h-full w-full relative flex flex-col md:flex-row overflow-hidden">
       <!-- Map Area -->
       <div class="flex-1 relative h-full">
         <!-- Mapbox Map -->
@@ -137,28 +132,26 @@
         }
         <!-- Fallback message if no user location for Waze -->
         @if (mapProvider() === 'waze' && !userLocation()) {
-          <div
-            class="absolute inset-0 flex items-center justify-center bg-surface-base"
-            >
+          <div class="absolute inset-0 flex items-center justify-center bg-surface-base">
             <div class="text-center space-y-3 p-6">
               <svg
                 class="w-12 h-12 text-warning-strong mx-auto"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                >
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
+                />
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
+                />
               </svg>
               <p class="text-text-primary font-medium">Necesitamos tu ubicación</p>
               <p class="text-text-secondary text-sm">
@@ -167,7 +160,7 @@
               <button
                 (click)="getUserLocation()"
                 class="mt-4 px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-hover transition-colors font-bold"
-                >
+              >
                 Permitir ubicación
               </button>
             </div>
@@ -184,11 +177,11 @@
         <!-- Location FAB -->
         <div
           class="absolute bottom-[calc(6rem+env(safe-area-inset-bottom))] right-4 md:bottom-8 md:right-8 z-[400]"
-          >
+        >
           <button
             (click)="centerOnUser()"
             class="w-12 h-12 bg-surface-raised rounded-full shadow-lg flex items-center justify-center text-text-primary hover:bg-surface-secondary transition-colors border border-border-default"
-            >
+          >
             <ion-icon name="locate-outline" class="text-xl"></ion-icon>
           </button>
         </div>
@@ -205,19 +198,14 @@
           {{ filteredCars.length }} vehículos encontrados
         </h2>
         <div class="flex items-center gap-3">
-          <label class="text-sm text-text-muted" for="sort-select">
-            Ordenar por
-          </label>
+          <label class="text-sm text-text-muted" for="sort-select"> Ordenar por </label>
           <select
             id="sort-select"
             class="rounded-lg border border-border-default bg-surface-base px-3 py-2 text-sm text-text-primary shadow-sm focus:border-cta-default focus:ring-1 focus:ring-cta-default outline-none"
             (change)="onSortChange($any($event.target).value)"
-            >
+          >
             @for (option of sortOptions; track option) {
-              <option
-                [value]="option.value"
-                [selected]="sortOrder() === option.value"
-                >
+              <option [value]="option.value" [selected]="sortOrder() === option.value">
                 {{ option.label }}
               </option>
             }
@@ -228,12 +216,9 @@
       @if (viewMode() === 'grid') {
         <div
           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6"
-          >
+        >
           @for (car of filteredCars; track car; let i = $index) {
-            <div
-              class="group card-premium cursor-pointer"
-              (click)="onCarouselCardSelected(car.id)"
-              >
+            <div class="group card-premium cursor-pointer" (click)="onCarouselCardSelected(car.id)">
               <!-- Image -->
               <div class="aspect-[4/3] relative overflow-hidden bg-surface-secondary">
                 <img
@@ -241,10 +226,10 @@
                   [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="lazy"
-                  />
+                />
                 <div
                   class="absolute top-3 right-3 bg-surface-base/90 backdrop-blur px-3 py-1 rounded-full text-sm font-bold text-text-primary shadow-sm border border-border-default"
-                  >
+                >
                   @if (car.price_per_day && car.price_per_day > 0) {
                     ${{ car.price_per_day | number: '1.0-0' }}
                     <span class="text-xs font-normal text-text-secondary">/día</span>
@@ -263,27 +248,23 @@
                   {{ car.location_city || 'Ubicación no disponible' }}
                 </p>
                 <div class="flex items-center gap-3 text-sm text-text-muted">
-                  <span
-                    class="flex items-center gap-1 bg-surface-secondary px-2 py-1 rounded-md"
-                    >
+                  <span class="flex items-center gap-1 bg-surface-secondary px-2 py-1 rounded-md">
                     <svg
                       class="w-4 h-4 text-text-secondary"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
-                      >
+                    >
                       <circle cx="12" cy="12" r="3" stroke-width="1.75" />
                       <path
                         d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"
                         stroke-width="1.75"
                         stroke-linecap="round"
-                        />
+                      />
                     </svg>
                     {{ car.transmission || 'Manual' }}
                   </span>
-                  <span
-                    class="flex items-center gap-1 bg-surface-secondary px-2 py-1 rounded-md"
-                    >
+                  <span class="flex items-center gap-1 bg-surface-secondary px-2 py-1 rounded-md">
                     👥 {{ car.seats || 5 }}
                   </span>
                 </div>
@@ -299,7 +280,7 @@
             <div
               class="card-premium cursor-pointer flex flex-col md:flex-row"
               (click)="onCarouselCardSelected(car.id)"
-              >
+            >
               <!-- Image -->
               <div class="md:w-72 aspect-video md:aspect-auto relative bg-surface-secondary">
                 <img
@@ -307,7 +288,7 @@
                   [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
                   class="w-full h-full object-cover"
                   loading="lazy"
-                  />
+                />
               </div>
               <!-- Content -->
               <div class="p-5 flex-1 flex flex-col justify-between">
@@ -323,8 +304,11 @@
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
-                          >
-                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke-width="1.75" />
+                        >
+                          <path
+                            d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+                            stroke-width="1.75"
+                          />
                           <circle cx="12" cy="10" r="3" stroke-width="1.75" />
                         </svg>
                         {{ car.location_city }}, {{ car.location_state }}
@@ -342,39 +326,32 @@
                     </div>
                   </div>
                   @if (car.description) {
-                    <p
-                      class="text-text-secondary text-sm line-clamp-2 mb-4"
-                      >
+                    <p class="text-text-secondary text-sm line-clamp-2 mb-4">
                       {{ car.description }}
                     </p>
                   }
                   <div class="flex flex-wrap gap-3">
                     <span
                       class="px-3 py-1 bg-surface-secondary rounded-full text-xs font-medium text-text-secondary flex items-center gap-1"
-                      >
-                      <svg
-                        class="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        >
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="3" stroke-width="1.75" />
                         <path
                           d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"
                           stroke-width="1.75"
                           stroke-linecap="round"
-                          />
+                        />
                       </svg>
                       {{ car.transmission || 'Manual' }}
                     </span>
                     <span
                       class="px-3 py-1 bg-surface-secondary rounded-full text-xs font-medium text-text-secondary flex items-center gap-1"
-                      >
+                    >
                       ⛽ {{ car.fuel_type || 'Nafta' }}
                     </span>
                     <span
                       class="px-3 py-1 bg-surface-secondary rounded-full text-xs font-medium text-text-secondary flex items-center gap-1"
-                      >
+                    >
                       👥 {{ car.seats || 5 }} asientos
                     </span>
                   </div>
@@ -389,7 +366,7 @@
         <div class="text-center py-20">
           <div
             class="w-20 h-20 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-4 text-4xl"
-            >
+          >
             🔍
           </div>
           <h3 class="text-xl font-bold text-text-primary mb-2 font-satoshi">

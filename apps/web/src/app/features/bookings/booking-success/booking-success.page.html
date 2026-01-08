@@ -155,18 +155,20 @@
 
       <!-- Main Message -->
       @if (bkg.status === 'confirmed') {
-        <h1 class="text-3xl font-bold text-center mb-2 text-text-primary tracking-tight font-satoshi">
+        <h1
+          class="text-3xl font-bold text-center mb-2 text-text-primary tracking-tight font-satoshi"
+        >
           ¡Tu reserva está confirmada!
         </h1>
       } @else {
-        <h1 class="text-3xl font-bold text-center mb-2 text-text-primary tracking-tight font-satoshi">
+        <h1
+          class="text-3xl font-bold text-center mb-2 text-text-primary tracking-tight font-satoshi"
+        >
           ¡Tu solicitud fue enviada!
         </h1>
       }
 
-      <p
-        class="text-center text-text-secondary mb-6"
-      >
+      <p class="text-center text-text-secondary mb-6">
         @if (bkg.status === 'confirmed') {
           Hemos enviado los detalles a tu email
         } @else {
@@ -185,12 +187,7 @@
           <ion-button size="small" fill="solid" color="primary" (click)="goToBookingDetail()">
             Ver detalles ahora
           </ion-button>
-          <ion-button
-            size="small"
-            fill="clear"
-            color="medium"
-            (click)="cancelAutoRedirect()"
-          >
+          <ion-button size="small" fill="clear" color="medium" (click)="cancelAutoRedirect()">
             Quedarme aquí
           </ion-button>
         </div>
@@ -207,22 +204,17 @@
         <ion-card-content>
           <div class="space-y-4">
             <!-- Car Info -->
-            <div
-              class="flex items-center space-x-4 pb-4 border-b border-border-default"
-            >
+            <div class="flex items-center space-x-4 pb-4 border-b border-border-default">
               <div
                 class="w-24 h-24 bg-surface-secondary rounded-lg flex items-center justify-center"
               >
-                <ion-icon
-                  name="car-outline"
-                  class="text-4xl text-text-muted"
-                ></ion-icon>
+                <ion-icon name="car-outline" class="text-4xl text-text-muted"></ion-icon>
               </div>
               <div>
-                <h3 class="font-semibold text-lg text-text-primary font-satoshi">{{ getCarName() }}</h3>
-                <p
-                  class="text-sm text-text-secondary"
-                >
+                <h3 class="font-semibold text-lg text-text-primary font-satoshi">
+                  {{ getCarName() }}
+                </h3>
+                <p class="text-sm text-text-secondary">
                   <ion-icon name="location-outline"></ion-icon>
                   @if (bkg.status === 'confirmed') {
                     Reserva confirmada
@@ -239,7 +231,9 @@
                 <ion-icon name="log-in-outline"></ion-icon>
                 Desde:
               </span>
-              <span class="value text-text-primary">{{ bkg.start_at | date: 'dd/MM/yyyy HH:mm' }}</span>
+              <span class="value text-text-primary">{{
+                bkg.start_at | date: 'dd/MM/yyyy HH:mm'
+              }}</span>
             </div>
 
             <div class="detail-row text-text-secondary">
@@ -247,7 +241,9 @@
                 <ion-icon name="log-out-outline"></ion-icon>
                 Hasta:
               </span>
-              <span class="value text-text-primary">{{ bkg.end_at | date: 'dd/MM/yyyy HH:mm' }}</span>
+              <span class="value text-text-primary">{{
+                bkg.end_at | date: 'dd/MM/yyyy HH:mm'
+              }}</span>
             </div>
 
             <!-- Total -->
@@ -261,15 +257,13 @@
                 }
               </span>
               <span class="value font-bold text-success-text">
-                {{ bkg.total_amount | currency: (bkg.currency || 'ARS') : 'symbol' : '1.0-0' }}
+                {{ bkg.total_amount | currency: bkg.currency || 'ARS' : 'symbol' : '1.0-0' }}
               </span>
             </div>
 
             <!-- Booking ID -->
             <div class="detail-row text-xs">
-              <span class="label text-text-muted"
-                >Número de Reserva:</span
-              >
+              <span class="label text-text-muted">Número de Reserva:</span>
               <span class="value font-mono text-text-secondary">
                 {{ bookingId() | slice: 0 : 8 }}...
               </span>
@@ -292,7 +286,9 @@
 
             <!-- Step 1: Solicitud Enviada - COMPLETADO -->
             <div class="flex items-start gap-4 mb-6">
-              <div class="relative z-10 w-8 h-8 rounded-full bg-success-500 flex items-center justify-center flex-shrink-0">
+              <div
+                class="relative z-10 w-8 h-8 rounded-full bg-success-500 flex items-center justify-center flex-shrink-0"
+              >
                 <ion-icon name="checkmark" class="text-white text-lg"></ion-icon>
               </div>
               <div class="flex-1 pt-1">
@@ -303,19 +299,25 @@
 
             <!-- Step 2: Esperando Aprobación - EN PROGRESO -->
             <div class="flex items-start gap-4 mb-6">
-              <div class="relative z-10 w-8 h-8 rounded-full bg-warning-500 flex items-center justify-center flex-shrink-0 animate-pulse">
+              <div
+                class="relative z-10 w-8 h-8 rounded-full bg-warning-500 flex items-center justify-center flex-shrink-0 animate-pulse"
+              >
                 <ion-icon name="hourglass-outline" class="text-white text-lg"></ion-icon>
               </div>
               <div class="flex-1 pt-1">
                 <h4 class="font-semibold text-warning-text">Esperando Aprobación</h4>
-                <p class="text-sm text-text-secondary">El anfitrión revisará tu perfil y responderá pronto</p>
+                <p class="text-sm text-text-secondary">
+                  El anfitrión revisará tu perfil y responderá pronto
+                </p>
                 <p class="text-xs text-text-muted mt-1">Tiempo promedio: 2-4 horas</p>
               </div>
             </div>
 
             <!-- Step 3: Check-in - PENDIENTE -->
             <div class="flex items-start gap-4 mb-6">
-              <div class="relative z-10 w-8 h-8 rounded-full bg-surface-pressed flex items-center justify-center flex-shrink-0">
+              <div
+                class="relative z-10 w-8 h-8 rounded-full bg-surface-pressed flex items-center justify-center flex-shrink-0"
+              >
                 <span class="text-text-muted font-bold text-sm">3</span>
               </div>
               <div class="flex-1 pt-1 opacity-60">
@@ -326,7 +328,9 @@
 
             <!-- Step 4: Viaje - PENDIENTE -->
             <div class="flex items-start gap-4">
-              <div class="relative z-10 w-8 h-8 rounded-full bg-surface-pressed flex items-center justify-center flex-shrink-0">
+              <div
+                class="relative z-10 w-8 h-8 rounded-full bg-surface-pressed flex items-center justify-center flex-shrink-0"
+              >
                 <span class="text-text-muted font-bold text-sm">4</span>
               </div>
               <div class="flex-1 pt-1 opacity-60">
@@ -339,10 +343,17 @@
           <!-- Info Box -->
           <div class="mt-6 p-4 bg-surface-raised rounded-xl border border-border-default">
             <div class="flex items-start gap-3">
-              <ion-icon name="notifications-outline" class="text-info-500 text-xl flex-shrink-0 mt-0.5"></ion-icon>
+              <ion-icon
+                name="notifications-outline"
+                class="text-info-500 text-xl flex-shrink-0 mt-0.5"
+              ></ion-icon>
               <div>
-                <p class="text-sm text-text-primary font-medium">Te notificaremos cuando el anfitrión responda</p>
-                <p class="text-xs text-text-secondary mt-1">Recibirás un email y notificación push</p>
+                <p class="text-sm text-text-primary font-medium">
+                  Te notificaremos cuando el anfitrión responda
+                </p>
+                <p class="text-xs text-text-secondary mt-1">
+                  Recibirás un email y notificación push
+                </p>
               </div>
             </div>
           </div>
@@ -373,7 +384,9 @@
               <ion-item class="item-premium">
                 <ion-icon name="chatbubble-outline" slot="start" color="primary"></ion-icon>
                 <ion-label class="ion-text-wrap">
-                  <h3 class="font-semibold font-satoshi text-text-primary">Contacta al propietario</h3>
+                  <h3 class="font-semibold font-satoshi text-text-primary">
+                    Contacta al propietario
+                  </h3>
                   <p class="text-sm text-text-secondary">
                     Coordina la entrega del vehículo con 24hs de anticipación
                   </p>
@@ -383,7 +396,9 @@
               <ion-item class="item-premium">
                 <ion-icon name="document-text-outline" slot="start" color="primary"></ion-icon>
                 <ion-label class="ion-text-wrap">
-                  <h3 class="font-semibold font-satoshi text-text-primary">Prepara tu documentación</h3>
+                  <h3 class="font-semibold font-satoshi text-text-primary">
+                    Prepara tu documentación
+                  </h3>
                   <p class="text-sm text-text-secondary">
                     DNI, licencia de conducir vigente y tarjeta de crédito a tu nombre
                   </p>

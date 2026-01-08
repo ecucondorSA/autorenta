@@ -1,5 +1,4 @@
-import {Component, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -29,22 +28,20 @@ import {
           <p class="text-text-secondary">Cargando siniestro...</p>
         </div>
       }
-    
+
       <!-- Error State -->
       @if (error() && !loading()) {
-        <div
-          class="bg-error-bg border border-error-border rounded-xl p-6"
-          >
+        <div class="bg-error-bg border border-error-border rounded-xl p-6">
           <p class="text-error-strong">{{ error() }}</p>
           <button
             routerLink="/admin/claims"
             class="mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-xl hover:bg-error-700"
-            >
+          >
             Volver a Siniestros
           </button>
         </div>
       }
-    
+
       <!-- Claim Detail -->
       @if (claim() && !loading()) {
         <div class="space-y-6">
@@ -53,27 +50,25 @@ import {
             <button
               routerLink="/admin/claims"
               class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-strong transition-base mb-4"
-              >
+            >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                  />
+                />
               </svg>
               Volver a Siniestros
             </button>
             <div class="flex items-start justify-between gap-4">
               <div>
                 <div class="flex items-center gap-3 mb-2">
-                  <h1 class="text-3xl font-bold text-text-primary">
-                    Detalle del Siniestro
-                  </h1>
+                  <h1 class="text-3xl font-bold text-text-primary">Detalle del Siniestro</h1>
                   <span
                     class="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-semibold rounded-full"
                     [ngClass]="getStatusBadgeClass(claim()!.status)"
-                    >
+                  >
                     {{ CLAIM_STATUS_LABELS[claim()!.status] }}
                   </span>
                 </div>
@@ -87,9 +82,7 @@ import {
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-6">
               <!-- Claim Info Card -->
-              <div
-                class="bg-surface-raised rounded-lg border border-border-default p-6 shadow-sm"
-                >
+              <div class="bg-surface-raised rounded-lg border border-border-default p-6 shadow-sm">
                 <h2 class="text-lg font-semibold text-text-primary mb-4">
                   Información del Siniestro
                 </h2>
@@ -101,28 +94,20 @@ import {
                     </dd>
                   </div>
                   <div>
-                    <dt class="text-sm font-medium text-text-secondary">
-                      Descripción
-                    </dt>
-                    <dd
-                      class="mt-1 text-sm text-text-primary whitespace-pre-wrap"
-                      >
+                    <dt class="text-sm font-medium text-text-secondary">Descripción</dt>
+                    <dd class="mt-1 text-sm text-text-primary whitespace-pre-wrap">
                       {{ claim()!.description }}
                     </dd>
                   </div>
                   <div>
-                    <dt class="text-sm font-medium text-text-secondary">
-                      Fecha del Incidente
-                    </dt>
+                    <dt class="text-sm font-medium text-text-secondary">Fecha del Incidente</dt>
                     <dd class="mt-1 text-sm text-text-primary">
                       {{ formatDateTime(claim()!.incident_date) }}
                     </dd>
                   </div>
                   @if (claim()!.location) {
                     <div>
-                      <dt class="text-sm font-medium text-text-secondary">
-                        Ubicación
-                      </dt>
+                      <dt class="text-sm font-medium text-text-secondary">Ubicación</dt>
                       <dd class="mt-1 text-sm text-text-primary">
                         {{ claim()!.location }}
                       </dd>
@@ -130,26 +115,20 @@ import {
                   }
                   @if (claim()!.police_report_number) {
                     <div>
-                      <dt class="text-sm font-medium text-text-secondary">
-                        N° Denuncia Policial
-                      </dt>
+                      <dt class="text-sm font-medium text-text-secondary">N° Denuncia Policial</dt>
                       <dd class="mt-1 text-sm text-text-primary">
                         {{ claim()!.police_report_number }}
                       </dd>
                     </div>
                   }
                   <div>
-                    <dt class="text-sm font-medium text-text-secondary">
-                      Reportado por
-                    </dt>
+                    <dt class="text-sm font-medium text-text-secondary">Reportado por</dt>
                     <dd class="mt-1 text-sm text-text-primary">
                       {{ claim()!.reporter_role === 'driver' ? 'Conductor' : 'Propietario' }}
                     </dd>
                   </div>
                   <div>
-                    <dt class="text-sm font-medium text-text-secondary">
-                      Fecha de reporte
-                    </dt>
+                    <dt class="text-sm font-medium text-text-secondary">Fecha de reporte</dt>
                     <dd class="mt-1 text-sm text-text-primary">
                       {{ formatDateTime(claim()!.created_at) }}
                     </dd>
@@ -160,7 +139,7 @@ import {
               @if (claim()!.photos && claim()!.photos!.length > 0) {
                 <div
                   class="bg-surface-raised rounded-lg border border-border-default p-6 shadow-sm"
-                  >
+                >
                   <h2 class="text-lg font-semibold text-text-primary mb-4">
                     📸 Evidencia Fotográfica ({{ claim()!.photos!.length }})
                   </h2>
@@ -169,16 +148,16 @@ import {
                       <div
                         class="relative aspect-square rounded-lg overflow-hidden bg-surface-raised cursor-pointer hover:opacity-90 transition-opacity"
                         (click)="openPhotoModal(i)"
-                        >
+                      >
                         <img
                           [src]="getPhotoUrl(photo)"
                           [alt]="'Evidencia ' + (i + 1)"
                           class="w-full h-full object-cover"
                           loading="lazy"
-                          />
+                        />
                         <div
                           class="absolute bottom-2 right-2 bg-surface-overlay/60 text-text-inverse text-xs px-2 py-1 rounded"
-                          >
+                        >
                           {{ i + 1 }}/{{ claim()!.photos!.length }}
                         </div>
                       </div>
@@ -190,10 +169,8 @@ import {
               @if (claim()!.resolution_notes) {
                 <div
                   class="bg-surface-raised rounded-lg border border-border-default p-6 shadow-sm"
-                  >
-                  <h2 class="text-lg font-semibold text-text-primary mb-4">
-                    Notas de Resolución
-                  </h2>
+                >
+                  <h2 class="text-lg font-semibold text-text-primary mb-4">Notas de Resolución</h2>
                   <p class="text-sm text-text-primary whitespace-pre-wrap">
                     {{ claim()!.resolution_notes }}
                   </p>
@@ -206,16 +183,12 @@ import {
               @if (canResolve()) {
                 <div
                   class="bg-surface-raised rounded-lg border border-border-default p-6 shadow-sm"
-                  >
-                  <h2 class="text-lg font-semibold text-text-primary mb-4">
-                    Acciones de Admin
-                  </h2>
+                >
+                  <h2 class="text-lg font-semibold text-text-primary mb-4">Acciones de Admin</h2>
                   <div class="space-y-4">
                     <!-- Resolution Notes -->
                     <div>
-                      <label
-                        class="block text-sm font-medium text-text-primary mb-2"
-                        >
+                      <label class="block text-sm font-medium text-text-primary mb-2">
                         Notas de resolución
                       </label>
                       <textarea
@@ -232,7 +205,7 @@ import {
                           (click)="updateStatus('under_review')"
                           [disabled]="submitting()"
                           class="w-full px-4 py-2 bg-cta-default text-cta-text rounded-lg font-medium transition-colors"
-                          >
+                        >
                           @if (!submitting()) {
                             <span>Poner en Revisión</span>
                           }
@@ -246,7 +219,7 @@ import {
                           (click)="updateStatus('approved')"
                           [disabled]="submitting()"
                           class="w-full px-4 py-2 bg-success-light text-text-primary rounded-lg font-medium transition-colors"
-                          >
+                        >
                           @if (!submitting()) {
                             <span>✓ Aprobar Siniestro</span>
                           }
@@ -260,7 +233,7 @@ import {
                           (click)="updateStatus('rejected')"
                           [disabled]="submitting()"
                           class="w-full px-4 py-2 bg-error-600 hover:bg-error-700 disabled:bg-error-400 text-text-inverse rounded-lg font-medium transition-colors"
-                          >
+                        >
                           @if (!submitting()) {
                             <span>✗ Rechazar Siniestro</span>
                           }
@@ -274,7 +247,7 @@ import {
                           (click)="updateStatus('paid')"
                           [disabled]="submitting()"
                           class="w-full px-4 py-2 bg-success-light text-text-primary rounded-lg font-medium transition-colors"
-                          >
+                        >
                           @if (!submitting()) {
                             <span>Marcar como Pagado</span>
                           }
@@ -288,27 +261,21 @@ import {
                 </div>
               }
               <!-- Status Info -->
-              <div
-                class="bg-surface-raised rounded-lg border border-border-default p-6 shadow-sm"
-                >
-                <h2 class="text-lg font-semibold text-text-primary mb-4">
-                  Estado Actual
-                </h2>
+              <div class="bg-surface-raised rounded-lg border border-border-default p-6 shadow-sm">
+                <h2 class="text-lg font-semibold text-text-primary mb-4">Estado Actual</h2>
                 <div class="space-y-3">
                   <div>
                     <p class="text-xs text-text-secondary mb-1">Estado</p>
                     <span
                       class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full"
                       [ngClass]="getStatusBadgeClass(claim()!.status)"
-                      >
+                    >
                       {{ CLAIM_STATUS_LABELS[claim()!.status] }}
                     </span>
                   </div>
                   @if (claim()!.closed_at) {
                     <div>
-                      <p class="text-xs text-text-secondary mb-1">
-                        Fecha de cierre
-                      </p>
+                      <p class="text-xs text-text-secondary mb-1">Fecha de cierre</p>
                       <p class="text-sm text-text-primary">
                         {{ formatDateTime(claim()!.closed_at) }}
                       </p>
@@ -321,25 +288,25 @@ import {
         </div>
       }
     </div>
-    
+
     <!-- Photo Modal (Simple lightbox) -->
     @if (selectedPhotoIndex() !== null) {
       <div
         class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/90 p-4"
         (click)="closePhotoModal()"
-        >
+      >
         <div class="relative max-w-6xl max-h-full">
           <button
             class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface-raised/10 hover:bg-surface-raised/20 flex items-center justify-center text-text-inverse"
             (click)="closePhotoModal()"
-            >
+          >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M6 18L18 6M6 6l12 12"
-                />
+              />
             </svg>
           </button>
           <img
@@ -347,11 +314,11 @@ import {
             [alt]="'Evidencia ' + (selectedPhotoIndex()! + 1)"
             class="max-w-full max-h-[90vh] object-contain"
             (click)="$event.stopPropagation()"
-            />
+          />
         </div>
       </div>
     }
-    `,
+  `,
   styles: [
     `
       :host {

@@ -290,7 +290,9 @@ export class VehicleDocumentsService {
     // Check if vehicle has verified documents (green_card, vtv, insurance)
     const { data, error } = await this.supabase
       .from('vehicle_documents')
-      .select('green_card_verified_at, vtv_verified_at, vtv_expiry, insurance_verified_at, insurance_expiry')
+      .select(
+        'green_card_verified_at, vtv_verified_at, vtv_expiry, insurance_verified_at, insurance_expiry',
+      )
       .eq('vehicle_id', carId)
       .single();
 
@@ -334,7 +336,9 @@ export class VehicleDocumentsService {
   async getMissingDocuments(carId: string): Promise<VehicleDocumentKind[]> {
     const { data, error } = await this.supabase
       .from('vehicle_documents')
-      .select('green_card_verified_at, vtv_verified_at, vtv_expiry, insurance_verified_at, insurance_expiry')
+      .select(
+        'green_card_verified_at, vtv_verified_at, vtv_expiry, insurance_verified_at, insurance_expiry',
+      )
       .eq('vehicle_id', carId)
       .single();
 
@@ -374,7 +378,9 @@ export class VehicleDocumentsService {
    * @param carId - ID del vehículo
    * @returns Documentos próximos a vencer con días restantes
    */
-  async getExpiringDocuments(carId: string): Promise<{ type: VehicleDocumentKind; expiryDate: Date; daysLeft: number }[]> {
+  async getExpiringDocuments(
+    carId: string,
+  ): Promise<{ type: VehicleDocumentKind; expiryDate: Date; daysLeft: number }[]> {
     const { data, error } = await this.supabase
       .from('vehicle_documents')
       .select('vtv_expiry, insurance_expiry')
@@ -400,7 +406,9 @@ export class VehicleDocumentsService {
     if (data.insurance_expiry) {
       const insuranceExpiry = new Date(data.insurance_expiry);
       if (insuranceExpiry > now && insuranceExpiry <= thirtyDaysFromNow) {
-        const daysLeft = Math.ceil((insuranceExpiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        const daysLeft = Math.ceil(
+          (insuranceExpiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+        );
         expiring.push({ type: 'insurance', expiryDate: insuranceExpiry, daysLeft });
       }
     }
@@ -447,7 +455,6 @@ export class VehicleDocumentsService {
       this.supabase.removeChannel(channel);
     };
   }
-
 
   /**
    * Labels para tipos de documentos

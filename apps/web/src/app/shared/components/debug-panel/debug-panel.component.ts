@@ -1,5 +1,11 @@
-import {Component, inject, signal, computed, HostListener,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  computed,
+  HostListener,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service';
@@ -31,21 +37,37 @@ import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service'
       <button
         (click)="debugService.togglePanel()"
         class="fixed bottom-20 right-4 z-[9999] w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all"
-        [class]="debugService.isPanelOpen() ? 'bg-red-500 hover:bg-red-600' : 'bg-primary-500 hover:bg-primary-600'"
+        [class]="
+          debugService.isPanelOpen()
+            ? 'bg-red-500 hover:bg-red-600'
+            : 'bg-primary-500 hover:bg-primary-600'
+        "
         [title]="debugService.isPanelOpen() ? 'Close Debug Panel' : 'Open Debug Panel'"
       >
         @if (debugService.isPanelOpen()) {
           <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         } @else {
           <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+            />
           </svg>
         }
         <!-- Badge with error count -->
         @if (!debugService.isPanelOpen() && debugService.errorCount() > 0) {
-          <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+          <span
+            class="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+          >
             {{ debugService.errorCount() > 9 ? '9+' : debugService.errorCount() }}
           </span>
         }
@@ -65,7 +87,9 @@ import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service'
         ></div>
 
         <!-- Header -->
-        <div class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
+        <div
+          class="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700"
+        >
           <div class="flex items-center gap-3">
             <span class="text-lg font-bold text-primary-400">Debug Panel</span>
             <span class="text-xs text-gray-400">{{ debugService.logs().length }} logs</span>
@@ -110,7 +134,12 @@ import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service'
               title="Clear Logs"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
               </svg>
             </button>
             <button
@@ -119,7 +148,12 @@ import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service'
               title="Copy to Clipboard"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                />
               </svg>
             </button>
             <button
@@ -128,7 +162,12 @@ import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service'
               title="Download Logs"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                />
               </svg>
             </button>
             <button
@@ -138,7 +177,12 @@ import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service'
               title="Session Info"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </button>
             <button
@@ -147,7 +191,12 @@ import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service'
               title="Close Panel"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
           </div>
@@ -157,20 +206,24 @@ import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service'
         @if (showInfo) {
           <div class="px-4 py-2 bg-gray-800 border-b border-gray-700 text-xs font-mono">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-              <div><span class="text-gray-500">Platform:</span> {{ debugService.sessionInfo.platform }}</div>
-              <div><span class="text-gray-500">Screen:</span> {{ debugService.sessionInfo.screenSize }}</div>
-              <div><span class="text-gray-500">Language:</span> {{ debugService.sessionInfo.language }}</div>
-              <div><span class="text-gray-500">Env:</span> {{ debugService.sessionInfo.environment }}</div>
+              <div>
+                <span class="text-gray-500">Platform:</span> {{ debugService.sessionInfo.platform }}
+              </div>
+              <div>
+                <span class="text-gray-500">Screen:</span> {{ debugService.sessionInfo.screenSize }}
+              </div>
+              <div>
+                <span class="text-gray-500">Language:</span> {{ debugService.sessionInfo.language }}
+              </div>
+              <div>
+                <span class="text-gray-500">Env:</span> {{ debugService.sessionInfo.environment }}
+              </div>
             </div>
           </div>
         }
 
         <!-- Logs Container -->
-        <div
-          #logsContainer
-          class="flex-1 overflow-y-auto font-mono text-xs"
-          (scroll)="onScroll()"
-        >
+        <div #logsContainer class="flex-1 overflow-y-auto font-mono text-xs" (scroll)="onScroll()">
           @for (log of filteredLogs(); track log.id) {
             <div
               class="px-4 py-1 hover:bg-gray-800 border-b border-gray-800 flex items-start gap-2"
@@ -209,7 +262,9 @@ import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service'
             <!-- Expanded Data -->
             @if (log.data && expandedLogs.has(log.id)) {
               <div class="px-4 py-2 bg-gray-950 border-b border-gray-800 ml-8">
-                <pre class="text-xs text-gray-400 whitespace-pre-wrap">{{ formatData(log.data) }}</pre>
+                <pre class="text-xs text-gray-400 whitespace-pre-wrap">{{
+                  formatData(log.data)
+                }}</pre>
               </div>
             }
           } @empty {
@@ -220,18 +275,22 @@ import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service'
         </div>
 
         <!-- Footer -->
-        <div class="px-4 py-1 bg-gray-800 border-t border-gray-700 text-xs text-gray-500 flex items-center justify-between">
+        <div
+          class="px-4 py-1 bg-gray-800 border-t border-gray-700 text-xs text-gray-500 flex items-center justify-between"
+        >
           <span>AutoRenta Debug v1.0 | Ctrl+Shift+D to toggle</span>
           <span>{{ autoScroll ? 'Auto-scroll ON' : 'Auto-scroll OFF' }}</span>
         </div>
       </div>
     }
   `,
-  styles: [`
-    :host {
-      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      }
+    `,
+  ],
 })
 export class DebugPanelComponent {
   protected readonly debugService = inject(DebugService);
@@ -260,14 +319,13 @@ export class DebugPanelComponent {
     let logs = this.debugService.logs();
 
     if (this.levelFilter) {
-      logs = logs.filter(l => l.level === this.levelFilter);
+      logs = logs.filter((l) => l.level === this.levelFilter);
     }
 
     if (this.searchQuery) {
       const q = this.searchQuery.toLowerCase();
-      logs = logs.filter(l =>
-        l.message.toLowerCase().includes(q) ||
-        l.context.toLowerCase().includes(q)
+      logs = logs.filter(
+        (l) => l.message.toLowerCase().includes(q) || l.context.toLowerCase().includes(q),
       );
     }
 
@@ -394,11 +452,11 @@ export class DebugPanelComponent {
    */
   getLevelBadgeClass(level: string): string {
     const classes: Record<string, string> = {
-      'DEBUG': 'bg-gray-600 text-gray-200',
-      'INFO': 'bg-blue-600 text-white',
-      'WARN': 'bg-yellow-600 text-white',
-      'ERROR': 'bg-red-600 text-white',
-      'CRITICAL': 'bg-red-800 text-white animate-pulse',
+      DEBUG: 'bg-gray-600 text-gray-200',
+      INFO: 'bg-blue-600 text-white',
+      WARN: 'bg-yellow-600 text-white',
+      ERROR: 'bg-red-600 text-white',
+      CRITICAL: 'bg-red-800 text-white animate-pulse',
     };
     return classes[level] || 'bg-gray-600 text-gray-200';
   }

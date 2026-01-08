@@ -166,7 +166,7 @@ body.no-scroll {
 }
 
 /* Decorative SVG icons should be hidden from assistive tech */
-svg[aria-hidden="true"],
+svg[aria-hidden='true'],
 .icon-decorative {
   pointer-events: none;
 }
@@ -189,16 +189,16 @@ svg[aria-hidden="true"],
 /* Global minimum touch target for interactive elements */
 button:not(.no-min-touch),
 a:not(.no-min-touch):not(.sr-only),
-input[type="button"]:not(.no-min-touch),
-input[type="submit"]:not(.no-min-touch),
-input[type="reset"]:not(.no-min-touch),
-[role="button"]:not(.no-min-touch) {
+input[type='button']:not(.no-min-touch),
+input[type='submit']:not(.no-min-touch),
+input[type='reset']:not(.no-min-touch),
+[role='button']:not(.no-min-touch) {
   min-height: 44px;
   min-width: 44px;
 }
 
 /* Links with text need min-height but can be narrower */
-a:not(.no-min-touch):not(.sr-only):not([role="button"]) {
+a:not(.no-min-touch):not(.sr-only):not([role='button']) {
   min-height: 44px;
   min-width: auto;
   display: inline-flex;
@@ -206,13 +206,16 @@ a:not(.no-min-touch):not(.sr-only):not([role="button"]) {
 }
 
 /* Range inputs need special handling */
-input[type="range"] {
+input[type='range'] {
   min-height: 44px;
   cursor: pointer;
 }
 
 /* Ensure inline links in text don't break layout */
-p a, li a, span a, td a {
+p a,
+li a,
+span a,
+td a {
   min-height: auto;
   min-width: auto;
   display: inline;
@@ -238,7 +241,7 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
-[role="button"]:focus-visible,
+[role='button']:focus-visible,
 [tabindex]:focus-visible {
   outline: 2px solid var(--border-focus, #3b82f6);
   outline-offset: 2px;
@@ -248,7 +251,7 @@ textarea:focus-visible,
 /* High contrast focus for critical actions */
 .btn-primary:focus-visible,
 .cta-button:focus-visible,
-button[type="submit"]:focus-visible {
+button[type='submit']:focus-visible {
   outline: 3px solid var(--border-focus, #3b82f6);
   outline-offset: 3px;
   box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.2);
@@ -385,49 +388,49 @@ ion-toast.toast-modern {
     --safe-area-right: env(safe-area-inset-right, 0px);
 
     /* ─── Superficies (Surfaces) ─── */
-    --surface-base: #FFFFFF; /* Pure White - Dominante (v2.1) */
-    --surface-raised: #FFFFFF; /* White - Tarjetas elevadas */
-    --surface-secondary: #F9FAFB; /* Warm Gray - Fondos suaves (v2.1) */
-    --surface-elevated: #F5F5F5; /* Gray G05 - Elevación */
-    --surface-hover: #F8F4EC; /* Ivory - Hover state */
-    --surface-pressed: #E3E3E3; /* Gray G10 - Pressed state */
+    --surface-base: #ffffff; /* Pure White - Dominante (v2.1) */
+    --surface-raised: #ffffff; /* White - Tarjetas elevadas */
+    --surface-secondary: #f9fafb; /* Warm Gray - Fondos suaves (v2.1) */
+    --surface-elevated: #f5f5f5; /* Gray G05 - Elevación */
+    --surface-hover: #f8f4ec; /* Ivory - Hover state */
+    --surface-pressed: #e3e3e3; /* Gray G10 - Pressed state */
 
     /* ─── Textos ─── */
     --text-primary: #000000; /* Pure Black (v2.1) */
-    --text-secondary: #1A1A1A; /* Soft Dark (v2.1) */
-    --text-muted: #7B7B7B; /* Gray G40 */
-    --text-inverse: #FFFFFF; /* White */
-    --text-link: #0066FF; /* Safety Blue */
-    --text-link-hover: #0052CC; /* Blue hover */
-    --text-placeholder: #7B7B7B; /* Gray G40 */
+    --text-secondary: #1a1a1a; /* Soft Dark (v2.1) */
+    --text-muted: #7b7b7b; /* Gray G40 */
+    --text-inverse: #ffffff; /* White */
+    --text-link: #0066ff; /* Safety Blue */
+    --text-link-hover: #0052cc; /* Blue hover */
+    --text-placeholder: #7b7b7b; /* Gray G40 */
 
     /* ─── Bordes ─── */
-    --border-default: #E3E3E3; /* Gray G10 */
-    --border-muted: #F3F4F6; /* Gray 50 */
-    --border-focus: #39FF14; /* Neón Focus (v2.1) */
-    --border-hover: #1A1A1A; /* Dark hover */
-    --border-error: #FF2A2A; /* Digital Red */
-    --border-success: #39FF14; /* Neón Green */
+    --border-default: #e3e3e3; /* Gray G10 */
+    --border-muted: #f3f4f6; /* Gray 50 */
+    --border-focus: #39ff14; /* Neón Focus (v2.1) */
+    --border-hover: #1a1a1a; /* Dark hover */
+    --border-error: #ff2a2a; /* Digital Red */
+    --border-success: #39ff14; /* Neón Green */
 
     /* ─── CTAs y Acciones (Secure Energy v2.1) ─── */
-    --cta-default: #39FF14; /* Verde Neón - Primary Action */
-    --cta-hover: #2ECC11; /* Shade */
-    --cta-pressed: #25A50E; /* Pressed */
+    --cta-default: #39ff14; /* Verde Neón - Primary Action */
+    --cta-hover: #2ecc11; /* Shade */
+    --cta-pressed: #25a50e; /* Pressed */
     --cta-text: #000000; /* Negro para máximo contraste */
 
     /* ─── CTA Secondary (Amarillo Voltage) ─── */
-    --cta-secondary: #FAFF00; /* Amarillo Vivo - Voltage */
-    --cta-secondary-hover: #D4D900; /* Shade */
+    --cta-secondary: #faff00; /* Amarillo Vivo - Voltage */
+    --cta-secondary-hover: #d4d900; /* Shade */
     --cta-secondary-text: #000000; /* Negro */
 
     /* ─── CTA Info / Safety (Azul) ─── */
-    --cta-info: #0066FF; /* Safety Blue */
-    --cta-info-text: #FFFFFF; /* Blanco */
+    --cta-info: #0066ff; /* Safety Blue */
+    --cta-info-text: #ffffff; /* Blanco */
 
     /* ─── CTA Neon (Alias) ─── */
-    --cta-neon: #39FF14; /* Verde Neón */
-    --cta-neon-hover: #2ECC11;
-    --cta-neon-pressed: #25A50E;
+    --cta-neon: #39ff14; /* Verde Neón */
+    --cta-neon-hover: #2ecc11;
+    --cta-neon-pressed: #25a50e;
     --cta-neon-text: #000000;
 
     /* ─── Estados y Feedback ─── */
@@ -436,7 +439,7 @@ ion-toast.toast-modern {
     --info-200: #bfdbfe;
     --info-300: #93c5fd;
     --info-400: #60a5fa;
-    --info-500: #0066FF; /* Safety Blue */
+    --info-500: #0066ff; /* Safety Blue */
     --info-600: #2563eb;
     --info-700: #1d4ed8;
     --info-800: #1e40af;
@@ -447,7 +450,7 @@ ion-toast.toast-modern {
     --success-200: #bbf7d0;
     --success-300: #86efac;
     --success-400: #4ade80;
-    --success-500: #39FF14; /* Neón Green */
+    --success-500: #39ff14; /* Neón Green */
     --success-600: #16a34a;
     --success-700: #15803d;
     --success-800: #166534;
@@ -458,7 +461,7 @@ ion-toast.toast-modern {
     --warning-200: #fef08a;
     --warning-300: #fde047;
     --warning-400: #facc15;
-    --warning-500: #FAFF00; /* Voltage Yellow */
+    --warning-500: #faff00; /* Voltage Yellow */
     --warning-600: #ca8a04;
     --warning-700: #a16207;
     --warning-800: #854d0e;
@@ -469,7 +472,7 @@ ion-toast.toast-modern {
     --error-200: #fecaca;
     --error-300: #fca5a5;
     --error-400: #f87171;
-    --error-500: #FF2A2A; /* Digital Red */
+    --error-500: #ff2a2a; /* Digital Red */
     --error-600: #dc2626;
     --error-700: #b91c1c;
     --error-800: #991b1b;
@@ -547,8 +550,8 @@ ion-toast.toast-modern {
 
     /* ─── Legacy Compatibility ─── */
     --info-light: var(--info-500); /* Safety Blue */
-    --info-dark: #3385FF;
-    --success-light: #00A86B; /* Jade Green for texts */
+    --info-dark: #3385ff;
+    --success-light: #00a86b; /* Jade Green for texts */
     --warning-light: var(--warning-500); /* Voltage Yellow */
     --error-light: var(--error-500); /* Digital Red */
 
@@ -1224,7 +1227,9 @@ ion-toast.toast-modern {
 
   .btn-accent:hover {
     background-color: var(--cta-hover);
-    box-shadow: 4px 4px 0px 0px #000000, 0 0 20px rgba(57, 255, 20, 0.4); /* Hard + Glow */
+    box-shadow:
+      4px 4px 0px 0px #000000,
+      0 0 20px rgba(57, 255, 20, 0.4); /* Hard + Glow */
   }
 
   .btn-ghost {
@@ -1596,7 +1601,7 @@ ion-toast.toast-modern {
 
   .nav-link-highlight {
     /* Radioactive Identity - High Contrast */
-    background-color: #39FF14 !important; /* Neón */
+    background-color: #39ff14 !important; /* Neón */
     color: #000000 !important;
     box-shadow: 0 8px 25px rgba(57, 255, 20, 0.3);
     border: none;
@@ -1605,7 +1610,7 @@ ion-toast.toast-modern {
   }
 
   .nav-link-highlight:hover {
-    background-color: #2ECC11 !important;
+    background-color: #2ecc11 !important;
     box-shadow: 0 12px 30px rgba(57, 255, 20, 0.4);
     color: #000000 !important;
     transform: translateY(-1px);
@@ -1717,7 +1722,7 @@ ion-toast.toast-modern {
 }
 
 .whatsapp-bg::-webkit-scrollbar-thumb:hover {
-  background: #7B7B7B;
+  background: #7b7b7b;
 }
 
 /* Animación de aparición de mensajes */
@@ -1772,13 +1777,17 @@ app-pwa-install-banner > div {
 /* Precios - Bold, visible, con tabular nums para alineación */
 .price {
   @apply font-tech font-bold;
-  font-feature-settings: 'tnum' 1, 'zero' 1;
+  font-feature-settings:
+    'tnum' 1,
+    'zero' 1;
 }
 
 /* Números de identificación (VIN, booking ID, etc) */
 .tech-id {
   @apply font-tech text-sm;
-  font-feature-settings: 'tnum' 1, 'zero' 1;
+  font-feature-settings:
+    'tnum' 1,
+    'zero' 1;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }

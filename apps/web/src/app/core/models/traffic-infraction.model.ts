@@ -16,4 +16,3 @@ export interface TrafficInfraction {
   renter_name?: string;
   owner_name?: string;
 }
-

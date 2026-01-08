@@ -1,5 +1,13 @@
-import {Component, inject, OnInit, signal, computed, effect,
-  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  computed,
+  effect,
+  ChangeDetectionStrategy,
+  DestroyRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -29,9 +37,7 @@ import type { UserProfile, Role } from '../../../core/models';
   imports: [IonicModule, ReactiveFormsModule, SectionCardComponent],
   template: `
     <ion-header>
-      <ion-toolbar
-        class="bg-surface-raised border-b border-border-default"
-        >
+      <ion-toolbar class="bg-surface-raised border-b border-border-default">
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
@@ -39,9 +45,7 @@ import type { UserProfile, Role } from '../../../core/models';
             class="text-text-primary"
           ></ion-back-button>
         </ion-buttons>
-        <ion-title class="text-text-primary">
-          Datos Personales
-        </ion-title>
+        <ion-title class="text-text-primary"> Datos Personales </ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -49,14 +53,12 @@ import type { UserProfile, Role } from '../../../core/models';
       <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
         <!-- Header -->
         <div class="mb-6">
-          <h1 class="text-2xl font-bold text-text-primary mb-2">
-            Información Personal
-          </h1>
+          <h1 class="text-2xl font-bold text-text-primary mb-2">Información Personal</h1>
           <p class="text-sm text-text-secondary">
             Mantén tus datos personales actualizados para una mejor experiencia.
           </p>
         </div>
-    
+
         <!-- Loading State -->
         @if (loading()) {
           <div class="flex justify-center py-12">
@@ -65,7 +67,7 @@ import type { UserProfile, Role } from '../../../core/models';
             ></div>
           </div>
         }
-    
+
         <!-- Form -->
         @if (!loading() && personalForm) {
           <form [formGroup]="personalForm" class="space-y-6">
@@ -77,30 +79,30 @@ import type { UserProfile, Role } from '../../../core/models';
                 [class.bg-warning-bg]="saveStatus() === 'saving'"
                 [class.text-success-text]="saveStatus() === 'saved'"
                 [class.text-warning-text]="saveStatus() === 'saving'"
-                >
+              >
                 @if (saveStatus() === 'saving') {
                   <svg
                     class="h-4 w-4 animate-spin"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    >
+                  >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
                       d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                      />
+                    />
                   </svg>
                 }
                 @if (saveStatus() === 'saved') {
-                  <svg
-                    class="h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                 }
                 <span>{{ saveStatus() === 'saving' ? 'Guardando...' : 'Guardado' }}</span>
@@ -118,41 +120,40 @@ import type { UserProfile, Role } from '../../../core/models';
                     id="full_name"
                     type="text"
                     formControlName="full_name"
-                  class="w-full px-3 py-2 rounded-lg border bg-surface-base
+                    class="w-full px-3 py-2 rounded-lg border bg-surface-base
                          text-text-primary
                          border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default
                          placeholder:text-text-muted"
                     placeholder="Ej: Juan Pérez"
-                    />
-                  @if (personalForm.get('full_name')?.invalid && personalForm.get('full_name')?.touched) {
-                    <p
-                      class="mt-1 text-xs text-error-text"
-                      >
-                      El nombre es requerido
-                    </p>
+                  />
+                  @if (
+                    personalForm.get('full_name')?.invalid && personalForm.get('full_name')?.touched
+                  ) {
+                    <p class="mt-1 text-xs text-error-text">El nombre es requerido</p>
                   }
                 </div>
                 <!-- Date of Birth -->
                 <div>
-                  <label for="date_of_birth" class="block text-sm font-medium text-text-primary mb-1">
+                  <label
+                    for="date_of_birth"
+                    class="block text-sm font-medium text-text-primary mb-1"
+                  >
                     Fecha de Nacimiento
                   </label>
                   <input
                     id="date_of_birth"
                     type="date"
                     formControlName="date_of_birth"
-                  class="w-full px-3 py-2 rounded-lg border bg-surface-base
+                    class="w-full px-3 py-2 rounded-lg border bg-surface-base
                          text-text-primary
                          border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default"
                     [max]="maxBirthDate()"
-                    />
+                  />
                   <p class="mt-1 text-xs text-text-muted">
                     Debes tener al menos 18 años para usar la plataforma
                   </p>
                   @if (ageError()) {
-                    <p
-                      class="mt-1 text-xs text-error-text"
-                      >
+                    <p class="mt-1 text-xs text-error-text">
                       {{ ageError() }}
                     </p>
                   }
@@ -170,10 +171,10 @@ import type { UserProfile, Role } from '../../../core/models';
                   <select
                     id="gov_id_type"
                     formControlName="gov_id_type"
-                  class="w-full px-3 py-2 rounded-lg border bg-surface-base
+                    class="w-full px-3 py-2 rounded-lg border bg-surface-base
                          text-text-primary
                          border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default"
-                    >
+                  >
                     <option value="">Seleccionar...</option>
                     <option value="dni">DNI</option>
                     <option value="cuit">CUIT</option>
@@ -182,19 +183,22 @@ import type { UserProfile, Role } from '../../../core/models';
                 </div>
                 <!-- Gov ID Number -->
                 <div>
-                  <label for="gov_id_number" class="block text-sm font-medium text-text-primary mb-1">
+                  <label
+                    for="gov_id_number"
+                    class="block text-sm font-medium text-text-primary mb-1"
+                  >
                     Número de Documento
                   </label>
                   <input
                     id="gov_id_number"
                     type="text"
                     formControlName="gov_id_number"
-                  class="w-full px-3 py-2 rounded-lg border bg-surface-base
+                    class="w-full px-3 py-2 rounded-lg border bg-surface-base
                          text-text-primary
                          border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default
                          placeholder:text-text-muted"
                     placeholder="Ej: 12345678"
-                    />
+                  />
                   <p class="mt-1 text-xs text-text-muted">
                     Este documento será verificado para habilitar ciertas funciones
                   </p>
@@ -214,13 +218,13 @@ import type { UserProfile, Role } from '../../../core/models';
                     [class.border-cta-default]="personalForm.get('role')?.value === 'renter'"
                     [class.bg-cta-default/5]="personalForm.get('role')?.value === 'renter'"
                     [class.border-border-default]="personalForm.get('role')?.value !== 'renter'"
-                    >
+                  >
                     <input
                       type="radio"
                       formControlName="role"
                       value="renter"
                       class="mt-1 h-4 w-4 text-cta-default focus:ring-cta-default"
-                      />
+                    />
                     <div>
                       <span class="block font-medium text-text-primary">Locatario</span>
                       <span class="text-sm text-text-secondary">
@@ -234,13 +238,13 @@ import type { UserProfile, Role } from '../../../core/models';
                     [class.border-cta-default]="personalForm.get('role')?.value === 'owner'"
                     [class.bg-cta-default/5]="personalForm.get('role')?.value === 'owner'"
                     [class.border-border-default]="personalForm.get('role')?.value !== 'owner'"
-                    >
+                  >
                     <input
                       type="radio"
                       formControlName="role"
                       value="owner"
                       class="mt-1 h-4 w-4 text-cta-default focus:ring-cta-default"
-                      />
+                    />
                     <div>
                       <span class="block font-medium text-text-primary">Locador</span>
                       <span class="text-sm text-text-secondary">
@@ -254,13 +258,13 @@ import type { UserProfile, Role } from '../../../core/models';
                     [class.border-cta-default]="personalForm.get('role')?.value === 'both'"
                     [class.bg-cta-default/5]="personalForm.get('role')?.value === 'both'"
                     [class.border-border-default]="personalForm.get('role')?.value !== 'both'"
-                    >
+                  >
                     <input
                       type="radio"
                       formControlName="role"
                       value="both"
                       class="mt-1 h-4 w-4 text-cta-default focus:ring-cta-default"
-                      />
+                    />
                     <div>
                       <span class="block font-medium text-text-primary">Ambos</span>
                       <span class="text-sm text-text-secondary">
@@ -280,22 +284,30 @@ import type { UserProfile, Role } from '../../../core/models';
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
+                  />
                 </svg>
                 Información Importante
               </h4>
               <ul class="text-xs text-info-text space-y-1.5">
                 <li class="flex gap-2">
                   <span>•</span>
-                  <span>Tu <strong>fecha de nacimiento</strong> se usa para calcular tarifas de seguro</span>
+                  <span
+                    >Tu <strong>fecha de nacimiento</strong> se usa para calcular tarifas de
+                    seguro</span
+                  >
                 </li>
                 <li class="flex gap-2">
                   <span>•</span>
-                  <span>El <strong>documento de identidad</strong> es necesario para verificar tu cuenta</span>
+                  <span
+                    >El <strong>documento de identidad</strong> es necesario para verificar tu
+                    cuenta</span
+                  >
                 </li>
                 <li class="flex gap-2">
                   <span>•</span>
-                  <span>Cambiar tu <strong>rol</strong> puede afectar las funciones disponibles</span>
+                  <span
+                    >Cambiar tu <strong>rol</strong> puede afectar las funciones disponibles</span
+                  >
                 </li>
               </ul>
             </div>
@@ -303,7 +315,7 @@ import type { UserProfile, Role } from '../../../core/models';
         }
       </div>
     </ion-content>
-    `,
+  `,
   styles: [
     `
       :host {
@@ -385,11 +397,7 @@ export class ProfilePersonalPage implements OnInit {
 
   private setupAutoSave(): void {
     this.personalForm.valueChanges
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-        takeUntilDestroyed(this.destroyRef)
-      )
+      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.validateAndSave();
       });
@@ -405,9 +413,7 @@ export class ProfilePersonalPage implements OnInit {
       const monthDiff = today.getMonth() - birthDate.getMonth();
 
       const actualAge =
-        monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())
-          ? age - 1
-          : age;
+        monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate()) ? age - 1 : age;
 
       if (actualAge < 18) {
         this.ageError.set('Debes tener al menos 18 años');

@@ -6,7 +6,7 @@ describe('FormValidationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [FormValidationService]
+      providers: [FormValidationService],
     });
     service = TestBed.inject(FormValidationService);
   });
@@ -18,5 +18,4 @@ describe('FormValidationService', () => {
   it('should have getErrorMessage method', () => {
     expect(typeof service.getErrorMessage).toBe('function');
   });
-
 });

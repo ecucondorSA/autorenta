@@ -47,7 +47,6 @@ export const palette = {
     },
   },
 
-
   // ─── Colores de Feedback (Opcionales, baja saturación) ───
   feedback: {
     error: {

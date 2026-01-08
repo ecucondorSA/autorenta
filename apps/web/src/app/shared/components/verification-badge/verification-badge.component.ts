@@ -1,4 +1,3 @@
-
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -17,22 +16,22 @@ import type { VerificationStatus } from '../../../core/models';
         class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2"
         [class]="getBadgeClass(overallStatus())"
         [title]="getButtonTitle(overallStatus())"
-        >
+      >
         <span>{{ getStatusIcon(overallStatus()) }}</span>
         <span>{{ getStatusLabel(overallStatus()) }}</span>
         @if (overallStatus() !== 'VERIFICADO') {
-          <svg
-            class="w-3 h-3 ml-1"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         }
       </button>
     }
-    `,
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerificationBadgeComponent implements OnInit {

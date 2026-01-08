@@ -193,10 +193,7 @@ export function formatCurrency(
 /**
  * Format amount (not cents) to currency string
  */
-export function formatAmount(
-  amount: number | null | undefined,
-  currency = 'ARS',
-): string {
+export function formatAmount(amount: number | null | undefined, currency = 'ARS'): string {
   if (amount === null || amount === undefined) return '-';
 
   return new Intl.NumberFormat('es-AR', {
@@ -259,9 +256,7 @@ export function formatDate(
 /**
  * Format date with time
  */
-export function formatDateTime(
-  date: string | Date | null | undefined,
-): string {
+export function formatDateTime(date: string | Date | null | undefined): string {
   if (!date) return '-';
 
   const d = typeof date === 'string' ? new Date(date) : date;

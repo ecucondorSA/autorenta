@@ -41,7 +41,12 @@ type BadgeVariant = 'default' | 'minimal' | 'detailed';
         <div [class]="iconContainerClass()">
           @if (currentLevel() >= 3) {
             <!-- Level 3: Locador Senior - Gold crown + shield -->
-            <svg [class]="iconClass()" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              [class]="iconClass()"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <!-- Crown -->
               <path
                 d="M5 16L3 8L7.5 11L12 6L16.5 11L21 8L19 16H5Z"
@@ -62,7 +67,12 @@ type BadgeVariant = 'default' | 'minimal' | 'detailed';
             </svg>
           } @else if (currentLevel() >= 2) {
             <!-- Level 2: Identity Verified - Blue shield with check -->
-            <svg [class]="iconClass()" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              [class]="iconClass()"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 d="M12 2L4 5.5V11.5C4 16.19 7.4 20.56 12 22C16.6 20.56 20 16.19 20 11.5V5.5L12 2Z"
                 fill="currentColor"
@@ -78,7 +88,12 @@ type BadgeVariant = 'default' | 'minimal' | 'detailed';
             </svg>
           } @else {
             <!-- Level 1: Basic verification - Gray shield outline -->
-            <svg [class]="iconClass()" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              [class]="iconClass()"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 d="M12 2L4 5.5V11.5C4 16.19 7.4 20.56 12 22C16.6 20.56 20 16.19 20 11.5V5.5L12 2Z"
                 stroke="currentColor"
@@ -86,7 +101,7 @@ type BadgeVariant = 'default' | 'minimal' | 'detailed';
                 fill="none"
                 class="text-gray-400"
               />
-              <circle cx="12" cy="12" r="2" fill="currentColor" class="text-gray-400"/>
+              <circle cx="12" cy="12" r="2" fill="currentColor" class="text-gray-400" />
             </svg>
           }
         </div>
@@ -104,36 +119,44 @@ type BadgeVariant = 'default' | 'minimal' | 'detailed';
 
         <!-- Level indicator for detailed variant -->
         @if (variant === 'detailed' && currentLevel() >= 2) {
-          <span [class]="levelBadgeClass()">
-            L{{ currentLevel() }}
-          </span>
+          <span [class]="levelBadgeClass()"> L{{ currentLevel() }} </span>
         }
       </div>
     }
   `,
-  styles: [`
-    .verified-badge {
-      transition: all 0.2s ease;
-    }
+  styles: [
+    `
+      .verified-badge {
+        transition: all 0.2s ease;
+      }
 
-    .verified-badge:hover {
-      transform: scale(1.02);
-    }
+      .verified-badge:hover {
+        transform: scale(1.02);
+      }
 
-    @keyframes badge-shine {
-      0% { opacity: 0; transform: translateX(-100%); }
-      50% { opacity: 0.5; }
-      100% { opacity: 0; transform: translateX(100%); }
-    }
+      @keyframes badge-shine {
+        0% {
+          opacity: 0;
+          transform: translateX(-100%);
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+      }
 
-    .badge-shine::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      animation: badge-shine 2s ease-in-out infinite;
-    }
-  `],
+      .badge-shine::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        animation: badge-shine 2s ease-in-out infinite;
+      }
+    `,
+  ],
 })
 export class VerifiedBadgeComponent implements OnInit {
   private readonly identityLevelService = inject(IdentityLevelService);
@@ -318,10 +341,7 @@ export class VerifiedBadgeComponent implements OnInit {
 
   readonly levelBadgeClass = computed(() => {
     const level = this.currentLevel();
-    const classes: string[] = [
-      'font-bold rounded-full',
-      'flex items-center justify-center',
-    ];
+    const classes: string[] = ['font-bold rounded-full', 'flex items-center justify-center'];
 
     // Color based on level
     if (level >= 3) {
@@ -386,7 +406,9 @@ export class VerifiedBadgeComponent implements OnInit {
       // Get user ID
       let targetUserId = this.userId;
       if (!targetUserId) {
-        const { data: { user } } = await this.supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await this.supabase.auth.getUser();
         if (!user) return;
         targetUserId = user.id;
       }
@@ -404,10 +426,12 @@ export class VerifiedBadgeComponent implements OnInit {
       }
 
       // Get vehicle documents for all cars
-      const carIds = cars.map(c => c.id);
+      const carIds = cars.map((c) => c.id);
       const { data: docs, error: docsError } = await this.supabase
         .from('vehicle_documents')
-        .select('vehicle_id, green_card_verified_at, vtv_verified_at, vtv_expiry, insurance_verified_at, insurance_expiry')
+        .select(
+          'vehicle_id, green_card_verified_at, vtv_verified_at, vtv_expiry, insurance_verified_at, insurance_expiry',
+        )
         .in('vehicle_id', carIds);
 
       if (docsError || !docs?.length) {

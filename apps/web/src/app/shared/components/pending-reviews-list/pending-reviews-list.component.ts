@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {Component, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 

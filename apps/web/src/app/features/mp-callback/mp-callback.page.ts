@@ -1,6 +1,11 @@
-
-import {Component, OnDestroy, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { MarketplaceOnboardingService } from '@core/services/auth/marketplace-onboarding.service';
@@ -32,7 +37,7 @@ import { MarketplaceOnboardingService } from '@core/services/auth/marketplace-on
             <p>Por favor esperá un momento mientras completamos la vinculación con Mercado Pago.</p>
           </div>
         }
-    
+
         <!-- Success State -->
         @if (state() === 'success') {
           <div class="state-card success">
@@ -60,7 +65,7 @@ import { MarketplaceOnboardingService } from '@core/services/auth/marketplace-on
             </div>
           </div>
         }
-    
+
         <!-- Error State -->
         @if (state() === 'error') {
           <div class="state-card error">
@@ -90,7 +95,7 @@ import { MarketplaceOnboardingService } from '@core/services/auth/marketplace-on
             </ion-button>
           </div>
         }
-    
+
         <!-- Loading State (initial) -->
         @if (state() === 'loading') {
           <div class="state-card">
@@ -100,7 +105,7 @@ import { MarketplaceOnboardingService } from '@core/services/auth/marketplace-on
         }
       </div>
     </ion-content>
-    `,
+  `,
   styles: [
     `
       :host {

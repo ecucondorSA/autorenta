@@ -725,7 +725,7 @@
 @media (prefers-color-scheme: dark) {
   ::ng-deep .flatpickr-calendar {
     box-shadow:
-      0 10px 25px -5px #4E4E4E,
-      0 8px 10px -6px #4E4E4E !important;
+      0 10px 25px -5px #4e4e4e,
+      0 8px 10px -6px #4e4e4e !important;
   }
 }

@@ -10,14 +10,17 @@
 export type Currency = 'USD' | 'ARS' | 'BRL';
 
 // Currency configurations
-export const CURRENCY_CONFIG: Record<Currency, {
-  code: string;
-  symbol: string;
-  locale: string;
-  decimals: number;
-  thousandsSeparator: string;
-  decimalSeparator: string;
-}> = {
+export const CURRENCY_CONFIG: Record<
+  Currency,
+  {
+    code: string;
+    symbol: string;
+    locale: string;
+    decimals: number;
+    thousandsSeparator: string;
+    decimalSeparator: string;
+  }
+> = {
   USD: {
     code: 'USD',
     symbol: '$',
@@ -56,7 +59,7 @@ export function formatMoney(
     showCurrencyCode?: boolean;
     showDecimals?: boolean;
     compact?: boolean;
-  }
+  },
 ): string {
   const { showCurrencyCode = false, showDecimals = true, compact = false } = options || {};
   const config = CURRENCY_CONFIG[currency];
@@ -104,7 +107,7 @@ export function formatCompactMoney(amount: number, currency: Currency = 'USD'): 
 export function formatMoneyValue(
   amount: number,
   currency: Currency = 'USD',
-  options?: { showDecimals?: boolean }
+  options?: { showDecimals?: boolean },
 ): string {
   const { showDecimals = true } = options || {};
   const config = CURRENCY_CONFIG[currency];
@@ -138,7 +141,7 @@ export function unitsToCents(units: number): number {
 export function formatCents(
   cents: number,
   currency: Currency = 'USD',
-  options?: { showDecimals?: boolean }
+  options?: { showDecimals?: boolean },
 ): string {
   return formatMoney(centsToUnits(cents), currency, options);
 }
@@ -221,11 +224,7 @@ export function isValidAmount(amount: number): boolean {
  * Format price range
  * @example formatPriceRange(50, 150, 'USD') => '$50 - $150'
  */
-export function formatPriceRange(
-  min: number,
-  max: number,
-  currency: Currency = 'USD'
-): string {
+export function formatPriceRange(min: number, max: number, currency: Currency = 'USD'): string {
   const minFormatted = formatMoney(min, currency, { showDecimals: false });
   const maxFormatted = formatMoney(max, currency, { showDecimals: false });
   return `${minFormatted} - ${maxFormatted}`;
@@ -252,7 +251,10 @@ export function calculateRentalTotal(dailyRate: number, days: number): number {
  * Calculate discounted price
  * @example calculateDiscountedPrice(100, 10) => 90
  */
-export function calculateDiscountedPrice(originalPrice: number, discountPercentage: number): number {
+export function calculateDiscountedPrice(
+  originalPrice: number,
+  discountPercentage: number,
+): number {
   return roundMoney(originalPrice * (1 - discountPercentage / 100));
 }
 
@@ -273,7 +275,7 @@ export function splitAmount(totalAmount: number, parts: number): number[] {
   if (parts <= 0) return [];
   if (parts === 1) return [totalAmount];
 
-  const baseAmount = Math.floor(totalAmount * 100 / parts) / 100;
+  const baseAmount = Math.floor((totalAmount * 100) / parts) / 100;
   const remainder = roundMoney(totalAmount - baseAmount * parts);
 
   const result: number[] = [];

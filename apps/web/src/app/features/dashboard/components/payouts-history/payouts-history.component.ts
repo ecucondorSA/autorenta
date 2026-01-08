@@ -1,6 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Component, OnInit, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { firstValueFrom } from 'rxjs';
 import { PayoutService, Payout } from '@core/services/payments/payout.service';
@@ -15,9 +14,7 @@ import { AuthService } from '@core/services/auth/auth.service';
     <div class="space-y-4">
       <!-- Header -->
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold text-text-primary">
-          Historial de Ingresos
-        </h3>
+        <h3 class="text-lg font-semibold text-text-primary">Historial de Ingresos</h3>
         <button
           (click)="loadPayouts()"
           [disabled]="loading()"
@@ -36,9 +33,7 @@ import { AuthService } from '@core/services/auth/auth.service';
 
       <!-- Error State -->
       @if (error() && !loading()) {
-        <div
-          class="bg-error-bg border border-error-border rounded-lg p-4"
-        >
+        <div class="bg-error-bg border border-error-border rounded-lg p-4">
           <p class="text-error-strong">{{ error() }}</p>
         </div>
       }
@@ -59,9 +54,7 @@ import { AuthService } from '@core/services/auth/auth.service';
               d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <h3 class="mt-4 text-lg font-medium text-text-primary">
-            No hay ingresos registrados
-          </h3>
+          <h3 class="mt-4 text-lg font-medium text-text-primary">No hay ingresos registrados</h3>
           <p class="mt-2 text-sm text-text-secondary">
             Tus ingresos por bookings completados aparecerán aquí.
           </p>
@@ -102,9 +95,7 @@ import { AuthService } from '@core/services/auth/auth.service';
                       {{ formatCurrency(payout.amount, payout.currency) }}
                     </p>
                     @if (payout.splitId) {
-                      <p class="text-xs text-text-secondary mt-1">
-                        Split ID: {{ payout.splitId }}
-                      </p>
+                      <p class="text-xs text-text-secondary mt-1">Split ID: {{ payout.splitId }}</p>
                     }
                   </div>
                   @if (payout.providerPayoutId) {

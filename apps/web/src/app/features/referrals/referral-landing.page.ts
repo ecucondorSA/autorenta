@@ -1,6 +1,4 @@
-
-import {Component, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { ReferralsService } from '@core/services/auth/referrals.service';
@@ -37,9 +35,7 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
         } @else if (error()) {
           <div class="card-premium p-8 text-center">
             <div class="text-5xl mb-4">❌</div>
-            <h2 class="text-2xl font-bold mb-2 text-text-primary">
-              Código inválido
-            </h2>
+            <h2 class="text-2xl font-bold mb-2 text-text-primary">Código inválido</h2>
             <p class="text-text-secondary mb-6">
               {{ error() }}
             </p>
@@ -48,12 +44,10 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
         } @else if (success()) {
           <div class="card-premium p-8 text-center">
             <div class="text-5xl mb-4">🎉</div>
-            <h2 class="text-2xl font-bold mb-2 text-text-primary">
-              ¡Código aplicado!
-            </h2>
+            <h2 class="text-2xl font-bold mb-2 text-text-primary">¡Código aplicado!</h2>
             <p class="text-text-secondary mb-6">
-              Recibiste <strong class="text-cta-default">$500 ARS</strong> de
-              bono de bienvenida. ¡Publicá tu primer auto y ganá $1,000 ARS más!
+              Recibiste <strong class="text-cta-default">$500 ARS</strong> de bono de bienvenida.
+              ¡Publicá tu primer auto y ganá $1,000 ARS más!
             </p>
             <a routerLink="/cars/publish" class="btn-primary"> Publicar mi auto </a>
           </div>
@@ -61,9 +55,7 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
           <div class="card-premium p-8">
             <div class="text-center mb-6">
               <div class="text-5xl mb-4">🎁</div>
-              <h2 class="text-2xl font-bold mb-2 text-text-primary">
-                ¡Te invitaron a Autorentar!
-              </h2>
+              <h2 class="text-2xl font-bold mb-2 text-text-primary">¡Te invitaron a Autorentar!</h2>
               <p class="text-text-secondary">
                 Usá el código
                 <strong class="text-cta-default">{{ code() }}</strong> y ganás:
@@ -77,29 +69,21 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
                 <li class="flex items-start gap-3">
                   <span class="text-2xl">💵</span>
                   <div>
-                    <div class="font-semibold text-text-primary">
-                      $500 ARS de bienvenida
-                    </div>
+                    <div class="font-semibold text-text-primary">$500 ARS de bienvenida</div>
                     <div class="text-sm text-text-secondary">Al registrarte</div>
                   </div>
                 </li>
                 <li class="flex items-start gap-3">
                   <span class="text-2xl">🚗</span>
                   <div>
-                    <div class="font-semibold text-text-primary">
-                      $1,000 ARS extras
-                    </div>
-                    <div class="text-sm text-text-secondary">
-                      Al publicar tu primer auto
-                    </div>
+                    <div class="font-semibold text-text-primary">$1,000 ARS extras</div>
+                    <div class="text-sm text-text-secondary">Al publicar tu primer auto</div>
                   </div>
                 </li>
                 <li class="flex items-start gap-3">
                   <span class="text-2xl">💰</span>
                   <div>
-                    <div class="font-semibold text-text-primary">
-                      Generá ingresos
-                    </div>
+                    <div class="font-semibold text-text-primary">Generá ingresos</div>
                     <div class="text-sm text-text-secondary">
                       Rentá tu auto y ganás hasta $200k/mes
                     </div>

@@ -64,7 +64,7 @@ export class ContractTemplateService {
 
       if (!response.ok) {
         throw new Error(
-          `Failed to load contract template: ${response.status} ${response.statusText}`
+          `Failed to load contract template: ${response.status} ${response.statusText}`,
         );
       }
 
@@ -103,11 +103,7 @@ export class ContractTemplateService {
     merged = this.replacePlaceholder(merged, 'car_plate', data.carPlate);
 
     // Insurance details
-    merged = this.replacePlaceholder(
-      merged,
-      'insurance_policy_number',
-      data.insurancePolicyNumber
-    );
+    merged = this.replacePlaceholder(merged, 'insurance_policy_number', data.insurancePolicyNumber);
     merged = this.replacePlaceholder(merged, 'insurance_company', data.insuranceCompany);
     merged = this.replacePlaceholder(merged, 'insurance_cuit', data.insuranceCuit);
     merged = this.replacePlaceholder(merged, 'insurance_validity', data.insuranceValidity);
@@ -126,14 +122,10 @@ export class ContractTemplateService {
     merged = this.replacePlaceholder(
       merged,
       'renter_accepted_at',
-      data.renterAcceptedAt || 'Pendiente de aceptación'
+      data.renterAcceptedAt || 'Pendiente de aceptación',
     );
     merged = this.replacePlaceholder(merged, 'renter_ip', data.renterIp || '-');
-    merged = this.replacePlaceholder(
-      merged,
-      'renter_user_agent',
-      data.renterUserAgent || '-'
-    );
+    merged = this.replacePlaceholder(merged, 'renter_user_agent', data.renterUserAgent || '-');
 
     return merged;
   }
@@ -173,7 +165,7 @@ export class ContractTemplateService {
     if (remainingPlaceholders && remainingPlaceholders.length > 0) {
       console.warn(
         '[ContractTemplateService] Warning: Unresolved placeholders found:',
-        remainingPlaceholders
+        remainingPlaceholders,
       );
       return false;
     }

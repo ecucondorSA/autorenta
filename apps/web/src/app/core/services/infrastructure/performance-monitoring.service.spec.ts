@@ -6,7 +6,7 @@ describe('PerformanceMonitoringService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PerformanceMonitoringService]
+      providers: [PerformanceMonitoringService],
     });
     service = TestBed.inject(PerformanceMonitoringService);
   });
@@ -18,5 +18,4 @@ describe('PerformanceMonitoringService', () => {
   it('should have getMemoryUsage method', () => {
     expect(typeof service.getMemoryUsage).toBe('function');
   });
-
 });

@@ -1,6 +1,4 @@
-import {Component, computed, input, output,
-  ChangeDetectionStrategy} from '@angular/core';
-
+import { Component, computed, input, output, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-error-state',

@@ -1,5 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {Injectable, signal, OnDestroy, inject, computed} from '@angular/core';
+import { Injectable, signal, OnDestroy, inject, computed } from '@angular/core';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
@@ -77,7 +77,8 @@ export class RealtimeConnectionService implements OnDestroy {
 
     const successRate = metrics.successCount / metrics.totalAttempts;
     const latencyPenalty = Math.min(metrics.averageLatencyMs / 5000, 0.3); // Max 30% penalty for slow connections
-    const recentErrorPenalty = metrics.lastErrorAt && (Date.now() - metrics.lastErrorAt < 60000) ? 0.2 : 0;
+    const recentErrorPenalty =
+      metrics.lastErrorAt && Date.now() - metrics.lastErrorAt < 60000 ? 0.2 : 0;
 
     const score = Math.round((successRate - latencyPenalty - recentErrorPenalty) * 100);
     return Math.max(0, Math.min(100, score));
@@ -302,7 +303,9 @@ export class RealtimeConnectionService implements OnDestroy {
     const retryCount = this.retryCounters.get(channelName) ?? 0;
 
     if (retryCount >= this.maxRetries) {
-      this.logger.debug(`❌ [Realtime] Max retries (${this.maxRetries}) reached for ${channelName}`);
+      this.logger.debug(
+        `❌ [Realtime] Max retries (${this.maxRetries}) reached for ${channelName}`,
+      );
       this.connectionStatus.set('error');
       onStatusChange?.('error');
       return;
@@ -380,7 +383,7 @@ export class RealtimeConnectionService implements OnDestroy {
    * Track a new connection attempt
    */
   private trackConnectionAttempt(): void {
-    this._metrics.update(m => ({
+    this._metrics.update((m) => ({
       ...m,
       totalAttempts: m.totalAttempts + 1,
     }));
@@ -399,7 +402,7 @@ export class RealtimeConnectionService implements OnDestroy {
 
     const avgLatency = this.latencyHistory.reduce((a, b) => a + b, 0) / this.latencyHistory.length;
 
-    this._metrics.update(m => ({
+    this._metrics.update((m) => ({
       ...m,
       successCount: m.successCount + 1,
       averageLatencyMs: Math.round(avgLatency),
@@ -407,14 +410,16 @@ export class RealtimeConnectionService implements OnDestroy {
       uptimeMs: 0, // Will be calculated separately if needed
     }));
 
-    this.logger.debug(`[Realtime] Connection success. Latency: ${latencyMs}ms, Avg: ${Math.round(avgLatency)}ms`);
+    this.logger.debug(
+      `[Realtime] Connection success. Latency: ${latencyMs}ms, Avg: ${Math.round(avgLatency)}ms`,
+    );
   }
 
   /**
    * Track failed connection
    */
   private trackConnectionFailure(): void {
-    this._metrics.update(m => ({
+    this._metrics.update((m) => ({
       ...m,
       failureCount: m.failureCount + 1,
       lastErrorAt: Date.now(),
@@ -446,12 +451,13 @@ export class RealtimeConnectionService implements OnDestroy {
    */
   getMetricsSummary(): string {
     const m = this._metrics();
-    const successRate = m.totalAttempts > 0
-      ? ((m.successCount / m.totalAttempts) * 100).toFixed(1)
-      : '100';
+    const successRate =
+      m.totalAttempts > 0 ? ((m.successCount / m.totalAttempts) * 100).toFixed(1) : '100';
 
-    return `Connections: ${m.successCount}/${m.totalAttempts} (${successRate}%), ` +
-           `Avg Latency: ${m.averageLatencyMs}ms, ` +
-           `Health: ${this.healthScore()}%`;
+    return (
+      `Connections: ${m.successCount}/${m.totalAttempts} (${successRate}%), ` +
+      `Avg Latency: ${m.averageLatencyMs}ms, ` +
+      `Health: ${this.healthScore()}%`
+    );
   }
 }

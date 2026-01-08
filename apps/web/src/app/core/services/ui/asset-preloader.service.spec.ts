@@ -6,7 +6,7 @@ describe('AssetPreloaderService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AssetPreloaderService]
+      providers: [AssetPreloaderService],
     });
     service = TestBed.inject(AssetPreloaderService);
   });
@@ -26,5 +26,4 @@ describe('AssetPreloaderService', () => {
   it('should have isMapboxLoaded method', () => {
     expect(typeof service.isMapboxLoaded).toBe('function');
   });
-
 });

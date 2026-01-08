@@ -1,12 +1,8 @@
-import {Component, OnInit, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import {
-  AccountingService,
-  RevenueRecognition,
-} from '@core/services/payments/accounting.service';
+import { AccountingService, RevenueRecognition } from '@core/services/payments/accounting.service';
 
 @Component({
   selector: 'app-revenue-recognition',

@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {Component, inject, Input, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { Payout, PayoutService } from '@core/services/payments/payout.service';
 
@@ -23,7 +22,7 @@ import { Payout, PayoutService } from '@core/services/payments/payout.service';
           <span>Cargando historial...</span>
         </div>
       }
-    
+
       <!-- Payouts List -->
       @if (!loading() && payouts().length > 0) {
         <div class="payouts-list">
@@ -36,31 +35,25 @@ import { Payout, PayoutService } from '@core/services/payments/payout.service';
                       fill-rule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                       clip-rule="evenodd"
-                      />
+                    />
                   </svg>
                 }
                 @if (payout.status === 'pending' || payout.status === 'processing') {
-                  <svg
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    >
+                  <svg fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fill-rule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
                       clip-rule="evenodd"
-                      />
+                    />
                   </svg>
                 }
                 @if (payout.status === 'failed' || payout.status === 'cancelled') {
-                  <svg
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    >
+                  <svg fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fill-rule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                       clip-rule="evenodd"
-                      />
+                    />
                   </svg>
                 }
               </div>
@@ -90,7 +83,7 @@ import { Payout, PayoutService } from '@core/services/payments/payout.service';
                         fill-rule="evenodd"
                         d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
                         clip-rule="evenodd"
-                        />
+                      />
                     </svg>
                     <span>{{ payout.failureReason }}</span>
                   </div>
@@ -106,16 +99,20 @@ import { Payout, PayoutService } from '@core/services/payments/payout.service';
           }
         </div>
       }
-    
+
       <!-- Empty State -->
       @if (!loading() && payouts().length === 0) {
         <div class="empty-state">
-          <img src="/assets/images/empty-states/empty-wallet.svg" alt="No hay retiros" class="w-48 h-48 mx-auto mb-4">
+          <img
+            src="/assets/images/empty-states/empty-wallet.svg"
+            alt="No hay retiros"
+            class="w-48 h-48 mx-auto mb-4"
+          />
           <p class="empty-text">No tenés retiros registrados</p>
           <p class="empty-hint">Tus retiros aparecerán aquí una vez que los solicites</p>
         </div>
       }
-    
+
       <!-- Error Message -->
       @if (error()) {
         <div class="alert alert-error">
@@ -123,7 +120,7 @@ import { Payout, PayoutService } from '@core/services/payments/payout.service';
         </div>
       }
     </div>
-    `,
+  `,
   styles: [
     `
       .payout-history {

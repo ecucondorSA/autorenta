@@ -1,6 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
-
 type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'list' | 'conversation' | 'table';
 
 /**
@@ -30,7 +29,7 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'list' | 'conversation
           </div>
         </div>
       }
-    
+
       <!-- Text Skeleton -->
       @if (type === 'text') {
         <div class="skeleton-text-wrapper">
@@ -39,21 +38,17 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'list' | 'conversation
           }
         </div>
       }
-    
+
       <!-- Circle Skeleton (para avatares) -->
       @if (type === 'circle') {
         <div class="skeleton-circle"></div>
       }
-    
+
       <!-- Rectangle Skeleton -->
       @if (type === 'rect') {
-        <div
-          class="skeleton-rect"
-          [style.width.px]="width"
-          [style.height.px]="height"
-        ></div>
+        <div class="skeleton-rect" [style.width.px]="width" [style.height.px]="height"></div>
       }
-    
+
       <!-- List Skeleton (para listas de items) -->
       @if (type === 'list') {
         <div class="skeleton-list">
@@ -68,7 +63,7 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'list' | 'conversation
           }
         </div>
       }
-    
+
       <!-- Conversation Skeleton (para lista de conversaciones) -->
       @if (type === 'conversation') {
         <div class="skeleton-conversation">
@@ -84,7 +79,7 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'list' | 'conversation
           }
         </div>
       }
-    
+
       <!-- Table Skeleton (para tablas) -->
       @if (type === 'table') {
         <div class="skeleton-table">
@@ -99,7 +94,7 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'list' | 'conversation
         </div>
       }
     </div>
-    `,
+  `,
   styles: [
     `
       .skeleton-wrapper {

@@ -1,17 +1,11 @@
-<div
-  class="owner-bookings-page bg-surface-base min-h-screen transition-colors duration-300"
-  >
+<div class="owner-bookings-page bg-surface-base min-h-screen transition-colors duration-300">
   <!-- Header -->
-  <div
-    class="bg-surface-raised border-b border-border-default transition-colors duration-300"
-    >
+  <div class="bg-surface-raised border-b border-border-default transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <h1 class="text-3xl font-bold text-text-primary tracking-tight font-satoshi">
         Reservas de Mis Autos
       </h1>
-      <p class="mt-2 text-text-secondary">
-        Gestiona las reservas de tus vehículos
-      </p>
+      <p class="mt-2 text-text-secondary">Gestiona las reservas de tus vehículos</p>
     </div>
   </div>
 
@@ -24,11 +18,11 @@
             <span class="text-2xl animate-bounce">⚡</span>
             <div>
               <p class="font-bold text-lg">
-                ¡{{ pendingApprovalCount() }} {{ pendingApprovalCount() === 1 ? 'reserva requiere' : 'reservas requieren' }} tu aprobación!
+                ¡{{ pendingApprovalCount() }}
+                {{ pendingApprovalCount() === 1 ? 'reserva requiere' : 'reservas requieren' }} tu
+                aprobación!
               </p>
-              <p class="text-sm text-orange-100">
-                Los conductores están esperando tu confirmación
-              </p>
+              <p class="text-sm text-orange-100">Los conductores están esperando tu confirmación</p>
             </div>
           </div>
           <button
@@ -53,7 +47,8 @@
             <span class="text-2xl">🔍</span>
             <div>
               <p class="font-bold text-lg">
-                {{ pendingReviewCount() }} {{ pendingReviewCount() === 1 ? 'reserva en revisión' : 'reservas en revisión' }}
+                {{ pendingReviewCount() }}
+                {{ pendingReviewCount() === 1 ? 'reserva en revisión' : 'reservas en revisión' }}
               </p>
               <p class="text-sm text-blue-100">
                 Confirmá la devolución del vehículo para liberar los fondos
@@ -77,11 +72,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     @if (loading()) {
       <div class="flex flex-col items-center justify-center py-16">
-        <svg
-          class="animate-spin h-12 w-12 text-primary-600"
-          fill="none"
-          viewBox="0 0 24 24"
-          >
+        <svg class="animate-spin h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24">
           <circle
             class="opacity-25"
             cx="12"
@@ -96,17 +87,13 @@
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           ></path>
         </svg>
-        <p class="mt-4 text-sm text-text-secondary">
-          Cargando reservas...
-        </p>
+        <p class="mt-4 text-sm text-text-secondary">Cargando reservas...</p>
       </div>
     }
 
     <!-- Error State -->
     @if (error(); as errorMsg) {
-      <div
-        class="bg-error-bg border border-error-border rounded-lg p-4"
-        >
+      <div class="bg-error-bg border border-error-border rounded-lg p-4">
         <p class="text-sm text-error-strong">{{ errorMsg }}</p>
         <button (click)="loadBookings()" class="mt-2 text-sm font-medium text-error-text underline">
           Intentar de nuevo
@@ -119,7 +106,7 @@
         @if (!mpStatus.isApproved) {
           <div
             class="mb-8 rounded-lg border border-warning-300 bg-warning-bg px-4 py-4 text-sm text-warning-strong"
-            >
+          >
             <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div class="flex items-start gap-3">
                 <span class="mt-0.5 text-lg">⚠️</span>
@@ -135,7 +122,7 @@
                 [routerLink]="['/profile']"
                 [queryParams]="{ section: 'payments' }"
                 class="inline-flex items-center gap-2 rounded-lg border border-warning-400 bg-surface-raised px-3 py-2 text-sm font-medium text-warning-strong transition hover:bg-warning-bg-hover"
-                >
+              >
                 Vincular ahora →
               </a>
             </div>
@@ -157,12 +144,8 @@
         @if (leadsLoading()) {
           <div
             class="flex items-center gap-3 rounded-lg border border-border-default bg-surface-raised px-4 py-3 text-sm text-text-secondary"
-            >
-            <svg
-              class="h-5 w-5 animate-spin text-primary-600"
-              viewBox="0 0 24 24"
-              fill="none"
-              >
+          >
+            <svg class="h-5 w-5 animate-spin text-primary-600" viewBox="0 0 24 24" fill="none">
               <circle
                 class="opacity-25"
                 cx="12"
@@ -182,10 +165,8 @@
         } @else if (carLeads().length === 0) {
           <div
             class="rounded-lg border border-dashed border-border-default bg-surface-raised px-4 py-6 text-center"
-            >
-            <p class="text-sm text-text-secondary">
-              Aún no hay consultas pendientes sin reserva.
-            </p>
+          >
+            <p class="text-sm text-text-secondary">Aún no hay consultas pendientes sin reserva.</p>
           </div>
         } @else {
           <div class="owner-leads-grid">
@@ -213,16 +194,12 @@
                   {{ lead.lastMessage.created_at | date: 'dd/MM/yyyy HH:mm' }}
                 </p>
 
-                <button
-                  (click)="openCarChat(lead)"
-                  class="lead-card__cta"
-                  type="button"
-                  >
+                <button (click)="openCarChat(lead)" class="lead-card__cta" type="button">
                   Abrir chat
                   <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       d="M12.293 4.293a1 1 0 011.414 0l4 4a.997.997 0 01.083 1.32l-.083.094-4 4a1 1 0 01-1.497-1.32l.083-.094L14.585 10H4a1 1 0 01-.117-1.993L4 8h10.585l-2.292-2.293a1 1 0 01-.083-1.32l.083-.094z"
-                      />
+                    />
                   </svg>
                 </button>
               </div>
@@ -239,17 +216,15 @@
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-              />
+            />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-text-primary font-satoshi">
-            No tenés reservas
-          </h3>
+          <h3 class="mt-2 text-sm font-medium text-text-primary font-satoshi">No tenés reservas</h3>
           <p class="mt-1 text-sm text-text-secondary">
             Cuando alguien alquile tus autos, aparecerán acá.
           </p>
@@ -279,14 +254,18 @@
                   {{ statusLabel(booking) }}
                 </span>
                 @if (booking.deposit_status) {
-                  <app-deposit-status-badge [status]="booking.deposit_status"></app-deposit-status-badge>
+                  <app-deposit-status-badge
+                    [status]="booking.deposit_status"
+                  ></app-deposit-status-badge>
                 }
               </div>
 
               <div class="owner-booking-card__meta">
                 <div class="owner-booking-card__meta-item">
                   <span class="owner-booking-card__meta-label">Locatario</span>
-                  <span class="owner-booking-card__meta-value">{{ renterDisplayName(booking) }}</span>
+                  <span class="owner-booking-card__meta-value">{{
+                    renterDisplayName(booking)
+                  }}</span>
                 </div>
                 <div class="owner-booking-card__meta-item">
                   <span class="owner-booking-card__meta-label">Fechas</span>
@@ -317,7 +296,7 @@
                   <a
                     [routerLink]="['/bookings', booking.id, 'owner-check-in']"
                     class="owner-booking-btn bg-success-light text-text-primary"
-                    >
+                  >
                     📝 Entregar
                   </a>
                 }
@@ -326,7 +305,7 @@
                   <a
                     [routerLink]="['/bookings', booking.id, 'owner-check-out']"
                     class="owner-booking-btn bg-cta-default text-cta-text"
-                    >
+                  >
                     🏁 Recibir
                   </a>
                 }
@@ -335,7 +314,7 @@
                   <a
                     [routerLink]="['/bookings', 'owner', booking.id]"
                     class="owner-booking-btn bg-blue-600 text-text-inverse"
-                    >
+                  >
                     🔍 Confirmar Devolución
                   </a>
                 }
@@ -345,7 +324,7 @@
                     (click)="onCompleteRental(booking.id)"
                     [disabled]="processingAction() === booking.id"
                     class="owner-booking-btn bg-blue-600 text-text-inverse disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
+                  >
                     {{ processingAction() === booking.id ? '...' : '✅ Devolucion' }}
                   </button>
                 }
@@ -355,7 +334,7 @@
                     (click)="onCancelBooking(booking.id)"
                     [disabled]="processingAction() === booking.id"
                     class="owner-booking-btn bg-error-600 text-text-inverse disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
+                  >
                     {{ processingAction() === booking.id ? '...' : '❌ Cancelar' }}
                   </button>
                 }
@@ -363,7 +342,7 @@
                 <a
                   [routerLink]="['/bookings', 'owner', booking.id]"
                   class="owner-booking-btn owner-booking-btn--ghost"
-                  >
+                >
                   Ver detalle →
                 </a>
 
@@ -371,7 +350,7 @@
                   <a
                     [routerLink]="['/bookings', booking.id, 'disputes']"
                     class="owner-booking-btn owner-booking-btn--soft"
-                    >
+                  >
                     ⚠️ Disputa
                   </a>
                 }

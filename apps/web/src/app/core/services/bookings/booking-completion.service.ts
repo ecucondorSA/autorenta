@@ -236,8 +236,8 @@ export class BookingCompletionService {
     await onUpdateBooking(booking.id, {
       status: 'pending_dispute_resolution', // Nuevo estado
       dispute_open_at: new Date().toISOString(),
-      damage_amount_cents: inspectionData.damageAmountCents,  // BD: damage_amount_cents
-      damage_description: inspectionData.damageDescription,   // BD: damage_description
+      damage_amount_cents: inspectionData.damageAmountCents, // BD: damage_amount_cents
+      damage_description: inspectionData.damageDescription, // BD: damage_description
       // Almacenar otros cargos en metadata si no hay columnas dedicadas
       metadata: {
         ...(booking.metadata || {}),

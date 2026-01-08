@@ -1,6 +1,18 @@
-
-import {Component, OnDestroy, OnInit, effect, inject, input, output, signal,
-  ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, viewChild, AfterViewChecked} from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  ElementRef,
+  viewChild,
+  AfterViewChecked,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -36,7 +48,9 @@ export interface ChatContext {
       class="chat-container flex h-[550px] flex-col overflow-hidden rounded-2xl border border-border-default bg-surface-raised shadow-sm"
     >
       <!-- Professional Header -->
-      <div class="flex items-center gap-3 border-b border-border-default bg-surface-raised px-4 py-3">
+      <div
+        class="flex items-center gap-3 border-b border-border-default bg-surface-raised px-4 py-3"
+      >
         <!-- Avatar with Initials -->
         <div class="relative flex-shrink-0">
           <div
@@ -46,15 +60,21 @@ export interface ChatContext {
           </div>
           <!-- Online indicator - real presence -->
           @if (recipientOnline()) {
-            <div class="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-surface-raised bg-emerald-500"></div>
+            <div
+              class="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-surface-raised bg-emerald-500"
+            ></div>
           } @else {
-            <div class="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-surface-raised bg-gray-400"></div>
+            <div
+              class="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-surface-raised bg-gray-400"
+            ></div>
           }
         </div>
 
         <!-- Contact Info -->
         <div class="flex-1 min-w-0">
-          <h3 class="text-base font-semibold text-text-primary truncate">{{ context().recipientName }}</h3>
+          <h3 class="text-base font-semibold text-text-primary truncate">
+            {{ context().recipientName }}
+          </h3>
           <div class="flex items-center gap-1.5">
             @if (recipientOnline()) {
               <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
@@ -77,8 +97,12 @@ export interface ChatContext {
             [title]="blocked() ? 'Desbloquear' : 'Bloquear'"
           >
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+              />
             </svg>
           </button>
           <!-- Menu button -->
@@ -88,7 +112,9 @@ export interface ChatContext {
             (click)="onMenuClick()"
           >
             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+              <path
+                d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+              />
             </svg>
           </button>
         </div>
@@ -96,13 +122,18 @@ export interface ChatContext {
 
       <!-- Blocked user banner -->
       @if (blocked()) {
-        <div class="bg-error-bg/50 border-b border-error-border px-4 py-2.5 text-sm text-center text-error-strong">
+        <div
+          class="bg-error-bg/50 border-b border-error-border px-4 py-2.5 text-sm text-center text-error-strong"
+        >
           <span class="font-medium">Usuario bloqueado</span> · Desbloquéalo para volver a chatear
         </div>
       }
       @if (blockedBy() && !blocked()) {
-        <div class="bg-warning-bg/50 border-b border-warning-border px-4 py-2.5 text-sm text-center text-warning-strong">
-          <span class="font-medium">Este usuario te ha bloqueado</span> · No puedes enviarle mensajes
+        <div
+          class="bg-warning-bg/50 border-b border-warning-border px-4 py-2.5 text-sm text-center text-warning-strong"
+        >
+          <span class="font-medium">Este usuario te ha bloqueado</span> · No puedes enviarle
+          mensajes
         </div>
       }
 
@@ -112,7 +143,9 @@ export interface ChatContext {
         @if (loading()) {
           <div class="flex h-full items-center justify-center">
             <div class="text-center">
-              <div class="mb-3 inline-block h-10 w-10 animate-spin rounded-full border-4 border-border-muted border-t-indigo-500"></div>
+              <div
+                class="mb-3 inline-block h-10 w-10 animate-spin rounded-full border-4 border-border-muted border-t-indigo-500"
+              ></div>
               <p class="text-sm text-text-secondary">Cargando mensajes...</p>
             </div>
           </div>
@@ -120,9 +153,21 @@ export interface ChatContext {
 
         <!-- Error state -->
         @if (error()) {
-          <div class="mx-4 mt-4 flex items-center gap-2 rounded-xl bg-error-bg/50 border border-error-border/50 p-4 text-sm text-error-strong">
-            <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          <div
+            class="mx-4 mt-4 flex items-center gap-2 rounded-xl bg-error-bg/50 border border-error-border/50 p-4 text-sm text-error-strong"
+          >
+            <svg
+              class="h-5 w-5 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
             </svg>
             <span>{{ error() }}</span>
           </div>
@@ -132,12 +177,23 @@ export interface ChatContext {
         @if (!loading() && messages().length === 0) {
           <div class="flex h-full flex-col items-center justify-center px-6 text-center">
             <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-indigo-50">
-              <svg class="h-10 w-10 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              <svg
+                class="h-10 w-10 text-indigo-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
               </svg>
             </div>
-            <h4 class="mb-1 text-base font-semibold text-text-primary">{{ getEmptyStateTitle() }}</h4>
+            <h4 class="mb-1 text-base font-semibold text-text-primary">
+              {{ getEmptyStateTitle() }}
+            </h4>
             <p class="text-sm text-text-secondary max-w-xs">{{ getEmptyStateSubtitle() }}</p>
           </div>
         }
@@ -147,7 +203,9 @@ export interface ChatContext {
           <div class="px-4 py-4 space-y-3 mt-auto">
             <!-- Date separator (first message) -->
             <div class="flex items-center justify-center mb-2">
-              <span class="px-3 py-1 text-xs text-text-secondary bg-surface-raised rounded-full border border-border-default shadow-sm">
+              <span
+                class="px-3 py-1 text-xs text-text-secondary bg-surface-raised rounded-full border border-border-default shadow-sm"
+              >
                 {{ getConversationDateLabel() }}
               </span>
             </div>
@@ -158,14 +216,24 @@ export interface ChatContext {
                 @if (!isOwnMessage(message)) {
                   <div class="flex items-end gap-2 max-w-[80%]">
                     <!-- Small avatar -->
-                    <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-xs font-bold mb-1">
+                    <div
+                      class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-xs font-bold mb-1"
+                    >
                       {{ getInitials() }}
                     </div>
                     <div class="relative">
-                      <div class="rounded-2xl rounded-bl-md bg-white border border-border-default px-4 py-2.5 shadow-sm">
-                        <p class="text-sm text-text-primary leading-relaxed whitespace-pre-wrap break-words">{{ message.body }}</p>
+                      <div
+                        class="rounded-2xl rounded-bl-md bg-white border border-border-default px-4 py-2.5 shadow-sm"
+                      >
+                        <p
+                          class="text-sm text-text-primary leading-relaxed whitespace-pre-wrap break-words"
+                        >
+                          {{ message.body }}
+                        </p>
                         <div class="mt-1 flex items-center justify-end">
-                          <span class="text-xs text-text-muted">{{ formatTime(message.created_at) }}</span>
+                          <span class="text-xs text-text-muted">{{
+                            formatTime(message.created_at)
+                          }}</span>
                         </div>
                       </div>
                     </div>
@@ -176,36 +244,74 @@ export interface ChatContext {
                 @if (isOwnMessage(message)) {
                   <div class="max-w-[80%]">
                     <div class="relative">
-                      <div class="rounded-2xl rounded-br-md bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-2.5 shadow-sm">
-                        <p class="text-sm text-white leading-relaxed whitespace-pre-wrap break-words">{{ message.body }}</p>
+                      <div
+                        class="rounded-2xl rounded-br-md bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-2.5 shadow-sm"
+                      >
+                        <p
+                          class="text-sm text-white leading-relaxed whitespace-pre-wrap break-words"
+                        >
+                          {{ message.body }}
+                        </p>
                         <div class="mt-1 flex items-center justify-end gap-1">
-                          <span class="text-xs text-white/70">{{ formatTime(message.created_at) }}</span>
+                          <span class="text-xs text-white/70">{{
+                            formatTime(message.created_at)
+                          }}</span>
                           <!-- Status indicators -->
                           @if (getMessageStatus(message) === 'pending') {
                             <!-- Clock icon - pending/queued -->
-                            <svg class="h-3.5 w-3.5 text-white/50 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <svg
+                              class="h-3.5 w-3.5 text-white/50 animate-pulse"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
                             </svg>
                           }
                           @if (getMessageStatus(message) === 'sent') {
-                            <svg class="h-3.5 w-3.5 text-white/70" fill="currentColor" viewBox="0 0 16 15">
-                              <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512z" />
+                            <svg
+                              class="h-3.5 w-3.5 text-white/70"
+                              fill="currentColor"
+                              viewBox="0 0 16 15"
+                            >
+                              <path
+                                d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512z"
+                              />
                             </svg>
                           }
                           @if (getMessageStatus(message) === 'delivered') {
-                            <svg class="h-3.5 w-3.5 text-white/70" fill="currentColor" viewBox="0 0 16 15">
-                              <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z" />
+                            <svg
+                              class="h-3.5 w-3.5 text-white/70"
+                              fill="currentColor"
+                              viewBox="0 0 16 15"
+                            >
+                              <path
+                                d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
+                              />
                             </svg>
                           }
                           @if (getMessageStatus(message) === 'read') {
-                            <svg class="h-3.5 w-3.5 text-cyan-300" fill="currentColor" viewBox="0 0 16 15">
-                              <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z" />
+                            <svg
+                              class="h-3.5 w-3.5 text-cyan-300"
+                              fill="currentColor"
+                              viewBox="0 0 16 15"
+                            >
+                              <path
+                                d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
+                              />
                             </svg>
                           }
                         </div>
                       </div>
                       <!-- "Tú" label -->
-                      <span class="absolute -bottom-4 right-2 text-xs text-text-muted font-medium">Tú</span>
+                      <span class="absolute -bottom-4 right-2 text-xs text-text-muted font-medium"
+                        >Tú</span
+                      >
                     </div>
                   </div>
                 }
@@ -216,14 +322,27 @@ export interface ChatContext {
             @if (recipientTyping()) {
               <div class="flex justify-start">
                 <div class="flex items-end gap-2">
-                  <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-xs font-bold">
+                  <div
+                    class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-xs font-bold"
+                  >
                     {{ getInitials() }}
                   </div>
-                  <div class="rounded-2xl rounded-bl-md bg-white border border-border-default px-4 py-3 shadow-sm">
+                  <div
+                    class="rounded-2xl rounded-bl-md bg-white border border-border-default px-4 py-3 shadow-sm"
+                  >
                     <div class="flex items-center gap-1">
-                      <div class="h-2 w-2 animate-bounce rounded-full bg-indigo-400" style="animation-delay: 0ms"></div>
-                      <div class="h-2 w-2 animate-bounce rounded-full bg-indigo-400" style="animation-delay: 150ms"></div>
-                      <div class="h-2 w-2 animate-bounce rounded-full bg-indigo-400" style="animation-delay: 300ms"></div>
+                      <div
+                        class="h-2 w-2 animate-bounce rounded-full bg-indigo-400"
+                        style="animation-delay: 0ms"
+                      ></div>
+                      <div
+                        class="h-2 w-2 animate-bounce rounded-full bg-indigo-400"
+                        style="animation-delay: 150ms"
+                      ></div>
+                      <div
+                        class="h-2 w-2 animate-bounce rounded-full bg-indigo-400"
+                        style="animation-delay: 300ms"
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -248,8 +367,19 @@ export interface ChatContext {
           @if (loadingSuggestions()) {
             <div class="flex items-center gap-2 text-indigo-600">
               <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                />
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
               </svg>
               <span class="text-xs font-medium">Generando sugerencias...</span>
             </div>
@@ -289,8 +419,12 @@ export interface ChatContext {
               title="Sugerencias IA"
             >
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                />
               </svg>
             </button>
           }
@@ -303,7 +437,13 @@ export interface ChatContext {
               (ngModelChange)="onMessageDraftChange($event)"
               name="message"
               [disabled]="sending() || blocked() || blockedBy()"
-              [placeholder]="blocked() ? 'Usuario bloqueado' : blockedBy() ? 'Te han bloqueado' : 'Escribe un mensaje...'"
+              [placeholder]="
+                blocked()
+                  ? 'Usuario bloqueado'
+                  : blockedBy()
+                    ? 'Te han bloqueado'
+                    : 'Escribe un mensaje...'
+              "
               class="w-full rounded-full bg-surface-base border border-border-default px-4 py-2.5 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
             />
           </div>
@@ -321,8 +461,19 @@ export interface ChatContext {
             }
             @if (sending()) {
               <svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
             }
           </button>
@@ -360,8 +511,8 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   readonly sending = signal(false);
   readonly error = signal<string | null>(null);
   readonly newMessage = signal('');
-  readonly blocked = signal(false);       // I blocked them
-  readonly blockedBy = signal(false);     // They blocked me
+  readonly blocked = signal(false); // I blocked them
+  readonly blockedBy = signal(false); // They blocked me
   readonly notification = signal<string | null>(null);
   readonly recipientTyping = signal(false);
   readonly recipientOnline = signal(false); // Real presence status
@@ -452,18 +603,24 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (!target) return;
 
     const wasBlocked = this.blocked();
-    
+
     // Optimistic update
     this.blocked.set(!wasBlocked);
 
     try {
       if (wasBlocked) {
         await this.messagesService.unblockUser(target);
-        this.toastService.info('Usuario desbloqueado', `${ctx.recipientName} puede volver a escribirte.`);
+        this.toastService.info(
+          'Usuario desbloqueado',
+          `${ctx.recipientName} puede volver a escribirte.`,
+        );
       } else {
         await this.messagesService.blockUser(target);
         this.recipientTyping.set(false);
-        this.toastService.success('Usuario bloqueado', `No recibirás mensajes de ${ctx.recipientName}.`);
+        this.toastService.success(
+          'Usuario bloqueado',
+          `No recibirás mensajes de ${ctx.recipientName}.`,
+        );
       }
     } catch {
       // Revertir optimistic update en caso de error
@@ -625,15 +782,12 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (this.blocked()) {
       this.toastService.warning(
         'Usuario bloqueado',
-        'Debes desbloquear a este usuario para enviar mensajes.'
+        'Debes desbloquear a este usuario para enviar mensajes.',
       );
       return;
     }
     if (this.blockedBy()) {
-      this.toastService.error(
-        'No puedes enviar mensajes',
-        'Este usuario te ha bloqueado.'
-      );
+      this.toastService.error('No puedes enviar mensajes', 'Este usuario te ha bloqueado.');
       return;
     }
 
@@ -683,9 +837,10 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
       const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
 
       // Check if it's a validation error (blocked, rate limit) vs network error
-      const isValidationError = errorMessage.includes('bloqueado') ||
-                                errorMessage.includes('bloqueó') ||
-                                errorMessage.includes('límite');
+      const isValidationError =
+        errorMessage.includes('bloqueado') ||
+        errorMessage.includes('bloqueó') ||
+        errorMessage.includes('límite');
 
       if (isValidationError) {
         // Validation error: remove optimistic message and restore draft
@@ -697,14 +852,11 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         // Network error: message was queued for retry, mark as pending
         // Keep optimistic message but mark it visually as pending
         this.messages.update((prev) =>
-          prev.map((m) => m.id === optimisticId
-            ? { ...m, id: `pending-${optimisticId}` }
-            : m
-          )
+          prev.map((m) => (m.id === optimisticId ? { ...m, id: `pending-${optimisticId}` } : m)),
         );
         this.toastService.info(
           'Mensaje pendiente',
-          'Se enviará automáticamente cuando vuelva la conexión.'
+          'Se enviará automáticamente cuando vuelva la conexión.',
         );
         // Don't set error - message is queued and will be retried
       }
@@ -856,7 +1008,11 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     const firstMsgDate = new Date(msgs[0].created_at);
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const msgDay = new Date(firstMsgDate.getFullYear(), firstMsgDate.getMonth(), firstMsgDate.getDate());
+    const msgDay = new Date(
+      firstMsgDate.getFullYear(),
+      firstMsgDate.getMonth(),
+      firstMsgDate.getDate(),
+    );
 
     const diffDays = Math.floor((today.getTime() - msgDay.getTime()) / (1000 * 60 * 60 * 24));
 
@@ -867,7 +1023,11 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     } else if (diffDays < 7) {
       return firstMsgDate.toLocaleDateString('es-AR', { weekday: 'long' });
     } else {
-      return firstMsgDate.toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
+      return firstMsgDate.toLocaleDateString('es-AR', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
     }
   }
 
@@ -908,10 +1068,12 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     try {
       // Convertir mensajes al formato esperado
-      const history = this.messages().slice(-10).map(m => ({
-        role: m.sender_id === this.currentUserId() ? 'user' as const : 'recipient' as const,
-        text: m.body,
-      }));
+      const history = this.messages()
+        .slice(-10)
+        .map((m) => ({
+          role: m.sender_id === this.currentUserId() ? ('user' as const) : ('recipient' as const),
+          text: m.body,
+        }));
 
       const suggestions = await this.geminiService.generateChatSuggestions({
         conversationHistory: history,

@@ -6,7 +6,7 @@ describe('PwaService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PwaService]
+      providers: [PwaService],
     });
     service = TestBed.inject(PwaService);
   });
@@ -54,5 +54,4 @@ describe('PwaService', () => {
   it('should have writeToClipboard method', () => {
     expect(typeof service.writeToClipboard).toBe('function');
   });
-
 });

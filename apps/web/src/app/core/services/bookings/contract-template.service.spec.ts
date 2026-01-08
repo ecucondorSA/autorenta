@@ -6,7 +6,7 @@ describe('ContractTemplateService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ContractTemplateService]
+      providers: [ContractTemplateService],
     });
     service = TestBed.inject(ContractTemplateService);
   });
@@ -30,5 +30,4 @@ describe('ContractTemplateService', () => {
   it('should have extractPlaceholders method', () => {
     expect(typeof service.extractPlaceholders).toBe('function');
   });
-
 });

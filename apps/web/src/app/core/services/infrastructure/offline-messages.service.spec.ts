@@ -6,7 +6,7 @@ describe('OfflineMessagesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [OfflineMessagesService]
+      providers: [OfflineMessagesService],
     });
     service = TestBed.inject(OfflineMessagesService);
   });
@@ -54,5 +54,4 @@ describe('OfflineMessagesService', () => {
   it('should have shouldRetry method', () => {
     expect(typeof service.shouldRetry).toBe('function');
   });
-
 });
