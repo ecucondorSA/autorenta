@@ -1,3 +1,10 @@
+## [1.11.4](https://github.com/ecucondorSA/autorenta/compare/v1.11.3...v1.11.4) (2026-01-08)
+
+
+### Bug Fixes
+
+* **migrations:** add conditional check for payment_intents.type column ([ba7b2cf](https://github.com/ecucondorSA/autorenta/commit/ba7b2cf258603698ef706c3a026d593729b75f50))
+
 ## [1.11.3](https://github.com/ecucondorSA/autorenta/compare/v1.11.2...v1.11.3) (2026-01-08)
 
 
