@@ -1,3 +1,10 @@
+## [1.11.5](https://github.com/ecucondorSA/autorenta/compare/v1.11.4...v1.11.5) (2026-01-08)
+
+
+### Bug Fixes
+
+* **build:** import PaymentBusinessError and fix Record type access ([08914e2](https://github.com/ecucondorSA/autorenta/commit/08914e2c37bb6a52e23a4899791f459631533dbf))
+
 ## [1.11.4](https://github.com/ecucondorSA/autorenta/compare/v1.11.3...v1.11.4) (2026-01-08)
 
 
