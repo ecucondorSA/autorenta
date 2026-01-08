@@ -59,7 +59,7 @@ END;
 $$;
 
 -- 2. Update get_active_subscription to be robust
-DROP FUNCTION IF EXISTS public.get_active_subscription();
+DROP FUNCTION IF EXISTS public.get_active_subscription() CASCADE;
 
 CREATE OR REPLACE FUNCTION public.get_active_subscription()
 RETURNS JSONB
@@ -70,7 +70,7 @@ AS $$
 DECLARE
     v_sub RECORD;
 BEGIN
-    SELECT 
+    SELECT
         s.*,
         (s.remaining_balance_cents::float / 100.0) as remaining_balance_usd,
         (s.coverage_limit_cents::float / 100.0) as coverage_limit_usd,
