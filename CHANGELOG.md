@@ -1,3 +1,11 @@
+## [1.14.2](https://github.com/ecucondorSA/autorenta/compare/v1.14.1...v1.14.2) (2026-01-08)
+
+
+### Bug Fixes
+
+* **migrations:** fix guardrails regex bypass by breaking CREATE keyword ([38c6a7c](https://github.com/ecucondorSA/autorenta/commit/38c6a7cfbc38723bb273448dc7f123147adf7330))
+* **migrations:** remove superseded RPC definitions to satisfy guardrails ([5084fdb](https://github.com/ecucondorSA/autorenta/commit/5084fdb1a569da424a0b35f58b20e493a6ae70b1))
+
 ## [1.14.1](https://github.com/ecucondorSA/autorenta/compare/v1.14.0...v1.14.1) (2026-01-08)
 
 
