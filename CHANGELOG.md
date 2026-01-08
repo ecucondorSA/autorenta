@@ -1,3 +1,10 @@
+## [1.11.2](https://github.com/ecucondorSA/autorenta/compare/v1.11.1...v1.11.2) (2026-01-08)
+
+
+### Bug Fixes
+
+* **ci:** resolve guardrails warnings and remaining lint issues ([e6b6452](https://github.com/ecucondorSA/autorenta/commit/e6b6452f796832bf07886503c2c53355049c308e))
+
 ## [1.11.1](https://github.com/ecucondorSA/autorenta/compare/v1.11.0...v1.11.1) (2026-01-08)
 
 
