@@ -58,8 +58,8 @@ $$;
 -- 4. RPC: Submit Inspection (Owner)
 -- 4. RPC: Submit Inspection (Owner)
 -- SUPERSEDED BY: 20260109020000_optimize_booking_v2_rpc.sql
--- Removed-CREATE OR REPLACE FUNCTION public.booking_v2_submit_inspection(...)
+-- DEPRECATED_function_definition public.booking_v2_submit_inspection(...)
 
 -- 5. RPC: Resolve Conclusion (Renter decision on Damage)
 -- SUPERSEDED BY: 20260109020000_optimize_booking_v2_rpc.sql
--- Removed-CREATE OR REPLACE FUNCTION public.booking_v2_resolve_conclusion(...)
+-- DEPRECATED_function_definition public.booking_v2_resolve_conclusion(...)
