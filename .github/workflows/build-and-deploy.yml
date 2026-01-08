@@ -57,6 +57,12 @@ jobs:
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
+      - name: Inject Service Role Key into Migration
+        run: |
+          sed -i "s/SERVICE_ROLE_KEY/${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}/g" supabase/migrations/20260108040000_schedule_cron_jobs.sql
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
       - name: Apply Migrations
         run: supabase db push
         env:
@@ -65,7 +71,10 @@ jobs:
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
 
       - name: Deploy Supabase Edge Functions
-        run: supabase functions deploy create-subscription-wallet
+        run: |
+          supabase functions deploy create-subscription-wallet
+          supabase functions deploy process-payment-queue
+          supabase functions deploy release-expired-deposits
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
