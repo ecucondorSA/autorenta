@@ -637,7 +637,7 @@ export class PublishCarV2Page implements OnInit {
   }
 
   // ✅ NEW: Swipe to Delete Logic
-  handlePhotoTouchStart(event: TouchEvent, index: number): void {
+  handlePhotoTouchStart(event: TouchEvent, _index: number): void {
     this.touchStartX = event.touches[0].clientX;
   }
 
