@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/ecucondorSA/autorenta/compare/v1.10.0...v1.11.0) (2026-01-08)
+
+
+### Features
+
+* **payments:** implement critical money capture logic and automation ([8ac7172](https://github.com/ecucondorSA/autorenta/commit/8ac717248ce4702821c55b0b3ab889125bf1a7c5))
+
 # [1.10.0](https://github.com/ecucondorSA/autorenta/compare/v1.9.8...v1.10.0) (2026-01-08)
 
 
