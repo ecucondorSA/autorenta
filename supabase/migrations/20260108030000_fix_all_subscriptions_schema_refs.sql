@@ -2,6 +2,8 @@
 -- This prevents 500 errors caused by search_path issues in complex RPC calls.
 
 -- 1. Update create_subscription to be robust
+DROP FUNCTION IF EXISTS public.create_subscription(UUID, subscription_tier, TEXT, TEXT, JSONB);
+
 CREATE OR REPLACE FUNCTION public.create_subscription(
     p_user_id UUID,
     p_tier subscription_tier,
@@ -57,6 +59,8 @@ END;
 $$;
 
 -- 2. Update get_active_subscription to be robust
+DROP FUNCTION IF EXISTS public.get_active_subscription();
+
 CREATE OR REPLACE FUNCTION public.get_active_subscription()
 RETURNS JSONB
 LANGUAGE plpgsql
