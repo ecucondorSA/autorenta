@@ -1,3 +1,10 @@
+## [1.15.5](https://github.com/ecucondorSA/autorenta/compare/v1.15.4...v1.15.5) (2026-01-08)
+
+
+### Bug Fixes
+
+* **ci:** final attempt at robust baseline rehydration and chronological sync ([ef73e4d](https://github.com/ecucondorSA/autorenta/commit/ef73e4de671c8ef8b47497b8e16a55b6367c0ea3))
+
 ## [1.15.4](https://github.com/ecucondorSA/autorenta/compare/v1.15.3...v1.15.4) (2026-01-08)
 
 
