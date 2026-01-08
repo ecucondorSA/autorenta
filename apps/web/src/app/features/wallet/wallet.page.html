@@ -1,6 +1,4 @@
-<div
-  class="wallet-page min-h-screen bg-surface-base py-4 sm:py-6 md:py-section-sm"
->
+<div class="wallet-page min-h-screen bg-surface-base py-4 sm:py-6 md:py-section-sm">
   <div class="container-page px-3 sm:px-4 md:px-container space-y-6 sm:space-y-8 md:space-y-10">
     <!-- Error Alert -->
     @if (walletError(); as error) {
@@ -8,7 +6,11 @@
         class="bg-error-bg border border-error-border rounded-lg p-4 transition-colors duration-300"
       >
         <div class="flex items-start space-x-3">
-          <svg class="w-6 h-6 text-error-text flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <svg
+            class="w-6 h-6 text-error-text flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
             <path
               fill-rule="evenodd"
               d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -44,23 +46,38 @@
     </section>
 
     <!-- ============================================ -->
+    <!-- SECCIÓN 1B: PLANES DEL CLUB -->
+    <!-- ============================================ -->
+    <app-club-plans-preview></app-club-plans-preview>
+
+    <!-- ============================================ -->
     <!-- SECCIÓN 2: SALDO CASH (SECUNDARIA) -->
     <!-- ============================================ -->
-    <section class="rounded-2xl sm:rounded-3xl border border-border-default/50 bg-surface-raised p-4 sm:p-6 md:p-8">
+    <section
+      class="rounded-2xl sm:rounded-3xl border border-border-default/50 bg-surface-raised p-4 sm:p-6 md:p-8"
+    >
       <!-- Header compacto -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
           <div class="flex items-center gap-2 mb-1">
-            <svg class="w-5 h-5 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              class="w-5 h-5 text-success-strong"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
             <p class="text-xs uppercase tracking-widest text-text-secondary font-semibold">
               Saldo Cash
             </p>
           </div>
-          <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
-            Tu Billetera
-          </h2>
+          <h2 class="text-xl sm:text-2xl font-bold text-text-primary">Tu Billetera</h2>
         </div>
         <div class="flex gap-2">
           <button
@@ -90,20 +107,26 @@
           class="bg-gradient-to-br from-success-light/10 to-success-light/5 rounded-xl p-4 border border-success-light/30"
           data-tour-step="wallet-balance"
         >
-          <p class="text-xs uppercase tracking-wider text-success-strong/80 font-semibold mb-1">Disponible</p>
+          <p class="text-xs uppercase tracking-wider text-success-strong/80 font-semibold mb-1">
+            Disponible
+          </p>
           <p class="text-2xl sm:text-3xl font-bold text-success-strong">
-            ${{ availableBalanceSummary() | number:'1.2-2' }}
+            ${{ availableBalanceSummary() | number: '1.2-2' }}
           </p>
         </div>
 
         <!-- Crédito Protegido -->
-        <div class="bg-gradient-to-br from-warning-bg/30 to-warning-bg/10 rounded-xl p-4 border border-warning-border/50">
+        <div
+          class="bg-gradient-to-br from-warning-bg/30 to-warning-bg/10 rounded-xl p-4 border border-warning-border/50"
+        >
           <div class="flex items-center justify-between mb-1">
-            <p class="text-xs uppercase tracking-wider text-warning-strong/80 font-semibold">Protegido</p>
+            <p class="text-xs uppercase tracking-wider text-warning-strong/80 font-semibold">
+              Protegido
+            </p>
             <app-icon name="lock" [size]="14" cssClass="text-warning-strong/60" />
           </div>
           <p class="text-2xl sm:text-3xl font-bold text-warning-strong">
-            ${{ protectedCreditBalance() | number:'1.2-2' }}
+            ${{ protectedCreditBalance() | number: '1.2-2' }}
           </p>
           <div class="mt-2 w-full bg-warning-border/30 rounded-full h-1.5">
             <div
@@ -116,29 +139,35 @@
         <!-- Transferible -->
         <div class="bg-surface-secondary/50 rounded-xl p-4 border border-border-default/50">
           <div class="flex items-center justify-between mb-1">
-            <p class="text-xs uppercase tracking-wider text-text-secondary font-semibold">Transferible</p>
+            <p class="text-xs uppercase tracking-wider text-text-secondary font-semibold">
+              Transferible
+            </p>
             <app-icon name="arrow-right-left" [size]="14" cssClass="text-text-secondary/60" />
           </div>
           <p class="text-2xl sm:text-3xl font-bold text-text-primary">
-            ${{ transferableBalance() | number:'1.2-2' }}
+            ${{ transferableBalance() | number: '1.2-2' }}
           </p>
         </div>
 
         <!-- Retirable -->
         <div class="bg-surface-secondary/50 rounded-xl p-4 border border-border-default/50">
           <div class="flex items-center justify-between mb-1">
-            <p class="text-xs uppercase tracking-wider text-text-secondary font-semibold">Retirable</p>
+            <p class="text-xs uppercase tracking-wider text-text-secondary font-semibold">
+              Retirable
+            </p>
             <app-icon name="arrow-up" [size]="14" cssClass="text-text-secondary/60" />
           </div>
           <p class="text-2xl sm:text-3xl font-bold text-text-primary">
-            ${{ withdrawableBalance() | number:'1.2-2' }}
+            ${{ withdrawableBalance() | number: '1.2-2' }}
           </p>
         </div>
       </div>
 
       <!-- Depósitos pendientes -->
       @if (pendingDepositsCount() > 0) {
-        <div class="mt-4 flex items-center gap-2 text-sm text-warning-strong bg-warning-bg/30 rounded-lg px-4 py-3 border border-warning-border/50">
+        <div
+          class="mt-4 flex items-center gap-2 text-sm text-warning-strong bg-warning-bg/30 rounded-lg px-4 py-3 border border-warning-border/50"
+        >
           <app-icon name="clock" [size]="16" cssClass="animate-pulse" />
           <span>{{ pendingDepositsCount() }} depósito(s) pendiente(s) de acreditación</span>
           <button
@@ -166,26 +195,32 @@
     <!-- ============================================ -->
     <!-- SECCIÓN 3: HISTORIAL UNIFICADO -->
     <!-- ============================================ -->
-    <section class="rounded-2xl sm:rounded-3xl border border-border-default/50 bg-surface-raised p-4 sm:p-6 md:p-8">
+    <section
+      class="rounded-2xl sm:rounded-3xl border border-border-default/50 bg-surface-raised p-4 sm:p-6 md:p-8"
+    >
       <!-- Header con Tabs -->
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 sm:pb-6 border-b border-border-default/30">
+      <div
+        class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 sm:pb-6 border-b border-border-default/30"
+      >
         <div>
-          <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
-            Historial de Movimientos
-          </h2>
+          <h2 class="text-xl sm:text-2xl font-bold text-text-primary">Historial de Movimientos</h2>
           <p class="text-sm text-text-secondary mt-1 hidden sm:block">
             Todos tus movimientos en un solo lugar
           </p>
         </div>
 
         <!-- Tabs -->
-        <div class="flex gap-1 p-1 bg-surface-base rounded-lg border border-border-default/50 overflow-x-auto">
+        <div
+          class="flex gap-1 p-1 bg-surface-base rounded-lg border border-border-default/50 overflow-x-auto"
+        >
           <button
             type="button"
             (click)="setActiveTab('transactions')"
             [ngClass]="{
-              'bg-cta-default/15 text-cta-default border-cta-default/30': activeTab() === 'transactions',
-              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent': activeTab() !== 'transactions'
+              'bg-cta-default/15 text-cta-default border-cta-default/30':
+                activeTab() === 'transactions',
+              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent':
+                activeTab() !== 'transactions',
             }"
             class="px-4 py-2 text-sm font-medium rounded-md border transition whitespace-nowrap"
           >
@@ -196,8 +231,10 @@
             type="button"
             (click)="setActiveTab('transfers')"
             [ngClass]="{
-              'bg-cta-default/15 text-cta-default border-cta-default/30': activeTab() === 'transfers',
-              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent': activeTab() !== 'transfers'
+              'bg-cta-default/15 text-cta-default border-cta-default/30':
+                activeTab() === 'transfers',
+              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent':
+                activeTab() !== 'transfers',
             }"
             class="px-4 py-2 text-sm font-medium rounded-md border transition whitespace-nowrap"
           >
@@ -208,8 +245,10 @@
             type="button"
             (click)="setActiveTab('withdrawals')"
             [ngClass]="{
-              'bg-cta-default/15 text-cta-default border-cta-default/30': activeTab() === 'withdrawals',
-              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent': activeTab() !== 'withdrawals'
+              'bg-cta-default/15 text-cta-default border-cta-default/30':
+                activeTab() === 'withdrawals',
+              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent':
+                activeTab() !== 'withdrawals',
             }"
             class="px-4 py-2 text-sm font-medium rounded-md border transition whitespace-nowrap"
             data-tour-step="withdraw-button"
@@ -223,7 +262,8 @@
               (click)="setActiveTab('coverage')"
               [ngClass]="{
                 'bg-amber-500/15 text-amber-600 border-amber-500/30': activeTab() === 'coverage',
-                'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent': activeTab() !== 'coverage'
+                'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent':
+                  activeTab() !== 'coverage',
               }"
               class="px-4 py-2 text-sm font-medium rounded-md border transition whitespace-nowrap"
             >
@@ -256,7 +296,8 @@
                   (click)="setWithdrawalMode('form')"
                   [ngClass]="{
                     'bg-cta-default text-cta-text': withdrawalMode() === 'form',
-                    'text-text-secondary hover:bg-surface-secondary/50': withdrawalMode() !== 'form'
+                    'text-text-secondary hover:bg-surface-secondary/50':
+                      withdrawalMode() !== 'form',
                   }"
                   class="px-3 py-2 text-sm font-medium rounded-lg transition"
                 >
@@ -267,7 +308,8 @@
                   (click)="setWithdrawalMode('accounts')"
                   [ngClass]="{
                     'bg-cta-default text-cta-text': withdrawalMode() === 'accounts',
-                    'text-text-secondary hover:bg-surface-secondary/50': withdrawalMode() !== 'accounts'
+                    'text-text-secondary hover:bg-surface-secondary/50':
+                      withdrawalMode() !== 'accounts',
                   }"
                   class="px-3 py-2 text-sm font-medium rounded-lg transition"
                 >
@@ -289,7 +331,11 @@
                 @if (activeBankAccounts().length === 0) {
                   <div class="bg-warning-bg/30 border border-warning-border/50 rounded-lg p-4">
                     <div class="flex items-start gap-3">
-                      <app-icon name="alert-triangle" [size]="20" cssClass="text-warning-strong mt-0.5 flex-shrink-0" />
+                      <app-icon
+                        name="alert-triangle"
+                        [size]="20"
+                        cssClass="text-warning-strong mt-0.5 flex-shrink-0"
+                      />
                       <div>
                         <p class="text-sm text-text-primary">
                           Aún no registraste cuentas bancarias.
@@ -342,7 +388,9 @@
           <div class="space-y-6">
             <div class="bg-amber-50/50 rounded-xl p-6 border border-amber-200/50">
               <div class="flex items-start gap-4">
-                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+                <div
+                  class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center"
+                >
                   <app-icon name="shield" [size]="24" cssClass="text-amber-600" />
                 </div>
                 <div class="flex-1">
@@ -350,7 +398,8 @@
                     Historial de uso de cobertura
                   </h3>
                   <p class="text-sm text-amber-700 mt-1">
-                    Aquí verás las deducciones realizadas de tu saldo de cobertura por daños o claims.
+                    Aquí verás las deducciones realizadas de tu saldo de cobertura por daños o
+                    claims.
                   </p>
                 </div>
                 <button
@@ -366,7 +415,11 @@
 
             <!-- Placeholder para historial de cobertura -->
             <div class="text-center py-12 text-text-secondary">
-              <app-icon name="shield-check" [size]="48" cssClass="mx-auto mb-4 text-success-strong/30" />
+              <app-icon
+                name="shield-check"
+                [size]="48"
+                cssClass="mx-auto mb-4 text-success-strong/30"
+              />
               <p class="text-lg font-medium">Sin deducciones registradas</p>
               <p class="text-sm mt-1">Tu cobertura no ha sido utilizada aún. ¡Excelente!</p>
             </div>
@@ -388,7 +441,8 @@
         <a
           href="mailto:autorentardev@gmail.com"
           class="text-cta-default hover:text-cta-default/80 font-semibold ml-1 transition"
-        >Contacta a soporte</a>
+          >Contacta a soporte</a
+        >
       </p>
     </section>
   </div>

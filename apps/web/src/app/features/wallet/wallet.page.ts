@@ -47,6 +47,7 @@ import { WithdrawalRequestFormComponent } from '../../shared/components/withdraw
 import { WalletFaqComponent } from './components/wallet-faq.component';
 import { WalletTransfersComponent } from './components/wallet-transfers.component';
 import { ClubMembershipCardComponent } from './components/club-membership-card.component';
+import { ClubPlansPreviewComponent } from './components/club-plans-preview.component';
 import { WalletAccountNumberCardComponent } from '../../shared/components/wallet-account-number-card/wallet-account-number-card.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 
@@ -66,13 +67,13 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
     WalletTransfersComponent,
     IconComponent,
     ClubMembershipCardComponent,
+    ClubPlansPreviewComponent,
     WalletAccountNumberCardComponent,
   ],
   templateUrl: './wallet.page.html',
   styleUrls: ['./wallet.page.css'],
 })
 export class WalletPage implements OnInit {
-
   /**
    * Tab activa (transactions | withdrawals | transfers | coverage)
    */
@@ -270,7 +271,6 @@ export class WalletPage implements OnInit {
       /* Silenced */
     }
   }
-
 
   /**
    * Navega a la página de depósito
