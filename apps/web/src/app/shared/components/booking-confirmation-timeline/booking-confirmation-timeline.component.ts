@@ -1,19 +1,19 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
   input,
   output,
   Signal,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
 import {
-  BookingStateMachineService,
   BookingState,
+  BookingStateMachineService,
 } from '@core/services/bookings/booking-state-machine.service';
+import { TranslateModule } from '@ngx-translate/core';
 import { Booking } from '../../../core/models';
 
 /**
@@ -188,87 +188,83 @@ export class BookingConfirmationTimelineComponent {
         actionDescription: 'Confirmar que devolviste el vehículo al propietario',
       },
 
-      // 5. Owner Confirms Return
+      // 5. Inspection (Owner) - V2
       {
         key: 'owner_confirms',
-        label: 'Propietario Confirma',
+        label: 'Inspección del Vehículo',
         description: booking.has_damages
-          ? `Confirmado con daños reportados ($${(booking.damage_amount_cents || 0) / 100} USD)`
-          : 'Vehículo recibido en buenas condiciones',
+          ? 'Se reportaron daños en la devolución'
+          : booking.owner_confirmed_delivery
+            ? 'Inspección aprobada sin daños'
+            : 'El propietario está revisando el vehículo',
         completed: !!booking.owner_confirmed_delivery,
         timestamp: booking.owner_confirmed_at || null,
         actor: this.ownerName(),
         actorId: booking.owner_id || null,
         requiresAction:
           !!booking.returned_at && !booking.owner_confirmed_delivery && this.isOwner(),
-        actionLabel: 'Confirmar recepción',
-        actionDescription: 'Confirmar que recibiste el vehículo (con o sin daños)',
+        actionLabel: 'Realizar Inspección',
+        actionDescription: 'Verificar estado y confirmar recepción',
         metadata: booking.has_damages
           ? {
-              damageAmount: (booking.damage_amount_cents || 0) / 100,
-              damageDescription: booking.damage_description || undefined,
-            }
+            damageAmount: (booking.damage_amount_cents || 0) / 100,
+            damageDescription: booking.damage_description || undefined,
+          }
           : undefined,
       },
 
-      // 6. Damage Report (conditional)
+      // 6. Resolution/Dispute (Conditional)
+      // Shown if damages reported OR if explicit dispute exists
       {
         key: 'damage_report',
-        label: 'Reporte de Daños',
-        description: booking.damage_description || 'No se reportaron daños',
-        completed: true, // Always shown if we reach this step
-        timestamp: booking.owner_confirmed_at || null,
-        actor: this.ownerName(),
-        actorId: booking.owner_id || null,
-        isConditional: true, // Only show if damages reported
+        label: booking.inspection_status === 'disputed' ? 'En Disputa' : 'Resolución de Daños',
+        description: booking.inspection_status === 'disputed'
+          ? 'El caso está en mediación'
+          : booking.renter_confirmed_payment
+            ? 'El locatario aceptó los daños'
+            : 'El locatario debe revisar el reporte',
+        completed: !!booking.renter_confirmed_payment || booking.inspection_status === 'damage_accepted',
+        timestamp: booking.renter_confirmed_at || null,
+        actor: this.renterName(),
+        actorId: booking.renter_id,
+        isConditional: true,
+        requiresAction: booking.has_damages && !booking.renter_confirmed_payment && booking.inspection_status !== 'disputed' && this.isRenter(),
+        actionLabel: 'Revisar Reporte',
+        actionDescription: 'Aceptar daños o iniciar disputa',
         metadata: {
           damageAmount: (booking.damage_amount_cents || 0) / 100,
           damageDescription: booking.damage_description || undefined,
         },
       },
 
-      // 7. Renter Confirms Payment
-      {
-        key: 'renter_confirms',
-        label: 'Locatario Confirma',
-        description: 'Confirma liberar el pago al propietario',
-        completed: !!booking.renter_confirmed_payment,
-        timestamp: booking.renter_confirmed_at || null,
-        actor: this.renterName(),
-        actorId: booking.renter_id,
-        requiresAction:
-          !!booking.returned_at && !booking.renter_confirmed_payment && this.isRenter(),
-        actionLabel: 'Confirmar pago',
-        actionDescription: 'Autorizar la liberación de fondos al propietario',
-      },
-
-      // 8. Funds Released
+      // 7. Funds Released
       {
         key: 'funds_released',
-        label: 'Fondos Liberados',
-        description: 'Pago transferido al propietario y depósito devuelto',
+        label: 'Liberación de Fondos',
+        description: 'Pago transferido al propietario',
         completed: !!booking.funds_released_at,
         timestamp: booking.funds_released_at || null,
-        actor: 'Sistema automático',
+        actor: 'Sistema',
         actorId: null,
       },
 
-      // 9. Completed
+      // 8. Completed
       {
         key: 'completed',
         label: 'Completado',
-        description: 'Reserva finalizada exitosamente',
+        description: 'Proceso finalizado',
         completed: booking.status === 'completed',
-        timestamp: booking.funds_released_at || booking.updated_at || null,
+        timestamp: booking.updated_at || null,
         actor: null,
         actorId: null,
       },
     ];
 
-    // Filter out conditional steps if not applicable
+    // Filter conditionals
     return steps.filter((step) => {
       if (step.key === 'damage_report') {
-        return booking.has_damages === true;
+        // Show if damages exist OR explicit dispute status
+        return booking.has_damages === true || booking.inspection_status === 'disputed';
       }
       return true;
     });
@@ -358,7 +354,12 @@ export class BookingConfirmationTimelineComponent {
       case 'owner_confirms':
         action = 'owner_confirm';
         break;
+      case 'damage_report':
+        // Map damage resolution action to renter_confirm event (navigates to component)
+        action = 'renter_confirm';
+        break;
       case 'renter_confirms':
+        // Fallback legacy
         action = 'renter_confirm';
         break;
       default:

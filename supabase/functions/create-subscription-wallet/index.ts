@@ -107,28 +107,68 @@ serve(async (req) => {
       ref: idempotencyKey,
     });
 
-    const { data: result, error: chargeError } = await supabase.rpc('create_subscription_with_wallet', {
-      p_user_id: user.id,
-      p_tier: tier,
-      p_ref: idempotencyKey,
-      p_description: `Membresía ${tierConfig.name} (Autorentar Club)`,
-      p_meta: {
-        type: 'subscription',
-        tier,
-        initiated_at: new Date().toISOString(),
-      },
-    });
+    // Call RPC function with error handling for the RPC call itself
+    let result, chargeError;
+    try {
+      const response = await supabase.rpc('create_subscription_with_wallet', {
+        p_user_id: user.id,
+        p_tier: tier,
+        p_ref: idempotencyKey,
+        p_description: `Membresía ${tierConfig.name} (Autorentar Club)`,
+        p_meta: {
+          type: 'subscription',
+          tier,
+          initiated_at: new Date().toISOString(),
+        },
+      });
+      result = response.data;
+      chargeError = response.error;
+    } catch (rpcErr) {
+      log.error('RPC execution exception', rpcErr);
+      return new Response(
+        JSON.stringify({
+          error: 'RPC execution failed',
+          message: rpcErr instanceof Error ? rpcErr.message : 'Unknown RPC error',
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     if (chargeError) {
       const msg = chargeError.message || 'Charge failed';
-      const isInsufficient = msg.toLowerCase().includes('insufficient') || msg.toLowerCase().includes('saldo');
+      const msgLower = msg.toLowerCase();
+      
+      let status = 500;
+      let errorType = 'Charge failed';
+
+      if (msgLower.includes('insufficient') || msgLower.includes('saldo')) {
+        status = 400;
+        errorType = 'Insufficient balance';
+      } else if (msgLower.includes('active subscription') || msgLower.includes('ya tiene una suscripci')) {
+        status = 409; // Conflict
+        errorType = 'Already subscribed';
+      } else if (msgLower.includes('wallet not found') || msgLower.includes('wallet no encontrada')) {
+        status = 404;
+        errorType = 'Wallet not found';
+      }
+
+      log.error('RPC Business Error', { msg, status, errorType });
+
       return new Response(
         JSON.stringify({
-          error: isInsufficient ? 'Insufficient balance' : 'Charge failed',
+          error: errorType,
           message: msg,
+          details: {
+            tier,
+            userId: user.id,
+            amount_cents: tierConfig.price_cents,
+          }
         }),
         {
-          status: isInsufficient ? 400 : 500,
+          status,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );

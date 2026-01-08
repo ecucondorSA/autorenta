@@ -12,13 +12,15 @@ export type BookingState =
   | 'PENDING_PAYMENT' // Esperando pago/autorizacion
   | 'CONFIRMED' // Pagado, esperando check-in
   | 'ACTIVE' // En progreso (vehiculo entregado)
-  | 'RETURNED' // Vehiculo devuelto, esperando confirmaciones
-  | 'PENDING_OWNER' // Esperando confirmacion del propietario
-  | 'PENDING_RENTER' // Esperando confirmacion del locatario
+  | 'RETURNED' // Vehiculo devuelto, esperando inspeccion
+  | 'INSPECTED_GOOD' // Inspeccionado OK, esperando confirmacion final (opcional/auto)
+  | 'DAMAGE_REPORTED' // Con daños, esperando aceptacion/disputa del locatario
+  | 'PENDING_OWNER' // Legacy: Esperando confirmacion del propietario
+  | 'PENDING_RENTER' // Legacy: Esperando confirmacion del locatario
   | 'FUNDS_RELEASED' // Fondos liberados
   | 'COMPLETED' // Finalizado exitosamente
   | 'CANCELLED' // Cancelado
-  | 'DISPUTED'; // En disputa
+  | 'DISPUTED'; // En disputa activa
 
 /**
  * Transiciones validas entre estados
@@ -31,13 +33,15 @@ export const VALID_TRANSITIONS: Record<BookingState, BookingState[]> = {
   PENDING_PAYMENT: ['CONFIRMED', 'CANCELLED'],
   CONFIRMED: ['ACTIVE', 'CANCELLED'],
   ACTIVE: ['RETURNED', 'DISPUTED'],
-  RETURNED: ['PENDING_OWNER', 'PENDING_RENTER', 'DISPUTED'],
+  RETURNED: ['INSPECTED_GOOD', 'DAMAGE_REPORTED', 'DISPUTED', 'PENDING_OWNER', 'PENDING_RENTER'],
+  INSPECTED_GOOD: ['FUNDS_RELEASED', 'COMPLETED', 'DISPUTED'],
+  DAMAGE_REPORTED: ['FUNDS_RELEASED', 'DISPUTED', 'COMPLETED'],
   PENDING_OWNER: ['FUNDS_RELEASED', 'DISPUTED'],
   PENDING_RENTER: ['FUNDS_RELEASED', 'DISPUTED'],
   FUNDS_RELEASED: ['COMPLETED'],
   COMPLETED: [],
   CANCELLED: [],
-  DISPUTED: ['FUNDS_RELEASED', 'CANCELLED'],
+  DISPUTED: ['FUNDS_RELEASED', 'CANCELLED', 'COMPLETED'],
 };
 
 /**
@@ -48,7 +52,9 @@ export const STATE_LABELS: Record<BookingState, string> = {
   PENDING_PAYMENT: 'Pago Pendiente',
   CONFIRMED: 'Confirmada',
   ACTIVE: 'En Progreso',
-  RETURNED: 'Vehiculo Devuelto',
+  RETURNED: 'Vehículo Devuelto',
+  INSPECTED_GOOD: 'Inspección Aprobada',
+  DAMAGE_REPORTED: 'Daños Reportados',
   PENDING_OWNER: 'Esperando Propietario',
   PENDING_RENTER: 'Esperando Locatario',
   FUNDS_RELEASED: 'Fondos Liberados',
@@ -65,7 +71,9 @@ export const STATE_ACTIONS: Record<BookingState, { owner: string[]; renter: stri
   PENDING_PAYMENT: { owner: [], renter: ['pay', 'cancel'] },
   CONFIRMED: { owner: ['check_in'], renter: ['check_in'] },
   ACTIVE: { owner: ['mark_returned'], renter: ['mark_returned'] },
-  RETURNED: { owner: ['confirm'], renter: ['confirm'] },
+  RETURNED: { owner: ['submit_inspection'], renter: [] }, // Only owner inspects now
+  INSPECTED_GOOD: { owner: [], renter: ['confirm_release'] },
+  DAMAGE_REPORTED: { owner: [], renter: ['accept_damage', 'dispute_damage'] },
   PENDING_OWNER: { owner: ['confirm'], renter: [] },
   PENDING_RENTER: { owner: [], renter: ['confirm'] },
   FUNDS_RELEASED: { owner: [], renter: [] },
@@ -110,14 +118,31 @@ export class BookingStateMachineService {
     if (booking.status === 'completed' && booking.funds_released_at) return 'COMPLETED';
     if (booking.funds_released_at) return 'FUNDS_RELEASED';
 
-    // 4. Bilateral confirmation (after vehicle returned)
+    // 4. Bilateral confirmation V2
     if (booking.returned_at) {
       const ownerConfirmed = !!booking.owner_confirmed_delivery;
       const renterConfirmed = !!booking.renter_confirmed_payment;
 
+      // V2 Flags
+      // inspection_status can be 'pending', 'good', 'damaged', 'disputed'
+      // We prioritize explicit flags first
+
       if (ownerConfirmed && renterConfirmed) return 'FUNDS_RELEASED';
+
+      if (booking.has_damages) {
+        if (booking.dispute_status === 'open' || booking.inspection_status === 'disputed') return 'DISPUTED';
+        return 'DAMAGE_REPORTED';
+      }
+
+      if (ownerConfirmed && !renterConfirmed) {
+        // If no damage, it might be INSPECTED_GOOD
+        return 'INSPECTED_GOOD';
+      }
+
+      // Legacy fallback
       if (ownerConfirmed && !renterConfirmed) return 'PENDING_RENTER';
       if (!ownerConfirmed && renterConfirmed) return 'PENDING_OWNER';
+
       return 'RETURNED';
     }
 
@@ -206,6 +231,8 @@ export class BookingStateMachineService {
       RETURNED: 4,
       PENDING_OWNER: 5,
       PENDING_RENTER: 5,
+      INSPECTED_GOOD: 5,
+      DAMAGE_REPORTED: 6,
       FUNDS_RELEASED: 7,
       COMPLETED: 8,
       CANCELLED: -1,

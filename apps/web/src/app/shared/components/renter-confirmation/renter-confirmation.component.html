@@ -170,14 +170,31 @@
 
   <!-- Botón de confirmación -->
   @if (!renterConfirmed) {
-    <div class="flex justify-end">
+    <div class="flex justify-between items-center gap-4">
+      <!-- Botón de disputa (solo si hay daños) -->
+      @if (damageAmount && damageAmount > 0) {
+        <button
+           type="button"
+           (click)="dispute()"
+           class="px-4 py-2 text-sm font-medium text-error-700 bg-error-50 hover:bg-error-100 border border-error-200 rounded-lg transition-colors flex items-center gap-2"
+           [disabled]="loading().resolvingConclusion"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          Disputar Daños
+        </button>
+      } @else {
+        <div></div> <!-- Spacer -->
+      }
+
       <button
         type="button"
         (click)="confirm()"
         class="px-6 py-3 text-sm font-medium text-text-primary bg-success-light hover:bg-success-light rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"
-        [disabled]="loading().confirmingRenter"
+        [disabled]="loading().confirmingRenter || loading().resolvingConclusion"
       >
-        @if (loading().confirmingRenter) {
+        @if (loading().confirmingRenter || loading().resolvingConclusion) {
           <svg
             class="animate-spin h-4 w-4 text-text-inverse"
             xmlns="http://www.w3.org/2000/svg"
@@ -199,7 +216,7 @@
             ></path>
           </svg>
         }
-        @if (!loading().confirmingRenter) {
+        @if (!loading().confirmingRenter && !loading().resolvingConclusion) {
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -210,7 +227,11 @@
           </svg>
         }
         <span>{{
-          loading().confirmingRenter ? 'Confirmando...' : 'Confirmar y liberar pago'
+          loading().confirmingRenter || loading().resolvingConclusion
+            ? 'Procesando...'
+            : damageAmount && damageAmount > 0
+              ? 'Aceptar Daños y Pagar'
+              : 'Confirmar y liberar pago'
         }}</span>
       </button>
     </div>

@@ -1,19 +1,19 @@
 import {
+  ChangeDetectionStrategy,
   Component,
+  EventEmitter,
+  inject,
   Input,
   Output,
-  EventEmitter,
   signal,
-  inject,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '@core/services/auth/auth.service';
 import {
   BookingConfirmationService,
-  ConfirmAndReleaseResponse,
+  ConfirmAndReleaseResponse
 } from '@core/services/bookings/booking-confirmation.service';
-import { AuthService } from '@core/services/auth/auth.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * Componente de confirmación del locatario (renter)
@@ -122,18 +122,61 @@ export class RenterConfirmationComponent {
     }
 
     try {
-      const result = await this.confirmationService.confirmRenter({
-        booking_id: this.bookingId,
-        confirming_user_id: userId,
-      });
-
-      this.confirmationResult.set(result);
-      this.message.set(result.message);
-      this.confirmed.emit(result);
+      // Si hay daños, usamos el flujo V2 explícito
+      if (this.damageAmount && this.damageAmount > 0) {
+        const result = await this.confirmationService.resolveConclusion({
+          booking_id: this.bookingId,
+          renter_id: userId,
+          accept_damage: true
+        });
+        this.confirmationResult.set({
+          success: true,
+          message: 'Has aceptado los daños. Fondos liberados.',
+          funds_released: true,
+          completion_status: 'COMPLETED',
+          owner_confirmed: true,
+          renter_confirmed: true,
+          waiting_for: 'none'
+        });
+        this.message.set('Daños aceptados y pago liberado.');
+        this.confirmed.emit(this.confirmationResult()!);
+      } else {
+        // Flujo normal (o V1 legacy)
+        const result = await this.confirmationService.confirmRenter({
+          booking_id: this.bookingId,
+          confirming_user_id: userId,
+        });
+        this.confirmationResult.set(result);
+        this.message.set(result.message);
+        this.confirmed.emit(result);
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al confirmar';
       this.message.set(`Error: ${errorMessage}`);
       this.errorOccurred.emit(errorMessage);
+    }
+  }
+
+  /**
+   * Disputar los daños reportados
+   */
+  async dispute(): Promise<void> {
+    const userId = this.auth.sessionSignal()?.user?.id;
+    if (!userId) return;
+
+    if (!confirm('¿Estás seguro de iniciar una disputa? El caso será revisado por soporte.')) return;
+
+    try {
+      await this.confirmationService.resolveConclusion({
+        booking_id: this.bookingId,
+        renter_id: userId,
+        accept_damage: false
+      });
+      this.message.set('Disputa iniciada. Soporte te contactará.');
+      this.errorOccurred.emit('Disputa iniciada'); // Notify parent to reload/update status
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error al disputar';
+      this.message.set(`Error: ${errorMessage}`);
     }
   }
 }

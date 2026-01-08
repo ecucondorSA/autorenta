@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 /**
@@ -39,13 +39,30 @@ export interface RenterConfirmParams {
   confirming_user_id: string;
 }
 
+export interface InspectionParams {
+  booking_id: string;
+  inspector_id: string;
+  has_damage: boolean;
+  damage_amount?: number;
+  damage_description?: string;
+  evidence?: unknown[];
+}
+
+export interface ResolveConclusionParams {
+  booking_id: string;
+  renter_id: string;
+  accept_damage: boolean;
+}
+
 /**
  * Estado de carga del servicio
  */
 export interface ConfirmationLoadingState {
   markingAsReturned: boolean;
-  confirmingOwner: boolean;
-  confirmingRenter: boolean;
+  confirmingOwner: boolean; // Legacy/Wrapper
+  confirmingRenter: boolean; // Legacy/Wrapper
+  submittingInspection: boolean;
+  resolvingConclusion: boolean;
 }
 
 /**
@@ -93,6 +110,8 @@ export class BookingConfirmationService {
     markingAsReturned: false,
     confirmingOwner: false,
     confirmingRenter: false,
+    submittingInspection: false,
+    resolvingConclusion: false,
   });
 
   /**
@@ -109,6 +128,8 @@ export class BookingConfirmationService {
     const loadingState = this.loading();
     return (
       loadingState.markingAsReturned ||
+      loadingState.submittingInspection ||
+      loadingState.resolvingConclusion ||
       loadingState.confirmingOwner ||
       loadingState.confirmingRenter
     );
@@ -147,36 +168,19 @@ export class BookingConfirmationService {
     this.clearError();
 
     try {
-      if (!params.booking_id) {
-        throw this.createError('MISSING_BOOKING_ID', 'El ID del booking es requerido');
-      }
+      if (!params.booking_id) throw this.createError('MISSING_ID', 'ID requerido');
 
-      if (!params.returned_by) {
-        throw this.createError('MISSING_USER_ID', 'El ID del usuario es requerido');
-      }
-
-      const { data, error } = await this.supabase.getClient().rpc('booking_mark_as_returned', {
+      // Use V2 RPC
+      const { data, error } = await this.supabase.getClient().rpc('booking_v2_return_vehicle', {
         p_booking_id: params.booking_id,
         p_returned_by: params.returned_by,
       });
 
-      if (error) {
-        throw this.createError('MARK_AS_RETURNED_ERROR', error.message, error);
-      }
+      if (error) throw this.createError('RPC_ERROR', error.message, error);
 
-      if (!data || data.length === 0) {
-        throw this.createError('MARK_AS_RETURNED_EMPTY', 'No se pudo marcar como devuelto');
-      }
-
-      const result = data[0] as MarkAsReturnedResponse;
-
-      if (!result.success) {
-        throw this.createError('MARK_AS_RETURNED_FAILED', result.message);
-      }
-
-      return result;
+      return { success: true, message: 'Vehículo marcado como devuelto', completion_status: 'RETURNED' };
     } catch (err) {
-      throw this.handleError(err, 'Error al marcar booking como devuelto');
+      throw this.handleError(err, 'Error al marcar devuelto');
     } finally {
       this.setLoadingState('markingAsReturned', false);
     }
@@ -207,129 +211,74 @@ export class BookingConfirmationService {
    *   damage_description: 'Rayón en puerta trasera'
    * });
    */
-  async confirmOwner(params: OwnerConfirmParams): Promise<ConfirmAndReleaseResponse> {
-    this.setLoadingState('confirmingOwner', true);
+  /**
+   * V2: Submit Inspection (Owner)
+   */
+  async submitInspection(params: InspectionParams): Promise<ConfirmAndReleaseResponse> {
+    this.setLoadingState('submittingInspection', true);
     this.clearError();
-
     try {
-      if (!params.booking_id) {
-        throw this.createError('MISSING_BOOKING_ID', 'El ID del booking es requerido');
-      }
-
-      if (!params.confirming_user_id) {
-        throw this.createError('MISSING_USER_ID', 'El ID del usuario es requerido');
-      }
-
-      // Validar daños si se reportaron
-      if (params.has_damages) {
-        if (!params.damage_amount || params.damage_amount <= 0) {
-          throw this.createError(
-            'INVALID_DAMAGE_AMOUNT',
-            'El monto de daños debe ser mayor a 0 cuando has_damages es true',
-          );
-        }
-
-        if (params.damage_amount > 250) {
-          throw this.createError(
-            'DAMAGE_AMOUNT_EXCEEDS_DEPOSIT',
-            'El monto de daños no puede exceder la garantía de $250 USD',
-          );
-        }
-      }
-
-      const damageAmountCents = Math.round((params.damage_amount ?? 0) * 100);
-      const { data, error } = await this.supabase.getClient().rpc('booking_confirm_and_release', {
+      const { data, error } = await this.supabase.getClient().rpc('booking_v2_submit_inspection', {
         p_booking_id: params.booking_id,
-        p_confirming_user_id: params.confirming_user_id,
-        p_has_damages: params.has_damages ?? false,
-        p_damage_amount: damageAmountCents,
-        p_damage_description: params.damage_description ?? null,
+        p_inspector_id: params.inspector_id,
+        p_has_damage: params.has_damage,
+        p_damage_amount_cents: params.damage_amount ? Math.round(params.damage_amount * 100) : 0,
+        p_description: params.damage_description,
+        p_evidence: params.evidence ?? []
       });
 
-      if (error) {
-        throw this.createError('CONFIRM_OWNER_ERROR', error.message, error);
-      }
-
-      if (!data || data.length === 0) {
-        throw this.createError('CONFIRM_OWNER_EMPTY', 'No se pudo procesar la confirmación');
-      }
-
-      const result = data[0] as ConfirmAndReleaseResponse;
-
-      if (!result.success) {
-        throw this.createError('CONFIRM_OWNER_FAILED', result.message);
-      }
-
-      // Guardar estado de la confirmación
-      this.lastConfirmation.set(result);
-
-      return result;
+      if (error) throw this.createError('INSPECTION_ERROR', error.message);
+      return data;
     } catch (err) {
-      throw this.handleError(err, 'Error al confirmar como propietario');
+      throw this.handleError(err, 'Error al enviar inspección');
     } finally {
-      this.setLoadingState('confirmingOwner', false);
+      this.setLoadingState('submittingInspection', false);
     }
   }
 
   /**
-   * Confirmación del locatario (renter)
-   * Confirma liberar el pago al propietario
-   *
-   * Si ambos (owner + renter) ya confirmaron, libera fondos automáticamente
-   *
-   * @param params - Parámetros de confirmación del locatario
-   * @returns Resultado de la confirmación con estado de liberación de fondos
-   *
-   * @example
-   * await confirmationService.confirmRenter({
-   *   booking_id: 'booking-uuid',
-   *   confirming_user_id: 'renter-uuid'
-   * });
+   * V2: Resolve Conclusion (Renter)
    */
-  async confirmRenter(params: RenterConfirmParams): Promise<ConfirmAndReleaseResponse> {
-    this.setLoadingState('confirmingRenter', true);
+  async resolveConclusion(params: ResolveConclusionParams): Promise<ConfirmAndReleaseResponse> {
+    this.setLoadingState('resolvingConclusion', true);
     this.clearError();
-
     try {
-      if (!params.booking_id) {
-        throw this.createError('MISSING_BOOKING_ID', 'El ID del booking es requerido');
-      }
-
-      if (!params.confirming_user_id) {
-        throw this.createError('MISSING_USER_ID', 'El ID del usuario es requerido');
-      }
-
-      const { data, error } = await this.supabase.getClient().rpc('booking_confirm_and_release', {
+      const { data, error } = await this.supabase.getClient().rpc('booking_v2_resolve_conclusion', {
         p_booking_id: params.booking_id,
-        p_confirming_user_id: params.confirming_user_id,
-        p_has_damages: false,
-        p_damage_amount: 0,
-        p_damage_description: null,
+        p_renter_id: params.renter_id,
+        p_accept_damage: params.accept_damage
       });
 
-      if (error) {
-        throw this.createError('CONFIRM_RENTER_ERROR', error.message, error);
-      }
-
-      if (!data || data.length === 0) {
-        throw this.createError('CONFIRM_RENTER_EMPTY', 'No se pudo procesar la confirmación');
-      }
-
-      const result = data[0] as ConfirmAndReleaseResponse;
-
-      if (!result.success) {
-        throw this.createError('CONFIRM_RENTER_FAILED', result.message);
-      }
-
-      // Guardar estado de la confirmación
-      this.lastConfirmation.set(result);
-
-      return result;
+      if (error) throw this.createError('RESOLUTION_ERROR', error.message);
+      return data;
     } catch (err) {
-      throw this.handleError(err, 'Error al confirmar como locatario');
+      throw this.handleError(err, 'Error al resolver conclusión');
     } finally {
-      this.setLoadingState('confirmingRenter', false);
+      this.setLoadingState('resolvingConclusion', false);
     }
+  }
+
+  // Legacy adaptations or keep for backward compatibility if needed
+  async confirmOwner(params: OwnerConfirmParams): Promise<ConfirmAndReleaseResponse> {
+    // Map to new V2 inspection
+    return this.submitInspection({
+      booking_id: params.booking_id,
+      inspector_id: params.confirming_user_id,
+      has_damage: params.has_damages ?? false,
+      damage_amount: params.damage_amount,
+      damage_description: params.damage_description
+    }) as any;
+  }
+
+  async confirmRenter(params: RenterConfirmParams): Promise<ConfirmAndReleaseResponse> {
+    // Assume 'release funds' means accepting inspection/conclusion
+    // In V2, renter usually only acts if damaged.
+    // If Good, funds auto-release or can use resolveConclusion(accept=true)
+    return this.resolveConclusion({
+      booking_id: params.booking_id,
+      renter_id: params.confirming_user_id,
+      accept_damage: true // Implicit acceptance for legacy calls
+    }) as any;
   }
 
   /**

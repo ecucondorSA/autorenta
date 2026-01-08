@@ -701,7 +701,16 @@ export class SubscriptionService {
   }
 
   private handleError(err: unknown, context: string): void {
-    const message = err instanceof Error ? err.message : 'Error desconocido';
+    let message = err instanceof Error ? err.message : 'Error desconocido';
+    
+    // Check if error is from Supabase Edge Function (FunctionsHttpError)
+    const errorObj = err as any;
+    if (errorObj?.context?.message) {
+      message = errorObj.context.message;
+    } else if (errorObj?.message) {
+      message = errorObj.message;
+    }
+
     this.error.set({ message: `${context}: ${message}` });
     this.logger.error(context, err);
   }

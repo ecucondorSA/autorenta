@@ -5,8 +5,8 @@ import type {
   PaymentProvider,
   PaymentStatus,
 } from '../types/database.types';
-import type { BookingDepositStatus } from './wallet.model';
 import type { Car } from './car.model';
+import type { BookingDepositStatus } from './wallet.model';
 
 // Re-export enum types from database.types
 export type {
@@ -18,7 +18,7 @@ export type {
   KycStatus,
   PaymentProvider,
   PaymentStatus,
-  Transmission,
+  Transmission
 } from '../types/database.types';
 
 // Admin types
@@ -38,7 +38,7 @@ export type {
   ReviewDB,
   WalletBalanceDB,
   WalletLedgerDB,
-  WalletTransactionDB,
+  WalletTransactionDB
 } from '../types/supabase-types';
 
 // Wallet domain models (preferred over DB row types)
@@ -67,7 +67,7 @@ export type {
   WithdrawalFilters,
   WithdrawalLoadingState,
   WithdrawalRequest,
-  WithdrawalStatus,
+  WithdrawalStatus
 } from './wallet.model';
 
 // Feature flag models
@@ -80,7 +80,7 @@ export {
   calculateDeductibleUsd,
   calculateHoldEstimatedArs,
   isFxExpired,
-  ValidationErrorCodes,
+  ValidationErrorCodes
 } from './booking-detail-payment.model';
 export type {
   AuthorizePaymentResult,
@@ -104,7 +104,7 @@ export type {
   UserConsents,
   ValidationError,
   WalletLock,
-  WalletLockResult,
+  WalletLockResult
 } from './booking-detail-payment.model';
 
 // Tripo AI models
@@ -304,7 +304,10 @@ export type BookingCompletionStatus =
   | 'pending_owner' // Esperando confirmación del propietario
   | 'pending_renter' // Esperando confirmación del locatario
   | 'pending_both' // Esperando confirmación de ambas partes
-  | 'funds_released'; // Fondos liberados exitosamente
+  | 'funds_released' // Fondos liberados exitosamente
+  | 'inspected_good' // Inspeccionado sin daños
+  | 'damage_reported' // Con daños reportados
+  | 'disputed'; // En disputa activa
 
 export interface Booking {
   id: string;
@@ -377,7 +380,16 @@ export interface Booking {
 
   // NEW: Dispute management fields
   dispute_open_at?: string | null;
+  dispute_reason?: string | null;
+  dispute_evidence?: string[] | null;
   dispute_status?: 'open' | 'resolved' | 'rejected' | null; // open, resolved (owner wins), rejected (renter wins)
+  dispute_resolved_at?: string | null;
+
+  // NEW: Inspection V2 fields
+  inspection_status?: 'pending' | 'good' | 'damaged' | 'disputed' | 'damage_accepted' | null;
+  inspection_evidence?: string[] | null;
+  inspection_comment?: string | null;
+  auto_release_at?: string | null;
 
   // Cancellation management
   cancellation_policy_id?: number;
