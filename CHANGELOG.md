@@ -1,3 +1,10 @@
+## [1.15.3](https://github.com/ecucondorSA/autorenta/compare/v1.15.2...v1.15.3) (2026-01-08)
+
+
+### Bug Fixes
+
+* **ci:** move 202501* migrations to end of baseline to respect logical dependency ([4b49e57](https://github.com/ecucondorSA/autorenta/commit/4b49e570267f2bd6fbf090a2ae938342ebd719f0))
+
 ## [1.15.2](https://github.com/ecucondorSA/autorenta/compare/v1.15.1...v1.15.2) (2026-01-08)
 
 
