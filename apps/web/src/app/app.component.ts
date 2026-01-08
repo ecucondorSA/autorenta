@@ -34,10 +34,11 @@ import { LocaleManagerService } from '@core/services/ui/locale-manager.service';
 import { MapboxPreloaderService } from '@core/services/geo/mapbox-preloader.service';
 import { MobileBottomNavPortalService } from '@core/services/ui/mobile-bottom-nav-portal.service';
 import { ProfileService, UserProfile } from '@core/services/auth/profile.service';
-import { GuidedTourService } from './core/guided-tour';
 import { PushNotificationService } from '@core/services/infrastructure/push-notification.service';
 import { PwaService } from '@core/services/infrastructure/pwa.service';
 import { NotificationsService } from '@core/services/infrastructure/user-notifications.service';
+import { routeAnimations } from '@core/animations/route-animations'; // Importar animaciones
+import { GuidedTourService } from './core/guided-tour';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
 import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
@@ -58,7 +59,6 @@ import { VerificationPromptBannerComponent } from './shared/components/verificat
 import { ClickOutsideDirective } from './shared/directives/click-outside.directive';
 import { OfflineBannerComponent } from './shared/components/offline-banner/offline-banner.component';
 
-import { routeAnimations } from '@core/animations/route-animations'; // Importar animaciones
 
 @Component({
   selector: 'app-root',

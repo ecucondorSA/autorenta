@@ -15,12 +15,8 @@ import {
   LOCK_TYPES,
   LockType,
 } from '@core/services/infrastructure/advisory-lock.service';
-import {
-  CircuitBreakerService,
-} from '@core/services/infrastructure/circuit-breaker.service';
-import {
-  PaymentMetricsService,
-} from '@core/services/payments/payment-metrics.service';
+import { CircuitBreakerService } from '@core/services/infrastructure/circuit-breaker.service';
+import { PaymentMetricsService } from '@core/services/payments/payment-metrics.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 

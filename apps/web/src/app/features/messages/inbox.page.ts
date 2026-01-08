@@ -474,7 +474,7 @@ export class InboxPage implements OnInit, OnDestroy {
     this.showAttachMenu.set(false);
   }
 
-  triggerFileInput(type: 'document' | 'image' | 'camera'): void {
+  triggerFileInput(): void {
     this.showAttachMenu.set(false);
 
     // Haptic feedback

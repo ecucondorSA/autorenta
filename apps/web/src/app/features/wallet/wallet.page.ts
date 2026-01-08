@@ -44,12 +44,12 @@ import { WithdrawalRequestFormComponent } from '../../shared/components/withdraw
  *
  * Ruta: /wallet
  */
+import { WalletAccountNumberCardComponent } from '../../shared/components/wallet-account-number-card/wallet-account-number-card.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 import { WalletFaqComponent } from './components/wallet-faq.component';
 import { WalletTransfersComponent } from './components/wallet-transfers.component';
 import { ClubMembershipCardComponent } from './components/club-membership-card.component';
 import { ClubPlansPreviewComponent } from './components/club-plans-preview.component';
-import { WalletAccountNumberCardComponent } from '../../shared/components/wallet-account-number-card/wallet-account-number-card.component';
-import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-wallet',

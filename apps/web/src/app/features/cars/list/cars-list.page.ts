@@ -20,10 +20,9 @@ import { CarsCompareService } from '@core/services/cars/cars-compare.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
 import { GeocodingService } from '@core/services/geo/geocoding.service';
-import { LocationCoordinates, LocationService } from '@core/services/geo/location.service';
+import { LocationService } from '@core/services/geo/location.service';
 import {
   CarAvailabilityService,
-  CarWithAvailability,
 } from '@core/services/cars/car-availability.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
@@ -32,9 +31,10 @@ import { MetaService } from '@core/services/ui/meta.service';
 import { ToastService } from '@core/services/ui/toast.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import type { DateRange } from '@core/models/marketplace.model';
+import { getErrorMessage } from '@core/utils/type-guards';
 import { Car } from '../../../core/models';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
-import type { DateRange } from '@core/models/marketplace.model';
 import { DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { PullToRefreshComponent } from '../../../shared/components/pull-to-refresh/pull-to-refresh.component';
 import { PwaTitlebarComponent } from '../../../shared/components/pwa-titlebar/pwa-titlebar.component';
@@ -43,7 +43,6 @@ import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-r
 // import { CarCardV3Component } from '../../../shared/components/marketplace/car-card-v3/car-card-v3.component';
 // import { FiltersDrawerComponent } from '../../../shared/components/marketplace/filters-drawer/filters-drawer.component';
 // import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
-import { getErrorMessage } from '@core/utils/type-guards';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 
 // Temporary BreadcrumbItem interface
@@ -961,7 +960,7 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
           bearing: 0,
           pitch: 0,
         });
-      } catch (error) {
+      } catch {
         this.toastService.error('Error', 'Verifica los permisos de geolocalización');
       } finally {
         this.isLocating.set(false);

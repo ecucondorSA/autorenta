@@ -16,7 +16,6 @@ import {
   BookingCommand,
   PickupPreference,
   PersonalInfoKind,
-  NearestCarInfo,
   RentarfastContext,
 } from './rentarfast.models';
 

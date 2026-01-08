@@ -136,7 +136,7 @@ export class VehicleDocumentsService {
    * Subir un documento
    */
   async uploadDocument(params: UploadDocumentParams): Promise<VehicleDocument> {
-    const { car_id, kind, file, expiry_date, notes } = params;
+    const { car_id, kind, file } = params;
 
     // 1. Upload file to storage
     const timestamp = Date.now();

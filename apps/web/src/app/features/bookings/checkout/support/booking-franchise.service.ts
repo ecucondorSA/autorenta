@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { BucketType } from '@core/models/fgo-v1-1.model';
-import { Booking } from '../../../../core/models';
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
+import { Booking } from '../../../../core/models';
 
 export interface FranchiseInfo {
   bucket: BucketType;

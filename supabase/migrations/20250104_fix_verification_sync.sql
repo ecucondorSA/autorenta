@@ -6,6 +6,138 @@
 -- 3. update_profile_from_ocr not syncing to user_identity_levels
 
 -- =====================================================
+-- 0. Ensure user_identity_levels exists (shadow DB compatibility)
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS public.user_identity_levels (
+  user_id uuid PRIMARY KEY,
+  current_level integer DEFAULT 1,
+  email_verified_at timestamptz,
+  phone_verified_at timestamptz,
+  id_verified_at timestamptz,
+  driver_license_verified_at timestamptz,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now(),
+  country text,
+  document_type text,
+  document_number text,
+  document_verified_at timestamptz,
+  document_ai_score numeric(5,2),
+  document_province text,
+  extracted_full_name text,
+  extracted_birth_date date,
+  extracted_gender text,
+  extracted_nationality text,
+  cuil text,
+  driver_license_number text,
+  driver_license_categories text[],
+  driver_license_expiry date,
+  driver_license_professional boolean DEFAULT false,
+  driver_license_ai_score numeric(5,2),
+  driver_license_points integer,
+  last_ocr_text_preview text,
+  last_ocr_confidence numeric(5,2),
+  last_ocr_has_face boolean,
+  last_ocr_face_confidence numeric(5,2),
+  selfie_url text,
+  selfie_verified_at timestamptz,
+  face_match_score numeric(5,2),
+  liveness_score numeric(5,2),
+  manual_review_required boolean DEFAULT false,
+  manual_reviewed_by uuid,
+  manual_reviewed_at timestamptz,
+  manual_review_decision text,
+  phone_number text
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_identity_levels_country
+  ON public.user_identity_levels (country);
+
+CREATE INDEX IF NOT EXISTS idx_user_identity_levels_verified
+  ON public.user_identity_levels (document_verified_at)
+  WHERE document_verified_at IS NOT NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_user_identity_unique_document
+  ON public.user_identity_levels (document_number)
+  WHERE document_number IS NOT NULL;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'user_identity_levels_country_check'
+  ) THEN
+    ALTER TABLE public.user_identity_levels
+      ADD CONSTRAINT user_identity_levels_country_check
+      CHECK (country = ANY (ARRAY['AR'::text, 'EC'::text]));
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'user_identity_levels_current_level_check'
+  ) THEN
+    ALTER TABLE public.user_identity_levels
+      ADD CONSTRAINT user_identity_levels_current_level_check
+      CHECK (current_level >= 1 AND current_level <= 5);
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'user_identity_levels_document_type_check'
+  ) THEN
+    ALTER TABLE public.user_identity_levels
+      ADD CONSTRAINT user_identity_levels_document_type_check
+      CHECK (document_type = ANY (ARRAY['DNI'::text, 'CEDULA'::text, 'PASAPORTE'::text, 'LC'::text, 'LE'::text, 'CI'::text]));
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'user_identity_levels_extracted_gender_check'
+  ) THEN
+    ALTER TABLE public.user_identity_levels
+      ADD CONSTRAINT user_identity_levels_extracted_gender_check
+      CHECK (extracted_gender = ANY (ARRAY['M'::text, 'F'::text]));
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'user_identity_levels_manual_review_decision_check'
+  ) THEN
+    ALTER TABLE public.user_identity_levels
+      ADD CONSTRAINT user_identity_levels_manual_review_decision_check
+      CHECK (manual_review_decision = ANY (ARRAY['APPROVED'::text, 'REJECTED'::text, 'PENDING'::text]));
+  END IF;
+
+  IF to_regclass('auth.users') IS NOT NULL THEN
+    IF NOT EXISTS (
+      SELECT 1 FROM pg_constraint WHERE conname = 'user_identity_levels_user_id_fkey'
+    ) THEN
+      ALTER TABLE public.user_identity_levels
+        ADD CONSTRAINT user_identity_levels_user_id_fkey
+        FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+    END IF;
+
+    IF NOT EXISTS (
+      SELECT 1 FROM pg_constraint WHERE conname = 'user_identity_levels_manual_reviewed_by_fkey'
+    ) THEN
+      ALTER TABLE public.user_identity_levels
+        ADD CONSTRAINT user_identity_levels_manual_reviewed_by_fkey
+        FOREIGN KEY (manual_reviewed_by) REFERENCES auth.users(id);
+    END IF;
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE schemaname = 'public' AND tablename = 'user_identity_levels' AND policyname = 'Users can view own identity level'
+  ) THEN
+    EXECUTE 'CREATE POLICY "Users can view own identity level" ON public.user_identity_levels FOR SELECT TO authenticated USING ((SELECT auth.uid()) = user_id)';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE schemaname = 'public' AND tablename = 'user_identity_levels' AND policyname = 'Users can update own identity level'
+  ) THEN
+    EXECUTE 'CREATE POLICY "Users can update own identity level" ON public.user_identity_levels FOR UPDATE TO authenticated USING ((SELECT auth.uid()) = user_id)';
+  END IF;
+END $$;
+
+-- =====================================================
 -- 1. Create trigger function to sync and recalculate level
 -- =====================================================
 

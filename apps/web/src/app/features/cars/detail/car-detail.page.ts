@@ -30,6 +30,11 @@ import { MetaService } from '@core/services/ui/meta.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { WalletService } from '@core/services/payments/wallet.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
+import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
+import { WaitlistService } from '@core/services/bookings/waitlist.service';
 
 // Models
 import { calculateCreditSecurityUsd } from '@core/models/booking-detail-payment.model';
@@ -38,6 +43,7 @@ import {
   RiskCalculation,
   RiskCalculatorService,
 } from '@core/services/verification/risk-calculator.service';
+import type { DateRange } from '@core/models/marketplace.model';
 import { Car, CarPhoto, CarStats, Review } from '../../../core/models';
 
 // Components
@@ -47,7 +53,6 @@ import { AiReputationCardComponent } from '../../../shared/components/ai-reputat
 import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
 import { CarInquiryChatComponent } from '../../../shared/components/car-inquiry-chat/car-inquiry-chat.component';
 import { CarReviewsSectionComponent } from '../../../shared/components/car-reviews-section/car-reviews-section.component';
-import type { DateRange } from '@core/models/marketplace.model';
 import { DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { type PaymentMethod } from '../../../shared/components/payment-method-buttons/payment-method-buttons.component';
@@ -70,13 +75,6 @@ export interface BreadcrumbItem {
   url?: string;
   icon?: string;
 }
-
-// Services
-import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
-import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
-import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
-import { WaitlistService } from '@core/services/bookings/waitlist.service';
 
 interface CarDetailState {
   car: Car | null;

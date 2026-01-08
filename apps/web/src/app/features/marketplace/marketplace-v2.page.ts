@@ -25,7 +25,6 @@ import { GeocodingResult, GeocodingService } from '@core/services/geo/geocoding.
 import { LocationService } from '@core/services/geo/location.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
-import { FilterState } from '../../shared/components/map-filters/map-filters.component';
 
 // QuickFilter interface defined locally (component was removed)
 interface QuickFilter {
@@ -56,6 +55,7 @@ import { ThemeService } from '@core/services/ui/theme.service';
 import type { DateRange, LatLngBoundsLiteral, Stat } from '@core/models/marketplace.model';
 import { DateRangePickerComponent } from '../../shared/components/date-range-picker/date-range-picker.component';
 import { HdriBackgroundComponent } from '../../shared/components/hdri-background/hdri-background.component';
+import { FilterState } from '../../shared/components/map-filters/map-filters.component';
 import { Car } from '../../core/models';
 
 interface CarWithLatestLocation extends Car {

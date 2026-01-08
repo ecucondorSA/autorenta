@@ -7,7 +7,7 @@ import {
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
-import { LocationData, LocationService } from '@core/services/geo/location.service';
+import { LocationService } from '@core/services/geo/location.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { ProfileStore } from '@core/stores/profile.store';
 import { RentarfastIntentService } from './rentarfast-intent.service';
@@ -149,7 +149,7 @@ export class RentarfastCapabilityService {
       const endDateStr = endDate.toISOString().split('T')[0];
 
       // Generate interactive suggestions (Supabase chatbot style)
-      const suggestions: AgentChatSuggestion[] = carsWithDistance.map((car, index) => {
+      const suggestions: AgentChatSuggestion[] = carsWithDistance.map((car) => {
         const title = car.title || `${car.brand} ${car.model}`;
         const price = car.price_per_day ? `$${car.price_per_day}/día` : '';
         const city = car.location_city ? ` - ${car.location_city}` : '';

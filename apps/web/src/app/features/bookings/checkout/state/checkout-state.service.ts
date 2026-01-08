@@ -7,7 +7,6 @@ import { ExchangeRateService } from '@core/services/payments/exchange-rate.servi
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 import { BucketType, FgoParameters } from '@core/models/fgo-v1-1.model';
-import { SubscriptionCoverageCheck } from '@core/models/subscription.model';
 import { Booking } from '../../../../core/models';
 import {
   FranchiseInfo,

@@ -30,13 +30,13 @@ import {
   PaymentAuthorization,
   PaymentMode,
 } from '@core/models/booking-detail-payment.model';
-import { Car } from '../../../core/models';
 import {
   SubscriptionCoverageCheck,
   PreauthorizationCalculation,
   SUBSCRIPTION_TIERS,
   type SubscriptionTier,
 } from '@core/models/subscription.model';
+import { Car } from '../../../core/models';
 
 // Components
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';

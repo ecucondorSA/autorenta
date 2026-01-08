@@ -1,4 +1,3 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, Signal, computed, effect, inject, PLATFORM_ID } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';

@@ -14,10 +14,10 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 import { BankAccount, PayoutService } from '@core/services/payments/payout.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { WalletService } from '@core/services/payments/wallet.service';
+import { MercadoPagoConnectComponent } from '../profile/mercadopago-connect.component';
 import { BankAccountsComponent } from './components/bank-accounts.component';
 import { PayoutHistoryComponent } from './components/payout-history.component';
 import { RequestPayoutModalComponent } from './components/request-payout-modal.component';
-import { MercadoPagoConnectComponent } from '../profile/mercadopago-connect.component';
 
 /**
  * Payouts Page

@@ -227,7 +227,7 @@ export class BookingCheckinPage implements OnInit {
     this.carModel.set(this.route.snapshot.queryParams['model'] || 'Model 3');
   }
 
-  async onVideoUploaded(videoPath: string) {
+  async onVideoUploaded() {
     this.videoUploaded.set(true);
 
     const toast = await this.toastCtrl.create({
@@ -280,7 +280,7 @@ export class BookingCheckinPage implements OnInit {
       setTimeout(() => {
         this.router.navigate(['/bookings', this.bookingId()]);
       }, 1000);
-    } catch (error) {
+    } catch {
       const toast = await this.toastCtrl.create({
         message: '❌ Error al confirmar check-in',
         duration: 5000,

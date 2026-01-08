@@ -6,8 +6,8 @@ import {
 } from '@core/services/infrastructure/realtime-connection.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import type { Booking } from '@core/models';
-import type { BookingConfirmationRow } from './booking-ops.service';
 import { validateBookingPayload } from '@core/utils/booking-validators';
+import type { BookingConfirmationRow } from './booking-ops.service';
 
 /**
  * Handlers for realtime booking updates (single booking)
