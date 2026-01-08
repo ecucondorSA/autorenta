@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/ecucondorSA/autorenta/compare/v1.9.8...v1.10.0) (2026-01-08)
+
+
+### Features
+
+* **subscription:** add upgrade_subscription_with_wallet RPC and fix linting ([4f14c1d](https://github.com/ecucondorSA/autorenta/commit/4f14c1d0875fc3cbda4257a8e4a569e943185d8a))
+
 ## [1.9.8](https://github.com/ecucondorSA/autorenta/compare/v1.9.7...v1.9.8) (2026-01-08)
 
 
