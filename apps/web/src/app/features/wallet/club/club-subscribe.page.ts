@@ -335,10 +335,39 @@ export class ClubSubscribePage implements OnInit {
         err instanceof Error ? err.message : 'No se pudo procesar el pago con wallet.';
 
       // Handle already subscribed case (409)
+      const msgLower = message.toLowerCase();
       if (
-        message.toLowerCase().includes('already subscribed') ||
-        message.toLowerCase().includes('ya tiene una suscripci')
+        msgLower.includes('already subscribed') ||
+        msgLower.includes('already has an active subscription') ||
+        msgLower.includes('ya tiene una suscripci')
       ) {
+        // Attempt upgrade if different tier
+        const currentTier = this.subscriptionService.tier();
+        if (currentTier && currentTier !== tier.tier) {
+          try {
+            this.toast.info(
+              'Actualizando plan',
+              'Detectamos una suscripción activa. Procesando mejora de plan...',
+            );
+            await this.subscriptionService.upgradeSubscriptionWithWallet(tier.tier);
+            this.analytics.trackEvent('club_upgrade_submitted', {
+              tier: tier.tier,
+              method: 'wallet',
+            });
+            this.toast.success('Plan Actualizado', 'Tu suscripción ha sido mejorada.');
+            void this.router.navigate(['/wallet/club/history'], {
+              queryParams: { payment: 'success', tier: tier.tier, type: 'upgrade' },
+            });
+            return;
+          } catch (upgradeErr) {
+            // Fallthrough to error display
+            const upgradeMsg =
+              upgradeErr instanceof Error ? upgradeErr.message : 'Fallo la actualización';
+            this.error.set(`Error al mejorar plan: ${upgradeMsg}`);
+            return;
+          }
+        }
+
         this.toast.info('Suscripción activa', 'Ya eres miembro de Autorentar Club.');
         void this.router.navigate(['/wallet/club/history']);
         return;

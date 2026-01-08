@@ -218,31 +218,31 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     quote: string;
     earnings: number;
   }> = [
-    {
-      avatar: '/assets/images/avatars/avatar-2.jpg', // Martín (Hombre 40s)
-      name: 'Martín',
-      location: 'Buenos Aires',
-      quote:
-        'Empecé para pagar el seguro y ahora pago la cuota completa del auto. Es increíble que antes perdía plata teniéndolo estacionado.',
-      earnings: 450000,
-    },
-    {
-      avatar: '/assets/images/avatars/avatar-1.jpg', // Sofía (Mujer joven)
-      name: 'Sofía',
-      location: 'Córdoba',
-      quote:
-        'Lo uso para ir al trabajo y lo comparto los fines de semana. Con eso cubro el mantenimiento y me sobra para ahorrar.',
-      earnings: 280000,
-    },
-    {
-      avatar: '/assets/images/avatars/avatar-3.jpg', // Carlos (Hombre joven)
-      name: 'Carlos',
-      location: 'Rosario',
-      quote:
-        'Tengo una camioneta que uso poco. La puse en la plataforma y se convirtió en mi mejor inversión del año.',
-      earnings: 820000,
-    },
-  ];
+      {
+        avatar: '/assets/images/avatars/avatar-2.jpg', // Martín (Hombre 40s)
+        name: 'Martín',
+        location: 'Buenos Aires',
+        quote:
+          'Empecé para pagar el seguro y ahora pago la cuota completa del auto. Es increíble que antes perdía plata teniéndolo estacionado.',
+        earnings: 450000,
+      },
+      {
+        avatar: '/assets/images/avatars/avatar-1.jpg', // Sofía (Mujer joven)
+        name: 'Sofía',
+        location: 'Córdoba',
+        quote:
+          'Lo uso para ir al trabajo y lo comparto los fines de semana. Con eso cubro el mantenimiento y me sobra para ahorrar.',
+        earnings: 280000,
+      },
+      {
+        avatar: '/assets/images/avatars/avatar-3.jpg', // Carlos (Hombre joven)
+        name: 'Carlos',
+        location: 'Rosario',
+        quote:
+          'Tengo una camioneta que uso poco. La puse en la plataforma y se convirtió en mi mejor inversión del año.',
+        earnings: 820000,
+      },
+    ];
 
   // Pagination
   readonly currentPage = signal(1);
@@ -740,7 +740,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
         model_text_backup: item.model,
         year: item.year,
         plate: item.plate,
-        price_per_day: item.price_per_day / 100, // Ajustar de centavos a unidades
+        price_per_day: item.price_per_day, // Valor directo (NUMERIC)
         currency: item.currency,
         status: item.status,
         location_city: item.location?.city || '',

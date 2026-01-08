@@ -1,18 +1,18 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  signal,
-  inject,
-  ChangeDetectionStrategy,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
-import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { PaymentsService } from '@core/services/payments/payments.service';
+import { IonicModule } from '@ionic/angular';
 import { Booking } from '../../../core/models';
 import { ReferralBannerComponent } from '../../../shared/components/referral-banner/referral-banner.component';
 
@@ -38,8 +38,9 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
   readonly booking = signal<Booking | null>(null);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
-  readonly autoRedirectSeconds = signal<number>(12);
+  readonly autoRedirectSeconds = signal<number>(8);
   readonly autoRedirectActive = signal(false);
+  readonly flow = signal<'request' | 'instant' | 'payment' | null>(null);
   private redirectInterval: number | null = null;
   private redirectTimeout: number | null = null;
 
@@ -64,6 +65,13 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
     }
 
     this.bookingId.set(id);
+
+    // Detect flow type from query params
+    const flowParam = this.route.snapshot.queryParamMap.get('flow');
+    if (flowParam === 'request' || flowParam === 'instant' || flowParam === 'payment') {
+      this.flow.set(flowParam);
+    }
+
     this.loadBooking(id);
 
     // ✅ OPTIMIZED: Realtime first, polling only as fallback

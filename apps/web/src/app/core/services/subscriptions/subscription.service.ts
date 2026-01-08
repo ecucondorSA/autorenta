@@ -367,38 +367,24 @@ export class SubscriptionService {
       throw err;
     }
   }
-
   /**
    * Create a subscription using wallet balance (internal transfer).
    * Returns the subscription ID if successful.
    */
   async createSubscriptionWithWallet(tier: SubscriptionTier): Promise<string> {
-    try {
-      const tierConfig = SUBSCRIPTION_TIERS[tier];
-      if (!tierConfig) {
-        throw new Error(`Invalid tier: ${tier}`);
-      }
+    const tierConfig = SUBSCRIPTION_TIERS[tier];
+    if (!tierConfig) {
+      throw new Error(`Invalid tier: ${tier}`);
+    }
 
+    try {
       const { data, error } = await this.supabase.functions.invoke('create-subscription-wallet', {
         body: { tier },
       });
 
       if (error) {
-        // Try to get JSON error from body
-        let serverError = 'Error al crear suscripción';
-        try {
-          if (error instanceof Error) {
-            const body = await (
-              error as Error & {
-                context?: { json: () => Promise<{ message?: string; error?: string }> };
-              }
-            ).context?.json();
-            if (body?.message) serverError = body.message;
-            else if (body?.error) serverError = body.error;
-          }
-        } catch {
-          // Ignore JSON parse error
-        }
+        // Extract error message from FunctionsHttpError
+        let serverError = await this.extractFunctionError(error);
         throw new Error(serverError);
       }
 
@@ -413,9 +399,61 @@ export class SubscriptionService {
       await this.fetchSubscription(true);
       return data.subscription_id as string;
     } catch (err) {
-      this.handleError(err, 'Error al crear suscripción con wallet');
-      throw err;
+      // Handle thrown exceptions (functions.invoke may throw for non-2xx)
+      const message = await this.extractFunctionError(err);
+      this.logger.error('Error al crear suscripción con wallet', { message, tier });
+      throw new Error(message);
     }
+  }
+
+  /**
+   * Extract error message from Supabase function errors.
+   * Handles FunctionsHttpError, FunctionsRelayError, and plain Error objects.
+   */
+  private async extractFunctionError(error: unknown): Promise<string> {
+    if (!error) return 'Error desconocido';
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const errAny = error as any;
+
+    // Try to get message from error context (FunctionsHttpError)
+    if (errAny.context && typeof errAny.context.json === 'function') {
+      try {
+        const body = await errAny.context.json();
+        if (body?.message) return body.message;
+        if (body?.error) return body.error;
+      } catch {
+        // json() may have been consumed, try text()
+        if (typeof errAny.context.text === 'function') {
+          try {
+            const text = await errAny.context.text();
+            if (text) {
+              try {
+                const parsed = JSON.parse(text);
+                if (parsed.message) return parsed.message;
+                if (parsed.error) return parsed.error;
+              } catch {
+                return text;
+              }
+            }
+          } catch {
+            // Ignore
+          }
+        }
+      }
+    }
+
+    // Fallback to error message
+    if (errAny.message && errAny.message !== 'FunctionsHttpError') {
+      return errAny.message;
+    }
+
+    // Check for 409 status
+    if (errAny.context?.status === 409) {
+      return 'Already subscribed';
+    }
+
+    return 'Error al procesar la solicitud';
   }
 
   /**

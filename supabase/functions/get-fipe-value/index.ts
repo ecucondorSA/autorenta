@@ -99,21 +99,26 @@ interface VehicleParams {
  */
 async function getBRLtoUSDRate(): Promise<number> {
   try {
-    const response = await fetch(`${BINANCE_API_BASE}/ticker/price?symbol=BRLBUSD`);
+    // Use USDTBRL (USDT in BRL) because BRLBUSD is deprecated
+    // Price format: "5.40" (1 USDT = 5.40 BRL)
+    const response = await fetch(`${BINANCE_API_BASE}/ticker/price?symbol=USDTBRL`);
 
     if (!response.ok) {
-      console.error(`❌ Binance BRL/USD request failed: ${response.status}`);
-      return 0.20; // Fallback rate
+      console.error(`❌ Binance USDT/BRL request failed: ${response.status}`);
+      return 0.18; // Fallback rate (approx 1/5.5)
     }
 
     const data: BinancePrice = await response.json();
-    const rate = parseFloat(data.price);
+    const usdtBrlPrice = parseFloat(data.price);
 
-    console.log(`✅ Binance BRL/USD rate: ${rate}`);
+    // Invert to get BRL -> USD rate (1 BRL = 1/5.40 USD)
+    const rate = 1 / usdtBrlPrice;
+
+    console.log(`✅ Binance USDT/BRL price: ${usdtBrlPrice} -> Rate: ${rate}`);
     return rate;
   } catch (error) {
-    console.error('❌ Error fetching Binance BRL/USD rate:', error);
-    return 0.20; // Fallback
+    console.error('❌ Error fetching Binance USDT/BRL rate:', error);
+    return 0.18; // Fallback
   }
 }
 
