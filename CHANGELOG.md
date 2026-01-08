@@ -1,3 +1,10 @@
+## [1.9.3](https://github.com/ecucondorSA/autorenta/compare/v1.9.2...v1.9.3) (2026-01-08)
+
+
+### Bug Fixes
+
+* **subscription:** resolve 500 error in wallet charge and cleanup code linting ([923e51d](https://github.com/ecucondorSA/autorenta/commit/923e51df7d357a0259cd67503f50826032e5ea04))
+
 ## [1.9.2](https://github.com/ecucondorSA/autorenta/compare/v1.9.1...v1.9.2) (2026-01-08)
 
 
