@@ -1,3 +1,10 @@
+## [1.11.3](https://github.com/ecucondorSA/autorenta/compare/v1.11.2...v1.11.3) (2026-01-08)
+
+
+### Bug Fixes
+
+* **migrations:** add DROP FUNCTION to handle return type change ([2458413](https://github.com/ecucondorSA/autorenta/commit/2458413e6a5d4865786535db12a758d458ca74c2))
+
 ## [1.11.2](https://github.com/ecucondorSA/autorenta/compare/v1.11.1...v1.11.2) (2026-01-08)
 
 
