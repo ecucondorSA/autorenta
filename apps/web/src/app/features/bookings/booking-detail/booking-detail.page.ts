@@ -26,8 +26,8 @@ import {
   BookingPaymentRow,
   BookingPricingRow,
 } from '@core/services/bookings/booking-ops.service';
-import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
@@ -38,44 +38,43 @@ import { MetaService } from '@core/services/ui/meta.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { AlertController } from '@ionic/angular';
 import { IonIcon } from '@ionic/angular/standalone';
+import { TranslateModule } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
 import {
-  timeOutline,
-  checkmarkCircleOutline,
-  carSportOutline,
-  flagOutline,
-  closeCircleOutline,
-  hourglassOutline,
+  alertCircle,
   alertCircleOutline,
+  arrowBack,
+  arrowBackOutline,
+  arrowForward,
+  carSportOutline,
   cardOutline,
-  searchOutline,
+  chatbubbleEllipsesOutline,
+  checkmarkCircle,
+  checkmarkCircleOutline,
+  checkmarkDoneOutline,
+  chevronForward,
+  closeCircle,
+  closeCircleOutline,
+  documentTextOutline,
+  flagOutline,
+  gitCompareOutline,
   hammerOutline,
   helpCircle,
-  arrowBackOutline,
-  arrowBack,
-  documentTextOutline,
-  shieldCheckmarkOutline,
-  gitCompareOutline,
-  warningOutline,
-  chevronForward,
-  receiptOutline,
-  chatbubbleEllipsesOutline,
-  arrowForward,
-  checkmarkDoneOutline,
-  sparkles,
+  hourglassOutline,
   informationCircle,
-  alertCircle,
-  closeCircle,
-  checkmarkCircle,
   mapOutline,
+  receiptOutline,
+  searchOutline,
+  shieldCheckmarkOutline,
+  sparkles,
+  timeOutline,
+  warningOutline,
 } from 'ionicons/icons';
-import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
 import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
 import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
-import { SidePanelComponent } from '../../../shared/components/side-panel/side-panel.component';
 import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
 import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
 import { BookingInsuranceSummaryComponent } from '../../../shared/components/booking-insurance-summary/booking-insurance-summary.component';
@@ -95,6 +94,7 @@ import { ReportOwnerNoShowComponent } from '../../../shared/components/report-ow
 import { ReportRenterNoShowComponent } from '../../../shared/components/report-renter-no-show/report-renter-no-show.component'; // NEW
 import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component'; // NEW
 import { SettlementSimulatorComponent } from '../../../shared/components/settlement-simulator/settlement-simulator.component';
+import { SidePanelComponent } from '../../../shared/components/side-panel/side-panel.component';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
 
@@ -363,6 +363,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
     const isReturnFlow =
       !!booking.returned_at ||
+      booking.status === 'returned' || // V2 status
+      booking.status === 'inspected_good' || // V2 status
+      booking.status === 'damage_reported' || // V2 status
       booking.completion_status === 'returned' ||
       booking.completion_status === 'pending_owner' ||
       booking.completion_status === 'pending_renter' ||
@@ -803,6 +806,19 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   });
 
   readonly showReportRenterNoShowModal = signal(false); // NEW
+  readonly checkInPhotos = computed(() => {
+    const list = this.inspections();
+    const ownerCheckIn = list.find((i) => i.stage === 'check_in');
+    if (ownerCheckIn) return ownerCheckIn.photos;
+    const renterCheckIn = list.find((i) => i.stage === 'renter_check_in');
+    return renterCheckIn?.photos || [];
+  });
+
+  readonly checkOutPhotos = computed(() => {
+    const list = this.inspections();
+    return list.find((i) => i.stage === 'check_out')?.photos || [];
+  });
+
   readonly canReportRenterNoShow = computed(() => {
     const booking = this.booking();
     if (!booking || !this.isOwner()) return false;
@@ -958,19 +974,39 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   });
 
   // Owner check-out: Owner confirma la devolución del vehículo
+  // Owner check-out: Owner confirma la devolución del vehículo
   readonly canOwnerCheckOut = computed(() => {
     const booking = this.booking();
     if (!booking || !this.isOwner()) return false;
-    // Owner puede hacer check-out cuando el renter ya devolvió (in_progress con renter check-out)
-    return booking.status === 'in_progress' && this.hasRenterCheckIn();
+
+    // Owner can proceed if vehicle is returned but not yet fully completed/archived
+    // We check:
+    // 1. Status is 'returned' (new V2 status)
+    // 2. OR returned_at is set
+    // 3. OR has check-out inspection (legacy/fallback)
+    const isReturned = booking.status === 'returned' || !!booking.returned_at || this.hasCheckOut();
+
+    // Must be in a state where owner intervention is needed (not yet completed)
+    return isReturned && booking.status !== 'completed';
+  });
+
+  // Helper for UI to show return/confirmation section
+  readonly isReturnPhase = computed(() => {
+    const booking = this.booking();
+    if (!booking) return false;
+    return (
+      booking.status === 'returned' ||
+      !!booking.returned_at ||
+      (booking.status === 'in_progress' && this.hasCheckOut())
+    );
   });
 
   readonly canReportDamage = computed(() => {
     const booking = this.booking();
     if (!booking || !this.isOwner()) return false;
-    // Owner can report damage after vehicle return (completed status or returned_at is set)
+    // Owner can report damage after vehicle return
     const canReport =
-      (booking.status === 'completed' || booking.returned_at !== null) && !booking.has_damages; // CORRECTO: usa nombre de columna BD real
+      (booking.status === 'completed' || this.isReturnPhase()) && !booking.has_damages;
     return canReport;
   });
 

@@ -8,16 +8,16 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
-import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
-import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { IonicModule } from '@ionic/angular';
-import { Booking } from '../../../core/models';
+import { firstValueFrom } from 'rxjs';
+import { Booking, BookingStatus } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 
 /**
@@ -111,10 +111,11 @@ export class OwnerCheckOutPage implements OnInit {
       }
 
       // Validar estado
-      if (booking.status !== 'in_progress') {
+      const validStatuses: BookingStatus[] = ['in_progress', 'returned'];
+      if (!validStatuses.includes(booking.status)) {
         this.toastService.error(
           'Error',
-          `La reserva debe estar en estado "En curso". Estado actual: ${booking.status}`,
+          `La reserva debe estar en estado "En curso" o "Devuelto". Estado actual: ${booking.status}`,
         );
         this.router.navigate(['/bookings/owner']);
         return;

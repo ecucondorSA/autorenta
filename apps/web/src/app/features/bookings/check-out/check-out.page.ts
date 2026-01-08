@@ -1,22 +1,22 @@
+import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   OnInit,
+  computed,
   inject,
   signal,
-  computed,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
-import { BookingsService } from '@core/services/bookings/bookings.service';
-import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
-import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
-import { AuthService } from '@core/services/auth/auth.service';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { firstValueFrom } from 'rxjs';
 import { Booking } from '../../../core/models';
+import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 
 /**
  * Página de Check-out para locatarios
@@ -201,10 +201,8 @@ export class CheckOutPage implements OnInit {
           booking_id: booking.id,
           returned_by: renterId,
         });
-        await this.confirmationService.confirmRenter({
-          booking_id: booking.id,
-          confirming_user_id: renterId,
-        });
+
+        // Update local booking state
         const updated = await this.bookingsService.getBookingById(booking.id);
         if (updated) this.booking.set(updated);
       }

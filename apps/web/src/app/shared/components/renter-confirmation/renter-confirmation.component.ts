@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 
+import { InspectionPhoto } from '@core/models/fgo-v1-1.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import {
   BookingConfirmationService,
@@ -74,6 +75,16 @@ export class RenterConfirmationComponent {
    * Monto del depósito (usualmente $250)
    */
   @Input() depositAmount = 250;
+
+  /**
+   * Fotos de la entrega (Check-in)
+   */
+  @Input() checkInPhotos: InspectionPhoto[] = [];
+
+  /**
+   * Fotos de la devolución (Check-out)
+   */
+  @Input() checkOutPhotos: InspectionPhoto[] = [];
 
   /**
    * Emite cuando la confirmación se completó exitosamente
@@ -179,5 +190,12 @@ export class RenterConfirmationComponent {
       const errorMessage = err instanceof Error ? err.message : 'Error al disputar';
       this.message.set(`Error: ${errorMessage}`);
     }
+  }
+
+  /**
+   * Filtra fotos por tipo
+   */
+  getPhotosByType(photos: InspectionPhoto[], type: InspectionPhoto['type']): InspectionPhoto[] {
+    return photos.filter((p) => p.type === type);
   }
 }

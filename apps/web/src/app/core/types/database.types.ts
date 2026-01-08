@@ -16726,11 +16726,11 @@ export type Database = {
         Returns: boolean;
       };
       _st_coveredby:
-        | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
+      | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
+      | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
       _st_covers:
-        | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
+      | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
+      | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
       _st_crosses: {
         Args: { geom1: unknown; geom2: unknown };
         Returns: boolean;
@@ -16830,38 +16830,38 @@ export type Database = {
       };
       accounting_auto_audit: { Args: never; Returns: Json };
       accounting_balance_sheet:
-        | {
-            Args: { p_date: string };
-            Returns: {
-              error: true;
-            } & 'Could not choose the best candidate function between: public.accounting_balance_sheet(p_date => date), public.accounting_balance_sheet(p_date => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved'[];
-          }
-        | {
-            Args: { p_date?: string };
-            Returns: {
-              error: true;
-            } & 'Could not choose the best candidate function between: public.accounting_balance_sheet(p_date => date), public.accounting_balance_sheet(p_date => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved'[];
-          };
+      | {
+        Args: { p_date: string };
+        Returns: {
+          error: true;
+        } & 'Could not choose the best candidate function between: public.accounting_balance_sheet(p_date => date), public.accounting_balance_sheet(p_date => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved'[];
+      }
+      | {
+        Args: { p_date?: string };
+        Returns: {
+          error: true;
+        } & 'Could not choose the best candidate function between: public.accounting_balance_sheet(p_date => date), public.accounting_balance_sheet(p_date => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved'[];
+      };
       accounting_daily_closure: { Args: never; Returns: Json };
       accounting_income_statement:
-        | {
-            Args: { p_end_date: string; p_start_date: string };
-            Returns: {
-              account_type: string;
-              balance: number;
-              code: string;
-              name: string;
-            }[];
-          }
-        | {
-            Args: { p_end_date: string; p_start_date: string };
-            Returns: {
-              account_code: string;
-              account_name: string;
-              account_type: string;
-              amount: number;
-            }[];
-          };
+      | {
+        Args: { p_end_date: string; p_start_date: string };
+        Returns: {
+          account_type: string;
+          balance: number;
+          code: string;
+          name: string;
+        }[];
+      }
+      | {
+        Args: { p_end_date: string; p_start_date: string };
+        Returns: {
+          account_code: string;
+          account_name: string;
+          account_type: string;
+          amount: number;
+        }[];
+      };
       accounting_monthly_closure: { Args: never; Returns: Json };
       accounting_verify_wallet_liabilities: { Args: never; Returns: undefined };
       accumulate_pool_contribution: {
@@ -16908,42 +16908,42 @@ export type Database = {
       };
       addauth: { Args: { '': string }; Returns: boolean };
       addgeometrycolumn:
-        | {
-            Args: {
-              catalog_name: string;
-              column_name: string;
-              new_dim: number;
-              new_srid_in: number;
-              new_type: string;
-              schema_name: string;
-              table_name: string;
-              use_typmod?: boolean;
-            };
-            Returns: string;
-          }
-        | {
-            Args: {
-              column_name: string;
-              new_dim: number;
-              new_srid: number;
-              new_type: string;
-              schema_name: string;
-              table_name: string;
-              use_typmod?: boolean;
-            };
-            Returns: string;
-          }
-        | {
-            Args: {
-              column_name: string;
-              new_dim: number;
-              new_srid: number;
-              new_type: string;
-              table_name: string;
-              use_typmod?: boolean;
-            };
-            Returns: string;
-          };
+      | {
+        Args: {
+          catalog_name: string;
+          column_name: string;
+          new_dim: number;
+          new_srid_in: number;
+          new_type: string;
+          schema_name: string;
+          table_name: string;
+          use_typmod?: boolean;
+        };
+        Returns: string;
+      }
+      | {
+        Args: {
+          column_name: string;
+          new_dim: number;
+          new_srid: number;
+          new_type: string;
+          schema_name: string;
+          table_name: string;
+          use_typmod?: boolean;
+        };
+        Returns: string;
+      }
+      | {
+        Args: {
+          column_name: string;
+          new_dim: number;
+          new_srid: number;
+          new_type: string;
+          table_name: string;
+          use_typmod?: boolean;
+        };
+        Returns: string;
+      };
       adjust_alpha_dynamic: {
         Args: { p_bucket?: string; p_country_code?: string };
         Returns: Json;
@@ -17203,22 +17203,22 @@ export type Database = {
         }[];
       };
       capture_payment_authorization:
-        | { Args: { p_auth_id: string }; Returns: boolean }
-        | {
-            Args: { p_amount_cents: number; p_payment_id: string };
-            Returns: {
-              captured_amount_cents: number;
-              captured_at: string;
-              message: string;
-              success: boolean;
-            }[];
-          };
+      | { Args: { p_auth_id: string }; Returns: boolean }
+      | {
+        Args: { p_amount_cents: number; p_payment_id: string };
+        Returns: {
+          captured_amount_cents: number;
+          captured_at: string;
+          message: string;
+          success: boolean;
+        }[];
+      };
       capture_preauth:
-        | { Args: { p_auth_id: string }; Returns: boolean }
-        | {
-            Args: { p_amount: number; p_intent_id: string };
-            Returns: undefined;
-          };
+      | { Args: { p_auth_id: string }; Returns: boolean }
+      | {
+        Args: { p_amount: number; p_intent_id: string };
+        Returns: undefined;
+      };
       charge_accident_deductible: {
         Args: { p_accident_id: string; p_deductible_cents: number };
         Returns: Json;
@@ -17337,18 +17337,18 @@ export type Database = {
         Returns: number;
       };
       config_get_boolean:
-        | {
-            Args: { p_key: string };
-            Returns: {
-              error: true;
-            } & 'Could not choose the best candidate function between: public.config_get_boolean(p_key => text), public.config_get_boolean(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved';
-          }
-        | {
-            Args: { p_key: string };
-            Returns: {
-              error: true;
-            } & 'Could not choose the best candidate function between: public.config_get_boolean(p_key => text), public.config_get_boolean(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved';
-          };
+      | {
+        Args: { p_key: string };
+        Returns: {
+          error: true;
+        } & 'Could not choose the best candidate function between: public.config_get_boolean(p_key => text), public.config_get_boolean(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved';
+      }
+      | {
+        Args: { p_key: string };
+        Returns: {
+          error: true;
+        } & 'Could not choose the best candidate function between: public.config_get_boolean(p_key => text), public.config_get_boolean(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved';
+      };
       config_get_json: { Args: { p_key: string }; Returns: Json };
       config_get_number: { Args: { p_key: string }; Returns: number };
       config_get_public: {
@@ -17362,18 +17362,18 @@ export type Database = {
         }[];
       };
       config_get_string:
-        | {
-            Args: { p_key: string };
-            Returns: {
-              error: true;
-            } & 'Could not choose the best candidate function between: public.config_get_string(p_key => text), public.config_get_string(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved';
-          }
-        | {
-            Args: { p_key: string };
-            Returns: {
-              error: true;
-            } & 'Could not choose the best candidate function between: public.config_get_string(p_key => text), public.config_get_string(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved';
-          };
+      | {
+        Args: { p_key: string };
+        Returns: {
+          error: true;
+        } & 'Could not choose the best candidate function between: public.config_get_string(p_key => text), public.config_get_string(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved';
+      }
+      | {
+        Args: { p_key: string };
+        Returns: {
+          error: true;
+        } & 'Could not choose the best candidate function between: public.config_get_string(p_key => text), public.config_get_string(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved';
+      };
       config_update: {
         Args: { p_key: string; p_value: Json };
         Returns: {
@@ -17440,35 +17440,35 @@ export type Database = {
         Returns: string;
       };
       create_mp_preauth_order:
-        | {
-            Args: {
-              p_amount_cents: number;
-              p_booking_id?: string;
-              p_description: string;
-              p_intent_id: string;
-            };
-            Returns: {
-              error: string;
-              mp_order_id: string;
-              mp_order_status: string;
-              success: boolean;
-            }[];
-          }
-        | {
-            Args: {
-              p_amount_cents: number;
-              p_booking_id?: string;
-              p_description: string;
-              p_intent_id: string;
-              p_token?: string;
-            };
-            Returns: {
-              error: string;
-              mp_order_id: string;
-              mp_order_status: string;
-              success: boolean;
-            }[];
-          };
+      | {
+        Args: {
+          p_amount_cents: number;
+          p_booking_id?: string;
+          p_description: string;
+          p_intent_id: string;
+        };
+        Returns: {
+          error: string;
+          mp_order_id: string;
+          mp_order_status: string;
+          success: boolean;
+        }[];
+      }
+      | {
+        Args: {
+          p_amount_cents: number;
+          p_booking_id?: string;
+          p_description: string;
+          p_intent_id: string;
+          p_token?: string;
+        };
+        Returns: {
+          error: string;
+          mp_order_id: string;
+          mp_order_status: string;
+          success: boolean;
+        }[];
+      };
       create_onboarding_plan_with_steps: {
         Args: {
           p_plan_code: string;
@@ -17490,22 +17490,22 @@ export type Database = {
         Returns: string;
       };
       create_payment_authorization:
-        | {
-            Args: { p_amount: number; p_currency: string; p_user_id: string };
-            Returns: string;
-          }
-        | {
-            Args: {
-              p_amount_ars?: number;
-              p_amount_usd?: number;
-              p_booking_id?: string;
-              p_description?: string;
-              p_external_reference?: string;
-              p_fx_rate?: number;
-              p_user_id: string;
-            };
-            Returns: Json;
-          };
+      | {
+        Args: { p_amount: number; p_currency: string; p_user_id: string };
+        Returns: string;
+      }
+      | {
+        Args: {
+          p_amount_ars?: number;
+          p_amount_usd?: number;
+          p_booking_id?: string;
+          p_description?: string;
+          p_external_reference?: string;
+          p_fx_rate?: number;
+          p_user_id: string;
+        };
+        Returns: Json;
+      };
       create_review: {
         Args: {
           p_booking_id: string;
@@ -17579,35 +17579,35 @@ export type Database = {
         }[];
       };
       dropgeometrycolumn:
-        | {
-            Args: {
-              catalog_name: string;
-              column_name: string;
-              schema_name: string;
-              table_name: string;
-            };
-            Returns: string;
-          }
-        | {
-            Args: {
-              column_name: string;
-              schema_name: string;
-              table_name: string;
-            };
-            Returns: string;
-          }
-        | { Args: { column_name: string; table_name: string }; Returns: string };
+      | {
+        Args: {
+          catalog_name: string;
+          column_name: string;
+          schema_name: string;
+          table_name: string;
+        };
+        Returns: string;
+      }
+      | {
+        Args: {
+          column_name: string;
+          schema_name: string;
+          table_name: string;
+        };
+        Returns: string;
+      }
+      | { Args: { column_name: string; table_name: string }; Returns: string };
       dropgeometrytable:
-        | {
-            Args: {
-              catalog_name: string;
-              schema_name: string;
-              table_name: string;
-            };
-            Returns: string;
-          }
-        | { Args: { schema_name: string; table_name: string }; Returns: string }
-        | { Args: { table_name: string }; Returns: string };
+      | {
+        Args: {
+          catalog_name: string;
+          schema_name: string;
+          table_name: string;
+        };
+        Returns: string;
+      }
+      | { Args: { schema_name: string; table_name: string }; Returns: string }
+      | { Args: { table_name: string }; Returns: string };
       enablelongtransactions: { Args: never; Returns: string };
       encrypt_message: { Args: { plaintext: string }; Returns: string };
       encrypt_pii: { Args: { plaintext: string }; Returns: string };
@@ -18365,8 +18365,8 @@ export type Database = {
         Returns: undefined;
       };
       is_admin:
-        | { Args: never; Returns: boolean }
-        | { Args: { check_user_id: string }; Returns: boolean };
+      | { Args: never; Returns: boolean }
+      | { Args: { check_user_id: string }; Returns: boolean };
       is_at_least_18: { Args: { birth_date: string }; Returns: boolean };
       is_car_available: {
         Args: { p_car_id: string; p_end_date: string; p_start_date: string };
@@ -18583,8 +18583,8 @@ export type Database = {
       };
       populate_car_estimates: { Args: { p_car_id: string }; Returns: undefined };
       populate_geometry_columns:
-        | { Args: { tbl_oid: unknown; use_typmod?: boolean }; Returns: number }
-        | { Args: { use_typmod?: boolean }; Returns: string };
+      | { Args: { tbl_oid: unknown; use_typmod?: boolean }; Returns: number }
+      | { Args: { use_typmod?: boolean }; Returns: string };
       postgis_constraint_dims: {
         Args: { geomcolumn: string; geomschema: string; geomtable: string };
         Returns: number;
@@ -18822,11 +18822,11 @@ export type Database = {
         Returns: Json;
       };
       process_withdrawal:
-        | { Args: { p_request_id: string }; Returns: boolean }
-        | {
-            Args: { p_request_id: string; p_transfer_id: string };
-            Returns: Json;
-          };
+      | { Args: { p_request_id: string }; Returns: boolean }
+      | {
+        Args: { p_request_id: string; p_transfer_id: string };
+        Returns: Json;
+      };
       purchase_bonus_protector: {
         Args: { p_protection_level: number; p_user_id: string };
         Returns: {
@@ -18839,32 +18839,32 @@ export type Database = {
         }[];
       };
       quote_booking:
-        | {
-            Args: {
-              p_car_id: string;
-              p_end: string;
-              p_promo?: string;
-              p_start: string;
-            };
-            Returns: {
-              discount: number;
-              price_subtotal: number;
-              service_fee: number;
-              total: number;
-            }[];
-          }
-        | {
-            Args: {
-              p_car_id: string;
-              p_delivery_required?: boolean;
-              p_end: string;
-              p_promo_code?: string;
-              p_start: string;
-              p_user_lat?: number;
-              p_user_lng?: number;
-            };
-            Returns: Json;
-          };
+      | {
+        Args: {
+          p_car_id: string;
+          p_end: string;
+          p_promo?: string;
+          p_start: string;
+        };
+        Returns: {
+          discount: number;
+          price_subtotal: number;
+          service_fee: number;
+          total: number;
+        }[];
+      }
+      | {
+        Args: {
+          p_car_id: string;
+          p_delivery_required?: boolean;
+          p_end: string;
+          p_promo_code?: string;
+          p_start: string;
+          p_user_lat?: number;
+          p_user_lng?: number;
+        };
+        Returns: Json;
+      };
       recalculate_all_driver_scores: {
         Args: never;
         Returns: {
@@ -18903,27 +18903,27 @@ export type Database = {
       };
       refresh_accounting_balances: { Args: never; Returns: undefined };
       register_payment_split:
-        | {
-            Args: {
-              p_booking_id: string;
-              p_currency?: string;
-              p_mp_payment_id: string;
-              p_total_amount_cents: number;
-            };
-            Returns: string;
-          }
-        | {
-            Args: {
-              p_booking_id: string;
-              p_mercadopago_payment_id?: string;
-              p_owner_amount: number;
-              p_owner_collector_id: string;
-              p_payment_id: string;
-              p_platform_fee: number;
-              p_total_amount: number;
-            };
-            Returns: string;
-          };
+      | {
+        Args: {
+          p_booking_id: string;
+          p_currency?: string;
+          p_mp_payment_id: string;
+          p_total_amount_cents: number;
+        };
+        Returns: string;
+      }
+      | {
+        Args: {
+          p_booking_id: string;
+          p_mercadopago_payment_id?: string;
+          p_owner_amount: number;
+          p_owner_collector_id: string;
+          p_payment_id: string;
+          p_platform_fee: number;
+          p_total_amount: number;
+        };
+        Returns: string;
+      };
       register_vehicle_return: {
         Args: {
           p_booking_id: string;
@@ -18998,52 +18998,52 @@ export type Database = {
         Returns: Json;
       };
       request_booking:
-        | {
-            Args: {
-              p_car_id: string;
-              p_end: string;
-              p_payment_method?: string;
-              p_renter_id: string;
-              p_start: string;
-            };
-            Returns: {
-              booking_id: string;
-              status: string;
-            }[];
-          }
-        | {
-            Args: {
-              p_car_id: string;
-              p_end: string;
-              p_idempotency_key?: string;
-              p_payment_method?: string;
-              p_renter_id: string;
-              p_start: string;
-            };
-            Returns: {
-              booking_id: string;
-              status: string;
-            }[];
-          }
-        | {
-            Args: {
-              p_car_id: string;
-              p_delivery_required?: boolean;
-              p_dropoff_lat?: number;
-              p_dropoff_lng?: number;
-              p_dynamic_price_snapshot?: Json;
-              p_end: string;
-              p_pickup_lat?: number;
-              p_pickup_lng?: number;
-              p_price_lock_token?: string;
-              p_start: string;
-              p_use_dynamic_pricing?: boolean;
-            };
-            Returns: {
-              booking_id: string;
-              status: string;
-            }[];
-          };
+      | {
+        Args: {
+          p_car_id: string;
+          p_end: string;
+          p_payment_method?: string;
+          p_renter_id: string;
+          p_start: string;
+        };
+        Returns: {
+          booking_id: string;
+          status: string;
+        }[];
+      }
+      | {
+        Args: {
+          p_car_id: string;
+          p_end: string;
+          p_idempotency_key?: string;
+          p_payment_method?: string;
+          p_renter_id: string;
+          p_start: string;
+        };
+        Returns: {
+          booking_id: string;
+          status: string;
+        }[];
+      }
+      | {
+        Args: {
+          p_car_id: string;
+          p_delivery_required?: boolean;
+          p_dropoff_lat?: number;
+          p_dropoff_lng?: number;
+          p_dynamic_price_snapshot?: Json;
+          p_end: string;
+          p_pickup_lat?: number;
+          p_pickup_lng?: number;
+          p_price_lock_token?: string;
+          p_start: string;
+          p_use_dynamic_pricing?: boolean;
+        };
+        Returns: {
+          booking_id: string;
+          status: string;
+        }[];
+      };
       request_booking_extension: {
         Args: {
           p_additional_days: number;
@@ -19140,86 +19140,86 @@ export type Database = {
         Returns: unknown;
       };
       st_angle:
-        | { Args: { line1: unknown; line2: unknown }; Returns: number }
-        | {
-            Args: { pt1: unknown; pt2: unknown; pt3: unknown; pt4?: unknown };
-            Returns: number;
-          };
+      | { Args: { line1: unknown; line2: unknown }; Returns: number }
+      | {
+        Args: { pt1: unknown; pt2: unknown; pt3: unknown; pt4?: unknown };
+        Returns: number;
+      };
       st_area:
-        | { Args: { geog: unknown; use_spheroid?: boolean }; Returns: number }
-        | { Args: { '': string }; Returns: number };
+      | { Args: { geog: unknown; use_spheroid?: boolean }; Returns: number }
+      | { Args: { '': string }; Returns: number };
       st_asencodedpolyline: {
         Args: { geom: unknown; nprecision?: number };
         Returns: string;
       };
       st_asewkt: { Args: { '': string }; Returns: string };
       st_asgeojson:
-        | {
-            Args: { geog: unknown; maxdecimaldigits?: number; options?: number };
-            Returns: string;
-          }
-        | {
-            Args: { geom: unknown; maxdecimaldigits?: number; options?: number };
-            Returns: string;
-          }
-        | {
-            Args: {
-              geom_column?: string;
-              maxdecimaldigits?: number;
-              pretty_bool?: boolean;
-              r: Record<string, unknown>;
-            };
-            Returns: string;
-          }
-        | { Args: { '': string }; Returns: string };
+      | {
+        Args: { geog: unknown; maxdecimaldigits?: number; options?: number };
+        Returns: string;
+      }
+      | {
+        Args: { geom: unknown; maxdecimaldigits?: number; options?: number };
+        Returns: string;
+      }
+      | {
+        Args: {
+          geom_column?: string;
+          maxdecimaldigits?: number;
+          pretty_bool?: boolean;
+          r: Record<string, unknown>;
+        };
+        Returns: string;
+      }
+      | { Args: { '': string }; Returns: string };
       st_asgml:
-        | {
-            Args: {
-              geog: unknown;
-              id?: string;
-              maxdecimaldigits?: number;
-              nprefix?: string;
-              options?: number;
-            };
-            Returns: string;
-          }
-        | {
-            Args: { geom: unknown; maxdecimaldigits?: number; options?: number };
-            Returns: string;
-          }
-        | { Args: { '': string }; Returns: string }
-        | {
-            Args: {
-              geog: unknown;
-              id?: string;
-              maxdecimaldigits?: number;
-              nprefix?: string;
-              options?: number;
-              version: number;
-            };
-            Returns: string;
-          }
-        | {
-            Args: {
-              geom: unknown;
-              id?: string;
-              maxdecimaldigits?: number;
-              nprefix?: string;
-              options?: number;
-              version: number;
-            };
-            Returns: string;
-          };
+      | {
+        Args: {
+          geog: unknown;
+          id?: string;
+          maxdecimaldigits?: number;
+          nprefix?: string;
+          options?: number;
+        };
+        Returns: string;
+      }
+      | {
+        Args: { geom: unknown; maxdecimaldigits?: number; options?: number };
+        Returns: string;
+      }
+      | { Args: { '': string }; Returns: string }
+      | {
+        Args: {
+          geog: unknown;
+          id?: string;
+          maxdecimaldigits?: number;
+          nprefix?: string;
+          options?: number;
+          version: number;
+        };
+        Returns: string;
+      }
+      | {
+        Args: {
+          geom: unknown;
+          id?: string;
+          maxdecimaldigits?: number;
+          nprefix?: string;
+          options?: number;
+          version: number;
+        };
+        Returns: string;
+      };
       st_askml:
-        | {
-            Args: { geog: unknown; maxdecimaldigits?: number; nprefix?: string };
-            Returns: string;
-          }
-        | {
-            Args: { geom: unknown; maxdecimaldigits?: number; nprefix?: string };
-            Returns: string;
-          }
-        | { Args: { '': string }; Returns: string };
+      | {
+        Args: { geog: unknown; maxdecimaldigits?: number; nprefix?: string };
+        Returns: string;
+      }
+      | {
+        Args: { geom: unknown; maxdecimaldigits?: number; nprefix?: string };
+        Returns: string;
+      }
+      | { Args: { '': string }; Returns: string };
       st_aslatlontext: {
         Args: { geom: unknown; tmpl?: string };
         Returns: string;
@@ -19236,60 +19236,60 @@ export type Database = {
         Returns: unknown;
       };
       st_assvg:
-        | {
-            Args: { geog: unknown; maxdecimaldigits?: number; rel?: number };
-            Returns: string;
-          }
-        | {
-            Args: { geom: unknown; maxdecimaldigits?: number; rel?: number };
-            Returns: string;
-          }
-        | { Args: { '': string }; Returns: string };
+      | {
+        Args: { geog: unknown; maxdecimaldigits?: number; rel?: number };
+        Returns: string;
+      }
+      | {
+        Args: { geom: unknown; maxdecimaldigits?: number; rel?: number };
+        Returns: string;
+      }
+      | { Args: { '': string }; Returns: string };
       st_astext: { Args: { '': string }; Returns: string };
       st_astwkb:
-        | {
-            Args: {
-              geom: unknown;
-              prec?: number;
-              prec_m?: number;
-              prec_z?: number;
-              with_boxes?: boolean;
-              with_sizes?: boolean;
-            };
-            Returns: string;
-          }
-        | {
-            Args: {
-              geom: unknown[];
-              ids: number[];
-              prec?: number;
-              prec_m?: number;
-              prec_z?: number;
-              with_boxes?: boolean;
-              with_sizes?: boolean;
-            };
-            Returns: string;
-          };
+      | {
+        Args: {
+          geom: unknown;
+          prec?: number;
+          prec_m?: number;
+          prec_z?: number;
+          with_boxes?: boolean;
+          with_sizes?: boolean;
+        };
+        Returns: string;
+      }
+      | {
+        Args: {
+          geom: unknown[];
+          ids: number[];
+          prec?: number;
+          prec_m?: number;
+          prec_z?: number;
+          with_boxes?: boolean;
+          with_sizes?: boolean;
+        };
+        Returns: string;
+      };
       st_asx3d: {
         Args: { geom: unknown; maxdecimaldigits?: number; options?: number };
         Returns: string;
       };
       st_azimuth:
-        | { Args: { geog1: unknown; geog2: unknown }; Returns: number }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: number };
+      | { Args: { geog1: unknown; geog2: unknown }; Returns: number }
+      | { Args: { geom1: unknown; geom2: unknown }; Returns: number };
       st_boundingdiagonal: {
         Args: { fits?: boolean; geom: unknown };
         Returns: unknown;
       };
       st_buffer:
-        | {
-            Args: { geom: unknown; options?: string; radius: number };
-            Returns: unknown;
-          }
-        | {
-            Args: { geom: unknown; quadsegs: number; radius: number };
-            Returns: unknown;
-          };
+      | {
+        Args: { geom: unknown; options?: string; radius: number };
+        Returns: unknown;
+      }
+      | {
+        Args: { geom: unknown; quadsegs: number; radius: number };
+        Returns: unknown;
+      };
       st_centroid: { Args: { '': string }; Returns: unknown };
       st_clipbybox2d: {
         Args: { box: unknown; geom: unknown };
@@ -19318,11 +19318,11 @@ export type Database = {
       };
       st_coorddim: { Args: { geometry: unknown }; Returns: number };
       st_coveredby:
-        | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
+      | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
+      | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
       st_covers:
-        | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
+      | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
+      | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
       st_crosses: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
       st_curvetoline: {
         Args: { flags?: number; geom: unknown; tol?: number; toltype?: number };
@@ -19341,17 +19341,17 @@ export type Database = {
         Returns: boolean;
       };
       st_distance:
-        | {
-            Args: { geog1: unknown; geog2: unknown; use_spheroid?: boolean };
-            Returns: number;
-          }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: number };
+      | {
+        Args: { geog1: unknown; geog2: unknown; use_spheroid?: boolean };
+        Returns: number;
+      }
+      | { Args: { geom1: unknown; geom2: unknown }; Returns: number };
       st_distancesphere:
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: number }
-        | {
-            Args: { geom1: unknown; geom2: unknown; radius: number };
-            Returns: number;
-          };
+      | { Args: { geom1: unknown; geom2: unknown }; Returns: number }
+      | {
+        Args: { geom1: unknown; geom2: unknown; radius: number };
+        Returns: number;
+      };
       st_distancespheroid: {
         Args: { geom1: unknown; geom2: unknown };
         Returns: number;
@@ -19367,21 +19367,21 @@ export type Database = {
       };
       st_equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
       st_expand:
-        | { Args: { box: unknown; dx: number; dy: number }; Returns: unknown }
-        | {
-            Args: { box: unknown; dx: number; dy: number; dz?: number };
-            Returns: unknown;
-          }
-        | {
-            Args: {
-              dm?: number;
-              dx: number;
-              dy: number;
-              dz?: number;
-              geom: unknown;
-            };
-            Returns: unknown;
-          };
+      | { Args: { box: unknown; dx: number; dy: number }; Returns: unknown }
+      | {
+        Args: { box: unknown; dx: number; dy: number; dz?: number };
+        Returns: unknown;
+      }
+      | {
+        Args: {
+          dm?: number;
+          dx: number;
+          dy: number;
+          dz?: number;
+          geom: unknown;
+        };
+        Returns: unknown;
+      };
       st_force3d: { Args: { geom: unknown; zvalue?: number }; Returns: unknown };
       st_force3dm: {
         Args: { geom: unknown; mvalue?: number };
@@ -19396,16 +19396,16 @@ export type Database = {
         Returns: unknown;
       };
       st_generatepoints:
-        | { Args: { area: unknown; npoints: number }; Returns: unknown }
-        | {
-            Args: { area: unknown; npoints: number; seed: number };
-            Returns: unknown;
-          };
+      | { Args: { area: unknown; npoints: number }; Returns: unknown }
+      | {
+        Args: { area: unknown; npoints: number; seed: number };
+        Returns: unknown;
+      };
       st_geogfromtext: { Args: { '': string }; Returns: unknown };
       st_geographyfromtext: { Args: { '': string }; Returns: unknown };
       st_geohash:
-        | { Args: { geog: unknown; maxchars?: number }; Returns: string }
-        | { Args: { geom: unknown; maxchars?: number }; Returns: string };
+      | { Args: { geog: unknown; maxchars?: number }; Returns: string }
+      | { Args: { geom: unknown; maxchars?: number }; Returns: string };
       st_geomcollfromtext: { Args: { '': string }; Returns: unknown };
       st_geometricmedian: {
         Args: {
@@ -19419,9 +19419,9 @@ export type Database = {
       st_geometryfromtext: { Args: { '': string }; Returns: unknown };
       st_geomfromewkt: { Args: { '': string }; Returns: unknown };
       st_geomfromgeojson:
-        | { Args: { '': Json }; Returns: unknown }
-        | { Args: { '': Json }; Returns: unknown }
-        | { Args: { '': string }; Returns: unknown };
+      | { Args: { '': Json }; Returns: unknown }
+      | { Args: { '': Json }; Returns: unknown }
+      | { Args: { '': string }; Returns: unknown };
       st_geomfromgml: { Args: { '': string }; Returns: unknown };
       st_geomfromkml: { Args: { '': string }; Returns: unknown };
       st_geomfrommarc21: { Args: { marc21xml: string }; Returns: unknown };
@@ -19449,8 +19449,8 @@ export type Database = {
         Returns: unknown;
       };
       st_intersects:
-        | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
+      | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
+      | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
       st_isvaliddetail: {
         Args: { flags?: number; geom: unknown };
         Returns: Database['public']['CompositeTypes']['valid_detail'];
@@ -19462,8 +19462,8 @@ export type Database = {
         };
       };
       st_length:
-        | { Args: { geog: unknown; use_spheroid?: boolean }; Returns: number }
-        | { Args: { '': string }; Returns: number };
+      | { Args: { geog: unknown; use_spheroid?: boolean }; Returns: number }
+      | { Args: { '': string }; Returns: number };
       st_letters: { Args: { font?: Json; letters: string }; Returns: unknown };
       st_linecrossingdirection: {
         Args: { line1: unknown; line2: unknown };
@@ -19603,8 +19603,8 @@ export type Database = {
         Returns: unknown;
       };
       st_setsrid:
-        | { Args: { geog: unknown; srid: number }; Returns: unknown }
-        | { Args: { geom: unknown; srid: number }; Returns: unknown };
+      | { Args: { geog: unknown; srid: number }; Returns: unknown }
+      | { Args: { geom: unknown; srid: number }; Returns: unknown };
       st_sharedpaths: {
         Args: { geom1: unknown; geom2: unknown };
         Returns: unknown;
@@ -19627,8 +19627,8 @@ export type Database = {
         Returns: Record<string, unknown>[];
       };
       st_srid:
-        | { Args: { geog: unknown }; Returns: number }
-        | { Args: { geom: unknown }; Returns: number };
+      | { Args: { geog: unknown }; Returns: number }
+      | { Args: { geom: unknown }; Returns: number };
       st_subdivide: {
         Args: { geom: unknown; gridsize?: number; maxvertices?: number };
         Returns: unknown[];
@@ -19657,22 +19657,22 @@ export type Database = {
       };
       st_touches: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean };
       st_transform:
-        | {
-            Args: { from_proj: string; geom: unknown; to_proj: string };
-            Returns: unknown;
-          }
-        | {
-            Args: { from_proj: string; geom: unknown; to_srid: number };
-            Returns: unknown;
-          }
-        | { Args: { geom: unknown; to_proj: string }; Returns: unknown };
+      | {
+        Args: { from_proj: string; geom: unknown; to_proj: string };
+        Returns: unknown;
+      }
+      | {
+        Args: { from_proj: string; geom: unknown; to_srid: number };
+        Returns: unknown;
+      }
+      | { Args: { geom: unknown; to_proj: string }; Returns: unknown };
       st_triangulatepolygon: { Args: { g1: unknown }; Returns: unknown };
       st_union:
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: unknown }
-        | {
-            Args: { geom1: unknown; geom2: unknown; gridsize: number };
-            Returns: unknown;
-          };
+      | { Args: { geom1: unknown; geom2: unknown }; Returns: unknown }
+      | {
+        Args: { geom1: unknown; geom2: unknown; gridsize: number };
+        Returns: unknown;
+      };
       st_voronoilines: {
         Args: { extend_to?: unknown; g1: unknown; tolerance?: number };
         Returns: unknown;
@@ -19882,26 +19882,26 @@ export type Database = {
         }[];
       };
       verify_bank_account:
-        | { Args: { p_account_id: string }; Returns: boolean }
-        | {
-            Args: { p_account_number: string; p_user_id: string };
-            Returns: Json;
-          };
+      | { Args: { p_account_id: string }; Returns: boolean }
+      | {
+        Args: { p_account_number: string; p_user_id: string };
+        Returns: Json;
+      };
       wallet_charge_rental:
-        | {
-            Args: { p_amount: number; p_booking_id: string; p_user_id: string };
-            Returns: boolean;
-          }
-        | {
-            Args: {
-              p_amount_cents: number;
-              p_booking_id: string;
-              p_meta?: Json;
-              p_ref: string;
-              p_user_id: string;
-            };
-            Returns: Json;
-          };
+      | {
+        Args: { p_amount: number; p_booking_id: string; p_user_id: string };
+        Returns: boolean;
+      }
+      | {
+        Args: {
+          p_amount_cents: number;
+          p_booking_id: string;
+          p_meta?: Json;
+          p_ref: string;
+          p_user_id: string;
+        };
+        Returns: Json;
+      };
       wallet_confirm_deposit_admin: {
         Args: {
           p_provider_metadata?: Json;
@@ -19957,25 +19957,25 @@ export type Database = {
         }[];
       };
       wallet_deposit_ledger:
-        | {
-            Args: { p_user_id: string };
-            Returns: {
-              amount: number;
-              created_at: string;
-              id: string;
-              status: string;
-            }[];
-          }
-        | {
-            Args: {
-              p_amount_cents: number;
-              p_meta?: Json;
-              p_provider?: string;
-              p_ref: string;
-              p_user_id: string;
-            };
-            Returns: Json;
-          };
+      | {
+        Args: { p_user_id: string };
+        Returns: {
+          amount: number;
+          created_at: string;
+          id: string;
+          status: string;
+        }[];
+      }
+      | {
+        Args: {
+          p_amount_cents: number;
+          p_meta?: Json;
+          p_provider?: string;
+          p_ref: string;
+          p_user_id: string;
+        };
+        Returns: Json;
+      };
       wallet_get_autorentar_credit_info: {
         Args: { p_user_id?: string };
         Returns: {
@@ -19990,71 +19990,71 @@ export type Database = {
         }[];
       };
       wallet_get_balance:
-        | {
-            Args: never;
-            Returns: {
-              autorentar_credit_balance: number;
-              available_balance: number;
-              cash_deposit_balance: number;
-              currency: string;
-              locked_balance: number;
-              non_withdrawable_balance: number;
-              protected_credit_balance: number;
-              total_balance: number;
-              transferable_balance: number;
-              user_id: string;
-              withdrawable_balance: number;
-            }[];
-          }
-        | {
-            Args: { p_user_id: string };
-            Returns: {
-              autorentar_credit_balance: number;
-              available_balance: number;
-              cash_deposit_balance: number;
-              currency: string;
-              locked_balance: number;
-              total_balance: number;
-            }[];
-          };
+      | {
+        Args: never;
+        Returns: {
+          autorentar_credit_balance: number;
+          available_balance: number;
+          cash_deposit_balance: number;
+          currency: string;
+          locked_balance: number;
+          non_withdrawable_balance: number;
+          protected_credit_balance: number;
+          total_balance: number;
+          transferable_balance: number;
+          user_id: string;
+          withdrawable_balance: number;
+        }[];
+      }
+      | {
+        Args: { p_user_id: string };
+        Returns: {
+          autorentar_credit_balance: number;
+          available_balance: number;
+          cash_deposit_balance: number;
+          currency: string;
+          locked_balance: number;
+          total_balance: number;
+        }[];
+      };
       wallet_initiate_deposit:
-        | {
-            Args: { p_amount: number; p_provider: string; p_user_id: string };
-            Returns: string;
-          }
-        | {
-            Args: { p_amount: number; p_currency: string; p_user_id: string };
-            Returns: string;
-          };
+      | {
+        Args: { p_amount: number; p_provider: string; p_user_id: string };
+        Returns: string;
+      }
+      | {
+        Args: { p_amount: number; p_currency: string; p_user_id: string };
+        Returns: string;
+      };
       wallet_lock_funds:
-        | {
-            Args: {
-              p_amount: number;
-              p_booking_id: string;
-              p_description?: string;
-            };
-            Returns: {
-              message: string;
-              new_available_balance: number;
-              new_locked_balance: number;
-              success: boolean;
-              transaction_id: string;
-            }[];
-          }
-        | {
-            Args: { p_amount_cents: number; p_booking_id: string };
-            Returns: string;
-          }
-        | {
-            Args: {
-              p_amount: number;
-              p_reference_id: string;
-              p_reference_type: string;
-              p_user_id: string;
-            };
-            Returns: string;
-          }
-        | { Args: { p_amount: number; p_user_id: string }; Returns: boolean };
+      | {
+        Args: {
+          p_amount: number;
+          p_booking_id: string;
+          p_description?: string;
+        };
+        Returns: {
+          message: string;
+          new_available_balance: number;
+          new_locked_balance: number;
+          success: boolean;
+          transaction_id: string;
+        }[];
+      }
+      | {
+        Args: { p_amount_cents: number; p_booking_id: string };
+        Returns: string;
+      }
+      | {
+        Args: {
+          p_amount: number;
+          p_reference_id: string;
+          p_reference_type: string;
+          p_user_id: string;
+        };
+        Returns: string;
+      }
+      | { Args: { p_amount: number; p_user_id: string }; Returns: boolean };
       wallet_lock_funds_with_expiration: {
         Args: {
           p_amount_cents: number;
@@ -20081,172 +20081,175 @@ export type Database = {
         }[];
       };
       wallet_refund:
-        | {
-            Args: { p_reason: string; p_transaction_id: string };
-            Returns: boolean;
-          }
-        | {
-            Args: {
-              p_amount_cents: number;
-              p_meta?: Json;
-              p_original_transaction_id: string;
-              p_reason?: string;
-              p_ref: string;
-              p_user_id: string;
-            };
-            Returns: Json;
-          };
+      | {
+        Args: { p_reason: string; p_transaction_id: string };
+        Returns: boolean;
+      }
+      | {
+        Args: {
+          p_amount_cents: number;
+          p_meta?: Json;
+          p_original_transaction_id: string;
+          p_reason?: string;
+          p_ref: string;
+          p_user_id: string;
+        };
+        Returns: Json;
+      };
       wallet_transfer_to_owner:
-        | { Args: { p_amount: number; p_booking_id: string }; Returns: boolean }
-        | {
-            Args: {
-              p_booking_id: string;
-              p_meta?: Json;
-              p_owner_id: string;
-              p_platform_fee_cents: number;
-              p_ref: string;
-              p_rental_amount_cents: number;
-              p_renter_id: string;
-            };
-            Returns: Json;
-          };
+      | { Args: { p_amount: number; p_booking_id: string }; Returns: boolean }
+      | {
+        Args: {
+          p_booking_id: string;
+          p_meta?: Json;
+          p_owner_id: string;
+          p_platform_fee_cents: number;
+          p_ref: string;
+          p_rental_amount_cents: number;
+          p_renter_id: string;
+        };
+        Returns: Json;
+      };
       wallet_unlock_funds:
-        | { Args: { p_amount: number; p_user_id: string }; Returns: boolean }
-        | {
-            Args: { p_reference_id: string; p_user_id: string };
-            Returns: boolean;
-          };
+      | { Args: { p_amount: number; p_user_id: string }; Returns: boolean }
+      | {
+        Args: { p_reference_id: string; p_user_id: string };
+        Returns: boolean;
+      };
     };
     Enums: {
       accident_status: 'reported' | 'under_review' | 'insurance_filed' | 'resolved' | 'closed';
       admin_role: 'super_admin' | 'operations' | 'support' | 'finance';
       booking_cancelled_by_role: 'renter' | 'owner' | 'system' | 'admin';
       booking_status:
-        | 'pending_payment'
-        | 'pending'
-        | 'pending_approval'
-        | 'confirmed'
-        | 'in_progress'
-        | 'pending_review'
-        | 'disputed'
-        | 'completed'
-        | 'cancelled'
-        | 'no_show'
-        | 'expired'
-        | 'cancelled_renter'
-        | 'cancelled_owner'
-        | 'cancelled_system'
-        | 'rejected'
-        | 'resolved'
-        | 'pending_dispute_resolution'
-        | 'payment_validation_failed';
+      | 'pending_payment'
+      | 'pending'
+      | 'pending_approval'
+      | 'confirmed'
+      | 'in_progress'
+      | 'pending_review'
+      | 'disputed'
+      | 'completed'
+      | 'cancelled'
+      | 'no_show'
+      | 'expired'
+      | 'cancelled_renter'
+      | 'cancelled_owner'
+      | 'cancelled_system'
+      | 'rejected'
+      | 'resolved'
+      | 'pending_dispute_resolution'
+      | 'payment_validation_failed'
+      | 'returned'
+      | 'inspected_good'
+      | 'damage_reported';
       cancel_policy: 'flex' | 'moderate' | 'strict';
       car_status: 'draft' | 'pending' | 'active' | 'suspended' | 'deleted';
       claim_status:
-        | 'draft'
-        | 'submitted'
-        | 'under_review'
-        | 'approved'
-        | 'rejected'
-        | 'paid'
-        | 'processing';
+      | 'draft'
+      | 'submitted'
+      | 'under_review'
+      | 'approved'
+      | 'rejected'
+      | 'paid'
+      | 'processing';
       damage_severity: 'minor' | 'moderate' | 'severe';
       damage_type:
-        | 'scratch'
-        | 'dent'
-        | 'broken_glass'
-        | 'tire_damage'
-        | 'mechanical'
-        | 'interior'
-        | 'missing_item'
-        | 'other';
+      | 'scratch'
+      | 'dent'
+      | 'broken_glass'
+      | 'tire_damage'
+      | 'mechanical'
+      | 'interior'
+      | 'missing_item'
+      | 'other';
       dispute_kind: 'damage' | 'no_show' | 'late_return' | 'other';
       dispute_status: 'open' | 'in_review' | 'resolved' | 'rejected';
       document_kind:
-        | 'gov_id_front'
-        | 'gov_id_back'
-        | 'driver_license'
-        | 'utility_bill'
-        | 'selfie'
-        | 'license_front'
-        | 'license_back'
-        | 'vehicle_registration'
-        | 'vehicle_insurance'
-        | 'criminal_record';
+      | 'gov_id_front'
+      | 'gov_id_back'
+      | 'driver_license'
+      | 'utility_bill'
+      | 'selfie'
+      | 'license_front'
+      | 'license_back'
+      | 'vehicle_registration'
+      | 'vehicle_insurance'
+      | 'criminal_record';
       infraction_status: 'pending' | 'accepted' | 'disputed' | 'charged' | 'dismissed';
       kyc_status: 'not_started' | 'pending' | 'verified' | 'rejected';
       notification_type:
-        | 'new_booking_for_owner'
-        | 'booking_cancelled_for_owner'
-        | 'booking_cancelled_for_renter'
-        | 'new_chat_message'
-        | 'payment_successful'
-        | 'payout_successful'
-        | 'inspection_reminder'
-        | 'generic_announcement'
-        | 'mp_onboarding_required'
-        | 'booking_reminder_24h'
-        | 'booking_reminder_2h'
-        | 'document_expiry_license'
-        | 'owner_inactive_reminder'
-        | 'optimization_tip'
-        | 'booking_ended_review'
-        | 'monthly_report'
-        | 'welcome'
-        | 'verification_approved'
-        | 'verification_rejected'
-        | 'nearby_cars'
-        | 'car_views_milestone'
-        | 'car_recommendation'
-        | 'renter_tip'
-        | 'price_drop_alert'
-        | 'favorite_car_available'
-        | 'pending_requests_reminder';
+      | 'new_booking_for_owner'
+      | 'booking_cancelled_for_owner'
+      | 'booking_cancelled_for_renter'
+      | 'new_chat_message'
+      | 'payment_successful'
+      | 'payout_successful'
+      | 'inspection_reminder'
+      | 'generic_announcement'
+      | 'mp_onboarding_required'
+      | 'booking_reminder_24h'
+      | 'booking_reminder_2h'
+      | 'document_expiry_license'
+      | 'owner_inactive_reminder'
+      | 'optimization_tip'
+      | 'booking_ended_review'
+      | 'monthly_report'
+      | 'welcome'
+      | 'verification_approved'
+      | 'verification_rejected'
+      | 'nearby_cars'
+      | 'car_views_milestone'
+      | 'car_recommendation'
+      | 'renter_tip'
+      | 'price_drop_alert'
+      | 'favorite_car_available'
+      | 'pending_requests_reminder';
       onboarding_status: 'incomplete' | 'complete' | 'skipped';
       payment_event_type:
-        | 'payment_initiated'
-        | 'payment_processing'
-        | 'payment_approved'
-        | 'payment_rejected'
-        | 'payment_failed'
-        | 'payment_cancelled'
-        | 'hold_created'
-        | 'hold_captured'
-        | 'hold_released'
-        | 'hold_expired'
-        | 'hold_reauthorized'
-        | 'refund_initiated'
-        | 'refund_processing'
-        | 'refund_completed'
-        | 'refund_failed'
-        | 'partial_refund_completed'
-        | 'split_initiated'
-        | 'split_owner_payment'
-        | 'split_platform_fee'
-        | 'split_completed'
-        | 'wallet_lock_created'
-        | 'wallet_lock_released'
-        | 'wallet_funds_transferred'
-        | 'dispute_opened'
-        | 'dispute_evidence_submitted'
-        | 'dispute_resolved'
-        | 'webhook_received'
-        | 'status_sync'
-        | 'manual_intervention';
+      | 'payment_initiated'
+      | 'payment_processing'
+      | 'payment_approved'
+      | 'payment_rejected'
+      | 'payment_failed'
+      | 'payment_cancelled'
+      | 'hold_created'
+      | 'hold_captured'
+      | 'hold_released'
+      | 'hold_expired'
+      | 'hold_reauthorized'
+      | 'refund_initiated'
+      | 'refund_processing'
+      | 'refund_completed'
+      | 'refund_failed'
+      | 'partial_refund_completed'
+      | 'split_initiated'
+      | 'split_owner_payment'
+      | 'split_platform_fee'
+      | 'split_completed'
+      | 'wallet_lock_created'
+      | 'wallet_lock_released'
+      | 'wallet_funds_transferred'
+      | 'dispute_opened'
+      | 'dispute_evidence_submitted'
+      | 'dispute_resolved'
+      | 'webhook_received'
+      | 'status_sync'
+      | 'manual_intervention';
       payment_provider: 'mock' | 'mercadopago' | 'stripe';
       payment_status: 'pending' | 'processing' | 'approved' | 'rejected' | 'refunded' | 'cancelled';
       payout_status_enum: 'pending' | 'processing' | 'completed' | 'failed' | 'manual_review';
       subscription_status: 'active' | 'inactive' | 'depleted' | 'expired' | 'cancelled';
       subscription_tier: 'club_standard' | 'club_black' | 'club_luxury';
       ticket_category:
-        | 'booking_issue'
-        | 'payment_issue'
-        | 'vehicle_issue'
-        | 'account_issue'
-        | 'verification_issue'
-        | 'technical_issue'
-        | 'suggestion'
-        | 'other';
+      | 'booking_issue'
+      | 'payment_issue'
+      | 'vehicle_issue'
+      | 'account_issue'
+      | 'verification_issue'
+      | 'technical_issue'
+      | 'suggestion'
+      | 'other';
       ticket_status: 'open' | 'in_progress' | 'waiting_user' | 'resolved' | 'closed';
       ticket_urgency: 'low' | 'medium' | 'high' | 'critical';
     };
@@ -20270,114 +20273,114 @@ type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
-    : never = never,
+  ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R;
     }
-    ? R
-    : never
+  ? R
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R;
-      }
-      ? R
-      : never
-    : never;
+  ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+    Row: infer R;
+  }
+  ? R
+  : never
+  : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema['Tables']
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
-      Insert: infer I;
-    }
-    ? I
-    : never
+    Insert: infer I;
+  }
+  ? I
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I;
-      }
-      ? I
-      : never
-    : never;
+  ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+    Insert: infer I;
+  }
+  ? I
+  : never
+  : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema['Tables']
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
-      Update: infer U;
-    }
-    ? U
-    : never
+    Update: infer U;
+  }
+  ? U
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U;
-      }
-      ? U
-      : never
-    : never;
+  ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+    Update: infer U;
+  }
+  ? U
+  : never
+  : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema['Enums']
+  | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
+  : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
-    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
-    : never;
+  ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+  : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema['CompositeTypes']
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema['CompositeTypes']
+  | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
-    : never = never,
+  ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+  : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
-    : never;
+  ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+  : never;
 
 export const Constants = {
   public: {
@@ -20404,6 +20407,9 @@ export const Constants = {
         'resolved',
         'pending_dispute_resolution',
         'payment_validation_failed',
+        'returned',
+        'inspected_good',
+        'damage_reported',
       ],
       cancel_policy: ['flex', 'moderate', 'strict'],
       car_status: ['draft', 'pending', 'active', 'suspended', 'deleted'],

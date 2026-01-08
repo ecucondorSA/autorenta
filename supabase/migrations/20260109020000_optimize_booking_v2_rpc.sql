@@ -23,8 +23,9 @@ DECLARE
 BEGIN
     -- Perform UPDATE directly causing implicit row lock only for duration of update
     IF p_has_damage THEN
-         UPDATE bookings
+         UPDATE bookings b
          SET
+            status = 'damage_reported',
             owner_confirmed_delivery = TRUE,
             owner_confirmed_at = NOW(),
             has_damages = TRUE,
@@ -34,25 +35,30 @@ BEGIN
             inspection_status = 'damaged',
             inspection_comment = p_description,
             auto_release_at = NOW() + INTERVAL '72 hours'
-         WHERE id = p_booking_id
-           AND owner_id = p_inspector_id
-           AND returned_at IS NOT NULL
-           AND owner_confirmed_delivery IS FALSE
-         RETURNING id INTO v_updated_id;
+         FROM cars c
+         WHERE b.id = p_booking_id
+           AND b.car_id = c.id
+           AND c.owner_id = p_inspector_id
+           AND b.returned_at IS NOT NULL
+           AND (b.inspection_status = 'pending' OR b.inspection_status IS NULL)
+         RETURNING b.id INTO v_updated_id;
     ELSE
          -- No damage = Happy Path
-         UPDATE bookings
+         UPDATE bookings b
          SET
+            status = 'inspected_good',
             owner_confirmed_delivery = TRUE,
             owner_confirmed_at = NOW(),
             has_damages = FALSE,
             inspection_status = 'good',
             auto_release_at = NOW() + INTERVAL '24 hours'
-         WHERE id = p_booking_id
-           AND owner_id = p_inspector_id
-           AND returned_at IS NOT NULL
-           AND owner_confirmed_delivery IS FALSE
-         RETURNING id INTO v_updated_id;
+         FROM cars c
+         WHERE b.id = p_booking_id
+           AND b.car_id = c.id
+           AND c.owner_id = p_inspector_id
+           AND b.returned_at IS NOT NULL
+           AND (b.inspection_status = 'pending' OR b.inspection_status IS NULL)
+         RETURNING b.id INTO v_updated_id;
     END IF;
 
     IF v_updated_id IS NULL THEN
@@ -60,13 +66,15 @@ BEGIN
         PERFORM 1 FROM bookings WHERE id = p_booking_id;
         IF NOT FOUND THEN RAISE EXCEPTION 'Booking not found'; END IF;
 
-        PERFORM 1 FROM bookings WHERE id = p_booking_id AND owner_id = p_inspector_id;
+        PERFORM 1 FROM bookings b
+        JOIN cars c ON b.car_id = c.id
+        WHERE b.id = p_booking_id AND c.owner_id = p_inspector_id;
         IF NOT FOUND THEN RAISE EXCEPTION 'Not authorized'; END IF;
 
         PERFORM 1 FROM bookings WHERE id = p_booking_id AND returned_at IS NOT NULL;
         IF NOT FOUND THEN RAISE EXCEPTION 'Vehicle not returned yet'; END IF;
 
-        PERFORM 1 FROM bookings WHERE id = p_booking_id AND owner_confirmed_delivery IS FALSE;
+        PERFORM 1 FROM bookings WHERE id = p_booking_id AND (inspection_status = 'pending' OR inspection_status IS NULL);
         IF NOT FOUND THEN RAISE EXCEPTION 'Inspection already submitted'; END IF;
 
         RAISE EXCEPTION 'Update failed for unknown reason';
