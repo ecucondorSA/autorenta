@@ -183,3 +183,6 @@ apps/web/tools/p2p-automation/**/screenshots/
 # Large analysis files
 tripwip_base.zip
 tripwip_base_extracted/
+
+# Private Documentation
+SUPABASE_ACCESS.md
