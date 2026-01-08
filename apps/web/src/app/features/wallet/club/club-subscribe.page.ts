@@ -22,7 +22,8 @@ import { environment } from '../../../../environments/environment';
 
 declare global {
   interface Window {
-    MercadoPago: unknown;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    MercadoPago: new (key: string, options: { locale: string }) => any;
   }
 }
 
@@ -239,7 +240,8 @@ export class ClubSubscribePage implements OnInit {
     return this.walletAvailableCents() >= tier.price_cents;
   });
 
-  private mp: unknown = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private mp: any = null;
 
   ngOnInit(): void {
     const tierParam = this.route.snapshot.queryParamMap.get('tier') as SubscriptionTier | null;

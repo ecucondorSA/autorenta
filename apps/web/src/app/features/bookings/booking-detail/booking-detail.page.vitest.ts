@@ -24,7 +24,7 @@ describe('BookingDetailPage (vitest)', () => {
   });
 
   const makeComponent = () => {
-    const updateBooking = vi.fn(async (_id: string, updates: Record<string, unknown>) => ({
+    const updateBooking = vi.fn(async (_id: string, updates: { metadata?: Record<string, unknown> }) => ({
       id: 'booking-1',
       metadata: updates?.metadata ?? {},
     }));
@@ -68,7 +68,7 @@ describe('BookingDetailPage (vitest)', () => {
 
   it('merges return checklist from metadata', () => {
     const { component } = makeComponent();
-    const booking: Partial<import('@core/models').Booking> = {
+    const booking = {
       id: 'booking-1',
       car_id: 'car-1',
       user_id: 'renter-1',
@@ -84,7 +84,7 @@ describe('BookingDetailPage (vitest)', () => {
       },
     };
 
-    component.booking.set(booking);
+    component.booking.set(booking as import('@core/models').Booking);
     (component as unknown as { loadReturnChecklist: (b: unknown) => void }).loadReturnChecklist(booking);
 
     const fuelItem = component.returnChecklistItems().find((i) => i.id === 'fuel');
@@ -94,7 +94,7 @@ describe('BookingDetailPage (vitest)', () => {
   it('syncs return checklist to metadata on toggle', async () => {
     vi.useFakeTimers();
     const { component, updateBooking } = makeComponent();
-    const booking: Partial<import('@core/models').Booking> = {
+    const booking = {
       id: 'booking-1',
       car_id: 'car-1',
       user_id: 'renter-1',
@@ -108,7 +108,7 @@ describe('BookingDetailPage (vitest)', () => {
       metadata: {},
     };
 
-    component.booking.set(booking);
+    component.booking.set(booking as import('@core/models').Booking);
     (component as unknown as { loadReturnChecklist: (b: unknown) => void }).loadReturnChecklist(booking);
 
     component.toggleReturnChecklistItem('final-photos');
@@ -116,14 +116,14 @@ describe('BookingDetailPage (vitest)', () => {
     await Promise.resolve();
 
     expect(updateBooking).toHaveBeenCalled();
-    const call = updateBooking.mock.calls[0][1];
+    const call = updateBooking.mock.calls[0][1] as { metadata: { return_checklist: unknown[] } };
     expect(call.metadata.return_checklist).toBeDefined();
     vi.useRealTimers();
   });
 
   it('builds car return considerations from car rules', () => {
     const { component } = makeComponent();
-    const booking: Partial<import('@core/models').Booking> = {
+    const booking = {
       id: 'booking-1',
       car_id: 'car-1',
       user_id: 'renter-1',
@@ -147,7 +147,7 @@ describe('BookingDetailPage (vitest)', () => {
       metadata: {},
     };
 
-    component.booking.set(booking);
+    component.booking.set(booking as import('@core/models').Booking);
     const notes = component.carReturnConsiderations();
 
     expect(notes.join(' ')).toContain('tanque lleno');
