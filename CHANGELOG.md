@@ -1,3 +1,10 @@
+## [1.12.1](https://github.com/ecucondorSA/autorenta/compare/v1.12.0...v1.12.1) (2026-01-08)
+
+
+### Bug Fixes
+
+* **ci:** remove duplicate closing header tag in publish-car-v2 ([1642d0f](https://github.com/ecucondorSA/autorenta/commit/1642d0f3b073f65f90fb861fcd0e2e7fb398ae65))
+
 # [1.12.0](https://github.com/ecucondorSA/autorenta/compare/v1.11.6...v1.12.0) (2026-01-08)
 
 
