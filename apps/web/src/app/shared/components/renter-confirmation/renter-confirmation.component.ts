@@ -124,7 +124,7 @@ export class RenterConfirmationComponent {
     try {
       // Si hay daños, usamos el flujo V2 explícito
       if (this.damageAmount && this.damageAmount > 0) {
-        const result = await this.confirmationService.resolveConclusion({
+        await this.confirmationService.resolveConclusion({
           booking_id: this.bookingId,
           renter_id: userId,
           accept_damage: true

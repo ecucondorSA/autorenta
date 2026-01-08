@@ -6,25 +6,25 @@
  */
 
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { SupabaseClient } from '@supabase/supabase-js';
 import {
   type ActiveSubscription,
+  type PreauthorizationCalculation,
   type SubscriptionCoverageCheck,
   type SubscriptionDisplayState,
   type SubscriptionTier,
   type SubscriptionUsageLogWithDetails,
-  type PreauthorizationCalculation,
   type UpgradeRecommendation,
-  SUBSCRIPTION_TIERS,
-  getTierConfig,
-  getRequiredTierByVehicleValue,
   calculatePreauthorization as calculatePreauthorizationLocal,
-  getUpgradeRecommendation as getUpgradeRecommendationLocal,
   canAccessVehicle,
   formatPreauthorizationInfo,
+  getRequiredTierByVehicleValue,
+  getTierConfig,
+  getUpgradeRecommendation as getUpgradeRecommendationLocal,
+  SUBSCRIPTION_TIERS,
 } from '@core/models/subscription.model';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 // Cache configuration
 const SUBSCRIPTION_STALE_TIME_MS = 30_000; // 30 seconds
@@ -383,9 +383,23 @@ export class SubscriptionService {
         body: { tier },
       });
 
-      if (error) throw error;
+      if (error) {
+        // Try to get JSON error from body
+        let serverError = 'Error al crear suscripción';
+        try {
+          if (error instanceof Error) {
+            const body = await (error as any).context?.json();
+            if (body?.message) serverError = body.message;
+            else if (body?.error) serverError = body.error;
+          }
+        } catch {
+          // Ignore JSON parse error
+        }
+        throw new Error(serverError);
+      }
+
       if (!data?.subscription_id) {
-        throw new Error(data?.error || 'No subscription ID returned');
+        throw new Error(data?.error || data?.message || 'No subscription ID returned');
       }
 
       this.logger.info('Subscription created with wallet', {
@@ -702,13 +716,23 @@ export class SubscriptionService {
 
   private handleError(err: unknown, context: string): void {
     let message = err instanceof Error ? err.message : 'Error desconocido';
-    
+
     // Check if error is from Supabase Edge Function (FunctionsHttpError)
     const errorObj = err as any;
     if (errorObj?.context?.message) {
       message = errorObj.context.message;
     } else if (errorObj?.message) {
       message = errorObj.message;
+    }
+
+    // Try to extract JSON from error context if available
+    try {
+      if (errorObj?.context instanceof Response) {
+        // We can't easily await here since this is not async,
+        // but often the message is already extracted in errorObj.message
+      }
+    } catch {
+      // Ignore
     }
 
     this.error.set({ message: `${context}: ${message}` });

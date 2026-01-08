@@ -11,9 +11,39 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  validate:
+    name: 🚨 Pre-flight Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Linter
+        run: pnpm lint
+
+      - name: Check Guardrails
+        run: pnpm guardrails:strict
+
+      - name: TypeScript Check
+        run: pnpm --filter @autorenta/web exec tsc --noEmit
+
   deploy-db:
     name: 🗄️ Deploy DB Migrations
     runs-on: ubuntu-latest
+    needs: validate
     steps:
       - uses: actions/checkout@v4
 

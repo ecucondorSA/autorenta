@@ -328,9 +328,17 @@ export class ClubSubscribePage implements OnInit {
       void this.router.navigate(['/wallet/club/history'], {
         queryParams: { payment: 'success', tier: tier.tier },
       });
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'No se pudo procesar el pago con wallet.';
+    } catch (err: any) {
+      const message = err.message || 'No se pudo procesar el pago con wallet.';
+      
+      // Handle already subscribed case (409)
+      if (message.toLowerCase().includes('already subscribed') || 
+          message.toLowerCase().includes('ya tiene una suscripci')) {
+        this.toast.info('Suscripción activa', 'Ya eres miembro de Autorentar Club.');
+        void this.router.navigate(['/wallet/club/history']);
+        return;
+      }
+
       this.error.set(message);
     } finally {
       this.loading.set(false);

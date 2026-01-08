@@ -73,6 +73,7 @@
     "_comment_utils": "=== UTILITIES ===",
     "install": "AUTORENTA_SKIP_INSTALL=1 ./tools/run.sh install",
     "install:all": "./tools/run.sh install",
+    "prepare": "husky",
     "clean": "./tools/ops/cleanup.sh",
     "clean:deep": "./tools/ops/deep-clean.sh",
     "sync:types": "./tools/dev/sync-types.sh",
