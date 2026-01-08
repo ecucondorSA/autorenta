@@ -1,3 +1,10 @@
+## [1.9.7](https://github.com/ecucondorSA/autorenta/compare/v1.9.6...v1.9.7) (2026-01-08)
+
+
+### Bug Fixes
+
+* **migration:** use DROP CASCADE for get_active_subscription to allow return type change ([2ab8f85](https://github.com/ecucondorSA/autorenta/commit/2ab8f85e7abd76be88e83343ee9468c0508f2992))
+
 ## [1.9.6](https://github.com/ecucondorSA/autorenta/compare/v1.9.5...v1.9.6) (2026-01-08)
 
 
