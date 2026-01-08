@@ -1,3 +1,10 @@
+## [1.9.4](https://github.com/ecucondorSA/autorenta/compare/v1.9.3...v1.9.4) (2026-01-08)
+
+
+### Bug Fixes
+
+* resolve migration timestamp conflict ([99dc5e1](https://github.com/ecucondorSA/autorenta/commit/99dc5e125a756dbdb84ed23606e342f4c34dd963))
+
 ## [1.9.3](https://github.com/ecucondorSA/autorenta/compare/v1.9.2...v1.9.3) (2026-01-08)
 
 
