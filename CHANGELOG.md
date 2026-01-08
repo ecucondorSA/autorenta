@@ -1,3 +1,10 @@
+## [1.9.5](https://github.com/ecucondorSA/autorenta/compare/v1.9.4...v1.9.5) (2026-01-08)
+
+
+### Bug Fixes
+
+* restore original timestamp for booking_flow_v2 to match remote db history ([638e2ec](https://github.com/ecucondorSA/autorenta/commit/638e2ec872f5609f47eeee9dfc3cf6a9239c9e45))
+
 ## [1.9.4](https://github.com/ecucondorSA/autorenta/compare/v1.9.3...v1.9.4) (2026-01-08)
 
 
