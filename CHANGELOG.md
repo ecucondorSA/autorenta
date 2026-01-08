@@ -1,3 +1,11 @@
+## [1.15.1](https://github.com/ecucondorSA/autorenta/compare/v1.15.0...v1.15.1) (2026-01-08)
+
+
+### Bug Fixes
+
+* **ci:** rehydrate init_baseline with archived history from 20251201 ([d7a467c](https://github.com/ecucondorSA/autorenta/commit/d7a467c31ef2bbd165b7ad60294b881a49b26da7))
+* **csp:** whitelist gtm, fonts, and avatars in connect-src ([d958dd4](https://github.com/ecucondorSA/autorenta/commit/d958dd4ab390c121d84e124f48ac40455786f465))
+
 # [1.15.0](https://github.com/ecucondorSA/autorenta/compare/v1.14.2...v1.15.0) (2026-01-08)
 
 
