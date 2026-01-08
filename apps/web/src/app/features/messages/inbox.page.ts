@@ -142,7 +142,7 @@ import { UnreadMessagesService } from '@core/services/bookings/unread-messages.s
       <div class="fab-container">
         @if (showAttachMenu()) {
           <div class="attach-menu" (click)="closeAttachMenu($event)">
-            <button class="attach-option" (click)="triggerFileInput('document')" type="button">
+            <button class="attach-option" (click)="triggerFileInput()" type="button">
               <div class="attach-icon document">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -155,7 +155,7 @@ import { UnreadMessagesService } from '@core/services/bookings/unread-messages.s
               </div>
               <span>Documento</span>
             </button>
-            <button class="attach-option" (click)="triggerFileInput('image')" type="button">
+            <button class="attach-option" (click)="triggerFileInput()" type="button">
               <div class="attach-icon photo">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -168,7 +168,7 @@ import { UnreadMessagesService } from '@core/services/bookings/unread-messages.s
               </div>
               <span>Foto/Video</span>
             </button>
-            <button class="attach-option" (click)="triggerFileInput('camera')" type="button">
+            <button class="attach-option" (click)="triggerFileInput()" type="button">
               <div class="attach-icon camera">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path

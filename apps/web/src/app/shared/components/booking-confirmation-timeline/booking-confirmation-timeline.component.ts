@@ -228,7 +228,7 @@ export class BookingConfirmationTimelineComponent {
         actor: this.renterName(),
         actorId: booking.renter_id,
         isConditional: true,
-        requiresAction: booking.has_damages && !booking.renter_confirmed_payment && booking.inspection_status !== 'disputed' && this.isRenter(),
+        requiresAction: booking.has_damages === true && !booking.renter_confirmed_payment && booking.inspection_status !== 'disputed' && this.isRenter(),
         actionLabel: 'Revisar Reporte',
         actionDescription: 'Aceptar daños o iniciar disputa',
         metadata: {

@@ -51,7 +51,7 @@ import { VideoInspectionRecorderComponent } from '../../../shared/components/vid
             [bookingId]="bookingId()"
             [carId]="carId()"
             [inspectionType]="'checkin'"
-            (videoUploaded)="onVideoUploaded($event)"
+            (videoUploaded)="onVideoUploaded()"
             (recorderError)="onError($event)"
           >
           </app-video-inspection-recorder>
