@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/ecucondorSA/autorenta/compare/v1.12.1...v1.13.0) (2026-01-08)
+
+
+### Features
+
+* **auth:** fix database schema errors and enhance test user seeding ([1238352](https://github.com/ecucondorSA/autorenta/commit/1238352fa0d44f47ccd5e0eaf347ddda81b76405))
+
 ## [1.12.1](https://github.com/ecucondorSA/autorenta/compare/v1.12.0...v1.12.1) (2026-01-08)
 
 
