@@ -1,3 +1,10 @@
+## [1.15.4](https://github.com/ecucondorSA/autorenta/compare/v1.15.3...v1.15.4) (2026-01-08)
+
+
+### Bug Fixes
+
+* **ci:** robust baseline rehydration with verified dependency order ([949594a](https://github.com/ecucondorSA/autorenta/commit/949594ac1e47a43ef72e77a3f3376ce14f653178))
+
 ## [1.15.3](https://github.com/ecucondorSA/autorenta/compare/v1.15.2...v1.15.3) (2026-01-08)
 
 
