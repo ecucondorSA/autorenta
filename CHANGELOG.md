@@ -3,6 +3,14 @@
 
 ### Bug Fixes
 
+* **build:** invoke showMobileTips signal in template ([650ea06](https://github.com/ecucondorSA/autorenta/commit/650ea06c6141e9a17b98a2bfabc2c9df735d71bf))
+* **ci:** resolve lint and guardrails warnings ([f916713](https://github.com/ecucondorSA/autorenta/commit/f91671363eba3dee0a46d93ec63c0a0f52b3ac8f))
+
+## [1.13.1](https://github.com/ecucondorSA/autorenta/compare/v1.13.0...v1.13.1) (2026-01-08)
+
+
+### Bug Fixes
+
 * **ci:** resolve lint and guardrails warnings ([f916713](https://github.com/ecucondorSA/autorenta/commit/f91671363eba3dee0a46d93ec63c0a0f52b3ac8f))
 
 # [1.13.0](https://github.com/ecucondorSA/autorenta/compare/v1.12.1...v1.13.0) (2026-01-08)
