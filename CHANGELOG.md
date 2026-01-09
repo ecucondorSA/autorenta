@@ -1,3 +1,10 @@
+## [1.18.1](https://github.com/ecucondorSA/autorenta/compare/v1.18.0...v1.18.1) (2026-01-09)
+
+
+### Bug Fixes
+
+* **types:** sync database types from Supabase ([0863e42](https://github.com/ecucondorSA/autorenta/commit/0863e42886f47ace2ee0956d9dcdfae1b44139de))
+
 # [1.18.0](https://github.com/ecucondorSA/autorenta/compare/v1.17.4...v1.18.0) (2026-01-09)
 
 
