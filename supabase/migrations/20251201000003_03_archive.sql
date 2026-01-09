@@ -107,7 +107,7 @@ BEGIN
 END $$;
 
 -- Crear unique constraint (permite NULL, solo valida no-NULL)
-CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS idx_wallet_transactions_provider_tx_id_unique
+CREATE UNIQUE INDEX IF NOT EXISTS idx_wallet_transactions_provider_tx_id_unique
   ON wallet_transactions (provider_transaction_id)
   WHERE provider_transaction_id IS NOT NULL AND provider_transaction_id != '';
 
@@ -12192,8 +12192,8 @@ SELECT * FROM accounting_provisions WHERE status = 'ACTIVE';
 CREATE OR REPLACE FUNCTION refresh_accounting_balances()
 RETURNS VOID AS $$
 BEGIN
-  REFRESH MATERIALIZED VIEW CONCURRENTLY accounting_balance_sheet;
-  REFRESH MATERIALIZED VIEW CONCURRENTLY accounting_income_statement;
+  REFRESH MATERIALIZED VIEW accounting_balance_sheet;
+  REFRESH MATERIALIZED VIEW accounting_income_statement;
   REFRESH MATERIALIZED VIEW accounting_dashboard;
   REFRESH MATERIALIZED VIEW accounting_wallet_reconciliation;
   REFRESH MATERIALIZED VIEW accounting_commissions_report;
