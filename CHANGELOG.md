@@ -1,3 +1,10 @@
+## [1.15.8](https://github.com/ecucondorSA/autorenta/compare/v1.15.7...v1.15.8) (2026-01-09)
+
+
+### Bug Fixes
+
+* **ci:** add wallet_transactions table to core migration ([aa7fd7b](https://github.com/ecucondorSA/autorenta/commit/aa7fd7bf288f2c46a6fa652b0ef7acb50bbca301))
+
 ## [1.15.7](https://github.com/ecucondorSA/autorenta/compare/v1.15.6...v1.15.7) (2026-01-09)
 
 
