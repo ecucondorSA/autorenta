@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/ecucondorSA/autorenta/compare/v1.15.12...v1.16.0) (2026-01-09)
+
+
+### Features
+
+* **ui:** mobile optimizations for login and marketplace pages ([fbad978](https://github.com/ecucondorSA/autorenta/commit/fbad978a768d159e02f0e067441b2d7917d901af))
+
 ## [1.15.12](https://github.com/ecucondorSA/autorenta/compare/v1.15.11...v1.15.12) (2026-01-09)
 
 
