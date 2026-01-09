@@ -40,7 +40,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: TypeScript Check
-        run: pnpm --filter @autorenta/web exec tsc --noEmit
+        run: pnpm --filter autorenta-web exec tsc --noEmit
 
       - name: Build Production
         run: pnpm build:web
