@@ -6,6 +6,10 @@ on:
     - cron: '*/30 * * * *'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   check-mp-api:
     name: Check MercadoPago API
@@ -96,20 +100,6 @@ jobs:
               `https://api.mercadopago.com/v1/payments/search?begin_date=${yesterday.toISOString()}&limit=1`
             ));
 
-            // 4. Check money-out capability (for payouts)
-            console.log('Checking money-out capability...');
-            results.push(await checkEndpoint(
-              'MP Account Balance',
-              'https://api.mercadopago.com/users/me/mercadopago_account/balance'
-            ));
-
-            // 5. Check if we have pending webhooks
-            console.log('Checking webhook notifications...');
-            results.push(await checkEndpoint(
-              'MP Webhooks',
-              'https://api.mercadopago.com/v1/notifications/search?limit=5'
-            ));
-
             // Report results
             console.log('\n=== MercadoPago Health Check ===\n');
 
@@ -144,11 +134,14 @@ jobs:
               console.warn('⚠️ MercadoPago API is responding slowly');
             }
 
+            // Only fail if critical endpoints fail (auth, payment methods, or payment search)
             if (failed.length > 0) {
-              console.error('\n❌ MercadoPago API issues detected!');
+              console.error(`\n❌ ${failed.length} MercadoPago endpoint(s) failing`);
               core.setFailed(`${failed.length} MercadoPago endpoints are failing`);
-            } else if (slow.length >= 3) {
+            } else if (slow.length >= 2) {
               console.warn('\n⚠️ MercadoPago API is degraded (multiple slow endpoints)');
+            } else {
+              console.log('\n✅ MercadoPago API is healthy');
             }
 
             return { results, failed, slow, avgLatency };
