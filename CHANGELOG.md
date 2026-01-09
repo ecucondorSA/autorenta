@@ -1,3 +1,10 @@
+## [2.2.1](https://github.com/ecucondorSA/autorenta/compare/v2.2.0...v2.2.1) (2026-01-09)
+
+
+### Bug Fixes
+
+* **ci:** resolve pnpm version conflict and localStorage E2E errors ([5b91671](https://github.com/ecucondorSA/autorenta/commit/5b91671952a2a5071a94b695a0701c492eb3b5a9))
+
 # [2.2.0](https://github.com/ecucondorSA/autorenta/compare/v2.1.0...v2.2.0) (2026-01-09)
 
 
