@@ -169,8 +169,9 @@ jobs:
       - name: Start Server & Run Critical E2E Tests
         run: |
           cd apps/web
-          npx serve -s dist/web -l 4200 &
-          sleep 5
+          npx serve -s dist/web/browser -l 4200 &
+          sleep 10
+          curl -sf http://localhost:4200 > /dev/null && echo "Server is up"
           npx playwright test --config=e2e/playwright.config.ts --grep @critical
         env:
           CI: true
