@@ -246,10 +246,10 @@ export class ProfileExpandedPage implements OnInit {
    */
   getKycStatusClass(status: KycStatus): string {
     const classMap: Record<KycStatus, string> = {
-      verified: 'text-success-text dark:text-success-200',
-      pending: 'text-warning-text dark:text-warning-200',
-      rejected: 'text-error-text dark:text-error-200',
-      not_started: 'text-text-muted dark:text-text-secondary/50',
+      verified: 'text-success-text',
+      pending: 'text-warning-text',
+      rejected: 'text-error-text',
+      not_started: 'text-text-muted',
     };
 
     return classMap[status] || classMap.not_started;

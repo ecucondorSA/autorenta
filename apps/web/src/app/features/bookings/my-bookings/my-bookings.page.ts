@@ -108,40 +108,67 @@ export class MyBookingsPage implements OnInit, OnDestroy {
     return allBookings.filter((booking) => booking.status === filter);
   });
 
-  // Computed: Bookings grouped by section (using effective status)
+  // Computed: Bookings grouped by section (using effective status) - OPTIMIZED: single iteration
   readonly bookingsBySection = computed(() => {
     const allBookings = this.bookings();
     const filter = this.statusFilter();
-    const filteredBookings =
-      filter === 'all'
-        ? allBookings
-        : allBookings.filter((b) => this.getEffectiveStatus(b) === filter);
     const sectionList = this.sections();
 
-    return sectionList.map((section) => ({
-      ...section,
-      bookings: filteredBookings.filter((b) =>
-        section.statuses.includes(this.getEffectiveStatus(b)),
-      ),
-      count: filteredBookings.filter((b) => section.statuses.includes(this.getEffectiveStatus(b)))
-        .length,
-    }));
+    // Pre-create section buckets
+    const sectionBuckets = new Map<string, Booking[]>();
+    for (const section of sectionList) {
+      sectionBuckets.set(section.id, []);
+    }
+
+    // Single pass through bookings
+    for (const booking of allBookings) {
+      const effectiveStatus = this.getEffectiveStatus(booking);
+
+      // Apply filter if not 'all'
+      if (filter !== 'all' && effectiveStatus !== filter) continue;
+
+      // Find matching section and add booking
+      for (const section of sectionList) {
+        if (section.statuses.includes(effectiveStatus)) {
+          sectionBuckets.get(section.id)!.push(booking);
+          break;
+        }
+      }
+    }
+
+    // Build result
+    return sectionList.map((section) => {
+      const bookings = sectionBuckets.get(section.id) ?? [];
+      return {
+        ...section,
+        bookings,
+        count: bookings.length,
+      };
+    });
   });
 
-  // Computed: Count of bookings per status (using effective status)
+  // Computed: Count of bookings per status (using effective status) - OPTIMIZED: single iteration
   readonly statusCounts = computed(() => {
     const bookings = this.bookings();
-    return {
+    const counts = {
       all: bookings.length,
-      pending: bookings.filter((b) => this.getEffectiveStatus(b) === 'pending').length,
-      pending_review: bookings.filter((b) => this.getEffectiveStatus(b) === 'pending_review')
-        .length,
-      confirmed: bookings.filter((b) => this.getEffectiveStatus(b) === 'confirmed').length,
-      in_progress: bookings.filter((b) => this.getEffectiveStatus(b) === 'in_progress').length,
-      completed: bookings.filter((b) => this.getEffectiveStatus(b) === 'completed').length,
-      expired: bookings.filter((b) => this.getEffectiveStatus(b) === 'expired').length,
-      cancelled: bookings.filter((b) => this.getEffectiveStatus(b) === 'cancelled').length,
+      pending: 0,
+      pending_review: 0,
+      confirmed: 0,
+      in_progress: 0,
+      completed: 0,
+      expired: 0,
+      cancelled: 0,
     };
+
+    for (const booking of bookings) {
+      const status = this.getEffectiveStatus(booking);
+      if (status in counts) {
+        counts[status as keyof typeof counts]++;
+      }
+    }
+
+    return counts;
   });
 
   // Computed: Summary stats for dashboard (using effective status)

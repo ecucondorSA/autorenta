@@ -29,18 +29,34 @@
   @if (!loading() && hasBookings()) {
     <div class="bookings-list">
       @for (booking of pendingReviews(); track booking.id) {
-        <div class="booking-card" (click)="navigateToBooking(booking.id)">
-          <!-- Status Badge -->
+        <div
+          class="booking-card"
+          [class.processing]="confirmingId() === booking.id"
+          (click)="navigateToBooking(booking.id)"
+        >
+          <!-- Status Badge with time -->
           <div class="status-badge">
             <span class="icon">🔍</span>
             <span class="label">Pendiente de revisión</span>
+            @if (getTimeSinceReturn(booking)) {
+              <span class="time-badge">{{ getTimeSinceReturn(booking) }}</span>
+            }
           </div>
 
           <!-- Car Info -->
           <div class="car-info">
-            <h3>{{ booking.car_title || booking.car_id }}</h3>
-            <div class="booking-dates">
-              <span class="date-range">📅 {{ formatDateRange(booking) }}</span>
+            @if (booking.car?.images?.[0]) {
+              <img
+                [src]="booking.car.images[0]"
+                [alt]="booking.car_title"
+                class="car-thumbnail"
+              />
+            }
+            <div class="car-details">
+              <h3>{{ booking.car_title || booking.car?.brand + ' ' + booking.car?.model }}</h3>
+              <div class="booking-dates">
+                <span class="date-range">📅 {{ formatDateRange(booking) }}</span>
+              </div>
             </div>
           </div>
 
@@ -60,12 +76,37 @@
             }
           </div>
 
-          <!-- Action Button -->
+          <!-- Direct Actions -->
           <div class="booking-actions">
-            <button class="btn-confirm">
-              <span>✅</span>
-              <span>Confirmar Devolución</span>
-              <span>→</span>
+            <button
+              class="btn-success"
+              (click)="confirmReturnDirectly(booking.id, $event)"
+              [disabled]="confirmingId() !== null"
+            >
+              @if (confirmingId() === booking.id) {
+                <span class="spinner-small"></span>
+                <span>Procesando...</span>
+              } @else {
+                <app-icon name="check" [size]="18" />
+                <span>Sin daños</span>
+              }
+            </button>
+
+            <button
+              class="btn-warning"
+              (click)="reportDamages(booking.id, $event)"
+              [disabled]="confirmingId() !== null"
+            >
+              <app-icon name="alert-triangle" [size]="18" />
+              <span>Reportar daños</span>
+            </button>
+
+            <button
+              class="btn-view"
+              (click)="$event.stopPropagation(); navigateToBooking(booking.id)"
+            >
+              <app-icon name="eye" [size]="18" />
+              <span>Detalle</span>
             </button>
           </div>
         </div>

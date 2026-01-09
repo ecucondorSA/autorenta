@@ -180,36 +180,25 @@ import { MetaService } from '@core/services/ui/meta.service';
                       <span class="score-max">/100</span>
                     </div>
                   </div>
+                  <!-- Overall Score Progress -->
+                  <div class="overall-progress mb-4">
+                    <ion-progress-bar
+                      [value]="driverScore() / 100"
+                      [color]="driverScore() >= 80 ? 'success' : driverScore() >= 60 ? 'warning' : 'danger'"
+                    ></ion-progress-bar>
+                  </div>
                   <div class="score-breakdown">
                     <div class="score-category">
-                      <div class="category-bar">
-                        <div
-                          class="bar-fill"
-                          [style.width]="getSpeedScore() + '%'"
-                          [style.background]="'var(--system-blue-default, #3880ff)'"
-                        ></div>
-                      </div>
-                      <span>Velocidad: {{ getSpeedScore() }}%</span>
+                      <span class="category-label">Velocidad: {{ getSpeedScore() }}%</span>
+                      <ion-progress-bar [value]="getSpeedScore() / 100" color="primary"></ion-progress-bar>
                     </div>
                     <div class="score-category">
-                      <div class="category-bar">
-                        <div
-                          class="bar-fill"
-                          [style.width]="getBrakingScore() + '%'"
-                          [style.background]="'var(--success-default, #2dd36f)'"
-                        ></div>
-                      </div>
-                      <span>Frenado: {{ getBrakingScore() }}%</span>
+                      <span class="category-label">Frenado: {{ getBrakingScore() }}%</span>
+                      <ion-progress-bar [value]="getBrakingScore() / 100" color="success"></ion-progress-bar>
                     </div>
                     <div class="score-category">
-                      <div class="category-bar">
-                        <div
-                          class="bar-fill"
-                          [style.width]="getAccelerationScore() + '%'"
-                          [style.background]="'var(--warning-default, #ffc409)'"
-                        ></div>
-                      </div>
-                      <span>Aceleración: {{ getAccelerationScore() }}%</span>
+                      <span class="category-label">Aceleración: {{ getAccelerationScore() }}%</span>
+                      <ion-progress-bar [value]="getAccelerationScore() / 100" color="warning"></ion-progress-bar>
                     </div>
                   </div>
                 </div>

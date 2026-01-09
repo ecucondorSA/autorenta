@@ -562,6 +562,25 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
+   LOGIN MODAL ANIMATIONS
+   ───────────────────────────────────────────────────────────── */
+
+/* Backdrop fade */
+.animate-fadeIn {
+  animation: fadeIn 200ms ease-out forwards;
+}
+
+/* Mobile: slide up from bottom */
+.animate-slideUp {
+  animation: bottomSheetEnter 300ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+/* Desktop: scale in from center */
+.animate-scaleIn {
+  animation: scaleIn 200ms ease-out forwards;
+}
+
+/* ─────────────────────────────────────────────────────────────
    REDUCED MOTION - Accessibility
    ───────────────────────────────────────────────────────────── */
 

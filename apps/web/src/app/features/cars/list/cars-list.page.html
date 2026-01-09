@@ -1,5 +1,5 @@
 <section
-  class="cars-marketplace bg-surface-base dark:bg-surface-base transition-colors duration-300 min-h-screen"
+  class="cars-marketplace bg-surface-base transition-colors duration-300 min-h-screen"
 >
   <!-- Barra superior fija -->
   <!-- Recompilation trigger 1 -->
@@ -7,7 +7,7 @@
 
   <!-- Desktop Header with View Toggles (hidden on mobile when map view) -->
   <div
-    class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50"
+    class="bg-white border-b border-slate-200 sticky top-0 z-50"
     [class.hidden]="viewMode() === 'map'"
     [class.lg:block]="true"
   >
@@ -16,11 +16,11 @@
     >
       <!-- Header Left -->
       <div class="header-left">
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white font-satoshi">
+        <h1 class="text-2xl font-bold text-slate-900 font-satoshi">
           Alquila tu próximo auto
         </h1>
         <p
-          class="text-sm text-slate-600 dark:text-slate-500"
+          class="text-sm text-slate-600"
           data-testid="results-count"
           aria-live="polite"
         >
@@ -38,7 +38,7 @@
             data-testid="sort-select"
             [value]="sortBy()"
             (change)="onSortChange($any($event.target).value)"
-            class="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-slate-700 dark:text-slate-500 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            class="appearance-none bg-white border border-slate-200 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-slate-700 cursor-pointer hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-500"
           >
             <option value="rating">Mejor valorados</option>
             <option value="price_asc">Precio: menor a mayor</option>
@@ -55,21 +55,19 @@
 
         <!-- View Toggle (Desktop only - mobile uses floating pill) -->
         <div
-          class="hidden lg:flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl items-center border border-slate-200 dark:border-slate-700"
+          class="hidden lg:flex bg-slate-100 p-1 rounded-xl items-center border border-slate-200"
         >
           <button
             type="button"
             data-testid="view-map"
             [class.bg-white]="viewMode() === 'map'"
-            [class.dark:bg-slate-700]="viewMode() === 'map'"
             [class.shadow-sm]="viewMode() === 'map'"
             [class.text-slate-900]="viewMode() === 'map'"
-            [class.dark:text-white]="viewMode() === 'map'"
             [class.text-slate-500]="viewMode() !== 'map'"
             (click)="viewMode.set('map')"
             [attr.aria-pressed]="viewMode() === 'map'"
             aria-label="Cambiar a vista mapa"
-            class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
+            class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 flex items-center gap-1.5 text-sm font-medium"
             title="Vista Mapa"
           >
             <app-icon name="map" [size]="16" />
@@ -79,15 +77,13 @@
             type="button"
             data-testid="view-grid"
             [class.bg-white]="viewMode() !== 'map'"
-            [class.dark:bg-slate-700]="viewMode() !== 'map'"
             [class.shadow-sm]="viewMode() !== 'map'"
             [class.text-slate-900]="viewMode() !== 'map'"
-            [class.dark:text-white]="viewMode() !== 'map'"
             [class.text-slate-500]="viewMode() === 'map'"
             (click)="viewMode.set('grid')"
             [attr.aria-pressed]="viewMode() !== 'map'"
             aria-label="Cambiar a vista lista"
-            class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
+            class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 flex items-center gap-1.5 text-sm font-medium"
             title="Vista Lista"
           >
             <app-icon name="menu" [size]="16" />
@@ -115,7 +111,7 @@
     >
       <!-- 🔎 BARRA DE BÚSQUEDA PROFESIONAL -->
       <div
-        class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 mb-6"
+        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-6"
       >
         <!-- Fila Principal: Búsqueda + Fechas -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
@@ -154,7 +150,7 @@
                 [attr.aria-expanded]="searchSuggestions().length > 0"
                 aria-controls="search-suggestions"
                 placeholder="Ej. Toyota Corolla en Centro..."
-                class="w-full pl-11 pr-4 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all font-medium"
+                class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all font-medium"
               />
 
               <!-- Sugerencias (Dropdown) -->
@@ -162,7 +158,7 @@
                 <div
                   id="search-suggestions"
                   role="listbox"
-                  class="absolute inset-x-0 top-full mt-2 z-20 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+                  class="absolute inset-x-0 top-full mt-2 z-20 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
                 >
                   @for (suggestion of searchSuggestions(); track suggestion; let idx = $index) {
                     <button
@@ -170,7 +166,7 @@
                       role="option"
                       [id]="'search-suggestion-' + idx"
                       (click)="onSuggestionClick(suggestion)"
-                      class="w-full text-left px-4 py-3 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3 border-b border-slate-50 dark:border-slate-700/50 last:border-0"
+                      class="w-full text-left px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-3 border-b border-slate-50 last:border-0"
                     >
                       <svg
                         class="w-4 h-4 text-slate-400"
@@ -215,7 +211,7 @@
         </div>
 
         <!-- Separador sutil -->
-        <div class="h-px w-full bg-slate-100 dark:bg-slate-700/50 mb-6"></div>
+        <div class="h-px w-full bg-slate-100 mb-6"></div>
 
         <!-- Fila Secundaria: Filtros Avanzados -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -255,7 +251,7 @@
                 placeholder="Ilimitado"
                 min="0"
                 step="5"
-                class="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all"
+                class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all"
               />
             </div>
           </div>
@@ -286,7 +282,7 @@
                 placeholder="0"
                 min="0"
                 step="100"
-                class="w-full pl-7 pr-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all"
+                class="w-full pl-7 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all"
               />
             </div>
           </div>
@@ -317,7 +313,7 @@
                 placeholder="Ilimitado"
                 min="0"
                 step="100"
-                class="w-full pl-7 pr-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all"
+                class="w-full pl-7 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all"
               />
             </div>
           </div>
@@ -350,7 +346,7 @@
                     $any($event.target).value ? parseFloat($any($event.target).value) : null
                   )
                 "
-                class="w-full pl-9 pr-8 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all appearance-none cursor-pointer"
+                class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all appearance-none cursor-pointer"
               >
                 <option value="">Todas</option>
                 <option value="4.5">4.5+ Excelente</option>
@@ -384,7 +380,7 @@
             <button
               type="button"
               (click)="toggleShowUnavailable()"
-              class="group flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              class="group flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
             >
               <div
                 [class.bg-cyan-600]="showUnavailableCars()"
@@ -398,11 +394,11 @@
                 ></span>
               </div>
               <div class="flex flex-col items-start">
-                <span class="text-xs font-bold text-slate-700 dark:text-slate-300">
+                <span class="text-xs font-bold text-slate-700">
                   Mostrar no disponibles
                 </span>
                 @if (showUnavailableCars()) {
-                  <span class="text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+                  <span class="text-[10px] text-amber-600 font-medium">
                     (Ver disponibilidad futura)
                   </span>
                 }
@@ -444,11 +440,11 @@
       @if (loadError()) {
         <div class="mb-6" role="alert" aria-live="polite" data-testid="load-error">
           <div
-            class="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 flex items-start justify-between gap-4"
+            class="p-4 bg-white rounded-lg border border-slate-200 flex items-start justify-between gap-4"
           >
             <div>
-              <p class="text-sm font-semibold text-slate-900 dark:text-white">Error al cargar</p>
-              <p class="text-sm text-slate-600 dark:text-slate-500 mt-1">{{ loadError() }}</p>
+              <p class="text-sm font-semibold text-slate-900">Error al cargar</p>
+              <p class="text-sm text-slate-600 mt-1">{{ loadError() }}</p>
             </div>
             <button
               type="button"
@@ -467,15 +463,15 @@
           @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
             <div class="animate-pulse">
               <!-- Image Skeleton -->
-              <div class="aspect-[4/3] rounded-xl bg-slate-200 dark:bg-slate-700 mb-3"></div>
+              <div class="aspect-[4/3] rounded-xl bg-slate-200 mb-3"></div>
               <!-- Content Skeleton -->
               <div class="space-y-2">
                 <div class="flex justify-between">
-                  <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
-                  <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-12"></div>
+                  <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+                  <div class="h-4 bg-slate-200 rounded w-12"></div>
                 </div>
-                <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
-                <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
+                <div class="h-3 bg-slate-200 rounded w-1/2"></div>
+                <div class="h-4 bg-slate-200 rounded w-1/3"></div>
               </div>
             </div>
           }
@@ -487,15 +483,15 @@
         <div class="flex flex-col gap-4 max-w-5xl mx-auto" data-testid="list-skeleton">
           @for (_ of [1, 2, 3]; track _) {
             <div
-              class="animate-pulse bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col md:flex-row"
+              class="animate-pulse bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col md:flex-row"
             >
               <div
-                class="w-full sm:w-48 md:w-56 lg:w-72 aspect-video md:aspect-[4/3] bg-slate-200 dark:bg-slate-700 flex-shrink-0"
+                class="w-full sm:w-48 md:w-56 lg:w-72 aspect-video md:aspect-[4/3] bg-slate-200 flex-shrink-0"
               ></div>
               <div class="p-5 flex-1 space-y-3">
-                <div class="h-5 bg-slate-200 dark:bg-slate-700 rounded w-2/3"></div>
-                <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
-                <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
+                <div class="h-5 bg-slate-200 rounded w-2/3"></div>
+                <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+                <div class="h-4 bg-slate-200 rounded w-1/3"></div>
               </div>
             </div>
           }
@@ -521,7 +517,7 @@
             >
               <!-- Image Container -->
               <div
-                class="aspect-[16/10] relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700 mb-3"
+                class="aspect-[16/10] relative overflow-hidden rounded-xl bg-slate-100 mb-3"
               >
                 @if (idx < 2) {
                   <img
@@ -613,11 +609,11 @@
               <div class="space-y-1">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2 min-w-0">
-                    <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                    <p class="text-sm font-semibold text-slate-900 truncate">
                       {{ car.location_city || car.location_state || 'Argentina' }}
                     </p>
                     @if (car.distanceText) {
-                      <span class="text-xs text-slate-500 dark:text-slate-500 flex-shrink-0"
+                      <span class="text-xs text-slate-500 flex-shrink-0"
                         >· {{ car.distanceText }}</span
                       >
                     }
@@ -627,13 +623,13 @@
                       <app-icon
                         name="star-filled"
                         [size]="16"
-                        cssClass="text-slate-900 dark:text-white"
+                        cssClass="text-slate-900"
                       />
-                      <span class="text-sm font-medium text-slate-900 dark:text-white">{{
+                      <span class="text-sm font-medium text-slate-900">{{
                         car.rating_avg | number: '1.1-1'
                       }}</span>
                       @if (car.rating_count) {
-                        <span class="text-xs text-slate-500 dark:text-slate-500"
+                        <span class="text-xs text-slate-500"
                           >({{ car.rating_count }})</span
                         >
                       }
@@ -641,19 +637,19 @@
                   }
                 </div>
                 <h3
-                  class="text-sm text-slate-500 dark:text-slate-500 truncate font-bold font-satoshi"
+                  class="text-sm text-slate-500 truncate font-bold font-satoshi"
                 >
                   {{ car.brand }} {{ car.model }} {{ car.year }}
                 </h3>
-                <p class="text-sm text-slate-500 dark:text-slate-500">
+                <p class="text-sm text-slate-500">
                   {{ car.transmission | titlecase }} · {{ car.seats }} asientos ·
                   {{ car.fuel_type | titlecase }}
                 </p>
                 <p class="pt-1">
-                  <span class="font-semibold text-slate-900 dark:text-white"
+                  <span class="font-semibold text-slate-900"
                     >${{ car.price_per_day | number: '1.0-0' }}</span
                   >
-                  <span class="text-slate-500 dark:text-slate-500"> / día</span>
+                  <span class="text-slate-500"> / día</span>
                 </p>
               </div>
             </a>
@@ -667,7 +663,7 @@
           @for (car of premiumCars(); track car.id; let idx = $index) {
             <a
               [routerLink]="['/cars', car.id]"
-              class="relative flex-shrink-0 w-[85vw] snap-center bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700 flex flex-col no-min-touch"
+              class="relative flex-shrink-0 w-[85vw] snap-center bg-white rounded-3xl overflow-hidden shadow-lg border border-slate-200 flex flex-col no-min-touch"
             >
               <!-- Full Height Image -->
               <div class="h-[65%] relative">
@@ -741,23 +737,23 @@
               </div>
 
               <!-- Bottom Content -->
-              <div class="flex-1 p-5 flex flex-col justify-between bg-white dark:bg-slate-800">
+              <div class="flex-1 p-5 flex flex-col justify-between bg-white">
                 <div>
                   <div class="flex justify-between items-start mb-1">
                     <h3
-                      class="text-xl font-bold text-slate-900 dark:text-white font-satoshi leading-tight"
+                      class="text-xl font-bold text-slate-900 font-satoshi leading-tight"
                     >
                       {{ car.brand }} {{ car.model }}
                     </h3>
                     @if (car.rating_avg) {
                       <div
-                        class="flex items-center gap-1 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-lg"
+                        class="flex items-center gap-1 bg-slate-100 px-2 py-1 rounded-lg"
                       >
                         <app-icon name="star-filled" [size]="14" cssClass="text-amber-500" />
-                        <span class="text-sm font-bold text-slate-900 dark:text-white">
+                        <span class="text-sm font-bold text-slate-900">
                           {{ car.rating_avg | number: '1.1-1' }}
                           @if (car.rating_count) {
-                            <span class="text-xs font-semibold text-slate-600 dark:text-slate-300"
+                            <span class="text-xs font-semibold text-slate-600"
                               >({{ car.rating_count }})</span
                             >
                           }
@@ -765,7 +761,7 @@
                       </div>
                     }
                   </div>
-                  <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">
+                  <p class="text-slate-500 text-sm mb-4">
                     {{ car.year }} · {{ car.location_city || 'Argentina' }}
                     @if (car.distanceText) {
                       · {{ car.distanceText }}
@@ -775,12 +771,12 @@
                   <!-- Features Chips -->
                   <div class="flex flex-wrap gap-2">
                     <span
-                      class="px-3 py-1 bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 rounded-full text-xs text-slate-600 dark:text-slate-400"
+                      class="px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-xs text-slate-600"
                     >
                       {{ car.transmission | titlecase }}
                     </span>
                     <span
-                      class="px-3 py-1 bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 rounded-full text-xs text-slate-600 dark:text-slate-400"
+                      class="px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-xs text-slate-600"
                     >
                       {{ car.seats }} asientos
                     </span>
@@ -807,10 +803,10 @@
             >
               <button
                 (click)="loadMore()"
-                class="flex flex-col items-center gap-4 p-8 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                class="flex flex-col items-center gap-4 p-8 rounded-full hover:bg-slate-50 transition-colors"
               >
                 <div
-                  class="w-16 h-16 rounded-full bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400"
+                  class="w-16 h-16 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600"
                 >
                   <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
@@ -821,7 +817,7 @@
                     ></path>
                   </svg>
                 </div>
-                <span class="font-bold text-lg text-slate-900 dark:text-white">Ver más autos</span>
+                <span class="font-bold text-lg text-slate-900">Ver más autos</span>
               </button>
             </div>
           }
@@ -838,7 +834,7 @@
         <div class="hidden sm:flex mt-8 mb-12 justify-center pb-20 lg:pb-0">
           <button
             (click)="loadMore()"
-            class="px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full shadow-sm text-slate-900 dark:text-white font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 group"
+            class="px-6 py-3 bg-white border border-slate-200 rounded-full shadow-sm text-slate-900 font-medium hover:bg-slate-50 transition-colors flex items-center gap-2 group"
           >
             <span>Ver más autos</span>
             <svg
@@ -867,7 +863,7 @@
               [attr.data-car-id]="car.id"
               [id]="'car-card-' + car.id"
               data-testid="car-card"
-              class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer flex flex-col md:flex-row no-min-touch"
+              class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 overflow-hidden cursor-pointer flex flex-col md:flex-row no-min-touch"
               [class.ring-2]="activeMapCarId() === car.id"
               [class.ring-cyan-500]="activeMapCarId() === car.id"
               (mouseenter)="onCardMouseEnter(car.id)"
@@ -875,7 +871,7 @@
             >
               <!-- Image -->
               <div
-                class="w-full sm:w-48 md:w-56 lg:w-72 aspect-video md:aspect-[4/3] relative bg-slate-100 dark:bg-slate-700 flex-shrink-0"
+                class="w-full sm:w-48 md:w-56 lg:w-72 aspect-video md:aspect-[4/3] relative bg-slate-100 flex-shrink-0"
               >
                 <img
                   [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
@@ -891,13 +887,13 @@
                   <div class="flex justify-between items-start mb-2">
                     <div>
                       <h3
-                        class="text-xl font-bold text-slate-900 dark:text-white"
+                        class="text-xl font-bold text-slate-900"
                         data-testid="car-title"
                       >
                         {{ car.brand }} {{ car.model }}
                       </h3>
                       <p
-                        class="text-sm text-slate-500 dark:text-slate-500 flex items-center gap-1 mt-1"
+                        class="text-sm text-slate-500 flex items-center gap-1 mt-1"
                         data-testid="car-location"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -911,7 +907,7 @@
                           car.location_city || 'Ubicación no disponible'
                         }}</span>
                         @if (car.distanceText) {
-                          <span class="text-xs text-slate-500 dark:text-slate-500 flex-shrink-0"
+                          <span class="text-xs text-slate-500 flex-shrink-0"
                             >· {{ car.distanceText }}</span
                           >
                         }
@@ -920,7 +916,7 @@
                     <div class="text-right">
                       @if (car.price_per_day && car.price_per_day > 0) {
                         <div
-                          class="text-2xl font-bold text-cyan-600 dark:text-cyan-400"
+                          class="text-2xl font-bold text-cyan-600"
                           data-testid="car-price"
                         >
                           ${{ car.price_per_day | number: '1.0-0' }}
@@ -935,13 +931,13 @@
                           <app-icon
                             name="star-filled"
                             [size]="14"
-                            cssClass="text-slate-900 dark:text-white"
+                            cssClass="text-slate-900"
                           />
-                          <span class="text-sm font-semibold text-slate-900 dark:text-white">{{
+                          <span class="text-sm font-semibold text-slate-900">{{
                             car.rating_avg | number: '1.1-1'
                           }}</span>
                           @if (car.rating_count) {
-                            <span class="text-xs text-slate-500 dark:text-slate-500"
+                            <span class="text-xs text-slate-500"
                               >({{ car.rating_count }})</span
                             >
                           }
@@ -950,13 +946,13 @@
                     </div>
                   </div>
                   @if (car.description) {
-                    <p class="text-slate-600 dark:text-slate-500 text-sm line-clamp-2 mb-4">
+                    <p class="text-slate-600 text-sm line-clamp-2 mb-4">
                       {{ car.description }}
                     </p>
                   }
                   <div class="flex flex-wrap gap-3">
                     <span
-                      class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1"
+                      class="px-3 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-700 flex items-center gap-1"
                     >
                       <svg
                         class="w-3.5 h-3.5"
@@ -974,12 +970,12 @@
                       {{ car.transmission || 'Manual' }}
                     </span>
                     <span
-                      class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1"
+                      class="px-3 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-700 flex items-center gap-1"
                     >
                       ⛽ {{ car.fuel_type || 'Nafta' }}
                     </span>
                     <span
-                      class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1"
+                      class="px-3 py-1 bg-slate-100 rounded-full text-xs font-medium text-slate-700 flex items-center gap-1"
                     >
                       👥 {{ car.seats || 5 }} asientos
                     </span>
@@ -999,10 +995,10 @@
             alt="No se encontraron autos"
             class="w-64 h-64 mx-auto mb-6"
           />
-          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 font-satoshi">
+          <h3 class="text-xl font-bold text-slate-900 mb-2 font-satoshi">
             No encontramos vehículos
           </h3>
-          <p class="text-slate-500 dark:text-slate-500">Intenta ajustar tu búsqueda o filtros.</p>
+          <p class="text-slate-500">Intenta ajustar tu búsqueda o filtros.</p>
         </div>
       }
 
@@ -1013,7 +1009,7 @@
         <!-- Loading more indicator -->
         @if (loadingMore()) {
           <div class="flex justify-center py-8">
-            <div class="flex items-center gap-3 text-slate-500 dark:text-slate-400">
+            <div class="flex items-center gap-3 text-slate-500">
               <svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none">
                 <circle
                   class="opacity-25"
@@ -1036,7 +1032,7 @@
 
         <!-- Total count indicator -->
         @if (totalCars() > 0 && !serverHasMore() && !loadingMore()) {
-          <div class="text-center py-6 text-slate-500 dark:text-slate-400 text-sm">
+          <div class="text-center py-6 text-slate-500 text-sm">
             Mostrando {{ premiumCars().length }} de {{ totalCars() }} vehículos
           </div>
         }
@@ -1047,14 +1043,14 @@
     <!-- 🗺️ RIGHT PANEL: Mapa (Desktop: fixed height, Mobile: fullscreen) -->
     @if (viewMode() === 'map') {
       <div
-        class="w-full lg:w-1/2 xl:w-[45%] fixed inset-0 z-40 lg:relative lg:inset-auto lg:z-auto lg:h-full flex-shrink-0 overflow-hidden lg:border-l lg:border-slate-200 dark:lg:border-slate-800"
+        class="w-full lg:w-1/2 xl:w-[45%] fixed inset-0 z-40 lg:relative lg:inset-auto lg:z-auto lg:h-full flex-shrink-0 overflow-hidden lg:border-l lg:border-slate-200"
         data-testid="cars-map"
       >
         @if (loading() && premiumCars().length === 0) {
           <div
-            class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80 dark:bg-slate-900/70"
+            class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80"
           >
-            <div class="text-sm font-semibold text-slate-900 dark:text-white">
+            <div class="text-sm font-semibold text-slate-900">
               Cargando vehículos…
             </div>
           </div>
@@ -1062,13 +1058,13 @@
 
         @if (!loading() && loadError() && premiumCars().length === 0) {
           <div
-            class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80 dark:bg-slate-900/70 p-6"
+            class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80 p-6"
           >
             <div
-              class="max-w-md w-full bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4"
+              class="max-w-md w-full bg-white rounded-xl border border-slate-200 p-4"
             >
-              <p class="text-sm font-semibold text-slate-900 dark:text-white">Error al cargar</p>
-              <p class="text-sm text-slate-600 dark:text-slate-500 mt-1">{{ loadError() }}</p>
+              <p class="text-sm font-semibold text-slate-900">Error al cargar</p>
+              <p class="text-sm text-slate-600 mt-1">{{ loadError() }}</p>
               <button
                 type="button"
                 (click)="loadCars()"
@@ -1082,13 +1078,13 @@
 
         @if (!loading() && !loadError() && premiumCars().length === 0) {
           <div
-            class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80 dark:bg-slate-900/70 p-6"
+            class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80 p-6"
           >
             <div class="max-w-md w-full text-center">
-              <p class="text-sm font-semibold text-slate-900 dark:text-white">
+              <p class="text-sm font-semibold text-slate-900">
                 No encontramos vehículos
               </p>
-              <p class="text-sm text-slate-600 dark:text-slate-500 mt-1">
+              <p class="text-sm text-slate-600 mt-1">
                 Intenta ajustar tu búsqueda o filtros.
               </p>
             </div>
@@ -1121,7 +1117,7 @@
         <div class="absolute top-20 lg:top-4 left-4 z-10 flex flex-col gap-2">
           <button
             type="button"
-            class="w-11 h-11 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-300 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
+            class="w-11 h-11 bg-white rounded-xl shadow-lg border border-slate-200 flex items-center justify-center hover:bg-primary-50 hover:border-primary-300 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
             [class.ring-2]="isCenteredOnUser()"
             [class.ring-primary-500]="isCenteredOnUser()"
             [disabled]="isLocating()"
@@ -1151,7 +1147,7 @@
               <app-icon
                 name="location"
                 [size]="22"
-                cssClass="text-slate-600 dark:text-slate-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors"
+                cssClass="text-slate-600 group-hover:text-primary-600 transition-colors"
               />
             }
           </button>
@@ -1172,7 +1168,7 @@
       <!-- Results Count Badge -->
       <div class="flex justify-center mb-2">
         <span
-          class="px-3 py-1.5 bg-white dark:bg-slate-800 rounded-full text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200 dark:border-slate-700 mobile-map-carousel-badge"
+          class="px-3 py-1.5 bg-white rounded-full text-xs font-semibold text-slate-700 shadow-lg border border-slate-200 mobile-map-carousel-badge"
         >
           {{ premiumCars().length }} autos en esta zone
         </span>
@@ -1186,14 +1182,14 @@
           <a
             [routerLink]="['/cars', car.id]"
             [attr.data-car-id]="car.id"
-            class="flex-shrink-0 w-[260px] snap-start bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-200 active:scale-[0.98] mobile-map-carousel-card no-min-touch"
+            class="flex-shrink-0 w-[260px] snap-start bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden transition-all duration-200 active:scale-[0.98] mobile-map-carousel-card no-min-touch"
             [class.ring-2]="activeMapCarId() === car.id"
             [class.ring-cyan-500]="activeMapCarId() === car.id"
             [class.shadow-cyan-200]="activeMapCarId() === car.id"
           >
             <div class="flex h-[88px]">
               <!-- Car Image -->
-              <div class="w-[88px] h-full flex-shrink-0 bg-slate-100 dark:bg-slate-700 relative">
+              <div class="w-[88px] h-full flex-shrink-0 bg-slate-100 relative">
                 <img
                   [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
                   [alt]="car.brand + ' ' + car.model"
@@ -1219,7 +1215,7 @@
                 <div>
                   <div class="flex items-start justify-between gap-1">
                     <h4
-                      class="font-semibold text-[13px] text-slate-900 dark:text-white truncate leading-tight font-satoshi"
+                      class="font-semibold text-[13px] text-slate-900 truncate leading-tight font-satoshi"
                     >
                       {{ car.brand }} {{ car.model }}
                     </h4>
@@ -1228,20 +1224,20 @@
                         <app-icon
                           name="star-filled"
                           [size]="11"
-                          cssClass="text-slate-900 dark:text-white"
+                          cssClass="text-slate-900"
                         />
-                        <span class="text-xs font-medium text-slate-900 dark:text-white">
+                        <span class="text-xs font-medium text-slate-900">
                           {{ car.rating_avg | number: '1.1-1' }}
                         </span>
                         @if (car.rating_count) {
-                          <span class="text-xs font-medium text-slate-500 dark:text-slate-500"
+                          <span class="text-xs font-medium text-slate-500"
                             >({{ car.rating_count }})</span
                           >
                         }
                       </div>
                     }
                   </div>
-                  <p class="text-xs text-slate-500 dark:text-slate-500 truncate mt-0.5">
+                  <p class="text-xs text-slate-500 truncate mt-0.5">
                     {{ car.location_city || 'Argentina' }} · {{ car.transmission | titlecase }}
                     @if (car.distanceText) {
                       · {{ car.distanceText }}
@@ -1250,14 +1246,14 @@
                 </div>
                 <div class="flex items-center justify-between">
                   @if (car.price_per_day && car.price_per_day > 0) {
-                    <span class="font-bold text-[15px] text-slate-900 dark:text-white">
+                    <span class="font-bold text-[15px] text-slate-900">
                       ${{ car.price_per_day | number: '1.0-0'
                       }}<span class="text-xs font-normal text-slate-500 font-mono">/día</span>
                     </span>
                   } @else {
                     <span class="font-semibold text-[13px] text-primary-600">Consultar</span>
                   }
-                  <span class="text-cyan-600 dark:text-cyan-400 text-xs font-medium"> Ver → </span>
+                  <span class="text-cyan-600 text-xs font-medium"> Ver → </span>
                 </div>
               </div>
             </div>

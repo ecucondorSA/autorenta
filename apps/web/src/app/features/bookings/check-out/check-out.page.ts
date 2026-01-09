@@ -12,6 +12,7 @@ import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { FuelConfig, FuelConfigService } from '@core/services/bookings/fuel-config.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { firstValueFrom } from 'rxjs';
@@ -39,6 +40,7 @@ export class CheckOutPage implements OnInit {
   private readonly bookingsService = inject(BookingsService);
   private readonly confirmationService = inject(BookingConfirmationService);
   private readonly fgoService = inject(FgoV1_1Service);
+  private readonly fuelConfigService = inject(FuelConfigService);
   private readonly authService = inject(AuthService);
   private readonly logger = inject(LoggerService);
 
@@ -50,6 +52,7 @@ export class CheckOutPage implements OnInit {
   existingInspection = signal<BookingInspection | null>(null);
   checkInInspection = signal<BookingInspection | null>(null);
   renterCheckInInspection = signal<BookingInspection | null>(null);
+  fuelConfig = signal<FuelConfig | null>(null);
 
   // Computed properties
   readonly canPerformCheckOut = computed(() => {
@@ -90,28 +93,55 @@ export class CheckOutPage implements OnInit {
   });
 
   /**
-   * Calcula la penalidad por combustible faltante
-   * Precio por litro: ~$1.50 USD/litro Argentina
-   * Tanque promedio: 50 litros
-   * Penalización: diferencia% * 50L * $1.50 + 20% margen servicio
+   * Calcula la penalidad por combustible faltante usando configuración dinámica.
+   * Los valores se obtienen del FuelConfigService basado en el vehículo específico.
    */
   readonly fuelPenalty = computed(() => {
     const diff = this.fuelDifference();
+    const config = this.fuelConfig();
+    const checkIn = this.checkInInspection();
+    const checkOut = this.existingInspection();
+
+    // No hay diferencia o es positiva (devolvió con más combustible)
     if (diff === null || diff >= 0) return null;
 
-    const LITERS_PER_TANK = 50;
-    const PRICE_PER_LITER_USD = 1.5;
-    const SERVICE_MARGIN = 1.2; // 20% margen por servicio de carga
+    // Usar FuelConfigService si hay configuración cargada
+    if (config) {
+      const checkInLevel = checkIn?.fuelLevel ?? 0;
+      const checkOutLevel = checkOut?.fuelLevel ?? 0;
+      const penalty = this.fuelConfigService.calculatePenalty(config, checkInLevel, checkOutLevel);
 
-    const litersNeeded = (Math.abs(diff) / 100) * LITERS_PER_TANK;
-    const baseCost = litersNeeded * PRICE_PER_LITER_USD;
-    const totalCost = baseCost * SERVICE_MARGIN;
+      if (penalty === 0) return null;
+
+      const levelDiff = checkInLevel - checkOutLevel;
+      const litersPerPercent = config.tankLiters / 100;
+      const litersNeeded = levelDiff * litersPerPercent;
+      const baseCost = litersNeeded * config.pricePerLiterUsd;
+
+      return {
+        liters: Math.round(litersNeeded * 10) / 10,
+        baseCost: Math.round(baseCost * 100) / 100,
+        totalCost: penalty,
+        percentageMissing: Math.abs(diff),
+        fuelType: config.fuelType,
+      };
+    }
+
+    // Fallback a valores por defecto si no hay config (no debería pasar)
+    const DEFAULT_TANK_LITERS = 50;
+    const DEFAULT_PRICE_PER_LITER = 1.5;
+    const DEFAULT_MARGIN = 1.2;
+
+    const litersNeeded = (Math.abs(diff) / 100) * DEFAULT_TANK_LITERS;
+    const baseCost = litersNeeded * DEFAULT_PRICE_PER_LITER;
+    const totalCost = baseCost * DEFAULT_MARGIN;
 
     return {
       liters: Math.round(litersNeeded * 10) / 10,
       baseCost: Math.round(baseCost * 100) / 100,
       totalCost: Math.round(totalCost * 100) / 100,
       percentageMissing: Math.abs(diff),
+      fuelType: 'gasoline' as const,
     };
   });
 
@@ -133,6 +163,16 @@ export class CheckOutPage implements OnInit {
       }
 
       this.booking.set(booking);
+
+      // Cargar configuración de combustible para el vehículo
+      if (booking.car_id) {
+        try {
+          const config = await this.fuelConfigService.getConfig(booking.car_id);
+          this.fuelConfig.set(config);
+        } catch (err) {
+          this.logger.warn('Could not load fuel config, using defaults', 'CheckOutPage', err);
+        }
+      }
 
       // Verificar que el usuario es el locatario
       if (!this.isRenter()) {

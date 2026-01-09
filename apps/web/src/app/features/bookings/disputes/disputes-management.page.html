@@ -4,15 +4,27 @@
       <ion-back-button [defaultHref]="'/bookings/' + bookingId()"></ion-back-button>
     </ion-buttons>
     <ion-title>Gestión de Disputas</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="openCreateModal()">
-        <ion-icon name="add" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    @if (canCreateDispute() && !showCreateForm()) {
+      <ion-buttons slot="end">
+        <ion-button (click)="openCreateForm()">
+          <ion-icon name="add" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    }
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+  <!-- Role indicator -->
+  @if (booking()) {
+    <div class="flex items-center gap-2 mb-4">
+      <span class="text-xs px-2 py-1 rounded-full"
+            [class]="isOwner() ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'">
+        {{ isOwner() ? 'Eres el Anfitrión' : 'Eres el Locatario' }}
+      </span>
+    </div>
+  }
+
   <!-- Booking Info -->
   @if (booking()) {
     <ion-card class="mb-4">
@@ -31,8 +43,84 @@
     </ion-card>
   }
 
+  <!-- Inline Create Dispute Form -->
+  @if (showCreateForm()) {
+    <div class="create-dispute-form bg-surface-raised border-2 border-cta-default rounded-xl p-4 mb-6 animate-in slide-in-from-top">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold">Nueva Disputa</h3>
+        <button (click)="closeCreateForm()" class="p-2 rounded-full hover:bg-surface-hover">
+          <ion-icon name="close" class="text-xl"></ion-icon>
+        </button>
+      </div>
+
+      <form (ngSubmit)="createDispute()" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-text-secondary mb-2">Tipo de Disputa *</label>
+          <select
+            [ngModel]="newDisputeKind()"
+            (ngModelChange)="newDisputeKind.set($event)"
+            [ngModelOptions]="{ standalone: true }"
+            class="w-full px-4 py-3 rounded-xl border border-border-default bg-surface-base"
+            required>
+            <option value="">Seleccionar...</option>
+            <option value="damage">Daños al vehículo</option>
+            <option value="no_show">No se presentó</option>
+            <option value="late_return">Devolución tardía</option>
+            <option value="other">Otro</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-text-secondary mb-2">Descripción *</label>
+          <textarea
+            [ngModel]="newDisputeDescription()"
+            (ngModelChange)="newDisputeDescription.set($event)"
+            [ngModelOptions]="{ standalone: true }"
+            rows="4"
+            class="w-full px-4 py-3 rounded-xl border border-border-default bg-surface-base resize-none"
+            placeholder="Describe el problema en detalle..."
+            required></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-text-secondary mb-2">Evidencias (opcional)</label>
+          <input
+            type="file"
+            multiple
+            accept="image/*,.pdf"
+            (change)="onEvidenceFilesSelected($event)"
+            class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-cta-default file:text-cta-text" />
+          @if (evidenceFiles().length > 0) {
+            <p class="text-xs text-text-secondary mt-2">
+              {{ evidenceFiles().length }} archivo(s) seleccionado(s)
+            </p>
+          }
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button
+            type="button"
+            (click)="closeCreateForm()"
+            class="flex-1 py-3 rounded-xl border border-border-default font-semibold hover:bg-surface-hover">
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            [disabled]="loading() || !newDisputeKind() || !newDisputeDescription()"
+            class="flex-1 py-3 rounded-xl bg-cta-default text-cta-text font-bold disabled:opacity-50">
+            @if (loading()) {
+              <ion-spinner name="crescent" class="w-5 h-5"></ion-spinner>
+            } @else {
+              Crear Disputa
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
   <!-- Loading State -->
-  @if (loading()) {
+  @if (loading() && !showCreateForm()) {
     <div class="flex flex-col items-center justify-center py-12">
       <ion-spinner name="crescent"></ion-spinner>
       <p class="mt-4 text-text-secondary">Cargando disputas...</p>
@@ -40,14 +128,18 @@
   }
 
   <!-- Empty State -->
-  @if (!loading() && disputes().length === 0) {
+  @if (!loading() && disputes().length === 0 && !showCreateForm()) {
     <div class="text-center py-12">
       <ion-icon name="document-text-outline" class="text-6xl text-text-muted mb-4"></ion-icon>
       <p class="text-text-secondary mb-4">No hay disputas para esta reserva</p>
-      <ion-button (click)="openCreateModal()">
-        <ion-icon name="add" slot="start"></ion-icon>
-        Crear Disputa
-      </ion-button>
+      @if (canCreateDispute()) {
+        <ion-button (click)="openCreateForm()">
+          <ion-icon name="add" slot="start"></ion-icon>
+          Crear Disputa
+        </ion-button>
+      } @else {
+        <p class="text-xs text-text-muted">No puedes crear disputas en el estado actual de la reserva</p>
+      }
     </div>
   }
 
@@ -90,71 +182,6 @@
     </div>
   }
 
-  <!-- Create Dispute Modal -->
-  @if (showCreateModal()) {
-    <div
-      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
-      (click)="closeCreateModal()"
-    >
-      <ion-card
-        class="max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-        (click)="$event.stopPropagation()"
-      >
-        <ion-card-header>
-          <ion-card-title>Crear Disputa</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <form (ngSubmit)="createDispute()">
-            <ion-item class="mb-4">
-              <ion-label position="stacked">Tipo de Disputa *</ion-label>
-              <ion-select
-                [(ngModel)]="newDispute"
-                [ngModelOptions]="{ standalone: true }"
-                name="kind"
-                required
-              >
-                <ion-select-option value="damage">Daños al vehículo</ion-select-option>
-                <ion-select-option value="no_show">No se presentó</ion-select-option>
-                <ion-select-option value="late_return">Devolución tardía</ion-select-option>
-                <ion-select-option value="other">Otro</ion-select-option>
-              </ion-select>
-            </ion-item>
-            <ion-item class="mb-4">
-              <ion-label position="stacked">Descripción *</ion-label>
-              <ion-textarea
-                [(ngModel)]="newDispute"
-                [ngModelOptions]="{ standalone: true }"
-                name="description"
-                rows="6"
-                placeholder="Describe el problema en detalle..."
-                required
-              ></ion-textarea>
-            </ion-item>
-            <ion-item class="mb-4">
-              <ion-label position="stacked">Evidencias (opcional)</ion-label>
-              <ion-input
-                type="file"
-                multiple
-                accept="image/*,.pdf"
-                (change)="onEvidenceFilesSelected($event)"
-              ></ion-input>
-              <p class="text-xs text-text-secondary mt-2">
-                Puedes subir imágenes o documentos PDF como evidencia
-              </p>
-            </ion-item>
-            <div class="flex gap-2">
-              <ion-button expand="block" type="submit" [disabled]="loading()">
-                Crear Disputa
-              </ion-button>
-              <ion-button expand="block" fill="outline" (click)="closeCreateModal()">
-                Cancelar
-              </ion-button>
-            </div>
-          </form>
-        </ion-card-content>
-      </ion-card>
-    </div>
-  }
 
   <!-- Evidence Modal -->
   @if (showEvidenceModal()) {

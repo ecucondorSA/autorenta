@@ -69,8 +69,8 @@ export class PendingApprovalPage implements OnInit, OnDestroy, ViewWillEnter {
   readonly loading = signal(true);
   readonly pendingBookings = signal<PendingApproval[]>([]);
   readonly processingBookingId = signal<string | null>(null);
-  readonly showRejectDrawer = signal(false);
-  readonly selectedBookingId = signal<string | null>(null);
+  // Inline reject form - se expande dentro de la card
+  readonly rejectingBookingId = signal<string | null>(null);
   readonly rejectionReason = signal('');
   readonly customReason = signal('');
   readonly showAnalysisPanel = signal(false);
@@ -172,15 +172,17 @@ export class PendingApprovalPage implements OnInit, OnDestroy, ViewWillEnter {
   }
 
   onRejectClick(bookingId: string) {
-    this.selectedBookingId.set(bookingId);
+    // Si ya está abierto para otro booking, cerrarlo primero
+    if (this.rejectingBookingId() && this.rejectingBookingId() !== bookingId) {
+      this.onCancelReject();
+    }
+    this.rejectingBookingId.set(bookingId);
     this.rejectionReason.set('');
     this.customReason.set('');
-    this.showRejectDrawer.set(true);
-    document.body.style.overflow = 'hidden';
   }
 
   async onConfirmReject() {
-    const bookingId = this.selectedBookingId();
+    const bookingId = this.rejectingBookingId();
     let reason = this.rejectionReason();
 
     // Si eligió "other", usar la razón personalizada
@@ -213,11 +215,9 @@ export class PendingApprovalPage implements OnInit, OnDestroy, ViewWillEnter {
   }
 
   onCancelReject() {
-    this.showRejectDrawer.set(false);
-    this.selectedBookingId.set(null);
+    this.rejectingBookingId.set(null);
     this.rejectionReason.set('');
     this.customReason.set('');
-    document.body.style.overflow = '';
   }
 
   getUrgencyClass(hoursRemaining: number): string {
@@ -291,7 +291,9 @@ export class PendingApprovalPage implements OnInit, OnDestroy, ViewWillEnter {
     const booking = this.selectedAnalysisBooking();
     if (!booking) return;
 
+    // Cerrar panel de análisis y abrir formulario inline de rechazo
     this.closeAnalysisPanel();
-    this.onRejectClick(booking.booking_id);
+    // Pequeño delay para que el usuario vea la transición
+    setTimeout(() => this.onRejectClick(booking.booking_id), 100);
   }
 }

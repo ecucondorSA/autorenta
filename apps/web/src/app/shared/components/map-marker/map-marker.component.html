@@ -6,7 +6,7 @@
   >
     <!-- Car Photo Circle -->
     <div
-      class="w-14 h-14 rounded-full bg-surface-raised p-0.5 shadow-xl transition-all duration-300 border border-border-default group-hover:border-black dark:group-hover:border-cta-default"
+      class="w-14 h-14 rounded-full bg-surface-raised p-0.5 shadow-xl transition-all duration-300 border border-border-default group-hover:border-black"
       [class.ring-4]="isSelected"
       [class.ring-cta-default]="isSelected"
       [class.shadow-neon-glow]="isSelected"
@@ -24,10 +24,9 @@
       [class.scale-110]="isSelected"
     >
       <div
-        class="bg-black text-white dark:bg-white dark:text-black text-[10px] font-black uppercase tracking-tighter px-2 py-0.5 rounded-md shadow-hard-sm border border-white/10"
+        class="bg-black text-white text-[10px] font-black uppercase tracking-tighter px-2 py-0.5 rounded-md shadow-hard-sm border border-white/10"
         [class.bg-cta-default]="isSelected"
         [class.text-black]="isSelected"
-        [class.dark:bg-cta-default]="isSelected"
       >
         <span class="font-tech">\${{ car.pricePerDay | number: '1.0-0' }}</span>
       </div>

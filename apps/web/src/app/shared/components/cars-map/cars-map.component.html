@@ -29,7 +29,15 @@
 
   <div #mapContainer class="cars-map-canvas" id="map-container" data-testid="map-container"></div>
 
-  <!-- Map Layers Control - Removed (incomplete) -->
+  <!-- Map Layers Control -->
+  @if (!loading() && !error()) {
+    <div class="absolute top-4 right-4 z-20">
+      <app-map-layers-control
+        [layers]="mapLayers()"
+        (layerToggle)="onLayerToggle({ layerId: $event.id, visible: $event.visible })">
+      </app-map-layers-control>
+    </div>
+  }
 
   <!-- Map Feature Controls - All map controls in one place -->
   @if (!loading() && !error()) {

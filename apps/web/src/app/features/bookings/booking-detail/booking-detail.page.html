@@ -54,14 +54,10 @@
             class="w-full h-full object-cover" />
           <!-- Status Overlay -->
           <div class="absolute top-3 left-3">
-            <span
-              class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest bg-surface-inverse/90 text-text-inverse backdrop-blur-sm shadow-sm border border-white/10">
-              {{
-              booking()?.status === 'in_progress'
-              ? 'En Curso'
-              : (booking()?.status | uppercase)
-              }}
-            </span>
+            <app-booking-status
+              [booking]="booking()!"
+              [deliveryCountdown]="deliveryTimeRemaining()">
+            </app-booking-status>
           </div>
           } @else {
           <div class="w-full h-full flex items-center justify-center text-text-muted">
@@ -227,7 +223,23 @@
       </div>
       }
 
-      <!-- CASE 2: OWNER INSPECTED, WAITING FOR RENTER CONFIRMATION/DISPUTE -->
+      <!-- CASE 2: OWNER NEEDS TO CONFIRM VEHICLE RETURN (after inspection) -->
+      @if (
+      isOwner() &&
+      (booking()?.status === 'damage_reported' || booking()?.status === 'inspected_good' ||
+      booking()?.inspection_status === 'damaged' || booking()?.inspection_status === 'good') &&
+      !booking()?.owner_confirmed_delivery
+      ) {
+      <div id="owner-confirmation-section" class="mt-6">
+        <app-owner-confirmation [bookingId]="booking()!.id"
+          [ownerConfirmed]="!!booking()?.owner_confirmed_delivery"
+          [renterConfirmed]="!!booking()?.renter_confirmed_payment"
+          (confirmed)="handleConfirmationSuccess($event)"
+          (errorOccurred)="handleConfirmationError($event)"></app-owner-confirmation>
+      </div>
+      }
+
+      <!-- CASE 3: RENTER NEEDS TO CONFIRM (after owner confirmed) -->
       @if (
       isRenter() &&
       (booking()?.status === 'damage_reported' || booking()?.status === 'inspected_good' ||
@@ -422,7 +434,75 @@
       </section>
       }
 
-      <!-- 4. Documentation (Compact Grid) -->
+      <!-- 4. Pricing & Insurance Breakdown -->
+      @if (pricingView() || insuranceView()) {
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        @if (pricingView()) {
+        <div class="card-premium p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
+              <ion-icon name="receipt-outline" class="text-xl"></ion-icon>
+            </div>
+            <h3 class="font-bold text-text-primary">Desglose de Precio</h3>
+          </div>
+          <app-booking-pricing-breakdown [data]="pricingView()!"></app-booking-pricing-breakdown>
+        </div>
+        }
+
+        @if (insuranceView()) {
+        <div class="card-premium p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
+              <ion-icon name="shield-checkmark-outline" class="text-xl"></ion-icon>
+            </div>
+            <h3 class="font-bold text-text-primary">Cobertura y Garantía</h3>
+          </div>
+          <app-booking-insurance-summary [data]="insuranceView()!"></app-booking-insurance-summary>
+        </div>
+        }
+      </section>
+      }
+
+      <!-- 5. Tracking (if active) -->
+      @if (tracking()) {
+      <section class="card-premium p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
+            <ion-icon name="map-outline" class="text-xl"></ion-icon>
+          </div>
+          <h3 class="font-bold text-text-primary">Tracking GPS</h3>
+        </div>
+        <app-booking-tracking [session]="tracking()"></app-booking-tracking>
+      </section>
+      }
+
+      <!-- 6. Operations Timeline -->
+      @if (confirmation() || cancellation()) {
+      <section class="card-premium p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
+            <ion-icon name="time-outline" class="text-xl"></ion-icon>
+          </div>
+          <h3 class="font-bold text-text-primary">Historial de Operaciones</h3>
+        </div>
+        <app-booking-ops-timeline [data]="{
+          payment_date: payment()?.paid_at ?? null,
+          payment_note: null,
+          pickup_confirmed_at: confirmation()?.pickup_confirmed_at ?? null,
+          dropoff_confirmed_at: confirmation()?.dropoff_confirmed_at ?? null,
+          owner_confirmed_at: confirmation()?.owner_confirmed_at ?? null,
+          renter_confirmed_at: confirmation()?.renter_confirmed_at ?? null,
+          returned_at: booking()?.returned_at ?? null,
+          funds_released_at: confirmation()?.funds_released_at ?? null,
+          cancelled_at: cancellation()?.cancelled_at ?? null,
+          cancellation_reason: cancellation()?.cancellation_reason ?? null,
+          cancellation_fee_cents: cancellation()?.cancellation_fee_cents ?? null,
+          cancelled_by_role: cancellation()?.cancelled_by_role ?? null
+        }"></app-booking-ops-timeline>
+      </section>
+      }
+
+      <!-- 7. Documentation (Compact Grid) -->
       <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Contract Card -->
         <div class="card-premium p-6 flex flex-col h-full">
@@ -529,6 +609,30 @@
           </button>
           }
         </div>
+
+        <!-- Disputes List -->
+        <div class="card-premium p-6">
+          <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
+            <ion-icon name="flag-outline" class="text-warning-600"></ion-icon>
+            Disputas
+          </h3>
+          <app-disputes-list
+            [bookingId]="booking()!.id"
+            [showCreateButton]="canCreateDispute()"
+            (createDispute)="showDisputeForm.set(true)">
+          </app-disputes-list>
+        </div>
+
+        <!-- Settlement Simulator (Owner Only) -->
+        @if (isOwner() && (booking()?.status === 'completed' || isReturnPhase())) {
+        <div class="card-premium p-6">
+          <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
+            <ion-icon name="calculator-outline" class="text-info-600"></ion-icon>
+            Simulador de Liquidación
+          </h3>
+          <app-settlement-simulator [bookingId]="booking()!.id"></app-settlement-simulator>
+        </div>
+        }
       </section>
       }
     </div>
@@ -665,12 +769,17 @@
                 <ion-icon name="shield-checkmark-outline"></ion-icon>
                 Garantía
               </span>
-              <span class="font-medium text-text-primary">
-                {{
-                (booking()?.deposit_amount_cents ?? 0) / 100
-                | currency: booking()?.currency : 'symbol' : '1.0-0'
-                }}
-              </span>
+              <div class="flex items-center gap-2">
+                <span class="font-medium text-text-primary">
+                  {{
+                  (booking()?.deposit_amount_cents ?? 0) / 100
+                  | currency: booking()?.currency : 'symbol' : '1.0-0'
+                  }}
+                </span>
+                @if (booking()?.deposit_status) {
+                  <app-deposit-status-badge [status]="booking()!.deposit_status!"></app-deposit-status-badge>
+                }
+              </div>
             </div>
             }
 

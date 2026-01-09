@@ -4,6 +4,7 @@ import {
   OnDestroy,
   signal,
   inject,
+  computed,
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -18,6 +19,7 @@ import {
   DisputeKind,
 } from '@core/services/admin/disputes.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
@@ -34,6 +36,7 @@ import { Booking } from '../../../core/models';
 export class DisputesManagementPage implements OnInit, OnDestroy {
   private readonly disputesService = inject(DisputesService);
   private readonly bookingsService = inject(BookingsService);
+  private readonly authService = inject(AuthService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly supabaseService = inject(SupabaseClientService);
   private readonly realtimeConnection = inject(RealtimeConnectionService);
@@ -47,19 +50,39 @@ export class DisputesManagementPage implements OnInit, OnDestroy {
   readonly loading = signal(false);
   readonly disputes = signal<Dispute[]>([]);
   readonly selectedDispute = signal<Dispute | null>(null);
-  readonly showCreateModal = signal(false);
+  readonly showCreateForm = signal(false); // Inline form instead of modal
   readonly showEvidenceModal = signal(false);
   readonly evidence = signal<DisputeEvidence[]>([]);
   readonly uploadingEvidence = signal(false);
 
-  readonly newDispute = signal({
-    kind: '' as DisputeKind | '',
-    description: '',
-  });
+  // Separate signals for form fields (fixes ngModel binding issue)
+  readonly newDisputeKind = signal<DisputeKind | ''>('');
+  readonly newDisputeDescription = signal('');
 
   readonly evidenceFiles = signal<File[]>([]);
   readonly evidenceNote = signal('');
-  readonly newComment = signal(''); // New signal for comment input
+  readonly newComment = signal('');
+
+  // Role detection
+  readonly userRole = computed<'owner' | 'renter' | 'guest'>(() => {
+    const booking = this.booking();
+    const currentUser = this.authService.session$()?.user;
+    if (!booking || !currentUser) return 'guest';
+
+    if (booking.owner_id === currentUser.id) return 'owner';
+    if (booking.renter_id === currentUser.id) return 'renter';
+    return 'guest';
+  });
+
+  readonly isOwner = computed(() => this.userRole() === 'owner');
+  readonly isRenter = computed(() => this.userRole() === 'renter');
+
+  readonly canCreateDispute = computed(() => {
+    const booking = this.booking();
+    if (!booking || this.userRole() === 'guest') return false;
+    // Only allow disputes in certain statuses
+    return ['in_progress', 'pending_review', 'completed'].includes(booking.status);
+  });
 
   async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');
@@ -122,19 +145,29 @@ export class DisputesManagementPage implements OnInit, OnDestroy {
     }
   }
 
-  openCreateModal(): void {
-    this.showCreateModal.set(true);
-    this.newDispute.set({ kind: '', description: '' });
+  openCreateForm(): void {
+    if (!this.canCreateDispute()) {
+      this.toastService.warning('Advertencia', 'No puedes crear disputas en este momento');
+      return;
+    }
+    this.showCreateForm.set(true);
+    this.newDisputeKind.set('');
+    this.newDisputeDescription.set('');
+    this.evidenceFiles.set([]);
   }
 
-  closeCreateModal(): void {
-    this.showCreateModal.set(false);
-    this.newDispute.set({ kind: '', description: '' });
+  closeCreateForm(): void {
+    this.showCreateForm.set(false);
+    this.newDisputeKind.set('');
+    this.newDisputeDescription.set('');
     this.evidenceFiles.set([]);
   }
 
   async createDispute(): Promise<void> {
-    if (!this.newDispute().kind || !this.newDispute().description.trim()) {
+    const kind = this.newDisputeKind();
+    const description = this.newDisputeDescription();
+
+    if (!kind || !description.trim()) {
       this.toastService.error('Error', 'Debe completar todos los campos');
       return;
     }
@@ -143,8 +176,8 @@ export class DisputesManagementPage implements OnInit, OnDestroy {
     try {
       const dispute = await this.disputesService.createDispute({
         bookingId: this.bookingId(),
-        kind: this.newDispute().kind as DisputeKind,
-        description: this.newDispute().description.trim(),
+        kind: kind as DisputeKind,
+        description: description.trim(),
       });
 
       // Upload evidence if any
@@ -153,7 +186,7 @@ export class DisputesManagementPage implements OnInit, OnDestroy {
       }
 
       this.toastService.success('Disputa creada exitosamente', '');
-      this.closeCreateModal();
+      this.closeCreateForm();
       await this.loadDisputes();
     } catch (err) {
       console.error('Error creating dispute:', err);

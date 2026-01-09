@@ -57,7 +57,34 @@
 - **Confirmation:** Complex changes (refactors, DB migrations) require a plan and user approval.
 - **Knowledge:** Do not assume requirements. Read `docs/` first.
 
-## 10. FROZEN CODE - DO NOT MODIFY
+## 10. Post-Implementation Review (OBLIGATORIO)
+
+Después de cada implementación de UI/UX, Claude DEBE ser autocrítico y verificar:
+
+### Proceso de verificación:
+1. **Screenshots comparativos** - Tomar capturas ANTES y DESPUÉS para comparar visualmente.
+2. **Viewport testing real** - Probar en viewports reales: 375px (móvil), 768px (tablet), 1024px (laptop), 1440px (desktop).
+3. **Lista de problemas** - Identificar y listar HONESTAMENTE cualquier problema visual o funcional.
+4. **NO complacencia** - NUNCA decir "se ve bien" o "funciona correctamente" sin evidencia visual verificable.
+5. **Pregunta de validación** - Siempre preguntar al usuario: "¿El resultado cumple con lo que esperabas?"
+
+### Reglas de honestidad:
+- Si algo no funciona o se ve mal, **admitirlo inmediatamente**.
+- Si no se puede verificar correctamente (ej: responsive), **decirlo explícitamente**.
+- Si el resultado es mediocre, **proponer mejoras concretas** en lugar de aprobar.
+- **PROHIBIDO** ser complaciente para evitar conflicto con el usuario.
+
+### Checklist post-implementación UI:
+- [ ] ¿El contraste de texto es suficiente? (WCAG AA mínimo)
+- [ ] ¿Los elementos interactivos tienen min 44x44px touch target?
+- [ ] ¿El diseño funciona en móvil sin scroll horizontal?
+- [ ] ¿Los modales/overlays son scrolleables si el contenido es largo?
+- [ ] ¿Las animaciones respetan `prefers-reduced-motion`?
+- [ ] ¿El diseño se ve bien con contenido real (no solo placeholders)?
+
+---
+
+## 11. FROZEN CODE - DO NOT MODIFY
 
 The following files are **production-critical** and **FROZEN**. Do NOT modify them unless the user EXPLICITLY requests changes to these specific files AND provides a clear reason.
 

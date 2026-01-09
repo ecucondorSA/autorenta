@@ -132,7 +132,7 @@ describe('Booking Logic Integration', () => {
 
     it('debería verificar correctamente la disponibilidad de un coche', async () => {
       const newBookingId = 'new-booking-456';
-      const mockBooking: Booking = {
+      const mockBooking: BookingDB = {
         id: newBookingId,
         car_id: carId,
         status: 'pending',
@@ -143,7 +143,7 @@ describe('Booking Logic Integration', () => {
         total_amount: 1000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-      } as unknown as Booking;
+      } as unknown as BookingDB;
 
       supabase.rpc.and.callFake(async (method: string, params: unknown) => {
         if (method === 'is_car_available') {
@@ -182,7 +182,7 @@ describe('Booking Logic Integration', () => {
 
     it('no debería permitir crear una reserva duplicada', async () => {
       const firstBookingId = 'booking-dupe-1';
-      const firstBooking: Booking = {
+      const firstBooking: BookingDB = {
         id: firstBookingId,
         car_id: carId,
         status: 'confirmed',
@@ -193,7 +193,7 @@ describe('Booking Logic Integration', () => {
         total_amount: 1000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-      } as unknown as Booking;
+      } as unknown as BookingDB;
 
       // First call is successful
       let callCount = 0;
@@ -253,7 +253,7 @@ describe('Booking Logic Integration', () => {
 
     it('✅ Primera reserva debe ser exitosa', async () => {
       const bookingId = 'first-booking-ok';
-      const mockBooking: Booking = {
+      const mockBooking: BookingDB = {
         id: bookingId,
         car_id: carId,
         status: 'confirmed',
@@ -264,7 +264,7 @@ describe('Booking Logic Integration', () => {
         total_amount: 20000,
         currency: 'ARS',
         created_at: new Date().toISOString(),
-      } as unknown as Booking;
+      } as unknown as BookingDB;
 
       supabase.rpc.and.callFake(async (method: string) => {
         if (method === 'is_car_available') {

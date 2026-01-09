@@ -1,17 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
-import { BottomSheet } from './bottom-sheet';
+import { BottomSheetComponent } from './bottom-sheet.component';
 
-describe('BottomSheet', () => {
-  let component: BottomSheet;
-  let fixture: ComponentFixture<BottomSheet>;
+describe('BottomSheetComponent', () => {
+  let component: BottomSheetComponent;
+  let fixture: ComponentFixture<BottomSheetComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BottomSheet],
+      imports: [BottomSheetComponent],
+      providers: [provideAnimations()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BottomSheet);
+    fixture = TestBed.createComponent(BottomSheetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

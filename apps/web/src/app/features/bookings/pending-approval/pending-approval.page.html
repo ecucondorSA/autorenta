@@ -76,7 +76,7 @@
             <button
               class="btn-analyze"
               (click)="openAnalysisPanel(booking)"
-              [disabled]="processingBookingId() !== null"
+              [disabled]="processingBookingId() !== null || rejectingBookingId() === booking.booking_id"
             >
               <app-icon name="user-check" [size]="18" />
               Analizar Perfil
@@ -84,7 +84,7 @@
             <button
               class="btn-approve"
               (click)="onApprove(booking.booking_id)"
-              [disabled]="processingBookingId() !== null"
+              [disabled]="processingBookingId() !== null || rejectingBookingId() === booking.booking_id"
             >
               @if (processingBookingId() !== booking.booking_id) {
                 <span>✅ Aprobar</span>
@@ -96,14 +96,70 @@
                 </span>
               }
             </button>
-            <button
-              class="btn-reject"
-              (click)="onRejectClick(booking.booking_id)"
-              [disabled]="processingBookingId() !== null"
-            >
-              ❌ Rechazar
-            </button>
+            @if (rejectingBookingId() !== booking.booking_id) {
+              <button
+                class="btn-reject"
+                (click)="onRejectClick(booking.booking_id)"
+                [disabled]="processingBookingId() !== null"
+              >
+                ❌ Rechazar
+              </button>
+            }
           </div>
+
+          <!-- Inline Reject Form -->
+          @if (rejectingBookingId() === booking.booking_id) {
+            <div class="inline-reject-form">
+              <div class="reject-form-header">
+                <h4>Rechazar Reserva</h4>
+                <button class="close-inline-btn" (click)="onCancelReject()">
+                  <app-icon name="x" [size]="18" />
+                </button>
+              </div>
+
+              <div class="reason-options">
+                @for (reason of rejectionReasons; track reason.value) {
+                  <label class="reason-option" [class.selected]="rejectionReason() === reason.value">
+                    <input
+                      type="radio"
+                      name="rejection-reason-{{ booking.booking_id }}"
+                      [value]="reason.value"
+                      [checked]="rejectionReason() === reason.value"
+                      (change)="rejectionReason.set(reason.value)"
+                    />
+                    <span>{{ reason.label }}</span>
+                  </label>
+                }
+              </div>
+
+              @if (rejectionReason() === 'other') {
+                <div class="custom-reason">
+                  <textarea
+                    [value]="customReason()"
+                    (input)="customReason.set($any($event.target).value)"
+                    placeholder="Especifica la razón..."
+                    rows="2"
+                  ></textarea>
+                </div>
+              }
+
+              <div class="reject-form-actions">
+                <button class="btn-cancel-reject" (click)="onCancelReject()">
+                  Cancelar
+                </button>
+                <button
+                  class="btn-confirm-reject"
+                  (click)="onConfirmReject()"
+                  [disabled]="!rejectionReason() || processingBookingId() === booking.booking_id"
+                >
+                  @if (processingBookingId() === booking.booking_id) {
+                    <span class="spinner-small"></span>
+                  }
+                  Confirmar Rechazo
+                </button>
+              </div>
+            </div>
+          }
         </div>
       }
     </div>
@@ -153,62 +209,3 @@
   </div>
 }
 
-<!-- Drawer de Rechazo -->
-@if (showRejectDrawer() && selectedBookingId()) {
-  <div class="analysis-overlay" (click)="onCancelReject()">
-    <div class="analysis-drawer reject-drawer" (click)="$event.stopPropagation()">
-      <div class="drawer-header">
-        <div class="drawer-info">
-          <h2>Rechazar Reserva</h2>
-          <p class="drawer-subtitle">Selecciona el motivo del rechazo</p>
-        </div>
-        <button class="close-btn" (click)="onCancelReject()">
-          <app-icon name="x" [size]="24" />
-        </button>
-      </div>
-      <div class="drawer-content">
-        <div class="reject-form">
-          <div class="reason-options">
-            @for (reason of rejectionReasons; track reason.value) {
-              <label class="reason-option" [class.selected]="rejectionReason() === reason.value">
-                <input
-                  type="radio"
-                  name="rejection-reason"
-                  [value]="reason.value"
-                  [checked]="rejectionReason() === reason.value"
-                  (change)="rejectionReason.set(reason.value)"
-                />
-                <span>{{ reason.label }}</span>
-              </label>
-            }
-          </div>
-
-          @if (rejectionReason() === 'other') {
-            <div class="custom-reason">
-              <label>Especifica la razon:</label>
-              <textarea
-                [value]="customReason()"
-                (input)="customReason.set($any($event.target).value)"
-                placeholder="Escribe aqui..."
-                rows="3"
-              ></textarea>
-            </div>
-          }
-        </div>
-      </div>
-      <div class="drawer-footer">
-        <button class="btn-secondary" (click)="onCancelReject()">Cancelar</button>
-        <button
-          class="btn-danger"
-          (click)="onConfirmReject()"
-          [disabled]="!rejectionReason() || processingBookingId()"
-        >
-          @if (processingBookingId()) {
-            <span class="spinner-small"></span>
-          }
-          Confirmar Rechazo
-        </button>
-      </div>
-    </div>
-  </div>
-}
