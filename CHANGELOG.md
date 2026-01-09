@@ -1,3 +1,10 @@
+## [1.16.1](https://github.com/ecucondorSA/autorenta/compare/v1.16.0...v1.16.1) (2026-01-09)
+
+
+### Bug Fixes
+
+* **ci:** add SUPABASE_ACCESS_TOKEN env to migrations workflow ([5024dfe](https://github.com/ecucondorSA/autorenta/commit/5024dfed795bb3c5e0023008057e4f41b4cb11d5))
+
 # [1.16.0](https://github.com/ecucondorSA/autorenta/compare/v1.15.12...v1.16.0) (2026-01-09)
 
 
