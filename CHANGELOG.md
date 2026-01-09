@@ -1,3 +1,10 @@
+## [1.16.2](https://github.com/ecucondorSA/autorenta/compare/v1.16.1...v1.16.2) (2026-01-09)
+
+
+### Bug Fixes
+
+* **bookings:** add missing status types returned, inspected_good, damage_reported ([53ae750](https://github.com/ecucondorSA/autorenta/commit/53ae7503c30abf1c811a3b089b254bc1cc9b62d4))
+
 ## [1.16.1](https://github.com/ecucondorSA/autorenta/compare/v1.16.0...v1.16.1) (2026-01-09)
 
 
