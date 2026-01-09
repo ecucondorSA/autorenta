@@ -1,3 +1,10 @@
+## [1.18.2](https://github.com/ecucondorSA/autorenta/compare/v1.18.1...v1.18.2) (2026-01-09)
+
+
+### Bug Fixes
+
+* **types:** add missing type exports to database.types.ts ([78d90af](https://github.com/ecucondorSA/autorenta/commit/78d90af5d783edbe65524547cfdc7ed165f3a35c))
+
 ## [1.18.1](https://github.com/ecucondorSA/autorenta/compare/v1.18.0...v1.18.1) (2026-01-09)
 
 
