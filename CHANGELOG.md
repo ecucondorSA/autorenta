@@ -1,3 +1,18 @@
+# [2.2.0](https://github.com/ecucondorSA/autorenta/compare/v2.1.0...v2.2.0) (2026-01-09)
+
+
+### Bug Fixes
+
+* **ui:** improve mobile map view on cars/list page ([165a8c5](https://github.com/ecucondorSA/autorenta/commit/165a8c56f0b4c8f0168499a038001204331036d0))
+* **ui:** professional mobile carousel cards on cars/list ([11a9195](https://github.com/ecucondorSA/autorenta/commit/11a91953e259b23023f806197d6cf3b804d11cc6))
+
+
+### Features
+
+* add reward pool, points system and vitest infrastructure ([9bb902d](https://github.com/ecucondorSA/autorenta/commit/9bb902dc449d1ded493ae3ea3abcc683388ca256))
+* **ui:** add responsive padding for bottom nav across pages ([0ba1ae0](https://github.com/ecucondorSA/autorenta/commit/0ba1ae0811f5962082d2be59ec011542b28e8852))
+* **ui:** premium 10/10 mobile carousel design ([eec854e](https://github.com/ecucondorSA/autorenta/commit/eec854e40a24754cda6202171c56d6957daf13d5))
+
 # [2.1.0](https://github.com/ecucondorSA/autorenta/compare/v2.0.4...v2.1.0) (2026-01-09)
 
 
