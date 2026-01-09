@@ -1,7 +1,7 @@
 -- Setup script for profiles table with RLS policies
 
 -- Crear tabla profiles si no existe
-CREATE TABLE IF NOT EXISTS profiles (
+CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   full_name TEXT NOT NULL,
   avatar_url TEXT,
@@ -12,17 +12,17 @@ CREATE TABLE IF NOT EXISTS profiles (
 );
 
 -- Habilitar RLS
-ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- Política: Los usuarios pueden ver su propio perfil
-DROP POLICY IF EXISTS "Users can view own profile" ON profiles;
+DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
 CREATE POLICY "Users can view own profile"
   ON profiles
   FOR SELECT
   USING (auth.uid() = id);
 
 -- Política: Los usuarios pueden actualizar su propio perfil
-DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
 CREATE POLICY "Users can update own profile"
   ON profiles
   FOR UPDATE
@@ -30,14 +30,14 @@ CREATE POLICY "Users can update own profile"
   WITH CHECK (auth.uid() = id);
 
 -- Política: Los usuarios pueden insertar su propio perfil
-DROP POLICY IF EXISTS "Users can insert own profile" ON profiles;
+DROP POLICY IF EXISTS "Users can insert own profile" ON public.profiles;
 CREATE POLICY "Users can insert own profile"
   ON profiles
   FOR INSERT
   WITH CHECK (auth.uid() = id);
 
 -- Política: Los usuarios autenticados pueden ver perfiles de otros (para ver propietarios de autos)
-DROP POLICY IF EXISTS "Authenticated users can view all profiles" ON profiles;
+DROP POLICY IF EXISTS "Authenticated users can view all profiles" ON public.profiles;
 CREATE POLICY "Authenticated users can view all profiles"
   ON profiles
   FOR SELECT
