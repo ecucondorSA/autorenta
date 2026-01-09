@@ -1,0 +1,151 @@
+name: 🔄 Types Sync Check
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'supabase/migrations/**'
+      - 'apps/web/src/app/core/types/**'
+      - 'apps/web/src/app/core/utils/booking-utils.ts'
+      - 'apps/web/src/app/core/services/bookings/**'
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'apps/web/src/app/core/types/**'
+  workflow_dispatch:
+  schedule:
+    # Run daily at 6 AM UTC to catch drift
+    - cron: '0 6 * * *'
+
+env:
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+  SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+
+jobs:
+  check-types-sync:
+    name: 🔍 Check DB/UI Types Sync
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate fresh types from DB
+        id: generate
+        run: |
+          echo "📥 Generating types from remote database..."
+          supabase gen types typescript \
+            --project-id ${{ secrets.SUPABASE_PROJECT_ID }} \
+            > /tmp/fresh-types.ts 2>&1 || {
+              echo "::error::Failed to generate types from Supabase"
+              exit 1
+            }
+          echo "✅ Types generated successfully"
+
+      - name: Compare with current types
+        id: compare
+        run: |
+          CURRENT_TYPES="apps/web/src/app/core/types/database.types.ts"
+          FRESH_TYPES="/tmp/fresh-types.ts"
+
+          if [ ! -f "$CURRENT_TYPES" ]; then
+            echo "::error::Current types file not found: $CURRENT_TYPES"
+            exit 1
+          fi
+
+          # Extract enums section for comparison (most critical for sync)
+          echo "🔍 Extracting enums from both files..."
+
+          # Get booking_status enum from fresh types
+          FRESH_BOOKING_STATUS=$(grep -A 50 "booking_status:" "$FRESH_TYPES" | grep -E "^\s+\|" | head -30 | sort)
+          CURRENT_BOOKING_STATUS=$(grep -A 50 "booking_status:" "$CURRENT_TYPES" | grep -E "^\s+\|" | head -30 | sort)
+
+          echo "📊 Fresh DB booking_status values:"
+          echo "$FRESH_BOOKING_STATUS"
+          echo ""
+          echo "📊 Current UI booking_status values:"
+          echo "$CURRENT_BOOKING_STATUS"
+
+          # Compare
+          if [ "$FRESH_BOOKING_STATUS" != "$CURRENT_BOOKING_STATUS" ]; then
+            echo ""
+            echo "::error::❌ SYNC ERROR: booking_status enum differs between DB and UI types!"
+            echo ""
+            echo "Difference:"
+            diff <(echo "$CURRENT_BOOKING_STATUS") <(echo "$FRESH_BOOKING_STATUS") || true
+            echo ""
+            echo "🔧 To fix: Run 'pnpm db:types' locally and commit the changes"
+            exit 1
+          fi
+
+          echo "✅ booking_status enum is in sync"
+
+      - name: Check TypeScript Records completeness
+        run: |
+          echo "🔍 Checking if all BookingStatus values are in Records..."
+
+          # Extract all booking_status values from types file
+          STATUSES=$(grep -A 50 "booking_status:" apps/web/src/app/core/types/database.types.ts | \
+            grep -oE "'[a-z_]+'" | tr -d "'" | sort -u)
+
+          echo "📋 Expected statuses from DB enum:"
+          echo "$STATUSES"
+          echo ""
+
+          # Files to check for complete Records
+          FILES_TO_CHECK=(
+            "apps/web/src/app/core/utils/booking-utils.ts"
+            "apps/web/src/app/core/services/bookings/booking-flow-helpers.ts"
+            "apps/web/src/app/core/services/bookings/booking-flow.service.ts"
+          )
+
+          ERRORS=0
+
+          for FILE in "${FILES_TO_CHECK[@]}"; do
+            if [ -f "$FILE" ]; then
+              echo "📄 Checking $FILE..."
+
+              for STATUS in $STATUSES; do
+                if ! grep -q "$STATUS" "$FILE"; then
+                  echo "::warning file=$FILE::Missing status '$STATUS' in $FILE"
+                  ERRORS=$((ERRORS + 1))
+                fi
+              done
+            fi
+          done
+
+          if [ $ERRORS -gt 0 ]; then
+            echo ""
+            echo "::error::❌ Found $ERRORS missing status entries in TypeScript Records"
+            echo "🔧 To fix: Add missing statuses to the Record<BookingStatus, ...> objects"
+            exit 1
+          fi
+
+          echo "✅ All BookingStatus values present in checked files"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## 🔄 Types Sync Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ **All checks passed!** DB and UI types are in sync." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Sync issues detected!** See job logs for details." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### How to fix:" >> $GITHUB_STEP_SUMMARY
+            echo "1. Run \`pnpm db:types\` to regenerate types from DB" >> $GITHUB_STEP_SUMMARY
+            echo "2. Update any Record<BookingStatus, ...> objects with new values" >> $GITHUB_STEP_SUMMARY
+            echo "3. Commit and push changes" >> $GITHUB_STEP_SUMMARY
+          fi
