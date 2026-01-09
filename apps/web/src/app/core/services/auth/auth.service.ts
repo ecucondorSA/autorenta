@@ -446,8 +446,8 @@ export class AuthService implements OnDestroy {
     if (error) {
       throw this.mapError(error);
     }
-    // Redirect to home page after successful logout
-    await this.router.navigate(['/']);
+    // Redirect to login page after successful logout
+    await this.router.navigate(['/auth/login']);
   }
 
   async resetPassword(email: string, redirectTo?: string): Promise<void> {
