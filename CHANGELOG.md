@@ -1,3 +1,10 @@
+## [1.15.11](https://github.com/ecucondorSA/autorenta/compare/v1.15.10...v1.15.11) (2026-01-09)
+
+
+### Bug Fixes
+
+* **edge-functions:** remove MercadoPago SDK, use direct fetch API ([9efb5d2](https://github.com/ecucondorSA/autorenta/commit/9efb5d28b44c6e157c0cded04a1064258e96c55f))
+
 ## [1.15.10](https://github.com/ecucondorSA/autorenta/compare/v1.15.9...v1.15.10) (2026-01-09)
 
 
