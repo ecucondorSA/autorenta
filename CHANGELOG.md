@@ -1,3 +1,10 @@
+## [1.18.4](https://github.com/ecucondorSA/autorenta/compare/v1.18.3...v1.18.4) (2026-01-09)
+
+
+### Bug Fixes
+
+* **types:** restore working database.types.ts with correct structure ([65e51d7](https://github.com/ecucondorSA/autorenta/commit/65e51d764b1c94646b42c36961ec588460178e4a))
+
 ## [1.18.3](https://github.com/ecucondorSA/autorenta/compare/v1.18.2...v1.18.3) (2026-01-09)
 
 
