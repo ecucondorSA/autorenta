@@ -306,6 +306,7 @@
 @media (max-width: 640px) {
   .checkout-container {
     padding: 1rem 0.75rem;
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
 
   .checkout-header {

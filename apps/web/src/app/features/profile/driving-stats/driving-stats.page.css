@@ -6,6 +6,18 @@
   background: #f9fafb;
 }
 
+@media (max-width: 640px) {
+  .driving-stats-page {
+    padding: 16px;
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    min-height: 100svh;
+  }
+
+  .page-title {
+    font-size: 20px;
+  }
+}
+
 /* Header */
 .page-header {
   display: flex;

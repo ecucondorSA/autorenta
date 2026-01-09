@@ -443,6 +443,8 @@
 @media (max-width: 640px) {
   .confirmation-container {
     padding: 1.5rem 1rem;
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    min-height: 100svh;
   }
 
   .status-title {
