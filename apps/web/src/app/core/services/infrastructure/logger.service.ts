@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { environment } from '@environment';
 import { DebugService } from '@core/services/admin/debug.service';
+import { environment } from '@environment';
 import { LogLevel } from '../../../../environments/environment.base';
 
 /**
@@ -61,6 +61,7 @@ const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
 export class LoggerService {
   private readonly logger = globalThis.console;
   private readonly isDevelopment = !environment.production;
+  private readonly injector = inject(Injector); // Inject Injector
   private traceId?: string;
   private debugService?: DebugService;
 
@@ -548,7 +549,7 @@ export class ChildLogger {
   constructor(
     private parent: LoggerService,
     private context: string,
-  ) {}
+  ) { }
 
   debug(message: string, ...args: unknown[]): void {
     this.parent.debug(message, this.context, ...args);
