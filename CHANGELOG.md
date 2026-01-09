@@ -1,3 +1,10 @@
+## [1.15.10](https://github.com/ecucondorSA/autorenta/compare/v1.15.9...v1.15.10) (2026-01-09)
+
+
+### Bug Fixes
+
+* **ci:** resolve YAML syntax error in mercadopago-api-health workflow ([ea10cb0](https://github.com/ecucondorSA/autorenta/commit/ea10cb0ab956148df10f0496ae1ec082df0953c0))
+
 ## [1.15.9](https://github.com/ecucondorSA/autorenta/compare/v1.15.8...v1.15.9) (2026-01-09)
 
 
