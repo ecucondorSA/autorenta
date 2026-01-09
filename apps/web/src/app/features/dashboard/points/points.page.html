@@ -1,0 +1,347 @@
+<div class="points-page bg-surface-base min-h-screen pb-20 sm:pb-0 transition-colors duration-300">
+  <!-- Header -->
+  <div class="bg-surface-raised border-b border-border-default transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1
+            class="text-3xl font-bold text-text-primary flex items-center gap-2 tracking-tight font-satoshi"
+          >
+            <svg
+              class="w-8 h-8 text-primary-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke-width="1.75" stroke-linejoin="round"/>
+            </svg>
+            Mis Puntos
+          </h1>
+          <p class="mt-2 text-text-secondary">
+            Acumulá puntos y participá del pool de recompensas mensual
+          </p>
+        </div>
+        <a
+          routerLink="/dashboard"
+          class="px-4 py-2 bg-surface-base hover:bg-surface-raised text-text-primary font-medium rounded-lg transition-colors flex items-center gap-2 border border-border-default"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Volver
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Loading -->
+    @if (loading()) {
+      <div class="flex items-center justify-center py-16">
+        <svg class="animate-spin h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24">
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error(); as errorMsg) {
+      <div class="bg-error-bg border border-error-border rounded-lg p-4 mb-6">
+        <p class="text-sm text-error-strong">{{ errorMsg }}</p>
+        <button (click)="loadData()" class="mt-2 text-sm font-medium text-error-text underline">
+          Reintentar
+        </button>
+      </div>
+    }
+
+    @if (!loading() && !error()) {
+      <!-- Main Points Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <!-- Current Month Points -->
+        <div class="bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl shadow-lg p-6 text-white">
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-sm font-medium text-white/80">Puntos {{ currentMonthName() }}</p>
+            <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke-width="1.75"/>
+            </svg>
+          </div>
+          <p class="text-4xl font-bold">
+            {{ currentMonthPoints() | number:'1.0-0' }}
+          </p>
+          <p class="text-xs text-white/70 mt-2">Puntos acumulados este mes</p>
+        </div>
+
+        <!-- Estimated Earnings -->
+        <div class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6">
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-sm font-medium text-text-secondary">Ganancia Estimada</p>
+            <svg class="w-6 h-6 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="text-3xl font-bold text-text-primary">
+            {{ formatCents(estimatedEarnings()) | money }}
+          </p>
+          <p class="text-xs text-text-muted mt-2">Basado en puntos actuales</p>
+        </div>
+
+        <!-- Last Month Earnings -->
+        <div class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6">
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-sm font-medium text-text-secondary">{{ lastMonthName() || 'Mes Anterior' }}</p>
+            <svg class="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="1.75"/>
+              <line x1="16" y1="2" x2="16" y2="6" stroke-width="1.75"/>
+              <line x1="8" y1="2" x2="8" y2="6" stroke-width="1.75"/>
+              <line x1="3" y1="10" x2="21" y2="10" stroke-width="1.75"/>
+            </svg>
+          </div>
+          <p class="text-3xl font-bold text-text-primary">
+            {{ formatCents(lastMonthEarnings()) | money }}
+          </p>
+          <p class="text-xs text-text-muted mt-2">Ganancia mes anterior</p>
+        </div>
+
+        <!-- Total All Time -->
+        <div class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6">
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-sm font-medium text-text-secondary">Total Histórico</p>
+            <svg class="w-6 h-6 text-warning-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="text-3xl font-bold text-text-primary">
+            {{ formatCents(totalEarnedAllTime()) | money }}
+          </p>
+          <p class="text-xs text-text-muted mt-2">Ganado en total</p>
+        </div>
+      </div>
+
+      <!-- Pool Status Banner -->
+      @if (poolStatus(); as pool) {
+        <div class="bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 rounded-xl p-6 mb-8 border border-primary-200 dark:border-primary-800">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-semibold text-primary-700 dark:text-primary-300 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Pool de Recompensas {{ getMonthName(pool.period_month) }} {{ pool.period_year }}
+              </h2>
+              <p class="text-sm text-primary-600 dark:text-primary-400 mt-1">
+                El pool se distribuye el día 5 de cada mes entre todos los participantes
+              </p>
+            </div>
+            <div class="flex items-center gap-6">
+              <div class="text-center">
+                <p class="text-2xl font-bold text-primary-700 dark:text-primary-300">
+                  {{ poolTotalFormatted() | money }}
+                </p>
+                <p class="text-xs text-primary-600 dark:text-primary-400">Pool Total</p>
+              </div>
+              <div class="text-center">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ getStatusColor(pool.status) }}">
+                  {{ getStatusLabel(pool.status) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Points Breakdown -->
+      @if (pointsBreakdown().length > 0) {
+        <div class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6 mb-8">
+          <h2 class="text-xl font-semibold text-text-primary mb-6 flex items-center gap-2 font-satoshi">
+            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" stroke-width="1.75"/>
+              <path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" stroke-width="1.75"/>
+            </svg>
+            Desglose de Puntos
+          </h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            @for (item of pointsBreakdown(); track item.label) {
+              <div class="p-4 bg-surface-base rounded-lg border border-border-default">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm font-medium text-text-secondary">{{ item.label }}</span>
+                  <span class="text-lg font-bold text-text-primary">{{ item.value | number:'1.0-0' }}</span>
+                </div>
+                <div class="w-full bg-surface-raised rounded-full h-2 overflow-hidden">
+                  <div
+                    class="h-full rounded-full transition-all duration-500 {{ item.color }}"
+                    [style.width.%]="item.percentage"
+                  ></div>
+                </div>
+                <p class="text-xs text-text-muted mt-1">{{ item.percentage | number:'1.0-0' }}% del total</p>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Growth Comparison -->
+      @if (summary()?.lastMonth) {
+        <div class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6 mb-8">
+          <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+            <svg class="w-6 h-6 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Crecimiento Mensual
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <p class="text-sm text-text-secondary mb-1">Puntos Este Mes</p>
+              <p class="text-3xl font-extrabold text-text-primary">
+                {{ currentMonthPoints() | number:'1.0-0' }}
+              </p>
+            </div>
+            <div>
+              <p class="text-sm text-text-secondary mb-1">Puntos Mes Anterior</p>
+              <p class="text-2xl font-bold text-text-primary">
+                {{ summary()?.lastMonth?.points?.total_points || 0 | number:'1.0-0' }}
+              </p>
+            </div>
+            <div>
+              <p class="text-sm text-text-secondary mb-1">Crecimiento</p>
+              <p
+                class="text-3xl font-extrabold"
+                [class.text-success-strong]="isGrowthPositive()"
+                [class.text-error-text]="!isGrowthPositive()"
+              >
+                {{ isGrowthPositive() ? '+' : '' }}{{ pointsGrowth() }}%
+              </p>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- History -->
+      @if (summary()?.history?.length) {
+        <div class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6 mb-8">
+          <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+            <svg class="w-6 h-6 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Historial de Recompensas
+          </h2>
+
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="text-left text-sm text-text-secondary border-b border-border-default">
+                  <th class="pb-3 font-medium">Período</th>
+                  <th class="pb-3 font-medium text-right">Puntos</th>
+                  <th class="pb-3 font-medium text-right">Ganancia</th>
+                  <th class="pb-3 font-medium text-center">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (reward of summary()?.history; track reward.id) {
+                  <tr class="border-b border-border-default last:border-0">
+                    <td class="py-4">
+                      <span class="font-medium text-text-primary">
+                        {{ getMonthName(reward.period_month) }} {{ reward.period_year }}
+                      </span>
+                    </td>
+                    <td class="py-4 text-right">
+                      <span class="font-semibold text-text-primary">
+                        {{ reward.total_points | number:'1.0-0' }}
+                      </span>
+                    </td>
+                    <td class="py-4 text-right">
+                      @if (reward.amount_cents) {
+                        <span class="font-semibold text-success-strong">
+                          {{ formatCents(reward.amount_cents) | money }}
+                        </span>
+                      } @else {
+                        <span class="text-text-muted">-</span>
+                      }
+                    </td>
+                    <td class="py-4 text-center">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ getStatusColor(reward.status) }}">
+                        {{ getStatusLabel(reward.status) }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+
+      <!-- How It Works -->
+      <div class="bg-surface-raised rounded-xl shadow-sm border border-border-default p-6">
+        <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi">
+          <svg class="w-6 h-6 text-warning-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          ¿Cómo funciona el Pool de Recompensas?
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="p-4 bg-surface-base rounded-lg">
+            <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mb-3">
+              <span class="text-lg font-bold text-primary-600">1</span>
+            </div>
+            <h3 class="font-medium text-text-primary mb-1">Acumulá Puntos</h3>
+            <p class="text-sm text-text-secondary">
+              Ganá puntos por disponibilidad, calificaciones, antigüedad y más.
+            </p>
+          </div>
+
+          <div class="p-4 bg-surface-base rounded-lg">
+            <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mb-3">
+              <span class="text-lg font-bold text-primary-600">2</span>
+            </div>
+            <h3 class="font-medium text-text-primary mb-1">Se Acumula el Pool</h3>
+            <p class="text-sm text-text-secondary">
+              El 75% de cada reserva va al pool de recompensas mensual.
+            </p>
+          </div>
+
+          <div class="p-4 bg-surface-base rounded-lg">
+            <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mb-3">
+              <span class="text-lg font-bold text-primary-600">3</span>
+            </div>
+            <h3 class="font-medium text-text-primary mb-1">Cálculo Mensual</h3>
+            <p class="text-sm text-text-secondary">
+              El día 1 se calcula el valor de cada punto según el pool total.
+            </p>
+          </div>
+
+          <div class="p-4 bg-surface-base rounded-lg">
+            <div class="w-10 h-10 bg-success-100 dark:bg-success-900/30 rounded-lg flex items-center justify-center mb-3">
+              <span class="text-lg font-bold text-success-strong">4</span>
+            </div>
+            <h3 class="font-medium text-text-primary mb-1">Recibís tu Parte</h3>
+            <p class="text-sm text-text-secondary">
+              Tu ganancia = (Tus Puntos / Total Puntos) × Pool Total
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg border border-primary-200 dark:border-primary-800">
+          <p class="text-sm text-primary-700 dark:text-primary-300">
+            <strong>Tip:</strong> Mantené tu auto disponible y con buenas calificaciones para maximizar tus puntos.
+            La disponibilidad es el factor más importante en el cálculo de puntos.
+          </p>
+        </div>
+      </div>
+    }
+  </div>
+</div>

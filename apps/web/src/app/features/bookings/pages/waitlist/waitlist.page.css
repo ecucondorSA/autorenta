@@ -316,6 +316,7 @@
 @media (max-width: 768px) {
   .waitlist-container {
     padding: 1rem;
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
 
   .title {
