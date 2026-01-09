@@ -1,3 +1,10 @@
+## [1.17.2](https://github.com/ecucondorSA/autorenta/compare/v1.17.1...v1.17.2) (2026-01-09)
+
+
+### Bug Fixes
+
+* resolve build errors in login and pending-review pages ([42f40cb](https://github.com/ecucondorSA/autorenta/commit/42f40cb54dadbb85f532cb5b70a4643ed4032c23))
+
 ## [1.17.1](https://github.com/ecucondorSA/autorenta/compare/v1.17.0...v1.17.1) (2026-01-09)
 
 
