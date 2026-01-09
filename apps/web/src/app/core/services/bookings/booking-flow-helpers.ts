@@ -56,6 +56,7 @@ export function isValidStatusTransition(
       'cancelled_renter',
       'cancelled_owner',
       'cancelled_system',
+      'returned',
     ],
     pending_review: [
       'completed',
@@ -78,6 +79,9 @@ export function isValidStatusTransition(
     cancelled_owner: [],
     cancelled_system: [],
     payment_validation_failed: ['pending_payment', 'cancelled', 'cancelled_system'],
+    returned: ['inspected_good', 'damage_reported', 'completed'],
+    inspected_good: ['completed'],
+    damage_reported: ['disputed', 'completed'],
   };
 
   const allowed = validTransitions[from]?.includes(to) ?? false;
@@ -312,6 +316,24 @@ export function getBookingStatusDisplay(status: BookingStatus): {
       color: 'danger',
       icon: '💳',
       description: 'El pago no pudo ser validado. Por favor, intenta nuevamente.',
+    },
+    returned: {
+      label: 'Vehículo Devuelto',
+      color: 'primary',
+      icon: '🔄',
+      description: 'El vehículo ha sido devuelto. Pendiente de inspección.',
+    },
+    inspected_good: {
+      label: 'Inspección OK',
+      color: 'success',
+      icon: '✅',
+      description: 'Inspección completada sin daños. Reserva finalizada.',
+    },
+    damage_reported: {
+      label: 'Daño Reportado',
+      color: 'danger',
+      icon: '⚠️',
+      description: 'Se reportaron daños durante la inspección.',
     },
   };
 

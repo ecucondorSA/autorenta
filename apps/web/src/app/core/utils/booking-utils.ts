@@ -86,6 +86,9 @@ export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
   no_show: 'No se presento',
   pending_dispute_resolution: 'Resolucion de disputa pendiente',
   payment_validation_failed: 'Validacion de pago fallida',
+  returned: 'Devuelto',
+  inspected_good: 'Inspeccionado OK',
+  damage_reported: 'Dano reportado',
 };
 
 /**
@@ -110,6 +113,9 @@ export const BOOKING_STATUS_COLORS: Record<BookingStatus, string> = {
   no_show: 'danger',
   pending_dispute_resolution: 'warning',
   payment_validation_failed: 'danger',
+  returned: 'success',
+  inspected_good: 'success',
+  damage_reported: 'danger',
 };
 
 /**

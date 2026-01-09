@@ -638,6 +638,24 @@ export class BookingFlowService {
         icon: 'card-outline',
         description: 'El pago no pudo ser validado. Por favor, intenta nuevamente.',
       },
+      returned: {
+        label: 'Devuelto',
+        color: 'success',
+        icon: 'checkmark-done-outline',
+        description: 'El vehículo fue devuelto correctamente',
+      },
+      inspected_good: {
+        label: 'Inspección OK',
+        color: 'success',
+        icon: 'shield-checkmark-outline',
+        description: 'Vehículo inspeccionado sin daños',
+      },
+      damage_reported: {
+        label: 'Daño Reportado',
+        color: 'danger',
+        icon: 'warning-outline',
+        description: 'Se reportó un daño durante la inspección',
+      },
     };
 
     const baseInfo = statusMap[status] || {
