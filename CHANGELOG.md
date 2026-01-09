@@ -1,3 +1,10 @@
+## [1.15.7](https://github.com/ecucondorSA/autorenta/compare/v1.15.6...v1.15.7) (2026-01-09)
+
+
+### Bug Fixes
+
+* **ci:** make trigger creation idempotent in pricing migration ([b46bca2](https://github.com/ecucondorSA/autorenta/commit/b46bca2ba276367ca1857ef2a9c9e0820d456d54))
+
 ## [1.15.6](https://github.com/ecucondorSA/autorenta/compare/v1.15.5...v1.15.6) (2026-01-09)
 
 
