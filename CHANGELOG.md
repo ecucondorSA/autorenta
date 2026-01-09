@@ -1,3 +1,10 @@
+## [2.0.4](https://github.com/ecucondorSA/autorenta/compare/v2.0.3...v2.0.4) (2026-01-09)
+
+
+### Bug Fixes
+
+* **e2e:** simplify critical tests to basic smoke tests ([1fefd6c](https://github.com/ecucondorSA/autorenta/commit/1fefd6cadd2208c7d92c2081da92c95a47195f03))
+
 ## [2.0.3](https://github.com/ecucondorSA/autorenta/compare/v2.0.2...v2.0.3) (2026-01-09)
 
 
