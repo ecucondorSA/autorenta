@@ -1,3 +1,10 @@
+## [2.2.2](https://github.com/ecucondorSA/autorenta/compare/v2.2.1...v2.2.2) (2026-01-09)
+
+
+### Bug Fixes
+
+* **auth:** redirect unauthenticated users to login page ([328cbae](https://github.com/ecucondorSA/autorenta/commit/328cbae0a83745f7dee47622d2047ff7666dc4b7))
+
 ## [2.2.1](https://github.com/ecucondorSA/autorenta/compare/v2.2.0...v2.2.1) (2026-01-09)
 
 
