@@ -714,16 +714,12 @@ app-map-filters,
 }
 
 [data-testid='mobile-car-carousel'] .snap-x {
-  height: 96px;
+  height: 108px;
   align-items: center;
   flex-wrap: nowrap !important;
 }
 
-[data-testid='mobile-car-carousel'] a {
-  height: 88px !important;
-  min-height: 88px;
-  max-height: 88px;
-}
+/* Altura controlada por Tailwind en HTML - eliminado !important */
 
 /* ═══════════════════════════════════════════════════════════════
    🎯 Location Confirmation Banner Animation

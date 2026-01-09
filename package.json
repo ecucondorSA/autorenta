@@ -97,6 +97,7 @@
     "_comment_accessibility": "=== ACCESSIBILITY & TYPOGRAPHY ===",
     "check:contrast": "node tools/audit/check-color-contrast.mjs",
     "check:font-sizes": "node tools/audit/check-font-sizes.mjs",
+    "check:overflow": "npx tsx tools/audit/detect-overflow-issues.ts",
     "check:a11y": "npm run check:contrast && npm run check:font-sizes",
     "font:subset": "node tools/dev/font-subset.mjs",
     "_comment_legacy": "=== LEGACY (kept for compatibility) ===",
