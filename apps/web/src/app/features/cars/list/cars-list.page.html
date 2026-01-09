@@ -1211,49 +1211,28 @@
                 }
               </div>
               <!-- Car Info -->
-              <div class="flex-1 p-2.5 min-w-0 flex flex-col justify-between">
-                <div>
-                  <div class="flex items-start justify-between gap-1">
-                    <h4
-                      class="font-semibold text-[13px] text-slate-900 truncate leading-tight font-satoshi"
-                    >
-                      {{ car.brand }} {{ car.model }}
-                    </h4>
-                    @if (car.rating_avg) {
-                      <div class="flex items-center gap-0.5 flex-shrink-0">
-                        <app-icon
-                          name="star-filled"
-                          [size]="11"
-                          cssClass="text-slate-900"
-                        />
-                        <span class="text-xs font-medium text-slate-900">
-                          {{ car.rating_avg | number: '1.1-1' }}
-                        </span>
-                        @if (car.rating_count) {
-                          <span class="text-xs font-medium text-slate-500"
-                            >({{ car.rating_count }})</span
-                          >
-                        }
-                      </div>
-                    }
-                  </div>
-                  <p class="text-xs text-slate-500 truncate mt-0.5">
-                    {{ car.location_city || 'Argentina' }} · {{ car.transmission | titlecase }}
-                    @if (car.distanceText) {
-                      · {{ car.distanceText }}
-                    }
-                  </p>
-                </div>
-                <div class="flex items-center justify-between">
-                  @if (car.price_per_day && car.price_per_day > 0) {
-                    <span class="font-bold text-[15px] text-slate-900">
-                      ${{ car.price_per_day | number: '1.0-0'
-                      }}<span class="text-xs font-normal text-slate-500 font-mono">/día</span>
-                    </span>
-                  } @else {
-                    <span class="font-semibold text-[13px] text-primary-600">Consultar</span>
+              <div class="flex-1 p-2 min-w-0 flex flex-col">
+                <div class="flex items-start justify-between gap-1">
+                  <h4 class="font-semibold text-[13px] text-slate-900 truncate leading-tight font-satoshi">
+                    {{ car.brand }} {{ car.model }}
+                  </h4>
+                  @if (car.rating_avg) {
+                    <div class="flex items-center gap-0.5 flex-shrink-0">
+                      <app-icon name="star-filled" [size]="10" cssClass="text-amber-500" />
+                      <span class="text-[11px] font-semibold text-slate-700">{{ car.rating_avg | number: '1.1-1' }}</span>
+                    </div>
                   }
-                  <span class="text-cyan-600 text-sm font-semibold px-1.5 py-0.5 rounded bg-cyan-50/80 hover:bg-cyan-100 transition-colors whitespace-nowrap">Ver →</span>
+                </div>
+                <p class="text-[11px] text-slate-500 truncate leading-tight">
+                  {{ car.location_city || 'Buenos Aires' }}
+                </p>
+                <div class="flex items-center justify-between mt-auto pt-1">
+                  @if (car.price_per_day && car.price_per_day > 0) {
+                    <span class="font-bold text-[14px] text-slate-900">${{ car.price_per_day | number: '1.0-0' }}<span class="text-[10px] font-normal text-slate-400">/día</span></span>
+                  } @else {
+                    <span class="font-semibold text-[12px] text-primary-600">Consultar</span>
+                  }
+                  <span class="px-2 py-0.5 text-[11px] font-bold text-white bg-cyan-500 rounded-md shadow-sm">Ver →</span>
                 </div>
               </div>
             </div>
