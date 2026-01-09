@@ -95,7 +95,10 @@ import { ReportRenterNoShowComponent } from '../../../shared/components/report-r
 import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component'; // NEW
 import { SettlementSimulatorComponent } from '../../../shared/components/settlement-simulator/settlement-simulator.component';
 import { SidePanelComponent } from '../../../shared/components/side-panel/side-panel.component';
+import { BookingActionsCardComponent } from './booking-actions-card.component';
+import { BookingExtensionsManagerComponent } from './booking-extensions-manager.component';
 import { BookingStatusComponent } from './booking-status.component';
+import { BookingTrafficFinesManagerComponent } from './booking-traffic-fines-manager.component';
 import { ReviewManagementComponent } from './review-management.component';
 
 interface ReturnChecklistItem {
@@ -182,6 +185,9 @@ const DISPUTE_STATUSES = new Set<BookingStatus>([
     AiChecklistPanelComponent,
     ErrorStateComponent,
     SidePanelComponent,
+    BookingActionsCardComponent,
+    BookingExtensionsManagerComponent,
+    BookingTrafficFinesManagerComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',

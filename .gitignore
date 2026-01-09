@@ -186,3 +186,11 @@ tripwip_base_extracted/
 
 # Private Documentation
 SUPABASE_ACCESS.md
+
+# MCP Configuration (contains secrets - API keys, access tokens)
+mcp_config.json
+mcp_config.*.json
+
+# Development environment files that may contain secrets
+*.local.json
+**/config.local.json

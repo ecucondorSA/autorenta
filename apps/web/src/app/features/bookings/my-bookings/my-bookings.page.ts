@@ -39,6 +39,129 @@ interface BookingSection {
   accentClass: string;
 }
 
+// Status configuration object - centralizes all status-related UI properties
+interface StatusConfig {
+  label: string;
+  labelShort: string;
+  hint: string;
+  icon: string;
+  filterLabel: string;
+  bannerClass: string;
+  badgeClass: string;
+  cardClass: string;
+  borderClass: string;
+  iconBgClass: string;
+  badgeCompactClass: string;
+}
+
+const STATUS_CONFIG: Record<string, StatusConfig> = {
+  pending: {
+    label: 'Pendiente de pago',
+    labelShort: 'Pendiente',
+    hint: 'Completá el checkout para confirmar tu reserva.',
+    icon: '⏳',
+    filterLabel: 'Pendientes',
+    bannerClass: 'status-banner--pending',
+    badgeClass: 'badge-warning',
+    cardClass: 'booking-card--pending',
+    borderClass: 'border-l-warning-500',
+    iconBgClass: 'bg-warning-bg',
+    badgeCompactClass: 'bg-warning-bg text-warning-text',
+  },
+  pending_review: {
+    label: 'En revisión',
+    labelShort: 'En revisión',
+    hint: 'El auto fue devuelto. Confirmá la devolución para liberar los fondos.',
+    icon: '🔍',
+    filterLabel: 'En revisión',
+    bannerClass: 'status-banner--info',
+    badgeClass: 'badge-info',
+    cardClass: 'booking-card--info',
+    borderClass: 'border-l-info-500',
+    iconBgClass: 'bg-info-bg',
+    badgeCompactClass: 'bg-info-bg text-info-text',
+  },
+  confirmed: {
+    label: 'Aprobada',
+    labelShort: 'Aprobada',
+    hint: 'Tu reserva fue aprobada. Coordiná el check-in con el propietario.',
+    icon: '✅',
+    filterLabel: 'Confirmadas',
+    bannerClass: 'status-banner--success',
+    badgeClass: 'badge-success',
+    cardClass: 'booking-card--success',
+    borderClass: 'border-l-success-500',
+    iconBgClass: 'bg-success-bg',
+    badgeCompactClass: 'bg-success-bg text-success-text',
+  },
+  in_progress: {
+    label: 'En uso',
+    labelShort: 'En uso',
+    hint: 'Disfrutá tu viaje. Recordá devolver el auto en las condiciones acordadas.',
+    icon: '✅',
+    filterLabel: 'En curso',
+    bannerClass: 'status-banner--success',
+    badgeClass: 'badge-info',
+    cardClass: 'booking-card--success',
+    borderClass: 'border-l-success-500',
+    iconBgClass: 'bg-success-bg',
+    badgeCompactClass: 'bg-info-bg text-info-text',
+  },
+  completed: {
+    label: 'Finalizada',
+    labelShort: 'Finalizada',
+    hint: 'Gracias por viajar con nosotros.',
+    icon: '🚗',
+    filterLabel: 'Finalizadas',
+    bannerClass: 'status-banner--neutral',
+    badgeClass: 'badge-neutral',
+    cardClass: 'booking-card--neutral',
+    borderClass: 'border-l-border-default',
+    iconBgClass: 'bg-surface-secondary',
+    badgeCompactClass: 'bg-surface-secondary text-text-secondary',
+  },
+  cancelled: {
+    label: 'Cancelada',
+    labelShort: 'Cancelada',
+    hint: 'Se canceló esta reserva. Podés generar una nueva cuando quieras.',
+    icon: '❌',
+    filterLabel: 'Canceladas',
+    bannerClass: 'status-banner--danger',
+    badgeClass: 'badge-danger',
+    cardClass: 'booking-card--danger',
+    borderClass: 'border-l-error-500',
+    iconBgClass: 'bg-error-bg',
+    badgeCompactClass: 'bg-error-bg text-error-text',
+  },
+  expired: {
+    label: 'Vencida',
+    labelShort: 'Vencida',
+    hint: 'La fecha de alquiler ya pasó sin completar el pago.',
+    icon: '❌',
+    filterLabel: 'Vencidas',
+    bannerClass: 'status-banner--danger',
+    badgeClass: 'badge-danger',
+    cardClass: 'booking-card--danger',
+    borderClass: 'border-l-error-500',
+    iconBgClass: 'bg-error-bg',
+    badgeCompactClass: 'bg-error-bg text-error-text',
+  },
+} as const;
+
+const DEFAULT_STATUS_CONFIG: StatusConfig = {
+  label: 'Desconocido',
+  labelShort: 'Desconocido',
+  hint: '',
+  icon: 'ℹ️',
+  filterLabel: 'Otros',
+  bannerClass: '',
+  badgeClass: 'badge-neutral',
+  cardClass: 'booking-card--neutral',
+  borderClass: 'border-l-border-default',
+  iconBgClass: 'bg-surface-secondary',
+  badgeCompactClass: 'bg-surface-secondary text-text-secondary',
+};
+
 @Component({
   standalone: true,
   selector: 'app-my-bookings-page',
@@ -255,6 +378,14 @@ export class MyBookingsPage implements OnInit, OnDestroy {
     return startDate < now;
   }
 
+  /**
+   * Get status configuration for a booking (base config from STATUS_CONFIG)
+   */
+  private getStatusConfig(booking: Booking): StatusConfig {
+    const effectiveStatus = this.getEffectiveStatus(booking);
+    return STATUS_CONFIG[effectiveStatus] ?? DEFAULT_STATUS_CONFIG;
+  }
+
   statusLabel(booking: Booking): string {
     const effectiveStatus = this.getEffectiveStatus(booking);
     switch (effectiveStatus) {
@@ -345,84 +476,19 @@ export class MyBookingsPage implements OnInit, OnDestroy {
   }
 
   statusBannerClass(booking: Booking): string {
-    const effectiveStatus = this.getEffectiveStatus(booking);
-    switch (effectiveStatus) {
-      case 'pending':
-        return 'status-banner--pending';
-      case 'pending_review':
-        return 'status-banner--info';
-      case 'confirmed':
-      case 'in_progress':
-        return 'status-banner--success';
-      case 'completed':
-        return 'status-banner--neutral';
-      case 'cancelled':
-      case 'expired':
-        return 'status-banner--danger';
-      default:
-        return '';
-    }
+    return this.getStatusConfig(booking).bannerClass;
   }
 
   statusBadgeClass(booking: Booking): string {
-    const effectiveStatus = this.getEffectiveStatus(booking);
-    switch (effectiveStatus) {
-      case 'pending':
-        return 'badge-warning';
-      case 'pending_review':
-        return 'badge-info';
-      case 'confirmed':
-        return 'badge-success';
-      case 'in_progress':
-        return 'badge-info';
-      case 'completed':
-        return 'badge-neutral';
-      case 'cancelled':
-      case 'expired':
-        return 'badge-danger';
-      default:
-        return 'badge-neutral';
-    }
+    return this.getStatusConfig(booking).badgeClass;
   }
 
   statusCardClass(booking: Booking): string {
-    const effectiveStatus = this.getEffectiveStatus(booking);
-    switch (effectiveStatus) {
-      case 'pending':
-        return 'booking-card--pending';
-      case 'pending_review':
-        return 'booking-card--info';
-      case 'confirmed':
-      case 'in_progress':
-        return 'booking-card--success';
-      case 'completed':
-        return 'booking-card--neutral';
-      case 'cancelled':
-      case 'expired':
-        return 'booking-card--danger';
-      default:
-        return 'booking-card--neutral';
-    }
+    return this.getStatusConfig(booking).cardClass;
   }
 
   statusIcon(booking: Booking): string {
-    const effectiveStatus = this.getEffectiveStatus(booking);
-    switch (effectiveStatus) {
-      case 'pending':
-        return '⏳';
-      case 'pending_review':
-        return '🔍';
-      case 'confirmed':
-      case 'in_progress':
-        return '✅';
-      case 'completed':
-        return '🚗';
-      case 'cancelled':
-      case 'expired':
-        return '❌';
-      default:
-        return 'ℹ️';
-    }
+    return this.getStatusConfig(booking).icon;
   }
 
   /** Short status label for compact cards */
@@ -464,66 +530,17 @@ export class MyBookingsPage implements OnInit, OnDestroy {
 
   /** Border color class for compact cards */
   statusBorderClass(booking: Booking): string {
-    const effectiveStatus = this.getEffectiveStatus(booking);
-    switch (effectiveStatus) {
-      case 'pending':
-        return 'border-l-warning-500';
-      case 'pending_review':
-        return 'border-l-info-500';
-      case 'confirmed':
-      case 'in_progress':
-        return 'border-l-success-500';
-      case 'completed':
-        return 'border-l-border-default';
-      case 'cancelled':
-      case 'expired':
-        return 'border-l-error-500';
-      default:
-        return 'border-l-border-default';
-    }
+    return this.getStatusConfig(booking).borderClass;
   }
 
   /** Status icon background class */
   statusIconBgClass(booking: Booking): string {
-    const effectiveStatus = this.getEffectiveStatus(booking);
-    switch (effectiveStatus) {
-      case 'pending':
-        return 'bg-warning-bg';
-      case 'pending_review':
-        return 'bg-info-bg';
-      case 'confirmed':
-      case 'in_progress':
-        return 'bg-success-bg';
-      case 'completed':
-        return 'bg-surface-secondary';
-      case 'cancelled':
-      case 'expired':
-        return 'bg-error-bg';
-      default:
-        return 'bg-surface-secondary';
-    }
+    return this.getStatusConfig(booking).iconBgClass;
   }
 
   /** Compact badge class with colors */
   statusBadgeCompactClass(booking: Booking): string {
-    const effectiveStatus = this.getEffectiveStatus(booking);
-    switch (effectiveStatus) {
-      case 'pending':
-        return 'bg-warning-bg text-warning-text';
-      case 'pending_review':
-        return 'bg-info-bg text-info-text';
-      case 'confirmed':
-        return 'bg-success-bg text-success-text';
-      case 'in_progress':
-        return 'bg-info-bg text-info-text';
-      case 'completed':
-        return 'bg-surface-secondary text-text-secondary';
-      case 'cancelled':
-      case 'expired':
-        return 'bg-error-bg text-error-text';
-      default:
-        return 'bg-surface-secondary text-text-secondary';
-    }
+    return this.getStatusConfig(booking).badgeCompactClass;
   }
 
   /**
@@ -668,24 +685,8 @@ export class MyBookingsPage implements OnInit, OnDestroy {
    * Obtiene la etiqueta del filtro
    */
   getFilterLabel(filter: BookingStatusFilter): string {
-    switch (filter) {
-      case 'all':
-        return 'Todas';
-      case 'pending':
-        return 'Pendientes';
-      case 'pending_review':
-        return 'En revisión';
-      case 'confirmed':
-        return 'Confirmadas';
-      case 'in_progress':
-        return 'En curso';
-      case 'completed':
-        return 'Finalizadas';
-      case 'cancelled':
-        return 'Canceladas';
-      default:
-        return filter;
-    }
+    if (filter === 'all') return 'Todas';
+    return STATUS_CONFIG[filter]?.filterLabel ?? filter;
   }
 
   /**

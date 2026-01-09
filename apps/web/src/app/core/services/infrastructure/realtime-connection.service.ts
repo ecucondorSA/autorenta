@@ -95,6 +95,9 @@ export class RealtimeConnectionService implements OnDestroy {
   // Retry counters per channel
   private readonly retryCounters = new Map<string, number>();
 
+  // Pending reconnection timeouts (for cleanup)
+  private readonly pendingTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
+
   // Connection timing for latency tracking
   private readonly connectionStartTimes = new Map<string, number>();
   private latencyHistory: number[] = [];
@@ -324,8 +327,17 @@ export class RealtimeConnectionService implements OnDestroy {
     // Increment retry counter
     this.retryCounters.set(channelName, retryCount + 1);
 
-    // Schedule reconnection
-    setTimeout(() => {
+    // Cancel any existing pending timeout for this channel
+    const existingTimeout = this.pendingTimeouts.get(channelName);
+    if (existingTimeout) {
+      clearTimeout(existingTimeout);
+    }
+
+    // Schedule reconnection and track the timeout
+    const timeoutId = setTimeout(() => {
+      // Clear from pending timeouts
+      this.pendingTimeouts.delete(channelName);
+
       // Remove old channel
       this.unsubscribe(channelName);
 
@@ -339,28 +351,49 @@ export class RealtimeConnectionService implements OnDestroy {
       // Store in registry
       this.activeChannels.set(channelName, newChannel);
     }, delay);
+
+    this.pendingTimeouts.set(channelName, timeoutId);
   }
 
   /**
-   * Unsubscribe from a channel
+   * Unsubscribe from a channel and cancel any pending reconnection
    */
   unsubscribe(channelName: string): void {
+    // Cancel pending reconnection timeout
+    const pendingTimeout = this.pendingTimeouts.get(channelName);
+    if (pendingTimeout) {
+      clearTimeout(pendingTimeout);
+      this.pendingTimeouts.delete(channelName);
+    }
+
     const channel = this.activeChannels.get(channelName);
 
     if (channel) {
       this.supabase.removeChannel(channel);
       this.activeChannels.delete(channelName);
       this.retryCounters.delete(channelName);
+      this.connectionStartTimes.delete(channelName);
     }
   }
 
   /**
-   * Unsubscribe from all channels
+   * Unsubscribe from all channels and cancel all pending reconnections
    */
   unsubscribeAll(): void {
+    // Cancel all pending timeouts first
+    this.pendingTimeouts.forEach((timeoutId) => {
+      clearTimeout(timeoutId);
+    });
+    this.pendingTimeouts.clear();
+
+    // Then unsubscribe from all channels
     this.activeChannels.forEach((_, channelName) => {
       this.unsubscribe(channelName);
     });
+
+    // Clear remaining state
+    this.retryCounters.clear();
+    this.connectionStartTimes.clear();
   }
 
   /**

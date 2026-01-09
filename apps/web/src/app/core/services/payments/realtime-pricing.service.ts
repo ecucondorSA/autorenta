@@ -1,5 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { computed, effect, Injectable, signal, inject } from '@angular/core';
+import { computed, effect, Injectable, signal, inject, OnDestroy } from '@angular/core';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
@@ -65,7 +65,7 @@ export interface SpecialEvent {
 @Injectable({
   providedIn: 'root',
 })
-export class RealtimePricingService {
+export class RealtimePricingService implements OnDestroy {
   private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
 
@@ -94,6 +94,10 @@ export class RealtimePricingService {
   constructor() {
     // Effect para log de debug (opcional)
     effect(() => {});
+  }
+
+  ngOnDestroy(): void {
+    this.cleanup();
   }
 
   /**
@@ -325,16 +329,28 @@ export class RealtimePricingService {
   }
 
   /**
-   * 🧹 Cleanup - desuscribirse de todo
-   * Llamar en ngOnDestroy del componente
+   * 🧹 Cleanup - desuscribirse de todo y remover canales
+   * Se llama automáticamente en ngOnDestroy
    */
   cleanup(): void {
-    this.exchangeRatesChannel?.unsubscribe();
-    this.demandChannel?.unsubscribe();
-    this.eventsChannel?.unsubscribe();
+    // Usar removeChannel que es más completo que unsubscribe
+    if (this.exchangeRatesChannel) {
+      this.supabase.removeChannel(this.exchangeRatesChannel);
+      this.exchangeRatesChannel = null;
+    }
 
-    this.exchangeRatesChannel = null;
-    this.demandChannel = null;
-    this.eventsChannel = null;
+    if (this.demandChannel) {
+      this.supabase.removeChannel(this.demandChannel);
+      this.demandChannel = null;
+    }
+
+    if (this.eventsChannel) {
+      this.supabase.removeChannel(this.eventsChannel);
+      this.eventsChannel = null;
+    }
+
+    // Reset state
+    this.isConnected.set(false);
+    this.connectionStatus.set('disconnected');
   }
 }
