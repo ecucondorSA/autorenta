@@ -11,12 +11,17 @@ const path = require('path');
 // Load environment variables from root .env.local (single source of truth)
 // Use absolute path to ensure it works regardless of cwd
 const envPath = path.resolve(__dirname, '../../../.env.local');
-console.log(`Loading environment from: ${envPath}`);
-const result = require('dotenv').config({ path: envPath });
-if (result.error) {
-  console.error('❌ Error loading .env.local:', result.error);
+
+if (fs.existsSync(envPath)) {
+  console.log(`Loading environment from: ${envPath}`);
+  const result = require('dotenv').config({ path: envPath });
+  if (result.error) {
+    console.error('❌ Error parsing .env.local:', result.error);
+  } else {
+    console.log(`✅ Loaded ${Object.keys(result.parsed || {}).length} variables from .env.local`);
+  }
 } else {
-  console.log(`✅ Loaded ${Object.keys(result.parsed || {}).length} variables from .env.local`);
+  console.log('ℹ️ .env.local not found, relying on process.env (CI/CD)');
 }
 
 const envVars = {
