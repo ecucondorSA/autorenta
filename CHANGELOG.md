@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/ecucondorSA/autorenta/compare/v1.17.0...v1.17.1) (2026-01-09)
+
+
+### Bug Fixes
+
+* make generate-env script robust to missing .env.local in CI ([d208ed9](https://github.com/ecucondorSA/autorenta/commit/d208ed95976641ebed1fefd5c3919a2090dd6ba1))
+
 # [1.17.0](https://github.com/ecucondorSA/autorenta/compare/v1.16.2...v1.17.0) (2026-01-09)
 
 
