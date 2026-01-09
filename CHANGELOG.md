@@ -1,3 +1,10 @@
+## [1.17.3](https://github.com/ecucondorSA/autorenta/compare/v1.17.2...v1.17.3) (2026-01-09)
+
+
+### Bug Fixes
+
+* resolve runtime dependency injection error in LoggerService ([e8de12f](https://github.com/ecucondorSA/autorenta/commit/e8de12f44ec72ffc5893503d2b05338b5f21d6a9))
+
 ## [1.17.2](https://github.com/ecucondorSA/autorenta/compare/v1.17.1...v1.17.2) (2026-01-09)
 
 
