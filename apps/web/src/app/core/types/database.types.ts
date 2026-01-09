@@ -21112,22 +21112,3 @@ export const Constants = {
     },
   },
 } as const
-
-// ============================================
-// Type exports for convenience
-// ============================================
-export type BookingStatus = Database['public']['Enums']['booking_status'];
-export type PaymentStatus = Database['public']['Enums']['payment_status'];
-export type KycStatus = Database['public']['Enums']['kyc_status'];
-export type DisputeStatus = Database['public']['Enums']['dispute_status'];
-export type DisputeKind = Database['public']['Enums']['dispute_kind'];
-export type AdminRole = Database['public']['Enums']['admin_role'];
-export type CancelPolicy = Database['public']['Enums']['cancel_policy'];
-export type CarStatus = Database['public']['Enums']['car_status'];
-export type DocumentKind = Database['public']['Enums']['document_kind'];
-export type FuelType = Database['public']['Enums']['fuel_type'];
-export type PaymentProvider = Database['public']['Enums']['payment_provider'];
-export type Transmission = Database['public']['Enums']['transmission'];
-export type ClaimStatus = Database['public']['Enums']['claim_status'];
-export type InsuranceTier = Database['public']['Enums']['insurance_tier'];
-export type NotificationType = Database['public']['Enums']['notification_type'];
