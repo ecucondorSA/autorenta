@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/ecucondorSA/autorenta/compare/v1.17.4...v1.18.0) (2026-01-09)
+
+
+### Features
+
+* **ci:** upload fresh types as artifact when sync fails ([e17c448](https://github.com/ecucondorSA/autorenta/commit/e17c448514135420866d0bad1a234a8d60af6492))
+
 ## [1.17.4](https://github.com/ecucondorSA/autorenta/compare/v1.17.3...v1.17.4) (2026-01-09)
 
 
