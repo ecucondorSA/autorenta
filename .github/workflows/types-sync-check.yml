@@ -134,6 +134,14 @@ jobs:
 
           echo "✅ All BookingStatus values present in checked files"
 
+      - name: Upload fresh types as artifact
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fresh-database-types
+          path: /tmp/fresh-types.ts
+          retention-days: 7
+
       - name: Summary
         if: always()
         run: |
@@ -145,7 +153,10 @@ jobs:
             echo "❌ **Sync issues detected!** See job logs for details." >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### How to fix:" >> $GITHUB_STEP_SUMMARY
-            echo "1. Run \`pnpm db:types\` to regenerate types from DB" >> $GITHUB_STEP_SUMMARY
-            echo "2. Update any Record<BookingStatus, ...> objects with new values" >> $GITHUB_STEP_SUMMARY
-            echo "3. Commit and push changes" >> $GITHUB_STEP_SUMMARY
+            echo "1. Download the \`fresh-database-types\` artifact from this run" >> $GITHUB_STEP_SUMMARY
+            echo "2. Replace \`apps/web/src/app/core/types/database.types.ts\` with the downloaded file" >> $GITHUB_STEP_SUMMARY
+            echo "3. Update any Record<BookingStatus, ...> objects with new values" >> $GITHUB_STEP_SUMMARY
+            echo "4. Commit and push changes" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "📦 **Artifact available:** \`fresh-database-types\` (expires in 7 days)" >> $GITHUB_STEP_SUMMARY
           fi
