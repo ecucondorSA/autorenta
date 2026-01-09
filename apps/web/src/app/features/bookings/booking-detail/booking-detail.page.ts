@@ -96,6 +96,7 @@ import { ReportTrafficFineComponent } from '../../../shared/components/report-tr
 import { SettlementSimulatorComponent } from '../../../shared/components/settlement-simulator/settlement-simulator.component';
 import { SidePanelComponent } from '../../../shared/components/side-panel/side-panel.component';
 import { BookingActionsCardComponent } from './booking-actions-card.component';
+import { BookingCheckInInfoCardComponent } from './booking-check-in-info-card.component';
 import { BookingExtensionsManagerComponent } from './booking-extensions-manager.component';
 import { BookingStatusComponent } from './booking-status.component';
 import { BookingTrafficFinesManagerComponent } from './booking-traffic-fines-manager.component';
@@ -186,6 +187,7 @@ const DISPUTE_STATUSES = new Set<BookingStatus>([
     ErrorStateComponent,
     SidePanelComponent,
     BookingActionsCardComponent,
+    BookingCheckInInfoCardComponent,
     BookingExtensionsManagerComponent,
     BookingTrafficFinesManagerComponent,
   ],
