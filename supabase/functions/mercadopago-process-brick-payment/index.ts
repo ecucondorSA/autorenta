@@ -1,22 +1,12 @@
 /**
- * Supabase Edge Function: mercadopago-process-brick-payment
+ * @fileoverview Supabase Edge Function: mercadopago-process-brick-payment
+ * @version 12
+ * @frozen 2026-01-09
  *
- * Procesa pagos directos desde el Payment Brick de MercadoPago.
- * A diferencia de checkout-pro (redirect), este procesa el pago in-site.
+ * ⚠️  FROZEN CODE - DO NOT MODIFY WITHOUT EXPLICIT USER PERMISSION
  *
- * Flujo:
- * 1. Frontend muestra Payment Brick
- * 2. Usuario completa el formulario de pago
- * 3. Payment Brick llama onSubmit con formData (token, payment_method, etc.)
- * 4. Frontend llama a esta Edge Function
- * 5. Edge Function crea el pago directo en MercadoPago usando /v1/payments
- * 6. Retorna resultado al frontend inmediatamente
- * 7. Webhook de MP también confirmará (redundancia para fiabilidad)
- *
- * Environment Variables Required:
- * - MERCADOPAGO_ACCESS_TOKEN: Access token de Mercado Pago (APP_USR-*)
- * - SUPABASE_URL: URL del proyecto Supabase
- * - SUPABASE_SERVICE_ROLE_KEY: Service role key de Supabase
+ * Procesa pagos desde Payment Brick usando fetch() directo.
+ * NO usar SDK mercadopago - causa BOOT_ERROR en Deno.
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';

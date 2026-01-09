@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Supabase Edge Function: mercadopago-process-booking-payment
+ * @version 12
+ * @frozen 2026-01-09
+ *
+ * ⚠️  FROZEN CODE - DO NOT MODIFY WITHOUT EXPLICIT USER PERMISSION
+ *
+ * Procesa pagos de bookings usando fetch() directo a MercadoPago API.
+ * NO usar SDK mercadopago - causa BOOT_ERROR en Deno.
+ */
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';

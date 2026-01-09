@@ -1,8 +1,12 @@
 /**
- * Supabase Edge Function: mercadopago-create-preference
+ * @fileoverview Supabase Edge Function: mercadopago-create-preference
+ * @version 12
+ * @frozen 2026-01-09
  *
- * Crea una preferencia de pago en Mercado Pago para depósitos al wallet.
- * MIGRADO A SDK OFICIAL DE MERCADOPAGO
+ * ⚠️  FROZEN CODE - DO NOT MODIFY WITHOUT EXPLICIT USER PERMISSION
+ *
+ * Crea preferencias de pago para depósitos wallet usando fetch() directo.
+ * NO usar SDK mercadopago - causa BOOT_ERROR en Deno.
  *
  * Flujo:
  * 1. Frontend inicia depósito → llama a wallet_initiate_deposit() en Supabase

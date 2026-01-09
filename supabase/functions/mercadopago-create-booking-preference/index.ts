@@ -1,7 +1,12 @@
 /**
- * Supabase Edge Function: mercadopago-create-booking-preference
+ * @fileoverview Supabase Edge Function: mercadopago-create-booking-preference
+ * @version 12
+ * @frozen 2026-01-09
  *
- * Crea una preferencia de pago en Mercado Pago para pagos de bookings.
+ * ⚠️  FROZEN CODE - DO NOT MODIFY WITHOUT EXPLICIT USER PERMISSION
+ *
+ * Crea preferencias de pago para bookings usando fetch() directo.
+ * NO usar SDK mercadopago - causa BOOT_ERROR en Deno.
  *
  * Flujo:
  * 1. Frontend llama a esta función con booking_id

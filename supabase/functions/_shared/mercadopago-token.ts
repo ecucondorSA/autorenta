@@ -1,8 +1,14 @@
 /**
- * Utilidades para validación de tokens de MercadoPago
+ * @fileoverview MercadoPago Token Utilities (SDK-free)
+ * @version 12
+ * @frozen 2026-01-09
+ *
+ * ⚠️  FROZEN CODE - DO NOT MODIFY WITHOUT EXPLICIT USER PERMISSION
  *
  * Este archivo NO importa el SDK de mercadopago para evitar BOOT_ERROR en Deno.
  * Usar este archivo en lugar de mercadopago-sdk.ts para funciones edge.
+ *
+ * Razón: El SDK mercadopago v2 tiene dependencias Node.js incompatibles con Deno.
  */
 
 // ============================================================================

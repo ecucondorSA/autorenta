@@ -1,8 +1,12 @@
 /**
- * Supabase Edge Function: mercadopago-webhook
+ * @fileoverview Supabase Edge Function: mercadopago-webhook
+ * @version 12
+ * @frozen 2026-01-09
  *
- * Maneja las notificaciones IPN (Instant Payment Notification) de Mercado Pago.
- * MIGRADO A SDK OFICIAL DE MERCADOPAGO
+ * ⚠️  FROZEN CODE - DO NOT MODIFY WITHOUT EXPLICIT USER PERMISSION
+ *
+ * Maneja las notificaciones IPN de Mercado Pago usando fetch() directo.
+ * NO usar SDK mercadopago - causa BOOT_ERROR en Deno.
  *
  * Flujo del Webhook:
  * 1. Mercado Pago envía notificación POST cuando cambia estado del pago

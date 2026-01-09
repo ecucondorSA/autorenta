@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Supabase Edge Function: process-payment-queue
+ * @version 12
+ * @frozen 2026-01-09
+ *
+ * ⚠️  FROZEN CODE - DO NOT MODIFY WITHOUT EXPLICIT USER PERMISSION
+ *
+ * Procesa la cola de capturas de pagos pre-autorizados.
+ * Usa fetch() directo a MercadoPago API - NO usar SDK.
+ */
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 

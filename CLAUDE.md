@@ -57,5 +57,35 @@
 - **Confirmation:** Complex changes (refactors, DB migrations) require a plan and user approval.
 - **Knowledge:** Do not assume requirements. Read `docs/` first.
 
+## 10. FROZEN CODE - DO NOT MODIFY
+
+The following files are **production-critical** and **FROZEN**. Do NOT modify them unless the user EXPLICITLY requests changes to these specific files AND provides a clear reason.
+
+### MercadoPago Edge Functions (v12 - 2026-01-09)
+These functions use direct `fetch()` to MercadoPago API. The SDK was removed due to Deno incompatibility.
+
+```
+supabase/functions/_shared/mercadopago-token.ts
+supabase/functions/mercadopago-webhook/index.ts
+supabase/functions/mercadopago-process-brick-payment/index.ts
+supabase/functions/mercadopago-process-deposit-payment/index.ts
+supabase/functions/mercadopago-create-preference/index.ts
+supabase/functions/mercadopago-create-booking-preference/index.ts
+supabase/functions/mercadopago-process-booking-payment/index.ts
+supabase/functions/process-payment-queue/index.ts
+```
+
+**Rules for frozen code:**
+1. **READ-ONLY by default** - Only read these files for context, never modify.
+2. **Explicit permission required** - User must say "modify [filename]" or "fix [filename]".
+3. **No refactoring** - Do not "improve", "clean up", or "optimize" frozen code.
+4. **No SDK changes** - Never add `mercadopago` npm package back. Use `fetch()` only.
+5. **Report issues** - If you find a bug, report it to the user instead of fixing.
+
+### Why frozen?
+- MercadoPago SDK v2 is incompatible with Deno Edge Runtime (causes BOOT_ERROR)
+- Current implementation uses direct REST API calls which work correctly
+- v12 is tested and deployed in production
+
 ---
 **© 2026 Autorenta | Claude Agent Config**
