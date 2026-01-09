@@ -1117,7 +1117,7 @@
         <div class="absolute top-20 lg:top-4 left-4 z-10 flex flex-col gap-2">
           <button
             type="button"
-            class="w-11 h-11 bg-white rounded-xl shadow-lg border border-slate-200 flex items-center justify-center hover:bg-primary-50 hover:border-primary-300 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
+            class="w-11 h-11 bg-white rounded-xl shadow-xl border-2 border-slate-300 flex items-center justify-center hover:bg-primary-50 hover:border-primary-400 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
             [class.ring-2]="isCenteredOnUser()"
             [class.ring-primary-500]="isCenteredOnUser()"
             [disabled]="isLocating()"
@@ -1253,7 +1253,7 @@
                   } @else {
                     <span class="font-semibold text-[13px] text-primary-600">Consultar</span>
                   }
-                  <span class="text-cyan-600 text-xs font-medium"> Ver → </span>
+                  <span class="text-cyan-600 text-sm font-semibold px-1.5 py-0.5 rounded bg-cyan-50/80 hover:bg-cyan-100 transition-colors whitespace-nowrap">Ver →</span>
                 </div>
               </div>
             </div>
