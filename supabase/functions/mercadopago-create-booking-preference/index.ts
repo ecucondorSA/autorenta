@@ -25,7 +25,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { requireEmailVerification } from '../_shared/auth-utils.ts';
 import { createChildLogger } from '../_shared/logger.ts';
-import { getMercadoPagoAccessToken } from '../_shared/mercadopago-sdk.ts';
+import { getMercadoPagoAccessToken } from '../_shared/mercadopago-token.ts';
 
 const log = createChildLogger('CreateBookingPreference');
 

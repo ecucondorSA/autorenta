@@ -22,8 +22,10 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
-import { getMercadoPagoClient, getPaymentClient } from '../_shared/mercadopago-sdk.ts';
+import { getMercadoPagoAccessToken } from '../_shared/mercadopago-token.ts';
 import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
+
+const MP_API_BASE = 'https://api.mercadopago.com/v1';
 
 /**
  * Payment Brick form data structure
@@ -246,14 +248,13 @@ serve(async (req) => {
       .single();
 
     // ========================================
-    // CREATE PAYMENT IN MERCADOPAGO
+    // CREATE PAYMENT IN MERCADOPAGO (usando fetch directo)
     // ========================================
     console.log('Creating payment in MercadoPago...');
     console.log('Payment method:', formData.payment_method_id);
     console.log('Amount:', formData.transaction_amount);
 
-    const mpConfig = getMercadoPagoClient();
-    const paymentClient = getPaymentClient(mpConfig);
+    const MP_ACCESS_TOKEN = getMercadoPagoAccessToken('mercadopago-process-brick-payment', true);
 
     // Build payment request
     const paymentRequest: any = {
@@ -302,16 +303,25 @@ serve(async (req) => {
 
     console.log('Payment request:', JSON.stringify(paymentRequest, null, 2));
 
-    // Create the payment
-    // SECURITY: Use crypto.randomUUID() instead of Date.now() for idempotency key
-    // to prevent collisions when multiple requests happen within the same millisecond
-    const payment = await paymentClient.create({
-      body: paymentRequest,
-      requestOptions: {
-        idempotencyKey: `brick-payment-${transactionId}-${crypto.randomUUID()}`,
+    // Create the payment using direct fetch (evita SDK incompatible con Deno)
+    const idempotencyKey = `brick-payment-${transactionId}-${crypto.randomUUID()}`;
+    const mpResponse = await fetch(`${MP_API_BASE}/payments`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${MP_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
+        'X-Idempotency-Key': idempotencyKey,
       },
+      body: JSON.stringify(paymentRequest),
     });
 
+    if (!mpResponse.ok) {
+      const errorData = await mpResponse.json().catch(() => ({}));
+      console.error('MercadoPago API error:', errorData);
+      throw new Error(errorData.message || `MercadoPago API error: ${mpResponse.status}`);
+    }
+
+    const payment = await mpResponse.json();
     console.log('Payment created:', payment.id, payment.status);
 
     // ========================================

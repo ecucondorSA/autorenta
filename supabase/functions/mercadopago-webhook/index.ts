@@ -37,11 +37,9 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { createChildLogger } from '../_shared/logger.ts';
-import {
-  createMercadoPagoClient,
-  getPaymentClient,
-} from '../_shared/mercadopago-sdk.ts';
 import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
+
+const MP_API_BASE = 'https://api.mercadopago.com/v1';
 
 // Deno globals (silenciar errores de tsc en entorno Node/tsc)
 declare const Deno: any;
@@ -560,28 +558,37 @@ serve(async (req: Request) => {
     const paymentId = webhookPayload.data.id;
     log.info(`Fetching payment ${paymentId} using MercadoPago SDK...`);
 
-    // Obtener datos del pago usando SDK
+    // Obtener datos del pago usando fetch() directo (evita SDK incompatible con Deno)
     let paymentData: MPPayment | null = null;
     try {
-      const mpConfig = createMercadoPagoClient(MP_ACCESS_TOKEN);
-      const paymentClient = getPaymentClient(mpConfig);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
 
-      // Enforce a 3s timeout when fetching payment data from MercadoPago.
-      // The SDK is configured with a global timeout, but we add an extra layer of safety.
-      try {
-        paymentData = await withTimeout(paymentClient.get({ id: paymentId }), 3000);
-      } catch (timeoutErr) {
-        log.warn('Timeout fetching payment data, retrying might be needed', timeoutErr);
-        throw timeoutErr;
+      const mpResponse = await fetch(`${MP_API_BASE}/payments/${paymentId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${MP_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!mpResponse.ok) {
+        const errorData = await mpResponse.json().catch(() => ({}));
+        throw { status: mpResponse.status, message: errorData.message || `HTTP ${mpResponse.status}` };
       }
+
+      paymentData = await mpResponse.json();
 
       // Validar que la respuesta contiene datos válidos
       if (!paymentData || !paymentData.id) {
-        log.error('Invalid payment data received from MercadoPago SDK:', paymentData);
+        log.error('Invalid payment data received from MercadoPago API:', paymentData);
         return new Response(
           JSON.stringify({
             success: false,
-            error: 'Invalid payment data from MercadoPago SDK',
+            error: 'Invalid payment data from MercadoPago API',
             payment_id: paymentId,
           }),
           {
@@ -592,7 +599,7 @@ serve(async (req: Request) => {
       }
 
       // ✅ SECURITY: Log sin exponer datos sensibles completos
-      log.info('Payment Data from SDK', {
+      log.info('Payment Data from API', {
         id: paymentData.id,
         status: paymentData.status,
         status_detail: paymentData.status_detail,
@@ -604,7 +611,7 @@ serve(async (req: Request) => {
 
     } catch (apiError: any) {
       // ✅ CRITICAL FIX: Retornar 500 para que MercadoPago reintente
-      log.error('❌ MercadoPago SDK error - webhook will be retried', {
+      log.error('❌ MercadoPago API error - webhook will be retried', {
         error: apiError?.message || apiError,
         payment_id: paymentId,
         timestamp: new Date().toISOString(),
@@ -631,7 +638,6 @@ serve(async (req: Request) => {
       }
 
       // MercadoPago reintenta automáticamente con 500/502/503
-      // Reintentos: inmediato, +1h, +2h, +4h, +8h (máx 12 en 24h)
       return new Response(
         JSON.stringify({
           error: 'Failed to fetch payment data from MercadoPago',

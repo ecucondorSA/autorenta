@@ -25,7 +25,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { createChildLogger } from '../_shared/logger.ts';
-import { getMercadoPagoAccessToken } from '../_shared/mercadopago-sdk.ts';
+import { getMercadoPagoAccessToken } from '../_shared/mercadopago-token.ts';
 
 const log = createChildLogger('CreatePreference');
 

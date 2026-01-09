@@ -2,7 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
-import { getMercadoPagoAccessToken } from '../_shared/mercadopago-sdk.ts';
+import { getMercadoPagoAccessToken } from '../_shared/mercadopago-token.ts';
 
 const MP_API_BASE = 'https://api.mercadopago.com/v1';
 

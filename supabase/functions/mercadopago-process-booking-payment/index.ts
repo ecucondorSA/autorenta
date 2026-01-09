@@ -3,7 +3,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
 import { createChildLogger } from '../_shared/logger.ts';
-import { getMercadoPagoAccessToken } from '../_shared/mercadopago-sdk.ts';
+import { getMercadoPagoAccessToken } from '../_shared/mercadopago-token.ts';
 
 const log = createChildLogger('ProcessBookingPayment');
 const MP_API_BASE = 'https://api.mercadopago.com/v1';

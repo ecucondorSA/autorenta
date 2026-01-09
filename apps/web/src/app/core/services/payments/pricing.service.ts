@@ -69,12 +69,29 @@ export interface FipeBaseModel {
   variants: FipeModel[];
 }
 
+/** Average vehicle values by category (USD) for rate estimation fallback */
+const CATEGORY_AVERAGE_VALUES_USD: Record<string, number> = {
+  economy: 8_000,
+  standard: 15_000,
+  premium: 35_000,
+  luxury: 80_000,
+} as const;
+
+/** Default fallback value when category is unknown */
+const DEFAULT_VEHICLE_VALUE_USD = 15_000;
+
+/** Default daily rate percentage (0.3% of vehicle value) */
+const DEFAULT_DAILY_RATE_PCT = 0.003;
+
 @Injectable({
   providedIn: 'root',
 })
 export class PricingService {
   private readonly supabase = injectSupabase();
   private readonly distanceCalculator = inject(DistanceCalculatorService);
+
+  /** Cache for vehicle categories to avoid N+1 queries */
+  private categoriesCache: Map<string, string> | null = null;
 
   async quoteBooking(params: {
     carId: string;
@@ -92,7 +109,7 @@ export class PricingService {
     });
     if (error) throw error;
     if (!data || data.length === 0) {
-      throw new Error('No se pudo calcular la cotización');
+      throw new Error(`No se pudo calcular la cotización para el vehículo ${params.carId}`);
     }
 
     const baseQuote = data[0] as QuoteBreakdown;
@@ -189,6 +206,18 @@ export class PricingService {
   }
 
   /**
+   * Get category name by ID using cached data to avoid N+1 queries
+   */
+  private async getCategoryNameById(categoryId: string): Promise<string | undefined> {
+    // Initialize cache if needed
+    if (!this.categoriesCache) {
+      const categories = await this.getVehicleCategories();
+      this.categoriesCache = new Map(categories.map((c) => [c.id, c.name_es ?? c.name]));
+    }
+    return this.categoriesCache.get(categoryId);
+  }
+
+  /**
    * Estimate vehicle value using SQL function
    * Calls estimate_vehicle_value_usd(brand, model, year, country)
    */
@@ -217,21 +246,15 @@ export class PricingService {
 
     // Map SQL column names to frontend interface
     // SQL returns: estimated_value, confidence_level, data_source, category_id
-    const estimatedValue = result.estimated_value || 0;
+    const estimatedValue = result.estimated_value ?? 0;
 
-    // Calculate suggested daily rate (0.3% of vehicle value per day)
-    const suggestedRate = estimatedValue > 0 ? estimatedValue * 0.003 : undefined;
+    // Calculate suggested daily rate based on vehicle value
+    const suggestedRate = estimatedValue > 0 ? estimatedValue * DEFAULT_DAILY_RATE_PCT : undefined;
 
-    // Fetch category name if category_id exists
-    let categoryName: string | undefined;
-    if (result.category_id) {
-      const { data: category } = await this.supabase
-        .from('vehicle_categories')
-        .select('name_es')
-        .eq('id', result.category_id)
-        .single();
-      categoryName = category?.name_es;
-    }
+    // Get category name from cache (avoids N+1 query)
+    const categoryName = result.category_id
+      ? await this.getCategoryNameById(result.category_id)
+      : undefined;
 
     return {
       estimated_value_usd: estimatedValue,
@@ -279,7 +302,8 @@ export class PricingService {
 
       const result: FipeValueResult = await response.json();
       return result;
-    } catch {
+    } catch (error) {
+      console.error('[PricingService] getFipeValueRealtime failed:', error);
       return null;
     }
   }
@@ -302,29 +326,22 @@ export class PricingService {
       return null;
     }
 
+    const ratePct = data.base_daily_rate_pct ?? DEFAULT_DAILY_RATE_PCT;
+
     // If we have estimated value, use it with the category's rate percentage
     if (params.estimatedValueUsd) {
-      // Use the category's base_daily_rate_pct (e.g., 0.0030 = 0.30%)
-      const ratePct = data.base_daily_rate_pct || 0.003; // Fallback to 0.3% if null
       return params.estimatedValueUsd * ratePct;
     }
 
     // Otherwise use category default with average values
-    // Assume average vehicle value by category:
-    // Economy: $8k, Standard: $15k, Premium: $35k, Luxury: $80k
-    const averageValues: Record<string, number> = {
-      economy: 8000,
-      standard: 15000,
-      premium: 35000,
-      luxury: 80000,
-    };
-
     const categoryCode = data.code?.toLowerCase() || '';
-    const categoryName = Object.keys(averageValues).find((name) => categoryCode.includes(name));
-    const avgValue = categoryName ? averageValues[categoryName] : 15000;
+    const matchedCategory = Object.keys(CATEGORY_AVERAGE_VALUES_USD).find((name) =>
+      categoryCode.includes(name),
+    );
+    const avgValue = matchedCategory
+      ? CATEGORY_AVERAGE_VALUES_USD[matchedCategory]
+      : DEFAULT_VEHICLE_VALUE_USD;
 
-    // Use the category's base_daily_rate_pct
-    const ratePct = data.base_daily_rate_pct || 0.003; // Fallback to 0.3% if null
     return avgValue * ratePct;
   }
 
@@ -342,7 +359,8 @@ export class PricingService {
 
       const brands: FipeBrand[] = await response.json();
       return brands;
-    } catch {
+    } catch (error) {
+      console.error('[PricingService] getFipeBrands failed:', error);
       return [];
     }
   }
@@ -363,7 +381,8 @@ export class PricingService {
 
       const models: FipeModel[] = await response.json();
       return models;
-    } catch {
+    } catch (error) {
+      console.error(`[PricingService] getFipeModels failed for brand ${brandCode}:`, error);
       return [];
     }
   }
@@ -451,17 +470,25 @@ export class PricingService {
         };
       }
 
-      // Try each variant until we find one with data for this year
-      for (const variant of matchingVariants) {
-        const result = await this.getFipeValueRealtime({
-          brand: params.brand,
-          model: variant.name,
-          year: params.year,
-          country: params.country || 'AR',
-        });
+      // Try variants in parallel batches of 3 for better performance
+      const BATCH_SIZE = 3;
+      for (let i = 0; i < matchingVariants.length; i += BATCH_SIZE) {
+        const batch = matchingVariants.slice(i, i + BATCH_SIZE);
+        const results = await Promise.all(
+          batch.map((variant) =>
+            this.getFipeValueRealtime({
+              brand: params.brand,
+              model: variant.name,
+              year: params.year,
+              country: params.country || 'AR',
+            }),
+          ),
+        );
 
-        if (result && result.success) {
-          return result;
+        // Return first successful result from this batch
+        const successResult = results.find((r) => r?.success);
+        if (successResult) {
+          return successResult;
         }
       }
 
@@ -470,7 +497,8 @@ export class PricingService {
         success: false,
         error: `No se encontró información de precio para ${baseName} ${params.year}`,
       };
-    } catch {
+    } catch (error) {
+      console.error(`[PricingService] getFipeValueByBaseModel failed for ${params.brand} ${params.baseModel}:`, error);
       return null;
     }
   }
