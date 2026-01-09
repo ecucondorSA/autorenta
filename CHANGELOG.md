@@ -1,3 +1,10 @@
+## [1.15.12](https://github.com/ecucondorSA/autorenta/compare/v1.15.11...v1.15.12) (2026-01-09)
+
+
+### Bug Fixes
+
+* **ci:** add permissions and simplify MP health checks ([49d4b23](https://github.com/ecucondorSA/autorenta/commit/49d4b23eefa946a61ce8fc9d77dd471736f0acc1))
+
 ## [1.15.11](https://github.com/ecucondorSA/autorenta/compare/v1.15.10...v1.15.11) (2026-01-09)
 
 
