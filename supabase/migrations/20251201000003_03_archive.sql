@@ -179,7 +179,7 @@ COMMENT ON CONSTRAINT check_wallet_transactions_provider_valid ON wallet_transac
 -- ============================================
 
 -- Índice compuesto para búsquedas por usuario y estado
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_wallet_transactions_user_status_type
+CREATE INDEX IF NOT EXISTS idx_wallet_transactions_user_status_type
   ON wallet_transactions (user_id, status, type)
   WHERE status IN ('pending', 'completed');
 
@@ -187,7 +187,7 @@ COMMENT ON INDEX idx_wallet_transactions_user_status_type IS
   'Optimizar queries de balance y transacciones pending/completed por usuario';
 
 -- Índice para búsquedas por provider_transaction_id (para webhook idempotency)
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_wallet_transactions_provider_tx_id
+CREATE INDEX IF NOT EXISTS idx_wallet_transactions_provider_tx_id
   ON wallet_transactions (provider_transaction_id)
   WHERE provider_transaction_id IS NOT NULL;
 
@@ -40353,21 +40353,21 @@ WHERE location_geom IS NULL
   AND location_lng IS NOT NULL;
 
 -- 3) Crear índice GiST concurrente (si la base de datos lo soporta en el entorno)
--- Use CREATE INDEX CONCURRENTLY in production to avoid locking writes; in some
+-- Use CREATE INDEX in production to avoid locking writes; in some
 -- managed environments CONCURRENTLY is not allowed inside a transaction block.
 -- We'll attempt a safe approach: try concurrent outside transaction if possible.
 
 COMMIT;
 
 -- Create index concurrently (not in a transaction)
--- Note: CREATE INDEX CONCURRENTLY must run outside a transaction block. Many
+-- Note: CREATE INDEX must run outside a transaction block. Many
 -- managed migration runners execute files inside transactions by default.
 -- Recommended approach:
 -- 1) Run this file to add and populate the column (it ends with COMMIT above).
 -- 2) Run the CONCURRENTLY index creation as a separate command in the environment
 --    where you execute migrations (e.g., via psql, CI runner or maintenance job):
 --
---    psql "<YOUR_DB_CONN_STRING>" -c "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_cars_location_geom_gist ON public.cars USING GIST (location_geom);"
+--    psql "<YOUR_DB_CONN_STRING>" -c "CREATE INDEX IF NOT EXISTS idx_cars_location_geom_gist ON public.cars USING GIST (location_geom);"
 --
 -- If your environment does not support CONCURRENTLY in an automated step, run the
 -- non-concurrent fallback (this may acquire locks):
@@ -42287,27 +42287,27 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_mp_webhook_logs_event_id_unique ON mp_webh
 -- Note: run in maintenance window if DB is large; these are CONCURRENT where supported.
 
 -- NOTE: Using CONCURRENTLY to avoid locks on large tables. Do NOT wrap
--- CREATE INDEX CONCURRENTLY statements inside a transaction (BEGIN/COMMIT).
+-- CREATE INDEX statements inside a transaction (BEGIN/COMMIT).
 -- Apply this file directly with psql or via your migration runner.
 
 -- mp_webhook_logs.booking_id: queries filtering by booking_id (joins)
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_mp_webhook_logs_booking_id
+CREATE INDEX IF NOT EXISTS idx_mp_webhook_logs_booking_id
   ON public.mp_webhook_logs (booking_id);
 
 -- withdrawal_requests.bank_account_id: used in joins/filters when processing
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_withdrawal_requests_bank_account_id
+CREATE INDEX IF NOT EXISTS idx_withdrawal_requests_bank_account_id
   ON public.withdrawal_requests (bank_account_id);
 
 -- accounting_accounts.parent_account_id: hierarchical lookups
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_accounting_accounts_parent_account_id
+CREATE INDEX IF NOT EXISTS idx_accounting_accounts_parent_account_id
   ON public.accounting_accounts (parent_account_id);
 
 -- accounting_ledger.user_id: frequent ledger queries by user
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_accounting_ledger_user_id
+CREATE INDEX IF NOT EXISTS idx_accounting_ledger_user_id
   ON public.accounting_ledger (user_id);
 
 -- calendar_sync_log.car_id: backfills and sync queries by car
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_calendar_sync_log_car_id
+CREATE INDEX IF NOT EXISTS idx_calendar_sync_log_car_id
   ON public.calendar_sync_log (car_id);
 
 -- Notes:
