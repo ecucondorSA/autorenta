@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/ecucondorSA/autorenta/compare/v1.18.4...v1.19.0) (2026-01-09)
+
+
+### Features
+
+* **booking-detail-payment:** add sticky tabs navigation ([65a7133](https://github.com/ecucondorSA/autorenta/commit/65a713361caf47c7aa11642a7ec975bf5113acb8))
+
 ## [1.18.4](https://github.com/ecucondorSA/autorenta/compare/v1.18.3...v1.18.4) (2026-01-09)
 
 
