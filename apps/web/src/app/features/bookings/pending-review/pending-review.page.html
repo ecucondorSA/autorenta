@@ -47,7 +47,7 @@
           <div class="car-info">
             @if (booking.car?.images?.[0]) {
               <img
-                [src]="booking.car.images[0]"
+                [src]="booking.car?.images?.[0]"
                 [alt]="booking.car_title"
                 class="car-thumbnail"
               />

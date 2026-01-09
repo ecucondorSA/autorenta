@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
-import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { TranslateModule } from '@ngx-translate/core';
 import { HdriBackgroundComponent } from '../../../shared/components/hdri-background/hdri-background.component';
 
 @Component({
   standalone: true,
   selector: 'app-login-page',
   imports: [
-    NgOptimizedImage,
+
     RouterLink,
     ReactiveFormsModule,
     TranslateModule,
