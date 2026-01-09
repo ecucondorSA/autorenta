@@ -977,3 +977,229 @@ body:has(app-marketplace-v2-page) > app-root > div > header,
 body:has(.hero-minimal) > app-root > div > header {
   display: none !important;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   UTILIDADES RESPONSIVE GLOBALES
+   Clases que se pueden usar en cualquier página/componente
+   ───────────────────────────────────────────────────────────── */
+
+/* Contenedor de página con padding bottom para bottom nav */
+.page-content {
+  min-height: 100svh;
+  padding-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .page-content {
+    padding-bottom: calc(88px + var(--safe-area-bottom, 0px)) !important;
+  }
+}
+
+/* Grids responsive automáticos */
+.grid-responsive {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (max-width: 639px) {
+  .grid-responsive {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .grid-responsive {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Botones full width en mobile */
+.btn-mobile-full {
+  width: auto;
+}
+
+@media (max-width: 639px) {
+  .btn-mobile-full {
+    width: 100% !important;
+    justify-content: center;
+  }
+}
+
+/* Stack en mobile, row en desktop */
+.stack-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .stack-mobile {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Ocultar en mobile */
+.hide-mobile {
+  display: block;
+}
+
+@media (max-width: 639px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* Mostrar solo en mobile */
+.show-mobile {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .show-mobile {
+    display: block !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BOTTOM SHEET MODAL PATTERN
+   Para modales que deben comportarse como bottom sheets en mobile
+   ───────────────────────────────────────────────────────────── */
+
+.modal-bottom-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 639px) {
+  .modal-bottom-sheet {
+    align-items: flex-end !important;
+    padding-bottom: 88px; /* Espacio para bottom nav */
+  }
+
+  .modal-bottom-sheet > .modal-content,
+  .modal-bottom-sheet > div:first-child {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: calc(100dvh - 100px) !important;
+    border-radius: 24px 24px 0 0 !important;
+    margin: 0 !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   STICKY CTA PATTERN
+   Para botones de acción fijos en el bottom
+   ───────────────────────────────────────────────────────────── */
+
+.sticky-cta-bottom {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: linear-gradient(to top, var(--surface-base, white) 80%, transparent);
+  z-index: 40;
+}
+
+@media (max-width: 768px) {
+  .sticky-cta-bottom {
+    position: fixed;
+    bottom: 80px; /* Altura del bottom nav */
+    padding-bottom: max(1rem, var(--safe-area-bottom, 0px));
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   FORM LAYOUTS RESPONSIVE
+   ───────────────────────────────────────────────────────────── */
+
+/* Form grid que se apila en mobile */
+.form-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .form-grid .full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CARD RESPONSIVE VARIANTS
+   ───────────────────────────────────────────────────────────── */
+
+/* Card horizontal en desktop, vertical en mobile */
+.card-horizontal-desktop {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .card-horizontal-desktop {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .card-horizontal-desktop > .card-image {
+    width: 40%;
+    flex-shrink: 0;
+  }
+
+  .card-horizontal-desktop > .card-content {
+    flex: 1;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ASPECT RATIOS RESPONSIVE
+   ───────────────────────────────────────────────────────────── */
+
+.aspect-responsive {
+  aspect-ratio: 16/9;
+}
+
+@media (max-width: 639px) {
+  .aspect-responsive {
+    aspect-ratio: 4/3;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TEXT TRUNCATION HELPERS
+   ───────────────────────────────────────────────────────────── */
+
+.text-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (max-width: 639px) {
+  .text-clamp-mobile-1 {
+    -webkit-line-clamp: 1 !important;
+  }
+}

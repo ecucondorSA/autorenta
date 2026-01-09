@@ -402,8 +402,23 @@ module.exports = {
          ───────────────────────────────────────────────────────────── */
       spacing: {
         18: '4.5rem', // 72px
+        22: '5.5rem', // 88px - Bottom nav height
         88: '22rem', // 352px
         128: '32rem', // 512px
+        'bottom-nav': '88px', // Bottom navigation height + safe area
+        'safe-bottom': 'calc(88px + env(safe-area-inset-bottom, 0px))',
+      },
+
+      /* ─────────────────────────────────────────────────────────────
+         Min/Max Heights - Safe Viewport Units
+         ───────────────────────────────────────────────────────────── */
+      minHeight: {
+        'screen-safe': '100svh',
+        'screen-dynamic': '100dvh',
+      },
+      maxHeight: {
+        'modal-mobile': 'calc(100dvh - 100px)',
+        'sheet-mobile': '85dvh',
       },
 
       /* ─────────────────────────────────────────────────────────────
