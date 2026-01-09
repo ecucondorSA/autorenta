@@ -257,10 +257,23 @@ export async function loginBeforeTest(
  * Clear session (logout)
  */
 export async function clearSession(ctx: TestContext): Promise<void> {
-  await ctx.page.evaluate(() => {
-    localStorage.clear();
-    sessionStorage.clear();
-  });
+  // Navigate to a valid page first if we're on about:blank
+  // This is required because localStorage is not accessible on about:blank
+  const currentUrl = ctx.page.url();
+  if (currentUrl === 'about:blank' || !currentUrl.startsWith('http')) {
+    const baseUrl = process.env.BASE_URL || 'http://localhost:4200';
+    await ctx.page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
+  }
+
+  // Now safely clear storage
+  try {
+    await ctx.page.evaluate(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+    });
+  } catch {
+    // Ignore if localStorage is still not accessible
+  }
   await ctx.context.clearCookies();
 }
 

@@ -158,11 +158,21 @@ export class AutoRentaTest {
    * Logout
    */
   async logout(): Promise<void> {
-    // Clear session storage
-    await this.page.evaluate(() => {
-      localStorage.clear();
-      sessionStorage.clear();
-    });
+    // Navigate to valid page first if on about:blank
+    const currentUrl = this.page.url();
+    if (currentUrl === 'about:blank' || !currentUrl.startsWith('http')) {
+      await this.goto('/');
+    }
+
+    // Clear session storage safely
+    try {
+      await this.page.evaluate(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+      });
+    } catch {
+      // Ignore if localStorage not accessible
+    }
     await this.goto('/');
   }
 
@@ -170,10 +180,14 @@ export class AutoRentaTest {
    * Check if user is logged in
    */
   async isLoggedIn(): Promise<boolean> {
-    return this.page.evaluate(() => {
-      const session = localStorage.getItem('sb-pisqjmoklivzpwufhscx-auth-token');
-      return !!session;
-    });
+    try {
+      return await this.page.evaluate(() => {
+        const session = localStorage.getItem('sb-pisqjmoklivzpwufhscx-auth-token');
+        return !!session;
+      });
+    } catch {
+      return false;
+    }
   }
 
   /**
