@@ -461,33 +461,26 @@ export interface Booking {
 }
 
 export interface BookingExtensionRequest {
-  // NEW
-
   id: string;
-
   booking_id: string;
-
   renter_id: string;
-
   owner_id: string;
-
   original_end_at: string;
-
   new_end_at: string;
-
   request_status: 'pending' | 'approved' | 'rejected' | 'cancelled';
-
   estimated_cost_amount: number | null;
-
   estimated_cost_currency: string | null;
-
   renter_message: string | null;
-
   owner_response: string | null;
-
   requested_at: string;
-
   responded_at: string | null;
+
+  // Aliases for booking_extensions table compatibility
+  status?: 'pending' | 'approved' | 'rejected' | 'cancelled';
+  requested_end_at?: string;
+  additional_cost_cents?: number | null;
+  additional_amount_cents?: number | null;
+  reason?: string | null;
 }
 
 export interface PaymentIntent {

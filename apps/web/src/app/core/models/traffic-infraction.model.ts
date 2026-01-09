@@ -15,4 +15,9 @@ export interface TrafficInfraction {
   created_at: string;
   renter_name?: string;
   owner_name?: string;
+
+  // UI compatibility fields (derived from description)
+  violation_type?: string;
+  location?: string;
+  official_ticket_number?: string;
 }

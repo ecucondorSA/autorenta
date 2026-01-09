@@ -351,6 +351,7 @@ export const SUBSCRIPTION_STATUS_LABELS: Record<SubscriptionStatus, string> = {
   depleted: 'Saldo agotado',
   expired: 'Expirada',
   cancelled: 'Cancelada',
+  upgraded: 'Actualizada',
 };
 
 export const SUBSCRIPTION_USAGE_REASON_LABELS: Record<SubscriptionUsageReason, string> = {

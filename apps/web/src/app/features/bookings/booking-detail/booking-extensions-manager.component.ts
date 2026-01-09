@@ -81,24 +81,24 @@ import {
                     <div class="flex items-center gap-2 mb-2">
                       <span
                         class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold"
-                        [class]="getStatusClasses(request.status)"
+                        [class]="getStatusClasses(request.status ?? request.request_status ?? 'pending')"
                       >
-                        <ion-icon [name]="getStatusIcon(request.status)"></ion-icon>
-                        {{ getStatusLabel(request.status) }}
+                        <ion-icon [name]="getStatusIcon(request.status ?? request.request_status ?? 'pending')"></ion-icon>
+                        {{ getStatusLabel(request.status ?? request.request_status ?? 'pending') }}
                       </span>
                     </div>
 
                     <p class="text-sm text-text-primary font-medium mb-1">
                       Nueva fecha de fin:
                       <span class="font-bold">{{
-                        request.requested_end_at | date: 'EEEE d MMMM, HH:mm'
+                        (request.requested_end_at ?? request.new_end_at) | date: 'EEEE d MMMM, HH:mm'
                       }}</span>
                     </p>
 
                     <p class="text-xs text-text-secondary">
                       Costo adicional estimado:
                       <span class="font-semibold text-text-primary">
-                        {{ request.additional_cost_cents / 100 | currency: 'ARS' : 'symbol' : '1.0-0' }}
+                        {{ (request.additional_cost_cents ?? request.additional_amount_cents ?? request.estimated_cost_amount ?? 0) / 100 | currency: 'ARS' : 'symbol' : '1.0-0' }}
                       </span>
                     </p>
 
@@ -110,7 +110,7 @@ import {
                   </div>
 
                   <!-- Action Buttons (Owner Only) -->
-                  @if (isOwner() && request.status === 'pending') {
+                  @if (isOwner() && (request.status ?? request.request_status) === 'pending') {
                     <div class="flex flex-col gap-2">
                       <button
                         (click)="approveExtension(request.id)"
