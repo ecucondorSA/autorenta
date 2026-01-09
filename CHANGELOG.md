@@ -1,3 +1,10 @@
+## [1.15.9](https://github.com/ecucondorSA/autorenta/compare/v1.15.8...v1.15.9) (2026-01-09)
+
+
+### Bug Fixes
+
+* **ci:** remove CONCURRENTLY from index creation (incompatible with transactions) ([8ea6150](https://github.com/ecucondorSA/autorenta/commit/8ea61504269154ffd0ec15d6bfa4f896776ad4d7))
+
 ## [1.15.8](https://github.com/ecucondorSA/autorenta/compare/v1.15.7...v1.15.8) (2026-01-09)
 
 
