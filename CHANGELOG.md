@@ -1,3 +1,10 @@
+## [1.18.3](https://github.com/ecucondorSA/autorenta/compare/v1.18.2...v1.18.3) (2026-01-09)
+
+
+### Bug Fixes
+
+* **types:** remove duplicate type exports (ClaimType, WalletTransaction*) ([d3417ac](https://github.com/ecucondorSA/autorenta/commit/d3417ac879c02ccb1bb8a02f8151e68924af008c))
+
 ## [1.18.2](https://github.com/ecucondorSA/autorenta/compare/v1.18.1...v1.18.2) (2026-01-09)
 
 
