@@ -109,6 +109,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
   // UI state
   readonly showP2PDetails = signal(false);
+  readonly activeTab = signal<'vehicle' | 'details' | 'guarantee'>('vehicle');
 
   // Constants
   readonly PRE_AUTH_AMOUNT_USD_DEFAULT = 600;

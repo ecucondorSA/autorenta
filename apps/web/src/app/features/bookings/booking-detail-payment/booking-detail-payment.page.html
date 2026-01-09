@@ -136,6 +136,53 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         <!-- Left Column: Details (8 cols) -->
         <div class="lg:col-span-7 xl:col-span-8 space-y-6">
+          <!-- Tabs Navigation (Sticky) -->
+          <nav class="sticky top-16 z-10 bg-surface-base/95 backdrop-blur-sm border-b border-border-default -mx-4 px-4 py-2">
+            <div class="flex gap-1 overflow-x-auto scrollbar-hide">
+              <button
+                type="button"
+                (click)="activeTab.set('vehicle')"
+                [class]="activeTab() === 'vehicle'
+                  ? 'bg-primary-600 text-white shadow-md'
+                  : 'bg-surface-raised text-text-secondary hover:bg-surface-hover border border-border-default'"
+                class="flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10" />
+                </svg>
+                Vehículo
+              </button>
+              <button
+                type="button"
+                (click)="activeTab.set('details')"
+                [class]="activeTab() === 'details'
+                  ? 'bg-primary-600 text-white shadow-md'
+                  : 'bg-surface-raised text-text-secondary hover:bg-surface-hover border border-border-default'"
+                class="flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Fechas
+              </button>
+              <button
+                type="button"
+                (click)="activeTab.set('guarantee')"
+                [class]="activeTab() === 'guarantee'
+                  ? 'bg-primary-600 text-white shadow-md'
+                  : 'bg-surface-raised text-text-secondary hover:bg-surface-hover border border-border-default'"
+                class="flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                Garantía
+              </button>
+            </div>
+          </nav>
+
+          <!-- Tab Content: Vehicle -->
+          @if (activeTab() === 'vehicle') {
           <!-- 1. Car Summary Card -->
           <section
             class="bg-surface-raised rounded-2xl shadow-md border border-border-default overflow-hidden group hover:shadow-lg transition-all duration-300"
@@ -294,7 +341,10 @@
               </div>
             </div>
           </section>
+          }
 
+          <!-- Tab Content: Details -->
+          @if (activeTab() === 'details') {
           <!-- 2. Dates & Location -->
           <section class="bg-surface-raised rounded-2xl shadow-md border border-border-default p-6">
             <h3 class="text-lg font-bold text-text-primary mb-4 font-satoshi">
@@ -372,7 +422,10 @@
               </div>
             </div>
           </section>
+          }
 
+          <!-- Tab Content: Guarantee -->
+          @if (activeTab() === 'guarantee') {
           <!-- 3. Garantía y solicitud -->
           @if (!bookingCreated()) {
             <section class="space-y-6">
@@ -1217,6 +1270,7 @@
               El contrato final se firma el día del check-in con fotos del vehículo.
             </p>
           </section>
+          }
         </div>
 
         <!-- Right Column: Payment Summary (Sticky) -->
