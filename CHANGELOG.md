@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/ecucondorSA/autorenta/compare/v2.0.2...v2.0.3) (2026-01-09)
+
+
+### Bug Fixes
+
+* **ci:** use browser subdirectory for Angular 18+ dist output ([4143200](https://github.com/ecucondorSA/autorenta/commit/41432008347ca064c213fbc8efd3a3784dd6644e))
+
 ## [2.0.2](https://github.com/ecucondorSA/autorenta/compare/v2.0.1...v2.0.2) (2026-01-09)
 
 
