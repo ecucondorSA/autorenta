@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
 import { BookingFlowService } from '@core/services/bookings/booking-flow.service';
 import { BookingOpsService } from '@core/services/bookings/booking-ops.service';
+import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
@@ -13,6 +14,7 @@ import { ExchangeRateService } from '@core/services/payments/exchange-rate.servi
 import { PaymentsService } from '@core/services/payments/payments.service';
 import { MetaService } from '@core/services/ui/meta.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { AlertController } from '@ionic/angular';
 import { of } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { BookingDetailPage } from './booking-detail.page';
@@ -50,16 +52,33 @@ describe('BookingDetailPage (vitest)', () => {
           provide: ActivatedRoute,
           useValue: { snapshot: { paramMap: convertToParamMap({ id: 'booking-1' }) } },
         },
+        {
+          provide: Router,
+          useValue: { navigate: vi.fn(), navigateByUrl: vi.fn() },
+        },
         { provide: PaymentsService, useValue: {} },
         { provide: ReviewsService, useValue: {} },
         { provide: BookingFlowService, useValue: {} },
         { provide: BookingConfirmationService, useValue: {} },
-        { provide: MetaService, useValue: {} },
+        { provide: MetaService, useValue: { setTitle: vi.fn(), setMeta: vi.fn() } },
         { provide: ExchangeRateService, useValue: {} },
         { provide: FgoV1_1Service, useValue: { getInspections: () => of([]) } },
-        { provide: InsuranceService, useValue: {} },
+        { provide: InsuranceService, useValue: { getMyClaims: () => of([]) } },
         { provide: BookingOpsService, useValue: {} },
         { provide: TrafficInfractionsService, useValue: {} },
+        {
+          provide: BookingRealtimeService,
+          useValue: { subscribe: vi.fn(), unsubscribe: vi.fn() },
+        },
+        {
+          provide: AlertController,
+          useValue: {
+            create: vi.fn().mockResolvedValue({
+              present: vi.fn(),
+              onDidDismiss: vi.fn().mockResolvedValue({ role: 'cancel' }),
+            }),
+          },
+        },
       ],
     });
 
