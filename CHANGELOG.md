@@ -1,3 +1,12 @@
+## [1.15.6](https://github.com/ecucondorSA/autorenta/compare/v1.15.5...v1.15.6) (2026-01-09)
+
+
+### Bug Fixes
+
+* **ci:** complete baseline with profiles and storage initialization ([f8555a6](https://github.com/ecucondorSA/autorenta/commit/f8555a6b704d8a25021f92b87d5a9b12b66d61b4))
+* **ci:** granular baseline migrations for better dependency management ([769eb19](https://github.com/ecucondorSA/autorenta/commit/769eb190d54707b1fd544c4e8b5d52eea23c943b))
+* **ci:** robust baseline with forced public schema for profiles ([b31ea14](https://github.com/ecucondorSA/autorenta/commit/b31ea14f9a72d955cbe8e9f634d9dfce1dc43eb6))
+
 ## [1.15.5](https://github.com/ecucondorSA/autorenta/compare/v1.15.4...v1.15.5) (2026-01-08)
 
 
