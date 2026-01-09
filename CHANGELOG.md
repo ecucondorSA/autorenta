@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/ecucondorSA/autorenta/compare/v2.0.0...v2.0.1) (2026-01-09)
+
+
+### Bug Fixes
+
+* **types:** resolve TypeScript build errors for models and enums ([9b87a47](https://github.com/ecucondorSA/autorenta/commit/9b87a47ed8905b1759c17965db9567a57f332da0))
+
 # [2.0.0](https://github.com/ecucondorSA/autorenta/compare/v1.19.0...v2.0.0) (2026-01-09)
 
 
