@@ -4,6 +4,56 @@
    ═══════════════════════════════════════════════════════════════ */
 
 /* ─────────────────────────────────────────────────────────────
+   SCROLLBAR OCULTA - Mantiene scroll, oculta barra visual
+   ───────────────────────────────────────────────────────────── */
+
+/* Para todos los navegadores modernos */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Asegurar que el body y contenedores principales no muestren scrollbar */
+html,
+body,
+#app-scroller,
+.app-main,
+main {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#app-scroller::-webkit-scrollbar,
+.app-main::-webkit-scrollbar,
+main::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DESHABILITAR HYPHENS - Evitar cortes de palabras feos
+   ───────────────────────────────────────────────────────────── */
+
+/* Deshabilitar hyphens globalmente para evitar cortes como "estacio-nados" */
+p,
+h1, h2, h3, h4, h5, h6,
+span,
+a,
+li,
+blockquote {
+  hyphens: none !important;
+  -webkit-hyphens: none !important;
+  -ms-hyphens: none !important;
+  word-break: normal !important;
+  overflow-wrap: break-word;
+}
+
+/* ─────────────────────────────────────────────────────────────
    DESIGN TOKENS - CSS Custom Properties
    ───────────────────────────────────────────────────────────── */
 :root {
@@ -849,8 +899,81 @@
       min-height: calc(100svh - var(--safe-area-top));
     }
 
+    /* Login page: sin min-height porque usa position:fixed */
+    .app-main:has(app-login-page) {
+      min-height: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    /* Login page: ocultar scroll del contenedor principal */
+    #app-scroller:has(app-login-page) {
+      overflow: hidden !important;
+    }
+
     body {
       min-height: 100svh;
     }
   }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Login Page: Header Transparente Inmersivo
+   ───────────────────────────────────────────────────────────── */
+
+/* Header transparente cuando está en login page */
+body:has(app-login-page) header,
+body:has(app-login-page) #main-header {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-bottom: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Logo en blanco para contraste con HDRI */
+body:has(app-login-page) header .logo-text,
+body:has(app-login-page) #main-header .logo-text {
+  color: white !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Logo imagen en blanco */
+body:has(app-login-page) header img,
+body:has(app-login-page) #main-header img {
+  filter: brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5)) !important;
+}
+
+/* Iconos del header en blanco */
+body:has(app-login-page) header svg,
+body:has(app-login-page) #main-header svg,
+body:has(app-login-page) header button,
+body:has(app-login-page) #main-header button {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Gradiente sutil en la parte superior para legibilidad del header */
+body:has(app-login-page) header::after,
+body:has(app-login-page) #main-header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Marketplace Page: Ocultar header principal (tiene su propio header)
+   ───────────────────────────────────────────────────────────── */
+
+/* La página marketplace-v2 tiene su propio header flotante en el hero */
+body:has(app-marketplace-v2-page) > app-root > div > header,
+body:has(.hero-minimal) > app-root > div > header {
+  display: none !important;
 }

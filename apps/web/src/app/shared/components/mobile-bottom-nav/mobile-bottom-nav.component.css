@@ -19,6 +19,8 @@
   margin: 0 !important;
   padding: 0 !important;
   /* El safe area se maneja en .nav-container */
+  /* Prevenir scroll interno */
+  overflow: hidden !important;
 }
 
 :host(.hidden) {
@@ -60,8 +62,8 @@
   /* Sin border-radius - pegado al borde inferior */
   border-radius: 0;
 
-  /* Padding: arriba 8px, lados 8px, abajo = safe area o 0 */
-  padding: 8px 8px env(safe-area-inset-bottom, 0px);
+  /* Padding: arriba 8px, lados 8px, abajo = safe area + 8px mínimo para labels */
+  padding: 8px 8px max(8px, env(safe-area-inset-bottom, 8px));
 
   box-shadow:
     0 -8px 32px rgba(167, 216, 244, 0.15),

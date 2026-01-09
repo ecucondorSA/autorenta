@@ -19,6 +19,16 @@ import { HdriBackgroundComponent } from '../../../shared/components/hdri-backgro
   ],
   templateUrl: './login.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'block w-full h-full',
+  },
+  styles: [`
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  `],
 })
 export class LoginPage implements OnInit {
   private readonly fb = inject(FormBuilder);
