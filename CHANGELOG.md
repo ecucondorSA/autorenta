@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/ecucondorSA/autorenta/compare/v2.0.1...v2.0.2) (2026-01-09)
+
+
+### Bug Fixes
+
+* **ci:** correct package filter name for TypeScript check ([ded24b9](https://github.com/ecucondorSA/autorenta/commit/ded24b9d01fce9c2f414cd1a0aca0798fdf25995))
+
 ## [2.0.1](https://github.com/ecucondorSA/autorenta/compare/v2.0.0...v2.0.1) (2026-01-09)
 
 
