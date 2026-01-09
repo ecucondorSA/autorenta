@@ -671,6 +671,8 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS set_booking_pricing ON public.bookings;
+
 CREATE TRIGGER set_booking_pricing
   BEFORE INSERT ON public.bookings
   FOR EACH ROW
