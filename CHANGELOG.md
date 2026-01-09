@@ -1,3 +1,10 @@
+## [1.17.4](https://github.com/ecucondorSA/autorenta/compare/v1.17.3...v1.17.4) (2026-01-09)
+
+
+### Bug Fixes
+
+* add missing Injector import in LoggerService ([ecce324](https://github.com/ecucondorSA/autorenta/commit/ecce324ce5bc8d3de778ef1f3b64c79d2ae77d81))
+
 ## [1.17.3](https://github.com/ecucondorSA/autorenta/compare/v1.17.2...v1.17.3) (2026-01-09)
 
 
