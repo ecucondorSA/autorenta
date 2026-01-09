@@ -92,6 +92,29 @@ export class CheckOutPage implements OnInit {
     return checkOut.fuelLevel - checkIn.fuelLevel;
   });
 
+  /** Nivel de combustible al check-in para mostrar marcador en barra */
+  readonly checkInFuelLevel = computed(() => {
+    return this.checkInInspection()?.fuelLevel ?? 0;
+  });
+
+  /** Clase CSS para la barra de combustible según diferencia */
+  readonly fuelBarClass = computed(() => {
+    const diff = this.fuelDifference();
+    if (diff === null) return 'bg-gray-400';
+    if (diff >= 0) return 'bg-success-500';
+    if (diff >= -10) return 'bg-warning-500';
+    return 'bg-error-500';
+  });
+
+  /** Texto descriptivo del estado del combustible */
+  readonly fuelStatusText = computed(() => {
+    const diff = this.fuelDifference();
+    if (diff === null) return '';
+    if (diff > 0) return `+${diff}% (devolviste con más)`;
+    if (diff === 0) return 'Igual que al inicio';
+    return `${diff}% (falta combustible)`;
+  });
+
   /**
    * Calcula la penalidad por combustible faltante usando configuración dinámica.
    * Los valores se obtienen del FuelConfigService basado en el vehículo específico.
