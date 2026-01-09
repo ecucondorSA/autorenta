@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/ecucondorSA/autorenta/compare/v2.0.4...v2.1.0) (2026-01-09)
+
+
+### Features
+
+* **ui:** add responsive design utilities and fix register page ([11ad6bf](https://github.com/ecucondorSA/autorenta/commit/11ad6bffba5f443c4128b32f3359360f89366d58))
+
 ## [2.0.4](https://github.com/ecucondorSA/autorenta/compare/v2.0.3...v2.0.4) (2026-01-09)
 
 
