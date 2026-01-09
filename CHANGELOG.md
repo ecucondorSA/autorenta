@@ -1,3 +1,15 @@
+# [1.17.0](https://github.com/ecucondorSA/autorenta/compare/v1.16.2...v1.17.0) (2026-01-09)
+
+
+### Bug Fixes
+
+* apply pending local changes and prepares for ci verification ([da687b8](https://github.com/ecucondorSA/autorenta/commit/da687b8c572cd1ff267f22d25d4f999a10c62b95))
+
+
+### Features
+
+* **ci:** add types sync check workflow to detect DB/UI drift ([b8df19e](https://github.com/ecucondorSA/autorenta/commit/b8df19ef6ec19ec9c444556f4e8aa585fbfd669b))
+
 ## [1.16.2](https://github.com/ecucondorSA/autorenta/compare/v1.16.1...v1.16.2) (2026-01-09)
 
 
