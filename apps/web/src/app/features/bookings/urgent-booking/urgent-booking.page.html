@@ -1,136 +1,247 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="mb-6">
-    <h1 class="text-2xl font-bold text-text-primary font-satoshi">Reserva Urgente</h1>
-    <p class="mt-2 text-sm text-text-secondary">
-      Reserva un auto disponible inmediatamente cerca de tu ubicación.
-    </p>
+<div class="min-h-screen bg-surface-primary pb-safe">
+  <!-- Header con degradado de urgencia -->
+  <div class="bg-gradient-to-b from-warning-bg to-surface-primary px-4 pt-4 pb-6">
+    <a
+      routerLink="/cars"
+      class="mb-4 inline-flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
+    >
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      Volver
+    </a>
+
+    <div class="flex items-center gap-3">
+      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-warning-strong/10">
+        <svg class="h-6 w-6 text-warning-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-2xl font-bold text-text-primary font-satoshi">Reserva Urgente</h1>
+        <p class="text-sm text-text-secondary">Disponible inmediatamente</p>
+      </div>
+    </div>
   </div>
 
-  @if (loading()) {
-    <div class="flex items-center justify-center py-12">
-      <div
-        class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"
-      ></div>
-    </div>
-  } @else if (car(); as c) {
-    <div class="space-y-6">
-      <!-- Información del auto -->
-      <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
-        <h2 class="mb-4 text-xl font-semibold text-text-primary font-satoshi">
-          {{ c.brand }} {{ c.model }}
-        </h2>
-        <div class="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <p class="text-text-secondary">Año</p>
-            <p class="font-medium text-text-primary">{{ c.year }}</p>
-          </div>
-          <div>
-            <p class="text-text-secondary">Precio por hora</p>
-            <p class="font-medium text-text-primary">
-              @if (quote()?.hourlyRate !== undefined && quote()?.hourlyRate !== null) {
-                ${{ quote()!.hourlyRate! | number: '1.2-2' }}
-              } @else {
-                ...
-              }
-            </p>
-          </div>
-        </div>
+  <div class="px-4 -mt-2">
+    @if (loading()) {
+      <div class="flex flex-col items-center justify-center py-16">
+        <div class="h-10 w-10 animate-spin rounded-full border-4 border-cta-default border-t-transparent"></div>
+        <p class="mt-4 text-sm text-text-secondary">Cargando disponibilidad...</p>
       </div>
-
-      <!-- Disponibilidad -->
-      @if (availability(); as a) {
-        <div
-          class="rounded-lg border p-4"
-          [ngClass]="{
-            'bg-success-light/10': a.available,
-            'bg-error-bg': !a.available,
-          }"
-        >
-          @if (a.available) {
-            <div class="flex items-center gap-2">
-              <svg class="h-5 w-5 text-success-strong" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+    } @else if (error() && !car()) {
+      <div class="rounded-xl bg-error-bg p-6 text-center">
+        <svg class="mx-auto h-12 w-12 text-error-strong mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <p class="text-error-strong font-medium">{{ error() }}</p>
+        <a routerLink="/cars" class="mt-4 inline-block text-sm text-cta-default font-medium">
+          Volver a buscar autos
+        </a>
+      </div>
+    } @else if (car(); as c) {
+      <div class="space-y-4">
+        <!-- Card del auto -->
+        <div class="rounded-xl border border-border-default bg-surface-raised overflow-hidden shadow-sm">
+          @if (c.photos && c.photos.length > 0) {
+            <div class="h-48 w-full bg-surface-secondary">
+              <img [src]="c.photos[0]" [alt]="c.brand + ' ' + c.model" class="h-full w-full object-cover" />
+            </div>
+          }
+          <div class="p-4">
+            <div class="flex items-start justify-between">
               <div>
-                <p class="font-medium text-success-strong">Disponible ahora</p>
-                @if (a.distance) {
-                  <p class="text-sm text-success-strong">
-                    A {{ a.distance | number: '1.1-1' }} km de tu ubicación
-                  </p>
-                }
-                @if (a.eta) {
-                  <p class="text-sm text-success-strong">ETA: {{ a.eta }} minutos</p>
-                }
+                <h2 class="text-xl font-bold text-text-primary font-satoshi">
+                  {{ c.brand }} {{ c.model }}
+                </h2>
+                <p class="text-sm text-text-secondary">{{ c.year }}</p>
+              </div>
+              <div class="text-right">
+                <p class="text-xs text-text-secondary">Por hora</p>
+                <p class="text-lg font-bold text-cta-default">
+                  @if (quote()?.hourlyRate !== undefined && quote()?.hourlyRate !== null) {
+                    ${{ quote()!.hourlyRate! | number: '1.0-0' }}
+                  } @else {
+                    <span class="inline-block h-5 w-12 animate-pulse rounded bg-surface-secondary"></span>
+                  }
+                </p>
               </div>
             </div>
-          } @else {
-            <p class="text-error-strong">{{ a.reason || 'No disponible' }}</p>
-          }
+          </div>
         </div>
-      }
 
-      <!-- Configuración de reserva -->
-      <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
-        <h3 class="mb-4 text-lg font-semibold text-text-primary font-satoshi">Configuración</h3>
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-text-primary"> Duración (horas) </label>
-            <input
-              type="number"
-              [(ngModel)]="durationHours"
-              min="1"
-              max="24"
-              (change)="updateQuote()"
-              class="mt-1 block w-full rounded-md border border-border-muted px-3 py-2 shadow-sm focus:border-cta-default focus:outline-none focus:ring-cta-default"
-            />
+        <!-- Estado de disponibilidad -->
+        @if (availability(); as a) {
+          <div
+            class="rounded-xl p-4"
+            [ngClass]="{
+              'bg-success-light/20 border border-success-light': a.available,
+              'bg-error-bg border border-error-strong/20': !a.available,
+            }"
+          >
+            @if (a.available) {
+              <div class="flex items-start gap-3">
+                <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-success-strong/20">
+                  <svg class="h-5 w-5 text-success-strong" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <p class="font-semibold text-success-strong">Disponible ahora</p>
+                  <div class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-success-strong/80">
+                    @if (a.distance) {
+                      <span class="flex items-center gap-1">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        </svg>
+                        {{ a.distance | number: '1.1-1' }} km
+                      </span>
+                    }
+                    @if (a.eta) {
+                      <span class="flex items-center gap-1">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {{ a.eta }} min
+                      </span>
+                    }
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="flex items-center gap-3">
+                <svg class="h-5 w-5 text-error-strong flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                <p class="text-error-strong font-medium">{{ a.reason || 'No disponible en este momento' }}</p>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Configuración de duración -->
+        <div class="rounded-xl border border-border-default bg-surface-raised p-5 shadow-sm">
+          <h3 class="mb-4 text-base font-semibold text-text-primary font-satoshi flex items-center gap-2">
+            <svg class="h-5 w-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Duración
+          </h3>
+
+          <div class="flex items-center gap-4">
+            <button
+              type="button"
+              (click)="durationHours = Math.max(1, durationHours - 1); updateQuote()"
+              class="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-border-muted text-text-secondary hover:border-cta-default hover:text-cta-default transition-colors"
+            >
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+              </svg>
+            </button>
+
+            <div class="flex-1 text-center">
+              <p class="text-3xl font-bold text-text-primary font-satoshi">{{ durationHours }}</p>
+              <p class="text-sm text-text-secondary">{{ durationHours === 1 ? 'hora' : 'horas' }}</p>
+            </div>
+
+            <button
+              type="button"
+              (click)="durationHours = Math.min(24, durationHours + 1); updateQuote()"
+              class="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-border-muted text-text-secondary hover:border-cta-default hover:text-cta-default transition-colors"
+            >
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
           </div>
 
-          <!-- Cotización -->
-          @if (quote(); as q) {
-            <div class="rounded-lg bg-cta-default/10 p-4">
-              <div class="mb-2 flex items-center justify-between">
-                <span class="text-sm font-medium text-cta-default">Total</span>
-                <span class="text-xl font-bold text-cta-default">
-                  ${{ q.totalPrice | number: '1.2-2' }}
-                </span>
+          <!-- Quick select -->
+          <div class="mt-4 flex gap-2 overflow-x-auto pb-1">
+            @for (hours of [2, 4, 6, 8, 12]; track hours) {
+              <button
+                type="button"
+                (click)="durationHours = hours; updateQuote()"
+                class="flex-shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                [ngClass]="{
+                  'bg-cta-default text-cta-text': durationHours === hours,
+                  'bg-surface-secondary text-text-secondary hover:bg-surface-hover': durationHours !== hours
+                }"
+              >
+                {{ hours }}h
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Resumen de precio -->
+        @if (quote(); as q) {
+          <div class="rounded-xl bg-gradient-to-br from-cta-default/10 to-cta-default/5 p-5 border border-cta-default/20">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm font-medium text-text-secondary">Total a pagar</span>
+              <span class="text-2xl font-bold text-cta-default font-satoshi">
+                ${{ q.totalPrice | number: '1.0-0' }}
+              </span>
+            </div>
+
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between text-text-secondary">
+                <span>{{ durationHours }} {{ durationHours === 1 ? 'hora' : 'horas' }} x ${{ q.hourlyRate | number: '1.0-0' }}</span>
+                <span>${{ durationHours * q.hourlyRate | number: '1.0-0' }}</span>
               </div>
               @if (q.surgeFactor && q.surgeFactor > 1) {
-                <p class="text-xs text-cta-default">
-                  Incluye recargo por demanda: {{ (q.surgeFactor - 1) * 100 | number: '1.0-0' }}%
-                </p>
+                <div class="flex justify-between text-warning-strong">
+                  <span class="flex items-center gap-1">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                    Recargo por demanda
+                  </span>
+                  <span>+{{ ((q.surgeFactor - 1) * 100) | number: '1.0-0' }}%</span>
+                </div>
               }
             </div>
+          </div>
+        }
+
+        <!-- Botón de confirmación -->
+        <button
+          (click)="createBooking()"
+          [disabled]="!canCreateBooking() || creating()"
+          class="w-full rounded-xl bg-cta-default py-4 text-base font-semibold text-cta-text shadow-lg shadow-cta-default/25 hover:bg-cta-hover disabled:opacity-50 disabled:shadow-none transition-all"
+        >
+          @if (creating()) {
+            <span class="flex items-center justify-center gap-2">
+              <span class="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+              Creando reserva...
+            </span>
+          } @else {
+            <span class="flex items-center justify-center gap-2">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              Confirmar Reserva Urgente
+            </span>
           }
+        </button>
+
+        @if (error()) {
+          <div class="rounded-xl bg-error-bg p-4 flex items-start gap-3">
+            <svg class="h-5 w-5 text-error-strong flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+            <p class="text-error-strong text-sm">{{ error() }}</p>
+          </div>
+        }
+
+        <!-- Info adicional -->
+        <div class="rounded-xl bg-surface-secondary p-4">
+          <p class="text-xs text-text-secondary text-center leading-relaxed">
+            Al confirmar, aceptas los términos de uso de AutoRenta.
+            La reserva urgente tiene una ventana de recogida de 30 minutos.
+          </p>
         </div>
       </div>
-
-      <!-- Botón de confirmación -->
-      <button
-        (click)="createBooking()"
-        [disabled]="!canCreateBooking() || creating()"
-        class="w-full rounded-lg bg-cta-default text-cta-text hover:bg-cta-default disabled:opacity-50"
-      >
-        @if (creating()) {
-          <span class="flex items-center justify-center gap-2">
-            <span
-              class="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"
-            ></span>
-            Creando reserva...
-          </span>
-        } @else {
-          Confirmar Reserva Urgente
-        }
-      </button>
-
-      @if (error()) {
-        <div class="rounded-lg bg-error-bg p-4 text-error-strong">
-          {{ error() }}
-        </div>
-      }
-    </div>
-  }
+    }
+  </div>
 </div>

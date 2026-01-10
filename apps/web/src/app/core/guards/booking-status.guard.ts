@@ -142,11 +142,14 @@ export const renterCheckInGuard: CanMatchFn = bookingStatusGuard(['confirmed'], 
 
 /**
  * Guard específico para renter check-out
- * Requiere: booking en estado 'in_progress' y usuario sea el renter
+ * Requiere: booking en estado activo donde el viaje puede estar en curso
+ * Acepta múltiples estados porque el status real puede diferir del effectiveStatus
+ * La validación final se hace en el componente basada en inspecciones
  */
-export const renterCheckOutGuard: CanMatchFn = bookingStatusGuard(['in_progress'], {
-  requireRenter: true,
-});
+export const renterCheckOutGuard: CanMatchFn = bookingStatusGuard(
+  ['in_progress', 'confirmed', 'pending_review'],
+  { requireRenter: true },
+);
 
 /**
  * Guard específico para owner check-out

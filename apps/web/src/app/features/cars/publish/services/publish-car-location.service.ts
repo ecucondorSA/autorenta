@@ -132,14 +132,14 @@ export class PublishCarLocationService {
   }
 
   /**
-   * Get current GPS position with high accuracy
-   * Uses watchPosition to wait for GPS to acquire satellites and improve accuracy
-   * Target: ≤10 meters accuracy or best result within timeout
+   * Get current GPS position with reasonable accuracy
+   * Uses watchPosition to wait for GPS signal, accepts ≤100m accuracy
+   * Fast timeout (5s) for better UX - user can adjust on map if needed
    */
   private getCurrentPosition(): Promise<GeolocationPosition> {
     return new Promise((resolve, reject) => {
-      const desiredAccuracy = 10; // meters
-      const maxWait = 15000; // 15 seconds max wait
+      const desiredAccuracy = 100; // 100m is enough - user can adjust on map
+      const maxWait = 5000; // 5 seconds max - faster feedback
       let bestPosition: GeolocationPosition | null = null;
       let watchId: number;
 
@@ -194,7 +194,7 @@ export class PublishCarLocationService {
         {
           enableHighAccuracy: true,
           timeout: maxWait,
-          maximumAge: 0,
+          maximumAge: 60000, // Accept cached position up to 1 minute old
         },
       );
     });

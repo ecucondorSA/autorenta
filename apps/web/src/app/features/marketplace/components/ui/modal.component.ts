@@ -6,6 +6,7 @@ import {
   effect,
   ElementRef,
   input,
+  OnDestroy,
   output,
   ViewChild,
 } from '@angular/core';
@@ -257,7 +258,7 @@ import { FocusTrapDirective } from '@core/directives/focus-trap.directive';
     `,
   ],
 })
-export class ModalComponent {
+export class ModalComponent implements OnDestroy {
   @ViewChild('modalElement') modalElement!: ElementRef<HTMLDivElement>;
 
   // Props
@@ -278,14 +279,17 @@ export class ModalComponent {
   // State
   previousFocusedElement: HTMLElement | null = null;
 
+  // Keydown listener reference for cleanup
+  private readonly keydownListener = (e: KeyboardEvent) => {
+    if (e.key === 'Escape' && this.closeOnEsc() && this.isOpen()) {
+      this.close();
+    }
+  };
+
   constructor() {
     // Handle ESC key
     if (typeof window !== 'undefined') {
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && this.closeOnEsc() && this.isOpen()) {
-          this.close();
-        }
-      });
+      window.addEventListener('keydown', this.keydownListener);
     }
 
     // ✅ P1-016: Auto-lock scroll and manage focus when modal opens
@@ -294,6 +298,12 @@ export class ModalComponent {
         this.open();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('keydown', this.keydownListener);
+    }
   }
 
   modalClasses(): string {

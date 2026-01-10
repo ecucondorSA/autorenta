@@ -24,6 +24,7 @@ export interface Message {
   created_at: string;
   read_at: string | null;
   delivered_at: string | null;
+  [key: string]: unknown; // Index signature for DatabaseRecord compatibility
 }
 
 @Injectable({

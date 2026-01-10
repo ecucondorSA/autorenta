@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
@@ -11,7 +11,7 @@ import type { Car } from '../../../core/models';
   selector: 'app-urgent-booking',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './urgent-booking.page.html',
 })
 export class UrgentBookingPage implements OnInit {
@@ -20,6 +20,9 @@ export class UrgentBookingPage implements OnInit {
   private readonly urgentRentalService = inject(UrgentRentalService);
   private readonly carsService = inject(CarsService);
   private readonly toastService = inject(NotificationManagerService);
+
+  // Expose Math for template
+  readonly Math = Math;
 
   readonly car = signal<Car | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

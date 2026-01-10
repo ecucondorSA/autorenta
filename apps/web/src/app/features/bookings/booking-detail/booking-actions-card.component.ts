@@ -16,7 +16,10 @@ import {
   carOutline,
   chatbubbleEllipsesOutline,
   checkmarkDoneOutline,
+  closeCircleOutline,
+  documentTextOutline,
   flagOutline,
+  helpCircleOutline,
   receiptOutline,
   shieldCheckmarkOutline,
   timeOutline,
@@ -36,175 +39,153 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink, IonIcon, DepositStatusBadgeComponent],
   template: `
-    <div class="card-premium p-0 overflow-hidden">
-      <div class="p-6">
-        <h3 class="text-sm font-bold text-text-muted uppercase tracking-wider mb-4">Gestión</h3>
-
-        <!-- Contact Button (Primary Communication) -->
-        <button
-          (click)="chatOpen.emit()"
-          class="w-full flex items-center justify-center gap-3 p-4 mb-4 rounded-2xl bg-cta-default text-cta-text font-bold text-lg hover:bg-cta-hover active:scale-[0.98] transition-all shadow-md"
-        >
-          <ion-icon name="chatbubble-ellipses-outline" class="text-2xl"></ion-icon>
-          Chat con {{ isOwner() ? 'Viajero' : 'Anfitrión' }}
-        </button>
-
-        <!-- Contextual Action Buttons -->
-        <div class="space-y-3">
-          <!-- Primary Payment/Guarantee Action (Viajero) -->
-          @if (showPaymentAction()) {
-            <a
-              [routerLink]="['/bookings', booking()?.id, 'detail-payment']"
-              class="w-full flex items-center justify-between p-4 rounded-xl bg-cta-default text-cta-text hover:bg-cta-hover transition-all shadow-lg transform hover:scale-[1.02] active:scale-95 border-2 border-white/20"
+    <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden">
+      <!-- Primary CTA Section -->
+      <div class="p-5">
+        <!-- SINGLE PRIMARY CTA based on state -->
+        @if (showPaymentAction()) {
+          <!-- Garantizar Reserva -->
+          <a
+            [routerLink]="['/bookings', booking()?.id, 'detail-payment']"
+            class="block w-full py-4 px-6 rounded-xl bg-neutral-900 text-white font-semibold text-center hover:bg-neutral-800 transition-all"
+          >
+            Garantizar Reserva
+          </a>
+          <p class="text-xs text-neutral-500 text-center mt-2">
+            Requerido para que el anfitrión apruebe
+          </p>
+        } @else if (awaitingRenterCheckIn() && isRenter()) {
+          <!-- Renter: Confirmar Recepción (owner ya entregó) -->
+          <a
+            [routerLink]="['/bookings', booking()?.id, 'check-in']"
+            class="block w-full py-4 px-6 rounded-xl bg-amber-500 text-white font-semibold text-center hover:bg-amber-600 transition-all"
+          >
+            Confirmar Recepción
+          </a>
+          <p class="text-xs text-neutral-500 text-center mt-2">
+            El propietario ya entregó el vehículo
+          </p>
+        } @else if (awaitingRenterCheckIn() && isOwner()) {
+          <!-- Owner: Esperando que renter confirme recepción -->
+          <div class="py-4 px-6 rounded-xl bg-emerald-50 border border-emerald-200 text-center">
+            <p class="text-sm font-medium text-emerald-700">Vehículo entregado</p>
+            <p class="text-xs text-emerald-600 mt-1">Esperando que el viajero confirme la recepción</p>
+          </div>
+        } @else if (canPerformCheckOut()) {
+          <!-- Finalizar Viaje -->
+          <a
+            [routerLink]="['/bookings', booking()?.id, 'check-out']"
+            class="block w-full py-4 px-6 rounded-xl bg-neutral-900 text-white font-semibold text-center hover:bg-neutral-800 transition-all"
+          >
+            Finalizar Viaje
+          </a>
+          <p class="text-xs text-neutral-500 text-center mt-2">
+            Devolver el vehículo al propietario
+          </p>
+        } @else if (canPerformCheckIn()) {
+          <!-- Iniciar Check-in -->
+          <a
+            [routerLink]="['/bookings', booking()?.id, 'check-in']"
+            class="block w-full py-4 px-6 rounded-xl bg-neutral-900 text-white font-semibold text-center hover:bg-neutral-800 transition-all"
+          >
+            Iniciar Check-in
+          </a>
+          <p class="text-xs text-neutral-500 text-center mt-2">
+            Recibir el vehículo del propietario
+          </p>
+        } @else if (canOwnerCheckIn()) {
+          <!-- Owner: Entregar Vehículo -->
+          <a
+            [routerLink]="['/bookings', booking()?.id, 'owner-check-in']"
+            class="block w-full py-4 px-6 rounded-xl bg-neutral-900 text-white font-semibold text-center hover:bg-neutral-800 transition-all"
+          >
+            Entregar Vehículo
+          </a>
+          <p class="text-xs text-neutral-500 text-center mt-2">
+            Realizar inspección de entrega
+          </p>
+        } @else if (canOwnerCheckOut()) {
+          <!-- Owner: Confirmar Devolución -->
+          <a
+            [routerLink]="['/bookings', booking()?.id, 'owner-check-out']"
+            class="block w-full py-4 px-6 rounded-xl bg-neutral-900 text-white font-semibold text-center hover:bg-neutral-800 transition-all"
+          >
+            Confirmar Devolución
+          </a>
+          <p class="text-xs text-neutral-500 text-center mt-2">
+            Inspeccionar estado del vehículo
+          </p>
+        } @else if (canApproveBooking()) {
+          <!-- Approve/Reject -->
+          <div class="space-y-2">
+            <button
+              (click)="approveBooking.emit()"
+              class="w-full py-4 px-6 rounded-xl bg-neutral-900 text-white font-semibold text-center hover:bg-neutral-800 transition-all"
             >
-              <span class="font-bold flex items-center gap-2">
-                <ion-icon name="shield-checkmark-outline"></ion-icon>
-                Garantizar Reserva Ahora
-              </span>
-              <ion-icon name="arrow-forward"></ion-icon>
-            </a>
-            <p class="text-[10px] text-center text-text-muted mt-2">
-              Debes garantizar la reserva para que el anfitrión pueda aprobarla.
-            </p>
-          }
-
-          <!-- Waiting for Contribution (Anfitrión) -->
-          @if (showWaitingContribution()) {
-            <div
-              class="w-full flex items-center gap-3 p-4 rounded-xl bg-warning-50 text-warning-700 border border-warning-200"
+              Aprobar Reserva
+            </button>
+            <button
+              (click)="rejectBooking.emit()"
+              class="w-full py-3 px-6 rounded-xl border border-neutral-200 text-neutral-600 font-medium text-center hover:bg-neutral-50 transition-all"
             >
-              <ion-icon name="time-outline" class="text-2xl text-warning-500"></ion-icon>
-              <span class="font-medium">Esperando contribución del viajero</span>
-            </div>
-          }
+              Rechazar
+            </button>
+          </div>
+        } @else if (showWaitingContribution()) {
+          <!-- Waiting state -->
+          <div class="py-4 px-6 rounded-xl bg-amber-50 border border-amber-200 text-center">
+            <p class="text-sm font-medium text-amber-700">Esperando contribución del viajero</p>
+          </div>
+        } @else {
+          <!-- Default: No action needed -->
+          <div class="py-4 px-6 rounded-xl bg-neutral-50 text-center">
+            <p class="text-sm text-neutral-500">Sin acciones pendientes</p>
+          </div>
+        }
+      </div>
 
-          <!-- Approve/Reject (Owner) -->
-          @if (canApproveBooking()) {
-            <div class="grid grid-cols-2 gap-3">
-              <button
-                (click)="rejectBooking.emit()"
-                class="px-4 py-3 rounded-xl border border-border-default text-text-secondary font-semibold hover:bg-surface-secondary transition-colors"
-              >
-                Rechazar
-              </button>
-              <button
-                (click)="approveBooking.emit()"
-                class="px-4 py-3 rounded-xl bg-success-600 text-white font-semibold hover:bg-success-700 transition-colors shadow-sm"
-              >
-                Aprobar
-              </button>
-            </div>
-          }
-
-          <!-- Check-in Action (Renter) -->
-          @if (canPerformCheckIn()) {
-            <a
-              [routerLink]="['/bookings', booking()?.id, 'check-in']"
-              class="w-full flex items-center justify-between p-4 rounded-xl bg-success-50 text-success-900 hover:bg-success-100 transition-colors border border-success-200"
-            >
-              <span class="font-semibold flex items-center gap-2">
-                <ion-icon name="checkmark-done-outline"></ion-icon>
-                Iniciar Check-in
-              </span>
-              <ion-icon name="arrow-forward"></ion-icon>
-            </a>
-          }
-
-          <!-- Check-out Action (Renter) -->
-          @if (canPerformCheckOut()) {
-            <a
-              [routerLink]="['/bookings', booking()?.id, 'check-out']"
-              class="w-full flex items-center justify-between p-4 rounded-xl bg-info-50 text-info-900 hover:bg-info-100 transition-colors border border-info-200"
-            >
-              <span class="font-semibold flex items-center gap-2">
-                <ion-icon name="flag-outline"></ion-icon>
-                Finalizar Viaje
-              </span>
-              <ion-icon name="arrow-forward"></ion-icon>
-            </a>
-          }
-
-          <!-- Owner Check-in Action -->
-          @if (canOwnerCheckIn()) {
-            <a
-              [routerLink]="['/bookings', booking()?.id, 'owner-check-in']"
-              class="w-full flex items-center justify-between p-4 rounded-xl bg-warning-50 text-warning-900 hover:bg-warning-100 transition-colors border border-warning-200"
-            >
-              <span class="font-semibold flex items-center gap-2">
-                <ion-icon name="car-outline"></ion-icon>
-                Iniciar Entrega del Vehículo
-              </span>
-              <ion-icon name="arrow-forward"></ion-icon>
-            </a>
-          }
-
-          <!-- Owner Check-out Action -->
-          @if (canOwnerCheckOut()) {
-            <a
-              [routerLink]="['/bookings', booking()?.id, 'owner-check-out']"
-              class="w-full flex items-center justify-between p-4 rounded-xl bg-info-50 text-info-900 hover:bg-info-100 transition-colors border border-info-200"
-            >
-              <span class="font-semibold flex items-center gap-2">
-                <ion-icon name="checkmark-done-outline"></ion-icon>
-                Confirmar Devolución
-              </span>
-              <ion-icon name="arrow-forward"></ion-icon>
-            </a>
-          }
-
-          <!-- Cancel Button -->
+      <!-- Quick Actions (Icons) -->
+      <div class="px-5 pb-5">
+        <div class="grid grid-cols-4 gap-2">
+          <button
+            (click)="chatOpen.emit()"
+            class="flex flex-col items-center gap-1.5 py-3 rounded-xl hover:bg-neutral-50 transition-colors group"
+          >
+            <ion-icon name="chatbubble-ellipses-outline" class="text-xl text-neutral-600 group-hover:text-neutral-900"></ion-icon>
+            <span class="text-[10px] text-neutral-500 group-hover:text-neutral-700">Chat</span>
+          </button>
+          <a
+            [routerLink]="['/bookings', booking()?.id, 'detail-payment']"
+            class="flex flex-col items-center gap-1.5 py-3 rounded-xl hover:bg-neutral-50 transition-colors group"
+          >
+            <ion-icon name="receipt-outline" class="text-xl text-neutral-600 group-hover:text-neutral-900"></ion-icon>
+            <span class="text-[10px] text-neutral-500 group-hover:text-neutral-700">Pago</span>
+          </a>
+          <a
+            [routerLink]="['/bookings', booking()?.id, 'contract']"
+            class="flex flex-col items-center gap-1.5 py-3 rounded-xl hover:bg-neutral-50 transition-colors group"
+          >
+            <ion-icon name="document-text-outline" class="text-xl text-neutral-600 group-hover:text-neutral-900"></ion-icon>
+            <span class="text-[10px] text-neutral-500 group-hover:text-neutral-700">Contrato</span>
+          </a>
           @if (showCancelButton()) {
             <button
               (click)="handleCancel()"
-              class="w-full py-3 text-text-muted hover:text-error-600 text-sm font-medium transition-colors"
+              class="flex flex-col items-center gap-1.5 py-3 rounded-xl hover:bg-red-50 transition-colors group"
             >
-              Cancelar Reserva
+              <ion-icon name="close-circle-outline" class="text-xl text-neutral-400 group-hover:text-red-500"></ion-icon>
+              <span class="text-[10px] text-neutral-400 group-hover:text-red-500">Cancelar</span>
             </button>
+          } @else {
+            <a
+              href="mailto:soporte@autorentar.com"
+              class="flex flex-col items-center gap-1.5 py-3 rounded-xl hover:bg-neutral-50 transition-colors group"
+            >
+              <ion-icon name="help-circle-outline" class="text-xl text-neutral-600 group-hover:text-neutral-900"></ion-icon>
+              <span class="text-[10px] text-neutral-500 group-hover:text-neutral-700">Ayuda</span>
+            </a>
           }
         </div>
-      </div>
-
-      <!-- Financial Summary Mini -->
-      <div class="bg-surface-secondary border-t border-border-default p-6">
-        <div class="flex justify-between items-center mb-2">
-          <span class="text-text-secondary">Total</span>
-          <span class="text-xl font-bold text-text-primary">
-            {{ booking()?.total_amount | currency: booking()?.currency : 'symbol' : '1.0-0' }}
-          </span>
-        </div>
-        @if (booking()?.deposit_amount_cents) {
-          <div class="flex justify-between items-center text-sm">
-            <span class="text-text-secondary flex items-center gap-1">
-              <ion-icon name="shield-checkmark-outline"></ion-icon>
-              Garantía
-            </span>
-            <div class="flex items-center gap-2">
-              <span class="font-medium text-text-primary">
-                {{
-                  (booking()?.deposit_amount_cents ?? 0) / 100
-                    | currency: booking()?.currency : 'symbol' : '1.0-0'
-                }}
-              </span>
-              @if (booking()?.deposit_status) {
-                <app-deposit-status-badge
-                  [status]="booking()!.deposit_status!"
-                ></app-deposit-status-badge>
-              }
-            </div>
-          </div>
-        }
-
-        <!-- View Payment Details Button -->
-        <a
-          [routerLink]="['/bookings', booking()?.id, 'detail-payment']"
-          class="w-full mt-4 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border-default text-text-secondary font-semibold hover:bg-surface-raised hover:text-text-primary transition-all text-sm group"
-        >
-          <ion-icon
-            name="receipt-outline"
-            class="text-lg group-hover:scale-110 transition-transform"
-          ></ion-icon>
-          Ver detalle de pago
-        </a>
       </div>
     </div>
   `,
@@ -221,6 +202,7 @@ export class BookingActionsCardComponent {
   readonly canOwnerCheckIn = input.required<boolean>();
   readonly canOwnerCheckOut = input.required<boolean>();
   readonly canOwnerCancel = input.required<boolean>();
+  readonly awaitingRenterCheckIn = input<boolean>(false);
 
   // Outputs
   readonly chatOpen = output<void>();
@@ -239,6 +221,9 @@ export class BookingActionsCardComponent {
       flagOutline,
       carOutline,
       receiptOutline,
+      documentTextOutline,
+      closeCircleOutline,
+      helpCircleOutline,
     });
   }
 

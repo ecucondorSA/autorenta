@@ -18,6 +18,7 @@ export interface Dispute {
   resolution_currency: string | null; // Moneda del monto
   responsible_party_id: string | null; // ID del usuario responsable de la resolución (ej. quien debe pagar)
   dispute_resolution: string | null; // NEW: field for resolution reason/notes
+  [key: string]: unknown; // Index signature for DatabaseRecord compatibility
 }
 
 export interface DisputeEvidence {

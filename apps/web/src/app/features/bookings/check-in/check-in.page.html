@@ -398,11 +398,93 @@
             </div>
           </div>
 
-          <app-inspection-uploader
-            [bookingId]="booking()!.id"
-            stage="renter_check_in"
-            (inspectionCompleted)="onInspectionCompleted($event)"
-          ></app-inspection-uploader>
+          <!-- Mode Selector -->
+          <div class="mb-6">
+            <h2
+              class="mb-4 flex items-center gap-2 text-lg font-bold text-text-primary font-satoshi"
+            >
+              <span
+                class="flex h-6 w-6 items-center justify-center rounded-full bg-cta-default text-xs text-cta-text"
+                >2</span
+              >
+              Elegí cómo documentar
+            </h2>
+            <div class="grid grid-cols-3 gap-2">
+              <!-- Photos Mode -->
+              <button
+                type="button"
+                class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all"
+                [class]="inspectionMode() === 'photos' ? 'border-cta-default bg-cta-default/10' : 'border-border-default bg-surface-base hover:border-border-muted'"
+                (click)="setInspectionMode('photos')"
+              >
+                <svg class="w-7 h-7" [class]="inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-secondary'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span class="font-medium text-xs" [class]="inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-primary'">Fotos</span>
+                <span class="text-[10px] text-text-secondary">5-10 min</span>
+              </button>
+
+              <!-- Video Batch Mode -->
+              <button
+                type="button"
+                class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all relative"
+                [class]="inspectionMode() === 'video' ? 'border-cta-default bg-cta-default/10' : 'border-border-default bg-surface-base hover:border-border-muted'"
+                (click)="setInspectionMode('video')"
+              >
+                <span class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded-full">IA</span>
+                <svg class="w-7 h-7" [class]="inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-secondary'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <span class="font-medium text-xs" [class]="inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-primary'">Video</span>
+                <span class="text-[10px] text-text-secondary">1-2 min</span>
+              </button>
+
+              <!-- Live Mode (NEW) -->
+              <button
+                type="button"
+                class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all relative"
+                [class]="inspectionMode() === 'live' ? 'border-purple-500 bg-purple-500/10' : 'border-border-default bg-surface-base hover:border-border-muted'"
+                (click)="setInspectionMode('live')"
+              >
+                <span class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold rounded-full animate-pulse">LIVE</span>
+                <svg class="w-7 h-7" [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-secondary'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z" />
+                </svg>
+                <span class="font-medium text-xs" [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-primary'">En Vivo</span>
+                <span class="text-[10px] text-text-secondary">Tiempo real</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Inspection Component based on mode -->
+          @switch (inspectionMode()) {
+            @case ('live') {
+              <app-video-inspection-live
+                [bookingId]="booking()!.id"
+                stage="renter_check_in"
+                (inspectionCompleted)="onInspectionCompleted($event)"
+                (inspectionCancelled)="goToBookingDetail()"
+                (switchToPhotos)="switchToPhotos()"
+              ></app-video-inspection-live>
+            }
+            @case ('video') {
+              <app-video-inspection-ai
+                [bookingId]="booking()!.id"
+                stage="renter_check_in"
+                (inspectionCompleted)="onInspectionCompleted($event)"
+                (inspectionCancelled)="goToBookingDetail()"
+                (switchToPhotos)="switchToPhotos()"
+              ></app-video-inspection-ai>
+            }
+            @default {
+              <app-inspection-uploader
+                [bookingId]="booking()!.id"
+                stage="renter_check_in"
+                (inspectionCompleted)="onInspectionCompleted($event)"
+              ></app-inspection-uploader>
+            }
+          }
         </div>
       }
 

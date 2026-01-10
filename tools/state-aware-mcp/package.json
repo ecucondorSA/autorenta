@@ -19,7 +19,7 @@
   "author": "AutoRenta",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.25.1",
+    "@modelcontextprotocol/sdk": "^1.25.2",
     "@supabase/supabase-js": "^2.39.0",
     "glob": "^10.5.0"
   }

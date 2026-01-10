@@ -412,11 +412,55 @@
             </ul>
           </div>
 
-          <app-inspection-uploader
-            [bookingId]="booking()!.id"
-            stage="check_out"
-            (inspectionCompleted)="onInspectionCompleted($event)"
-          ></app-inspection-uploader>
+          <!-- Mode Selector -->
+          <div class="mb-6">
+            <h3 class="text-base font-medium text-text-primary mb-3">Elegí cómo documentar</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all"
+                [class]="inspectionMode() === 'photos' ? 'border-cta-default bg-cta-default/10' : 'border-border-default bg-surface-base hover:border-border-muted'"
+                (click)="setInspectionMode('photos')"
+              >
+                <svg class="w-8 h-8" [class]="inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-secondary'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span class="font-medium text-sm" [class]="inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-primary'">Fotos</span>
+                <span class="text-xs text-text-secondary">Tradicional (5-10 min)</span>
+              </button>
+              <button
+                type="button"
+                class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all relative"
+                [class]="inspectionMode() === 'video' ? 'border-cta-default bg-cta-default/10' : 'border-border-default bg-surface-base hover:border-border-muted'"
+                (click)="setInspectionMode('video')"
+              >
+                <span class="absolute -top-2 -right-2 px-2 py-0.5 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-bold rounded-full">IA</span>
+                <svg class="w-8 h-8" [class]="inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-secondary'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <span class="font-medium text-sm" [class]="inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-primary'">Video + IA</span>
+                <span class="text-xs text-text-secondary">Rápido (1-2 min)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Inspection Component based on mode -->
+          @if (inspectionMode() === 'video') {
+            <app-video-inspection-ai
+              [bookingId]="booking()!.id"
+              stage="check_out"
+              (inspectionCompleted)="onInspectionCompleted($event)"
+              (inspectionCancelled)="goToBookingDetail()"
+              (switchToPhotos)="switchToPhotos()"
+            ></app-video-inspection-ai>
+          } @else {
+            <app-inspection-uploader
+              [bookingId]="booking()!.id"
+              stage="check_out"
+              (inspectionCompleted)="onInspectionCompleted($event)"
+            ></app-inspection-uploader>
+          }
         </div>
       }
 

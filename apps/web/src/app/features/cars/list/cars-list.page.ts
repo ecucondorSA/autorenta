@@ -1148,7 +1148,9 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
     banner.className =
       'fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-success-light text-text-primary px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-down';
 
-    // Crear elementos de forma segura (sin innerHTML)
+    // Crear elementos de forma segura (sin innerHTML) usando DocumentFragment para batching
+    const fragment = document.createDocumentFragment();
+
     const messageSpan = document.createElement('span');
     messageSpan.textContent = '¡Nuevos vehículos disponibles!';
 
@@ -1168,9 +1170,11 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
       banner.remove();
     });
 
-    banner.appendChild(messageSpan);
-    banner.appendChild(refreshButton);
-    banner.appendChild(closeButton);
+    // Batch DOM operations: single reflow instead of multiple
+    fragment.appendChild(messageSpan);
+    fragment.appendChild(refreshButton);
+    fragment.appendChild(closeButton);
+    banner.appendChild(fragment);
 
     document.body.appendChild(banner);
 

@@ -837,23 +837,36 @@
               <button
                 type="button"
                 (click)="useCurrentLocation()"
-                class="text-cta-default text-sm font-bold hover:underline flex items-center gap-1"
+                [disabled]="gettingLocation()"
+                class="text-cta-default text-sm font-bold hover:underline flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-wait"
               >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                Usar mi ubicación actual
+                @switch (locationState()) {
+                  @case ('acquiring') {
+                    <div class="w-4 h-4 border-2 border-cta-default border-t-transparent rounded-full animate-spin"></div>
+                    <span>Buscando ubicación...</span>
+                  }
+                  @case ('geocoding') {
+                    <div class="w-4 h-4 border-2 border-cta-default border-t-transparent rounded-full animate-spin"></div>
+                    <span>Obteniendo dirección...</span>
+                  }
+                  @default {
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                    <span>Usar mi ubicación actual</span>
+                  }
+                }
               </button>
             </div>
 

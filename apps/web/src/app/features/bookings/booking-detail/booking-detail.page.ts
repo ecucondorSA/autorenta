@@ -741,6 +741,20 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     return this.inspections().some((i: BookingInspection) => i.stage === 'check_out' && i.signedAt);
   });
 
+  /**
+   * Estado intermedio: Owner entregó el vehículo pero Renter no ha confirmado recepción.
+   * Se usa para mostrar "Confirmar recepción" en la UI.
+   */
+  readonly awaitingRenterCheckIn = computed(() => {
+    const booking = this.booking();
+    if (!booking) return false;
+    return (
+      booking.status === 'confirmed' &&
+      this.hasOwnerCheckIn() &&
+      !this.hasRenterCheckIn()
+    );
+  });
+
   readonly hasClaim = computed(() => {
     return this.bookingClaims().length > 0;
   });
@@ -2188,11 +2202,13 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   // ============================================================================
   downloadingContract = signal(false);
 
-  async downloadContract(): Promise<void> {
+  async downloadContract(contractComponent?: { setDownloading: (v: boolean) => void }): Promise<void> {
     const booking = this.booking();
     if (!booking || this.downloadingContract()) return;
 
     this.downloadingContract.set(true);
+    contractComponent?.setDownloading(true);
+
     try {
       const contractData: ContractPdfData = {
         booking_id: booking.id,
@@ -2201,7 +2217,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         end_date: booking.end_at,
         days_count: booking.days_count ?? 1,
         contribution_cents: Math.round((booking.total_amount ?? 0) * 100),
-        deposit_amount_cents: Math.round((booking.breakdown?.deposit_cents ?? 0)),
+        deposit_amount_cents: Math.round(booking.breakdown?.deposit_cents ?? 0),
         insurance_cents: booking.breakdown?.insurance_cents ?? 0,
         fees_cents: booking.breakdown?.fees_cents ?? 0,
         total_amount_cents: booking.breakdown?.total_cents ?? Math.round((booking.total_amount ?? 0) * 100),
@@ -2238,6 +2254,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       this.logger.error('Error downloading contract:', error);
     } finally {
       this.downloadingContract.set(false);
+      contractComponent?.setDownloading(false);
     }
   }
 

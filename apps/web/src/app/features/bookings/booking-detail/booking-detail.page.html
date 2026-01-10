@@ -45,140 +45,285 @@
     <!-- LEFT COLUMN (CONTEXT & HISTORY) - Span 8 -->
     <!-- ============================================================================================== -->
     <div class="lg:col-span-8 space-y-6">
-      <!-- 1. COMPACT HERO: Car & Key Stats -->
-      <section class="card-premium p-0 flex flex-col sm:flex-row overflow-hidden">
-        <!-- Image Section (35%) -->
-        <div class="relative sm:w-1/3 h-48 sm:h-auto bg-surface-secondary">
-          @if (booking()?.car_image) {
-          <img [src]="booking()!.car_image" [alt]="booking()?.car_title"
-            class="w-full h-full object-cover" />
-          <!-- Status Overlay -->
-          <div class="absolute top-3 left-3">
-            <app-booking-status
-              [booking]="booking()!"
-              [deliveryCountdown]="deliveryTimeRemaining()">
-            </app-booking-status>
+      <!-- 1. HERO CARD: Minimalista con jerarquía clara -->
+      <section class="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden">
+        <div class="flex flex-col sm:flex-row">
+          <!-- Image Section (40%) -->
+          <div class="relative sm:w-2/5 h-56 sm:h-auto bg-neutral-100">
+            @if (booking()?.car_image) {
+            <img [src]="booking()!.car_image" [alt]="booking()?.car_title"
+              class="w-full h-full object-cover" />
+            } @else {
+            <div class="w-full h-full flex items-center justify-center text-neutral-400">
+              <ion-icon name="car-sport-outline" class="text-6xl"></ion-icon>
+            </div>
+            }
           </div>
-          } @else {
-          <div class="w-full h-full flex items-center justify-center text-text-muted">
-            <ion-icon name="car-sport-outline" class="text-4xl"></ion-icon>
-          </div>
-          }
-        </div>
 
-        <!-- Info Section (65%) -->
-        <div class="flex-1 h-full p-5 flex flex-col justify-between overflow-hidden">
-          <div>
-            <div class="flex justify-between items-start mb-2">
-              <h1
-                class="text-xl sm:text-2xl font-bold text-text-primary tracking-tight leading-none font-satoshi">
+          <!-- Info Section (60%) -->
+          <div class="flex-1 p-6 sm:p-8 flex flex-col justify-between">
+            <!-- Status Badge Prominente -->
+            <div class="mb-4">
+              <app-booking-status
+                [booking]="booking()!"
+                [deliveryCountdown]="deliveryTimeRemaining()"
+                [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
+                [hasRenterCheckIn]="hasRenterCheckIn()"
+                [isOwner]="isOwner()">
+              </app-booking-status>
+            </div>
+
+            <!-- Título del Vehículo -->
+            <div class="mb-6">
+              <h1 class="text-2xl sm:text-3xl font-bold text-neutral-900 tracking-tight mb-1">
                 {{ booking()?.car_brand }} {{ booking()?.car_model }}
-                <span class="text-text-muted font-normal ml-1">{{ booking()?.car_year }}</span>
               </h1>
-              <!-- Price Tag -->
+              <p class="text-neutral-500 text-sm">
+                {{ booking()?.car_year }} · {{ booking()!.days_count }} {{ booking()!.days_count === 1 ? 'día' : 'días' }} con {{ carOwnerName() }}
+              </p>
+            </div>
+
+            <!-- Precio Hero + Fechas -->
+            <div class="flex items-end justify-between gap-4 pt-4 border-t border-neutral-100">
+              <!-- Precio Grande -->
+              <div>
+                <p class="text-3xl sm:text-4xl font-bold text-neutral-900 tracking-tight">
+                  {{ booking()!.total_amount | currency: booking()!.currency : 'symbol' : '1.0-0' }}
+                </p>
+                <p class="text-xs text-neutral-400 mt-1">Total de la reserva</p>
+              </div>
+
+              <!-- Fechas Compactas -->
               <div class="text-right">
-                <p class="text-lg font-bold text-text-primary leading-none">
-                  {{
-                  booking()!.total_amount | currency: booking()!.currency : 'symbol' : '1.0-0'
-                  }}
+                <p class="text-sm font-medium text-neutral-700">
+                  {{ booking()!.start_at | date: 'd MMM' }}
+                  <span class="text-neutral-400 mx-1">→</span>
+                  {{ booking()!.end_at | date: 'd MMM' }}
                 </p>
-                <p class="text-[10px] text-text-muted font-medium uppercase tracking-wide">
-                  Total
-                </p>
-              </div>
-            </div>
-
-            <!-- Owner info tiny -->
-            <div class="flex items-center gap-2 text-sm text-text-secondary mb-4">
-              <div
-                class="w-5 h-5 rounded-full bg-surface-secondary flex items-center justify-center text-[10px] font-bold text-text-secondary">
-                {{ carOwnerName().charAt(0) }}
-              </div>
-              <span>{{ carOwnerName() }}</span>
-            </div>
-          </div>
-
-          <!-- Dashboard Stats Grid -->
-          <div class="grid grid-cols-3 gap-2 border-t border-border-default pt-4">
-            <div>
-              <p class="text-[10px] text-text-muted uppercase font-bold tracking-wider mb-0.5">
-                Inicio
-              </p>
-              <p class="text-sm font-semibold text-text-primary">
-                {{ booking()!.start_at | date: 'dd MMM, HH:mm' }}
-              </p>
-            </div>
-            <div>
-              <p class="text-[10px] text-text-muted uppercase font-bold tracking-wider mb-0.5">
-                Fin
-              </p>
-              <p class="text-sm font-semibold text-text-primary">
-                {{ booking()!.end_at | date: 'dd MMM, HH:mm' }}
-              </p>
-            </div>
-            <div>
-              <p class="text-[10px] text-text-muted uppercase font-bold tracking-wider mb-0.5">
-                Tiempo
-              </p>
-              <p class="text-sm font-semibold text-text-primary flex items-center gap-1">
-                {{ booking()!.days_count }} días
                 @if (deliveryTimeRemaining()) {
-                <span class="text-[10px] text-info-700 bg-info-50 px-1.5 py-0.5 rounded-full">{{
-                  deliveryTimeRemaining()
-                  }}</span>
+                <p class="text-xs text-amber-600 font-medium mt-1 flex items-center justify-end gap-1">
+                  <ion-icon name="time-outline" class="text-sm"></ion-icon>
+                  {{ deliveryTimeRemaining() }}
+                </p>
                 }
-              </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 2. Timeline Bar (Slim) -->
-      <section class="card-premium p-6">
-        <app-booking-confirmation-timeline [booking]="booking()!" [ownerName]="carOwnerName()"
-          [renterName]="booking()?.renter_name ?? 'el locatario'"
-          (confirmationRequested)="handleTimelineAction($event)"></app-booking-confirmation-timeline>
+      <!-- 2. TIMELINE VERTICAL CONTEXTUAL -->
+      <section class="bg-white rounded-2xl border border-neutral-200 p-6">
+        <h3 class="text-sm font-bold text-neutral-900 mb-4">Progreso de la Reserva</h3>
 
-        <!-- URGENT ACTION: Guarantee Required -->
-        @if ((needsPayment() || booking()?.status === 'pending_payment') && isRenter()) {
-        <div
-          class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-cta-default to-cta-hover text-cta-text shadow-xl animate-pulse">
-          <div class="flex items-center justify-between gap-4">
-            <div class="flex-1">
-              <h3 class="text-base font-bold flex items-center gap-2">
-                <ion-icon name="alert-circle" class="text-xl"></ion-icon>
-                Acción Requerida
-              </h3>
-              <p class="text-sm opacity-90">
-                Tu reserva está pausada. Debes garantizar la garantía para avanzar.
-              </p>
+        <div class="relative">
+          <!-- Vertical Line -->
+          <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-neutral-200"></div>
+
+          <!-- Timeline Items -->
+          <div class="space-y-4">
+
+            <!-- 1. Solicitud -->
+            <div class="relative flex items-start gap-4">
+              <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <div class="flex-1 pb-4">
+                <p class="text-sm font-medium text-neutral-900">Solicitud enviada</p>
+                <p class="text-xs text-neutral-500">{{ booking()?.created_at | date: 'd MMM, HH:mm' }}</p>
+              </div>
             </div>
-            <a [routerLink]="['/bookings', booking()?.id, 'detail-payment']"
-              class="px-6 py-3 bg-white text-cta-default font-bold rounded-xl shadow-lg hover:bg-opacity-90 transition-all whitespace-nowrap">
-              Garantizar Ahora
-            </a>
+
+            <!-- 2. Garantía/Pago -->
+            @if (booking()?.status === 'pending' || booking()?.status === 'pending_payment') {
+              <!-- CURRENT: Esperando pago -->
+              <div class="relative flex items-start gap-4">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-amber-500 text-white flex-shrink-0 ring-4 ring-amber-100">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div class="flex-1 pb-4 bg-amber-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-amber-200">
+                  <p class="text-sm font-semibold text-amber-800">Esperando garantía</p>
+                  <p class="text-xs text-amber-700 mt-1">Debes completar el pago para que el propietario pueda aprobar</p>
+                </div>
+              </div>
+              <!-- FUTURE: Aprobación -->
+              <div class="relative flex items-start gap-4 opacity-50">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-neutral-200 text-neutral-400 flex-shrink-0">
+                  <span class="text-xs font-bold">3</span>
+                </div>
+                <div class="flex-1 pb-4">
+                  <p class="text-sm font-medium text-neutral-400">Aprobación del propietario</p>
+                  <p class="text-xs text-neutral-400">Pendiente</p>
+                </div>
+              </div>
+            } @else {
+              <!-- COMPLETED: Garantía pagada -->
+              <div class="relative flex items-start gap-4">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="flex-1 pb-4">
+                  <p class="text-sm font-medium text-neutral-900">Garantía confirmada</p>
+                  <p class="text-xs text-neutral-500">Pago procesado</p>
+                </div>
+              </div>
+            }
+
+            <!-- 3. Aprobación (solo si ya pasó garantía) -->
+            @if (booking()?.status !== 'pending' && booking()?.status !== 'pending_payment') {
+              @if (booking()?.status === 'confirmed' || booking()?.status === 'in_progress' || booking()?.status === 'completed') {
+                <!-- COMPLETED: Aprobado -->
+                <div class="relative flex items-start gap-4">
+                  <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                  </div>
+                  <div class="flex-1 pb-4">
+                    <p class="text-sm font-medium text-neutral-900">Reserva aprobada</p>
+                    <p class="text-xs text-neutral-500">Por {{ carOwnerName() }}</p>
+                  </div>
+                </div>
+              }
+            }
+
+            <!-- 4. Check-in -->
+            @if (hasRenterCheckIn()) {
+              <!-- COMPLETED: Check-in bilateral completado -->
+              <div class="relative flex items-start gap-4">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="flex-1 pb-4">
+                  <p class="text-sm font-medium text-neutral-900">Check-in completado</p>
+                  <p class="text-xs text-neutral-500">Vehículo entregado y recepción confirmada</p>
+                </div>
+              </div>
+            } @else if (awaitingRenterCheckIn()) {
+              <!-- Owner YA entregó, renter debe confirmar -->
+              <!-- COMPLETED: Vehículo entregado por owner -->
+              <div class="relative flex items-start gap-4">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="flex-1 pb-4">
+                  <p class="text-sm font-medium text-neutral-900">Vehículo entregado</p>
+                  <p class="text-xs text-neutral-500">El propietario completó la entrega</p>
+                </div>
+              </div>
+              <!-- CURRENT: Renter debe confirmar recepción -->
+              <div class="relative flex items-start gap-4">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-amber-500 text-white flex-shrink-0 ring-4 ring-amber-100">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"/>
+                  </svg>
+                </div>
+                <div class="flex-1 pb-4 bg-amber-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-amber-200">
+                  <p class="text-sm font-semibold text-amber-800">Confirmar recepción</p>
+                  <p class="text-xs text-amber-700 mt-1">Debes confirmar que recibiste el vehículo</p>
+                  @if (isRenter()) {
+                    <a [routerLink]="['/bookings', booking()?.id, 'check-in']"
+                       class="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-amber-800 hover:text-amber-900 underline">
+                      Confirmar ahora →
+                    </a>
+                  }
+                </div>
+              </div>
+            } @else if (booking()?.status === 'confirmed') {
+              <!-- CURRENT: Esperando check-in del owner -->
+              <div class="relative flex items-start gap-4">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white flex-shrink-0 ring-4 ring-blue-100">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+                <div class="flex-1 pb-4 bg-blue-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-blue-200">
+                  <p class="text-sm font-semibold text-blue-800">Check-in programado</p>
+                  <p class="text-xs text-blue-700 mt-1">{{ booking()?.start_at | date: 'EEEE d MMM, HH:mm' }}</p>
+                  <p class="text-xs text-blue-600 mt-2">Próximo paso: Recoger el vehículo</p>
+                </div>
+              </div>
+            }
+
+            <!-- 5. Viaje en curso -->
+            @if (hasRenterCheckIn() && !hasCheckOut() && booking()?.status !== 'completed') {
+              <!-- CURRENT: En viaje (check-in bilateral completado) -->
+              <div class="relative flex items-start gap-4">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white flex-shrink-0 ring-4 ring-blue-100">
+                  <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  </svg>
+                </div>
+                <div class="flex-1 pb-4 bg-blue-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-blue-200">
+                  <p class="text-sm font-semibold text-blue-800">Viaje en curso</p>
+                  <p class="text-xs text-blue-700 mt-1">Devolución: {{ booking()?.end_at | date: 'EEEE d MMM, HH:mm' }}</p>
+                  @if (deliveryTimeRemaining()) {
+                    <p class="text-xs text-blue-600 mt-2 font-medium">⏱️ {{ deliveryTimeRemaining() }} restantes</p>
+                  }
+                </div>
+              </div>
+              <!-- FUTURE: Check-out -->
+              <div class="relative flex items-start gap-4 opacity-50">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-neutral-200 text-neutral-400 flex-shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-neutral-400">Check-out e inspección</p>
+                  <p class="text-xs text-neutral-400">Devolver vehículo</p>
+                </div>
+              </div>
+            } @else if (booking()?.status === 'completed') {
+              <!-- COMPLETED: Viaje y check-out -->
+              <div class="relative flex items-start gap-4">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div class="flex-1 pb-4">
+                  <p class="text-sm font-medium text-neutral-900">Viaje finalizado</p>
+                  <p class="text-xs text-neutral-500">{{ booking()?.end_at | date: 'd MMM, HH:mm' }}</p>
+                </div>
+              </div>
+              <div class="relative flex items-start gap-4">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div class="flex-1 bg-emerald-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-emerald-200">
+                  <p class="text-sm font-semibold text-emerald-800">Reserva completada</p>
+                  <p class="text-xs text-emerald-700 mt-1">Todo en orden. ¡Gracias por usar AutoRenta!</p>
+                </div>
+              </div>
+            }
+
           </div>
         </div>
-        }
 
-        <!-- Alerts integrated efficiently -->
+        <!-- Flow Alert (if any) -->
         @if (flowAlert()) {
-        <div class="mt-4 pt-4 border-t border-border-default">
-          <div class="flex items-start gap-3">
-            <ion-icon
-              [name]="flowAlert()!.tone === 'danger' ? 'alert-circle' : 'information-circle'"
-              [class]="flowAlert()!.tone === 'danger' ? 'text-error-500' : 'text-info-500'"
-              class="mt-0.5"></ion-icon>
+        <div class="mt-4 p-3 rounded-xl {{ flowAlert()!.tone === 'danger' ? 'bg-red-50 border border-red-200' : 'bg-blue-50 border border-blue-200' }}">
+          <div class="flex items-start gap-2">
+            <svg class="w-4 h-4 {{ flowAlert()!.tone === 'danger' ? 'text-red-500' : 'text-blue-500' }} flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
             <div class="flex-1">
-              <p class="text-sm font-medium text-text-primary">{{ flowAlert()!.title }}</p>
-              <p class="text-xs text-text-secondary">{{ flowAlert()!.message }}</p>
+              <p class="text-xs font-medium {{ flowAlert()!.tone === 'danger' ? 'text-red-700' : 'text-blue-700' }}">{{ flowAlert()!.title }}</p>
+              <p class="text-xs {{ flowAlert()!.tone === 'danger' ? 'text-red-600' : 'text-blue-600' }}">{{ flowAlert()!.message }}</p>
             </div>
-            @if (flowAlert()!.action) {
-            <a [routerLink]="flowAlert()!.action!.route"
-              class="text-xs font-bold text-cta-default hover:underline">
-              {{ flowAlert()!.action!.label }}
-            </a>
-            }
           </div>
         </div>
         }
@@ -261,11 +406,15 @@
       }
 
       <!-- 3. CHECK-IN CRITICAL INFO CARD (Extracted Component) -->
-      <app-booking-check-in-info-card [booking]="booking()!" />
+      <app-booking-check-in-info-card
+        [booking]="booking()!"
+        [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
+        [isOwner]="isOwner()"
+      />
 
       <!-- 3.5 Download Inspection PDFs (if inspections exist) -->
       @if (hasOwnerCheckIn() || hasCheckOut()) {
-      <section class="card-premium p-4">
+      <section class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4">
         <h3 class="text-sm font-bold text-text-primary mb-3 flex items-center gap-2">
           <ion-icon name="document-text-outline" class="text-info-500"></ion-icon>
           Actas de Inspección
@@ -303,7 +452,7 @@
 
       <!-- 4. LOGISTICS CARD (Delivery/Dropoff info) -->
       @if (booking()?.delivery_required || booking()?.dropoff_location_lat) {
-      <section class="card-premium overflow-hidden p-0">
+      <section class="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden p-0">
         <div
           class="px-5 py-3 border-b border-border-default bg-surface-secondary/50 flex justify-between items-center">
           <h3 class="text-sm font-bold text-text-primary flex items-center gap-2">
@@ -349,7 +498,7 @@
       @if (pricingView() || insuranceView()) {
       <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
         @if (pricingView()) {
-        <div class="card-premium p-6">
+        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
               <ion-icon name="receipt-outline" class="text-xl"></ion-icon>
@@ -361,7 +510,7 @@
         }
 
         @if (insuranceView()) {
-        <div class="card-premium p-6">
+        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
               <ion-icon name="shield-checkmark-outline" class="text-xl"></ion-icon>
@@ -376,7 +525,7 @@
 
       <!-- 5. Tracking (if active) -->
       @if (tracking()) {
-      <section class="card-premium p-6">
+      <section class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
             <ion-icon name="map-outline" class="text-xl"></ion-icon>
@@ -389,7 +538,7 @@
 
       <!-- 6. Operations Timeline -->
       @if (confirmation() || cancellation()) {
-      <section class="card-premium p-6">
+      <section class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
             <ion-icon name="time-outline" class="text-xl"></ion-icon>
@@ -416,7 +565,7 @@
       <!-- 7. Documentation (Compact Grid) -->
       <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Contract Card -->
-        <div class="card-premium p-6 flex flex-col h-full">
+        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6 flex flex-col h-full">
           <div class="flex items-center gap-3 mb-4">
             <div
               class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
@@ -425,25 +574,16 @@
             <h3 class="font-bold text-text-primary">Contrato Digital</h3>
           </div>
           <div class="flex-1">
-            <app-booking-contract [bookingId]="booking()!.id"></app-booking-contract>
+            <app-booking-contract
+              #contractComponent
+              [bookingId]="booking()!.id"
+              (downloadRequested)="downloadContract(contractComponent)"
+            ></app-booking-contract>
           </div>
-          <!-- Download Contract PDF Button -->
-          <button
-            (click)="downloadContract()"
-            [disabled]="downloadingContract()"
-            class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-surface-secondary hover:bg-surface-hover text-text-primary rounded-xl transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
-            @if (downloadingContract()) {
-              <div class="w-4 h-4 border-2 border-text-muted border-t-transparent rounded-full animate-spin"></div>
-              <span>Generando PDF...</span>
-            } @else {
-              <ion-icon name="document-text-outline" class="text-lg"></ion-icon>
-              <span>Descargar Contrato PDF</span>
-            }
-          </button>
         </div>
 
         <!-- Refund Status / Insurance -->
-        <div class="card-premium p-6 flex flex-col h-full">
+        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6 flex flex-col h-full">
           <div class="flex items-center gap-3 mb-4">
             <div
               class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
@@ -483,7 +623,7 @@
 
         <!-- Damage Comparison (if inspections exist) -->
         @if (hasOwnerCheckIn() && hasCheckOut()) {
-        <div class="card-premium p-6">
+        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
           <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
             <ion-icon name="git-compare-outline" class="text-info-600"></ion-icon>
             Comparativa de Daños
@@ -494,7 +634,7 @@
 
         <!-- Claims List -->
         @if (hasClaim()) {
-        <div class="card-premium p-6">
+        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
           <h3 class="font-bold text-text-primary mb-4 text-error-600 flex items-center gap-2">
             <ion-icon name="warning-outline"></ion-icon>
             Siniestros Reportados
@@ -543,7 +683,7 @@
         </div>
 
         <!-- Disputes List -->
-        <div class="card-premium p-6">
+        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
           <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
             <ion-icon name="flag-outline" class="text-warning-600"></ion-icon>
             Disputas
@@ -557,7 +697,7 @@
 
         <!-- Settlement Simulator (Owner Only) -->
         @if (isOwner() && (booking()?.status === 'completed' || isReturnPhase())) {
-        <div class="card-premium p-6">
+        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
           <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
             <ion-icon name="calculator-outline" class="text-info-600"></ion-icon>
             Simulador de Liquidación
@@ -587,6 +727,7 @@
           [canOwnerCheckIn]="canOwnerCheckIn()"
           [canOwnerCheckOut]="canOwnerCheckOut()"
           [canOwnerCancel]="canOwnerCancel()"
+          [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
           (chatOpen)="openChatPanel()"
           (cancelBooking)="cancelBooking($event)"
           (ownerCancelBooking)="ownerCancelBooking()"
@@ -595,7 +736,7 @@
         />
 
         <!-- 2. AI Tools Panel -->
-        <div class="card-premium overflow-hidden p-0">
+        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden p-0">
           <div class="p-4 border-b border-border-default bg-surface-secondary">
             <h3 class="font-bold text-info-900 flex items-center gap-2">
               <ion-icon name="sparkles" class="text-info-500"></ion-icon>

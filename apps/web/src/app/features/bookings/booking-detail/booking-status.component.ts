@@ -16,40 +16,20 @@ import { Booking } from '../../../core/models';
   imports: [CommonModule],
   template: `
     @if (booking) {
-      <div class="status-badge" [ngClass]="statusClass()">
-        {{ statusIcon() }} {{ statusLabel() }}
-        @if (showDeliveryCountdown()) {
-          <span class="delivery-countdown"> ⏱ {{ deliveryCountdown }} </span>
-        }
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase" [ngClass]="statusClass()">
+        <span class="w-2 h-2 rounded-full" [ngClass]="dotClass()"></span>
+        {{ statusLabel() }}
       </div>
     }
   `,
-  styles: [
-    `
-      .status-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-weight: 500;
-        font-size: 0.875rem;
-      }
-      .delivery-countdown {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
-        padding-left: 0.5rem;
-        border-left: 1px solid rgba(0, 0, 0, 0.1);
-        font-size: 0.75rem;
-        font-weight: 600;
-      }
-    `,
-  ],
+  styles: [],
 })
 export class BookingStatusComponent {
   @Input({ required: true }) booking!: Booking;
   @Input() deliveryCountdown: string | null = null;
+  @Input() awaitingRenterCheckIn: boolean = false;
+  @Input() hasRenterCheckIn: boolean = false;
+  @Input() isOwner: boolean = false;
 
   constructor(private bookingsService: BookingsService) {}
 
@@ -85,42 +65,100 @@ export class BookingStatusComponent {
       this.booking?.completion_status === 'pending_renter' ||
       this.booking?.completion_status === 'pending_both';
 
+    // Check-in bilateral completado: mostrar como "En curso"
+    if (this.hasRenterCheckIn && status === 'confirmed') {
+      return 'bg-blue-50 text-blue-700 border border-blue-200';
+    }
+
+    // Bilateral check-in: owner delivered, renter needs to confirm
+    if (this.awaitingRenterCheckIn && status === 'confirmed') {
+      // Owner ve verde (completó su parte), Renter ve ámbar (acción pendiente)
+      return this.isOwner
+        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+        : 'bg-amber-50 text-amber-700 border border-amber-200';
+    }
+
     // Request flow: pending approval (amber, not error)
     if (this.isAwaitingOwnerApproval()) {
-      return 'bg-amber-100 text-amber-700';
+      return 'bg-amber-50 text-amber-700 border border-amber-200';
     }
 
     if (isReturnFlow) {
-      return 'bg-warning-light/20 text-warning-strong';
+      return 'bg-orange-50 text-orange-700 border border-orange-200';
     }
 
     // Traditional: expired payment (only when not in approval/request flow)
     if (status === 'pending' && this.isExpired() && !this.isAwaitingOwnerApproval()) {
-      return 'bg-error-bg-hover text-error-strong';
+      return 'bg-red-50 text-red-700 border border-red-200';
     }
 
     switch (status) {
       case 'pending':
       case 'pending_payment':
-        return 'bg-warning-bg-hover text-warning-strong';
+        return 'bg-amber-50 text-amber-700 border border-amber-200';
       case 'confirmed':
-        return 'bg-success-light/20 text-success-strong';
+        return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
       case 'in_progress':
         if (isBeforeStart) {
-          return 'bg-success-light/20 text-success-strong';
+          return 'bg-emerald-50 text-emerald-700 border border-emerald-200';
         }
-        return 'bg-cta-default/20 text-cta-default';
+        return 'bg-blue-50 text-blue-700 border border-blue-200';
       case 'pending_review':
-        return 'bg-warning-light/20 text-warning-strong';
+        return 'bg-orange-50 text-orange-700 border border-orange-200';
       case 'completed':
-        return 'bg-surface-raised text-text-primary';
+        return 'bg-neutral-100 text-neutral-600 border border-neutral-200';
       case 'disputed':
-        return 'bg-error-bg-hover text-error-strong';
+        return 'bg-red-50 text-red-700 border border-red-200';
       case 'cancelled':
       case 'expired':
-        return 'bg-error-bg-hover text-error-strong';
+        return 'bg-red-50 text-red-700 border border-red-200';
       default:
-        return 'bg-surface-raised text-text-primary';
+        return 'bg-neutral-100 text-neutral-600 border border-neutral-200';
+    }
+  });
+
+  dotClass = computed(() => {
+    const status = this.booking?.status;
+    const startAt = this.booking?.start_at ? new Date(this.booking.start_at).getTime() : null;
+    const isBeforeStart =
+      status === 'in_progress' && startAt && !Number.isNaN(startAt) && Date.now() < startAt;
+    const isReturnFlow =
+      !!this.booking?.returned_at ||
+      this.booking?.completion_status === 'returned' ||
+      this.booking?.completion_status === 'pending_owner' ||
+      this.booking?.completion_status === 'pending_renter' ||
+      this.booking?.completion_status === 'pending_both';
+
+    // Check-in bilateral completado: mostrar como "En curso"
+    if (this.hasRenterCheckIn && status === 'confirmed') return 'bg-blue-500 animate-pulse';
+
+    // Bilateral check-in: owner delivered, renter needs to confirm
+    if (this.awaitingRenterCheckIn && status === 'confirmed') {
+      return this.isOwner ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse';
+    }
+
+    if (this.isAwaitingOwnerApproval()) return 'bg-amber-500';
+    if (isReturnFlow) return 'bg-orange-500';
+    if (status === 'pending' && this.isExpired()) return 'bg-red-500';
+
+    switch (status) {
+      case 'pending':
+      case 'pending_payment':
+        return 'bg-amber-500';
+      case 'confirmed':
+        return 'bg-emerald-500';
+      case 'in_progress':
+        return isBeforeStart ? 'bg-emerald-500' : 'bg-blue-500 animate-pulse';
+      case 'pending_review':
+        return 'bg-orange-500';
+      case 'completed':
+        return 'bg-neutral-400';
+      case 'disputed':
+      case 'cancelled':
+      case 'expired':
+        return 'bg-red-500';
+      default:
+        return 'bg-neutral-400';
     }
   });
 
@@ -135,6 +173,17 @@ export class BookingStatusComponent {
       this.booking?.completion_status === 'pending_owner' ||
       this.booking?.completion_status === 'pending_renter' ||
       this.booking?.completion_status === 'pending_both';
+
+    // Check-in bilateral completado: mostrar como "En curso"
+    if (this.hasRenterCheckIn && status === 'confirmed') {
+      return 'En curso';
+    }
+
+    // Bilateral check-in: owner delivered, renter needs to confirm
+    if (this.awaitingRenterCheckIn && status === 'confirmed') {
+      // Owner ve "Vehículo entregado", Renter ve "Confirmar recepción"
+      return this.isOwner ? 'Vehículo entregado' : 'Confirmar recepción';
+    }
 
     // Request flow: waiting for owner approval
     if (this.isAwaitingOwnerApproval()) {

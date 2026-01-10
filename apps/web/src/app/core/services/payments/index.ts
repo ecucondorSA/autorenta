@@ -27,7 +27,6 @@ export * from '@core/services/payments/protection-credit.service';
 export * from '@core/services/payments/realtime-pricing.service';
 export * from '@core/services/payments/refund.service';
 export * from '@core/services/payments/settlement.service';
-export * from '@core/services/payments/split-payment.service';
 export * from '@core/services/payments/wallet-ledger.service';
 export * from '@core/services/payments/wallet.service';
 export * from '@core/services/payments/waterfall-execution.service';

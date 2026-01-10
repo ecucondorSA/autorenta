@@ -18,6 +18,9 @@ import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { firstValueFrom } from 'rxjs';
 import { Booking } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
+import { VideoInspectionAIComponent } from '../../../shared/components/video-inspection-ai/video-inspection-ai.component';
+
+type InspectionMode = 'photos' | 'video';
 
 /**
  * Página de Check-out para locatarios
@@ -30,7 +33,7 @@ import { InspectionUploaderComponent } from '../../../shared/components/inspecti
   selector: 'app-check-out',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, InspectionUploaderComponent],
+  imports: [CommonModule, RouterLink, InspectionUploaderComponent, VideoInspectionAIComponent],
   templateUrl: './check-out.page.html',
   styleUrl: './check-out.page.css',
 })
@@ -54,22 +57,25 @@ export class CheckOutPage implements OnInit {
   renterCheckInInspection = signal<BookingInspection | null>(null);
   fuelConfig = signal<FuelConfig | null>(null);
 
+  // Inspection mode: photos (traditional) or video (AI-powered)
+  inspectionMode = signal<InspectionMode>('photos');
+
   // Computed properties
   readonly canPerformCheckOut = computed(() => {
     const booking = this.booking();
     if (!booking) return false;
 
     // Solo permite check-out si:
-    // 1. Booking está en progreso o completado
-    // 2. El usuario es el locatario
-    // 3. No hay check-out completado ya
-    // 4. Existe check-in completado
+    // 1. El usuario es el locatario
+    // 2. No hay check-out completado ya
+    // 3. Existe check-in completado (validación basada en inspecciones, no en status)
     const isRenter = booking.renter_id === this.authService.session$()?.user?.id;
-    const validStatus = booking.status === 'in_progress' || booking.status === 'completed';
     const hasCheckOut = this.existingInspection()?.signedAt !== undefined;
     const hasCheckIn = this.renterCheckInInspection()?.signedAt !== undefined;
 
-    return isRenter && validStatus && !hasCheckOut && hasCheckIn;
+    // La validación es por inspecciones, no por booking.status
+    // porque el effectiveStatus puede diferir del status real
+    return isRenter && hasCheckIn && !hasCheckOut;
   });
 
   readonly isRenter = computed(() => {
@@ -204,12 +210,9 @@ export class CheckOutPage implements OnInit {
         return;
       }
 
-      // Verificar estado del booking
-      if (booking.status !== 'in_progress' && booking.status !== 'completed') {
-        this.error.set('El check-out solo está disponible para reservas en progreso');
-        this.loading.set(false);
-        return;
-      }
+      // Nota: La validación del estado se hace por inspecciones, no por booking.status
+      // porque el effectiveStatus (basado en inspecciones) puede diferir del status real
+      // La validación real está después de cargar las inspecciones
 
       // Cargar inspecciones (check-in locador, recepción locatario y check-out)
       const [checkIn, renterCheckIn, checkOut] = await Promise.all([
@@ -290,6 +293,20 @@ export class CheckOutPage implements OnInit {
     if (booking) {
       this.router.navigate(['/bookings', booking.id]);
     }
+  }
+
+  /**
+   * Cambia el modo de inspección
+   */
+  setInspectionMode(mode: InspectionMode): void {
+    this.inspectionMode.set(mode);
+  }
+
+  /**
+   * Cambia a modo fotos (callback desde video component)
+   */
+  switchToPhotos(): void {
+    this.inspectionMode.set('photos');
   }
 
   formatDateTime(date: Date | string): string {

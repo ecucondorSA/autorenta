@@ -6,7 +6,6 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { PaymentAuthorizationService } from '@core/services/payments/payment-authorization.service';
 import { PaymentsService } from '@core/services/payments/payments.service';
-import { SplitPaymentService } from '@core/services/payments/split-payment.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 
 /**
@@ -96,7 +95,6 @@ interface PaymentWebhookPayload {
 export class PaymentOrchestrationService {
   private readonly paymentsService = inject(PaymentsService);
   private readonly authService = inject(PaymentAuthorizationService);
-  private readonly splitService = inject(SplitPaymentService);
   private readonly bookingsService = inject(BookingsService);
   private readonly walletService = inject(WalletService);
   private readonly logger = inject(LoggerService);

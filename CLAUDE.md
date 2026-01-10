@@ -686,4 +686,149 @@ if (environment.features.enableP2P) {
 
 ---
 
-**© 2026 AutoRenta | Claude Agent Configuration v3.0**
+## 31. Quality Audits (Auditorías de Calidad)
+
+Auditorías periódicas recomendadas para mantener estándares profesionales.
+
+### 🔴 Alta Prioridad
+
+#### Core Web Vitals (CWV)
+Crítico para SEO, UX y conversión. Medir mensualmente.
+
+| Métrica | Umbral Bueno | Qué Medir |
+|---------|--------------|-----------|
+| **LCP** (Largest Contentful Paint) | < 2.5s | Hero images, contenido principal |
+| **INP** (Interaction to Next Paint) | < 200ms | Respuesta a clicks/taps en botones |
+| **CLS** (Cumulative Layout Shift) | < 0.1 | Saltos de layout durante carga |
+
+**Herramientas:** Lighthouse, Google Search Console, web.dev/measure
+**Páginas críticas:** marketplace, car-detail, booking-flow, checkout
+
+#### Security Audit (OWASP Top 10 2025)
+Ejecutar `pnpm audit` semanalmente. Configurar Dependabot/Renovate.
+
+**Checklist:**
+- [ ] `pnpm audit` sin vulnerabilidades críticas/altas
+- [ ] Dependencias actualizadas (no >6 meses de antigüedad)
+- [ ] Trusted Types habilitado para prevenir XSS
+- [ ] RLS policies en todas las tablas
+- [ ] Secrets solo en variables de entorno
+
+**Herramientas:** Snyk, npm audit, OWASP ZAP
+
+#### Accessibility (WCAG 2.2 AA)
+Requerido por European Accessibility Act (EAA) desde Junio 2025.
+
+**Criterios clave:**
+- Touch targets mínimo 24x24px CSS (recomendado 44x44px)
+- Focus visible sin ser obscurecido
+- Contraste mínimo 4.5:1 para texto normal
+- Navegación completa por teclado
+- Labels en todos los inputs
+
+**Herramientas:** axe DevTools (Chrome), Lighthouse Accessibility
+
+### 🟡 Media Prioridad
+
+#### Bundle Size Analysis
+Establecer budget y monitorear en CI.
+
+```bash
+# Analizar bundle
+npx source-map-explorer dist/**/*.js
+
+# Verificar dependencia antes de instalar
+# https://bundlephobia.com/
+```
+
+**Targets:**
+- Initial bundle: < 500KB gzipped
+- Lazy chunks: < 100KB cada uno
+- No dependencias duplicadas entre chunks
+
+#### PWA Audit
+Verificar con Lighthouse PWA audit.
+
+**Checklist:**
+- [ ] Manifest válido con iconos (192x192, 512x512)
+- [ ] Service Worker registrado y funcionando
+- [ ] Offline fallback page
+- [ ] HTTPS habilitado
+- [ ] Instalable en home screen
+
+**Estrategias de Cache:**
+| Recurso | Estrategia |
+|---------|------------|
+| Static assets (JS/CSS/fonts) | Cache-First |
+| Imágenes de autos | Cache-First con TTL |
+| API calls dinámicos | Network-First con fallback |
+| HTML pages | Stale-While-Revalidate |
+
+#### Database Query Optimization
+Usar Supabase Dashboard > Database > Query Performance.
+
+**Checklist:**
+- [ ] `pg_stat_statements` habilitado
+- [ ] Queries lentas identificadas (>100ms)
+- [ ] Índices en columnas de WHERE/JOIN frecuentes
+- [ ] RLS optimizado con `(select auth.uid())` para cache
+- [ ] No N+1 queries en frontend
+
+#### Mobile Real Device Testing
+62% del tráfico es móvil. Emuladores no capturan todo.
+
+**Estrategia:**
+- **CI diario:** Playwright con emulación mobile
+- **Semanal:** Testing en dispositivos reales (BrowserStack o físicos)
+
+**Verificar en real devices:**
+- Performance real (CPU, memoria)
+- Touch gestures y swipes
+- Cámara (inspecciones de video)
+- Network throttling (3G, 4G)
+
+### 🟢 Baja Prioridad
+
+#### Image Optimization
+- [ ] `NgOptimizedImage` directive en imágenes críticas
+- [ ] Formatos modernos (WebP, AVIF)
+- [ ] `loading="lazy"` en imágenes below-the-fold
+- [ ] Dimensiones explícitas (width/height) para evitar CLS
+- [ ] Supabase Image Transformation para resize on-the-fly
+
+#### Real User Monitoring (RUM)
+Datos de laboratorio ≠ datos reales. Configurar Sentry Performance.
+
+```typescript
+// Ya configurado en environment
+sentryDsn: '...',
+
+// Verificar que Performance está habilitado
+Sentry.init({
+  tracesSampleRate: 0.1, // 10% de transacciones
+});
+```
+
+### Frecuencia de Auditorías
+
+| Auditoría | Frecuencia | Responsable |
+|-----------|------------|-------------|
+| `pnpm audit` | Semanal (CI) | Automatizado |
+| Core Web Vitals | Mensual | Dev Team |
+| Accessibility | Por release | QA |
+| Bundle Size | Por PR (CI) | Automatizado |
+| Database Performance | Mensual | Backend |
+| Mobile Testing | Semanal | QA |
+
+### Recursos
+
+- [Angular Performance](https://angular.dev/best-practices/runtime-performance)
+- [Angular Security](https://angular.dev/best-practices/security)
+- [OWASP Top 10 2025](https://owasp.org/Top10/2025/)
+- [WebAIM WCAG Checklist](https://webaim.org/standards/wcag/checklist)
+- [Supabase Performance](https://supabase.com/docs/guides/platform/performance)
+- [web.dev Core Web Vitals](https://web.dev/articles/vitals)
+
+---
+
+**© 2026 AutoRenta | Claude Agent Configuration v3.1**

@@ -16,6 +16,10 @@ import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { firstValueFrom } from 'rxjs';
 import { Booking } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
+import { VideoInspectionAIComponent } from '../../../shared/components/video-inspection-ai/video-inspection-ai.component';
+import { VideoInspectionLiveComponent } from '../../../shared/components/video-inspection-live/video-inspection-live.component';
+
+type InspectionMode = 'photos' | 'video' | 'live';
 
 /**
  * Página de Check-in para locatarios
@@ -27,7 +31,7 @@ import { InspectionUploaderComponent } from '../../../shared/components/inspecti
   selector: 'app-check-in',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, InspectionUploaderComponent],
+  imports: [CommonModule, RouterLink, InspectionUploaderComponent, VideoInspectionAIComponent, VideoInspectionLiveComponent],
   templateUrl: './check-in.page.html',
   styleUrl: './check-in.page.css',
 })
@@ -45,6 +49,9 @@ export class CheckInPage implements OnInit {
   inspectionCompleted = signal(false);
   existingInspection = signal<BookingInspection | null>(null);
   ownerCheckInInspection = signal<BookingInspection | null>(null);
+
+  // Inspection mode: photos (traditional) or video (AI-powered)
+  inspectionMode = signal<InspectionMode>('photos');
 
   // Computed properties
   readonly canPerformCheckIn = computed(() => {
@@ -183,6 +190,20 @@ export class CheckInPage implements OnInit {
     if (booking) {
       this.router.navigate(['/bookings', booking.id]);
     }
+  }
+
+  /**
+   * Cambia el modo de inspección
+   */
+  setInspectionMode(mode: InspectionMode): void {
+    this.inspectionMode.set(mode);
+  }
+
+  /**
+   * Cambia a modo fotos (callback desde video component)
+   */
+  switchToPhotos(): void {
+    this.inspectionMode.set('photos');
   }
 
   formatDateTime(date: Date | string): string {

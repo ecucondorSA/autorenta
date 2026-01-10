@@ -33,9 +33,8 @@ export interface ConnectionMetrics {
 }
 
 // Type for database records compatible with Supabase Realtime
-// Supabase Realtime requires this exact constraint
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type DatabaseRecord = { [key: string]: any };
+// Using unknown instead of any for type safety while maintaining flexibility
+export type DatabaseRecord = Record<string, unknown>;
 
 /**
  * Service for resilient Realtime connections with automatic reconnection

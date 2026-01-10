@@ -1,31 +1,24 @@
-<div class="owner-dashboard bg-surface-base min-h-screen pb-20 sm:pb-0 transition-colors duration-300">
+<div
+  class="owner-dashboard bg-surface-base min-h-screen pb-20 sm:pb-0 transition-colors duration-300">
   <!-- Header con mejor jerarquía y sombra suave -->
   <div
-    class="bg-surface-raised border-b border-border-default transition-colors duration-300 shadow-sm z-10 relative"
-  >
+    class="bg-surface-raised border-b border-border-default transition-colors duration-300 shadow-sm z-10 relative">
     <div class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div class="min-w-0">
           <h1
-            class="text-xl sm:text-2xl md:text-3xl font-extrabold text-text-primary tracking-tight font-satoshi truncate"
-          >
-            Panel del Locador
+            class="text-xl sm:text-2xl md:text-3xl font-extrabold text-text-primary tracking-tight font-satoshi truncate">
+            Panel de Partícipe
           </h1>
           <p class="mt-0.5 sm:mt-1 text-xs sm:text-sm text-text-secondary font-medium">
-            Gestiona el rendimiento de tu flota y tus finanzas
+            Monitorea tu participación en el Pool de Movilidad y tus retornos.
           </p>
         </div>
-        <a
-          routerLink="/wallet"
-          class="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex-shrink-0"
-        >
+        <a routerLink="/wallet"
+          class="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex-shrink-0">
           <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
           <span class="sm:hidden">Wallet</span>
           <span class="hidden sm:inline">Ir a Wallet</span>
@@ -36,8 +29,7 @@
 
   <!-- Content -->
   <div
-    class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 space-y-4 sm:space-y-6 md:space-y-8"
-  >
+    class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 space-y-4 sm:space-y-6 md:space-y-8">
     <!-- Missing Documents Widget (User verification) -->
     <app-missing-documents-widget />
 
@@ -46,697 +38,488 @@
 
     <!-- Loading State con mejor diseño -->
     @if (loading()) {
-      <div class="flex flex-col items-center justify-center py-20 space-y-4">
-        <div class="relative">
-          <div
-            class="w-12 h-12 rounded-full border-4 border-primary-100 border-t-primary-600 animate-spin"
-          ></div>
+    <div class="flex flex-col items-center justify-center py-20 space-y-4">
+      <div class="relative">
+        <div
+          class="w-12 h-12 rounded-full border-4 border-primary-100 border-t-primary-600 animate-spin">
         </div>
-        <p class="text-text-secondary font-medium animate-pulse">Cargando tus métricas...</p>
       </div>
+      <p class="text-text-secondary font-medium animate-pulse">Cargando tus métricas...</p>
+    </div>
     }
 
     <!-- Error State -->
     @if (error(); as errorMsg) {
-      <div
-        class="bg-error-bg/10 border border-error-border/50 rounded-xl p-6 flex items-start gap-4"
-      >
-        <div class="p-2 bg-error-bg text-error-strong rounded-full shrink-0">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-error-strong mb-1 font-satoshi">
-            Error al cargar datos
-          </h3>
-          <p class="text-sm text-text-secondary mb-3">{{ errorMsg }}</p>
-          <button
-            (click)="loadDashboardData()"
-            class="text-sm font-bold text-primary-600 hover:text-primary-700 hover:underline"
-          >
-            Reintentar conexión
-          </button>
-        </div>
+    <div class="bg-error-bg/10 border border-error-border/50 rounded-xl p-6 flex items-start gap-4">
+      <div class="p-2 bg-error-bg text-error-strong rounded-full shrink-0">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
       </div>
+      <div>
+        <h3 class="text-lg font-bold text-error-strong mb-1 font-satoshi">
+          Error al cargar datos
+        </h3>
+        <p class="text-sm text-text-secondary mb-3">{{ errorMsg }}</p>
+        <button (click)="loadDashboardData()"
+          class="text-sm font-bold text-primary-600 hover:text-primary-700 hover:underline">
+          Reintentar conexión
+        </button>
+      </div>
+    </div>
     }
 
     @if (!loading()) {
-      <!-- Balance Cards - Rediseñadas con profundidad y sin emojis -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
-        <!-- Balance Disponible (Verde) -->
-        <div
-          class="group bg-surface-raised rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-border-default shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden"
-        >
-          <div
-            class="absolute top-0 left-0 w-1 sm:w-1.5 h-full bg-success-default group-hover:w-1.5 sm:group-hover:w-2 transition-all"
-          ></div>
-          <div class="flex items-start justify-between relative z-10">
-            <div class="min-w-0 flex-1">
-              <p
-                class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary uppercase tracking-wider"
-              >
-                Balance Disponible
-              </p>
-              <p
-                class="text-xl sm:text-2xl md:text-3xl font-extrabold text-text-primary mt-1 sm:mt-2 group-hover:text-success-default transition-colors truncate"
-              >
-                {{ availableBalance() | money }}
-              </p>
-              <p
-                class="text-xs sm:text-xs text-success-default font-medium mt-0.5 sm:mt-1 flex items-center gap-1"
-              >
-                <svg
-                  class="w-2.5 h-2.5 sm:w-3 sm:h-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                <span class="sm:hidden">Retirar</span>
-                <span class="hidden sm:inline">Listo para retirar</span>
-              </p>
-            </div>
-            <div
-              class="p-2 sm:p-3 bg-success-light/10 text-success-default rounded-lg sm:rounded-xl group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
-            >
-              <svg
-                class="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <!-- Balance Pendiente (Naranja) -->
-        <div
-          class="group bg-surface-raised rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-border-default shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden"
-        >
-          <div
-            class="absolute top-0 left-0 w-1 sm:w-1.5 h-full bg-warning-default group-hover:w-1.5 sm:group-hover:w-2 transition-all"
-          ></div>
-          <div class="flex items-start justify-between relative z-10">
-            <div class="min-w-0 flex-1">
-              <p
-                class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary uppercase tracking-wider"
-              >
-                En Proceso
-              </p>
-              <p
-                class="text-xl sm:text-2xl md:text-3xl font-extrabold text-text-primary mt-1 sm:mt-2 group-hover:text-warning-default transition-colors truncate"
-              >
-                {{ pendingBalance() | money }}
-              </p>
-              <p
-                class="text-xs sm:text-xs text-warning-default font-medium mt-0.5 sm:mt-1 flex items-center gap-1"
-              >
-                <svg
-                  class="w-2.5 h-2.5 sm:w-3 sm:h-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <span class="sm:hidden">Activas</span>
-                <span class="hidden sm:inline">Reservas activas</span>
-              </p>
-            </div>
-            <div
-              class="p-2 sm:p-3 bg-warning-light/10 text-warning-default rounded-lg sm:rounded-xl group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
-            >
-              <svg
-                class="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <!-- Total Ganado (Azul/Primary) -->
-        <div
-          class="group bg-surface-raised rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-border-default shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden sm:col-span-2 lg:col-span-1"
-        >
-          <div
-            class="absolute top-0 left-0 w-1 sm:w-1.5 h-full bg-primary-500 group-hover:w-1.5 sm:group-hover:w-2 transition-all"
-          ></div>
-          <div class="flex items-start justify-between relative z-10">
-            <div class="min-w-0 flex-1">
-              <p
-                class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary uppercase tracking-wider"
-              >
-                Total Ganado
-              </p>
-              <p
-                class="text-xl sm:text-2xl md:text-3xl font-extrabold text-text-primary mt-1 sm:mt-2 group-hover:text-primary-600 transition-colors truncate"
-              >
-                {{ totalEarnings() | money }}
-              </p>
-              <p
-                class="text-xs sm:text-xs text-text-secondary font-medium mt-0.5 sm:mt-1 flex items-center gap-1"
-              >
-                <span class="sm:hidden">Total</span>
-                <span class="hidden sm:inline">Histórico acumulado</span>
-              </p>
-            </div>
-            <div
-              class="p-2 sm:p-3 bg-primary-50 text-primary-600 rounded-lg sm:rounded-xl group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
-            >
-              <svg
-                class="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Widgets Reactivados -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <app-payouts-widget></app-payouts-widget>
-        <app-statistics-widget></app-statistics-widget>
-      </div>
-
-      <!-- Earnings by Month -->
+    <!-- Balance Cards - Rediseñadas con profundidad y sin emojis -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+      <!-- Balance Disponible (Verde) -->
       <div
-        class="bg-surface-raised rounded-xl sm:rounded-2xl shadow-sm border border-border-default p-4 sm:p-5 md:p-6 lg:p-8"
-      >
-        <h2
-          class="text-base sm:text-lg font-bold text-text-primary mb-4 sm:mb-6 flex items-center gap-1.5 sm:gap-2 font-satoshi"
-        >
-          <svg
-            class="w-4 h-4 sm:w-5 sm:h-5 text-primary-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-            />
-          </svg>
-          <span class="sm:hidden">Rendimiento</span>
-          <span class="hidden sm:inline">Rendimiento Mensual</span>
-        </h2>
+        class="group bg-surface-raised rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-border-default shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden">
         <div
-          class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-border-default"
-        >
-          <div class="pt-3 sm:pt-0">
-            <p class="text-xs sm:text-sm font-medium text-text-secondary mb-0.5 sm:mb-1">
-              Este Mes
+          class="absolute top-0 left-0 w-1 sm:w-1.5 h-full bg-success-default group-hover:w-1.5 sm:group-hover:w-2 transition-all">
+        </div>
+        <div class="flex items-start justify-between relative z-10">
+          <div class="min-w-0 flex-1">
+            <p
+              class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary uppercase tracking-wider">
+              Balance Disponible
             </p>
             <p
-              class="text-xl sm:text-2xl md:text-3xl font-bold text-text-primary tracking-tight truncate"
-            >
-              {{ thisMonthEarnings() | money }}
-            </p>
-          </div>
-          <div class="pt-3 sm:pt-0 sm:pl-4 md:pl-6 lg:pl-8">
-            <p class="text-xs sm:text-sm font-medium text-text-secondary mb-0.5 sm:mb-1">
-              Mes Anterior
+              class="text-xl sm:text-2xl md:text-3xl font-extrabold text-text-primary mt-1 sm:mt-2 group-hover:text-success-default transition-colors truncate">
+              {{ availableBalance() | money }}
             </p>
             <p
-              class="text-xl sm:text-2xl md:text-3xl font-bold text-text-secondary/60 tracking-tight truncate"
-            >
-              {{ lastMonthEarnings() | money }}
+              class="text-xs sm:text-xs text-success-default font-medium mt-0.5 sm:mt-1 flex items-center gap-1">
+              <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 13l4 4L19 7" />
+              </svg>
+              <span class="sm:hidden">Retirar</span>
+              <span class="hidden sm:inline">Listo para retirar</span>
             </p>
           </div>
-          <div class="pt-3 sm:pt-0 sm:pl-4 md:pl-6 lg:pl-8">
-            <p class="text-xs sm:text-sm font-medium text-text-secondary mb-0.5 sm:mb-1">
-              Crecimiento
-            </p>
-            <div class="flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
-              <p
-                class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight"
-                [class.text-success-strong]="isGrowthPositive()"
-                [class.text-error-strong]="!isGrowthPositive()"
-              >
-                {{ isGrowthPositive() ? '+' : '' }}{{ growthPercentage() }}%
-              </p>
-              @if (isGrowthPositive()) {
-                <span
-                  class="text-xs sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-success-light/20 text-success-strong rounded-full font-medium"
-                  >Trending Up</span
-                >
-              }
-            </div>
+          <div
+            class="p-2 sm:p-3 bg-success-light/10 text-success-default rounded-lg sm:rounded-xl group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
           </div>
         </div>
       </div>
 
-      <!-- Payouts History -->
+      <!-- Balance Pendiente (Naranja) -->
       <div
-        class="bg-surface-raised rounded-xl sm:rounded-2xl shadow-sm border border-border-default p-3 sm:p-4 md:p-6 overflow-hidden"
-      >
-        <app-payouts-history></app-payouts-history>
-      </div>
-
-      <!-- Stats Cards - Refined -->
-      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
-        <!-- Mis Autos -->
-        <a
-          routerLink="/cars/my-cars"
-          class="group bg-surface-raised rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-border-default hover:border-primary-300 transition-all duration-200 hover:shadow-md flex items-center justify-between"
-        >
-          <div class="min-w-0">
-            <p
-              class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary group-hover:text-primary-600 transition-colors"
-            >
-              Mis Autos
-            </p>
-            <p class="text-lg sm:text-xl md:text-2xl font-bold text-text-primary mt-0.5 sm:mt-1">
-              {{ totalCars() }}
-            </p>
-          </div>
-          <div
-            class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-surface-base flex items-center justify-center text-text-secondary group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors flex-shrink-0"
-          >
-            <svg
-              class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-              />
-            </svg>
-          </div>
-        </a>
-
-        <!-- Activos -->
+        class="group bg-surface-raised rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-border-default shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden">
         <div
-          class="bg-surface-raised rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-border-default flex items-center justify-between"
-        >
-          <div class="min-w-0">
-            <p class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary">Disponibles</p>
-            <p class="text-lg sm:text-xl md:text-2xl font-bold text-success-strong mt-0.5 sm:mt-1">
-              {{ activeCars() }}
-            </p>
-          </div>
-          <div
-            class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-success-light/10 flex items-center justify-center text-success-strong flex-shrink-0"
-          >
-            <svg
-              class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
+          class="absolute top-0 left-0 w-1 sm:w-1.5 h-full bg-warning-default group-hover:w-1.5 sm:group-hover:w-2 transition-all">
         </div>
-
-        <!-- Upcoming -->
-        <a
-          routerLink="/bookings/owner"
-          class="group bg-surface-raised rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-border-default hover:border-cta-default transition-all duration-200 hover:shadow-md flex items-center justify-between"
-        >
-          <div class="min-w-0">
+        <div class="flex items-start justify-between relative z-10">
+          <div class="min-w-0 flex-1">
             <p
-              class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary group-hover:text-cta-default transition-colors"
-            >
-              Próximas
+              class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary uppercase tracking-wider">
+              En Proceso
             </p>
-            <p class="text-lg sm:text-xl md:text-2xl font-bold text-cta-default mt-0.5 sm:mt-1">
-              {{ upcomingBookings() }}
+            <p
+              class="text-xl sm:text-2xl md:text-3xl font-extrabold text-text-primary mt-1 sm:mt-2 group-hover:text-warning-default transition-colors truncate">
+              {{ pendingBalance() | money }}
             </p>
-          </div>
-          <div
-            class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-cta-default/10 flex items-center justify-center text-cta-default flex-shrink-0"
-          >
-            <svg
-              class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
-          </div>
-        </a>
-
-        <!-- Active Rentals -->
-        <div
-          class="bg-surface-raised rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-border-default flex items-center justify-between"
-        >
-          <div class="min-w-0">
-            <p class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary">En Curso</p>
-            <p class="text-lg sm:text-xl md:text-2xl font-bold text-warning-strong mt-0.5 sm:mt-1">
-              {{ activeBookings() }}
+            <p
+              class="text-xs sm:text-xs text-warning-default font-medium mt-0.5 sm:mt-1 flex items-center gap-1">
+              <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span class="sm:hidden">Activas</span>
+              <span class="hidden sm:inline">Reservas activas</span>
             </p>
           </div>
           <div
-            class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-warning-light/10 flex items-center justify-center text-warning-strong flex-shrink-0"
-          >
-            <svg
-              class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
+            class="p-2 sm:p-3 bg-warning-light/10 text-warning-default rounded-lg sm:rounded-xl group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
           </div>
         </div>
       </div>
 
-      <!-- Recent Notifications (Estilo mejorado) -->
+      <!-- Total Ganado (Azul/Primary) -->
       <div
-        class="bg-surface-raised rounded-xl sm:rounded-2xl shadow-sm border border-border-default p-3 sm:p-4 md:p-6"
-      >
-        <div class="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
-          <h2
-            class="text-sm sm:text-base md:text-lg font-bold text-text-primary flex items-center gap-1.5 sm:gap-2 font-satoshi"
-          >
-            <svg
-              class="w-4 h-4 sm:w-5 sm:h-5 text-text-secondary"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              />
-            </svg>
-            <span class="sm:hidden">Actividad</span>
-            <span class="hidden sm:inline">Actividad Reciente</span>
-          </h2>
-          <a
-            routerLink="/notifications"
-            class="text-xs sm:text-sm text-primary-600 hover:text-primary-700 font-medium hover:underline"
-          >
-            Ver todas
-          </a>
+        class="group bg-surface-raised rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-border-default shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden sm:col-span-2 lg:col-span-1">
+        <div
+          class="absolute top-0 left-0 w-1 sm:w-1.5 h-full bg-primary-500 group-hover:w-1.5 sm:group-hover:w-2 transition-all">
         </div>
-
-        @if (recentNotifications().length === 0) {
-          <div
-            class="text-center py-8 sm:py-10 md:py-12 border-2 border-dashed border-border-default rounded-lg sm:rounded-xl"
-          >
-            <svg
-              class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-text-secondary/30 mx-auto mb-2 sm:mb-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-              />
-            </svg>
-            <p class="text-xs sm:text-sm text-text-secondary px-4">
-              Todo tranquilo por aquí. No hay nuevas notificaciones.
+        <div class="flex items-start justify-between relative z-10">
+          <div class="min-w-0 flex-1">
+            <p
+              class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary uppercase tracking-wider">
+              Total Ganado
+            </p>
+            <p
+              class="text-xl sm:text-2xl md:text-3xl font-extrabold text-text-primary mt-1 sm:mt-2 group-hover:text-primary-600 transition-colors truncate">
+              {{ totalEarnings() | money }}
+            </p>
+            <p
+              class="text-xs sm:text-xs text-text-secondary font-medium mt-0.5 sm:mt-1 flex items-center gap-1">
+              <span class="sm:hidden">Total</span>
+              <span class="hidden sm:inline">Histórico acumulado</span>
             </p>
           </div>
-        } @else {
-          <div class="space-y-1.5 sm:space-y-2">
-            @for (notification of recentNotifications(); track notification.id) {
-              <div
-                class="group flex items-start gap-2.5 sm:gap-3 md:gap-4 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl border border-transparent hover:border-border-default hover:bg-surface-base transition-all cursor-pointer"
-                [class.bg-primary-50]="!notification.read"
-                [routerLink]="notification.actionUrl || '/notifications'"
-              >
-                <div class="mt-0.5 sm:mt-1 flex-shrink-0">
-                  @if (!notification.read) {
-                    <span
-                      class="block w-2 h-2 sm:w-2.5 sm:h-2.5 bg-primary-600 rounded-full ring-2 sm:ring-4 ring-primary-100"
-                    ></span>
-                  } @else {
-                    <span
-                      class="block w-2 h-2 sm:w-2.5 sm:h-2.5 bg-text-secondary/30 rounded-full"
-                    ></span>
-                  }
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p
-                    class="text-xs sm:text-sm font-medium text-text-primary group-hover:text-primary-600 transition-colors line-clamp-1"
-                    [class.font-bold]="!notification.read"
-                  >
-                    {{ notification.title }}
-                  </p>
-                  <p class="text-xs sm:text-sm text-text-secondary mt-0.5 line-clamp-1">
-                    {{ notification.message }}
-                  </p>
-                  <p class="text-xs sm:text-xs text-text-secondary/60 mt-1 sm:mt-1.5 font-mono">
-                    {{ notification.createdAt | date: 'short' }}
-                  </p>
-                </div>
-                <svg
-                  class="w-4 h-4 sm:w-5 sm:h-5 text-text-secondary/30 group-hover:text-primary-600 opacity-60 sm:opacity-0 sm:group-hover:opacity-100 transition-all transform group-hover:translate-x-1 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </div>
+          <div
+            class="p-2 sm:p-3 bg-primary-50 text-primary-600 rounded-lg sm:rounded-xl group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Widget de Participación en Red (Shield Armor) -->
+    <app-network-participation-widget [participationPeriod]="participationPeriod()"
+      [fgoStatus]="fgoStatus()">
+    </app-network-participation-widget>
+
+    <!-- Widgets Reactivados -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <app-payouts-widget></app-payouts-widget>
+      <app-statistics-widget></app-statistics-widget>
+    </div>
+
+    <!-- Earnings by Month -->
+    <div
+      class="bg-surface-raised rounded-xl sm:rounded-2xl shadow-sm border border-border-default p-4 sm:p-5 md:p-6 lg:p-8">
+      <h2
+        class="text-base sm:text-lg font-bold text-text-primary mb-4 sm:mb-6 flex items-center gap-1.5 sm:gap-2 font-satoshi">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <span class="sm:hidden">Rendimiento</span>
+        <span class="hidden sm:inline">Rendimiento Mensual</span>
+      </h2>
+      <div
+        class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-border-default">
+        <div class="pt-3 sm:pt-0">
+          <p class="text-xs sm:text-sm font-medium text-text-secondary mb-0.5 sm:mb-1">
+            Este Mes
+          </p>
+          <p
+            class="text-xl sm:text-2xl md:text-3xl font-bold text-text-primary tracking-tight truncate">
+            {{ thisMonthEarnings() | money }}
+          </p>
+        </div>
+        <div class="pt-3 sm:pt-0 sm:pl-4 md:pl-6 lg:pl-8">
+          <p class="text-xs sm:text-sm font-medium text-text-secondary mb-0.5 sm:mb-1">
+            Mes Anterior
+          </p>
+          <p
+            class="text-xl sm:text-2xl md:text-3xl font-bold text-text-secondary/60 tracking-tight truncate">
+            {{ lastMonthEarnings() | money }}
+          </p>
+        </div>
+        <div class="pt-3 sm:pt-0 sm:pl-4 md:pl-6 lg:pl-8">
+          <p class="text-xs sm:text-sm font-medium text-text-secondary mb-0.5 sm:mb-1">
+            Crecimiento
+          </p>
+          <div class="flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
+            <p class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight"
+              [class.text-success-strong]="isGrowthPositive()"
+              [class.text-error-strong]="!isGrowthPositive()">
+              {{ isGrowthPositive() ? '+' : '' }}{{ growthPercentage() }}%
+            </p>
+            @if (isGrowthPositive()) {
+            <span
+              class="text-xs sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-success-light/20 text-success-strong rounded-full font-medium">Trending
+              Up</span>
             }
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payouts History -->
+    <div
+      class="bg-surface-raised rounded-xl sm:rounded-2xl shadow-sm border border-border-default p-3 sm:p-4 md:p-6 overflow-hidden">
+      <app-payouts-history></app-payouts-history>
+    </div>
+
+    <!-- Stats Cards - Refined -->
+    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
+      <!-- Mis Autos -->
+      <a routerLink="/cars/my-cars"
+        class="group bg-surface-raised rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-border-default hover:border-primary-300 transition-all duration-200 hover:shadow-md flex items-center justify-between">
+        <div class="min-w-0">
+          <p
+            class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary group-hover:text-primary-600 transition-colors">
+            Mis Autos
+          </p>
+          <p class="text-lg sm:text-xl md:text-2xl font-bold text-text-primary mt-0.5 sm:mt-1">
+            {{ totalCars() }}
+          </p>
+        </div>
+        <div
+          class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-surface-base flex items-center justify-center text-text-secondary group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors flex-shrink-0">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+        </div>
+      </a>
+
+      <!-- Activos -->
+      <div
+        class="bg-surface-raised rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-border-default flex items-center justify-between">
+        <div class="min-w-0">
+          <p class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary">Disponibles</p>
+          <p class="text-lg sm:text-xl md:text-2xl font-bold text-success-strong mt-0.5 sm:mt-1">
+            {{ activeCars() }}
+          </p>
+        </div>
+        <div
+          class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-success-light/10 flex items-center justify-center text-success-strong flex-shrink-0">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Upcoming -->
+      <a routerLink="/bookings/owner"
+        class="group bg-surface-raised rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-border-default hover:border-cta-default transition-all duration-200 hover:shadow-md flex items-center justify-between">
+        <div class="min-w-0">
+          <p
+            class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary group-hover:text-cta-default transition-colors">
+            Próximas
+          </p>
+          <p class="text-lg sm:text-xl md:text-2xl font-bold text-cta-default mt-0.5 sm:mt-1">
+            {{ upcomingBookings() }}
+          </p>
+        </div>
+        <div
+          class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-cta-default/10 flex items-center justify-center text-cta-default flex-shrink-0">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </div>
+      </a>
+
+      <!-- Active Rentals -->
+      <div
+        class="bg-surface-raised rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-border-default flex items-center justify-between">
+        <div class="min-w-0">
+          <p class="text-xs sm:text-xs md:text-sm font-medium text-text-secondary">En Curso</p>
+          <p class="text-lg sm:text-xl md:text-2xl font-bold text-warning-strong mt-0.5 sm:mt-1">
+            {{ activeBookings() }}
+          </p>
+        </div>
+        <div
+          class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-warning-light/10 flex items-center justify-center text-warning-strong flex-shrink-0">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Notifications (Estilo mejorado) -->
+    <div
+      class="bg-surface-raised rounded-xl sm:rounded-2xl shadow-sm border border-border-default p-3 sm:p-4 md:p-6">
+      <div class="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
+        <h2
+          class="text-sm sm:text-base md:text-lg font-bold text-text-primary flex items-center gap-1.5 sm:gap-2 font-satoshi">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-text-secondary" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <span class="sm:hidden">Actividad</span>
+          <span class="hidden sm:inline">Actividad Reciente</span>
+        </h2>
+        <a routerLink="/notifications"
+          class="text-xs sm:text-sm text-primary-600 hover:text-primary-700 font-medium hover:underline">
+          Ver todas
+        </a>
+      </div>
+
+      @if (recentNotifications().length === 0) {
+      <div
+        class="text-center py-8 sm:py-10 md:py-12 border-2 border-dashed border-border-default rounded-lg sm:rounded-xl">
+        <svg
+          class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-text-secondary/30 mx-auto mb-2 sm:mb-3"
+          fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+        </svg>
+        <p class="text-xs sm:text-sm text-text-secondary px-4">
+          Todo tranquilo por aquí. No hay nuevas notificaciones.
+        </p>
+      </div>
+      } @else {
+      <div class="space-y-1.5 sm:space-y-2">
+        @for (notification of recentNotifications(); track notification.id) {
+        <div
+          class="group flex items-start gap-2.5 sm:gap-3 md:gap-4 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl border border-transparent hover:border-border-default hover:bg-surface-base transition-all cursor-pointer"
+          [class.bg-primary-50]="!notification.read"
+          [routerLink]="notification.actionUrl || '/notifications'">
+          <div class="mt-0.5 sm:mt-1 flex-shrink-0">
+            @if (!notification.read) {
+            <span
+              class="block w-2 h-2 sm:w-2.5 sm:h-2.5 bg-primary-600 rounded-full ring-2 sm:ring-4 ring-primary-100"></span>
+            } @else {
+            <span class="block w-2 h-2 sm:w-2.5 sm:h-2.5 bg-text-secondary/30 rounded-full"></span>
+            }
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs sm:text-sm font-medium text-text-primary group-hover:text-primary-600 transition-colors line-clamp-1"
+              [class.font-bold]="!notification.read">
+              {{ notification.title }}
+            </p>
+            <p class="text-xs sm:text-sm text-text-secondary mt-0.5 line-clamp-1">
+              {{ notification.message }}
+            </p>
+            <p class="text-xs sm:text-xs text-text-secondary/60 mt-1 sm:mt-1.5 font-mono">
+              {{ notification.createdAt | date: 'short' }}
+            </p>
+          </div>
+          <svg
+            class="w-4 h-4 sm:w-5 sm:h-5 text-text-secondary/30 group-hover:text-primary-600 opacity-60 sm:opacity-0 sm:group-hover:opacity-100 transition-all transform group-hover:translate-x-1 flex-shrink-0"
+            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
         }
       </div>
-
-      <!-- Quick Actions - Tarjetas táctiles -->
-      <div
-        class="bg-surface-raised rounded-xl sm:rounded-2xl shadow-sm border border-border-default p-3 sm:p-4 md:p-6"
-      >
-        <h2
-          class="text-sm sm:text-base md:text-lg font-bold text-text-primary mb-3 sm:mb-4 md:mb-6 font-satoshi"
-        >
-          Acciones Rápidas
-        </h2>
-        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
-          <a
-            routerLink="/cars/publish"
-            class="flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 bg-surface-base border border-border-default hover:border-primary-500 hover:ring-2 sm:hover:ring-4 hover:ring-primary-50 rounded-xl sm:rounded-2xl transition-all duration-200 group active:scale-95"
-          >
-            <div
-              class="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-primary-100 text-primary-600 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform"
-            >
-              <svg
-                class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-            </div>
-            <p
-              class="text-xs sm:text-sm md:text-base font-bold text-text-primary group-hover:text-primary-600 transition-colors text-center"
-            >
-              <span class="sm:hidden">Publicar</span>
-              <span class="hidden sm:inline">Publicar Auto</span>
-            </p>
-            <p
-              class="text-xs sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block"
-            >
-              Añadir vehículo
-            </p>
-          </a>
-
-          <a
-            routerLink="/bookings/owner"
-            class="flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 bg-surface-base border border-border-default hover:border-primary-500 hover:ring-2 sm:hover:ring-4 hover:ring-primary-50 rounded-xl sm:rounded-2xl transition-all duration-200 group active:scale-95"
-          >
-            <div
-              class="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-blue-100 text-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform"
-            >
-              <svg
-                class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                />
-              </svg>
-            </div>
-            <p
-              class="text-xs sm:text-sm md:text-base font-bold text-text-primary group-hover:text-blue-600 transition-colors text-center"
-            >
-              <span class="sm:hidden">Reservas</span>
-              <span class="hidden sm:inline">Mis Reservas</span>
-            </p>
-            <p
-              class="text-xs sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block"
-            >
-              Gestionar reservas
-            </p>
-          </a>
-
-          <button
-            (click)="toggleCalendar()"
-            class="flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 bg-surface-base border border-border-default hover:border-primary-500 hover:ring-2 sm:hover:ring-4 hover:ring-primary-50 rounded-xl sm:rounded-2xl transition-all duration-200 group active:scale-95 w-full"
-          >
-            <div
-              class="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-purple-100 text-purple-600 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform"
-            >
-              <svg
-                class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-            </div>
-            <p
-              class="text-xs sm:text-sm md:text-base font-bold text-text-primary group-hover:text-purple-600 transition-colors text-center"
-            >
-              Calendario
-            </p>
-            <p
-              class="text-xs sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block"
-            >
-              Ver disponibilidad
-            </p>
-          </button>
-
-          <a
-            routerLink="/wallet"
-            class="flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 bg-surface-base border border-border-default hover:border-primary-500 hover:ring-2 sm:hover:ring-4 hover:ring-primary-50 rounded-xl sm:rounded-2xl transition-all duration-200 group active:scale-95"
-          >
-            <div
-              class="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-success-light/20 text-success-strong rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform"
-            >
-              <svg
-                class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <p
-              class="text-xs sm:text-sm md:text-base font-bold text-text-primary group-hover:text-success-strong transition-colors text-center"
-            >
-              <span class="sm:hidden">Wallet</span>
-              <span class="hidden sm:inline">Retirar Dinero</span>
-            </p>
-            <p
-              class="text-xs sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block"
-            >
-              Ir a Billetera
-            </p>
-          </a>
-        </div>
-      </div>
-
-      <!-- Multi-Car Calendar Section (Mantenido igual, solo wrapper mejorado) -->
-      @if (showCalendar()) {
-        <div
-          class="mt-4 sm:mt-6 md:mt-8 bg-surface-raised rounded-xl sm:rounded-2xl shadow-lg border border-border-default p-3 sm:p-4 md:p-6 animate-in fade-in slide-in-from-top-4 duration-300"
-        >
-          <div class="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
-            <h2 class="text-base sm:text-lg md:text-xl font-bold text-text-primary font-satoshi">
-              <span class="sm:hidden">Calendario</span>
-              <span class="hidden sm:inline">📅 Calendario de Disponibilidad</span>
-            </h2>
-            <button
-              (click)="toggleCalendar()"
-              class="px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium text-text-secondary hover:text-text-primary bg-surface-base rounded-lg transition-colors"
-            >
-              Ocultar
-            </button>
-          </div>
-          <app-multi-car-calendar />
-        </div>
       }
+    </div>
+
+    <!-- Quick Actions - Tarjetas táctiles -->
+    <div
+      class="bg-surface-raised rounded-xl sm:rounded-2xl shadow-sm border border-border-default p-3 sm:p-4 md:p-6">
+      <h2
+        class="text-sm sm:text-base md:text-lg font-bold text-text-primary mb-3 sm:mb-4 md:mb-6 font-satoshi">
+        Acciones Rápidas
+      </h2>
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
+        <a routerLink="/cars/publish"
+          class="flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 bg-surface-base border border-border-default hover:border-primary-500 hover:ring-2 sm:hover:ring-4 hover:ring-primary-50 rounded-xl sm:rounded-2xl transition-all duration-200 group active:scale-95">
+          <div
+            class="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-primary-100 text-primary-600 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 4v16m8-8H4" />
+            </svg>
+          </div>
+          <p
+            class="text-xs sm:text-sm md:text-base font-bold text-text-primary group-hover:text-primary-600 transition-colors text-center">
+            <span class="sm:hidden">Publicar</span>
+            <span class="hidden sm:inline">Publicar Auto</span>
+          </p>
+          <p
+            class="text-xs sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block">
+            Añadir vehículo
+          </p>
+        </a>
+
+        <a routerLink="/bookings/owner"
+          class="flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 bg-surface-base border border-border-default hover:border-primary-500 hover:ring-2 sm:hover:ring-4 hover:ring-primary-50 rounded-xl sm:rounded-2xl transition-all duration-200 group active:scale-95">
+          <div
+            class="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-blue-100 text-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <p
+            class="text-xs sm:text-sm md:text-base font-bold text-text-primary group-hover:text-blue-600 transition-colors text-center">
+            <span class="sm:hidden">Reservas</span>
+            <span class="hidden sm:inline">Mis Reservas</span>
+          </p>
+          <p
+            class="text-xs sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block">
+            Gestionar reservas
+          </p>
+        </a>
+
+        <button (click)="toggleCalendar()"
+          class="flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 bg-surface-base border border-border-default hover:border-primary-500 hover:ring-2 sm:hover:ring-4 hover:ring-primary-50 rounded-xl sm:rounded-2xl transition-all duration-200 group active:scale-95 w-full">
+          <div
+            class="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-purple-100 text-purple-600 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <p
+            class="text-xs sm:text-sm md:text-base font-bold text-text-primary group-hover:text-purple-600 transition-colors text-center">
+            Calendario
+          </p>
+          <p
+            class="text-xs sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block">
+            Ver disponibilidad
+          </p>
+        </button>
+
+        <a routerLink="/wallet"
+          class="flex flex-col items-center justify-center p-3 sm:p-4 md:p-6 bg-surface-base border border-border-default hover:border-primary-500 hover:ring-2 sm:hover:ring-4 hover:ring-primary-50 rounded-xl sm:rounded-2xl transition-all duration-200 group active:scale-95">
+          <div
+            class="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-success-light/20 text-success-strong rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <p
+            class="text-xs sm:text-sm md:text-base font-bold text-text-primary group-hover:text-success-strong transition-colors text-center">
+            <span class="sm:hidden">Wallet</span>
+            <span class="hidden sm:inline">Retirar Dinero</span>
+          </p>
+          <p
+            class="text-xs sm:text-xs text-text-secondary text-center mt-0.5 sm:mt-1 hidden sm:block">
+            Ir a Billetera
+          </p>
+        </a>
+      </div>
+    </div>
+
+    <!-- Multi-Car Calendar Section (Mantenido igual, solo wrapper mejorado) -->
+    @if (showCalendar()) {
+    <div
+      class="mt-4 sm:mt-6 md:mt-8 bg-surface-raised rounded-xl sm:rounded-2xl shadow-lg border border-border-default p-3 sm:p-4 md:p-6 animate-in fade-in slide-in-from-top-4 duration-300">
+      <div class="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
+        <h2 class="text-base sm:text-lg md:text-xl font-bold text-text-primary font-satoshi">
+          <span class="sm:hidden">Calendario</span>
+          <span class="hidden sm:inline">📅 Calendario de Disponibilidad</span>
+        </h2>
+        <button (click)="toggleCalendar()"
+          class="px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium text-text-secondary hover:text-text-primary bg-surface-base rounded-lg transition-colors">
+          Ocultar
+        </button>
+      </div>
+      <app-multi-car-calendar />
+    </div>
+    }
     }
   </div>
 </div>

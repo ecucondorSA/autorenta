@@ -29,27 +29,45 @@ import {
   imports: [CommonModule, IonIcon],
   template: `
     @if (shouldShow()) {
-      <section class="bg-surface-inverse text-text-inverse rounded-2xl shadow-xl overflow-hidden">
+      <section class="bg-neutral-900 text-white rounded-2xl shadow-xl overflow-hidden">
         <!-- Header -->
-        <div class="px-5 py-4 border-b border-white/10 flex justify-between items-center">
-          <h3 class="text-base font-bold flex items-center gap-2 text-text-inverse">
+        <div class="px-5 py-4 border-b border-neutral-700 flex justify-between items-center">
+          <h3 class="text-base font-bold flex items-center gap-2 text-white">
             <ion-icon name="location" class="text-xl"></ion-icon>
             Información de Check-in
           </h3>
           <!-- Car Ready Status -->
           <div class="flex items-center gap-2">
-            @if (booking().owner_confirmed_delivery) {
+            @if (awaitingRenterCheckIn()) {
+              @if (isOwner()) {
+                <!-- Owner: ya entregó, esperando viajero -->
+                <span
+                  class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold"
+                >
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  Auto Entregado
+                </span>
+              } @else {
+                <!-- Renter: debe confirmar recepción -->
+                <span
+                  class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-bold"
+                >
+                  <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                  Confirmar Recepción
+                </span>
+              }
+            } @else if (booking().owner_confirmed_delivery) {
               <span
-                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-success-500/20 border border-success-400/30 text-success-300 text-xs font-bold"
+                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold"
               >
-                <span class="w-2 h-2 rounded-full bg-success-400 animate-pulse"></span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                 Auto Listo
               </span>
             } @else {
               <span
-                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-warning-500/20 border border-warning-400/30 text-warning-300 text-xs font-bold"
+                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-bold"
               >
-                <span class="w-2 h-2 rounded-full bg-warning-400"></span>
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
                 Preparando
               </span>
             }
@@ -61,13 +79,13 @@ import {
           <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-xs text-text-inverse/70 font-semibold uppercase tracking-wider mb-1">
+                <p class="text-xs text-neutral-300 font-semibold uppercase tracking-wider mb-1">
                   Fecha y Hora de Retiro
                 </p>
-                <p class="text-2xl font-bold text-text-inverse">
+                <p class="text-2xl font-bold text-white">
                   {{ booking().start_at | date: 'EEEE d MMMM' }}
                 </p>
-                <p class="text-3xl font-black tracking-tight text-text-inverse">
+                <p class="text-3xl font-black tracking-tight text-white">
                   {{ booking().start_at | date: 'HH:mm' }} hs
                 </p>
               </div>
@@ -79,13 +97,13 @@ import {
 
           <!-- Coordenadas con Navegación -->
           <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10">
-            <p class="text-xs text-text-inverse/70 font-semibold uppercase tracking-wider mb-3">
+            <p class="text-xs text-neutral-300 font-semibold uppercase tracking-wider mb-3">
               Punto de Encuentro
             </p>
 
             @if (hasPickupLocation()) {
               <!-- Usar coordenadas específicas del pickup -->
-              <p class="text-sm font-medium mb-4 text-text-inverse/90">
+              <p class="text-sm font-medium mb-4 text-white">
                 {{ booking().pickup_location_lat?.toFixed(6) }},
                 {{ booking().pickup_location_lng?.toFixed(6) }}
               </p>
@@ -95,7 +113,7 @@ import {
                   [href]="googleMapsUrl()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-surface-base text-text-primary font-bold text-sm hover:bg-surface-hover transition-all active:scale-[0.98] shadow-lg"
+                  class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white text-neutral-900 font-bold text-sm hover:bg-neutral-100 transition-all active:scale-[0.98] shadow-lg"
                 >
                   <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                     <path
@@ -108,7 +126,7 @@ import {
                   [href]="wazeUrl()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-info-400 text-black font-bold text-sm hover:bg-info-300 transition-all active:scale-[0.98] shadow-lg"
+                  class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-sky-400 text-neutral-900 font-bold text-sm hover:bg-sky-300 transition-all active:scale-[0.98] shadow-lg"
                 >
                   <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                     <path
@@ -119,35 +137,35 @@ import {
                 </a>
               </div>
             } @else {
-              <div class="flex items-center gap-3 text-text-inverse/70">
+              <div class="flex items-center gap-3 text-neutral-300">
                 <ion-icon name="location-outline" class="text-2xl"></ion-icon>
-                <span class="text-sm">Ubicación no disponible</span>
+                <span class="text-sm font-medium">Ubicación no disponible</span>
               </div>
             }
           </div>
 
           <!-- Documentos Físicos Requeridos (PROMINENTE) -->
-          <div class="bg-warning-500/20 backdrop-blur rounded-xl p-4 border border-warning-400/30">
+          <div class="bg-amber-900/40 backdrop-blur rounded-xl p-4 border border-amber-500/40">
             <div class="flex items-start gap-3">
               <div
-                class="w-10 h-10 rounded-full bg-warning-500/30 flex items-center justify-center shrink-0"
+                class="w-10 h-10 rounded-full bg-amber-500/30 flex items-center justify-center shrink-0"
               >
-                <ion-icon name="warning" class="text-xl text-warning-300"></ion-icon>
+                <ion-icon name="warning" class="text-xl text-amber-400"></ion-icon>
               </div>
               <div>
-                <p class="text-sm font-bold text-warning-200 mb-2">Documentos Físicos Obligatorios</p>
-                <p class="text-xs text-text-inverse/80 mb-3">
+                <p class="text-sm font-bold text-amber-300 mb-2">Documentos Físicos Obligatorios</p>
+                <p class="text-xs text-neutral-200 mb-3">
                   Aunque la App verificó tu identidad, legalmente debes mostrar los documentos físicos
                   al dueño.
                 </p>
                 <div class="grid grid-cols-2 gap-2">
-                  <div class="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2">
-                    <ion-icon name="id-card" class="text-warning-300"></ion-icon>
-                    <span class="text-xs font-semibold text-text-inverse">DNI Físico</span>
+                  <div class="flex items-center gap-2 bg-white/15 rounded-lg px-3 py-2">
+                    <ion-icon name="id-card" class="text-amber-400"></ion-icon>
+                    <span class="text-xs font-semibold text-white">DNI Físico</span>
                   </div>
-                  <div class="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2">
-                    <ion-icon name="car" class="text-warning-300"></ion-icon>
-                    <span class="text-xs font-semibold text-text-inverse">Carnet Físico</span>
+                  <div class="flex items-center gap-2 bg-white/15 rounded-lg px-3 py-2">
+                    <ion-icon name="car" class="text-amber-400"></ion-icon>
+                    <span class="text-xs font-semibold text-white">Carnet Físico</span>
                   </div>
                 </div>
               </div>
@@ -160,6 +178,8 @@ import {
 })
 export class BookingCheckInInfoCardComponent {
   readonly booking = input.required<Booking>();
+  readonly awaitingRenterCheckIn = input<boolean>(false);
+  readonly isOwner = input<boolean>(false);
 
   constructor() {
     addIcons({

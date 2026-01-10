@@ -1,0 +1,415 @@
+<!-- Video Inspection Live Component -->
+<div class="flex flex-col h-full bg-gray-900">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between p-4 bg-gray-800">
+    <div class="flex items-center gap-3">
+      <button
+        (click)="cancel()"
+        class="p-2 text-white hover:bg-gray-700 rounded-full transition-colors"
+      >
+        <app-icon name="arrow-back" class="w-6 h-6"></app-icon>
+      </button>
+      <div>
+        <h1 class="text-lg font-semibold text-white">Inspección en Vivo</h1>
+        <p class="text-sm text-gray-400">{{ stageLabel() }}</p>
+      </div>
+    </div>
+
+    <!-- Connection indicator -->
+    <div class="flex items-center gap-2">
+      @if (connectionState() === 'connected') {
+        <span class="flex items-center gap-1 text-green-400 text-sm">
+          <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+          IA Conectada
+        </span>
+      } @else if (connectionState() === 'connecting') {
+        <span class="flex items-center gap-1 text-yellow-400 text-sm">
+          <span class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+          Conectando...
+        </span>
+      } @else {
+        <span class="flex items-center gap-1 text-red-400 text-sm">
+          <span class="w-2 h-2 bg-red-400 rounded-full"></span>
+          Desconectado
+        </span>
+      }
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  @switch (viewState()) {
+    <!-- INITIALIZING -->
+    @case ('initializing') {
+      <div class="flex-1 flex flex-col items-center justify-center p-8">
+        <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-white text-lg">Iniciando inspección en vivo...</p>
+        <p class="text-gray-400 text-sm mt-2">Conectando con IA y cámara</p>
+      </div>
+    }
+
+    <!-- READY -->
+    @case ('ready') {
+      <div class="flex-1 flex flex-col">
+        <!-- Video Preview -->
+        <div class="relative flex-1 bg-black">
+          <video
+            #videoElement
+            class="w-full h-full object-cover"
+            autoplay
+            playsinline
+            muted
+          ></video>
+
+          <!-- Overlay: Areas Status -->
+          <div class="absolute top-4 left-4 right-4">
+            <div class="bg-black/60 rounded-lg p-3">
+              <div class="text-xs text-gray-300 mb-2">Áreas detectadas:</div>
+              <div class="flex flex-wrap gap-2">
+                @for (area of ['front', 'rear', 'left_side', 'right_side']; track area) {
+                  <span
+                    class="px-2 py-1 rounded text-xs font-medium"
+                    [class]="areasDetected()[area] ? 'bg-green-500/80 text-white' : 'bg-gray-600/80 text-gray-300'"
+                  >
+                    {{ AREA_LABELS[area] }}
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Overlay: Instructions -->
+          <div class="absolute bottom-20 left-4 right-4">
+            <div class="bg-black/70 rounded-lg p-4 text-center">
+              <app-icon name="videocam" class="w-8 h-8 text-white mx-auto mb-2"></app-icon>
+              <p class="text-white font-medium">Caminá lentamente alrededor del vehículo</p>
+              <p class="text-gray-300 text-sm mt-1">La IA analizará el video en tiempo real</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Start Button -->
+        <div class="p-4 bg-gray-800">
+          <button
+            (click)="startRecording()"
+            [disabled]="!isConnected()"
+            class="w-full py-4 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+          >
+            <span class="w-4 h-4 bg-white rounded-full"></span>
+            Comenzar Inspección
+          </button>
+
+          <button
+            (click)="switchToPhotos.emit()"
+            class="w-full mt-3 py-3 bg-transparent border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-xl transition-colors"
+          >
+            Usar modo fotos tradicional
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- RECORDING -->
+    @case ('recording') {
+      <div class="flex-1 flex flex-col">
+        <!-- Video with Live Feedback -->
+        <div class="relative flex-1 bg-black">
+          <video
+            #videoElement
+            class="w-full h-full object-cover"
+            autoplay
+            playsinline
+            muted
+          ></video>
+
+          <!-- Recording Indicator -->
+          <div class="absolute top-4 left-4 flex items-center gap-2 bg-red-600 px-3 py-1.5 rounded-full">
+            <span class="w-3 h-3 bg-white rounded-full animate-pulse"></span>
+            <span class="text-white font-mono font-medium">{{ recordingTimeFormatted() }}</span>
+          </div>
+
+          <!-- Areas Status (Top Right) -->
+          <div class="absolute top-4 right-4">
+            <div class="bg-black/70 rounded-lg p-2 space-y-1">
+              @for (entry of (areasDetected() | keyvalue); track entry.key) {
+                <div class="flex items-center gap-2 text-xs">
+                  <app-icon
+                    [name]="entry.value ? 'checkmark-circle' : 'ellipse-outline'"
+                    [class]="entry.value ? 'w-4 h-4 text-green-400' : 'w-4 h-4 text-gray-500'"
+                  ></app-icon>
+                  <span [class]="entry.value ? 'text-green-400' : 'text-gray-400'">
+                    {{ AREA_LABELS[entry.key] }}
+                  </span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Live Messages Feed -->
+          <div class="absolute bottom-24 left-4 right-4 max-h-40 overflow-y-auto">
+            <div class="space-y-2">
+              @for (event of liveMessages(); track event.timestamp) {
+                <div
+                  class="bg-black/80 rounded-lg px-3 py-2 flex items-start gap-2 animate-fadeIn"
+                  [class]="getEventClass(event.type)"
+                >
+                  <app-icon [name]="getEventIcon(event.type)" class="w-5 h-5 flex-shrink-0 mt-0.5"></app-icon>
+                  <span class="text-sm text-white">{{ event.message }}</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Damage Counter -->
+          @if (geminiLive.damages().length > 0) {
+            <div class="absolute top-16 left-4 bg-orange-500/90 px-3 py-1.5 rounded-full">
+              <span class="text-white text-sm font-medium">
+                {{ geminiLive.damages().length }} daño(s) detectado(s)
+              </span>
+            </div>
+          }
+
+          <!-- Odometer/Fuel if detected -->
+          @if (geminiLive.odometer() || geminiLive.fuelLevel()) {
+            <div class="absolute top-16 right-4 bg-blue-500/90 px-3 py-1.5 rounded-lg">
+              @if (geminiLive.odometer()) {
+                <div class="text-white text-xs">
+                  <span class="font-semibold">{{ geminiLive.odometer()?.value?.toLocaleString() }}</span> km
+                </div>
+              }
+              @if (geminiLive.fuelLevel()) {
+                <div class="text-white text-xs">
+                  Combustible: <span class="font-semibold">{{ geminiLive.fuelLevel()?.percentage }}%</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Stop Button -->
+        <div class="p-4 bg-gray-800">
+          <button
+            (click)="stopRecording()"
+            class="w-full py-4 bg-white hover:bg-gray-100 text-gray-900 font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+          >
+            <span class="w-4 h-4 bg-red-600 rounded"></span>
+            Finalizar Grabación
+          </button>
+
+          <!-- Missing areas warning -->
+          @if (missingAreas().length > 0) {
+            <p class="text-yellow-400 text-xs text-center mt-2">
+              Falta: {{ missingAreas().join(', ') }}
+            </p>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- REVIEW -->
+    @case ('review') {
+      <div class="flex-1 overflow-y-auto">
+        <!-- Summary Header -->
+        <div class="p-4 bg-gray-800">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+              <app-icon name="checkmark-circle" class="w-6 h-6 text-green-400"></app-icon>
+            </div>
+            <div>
+              <h2 class="text-lg font-semibold text-white">Inspección Completada</h2>
+              <p class="text-sm text-gray-400">Duración: {{ recordingTimeFormatted() }}</p>
+            </div>
+          </div>
+
+          <!-- Areas Summary -->
+          <div class="flex flex-wrap gap-2 mb-4">
+            @for (entry of (areasDetected() | keyvalue); track entry.key) {
+              <span
+                class="px-2 py-1 rounded text-xs font-medium"
+                [class]="entry.value ? 'bg-green-500/20 text-green-400' : 'bg-gray-600/50 text-gray-400'"
+              >
+                {{ entry.value ? '✓' : '○' }} {{ AREA_LABELS[entry.key] }}
+              </span>
+            }
+          </div>
+        </div>
+
+        <!-- Odometer & Fuel -->
+        <div class="p-4 space-y-4">
+          <h3 class="text-white font-medium">Datos del Vehículo</h3>
+
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Odometer -->
+            <div class="bg-gray-800 rounded-xl p-4">
+              <label class="block text-sm text-gray-400 mb-2">Odómetro (km)</label>
+              <input
+                type="number"
+                [(ngModel)]="editableOdometer"
+                class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="0"
+              />
+            </div>
+
+            <!-- Fuel -->
+            <div class="bg-gray-800 rounded-xl p-4">
+              <label class="block text-sm text-gray-400 mb-2">Combustible (%)</label>
+              <input
+                type="number"
+                [(ngModel)]="editableFuelLevel"
+                min="0"
+                max="100"
+                class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="50"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Damages -->
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-white font-medium">Daños Detectados</h3>
+            <span class="text-sm text-gray-400">{{ confirmedDamagesCount() }} confirmado(s)</span>
+          </div>
+
+          @if (damages().length === 0) {
+            <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-4 text-center">
+              <app-icon name="checkmark-circle" class="w-8 h-8 text-green-400 mx-auto mb-2"></app-icon>
+              <p class="text-green-400">No se detectaron daños</p>
+            </div>
+          } @else {
+            <div class="space-y-3">
+              @for (damage of damages(); track damage.timestamp; let i = $index) {
+                <div
+                  class="bg-gray-800 rounded-xl p-4"
+                  [class.opacity-50]="damage.discarded"
+                >
+                  <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0">
+                      <div
+                        class="w-10 h-10 rounded-lg flex items-center justify-center"
+                        [class]="getSeverityClass(damage.severity)"
+                      >
+                        <app-icon name="warning" class="w-5 h-5"></app-icon>
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center gap-2 mb-1">
+                        <span class="font-medium text-white">{{ DAMAGE_LABELS[damage.type] || damage.type }}</span>
+                        <span
+                          class="text-xs px-2 py-0.5 rounded-full"
+                          [class]="getSeverityClass(damage.severity)"
+                        >
+                          {{ SEVERITY_LABELS[damage.severity] || damage.severity }}
+                        </span>
+                      </div>
+                      <p class="text-sm text-gray-400 mb-2">{{ damage.location }}</p>
+
+                      @if (!damage.discarded) {
+                        <div class="flex gap-2">
+                          <button
+                            (click)="confirmDamage(i)"
+                            class="text-xs px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-full transition-colors"
+                            [class.ring-2]="damage.confirmed"
+                            [class.ring-green-400]="damage.confirmed"
+                          >
+                            {{ damage.confirmed ? 'Confirmado' : 'Confirmar' }}
+                          </button>
+                          <button
+                            (click)="discardDamage(i)"
+                            class="text-xs px-3 py-1 bg-gray-600 hover:bg-gray-500 text-white rounded-full transition-colors"
+                          >
+                            Descartar
+                          </button>
+                        </div>
+                      } @else {
+                        <button
+                          (click)="restoreDamage(i)"
+                          class="text-xs px-3 py-1 bg-gray-600 hover:bg-gray-500 text-white rounded-full transition-colors"
+                        >
+                          Restaurar
+                        </button>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Error Message -->
+        @if (error()) {
+          <div class="mx-4 mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl">
+            <p class="text-red-400 text-sm">{{ error() }}</p>
+          </div>
+        }
+      </div>
+
+      <!-- Bottom Actions -->
+      <div class="p-4 bg-gray-800 border-t border-gray-700 space-y-3">
+        <button
+          (click)="saveInspection()"
+          [disabled]="!isValid() || saving()"
+          class="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+        >
+          @if (saving()) {
+            <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            Guardando...
+          } @else {
+            <app-icon name="checkmark" class="w-5 h-5"></app-icon>
+            Confirmar Inspección
+          }
+        </button>
+
+        <button
+          (click)="backToRecording()"
+          [disabled]="saving()"
+          class="w-full py-3 bg-transparent border border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50 rounded-xl transition-colors"
+        >
+          Volver a grabar
+        </button>
+      </div>
+    }
+
+    <!-- SAVING -->
+    @case ('saving') {
+      <div class="flex-1 flex flex-col items-center justify-center p-8">
+        <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-white text-lg">Guardando inspección...</p>
+      </div>
+    }
+
+    <!-- ERROR -->
+    @case ('error') {
+      <div class="flex-1 flex flex-col items-center justify-center p-8">
+        <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-4">
+          <app-icon name="alert-circle" class="w-8 h-8 text-red-400"></app-icon>
+        </div>
+        <p class="text-white text-lg mb-2">Error</p>
+        <p class="text-gray-400 text-center mb-6">{{ error() }}</p>
+
+        <div class="space-y-3 w-full max-w-xs">
+          <button
+            (click)="retry()"
+            class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors"
+          >
+            Reintentar
+          </button>
+          <button
+            (click)="switchToPhotos.emit()"
+            class="w-full py-3 bg-transparent border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-xl transition-colors"
+          >
+            Usar modo fotos
+          </button>
+          <button
+            (click)="cancel()"
+            class="w-full py-3 text-gray-400 hover:text-white transition-colors"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    }
+  }
+</div>

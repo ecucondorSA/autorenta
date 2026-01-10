@@ -18,7 +18,7 @@
   "author": "AutoRenta",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.25.1",
+    "@modelcontextprotocol/sdk": "^1.25.2",
     "playwright": "^1.40.0"
   }
 }

@@ -42,6 +42,7 @@ export interface BookingConfirmationRow {
   funds_released_at: string | null;
   created_at: string | null;
   updated_at: string | null;
+  [key: string]: unknown; // Index signature for DatabaseRecord compatibility
 }
 
 export interface BookingCancellationRow {

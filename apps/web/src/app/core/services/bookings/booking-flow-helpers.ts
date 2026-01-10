@@ -128,15 +128,26 @@ export function canPerformCheckIn(booking: Booking): {
 
 /**
  * Verifica si un booking está en un estado que permite check-out
+ * Nota: Esta función es permisiva con los estados porque la validación real
+ * se hace en el componente check-out basada en las inspecciones completadas.
+ * El effectiveStatus (basado en inspecciones) puede diferir del booking.status.
  */
 export function canPerformCheckOut(booking: Booking): {
   allowed: boolean;
   reason?: string;
 } {
-  if (booking.status !== 'in_progress') {
+  // Estados donde el viaje podría estar activo (check-in hecho pero no check-out)
+  const activeStates: BookingStatus[] = [
+    'in_progress',
+    'confirmed',
+    'pending_review',
+    'completed',
+  ];
+
+  if (!activeStates.includes(booking.status)) {
     return {
       allowed: false,
-      reason: `El check-out solo está disponible para bookings en progreso. Estado actual: ${booking.status}`,
+      reason: `El check-out no está disponible para reservas en estado: ${booking.status}`,
     };
   }
 

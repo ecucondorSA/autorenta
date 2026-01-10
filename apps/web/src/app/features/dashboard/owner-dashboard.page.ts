@@ -13,14 +13,18 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
 import type { DashboardStats } from '@core/models/dashboard.model';
 import { DashboardService } from '@core/services/admin/dashboard.service';
+import { ParticipationService } from '@core/services/business/participation.service';
 import { NotificationsService } from '@core/services/infrastructure/user-notifications.service';
-import { MissingDocumentsWidgetComponent } from '../../shared/components/missing-documents-widget/missing-documents-widget.component';
-import { VehicleDocsSummaryWidgetComponent } from '../../shared/components/vehicle-docs-summary-widget/vehicle-docs-summary-widget.component';
-import { MoneyPipe } from '../../shared/pipes/money.pipe';
+import { FgoStatus } from '@core/models/fgo.model';
+import { ParticipationPeriod } from '@core/models/participation.model';
+import { MissingDocumentsWidgetComponent } from '@shared/components/missing-documents-widget/missing-documents-widget.component';
+import { VehicleDocsSummaryWidgetComponent } from '@shared/components/vehicle-docs-summary-widget/vehicle-docs-summary-widget.component';
+import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { MultiCarCalendarComponent } from './components/multi-car-calendar/multi-car-calendar.component';
 import { PayoutsHistoryComponent } from './components/payouts-history/payouts-history.component';
 import { PayoutsWidgetComponent } from './widgets/payouts.component';
 import { StatisticsWidgetComponent } from './widgets/statistics.component';
+import { NetworkParticipationWidgetComponent } from './widgets/network-participation.component';
 
 @Component({
   standalone: true,
@@ -37,12 +41,14 @@ import { StatisticsWidgetComponent } from './widgets/statistics.component';
     PayoutsHistoryComponent,
     PayoutsWidgetComponent,
     StatisticsWidgetComponent,
+    NetworkParticipationWidgetComponent,
   ],
   templateUrl: './owner-dashboard.page.html',
   styleUrls: ['./owner-dashboard.page.css'],
 })
 export class OwnerDashboardPage implements OnInit, OnDestroy {
   private readonly dashboardService = inject(DashboardService);
+  private readonly participationService = inject(ParticipationService);
   private readonly notificationsService = inject(NotificationsService);
 
   // P0-006 FIX: Memory leak prevention
@@ -54,6 +60,10 @@ export class OwnerDashboardPage implements OnInit, OnDestroy {
 
   // Dashboard stats from Edge Function
   readonly stats = signal<DashboardStats | null>(null);
+
+  // Participation & FGO Signals (The "Armor")
+  readonly participationPeriod = signal<ParticipationPeriod | null>(null);
+  readonly fgoStatus = signal<FgoStatus | null>(null);
 
   // Wallet computed signals
   readonly availableBalance = computed(() => this.stats()?.wallet.availableBalance ?? 0);
@@ -120,6 +130,8 @@ export class OwnerDashboardPage implements OnInit, OnDestroy {
         next: (stats) => {
           this.stats.set(stats);
           this.loading.set(false);
+          // Load Participation Data (independent but critical)
+          this.loadParticipationData();
         },
         error: (_err) => {
           this.error.set('No pudimos cargar las estadísticas. Intentá de nuevo.');
@@ -128,22 +140,34 @@ export class OwnerDashboardPage implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Refresh dashboard data manually
-   * Clears cache and fetches fresh data
-   */
-  refreshDashboard(): void {
-    this.dashboardService.clearCache();
-    this.loadDashboardData(true);
+  private loadParticipationData() {
+    // Load Participation Period (Points)
+    this.participationService.getCurrentPeriod('current-owner-id') // TODO: Get real ID
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(period => this.participationPeriod.set(period));
+
+    // Load FGO Status (Protection)
+    this.participationService.getFgoStatus()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(status => this.fgoStatus.set(status));
   }
 
-  toggleCalendar(): void {
-    this.showCalendar.set(!this.showCalendar());
-  }
+/**
+ * Refresh dashboard data manually
+ * Clears cache and fetches fresh data
+ */
+refreshDashboard(): void {
+  this.dashboardService.clearCache();
+  this.loadDashboardData(true);
+}
 
-  ngOnDestroy(): void {
-    // P0-006 FIX: Clean up subscriptions
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+toggleCalendar(): void {
+  this.showCalendar.set(!this.showCalendar());
+}
+
+ngOnDestroy(): void {
+  // P0-006 FIX: Clean up subscriptions
+  this.destroy$.next();
+  this.destroy$.complete();
+}
 }

@@ -29,6 +29,18 @@ import { SupabaseClient } from '@supabase/supabase-js';
 // Cache configuration
 const SUBSCRIPTION_STALE_TIME_MS = 30_000; // 30 seconds
 
+// Type for Supabase FunctionsHttpError context
+interface FunctionsErrorContext {
+  json?: () => Promise<{ message?: string; error?: string }>;
+  text?: () => Promise<string>;
+  status?: number;
+}
+
+interface FunctionsError {
+  message?: string;
+  context?: FunctionsErrorContext;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -413,23 +425,22 @@ export class SubscriptionService {
   private async extractFunctionError(error: unknown): Promise<string> {
     if (!error) return 'Error desconocido';
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const errAny = error as any;
+    const err = error as FunctionsError;
 
     // Try to get message from error context (FunctionsHttpError)
-    if (errAny.context && typeof errAny.context.json === 'function') {
+    if (err.context?.json) {
       try {
-        const body = await errAny.context.json();
+        const body = await err.context.json();
         if (body?.message) return body.message;
         if (body?.error) return body.error;
       } catch {
         // json() may have been consumed, try text()
-        if (typeof errAny.context.text === 'function') {
+        if (err.context?.text) {
           try {
-            const text = await errAny.context.text();
+            const text = await err.context.text();
             if (text) {
               try {
-                const parsed = JSON.parse(text);
+                const parsed = JSON.parse(text) as { message?: string; error?: string };
                 if (parsed.message) return parsed.message;
                 if (parsed.error) return parsed.error;
               } catch {
@@ -444,12 +455,12 @@ export class SubscriptionService {
     }
 
     // Fallback to error message
-    if (errAny.message && errAny.message !== 'FunctionsHttpError') {
-      return errAny.message;
+    if (err.message && err.message !== 'FunctionsHttpError') {
+      return err.message;
     }
 
     // Check for 409 status
-    if (errAny.context?.status === 409) {
+    if (err.context?.status === 409) {
       return 'Already subscribed';
     }
 

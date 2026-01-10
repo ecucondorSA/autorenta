@@ -18,7 +18,7 @@ export type {
   KycStatus,
   PaymentProvider,
   PaymentStatus,
-  Transmission,
+  Transmission
 } from '../types/database.types';
 
 // Admin types
@@ -38,7 +38,7 @@ export type {
   ReviewDB,
   WalletBalanceDB,
   WalletLedgerDB,
-  WalletTransactionDB,
+  WalletTransactionDB
 } from '../types/supabase-types';
 
 // Wallet domain models (preferred over DB row types)
@@ -67,7 +67,7 @@ export type {
   WithdrawalFilters,
   WithdrawalLoadingState,
   WithdrawalRequest,
-  WithdrawalStatus,
+  WithdrawalStatus
 } from './wallet.model';
 
 // Feature flag models
@@ -80,7 +80,7 @@ export {
   calculateDeductibleUsd,
   calculateHoldEstimatedArs,
   isFxExpired,
-  ValidationErrorCodes,
+  ValidationErrorCodes
 } from './booking-detail-payment.model';
 export type {
   AuthorizePaymentResult,
@@ -104,7 +104,7 @@ export type {
   UserConsents,
   ValidationError,
   WalletLock,
-  WalletLockResult,
+  WalletLockResult
 } from './booking-detail-payment.model';
 
 // Tripo AI models
@@ -143,6 +143,9 @@ export * from './gemini.model';
 
 // Export ProfileService types
 export type { UpdateProfileData } from '../services/auth/profile.service';
+
+// Export Participation models
+export * from './participation.model';
 
 // Nuevos tipos para perfil expandido
 type OnboardingStatus = 'incomplete' | 'complete';
@@ -458,6 +461,8 @@ export interface Booking {
   extension_additional_cost_cents?: number | null;
   extension_requested_at?: string | null;
   extension_responded_at?: string | null;
+
+  [key: string]: unknown; // Index signature for DatabaseRecord compatibility
 }
 
 export interface BookingExtensionRequest {
@@ -896,3 +901,6 @@ export interface ProcessRefundResult {
 
 // Export Subscription models (Autorentar Club)
 export * from './subscription.model';
+
+// Export Participation models (Negocio en Participacion)
+export * from './participation.model';

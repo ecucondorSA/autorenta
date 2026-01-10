@@ -287,14 +287,36 @@ export class PublishCarPhotoService {
 
   /**
    * Upload photos to storage for a car
+   *
+   * 🚀 PERF: Parallelized with concurrency limit of 3
+   * - Uploads 3 photos simultaneously for better performance
+   * - Maintains order with position index
+   * - Falls back gracefully on individual failures
    */
   async uploadPhotos(carId: string): Promise<void> {
     const photos = this.uploadedPhotos();
     if (photos.length === 0) return;
 
-    for (let i = 0; i < photos.length; i++) {
-      const photo = photos[i];
-      await this.carsService.uploadPhoto(photo.file, carId, i);
+    // 🚀 PERF: Upload in parallel with concurrency limit
+    const CONCURRENCY = 3;
+    const errors: string[] = [];
+
+    for (let i = 0; i < photos.length; i += CONCURRENCY) {
+      const batch = photos.slice(i, i + CONCURRENCY);
+      const batchPromises = batch.map(async (photo, batchIndex) => {
+        const position = i + batchIndex;
+        try {
+          await this.carsService.uploadPhoto(photo.file, carId, position);
+        } catch (error) {
+          console.error(`Error uploading photo ${position}:`, error);
+          errors.push(`Foto ${position + 1}`);
+        }
+      });
+      await Promise.all(batchPromises);
+    }
+
+    if (errors.length > 0) {
+      this.notifications.warning('Fotos', `Algunas fotos no se subieron: ${errors.join(', ')}`);
     }
   }
 
@@ -354,6 +376,8 @@ export class PublishCarPhotoService {
 
   /**
    * Add stock photos (URLs) to the photo list
+   *
+   * 🚀 PERF: Parallelized fetch of all URLs simultaneously
    */
   async addStockPhotos(photoUrls: string[]): Promise<void> {
     const currentPhotos = this.uploadedPhotos();
@@ -367,21 +391,20 @@ export class PublishCarPhotoService {
     this.isProcessingPhotos.set(true);
 
     try {
-      const newPhotos: PhotoPreview[] = [];
-
-      for (const url of photoUrls) {
-        // Fetch image and convert to File
+      // 🚀 PERF: Fetch and process all URLs in parallel
+      const photoPromises = photoUrls.map(async (url, index) => {
         const response = await fetch(url);
         const blob = await response.blob();
-        const file = new File([blob], `stock-${Date.now()}.jpg`, {
+        const file = new File([blob], `stock-${Date.now()}-${index}.jpg`, {
           type: blob.type || 'image/jpeg',
         });
 
         this.validatePhoto(file);
         const preview = await this.createPreview(file);
-        newPhotos.push({ file, preview });
-      }
+        return { file, preview };
+      });
 
+      const newPhotos = await Promise.all(photoPromises);
       this.uploadedPhotos.set([...currentPhotos, ...newPhotos]);
     } catch (error) {
       if (error instanceof Error) {
@@ -427,6 +450,8 @@ export class PublishCarPhotoService {
 
   /**
    * Add AI generated photos (URLs) to the photo list
+   *
+   * 🚀 PERF: Parallelized fetch of all URLs simultaneously
    */
   async addAIPhotos(photoUrls: string[]): Promise<void> {
     const currentPhotos = this.uploadedPhotos();
@@ -440,19 +465,20 @@ export class PublishCarPhotoService {
     this.isProcessingPhotos.set(true);
 
     try {
-      const newPhotos: PhotoPreview[] = [];
-
-      for (const url of photoUrls) {
-        // Fetch image and convert to File
+      // 🚀 PERF: Fetch and process all URLs in parallel
+      const photoPromises = photoUrls.map(async (url, index) => {
         const response = await fetch(url);
         const blob = await response.blob();
-        const file = new File([blob], `ai-${Date.now()}.png`, { type: blob.type || 'image/png' });
+        const file = new File([blob], `ai-${Date.now()}-${index}.png`, {
+          type: blob.type || 'image/png',
+        });
 
         this.validatePhoto(file);
         const preview = await this.createPreview(file);
-        newPhotos.push({ file, preview });
-      }
+        return { file, preview };
+      });
 
+      const newPhotos = await Promise.all(photoPromises);
       this.uploadedPhotos.set([...currentPhotos, ...newPhotos]);
     } catch (error) {
       if (error instanceof Error) {

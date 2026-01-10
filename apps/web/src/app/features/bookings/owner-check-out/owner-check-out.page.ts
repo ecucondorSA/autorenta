@@ -19,6 +19,10 @@ import { IonicModule } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 import { Booking, BookingStatus } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
+import { VideoInspectionAIComponent } from '../../../shared/components/video-inspection-ai/video-inspection-ai.component';
+import { VideoInspectionLiveComponent } from '../../../shared/components/video-inspection-live/video-inspection-live.component';
+
+type InspectionMode = 'photos' | 'video' | 'live';
 
 /**
  * Owner Check-Out Page
@@ -31,7 +35,7 @@ import { InspectionUploaderComponent } from '../../../shared/components/inspecti
   selector: 'app-owner-check-out',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule, InspectionUploaderComponent],
+  imports: [CommonModule, IonicModule, InspectionUploaderComponent, VideoInspectionAIComponent, VideoInspectionLiveComponent],
   templateUrl: './owner-check-out.page.html',
   styleUrls: ['./owner-check-out.page.css'],
 })
@@ -48,6 +52,9 @@ export class OwnerCheckOutPage implements OnInit {
   readonly loading = signal(true);
   // Estado del flujo
   readonly step = signal<'inspection' | 'damages'>('inspection');
+
+  // Inspection mode: photos (traditional), video (AI batch), or live (real-time)
+  readonly inspectionMode = signal<InspectionMode>('photos');
 
   // Datos del formulario de daños
   readonly hasDamages = signal(false);
@@ -264,5 +271,13 @@ export class OwnerCheckOutPage implements OnInit {
 
   cancel() {
     this.router.navigate(['/bookings/owner']);
+  }
+
+  setInspectionMode(mode: InspectionMode): void {
+    this.inspectionMode.set(mode);
+  }
+
+  switchToPhotos(): void {
+    this.inspectionMode.set('photos');
   }
 }

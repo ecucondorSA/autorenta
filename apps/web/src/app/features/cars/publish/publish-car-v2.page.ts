@@ -94,6 +94,8 @@ export class PublishCarV2Page implements OnInit {
   readonly showStockPhotosModal = signal(false);
   readonly showAIPhotosModal = signal(false);
   readonly showMobileTips = signal(false); // ✅ NEW: For Bottom Sheet
+  readonly locationState = signal<'idle' | 'acquiring' | 'geocoding'>('idle');
+  readonly gettingLocation = computed(() => this.locationState() !== 'idle');
   private carId: string | null = null;
   private touchStartX = 0; // ✅ NEW: For Swipe Gesture
 
@@ -995,41 +997,57 @@ export class PublishCarV2Page implements OnInit {
   }
 
   /**
-   * Use current GPS location
+   * Use current GPS location with progressive feedback
    */
   async useCurrentLocation(): Promise<void> {
-    const location = await this.locationService.useCurrentLocation();
+    if (this.gettingLocation()) return; // Prevent double-click
 
-    if (location) {
-      // Reverse geocode to get address
-      const address = await this.locationService.reverseGeocode(
-        location.latitude,
-        location.longitude,
-      );
+    this.locationState.set('acquiring');
 
-      if (address) {
-        // Fill address fields - combine street + number for display
-        const streetWithNumber = address.streetNumber
-          ? `${address.street} ${address.streetNumber}`
-          : address.street;
+    try {
+      const location = await this.locationService.useCurrentLocation();
 
-        this.publishForm.patchValue({
-          location_street: streetWithNumber,
-          location_street_number: address.streetNumber,
-          location_city: address['city'],
-          location_state: address.state,
-          location_country: address['country'],
-        });
-        this.notificationManager.success(
-          'Ubicación actualizada',
-          'Se completó la dirección automáticamente.',
+      if (location) {
+        // Update state: now getting address
+        this.locationState.set('geocoding');
+
+        // Reverse geocode to get address
+        const address = await this.locationService.reverseGeocode(
+          location.latitude,
+          location.longitude,
         );
-      } else {
-        this.notificationManager.warning(
-          'Ubicación detectada',
-          'Tenemos tus coordenadas, pero no pudimos encontrar la dirección exacta. Por favor completa los campos manualmente.',
-        );
+
+        if (address) {
+          // Fill address fields - combine street + number for display
+          const streetWithNumber = address.streetNumber
+            ? `${address.street} ${address.streetNumber}`
+            : address.street;
+
+          this.publishForm.patchValue({
+            location_street: streetWithNumber,
+            location_street_number: address.streetNumber,
+            location_city: address['city'],
+            location_state: address.state,
+            location_country: address['country'],
+          });
+          this.notificationManager.success(
+            'Ubicación actualizada',
+            'Se completó la dirección automáticamente.',
+          );
+        } else {
+          this.notificationManager.warning(
+            'Ubicación detectada',
+            'Tenemos tus coordenadas, pero no pudimos encontrar la dirección exacta. Por favor completa los campos manualmente.',
+          );
+        }
       }
+    } catch {
+      this.notificationManager.error(
+        'Error de ubicación',
+        'No pudimos obtener tu ubicación. Verifica los permisos de GPS.',
+      );
+    } finally {
+      this.locationState.set('idle');
     }
   }
 

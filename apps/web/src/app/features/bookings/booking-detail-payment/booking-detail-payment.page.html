@@ -520,6 +520,45 @@
               </section>
 
               <!-- ============================================ -->
+              <!-- FISCAL INFORMATION - Collapsible -->
+              <!-- ============================================ -->
+              <details class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden">
+                <summary class="p-4 cursor-pointer text-sm font-medium text-text-primary hover:bg-surface-hover transition-colors flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
+                      </svg>
+                    </div>
+                    <span>Información Fiscal para Participantes</span>
+                  </div>
+                  <svg class="w-5 h-5 text-text-secondary transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <div class="px-4 pb-4 pt-0 text-xs text-slate-600 space-y-3 border-t border-border-default">
+                  <div class="pt-3">
+                    <p class="font-semibold text-slate-700 mb-1.5">Para el Propietario (Comodante):</p>
+                    <ul class="list-disc ml-4 space-y-1 text-slate-600">
+                      <li>Si genera ingresos habituales, debe inscribirse en AFIP</li>
+                      <li>Monotributistas emiten Factura C al usuario</li>
+                      <li>AutoRenta no retiene impuestos - cada parte gestiona los suyos</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-slate-700 mb-1.5">Para el Usuario (Comodatario):</p>
+                    <ul class="list-disc ml-4 space-y-1 text-slate-600">
+                      <li>Este comprobante no es factura fiscal</li>
+                      <li>Si necesita factura, solicitarla al propietario</li>
+                    </ul>
+                  </div>
+                  <p class="text-slate-500 italic pt-1">
+                    Consulte con su contador para su situación particular.
+                  </p>
+                </div>
+              </details>
+
+              <!-- ============================================ -->
               <!-- MESSAGE TO HOST - Key for P2P -->
               <!-- ============================================ -->
               <section
@@ -589,7 +628,7 @@
                     </h3>
                     <p class="text-xs text-text-secondary mt-1">
                       Elegí <strong>tarjeta</strong> (pre-autorización) o <strong>wallet</strong>
-                      (bloqueo de saldo). No se cobra el alquiler en esta etapa.
+                      (bloqueo de saldo). No se cobra la contribución en esta etapa.
                     </p>
                   </div>
                 </div>
@@ -1247,6 +1286,24 @@
             </section>
           }
 
+          <!-- Legal Nature Banner -->
+          <section class="p-4 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-slate-200 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-slate-800">Participación en Red de Movilidad</p>
+                <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Estás contribuyendo a un <strong>Pool de Movilidad Compartida</strong> (Negocio en Participación Art. 1448 CCyC).
+                  Tu aporte remunera la disponibilidad de la flota, no solo el uso de este vehículo.
+                </p>
+              </div>
+            </div>
+          </section>
+
           <!-- Terms -->
           <section class="rounded-xl border border-border-default bg-surface-raised p-4">
             <label class="flex items-start gap-3 cursor-pointer">
@@ -1313,7 +1370,7 @@
               >
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div>
-                    <p class="text-primary-100 text-xs font-medium mb-0.5">Total del Alquiler</p>
+                    <p class="text-primary-100 text-xs font-medium mb-0.5">Contribución Total</p>
                     <div class="flex items-baseline gap-1">
                       <span class="text-xl sm:text-2xl font-extrabold tracking-tight break-words"
                         >USD {{ rentalCostUsd() | number: '1.2-2' }}</span
@@ -1332,16 +1389,33 @@
               <div class="p-4 sm:p-6 space-y-6">
                 <!-- Breakdown -->
                 <div class="space-y-3 text-sm">
+                  <!-- Participant Share (75%) -->
                   <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
-                    <span class="text-text-secondary">Precio por día</span>
-                    @if (car()?.price_per_day && car()!.price_per_day > 0) {
-                      <span class="font-medium text-text-primary"
-                        >USD {{ car()?.price_per_day | number: '1.2-2' }} x {{ rentalDays() }}</span
-                      >
-                    } @else {
-                      <span class="font-medium text-primary-600">Consultar</span>
+                    <div class="flex flex-col">
+                      <span class="text-text-secondary">Retorno a Partícipes (75%)</span>
+                      <span class="text-[10px] text-text-secondary/70">Aporte al Pool de Propietarios</span>
+                    </div>
+                    @if (car()?.price_per_day) {
+                      <span class="font-medium text-text-primary">
+                        USD {{ (rentalCostUsd() * 0.75) | number: '1.2-2' }}
+                      </span>
                     }
                   </div>
+
+                  <!-- Network Fee (25%) -->
+                  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                    <div class="flex flex-col">
+                      <span class="text-text-secondary">Gestión de Red (25%)</span>
+                      <span class="text-[10px] text-text-secondary/70">Seguro, Tecnología y Soporte</span>
+                    </div>
+                    @if (car()?.price_per_day) {
+                      <span class="font-medium text-text-primary">
+                        USD {{ (rentalCostUsd() * 0.25) | number: '1.2-2' }}
+                      </span>
+                    }
+                  </div>
+
+                  <!-- FGO Protection -->
                   <div
                     class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 text-success-strong"
                   >
@@ -1354,13 +1428,9 @@
                           d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                      Seguro básico
+                      FGO Anti-Fraude
                     </span>
-                    <span class="font-medium">GRATIS</span>
-                  </div>
-                  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
-                    <span class="text-text-secondary">Tarifa de servicio</span>
-                    <span class="font-medium text-text-primary">USD 0</span>
+                    <span class="font-medium">INCLUIDO</span>
                   </div>
 
                   <!-- Divider -->
@@ -1369,7 +1439,7 @@
                   <div
                     class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 font-bold text-lg text-text-primary"
                   >
-                    <span>Total Alquiler</span>
+                    <span>Contribución Final</span>
                     <span>USD {{ rentalCostUsd() | number: '1.2-2' }}</span>
                   </div>
 

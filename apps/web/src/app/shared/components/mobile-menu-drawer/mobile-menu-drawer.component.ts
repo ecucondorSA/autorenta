@@ -197,10 +197,20 @@ export class MobileMenuDrawerComponent implements OnDestroy {
     this.close();
 
     try {
-      await this.router.navigate([route]);
+      // Parse URL to extract path and query params
+      const [path, queryString] = route.split('?');
+      const queryParams: Record<string, string> = {};
+
+      if (queryString) {
+        const params = new URLSearchParams(queryString);
+        params.forEach((value, key) => {
+          queryParams[key] = value;
+        });
+      }
+
+      await this.router.navigate([path], { queryParams });
     } catch (error) {
       console.error('Navigation failed:', error);
-      // Navigation errors are usually not critical, just log
     }
   }
 

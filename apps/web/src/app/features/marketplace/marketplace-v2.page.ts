@@ -340,6 +340,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private clickHintTimeout?: ReturnType<typeof setTimeout>;
   private clickHintShownSession = false;
 
+  // Scroll listener reference for cleanup
+  private readonly scrollListener = () => this.isScrolled.set(window.scrollY > 20);
+
   // Splash Screen State
   readonly showSplash = signal(true);
 
@@ -356,13 +359,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     // Track scroll for glass header
     if (this.isBrowser) {
       // Use passive listener for performance
-      window.addEventListener(
-        'scroll',
-        () => {
-          this.isScrolled.set(window.scrollY > 20);
-        },
-        { passive: true },
-      );
+      window.addEventListener('scroll', this.scrollListener, { passive: true });
     }
   }
 
@@ -671,6 +668,10 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // Cleanup scroll listener
+    if (this.isBrowser) {
+      window.removeEventListener('scroll', this.scrollListener);
+    }
     // Cleanup location watch
     if (this.locationWatchId !== null) {
       this.locationService.clearWatch(this.locationWatchId);

@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import {
+  CountryCode,
   PricingBucketType,
   CalculateRiskSnapshotParams,
   CoverageUpgrade,
@@ -13,6 +14,24 @@ import { Observable, catchError, from, map, of } from 'rxjs';
 
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { RiskCalculatorService } from '@core/services/verification/risk-calculator.service';
+
+// Type for booking_risk_snapshots table row
+interface RiskSnapshotRow {
+  franchise_usd: number;
+  rollover_franchise_usd?: number;
+  estimated_hold_amount: number;
+  estimated_deposit: number;
+  bucket: string;
+  country_code: string;
+  fx_snapshot: number;
+  created_at: string;
+  coverage_upgrade?: string;
+  meta?: {
+    rollover_deductible_usd?: number;
+    vehicle_value_usd?: number;
+    coverage_upgrade?: string;
+  };
+}
 
 /**
  * Servicio para cálculo de riesgos y garantías
@@ -155,8 +174,7 @@ export class RiskService {
           return { snapshot: null, error: response.error?.message };
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const data = response.data as any;
+        const data = response.data as RiskSnapshotRow;
         const snapshot: RiskSnapshot = {
           deductibleUsd: data.franchise_usd,
           rolloverDeductibleUsd:
@@ -166,7 +184,7 @@ export class RiskService {
           creditSecurityUsd: data.estimated_deposit || 0,
           bucket: data.bucket as PricingBucketType,
           vehicleValueUsd: data.meta?.vehicle_value_usd || 0,
-          country: data.country_code,
+          country: data.country_code as CountryCode,
           fxRate: data.fx_snapshot,
           calculatedAt: new Date(data.created_at),
           coverageUpgrade:
