@@ -1,4 +1,4 @@
-name: 📱 Build Android APK
+name: 📱 Build Android AAB
 
 on:
   workflow_dispatch:
@@ -22,11 +22,11 @@ env:
   JAVA_VERSION: '21'
 
 jobs:
-  build-apk:
-    name: Build APK
+  build-aab:
+    name: Build AAB
     runs-on: ubuntu-latest
     outputs:
-      apk_path: ${{ steps.build.outputs.apk_path }}
+      aab_path: ${{ steps.build.outputs.aab_path }}
       version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout
@@ -108,15 +108,15 @@ jobs:
           ls -la apps/web/android/keystore/
           file apps/web/android/keystore/autorentar-release.keystore
 
-      - name: Build Release APK
+      - name: Build Release AAB
         id: build
         if: github.event.inputs.build_type == 'release'
         working-directory: apps/web/android
         run: |
           ls -la app/capacitor.build.gradle
-          ./gradlew assembleRelease --stacktrace --info
-          APK_PATH="app/build/outputs/apk/release/app-release.apk"
-          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+          ./gradlew bundleRelease --stacktrace --info
+          AAB_PATH="app/build/outputs/bundle/release/app-release.aab"
+          echo "aab_path=$AAB_PATH" >> $GITHUB_OUTPUT
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -126,55 +126,55 @@ jobs:
         working-directory: apps/web/android
         run: ./gradlew assembleDebug
 
-      - name: Rename APK
+      - name: Rename AAB
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           BUILD_TYPE="${{ github.event.inputs.build_type }}"
 
           if [ "$BUILD_TYPE" = "release" ]; then
-            mv apps/web/android/app/build/outputs/apk/release/app-release.apk \
-               apps/web/android/app/build/outputs/apk/release/autorentar-${VERSION}-release.apk
+            mv apps/web/android/app/build/outputs/bundle/release/app-release.aab \
+               apps/web/android/app/build/outputs/bundle/release/autorentar-${VERSION}-release.aab
           else
-            mv apps/web/android/app/build/outputs/apk/debug/app-debug.apk \
-               apps/web/android/app/build/outputs/apk/debug/autorentar-${VERSION}-debug.apk
+            echo "Debug builds use APK format"
           fi
 
-      - name: Upload APK Artifact
+      - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         with:
           name: autorentar-${{ github.event.inputs.build_type }}-${{ steps.version.outputs.version }}
-          path: apps/web/android/app/build/outputs/apk/${{ github.event.inputs.build_type }}/*.apk
+          path: apps/web/android/app/build/outputs/bundle/${{ github.event.inputs.build_type }}/*.aab
           retention-days: 90
 
       - name: Build Summary
         run: |
-          echo "## 📱 Android Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "## 📱 Android AAB Build Complete" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Type:** ${{ github.event.inputs.build_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Format:** AAB (Android App Bundle)" >> $GITHUB_STEP_SUMMARY
           echo "- **Artifact:** autorentar-${{ github.event.inputs.build_type }}-${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
 
   upload-play-store:
     name: Upload to Google Play
     runs-on: ubuntu-latest
-    needs: build-apk
+    needs: build-aab
     if: github.event.inputs.upload_to_play_store == 'true' && github.event.inputs.build_type == 'release'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download APK
+      - name: Download AAB
         uses: actions/download-artifact@v4
         with:
-          name: autorentar-release-${{ needs.build-apk.outputs.version }}
-          path: ./apk
+          name: autorentar-release-${{ needs.build-aab.outputs.version }}
+          path: ./aab
 
       - name: Upload to Google Play (Internal Track)
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
           packageName: com.autorentar.app
-          releaseFiles: ./apk/*.apk
+          releaseFiles: ./aab/*.aab
           track: internal
           status: completed
 
@@ -185,4 +185,4 @@ jobs:
           echo "- **Track:** internal" >> $GITHUB_STEP_SUMMARY
           echo "- **Status:** completed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "The APK is now available in Google Play Console for internal testing." >> $GITHUB_STEP_SUMMARY
+          echo "The AAB is now available in Google Play Console for internal testing." >> $GITHUB_STEP_SUMMARY
