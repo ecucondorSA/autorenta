@@ -1,3 +1,10 @@
+## [2.3.4](https://github.com/ecucondorSA/autorenta/compare/v2.3.3...v2.3.4) (2026-01-10)
+
+
+### Bug Fixes
+
+* resolve car address property mismatch in booking detail ([33a0a4c](https://github.com/ecucondorSA/autorenta/commit/33a0a4ca3127ba467130b858979a5002a4a40ee8))
+
 ## [2.3.3](https://github.com/ecucondorSA/autorenta/compare/v2.3.2...v2.3.3) (2026-01-10)
 
 
