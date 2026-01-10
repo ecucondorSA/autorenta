@@ -263,6 +263,44 @@
       <!-- 3. CHECK-IN CRITICAL INFO CARD (Extracted Component) -->
       <app-booking-check-in-info-card [booking]="booking()!" />
 
+      <!-- 3.5 Download Inspection PDFs (if inspections exist) -->
+      @if (hasOwnerCheckIn() || hasCheckOut()) {
+      <section class="card-premium p-4">
+        <h3 class="text-sm font-bold text-text-primary mb-3 flex items-center gap-2">
+          <ion-icon name="document-text-outline" class="text-info-500"></ion-icon>
+          Actas de Inspección
+        </h3>
+        <div class="flex flex-wrap gap-3">
+          @if (hasOwnerCheckIn()) {
+          <button
+            (click)="downloadInspection('delivery')"
+            [disabled]="downloadingInspection()"
+            class="flex items-center gap-2 px-4 py-2 bg-surface-secondary hover:bg-surface-hover rounded-lg text-sm font-medium text-text-primary transition-colors disabled:opacity-50">
+            @if (downloadingInspection()) {
+              <div class="w-4 h-4 border-2 border-text-muted border-t-transparent rounded-full animate-spin"></div>
+            } @else {
+              <ion-icon name="document-text-outline"></ion-icon>
+            }
+            <span>Acta de Entrega</span>
+          </button>
+          }
+          @if (hasCheckOut()) {
+          <button
+            (click)="downloadInspection('return')"
+            [disabled]="downloadingInspection()"
+            class="flex items-center gap-2 px-4 py-2 bg-surface-secondary hover:bg-surface-hover rounded-lg text-sm font-medium text-text-primary transition-colors disabled:opacity-50">
+            @if (downloadingInspection()) {
+              <div class="w-4 h-4 border-2 border-text-muted border-t-transparent rounded-full animate-spin"></div>
+            } @else {
+              <ion-icon name="document-text-outline"></ion-icon>
+            }
+            <span>Acta de Devolución</span>
+          </button>
+          }
+        </div>
+      </section>
+      }
+
       <!-- 4. LOGISTICS CARD (Delivery/Dropoff info) -->
       @if (booking()?.delivery_required || booking()?.dropoff_location_lat) {
       <section class="card-premium overflow-hidden p-0">
@@ -389,6 +427,19 @@
           <div class="flex-1">
             <app-booking-contract [bookingId]="booking()!.id"></app-booking-contract>
           </div>
+          <!-- Download Contract PDF Button -->
+          <button
+            (click)="downloadContract()"
+            [disabled]="downloadingContract()"
+            class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-surface-secondary hover:bg-surface-hover text-text-primary rounded-xl transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+            @if (downloadingContract()) {
+              <div class="w-4 h-4 border-2 border-text-muted border-t-transparent rounded-full animate-spin"></div>
+              <span>Generando PDF...</span>
+            } @else {
+              <ion-icon name="document-text-outline" class="text-lg"></ion-icon>
+              <span>Descargar Contrato PDF</span>
+            }
+          </button>
         </div>
 
         <!-- Refund Status / Insurance -->

@@ -1018,14 +1018,18 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   /**
    * Extract photo gallery from car
-   * ENHANCED: Forces local AI-generated assets for all cars to ensure high visual quality and consistency.
-   * Ignores potentially low-quality DB photos for the main grid view.
+   * Uses Supabase car_photos (Gemini 3 Pro generated) with placeholder fallback.
    */
   extractPhotoGallery(car: Car): string[] {
-    // FORCE LOCAL AI PHOTO for consistency
-    // We generated high-quality LATAM context photos for all active cars in the DB based on their ID.
-    // This ensures no low-quality or placeholder images break the professional look.
-    return [`/assets/images/cars/${car.id}-front.jpg`];
+    // Usar fotos de Supabase (car_photos) generadas por Gemini 3 Pro
+    if (car.car_photos && car.car_photos.length > 0) {
+      return car.car_photos.map((p) => p.url);
+    }
+    if (car.photos && car.photos.length > 0) {
+      return car.photos.map((p) => p.url);
+    }
+    // Fallback a placeholder si no hay fotos
+    return ['/assets/images/car-placeholder.svg'];
   }
 
   /**

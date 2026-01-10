@@ -84,6 +84,7 @@ export class MobileBottomNavPortalService {
     }
 
     const element = this.componentRef.location.nativeElement as HTMLElement;
-    element.classList.toggle('hidden', hidden);
+    // Usar inline style porque la clase 'block' del host tiene más especificidad que 'hidden'
+    element.style.display = hidden ? 'none' : '';
   }
 }

@@ -1,9 +1,7 @@
-<!-- Mobile Menu Drawer - Bottom Sheet Style -->
+<!-- Mobile Menu Drawer - Simplified & Accessible -->
 @if (isOpen()) {
   <div class="drawer-overlay" (click)="onBackdropClick()" aria-hidden="true"></div>
-}
 
-@if (isOpen()) {
   <div
     #drawerContent
     class="drawer-container"
@@ -19,9 +17,11 @@
     <div class="drawer-handle" aria-hidden="true">
       <div class="drawer-handle__bar"></div>
     </div>
-    <!-- Header with User Info -->
+
+    <!-- Header with User Info - Pro Level -->
     <div class="drawer-header">
       <div class="drawer-header__user">
+        <!-- Avatar with initials fallback -->
         <div class="drawer-header__avatar">
           @if (userProfile?.avatar_url) {
             <img
@@ -29,23 +29,94 @@
               [alt]="userProfile?.full_name || 'Profile'"
               class="drawer-header__avatar-img"
             />
+          } @else {
+            <div class="drawer-header__avatar-initials" [style.background]="getAvatarColor()">
+              {{ getInitials() }}
+            </div>
           }
-          @if (!userProfile?.avatar_url) {
-            <app-menu-icon name="user-circle" [size]="28" cssClass="text-gray-400" />
-          }
+          <!-- Online indicator -->
+          <div class="drawer-header__online-dot"></div>
         </div>
         <div class="drawer-header__info">
           <div class="flex items-center gap-2">
             <p class="drawer-header__name">{{ userProfile?.full_name || 'Usuario' }}</p>
+            @if (isPremium()) {
+              <span class="drawer-header__premium-badge">PLUS</span>
+            }
             <app-verified-badge size="xs" variant="minimal" [showTooltip]="false" />
           </div>
           <p class="drawer-header__email">{{ userEmail() || '' }}</p>
+          <!-- Verification progress -->
+          @if (verificationProgress() < 100) {
+            <div class="drawer-header__progress">
+              <div class="drawer-header__progress-bar">
+                <div
+                  class="drawer-header__progress-fill"
+                  [style.width.%]="verificationProgress()"
+                ></div>
+              </div>
+              <span class="drawer-header__progress-text">{{ verificationProgress() }}% verificado</span>
+            </div>
+          }
         </div>
       </div>
       <button type="button" class="drawer-header__close" (click)="close()" aria-label="Cerrar menu">
         <app-menu-icon name="close" [size]="24" />
       </button>
     </div>
+
+    <!-- NIVEL 1: Gamification - Level & XP -->
+    <div class="drawer-gamification">
+      <div class="drawer-gamification__level">
+        <span class="drawer-gamification__level-icon">{{ gamificationStats().level.icon }}</span>
+        <div class="drawer-gamification__level-info">
+          <span class="drawer-gamification__level-name" [style.color]="gamificationStats().level.color">
+            {{ gamificationStats().level.name }}
+          </span>
+          <div class="drawer-gamification__xp-bar">
+            <div
+              class="drawer-gamification__xp-fill"
+              [style.width.%]="gamificationStats().xpProgress"
+              [style.background]="gamificationStats().level.color"
+            ></div>
+          </div>
+          <span class="drawer-gamification__xp-text">
+            {{ gamificationStats().currentXP }}/{{ gamificationStats().nextLevel?.minXP || '∞' }} XP
+          </span>
+        </div>
+      </div>
+      <div class="drawer-gamification__badges">
+        @for (badge of gamificationStats().badges.slice(0, 4); track badge.id) {
+          <span
+            class="drawer-gamification__badge"
+            [class.drawer-gamification__badge--locked]="!badge.isUnlocked"
+            [title]="badge.name"
+          >
+            {{ badge.icon }}
+          </span>
+        }
+        @if (gamificationStats().badges.length > 4) {
+          <span class="drawer-gamification__badge-more">
+            +{{ gamificationStats().badges.length - 4 }}
+          </span>
+        }
+      </div>
+    </div>
+
+    <!-- Quick Alert - Only show if there are urgent actions (e.g., pending reservations) -->
+    @if (isHost() && hostStats().pendingReservations > 0) {
+      <button
+        type="button"
+        class="drawer-host-dashboard__alert"
+        (click)="navigateAndClose('/bookings?status=pending')"
+        aria-label="Ver reservas pendientes"
+      >
+        <span aria-hidden="true">⚡</span>
+        {{ hostStats().pendingReservations }} reservas pendientes
+        <app-menu-icon name="chevron-right" [size]="16" />
+      </button>
+    }
+
     <!-- Menu Content -->
     <div class="drawer-content">
       <!-- Menu Sections -->
@@ -55,7 +126,12 @@
             {{ section.title }}
           </p>
           @for (item of section.items; track trackByItem($index, item)) {
-            <a class="drawer-item group" (click)="navigateAndClose(item.route)">
+            <button
+              type="button"
+              class="drawer-item group"
+              (click)="navigateAndClose(item.route)"
+              [attr.aria-label]="'Ir a ' + item.label"
+            >
               <div
                 class="drawer-item__icon"
                 [class]="
@@ -74,11 +150,45 @@
                 </span>
               }
               <app-menu-icon name="chevron-right" [size]="18" cssClass="drawer-item__chevron" />
-            </a>
+            </button>
           }
         </div>
         <div class="drawer-divider"></div>
       }
+
+      <!-- CTA: Publicar Auto -->
+      <div class="drawer-cta">
+        <button
+          type="button"
+          class="drawer-cta__button"
+          (click)="navigateAndClose('/cars/publish')"
+        >
+          <app-menu-icon name="plus" [size]="20" cssClass="text-white" />
+          <span>Publicar mi auto</span>
+          <span class="drawer-cta__subtitle">Ganá dinero con tu vehículo</span>
+        </button>
+      </div>
+
+
+      <!-- Invite Friends -->
+      <button
+        type="button"
+        class="drawer-item drawer-item--invite group"
+        (click)="navigateAndClose('/referrals')"
+        aria-label="Invitar amigos y ganar recompensas"
+      >
+        <div class="drawer-item__icon bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-purple-600 group-hover:opacity-80">
+          <app-menu-icon name="user-plus" [size]="20" />
+        </div>
+        <div class="drawer-item__invite-content">
+          <span class="drawer-item__label">Invitar amigos</span>
+          <span class="drawer-item__invite-reward">Gana $5.000 por cada invitado</span>
+        </div>
+        <app-menu-icon name="chevron-right" [size]="18" cssClass="drawer-item__chevron" />
+      </button>
+
+      <div class="drawer-divider"></div>
+
       <!-- Sign Out Button -->
       <button type="button" class="drawer-item drawer-item--logout group" (click)="signOut()">
         <div class="drawer-item__icon bg-red-500/10 text-red-600 group-hover:bg-red-500/20">
@@ -87,6 +197,7 @@
         <span class="drawer-item__label text-red-600">Cerrar Sesion</span>
       </button>
     </div>
+
     <!-- Safe Area Bottom Padding -->
     <div class="drawer-safe-area"></div>
   </div>

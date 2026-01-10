@@ -15,6 +15,7 @@ export const environment = buildEnvironment({
   googleAnalyticsMeasurementId: 'G-WV2PWTKG2E', // Google Analytics 4
   enableAnalytics: true,
   docVerifierUrl: 'https://doc-verifier.autorentar.workers.dev',
+  pdfWorkerUrl: 'https://autorent-pdf-generator.marques-eduardo95466020.workers.dev',
   // Google AI Image Generation (Gemini)
   // IMPORTANTE: Configurar via variable de entorno en Cloudflare Pages
   // NG_APP_GOOGLE_AI_IMAGE_URL - Endpoint completo de Gemini (incluye ?key=... si aplica)

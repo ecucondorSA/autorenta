@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { RiskService } from './risk.service';
-import { RiskCalculatorService } from './risk-calculator.service';
 import { firstValueFrom } from 'rxjs';
 import type { CountryCode } from '@core/models/booking-detail-payment.model';
+import { RiskCalculatorService } from './risk-calculator.service';
+import { RiskService } from './risk.service';
 
 // Mock supabase
 const mockSupabaseClient = {

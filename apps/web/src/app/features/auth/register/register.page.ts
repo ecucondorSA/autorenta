@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { AuthService } from '@core/services/auth/auth.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { MobileBottomNavPortalService } from '@core/services/ui/mobile-bottom-nav-portal.service';
 import { environment } from '@environment';
 
 @Component({
@@ -17,7 +18,8 @@ import { environment } from '@environment';
   templateUrl: './register.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterPage {
+export class RegisterPage implements OnInit, OnDestroy {
+  private readonly bottomNavService = inject(MobileBottomNavPortalService);
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
@@ -171,5 +173,15 @@ export class RegisterPage {
       // Timeout para permitir redirección antes de resetear loading
       setTimeout(() => this.loading.set(false), 3000);
     }
+  }
+
+  ngOnInit(): void {
+    // Ocultar bottom nav en página de registro para maximizar espacio
+    this.bottomNavService.setHidden(true);
+  }
+
+  ngOnDestroy(): void {
+    // Restaurar bottom nav al salir de la página
+    this.bottomNavService.setHidden(false);
   }
 }

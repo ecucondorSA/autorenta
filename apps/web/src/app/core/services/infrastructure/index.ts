@@ -12,6 +12,7 @@ export * from './notification-templates.service';
 export * from './offline-manager.service';
 export * from './offline-messages.service';
 export * from './pdf-generator.service';
+export * from './pdf-worker.service';
 export * from './performance-monitoring.service';
 export * from './platform-config.service';
 export * from './push-notification.service';

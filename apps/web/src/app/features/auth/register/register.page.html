@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-surface-base flex pb-20 sm:pb-0">
+<div class="min-h-screen bg-surface-base flex">
   <!-- Left Panel - Visual (hidden on mobile) -->
   <div
     class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 relative overflow-hidden"
@@ -169,10 +169,10 @@
   </div>
 
   <!-- Right Panel - Form -->
-  <div class="w-full lg:w-1/2 flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
+  <div class="w-full lg:w-1/2 flex items-start sm:items-center justify-center py-2 sm:py-8 px-4 sm:px-6 lg:px-8">
     <div class="w-full max-w-md">
-      <!-- Mobile Logo -->
-      <div class="text-center mb-6 lg:hidden">
+      <!-- Mobile Logo - Solo visible en desktop (en móvil ya está el header) -->
+      <div class="text-center mb-6 hidden lg:block">
         <img
           ngSrc="/assets/images/autorentar-logo.svg"
           alt="Autorentar"
@@ -184,21 +184,21 @@
       </div>
 
       <!-- Header -->
-      <div class="text-center mb-6">
-        <h1 class="text-3xl font-bold text-text-primary mb-2 tracking-tight font-satoshi">
+      <div class="text-center mb-3 sm:mb-6">
+        <h1 class="text-2xl sm:text-3xl font-bold text-text-primary mb-1 sm:mb-2 tracking-tight font-satoshi">
           Creá tu cuenta
         </h1>
-        <p class="text-text-secondary">30 segundos y empezás a explorar</p>
+        <p class="text-text-secondary text-sm sm:text-base hidden sm:block">30 segundos y empezás a explorar</p>
       </div>
 
       <!-- Card -->
-      <div class="bg-surface-raised rounded-2xl p-6 sm:p-8 shadow-sm border border-border-default">
+      <div class="bg-surface-raised rounded-2xl p-4 sm:p-8 shadow-sm border border-border-default">
         <!-- Google Sign Up Button -->
         <button
           type="button"
           (click)="signUpWithGoogle()"
           [disabled]="loading()"
-          class="w-full flex items-center justify-center gap-3 rounded-xl border-2 border-border-default bg-surface-base px-6 py-3 text-sm font-semibold text-text-primary hover:bg-surface-secondary hover:border-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full flex items-center justify-center gap-3 rounded-xl border-2 border-border-default bg-surface-base px-4 sm:px-6 py-2.5 sm:py-3 text-sm font-semibold text-text-primary hover:bg-surface-secondary hover:border-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -230,7 +230,7 @@
         <button
           type="button"
           (click)="toggleMagicLinkMode()"
-          class="w-full flex items-center justify-center gap-2 rounded-xl border border-border-default bg-surface-base px-6 py-2.5 text-sm text-text-secondary hover:bg-surface-secondary transition-all mt-3"
+          class="w-full flex items-center justify-center gap-2 rounded-xl border border-border-default bg-surface-base px-4 sm:px-6 py-2 sm:py-2.5 text-sm text-text-secondary hover:bg-surface-secondary transition-all mt-2 sm:mt-3"
         >
           <svg
             class="w-4 h-4"
@@ -253,7 +253,7 @@
         </button>
 
         <!-- Divider -->
-        <div class="relative my-5">
+        <div class="relative my-3 sm:my-5">
           <div class="absolute inset-0 flex items-center">
             <div class="w-full border-t border-border-default"></div>
           </div>
@@ -273,7 +273,7 @@
           <div class="space-y-4">
             <!-- Email for Magic Link -->
             <div>
-              <label for="magic-email" class="block text-sm font-medium text-text-primary mb-1.5">
+              <label for="magic-email" class="block text-sm font-medium text-text-primary mb-1">
                 Email
               </label>
               <input
@@ -282,7 +282,7 @@
                 [formControl]="form.controls.email"
                 autocomplete="email"
                 placeholder="ejemplo@correo.com"
-                class="w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400"
+                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400"
                 [class.border-border-default]="
                   !form.controls.email.touched || !form.controls.email.invalid
                 "
@@ -300,7 +300,7 @@
 
             <!-- Name (optional for magic link) -->
             <div>
-              <label for="magic-name" class="block text-sm font-medium text-text-primary mb-1.5">
+              <label for="magic-name" class="block text-sm font-medium text-text-primary mb-1">
                 Nombre <span class="text-text-muted">(opcional)</span>
               </label>
               <input
@@ -392,12 +392,12 @@
 
         <!-- Regular Form -->
         @if (!magicLinkMode()) {
-          <form class="space-y-4" [formGroup]="form" (ngSubmit)="submit()">
+          <form class="space-y-3 sm:space-y-4" [formGroup]="form" (ngSubmit)="submit()">
             <!-- Full Name -->
             <div>
               <label
                 for="register-fullname"
-                class="block text-sm font-medium text-text-primary mb-1.5"
+                class="block text-sm font-medium text-text-primary mb-1"
               >
                 Nombre completo
               </label>
@@ -407,7 +407,7 @@
                 formControlName="fullName"
                 autocomplete="name"
                 placeholder="Juan Pérez"
-                class="w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400"
+                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400"
                 [class.border-border-default]="
                   !form.controls.fullName.touched || !form.controls.fullName.invalid
                 "
@@ -427,7 +427,7 @@
             <div>
               <label
                 for="register-email"
-                class="block text-sm font-medium text-text-primary mb-1.5"
+                class="block text-sm font-medium text-text-primary mb-1"
               >
                 Email
               </label>
@@ -437,7 +437,7 @@
                 formControlName="email"
                 autocomplete="email"
                 placeholder="ejemplo@correo.com"
-                class="w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400"
+                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400"
                 [class.border-border-default]="
                   !form.controls.email.touched || !form.controls.email.invalid
                 "
@@ -460,7 +460,7 @@
             <div>
               <label
                 for="register-phone"
-                class="block text-sm font-medium text-text-primary mb-1.5"
+                class="block text-sm font-medium text-text-primary mb-1"
               >
                 Teléfono <span class="text-text-muted font-normal">(opcional)</span>
               </label>
@@ -470,7 +470,7 @@
                 formControlName="phone"
                 autocomplete="tel"
                 placeholder="+54 11 1234-5678"
-                class="w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400"
+                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400"
                 [class.border-border-default]="
                   !form.controls.phone.touched || !form.controls.phone.invalid
                 "
@@ -491,7 +491,7 @@
             <div>
               <label
                 for="register-password"
-                class="block text-sm font-medium text-text-primary mb-1.5"
+                class="block text-sm font-medium text-text-primary mb-1"
               >
                 Contraseña
               </label>
@@ -501,7 +501,7 @@
                 formControlName="password"
                 autocomplete="new-password"
                 placeholder="Mínimo 8 caracteres"
-                class="w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400"
+                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400"
                 [class.border-border-default]="
                   !form.controls.password.touched || !form.controls.password.invalid
                 "
@@ -595,23 +595,21 @@
               }
             </button>
 
-            <!-- Terms -->
-            <p class="text-xs text-text-secondary text-center">
-              Al crear tu cuenta, aceptás nuestros
-              <a href="/terms" class="text-text-primary font-medium hover:underline">Términos</a> y
-              <a href="/privacy" class="text-text-primary font-medium hover:underline">Privacidad</a>
-            </p>
+            <!-- Terms + Login Link (combinados para ahorrar espacio en móvil) -->
+            <div class="text-center space-y-1 sm:space-y-2 mt-1">
+              <p class="text-[10px] sm:text-xs text-text-secondary">
+                Al crear cuenta, aceptás
+                <a href="/terms" class="text-text-primary font-medium hover:underline">Términos</a> y
+                <a href="/privacy" class="text-text-primary font-medium hover:underline">Privacidad</a>
+              </p>
+              <p class="text-xs sm:text-sm text-text-secondary">
+                ¿Ya tenés cuenta?
+                <a routerLink="/auth/login" class="text-cta-default hover:underline font-semibold ml-1">Ingresá</a>
+              </p>
+            </div>
           </form>
         }
         <!-- Cierra @if (!magicLinkMode()) -->
-
-        <!-- Login Link -->
-        <div class="mt-5 text-center text-sm border-t border-border-default pt-5">
-          <span class="text-text-secondary">¿Ya tenés cuenta?</span>
-          <a routerLink="/auth/login" class="text-cta-default hover:underline font-semibold ml-1">
-            Ingresá acá
-          </a>
-        </div>
       </div>
     </div>
   </div>

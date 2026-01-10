@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Booking } from '@core/models';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { BookingExtensionService } from './booking-extension.service';
 import { BookingNotificationsService } from './booking-notifications.service';
 import { BookingWalletService } from './booking-wallet.service';
 import { InsuranceService } from './insurance.service';
-import { LoggerService } from '@core/services/infrastructure/logger.service';
-import type { Booking } from '@core/models';
 
 // Mock supabase
 const mockSupabaseClient = {

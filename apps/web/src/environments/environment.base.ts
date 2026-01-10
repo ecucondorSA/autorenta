@@ -52,6 +52,7 @@ interface EnvDefaults {
   distanceConfig?: DistanceConfig;
   docVerifierUrl?: string;
   cloudflareWorkerUrl?: string;
+  pdfWorkerUrl?: string;
   geminiTextWorkerUrl?: string;
   googleAiImageUrl?: string;
   sentryDsn?: string;
@@ -155,6 +156,7 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   distanceConfig: defaults.distanceConfig ?? defaultDistanceConfig,
   docVerifierUrl: resolve('NG_APP_DOC_VERIFIER_URL', defaults.docVerifierUrl),
   cloudflareWorkerUrl: resolve('NG_APP_CLOUDFLARE_WORKER_URL', defaults.cloudflareWorkerUrl ?? ''),
+  pdfWorkerUrl: resolve('NG_APP_PDF_WORKER_URL', defaults.pdfWorkerUrl ?? ''),
   geminiTextWorkerUrl: resolve('NG_APP_GEMINI_TEXT_WORKER_URL', defaults.geminiTextWorkerUrl ?? ''),
   googleAiImageUrl: resolve('NG_APP_GOOGLE_AI_IMAGE_URL', defaults.googleAiImageUrl),
   sentryDsn: resolve('NG_APP_SENTRY_DSN', defaults.sentryDsn),

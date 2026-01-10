@@ -31,6 +31,7 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { PdfWorkerService, ContractPdfData, InspectionPdfData } from '@core/services/infrastructure/pdf-worker.service';
 import { TrafficInfractionsService } from '@core/services/infrastructure/traffic-infractions.service'; // NEW
 import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
 import { PaymentsService } from '@core/services/payments/payments.service';
@@ -211,6 +212,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly bookingOpsService = inject(BookingOpsService);
   private readonly trafficInfractionsService = inject(TrafficInfractionsService); // NEW
   private readonly bookingRealtimeService = inject(BookingRealtimeService);
+  private readonly pdfWorkerService = inject(PdfWorkerService);
   private readonly logger = inject(LoggerService).createChildLogger('BookingDetailPage');
 
   constructor() {
@@ -2179,6 +2181,120 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     });
 
     await alert.present();
+  }
+
+  // ============================================================================
+  // DOWNLOAD CONTRACT PDF
+  // ============================================================================
+  downloadingContract = signal(false);
+
+  async downloadContract(): Promise<void> {
+    const booking = this.booking();
+    if (!booking || this.downloadingContract()) return;
+
+    this.downloadingContract.set(true);
+    try {
+      const contractData: ContractPdfData = {
+        booking_id: booking.id,
+        booking_reference: booking.reference_code,
+        start_date: booking.start_at,
+        end_date: booking.end_at,
+        days_count: booking.days_count ?? 1,
+        contribution_cents: Math.round((booking.total_amount ?? 0) * 100),
+        deposit_amount_cents: Math.round((booking.breakdown?.guarantee_cents ?? booking.breakdown?.deposit_cents ?? 0)),
+        insurance_cents: booking.breakdown?.insurance_cents ?? 0,
+        fees_cents: booking.breakdown?.platform_fee_cents ?? 0,
+        total_amount_cents: booking.breakdown?.total_cents ?? Math.round((booking.total_amount ?? 0) * 100),
+        currency: (booking.currency as 'USD' | 'ARS' | 'BRL') || 'ARS',
+        car: {
+          title: `${booking.car_brand} ${booking.car_model}`,
+          brand: booking.car_brand ?? '',
+          model: booking.car_model ?? '',
+          year: booking.car_year ?? new Date().getFullYear(),
+          plate: booking.car?.plate ?? '',
+          color: booking.car?.color ?? '',
+          vin: booking.car?.vin,
+          mileage: booking.car?.odometer ?? 0,
+          fuel_policy: booking.car?.fuel_policy,
+          mileage_limit: booking.car?.mileage_limit ?? undefined,
+          extra_km_price: booking.car?.extra_km_price ?? undefined,
+        },
+        comodatario: {
+          full_name: booking.renter_name ?? '',
+          gov_id_number: this.renterDni() ?? '',
+          driver_license_number: '',
+          email: '',
+        },
+        comodante: {
+          full_name: this.carOwnerName(),
+          gov_id_number: '',
+        },
+        pickup_address: booking.pickup_address ?? booking.car?.address,
+        dropoff_address: booking.dropoff_address ?? booking.car?.address,
+      };
+
+      await this.pdfWorkerService.generateContract(contractData);
+    } catch (error) {
+      this.logger.error('Error downloading contract:', error);
+    } finally {
+      this.downloadingContract.set(false);
+    }
+  }
+
+  // ============================================================================
+  // DOWNLOAD INSPECTION PDF
+  // ============================================================================
+  downloadingInspection = signal(false);
+
+  async downloadInspection(type: 'delivery' | 'return'): Promise<void> {
+    const booking = this.booking();
+    if (!booking || this.downloadingInspection()) return;
+
+    // Find the appropriate inspection
+    const stage = type === 'delivery' ? 'check_in' : 'check_out';
+    const inspection = this.inspections().find(i => i.stage === stage || i.stage === 'renter_check_in');
+
+    if (!inspection) {
+      alert(`No hay acta de ${type === 'delivery' ? 'entrega' : 'devolución'} disponible`);
+      return;
+    }
+
+    this.downloadingInspection.set(true);
+    try {
+      const inspectionData: InspectionPdfData = {
+        inspection_id: inspection.id,
+        booking_id: booking.id,
+        type,
+        inspection_date: inspection.signedAt || inspection.createdAt || new Date().toISOString(),
+        inspector_name: inspection.inspectorName || 'AutoRenta',
+        comodatario_name: booking.renter_name ?? '',
+        comodante_name: this.carOwnerName(),
+        car: {
+          title: `${booking.car_brand} ${booking.car_model}`,
+          plate: booking.car?.plate ?? '',
+          mileage_at_inspection: inspection.mileage ?? booking.car?.odometer ?? 0,
+          fuel_level: inspection.fuelLevel || 'full',
+        },
+        checklist: (inspection.checklist || []).map((item: { label?: string; status?: string; notes?: string }) => ({
+          item: item.label || '',
+          status: (item.status as 'ok' | 'damaged' | 'missing' | 'na') || 'ok',
+          notes: item.notes,
+        })),
+        damages: (inspection.damages || []).map((d: { location?: string; description?: string; severity?: string; estimatedCostCents?: number }) => ({
+          location: d.location || '',
+          description: d.description || '',
+          severity: (d.severity as 'minor' | 'moderate' | 'severe') || 'minor',
+          estimated_cost_cents: d.estimatedCostCents,
+        })),
+        notes: inspection.notes,
+      };
+
+      await this.pdfWorkerService.generateInspection(inspectionData);
+    } catch (error) {
+      this.logger.error('Error downloading inspection:', error);
+    } finally {
+      this.downloadingInspection.set(false);
+    }
   }
 }
 

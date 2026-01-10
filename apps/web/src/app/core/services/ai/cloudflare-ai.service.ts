@@ -52,14 +52,24 @@ export class CloudflareAiService {
   // No hacemos fallback a workers.dev porque puede apuntar a un deploy viejo.
   private readonly WORKER_URL = environment.cloudflareWorkerUrl;
 
-  // Estilos "marketplace" realistas (Amateur / Phone Quality)
-  private readonly REALISTIC_STYLES = [
-    'photo taken with iphone, parked on crowded street, harsh afternoon sun, hard shadows, dirty car, unwashed, amateur shot',
-    'shot on samsung galaxy, dusty dirt road, overcast sky, mud on tires, candid photo, slightly tilted angle, realistic',
-    'craigslist car ad photo, parked in driveway, suburbs, boring lighting, unedited, daily driver car, leaves on ground',
-    'gas station parking lot, night time, fluorescent lights, grainy phone photo, reflection on hood, wet ground',
-    'random street parking, trees reflection on window, sunny day, lens flare, shot from sidewalk, real life, used car',
-    'parking garage, concrete background, dim lighting, flash photography, dust particles, raw photo, no filter',
+  // Estilos EXTERIOR - auto ESTACIONADO (marketplace LATAM)
+  private readonly EXTERIOR_STYLES = [
+    'phone photo, car PARKED ON THE SIDE of residential street, by the curb, latin american neighborhood, afternoon light, houses in background',
+    'amateur iphone photo, car PARKED AGAINST THE CURB on quiet street, Uruguay/Argentina border town vibe, overcast sky, slightly dusty',
+    'samsung photo, car PARKED BY THE SIDEWALK, small shops in background, latin american town, golden hour light',
+    'phone camera photo, car PARKED IN DRIVEWAY of modest latin american house, concrete floor, afternoon shade',
+    'phone photo, car PARKED IN PARKING LOT, shopping area visible, latin american city, daytime',
+    'iphone photo, car PARKED IN GAS STATION, pumps visible in background, latin america, afternoon',
+  ];
+
+  // Estilos INTERIOR - auto ESTACIONADO, volante a la IZQUIERDA (LATAM)
+  private readonly INTERIOR_STYLES = [
+    'interior photo of PARKED CAR from backseat, LEFT HAND DRIVE, ENGINE OFF, dashboard and steering wheel on left, water bottle in cupholder, PARKED on quiet residential street, houses visible, no traffic',
+    'amateur interior of STATIONARY CAR from rear seat, LEFT HAND DRIVE, earbuds on passenger seat, PARKED by the curb, latin american neighborhood, empty street outside',
+    'interior shot of PARKED VEHICLE from behind driver seat, LEFT HAND DRIVE, phone charging cable visible, CAR PARKED IN PARKING LOT, other parked cars visible outside',
+    'phone photo of PARKED car interior from backseat, LEFT SIDE STEERING WHEEL, sunglasses on dashboard, coffee cup in holder, CAR PARKED in front of house, driveway visible',
+    'amateur photo of PARKED car interior from rear, LEFT HAND DRIVE, energy drink in cupholder, CAR PARKED AT GAS STATION, pumps visible through windshield, engine off',
+    'interior photo from backseat of PARKED CAR, LEFT HAND DRIVE, steering wheel on left side, clean interior, afternoon light, CAR STATIONARY on suburban street',
   ];
 
   /**
@@ -110,17 +120,18 @@ export class CloudflareAiService {
   }): Promise<Blob[]> {
     const angles = params.angles || ['3/4-front', 'side', 'interior'];
 
-    // Seleccionar un estilo aleatorio para todo el set de fotos de este auto
-    // para mantener coherencia (mismo clima/lugar para el mismo auto)
-    const randomStyle =
-      this.REALISTIC_STYLES[Math.floor(Math.random() * this.REALISTIC_STYLES.length)];
+    // Seleccionar estilos aleatorios (uno para exterior, otro para interior)
+    const exteriorStyle =
+      this.EXTERIOR_STYLES[Math.floor(Math.random() * this.EXTERIOR_STYLES.length)];
+    const interiorStyle =
+      this.INTERIOR_STYLES[Math.floor(Math.random() * this.INTERIOR_STYLES.length)];
 
     const promises = angles.map((angle) =>
       this.generateCarImage({
         ...params,
         angle,
-        style: randomStyle,
-        // Steps are worker/model-specific; worker may ignore this for Gemini.
+        // Usar estilo de interior para 'interior', exterior para los demás
+        style: angle === 'interior' ? interiorStyle : exteriorStyle,
         num_steps: 8,
       }),
     );

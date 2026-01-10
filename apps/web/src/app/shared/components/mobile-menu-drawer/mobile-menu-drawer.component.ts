@@ -1,17 +1,22 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   ElementRef,
   EventEmitter,
+  HostListener,
   inject,
   Input,
+  OnDestroy,
   Output,
   signal,
   ViewChild,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { AuthService } from '@core/services/auth/auth.service';
 import { UserProfile } from '@core/services/auth/profile.service';
+import { GamificationService } from '@core/services/gamification/gamification.service';
 import { MenuIconComponent } from '../menu-icon/menu-icon.component';
 import { VerifiedBadgeComponent } from '../verified-badge/verified-badge.component';
 
@@ -33,14 +38,18 @@ interface MenuSection {
 @Component({
   selector: 'app-mobile-menu-drawer',
   standalone: true,
-  imports: [RouterModule, MenuIconComponent, VerifiedBadgeComponent],
+  imports: [RouterModule, CurrencyPipe, DatePipe, DecimalPipe, MenuIconComponent, VerifiedBadgeComponent],
   templateUrl: './mobile-menu-drawer.component.html',
   styleUrls: ['./mobile-menu-drawer.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MobileMenuDrawerComponent {
+export class MobileMenuDrawerComponent implements OnDestroy {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly gamification = inject(GamificationService);
+
+  // RAF ID for cleanup (memory leak fix)
+  private rafId: number | null = null;
 
   @ViewChild('drawerContent') drawerContent!: ElementRef<HTMLElement>;
 
@@ -61,7 +70,44 @@ export class MobileMenuDrawerComponent {
   // User email from auth service
   readonly userEmail = this.authService.userEmail;
 
-  // Menu sections based on the plan
+  // Pro Level: Quick stats signals (will be populated from services in the future)
+  readonly walletBalance = signal(0);
+  readonly unreadMessages = signal(0);
+  readonly pendingNotifications = signal(0);
+  readonly verificationProgress = signal(60); // Mock: 60% verified
+
+  // Avatar colors for initials
+  private readonly avatarColors = [
+    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+    'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+    'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+  ];
+
+  // Gamification data from service
+  readonly gamificationStats = this.gamification.stats;
+  readonly isHost = this.gamification.isHost;
+  readonly hostStats = this.gamification.hostStats;
+  readonly quickActions = this.gamification.quickActions;
+  readonly isPremium = this.gamification.isPremium;
+  readonly premiumPrice = this.gamification.premiumPrice;
+
+  // Computed: verificaciones completadas
+  readonly verificationsCompleted = computed(() => {
+    // Mock: basado en verification progress
+    const progress = this.verificationProgress();
+    return {
+      email: true,
+      phone: progress >= 40,
+      dni: progress >= 60,
+      license: progress >= 80,
+      selfie: progress >= 100,
+    };
+  });
+
+  // Menu sections - Simplified to 3 sections (industry standard: Airbnb, Uber use 3-4)
   readonly menuSections: MenuSection[] = [
     {
       title: 'Mis Actividades',
@@ -69,66 +115,59 @@ export class MobileMenuDrawerComponent {
       iconBgColor: 'bg-blue-500/10',
       iconTextColor: 'text-blue-600',
       items: [
+        { label: 'Mis Reservas', route: '/bookings', icon: 'calendar' },
+        { label: 'Mis Autos', route: '/cars/my', icon: 'archive' },
+        { label: 'Mensajes', route: '/messages', icon: 'message' },
+        { label: 'Favoritos', route: '/favorites', icon: 'heart' },
+      ],
+    },
+    {
+      title: 'Cuenta',
+      color: 'text-emerald-600',
+      iconBgColor: 'bg-emerald-500/10',
+      iconTextColor: 'text-emerald-600',
+      items: [
+        { label: 'Mi Perfil', route: '/profile', icon: 'user' },
+        { label: 'Wallet', route: '/wallet', icon: 'wallet' },
         {
           label: 'Verificacion',
           route: '/profile/verification',
           icon: 'check-circle',
           badge: 'IMPORTANTE',
         },
-        { label: 'Mis Reservas', route: '/bookings', icon: 'calendar' },
-        { label: 'Mis Autos', route: '/cars/my', icon: 'archive' },
-        { label: 'Calendario', route: '/bookings/calendar', icon: 'calendar-days' },
-        { label: 'Favoritos', route: '/favorites', icon: 'heart' },
-      ],
-    },
-    {
-      title: 'Comunicacion',
-      color: 'text-violet-600',
-      iconBgColor: 'bg-violet-500/10',
-      iconTextColor: 'text-violet-600',
-      items: [
-        { label: 'Mensajes', route: '/messages', icon: 'message' },
-        { label: 'Notificaciones', route: '/profile/notifications-settings', icon: 'bell' },
-      ],
-    },
-    {
-      title: 'Finanzas',
-      color: 'text-emerald-600',
-      iconBgColor: 'bg-emerald-500/10',
-      iconTextColor: 'text-emerald-600',
-      items: [
-        { label: 'Wallet', route: '/wallet', icon: 'wallet' },
-        { label: 'Retiros', route: '/wallet/payouts', icon: 'credit-card' },
-        { label: 'Mis Ganancias', route: '/dashboard/earnings', icon: 'chart-bar', badge: 'NEW' },
-      ],
-    },
-    {
-      title: 'Configuracion',
-      color: 'text-gray-500',
-      iconBgColor: 'bg-gray-500/10',
-      iconTextColor: 'text-gray-600',
-      items: [
-        { label: 'Editar Perfil', route: '/profile', icon: 'user' },
-        { label: 'Mi Direccion', route: '/profile/location-settings', icon: 'location' },
-        { label: 'Seguridad', route: '/profile/security', icon: 'shield' },
-        { label: 'Preferencias', route: '/profile/preferences', icon: 'settings' },
-        { label: 'Conductor', route: '/profile/driver-profile', icon: 'document' },
+        { label: 'Configuracion', route: '/profile/preferences', icon: 'settings' },
       ],
     },
     {
       title: 'Ayuda',
-      color: 'text-amber-600',
-      iconBgColor: 'bg-amber-500/10',
-      iconTextColor: 'text-amber-600',
+      color: 'text-gray-500',
+      iconBgColor: 'bg-gray-500/10',
+      iconTextColor: 'text-gray-600',
       items: [
-        { label: 'Centro de Ayuda', route: '/help', icon: 'help', badge: 'NEW' },
-        { label: 'Contactar Soporte', route: '/support', icon: 'phone' },
+        { label: 'Centro de Ayuda', route: '/help', icon: 'help' },
+        { label: 'Soporte', route: '/support', icon: 'phone' },
       ],
     },
   ];
 
   private touchStartY = 0;
   private isDragging = false;
+
+  // Keyboard support: Escape to close
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.isOpen()) {
+      this.close();
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup RAF to prevent memory leaks
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
+  }
 
   private animateIn(): void {
     this.isAnimating.set(true);
@@ -156,13 +195,26 @@ export class MobileMenuDrawerComponent {
     }
 
     this.close();
-    await this.router.navigate([route]);
+
+    try {
+      await this.router.navigate([route]);
+    } catch (error) {
+      console.error('Navigation failed:', error);
+      // Navigation errors are usually not critical, just log
+    }
   }
 
   async signOut(): Promise<void> {
     this.close();
-    await this.authService.signOut();
-    await this.router.navigate(['/']);
+
+    try {
+      await this.authService.signOut();
+      await this.router.navigate(['/']);
+    } catch (error) {
+      console.error('Sign out failed:', error);
+      // Still redirect to home even on error
+      await this.router.navigate(['/']);
+    }
   }
 
   // Touch handling for swipe-to-close
@@ -177,9 +229,18 @@ export class MobileMenuDrawerComponent {
     const currentY = event.touches[0].clientY;
     const diff = currentY - this.touchStartY;
 
-    // Only allow dragging down
+    // Only allow dragging down - use RAF for better performance
     if (diff > 0 && this.drawerContent) {
-      this.drawerContent.nativeElement.style.transform = `translateY(${diff}px)`;
+      // Cancel previous RAF to avoid stacking
+      if (this.rafId !== null) {
+        cancelAnimationFrame(this.rafId);
+      }
+
+      this.rafId = requestAnimationFrame(() => {
+        if (this.drawerContent) {
+          this.drawerContent.nativeElement.style.transform = `translateY(${diff}px)`;
+        }
+      });
     }
   }
 
@@ -207,5 +268,22 @@ export class MobileMenuDrawerComponent {
 
   trackByItem(index: number, item: MenuItem): string {
     return item.route;
+  }
+
+  // Pro Level: Get user initials for avatar
+  getInitials(): string {
+    const name = this.userProfile?.full_name || this.userEmail() || 'U';
+    const parts = name.split(' ').filter(Boolean);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  }
+
+  // Pro Level: Get consistent color for avatar based on name
+  getAvatarColor(): string {
+    const name = this.userProfile?.full_name || this.userEmail() || 'User';
+    const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return this.avatarColors[hash % this.avatarColors.length];
   }
 }

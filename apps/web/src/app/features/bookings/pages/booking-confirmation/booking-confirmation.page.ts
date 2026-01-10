@@ -10,6 +10,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentProvider } from '@core/interfaces/payment-gateway.interface';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { PdfWorkerService, ReceiptPdfData } from '@core/services/infrastructure/pdf-worker.service';
 
 type ConfirmationStatus = 'success' | 'pending' | 'error';
 
@@ -50,6 +51,7 @@ export class BookingConfirmationPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
   private readonly bookingsService = inject(BookingsService);
+  private readonly pdfWorkerService = inject(PdfWorkerService);
 
   // ==================== SIGNALS ====================
 
@@ -318,9 +320,14 @@ export class BookingConfirmationPage implements OnInit {
   }
 
   /**
-   * Descarga recibo de pago
+   * Estado de descarga del recibo
    */
-  downloadReceipt(): void {
+  downloadingReceipt = signal(false);
+
+  /**
+   * Descarga recibo de pago como PDF
+   */
+  async downloadReceipt(): Promise<void> {
     const booking = this.booking();
     const payment = this.paymentDetails();
 
@@ -329,19 +336,43 @@ export class BookingConfirmationPage implements OnInit {
       return;
     }
 
-    const receiptHtml = this.generateReceiptHTML(booking, payment);
+    if (this.downloadingReceipt()) return;
 
-    // Crear blob y descargar
-    const blob = new Blob([receiptHtml], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    link.download = `recibo-${(booking as any).id}.html`;
-    link.click();
+    this.downloadingReceipt.set(true);
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const b = booking as any;
+      const receiptData: ReceiptPdfData = {
+        receipt_number: `RCP-${b.id?.slice(0, 8).toUpperCase() || 'N/A'}`,
+        booking_id: b.id,
+        payment_id: payment.paymentId || payment.orderId,
+        payment_date: this.confirmedAt().toISOString(),
+        payer: {
+          full_name: b.renter_name || 'Cliente',
+          email: b.renter_email || '',
+          gov_id_number: '',
+        },
+        amount_cents: Math.round((b.total_price || b.total_amount || 0) * 100),
+        currency: (b.currency || 'ARS') as 'USD' | 'ARS' | 'BRL',
+        payment_method: this.providerDisplayName() || 'Tarjeta',
+        provider: payment.provider,
+        provider_reference: payment.paymentId || payment.orderId || payment.captureId,
+        line_items: [
+          {
+            description: `Reserva - ${b.car_brand || b.car?.brand || ''} ${b.car_model || b.car?.model || ''} (${b.days_count || 1} días)`,
+            amount_cents: Math.round((b.total_price || b.total_amount || 0) * 100),
+          },
+        ],
+        status: this.isSuccess() ? 'completed' : 'pending',
+      };
 
-    // Cleanup
-    setTimeout(() => URL.revokeObjectURL(url), 100);
+      await this.pdfWorkerService.generateReceipt(receiptData);
+    } catch (error) {
+      console.error('Error descargando recibo PDF:', error);
+      alert('Error generando el recibo. Intente nuevamente.');
+    } finally {
+      this.downloadingReceipt.set(false);
+    }
   }
 
   /**

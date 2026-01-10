@@ -63,7 +63,7 @@
         >
           <!-- Car Image Carousel -->
           <div
-            class="relative h-52 sm:h-64 md:h-72 lg:h-80 bg-surface-secondary overflow-hidden group"
+            class="relative h-44 sm:h-52 md:h-64 lg:h-72 bg-surface-secondary overflow-hidden group"
           >
             <!-- Main Image -->
             <img
@@ -155,7 +155,7 @@
             }
           </div>
 
-          <div class="p-3 sm:p-4 space-y-3 sm:space-y-4">
+          <div class="p-2.5 sm:p-3 md:p-4 space-y-2 sm:space-y-3 md:space-y-4">
             <!-- Car Title & Year -->
             <div>
               <h2 class="text-base sm:text-lg font-bold text-text-primary font-satoshi">
@@ -218,38 +218,38 @@
               </div>
             </div>
 
-            <!-- AI Panel Buttons -->
-            <div class="flex flex-col gap-1.5 sm:gap-2 pt-3 sm:pt-4 border-t border-border-default">
+            <!-- AI Panel Buttons - Horizontal en mobile, vertical en tablet+ -->
+            <div class="flex flex-row sm:flex-col gap-2 pt-2 sm:pt-3 md:pt-4 border-t border-border-default">
               <button
-                class="flex items-center gap-2 sm:gap-3 w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all bg-surface-base hover:bg-surface-hover border border-border-default text-text-primary hover:border-cta-default/50"
+                class="flex-1 sm:flex-none flex items-center justify-center sm:justify-start gap-1.5 sm:gap-3 w-full px-2.5 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all bg-surface-base hover:bg-surface-hover border border-border-default text-text-primary hover:border-cta-default/50"
                 (click)="toggleAiPanel('trip')"
               >
                 <app-icon
                   name="map-pin"
-                  [size]="16"
+                  [size]="14"
                   cssClass="text-cta-default sm:[&>svg]:w-[18px] sm:[&>svg]:h-[18px]"
                 />
-                <span>Planear Ruta</span>
+                <span class="truncate">Planear Ruta</span>
                 <app-icon
                   name="chevron-right"
-                  [size]="14"
-                  cssClass="ml-auto text-text-muted sm:[&>svg]:w-4 sm:[&>svg]:h-4"
+                  [size]="12"
+                  cssClass="hidden sm:block ml-auto text-text-muted sm:[&>svg]:w-4 sm:[&>svg]:h-4"
                 />
               </button>
               <button
-                class="flex items-center gap-2 sm:gap-3 w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all bg-surface-base hover:bg-surface-hover border border-border-default text-text-primary hover:border-success-default/50"
+                class="flex-1 sm:flex-none flex items-center justify-center sm:justify-start gap-1.5 sm:gap-3 w-full px-2.5 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all bg-surface-base hover:bg-surface-hover border border-border-default text-text-primary hover:border-success-default/50"
                 (click)="toggleAiPanel('checklist')"
               >
                 <app-icon
                   name="check-circle"
-                  [size]="16"
+                  [size]="14"
                   cssClass="text-success-default sm:[&>svg]:w-[18px] sm:[&>svg]:h-[18px]"
                 />
-                <span>Checklist IA</span>
+                <span class="truncate">Checklist IA</span>
                 <app-icon
                   name="chevron-right"
-                  [size]="14"
-                  cssClass="ml-auto text-text-muted sm:[&>svg]:w-4 sm:[&>svg]:h-4"
+                  [size]="12"
+                  cssClass="hidden sm:block ml-auto text-text-muted sm:[&>svg]:w-4 sm:[&>svg]:h-4"
                 />
               </button>
             </div>
