@@ -1,3 +1,10 @@
+## [2.3.3](https://github.com/ecucondorSA/autorenta/compare/v2.3.2...v2.3.3) (2026-01-10)
+
+
+### Bug Fixes
+
+* resolve build errors in booking detail and add workers deployment workflow ([104efda](https://github.com/ecucondorSA/autorenta/commit/104efda965abfa03377e881adeb54ce418864bdf))
+
 ## [2.3.2](https://github.com/ecucondorSA/autorenta/compare/v2.3.1...v2.3.2) (2026-01-10)
 
 
