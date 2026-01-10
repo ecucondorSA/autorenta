@@ -31,7 +31,7 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { PdfWorkerService, ContractPdfData, InspectionPdfData } from '@core/services/infrastructure/pdf-worker.service';
+import { ContractPdfData, InspectionPdfData, PdfWorkerService } from '@core/services/infrastructure/pdf-worker.service';
 import { TrafficInfractionsService } from '@core/services/infrastructure/traffic-infractions.service'; // NEW
 import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
 import { PaymentsService } from '@core/services/payments/payments.service';
@@ -2214,7 +2214,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
           plate: booking.car?.plate ?? '',
           color: booking.car?.color ?? '',
           vin: booking.car?.vin,
-          mileage: booking.car?.odometer ?? 0,
+          mileage: booking.car?.mileage ?? 0,
           fuel_policy: booking.car?.fuel_policy,
           mileage_limit: booking.car?.mileage_limit ?? undefined,
           extra_km_price: booking.car?.extra_km_price ?? undefined,
@@ -2279,7 +2279,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         car: {
           title: `${booking.car_brand} ${booking.car_model}`,
           plate: booking.car?.plate ?? '',
-          mileage_at_inspection: inspection.odometer ?? booking.car?.odometer ?? 0,
+          mileage_at_inspection: inspection.odometer ?? booking.car?.mileage ?? 0,
           fuel_level: fuelLevelStr,
         },
         checklist: [
