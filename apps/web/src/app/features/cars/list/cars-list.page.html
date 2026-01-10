@@ -147,7 +147,7 @@
                 (input)="onSearchInput($event)"
                 (keyup.enter)="onSearchSubmit()"
                 aria-autocomplete="list"
-                [attr.aria-expanded]="searchSuggestions().length > 0"
+                [attr.aria-expanded]="searchSuggestions().length  aria-label="Search cars input"> 0"
                 aria-controls="search-suggestions"
                 placeholder="Ej. Toyota Corolla en Centro..."
                 class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all font-medium"
@@ -252,7 +252,7 @@
                 min="0"
                 step="5"
                 class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all"
-              />
+              aria-label="Ilimitado" />
             </div>
           </div>
 
@@ -283,7 +283,7 @@
                 min="0"
                 step="100"
                 class="w-full pl-7 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all"
-              />
+              aria-label="0" />
             </div>
           </div>
 
@@ -314,7 +314,7 @@
                 min="0"
                 step="100"
                 class="w-full pl-7 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all"
-              />
+              aria-label="Ilimitado" />
             </div>
           </div>
 
@@ -993,8 +993,7 @@
           <img
             src="/assets/images/empty-states/empty-search.svg"
             alt="No se encontraron autos"
-            class="w-64 h-64 mx-auto mb-6"
-          />
+            class="w-64 h-64 mx-auto mb-6" width="256" height="256" />
           <h3 class="text-xl font-bold text-slate-900 mb-2 font-satoshi">
             No encontramos vehículos
           </h3>

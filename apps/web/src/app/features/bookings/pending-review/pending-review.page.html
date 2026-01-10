@@ -49,8 +49,7 @@
               <img
                 [src]="booking.car?.images?.[0]"
                 [alt]="booking.car_title"
-                class="car-thumbnail"
-              />
+                class="car-thumbnail" width="400" height="300" />
             }
             <div class="car-details">
               <h3>{{ booking.car_title || booking.car?.brand + ' ' + booking.car?.model }}</h3>

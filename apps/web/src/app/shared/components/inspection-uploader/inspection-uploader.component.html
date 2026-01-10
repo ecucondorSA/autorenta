@@ -64,8 +64,7 @@
           <div class="photo-item">
             <img
               [src]="photo.url"
-              [alt]="'Foto de inspección del vehículo ' + (i + 1) + ' de ' + photos().length"
-            />
+              [alt]="'Foto de inspección del vehículo ' + (i + 1) + ' de ' + photos().length" width="400" height="300" />
             <button class="remove-photo" (click)="removePhoto(i)" [disabled]="saving()">
               <app-icon name="trash" [size]="18" />
             </button>
@@ -91,7 +90,7 @@
         step="1"
         placeholder="Ej: 45000"
         [disabled]="saving()"
-      />
+      aria-label="Ej: 45000" />
       @if (odometer() <= 0) {
         <span class="field-hint error"
           ><app-icon name="alert-circle" [size]="14" cssClass="inline-block mr-1" /> Ingrese el

@@ -86,7 +86,7 @@
               placeholder="1105, 2805..."
               [value]="ledgerFilters().accountCode"
               (input)="updateLedgerFilters({ accountCode: $any($event.target).value })"
-            />
+            aria-label="1105, 2805..." />
           </div>
           <div class="filter-group">
             <label for="ledger-reference">Tipo de Referencia</label>
@@ -113,7 +113,7 @@
               placeholder="Descripción..."
               [value]="ledgerFilters().searchTerm"
               (input)="updateLedgerFilters({ searchTerm: $any($event.target).value })"
-            />
+            aria-label="Descripción..." />
           </div>
         </div>
         <div class="filter-actions">
@@ -624,7 +624,7 @@
             placeholder="YYYY-MM-DD, YYYY-MM, o YYYY"
             [value]="closurePeriodCode()"
             (input)="closurePeriodCode.set($any($event.target).value)"
-          />
+          aria-label="YYYY-MM-DD, YYYY-MM, o YYYY" />
           <div class="help-text">Formato: Diario (2025-11-07), Mensual (2025-11), Anual (2025)</div>
         </div>
 

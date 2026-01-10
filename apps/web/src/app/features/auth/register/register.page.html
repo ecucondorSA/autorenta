@@ -292,7 +292,7 @@
                 [class.focus:ring-cta-default]="
                   !form.controls.email.touched || !form.controls.email.invalid
                 "
-              />
+              aria-label="ejemplo@correo.com" />
               @if (form.controls.email.touched && form.controls.email.errors?.['email']) {
                 <p class="mt-1 text-xs text-error-text">Formato de email inválido</p>
               }
@@ -310,7 +310,7 @@
                 autocomplete="name"
                 placeholder="Juan Pérez"
                 class="w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary placeholder:text-gray-400 border-border-default focus:ring-cta-default"
-              />
+              aria-label="Juan Pérez" />
             </div>
 
             <!-- Success/Error Messages -->
@@ -417,7 +417,7 @@
                 [class.focus:ring-cta-default]="
                   !form.controls.fullName.touched || !form.controls.fullName.invalid
                 "
-              />
+              aria-label="Juan Pérez" />
               @if (form.controls.fullName.touched && form.controls.fullName.errors?.['required']) {
                 <p class="mt-1 text-xs text-error-text">El nombre es obligatorio</p>
               }
@@ -447,7 +447,7 @@
                 [class.focus:ring-cta-default]="
                   !form.controls.email.touched || !form.controls.email.invalid
                 "
-              />
+              aria-label="ejemplo@correo.com" />
               @if (form.controls.email.touched && form.controls.email.errors?.['required']) {
                 <p class="mt-1 text-xs text-error-text">El email es obligatorio</p>
               }
@@ -480,7 +480,7 @@
                 [class.focus:ring-cta-default]="
                   !form.controls.phone.touched || !form.controls.phone.invalid
                 "
-              />
+              aria-label="+54 11 1234-5678" />
               @if (form.controls.phone.touched && form.controls.phone.errors?.['pattern']) {
                 <p class="mt-1 text-xs text-error-text">Formato inválido (ej: +54 11 1234-5678)</p>
               }
@@ -511,7 +511,7 @@
                 [class.focus:ring-cta-default]="
                   !form.controls.password.touched || !form.controls.password.invalid
                 "
-              />
+              aria-label="Mínimo 8 caracteres" />
               @if (form.controls.password.touched && form.controls.password.errors?.['required']) {
                 <p class="mt-1 text-xs text-error-text">La contraseña es obligatoria</p>
               }

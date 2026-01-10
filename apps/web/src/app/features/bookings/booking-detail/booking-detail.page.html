@@ -52,7 +52,7 @@
           <div class="relative sm:w-2/5 h-56 sm:h-auto bg-neutral-100">
             @if (booking()?.car_image) {
             <img [src]="booking()!.car_image" [alt]="booking()?.car_title"
-              class="w-full h-full object-cover" />
+              class="w-full h-full object-cover" width="400" height="20" />
             } @else {
             <div class="w-full h-full flex items-center justify-center text-neutral-400">
               <ion-icon name="car-sport-outline" class="text-6xl"></ion-icon>

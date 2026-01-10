@@ -161,8 +161,7 @@
                     [src]="userProfile()!.avatar_url"
                     [alt]="userProfile()?.full_name || 'Profile'"
                     class="h-full w-full object-cover"
-                    loading="lazy"
-                  />
+                    loading="lazy" width="48" height="48" />
                 } @else {
                   <app-icon name="user" [size]="20" cssClass="text-secondary" />
                 }
@@ -190,8 +189,7 @@
                           <img
                             [src]="userProfile()!.avatar_url"
                             [alt]="userProfile()?.full_name || 'Profile'"
-                            class="h-full w-full object-cover"
-                          />
+                            class="h-full w-full object-cover" width="48" height="48" />
                         }
                         @if (!userProfile()?.avatar_url) {
                           <app-icon

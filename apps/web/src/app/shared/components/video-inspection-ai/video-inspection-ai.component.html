@@ -388,7 +388,7 @@
               class="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               min="0"
               placeholder="Ej: 45000"
-            />
+            aria-label="Ej: 45000" />
             <span class="text-gray-500">km</span>
           </div>
           @if (editableOdometer() <= 0) {
@@ -486,8 +486,7 @@
                     <img
                       [src]="damage.frame_url"
                       alt="Daño detectado"
-                      class="w-full h-full object-cover"
-                    />
+                      class="w-full h-full object-cover" width="96" height="96" />
                   </div>
 
                   <!-- Info -->

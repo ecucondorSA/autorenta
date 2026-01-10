@@ -96,7 +96,8 @@
                     @if (getPhotosByType(checkInPhotos, 'exterior'); as photos) {
                     @if (photos.length > 0) {
                     <img [src]="photos[0].url" class="w-full h-full object-cover"
-                      [alt]="photos[0].caption || 'Check-in exterior'">
+                      [alt]="photos[0].caption || 'Check-in exterior'"
+                      width="200" height="112">
                     } @else {
                     <div
                       class="w-full h-full flex items-center justify-center text-[10px] text-slate-400">
@@ -112,11 +113,13 @@
                     @if (getPhotosByType(checkOutPhotos, 'damage'); as damagePhotos) {
                     @if (damagePhotos.length > 0) {
                     <img [src]="damagePhotos[0].url" class="w-full h-full object-cover"
-                      [alt]="damagePhotos[0].caption || 'Reporte de daño'">
+                      [alt]="damagePhotos[0].caption || 'Reporte de daño'"
+                      width="200" height="112">
                     } @else if (getPhotosByType(checkOutPhotos, 'exterior'); as extPhotos) {
                     @if (extPhotos.length > 0) {
                     <img [src]="extPhotos[0].url" class="w-full h-full object-cover"
-                      [alt]="extPhotos[0].caption || 'Check-out exterior'">
+                      [alt]="extPhotos[0].caption || 'Check-out exterior'"
+                      width="200" height="112">
                     } @else {
                     <div
                       class="w-full h-full flex items-center justify-center text-[10px] text-slate-400">

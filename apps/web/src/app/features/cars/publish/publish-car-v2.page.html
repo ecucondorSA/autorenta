@@ -289,8 +289,7 @@
                     [alt]="'Vista previa del auto, foto ' + (i + 1)"
                     class="w-full h-full object-cover"
                     (touchstart)="handlePhotoTouchStart($event, i)"
-                    (touchend)="handlePhotoTouchEnd($event, i)"
-                  />
+                    (touchend)="handlePhotoTouchEnd($event, i)" width="400" height="300" />
                   <div
                     class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"
                   >
@@ -397,7 +396,7 @@
                   placeholder="Ej: 45000"
                   inputmode="numeric"
                   enterkeyhint="next"
-                />
+                aria-label="Ej: 45000" />
                 @if (
                   publishForm.get('mileage')?.invalid &&
                   (publishForm.get('mileage')?.dirty || publishForm.get('mileage')?.touched)
@@ -497,7 +496,7 @@
                   class="input-modern"
                   placeholder="Ej: Blanco Perla"
                   enterkeyhint="next"
-                />
+                aria-label="Ej: Blanco Perla" />
                 @if (
                   publishForm.get('color')?.invalid &&
                   (publishForm.get('color')?.dirty || publishForm.get('color')?.touched)
@@ -623,7 +622,7 @@
                         formControlName="extra_km_price"
                         class="input-modern pl-6 py-2"
                         placeholder="0.50"
-                      />
+                      aria-label="0.50" />
                     </div>
                   </div>
                 }
@@ -686,7 +685,7 @@
                         formControlName="second_driver_cost"
                         class="input-modern pl-6 py-2"
                         placeholder="5"
-                      />
+                      aria-label="5" />
                     </div>
                   </div>
                 }
@@ -757,7 +756,7 @@
                     formControlName="price_per_day"
                     class="input-modern pl-8 text-2xl font-bold text-slate-900 h-14"
                     [readonly]="isDynamicPricingSignal()"
-                  />
+                  aria-label="Price per day" />
                 </div>
                 @if (
                   publishForm.get('price_per_day')?.invalid &&
@@ -879,7 +878,7 @@
                   class="input-modern"
                   data-testid="location-street-input"
                   enterkeyhint="next"
-                />
+                aria-label="Dirección / Calle" />
                 @if (
                   publishForm.get('location_street')?.invalid &&
                   (publishForm.get('location_street')?.dirty ||
@@ -906,7 +905,7 @@
                   class="input-modern"
                   data-testid="location-city-input"
                   enterkeyhint="next"
-                />
+                aria-label="Ciudad" />
                 @if (
                   publishForm.get('location_city')?.invalid &&
                   (publishForm.get('location_city')?.dirty ||
@@ -933,7 +932,7 @@
                   class="input-modern"
                   data-testid="location-state-input"
                   enterkeyhint="done"
-                />
+                aria-label="Provincia" />
                 @if (
                   publishForm.get('location_state')?.invalid &&
                   (publishForm.get('location_state')?.dirty ||
@@ -1076,7 +1075,7 @@
           </h4>
           <div class="aspect-[4/3] bg-slate-100 rounded-xl mb-4 overflow-hidden relative">
             @if (uploadedPhotos().length > 0) {
-              <img [src]="uploadedPhotos()[0].preview" class="w-full h-full object-cover" />
+              <img [src]="uploadedPhotos()[0].preview" class="w-full h-full object-cover" alt="Vista previa del vehículo" width="400" height="300" />
             }
             @if (uploadedPhotos().length === 0) {
               <div class="flex items-center justify-center h-full text-slate-500">

@@ -57,8 +57,7 @@
                 [src]="
                   car.photos?.[0]?.url || car.car_photos?.[0]?.url || '/assets/placeholder-car.webp'
                 "
-                [alt]="car.brand + ' ' + car.model"
-              />
+                [alt]="car.brand + ' ' + car.model" width="400" height="300" />
             } @else {
               <div class="no-photo">
                 <app-icon name="car" [size]="32" />
@@ -197,7 +196,7 @@
               (input)="onReasonInput($event)"
               placeholder="Ej: Mantenimiento, uso personal..."
               class="form-input"
-            />
+            aria-label="Ej: Mantenimiento, uso personal..." />
           </div>
           <div class="form-actions">
             <button type="button" class="btn-secondary" (click)="cancelAddBlackout()">

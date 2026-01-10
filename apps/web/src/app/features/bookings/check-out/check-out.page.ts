@@ -19,8 +19,9 @@ import { firstValueFrom } from 'rxjs';
 import { Booking } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 import { VideoInspectionAIComponent } from '../../../shared/components/video-inspection-ai/video-inspection-ai.component';
+import { VideoInspectionLiveComponent } from '../../../shared/components/video-inspection-live/video-inspection-live.component';
 
-type InspectionMode = 'photos' | 'video';
+type InspectionMode = 'photos' | 'video' | 'live';
 
 /**
  * Página de Check-out para locatarios
@@ -33,7 +34,7 @@ type InspectionMode = 'photos' | 'video';
   selector: 'app-check-out',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, InspectionUploaderComponent, VideoInspectionAIComponent],
+  imports: [CommonModule, RouterLink, InspectionUploaderComponent, VideoInspectionAIComponent, VideoInspectionLiveComponent],
   templateUrl: './check-out.page.html',
   styleUrl: './check-out.page.css',
 })

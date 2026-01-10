@@ -46,7 +46,7 @@
         <div class="rounded-xl border border-border-default bg-surface-raised overflow-hidden shadow-sm">
           @if (c.photos && c.photos.length > 0) {
             <div class="h-48 w-full bg-surface-secondary">
-              <img [src]="c.photos[0]" [alt]="c.brand + ' ' + c.model" class="h-full w-full object-cover" />
+              <img [src]="c.photos[0]" [alt]="c.brand + ' ' + c.model" class="h-full w-full object-cover" width="400" height="192" />
             </div>
           }
           <div class="p-4">

@@ -63,7 +63,7 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
 
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
 
-  private readonly geminiLive = inject(GeminiLiveService);
+  protected readonly geminiLive = inject(GeminiLiveService);
   private readonly fgoService = inject(FgoV1_1Service);
   private readonly supabaseService = inject(SupabaseClientService);
   private readonly logger = inject(LoggerService);

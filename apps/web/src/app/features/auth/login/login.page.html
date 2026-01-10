@@ -182,7 +182,7 @@
                 [class.border-error-border]="form.controls.email.touched && form.controls.email.invalid"
                 [class.focus:ring-accent-neon/30]="!form.controls.email.touched || !form.controls.email.invalid"
                 [class.focus:border-accent-neon]="!form.controls.email.touched || !form.controls.email.invalid"
-              />
+              aria-label="tu@email.com" />
               @if (form.controls.email.touched && form.controls.email.errors?.['required']) {
                 <p class="mt-2 text-xs text-error-text" role="alert">El email es obligatorio</p>
               }
@@ -207,7 +207,7 @@
                 [class.border-error-border]="form.controls.password.touched && form.controls.password.invalid"
                 [class.focus:ring-accent-neon/30]="!form.controls.password.touched || !form.controls.password.invalid"
                 [class.focus:border-accent-neon]="!form.controls.password.touched || !form.controls.password.invalid"
-              />
+              aria-label="Contraseña" />
               @if (form.controls.password.touched && form.controls.password.errors?.['required']) {
                 <p class="mt-2 text-xs text-error-text" role="alert">La contraseña es obligatoria</p>
               }

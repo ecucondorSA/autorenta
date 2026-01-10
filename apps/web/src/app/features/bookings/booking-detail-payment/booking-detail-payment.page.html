@@ -197,8 +197,7 @@
                     [src]="car()?.photos?.[0]?.url"
                     alt="Car"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
+                    loading="lazy" width="192" height="300" />
                 } @else {
                   <div class="w-full h-full flex items-center justify-center text-text-secondary">
                     <svg
@@ -1347,8 +1346,7 @@
                     <img
                       [src]="car()?.photos?.[0]?.url"
                       alt="Auto"
-                      class="w-full h-full object-cover opacity-60"
-                    />
+                      class="w-full h-full object-cover opacity-60" width="400" height="128" />
                   }
                   <div
                     class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
