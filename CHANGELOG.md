@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/ecucondorSA/autorenta/compare/v2.2.2...v2.3.0) (2026-01-10)
+
+
+### Features
+
+* **pdf:** add PDF generator Worker with Comodato terminology ([b2bcfa8](https://github.com/ecucondorSA/autorenta/commit/b2bcfa8ec141361d5f360f98f0d93a5bd0ff3319))
+
 ## [2.2.2](https://github.com/ecucondorSA/autorenta/compare/v2.2.1...v2.2.2) (2026-01-09)
 
 
