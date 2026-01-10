@@ -1,3 +1,10 @@
+## [2.3.9](https://github.com/ecucondorSA/autorenta/compare/v2.3.8...v2.3.9) (2026-01-10)
+
+
+### Bug Fixes
+
+* **build:** resolve gamification Badge type and toast arguments ([4f37980](https://github.com/ecucondorSA/autorenta/commit/4f379807956a13a2fdba48e3defa21b1dbfddffd))
+
 ## [2.3.8](https://github.com/ecucondorSA/autorenta/compare/v2.3.7...v2.3.8) (2026-01-10)
 
 
