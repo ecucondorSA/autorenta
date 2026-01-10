@@ -1,3 +1,10 @@
+## [2.3.8](https://github.com/ecucondorSA/autorenta/compare/v2.3.7...v2.3.8) (2026-01-10)
+
+
+### Performance Improvements
+
+* **ci:** optimize GitHub Actions cron schedules ([45fc706](https://github.com/ecucondorSA/autorenta/commit/45fc7069316ae34cbce0d1c6baade98b0397b8b6))
+
 ## [2.3.7](https://github.com/ecucondorSA/autorenta/compare/v2.3.6...v2.3.7) (2026-01-10)
 
 
