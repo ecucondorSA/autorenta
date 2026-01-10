@@ -1,3 +1,10 @@
+## [2.3.5](https://github.com/ecucondorSA/autorenta/compare/v2.3.4...v2.3.5) (2026-01-10)
+
+
+### Bug Fixes
+
+* **ci:** inject environment variables into android build ([efd55e6](https://github.com/ecucondorSA/autorenta/commit/efd55e69836838e265fe8ca46195c4013df9e188))
+
 ## [2.3.4](https://github.com/ecucondorSA/autorenta/compare/v2.3.3...v2.3.4) (2026-01-10)
 
 
