@@ -1,3 +1,10 @@
+## [2.3.2](https://github.com/ecucondorSA/autorenta/compare/v2.3.1...v2.3.2) (2026-01-10)
+
+
+### Bug Fixes
+
+* **gamification:** rename Badge to GamificationBadge to avoid duplicate ([d7d320f](https://github.com/ecucondorSA/autorenta/commit/d7d320fb4f2d0370c6f5fa30cf7ce262abe323fd))
+
 ## [2.3.1](https://github.com/ecucondorSA/autorenta/compare/v2.3.0...v2.3.1) (2026-01-10)
 
 
