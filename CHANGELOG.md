@@ -1,3 +1,10 @@
+## [2.3.6](https://github.com/ecucondorSA/autorenta/compare/v2.3.5...v2.3.6) (2026-01-10)
+
+
+### Bug Fixes
+
+* **ui:** resolve missing booking address properties to unblock build ([44038eb](https://github.com/ecucondorSA/autorenta/commit/44038ebb18e538152bdd12241dd1e574930fceb6))
+
 ## [2.3.5](https://github.com/ecucondorSA/autorenta/compare/v2.3.4...v2.3.5) (2026-01-10)
 
 
