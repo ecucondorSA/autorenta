@@ -1,3 +1,10 @@
+## [2.3.10](https://github.com/ecucondorSA/autorenta/compare/v2.3.9...v2.3.10) (2026-01-10)
+
+
+### Performance Improvements
+
+* **ci:** reduce monitoring workflow frequency to daily ([56ea6be](https://github.com/ecucondorSA/autorenta/commit/56ea6bee9d0ffb9ded891245b29abc6165bec66d)), closes [hi#frequency](https://github.com/hi/issues/frequency)
+
 ## [2.3.9](https://github.com/ecucondorSA/autorenta/compare/v2.3.8...v2.3.9) (2026-01-10)
 
 
