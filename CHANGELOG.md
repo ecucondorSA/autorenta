@@ -1,3 +1,10 @@
+## [2.3.11](https://github.com/ecucondorSA/autorenta/compare/v2.3.10...v2.3.11) (2026-01-10)
+
+
+### Bug Fixes
+
+* **ci:** generate AAB instead of APK for Play Store ([0096f5c](https://github.com/ecucondorSA/autorenta/commit/0096f5c7b67ad18a3f073e6df569cbd7f487251b))
+
 ## [2.3.10](https://github.com/ecucondorSA/autorenta/compare/v2.3.9...v2.3.10) (2026-01-10)
 
 
