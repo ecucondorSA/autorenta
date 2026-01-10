@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { environment } from '@env/environment';
+import { environment } from '@environment';
 import { ToastService } from '../ui/toast.service';
 import { LoggerService } from './logger.service';
 
