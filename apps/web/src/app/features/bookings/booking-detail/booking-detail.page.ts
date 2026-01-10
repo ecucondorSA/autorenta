@@ -2229,8 +2229,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
           full_name: this.carOwnerName(),
           gov_id_number: '',
         },
-        pickup_address: booking.pickup_address ?? booking.car?.location_formatted_address,
-        dropoff_address: booking.dropoff_address ?? booking.car?.location_formatted_address,
+        pickup_address: booking.car?.location_formatted_address,
+        dropoff_address: booking.car?.location_formatted_address,
       };
 
       await this.pdfWorkerService.generateContract(contractData);
