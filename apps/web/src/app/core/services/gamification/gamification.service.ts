@@ -10,7 +10,7 @@ export interface UserLevel {
   benefits: string[];
 }
 
-export interface Badge {
+export interface GamificationBadge {
   id: string;
   name: string;
   description: string;
@@ -26,7 +26,7 @@ export interface GamificationStats {
   nextLevel: UserLevel | null;
   xpToNextLevel: number;
   xpProgress: number; // 0-100
-  badges: Badge[];
+  badges: GamificationBadge[];
   unlockedBadgesCount: number;
   tripsCompleted: number;
   reviewsGiven: number;
@@ -112,7 +112,7 @@ export class GamificationService {
   ];
 
   // Badges disponibles
-  private readonly availableBadges: Badge[] = [
+  private readonly availableBadges: GamificationBadge[] = [
     { id: 'first_trip', name: 'Primer Viaje', description: 'Completaste tu primer alquiler', icon: '🚗', isUnlocked: false },
     { id: 'verified', name: 'Verificado', description: 'Completaste todas las verificaciones', icon: '✓', isUnlocked: false },
     { id: 'reviewer', name: 'Crítico', description: 'Dejaste 5 reviews', icon: '📝', isUnlocked: false },
