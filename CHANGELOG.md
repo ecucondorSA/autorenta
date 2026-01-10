@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/ecucondorSA/autorenta/compare/v2.3.0...v2.3.1) (2026-01-10)
+
+
+### Bug Fixes
+
+* **pdf:** correct environment import and inspection types ([ea5e030](https://github.com/ecucondorSA/autorenta/commit/ea5e0302c6bf736cffd11f9b69e618d1ce1a03c5))
+
 # [2.3.0](https://github.com/ecucondorSA/autorenta/compare/v2.2.2...v2.3.0) (2026-01-10)
 
 
