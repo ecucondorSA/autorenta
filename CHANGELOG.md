@@ -1,3 +1,10 @@
+## [2.3.7](https://github.com/ecucondorSA/autorenta/compare/v2.3.6...v2.3.7) (2026-01-10)
+
+
+### Bug Fixes
+
+* **ui:** ensure strict string typing for booking address default values ([f49df88](https://github.com/ecucondorSA/autorenta/commit/f49df881cd059a92fa68c1e1b0de1b0f7c98bb06))
+
 ## [2.3.6](https://github.com/ecucondorSA/autorenta/compare/v2.3.5...v2.3.6) (2026-01-10)
 
 
