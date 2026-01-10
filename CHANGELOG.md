@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/ecucondorSA/autorenta/compare/v2.3.12...v2.4.0) (2026-01-10)
+
+
+### Features
+
+* apply comodato community model + remove dead code + AI video inspection ([c0c31e3](https://github.com/ecucondorSA/autorenta/commit/c0c31e345319af2b8473cdc7b99fd8aad6337bb2))
+
 ## [2.3.12](https://github.com/ecucondorSA/autorenta/compare/v2.3.11...v2.3.12) (2026-01-10)
 
 
