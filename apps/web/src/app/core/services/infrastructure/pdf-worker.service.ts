@@ -248,7 +248,7 @@ export class PdfWorkerService {
       setTimeout(() => URL.revokeObjectURL(url), 60000);
     } catch (error) {
       this.logger.error('Error abriendo PDF:', error);
-      this.toast.error('No se pudo abrir el documento');
+      this.toast.error('Error', 'No se pudo abrir el documento');
       throw error;
     }
   }
@@ -259,7 +259,7 @@ export class PdfWorkerService {
     filename: string,
   ): Promise<void> {
     try {
-      this.toast.info('Generando documento...');
+      this.toast.info('Generando', 'Preparando documento...');
 
       const response = await this.callWorker(type, data);
 
@@ -271,11 +271,11 @@ export class PdfWorkerService {
       const blob = this.base64ToBlob(response.pdf_base64);
       this.downloadBlob(blob, response.filename || filename);
 
-      this.toast.success('Documento descargado');
+      this.toast.success('Listo', 'Documento descargado');
       this.logger.info(`PDF generado: ${filename}`);
     } catch (error) {
       this.logger.error('Error generando PDF:', error);
-      this.toast.error('No se pudo generar el documento');
+      this.toast.error('Error', 'No se pudo generar el documento');
       throw error;
     }
   }

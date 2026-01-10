@@ -125,7 +125,7 @@ export class GamificationService {
 
   // Signals para estado actual (mock data por ahora)
   private readonly _currentXP = signal(340);
-  private readonly _badges = signal<Badge[]>(this.availableBadges.map((b, i) => ({
+  private readonly _badges = signal<GamificationBadge[]>(this.availableBadges.map((b, i) => ({
     ...b,
     isUnlocked: i < 3, // Primeros 3 desbloqueados para demo
     unlockedAt: i < 3 ? new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000) : undefined,
