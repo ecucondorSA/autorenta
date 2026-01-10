@@ -1,3 +1,10 @@
+## [2.3.12](https://github.com/ecucondorSA/autorenta/compare/v2.3.11...v2.3.12) (2026-01-10)
+
+
+### Bug Fixes
+
+* **ci:** add complete capacitor-cordova-android-plugins workaround ([065ebad](https://github.com/ecucondorSA/autorenta/commit/065ebad390c383b1fbca2f1927e66b3f14058571))
+
 ## [2.3.11](https://github.com/ecucondorSA/autorenta/compare/v2.3.10...v2.3.11) (2026-01-10)
 
 
