@@ -2,9 +2,9 @@ name: Update Exchange Rates
 
 on:
   schedule:
-    # Ejecutar cada 15 minutos
+    # Ejecutar cada 6 horas (rates crypto fluctúan pero no afectan reservas en tiempo real)
     # Llama Edge Function con x-region header para evitar geo-blocking de Binance
-    - cron: '*/15 * * * *'
+    - cron: '0 */6 * * *'
   workflow_dispatch: # Permitir ejecución manual
 
 jobs:

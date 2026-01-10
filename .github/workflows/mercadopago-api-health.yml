@@ -2,8 +2,8 @@ name: MercadoPago API Health
 
 on:
   schedule:
-    # Run every 30 minutes
-    - cron: '*/30 * * * *'
+    # Run every 4 hours (MP status rarely changes, manual dispatch available for incidents)
+    - cron: '0 */4 * * *'
   workflow_dispatch:
 
 permissions:

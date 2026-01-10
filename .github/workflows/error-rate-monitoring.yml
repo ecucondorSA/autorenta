@@ -2,8 +2,8 @@ name: Error Rate Monitoring
 
 on:
   schedule:
-    # Run every hour
-    - cron: '0 * * * *'
+    # Run every 8 hours (3x daily - errors are also tracked in Sentry real-time)
+    - cron: '0 */8 * * *'
   workflow_dispatch:
 
 jobs:

@@ -2,8 +2,8 @@ name: Fraud Detection Alerts
 
 on:
   schedule:
-    # Run every 30 minutes
-    - cron: '*/30 * * * *'
+    # Run every 6 hours (fraud patterns are analyzed in batch, not real-time)
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 jobs:
