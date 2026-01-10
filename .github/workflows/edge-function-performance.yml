@@ -2,8 +2,8 @@ name: Edge Function Performance
 
 on:
   schedule:
-    # Run every 2 hours
-    - cron: '0 */2 * * *'
+    # Run daily at 3:00 AM Argentina time (6:00 UTC)
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 jobs:

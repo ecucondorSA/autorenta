@@ -2,8 +2,8 @@ name: Wallet Balance Audit
 
 on:
   schedule:
-    # Run every 6 hours
-    - cron: '0 */6 * * *'
+    # Run daily at 5:00 AM Argentina time (8:00 UTC)
+    - cron: '0 8 * * *'
   workflow_dispatch:
 
 jobs:

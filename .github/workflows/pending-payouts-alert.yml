@@ -2,8 +2,8 @@ name: Pending Payouts Alert
 
 on:
   schedule:
-    # Run every 4 hours
-    - cron: '0 */4 * * *'
+    # Run daily at 10:00 AM Argentina time (13:00 UTC) - payouts processed in batch
+    - cron: '0 13 * * *'
   workflow_dispatch:
 
 jobs:
