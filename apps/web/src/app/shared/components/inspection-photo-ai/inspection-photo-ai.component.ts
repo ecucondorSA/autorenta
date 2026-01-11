@@ -434,7 +434,7 @@ const INSPECTION_POSITIONS: PositionConfig[] = [
     }
 
     .position-card:hover {
-      @apply border-primary-400 bg-primary-50;
+      @apply border-cta-default bg-cta-default/10;
     }
 
     .position-card.filled {
@@ -442,11 +442,11 @@ const INSPECTION_POSITIONS: PositionConfig[] = [
     }
 
     .position-card.required {
-      @apply border-primary-300;
+      @apply border-cta-default/60;
     }
 
     .position-card.validating {
-      @apply border-primary-400;
+      @apply border-cta-default;
     }
 
     .position-card.invalid {
@@ -513,7 +513,7 @@ const INSPECTION_POSITIONS: PositionConfig[] = [
     }
 
     .required-badge {
-      @apply text-[10px] text-primary-600 font-medium;
+      @apply text-[10px] text-cta-default font-medium;
     }
 
     .actions {
@@ -522,8 +522,8 @@ const INSPECTION_POSITIONS: PositionConfig[] = [
 
     .btn-primary {
       @apply flex items-center justify-center px-6 py-3 rounded-lg
-             bg-primary-600 text-white font-medium
-             hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed
+             bg-cta-default text-white font-medium
+             hover:bg-cta-hover disabled:opacity-50 disabled:cursor-not-allowed
              transition-colors;
     }
 

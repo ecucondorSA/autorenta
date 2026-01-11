@@ -953,10 +953,7 @@ export class PublishCarPhotoService {
           body_type: 'sedan',
           confidence: v.confidence,
         },
-        image_quality: {
-          score: firstWithVehicle.aiValidation.quality ?? 80,
-          suitable_for_detection: true,
-        },
+        suggestions: [],
       });
     }
   }

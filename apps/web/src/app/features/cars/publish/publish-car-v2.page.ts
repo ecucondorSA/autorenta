@@ -1408,14 +1408,28 @@ export class PublishCarV2Page implements OnInit {
     );
 
     // Sync with photo service - convert PhotoWithAI to files for upload
+    // Map PhotoPosition to VehiclePosition (filter out incompatible positions like 'cover')
+    const positionMap: Record<string, 'front' | 'rear' | 'left' | 'right' | 'interior' | 'dashboard' | 'trunk' | undefined> = {
+      cover: undefined,
+      front: 'front',
+      rear: 'rear',
+      left: 'left',
+      right: 'right',
+      interior: 'interior',
+      dashboard: 'dashboard',
+      trunk: 'trunk',
+      detail: undefined,
+    };
     this.photoService.setPhotosFromAI(
       validPhotos.map((p) => ({
         file: p.file,
         preview: p.preview,
-        position: p.position,
+        position: positionMap[p.position],
         aiValidation: {
           quality: p.quality?.score,
-          vehicle: p.vehicle,
+          vehicle: p.vehicle
+            ? { brand: p.vehicle.brand ?? '', model: p.vehicle.model ?? '', year: p.vehicle.year, color: p.vehicle.color, confidence: p.vehicle.confidence }
+            : undefined,
           plates: p.plates ? [{ text: '', confidence: 1, blurred: p.plates.detected }] : undefined,
         },
       })),
