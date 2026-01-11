@@ -1,3 +1,10 @@
+## [2.8.7](https://github.com/ecucondorSA/autorenta/compare/v2.8.6...v2.8.7) (2026-01-11)
+
+
+### Bug Fixes
+
+* resolve TypeScript errors in inspection-photo-ai component ([bb1735a](https://github.com/ecucondorSA/autorenta/commit/bb1735ad8bf7eee3ef70b1e9868230e2cb113cd7))
+
 ## [2.8.6](https://github.com/ecucondorSA/autorenta/compare/v2.8.5...v2.8.6) (2026-01-11)
 
 
