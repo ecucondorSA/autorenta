@@ -115,6 +115,15 @@ export interface VehicleScannerConfirmData {
 
         <!-- Detection Overlay -->
         <div class="absolute bottom-0 left-0 right-0 p-4 safe-area-bottom scan-layer">
+          @if (!isSecureContextSignal()) {
+            <div class="scan-warning mb-3">
+              <span>Para usar la cámara necesitás HTTPS. Abrí esta página con un enlace seguro.</span>
+            </div>
+          } @else if (permissionState() === 'denied') {
+            <div class="scan-warning mb-3">
+              <span>Permiso de cámara bloqueado. Revisá los permisos del navegador.</span>
+            </div>
+          }
           @if (scanner.currentDetection(); as detection) {
             <!-- Vehicle Card -->
             <div class="scan-card scan-card--detected mx-auto w-full max-w-md sm:max-w-lg rounded-2xl p-4 sm:p-5 border shadow-2xl animate-fadeIn">
@@ -492,6 +501,17 @@ export interface VehicleScannerConfirmData {
       box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.8);
     }
 
+    .scan-warning {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fecaca;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.4;
+      text-align: center;
+    }
+
     .scan-hud {
       top: 0;
       pointer-events: none;
@@ -648,6 +668,8 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
   readonly hasVibrated = signal(false);
   readonly hasAutoConfirmed = signal(false);
   readonly lowLight = signal(false);
+  readonly isSecureContextSignal = signal(true);
+  readonly permissionState = signal<'granted' | 'denied' | 'prompt' | 'unknown'>('unknown');
 
   /** Current tip index for rotation */
   readonly currentTipIndex = signal(0);
@@ -703,6 +725,8 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.attachToBody();
+    this.isSecureContextSignal.set(typeof window !== 'undefined' ? window.isSecureContext : true);
+    await this.checkCameraPermission();
     await this.startCamera();
     this.startTipRotation();
 
@@ -768,6 +792,25 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
       };
     } catch {
       // Silently fail if audio not supported
+    }
+  }
+
+  private async checkCameraPermission(): Promise<void> {
+    if (!('permissions' in navigator)) {
+      this.permissionState.set('unknown');
+      return;
+    }
+
+    try {
+      const status = await (navigator.permissions as Permissions).query({
+        name: 'camera' as PermissionName,
+      });
+      this.permissionState.set(status.state);
+      status.onchange = () => {
+        this.permissionState.set(status.state);
+      };
+    } catch {
+      this.permissionState.set('unknown');
     }
   }
 
