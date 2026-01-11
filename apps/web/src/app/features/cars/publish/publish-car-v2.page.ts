@@ -28,6 +28,14 @@ import {
   PhotoWithAI,
   VehicleAutoDetect,
 } from '../../../shared/components/photo-upload-ai/photo-upload-ai.component';
+import {
+  VideoVehicleRecognitionComponent,
+  DetectedVehicle,
+} from '../../../shared/components/video-vehicle-recognition/video-vehicle-recognition.component';
+import {
+  VehicleTrackingCameraComponent,
+  DetectedVehicleWithValue,
+} from '../../../shared/components/vehicle-tracking-camera/vehicle-tracking-camera.component';
 import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
 
 // ✅ NEW: Extracted services
@@ -65,6 +73,8 @@ import { PublishCarPhotoService } from './services/publish-car-photo.service';
     HostSupportInfoPanelComponent,
     BottomSheetComponent,
     PhotoUploadAIComponent,
+    VideoVehicleRecognitionComponent,
+    VehicleTrackingCameraComponent,
   ],
   templateUrl: './publish-car-v2.page.html',
   styleUrls: ['./publish-car-v2.page.scss'],
@@ -99,6 +109,7 @@ export class PublishCarV2Page implements OnInit {
   readonly editMode = signal(false);
   readonly showStockPhotosModal = signal(false);
   readonly showAIPhotosModal = signal(false);
+  readonly showVideoScanner = signal(false); // Video vehicle recognition
   readonly showMobileTips = signal(false); // ✅ NEW: For Bottom Sheet
   readonly locationState = signal<'idle' | 'acquiring' | 'geocoding'>('idle');
   readonly gettingLocation = computed(() => this.locationState() !== 'idle');
@@ -1530,5 +1541,75 @@ export class PublishCarV2Page implements OnInit {
       'Datos auto-completados',
       `${vehicle.brand} ${vehicle.model}${vehicle.year ? ` (${vehicle.year})` : ''} detectado automáticamente.`,
     );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Video Vehicle Recognition Handlers
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Handle vehicle detected from video scanner
+   * Converts DetectedVehicle to VehicleAutoDetect format and applies it
+   */
+  async onVideoVehicleDetected(vehicle: DetectedVehicle): Promise<void> {
+    this.logger.debug('[PublishCarV2] Vehicle detected from video:', vehicle);
+
+    // Close the video scanner
+    this.showVideoScanner.set(false);
+
+    // Convert to VehicleAutoDetect format (confidence is 0-100 from video, needs to be 0-1 for handler)
+    const autoDetect: VehicleAutoDetect = {
+      brand: vehicle.brand,
+      model: vehicle.model,
+      year: vehicle.year,
+      color: vehicle.color,
+      confidence: vehicle.confidence / 100, // Convert to 0-1 range
+    };
+
+    // Apply the detection
+    await this.applyVehicleAutoDetection(autoDetect);
+  }
+
+  /**
+   * Handle video scanner cancelled
+   */
+  onVideoScannerCancelled(): void {
+    this.showVideoScanner.set(false);
+  }
+
+  /**
+   * Handle vehicle detected from tracking camera (with market value)
+   * This is the advanced version that includes FIPE lookup
+   */
+  async onTrackingVehicleDetected(vehicle: DetectedVehicleWithValue): Promise<void> {
+    this.logger.debug('[PublishCarV2] Vehicle detected from tracking camera:', vehicle);
+
+    // Close the scanner
+    this.showVideoScanner.set(false);
+
+    // Convert to VehicleAutoDetect format for the existing handler
+    const autoDetect: VehicleAutoDetect = {
+      brand: vehicle.brand,
+      model: vehicle.model,
+      year: vehicle.year,
+      color: vehicle.color,
+      confidence: vehicle.confidence / 100, // Convert to 0-1 range
+    };
+
+    // Apply the detection
+    await this.applyVehicleAutoDetection(autoDetect);
+
+    // If we have market value, set suggested price
+    if (vehicle.marketValue && vehicle.suggestedDailyPrice) {
+      this.suggestedPrice.set(vehicle.suggestedDailyPrice);
+
+      // Show info about market value
+      this.notificationManager.show({
+        type: 'info',
+        title: 'Valor de mercado detectado',
+        message: `Tu ${vehicle.brand} ${vehicle.model} tiene un valor FIPE de ${vehicle.marketValue.currency} ${vehicle.marketValue.average.toLocaleString()}. Sugerimos un precio de alquiler de ${vehicle.marketValue.currency} ${vehicle.suggestedDailyPrice}/día.`,
+        duration: 10000,
+      });
+    }
   }
 }
