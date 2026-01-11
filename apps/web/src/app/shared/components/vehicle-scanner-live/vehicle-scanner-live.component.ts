@@ -329,9 +329,23 @@ export interface VehicleScannerConfirmData {
       animation: fadeIn 0.3s ease-out;
     }
 
+    /* Force fullscreen - override any parent styles */
+    :host {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 9999 !important;
+      display: block !important;
+    }
+
     .full-screen-scan {
-      width: 100vw;
-      height: 100dvh;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100dvh !important;
+      z-index: 9999 !important;
       overscroll-behavior: contain;
     }
 
@@ -477,35 +491,71 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
    */
   private async startCamera(): Promise<void> {
     try {
-      this.stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { ideal: 'environment' },
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-        },
-        audio: false,
-      });
+      // Check if getUserMedia is available
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        this.logger.error('getUserMedia not supported', 'VehicleScannerLive');
+        this.cameraError.set('Tu navegador no soporta acceso a la cámara. Probá con Chrome o Safari.');
+        return;
+      }
+
+      this.logger.info('Requesting camera access...', 'VehicleScannerLive');
+
+      // Request camera permission with multiple fallback options
+      let stream: MediaStream | null = null;
+
+      // Try environment camera first (back camera on mobile)
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: 'environment' },
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
+          audio: false,
+        });
+        this.logger.info('Got environment camera', 'VehicleScannerLive');
+      } catch (envError) {
+        this.logger.warn('Environment camera failed, trying any camera...', 'VehicleScannerLive', { error: envError });
+        // Fallback to any camera
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false,
+        });
+        this.logger.info('Got fallback camera', 'VehicleScannerLive');
+      }
+
+      this.stream = stream;
 
       // Wait for video element to be available
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
       if (this.videoRef?.nativeElement) {
         this.videoRef.nativeElement.srcObject = this.stream;
         await this.videoRef.nativeElement.play();
+        this.logger.info('Video playing, starting scanner...', 'VehicleScannerLive');
 
         // Start scanner
         this.scanner.startScanning(this.videoRef.nativeElement);
+      } else {
+        this.logger.error('Video element not found', 'VehicleScannerLive');
+        this.cameraError.set('Error interno: elemento de video no disponible');
       }
     } catch (error) {
       this.logger.error('Camera access failed', 'VehicleScannerLive', error);
 
       if (error instanceof Error) {
-        if (error.name === 'NotAllowedError') {
-          this.cameraError.set('Permití el acceso a la cámara para escanear el vehículo');
-        } else if (error.name === 'NotFoundError') {
-          this.cameraError.set('No se encontró una cámara disponible');
+        if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+          this.cameraError.set('Necesitás permitir el acceso a la cámara. Revisá los permisos en la configuración del navegador.');
+        } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+          this.cameraError.set('No se encontró ninguna cámara en tu dispositivo');
+        } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
+          this.cameraError.set('La cámara está siendo usada por otra aplicación');
+        } else if (error.name === 'OverconstrainedError') {
+          this.cameraError.set('La cámara no cumple con los requisitos mínimos');
+        } else if (error.name === 'SecurityError') {
+          this.cameraError.set('Acceso a la cámara bloqueado. Asegurate de usar HTTPS.');
         } else {
-          this.cameraError.set('Error al acceder a la cámara');
+          this.cameraError.set(`Error de cámara: ${error.message}`);
         }
       } else {
         this.cameraError.set('Error desconocido al acceder a la cámara');
