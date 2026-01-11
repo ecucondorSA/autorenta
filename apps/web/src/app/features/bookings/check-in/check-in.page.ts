@@ -284,10 +284,6 @@ export class CheckInPage implements OnInit {
           photos: photoUrls,
           odometer: event.estimatedOdometer || 0,
           fuelLevel: event.estimatedFuelLevel || 100,
-          // Store damages in notes/metadata
-          notes: event.totalDamages.length > 0
-            ? `AI detectó ${event.totalDamages.length} daño(s): ${event.totalDamages.map((d) => `${d.type} en ${d.location}`).join(', ')}`
-            : undefined,
         }),
       );
 
