@@ -1,3 +1,10 @@
+## [2.4.1](https://github.com/ecucondorSA/autorenta/compare/v2.4.0...v2.4.1) (2026-01-11)
+
+
+### Performance Improvements
+
+* quality audit fixes - images, accessibility, scripts ([045d3aa](https://github.com/ecucondorSA/autorenta/commit/045d3aaaa0247d6ab0d9b0bb9eee2806f0f796a2))
+
 # [2.4.0](https://github.com/ecucondorSA/autorenta/compare/v2.3.12...v2.4.0) (2026-01-10)
 
 
