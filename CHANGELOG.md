@@ -1,3 +1,10 @@
+## [2.8.3](https://github.com/ecucondorSA/autorenta/compare/v2.8.2...v2.8.3) (2026-01-11)
+
+
+### Bug Fixes
+
+* correct TypeScript errors in car-detail.page.html ([abdeb73](https://github.com/ecucondorSA/autorenta/commit/abdeb73f37fcd94d63f22b313f0dfb6048884e8c))
+
 ## [2.8.2](https://github.com/ecucondorSA/autorenta/compare/v2.8.1...v2.8.2) (2026-01-11)
 
 
