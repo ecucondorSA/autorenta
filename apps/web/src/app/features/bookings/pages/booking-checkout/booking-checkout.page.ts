@@ -19,9 +19,9 @@ import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
 import { PressScaleDirective } from '@shared/directives/press-scale.directive';
 import { SpringCollapseDirective } from '@shared/directives/spring-collapse.directive';
 import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
+import { formatDate } from '../../../../shared/utils/date.utils';
 import { PaymentProviderSelectorComponent } from '../../../../shared/components/payment-provider-selector/payment-provider-selector.component';
 import { PayPalButtonComponent } from '../../../../shared/components/paypal-button/paypal-button.component';
-import { formatDate } from '../../../../shared/utils/date.utils';
 
 /**
  * Booking Checkout Page
