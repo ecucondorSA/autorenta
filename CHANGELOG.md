@@ -1,3 +1,15 @@
+# [2.10.0](https://github.com/ecucondorSA/autorenta/compare/v2.9.0...v2.10.0) (2026-01-11)
+
+
+### Bug Fixes
+
+* resolve all lint warnings ([60454a3](https://github.com/ecucondorSA/autorenta/commit/60454a3c68476ad4d3c597be6d3f12d6ac6b73a3))
+
+
+### Features
+
+* **scanner:** apply neon green branding and improve UX ([ac19f85](https://github.com/ecucondorSA/autorenta/commit/ac19f857158f891cd20bbb7b0c41da752d49ba7b)), closes [#00d95f](https://github.com/ecucondorSA/autorenta/issues/00d95f)
+
 # [2.9.0](https://github.com/ecucondorSA/autorenta/compare/v2.8.10...v2.9.0) (2026-01-11)
 
 
