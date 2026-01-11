@@ -276,7 +276,7 @@ export interface VehicleScannerConfirmData {
             </div>
 
             <h3 class="text-2xl font-bold text-white mb-3 text-center">Cámara no disponible</h3>
-            <p class="text-neutral-300 text-center mb-2 max-w-sm leading-relaxed">
+            <p class="text-neutral-300 text-center mb-2 max-w-sm leading-relaxed whitespace-pre-line">
               {{ cameraError() }}
             </p>
 
@@ -1104,6 +1104,26 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
    */
   async retryCamera(): Promise<void> {
     this.logger.info('Retrying camera access...', 'VehicleScannerLive');
+
+    // Check if permission is permanently blocked
+    if (navigator.permissions) {
+      try {
+        const result = await navigator.permissions.query({ name: 'camera' as PermissionName });
+        if (result.state === 'denied') {
+          // Permission is blocked, show instructions to unblock
+          this.cameraError.set(
+            'La cámara está bloqueada. Para habilitarla:\n' +
+            '1. Tocá el ícono de candado 🔒 en la barra de direcciones\n' +
+            '2. Buscá "Cámara" y cambiá a "Permitir"\n' +
+            '3. Recargá la página'
+          );
+          return;
+        }
+      } catch {
+        // Permissions API not supported, continue with retry
+      }
+    }
+
     this.cameraError.set(null);
     await this.startCamera();
   }
