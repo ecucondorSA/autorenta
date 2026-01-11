@@ -60,7 +60,7 @@ import { Payout, PayoutService } from '@core/services/payments/payout.service';
               <div class="payout-content">
                 <div class="payout-header">
                   <h4 class="payout-amount">
-                    {{ payout.amount | number: '1.0-0' | currency: 'ARS' : 'symbol-narrow' }}
+                    {{ payout.amount | number: '1.0-0' | currency: 'USD' : 'symbol-narrow' }}
                   </h4>
                   <span class="payout-status" [ngClass]="'badge-' + payout.status">
                     {{ getStatusText(payout.status) }}

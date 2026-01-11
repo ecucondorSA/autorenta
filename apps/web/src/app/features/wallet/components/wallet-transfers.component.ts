@@ -86,9 +86,9 @@ export class WalletTransfersComponent implements OnInit {
   }
 
   amountLabel(cents: number, outgoing: boolean): string {
-    const amount = (cents / 100).toLocaleString('es-AR', {
+    const amount = (cents / 100).toLocaleString('en-US', {
       style: 'currency',
-      currency: 'ARS',
+      currency: 'USD',
       minimumFractionDigits: 2,
     });
     return outgoing ? `- ${amount}` : `+ ${amount}`;

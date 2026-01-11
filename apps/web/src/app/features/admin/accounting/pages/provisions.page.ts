@@ -64,6 +64,6 @@ export class ProvisionsPage implements OnInit {
   }
 
   formatCurrency(amount: number) {
-    return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(amount);
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
   }
 }

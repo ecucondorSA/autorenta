@@ -796,7 +796,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
           contentId: state.car.id,
           contentName: state.car.title,
           value: state.car.price_per_day,
-          currency: state.car.currency || 'ARS',
+          currency: state.car.currency || 'USD',
         });
       }
     });
@@ -1470,7 +1470,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       description,
       main_photo_url: mainPhoto,
       price_per_day: car.price_per_day,
-      currency: car.currency || 'ARS',
+      currency: car.currency || 'USD',
       id: car.id,
     });
     this.metaService.addCarProductData({
@@ -1478,7 +1478,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       description,
       main_photo_url: mainPhoto,
       price_per_day: car.price_per_day,
-      currency: car.currency || 'ARS',
+      currency: car.currency || 'USD',
       id: car.id,
       rating_avg: stats?.rating_avg,
       rating_count: stats?.reviews_count || 0,

@@ -125,20 +125,20 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly generatedPhotoIds = signal<Set<string>>(new Set()); // Almacena IDs de autos con fotos generadas
 
   // Calculator State - Business Simulator Logic
-  readonly calculatorCarValue = signal(15000000); // Valor de mercado
+  readonly calculatorCarValue = signal(15000); // Valor de mercado (USD)
   readonly calculatorDays = signal(12); // Días disponibles (Default: Fines de semana + extras)
 
   // New: Financing Logic
   readonly isFinanced = signal(false); // ¿Paga cuota?
-  readonly monthlyQuota = signal(350000); // Cuota promedio ARS
+  readonly monthlyQuota = signal(350); // Cuota promedio USD
 
   // Constants for calculation
   private readonly CALC_CONSTANTS = {
     dailyRateFactor: 0.0035, // 0.35% del valor del auto (Ajustado a inflación)
     platformFee: 0.15, // 15% comisión
-    avgWashCost: 8000, // Costo lavado ARS
-    insuranceAvg: 60000, // Seguro promedio mensual ARS
-    maxDailyRateArs: 120000, // Tope razonable por día
+    avgWashCost: 8, // Costo lavado USD
+    insuranceAvg: 60, // Seguro promedio mensual USD
+    maxDailyRateUsd: 120, // Tope razonable por día
   };
 
   readonly calculatorEstimate = computed(() => {
@@ -150,7 +150,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     // 1. Determinar Tarifa Diaria Estimada
     let estimatedDailyRate = carValue * this.CALC_CONSTANTS.dailyRateFactor;
     // Tope de mercado
-    estimatedDailyRate = Math.min(estimatedDailyRate, this.CALC_CONSTANTS.maxDailyRateArs);
+    estimatedDailyRate = Math.min(estimatedDailyRate, this.CALC_CONSTANTS.maxDailyRateUsd);
 
     // 2. Calcular Ingresos Brutos
     const grossIncome = estimatedDailyRate * days;
@@ -176,7 +176,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       const coveragePercent = (netResult / quota) * 100;
 
       if (balance >= 0) {
-        financingMessage = `¡Excelente! Cubres el 100% de tu cuota y te sobran $${balance.toLocaleString('es-AR')}. Tu auto es GRATIS.`;
+        financingMessage = `¡Excelente! Cubres el 100% de tu cuota y te sobran $${balance.toLocaleString('en-US')}. Tu auto es GRATIS.`;
         healthScore = 'green';
       } else {
         // Cuántos días faltan para cubrir
@@ -192,7 +192,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       }
     } else {
       // Mensaje para dueños sin deuda
-      financingMessage = `Generas un ingreso extra de $${netResult.toLocaleString('es-AR')} limpios al mes.`;
+      financingMessage = `Generas un ingreso extra de $${netResult.toLocaleString('en-US')} limpios al mes.`;
       healthScore = 'green';
     }
 
@@ -465,7 +465,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
         carId: car.id,
         title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim(),
         pricePerDay: car.price_per_day,
-        currency: car.currency || 'ARS',
+        currency: car.currency || 'USD',
         lat: car.location_lat || 0,
         lng: car.location_lng || 0,
         updatedAt: car.updated_at || new Date().toISOString(),

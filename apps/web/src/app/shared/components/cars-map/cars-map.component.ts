@@ -652,7 +652,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         carId: car['carId'],
         title: car['title'],
         pricePerDay: car.pricePerDay,
-        currency: car['currency'] || 'ARS',
+        currency: car['currency'] || 'USD',
         photoUrl: car.photoUrl,
         availabilityStatus: car.availabilityStatus || 'available',
       },

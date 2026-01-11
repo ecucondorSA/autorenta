@@ -176,18 +176,19 @@ export function getDistanceTierBadgeClass(tier: string | null | undefined): stri
  * Format cents to currency string
  *
  * @param cents Amount in cents
- * @param currency Currency code (default: ARS)
+ * @param currency Currency code (default: USD)
  * @param options Intl.NumberFormat options
  */
 export function formatCurrency(
   cents: number | null | undefined,
-  currency = 'ARS',
+  currency = 'USD',
   options?: Partial<Intl.NumberFormatOptions>,
 ): string {
   if (cents === null || cents === undefined) return '-';
 
   const amount = cents / 100;
-  return new Intl.NumberFormat('es-AR', {
+  const locale = currency === 'ARS' ? 'es-AR' : 'en-US';
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
     minimumFractionDigits: 0,
@@ -199,10 +200,11 @@ export function formatCurrency(
 /**
  * Format amount (not cents) to currency string
  */
-export function formatAmount(amount: number | null | undefined, currency = 'ARS'): string {
+export function formatAmount(amount: number | null | undefined, currency = 'USD'): string {
   if (amount === null || amount === undefined) return '-';
 
-  return new Intl.NumberFormat('es-AR', {
+  const locale = currency === 'ARS' ? 'es-AR' : 'en-US';
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
     minimumFractionDigits: 0,

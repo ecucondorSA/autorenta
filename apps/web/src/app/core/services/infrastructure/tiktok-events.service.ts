@@ -18,13 +18,13 @@ import { AuthService } from '@core/services/auth/auth.service';
  *   contentId: car.id,
  *   contentName: car.title,
  *   value: car.pricePerDay,
- *   currency: 'ARS'
+ *   currency: 'USD'
  * });
  *
  * // Track cuando un usuario completa el registro
  * tiktokEvents.trackCompleteRegistration({
  *   value: 0,
- *   currency: 'ARS'
+ *   currency: 'USD'
  * });
  * ```
  */
@@ -56,7 +56,7 @@ export class TikTokEventsService {
       content_name: params.contentName,
       content_type: params.contentType || 'product',
       value: params.value,
-      currency: params.currency || 'ARS',
+      currency: params.currency || 'USD',
       url: params.url || window.location.href,
     });
   }
@@ -76,7 +76,7 @@ export class TikTokEventsService {
       content_name: params.contentName,
       content_type: 'product',
       value: params.value,
-      currency: params.currency || 'ARS',
+      currency: params.currency || 'USD',
       url: window.location.href,
     });
   }
@@ -93,7 +93,7 @@ export class TikTokEventsService {
     await this.sendEvent('Search', {
       search_string: params.searchString,
       value: params.value,
-      currency: params.currency || 'ARS',
+      currency: params.currency || 'USD',
       url: window.location.href,
     });
   }
@@ -109,7 +109,7 @@ export class TikTokEventsService {
   }): Promise<void> {
     await this.sendEvent('AddPaymentInfo', {
       value: params.value,
-      currency: params.currency || 'ARS',
+      currency: params.currency || 'USD',
       content_id: params.contentId,
       url: window.location.href,
     });
@@ -131,7 +131,7 @@ export class TikTokEventsService {
       content_name: params.contentName,
       content_type: 'product',
       value: params.value,
-      currency: params.currency || 'ARS',
+      currency: params.currency || 'USD',
       contents: [
         {
           content_id: params.contentId,
@@ -165,7 +165,7 @@ export class TikTokEventsService {
       content_name: params.contentName,
       content_type: 'product',
       value: params.value,
-      currency: params.currency || 'ARS',
+      currency: params.currency || 'USD',
       contents: params.contents || [
         {
           content_id: params.contentId,
@@ -193,7 +193,7 @@ export class TikTokEventsService {
       content_name: params.contentName,
       content_type: 'product',
       value: params.value,
-      currency: params.currency || 'ARS',
+      currency: params.currency || 'USD',
       url: window.location.href,
     });
   }
@@ -205,7 +205,7 @@ export class TikTokEventsService {
   async trackCompleteRegistration(params?: { value?: number; currency?: string }): Promise<void> {
     await this.sendEvent('CompleteRegistration', {
       value: params?.value || 0,
-      currency: params?.currency || 'ARS',
+      currency: params?.currency || 'USD',
       url: window.location.href,
     });
   }
@@ -231,7 +231,7 @@ export class TikTokEventsService {
       content_name: params.contentName,
       content_type: 'product',
       value: params.value,
-      currency: params.currency || 'ARS',
+      currency: params.currency || 'USD',
       contents: params.contents || [
         {
           content_id: params.contentId,

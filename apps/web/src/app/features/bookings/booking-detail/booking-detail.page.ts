@@ -620,6 +620,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const booking = this.booking();
     if (!pricing) return null;
 
+    const currency = (booking?.currency as 'ARS' | 'USD') || 'USD';
+
     return {
       nightlyRate: (pricing.nightly_rate_cents ?? 0) / 100,
       nights: pricing.days_count ?? booking?.days_count ?? 1,
@@ -627,7 +629,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       discounts: (pricing.discounts_cents ?? 0) / 100,
       insurance: (pricing.insurance_cents ?? 0) / 100,
       total: (pricing.total_cents ?? pricing.subtotal_cents ?? 0) / 100,
-      currency: 'ARS' as const,
+      currency,
     };
   });
 
@@ -637,7 +639,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     if (!insurance) return null;
 
     // FIX: Use the currency from the booking instead of hardcoding ARS
-    const currency = (booking?.currency as 'ARS' | 'USD') || 'ARS';
+    const currency = (booking?.currency as 'ARS' | 'USD') || 'USD';
 
     return {
       coverageName: insurance.coverage_upgrade || 'Estándar',
@@ -1634,7 +1636,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   formatCurrency(cents: number, currency: string): string {
     const amount = cents / 100;
-    return new Intl.NumberFormat('es-AR', {
+    const locale = currency === 'ARS' ? 'es-AR' : 'en-US';
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: currency,
       minimumFractionDigits: 0,
@@ -2246,7 +2249,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         insurance_cents: booking.breakdown?.insurance_cents ?? 0,
         fees_cents: booking.breakdown?.fees_cents ?? 0,
         total_amount_cents: booking.breakdown?.total_cents ?? Math.round((booking.total_amount ?? 0) * 100),
-        currency: (booking.currency as 'USD' | 'ARS' | 'BRL') || 'ARS',
+        currency: (booking.currency as 'USD' | 'ARS' | 'BRL') || 'USD',
         car: {
           title: `${booking.car_brand} ${booking.car_model}`,
           brand: booking.car_brand ?? '',

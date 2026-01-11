@@ -657,7 +657,7 @@ export class NotificationsService implements OnDestroy {
     );
   }
 
-  async notifyPaymentSuccessful(amount: number, currency: string = 'ARS', bookingId?: string) {
+  async notifyPaymentSuccessful(amount: number, currency: string = 'USD', bookingId?: string) {
     const {
       data: { user },
     } = await this.supabase.auth.getUser();
@@ -676,7 +676,7 @@ export class NotificationsService implements OnDestroy {
     );
   }
 
-  async notifyPayoutSuccessful(amount: number, currency: string = 'ARS') {
+  async notifyPayoutSuccessful(amount: number, currency: string = 'USD') {
     const {
       data: { user },
     } = await this.supabase.auth.getUser();

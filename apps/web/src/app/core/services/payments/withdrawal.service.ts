@@ -250,7 +250,7 @@ export class WithdrawalService {
       }
 
       if (params.amount < 100) {
-        throw this.createError('AMOUNT_TOO_LOW', 'El monto mínimo de retiro es $100 ARS');
+        throw this.createError('AMOUNT_TOO_LOW', 'El monto mínimo de retiro es $100 USD');
       }
 
       const { data, error } = await this.supabase.getClient().rpc('wallet_request_withdrawal', {

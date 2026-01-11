@@ -111,7 +111,7 @@ import {
                         <div>
                           <p class="text-[10px] text-text-muted uppercase font-bold">Monto</p>
                           <p class="text-text-primary font-semibold">
-                            {{ fine.amount_cents / 100 | currency: 'ARS' : 'symbol' : '1.0-0' }}
+                            {{ fine.amount_cents / 100 | currency: 'USD' : 'symbol' : '1.0-0' }}
                           </p>
                         </div>
                       </div>

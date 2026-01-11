@@ -179,7 +179,7 @@ export class BookingsService {
       contentId: finalBooking.car_id,
       contentName: placeOrderContentName,
       value: finalBooking.total_amount || 0,
-      currency: finalBooking.currency || 'ARS',
+      currency: finalBooking.currency || 'USD',
     });
 
     // ✅ NUEVO: Notificar al dueño del auto sobre la nueva solicitud de reserva
@@ -275,7 +275,7 @@ export class BookingsService {
       contentId: finalBooking.car_id,
       contentName: placeOrderWithLocationContentName,
       value: finalBooking.total_amount || 0,
-      currency: finalBooking.currency || 'ARS',
+      currency: finalBooking.currency || 'USD',
     });
 
     return finalBooking;
@@ -473,7 +473,7 @@ export class BookingsService {
         contentId: booking.car_id,
         contentName: purchaseContentName,
         value: booking.total_amount || 0,
-        currency: booking.currency || 'ARS',
+        currency: booking.currency || 'USD',
       });
     }
   }
@@ -1003,7 +1003,7 @@ export class BookingsService {
   ): Promise<{ amount: number; currency: string; error?: string }> {
     const booking = await this.getBookingById(bookingId);
     if (!booking) {
-      return { amount: 0, currency: 'ARS', error: 'Reserva no encontrada' };
+      return { amount: 0, currency: 'USD', error: 'Reserva no encontrada' };
     }
     return this.extensionService.estimateExtensionCost(booking, newEndDate);
   }
@@ -1123,7 +1123,7 @@ export class BookingsService {
     }
 
     const pricePerDay = Number(car?.price_per_day ?? 0);
-    const currency = (car?.currency as string | null) || 'ARS';
+    const currency = (car?.currency as string | null) || 'USD';
     const days = Math.max(
       1,
       Math.ceil((new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24)),

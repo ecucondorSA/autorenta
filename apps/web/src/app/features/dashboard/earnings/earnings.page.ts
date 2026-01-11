@@ -76,7 +76,7 @@ export class EarningsPage implements OnInit {
         let depreciationRate = 0.15; // 15% anual (default)
         // Note: category_id is not part of Car interface, using default depreciation rate
         const annualDepreciation = valueUsd * depreciationRate;
-        total += annualDepreciation * this.exchangeRate(); // Convert to ARS
+        total += annualDepreciation;
       }
     }
 

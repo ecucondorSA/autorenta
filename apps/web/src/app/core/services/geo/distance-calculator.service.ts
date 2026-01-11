@@ -120,16 +120,16 @@ export class DistanceCalculatorService {
    * Calculate delivery fee based on distance
    * Only charges if distance > minDistanceForDeliveryFee
    * @param distanceKm Distance in kilometers
-   * @returns Delivery fee in cents (ARS)
+   * @returns Delivery fee in cents (USD)
    */
   calculateDeliveryFee(distanceKm: number): number {
     if (distanceKm <= this.config.minDistanceForDeliveryFee) {
       return 0;
     }
 
-    // Fee in ARS, converted to cents
-    const feeArs = distanceKm * this.config.deliveryFeePerKm;
-    return Math.round(feeArs * 100);
+    // Fee in USD, converted to cents
+    const feeUsd = distanceKm * this.config.deliveryFeePerKm;
+    return Math.round(feeUsd * 100);
   }
 
   /**
@@ -158,11 +158,16 @@ export class DistanceCalculatorService {
   /**
    * Format delivery fee for display
    * @param feeCents Fee in cents
-   * @returns Formatted string (e.g., "$150 ARS")
+   * @returns Formatted string (e.g., "$150 USD")
    */
   formatDeliveryFee(feeCents: number): string {
-    const feeArs = feeCents / 100;
-    return `$${feeArs.toFixed(2)} ARS`;
+    const feeUsd = feeCents / 100;
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(feeUsd);
   }
 
   /**

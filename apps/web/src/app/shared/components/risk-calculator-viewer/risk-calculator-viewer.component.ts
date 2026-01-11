@@ -68,10 +68,13 @@ export class RiskCalculatorViewerComponent {
   }
 
   formatCurrency(amount: number, currency: 'USD' | 'ARS' = 'USD'): string {
-    if (currency === 'USD') {
-      return `$${amount.toFixed(2)} USD`;
-    }
-    return `$${amount.toLocaleString('es-AR')} ARS`;
+    const locale = currency === 'ARS' ? 'es-AR' : 'en-US';
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
   }
 
   getClassColor(classNum: number): string {

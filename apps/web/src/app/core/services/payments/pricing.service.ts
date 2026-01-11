@@ -119,7 +119,7 @@ export class PricingService {
       const distanceData = await this.calculateDeliveryFee(params.carId, params.userLocation);
 
       if (distanceData) {
-        baseQuote.delivery_fee = distanceData.deliveryFeeCents / 100; // Convert to ARS
+        baseQuote.delivery_fee = distanceData.deliveryFeeCents / 100; // Convert to USD
         baseQuote.delivery_distance_km = distanceData.distanceKm;
         baseQuote.distance_risk_tier = distanceData.tier;
         baseQuote.total += baseQuote.delivery_fee;

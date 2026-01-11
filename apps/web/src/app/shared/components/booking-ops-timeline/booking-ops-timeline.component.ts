@@ -78,9 +78,9 @@ export class BookingOpsTimelineComponent {
   }
 
   formatCents(cents: number): string {
-    return new Intl.NumberFormat('es-AR', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'ARS',
+      currency: 'USD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(cents / 100);

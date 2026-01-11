@@ -5,7 +5,6 @@ import {
   PaymentMode,
   FxSnapshot,
   formatUsd,
-  formatArs,
 } from '@core/models/booking-detail-payment.model';
 
 /**
@@ -201,5 +200,4 @@ export class RiskPolicyTableComponent {
   @Input({ required: true }) fxSnapshot!: FxSnapshot;
 
   formatUsd = formatUsd;
-  formatArs = formatArs;
 }

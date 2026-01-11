@@ -166,7 +166,7 @@ import { MoneyPipe } from '../../pipes/money.pipe';
           <!-- Price -->
           <div class="flex items-baseline gap-1.5">
             <span class="h4 text-text-primary">
-              {{ car.pricePerDay | money: car.currency || 'ARS' }}
+              {{ car.pricePerDay | money: 'USD' }}
             </span>
             <span class="text-sm text-text-secondary font-medium">/día</span>
           </div>

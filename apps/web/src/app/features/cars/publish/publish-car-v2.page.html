@@ -96,14 +96,12 @@
                 </button>
               }
 
-              <!-- Vehicle Tracking Camera Component -->
+              <!-- Vehicle Scanner Live Component (Real-time detection) -->
               @if (showVideoScanner()) {
-                <div class="mb-6">
-                  <app-vehicle-tracking-camera
-                    (vehicleDetected)="onTrackingVehicleDetected($event)"
-                    (cancelled)="onVideoScannerCancelled()"
-                  />
-                </div>
+                <app-vehicle-scanner-live
+                  (vehicleConfirmed)="onVehicleScannerConfirmed($event)"
+                  (cancelled)="onVideoScannerCancelled()"
+                />
               }
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

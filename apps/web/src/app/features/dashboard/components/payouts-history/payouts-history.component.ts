@@ -150,7 +150,7 @@ import { AuthService } from '@core/services/auth/auth.service';
           <div class="bg-cta-default/10 rounded-lg p-4">
             <p class="text-sm text-cta-default mb-1">Total Ingresos</p>
             <p class="text-2xl font-bold text-cta-default">
-              {{ formatCurrency(totalAmount(), 'ARS') }}
+              {{ formatCurrency(totalAmount(), 'USD') }}
             </p>
           </div>
           <div class="bg-success-light/10 rounded-lg p-4">
@@ -275,7 +275,8 @@ export class PayoutsHistoryComponent implements OnInit {
   }
 
   formatCurrency(amount: number, currency: string): string {
-    return new Intl.NumberFormat('es-AR', {
+    const locale = currency === 'ARS' ? 'es-AR' : 'en-US';
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: currency,
       minimumFractionDigits: 0,

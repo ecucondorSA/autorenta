@@ -48,7 +48,7 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar 
 
           <h2>¿Cuánto puedo ganar?</h2>
           <p>
-            Los propietarios en Buenos Aires ganan en promedio entre $50.000 y $150.000 ARS
+            Los propietarios en Buenos Aires ganan en promedio entre $50,000 y $150,000 USD
             por mes, dependiendo del tipo de vehículo y la frecuencia de alquileres.
           </p>
 

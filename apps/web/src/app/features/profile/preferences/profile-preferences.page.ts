@@ -243,7 +243,7 @@ export class ProfilePreferencesPage implements OnInit, OnDestroy {
   readonly preferencesForm = this.fb.group({
     timezone: ['America/Buenos_Aires', Validators.required],
     locale: ['es-AR', Validators.required],
-    currency: ['ARS', Validators.required],
+    currency: ['USD', Validators.required],
     marketing_opt_in: [true],
   });
 
@@ -279,7 +279,7 @@ export class ProfilePreferencesPage implements OnInit, OnDestroy {
     this.preferencesForm.patchValue({
       timezone: profile.timezone || 'America/Buenos_Aires',
       locale: profile.locale || 'es-AR',
-      currency: profile.currency || 'ARS',
+      currency: profile.currency || 'USD',
       marketing_opt_in: profile.marketing_opt_in ?? true,
     });
 

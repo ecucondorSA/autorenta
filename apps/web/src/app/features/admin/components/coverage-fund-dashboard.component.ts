@@ -372,9 +372,9 @@ export class CoverageFundDashboardComponent implements OnInit {
 
   formatAmount(cents: number): string {
     const amount = cents / 100;
-    return new Intl.NumberFormat('es-AR', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'ARS',
+      currency: 'USD',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);

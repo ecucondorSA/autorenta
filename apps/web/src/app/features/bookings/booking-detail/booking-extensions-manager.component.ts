@@ -98,7 +98,7 @@ import {
                     <p class="text-xs text-text-secondary">
                       Costo adicional estimado:
                       <span class="font-semibold text-text-primary">
-                        {{ (request.additional_cost_cents ?? request.additional_amount_cents ?? request.estimated_cost_amount ?? 0) / 100 | currency: 'ARS' : 'symbol' : '1.0-0' }}
+                        {{ (request.additional_cost_cents ?? request.additional_amount_cents ?? request.estimated_cost_amount ?? 0) / 100 | currency: 'USD' : 'symbol' : '1.0-0' }}
                       </span>
                     </p>
 

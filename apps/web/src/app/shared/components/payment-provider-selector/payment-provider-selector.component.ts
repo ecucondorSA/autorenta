@@ -57,7 +57,7 @@ export class PaymentProviderSelectorComponent implements OnInit {
   /**
    * Moneda original del booking (USD o ARS)
    */
-  @Input() currency: 'USD' | 'ARS' = 'ARS';
+  @Input() currency: 'USD' | 'ARS' = 'USD';
 
   /**
    * Provider preseleccionado (opcional)

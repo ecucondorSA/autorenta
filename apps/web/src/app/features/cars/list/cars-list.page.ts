@@ -172,7 +172,7 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
         carId: car['id'],
         title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim(),
         pricePerDay: car['price_per_day'],
-        currency: car['currency'] || 'ARS',
+        currency: car['currency'] || 'USD',
         lat: car['location_lat'] || 0,
         lng: car['location_lng'] || 0,
         updatedAt: car['updated_at'] || new Date().toISOString(),

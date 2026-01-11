@@ -48,7 +48,7 @@ export class WithdrawalRequestFormComponent implements OnInit {
   readonly form: FormGroup;
   readonly submitting = signal(false);
   readonly FEE_PERCENTAGE = 0.015; // 1.5%
-  readonly MIN_AMOUNT = 100; // ARS
+  readonly MIN_AMOUNT = 100; // USD
 
   readonly amount = signal(0);
   readonly selectedAccountId = signal<string | null>(null);

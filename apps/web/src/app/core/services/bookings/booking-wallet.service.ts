@@ -177,7 +177,7 @@ export class BookingWalletService {
           bookingId: booking.id,
           userId: booking.user_id,
           amount: depositAmountCents / 100, // MP espera monto en la moneda base
-          currency: booking.currency || 'ARS',
+          currency: booking.currency || 'USD',
           intentType: 'security_deposit',
           isPreAuth: true,
           description:

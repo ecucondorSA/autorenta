@@ -102,7 +102,7 @@ export class FooterComponent {
 
   // Language and currency (these would typically be handled by a service)
   currentLanguage = signal('Español (AR)');
-  currentCurrency = signal('ARS');
+  currentCurrency = signal('USD');
 
   onLanguageChange(): void {
     // TODO: Implement language selector

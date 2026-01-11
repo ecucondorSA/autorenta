@@ -58,7 +58,7 @@ export class PaymentsService {
       bookingId: bookingId,
       userId: booking.renter_id,
       amount: Number(booking.total_amount ?? 0),
-      currency: booking.currency ?? 'ARS',
+      currency: booking.currency ?? 'USD',
       intentType: 'booking',
       description: `Pago de reserva ${bookingId.substring(0, 8)}`,
     });

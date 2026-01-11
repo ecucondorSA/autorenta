@@ -79,9 +79,9 @@ export class PayoutsPage implements OnInit, OnDestroy {
   });
 
   readonly formattedBalance = computed(() => {
-    return new Intl.NumberFormat('es-AR', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'ARS',
+      currency: 'USD',
     }).format(this.walletBalance());
   });
 

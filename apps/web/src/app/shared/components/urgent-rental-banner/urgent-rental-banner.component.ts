@@ -46,7 +46,7 @@ import {
             <div class="h4 text-cta-default">
               {{
                 quote()?.hourlyRate
-                  ? (quote()!.hourlyRate | currency: 'ARS' : 'symbol' : '1.0-0')
+                  ? (quote()!.hourlyRate | currency: 'USD' : 'symbol' : '1.0-0')
                   : '...'
               }}
             </div>

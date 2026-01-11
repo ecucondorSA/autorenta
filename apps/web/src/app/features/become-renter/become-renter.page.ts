@@ -44,9 +44,9 @@ export class BecomeRenterPage implements OnInit {
   readonly loading = signal(false);
 
   // Calculadora de ingresos
-  readonly carValue = signal(50000); // Valor del auto en ARS (por defecto $50k)
+  readonly carValue = signal(15000); // Valor del auto en USD (por defecto $15k)
   readonly daysPerMonth = signal(10); // Días rentados por mes
-  readonly pricePerDay = signal(8000); // Precio por día en ARS
+  readonly pricePerDay = signal(50); // Precio por día en USD
 
   // Computed: Ingresos mensuales estimados
   readonly estimatedMonthlyIncome = computed(() => {
@@ -73,7 +73,7 @@ export class BecomeRenterPage implements OnInit {
       location: 'Buenos Aires',
       photo: '/assets/images/testimonials/maria.jpg',
       carBrand: 'Toyota Corolla 2020',
-      earning: '$120,000/mes',
+      earning: '$1,200/mes',
       quote:
         'Publicar mi auto en Autorentar fue la mejor decisión. Genero ingresos mientras no lo uso y los locatarios son muy cuidadosos.',
       rating: 5,
@@ -83,7 +83,7 @@ export class BecomeRenterPage implements OnInit {
       location: 'Córdoba',
       photo: '/assets/images/testimonials/carlos.jpg',
       carBrand: 'Volkswagen Gol 2019',
-      earning: '$80,000/mes',
+      earning: '$800/mes',
       quote:
         'El proceso es super simple. En 24 horas ya tenía mi auto publicado y recibí mi primera reserva en menos de una semana.',
       rating: 5,
@@ -93,7 +93,7 @@ export class BecomeRenterPage implements OnInit {
       location: 'Rosario',
       photo: '/assets/images/testimonials/laura.jpg',
       carBrand: 'Chevrolet Onix 2021',
-      earning: '$150,000/mes',
+      earning: '$1,500/mes',
       quote:
         'Lo que más me gusta es la flexibilidad. Yo controlo cuándo mi auto está disponible y el precio. ¡Es como tener un ingreso pasivo!',
       rating: 5,
@@ -132,7 +132,7 @@ export class BecomeRenterPage implements OnInit {
   readonly benefits = [
     {
       title: 'Ingresos extras',
-      description: 'Generá entre $50,000 y $200,000 por mes según tu auto y disponibilidad.',
+      description: 'Generá entre $500 y $2,000 por mes según tu auto y disponibilidad.',
       icon: 'dollar-bill',
     },
     {
@@ -191,7 +191,7 @@ export class BecomeRenterPage implements OnInit {
     {
       question: '¿Cómo funciona el programa de referidos?',
       answer:
-        'Por cada amigo que invites y publique su auto, ganás $1,500 ARS en bonos. Tu amigo también recibe $500 ARS de bienvenida. ¡Es ganar-ganar!',
+        'Por cada amigo que invites y publique su auto, ganás $1,000 USD en bonos. Tu amigo también recibe $500 USD de bienvenida. ¡Es ganar-ganar!',
       open: false,
     },
   ];

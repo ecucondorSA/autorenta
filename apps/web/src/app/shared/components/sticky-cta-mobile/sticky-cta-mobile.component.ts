@@ -20,7 +20,7 @@ export class StickyCtaMobileComponent {
   @Input() loading = false;
   @Input() expressMode = false;
   @Input() showPrice = true;
-  /** Optional guarantee/deposit amount in ARS */
+  /** Optional guarantee/deposit amount in USD */
   @Input() guaranteeAmount: number | null = null;
   /** Show terms checkbox when user can book */
   @Input() showTermsCheckbox = false;

@@ -85,7 +85,7 @@ export class KpiCardComponent {
   @Input() color: 'primary' | 'success' | 'warning' | 'danger' | 'tertiary' = 'primary';
   @Input() icon?: string;
   @Input() format: 'currency' | 'number' | 'percent' = 'currency';
-  @Input() currency: string = 'ARS';
+  @Input() currency: string = 'USD';
 
   get cardColor(): string {
     // Devuelve undefined para usar color por defecto
@@ -98,13 +98,15 @@ export class KpiCardComponent {
     }
 
     switch (this.format) {
-      case 'currency':
-        return new Intl.NumberFormat('es-AR', {
+      case 'currency': {
+        const locale = this.currency === 'ARS' ? 'es-AR' : 'en-US';
+        return new Intl.NumberFormat(locale, {
           style: 'currency',
           currency: this.currency,
           minimumFractionDigits: 0,
           maximumFractionDigits: 0,
         }).format(this.value);
+      }
 
       case 'percent':
         return `${this.value.toFixed(1)}%`;

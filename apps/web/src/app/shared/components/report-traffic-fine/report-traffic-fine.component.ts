@@ -71,7 +71,7 @@ export class ReportTrafficFineComponent implements OnInit {
         renter_id: this.booking.renter_id,
         infraction_date: this.infractionDate(),
         amount_cents: Math.round(this.amount()! * 100), // Store in cents
-        currency: this.booking.currency || 'ARS', // Use booking currency or default
+        currency: this.booking.currency || 'USD', // Use booking currency or default
         description: this.description(),
         evidence_urls: this.evidenceUrls(),
       };

@@ -269,7 +269,7 @@ export class BookingExtensionService {
     } catch (error) {
       return {
         amount: 0,
-        currency: 'ARS',
+        currency: 'USD',
         error: error instanceof Error ? error.message : 'Error al estimar el costo de extensión',
       };
     }

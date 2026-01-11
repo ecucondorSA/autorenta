@@ -253,9 +253,9 @@ export class GuaranteeCopyBuilderService {
    */
   buildSummaryLine(risk: RiskCalculation): string {
     if (risk.guaranteeType === 'hold') {
-      return `Hold ${this.franchiseService.formatArs(risk.guaranteeAmountArs)} (${this.franchiseService.formatUsd(risk.guaranteeAmountUsd)})`;
+      return `Hold ${this.franchiseService.formatUsd(risk.guaranteeAmountUsd)}`;
     } else {
-      return `Crédito ${this.franchiseService.formatUsd(risk.guaranteeAmountUsd)} (${this.franchiseService.formatArs(risk.guaranteeAmountArs)})`;
+      return `Crédito ${this.franchiseService.formatUsd(risk.guaranteeAmountUsd)}`;
     }
   }
 }

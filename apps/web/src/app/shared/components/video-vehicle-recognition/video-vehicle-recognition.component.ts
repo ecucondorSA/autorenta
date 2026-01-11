@@ -442,12 +442,17 @@ export class VideoVehicleRecognitionComponent implements OnDestroy {
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
 
-    // Set canvas size to video size
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    // Downscale to keep payload reasonable (avoid oversized base64)
+    const maxWidth = 960;
+    const width = video.videoWidth || 0;
+    const height = video.videoHeight || 0;
+    if (!width || !height) return null;
+    const scale = width > maxWidth ? maxWidth / width : 1;
+    canvas.width = Math.round(width * scale);
+    canvas.height = Math.round(height * scale);
 
     // Draw current frame
-    ctx.drawImage(video, 0, 0);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     // Return as base64
     return canvas.toDataURL('image/jpeg', 0.8);
@@ -505,12 +510,22 @@ export class VideoVehicleRecognitionComponent implements OnDestroy {
         throw new Error(result.error || 'No se pudo identificar el vehículo');
       }
     } catch (error) {
-      this.logger.error('Analysis failed', 'VideoVehicleRecognition', error);
+      const message = this.getErrorMessage(error);
+      this.logger.error('Analysis failed', 'VideoVehicleRecognition', { message, error });
       this.state.set('error');
-      this.errorMessage.set(
-        error instanceof Error ? error.message : 'Error al analizar el video'
-      );
+      this.errorMessage.set(message);
     }
+  }
+
+  private getErrorMessage(error: unknown): string {
+    if (!error) return 'Error al analizar el video';
+    if (error instanceof Error) return error.message || 'Error al analizar el video';
+    if (typeof error === 'string') return error;
+    const anyErr = error as { message?: string; error?: string; status?: number };
+    if (anyErr.message) return anyErr.message;
+    if (anyErr.error) return anyErr.error;
+    if (anyErr.status) return `Error ${anyErr.status} al analizar el video`;
+    return 'Error al analizar el video';
   }
 
   useDetectedVehicle(): void {

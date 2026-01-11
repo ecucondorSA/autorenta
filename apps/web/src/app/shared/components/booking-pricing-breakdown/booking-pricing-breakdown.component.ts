@@ -136,13 +136,14 @@ export class BookingPricingBreakdownComponent implements OnInit {
   }
 
   get currencyLabel(): string {
-    return this.data?.currency === 'USD' ? 'USD' : 'ARS';
+    return this.data?.currency === 'ARS' ? 'ARS' : 'USD';
   }
 
   format(value: number | undefined): string {
     const amount = value ?? 0;
-    const currency = this.data?.currency === 'USD' ? 'USD' : 'ARS';
-    return new Intl.NumberFormat('es-AR', {
+    const currency = this.data?.currency === 'ARS' ? 'ARS' : 'USD';
+    const locale = currency === 'ARS' ? 'es-AR' : 'en-US';
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency,
       minimumFractionDigits: 0,

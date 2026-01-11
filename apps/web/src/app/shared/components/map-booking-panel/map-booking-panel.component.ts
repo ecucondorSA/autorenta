@@ -86,7 +86,7 @@ export interface BookingFormData {
               <p class="text-sm text-text-secondary">{{ car.locationLabel }}</p>
               <div class="flex items-baseline gap-1 mt-1">
                 <span class="text-lg font-bold text-cta-default">
-                  {{ car.pricePerDay | money: car.currency || 'ARS' }}
+                  {{ car.pricePerDay | money: 'USD' }}
                 </span>
                 <span class="text-xs text-text-secondary">/día</span>
               </div>
@@ -174,21 +174,21 @@ export interface BookingFormData {
                 {{ priceBreakdown()!.days }} día{{ priceBreakdown()!.days !== 1 ? 's' : '' }}
               </span>
               <span class="text-text-primary font-medium">
-                {{ priceBreakdown()!.subtotal | money: car?.currency || 'ARS' }}
+                {{ priceBreakdown()!.subtotal | money: 'USD' }}
               </span>
             </div>
             @if (priceBreakdown()!.fees > 0) {
               <div class="flex justify-between text-sm">
                 <span class="text-text-secondary">Comisión</span>
                 <span class="text-text-primary font-medium">
-                  {{ priceBreakdown()!.fees | money: car?.currency || 'ARS' }}
+                  {{ priceBreakdown()!.fees | money: 'USD' }}
                 </span>
               </div>
             }
             <div class="border-t border-border-default pt-2 flex justify-between">
               <span class="font-semibold text-text-primary">Total</span>
               <span class="text-xl font-bold text-cta-default">
-                {{ priceBreakdown()!.total | money: car?.currency || 'ARS' }}
+                {{ priceBreakdown()!.total | money: 'USD' }}
               </span>
             </div>
           </div>
@@ -519,10 +519,10 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
         startDate: new Date(this.startDate()!).toISOString(),
         endDate: new Date(this.endDate()!).toISOString(),
         totalAmount: this.priceBreakdown()!.total * 100, // Convert to cents
-        currency: this.car.currency || 'ARS',
+        currency: 'USD',
         paymentMode: this.paymentMethod(),
         riskSnapshot: {
-          dailyPriceUsd: this.car.pricePerDay / 1000, // Approximate USD conversion
+          dailyPriceUsd: this.car.pricePerDay,
           securityDepositUsd: 0,
           vehicleValueUsd: 0,
           // ✅ IMPLEMENTADO: Cálculo real de edad desde profile
@@ -530,9 +530,9 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
           driverAge: await this.getDriverAge(),
           coverageType: 'standard',
           paymentMode: this.paymentMethod(),
-          totalUsd: this.priceBreakdown()!.total / 1000,
+          totalUsd: this.priceBreakdown()!.total,
           totalArs: this.priceBreakdown()!.total,
-          exchangeRate: 1000,
+          exchangeRate: 1,
         },
       });
 
@@ -546,7 +546,7 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
         endDate: this.endDate()!,
         totalDays: this.priceBreakdown()!.days,
         totalPrice: this.priceBreakdown()!.total,
-        currency: this.car.currency || 'ARS',
+        currency: 'USD',
       });
 
       // Navigate to booking detail page

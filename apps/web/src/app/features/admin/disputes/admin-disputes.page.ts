@@ -33,7 +33,7 @@ export class AdminDisputesPage implements OnInit {
   // NEW: Resolution fields
   readonly resolutionReason = signal('');
   readonly resolutionAmount = signal<number | null>(null);
-  readonly resolutionCurrency = signal<string | null>('ARS');
+  readonly resolutionCurrency = signal<string | null>('USD');
 
   readonly filters = signal({
     status: '' as DisputeStatus | '',
@@ -81,7 +81,7 @@ export class AdminDisputesPage implements OnInit {
     // Pre-populate resolution fields
     this.resolutionReason.set(dispute.dispute_resolution || ''); // Use dispute_resolution
     this.resolutionAmount.set(dispute.resolution_amount || null);
-    this.resolutionCurrency.set(dispute.resolution_currency || 'ARS'); // Default or pre-populate
+    this.resolutionCurrency.set(dispute.resolution_currency || 'USD'); // Default or pre-populate
 
     try {
       const evidenceList = await this.disputesService.listEvidence(dispute.id);
@@ -101,7 +101,7 @@ export class AdminDisputesPage implements OnInit {
     this.evidence.set([]);
     this.resolutionReason.set(''); // Clear
     this.resolutionAmount.set(null); // Clear
-    this.resolutionCurrency.set('ARS'); // Reset to default
+    this.resolutionCurrency.set('USD'); // Reset to default
   }
 
   async updateStatus(disputeId: string, newStatus: DisputeStatus): Promise<void> {

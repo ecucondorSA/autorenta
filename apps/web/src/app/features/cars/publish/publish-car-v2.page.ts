@@ -33,9 +33,9 @@ import {
   DetectedVehicle,
 } from '../../../shared/components/video-vehicle-recognition/video-vehicle-recognition.component';
 import {
-  VehicleTrackingCameraComponent,
-  DetectedVehicleWithValue,
-} from '../../../shared/components/vehicle-tracking-camera/vehicle-tracking-camera.component';
+  VehicleScannerLiveComponent,
+  VehicleScannerConfirmData,
+} from '../../../shared/components/vehicle-scanner-live/vehicle-scanner-live.component';
 import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
 
 // ✅ NEW: Extracted services
@@ -74,7 +74,7 @@ import { PublishCarPhotoService } from './services/publish-car-photo.service';
     BottomSheetComponent,
     PhotoUploadAIComponent,
     VideoVehicleRecognitionComponent,
-    VehicleTrackingCameraComponent,
+    VehicleScannerLiveComponent,
   ],
   templateUrl: './publish-car-v2.page.html',
   styleUrls: ['./publish-car-v2.page.scss'],
@@ -1578,36 +1578,37 @@ export class PublishCarV2Page implements OnInit {
   }
 
   /**
-   * Handle vehicle detected from tracking camera (with market value)
-   * This is the advanced version that includes FIPE lookup
+   * Handle vehicle confirmed from live scanner (with market value)
+   * This is the real-time scanning version that includes FIPE lookup
    */
-  async onTrackingVehicleDetected(vehicle: DetectedVehicleWithValue): Promise<void> {
-    this.logger.debug('[PublishCarV2] Vehicle detected from tracking camera:', vehicle);
+  async onVehicleScannerConfirmed(data: VehicleScannerConfirmData): Promise<void> {
+    const { detection, marketValue, suggestedDailyPrice } = data;
+    this.logger.debug('[PublishCarV2] Vehicle confirmed from scanner:', detection);
 
     // Close the scanner
     this.showVideoScanner.set(false);
 
     // Convert to VehicleAutoDetect format for the existing handler
     const autoDetect: VehicleAutoDetect = {
-      brand: vehicle.brand,
-      model: vehicle.model,
-      year: vehicle.year,
-      color: vehicle.color,
-      confidence: vehicle.confidence / 100, // Convert to 0-1 range
+      brand: detection.brand,
+      model: detection.model,
+      year: detection.year,
+      color: detection.color,
+      confidence: detection.confidence / 100, // Convert to 0-1 range
     };
 
     // Apply the detection
     await this.applyVehicleAutoDetection(autoDetect);
 
     // If we have market value, set suggested price
-    if (vehicle.marketValue && vehicle.suggestedDailyPrice) {
-      this.suggestedPrice.set(vehicle.suggestedDailyPrice);
+    if (marketValue && suggestedDailyPrice) {
+      this.suggestedPrice.set(suggestedDailyPrice);
 
       // Show info about market value
       this.notificationManager.show({
         type: 'info',
         title: 'Valor de mercado detectado',
-        message: `Tu ${vehicle.brand} ${vehicle.model} tiene un valor FIPE de ${vehicle.marketValue.currency} ${vehicle.marketValue.average.toLocaleString()}. Sugerimos un precio de alquiler de ${vehicle.marketValue.currency} ${vehicle.suggestedDailyPrice}/día.`,
+        message: `Tu ${detection.brand} ${detection.model} tiene un valor FIPE de USD ${marketValue.value_usd.toLocaleString()}. Sugerimos un precio de alquiler de $${suggestedDailyPrice}/día.`,
         duration: 10000,
       });
     }
