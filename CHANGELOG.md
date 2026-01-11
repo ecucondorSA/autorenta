@@ -1,3 +1,10 @@
+## [2.8.1](https://github.com/ecucondorSA/autorenta/compare/v2.8.0...v2.8.1) (2026-01-11)
+
+
+### Bug Fixes
+
+* resolve CI/CD pipeline errors, fixed imports, renamed conflicting exports and made migrations idempotent ([0a54161](https://github.com/ecucondorSA/autorenta/commit/0a5416162239f06c17e28aecaf98f26398d781b6))
+
 # [2.8.0](https://github.com/ecucondorSA/autorenta/compare/v2.7.3...v2.8.0) (2026-01-11)
 
 
