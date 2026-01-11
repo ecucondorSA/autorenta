@@ -1,3 +1,10 @@
+## [2.8.2](https://github.com/ecucondorSA/autorenta/compare/v2.8.1...v2.8.2) (2026-01-11)
+
+
+### Bug Fixes
+
+* **security:** update CSP to resolve blocking of GTM and Supabase Realtime ([de9af01](https://github.com/ecucondorSA/autorenta/commit/de9af01d358e4992174e886ac564d3867546e57b))
+
 ## [2.8.1](https://github.com/ecucondorSA/autorenta/compare/v2.8.0...v2.8.1) (2026-01-11)
 
 
