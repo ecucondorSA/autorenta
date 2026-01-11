@@ -17,8 +17,10 @@ const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY') || '';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!;
 
-// Gemini Live API model - use flash for real-time (lower latency)
-const GEMINI_LIVE_MODEL = 'gemini-2.0-flash-live-preview-04-09';
+// Gemini Live API model for bidiGenerateContent
+// Only gemini-2.0-flash-exp and gemini-2.5-flash-native-audio-preview support Live API
+// Using 2.0-flash-exp as it works (responds with audio)
+const GEMINI_LIVE_MODEL = 'gemini-2.0-flash-exp';
 
 // System prompt for vehicle inspection
 const INSPECTION_SYSTEM_PROMPT = `Eres un asistente experto en inspección de vehículos para AutoRenta.

@@ -133,7 +133,7 @@ export class RenterConfirmationComponent {
     }
 
     try {
-      // Si hay daños, usamos el flujo V2 explícito
+      // Si hay daños, usamos el flujo V2 de resolución de daños
       if (this.damageAmount && this.damageAmount > 0) {
         await this.confirmationService.resolveConclusion({
           booking_id: this.bookingId,
@@ -152,13 +152,13 @@ export class RenterConfirmationComponent {
         this.message.set('Daños aceptados y pago liberado.');
         this.confirmed.emit(this.confirmationResult()!);
       } else {
-        // Flujo normal (o V1 legacy)
-        const result = await this.confirmationService.confirmRenter({
+        // Sin daños: usar confirmCompletion para cerrar el booking inmediatamente
+        const result = await this.confirmationService.confirmCompletion({
           booking_id: this.bookingId,
-          confirming_user_id: userId,
+          renter_id: userId,
         });
         this.confirmationResult.set(result);
-        this.message.set(result.message);
+        this.message.set(result.message || '¡Viaje completado! Tu garantía ha sido liberada.');
         this.confirmed.emit(result);
       }
     } catch (err) {

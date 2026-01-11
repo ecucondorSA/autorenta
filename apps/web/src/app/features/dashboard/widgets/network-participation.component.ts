@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Signal } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 
 interface ParticipationPeriodData {
@@ -26,8 +26,8 @@ interface FgoStatusData {
           <span class="text-blue-600">🛡️</span> Participación de Red
         </h3>
         <div class="px-2 py-1 rounded-full text-xs font-medium"
-             [ngClass]="fgoStatus()?.status === 'healthy' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'">
-          FGO: {{ fgoStatus()?.status === 'healthy' ? 'ACTIVO' : 'REVISAR' }}
+             [ngClass]="fgoStatus?.status === 'healthy' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'">
+          FGO: {{ fgoStatus?.status === 'healthy' ? 'ACTIVO' : 'REVISAR' }}
         </div>
       </div>
 
@@ -36,16 +36,16 @@ interface FgoStatusData {
         <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
           <p class="text-xs text-slate-500 uppercase font-semibold mb-1">Mis Puntos (Score)</p>
           <div class="text-2xl font-black text-slate-800">
-            {{ participationPeriod()?.total_points || 0 }} pts
+            {{ participationPeriod?.total_points || 0 }} pts
           </div>
           <div class="mt-2 text-xs text-slate-600">
             <div class="flex justify-between">
               <span>Disponibilidad:</span>
-              <span class="font-bold">{{ participationPeriod()?.points_availability || 0 }}</span>
+              <span class="font-bold">{{ participationPeriod?.points_availability || 0 }}</span>
             </div>
             <div class="flex justify-between">
               <span>Ubicación:</span>
-              <span class="font-bold">{{ participationPeriod()?.points_location || 0 }}</span>
+              <span class="font-bold">{{ participationPeriod?.points_location || 0 }}</span>
             </div>
           </div>
         </div>
@@ -54,10 +54,10 @@ interface FgoStatusData {
         <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
           <p class="text-xs text-blue-600 uppercase font-semibold mb-1">Participación Estimada</p>
           <div class="text-2xl font-black text-blue-700">
-            {{ participationPeriod()?.earnings_usd | money:'USD' }}
+            {{ participationPeriod?.earnings_usd | money:'USD' }}
           </div>
           <p class="text-xs text-blue-600 mt-2 leading-tight">
-            Basado en tu aporte al Pool de la Red ({{ participationPeriod()?.pool_share_percentage | percent:'1.2-2' }} share)
+            Basado en tu aporte al Pool de la Red ({{ participationPeriod?.pool_share_percentage | percent:'1.2-2' }} share)
           </p>
         </div>
       </div>
@@ -66,7 +66,7 @@ interface FgoStatusData {
       <div class="mt-4 pt-4 border-t border-slate-100">
         <div class="flex items-center justify-between text-xs text-slate-500 mb-2">
           <span>Protección Mutual (FGO)</span>
-          <span class="font-mono">{{ fgoStatus()?.totalBalance | money:'USD' }} en Reserva</span>
+          <span class="font-mono">{{ fgoStatus?.totalBalance | money:'USD' }} en Reserva</span>
         </div>
         <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
           <div class="bg-green-500 h-1.5 rounded-full" style="width: 100%"></div>
@@ -80,6 +80,6 @@ interface FgoStatusData {
   styles: []
 })
 export class NetworkParticipationWidgetComponent {
-  @Input() participationPeriod!: Signal<ParticipationPeriodData | null>;
-  @Input() fgoStatus!: Signal<FgoStatusData | null>;
+  @Input() participationPeriod: ParticipationPeriodData | null = null;
+  @Input() fgoStatus: FgoStatusData | null = null;
 }

@@ -23,6 +23,8 @@ import {
   GeminiLiveService,
   LiveAnalysisEvent,
   DetectedAreaState,
+  AreaConfidence,
+  ImageQualityReport,
 } from '@core/services/ai/gemini-live.service';
 import { IconComponent } from '../icon/icon.component';
 
@@ -80,9 +82,12 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
   readonly isConnected = this.geminiLive.isConnected;
   readonly connectionState = this.geminiLive.connectionState;
   readonly areasDetected = this.geminiLive.areasDetected;
+  readonly areaConfidence = this.geminiLive.areaConfidence;
   readonly detectedAreasCount = this.geminiLive.detectedAreasCount;
   readonly missingAreas = this.geminiLive.missingAreas;
   readonly lastMessage = this.geminiLive.lastMessage;
+  readonly currentImageQuality = this.geminiLive.currentImageQuality;
+  readonly forensicLog = this.geminiLive.forensicLog;
 
   // Local editable state
   readonly damages = signal<DamageEntry[]>([]);
@@ -175,16 +180,33 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
         this.handleLiveEvent(event);
       });
 
-      // Initialize camera
-      await this.initCamera();
+      // Initialize camera first
+      try {
+        await this.initCamera();
+      } catch (cameraErr) {
+        this.logger.error('Camera initialization failed', 'VideoInspectionLive', cameraErr);
+        const errorMessage = cameraErr instanceof Error ? cameraErr.message : 'Error desconocido';
+        this.error.set(`Error de cámara: ${errorMessage}`);
+        this.viewState.set('error');
+        return;
+      }
 
       // Connect to Gemini Live
-      await firstValueFrom(this.geminiLive.connect());
+      try {
+        await firstValueFrom(this.geminiLive.connect());
+      } catch (geminiErr) {
+        this.logger.error('Gemini connection failed', 'VideoInspectionLive', geminiErr);
+        const errorMessage = geminiErr instanceof Error ? geminiErr.message : 'Error desconocido';
+        this.error.set(`Error de conexión IA: ${errorMessage}`);
+        this.viewState.set('error');
+        return;
+      }
 
       this.viewState.set('ready');
     } catch (err) {
       this.logger.error('Failed to initialize', 'VideoInspectionLive', err);
-      this.error.set('Error al inicializar. Verificá permisos de cámara.');
+      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+      this.error.set(`Error al inicializar: ${errorMessage}`);
       this.viewState.set('error');
     }
   }
@@ -238,8 +260,8 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
   // ============================================================================
 
   startRecording(): void {
-    if (!this.isConnected() || !this.videoElement?.nativeElement) {
-      this.error.set('No hay conexión con IA');
+    if (!this.isConnected() || !this.mediaStream) {
+      this.error.set('No hay conexión con IA o cámara');
       return;
     }
 
@@ -247,8 +269,23 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
     this.recordingTime.set(0);
     this.error.set(null);
 
-    // Start frame capture
-    this.geminiLive.startFrameCapture(this.videoElement.nativeElement);
+    // Wait for Angular to render the new video element in 'recording' state
+    // then reassign the stream and start frame capture
+    setTimeout(() => {
+      if (this.videoElement?.nativeElement && this.mediaStream) {
+        // Reassign stream to the new video element
+        this.videoElement.nativeElement.srcObject = this.mediaStream;
+        this.videoElement.nativeElement.play();
+
+        // Start frame capture after video is playing
+        setTimeout(() => {
+          if (this.videoElement?.nativeElement) {
+            this.geminiLive.startFrameCapture(this.videoElement.nativeElement);
+            this.logger.info('Frame capture started', 'VideoInspectionLive');
+          }
+        }, 200);
+      }
+    }, 100);
 
     // Start timer
     this.recordingInterval = setInterval(() => {
@@ -461,8 +498,40 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
       case 'odometer_read': return 'text-blue-600';
       case 'fuel_read': return 'text-blue-600';
       case 'guidance': return 'text-purple-600';
+      case 'quality_warning': return 'text-yellow-600';
       case 'error': return 'text-red-600';
       default: return 'text-gray-600';
     }
+  }
+
+  getQualityScoreClass(score: number): string {
+    if (score >= 80) return 'text-green-400';
+    if (score >= 60) return 'text-yellow-400';
+    if (score >= 40) return 'text-orange-400';
+    return 'text-red-400';
+  }
+
+  getQualityLabel(quality: 'excellent' | 'good' | 'poor' | 'very_poor' | 'sharp' | 'acceptable' | 'blurry' | 'very_blurry' | 'optimal' | 'suboptimal' | 'unusable' | 'complete' | 'partial' | 'minimal'): string {
+    const labels: Record<string, string> = {
+      excellent: 'Excelente',
+      good: 'Buena',
+      poor: 'Pobre',
+      very_poor: 'Muy Pobre',
+      sharp: 'Nítido',
+      acceptable: 'Aceptable',
+      blurry: 'Borroso',
+      very_blurry: 'Muy Borroso',
+      optimal: 'Óptimo',
+      suboptimal: 'Subóptimo',
+      unusable: 'Inutilizable',
+      complete: 'Completa',
+      partial: 'Parcial',
+      minimal: 'Mínima',
+    };
+    return labels[quality] || quality;
+  }
+
+  getForensicSummary() {
+    return this.geminiLive.getForensicSummary();
   }
 }

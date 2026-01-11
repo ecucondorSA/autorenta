@@ -54,6 +54,11 @@ export interface ResolveConclusionParams {
   accept_damage: boolean;
 }
 
+export interface ConfirmCompletionParams {
+  booking_id: string;
+  renter_id: string;
+}
+
 /**
  * Estado de carga del servicio
  */
@@ -241,7 +246,7 @@ export class BookingConfirmationService {
   }
 
   /**
-   * V2: Resolve Conclusion (Renter)
+   * V2: Resolve Conclusion (Renter) - When there are damages
    */
   async resolveConclusion(params: ResolveConclusionParams): Promise<ConfirmAndReleaseResponse> {
     this.setLoadingState('resolvingConclusion', true);
@@ -259,6 +264,41 @@ export class BookingConfirmationService {
       throw this.handleError(err, 'Error al resolver conclusión');
     } finally {
       this.setLoadingState('resolvingConclusion', false);
+    }
+  }
+
+  /**
+   * V2: Confirm Completion (Renter) - When there are NO damages
+   * Used when inspection was good and renter wants to close the booking immediately
+   */
+  async confirmCompletion(params: ConfirmCompletionParams): Promise<ConfirmAndReleaseResponse> {
+    this.setLoadingState('confirmingRenter', true);
+    this.clearError();
+    try {
+      const { data, error } = await this.supabase.getClient().rpc('booking_v2_confirm_completion', {
+        p_booking_id: params.booking_id,
+        p_renter_id: params.renter_id,
+      });
+
+      if (error) throw this.createError('COMPLETION_ERROR', error.message);
+
+      // Map response to standard format
+      const response: ConfirmAndReleaseResponse = {
+        success: data?.success ?? true,
+        message: data?.message ?? 'Reserva completada',
+        completion_status: 'COMPLETED',
+        funds_released: true,
+        owner_confirmed: true,
+        renter_confirmed: true,
+        waiting_for: 'none',
+      };
+
+      this.lastConfirmation.set(response);
+      return response;
+    } catch (err) {
+      throw this.handleError(err, 'Error al confirmar finalización');
+    } finally {
+      this.setLoadingState('confirmingRenter', false);
     }
   }
 
