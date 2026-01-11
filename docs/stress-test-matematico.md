@@ -1,40 +1,48 @@
-# Stress Test Matematico - Autorenta (v3 LATAM Real)
+# Stress Test Matematico - Autorenta (v4 COMODATO Real)
 
 **Fecha:** 2026-01-11
-**Revision:** Basado en datos reales de BD + escenario LATAM + modelo FGO corregido
+**Revision:** Modelo COMODATO correcto (15% plataforma / 75% rewards / 10% FGO)
 
 ---
 
-## 1. Modelo de Cobertura de Siniestros (Definitivo)
+## 1. Modelo de Negocio COMODATO
+
+### 1.1 Diferencia con Marketplace Tradicional
+
+| Aspecto | Marketplace (Turo) | **COMODATO (AutoRenta)** |
+|---------|-------------------|--------------------------|
+| Propiedad operativa | Owner | **Plataforma** |
+| Take rate | 20-25% | **100%** (redistribuido) |
+| Pago a owner | Directo por booking | **Mensual via reward pool** |
+| Riesgo siniestros | Compartido | **FGO dedicado** |
+
+### 1.2 Distribucion del Pago (100% del bruto)
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    PAGO DEL RENTER (100%)                           │
+├─────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌─────────────────────┐  ┌───────────────────┐   │
+│  │   15%       │  │       75%           │  │       10%         │   │
+│  │  PLATAFORMA │  │    REWARD POOL      │  │       FGO         │   │
+│  │             │  │                     │  │                   │   │
+│  │ • Operacion │  │ • Owners (puntos)   │  │ • Siniestros      │   │
+│  │ • Marketing │  │ • Distribucion      │  │ • Garantias       │   │
+│  │ • Tech      │  │   mensual           │  │ • Reserva         │   │
+│  │ • Ganancia  │  │                     │  │                   │   │
+│  └─────────────┘  └─────────────────────┘  └───────────────────┘   │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 1.3 Modelo de Cobertura de Siniestros
 
 ```
 ORDEN DE COBERTURA (WATERFALL):
-┌─────────────────────────────────────────────────────────────────────┐
-│ 1. Garantia del Renter (FGO)  → 5% del valor del auto, retenida    │
-│ 2. Plataforma (AutoRenta)     → paga SOLO el excedente, CAP=franq  │
-│ 3. Seguro del vehiculo        → cubre TODO lo que supere franquicia│
-└─────────────────────────────────────────────────────────────────────┘
-
-FORMULA:
-  daño_total = severidad × valor_auto
-  recupero_garantia = min(garantia, daño_total) × tasa_recupero
-  daño_neto = max(0, daño_total - recupero_garantia)
-  perdida_plataforma = min(daño_neto, franquicia)  ← CAP CRITICO
-  perdida_seguro = max(0, daño_neto - franquicia)
+1. FGO (10% del bruto)    → Fondo acumulado para siniestros
+2. Garantia Renter (5%)   → Deposito retenido, recupero ~50%
+3. Plataforma (15%)       → Solo si FGO insuficiente, CAP = franquicia
+4. Seguro del vehiculo    → Cubre todo lo que excede franquicia
 ```
-
-### Ejemplo Real (Auto $25,000, daño $3,000)
-
-| Concepto | Calculo | Valor |
-|----------|---------|-------|
-| Garantia (5%) | $25,000 × 5% | $1,250 |
-| Recupero garantia (50%) | min($1,250, $3,000) × 50% | $625 |
-| Daño neto | $3,000 - $625 | $2,375 |
-| Franquicia seguro (5%) | $25,000 × 5% | $1,250 |
-| **Plataforma paga** | min($2,375, $1,250) | **$1,250** (CAP!) |
-| Seguro paga | $2,375 - $1,250 | $1,125 |
-
-**Sin el CAP**, la plataforma pagaría $2,375. **Con el CAP, paga solo $1,250** (-47%).
 
 ---
 
@@ -48,9 +56,7 @@ FORMULA:
 | $10k-$20k | 4 | 36% | $16,674 | $50.02 |
 | $20k-$50k | 4 | 36% | $25,554 | $76.66 |
 | >$100k | 1 | 9% | $215,745 | $647.24 |
-| **Total** | **11** | 100% | **$40,723** (prom ponderado) | - |
-
-**Nota:** El mix actual tiene concentracion en segmento medio ($10k-$50k = 72% de la flota).
+| **Total** | **11** | 100% | - | - |
 
 ### 2.2 Parametros por Bucket
 
@@ -65,92 +71,90 @@ FORMULA:
 
 ## 3. Parametros Operativos
 
-### 3.1 Ingresos
+### 3.1 Distribucion de Ingresos (COMODATO)
+
+| Componente | % del Bruto | Destino |
+|------------|-------------|---------|
+| **Plataforma** | 15% | Operaciones + ganancia |
+| **Reward Pool** | 75% | Distribucion a owners (puntos) |
+| **FGO** | 10% | Fondo de garantia operativa |
+
+### 3.2 Utilizacion
 
 | Parametro | Valor | Nota |
 |-----------|-------|------|
 | Tarifa diaria | 0.3% valor auto | Min $10/dia |
 | Dias alquilados/mes | 12 | Utilizacion 40% |
 | Alquileres/mes | 4 | Duracion promedio 3 dias |
-| Take rate | 20% | Comision plataforma |
-| Membresia renter | $10/mes | Por renter activo |
-| Renters/auto | 0.6 | Factor de actividad |
 
-### 3.2 Costos Variables
-
-| Parametro | Valor | Base |
-|-----------|-------|------|
-| Fees de pago | 3.5% | Del bruto |
-| Rewards/promos | 2.0% | Del bruto |
-| FGO operativo | 1.0% | Del bruto |
-| **Total costos var** | **6.5%** | Del bruto |
-
-### 3.3 Garantia y Recupero
+### 3.3 Costos Variables (sobre el bruto)
 
 | Parametro | Valor | Nota |
 |-----------|-------|------|
-| Garantia retenida | 5% valor auto | FGO deposit |
-| Tasa recupero optimista | 60% | Pago puntual |
-| Tasa recupero realista | 50% | Escenario LATAM |
-| Tasa recupero pesimista | 40% | Disputas frecuentes |
+| Fees de pago (MP) | 3.5% | Comision MercadoPago |
+| **Total costos** | **3.5%** | Solo fees de pago |
+
+**Nota:** El 75% reward pool NO es costo de la plataforma, se transfiere a owners.
+
+### 3.4 Garantia y Recupero
+
+| Parametro | Valor | Nota |
+|-----------|-------|------|
+| Garantia retenida | 5% valor auto | Deposito renter |
+| Tasa recupero | 50% | Escenario LATAM |
 
 ---
 
 ## 4. Siniestralidad Escenario LATAM
 
-### 4.1 Benchmarks Globales (Datos Verificados 2024-2025)
+### 4.1 Benchmarks Verificados 2024-2025
 
-| Fuente | Metrica | Valor | Referencia |
-|--------|---------|-------|------------|
-| **Turo Global** | Incidentes serios/trip | <0.10% | SEC Filing Q3 2024 |
-| **Auto Insurance H1 2024** | Loss ratio physical damage | 63.2% | AM Best |
-| **Auto Insurance H1 2024** | Loss ratio liability | 71.1% | AM Best |
-| **Commercial Auto** | Median loss ratio | 79% | Milliman 2023 |
-| **Costo promedio claim** | USD por claim | $12,000 | The Zebra 2024 |
-| **Weather claims** | % de incidentes | 0.97% | CarInsurEnt |
-| **Claims NO culpa renter** | % de claims | >60% | CarInsurEnt |
+| Fuente | Metrica | Valor |
+|--------|---------|-------|
+| Turo Global (SEC Q3 2024) | Incidentes serios/trip | <0.10% |
+| Auto Insurance H1 2024 | Loss ratio physical | 63.2% |
+| Commercial Auto (Milliman) | Median loss ratio | 79% |
 
-### 4.2 Benchmarks Regionales LATAM (Estimados)
-
-| Fuente | Frecuencia | Severidad | Nota |
-|--------|------------|-----------|------|
-| Turo LATAM (2024) | 2-4% | 3-5% valor | Mercado P2P |
-| Localiza BR | 1.5-3% | 2-4% valor | Flotas corporativas |
-| Rentcar ARG | 3-5% | 4-6% valor | Alquiler tradicional |
-| **AutoRenta target** | **3%** | **5%** | Escenario normal |
-
-**Nota:** Turo reporta <0.1% de trips con incidentes SERIOS (robo/totalloss), pero incidentes menores (rayones, golpes leves) no se incluyen en esa metrica.
-
-### 4.3 Escenarios para Stress Test
+### 4.2 Escenarios para Stress Test
 
 | Escenario | Frecuencia | Severidad | Aplicacion |
 |-----------|------------|-----------|------------|
-| **Baja** | 1.5% | 3% | Flota bien cuidada, renters verificados |
+| **Baja** | 1.5% | 3% | Flota bien cuidada |
 | **Normal** | 3.0% | 5% | Operacion estandar LATAM |
-| **Alta** | 6.0% | 8% | Temporada alta, renters nuevos |
-| **Crisis** | 10% | 10% | Escenario extremo (no esperado) |
+| **Alta** | 6.0% | 8% | Temporada alta |
+| **Crisis** | 10% | 10% | Escenario extremo |
 
 ---
 
-## 5. Formulas de Calculo
+## 5. Formulas de Calculo (COMODATO)
 
 ```python
-# INGRESOS
-alquiler_bruto_mes = tarifa_diaria × dias_alquilados  # Por auto
-ingreso_plataforma = alquiler_bruto × take_rate + membresia × renters_por_auto
-costos_variables = alquiler_bruto × 6.5%
+# INGRESOS MENSUALES POR AUTO
+bruto_mes = tarifa_diaria × dias_alquilados
 
-# PERDIDA POR SINIESTRO (CON CAP)
+# DISTRIBUCION COMODATO
+ingreso_plataforma = bruto_mes × 15%
+reward_pool = bruto_mes × 75%  # Va a owners
+fgo_contribution = bruto_mes × 10%  # Fondo siniestros
+
+# COSTOS DE LA PLATAFORMA
+costos_plataforma = bruto_mes × 3.5%  # Solo fees MP
+
+# UTILIDAD PLATAFORMA (ANTES DE SINIESTROS)
+utilidad_plataforma = ingreso_plataforma - costos_plataforma
+# = bruto × 15% - bruto × 3.5% = bruto × 11.5%
+
+# PERDIDA POR SINIESTRO
 daño_esperado = valor_auto × severidad
-recupero_garantia = min(garantia, daño_esperado) × tasa_recupero
+recupero_garantia = min(garantia, daño) × 50%
 daño_neto = max(0, daño_esperado - recupero_garantia)
-perdida_por_evento = min(daño_neto, franquicia)  # ← CAP CRITICO
+perdida_fgo = min(daño_neto, franquicia)  # CAP
 
-# PERDIDA ESPERADA MENSUAL
-perdida_mensual = alquileres_mes × frecuencia × perdida_por_evento
+# BALANCE FGO MENSUAL
+perdida_mensual_fgo = alquileres × frecuencia × perdida_fgo
+balance_fgo = fgo_contribution - perdida_mensual_fgo
 
-# CONTRIBUCION NETA
-contribucion_neta = ingreso_plataforma - costos_variables - perdida_mensual
+# SI FGO < 0, PLATAFORMA CUBRE DEFICIT (hasta CAP)
 ```
 
 ---
@@ -159,41 +163,43 @@ contribucion_neta = ingreso_plataforma - costos_variables - perdida_mensual
 
 ### 6.1 Escenario BAJA Siniestralidad (1.5% freq, 3% sev)
 
-| Bucket | Valor | Bruto/mes | Ingreso | Costos | Daño Exp | Recupero | Daño Neto | CAP | Perdida | **Contrib** |
-|--------|------:|----------:|--------:|-------:|---------:|---------:|----------:|----:|--------:|------------:|
-| $10k | $10,000 | $360 | $78 | $23 | $300 | $150 | $150 | $500 | $9 | **+$46** |
-| $20k | $20,000 | $720 | $150 | $47 | $600 | $300 | $300 | $1,000 | $18 | **+$85** |
-| $30k | $30,000 | $1,080 | $222 | $70 | $900 | $450 | $450 | $1,500 | $27 | **+$125** |
-| $200k | $200,000 | $7,200 | $1,446 | $468 | $6,000 | $3,000 | $3,000 | $10,000 | $180 | **+$798** |
+| Bucket | Bruto | Plataf 15% | Reward 75% | FGO 10% | Costos 3.5% | Daño Neto | Perdida FGO | **Bal FGO** | **Util Plataf** |
+|--------|------:|----------:|----------:|--------:|-----------:|----------:|------------:|------------:|----------------:|
+| $10k | $360 | $54 | $270 | $36 | $13 | $150 | $9 | **+$27** | **+$41** |
+| $20k | $720 | $108 | $540 | $72 | $25 | $300 | $18 | **+$54** | **+$83** |
+| $30k | $1,080 | $162 | $810 | $108 | $38 | $450 | $27 | **+$81** | **+$124** |
+| $200k | $7,200 | $1,080 | $5,400 | $720 | $252 | $3,000 | $180 | **+$540** | **+$828** |
 
-**Perdida = 4 alquileres × 1.5% × min(daño_neto, franquicia)**
+**Perdida FGO = 4 alquileres × 1.5% × min(daño_neto, franquicia)**
 
 ### 6.2 Escenario NORMAL Siniestralidad (3% freq, 5% sev)
 
-| Bucket | Valor | Bruto/mes | Ingreso | Costos | Daño Exp | Recupero | Daño Neto | CAP | Perdida | **Contrib** |
-|--------|------:|----------:|--------:|-------:|---------:|---------:|----------:|----:|--------:|------------:|
-| $10k | $10,000 | $360 | $78 | $23 | $500 | $250 | $250 | $500 | $30 | **+$25** |
-| $20k | $20,000 | $720 | $150 | $47 | $1,000 | $500 | $500 | $1,000 | $60 | **+$43** |
-| $30k | $30,000 | $1,080 | $222 | $70 | $1,500 | $750 | $750 | $1,500 | $90 | **+$62** |
-| $200k | $200,000 | $7,200 | $1,446 | $468 | $10,000 | $5,000 | $5,000 | $10,000 | $600 | **+$378** |
+| Bucket | Bruto | Plataf 15% | Reward 75% | FGO 10% | Costos 3.5% | Daño Neto | Perdida FGO | **Bal FGO** | **Util Plataf** |
+|--------|------:|----------:|----------:|--------:|-----------:|----------:|------------:|------------:|----------------:|
+| $10k | $360 | $54 | $270 | $36 | $13 | $250 | $30 | **+$6** | **+$41** |
+| $20k | $720 | $108 | $540 | $72 | $25 | $500 | $60 | **+$12** | **+$83** |
+| $30k | $1,080 | $162 | $810 | $108 | $38 | $750 | $90 | **+$18** | **+$124** |
+| $200k | $7,200 | $1,080 | $5,400 | $720 | $252 | $5,000 | $600 | **+$120** | **+$828** |
 
 ### 6.3 Escenario ALTA Siniestralidad (6% freq, 8% sev)
 
-| Bucket | Valor | Bruto/mes | Ingreso | Costos | Daño Exp | Recupero | Daño Neto | CAP | Perdida | **Contrib** |
-|--------|------:|----------:|--------:|-------:|---------:|---------:|----------:|----:|--------:|------------:|
-| $10k | $10,000 | $360 | $78 | $23 | $800 | $400 | $400 | $500 | $96 | **-$41** |
-| $20k | $20,000 | $720 | $150 | $47 | $1,600 | $800 | $800 | $1,000 | $192 | **-$89** |
-| $30k | $30,000 | $1,080 | $222 | $70 | $2,400 | $1,200 | $1,200 | $1,500 | $288 | **-$136** |
-| $200k | $200,000 | $7,200 | $1,446 | $468 | $16,000 | $8,000 | $8,000 | $10,000 | $1,920 | **-$942** |
+| Bucket | Bruto | Plataf 15% | Reward 75% | FGO 10% | Costos 3.5% | Daño Neto | Perdida FGO | **Bal FGO** | **Util Plataf** |
+|--------|------:|----------:|----------:|--------:|-----------:|----------:|------------:|------------:|----------------:|
+| $10k | $360 | $54 | $270 | $36 | $13 | $400 | $96 | **-$60** | **-$19** |
+| $20k | $720 | $108 | $540 | $72 | $25 | $800 | $192 | **-$120** | **-$37** |
+| $30k | $1,080 | $162 | $810 | $108 | $38 | $1,200 | $288 | **-$180** | **-$56** |
+| $200k | $7,200 | $1,080 | $5,400 | $720 | $252 | $8,000 | $1,920 | **-$1,200** | **-$372** |
+
+**Nota:** Cuando FGO negativo, la plataforma cubre el deficit con su 15%.
 
 ### 6.4 Escenario CRISIS (10% freq, 10% sev)
 
-| Bucket | Valor | Bruto/mes | Ingreso | Costos | Daño Exp | Recupero | Daño Neto | CAP | Perdida | **Contrib** |
-|--------|------:|----------:|--------:|-------:|---------:|---------:|----------:|----:|--------:|------------:|
-| $10k | $10,000 | $360 | $78 | $23 | $1,000 | $500 | $500 | $500 | $200 | **-$145** |
-| $20k | $20,000 | $720 | $150 | $47 | $2,000 | $1,000 | $1,000 | $1,000 | $400 | **-$297** |
-| $30k | $30,000 | $1,080 | $222 | $70 | $3,000 | $1,500 | $1,500 | $1,500 | $600 | **-$448** |
-| $200k | $200,000 | $7,200 | $1,446 | $468 | $20,000 | $10,000 | $10,000 | $10,000 | $4,000 | **-$3,022** |
+| Bucket | Bruto | Plataf 15% | Reward 75% | FGO 10% | Costos 3.5% | Daño Neto | Perdida FGO | **Bal FGO** | **Util Plataf** |
+|--------|------:|----------:|----------:|--------:|-----------:|----------:|------------:|------------:|----------------:|
+| $10k | $360 | $54 | $270 | $36 | $13 | $500 | $200 | **-$164** | **-$123** |
+| $20k | $720 | $108 | $540 | $72 | $25 | $1,000 | $400 | **-$328** | **-$245** |
+| $30k | $1,080 | $162 | $810 | $108 | $38 | $1,500 | $600 | **-$492** | **-$368** |
+| $200k | $7,200 | $1,080 | $5,400 | $720 | $252 | $10,000 | $4,000 | **-$3,280** | **-$2,452** |
 
 ---
 
@@ -201,183 +207,161 @@ contribucion_neta = ingreso_plataforma - costos_variables - perdida_mensual
 
 ### 7.1 Mix de Flota Real (11 autos actuales)
 
-| Escenario | Ingreso Plataf | Costos Var | Perdida Siniestros | **Contrib Neta** | Por Auto |
-|-----------|---------------:|-----------:|-------------------:|-----------------:|---------:|
-| **Baja** | $2,640 | $1,056 | $226 | **+$1,358** | +$123 |
-| **Normal** | $2,640 | $1,056 | $452 | **+$1,132** | +$103 |
-| **Alta** | $2,640 | $1,056 | $905 | **+$679** | +$62 |
-| **Crisis** | $2,640 | $1,056 | $1,810 | **-$226** | -$21 |
+| Escenario | Bruto Total | Plataf 15% | FGO 10% | Costos | Perdida FGO | **Bal FGO** | **Util Neta** |
+|-----------|------------:|-----------:|--------:|-------:|------------:|------------:|--------------:|
+| **Baja** | $16,200 | $2,430 | $1,620 | $567 | $311 | **+$1,309** | **+$1,863** |
+| **Normal** | $16,200 | $2,430 | $1,620 | $567 | $622 | **+$998** | **+$1,863** |
+| **Alta** | $16,200 | $2,430 | $1,620 | $567 | $1,555 | **+$65** | **+$1,863** |
+| **Crisis** | $16,200 | $2,430 | $1,620 | $567 | $3,110 | **-$1,490** | **+$373** |
 
-### 7.2 Proyeccion a Escala (sin auto luxury)
+**Nota:** En Crisis, el FGO entra en deficit pero la plataforma aun tiene margen para cubrirlo.
 
-| Flota | Escenario | Ingreso | Costos | Perdida | **Contrib Neta** | Margen |
-|------:|-----------|--------:|-------:|--------:|-----------------:|-------:|
-| 100 | Normal | $15,800 | $6,320 | $3,000 | **+$6,480** | 41% |
-| 500 | Normal | $79,000 | $31,600 | $15,000 | **+$32,400** | 41% |
-| 1000 | Normal | $158,000 | $63,200 | $30,000 | **+$64,800** | 41% |
-| 100 | Alta | $15,800 | $6,320 | $9,600 | **-$120** | -1% |
-| 500 | Alta | $79,000 | $31,600 | $48,000 | **-$600** | -1% |
+### 7.2 Analisis del Flujo de Fondos
 
-**Nota:** Proyeccion con mix estandar (50% $10k, 30% $20k, 15% $30k, 5% $50k), excluyendo autos luxury.
+```
+Escenario NORMAL (11 autos):
+├── Bruto mensual: $16,200
+├── → Reward Pool (75%): $12,150 → Owners
+├── → FGO (10%): $1,620
+│   └── Perdidas: -$622
+│   └── Superavit FGO: +$998
+├── → Plataforma (15%): $2,430
+│   └── Costos MP: -$567
+│   └── Utilidad: +$1,863
+└── RESULTADO:
+    ├── Owners reciben: $12,150/mes
+    ├── FGO acumula: +$998/mes (reserva)
+    └── Plataforma: +$1,863/mes
+```
 
----
+### 7.3 Proyeccion a Escala (100 autos, mix estandar)
 
-## 8. Analisis de Sensibilidad
-
-### 8.1 Impacto del CAP de Franquicia
-
-| Escenario | Sin CAP | Con CAP | Reduccion |
-|-----------|--------:|--------:|----------:|
-| Normal ($20k auto) | $60/mes | $60/mes | 0% (daño < franq) |
-| Alta ($20k auto) | $192/mes | $192/mes | 0% (daño < franq) |
-| Crisis ($20k auto) | $400/mes | $400/mes | 0% (daño = franq) |
-| Crisis ($200k auto) | $4,000/mes | $4,000/mes | 0% (CAP activo!) |
-
-**Insight:** El CAP protege principalmente en siniestros graves donde daño_neto > franquicia.
-
-### 8.2 Punto de Equilibrio por Frecuencia
-
-| Bucket | Break-even Freq | Nota |
-|--------|-----------------|------|
-| $10k | ~4.3% | Margen inicial bajo |
-| $20k | ~4.3% | Proporcional |
-| $30k | ~4.3% | Proporcional |
-| $200k | ~4.5% | Mejor absorcion |
-
-**Con severidad 5%, la plataforma es rentable mientras frecuencia < 4.3%**
-
-### 8.3 Impacto de Tasa de Recupero
-
-| Tasa Recupero | Contrib $20k Normal | Cambio vs 50% |
-|---------------|--------------------:|---------------|
-| 40% | +$31/mes | -28% |
-| 50% | +$43/mes | base |
-| 60% | +$55/mes | +28% |
-| 70% | +$67/mes | +56% |
-
-**Un +10% en recupero = +$12/mes por auto ($144/año)**
+| Escenario | Bruto | Owners (75%) | FGO (10%) | Perdidas | Bal FGO | Plataf (15%) | Costos | **Util Plataf** |
+|-----------|------:|-----------:|----------:|---------:|--------:|-----------:|-------:|----------------:|
+| Normal | $90,000 | $67,500 | $9,000 | $3,600 | **+$5,400** | $13,500 | $3,150 | **+$10,350** |
+| Alta | $90,000 | $67,500 | $9,000 | $11,520 | **-$2,520** | $13,500 | $3,150 | **+$7,830** |
 
 ---
 
-## 9. Comparativa Regional LATAM
+## 8. Comparativa: Modelo Anterior vs Real
 
-### 9.1 Contexto de Mercado
+### 8.1 Error del Modelo v3
 
-| Pais | Siniestralidad | Franquicia Tipica | Recupero Gtia | Nota |
-|------|----------------|-------------------|---------------|------|
-| Argentina | 4-6% | 5-8% | 40-50% | Alta inflacion complica |
-| Brasil | 2-4% | 3-5% | 50-60% | Mercado mas maduro |
-| Mexico | 3-5% | 4-6% | 45-55% | En crecimiento |
-| Colombia | 2-4% | 5-7% | 50-60% | Similar a Brasil |
+| Metrica | v3 (Incorrecto) | v4 (Real) | Diferencia |
+|---------|----------------:|----------:|------------|
+| Ingreso plataforma | 20% bruto | 15% bruto | -25% |
+| FGO contribution | 1% bruto | 10% bruto | +900% |
+| Reward pool | 0% | 75% bruto | N/A |
+| Costos variables | 6.5% bruto | 3.5% bruto | -46% |
 
-### 9.2 Recomendacion por Mercado
+### 8.2 Impacto en Viabilidad
 
-| Mercado | Mix Recomendado | Frecuencia Target | Estrategia |
-|---------|-----------------|-------------------|------------|
-| Argentina | 70% ≤$20k | <4% | Conservador, foco en recupero |
-| Brasil | 60% ≤$30k | <3% | Balanceado, escalar |
-| Mexico | 60% ≤$25k | <3.5% | Crecimiento gradual |
-| Colombia | 65% ≤$20k | <3% | Similar a Brasil |
+| Escenario | v3 Contrib | v4 Util Plataf | Cambio |
+|-----------|----------:|---------------:|--------|
+| Normal ($20k) | +$43/mes | +$83/mes | **+93%** |
+| Alta ($20k) | -$89/mes | -$37/mes | **+58%** |
+
+**El modelo COMODATO es mas resiliente porque:**
+1. El FGO tiene 10x mas fondos que en v3
+2. Los costos reales son menores (solo fees MP)
+3. Las perdidas se absorben primero por FGO
+
+---
+
+## 9. Metricas Clave del FGO
+
+### 9.1 Solvencia del FGO
+
+| Metrica | Formula | Target |
+|---------|---------|--------|
+| **Coverage Ratio (RC)** | Saldo FGO / PEM × 12 | > 1.0 |
+| **Loss Ratio (LR)** | Pagos / Contribuciones | < 80% |
+| **Alpha (α)** | % contribucion adicional | Dinamico |
+
+### 9.2 Escenarios de Solvencia FGO
+
+| Escenario | Contrib FGO | Perdidas | LR | Estado |
+|-----------|------------:|---------:|---:|--------|
+| Baja | $1,620 | $311 | 19% | 🟢 Excelente |
+| Normal | $1,620 | $622 | 38% | 🟢 Saludable |
+| Alta | $1,620 | $1,555 | 96% | 🟡 Warning |
+| Crisis | $1,620 | $3,110 | 192% | 🔴 Deficit |
 
 ---
 
 ## 10. Conclusiones
 
-### 10.1 Viabilidad por Escenario
+### 10.1 Viabilidad por Escenario (Modelo COMODATO)
 
-| Escenario | Viable? | Contrib/Auto/Mes | Recomendacion |
-|-----------|---------|------------------|---------------|
-| **Baja** (1.5%/3%) | SI | +$123 | Escenario ideal, escalar |
-| **Normal** (3%/5%) | SI | +$103 | Operacion sostenible |
-| **Alta** (6%/8%) | MARGINAL | +$62 | Requiere control de costos |
-| **Crisis** (10%/10%) | NO | -$21 | Pausar operaciones |
+| Escenario | FGO Viable? | Plataforma Viable? | Accion |
+|-----------|-------------|-------------------|--------|
+| **Baja** | ✅ +$998/mes | ✅ +$1,863/mes | Escalar |
+| **Normal** | ✅ +$998/mes | ✅ +$1,863/mes | Operar |
+| **Alta** | ⚠️ +$65/mes | ✅ +$1,863/mes | Monitorear |
+| **Crisis** | ❌ -$1,490/mes | ⚠️ +$373/mes | Intervenir |
 
-### 10.2 Factores Clave de Proteccion
+### 10.2 Fortalezas del Modelo COMODATO
 
-1. **FGO (Garantia 5%):** Reduce daño neto en 25-50% por recupero
-2. **CAP Franquicia:** Limita exposicion maxima a ~5% valor auto
-3. **Seguro obligatorio:** Absorbe todo lo que excede franquicia
-4. **Mix de flota:** Evitar concentracion en autos de alto valor
+1. **FGO robusto:** 10% del bruto genera reserva significativa
+2. **Costos bajos:** Solo 3.5% en fees de pago
+3. **Buffer doble:** FGO absorbe primero, luego plataforma
+4. **Owners protegidos:** 75% garantizado en reward pool
 
-### 10.3 Metricas de Alerta
+### 10.3 Riesgos y Mitigaciones
 
-| Metrica | Verde | Amarillo | Rojo |
-|---------|-------|----------|------|
-| Frecuencia mensual | <3% | 3-5% | >5% |
-| Severidad promedio | <5% | 5-8% | >8% |
-| Recupero garantia | >50% | 40-50% | <40% |
-| Contrib/auto/mes | >$80 | $40-$80 | <$40 |
+| Riesgo | Mitigacion |
+|--------|------------|
+| Crisis sostenida | Pausar nuevos comodatos |
+| FGO en deficit | Alpha dinamico sube contribucion |
+| Siniestralidad > 6% | Seguro obligatorio absorbe exceso |
 
-### 10.4 Plan de Accion
+### 10.4 Punto de Equilibrio
 
-1. **Inmediato:** Monitorear frecuencia y severidad real
-2. **Corto plazo:** Optimizar proceso de recupero de garantias (target 60%)
-3. **Mediano plazo:** Ajustar mix de flota si luxury >10%
-4. **Largo plazo:** Negociar franquicias menores con aseguradoras
+- **FGO break-even:** Frecuencia ~6.5% (con 5% severidad)
+- **Plataforma break-even:** Frecuencia ~15% (FGO ya en deficit)
+
+El modelo COMODATO es **altamente resiliente** hasta frecuencia del 6%.
 
 ---
 
-## 11. Anexo: Formulas Detalladas
+## 11. Formulas Resumidas
 
-### Calculo de Ingreso Plataforma
+```python
+# Por auto de $20k, escenario normal (3%/5%):
 
-```
-bruto_mensual = valor_auto × 0.003 × 12 dias
-ingreso_plataforma = bruto_mensual × 0.20 + $10 × 0.6
-```
+bruto = $20,000 × 0.003 × 12 = $720/mes
 
-### Calculo de Perdida Esperada
+# Distribucion COMODATO
+plataforma = $720 × 15% = $108
+rewards = $720 × 75% = $540 → owners
+fgo = $720 × 10% = $72
 
-```
-daño = valor_auto × severidad
-recupero = min(valor_auto × 0.05, daño) × tasa_recupero
-neto = max(0, daño - recupero)
-perdida_evento = min(neto, valor_auto × franquicia_pct)
-perdida_mensual = 4 × frecuencia × perdida_evento
-```
+# Costos
+fees_mp = $720 × 3.5% = $25
 
-### Ejemplo Numerico ($20k auto, normal)
+# Utilidad plataforma
+util = $108 - $25 = $83
 
-```
-bruto = $20,000 × 0.003 × 12 = $720
-ingreso = $720 × 0.20 + $10 × 0.6 = $150
-costos = $720 × 0.065 = $47
-
-daño = $20,000 × 0.05 = $1,000
-recupero = min($1,000, $1,000) × 0.50 = $500
+# Perdida FGO
+daño = $20,000 × 5% = $1,000
+recupero = $1,000 × 50% = $500
 neto = $1,000 - $500 = $500
-perdida_evento = min($500, $1,000) = $500
-perdida_mes = 4 × 0.03 × $500 = $60
+perdida = 4 × 3% × min($500, $1,000) = $60
 
-contrib = $150 - $47 - $60 = +$43
+# Balance FGO
+bal_fgo = $72 - $60 = +$12/mes
 ```
 
 ---
 
-## 12. Fuentes y Referencias
+## 12. Fuentes
 
-### Datos de Industria (Verificados 2024-2025)
-
-1. **Turo SEC Filing Q3 2024** - "Less than 0.10% of Turo trips end with a serious incident such as a vehicle theft." [Wikipedia](https://en.wikipedia.org/wiki/Turo_(company))
-
-2. **AM Best Auto Insurance Report 2024** - Loss ratios mejoraron: physical damage 63.2% (vs 79.1% en 2023), liability 71.1% (vs 75.6%). [Insurance Business](https://www.insurancebusinessmag.com/us/news/auto-motor/auto-insurers-see-improved-loss-ratios-in-2023-recovery--am-best-515357.aspx)
-
-3. **Milliman Commercial Auto Report 2023** - Median loss ratio 79%, rango intercuartil 73-87%. [Milliman](https://www.milliman.com/en/insight/2023-commercial-auto-liability-statutory-financial-results)
-
-4. **J.D. Power Survey 2024** - Tiempo promedio de reparacion: 22 dias (vs 12 dias pre-pandemia). [Heffernan Insurance](https://www.heffins.com/auto-claims-trends-frequency-severity-repair-costs-and-turnaround-times/)
-
-5. **CarInsurEnt Claims Report** - Weather claims: 0.97% de incidentes, >60% de claims NO son culpa del renter. [CarInsurEnt](https://carinsurent.com/guides/car-rental-insurance-guides/latest-trends-in-rental-car-damage-claims/)
-
-6. **The Zebra Insurance Outlook 2024** - Costo promedio por claim: ~$12,000 (11% aumento desde 2022). [The Zebra](https://www.thezebra.com/resources/car-insurance/insurance-outlook-for-2024/)
-
-### Benchmarks de Flota (Estandar Industria)
-
-- **Loss ratio saludable**: <65% (muy bueno), 65-80% (aceptable), >100% (no rentable)
-- **Franquicia tipica LATAM**: 3-8% del valor del vehiculo
-- **Tasa de recupero garantia**: 40-70% dependiendo del proceso de cobro
+- [Turo SEC Filing Q3 2024](https://en.wikipedia.org/wiki/Turo_(company))
+- [AM Best Auto Insurance 2024](https://www.insurancebusinessmag.com/us/news/auto-motor/auto-insurers-see-improved-loss-ratios-in-2023-recovery--am-best-515357.aspx)
+- [Milliman Commercial Auto 2023](https://www.milliman.com/en/insight/2023-commercial-auto-liability-statutory-financial-results)
+- Codigo fuente AutoRenta: `mercadopago-process-booking-payment/index.ts`
 
 ---
 
-*Documento generado con datos reales de la flota AutoRenta y parametros LATAM actualizados.*
-*Modelo v3 - Considera FGO + CAP Franquicia + Seguro obligatorio*
+*Modelo v4 - COMODATO: 15% Plataforma / 75% Rewards / 10% FGO*
 *Ultima actualizacion: 2026-01-11*
