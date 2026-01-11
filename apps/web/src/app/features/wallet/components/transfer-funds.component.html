@@ -114,7 +114,7 @@
           Monto a transferir
         </label>
         <div class="relative">
-          <span class="absolute left-3 top-2 text-text-secondary">ARS</span>
+          <span class="absolute left-3 top-2 text-text-secondary">USD</span>
           <input
             type="number"
             [ngModel]="amountInput()"
@@ -128,7 +128,7 @@
             [disabled]="loading()"
           aria-label="0.00" />
         </div>
-        <p class="mt-1 text-xs text-text-secondary">Mínimo: ARS 1.00</p>
+        <p class="mt-1 text-xs text-text-secondary">Mínimo: USD 1.00</p>
 
         @if (amountInput() > 0) {
           <p class="mt-2 text-sm text-text-secondary">= {{ amountInput() * 100 }} centavos</p>

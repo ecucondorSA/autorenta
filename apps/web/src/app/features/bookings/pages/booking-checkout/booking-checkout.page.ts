@@ -20,6 +20,7 @@ import { SpringCollapseDirective } from '@shared/directives/spring-collapse.dire
 import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
 import { PaymentProviderSelectorComponent } from '../../../../shared/components/payment-provider-selector/payment-provider-selector.component';
 import { PayPalButtonComponent } from '../../../../shared/components/paypal-button/paypal-button.component';
+import { formatDate } from '../../../../shared/utils/date.utils';
 
 /**
  * Booking Checkout Page
@@ -78,6 +79,11 @@ export class BookingCheckoutPage implements OnInit {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   booking = signal<any>(null);
+
+  formatBookingDate(date?: string | Date | null): string {
+    if (!date) return '-';
+    return formatDate(date, { format: 'medium' });
+  }
 
   /**
    * Proveedor de pago seleccionado
@@ -183,6 +189,15 @@ export class BookingCheckoutPage implements OnInit {
    * Badge de clase (color e icono)
    */
   readonly classBadge = computed(() => this.driverProfileService.getClassBadge());
+
+  /**
+   * Total del booking en USD para display
+   */
+  readonly bookingTotalUsd = computed(() => {
+    const booking = this.booking();
+    if (!booking) return 0;
+    return this.normalizeBookingAmountToUsd(booking);
+  });
 
   // ==================== LIFECYCLE ====================
 
@@ -318,6 +333,28 @@ export class BookingCheckoutPage implements OnInit {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
+  }
+
+  private normalizeBookingAmountToUsd(booking: Record<string, any>): number {
+    const amount =
+      booking.total_price ??
+      booking.total_amount ??
+      (booking.total_cents ? booking.total_cents / 100 : 0);
+    const currency = (booking.currency || 'USD').toUpperCase();
+    if (currency === 'USD') return Number(amount) || 0;
+
+    const fxRate =
+      booking.fx_snapshot ??
+      booking.fx_rate ??
+      booking.fxSnapshot ??
+      booking.fxRate ??
+      null;
+    if (typeof fxRate === 'number' && fxRate > 0) {
+      return Number(amount) / fxRate;
+    }
+
+    // Fallback: return as-is if no FX available
+    return Number(amount) || 0;
   }
 
   /**

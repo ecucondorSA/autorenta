@@ -4,12 +4,12 @@ export type RiskPolicyBucket = 'economy' | 'standard' | 'premium' | 'luxury';
 
 export interface RiskPolicy {
   bucket: RiskPolicyBucket;
+  car_value_usd: number;
   car_value_min: number;
   car_value_max: number;
   standard_franchise_usd: number;
   rollover_franchise_multiplier: number;
-  hold_min_ars: number;
-  hold_rollover_multiplier: number;
+  hold_percentage: number;
   security_credit_usd: number;
 }
 
@@ -18,7 +18,6 @@ type RiskPolicyBand = {
   minValueUsd: number;
   maxValueUsd: number;
   standardFranchiseUsd: number;
-  minHoldArs: number;
 };
 
 @Injectable({
@@ -26,7 +25,7 @@ type RiskPolicyBand = {
 })
 export class RiskMatrixService {
   private static readonly ROLLOVER_MULTIPLIER = 2;
-  private static readonly HOLD_ROLLOVER_MULTIPLIER = 0.35;
+  private static readonly HOLD_PERCENTAGE = 0.05;
 
   private static readonly BANDS: RiskPolicyBand[] = [
     {
@@ -34,28 +33,24 @@ export class RiskMatrixService {
       minValueUsd: 0,
       maxValueUsd: 10_000,
       standardFranchiseUsd: 500,
-      minHoldArs: 600_000,
     },
     {
       bucket: 'standard',
       minValueUsd: 10_001,
       maxValueUsd: 20_000,
       standardFranchiseUsd: 800,
-      minHoldArs: 800_000,
     },
     {
       bucket: 'premium',
       minValueUsd: 20_001,
       maxValueUsd: 40_000,
       standardFranchiseUsd: 1_200,
-      minHoldArs: 1_200_000,
     },
     {
       bucket: 'luxury',
       minValueUsd: 40_001,
       maxValueUsd: Number.POSITIVE_INFINITY,
       standardFranchiseUsd: 1_800,
-      minHoldArs: 1_500_000,
     },
   ];
 
@@ -74,12 +69,12 @@ export class RiskMatrixService {
 
     return {
       bucket: band.bucket,
+      car_value_usd: carValueUsd,
       car_value_min: band.minValueUsd,
       car_value_max: band.maxValueUsd,
       standard_franchise_usd: standard,
       rollover_franchise_multiplier: RiskMatrixService.ROLLOVER_MULTIPLIER,
-      hold_min_ars: band.minHoldArs,
-      hold_rollover_multiplier: RiskMatrixService.HOLD_ROLLOVER_MULTIPLIER,
+      hold_percentage: RiskMatrixService.HOLD_PERCENTAGE,
       security_credit_usd: securityCredit,
     };
   }
@@ -96,11 +91,7 @@ export class RiskMatrixService {
     hasCard: boolean,
   ): { hold?: number; securityCredit?: number } {
     if (hasCard) {
-      const rolloverDeductible = this.calculateFranchise(policy).rollover;
-      const hold = Math.max(
-        policy.hold_min_ars,
-        rolloverDeductible * policy.hold_rollover_multiplier * fxRate,
-      );
+      const hold = policy.car_value_usd * policy.hold_percentage * fxRate;
       return { hold };
     }
 

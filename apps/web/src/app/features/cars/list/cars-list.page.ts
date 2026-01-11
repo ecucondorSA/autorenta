@@ -38,6 +38,7 @@ import { PullToRefreshComponent } from '../../../shared/components/pull-to-refre
 import { PwaTitlebarComponent } from '../../../shared/components/pwa-titlebar/pwa-titlebar.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
+import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 // import { CarCardV3Component } from '../../../shared/components/marketplace/car-card-v3/car-card-v3.component';
 // import { FiltersDrawerComponent } from '../../../shared/components/marketplace/filters-drawer/filters-drawer.component';
 // import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
@@ -83,6 +84,7 @@ const PAGE_SIZE = 12;
     TranslateModule,
     IconComponent,
     DateRangePickerComponent,
+    MoneyPipe,
   ],
   templateUrl: './cars-list.page.html',
   styleUrls: ['./cars-list.page.css'],

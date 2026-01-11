@@ -21,6 +21,7 @@ import { Booking, BookingStatus } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 import { VideoInspectionAIComponent } from '../../../shared/components/video-inspection-ai/video-inspection-ai.component';
 import { VideoInspectionLiveComponent } from '../../../shared/components/video-inspection-live/video-inspection-live.component';
+import { formatDate } from '../../../shared/utils/date.utils';
 
 type InspectionMode = 'photos' | 'video' | 'live';
 
@@ -73,6 +74,11 @@ export class OwnerCheckOutPage implements OnInit {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly checkInData = signal<any>(null);
   readonly submitting = signal(false);
+
+  formatBookingDate(date?: string | Date | null): string {
+    if (!date) return '-';
+    return formatDate(date, { format: 'medium' });
+  }
 
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');

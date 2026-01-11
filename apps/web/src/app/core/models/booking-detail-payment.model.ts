@@ -424,26 +424,13 @@ export function applyUpgradeToDeductible(baseDeductible: number, upgrade: Covera
  * Calcula hold estimado para Argentina (modalidad con tarjeta)
  */
 export function calculateHoldEstimatedArs(
-  rolloverDeductibleUsd: number,
+  vehicleValueUsd: number,
   fxRate: number,
   bucket: PricingBucketType,
 ): number {
-  // Mínimo por bucket (en USD, se convierte a ARS)
-  const minBucketUsd: Record<PricingBucketType, number> = {
-    economy: 750, // USD 750 mínimo para economy
-    standard: 900, // USD 900 mínimo para standard
-    premium: 1200, // USD 1200 mínimo para premium
-    luxury: 1800, // USD 1800 mínimo para luxury
-  };
-
-  // Hold calculado: 35% del rollover deductible
-  const calculatedHoldUsd = 0.35 * rolloverDeductibleUsd;
-
-  // Tomar el mayor entre el mínimo del bucket y el calculado
-  const finalHoldUsd = Math.max(minBucketUsd[bucket], calculatedHoldUsd);
-
-  // Convertir a ARS
-  return finalHoldUsd * fxRate;
+  void bucket; // deprecated: se mantiene solo para compatibilidad
+  const holdUsd = vehicleValueUsd * 0.05;
+  return Math.round(holdUsd * fxRate);
 }
 
 /**

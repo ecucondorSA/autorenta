@@ -367,6 +367,14 @@ export class LoggerService {
   private sanitizeData(data: unknown): unknown {
     if (data === null || data === undefined) return undefined;
 
+    if (data instanceof Error) {
+      return {
+        name: data.name,
+        message: this.sanitizeData(data.message),
+        stack: this.isDevelopment && data.stack ? this.sanitizeData(data.stack) : undefined,
+      };
+    }
+
     if (typeof data === 'string') {
       // Don't log strings that look like tokens
       if (data.includes('token') || data.includes('key') || data.includes('secret')) {

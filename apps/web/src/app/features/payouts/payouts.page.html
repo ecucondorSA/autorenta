@@ -69,7 +69,7 @@
         @if (!canRequestPayout()) {
           <p class="balance-hint">
             @if (walletBalance() < 1000) {
-              <span> Mínimo ARS 1.000 para retirar </span>
+              <span> Mínimo USD 1.000 para retirar </span>
             }
             @if (walletBalance() >= 1000 && !defaultBankAccount()) {
               <span> Agregá una cuenta bancaria para retirar </span>
@@ -93,7 +93,7 @@
             </div>
             <div class="stat-value">{{ stats()!.pendingPayouts }}</div>
             <div class="stat-amount">
-              {{ stats()!.pendingAmount | number: '1.0-0' | currency: 'ARS' : 'symbol-narrow' }}
+              {{ stats()!.pendingAmount | number: '1.0-0' | currency: 'USD' : 'symbol-narrow' }}
             </div>
           </div>
           <div class="stat-card">
@@ -109,7 +109,7 @@
             </div>
             <div class="stat-value">{{ stats()!.completedPayouts }}</div>
             <div class="stat-amount">
-              {{ stats()!.completedAmount | number: '1.0-0' | currency: 'ARS' : 'symbol-narrow' }}
+              {{ stats()!.completedAmount | number: '1.0-0' | currency: 'USD' : 'symbol-narrow' }}
             </div>
           </div>
           <div class="stat-card">
@@ -128,7 +128,7 @@
             </div>
             <div class="stat-value">{{ stats()!.totalPayouts }}</div>
             <div class="stat-amount">
-              {{ stats()!.totalAmount | number: '1.0-0' | currency: 'ARS' : 'symbol-narrow' }}
+              {{ stats()!.totalAmount | number: '1.0-0' | currency: 'USD' : 'symbol-narrow' }}
             </div>
           </div>
         </div>

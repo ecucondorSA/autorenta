@@ -262,7 +262,7 @@
               <div class="mb-4 pb-4 border-b border-border-default">
                 <div class="flex gap-3">
                   <img
-                    src="/assets/car-placeholder.jpg"
+                    [src]="car()!.photos?.[0]?.url || car()!.car_photos?.[0]?.url || '/assets/car-placeholder.jpg'"
                     [alt]="car()!.title"
                     class="w-20 h-16 object-cover rounded-lg" width="80" height="64" />
                   <div>
@@ -281,13 +281,13 @@
               <div class="flex justify-between text-sm">
                 <span class="text-text-secondary">Check-in:</span>
                 <span class="font-medium text-text-primary">
-                  {{ booking()?.start_at | date: 'dd/MM/yyyy' }}
+                  {{ formatBookingDate(booking()?.start_at) }}
                 </span>
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-text-secondary">Check-out:</span>
                 <span class="font-medium text-text-primary">
-                  {{ booking()?.end_at | date: 'dd/MM/yyyy' }}
+                  {{ formatBookingDate(booking()?.end_at) }}
                 </span>
               </div>
             </div>

@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ContractsService, BookingContract } from '@core/services/bookings/contracts.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { ContractPdfViewerComponent } from './components/contract-pdf-viewer.component';
+import { formatDate } from '../../shared/utils/date.utils';
 
 interface Booking {
   id: string;
@@ -13,6 +14,11 @@ interface Booking {
   start_date: string;
   end_date: string;
   total_price: number;
+  total_amount?: number;
+  total_cents?: number;
+  currency?: string;
+  fx_snapshot?: number;
+  fx_rate?: number;
   status: string;
 }
 
@@ -42,6 +48,35 @@ export class BookingContractPage implements OnInit {
   readonly contract = signal<BookingContract | null>(null);
   readonly booking = signal<Booking | null>(null);
   readonly bookingId = signal<string>('');
+
+  formatBookingDate(date?: string | Date | null): string {
+    if (!date) return '-';
+    return formatDate(date, { format: 'medium' });
+  }
+
+  formatUsd(amount: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  }
+
+  getBookingTotalUsd(booking: Booking): number {
+    const amount =
+      booking.total_price ??
+      booking.total_amount ??
+      (booking.total_cents ? booking.total_cents / 100 : 0);
+    const currency = (booking.currency || 'USD').toUpperCase();
+    if (currency === 'USD') return Number(amount) || 0;
+
+    const fxRate = booking.fx_snapshot ?? booking.fx_rate ?? null;
+    if (typeof fxRate === 'number' && fxRate > 0) {
+      return Number(amount) / fxRate;
+    }
+    return Number(amount) || 0;
+  }
 
   async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');

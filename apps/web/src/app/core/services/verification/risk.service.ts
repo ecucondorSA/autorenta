@@ -252,10 +252,15 @@ export class RiskService {
       errors.push('La franquicia por vuelco debe ser 1.5× la franquicia estándar');
     }
 
-    // 3. Hold debe ser razonable (entre USD 150 y USD 2000)
+    // 3. Hold debe acercarse al 5% del valor del auto (con tolerancia por ajuste de clase)
     const holdUsd = snapshot.holdEstimatedArs / snapshot.fxRate;
-    if (holdUsd < 150 || holdUsd > 2000) {
-      errors.push(`Hold fuera de rango: ${holdUsd.toFixed(2)} USD (esperado: 150-2000)`);
+    const expectedHoldUsd = snapshot.vehicleValueUsd * 0.05;
+    const minHoldUsd = expectedHoldUsd * 0.7;
+    const maxHoldUsd = expectedHoldUsd * 1.4;
+    if (holdUsd < minHoldUsd || holdUsd > maxHoldUsd) {
+      errors.push(
+        `Hold fuera de rango: ${holdUsd.toFixed(2)} USD (esperado ~${expectedHoldUsd.toFixed(2)} USD)`,
+      );
     }
 
     // 4. Crédito de seguridad debe ser 600

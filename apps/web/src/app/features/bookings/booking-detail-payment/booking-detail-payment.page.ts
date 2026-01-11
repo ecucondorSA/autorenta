@@ -34,7 +34,6 @@ import {
   SubscriptionCoverageCheck,
   PreauthorizationCalculation,
   SUBSCRIPTION_TIERS,
-  type SubscriptionTier,
 } from '@core/models/subscription.model';
 import { Car } from '../../../core/models';
 
@@ -121,17 +120,21 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   readonly walletAvailableBalance = computed(() => this.walletBalance()?.available_balance ?? 0);
   readonly walletCurrency = computed(() => this.walletBalance()?.currency ?? 'USD');
 
-  // Required guarantee in USD (platform base currency)
-  // Uses holdEstimatedUsd which includes subscription discount if applicable
-  readonly walletRequiredUsd = computed(() => this.riskSnapshot()?.holdEstimatedUsd ?? 0);
-
-  // Wallet required in ARS (converted from holdEstimatedUsd)
-  readonly walletRequiredArs = computed(() => {
-    const snapshot = this.riskSnapshot();
+  readonly walletAvailableBalanceUsd = computed(() => {
+    const balance = this.walletAvailableBalance();
+    const currency = this.walletCurrency();
     const fx = this.fxSnapshot();
-    if (!snapshot || !fx?.platformRate) return 0;
-    return snapshot.holdEstimatedUsd * fx.platformRate;
+
+    if (currency === 'USD') return balance;
+    if (currency === 'ARS' && fx?.platformRate) {
+      return balance / fx.platformRate;
+    }
+    return balance;
   });
+
+  // Required guarantee in USD (platform base currency)
+  // Uses holdEstimatedUsd derived from preauthorization calculation
+  readonly walletRequiredUsd = computed(() => this.riskSnapshot()?.holdEstimatedUsd ?? 0);
 
   // Subscription savings calculation - shows how much user saves with/without subscription
   readonly subscriptionSavings = computed(() => {
@@ -151,45 +154,13 @@ export class BookingRequestPage implements OnInit, OnDestroy {
           : null,
       };
     }
-
-    // User has NO subscription - show potential savings
-    const requiredTier = preauth.requiredTier as SubscriptionTier;
-    const tierConfig = SUBSCRIPTION_TIERS[requiredTier];
-    if (!tierConfig) return null;
-
-    return {
-      withoutSubscription: preauth.holdAmountUsd,
-      withSubscription: tierConfig.preauth_with_subscription_usd,
-      savings: preauth.holdAmountUsd - tierConfig.preauth_with_subscription_usd,
-      hasSubscription: false,
-      recommendedTier: requiredTier,
-      recommendedTierName: tierConfig.name,
-      tierPriceUsd: tierConfig.price_usd,
-      fgoCap: preauth.fgoCap,
-    };
+    return null;
   });
 
   // Whether to show subscription promo banner (only if no subscription and savings > 0)
   readonly showSubscriptionPromoBanner = computed(() => {
     const savings = this.subscriptionSavings();
     return savings && !savings.hasSubscription && savings.savings > 0;
-  });
-
-  // Convert wallet balance to ARS for display only
-  readonly walletAvailableBalanceArs = computed(() => {
-    const balance = this.walletAvailableBalance();
-    const currency = this.walletCurrency();
-    const fx = this.fxSnapshot();
-
-    // If wallet is already in ARS, return as is
-    if (currency === 'ARS') return balance;
-
-    // Convert USD to ARS using platform rate (display only)
-    if (fx?.platformRate && currency === 'USD') {
-      return balance * fx.platformRate;
-    }
-
-    return balance;
   });
 
   // FIX: Compare in USD (platform base currency)
@@ -251,12 +222,17 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   readonly totalArs = computed(() => {
     const fx = this.fxSnapshot();
     const riskSnapshot = this.riskSnapshot();
+    const car = this.car();
     if (!fx) return 0;
 
     // Guarantee uses calculated hold from risk snapshot (aligns with checkout flow)
-    // Fallback to PRE_AUTH_AMOUNT_USD_DEFAULT if risk snapshot not yet calculated
-    const guaranteeArs =
-      riskSnapshot?.holdEstimatedArs ?? this.PRE_AUTH_AMOUNT_USD_DEFAULT * fx.platformRate;
+    // Fallback to 5% del valor del auto si el snapshot no está listo
+    const fallbackVehicleValueUsd =
+      car?.value_usd ?? (car?.price_per_day ? Math.round(car.price_per_day * 125) : 0);
+    const fallbackHoldUsd = fallbackVehicleValueUsd
+      ? fallbackVehicleValueUsd * 0.05
+      : this.PRE_AUTH_AMOUNT_USD_DEFAULT;
+    const guaranteeArs = riskSnapshot?.holdEstimatedArs ?? fallbackHoldUsd * fx.platformRate;
 
     // Rental cost already handles currency conversion correctly
     // (uses binanceRate for USD cars, direct ARS for ARS cars)
@@ -752,8 +728,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     this.preauthCalculation.set(preauth);
 
     // 2. Get Subscription coverage for franchise/deductibles
-    // Note: Deductibles are generally 10% of vehicle value or standard tiers
-    const standardDeductibleUsd = Math.round(vehicleValueUsd * 0.05); // Rough estimate
+    // Nota: Deductible aproximado como 5% del valor del vehículo
+    const standardDeductibleUsd = Math.round(vehicleValueUsd * 0.05);
     const rolloverDeductibleUsd = standardDeductibleUsd * 2;
 
     const coverage = await this.subscriptionService.checkCoverage(

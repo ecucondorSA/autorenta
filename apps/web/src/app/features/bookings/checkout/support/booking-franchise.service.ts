@@ -45,41 +45,22 @@ export class BookingFranchiseService {
   };
 
   private readonly holdMinimumArs: Record<BucketType, number> = {
-    economy: 600_000,
-    default: 800_000,
-    premium: 1_200_000,
-    luxury: 1_700_000, // tomar punto medio sugerido
+    economy: 0,
+    default: 0,
+    premium: 0,
+    luxury: 0,
   };
 
-  determineBucket(booking: Booking): BucketType {
-    const nightlyRateCents =
-      booking.breakdown?.nightly_rate_cents ??
-      booking.nightly_rate_cents ??
-      booking.rental_amount_cents ??
-      0;
-
-    const nightlyRateUsd = nightlyRateCents / 100;
-    const estimatedValueUsd = this.estimateCarValueUsd(nightlyRateUsd);
-
+  private getBucketForEstimatedValue(estimatedValueUsd: number): BucketType {
     const match = this.bucketThresholds.find(
       (threshold) => estimatedValueUsd <= threshold.maxValue,
     );
     return match?.bucket ?? 'default';
   }
 
-  getFranchiseForBooking(booking: Booking): FranchiseInfo {
-    const bucket = this.determineBucket(booking);
-    const nightlyRateCents =
-      booking.breakdown?.nightly_rate_cents ??
-      booking.nightly_rate_cents ??
-      booking.rental_amount_cents ??
-      0;
-
-    const nightlyRateUsd = nightlyRateCents / 100;
-    const estimatedValueUsd = this.estimateCarValueUsd(nightlyRateUsd);
+  private buildFranchiseInfo(estimatedValueUsd: number, bucket: BucketType): FranchiseInfo {
     const standard = this.standardFranchiseUsd[bucket];
     const rollover = standard * 2;
-
     const walletCredit = estimatedValueUsd <= 20_000 ? 300 : 500;
 
     return {
@@ -90,6 +71,53 @@ export class BookingFranchiseService {
       walletCreditUsd: walletCredit,
       holdMinimumArs: this.holdMinimumArs[bucket],
     };
+  }
+
+  getFranchiseForCarValueUsd(vehicleValueUsd: number): FranchiseInfo {
+    const safeValue =
+      Number.isFinite(vehicleValueUsd) && vehicleValueUsd > 0 ? vehicleValueUsd : 12_500;
+    const bucket = this.getBucketForEstimatedValue(safeValue);
+    return this.buildFranchiseInfo(safeValue, bucket);
+  }
+
+  private resolveBookingVehicleValueUsd(booking: Booking, nightlyRateUsd: number): number {
+    const carValueUsd = (booking as Booking & { car?: { value_usd?: number } }).car?.value_usd;
+    if (Number.isFinite(carValueUsd) && (carValueUsd ?? 0) > 0) {
+      return carValueUsd as number;
+    }
+    return this.estimateCarValueUsd(nightlyRateUsd);
+  }
+
+  determineBucket(booking: Booking): BucketType {
+    const nightlyRateCents =
+      booking.breakdown?.nightly_rate_cents ??
+      booking.nightly_rate_cents ??
+      booking.rental_amount_cents ??
+      0;
+
+    const nightlyRateUsd = nightlyRateCents / 100;
+    const vehicleValueUsd = this.resolveBookingVehicleValueUsd(booking, nightlyRateUsd);
+
+    return this.getBucketForEstimatedValue(vehicleValueUsd);
+  }
+
+  getFranchiseForNightlyRateUsd(nightlyRateUsd: number): FranchiseInfo {
+    const estimatedValueUsd = this.estimateCarValueUsd(nightlyRateUsd);
+    const bucket = this.getBucketForEstimatedValue(estimatedValueUsd);
+    return this.buildFranchiseInfo(estimatedValueUsd, bucket);
+  }
+
+  getFranchiseForBooking(booking: Booking): FranchiseInfo {
+    const nightlyRateCents =
+      booking.breakdown?.nightly_rate_cents ??
+      booking.nightly_rate_cents ??
+      booking.rental_amount_cents ??
+      0;
+
+    const nightlyRateUsd = nightlyRateCents / 100;
+    const vehicleValueUsd = this.resolveBookingVehicleValueUsd(booking, nightlyRateUsd);
+    const bucket = this.getBucketForEstimatedValue(vehicleValueUsd);
+    return this.buildFranchiseInfo(vehicleValueUsd, bucket);
   }
 
   private estimateCarValueUsd(nightlyRateUsd: number): number {

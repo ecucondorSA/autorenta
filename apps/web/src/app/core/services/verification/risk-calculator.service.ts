@@ -247,7 +247,7 @@ export class RiskCalculatorService {
           'Se preautoriza en tu tarjeta. Si está todo ok, se libera automáticamente. ' +
           'Si hay gastos o daños, capturamos solo lo necesario (hasta tu franquicia).' +
           (discountBadge ? ` ${discountBadge}` : ''),
-        amountArs: this.franchiseService.formatArs(risk.guaranteeAmountArs),
+        amountArs: '',
         amountUsd: this.franchiseService.formatUsd(risk.guaranteeAmountUsd),
         discountBadge,
       };
@@ -259,7 +259,7 @@ export class RiskCalculatorService {
           'Queda en tu wallet (no retirable). Se usa primero para gastos/daños. ' +
           'Si no se usa, queda disponible para próximas reservas.' +
           (discountBadge ? ` ${discountBadge}` : ''),
-        amountArs: this.franchiseService.formatArs(risk.guaranteeAmountArs),
+        amountArs: '',
         amountUsd: this.franchiseService.formatUsd(risk.guaranteeAmountUsd),
         discountBadge,
       };
@@ -277,21 +277,17 @@ export class RiskCalculatorService {
         {
           label: 'Franquicia Daño/Robo',
           amountUsd: this.franchiseService.formatUsd(risk.standardFranchiseUsd),
-          amountArs: this.franchiseService.formatArs(
-            Math.round(risk.standardFranchiseUsd * risk.fxRate),
-          ),
+          amountArs: '',
         },
         {
           label: 'Franquicia por Vuelco',
           amountUsd: this.franchiseService.formatUsd(risk.rolloverFranchiseUsd),
-          amountArs: this.franchiseService.formatArs(
-            Math.round(risk.rolloverFranchiseUsd * risk.fxRate),
-          ),
+          amountArs: '',
         },
         {
           label: risk.guaranteeType === 'hold' ? 'Garantía (hold)' : 'Crédito de Seguridad',
           amountUsd: this.franchiseService.formatUsd(risk.guaranteeAmountUsd),
-          amountArs: this.franchiseService.formatArs(risk.guaranteeAmountArs),
+          amountArs: '',
         },
       ],
     };

@@ -4,7 +4,6 @@ import {
   RiskSnapshot,
   PaymentMode,
   FxSnapshot,
-  formatArs,
   formatUsd,
 } from '@core/models/booking-detail-payment.model';
 
@@ -38,12 +37,6 @@ import {
                 class="px-4 py-3 text-right text-xs font-medium text-text-secondary uppercase tracking-wider"
               >
                 Límite (USD)
-              </th>
-              <th
-                scope="col"
-                class="px-4 py-3 text-right text-xs font-medium text-text-secondary uppercase tracking-wider"
-              >
-                Límite (ARS)
               </th>
             </tr>
           </thead>
@@ -90,9 +83,6 @@ import {
                   )
                 }}
               </td>
-              <td class="px-4 py-4 text-sm text-right font-medium text-text-primary">
-                {{ paymentMode === 'card' ? formatArs(riskSnapshot.holdEstimatedArs) : '—' }}
-              </td>
             </tr>
 
             <!-- Row 2: Franquicia Daño/Robo -->
@@ -122,9 +112,6 @@ import {
               </td>
               <td class="px-4 py-4 text-sm text-right font-semibold text-warning-700">
                 {{ formatUsd(riskSnapshot.deductibleUsd) }}
-              </td>
-              <td class="px-4 py-4 text-sm text-right font-semibold text-warning-700">
-                {{ formatArs(riskSnapshot.deductibleUsd * fxSnapshot.rate) }}
               </td>
             </tr>
 
@@ -158,9 +145,6 @@ import {
               </td>
               <td class="px-4 py-4 text-sm text-right font-semibold text-error-text">
                 {{ formatUsd(riskSnapshot.rolloverDeductibleUsd) }}
-              </td>
-              <td class="px-4 py-4 text-sm text-right font-semibold text-error-text">
-                {{ formatArs(riskSnapshot.rolloverDeductibleUsd * fxSnapshot.rate) }}
               </td>
             </tr>
           </tbody>

@@ -328,7 +328,7 @@
             <p class="text-sm font-medium text-success-text mb-2">Inicio de Ganancia Real</p>
             @if (profitStartDate()) {
               <p class="text-2xl font-bold text-success-text">
-                {{ profitStartDate()! | date: 'dd/MM/yyyy' }}
+                {{ formatDashboardDate(profitStartDate()!) }}
               </p>
               <p class="text-xs text-text-secondary mt-1">Después de cubrir depreciación</p>
             } @else {

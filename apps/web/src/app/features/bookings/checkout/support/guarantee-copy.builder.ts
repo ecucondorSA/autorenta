@@ -12,12 +12,7 @@ export interface GuaranteeCopySummary {
   providedIn: 'root',
 })
 export class GuaranteeCopyBuilder {
-  buildGuaranteeCopy(booking: Booking, guarantee: GuaranteeBreakdown): GuaranteeCopySummary {
-    const formatterArs = new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: 'ARS',
-      maximumFractionDigits: 0,
-    });
+  buildGuaranteeCopy(_booking: Booking, guarantee: GuaranteeBreakdown): GuaranteeCopySummary {
     const formatterUsd = new Intl.NumberFormat('es-AR', {
       style: 'currency',
       currency: 'USD',
@@ -26,15 +21,11 @@ export class GuaranteeCopyBuilder {
 
     const franchiseStandard = formatterUsd.format(guarantee.franchiseStandardUsd);
     const franchiseRollover = formatterUsd.format(guarantee.franchiseRolloverUsd);
-    const fxLabel =
-      booking.currency === 'USD'
-        ? 'USD'
-        : `${booking.currency}@FX ${guarantee.fxSnapshot.toFixed(2)}`;
 
     if (guarantee.paymentMethod === 'credit_card' || guarantee.paymentMethod === 'partial_wallet') {
-      const holdArs = formatterArs.format(guarantee.holdArs);
+      const holdUsd = formatterUsd.format(guarantee.holdUsd);
       return {
-        headline: `Garantía (preautorización reembolsable): ${holdArs} (estimado).`,
+        headline: `Garantía (preautorización reembolsable): ${holdUsd} (estimado).`,
         details: [
           'Si todo está en orden al cierre, liberamos la preautorización automáticamente.',
           'Capturamos solo lo necesario para combustible, limpieza o daños hasta tu franquicia.',
@@ -43,13 +34,12 @@ export class GuaranteeCopyBuilder {
         summary: [
           { label: 'Franquicia daño/robo', value: franchiseStandard },
           { label: 'Franquicia por vuelco', value: franchiseRollover },
-          { label: 'Garantía (hold)', value: `${holdArs} ${fxLabel}` },
+          { label: 'Garantía (hold)', value: holdUsd },
         ],
       };
     }
 
     const creditSecurityUsd = formatterUsd.format(guarantee.creditSecurityUsd);
-    const creditSecurityArs = formatterArs.format(guarantee.creditSecurityArs);
 
     return {
       headline: `Crédito de Seguridad: pagás ${creditSecurityUsd}. Queda en tu wallet (no retirable).`,
@@ -61,7 +51,7 @@ export class GuaranteeCopyBuilder {
       summary: [
         { label: 'Franquicia daño/robo', value: franchiseStandard },
         { label: 'Franquicia por vuelco', value: franchiseRollover },
-        { label: 'Crédito de seguridad', value: `${creditSecurityUsd} · ${creditSecurityArs}` },
+        { label: 'Crédito de seguridad', value: creditSecurityUsd },
       ],
     };
   }

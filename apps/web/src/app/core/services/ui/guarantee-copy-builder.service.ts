@@ -19,9 +19,7 @@ export interface GuaranteeCopy {
   // Franquicias
   franchiseTable: {
     standardUsd: string;
-    standardArs: string;
     rolloverUsd: string;
-    rolloverArs: string;
   };
 
   // Ejemplo de cálculo
@@ -44,7 +42,7 @@ export interface GuaranteeCopy {
  * - Ejemplos de cálculo prácticos
  *
  * Cumple con los requisitos AR de:
- * - Mostrar siempre ARS y USD con FX snapshot
+ * - Mostrar siempre USD como moneda principal
  * - Tabla comparativa de franquicias
  * - Ejemplos claros de uso
  * - Disclaimers legales
@@ -69,20 +67,14 @@ export class GuaranteeCopyBuilderService {
       description: this.buildDescription(risk),
 
       // Montos
-      amountArs: this.franchiseService.formatArs(risk.guaranteeAmountArs),
+      amountArs: '',
       amountUsd: this.franchiseService.formatUsd(risk.guaranteeAmountUsd),
       amountLabel: isHold ? 'Hold estimado' : 'Crédito requerido',
 
       // Franquicias
       franchiseTable: {
         standardUsd: this.franchiseService.formatUsd(risk.standardFranchiseUsd),
-        standardArs: this.franchiseService.formatArs(
-          Math.round(risk.standardFranchiseUsd * risk.fxRate),
-        ),
         rolloverUsd: this.franchiseService.formatUsd(risk.rolloverFranchiseUsd),
-        rolloverArs: this.franchiseService.formatArs(
-          Math.round(risk.rolloverFranchiseUsd * risk.fxRate),
-        ),
       },
 
       // Ejemplo de cálculo
@@ -102,8 +94,8 @@ export class GuaranteeCopyBuilderService {
   private buildDescription(risk: RiskCalculation): string {
     if (risk.guaranteeType === 'hold') {
       return (
-        `Se preautorizará ${this.franchiseService.formatArs(risk.guaranteeAmountArs)} ` +
-        `(aprox. ${this.franchiseService.formatUsd(risk.guaranteeAmountUsd)}) en tu tarjeta. ` +
+        `Se preautorizará ${this.franchiseService.formatUsd(risk.guaranteeAmountUsd)} ` +
+        `en tu tarjeta. ` +
         `Este monto NO se cobrará, solo quedará "retenido" temporalmente. ` +
         `\n\nSi entregas el auto en perfecto estado, se libera automáticamente en 24-48 horas. ` +
         `Si hay gastos (combustible, limpieza) o daños, solo capturamos lo necesario hasta tu franquicia.`
@@ -111,7 +103,7 @@ export class GuaranteeCopyBuilderService {
     } else {
       return (
         `Pagarás ${this.franchiseService.formatUsd(risk.guaranteeAmountUsd)} ` +
-        `(aprox. ${this.franchiseService.formatArs(risk.guaranteeAmountArs)}) como Crédito de Seguridad. ` +
+        `como Crédito de Seguridad. ` +
         `Este monto queda en tu wallet y NO es retirable. ` +
         `\n\nSe usa primero para cubrir gastos o daños durante el alquiler. ` +
         `Si no se usa, queda disponible para tus próximas reservas en AutoRenta.`
@@ -127,16 +119,12 @@ export class GuaranteeCopyBuilderService {
     const cleaningUsd = 25;
     const totalUsd = damageUsd + cleaningUsd;
 
-    const damageArs = Math.round(damageUsd * risk.fxRate);
-    const cleaningArs = Math.round(cleaningUsd * risk.fxRate);
-    const totalArs = damageArs + cleaningArs;
-
     if (risk.guaranteeType === 'hold') {
       return (
-        `📝 Ejemplo: Daños menores (${this.franchiseService.formatUsd(damageUsd)} / ${this.franchiseService.formatArs(damageArs)}) ` +
-        `+ limpieza (${this.franchiseService.formatUsd(cleaningUsd)} / ${this.franchiseService.formatArs(cleaningArs)}) ` +
-        `= ${this.franchiseService.formatUsd(totalUsd)} (${this.franchiseService.formatArs(totalArs)})\n\n` +
-        `✅ Se captura solo ${this.franchiseService.formatArs(totalArs)} y se libera el resto del hold.`
+        `📝 Ejemplo: Daños menores (${this.franchiseService.formatUsd(damageUsd)}) ` +
+        `+ limpieza (${this.franchiseService.formatUsd(cleaningUsd)}) ` +
+        `= ${this.franchiseService.formatUsd(totalUsd)}\n\n` +
+        `✅ Se captura solo ${this.franchiseService.formatUsd(totalUsd)} y se libera el resto del hold.`
       );
     } else {
       const creditUsd = risk.guaranteeAmountUsd;
@@ -165,7 +153,6 @@ export class GuaranteeCopyBuilderService {
    */
   private buildDisclaimers(risk: RiskCalculation): string[] {
     const disclaimers = [
-      `Tasa de cambio utilizada: USD 1 = ARS ${risk.fxRate.toFixed(2)} (snapshot del ${risk.fxSnapshotDate.toLocaleDateString('es-AR')})`,
       `Franquicia estándar (daño/robo): ${this.franchiseService.formatUsd(risk.standardFranchiseUsd)}`,
       `Franquicia por vuelco (rollover): ${this.franchiseService.formatUsd(risk.rolloverFranchiseUsd)} (2× la estándar)`,
     ];

@@ -130,7 +130,7 @@
     @if (deliveryRequired() && deliveryFeeCents() > 0) {
       <div class="mt-4 pt-4 border-t border-border-default">
         <div class="text-lg font-semibold text-text-primary">
-          Tarifa de delivery: ARS ${{ deliveryFeeCents() / 100 | number: '1.2-2' }}
+          Tarifa de delivery: USD ${{ deliveryFeeCents() / 100 | number: '1.2-2' }}
         </div>
         <div class="text-sm text-text-secondary mt-1">
           Se agregara al precio total de la reserva

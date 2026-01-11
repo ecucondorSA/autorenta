@@ -35,15 +35,19 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
 import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
 import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
 import { WaitlistService } from '@core/services/bookings/waitlist.service';
+import { MoneyPipe } from '@shared/pipes/money.pipe';
 
 // Models
-import { calculateCreditSecurityUsd } from '@core/models/booking-detail-payment.model';
+import type { Booking } from '@core/models';
 import { BookingPaymentMethod } from '@core/models/wallet.model';
 import {
   RiskCalculation,
-  RiskCalculatorService,
 } from '@core/services/verification/risk-calculator.service';
 import type { DateRange } from '@core/models/marketplace.model';
+import type { FranchiseInfo } from '../../bookings/checkout/support/booking-franchise.service';
+import { BookingFranchiseService } from '../../bookings/checkout/support/booking-franchise.service';
+import type { GuaranteeBreakdown } from '../../bookings/checkout/support/risk-calculator';
+import { CheckoutRiskCalculator } from '../../bookings/checkout/support/risk-calculator';
 // UI 2026 Directives
 import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
 import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
@@ -79,6 +83,13 @@ export interface BreadcrumbItem {
   icon?: string;
 }
 
+interface GuaranteeEstimate {
+  fxRate: number;
+  franchise: FranchiseInfo;
+  card: GuaranteeBreakdown;
+  wallet: GuaranteeBreakdown;
+}
+
 interface CarDetailState {
   car: Car | null;
   reviews: Review[];
@@ -96,6 +107,7 @@ interface CarDetailState {
     DateRangePickerComponent,
     CarReviewsSectionComponent,
     TranslateModule,
+    MoneyPipe,
     StickyCtaMobileComponent,
     IconComponent,
     RiskCalculatorViewerComponent,
@@ -119,8 +131,10 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   // ✅ NEW: ViewChild references for scroll behavior
   @ViewChild('stickyHeader', { read: ElementRef }) stickyHeaderRef?: ElementRef<HTMLDivElement>;
   @ViewChild('mainHeader', { read: ElementRef }) mainHeaderRef?: ElementRef<HTMLDivElement>;
-  @ViewChild('bookingDatePicker', { read: DateRangePickerComponent })
-  bookingDatePicker?: DateRangePickerComponent;
+  @ViewChild('bookingDatePickerDesktop', { read: DateRangePickerComponent })
+  bookingDatePickerDesktop?: DateRangePickerComponent;
+  @ViewChild('bookingDatePickerMobile', { read: DateRangePickerComponent })
+  bookingDatePickerMobile?: DateRangePickerComponent;
   private readonly route = inject(ActivatedRoute);
   public readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
@@ -139,7 +153,8 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly waitlistService = inject(WaitlistService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly tiktokEvents = inject(TikTokEventsService);
-  private readonly riskCalculatorService = inject(RiskCalculatorService);
+  private readonly bookingFranchiseService = inject(BookingFranchiseService);
+  private readonly checkoutRiskCalculator = inject(CheckoutRiskCalculator);
   private readonly usdFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -311,7 +326,8 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   readonly displayTitle = computed(() => {
     const car = this.car();
     if (!car) return 'Próximamente';
-    if (car.title && car.title.trim().length > 0) return car.title.trim();
+    const title = car.title?.trim() || '';
+    if (title && title.toLowerCase() !== 'auto sin título') return title;
 
     const parts = [
       car.brand || car.brand_name || '',
@@ -502,7 +518,19 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
 
   private openDatePicker(): void {
     try {
-      this.bookingDatePicker?.handleDateInputClick();
+      const mobileInput = this.bookingDatePickerMobile?.dateRangeInput?.nativeElement;
+      const desktopInput = this.bookingDatePickerDesktop?.dateRangeInput?.nativeElement;
+      const mobileVisible = !!mobileInput && mobileInput.offsetParent !== null;
+      const desktopVisible = !!desktopInput && desktopInput.offsetParent !== null;
+
+      if (mobileVisible) {
+        this.bookingDatePickerMobile?.handleDateInputClick();
+        return;
+      }
+      if (desktopVisible) {
+        this.bookingDatePickerDesktop?.handleDateInputClick();
+        return;
+      }
     } catch {
       // no-op
     }
@@ -595,28 +623,86 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   });
 
   /**
-   * Depósito de seguridad en USD (para mostrar)
-   * Retorna siempre US$ 600 según el sistema de garantías
+   * Vista previa de garantía usando la misma lógica del checkout
+   */
+  readonly guaranteeEstimate = computed<GuaranteeEstimate | null>(() => {
+    const pricePerDay = this.displayPrice();
+    if (!pricePerDay || pricePerDay <= 0) return null;
+
+    const fxRate = this.currentFxRate();
+    if (!fxRate || !Number.isFinite(fxRate) || fxRate <= 0) return null;
+
+    const car = this.car();
+    const currency = (car?.currency || 'USD').toUpperCase();
+    const nightlyRateUsd = currency === 'USD' ? pricePerDay : pricePerDay / fxRate;
+    const carValueUsd = car?.value_usd;
+    const franchise =
+      Number.isFinite(carValueUsd) && (carValueUsd ?? 0) > 0
+        ? this.bookingFranchiseService.getFranchiseForCarValueUsd(carValueUsd as number)
+        : this.bookingFranchiseService.getFranchiseForNightlyRateUsd(nightlyRateUsd);
+    const booking = { currency: currency === 'ARS' ? 'ARS' : 'USD' } as Booking;
+    const walletSplit = { wallet: 0, card: 0 };
+
+    const card = this.checkoutRiskCalculator.calculateGuarantee({
+      booking,
+      franchise,
+      fxSnapshot: fxRate,
+      paymentMethod: 'credit_card',
+      walletSplit,
+    });
+    const wallet = this.checkoutRiskCalculator.calculateGuarantee({
+      booking,
+      franchise,
+      fxSnapshot: fxRate,
+      paymentMethod: 'wallet',
+      walletSplit,
+    });
+
+    return { fxRate, franchise, card, wallet };
+  });
+
+  readonly cardHoldArs = computed(() => this.guaranteeEstimate()?.card.holdArs ?? null);
+
+  readonly cardHoldUsd = computed(() => {
+    const estimate = this.guaranteeEstimate();
+    if (!estimate) return null;
+    const holdUsd = estimate.card.holdArs / estimate.fxRate;
+    return Math.round(holdUsd * 100) / 100;
+  });
+
+  readonly walletCreditUsd = computed(
+    () => this.guaranteeEstimate()?.wallet.creditSecurityUsd ?? null,
+  );
+
+  readonly walletCreditArs = computed(() => {
+    const estimate = this.guaranteeEstimate();
+    if (!estimate) return null;
+    return Math.round(estimate.wallet.creditSecurityArs);
+  });
+
+  readonly guaranteeFxRate = computed(() => this.guaranteeEstimate()?.fxRate ?? null);
+
+  /**
+   * Depósito de seguridad en USD (estimado para analytics/UI)
    */
   readonly depositAmount = computed(() => {
-    const car = this.car();
-    if (!car) return 0;
-
-    // Usar el sistema de cálculo de garantías (siempre retorna 600 USD)
-    const vehicleValueUsd = car.value_usd ?? 10000;
-    return calculateCreditSecurityUsd(vehicleValueUsd);
+    const method = this.selectedPaymentMethod();
+    if (method === 'wallet') {
+      return this.walletCreditUsd() ?? 0;
+    }
+    return this.cardHoldUsd() ?? 0;
   });
 
   /**
    * Depósito de seguridad en ARS (para cálculos)
-   * Convierte el depósito USD a ARS usando la tasa de cambio
+   * Usa hold con tarjeta o crédito wallet según método seleccionado
    */
   readonly depositAmountArs = computed(() => {
-    const depositUsd = this.depositAmount();
-    const fxRate = this.currentFxRate();
-
-    if (!fxRate) return depositUsd; // Fallback a USD si no hay tasa
-    return depositUsd * fxRate;
+    const method = this.selectedPaymentMethod();
+    if (method === 'wallet') {
+      return this.walletCreditArs() ?? 0;
+    }
+    return this.cardHoldArs() ?? 0;
   });
 
   /**

@@ -48,8 +48,8 @@
           <div class="flex justify-between">
             <span class="text-text-secondary">Período:</span>
             <span class="font-semibold">
-              {{ booking()?.start_at | date: 'dd/MM/yyyy' }} -
-              {{ booking()?.end_at | date: 'dd/MM/yyyy' }}
+              {{ formatBookingDate(booking()?.start_at) }} -
+              {{ formatBookingDate(booking()?.end_at) }}
             </span>
           </div>
         </div>

@@ -23,8 +23,8 @@ const CONFIG = {
   avgSecurityDeposit: 400,    // USD
 
   // Hold (tarjeta)
-  holdPercentage: 0.35,
-  avgHoldAmount: 280,         // USD (35% de franquicia rollover)
+  holdPercentage: 0.05,
+  avgHoldAmount: 500,         // USD (referencia ~5% valor auto promedio)
 
   // Claims
   claimFrequency: 0.06,

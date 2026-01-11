@@ -13,7 +13,7 @@ import { Injectable } from '@angular/core';
  *
  * Rollover: 2.0× de la franquicia estándar
  *
- * Hold con tarjeta: max(min_bucket_ars, 0.35 × rollover_deductible_usd × FX)
+ * Hold con tarjeta: 5% del valor del auto (USD) convertido a ARS por FX
  */
 @Injectable({
   providedIn: 'root',
@@ -35,21 +35,9 @@ export class FranchiseTableService {
   private readonly ROLLOVER_MULTIPLIER = 2.0;
 
   /**
-   * Mínimos de hold por bucket (ARS) - Argentina
-   * Ajustables según inflación/política comercial
+   * Porcentaje del valor del auto para calcular hold con tarjeta
    */
-  private readonly MIN_HOLD_ARS = {
-    economy: 600_000, // ~USD 343 @ FX 1748
-    standard: 800_000, // ~USD 458 @ FX 1748
-    premium: 1_200_000, // ~USD 686 @ FX 1748
-    luxury: 1_500_000, // ~USD 858 @ FX 1748
-    'ultra-luxury': 2_000_000, // ~USD 1144 @ FX 1748
-  };
-
-  /**
-   * Porcentaje del rollover deductible para calcular hold con tarjeta
-   */
-  private readonly HOLD_PERCENTAGE = 0.35;
+  private readonly HOLD_PERCENTAGE = 0.05;
 
   /**
    * Obtiene la franquicia estándar en USD según el valor del auto
@@ -80,11 +68,9 @@ export class FranchiseTableService {
     bucket: 'economy' | 'standard' | 'premium' | 'luxury' | 'ultra-luxury',
     fxRate: number,
   ): number {
-    const rolloverUsd = this.getRolloverFranchiseUsd(carValueUsd);
-    const calculatedHold = this.HOLD_PERCENTAGE * rolloverUsd * fxRate;
-    const minHold = this.MIN_HOLD_ARS[bucket] ?? this.MIN_HOLD_ARS.standard;
-
-    return Math.max(minHold, Math.round(calculatedHold));
+    void bucket; // compatibilidad: bucket no afecta el hold (5% fijo)
+    const calculatedHold = carValueUsd * this.HOLD_PERCENTAGE * fxRate;
+    return Math.round(calculatedHold);
   }
 
   /**
@@ -120,7 +106,7 @@ export class FranchiseTableService {
       rolloverUsd: this.getRolloverFranchiseUsd(carValueUsd),
       holdArs: this.calculateHoldArs(carValueUsd, bucket, fxRate),
       securityCreditUsd: this.getSecurityCreditUsd(carValueUsd),
-      minHoldArs: this.MIN_HOLD_ARS[bucket] ?? this.MIN_HOLD_ARS.standard,
+      minHoldArs: 0,
     };
   }
 

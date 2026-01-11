@@ -198,12 +198,12 @@ export class DepositPage implements OnInit {
     }
 
     if (ars < this.MIN_AMOUNT_ARS) {
-      this.formError.set(`El monto mínimo es $${this.MIN_AMOUNT_ARS} ARS`);
+      this.formError.set(`El monto mínimo es USD ${this.minAmountUsd.toFixed(2)}`);
       return false;
     }
 
     if (ars > this.MAX_AMOUNT_ARS) {
-      this.formError.set(`El monto máximo es $${this.MAX_AMOUNT_ARS.toLocaleString()} ARS`);
+      this.formError.set(`El monto máximo es USD ${this.maxAmountUsd.toFixed(2)}`);
       return false;
     }
 

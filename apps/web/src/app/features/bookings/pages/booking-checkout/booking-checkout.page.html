@@ -68,13 +68,13 @@
               <div class="flex justify-between items-center py-2" appStaggerEnter [staggerIndex]="1">
                 <span class="text-sm text-text-muted">Desde</span>
                 <span class="text-sm text-text-primary font-medium">
-                  {{ booking().start_date | date: 'dd/MM/yyyy' }}
+                  {{ formatBookingDate(booking().start_date) }}
                 </span>
               </div>
               <div class="flex justify-between items-center py-2" appStaggerEnter [staggerIndex]="2">
                 <span class="text-sm text-text-muted">Hasta</span>
                 <span class="text-sm text-text-primary font-medium">
-                  {{ booking().end_date | date: 'dd/MM/yyyy' }}
+                  {{ formatBookingDate(booking().end_date) }}
                 </span>
               </div>
               <!-- Total -->
@@ -85,7 +85,7 @@
               >
                 <span class="text-sm font-semibold text-text-primary">Total Original</span>
                 <span class="text-balance-md text-text-primary">
-                  {{ formatCurrency(booking().total_price, booking().currency || 'ARS') }}
+                  {{ formatCurrency(bookingTotalUsd(), 'USD') }}
                 </span>
               </div>
             </div>
@@ -345,8 +345,8 @@
         <!-- Payment Provider Selector -->
         <div class="glass-card-elevated p-bento-md">
           <app-payment-provider-selector
-            [amount]="booking()?.total_price || 0"
-            [currency]="booking()?.currency || 'ARS'"
+            [amount]="bookingTotalUsd()"
+            [currency]="'USD'"
             [defaultProvider]="selectedProvider()"
             (providerChange)="handleProviderChange($event)"
           />

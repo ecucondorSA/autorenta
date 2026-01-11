@@ -53,7 +53,7 @@
         } @else if (paymentPending()) {
           Completa el pago para acreditar los fondos
         } @else if (showPaymentRedirect()) {
-          Monto: ${{ arsAmount() | number: '1.0-0' }} ARS · Serás enviado a Checkout Pro.
+          Monto: {{ formatCurrency(usdAmount()) }} USD · Se convertirá al pagar.
         } @else {
           Agrega saldo a tu wallet usando MercadoPago
         }
@@ -142,7 +142,7 @@
               }
               @if (!loadingRate() && platformRate() && arsAmount() > 0) {
                 <div class="flex items-center justify-between text-sm">
-                  <span class="text-text-secondary"> Se cobrará: </span>
+                  <span class="text-text-secondary"> Se cobrará en ARS: </span>
                   <span class="font-semibold text-primary-600">
                     ${{ arsAmount() | number: '1.0-0' }} ARS
                   </span>
@@ -210,7 +210,7 @@
               <div class="ml-3 text-sm">
                 <p class="text-primary-800 font-semibold mb-1">Sobre los depósitos</p>
                 <ul class="text-primary-700 space-y-1">
-                  <li>• El monto mínimo es $1,000 ARS</li>
+                  <li>• El monto mínimo es USD {{ minAmountUsd | number: '1.2-2' }}</li>
                   <li>• Los fondos se acreditan instantáneamente tras confirmación de pago</li>
                   <li>• Paga con tarjeta, Rapipago, Pago Fácil o cuenta de Mercado Pago</li>
                 </ul>

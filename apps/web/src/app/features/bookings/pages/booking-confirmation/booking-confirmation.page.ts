@@ -161,6 +161,15 @@ export class BookingConfirmationPage implements OnInit {
     }
   });
 
+  /**
+   * Total en USD para display
+   */
+  readonly bookingTotalUsd = computed(() => {
+    const booking = this.booking();
+    if (!booking) return 0;
+    return this.normalizeBookingAmountToUsd(booking);
+  });
+
   // ==================== LIFECYCLE ====================
 
   async ngOnInit(): Promise<void> {
@@ -342,6 +351,7 @@ export class BookingConfirmationPage implements OnInit {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const b = booking as any;
+      const amountUsd = this.normalizeBookingAmountToUsd(b);
       const receiptData: ReceiptPdfData = {
         receipt_number: `RCP-${b.id?.slice(0, 8).toUpperCase() || 'N/A'}`,
         booking_id: b.id,
@@ -352,15 +362,15 @@ export class BookingConfirmationPage implements OnInit {
           email: b.renter_email || '',
           gov_id_number: '',
         },
-        amount_cents: Math.round((b.total_price || b.total_amount || 0) * 100),
-        currency: (b.currency || 'ARS') as 'USD' | 'ARS' | 'BRL',
+        amount_cents: Math.round(amountUsd * 100),
+        currency: 'USD',
         payment_method: this.providerDisplayName() || 'Tarjeta',
         provider: payment.provider,
         provider_reference: payment.paymentId || payment.orderId || payment.captureId,
         line_items: [
           {
             description: `Reserva - ${b.car_brand || b.car?.brand || ''} ${b.car_model || b.car?.model || ''} (${b.days_count || 1} días)`,
-            amount_cents: Math.round((b.total_price || b.total_amount || 0) * 100),
+            amount_cents: Math.round(amountUsd * 100),
           },
         ],
         status: this.isSuccess() ? 'completed' : 'pending',
@@ -382,7 +392,7 @@ export class BookingConfirmationPage implements OnInit {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const b = booking as any;
     const confirmDate = this.formatDate(this.confirmedAt());
-    const totalAmount = this.formatCurrency(b.total_price, b.currency || 'ARS');
+    const totalAmount = this.formatCurrency(this.normalizeBookingAmountToUsd(b), 'USD');
 
     return `
 <!DOCTYPE html>
@@ -583,6 +593,27 @@ export class BookingConfirmationPage implements OnInit {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
+  }
+
+  private normalizeBookingAmountToUsd(booking: Record<string, any>): number {
+    const amount =
+      booking.total_price ??
+      booking.total_amount ??
+      (booking.total_cents ? booking.total_cents / 100 : 0);
+    const currency = (booking.currency || 'USD').toUpperCase();
+    if (currency === 'USD') return Number(amount) || 0;
+
+    const fxRate =
+      booking.fx_snapshot ??
+      booking.fx_rate ??
+      booking.fxSnapshot ??
+      booking.fxRate ??
+      null;
+    if (typeof fxRate === 'number' && fxRate > 0) {
+      return Number(amount) / fxRate;
+    }
+
+    return Number(amount) || 0;
   }
 
   /**

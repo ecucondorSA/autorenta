@@ -1,4 +1,4 @@
-<section class="min-h-screen bg-surface-base pb-20 sm:pb-0">
+<section class="bookings-page min-h-screen bg-surface-base pb-20 sm:pb-0">
   <!-- Hero Header -->
   <header class="glass-navbar sticky top-0 z-10 px-4 py-4 sm:px-6 mb-6">
     <div class="container-page flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -10,8 +10,10 @@
           <span class="text-text-secondary/40">•</span>
           <span class="text-xs text-text-secondary">Centro de viajes</span>
         </div>
-        <h1 class="text-hero-md font-satoshi font-bold text-text-primary">Tu panel de viajes</h1>
-        <p class="text-sm text-text-secondary mt-1 hidden sm:block">
+        <h1 class="bookings-title text-hero-md font-satoshi font-bold text-text-primary">
+          Tu panel de viajes
+        </h1>
+        <p class="bookings-subtitle text-sm text-text-secondary mt-1 hidden sm:block">
           Seguimiento claro de cada reserva, con estados y acciones visibles en un solo lugar.
         </p>
       </div>
@@ -28,7 +30,7 @@
 
   <!-- Filter Pills -->
   <div class="container-page px-4 sm:px-6 mb-6">
-    <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+    <div class="flex flex-wrap sm:flex-nowrap gap-2 sm:overflow-x-auto pb-2 scrollbar-hide">
       @for (filter of statusFilters; track filter) {
         <button
           (click)="setStatusFilter(filter)"
@@ -114,7 +116,7 @@
     <!-- Main Content (when bookings exist) -->
     @if (!loading() && !error() && bookings().length > 0) {
       <!-- ===== DASHBOARD SUMMARY (Bento Grid) ===== -->
-      <div class="grid grid-cols-3 gap-3 sm:gap-4">
+      <div class="summary-grid grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
         <!-- Action Required Card -->
         <button
           (click)="dashboardStats().actionRequired > 0 && focusSection('action-required')"
@@ -122,7 +124,7 @@
           appHoverLift
           appStaggerEnter
           [staggerIndex]="0"
-          class="relative glass-card-elevated p-4 rounded-2xl text-left transition-all"
+          class="summary-card glass-lite col-span-2 sm:col-span-1 relative glass-card-elevated p-4 rounded-2xl text-left transition-all"
           [class.opacity-50]="dashboardStats().actionRequired === 0"
           [class.cursor-not-allowed]="dashboardStats().actionRequired === 0"
           [class]="dashboardStats().actionRequired > 0 ? 'ring-2 ring-warning-500/30 bg-warning-bg/30' : ''"
@@ -148,7 +150,7 @@
           appHoverLift
           appStaggerEnter
           [staggerIndex]="1"
-          class="glass-card-elevated p-4 rounded-2xl text-left transition-all"
+          class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left transition-all"
           [class.opacity-50]="dashboardStats().active === 0"
           [class.cursor-not-allowed]="dashboardStats().active === 0"
           [class]="dashboardStats().active > 0 ? 'ring-2 ring-success-500/30 bg-success-bg/30' : ''"
@@ -172,7 +174,7 @@
           appHoverLift
           appStaggerEnter
           [staggerIndex]="2"
-          class="glass-card-elevated p-4 rounded-2xl text-left transition-all"
+          class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left transition-all"
           [class.opacity-50]="dashboardStats().history === 0"
           [class.cursor-not-allowed]="dashboardStats().history === 0"
         >
@@ -195,7 +197,7 @@
             <div
               appStaggerEnter
               [staggerIndex]="i + 3"
-              class="glass-card rounded-2xl overflow-hidden"
+              class="glass-lite glass-card rounded-2xl overflow-hidden"
             >
               <!-- Section Header (clickable) -->
               <button
@@ -207,7 +209,7 @@
                 <div class="flex items-center gap-3">
                   <span class="text-xl">{{ section.icon }}</span>
                   <div>
-                    <h3 class="text-base font-semibold text-text-primary font-satoshi">
+                    <h3 class="section-title text-base font-semibold text-text-primary font-satoshi">
                       {{ section.title }}
                     </h3>
                     <p class="text-xs text-text-secondary">

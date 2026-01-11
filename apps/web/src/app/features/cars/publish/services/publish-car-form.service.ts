@@ -294,14 +294,15 @@ export class PublishCarFormService {
     const modelId = this.formInstance.get('model_id')?.value;
     const year = this.formInstance.get('year')?.value;
 
-    if (!brandId || !modelId || !year) return '';
+    const brand = brandId ? this.brands().find((b) => b.id === brandId) : null;
+    const model = modelId ? this.models().find((m) => m.id === modelId) : null;
 
-    const brand = this.brands().find((b) => b.id === brandId);
-    const model = this.models().find((m) => m.id === modelId);
+    const brandName = brand?.name?.trim();
+    const modelName = model?.name?.trim();
+    const yearLabel = year ? String(year).trim() : '';
 
-    if (!brand || !model) return '';
-
-    return `${brand.name} ${model.name} ${year}`;
+    const parts = [brandName, modelName, yearLabel].filter(Boolean);
+    return parts.join(' ').trim();
   }
 
   /**
@@ -405,7 +406,10 @@ export class PublishCarFormService {
       location_country,
 
       // Generated/computed fields
-      title: this.generateTitle() || 'Auto sin título',
+      title:
+        this.generateTitle() ||
+        `${brand_text_backup || ''} ${model_text_backup || ''} ${year || ''}`.trim() ||
+        null,
       description,
       seats: model?.seats || 5,
       doors: model?.doors || 4,

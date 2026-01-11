@@ -2,28 +2,76 @@
   display: block;
 }
 
+/* Ensure hero images always cover the mobile viewport container */
+.hero-carousel img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-carousel {
+  isolation: isolate;
+}
+
+.hero-carousel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.45) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-meta {
+  z-index: 2;
+}
+
+.hero-overlay {
+  z-index: 2;
+}
+
+.hero-meta-card {
+  background: rgba(16, 16, 16, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 640px) {
+  .hero-meta-card {
+    padding: 0.625rem 0.75rem;
+    border-radius: 16px;
+  }
+}
+
 /* 3-Column Dashboard Layout */
 .dashboard-grid {
   display: grid;
+  grid-template-columns: 1fr;
   gap: 1rem;
   align-items: start;
+  width: 100%;
 }
 
-/* Desktop: 3 columns */
-@media (min-width: 1280px) {
+/* Mobile & Tablet: ensure full width */
+.dashboard-left,
+.dashboard-center,
+.dashboard-right {
+  width: 100%;
+  min-width: 0; /* Prevent overflow issues */
+}
+
+/* Tablet Small: center and constrain width for readability */
+@media (min-width: 640px) and (max-width: 899px) {
   .dashboard-grid {
-    grid-template-columns: 320px 1fr 380px;
-    gap: 1.5rem;
-  }
-
-  .dashboard-left,
-  .dashboard-right {
-    position: sticky;
-    top: 5rem;
+    max-width: 680px;
+    margin: 0 auto;
   }
 }
 
-/* Tablet Large: 2 columns side by side */
+/* Tablet Large / Small Desktop: 2 columns side by side */
 @media (min-width: 900px) and (max-width: 1279px) {
   .dashboard-grid {
     grid-template-columns: 1fr 1fr;
@@ -46,30 +94,25 @@
   }
 }
 
-/* Tablet Small: single column with better spacing */
-@media (min-width: 640px) and (max-width: 899px) {
+/* Desktop: 3 columns */
+@media (min-width: 1280px) {
   .dashboard-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-width: 600px;
-    margin: 0 auto;
+    grid-template-columns: 320px 1fr 380px;
+    gap: 1.5rem;
+  }
+
+  .dashboard-left,
+  .dashboard-right {
+    position: sticky;
+    top: 5.5rem;
+    height: fit-content;
   }
 }
 
-/* Mobile: single column */
+/* Spacing adjustments for smaller screens */
 @media (max-width: 639px) {
   .dashboard-grid {
-    display: flex;
-    flex-direction: column;
     gap: 0.75rem;
-  }
-}
-
-/* Extra small screens */
-@media (max-width: 400px) {
-  .dashboard-grid {
-    gap: 0.5rem;
   }
 }
 

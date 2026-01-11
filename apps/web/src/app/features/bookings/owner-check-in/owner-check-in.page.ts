@@ -21,6 +21,7 @@ import { IonicModule } from '@ionic/angular';
 import { Booking } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 import { LiveTrackingMapComponent } from '../../../shared/components/live-tracking-map/live-tracking-map.component';
+import { formatDate } from '../../../shared/utils/date.utils';
 
 /**
  * Owner Check-In Page
@@ -60,6 +61,11 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
   readonly isSharing = signal(false);
   readonly trackingSessions = signal<TrackingSession[]>([]);
   private unsubscribeTracking?: () => void;
+
+  formatBookingDate(date?: string | Date | null): string {
+    if (!date) return '-';
+    return formatDate(date, { format: 'medium' });
+  }
 
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');

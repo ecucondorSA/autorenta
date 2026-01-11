@@ -112,17 +112,15 @@ blockquote {
     box-sizing: border-box;
   }
 
-  /* Prevenir overflow en grids */
-  .grid,
-  [class*='grid-cols'] {
+  /* Prevenir overflow en grids sin columnas explícitas */
+  .grid:not([class*='grid-cols-']) {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
     width: 100%;
   }
 
-  /* Flex containers responsive */
-  .flex[class*='gap-'] {
-    flex-wrap: wrap;
+  /* Flex containers responsive (solo si ya usan wrap) */
+  .flex.flex-wrap {
     gap: 12px !important;
   }
 
@@ -160,8 +158,10 @@ blockquote {
     hyphens: auto;
   }
 
-  /* Fix para elementos con width fijo */
-  *[style*='width'] {
+  /* Fix para media con width fijo */
+  img[style*='width'],
+  video[style*='width'],
+  iframe[style*='width'] {
     max-width: 100% !important;
   }
 

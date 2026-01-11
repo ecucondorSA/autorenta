@@ -84,14 +84,7 @@ const FRANCHISE_BANDS = [
   { maxValue: Infinity, standardUsd: 1800 },
 ];
 
-const MIN_HOLD_ARS: Record<Bucket, number> = {
-  economy: 600_000,
-  standard: 800_000,
-  premium: 1_200_000,
-  luxury: 1_500_000,
-};
-
-const HOLD_PERCENTAGE = 0.35;
+const HOLD_PERCENTAGE = 0.05;
 const ROLLOVER_MULTIPLIER = 2.0;
 
 // =======================
@@ -140,11 +133,9 @@ function getSecurityCreditUsd(carValueUsd: number): number {
   return carValueUsd <= 20000 ? 300 : 500;
 }
 
-function calcHoldUsd(carValueUsd: number, bucket: Bucket, fxRate: number): number {
-  const rolloverUsd = getRolloverFranchiseUsd(carValueUsd);
-  const calculatedHoldUsd = HOLD_PERCENTAGE * rolloverUsd;
-  const minHoldUsd = MIN_HOLD_ARS[bucket] / fxRate;
-  return Math.max(minHoldUsd, calculatedHoldUsd);
+function calcHoldUsd(carValueUsd: number, bucket: Bucket, _fxRate: number): number {
+  void bucket; // Se mantiene para compatibilidad del simulador
+  return carValueUsd * HOLD_PERCENTAGE;
 }
 
 function sampleTripDays(rng: () => number): number {

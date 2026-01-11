@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   Component,
   computed,
@@ -18,12 +18,13 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
 import type { Car } from '../../../core/models';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
+import { formatDate } from '../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-earnings-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, MoneyPipe, DatePipe, IconComponent],
+  imports: [CommonModule, RouterLink, MoneyPipe, IconComponent],
   templateUrl: './earnings.page.html',
   styleUrls: ['./earnings.page.css'],
 })
@@ -40,6 +41,11 @@ export class EarningsPage implements OnInit {
   readonly cars = signal<Car[]>([]);
   readonly exchangeRate = signal<number>(1000); // Default ARS/USD rate
   readonly carCategories = signal<Map<string, { depreciation_rate_annual: number }>>(new Map());
+
+  formatDashboardDate(date?: string | Date | null): string {
+    if (!date) return '-';
+    return formatDate(date, { format: 'medium' });
+  }
 
   // Computed signals
   readonly availableBalance = computed(() => this.stats()?.wallet.availableBalance ?? 0);

@@ -610,7 +610,7 @@ export class SubscriptionService {
         fgoCap: data.fgo_cap_usd,
         formula: data.discount_applied
           ? `Hold reducido con suscripción ${data.user_tier}`
-          : `Hold = max($${data.base_hold_usd}, $${vehicleValueUsd} × 10%)`,
+          : `Hold = ${vehicleValueUsd} × 5%`,
       };
     } catch (err) {
       this.logger.error('Error calculating preauthorization from server', err);
@@ -648,13 +648,14 @@ export class SubscriptionService {
       } = await this.supabase.auth.getSession();
       if (!session?.user) {
         const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
+        const preauth = calculatePreauthorizationLocal(vehicleValueUsd, null);
         return {
           hasSubscription: false,
           canBook: true,
           requiresFullPreauth: true,
           requiredTier,
           userTier: null,
-          message: `Sin sesión: se requiere preautorización completa de $${SUBSCRIPTION_TIERS[requiredTier].preauth_hold_usd} USD`,
+          message: `Sin sesión: se requiere preautorización completa de $${preauth.holdAmountUsd.toFixed(0)} USD`,
         };
       }
 
@@ -730,7 +731,7 @@ export class SubscriptionService {
   getAllTiersWithPreauth() {
     return Object.values(SUBSCRIPTION_TIERS).map((tier) => ({
       ...tier,
-      savingsMessage: `Reduce preautorización de $${tier.preauth_hold_usd} a $${tier.preauth_with_subscription_usd}`,
+      savingsMessage: 'Preautorización: 5% del valor del auto',
     }));
   }
 

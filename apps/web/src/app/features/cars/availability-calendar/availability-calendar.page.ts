@@ -27,6 +27,7 @@ import {
   BlockDateModalComponent,
   BlockDateRequest,
 } from '../../../shared/components/block-date-modal/block-date-modal.component';
+import { formatDate } from '../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-availability-calendar',
@@ -52,6 +53,11 @@ export class AvailabilityCalendarPage implements AfterViewInit, OnDestroy {
   readonly blockedRanges = signal<DetailedBlockedRange[]>([]);
   readonly showBlockModal = signal(false);
   readonly currentMonth = signal(new Date());
+
+  formatCalendarDate(date?: string | Date | null): string {
+    if (!date) return '-';
+    return formatDate(date, { format: 'medium' });
+  }
 
   // Stats
   readonly stats = computed(() => {

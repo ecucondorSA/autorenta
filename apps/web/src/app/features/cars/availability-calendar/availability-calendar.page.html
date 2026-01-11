@@ -290,7 +290,7 @@
                   <div class="flex-1">
                     <div class="flex items-center gap-2 mb-1">
                       <span class="font-medium text-text-primary">
-                        {{ block.from | date: 'dd/MM/yyyy' }} - {{ block.to | date: 'dd/MM/yyyy' }}
+                        {{ formatCalendarDate(block.from) }} - {{ formatCalendarDate(block.to) }}
                       </span>
                       <span
                         class="px-2 py-0.5 bg-error-bg-hover text-error-strong text-xs rounded-full flex items-center gap-1"

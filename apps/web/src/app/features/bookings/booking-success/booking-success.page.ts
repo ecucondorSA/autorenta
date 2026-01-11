@@ -57,6 +57,35 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
   private realtimeConnectionTimeout: number | null = null;
   private readonly REALTIME_TIMEOUT_MS = 5000; // 5 seconds to wait for realtime
 
+  formatUsd(amount: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  }
+
+  getBookingTotalUsd(booking: Record<string, any>): number {
+    const amount =
+      booking.total_price ??
+      booking.total_amount ??
+      (booking.total_cents ? booking.total_cents / 100 : 0);
+    const currency = (booking.currency || 'USD').toUpperCase();
+    if (currency === 'USD') return Number(amount) || 0;
+
+    const fxRate =
+      booking.fx_snapshot ??
+      booking.fx_rate ??
+      booking.fxSnapshot ??
+      booking.fxRate ??
+      null;
+    if (typeof fxRate === 'number' && fxRate > 0) {
+      return Number(amount) / fxRate;
+    }
+    return Number(amount) || 0;
+  }
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {

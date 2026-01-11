@@ -5,6 +5,72 @@
   min-height: 100%;
 }
 
+.bookings-page {
+  background:
+    radial-gradient(1200px 480px at 15% -10%, rgba(0, 217, 95, 0.08), transparent 55%),
+    radial-gradient(800px 360px at 85% -20%, rgba(59, 130, 246, 0.08), transparent 55%),
+    #f7f7f5;
+}
+
+.bookings-title {
+  letter-spacing: -0.02em;
+}
+
+.bookings-subtitle {
+  max-width: 560px;
+}
+
+.section-title {
+  letter-spacing: -0.01em;
+}
+
+.summary-grid .summary-card {
+  min-height: 112px;
+}
+
+@media (max-width: 640px) {
+  .summary-grid .summary-card {
+    min-height: 96px;
+  }
+
+  .bookings-title {
+    font-size: 1.6rem;
+  }
+}
+
+.glass-lite {
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 12px 30px rgba(15, 23, 42, 0.08),
+    0 4px 10px rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+}
+
+/* Micro spacing tweaks */
+.summary-grid {
+  gap: 0.75rem;
+}
+
+.summary-card {
+  padding: 0.9rem !important;
+}
+
+.section-title {
+  margin-bottom: 0.1rem;
+}
+
+@media (max-width: 640px) {
+  .summary-grid {
+    gap: 0.6rem;
+  }
+
+  .summary-card {
+    padding: 0.8rem !important;
+  }
+}
+
 .bookings-shell {
   max-width: 1120px;
   margin: 0 auto;

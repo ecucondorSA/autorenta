@@ -2,6 +2,147 @@
   display: block;
 }
 
+/* Booking detail payment responsive hardening */
+.payment-page {
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+}
+
+.payment-header {
+  position: sticky;
+  top: 0;
+}
+
+.payment-main {
+  max-width: 72rem;
+}
+
+.payment-grid {
+  align-items: start;
+}
+
+.payment-tabs {
+  z-index: 15;
+}
+
+.tab-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+.payment-summary-card {
+  min-width: 0;
+  width: 100%;
+}
+
+.payment-left,
+.payment-right {
+  min-width: 0;
+}
+
+.payment-left section,
+.payment-right section {
+  min-width: 0;
+}
+
+.payment-summary-card img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Liquid Glass Lite */
+.glass-lite {
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 8px 24px rgba(15, 23, 42, 0.08),
+    0 2px 6px rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+}
+
+.glass-lite .bg-surface-raised {
+  background: transparent;
+}
+
+@media (max-width: 1023px) {
+  .payment-header {
+    position: static;
+  }
+
+  .payment-tabs {
+    position: static;
+    margin: 0;
+    border-radius: 14px;
+  }
+
+  .payment-left {
+    order: 1;
+  }
+
+  .payment-right {
+    order: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .payment-main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .payment-tabs {
+    position: static;
+    top: auto;
+    margin-bottom: 0.75rem;
+  }
+
+  .tab-scroll {
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .tab-button {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.78rem;
+    border-radius: 999px;
+    flex: 1 1 calc(50% - 0.4rem);
+    justify-content: center;
+  }
+
+  .tab-button:nth-child(3) {
+    flex-basis: 100%;
+  }
+
+  .payment-summary-card {
+    border-radius: 18px;
+    margin-top: 0.5rem;
+  }
+
+  .payment-summary-card .text-xl,
+  .payment-summary-card .text-2xl {
+    font-size: 1.25rem;
+  }
+
+  .payment-summary-card .text-lg {
+    font-size: 1.05rem;
+  }
+
+  .payment-left section,
+  .payment-right section,
+  .payment-summary-card {
+    box-sizing: border-box;
+  }
+
+  .payment-left .p-6 {
+    padding: 1rem;
+  }
+
+  .payment-summary-card .p-6,
+  .payment-summary-card .p-5,
+  .payment-summary-card .p-4 {
+    padding: 1rem;
+  }
+}
+
 /* Asegurar que el sticky funcione correctamente */
 .lg\:col-span-4 > * {
   position: sticky;

@@ -32,11 +32,8 @@ export class CheckoutRiskCalculator {
     const { booking, franchise, fxSnapshot, paymentMethod, walletSplit } = input;
     const hasCard = paymentMethod === 'credit_card' || paymentMethod === 'partial_wallet';
 
-    const rolloverUsd = franchise.rolloverDeductibleUsd;
-    const holdUsd = hasCard ? this.calculateHoldUsd(rolloverUsd) : 0;
-    const holdArs = hasCard
-      ? this.calculateHoldArs(holdUsd, franchise.holdMinimumArs, fxSnapshot)
-      : 0;
+    const holdUsd = hasCard ? this.calculateHoldUsd(franchise.estimatedCarValueUsd) : 0;
+    const holdArs = hasCard ? this.calculateHoldArs(holdUsd, fxSnapshot) : 0;
 
     const needsWalletSecurity = !hasCard;
     const creditSecurityUsd = needsWalletSecurity ? franchise.walletCreditUsd : 0;
@@ -59,13 +56,12 @@ export class CheckoutRiskCalculator {
     };
   }
 
-  private calculateHoldUsd(rolloverUsd: number): number {
-    return 0.35 * rolloverUsd;
+  private calculateHoldUsd(vehicleValueUsd: number): number {
+    return Math.round(vehicleValueUsd * 0.05 * 100) / 100;
   }
 
-  private calculateHoldArs(holdUsd: number, minimumArs: number, fxSnapshot: number): number {
-    const holdArs = holdUsd * fxSnapshot;
-    return Math.max(minimumArs, Math.round(holdArs));
+  private calculateHoldArs(holdUsd: number, fxSnapshot: number): number {
+    return Math.round(holdUsd * fxSnapshot);
   }
 
   private toUsd(amount: number, currency: Booking['currency'], fxSnapshot: number): number {

@@ -37,11 +37,11 @@
             <span class="detail-value code">{{ paymentReferenceId() }}</span>
           </div>
         }
-        @if (booking()) {
+          @if (booking()) {
           <div class="detail-row">
             <span class="detail-label">Monto Total</span>
             <span class="detail-value amount">
-              {{ formatCurrency(booking().total_price, booking().currency || 'ARS') }}
+              {{ formatCurrency(bookingTotalUsd(), 'USD') }}
             </span>
           </div>
         }

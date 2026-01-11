@@ -13,6 +13,7 @@ import { AdminService, VerificationStats } from '@core/services/admin/admin.serv
 import { Car, Booking } from '@core/models';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { TranslateModule } from '@ngx-translate/core';
+import { formatDate } from '../../../shared/utils/date.utils';
 
 @Component({
   selector: 'autorenta-admin-dashboard-page',
@@ -34,6 +35,11 @@ export class AdminDashboardPage implements OnInit {
   readonly bookings = computed(() => this.bookingsSignal());
   readonly verificationStats = computed(() => this.verificationStatsSignal());
   readonly loading = computed(() => this.loadingSignal());
+
+  formatAdminDate(date?: string | Date | null): string {
+    if (!date) return '-';
+    return formatDate(date, { format: 'medium' });
+  }
 
   async ngOnInit(): Promise<void> {
     await this.loadData();

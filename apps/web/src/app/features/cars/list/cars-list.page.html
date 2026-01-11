@@ -648,7 +648,7 @@
                 </p>
                 <p class="pt-1">
                   <span class="font-semibold text-slate-900"
-                    >${{ car.price_per_day | number: '1.0-0' }}</span
+                    >{{ car.price_per_day | money }}</span
                   >
                   <span class="text-slate-500"> / día</span>
                 </p>
@@ -715,7 +715,7 @@
                 <!-- Price Tag on Image (Tinder Style) -->
                 <div class="absolute bottom-4 left-4 text-white">
                   <p class="text-2xl font-bold font-satoshi">
-                    ${{ car.price_per_day | number: '1.0-0' }}
+                      {{ car.price_per_day | money }}
                   </p>
                   <p class="text-sm font-medium opacity-90">por día</p>
                 </div>
@@ -897,13 +897,7 @@
                         class="text-sm text-slate-500 flex items-center gap-1 mt-1"
                         data-testid="car-location"
                       >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path
-                            d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
-                            stroke-width="1.75"
-                          />
-                          <circle cx="12" cy="10" r="3" stroke-width="1.75" />
-                        </svg>
+                        <app-icon name="map-pin" [size]="16" cssClass="text-slate-500" />
                         <span class="truncate">{{
                           car.location_city || 'Ubicación no disponible'
                         }}</span>
@@ -920,7 +914,7 @@
                           class="text-2xl font-bold text-cyan-600"
                           data-testid="car-price"
                         >
-                          ${{ car.price_per_day | number: '1.0-0' }}
+                          {{ car.price_per_day | money }}
                         </div>
                         <div class="text-xs text-slate-500">por día</div>
                       } @else {
@@ -1236,7 +1230,7 @@
                   <div class="flex items-center justify-between">
                     @if (car.price_per_day && car.price_per_day > 0) {
                       <div class="flex items-baseline gap-0.5">
-                        <span class="font-bold text-[14px] text-slate-900 tracking-tight leading-5">${{ car.price_per_day | number: '1.0-0' }}</span>
+                        <span class="font-bold text-[14px] text-slate-900 tracking-tight leading-5">{{ car.price_per_day | money }}</span>
                         <span class="text-[9px] font-medium text-slate-400">/día</span>
                       </div>
                     } @else {

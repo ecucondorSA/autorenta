@@ -16,6 +16,7 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
 import { IonicModule } from '@ionic/angular';
 import { v4 as uuidv4 } from 'uuid';
 import { Booking } from '../../../core/models';
+import { formatDate } from '../../../shared/utils/date.utils';
 
 /**
  * Owner Damage Report Page
@@ -73,6 +74,11 @@ export class OwnerDamageReportPage implements OnInit {
   });
 
   readonly descriptionCharCount = computed(() => this.damageDescription().trim().length);
+
+  formatBookingDate(date?: string | Date | null): string {
+    if (!date) return '-';
+    return formatDate(date, { format: 'medium' });
+  }
 
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');

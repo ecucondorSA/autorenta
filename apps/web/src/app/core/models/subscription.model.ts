@@ -160,9 +160,9 @@ export const VEHICLE_VALUE_THRESHOLDS = {
 } as const;
 
 /**
- * Preauthorization formula: 10% of vehicle value
+ * Preauthorization formula: 5% of vehicle value
  */
-export const PREAUTH_PERCENTAGE = 0.1;
+export const PREAUTH_PERCENTAGE = 0.05;
 
 /**
  * Tier configurations (matches v_subscription_tiers view)
@@ -192,7 +192,7 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
       'Cobertura FGO hasta USD $800 por evento',
       'Válido por 1 año desde la activación',
       'Uso ilimitado de reservas en autos económicos',
-      'Preautorización reducida a $500 (vs $1,000)',
+      'Preautorización: 5% del valor del auto',
       'Sin cargos ocultos ni auto-renovación',
       'Soporte prioritario 24/7',
     ],
@@ -218,7 +218,7 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
       'Cobertura FGO hasta USD $1,200 por evento',
       'Válido por 1 año desde la activación',
       'Acceso a autos económicos y de gama media',
-      'Preautorización reducida a $800 (vs $2,500)',
+      'Preautorización: 5% del valor del auto',
       'Sin cargos ocultos ni auto-renovación',
       'Soporte VIP prioritario 24/7',
     ],
@@ -244,7 +244,7 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
       'Cobertura FGO hasta USD $2,000 por evento',
       'Válido por 1 año desde la activación',
       'Acceso a TODA la flota (incluyendo lujo)',
-      'Preautorización reducida a $1,000 (vs $5,000)',
+      'Preautorización: 5% del valor del auto',
       'Sin cargos ocultos ni auto-renovación',
       'Soporte VIP exclusivo 24/7',
       'Prioridad en reservas de vehículos premium',
@@ -466,33 +466,14 @@ export function calculatePreauthorization(
   const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
   const tierConfig = SUBSCRIPTION_TIERS[requiredTier];
 
-  // Base hold: use the tier's standard preauth or 10% of vehicle value (whichever is higher)
+  // Base hold: 5% del valor del auto (sin mínimos por tier)
   const formulaHoldCents = Math.round(vehicleValueUsd * PREAUTH_PERCENTAGE * 100);
-  const baseHoldCents = Math.max(tierConfig.preauth_hold_cents, formulaHoldCents);
+  const baseHoldCents = formulaHoldCents;
   const baseHoldUsd = baseHoldCents / 100;
 
-  // Check if user has adequate subscription for discount
-  const tierHierarchy: Record<SubscriptionTier, number> = {
-    club_standard: 1,
-    club_black: 2,
-    club_luxury: 3,
-  };
-
-  let holdAmountCents = baseHoldCents;
-  let discountApplied = false;
-  let discountReason: string | undefined;
-
-  if (userTier) {
-    const userLevel = tierHierarchy[userTier];
-    const requiredLevel = tierHierarchy[requiredTier];
-
-    if (userLevel >= requiredLevel) {
-      // User has adequate tier - apply discount
-      holdAmountCents = tierConfig.preauth_with_subscription_cents;
-      discountApplied = true;
-      discountReason = `Suscripción ${SUBSCRIPTION_TIERS[userTier].name} activa`;
-    }
-  }
+  const holdAmountCents = baseHoldCents;
+  const discountApplied = false;
+  const discountReason = undefined;
 
   return {
     holdAmountCents,
@@ -505,7 +486,7 @@ export function calculatePreauthorization(
     fgoCap: tierConfig.fgo_cap_usd,
     formula: discountApplied
       ? `Hold reducido con ${SUBSCRIPTION_TIERS[userTier!].name}`
-      : `Hold = max(${tierConfig.preauth_hold_usd}, ${vehicleValueUsd} × 10%)`,
+      : `Hold = ${vehicleValueUsd} × 5%`,
   };
 }
 

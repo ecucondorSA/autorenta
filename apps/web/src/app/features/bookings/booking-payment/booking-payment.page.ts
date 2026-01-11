@@ -17,7 +17,7 @@ import { from } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 // Core imports
-import { DatePipe } from '@angular/common';
+import { formatDate } from '../../../shared/utils/date.utils';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BonusMalusService } from '@core/services/payments/bonus-malus.service';
@@ -58,7 +58,6 @@ interface PaymentOption {
     LoadingStateComponent,
     ButtonComponent,
     MoneyPipe,
-    DatePipe,
     PaymentModeToggleComponent,
   ],
   templateUrl: './booking-payment.page.html',
@@ -160,6 +159,11 @@ export class BookingPaymentPage implements OnInit {
     const extras = this.deliveryFee() + this.insuranceFee() + this.platformFee();
     return total - extras;
   });
+
+  formatBookingDate(date?: string | Date | null): string {
+    if (!date) return '-';
+    return formatDate(date, { format: 'medium' });
+  }
 
   readonly totalAmount = computed(() => {
     const bookingData = this.booking();
