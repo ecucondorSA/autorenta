@@ -1,3 +1,10 @@
+## [2.7.3](https://github.com/ecucondorSA/autorenta/compare/v2.7.2...v2.7.3) (2026-01-11)
+
+
+### Bug Fixes
+
+* **bookings:** fix owner check-out authorization error ([77ddfeb](https://github.com/ecucondorSA/autorenta/commit/77ddfeb0b8206a395d475637d8ff9b3d8a2da43d))
+
 ## [2.7.2](https://github.com/ecucondorSA/autorenta/compare/v2.7.1...v2.7.2) (2026-01-11)
 
 
