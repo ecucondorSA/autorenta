@@ -1,3 +1,11 @@
+# [2.9.0](https://github.com/ecucondorSA/autorenta/compare/v2.8.10...v2.9.0) (2026-01-11)
+
+
+### Features
+
+* **currency:** unify UI to USD, keep ARS only for final collection ([7136d4b](https://github.com/ecucondorSA/autorenta/commit/7136d4bce785777b0d668dee4614306bf8ee3362))
+* **publish:** add AI vehicle tracking with real-time detection and FIPE valuation ([2078f40](https://github.com/ecucondorSA/autorenta/commit/2078f40b60891db7bdf0415db9d3a5cceacfb236))
+
 ## [2.8.10](https://github.com/ecucondorSA/autorenta/compare/v2.8.9...v2.8.10) (2026-01-11)
 
 
