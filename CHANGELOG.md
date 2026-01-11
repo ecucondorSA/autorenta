@@ -1,3 +1,10 @@
+## [2.13.2](https://github.com/ecucondorSA/autorenta/compare/v2.13.1...v2.13.2) (2026-01-11)
+
+
+### Bug Fixes
+
+* add middleware to fix camera permissions-policy header ([46c37a9](https://github.com/ecucondorSA/autorenta/commit/46c37a91722cf17267142da6e6bd79637036c253))
+
 ## [2.13.1](https://github.com/ecucondorSA/autorenta/compare/v2.13.0...v2.13.1) (2026-01-11)
 
 
