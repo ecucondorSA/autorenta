@@ -1,3 +1,10 @@
+## [2.13.3](https://github.com/ecucondorSA/autorenta/compare/v2.13.2...v2.13.3) (2026-01-11)
+
+
+### Bug Fixes
+
+* **build:** correct camera permission in cloudflare config script ([5725beb](https://github.com/ecucondorSA/autorenta/commit/5725beb4bd6c47b89651d59e7a867249b938552d))
+
 ## [2.13.2](https://github.com/ecucondorSA/autorenta/compare/v2.13.1...v2.13.2) (2026-01-11)
 
 
