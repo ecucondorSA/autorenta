@@ -1,3 +1,10 @@
+# [2.13.0](https://github.com/ecucondorSA/autorenta/compare/v2.12.2...v2.13.0) (2026-01-11)
+
+
+### Features
+
+* **scanner:** add confirmation sound and button animation ([4f402c4](https://github.com/ecucondorSA/autorenta/commit/4f402c41e90cf672ef5d978baf252c7a9d27d1b5))
+
 ## [2.12.2](https://github.com/ecucondorSA/autorenta/compare/v2.12.1...v2.12.2) (2026-01-11)
 
 
