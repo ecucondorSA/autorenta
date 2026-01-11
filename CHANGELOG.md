@@ -1,3 +1,10 @@
+## [2.13.1](https://github.com/ecucondorSA/autorenta/compare/v2.13.0...v2.13.1) (2026-01-11)
+
+
+### Bug Fixes
+
+* **scanner:** improve blocked camera permission handling ([4b0ec7c](https://github.com/ecucondorSA/autorenta/commit/4b0ec7c6a89e3e3968c7d8e6eed894bd0f7e3454))
+
 # [2.13.0](https://github.com/ecucondorSA/autorenta/compare/v2.12.2...v2.13.0) (2026-01-11)
 
 
