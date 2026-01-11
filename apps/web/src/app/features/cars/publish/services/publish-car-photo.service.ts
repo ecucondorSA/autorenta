@@ -878,4 +878,88 @@ export class PublishCarPhotoService {
       vehicleRecognized: recognition?.success ?? false,
     };
   }
+
+  // ============================================================================
+  // PHOTO UPLOAD AI COMPONENT INTEGRATION
+  // ============================================================================
+
+  /**
+   * Sets photos from the PhotoUploadAIComponent
+   * Replaces all current photos with AI-validated ones
+   *
+   * This method is called when photos change in the PhotoUploadAIComponent.
+   * It syncs the validated photos with this service for later upload.
+   */
+  setPhotosFromAI(photos: Array<{
+    file: File;
+    preview: string;
+    position?: VehiclePosition;
+    aiValidation?: {
+      quality?: number;
+      vehicle?: {
+        brand: string;
+        model: string;
+        year?: number;
+        color?: string;
+        confidence: number;
+      };
+      plates?: Array<{
+        text: string;
+        confidence: number;
+        blurred: boolean;
+      }>;
+    };
+  }>): void {
+    // Convert AI photos to PhotoPreview format
+    const photosPreviews: PhotoPreview[] = photos.map((p) => ({
+      file: p.file,
+      preview: p.preview,
+      position: p.position,
+      qualityResult: p.aiValidation?.quality
+        ? {
+            quality: {
+              score: p.aiValidation.quality,
+              is_acceptable: p.aiValidation.quality >= 50,
+              issues: [],
+              recommendations: [],
+            },
+            vehicle_detected: p.aiValidation?.vehicle
+              ? {
+                  is_vehicle: true,
+                  confidence: p.aiValidation.vehicle.confidence,
+                  vehicle_type: 'car',
+                  position_detected: p.position || null,
+                  position_match: true,
+                }
+              : undefined,
+          }
+        : undefined,
+      platesBlurred: p.aiValidation?.plates?.some((plate) => plate.blurred) ?? false,
+      platesCount: p.aiValidation?.plates?.length ?? 0,
+    }));
+
+    // Replace all photos
+    this.uploadedPhotos.set(photosPreviews);
+
+    // Update recognition result if vehicle was detected
+    const firstWithVehicle = photos.find((p) => p.aiValidation?.vehicle);
+    if (firstWithVehicle?.aiValidation?.vehicle) {
+      const v = firstWithVehicle.aiValidation.vehicle;
+      this.recognitionResult.set({
+        success: true,
+        vehicle: {
+          brand: v.brand,
+          model: v.model,
+          year_range: v.year ? [v.year, v.year] : undefined,
+          color: v.color || 'desconocido',
+          body_type: 'car',
+          confidence: v.confidence,
+        },
+        image_quality: {
+          score: firstWithVehicle.aiValidation.quality ?? 80,
+          suitable_for_detection: true,
+        },
+      });
+    }
+  }
 }

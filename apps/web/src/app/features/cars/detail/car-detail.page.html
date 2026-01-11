@@ -12,8 +12,8 @@
         <div class="flex items-center gap-1.5 font-bold text-text-primary">
           <app-icon name="star-filled" [size]="16" cssClass="text-warning-default" />
           <span>{{ carStats()?.rating_avg || car()?.rating_avg || 'Nuevo' }}</span>
-          @if (carStats()?.rating_count) {
-          <span class="text-text-muted font-normal text-sm">({{ carStats()?.rating_count }}
+          @if (carStats()?.reviews_count) {
+          <span class="text-text-muted font-normal text-sm">({{ carStats()?.reviews_count }}
             evaluaciones)</span>
           }
         </div>

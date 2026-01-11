@@ -199,7 +199,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   readonly imageLoaded = signal(false);
   readonly specsCollapsed = signal(false);
 
-  private readonly defaultCarPlaceholderUrl = '/assets/placeholder-car.webp';
+  protected readonly defaultCarPlaceholderUrl = '/assets/placeholder-car.webp';
 
   // ✅ FIX: Precio dinámico para mostrar en lugar del estático
   readonly dynamicPrice = signal<number | null>(null);

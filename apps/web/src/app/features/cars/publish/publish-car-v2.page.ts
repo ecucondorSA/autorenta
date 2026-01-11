@@ -23,6 +23,11 @@ import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-g
 import { BottomSheetComponent } from '../../../shared/components/bottom-sheet/bottom-sheet.component';
 import { FipeAutocompleteComponent } from '../../../shared/components/fipe-autocomplete/fipe-autocomplete.component';
 import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
+import {
+  PhotoUploadAIComponent,
+  PhotoWithAI,
+  VehicleAutoDetect,
+} from '../../../shared/components/photo-upload-ai/photo-upload-ai.component';
 import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
 
 // ✅ NEW: Extracted services
@@ -59,6 +64,7 @@ import { PublishCarPhotoService } from './services/publish-car-photo.service';
     FipeAutocompleteComponent,
     HostSupportInfoPanelComponent,
     BottomSheetComponent,
+    PhotoUploadAIComponent,
   ],
   templateUrl: './publish-car-v2.page.html',
   styleUrls: ['./publish-car-v2.page.scss'],
@@ -1383,5 +1389,132 @@ export class PublishCarV2Page implements OnInit {
     } catch {
       // Silently fail
     }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // AI Photo Upload Handlers
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Handle AI-validated photos change from PhotoUploadAIComponent
+   * Syncs validated photos with the photo service
+   */
+  onAIPhotosChange(photos: PhotoWithAI[]): void {
+    this.logger.debug('[PublishCarV2] AI Photos changed:', photos.length);
+
+    // Extract valid photos (those that passed validation or are uploading)
+    const validPhotos = photos.filter(
+      (p) => p.validationStatus === 'valid' || p.validationStatus === 'pending',
+    );
+
+    // Sync with photo service - convert PhotoWithAI to files for upload
+    this.photoService.setPhotosFromAI(
+      validPhotos.map((p) => ({
+        file: p.file,
+        preview: p.preview,
+        position: p.position,
+        aiValidation: {
+          quality: p.qualityScore,
+          vehicle: p.vehicleDetection,
+          plates: p.plates,
+        },
+      })),
+    );
+
+    this.logger.debug('[PublishCarV2] Synced photos with service:', validPhotos.length);
+  }
+
+  /**
+   * Handle vehicle auto-detection from AI analysis
+   * Pre-fills brand, model, year if detected with high confidence
+   */
+  async onVehicleAutoDetected(vehicle: VehicleAutoDetect): Promise<void> {
+    this.logger.debug('[PublishCarV2] Vehicle auto-detected:', vehicle);
+
+    // Only use if confidence is high enough
+    if (vehicle.confidence < 0.7) {
+      this.logger.debug('[PublishCarV2] Confidence too low, ignoring auto-detection');
+      return;
+    }
+
+    // Check if user already has values set
+    const existingBrand = this.selectedFIPEBrand();
+    const existingModel = this.selectedFIPEModel();
+    const existingYear = this.publishForm?.get('year')?.value;
+
+    // If user already filled data, don't overwrite
+    if (existingBrand || existingModel || existingYear) {
+      this.logger.debug('[PublishCarV2] User already has values, showing suggestion instead');
+
+      // Show suggestion toast
+      this.notificationManager.show({
+        type: 'info',
+        title: 'Vehículo detectado',
+        message: `Detectamos un ${vehicle.brand} ${vehicle.model}${vehicle.year ? ` (${vehicle.year})` : ''}. ¿Querés usar estos datos?`,
+        duration: 8000,
+        actions: [
+          {
+            label: 'Usar',
+            command: () => this.applyVehicleAutoDetection(vehicle),
+          },
+        ],
+      });
+      return;
+    }
+
+    // Auto-apply if no existing data
+    await this.applyVehicleAutoDetection(vehicle);
+  }
+
+  /**
+   * Apply detected vehicle data to form
+   */
+  private async applyVehicleAutoDetection(vehicle: VehicleAutoDetect): Promise<void> {
+    this.logger.debug('[PublishCarV2] Applying vehicle auto-detection:', vehicle);
+
+    // Try to find matching FIPE brand
+    const brands = this.fipeBrands();
+    const matchingBrand = brands.find(
+      (b) => b.name.toLowerCase() === vehicle.brand.toLowerCase(),
+    );
+
+    if (matchingBrand) {
+      // Select the brand (this will load models)
+      await this.onFIPEBrandSelected(matchingBrand);
+
+      // Wait for models to load, then try to match model
+      setTimeout(async () => {
+        const models = this.fipeModels();
+        const matchingModel = models.find((m) =>
+          m.name.toLowerCase().includes(vehicle.model.toLowerCase()),
+        );
+
+        if (matchingModel) {
+          await this.onFIPEModelSelected(matchingModel);
+        } else {
+          // Set model as text backup if not found in FIPE
+          this.publishForm?.patchValue({
+            model_text_backup: vehicle.model,
+          });
+        }
+      }, 500);
+    } else {
+      // Set brand/model as text backups if not found in FIPE
+      this.publishForm?.patchValue({
+        brand_text_backup: vehicle.brand,
+        model_text_backup: vehicle.model,
+      });
+    }
+
+    // Set year if detected
+    if (vehicle.year) {
+      this.publishForm?.get('year')?.setValue(vehicle.year);
+    }
+
+    // Show success feedback
+    this.notificationManager.success(
+      'Datos auto-completados',
+      `${vehicle.brand} ${vehicle.model}${vehicle.year ? ` (${vehicle.year})` : ''} detectado automáticamente.`,
+    );
   }
 }
