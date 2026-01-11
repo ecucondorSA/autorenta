@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, from, map, catchError, of } from 'rxjs';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { Observable, catchError, from, map, of } from 'rxjs';
 
 // ============================================================================
 // TYPES
@@ -19,7 +19,7 @@ export interface UploadedFrame {
   suggested_area?: string;
 }
 
-export interface DetectedDamage {
+export interface InspectionDamage {
   frame_index: number;
   frame_url: string;
   type: 'scratch' | 'dent' | 'crack' | 'stain' | 'missing' | 'other';
@@ -58,7 +58,7 @@ export interface AreasDetected {
 
 export interface VideoInspectionResult {
   success: boolean;
-  damages: DetectedDamage[];
+  damages: InspectionDamage[];
   odometer?: OdometerReading;
   fuel_level?: FuelLevelReading;
   areas_detected: AreasDetected;
@@ -80,7 +80,7 @@ export interface ExtractFramesOptions {
 export type InspectionStage = 'check_in' | 'check_out' | 'renter_check_in';
 
 // Labels for display
-export const DAMAGE_TYPE_LABELS: Record<DetectedDamage['type'], string> = {
+export const DAMAGE_TYPE_LABELS: Record<InspectionDamage['type'], string> = {
   scratch: 'Rayón',
   dent: 'Abolladura',
   crack: 'Grieta',
@@ -89,7 +89,7 @@ export const DAMAGE_TYPE_LABELS: Record<DetectedDamage['type'], string> = {
   other: 'Otro',
 };
 
-export const SEVERITY_LABELS: Record<DetectedDamage['severity'], string> = {
+export const INSPECTION_SEVERITY_LABELS: Record<InspectionDamage['severity'], string> = {
   minor: 'Menor',
   moderate: 'Moderado',
   severe: 'Severo',
@@ -550,16 +550,16 @@ export class VideoInspectionAIService {
    * Filter damages by severity
    */
   filterDamagesBySeverity(
-    damages: DetectedDamage[],
-    severity: DetectedDamage['severity']
-  ): DetectedDamage[] {
+    damages: InspectionDamage[],
+    severity: InspectionDamage['severity']
+  ): InspectionDamage[] {
     return damages.filter((d) => d.severity === severity);
   }
 
   /**
    * Get confirmed damages (not discarded by user)
    */
-  getConfirmedDamages(damages: DetectedDamage[]): DetectedDamage[] {
+  getConfirmedDamages(damages: InspectionDamage[]): InspectionDamage[] {
     return damages.filter((d) => !d.discarded);
   }
 

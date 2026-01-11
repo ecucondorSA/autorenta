@@ -1,5 +1,5 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
-import { SupabaseService } from '@core/services/supabase.service';
+import { Injectable, computed, signal } from '@angular/core';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * Vehicle Document Verification Service
@@ -53,7 +53,7 @@ export interface DocumentVerificationResult {
 
 @Injectable({ providedIn: 'root' })
 export class VehicleDocumentService {
-  private readonly supabase = inject(SupabaseService);
+  private readonly supabase = injectSupabase();
 
   // State
   readonly isVerifying = signal(false);
@@ -73,7 +73,7 @@ export class VehicleDocumentService {
     this.error.set(null);
 
     try {
-      const { data, error } = await this.supabase.client.functions.invoke<DocumentVerificationResult>(
+      const { data, error } = await this.supabase.functions.invoke<DocumentVerificationResult>(
         'verify-vehicle-document',
         { body: request }
       );

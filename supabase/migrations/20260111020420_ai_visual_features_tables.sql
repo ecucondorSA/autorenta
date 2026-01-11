@@ -35,16 +35,34 @@ ON public.vehicle_recognition_logs(created_at);
 ALTER TABLE public.vehicle_recognition_logs ENABLE ROW LEVEL SECURITY;
 
 -- Users can view recognition logs for their own cars
-CREATE POLICY "Users can view own car recognition logs"
-ON public.vehicle_recognition_logs FOR SELECT
-USING (
-  car_id IN (SELECT id FROM public.cars WHERE owner_id = (SELECT auth.uid()))
-);
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'vehicle_recognition_logs'
+        AND policyname = 'Users can view own car recognition logs'
+    ) THEN
+        CREATE POLICY "Users can view own car recognition logs"
+        ON public.vehicle_recognition_logs FOR SELECT
+        USING (
+          car_id IN (SELECT id FROM public.cars WHERE owner_id = (SELECT auth.uid()))
+        );
+    END IF;
+END $$;
 
 -- Service role can insert (edge functions)
-CREATE POLICY "Service role can insert recognition logs"
-ON public.vehicle_recognition_logs FOR INSERT
-WITH CHECK (true);
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'vehicle_recognition_logs'
+        AND policyname = 'Service role can insert recognition logs'
+    ) THEN
+        CREATE POLICY "Service role can insert recognition logs"
+        ON public.vehicle_recognition_logs FOR INSERT
+        WITH CHECK (true);
+    END IF;
+END $$;
 
 -- ----------------------------------------------------------------------------
 -- Photo Quality Logs
@@ -81,14 +99,32 @@ WHERE user_id IS NOT NULL;
 ALTER TABLE public.photo_quality_logs ENABLE ROW LEVEL SECURITY;
 
 -- Users can view their own quality logs
-CREATE POLICY "Users can view own photo quality logs"
-ON public.photo_quality_logs FOR SELECT
-USING (user_id = (SELECT auth.uid()));
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'photo_quality_logs'
+        AND policyname = 'Users can view own photo quality logs'
+    ) THEN
+        CREATE POLICY "Users can view own photo quality logs"
+        ON public.photo_quality_logs FOR SELECT
+        USING (user_id = (SELECT auth.uid()));
+    END IF;
+END $$;
 
 -- Service role can insert
-CREATE POLICY "Service role can insert photo quality logs"
-ON public.photo_quality_logs FOR INSERT
-WITH CHECK (true);
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'photo_quality_logs'
+        AND policyname = 'Service role can insert photo quality logs'
+    ) THEN
+        CREATE POLICY "Service role can insert photo quality logs"
+        ON public.photo_quality_logs FOR INSERT
+        WITH CHECK (true);
+    END IF;
+END $$;
 
 -- ----------------------------------------------------------------------------
 -- Plate Detection Logs
@@ -115,14 +151,32 @@ WHERE car_id IS NOT NULL;
 ALTER TABLE public.plate_detection_logs ENABLE ROW LEVEL SECURITY;
 
 -- Users can view their own detection logs
-CREATE POLICY "Users can view own plate detection logs"
-ON public.plate_detection_logs FOR SELECT
-USING (user_id = (SELECT auth.uid()));
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'plate_detection_logs'
+        AND policyname = 'Users can view own plate detection logs'
+    ) THEN
+        CREATE POLICY "Users can view own plate detection logs"
+        ON public.plate_detection_logs FOR SELECT
+        USING (user_id = (SELECT auth.uid()));
+    END IF;
+END $$;
 
 -- Service role can insert
-CREATE POLICY "Service role can insert plate detection logs"
-ON public.plate_detection_logs FOR INSERT
-WITH CHECK (true);
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'plate_detection_logs'
+        AND policyname = 'Service role can insert plate detection logs'
+    ) THEN
+        CREATE POLICY "Service role can insert plate detection logs"
+        ON public.plate_detection_logs FOR INSERT
+        WITH CHECK (true);
+    END IF;
+END $$;
 
 -- ----------------------------------------------------------------------------
 -- Add AI fields to cars table

@@ -1,6 +1,6 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 // ============================================================================
 // TYPES
@@ -50,7 +50,7 @@ export const ISSUE_TYPE_LABELS: Record<PhotoIssue['type'], string> = {
   low_resolution: 'Baja resolución',
 };
 
-export const SEVERITY_LABELS: Record<PhotoIssue['severity'], string> = {
+export const PHOTO_SEVERITY_LABELS: Record<PhotoIssue['severity'], string> = {
   low: 'Menor',
   medium: 'Moderado',
   high: 'Crítico',
@@ -312,7 +312,7 @@ export class PhotoQualityService {
    * Gets human-readable label for severity
    */
   getSeverityLabel(severity: PhotoIssue['severity']): string {
-    return SEVERITY_LABELS[severity] || severity;
+    return PHOTO_SEVERITY_LABELS[severity] || severity;
   }
 
   /**

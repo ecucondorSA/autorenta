@@ -1,33 +1,33 @@
+import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Output,
+  ViewChild,
   computed,
   inject,
   signal,
-  ChangeDetectionStrategy,
-  ElementRef,
-  ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { firstValueFrom } from 'rxjs';
 import { BookingInspection, InspectionPhoto, InspectionStage } from '@core/models/fgo-v1-1.model';
-import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {
-  VideoInspectionAIService,
-  VideoInspectionResult,
-  DetectedDamage,
-  DAMAGE_TYPE_LABELS,
-  SEVERITY_LABELS,
   AREA_LABELS,
   AreasDetected,
+  DAMAGE_TYPE_LABELS,
+  INSPECTION_SEVERITY_LABELS,
+  InspectionDamage,
+  VideoInspectionAIService,
+  VideoInspectionResult,
 } from '@core/services/ai/video-inspection-ai.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { firstValueFrom } from 'rxjs';
 import { IconComponent } from '../icon/icon.component';
 
 type ViewState = 'recording' | 'processing' | 'results' | 'error';
@@ -83,7 +83,7 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
   readonly analysisResult = signal<VideoInspectionResult | null>(null);
   readonly editableOdometer = signal(0);
   readonly editableFuelLevel = signal(0);
-  readonly damages = signal<DetectedDamage[]>([]);
+  readonly damages = signal<InspectionDamage[]>([]);
 
   // Saving state
   readonly saving = signal(false);
@@ -94,7 +94,7 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
 
   // Labels for template
   readonly DAMAGE_LABELS = DAMAGE_TYPE_LABELS;
-  readonly SEVERITY_LABELS = SEVERITY_LABELS;
+  readonly SEVERITY_LABELS = INSPECTION_SEVERITY_LABELS;
   readonly AREA_LABELS = AREA_LABELS;
 
   // Computed properties
@@ -209,8 +209,8 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
       const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
         ? 'video/webm;codecs=vp9'
         : MediaRecorder.isTypeSupported('video/webm')
-        ? 'video/webm'
-        : 'video/mp4';
+          ? 'video/webm'
+          : 'video/mp4';
 
       this.mediaRecorder = new MediaRecorder(this.mediaStream, {
         mimeType,
@@ -425,7 +425,7 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
     return AREA_LABELS[key];
   }
 
-  getSeverityClass(severity: DetectedDamage['severity']): string {
+  getSeverityClass(severity: InspectionDamage['severity']): string {
     switch (severity) {
       case 'minor': return 'bg-yellow-100 text-yellow-800';
       case 'moderate': return 'bg-orange-100 text-orange-800';

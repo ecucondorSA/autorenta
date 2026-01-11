@@ -1,5 +1,5 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
-import { SupabaseService } from '@core/services/supabase.service';
+import { Injectable, computed, signal } from '@angular/core';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * EXIF Validation Service
@@ -46,7 +46,7 @@ export interface ExpectedLocation {
 
 @Injectable({ providedIn: 'root' })
 export class ExifValidationService {
-  private readonly supabase = inject(SupabaseService);
+  private readonly supabase = injectSupabase();
 
   // State
   readonly isValidating = signal(false);
@@ -79,7 +79,7 @@ export class ExifValidationService {
     this.error.set(null);
 
     try {
-      const { data, error } = await this.supabase.client.functions.invoke<ExifValidationResult>(
+      const { data, error } = await this.supabase.functions.invoke<ExifValidationResult>(
         'validate-photo-exif',
         {
           body: {

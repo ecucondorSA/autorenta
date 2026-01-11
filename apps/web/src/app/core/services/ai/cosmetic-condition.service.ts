@@ -1,5 +1,5 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
-import { SupabaseService } from '@core/services/supabase.service';
+import { Injectable, computed, signal } from '@angular/core';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * Cosmetic Condition Analysis Service
@@ -44,7 +44,7 @@ export interface VehicleConditionReport {
 
 @Injectable({ providedIn: 'root' })
 export class CosmeticConditionService {
-  private readonly supabase = inject(SupabaseService);
+  private readonly supabase = injectSupabase();
 
   // State
   readonly isAnalyzing = signal(false);
@@ -100,7 +100,7 @@ export class CosmeticConditionService {
     const isInterior = ['interior', 'dashboard', 'seats', 'trunk'].includes(area);
 
     try {
-      const { data, error } = await this.supabase.client.functions.invoke<ConditionAnalysisResult>(
+      const { data, error } = await this.supabase.functions.invoke<ConditionAnalysisResult>(
         'analyze-cosmetic-condition',
         {
           body: {

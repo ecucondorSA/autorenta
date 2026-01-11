@@ -5,7 +5,7 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { HapticService } from '../../core/services/ui/haptic.service';
+import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
 
 /**
  * Directiva que aplica un efecto de escala al presionar.
@@ -24,7 +24,7 @@ import { HapticService } from '../../core/services/ui/haptic.service';
 })
 export class PressScaleDirective {
   private readonly el = inject(ElementRef<HTMLElement>);
-  private readonly hapticService = inject(HapticService, { optional: true });
+  private readonly hapticService = inject(HapticFeedbackService, { optional: true });
 
   /** Escala al presionar (default: 0.96) */
   readonly scaleAmount = input<number>(0.96);
