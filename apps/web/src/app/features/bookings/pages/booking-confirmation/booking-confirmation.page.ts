@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentProvider } from '@core/interfaces/payment-gateway.interface';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { PdfWorkerService, ReceiptPdfData } from '@core/services/infrastructure/pdf-worker.service';
+import { normalizeRecordToUsd } from '@core/utils/currency.utils';
 
 type ConfirmationStatus = 'success' | 'pending' | 'error';
 
@@ -596,24 +597,14 @@ export class BookingConfirmationPage implements OnInit {
   }
 
   private normalizeBookingAmountToUsd(booking: Record<string, unknown>): number {
-    const amount =
-      booking['total_price'] ??
-      booking['total_amount'] ??
-      (booking['total_cents'] ? Number(booking['total_cents']) / 100 : 0);
-    const currency = (String(booking['currency']) || 'USD').toUpperCase();
-    if (currency === 'USD') return Number(amount) || 0;
-
-    const fxRate =
-      booking['fx_snapshot'] ??
-      booking['fx_rate'] ??
-      booking['fxSnapshot'] ??
-      booking['fxRate'] ??
-      null;
-    if (typeof fxRate === 'number' && fxRate > 0) {
-      return Number(amount) / fxRate;
+    // Handle total_cents separately if present
+    if (booking['total_cents']) {
+      const cents = Number(booking['total_cents']);
+      const currency = String(booking['currency'] || 'USD');
+      const fxRate = (booking['fx_snapshot'] ?? booking['fx_rate']) as number | null;
+      return normalizeRecordToUsd({ total_price: cents / 100, currency, fx_snapshot: fxRate }, 'total_price');
     }
-
-    return Number(amount) || 0;
+    return normalizeRecordToUsd(booking, 'total_price') || normalizeRecordToUsd(booking, 'total_amount');
   }
 
   /**

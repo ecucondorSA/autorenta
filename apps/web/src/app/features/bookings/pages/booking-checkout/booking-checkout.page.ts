@@ -13,6 +13,7 @@ import { PaymentProvider } from '@core/interfaces/payment-gateway.interface';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { DriverProfileService } from '@core/services/auth/driver-profile.service';
 import { PaymentGatewayFactory } from '@core/services/payments/payment-gateway.factory';
+import { normalizeRecordToUsd } from '@core/utils/currency.utils';
 // UI 2026 Directives
 import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
 import { PressScaleDirective } from '@shared/directives/press-scale.directive';
@@ -336,25 +337,14 @@ export class BookingCheckoutPage implements OnInit {
   }
 
   private normalizeBookingAmountToUsd(booking: Record<string, unknown>): number {
-    const amount =
-      booking['total_price'] ??
-      booking['total_amount'] ??
-      (booking['total_cents'] ? Number(booking['total_cents']) / 100 : 0);
-    const currency = (String(booking['currency']) || 'USD').toUpperCase();
-    if (currency === 'USD') return Number(amount) || 0;
-
-    const fxRate =
-      booking['fx_snapshot'] ??
-      booking['fx_rate'] ??
-      booking['fxSnapshot'] ??
-      booking['fxRate'] ??
-      null;
-    if (typeof fxRate === 'number' && fxRate > 0) {
-      return Number(amount) / fxRate;
+    // Handle total_cents separately if present
+    if (booking['total_cents']) {
+      const cents = Number(booking['total_cents']);
+      const currency = String(booking['currency'] || 'USD');
+      const fxRate = (booking['fx_snapshot'] ?? booking['fx_rate']) as number | null;
+      return normalizeRecordToUsd({ total_price: cents / 100, currency, fx_snapshot: fxRate }, 'total_price');
     }
-
-    // Fallback: return as-is if no FX available
-    return Number(amount) || 0;
+    return normalizeRecordToUsd(booking, 'total_price') || normalizeRecordToUsd(booking, 'total_amount');
   }
 
   /**

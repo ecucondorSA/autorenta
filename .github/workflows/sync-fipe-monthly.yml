@@ -1,0 +1,98 @@
+name: Monthly FIPE Price Sync
+
+on:
+  schedule:
+    # Run on 1st of every month at 3:00 AM UTC
+    - cron: '0 3 1 * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Log results without updating (true/false)'
+        required: false
+        default: 'false'
+
+jobs:
+  sync-fipe-prices:
+    name: Sync FIPE Prices
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Invoke sync-fipe-prices Edge Function
+        id: sync
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "🚗 Starting monthly FIPE price sync..."
+          echo "Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST "${SUPABASE_URL}/functions/v1/sync-fipe-prices" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response:"
+          echo "$BODY" | jq . || echo "$BODY"
+
+          # Extract stats
+          TOTAL=$(echo "$BODY" | jq -r '.total // 0')
+          UPDATED=$(echo "$BODY" | jq -r '.updated // 0')
+          UNCHANGED=$(echo "$BODY" | jq -r '.unchanged // 0')
+          SKIPPED=$(echo "$BODY" | jq -r '.skipped_override + .skipped_no_data // 0')
+          ERRORS=$(echo "$BODY" | jq -r '.errors // 0')
+
+          echo ""
+          echo "📊 Summary:"
+          echo "  Total cars: $TOTAL"
+          echo "  Updated: $UPDATED"
+          echo "  Unchanged: $UNCHANGED"
+          echo "  Skipped: $SKIPPED"
+          echo "  Errors: $ERRORS"
+
+          # Save for summary
+          echo "total=$TOTAL" >> $GITHUB_OUTPUT
+          echo "updated=$UPDATED" >> $GITHUB_OUTPUT
+          echo "errors=$ERRORS" >> $GITHUB_OUTPUT
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "❌ Sync failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+          if [ "$ERRORS" -gt "5" ]; then
+            echo "⚠️ Too many errors ($ERRORS), marking as failure"
+            exit 1
+          fi
+
+          echo "✅ FIPE sync completed successfully"
+
+      - name: Create Summary
+        if: always()
+        run: |
+          echo "## 🚗 Monthly FIPE Price Sync" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Count |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Total Cars | ${{ steps.sync.outputs.total || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Updated | ${{ steps.sync.outputs.updated || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Errors | ${{ steps.sync.outputs.errors || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Run time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+
+      - name: Notify on Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Monthly FIPE Sync Failed',
+              body: `The monthly FIPE price sync failed.\n\nWorkflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\n\nPlease investigate and re-run manually if needed.`,
+              labels: ['bug', 'automated']
+            });
