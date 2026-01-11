@@ -1,3 +1,10 @@
+## [2.8.6](https://github.com/ecucondorSA/autorenta/compare/v2.8.5...v2.8.6) (2026-01-11)
+
+
+### Bug Fixes
+
+* resolve TypeScript errors in photo-upload-ai and publish-car components ([a2b79b9](https://github.com/ecucondorSA/autorenta/commit/a2b79b90c21ec569ee1e1680a6db54c2c0f6718d))
+
 ## [2.8.5](https://github.com/ecucondorSA/autorenta/compare/v2.8.4...v2.8.5) (2026-01-11)
 
 
