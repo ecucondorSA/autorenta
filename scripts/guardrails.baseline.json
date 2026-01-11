@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-01-09T01:07:11.665Z",
+  "generatedAt": "2026-01-11T03:18:48.173Z",
   "categories": {
     "componentSelectors": [],
     "componentClasses": [],
@@ -8,11 +8,12 @@
     "pageBaseNames": [],
     "typeNames": [
       "BankAccount",
+      "DetectedDamage",
       "DisputeKind",
       "DisputeStatus",
+      "InspectionStage",
       "PaymentProvider",
-      "SubscriptionStatus",
-      "SubscriptionTier"
+      "SubscriptionStatus"
     ],
     "rpcFunctions": [
       "booking_v2_resolve_conclusion",
