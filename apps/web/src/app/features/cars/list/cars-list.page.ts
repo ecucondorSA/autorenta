@@ -1100,13 +1100,15 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
   private pendingRealtimeRefresh = false;
 
   private setupRealtimeSubscription(): void {
-    // 🚀 PERF: Only listen to INSERT and DELETE events
-    // UPDATEs are frequent and rarely need immediate UI refresh
-    // This reduces unnecessary re-renders by ~80%
+    // 🚀 PERF: Listen to INSERT/UPDATE/DELETE but apply granular updates
+    // UPDATEs are filtered to avoid unnecessary re-renders.
     this.realtimeChannel = this.supabase
       .channel('cars-realtime')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'cars' }, (payload) => {
         this.handleRealtimeInsert(payload);
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'cars' }, (payload) => {
+        this.handleRealtimeUpdate(payload);
       })
       .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'cars' }, () => {
         this.handleRealtimeDelete();
@@ -1116,6 +1118,70 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
           console.debug('[CarsList] Realtime subscription active');
         }
       });
+  }
+
+  private handleRealtimeUpdate(payload: {
+    new?: Record<string, unknown> | null;
+    old?: Record<string, unknown> | null;
+  }): void {
+    const updated = payload.new ?? null;
+    if (!updated || typeof updated !== 'object') {
+      return;
+    }
+
+    const carId = updated['id'];
+    if (typeof carId !== 'string') {
+      return;
+    }
+
+    if (!this.shouldApplyRealtimeUpdate(updated, payload.old ?? null)) {
+      return;
+    }
+
+    this.cars.update((current) => {
+      const index = current.findIndex((car) => car.id === carId);
+      if (index === -1) {
+        return current;
+      }
+
+      const status = updated['status'];
+      if (typeof status === 'string' && status !== 'active') {
+        return current.filter((car) => car.id !== carId);
+      }
+
+      const existing = current[index];
+      const merged = { ...existing, ...(updated as Partial<Car>) } as Car;
+      const next = current.slice();
+      next[index] = merged;
+      return next;
+    });
+  }
+
+  private shouldApplyRealtimeUpdate(
+    updated: Record<string, unknown>,
+    previous: Record<string, unknown> | null,
+  ): boolean {
+    if (!previous) {
+      return true;
+    }
+
+    const watchedFields = [
+      'price_per_day',
+      'currency',
+      'status',
+      'title',
+      'brand_text_backup',
+      'model_text_backup',
+      'location_city',
+      'location_state',
+      'location_lat',
+      'location_lng',
+      'rating_avg',
+      'rating_count',
+      'updated_at',
+    ];
+
+    return watchedFields.some((field) => updated[field] !== previous[field]);
   }
 
   // Handle new car insertion - show toast only (user can manually refresh)

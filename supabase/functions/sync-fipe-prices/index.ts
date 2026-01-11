@@ -25,8 +25,11 @@ interface FipeResponse {
   success: boolean;
   data?: {
     value_usd: number;
+    value_brl?: number;
+    value_ars?: number;
     fipe_code: string;
     confidence: string;
+    reference_month?: string;
   };
 }
 
@@ -72,7 +75,6 @@ serve(async (req: Request) => {
     const results = {
       total: cars?.length || 0,
       updated: 0,
-      skipped_override: 0,
       skipped_no_data: 0,
       errors: 0,
       unchanged: 0,
@@ -93,18 +95,6 @@ serve(async (req: Request) => {
           brand: brand || "(null)",
           model: model || "(null)",
           status: "skipped_no_data"
-        });
-        continue;
-      }
-
-      // Skip if owner has locked the price
-      if (car.price_override === true) {
-        results.skipped_override++;
-        results.details.push({
-          id: car.id,
-          brand,
-          model,
-          status: "skipped_override"
         });
         continue;
       }
@@ -139,10 +129,36 @@ serve(async (req: Request) => {
           const newValue = fipe.data.value_usd;
           const oldValue = car.estimated_value_usd;
 
-          // Only update if value changed significantly (>5% difference)
-          const shouldUpdate = !oldValue || Math.abs(newValue - oldValue) / oldValue > 0.05;
+          const isChanged = oldValue !== null && oldValue !== newValue;
 
-          if (shouldUpdate) {
+          if (oldValue !== null && oldValue === newValue) {
+            results.unchanged++;
+            results.details.push({
+              id: car.id,
+              brand,
+              model,
+              status: "unchanged",
+              old_value: oldValue,
+              new_value: newValue
+            });
+            const { error: historyError } = await supabase
+              .from("cars_fipe_history")
+              .insert({
+                car_id: car.id,
+                synced_at: new Date().toISOString(),
+                value_usd: newValue,
+                value_brl: fipe.data.value_brl ?? null,
+                value_ars: fipe.data.value_ars ?? null,
+                fipe_code: fipe.data.fipe_code || null,
+                reference_month: fipe.data.reference_month || null,
+                source: "fipe",
+                is_changed: false,
+                previous_value_usd: oldValue
+              });
+            if (historyError) {
+              console.error(`[sync-fipe-prices] Error inserting history for car ${car.id}:`, historyError);
+            }
+          } else {
             // Update estimated_value_usd (trigger will auto-update price_per_day)
             const { error: updateError } = await supabase
               .from("cars")
@@ -150,46 +166,55 @@ serve(async (req: Request) => {
                 estimated_value_usd: newValue,
                 value_usd: newValue,
                 value_usd_source: "fipe",
+                fipe_code: fipe.data.fipe_code || null,
+                fipe_last_sync: new Date().toISOString(),
                 brand: brand, // Ensure main fields are populated
                 model: model,
                 updated_at: new Date().toISOString()
               })
               .eq("id", car.id);
 
-            if (updateError) {
-              console.error(`[sync-fipe-prices] Error updating car ${car.id}:`, updateError);
-              results.errors++;
-              results.details.push({
-                id: car.id,
-                brand,
-                model,
-                status: "error",
-                old_value: oldValue || 0,
-                new_value: newValue
-              });
-            } else {
-              results.updated++;
-              results.details.push({
-                id: car.id,
-                brand,
-                model,
-                status: "updated",
-                old_value: oldValue || 0,
-                new_value: newValue
-              });
-              console.log(`[sync-fipe-prices] Updated ${brand} ${model} ${car.year}: $${oldValue} → $${newValue}`);
+              if (updateError) {
+                console.error(`[sync-fipe-prices] Error updating car ${car.id}:`, updateError);
+                results.errors++;
+                results.details.push({
+                  id: car.id,
+                  brand,
+                  model,
+                  status: "error",
+                  old_value: oldValue || 0,
+                  new_value: newValue
+                });
+              } else {
+                results.updated++;
+                results.details.push({
+                  id: car.id,
+                  brand,
+                  model,
+                  status: "updated",
+                  old_value: oldValue || 0,
+                  new_value: newValue
+                });
+                const { error: historyError } = await supabase
+                  .from("cars_fipe_history")
+                  .insert({
+                    car_id: car.id,
+                    synced_at: new Date().toISOString(),
+                    value_usd: newValue,
+                    value_brl: fipe.data.value_brl ?? null,
+                    value_ars: fipe.data.value_ars ?? null,
+                    fipe_code: fipe.data.fipe_code || null,
+                    reference_month: fipe.data.reference_month || null,
+                    source: "fipe",
+                    is_changed: isChanged,
+                    previous_value_usd: oldValue
+                  });
+                if (historyError) {
+                  console.error(`[sync-fipe-prices] Error inserting history for car ${car.id}:`, historyError);
+                }
+                console.log(`[sync-fipe-prices] Updated ${brand} ${model} ${car.year}: $${oldValue} → $${newValue}`);
+              }
             }
-          } else {
-            results.unchanged++;
-            results.details.push({
-              id: car.id,
-              brand,
-              model,
-              status: "unchanged",
-              old_value: oldValue || 0,
-              new_value: newValue
-            });
-          }
         } else {
           results.skipped_no_data++;
           results.details.push({
@@ -219,7 +244,7 @@ serve(async (req: Request) => {
       total: results.total,
       updated: results.updated,
       unchanged: results.unchanged,
-      skipped: results.skipped_override + results.skipped_no_data,
+      skipped: results.skipped_no_data,
       errors: results.errors
     });
 

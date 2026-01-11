@@ -486,6 +486,9 @@ async function syncFipeValues(
 
       // Step 5: Update car in database
       const fipeCode = fipeData.codeFipe || fipeData.codigoFipe;
+      const oldValue = car.value_usd ?? null;
+      const isChanged = oldValue !== null && oldValue !== converted.usd;
+      const referenceMonth = fipeData.referenceMonth || fipeData.mesReferencia || null;
       const { error: updateError } = await supabase
         .from('cars')
         .update({
@@ -495,7 +498,7 @@ async function syncFipeValues(
           fipe_code: fipeCode,
           value_usd_source: 'fipe',
           fipe_last_sync: new Date().toISOString(),
-          estimated_value_usd: null, // Clear estimate since we have real data
+          estimated_value_usd: converted.usd, // Keep in sync for auto price update
         })
         .eq('id', car.id);
 
@@ -508,6 +511,23 @@ async function syncFipeValues(
       } else {
         result.synced++;
         console.log(`✅ Synced successfully!`);
+        const { error: historyError } = await supabase
+          .from('cars_fipe_history')
+          .insert({
+            car_id: car.id,
+            synced_at: new Date().toISOString(),
+            value_usd: converted.usd,
+            value_brl: Math.round(brlPrice),
+            value_ars: converted.ars,
+            fipe_code: fipeCode || null,
+            reference_month: referenceMonth,
+            source: 'fipe',
+            is_changed: isChanged,
+            previous_value_usd: oldValue,
+          });
+        if (historyError) {
+          console.error(`❌ History insert failed for car ${car.id}: ${historyError.message}`);
+        }
       }
 
       // Step 6: Rate limiting (respect FIPE API limits)
