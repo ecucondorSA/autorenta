@@ -109,8 +109,8 @@
         <div class="flex items-center gap-1.5 font-bold text-white/95">
           <app-icon name="star-filled" [size]="14" cssClass="text-warning-default" />
           <span>{{ carStats()?.rating_avg || car()?.rating_avg || 'Nuevo' }}</span>
-          @if (carStats()?.rating_count) {
-          <span class="text-white/70 font-normal">({{ carStats()?.rating_count }})</span>
+          @if (carStats()?.reviews_count) {
+          <span class="text-white/70 font-normal">({{ carStats()?.reviews_count }})</span>
           }
         </div>
         <div class="flex items-center gap-1.5 text-white/90">
@@ -291,7 +291,7 @@
             vehículo</h3>
           <p class="text-text-primary leading-relaxed text-base sm:text-lg">
             Este {{ car()?.brand }} {{ car()?.model }} {{ car()?.year }} se encuentra en excelentes
-            condiciones, ideal para {{ car()?.engine_type === 'Electric' ? 'una experiencia
+            condiciones, ideal para {{ car()?.fuel_type === 'electric' ? 'una experiencia
             silenciosa y sustentable' : 'tu próximo viaje' }}.
             {{ car()?.description || 'No hay una descripción detallada para este vehículo todavía.'
             }}

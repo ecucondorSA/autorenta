@@ -79,7 +79,7 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
               </div>
               <div class="form-hints">
                 <span class="hint-text">Disponible: {{ formattedMaxAmount() }}</span>
-                <span class="hint-text">Mínimo: ARS 1.000</span>
+                <span class="hint-text">Mínimo: USD 1,000</span>
               </div>
               @if (form.controls.amount.invalid && form.controls.amount.touched) {
                 <div class="error-messages">
@@ -87,7 +87,7 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                     <span class="error-text"> El monto es requerido </span>
                   }
                   @if (form.controls.amount.errors?.['min']) {
-                    <span class="error-text"> El monto mínimo es ARS 1.000 </span>
+                    <span class="error-text"> El monto mínimo es USD 1,000 </span>
                   }
                   @if (form.controls.amount.errors?.['max']) {
                     <span class="error-text"> No tenés suficiente saldo disponible </span>
@@ -117,19 +117,19 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
                 <div class="preview-row">
                   <span>Monto solicitado</span>
                   <span class="preview-value">{{
-                    form.value.amount | number: '1.0-0' | currency: 'ARS' : 'symbol-narrow'
+                    form.value.amount | number: '1.0-0' | currency: 'USD' : 'symbol-narrow'
                   }}</span>
                 </div>
                 <div class="preview-row">
                   <span>Comisión</span>
                   <span class="preview-value">{{
-                    calculateFee() | number: '1.0-0' | currency: 'ARS' : 'symbol-narrow'
+                    calculateFee() | number: '1.0-0' | currency: 'USD' : 'symbol-narrow'
                   }}</span>
                 </div>
                 <div class="preview-row total">
                   <span>Recibirás</span>
                   <span class="preview-value">{{
-                    calculateNet() | number: '1.0-0' | currency: 'ARS' : 'symbol-narrow'
+                    calculateNet() | number: '1.0-0' | currency: 'USD' : 'symbol-narrow'
                   }}</span>
                 </div>
                 <p class="preview-hint">El depósito se procesará en 1-3 días hábiles</p>
@@ -517,19 +517,19 @@ export class RequestPayoutModalComponent {
   });
 
   readonly formattedMaxAmount = computed(() => {
-    return new Intl.NumberFormat('es-AR', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'ARS',
+      currency: 'USD',
     }).format(this.maxAmount);
   });
 
   readonly quickAmounts = computed(() => {
     const amounts = [
-      { label: 'ARS 5.000', value: 5000 },
-      { label: 'ARS 10.000', value: 10000 },
-      { label: 'ARS 20.000', value: 20000 },
-      { label: 'ARS 50.000', value: 50000 },
-      { label: 'ARS 100.000', value: 100000 },
+      { label: 'USD 5,000', value: 5000 },
+      { label: 'USD 10,000', value: 10000 },
+      { label: 'USD 20,000', value: 20000 },
+      { label: 'USD 50,000', value: 50000 },
+      { label: 'USD 100,000', value: 100000 },
       { label: 'Todo', value: this.maxAmount },
     ];
     return amounts.filter((a) => a.value <= 1000000); // Max allowed by service
