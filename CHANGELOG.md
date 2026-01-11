@@ -1,3 +1,10 @@
+## [2.6.1](https://github.com/ecucondorSA/autorenta/compare/v2.6.0...v2.6.1) (2026-01-11)
+
+
+### Bug Fixes
+
+* copy static-shared.css to each page directory and update styleUrls ([96cbc9c](https://github.com/ecucondorSA/autorenta/commit/96cbc9cab50af1d56c6b919cf3ad1d9bf96db349))
+
 # [2.6.0](https://github.com/ecucondorSA/autorenta/compare/v2.5.1...v2.6.0) (2026-01-11)
 
 
