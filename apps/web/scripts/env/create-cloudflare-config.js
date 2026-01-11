@@ -59,7 +59,8 @@ const headersContent = `# Headers globales de seguridad
   Referrer-Policy: strict-origin-when-cross-origin
 
   # Permissions Policy (reemplaza Feature-Policy)
-  Permissions-Policy: geolocation=(self), microphone=(), camera=(), payment=(self), usb=(), magnetometer=(), gyroscope=(), accelerometer=()
+  # camera=(self) permite acceso a cámara para el scanner de vehículos
+  Permissions-Policy: geolocation=(self), microphone=(), camera=(self), payment=(self), usb=(), magnetometer=(), gyroscope=(), accelerometer=()
 
   # HTTP Strict Transport Security (HSTS)
   # Fuerza HTTPS por 1 año, incluye subdominios
