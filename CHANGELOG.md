@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/ecucondorSA/autorenta/compare/v2.5.1...v2.6.0) (2026-01-11)
+
+
+### Features
+
+* add 14 static footer pages ([9cc9ba5](https://github.com/ecucondorSA/autorenta/commit/9cc9ba5bd25282de75470508318c8c9f2343fc65))
+
 ## [2.5.1](https://github.com/ecucondorSA/autorenta/compare/v2.5.0...v2.5.1) (2026-01-11)
 
 
