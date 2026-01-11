@@ -1,11 +1,22 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { environment } from '@environment';
 import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { PhotoQualityService, PhotoQualityResult, VehiclePosition } from '@core/services/ai/photo-quality.service';
+import { PlateDetectionService } from '@core/services/ai/plate-detection.service';
+import { VehicleRecognitionService, VehicleRecognitionResult } from '@core/services/ai/vehicle-recognition.service';
 
 export interface PhotoPreview {
   file: File;
   preview: string;
+  /** Position for vehicle photos (front, rear, left, right, etc.) */
+  position?: VehiclePosition;
+  /** Quality validation result from AI */
+  qualityResult?: PhotoQualityResult;
+  /** Whether plates were detected and blurred */
+  platesBlurred?: boolean;
+  /** Number of plates that were blurred */
+  platesCount?: number;
 }
 
 export interface GenerateAIPhotosOptions {
@@ -37,11 +48,39 @@ export interface GenerateAIPhotosOptions {
 export class PublishCarPhotoService {
   private readonly carsService = inject(CarsService);
   private readonly notifications = inject(NotificationManagerService);
+  private readonly photoQuality = inject(PhotoQualityService);
+  private readonly plateDetection = inject(PlateDetectionService);
+  private readonly vehicleRecognition = inject(VehicleRecognitionService);
 
   // State
   readonly uploadedPhotos = signal<PhotoPreview[]>([]);
   readonly isProcessingPhotos = signal(false);
   readonly isGeneratingAIPhotos = signal(false);
+  readonly isValidatingQuality = signal(false);
+  readonly isDetectingPlates = signal(false);
+  readonly isRecognizingVehicle = signal(false);
+
+  // AI Results
+  readonly recognitionResult = signal<VehicleRecognitionResult | null>(null);
+
+  // Computed: Check if any photo has quality issues
+  readonly hasQualityIssues = computed(() => {
+    const photos = this.uploadedPhotos();
+    return photos.some(p => p.qualityResult && !p.qualityResult.quality.is_acceptable);
+  });
+
+  // Computed: Average quality score
+  readonly averageQualityScore = computed(() => {
+    const photos = this.uploadedPhotos().filter(p => p.qualityResult);
+    if (photos.length === 0) return 0;
+    const total = photos.reduce((sum, p) => sum + (p.qualityResult?.quality.score ?? 0), 0);
+    return Math.round(total / photos.length);
+  });
+
+  // Computed: Total plates blurred
+  readonly totalPlatesBlurred = computed(() => {
+    return this.uploadedPhotos().reduce((sum, p) => sum + (p.platesCount ?? 0), 0);
+  });
 
   private readonly MAX_PHOTOS = 10;
   private readonly MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -568,5 +607,275 @@ export class PublishCarPhotoService {
       console.error('Failed to load existing photos:', error);
       this.notifications.warning('Fotos', 'No pudimos cargar las fotos existentes.');
     }
+  }
+
+  // ============================================================================
+  // AI VISUAL FEATURES
+  // ============================================================================
+
+  /**
+   * Validates quality of a single photo
+   * Updates the photo's qualityResult in the photos array
+   */
+  async validatePhotoQuality(index: number, position?: VehiclePosition): Promise<PhotoQualityResult | null> {
+    const photos = this.uploadedPhotos();
+    const photo = photos[index];
+    if (!photo) return null;
+
+    this.isValidatingQuality.set(true);
+
+    try {
+      const result = await this.photoQuality.validatePhoto(
+        photo.preview,
+        'vehicle_exterior',
+        position
+      );
+
+      // Update photo with result
+      this.uploadedPhotos.update(list => {
+        const newList = [...list];
+        newList[index] = {
+          ...newList[index],
+          qualityResult: result,
+          position,
+        };
+        return newList;
+      });
+
+      return result;
+    } catch (error) {
+      console.error('Quality validation failed:', error);
+      return null;
+    } finally {
+      this.isValidatingQuality.set(false);
+    }
+  }
+
+  /**
+   * Validates quality of all photos
+   */
+  async validateAllPhotosQuality(): Promise<{
+    allValid: boolean;
+    averageScore: number;
+    issueCount: number;
+  }> {
+    this.isValidatingQuality.set(true);
+
+    try {
+      const photos = this.uploadedPhotos();
+      const positions: VehiclePosition[] = ['front', 'rear', 'left', 'right', 'interior'];
+
+      await Promise.all(
+        photos.map((_, index) =>
+          this.validatePhotoQuality(index, positions[index % positions.length])
+        )
+      );
+
+      const validatedPhotos = this.uploadedPhotos().filter(p => p.qualityResult);
+      const issueCount = validatedPhotos.filter(p => !p.qualityResult?.quality.is_acceptable).length;
+
+      return {
+        allValid: issueCount === 0,
+        averageScore: this.averageQualityScore(),
+        issueCount,
+      };
+    } finally {
+      this.isValidatingQuality.set(false);
+    }
+  }
+
+  /**
+   * Detects and blurs license plates in a photo
+   * Updates the photo with blurred version if plates found
+   */
+  async detectAndBlurPlates(index: number): Promise<{ found: boolean; count: number }> {
+    const photos = this.uploadedPhotos();
+    const photo = photos[index];
+    if (!photo) return { found: false, count: 0 };
+
+    this.isDetectingPlates.set(true);
+
+    try {
+      const result = await this.plateDetection.detectAndBlur(photo.preview);
+
+      if (result.hasPlates && result.blurredBlob) {
+        // Create new preview from blurred blob
+        const blurredPreview = URL.createObjectURL(result.blurredBlob);
+        const blurredFile = new File([result.blurredBlob], photo.file.name, { type: 'image/jpeg' });
+
+        // Update photo with blurred version
+        this.uploadedPhotos.update(list => {
+          const newList = [...list];
+          newList[index] = {
+            ...newList[index],
+            file: blurredFile,
+            preview: blurredPreview,
+            platesBlurred: true,
+            platesCount: result.platesCount,
+          };
+          return newList;
+        });
+
+        this.notifications.success(
+          'Privacidad',
+          `Se difuminó ${result.platesCount} placa(s) automáticamente`
+        );
+      }
+
+      return { found: result.hasPlates, count: result.platesCount };
+    } catch (error) {
+      console.error('Plate detection failed:', error);
+      return { found: false, count: 0 };
+    } finally {
+      this.isDetectingPlates.set(false);
+    }
+  }
+
+  /**
+   * Detects and blurs plates in all photos
+   */
+  async detectAndBlurAllPlates(): Promise<{ totalFound: number }> {
+    this.isDetectingPlates.set(true);
+
+    try {
+      const photos = this.uploadedPhotos();
+      let totalFound = 0;
+
+      // Process sequentially to avoid overwhelming the API
+      for (let i = 0; i < photos.length; i++) {
+        const result = await this.detectAndBlurPlates(i);
+        totalFound += result.count;
+      }
+
+      if (totalFound > 0) {
+        this.notifications.success(
+          'Privacidad',
+          `Se difuminaron ${totalFound} placa(s) en total para proteger tu privacidad`
+        );
+      }
+
+      return { totalFound };
+    } finally {
+      this.isDetectingPlates.set(false);
+    }
+  }
+
+  /**
+   * Recognizes vehicle make/model from the first photo
+   * Returns auto-complete suggestions for form fields
+   */
+  async recognizeVehicle(): Promise<VehicleRecognitionResult | null> {
+    const photos = this.uploadedPhotos();
+    if (photos.length === 0) return null;
+
+    this.isRecognizingVehicle.set(true);
+
+    try {
+      const result = await this.vehicleRecognition.recognizeFromBase64(photos[0].preview);
+      this.recognitionResult.set(result);
+
+      if (result.success && result.vehicle.confidence >= 70) {
+        this.notifications.success(
+          'Vehículo detectado',
+          `${result.vehicle.brand} ${result.vehicle.model} (${result.vehicle.confidence}% confianza)`
+        );
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Vehicle recognition failed:', error);
+      return null;
+    } finally {
+      this.isRecognizingVehicle.set(false);
+    }
+  }
+
+  /**
+   * Validates vehicle in photo matches expected info
+   */
+  async validateVehicleMatch(expected: {
+    brand: string;
+    model: string;
+    year?: number;
+    color?: string;
+  }): Promise<{ matches: boolean; discrepancies: string[] }> {
+    const photos = this.uploadedPhotos();
+    if (photos.length === 0) {
+      return { matches: true, discrepancies: [] };
+    }
+
+    this.isRecognizingVehicle.set(true);
+
+    try {
+      const result = await this.vehicleRecognition.validateVehicle(photos[0].preview, expected);
+
+      if (!result.matches && result.discrepancies.length > 0) {
+        this.notifications.warning(
+          'Verificación',
+          `Las fotos podrían no coincidir con el vehículo: ${result.discrepancies[0]}`
+        );
+      }
+
+      return result;
+    } finally {
+      this.isRecognizingVehicle.set(false);
+    }
+  }
+
+  /**
+   * Gets auto-complete values from vehicle recognition
+   */
+  getAutoCompleteFromRecognition(): {
+    brand?: string;
+    model?: string;
+    yearSuggestion?: [number, number];
+    color?: string;
+  } | null {
+    const result = this.recognitionResult();
+    if (!result?.success || result.vehicle.confidence < 60) {
+      return null;
+    }
+
+    return {
+      brand: result.vehicle.brand !== 'Desconocido' ? result.vehicle.brand : undefined,
+      model: result.vehicle.model !== 'Desconocido' ? result.vehicle.model : undefined,
+      yearSuggestion: result.vehicle.year_range,
+      color: result.vehicle.color !== 'desconocido' ? result.vehicle.color : undefined,
+    };
+  }
+
+  /**
+   * Runs all AI validations on photos:
+   * 1. Quality check
+   * 2. Plate detection and blur
+   * 3. Vehicle recognition (first photo only)
+   */
+  async runAllAIValidations(): Promise<{
+    qualityScore: number;
+    qualityIssues: number;
+    platesBlurred: number;
+    vehicleRecognized: boolean;
+  }> {
+    const photos = this.uploadedPhotos();
+    if (photos.length === 0) {
+      return { qualityScore: 0, qualityIssues: 0, platesBlurred: 0, vehicleRecognized: false };
+    }
+
+    // Run validations in sequence to provide feedback
+    this.notifications.info('Validando', 'Analizando calidad de fotos...');
+    const qualityResult = await this.validateAllPhotosQuality();
+
+    this.notifications.info('Validando', 'Detectando placas para privacidad...');
+    const plateResult = await this.detectAndBlurAllPlates();
+
+    this.notifications.info('Validando', 'Reconociendo vehículo...');
+    const recognition = await this.recognizeVehicle();
+
+    return {
+      qualityScore: qualityResult.averageScore,
+      qualityIssues: qualityResult.issueCount,
+      platesBlurred: plateResult.totalFound,
+      vehicleRecognized: recognition?.success ?? false,
+    };
   }
 }

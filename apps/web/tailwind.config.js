@@ -398,6 +398,26 @@ module.exports = {
       },
 
       /* ─────────────────────────────────────────────────────────────
+         Bento Grid System - 2026 UI Trend
+         Layouts modulares asimétricos inspirados en Apple/Spotify
+         ───────────────────────────────────────────────────────────── */
+      gridTemplateColumns: {
+        // Bento layouts predefinidos
+        'bento-2': 'repeat(2, minmax(0, 1fr))',
+        'bento-3': 'repeat(3, minmax(0, 1fr))',
+        'bento-4': 'repeat(4, minmax(0, 1fr))',
+        // Asimétrico: hero grande + items pequeños
+        'bento-hero-2': '2fr 1fr',
+        'bento-hero-3': '2fr 1fr 1fr',
+        'bento-sidebar': '1fr 300px',
+        'bento-sidebar-lg': '1fr 380px',
+      },
+      gridTemplateRows: {
+        'bento-auto': 'repeat(auto-fill, minmax(180px, 1fr))',
+        'bento-dashboard': 'auto 1fr 1fr',
+      },
+
+      /* ─────────────────────────────────────────────────────────────
          Espaciados Extendidos
          ───────────────────────────────────────────────────────────── */
       spacing: {

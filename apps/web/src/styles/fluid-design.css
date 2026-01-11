@@ -55,6 +55,32 @@
   --gap-md: clamp(1rem, 2vw, 1.5rem);
   --gap-lg: clamp(1.5rem, 3vw, 2rem);
   --gap-xl: clamp(2rem, 4vw, 3rem);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     2026 UI Additions - Hero & Financial Display
+     ───────────────────────────────────────────────────────────────────────── */
+
+  /* Hero Typography (para landing pages y headers impactantes) */
+  --font-hero-xl: clamp(2.5rem, 6vw + 1rem, 5rem); /* 40px - 80px */
+  --font-hero-lg: clamp(2rem, 4vw + 1rem, 4rem); /* 32px - 64px */
+  --font-hero-md: clamp(1.5rem, 3vw + 0.5rem, 2.5rem); /* 24px - 40px */
+
+  /* Financial Display (para balances, precios, montos) */
+  --font-balance-xl: clamp(2rem, 4vw + 1rem, 3.5rem); /* 32px - 56px */
+  --font-balance-lg: clamp(1.5rem, 3vw + 0.5rem, 2.5rem); /* 24px - 40px */
+  --font-balance-md: clamp(1.25rem, 2vw + 0.5rem, 1.75rem); /* 20px - 28px */
+
+  /* Micro Text (para labels, captions en móvil legibles) */
+  --font-micro: clamp(0.625rem, 0.5vw + 0.5rem, 0.75rem); /* 10px - 12px */
+  --font-label: clamp(0.6875rem, 0.5vw + 0.5rem, 0.8125rem); /* 11px - 13px */
+
+  /* Bento Card Spacing (responsive card padding) */
+  --bento-padding-sm: clamp(0.75rem, 2vw, 1rem);
+  --bento-padding-md: clamp(1rem, 3vw, 1.5rem);
+  --bento-padding-lg: clamp(1.5rem, 4vw, 2.5rem);
+
+  /* Bento Grid Gap (responsive grid spacing) */
+  --bento-gap: clamp(0.75rem, 2vw, 1.5rem);
 }
 
 /* Fluid Typography Utilities */
@@ -169,4 +195,133 @@
 .icon-fluid-xl {
   width: var(--icon-xl);
   height: var(--icon-xl);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2026 UI Utilities - Hero, Balance, Bento
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Hero Typography */
+.text-hero-xl {
+  font-size: var(--font-hero-xl);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+.text-hero-lg {
+  font-size: var(--font-hero-lg);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+.text-hero-md {
+  font-size: var(--font-hero-md);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+/* Financial/Balance Typography */
+.text-balance-xl {
+  font-size: var(--font-balance-xl);
+  line-height: 1.1;
+  font-weight: 700;
+  font-feature-settings: 'tnum' on, 'lnum' on; /* Tabular numerals */
+}
+.text-balance-lg {
+  font-size: var(--font-balance-lg);
+  line-height: 1.15;
+  font-weight: 600;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+}
+.text-balance-md {
+  font-size: var(--font-balance-md);
+  line-height: 1.2;
+  font-weight: 600;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+}
+
+/* Micro/Label Text */
+.text-micro {
+  font-size: var(--font-micro);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+.text-label {
+  font-size: var(--font-label);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+/* Bento Card Padding */
+.p-bento-sm {
+  padding: var(--bento-padding-sm);
+}
+.p-bento-md {
+  padding: var(--bento-padding-md);
+}
+.p-bento-lg {
+  padding: var(--bento-padding-lg);
+}
+
+/* Bento Grid Utilities */
+.bento-grid {
+  display: grid;
+  gap: var(--bento-gap);
+}
+
+/* 2 columnas responsive */
+.bento-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--bento-gap);
+}
+@media (min-width: 640px) {
+  .bento-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 3 columnas responsive */
+.bento-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--bento-gap);
+}
+@media (min-width: 640px) {
+  .bento-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .bento-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Hero layout: 2fr + 1fr responsive */
+.bento-grid-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--bento-gap);
+}
+@media (min-width: 768px) {
+  .bento-grid-hero {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+/* Span utilities for bento items */
+.bento-span-2 {
+  grid-column: span 1;
+}
+@media (min-width: 640px) {
+  .bento-span-2 {
+    grid-column: span 2;
+  }
+}
+
+.bento-span-full {
+  grid-column: 1 / -1;
 }

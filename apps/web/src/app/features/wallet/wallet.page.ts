@@ -10,6 +10,11 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+
+// UI 2026 Directives
+import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
+import { PressScaleDirective } from '@shared/directives/press-scale.directive';
+import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
 import type { AddBankAccountParams, RequestWithdrawalParams } from '@core/models/wallet.model';
 import { SubscriptionTier } from '@core/models/subscription.model';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
@@ -69,6 +74,10 @@ import { ClubPlansPreviewComponent } from './components/club-plans-preview.compo
     ClubMembershipCardComponent,
     ClubPlansPreviewComponent,
     WalletAccountNumberCardComponent,
+    // UI 2026 Directives
+    HoverLiftDirective,
+    PressScaleDirective,
+    StaggerEnterDirective,
   ],
   templateUrl: './wallet.page.html',
   styleUrls: ['./wallet.page.css'],

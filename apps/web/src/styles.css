@@ -44,6 +44,9 @@
 /* 🎬 Animation System - Enter/leave transitions */
 @import './styles/animations.css';
 
+/* 🪟 Glassmorphism System - 2026 UI Trend */
+@import './styles/glass.css';
+
 /* ============================================ */
 /* CSS RULES START HERE */
 /* ============================================ */

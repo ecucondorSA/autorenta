@@ -46,15 +46,20 @@
     <!-- ============================================================================================== -->
     <div class="lg:col-span-8 space-y-6">
       <!-- 1. HERO CARD: Minimalista con jerarquía clara -->
-      <section class="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden">
+      <section
+        appHoverLift
+        [liftAmount]="6"
+        class="glass-card-elevated rounded-2xl overflow-hidden"
+        appStaggerEnter
+        [staggerIndex]="0">
         <div class="flex flex-col sm:flex-row">
           <!-- Image Section (40%) -->
-          <div class="relative sm:w-2/5 h-56 sm:h-auto bg-neutral-100">
+          <div class="relative sm:w-2/5 h-56 sm:h-auto bg-surface-secondary">
             @if (booking()?.car_image) {
             <img [src]="booking()!.car_image" [alt]="booking()?.car_title"
               class="w-full h-full object-cover" width="400" height="20" />
             } @else {
-            <div class="w-full h-full flex items-center justify-center text-neutral-400">
+            <div class="w-full h-full flex items-center justify-center text-text-muted">
               <ion-icon name="car-sport-outline" class="text-6xl"></ion-icon>
             </div>
             }
@@ -75,10 +80,10 @@
 
             <!-- Título del Vehículo -->
             <div class="mb-6">
-              <h1 class="text-2xl sm:text-3xl font-bold text-neutral-900 tracking-tight mb-1">
+              <h1 class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight mb-1">
                 {{ booking()?.car_brand }} {{ booking()?.car_model }}
               </h1>
-              <p class="text-neutral-500 text-sm">
+              <p class="text-text-secondary text-sm">
                 {{ booking()?.car_year }} · {{ booking()!.days_count }} {{ booking()!.days_count === 1 ? 'día' : 'días' }} con {{ carOwnerName() }}
               </p>
             </div>
@@ -87,17 +92,17 @@
             <div class="flex items-end justify-between gap-4 pt-4 border-t border-neutral-100">
               <!-- Precio Grande -->
               <div>
-                <p class="text-3xl sm:text-4xl font-bold text-neutral-900 tracking-tight">
+                <p class="text-3xl sm:text-4xl font-bold text-text-primary tracking-tight">
                   {{ booking()!.total_amount | currency: booking()!.currency : 'symbol' : '1.0-0' }}
                 </p>
-                <p class="text-xs text-neutral-400 mt-1">Total de la reserva</p>
+                <p class="text-xs text-text-muted mt-1">Total de la reserva</p>
               </div>
 
               <!-- Fechas Compactas -->
               <div class="text-right">
                 <p class="text-sm font-medium text-neutral-700">
                   {{ booking()!.start_at | date: 'd MMM' }}
-                  <span class="text-neutral-400 mx-1">→</span>
+                  <span class="text-text-muted mx-1">→</span>
                   {{ booking()!.end_at | date: 'd MMM' }}
                 </p>
                 @if (deliveryTimeRemaining()) {
@@ -113,12 +118,16 @@
       </section>
 
       <!-- 2. TIMELINE VERTICAL CONTEXTUAL -->
-      <section class="bg-white rounded-2xl border border-neutral-200 p-6">
-        <h3 class="text-sm font-bold text-neutral-900 mb-4">Progreso de la Reserva</h3>
+      <section
+        appHoverLift
+        class="glass-card rounded-2xl p-6"
+        appStaggerEnter
+        [staggerIndex]="1">
+        <h3 class="text-sm font-bold text-text-primary mb-4">Progreso de la Reserva</h3>
 
         <div class="relative">
-          <!-- Vertical Line -->
-          <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-neutral-200"></div>
+          <!-- Vertical Line with gradient -->
+          <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-success-500 via-cta-default to-surface-secondary"></div>
 
           <!-- Timeline Items -->
           <div class="space-y-4">
@@ -131,8 +140,8 @@
                 </svg>
               </div>
               <div class="flex-1 pb-4">
-                <p class="text-sm font-medium text-neutral-900">Solicitud enviada</p>
-                <p class="text-xs text-neutral-500">{{ booking()?.created_at | date: 'd MMM, HH:mm' }}</p>
+                <p class="text-sm font-medium text-text-primary">Solicitud enviada</p>
+                <p class="text-xs text-text-secondary">{{ booking()?.created_at | date: 'd MMM, HH:mm' }}</p>
               </div>
             </div>
 
@@ -152,12 +161,12 @@
               </div>
               <!-- FUTURE: Aprobación -->
               <div class="relative flex items-start gap-4 opacity-50">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-neutral-200 text-neutral-400 flex-shrink-0">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-surface-secondary text-text-muted flex-shrink-0">
                   <span class="text-xs font-bold">3</span>
                 </div>
                 <div class="flex-1 pb-4">
-                  <p class="text-sm font-medium text-neutral-400">Aprobación del propietario</p>
-                  <p class="text-xs text-neutral-400">Pendiente</p>
+                  <p class="text-sm font-medium text-text-muted">Aprobación del propietario</p>
+                  <p class="text-xs text-text-muted">Pendiente</p>
                 </div>
               </div>
             } @else {
@@ -169,8 +178,8 @@
                   </svg>
                 </div>
                 <div class="flex-1 pb-4">
-                  <p class="text-sm font-medium text-neutral-900">Garantía confirmada</p>
-                  <p class="text-xs text-neutral-500">Pago procesado</p>
+                  <p class="text-sm font-medium text-text-primary">Garantía confirmada</p>
+                  <p class="text-xs text-text-secondary">Pago procesado</p>
                 </div>
               </div>
             }
@@ -186,8 +195,8 @@
                     </svg>
                   </div>
                   <div class="flex-1 pb-4">
-                    <p class="text-sm font-medium text-neutral-900">Reserva aprobada</p>
-                    <p class="text-xs text-neutral-500">Por {{ carOwnerName() }}</p>
+                    <p class="text-sm font-medium text-text-primary">Reserva aprobada</p>
+                    <p class="text-xs text-text-secondary">Por {{ carOwnerName() }}</p>
                   </div>
                 </div>
               }
@@ -203,8 +212,8 @@
                   </svg>
                 </div>
                 <div class="flex-1 pb-4">
-                  <p class="text-sm font-medium text-neutral-900">Check-in completado</p>
-                  <p class="text-xs text-neutral-500">Vehículo entregado y recepción confirmada</p>
+                  <p class="text-sm font-medium text-text-primary">Check-in completado</p>
+                  <p class="text-xs text-text-secondary">Vehículo entregado y recepción confirmada</p>
                 </div>
               </div>
             } @else if (awaitingRenterCheckIn()) {
@@ -217,8 +226,8 @@
                   </svg>
                 </div>
                 <div class="flex-1 pb-4">
-                  <p class="text-sm font-medium text-neutral-900">Vehículo entregado</p>
-                  <p class="text-xs text-neutral-500">El propietario completó la entrega</p>
+                  <p class="text-sm font-medium text-text-primary">Vehículo entregado</p>
+                  <p class="text-xs text-text-secondary">El propietario completó la entrega</p>
                 </div>
               </div>
               <!-- CURRENT: Renter debe confirmar recepción -->
@@ -274,14 +283,14 @@
               </div>
               <!-- FUTURE: Check-out -->
               <div class="relative flex items-start gap-4 opacity-50">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-neutral-200 text-neutral-400 flex-shrink-0">
+                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-surface-secondary text-text-muted flex-shrink-0">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                   </svg>
                 </div>
                 <div class="flex-1">
-                  <p class="text-sm font-medium text-neutral-400">Check-out e inspección</p>
-                  <p class="text-xs text-neutral-400">Devolver vehículo</p>
+                  <p class="text-sm font-medium text-text-muted">Check-out e inspección</p>
+                  <p class="text-xs text-text-muted">Devolver vehículo</p>
                 </div>
               </div>
             } @else if (booking()?.status === 'completed') {
@@ -293,8 +302,8 @@
                   </svg>
                 </div>
                 <div class="flex-1 pb-4">
-                  <p class="text-sm font-medium text-neutral-900">Viaje finalizado</p>
-                  <p class="text-xs text-neutral-500">{{ booking()?.end_at | date: 'd MMM, HH:mm' }}</p>
+                  <p class="text-sm font-medium text-text-primary">Viaje finalizado</p>
+                  <p class="text-xs text-text-secondary">{{ booking()?.end_at | date: 'd MMM, HH:mm' }}</p>
                 </div>
               </div>
               <div class="relative flex items-start gap-4">
@@ -347,7 +356,7 @@
 
       <!-- 3.5 Download Inspection PDFs (if inspections exist) -->
       @if (hasOwnerCheckIn() || hasCheckOut()) {
-      <section class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4">
+      <section appHoverLift class="glass-card rounded-2xl p-4">
         <h3 class="text-sm font-bold text-text-primary mb-3 flex items-center gap-2">
           <ion-icon name="document-text-outline" class="text-info-500"></ion-icon>
           Actas de Inspección
@@ -385,7 +394,7 @@
 
       <!-- 4. LOGISTICS CARD (Delivery/Dropoff info) -->
       @if (booking()?.delivery_required || booking()?.dropoff_location_lat) {
-      <section class="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden p-0">
+      <section appHoverLift class="glass-card rounded-2xl overflow-hidden p-0">
         <div
           class="px-5 py-3 border-b border-border-default bg-surface-secondary/50 flex justify-between items-center">
           <h3 class="text-sm font-bold text-text-primary flex items-center gap-2">
@@ -429,9 +438,9 @@
 
       <!-- 4. Pricing & Insurance Breakdown -->
       @if (pricingView() || insuranceView()) {
-      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6" appStaggerEnter [staggerIndex]="2">
         @if (pricingView()) {
-        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
+        <div appHoverLift class="glass-card rounded-2xl p-6">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
               <ion-icon name="receipt-outline" class="text-xl"></ion-icon>
@@ -443,9 +452,9 @@
         }
 
         @if (insuranceView()) {
-        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
+        <div appHoverLift class="glass-card rounded-2xl p-6">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
+            <div class="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center text-success-600">
               <ion-icon name="shield-checkmark-outline" class="text-xl"></ion-icon>
             </div>
             <h3 class="font-bold text-text-primary">Cobertura y Garantía</h3>
@@ -458,7 +467,7 @@
 
       <!-- 5. Tracking (if active) -->
       @if (tracking()) {
-      <section class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
+      <section appHoverLift class="glass-card rounded-2xl p-6" appStaggerEnter [staggerIndex]="3">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
             <ion-icon name="map-outline" class="text-xl"></ion-icon>
@@ -471,7 +480,7 @@
 
       <!-- 6. Operations Timeline -->
       @if (confirmation() || cancellation()) {
-      <section class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
+      <section appHoverLift class="glass-card rounded-2xl p-6">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
             <ion-icon name="time-outline" class="text-xl"></ion-icon>
@@ -496,9 +505,9 @@
       }
 
       <!-- 7. Documentation (Compact Grid) -->
-      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6" appStaggerEnter [staggerIndex]="4">
         <!-- Contract Card -->
-        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6 flex flex-col h-full">
+        <div appHoverLift class="glass-card rounded-2xl p-6 flex flex-col h-full">
           <div class="flex items-center gap-3 mb-4">
             <div
               class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
@@ -516,7 +525,7 @@
         </div>
 
         <!-- Refund Status / Insurance -->
-        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6 flex flex-col h-full">
+        <div appHoverLift class="glass-card rounded-2xl p-6 flex flex-col h-full">
           <div class="flex items-center gap-3 mb-4">
             <div
               class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
@@ -556,7 +565,7 @@
 
         <!-- Damage Comparison (if inspections exist) -->
         @if (hasOwnerCheckIn() && hasCheckOut()) {
-        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
+        <div appHoverLift class="glass-card rounded-2xl p-6">
           <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
             <ion-icon name="git-compare-outline" class="text-info-600"></ion-icon>
             Comparativa de Daños
@@ -567,7 +576,7 @@
 
         <!-- Claims List -->
         @if (hasClaim()) {
-        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
+        <div appHoverLift class="glass-card rounded-2xl p-6">
           <h3 class="font-bold text-text-primary mb-4 text-error-600 flex items-center gap-2">
             <ion-icon name="warning-outline"></ion-icon>
             Siniestros Reportados
@@ -616,7 +625,7 @@
         </div>
 
         <!-- Disputes List -->
-        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
+        <div appHoverLift class="glass-card rounded-2xl p-6">
           <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
             <ion-icon name="flag-outline" class="text-warning-600"></ion-icon>
             Disputas
@@ -630,7 +639,7 @@
 
         <!-- Settlement Simulator (Owner Only) -->
         @if (isOwner() && (booking()?.status === 'completed' || isReturnPhase())) {
-        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm p-6">
+        <div appHoverLift class="glass-card rounded-2xl p-6">
           <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
             <ion-icon name="calculator-outline" class="text-info-600"></ion-icon>
             Simulador de Liquidación
@@ -668,11 +677,11 @@
           (rejectBooking)="rejectBooking()"
         />
 
-        <!-- 2. AI Tools Panel -->
-        <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden p-0">
-          <div class="p-4 border-b border-border-default bg-surface-secondary">
+        <!-- 2. AI Tools Panel - Glassmorphism -->
+        <div class="glass-panel rounded-2xl overflow-hidden p-0">
+          <div class="p-4 border-b border-white/20 bg-gradient-to-r from-info-500/10 to-cta-default/10">
             <h3 class="font-bold text-info-900 flex items-center gap-2">
-              <ion-icon name="sparkles" class="text-info-500"></ion-icon>
+              <ion-icon name="sparkles" class="text-info-500 animate-pulse"></ion-icon>
               Asistente IA
             </h3>
           </div>

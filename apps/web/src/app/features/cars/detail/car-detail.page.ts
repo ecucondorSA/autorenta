@@ -44,6 +44,9 @@ import {
   RiskCalculatorService,
 } from '@core/services/verification/risk-calculator.service';
 import type { DateRange } from '@core/models/marketplace.model';
+// UI 2026 Directives
+import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
+import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
 import { Car, CarPhoto, CarStats, Review } from '../../../core/models';
 
 // Components
@@ -103,6 +106,9 @@ interface CarDetailState {
     CarInquiryChatComponent,
     AvailabilityMiniCalendarComponent,
     ReviewSummaryComponent,
+    // UI 2026 Directives
+    HoverLiftDirective,
+    StaggerEnterDirective,
   ],
   templateUrl: './car-detail.page.html',
   styleUrls: ['./car-detail.page.css'],

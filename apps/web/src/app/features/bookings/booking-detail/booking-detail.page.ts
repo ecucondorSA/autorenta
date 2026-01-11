@@ -72,6 +72,9 @@ import {
   warningOutline,
 } from 'ionicons/icons';
 import { firstValueFrom } from 'rxjs';
+// UI 2026 Directives
+import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
+import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
 import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
 import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
 import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
@@ -91,9 +94,9 @@ import { OwnerConfirmationComponent } from '../../../shared/components/owner-con
 import { RefundRequestComponent } from '../../../shared/components/refund-request/refund-request.component';
 import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
 import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
-import { ReportOwnerNoShowComponent } from '../../../shared/components/report-owner-no-show/report-owner-no-show.component'; // NEW
-import { ReportRenterNoShowComponent } from '../../../shared/components/report-renter-no-show/report-renter-no-show.component'; // NEW
-import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component'; // NEW
+import { ReportOwnerNoShowComponent } from '../../../shared/components/report-owner-no-show/report-owner-no-show.component';
+import { ReportRenterNoShowComponent } from '../../../shared/components/report-renter-no-show/report-renter-no-show.component';
+import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component';
 import { SettlementSimulatorComponent } from '../../../shared/components/settlement-simulator/settlement-simulator.component';
 import { SidePanelComponent } from '../../../shared/components/side-panel/side-panel.component';
 import { BookingFlowCardComponent, FlowActionEvent } from '../../../shared/components/booking-flow-card/booking-flow-card.component';
@@ -193,6 +196,9 @@ const DISPUTE_STATUSES = new Set<BookingStatus>([
     BookingExtensionsManagerComponent,
     BookingTrafficFinesManagerComponent,
     BookingFlowCardComponent,
+    // UI 2026 Directives
+    HoverLiftDirective,
+    StaggerEnterDirective,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',

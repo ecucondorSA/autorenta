@@ -1,26 +1,27 @@
-<div class="checkout-container">
+<!-- Booking Checkout - Modernized 2026 UI -->
+<div class="max-w-6xl mx-auto px-4 py-6 pb-safe-bottom sm:px-6 lg:px-8">
   <!-- Header -->
-  <div class="checkout-header">
-    <h1 class="text-2xl font-bold text-text-primary mb-2 font-satoshi font-luxury">
-      Completar Pago
-    </h1>
-    <p class="text-sm text-text-secondary">
+  <header class="mb-8">
+    <h1 class="text-hero-md text-text-primary font-luxury">Completar Pago</h1>
+    <p class="mt-2 text-base text-text-secondary">
       Selecciona tu método de pago preferido y completa la reserva
     </p>
-  </div>
+  </header>
 
   <!-- Loading State -->
   @if (isLoading()) {
-    <div class="loading-container">
+    <div class="flex flex-col items-center justify-center py-16 min-h-[300px]">
       <div class="spinner"></div>
-      <p class="loading-text font-luxury">Cargando información del pago...</p>
+      <p class="mt-4 text-sm text-text-muted font-luxury">Cargando información del pago...</p>
     </div>
   }
 
   <!-- Error State -->
   @if (error() && !isLoading()) {
-    <div class="error-container">
-      <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div
+      class="flex flex-col items-center justify-center p-8 rounded-2xl bg-error-50 border-2 border-error-200 text-center"
+    >
+      <svg class="w-16 h-16 text-error-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -28,396 +29,427 @@
           d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
         />
       </svg>
-      <h3 class="error-title font-bold font-satoshi">Error</h3>
-      <p class="error-message">{{ error() }}</p>
-      <button class="btn-secondary" (click)="cancelPayment()">Volver</button>
+      <h3 class="text-xl font-bold text-error-700 mb-2">Error</h3>
+      <p class="text-sm text-error-600 mb-6 max-w-md">{{ error() }}</p>
+      <button
+        class="px-6 py-3 rounded-xl border-2 border-text-primary text-text-primary font-semibold
+               hover:bg-surface-secondary transition-all"
+        (click)="cancelPayment()"
+      >
+        Volver
+      </button>
     </div>
   }
 
-  <!-- Main Content -->
+  <!-- Main Content - Bento Grid Layout -->
   @if (!isLoading() && !error()) {
-    <div class="checkout-content">
-      <div class="checkout-grid flex flex-col gap-6 lg:flex-row">
-        <div class="checkout-main space-y-6 lg:flex-1">
-          <!-- Booking Summary -->
-          <div class="booking-summary-card">
-            <h2 class="card-title font-bold font-satoshi">Resumen de la Reserva</h2>
-            @if (booking()) {
-              <div class="booking-details">
-                <!-- Car Info -->
-                <div class="detail-row">
-                  <span class="detail-label">Vehículo</span>
-                  <span class="detail-value"
-                    >{{ booking().car?.brand }} {{ booking().car?.model }}</span
-                  >
-                </div>
-                <!-- Date Range -->
-                <div class="detail-row">
-                  <span class="detail-label">Desde</span>
-                  <span class="detail-value">{{ booking().start_date | date: 'dd/MM/yyyy' }}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Hasta</span>
-                  <span class="detail-value">{{ booking().end_date | date: 'dd/MM/yyyy' }}</span>
-                </div>
-                <!-- Total Original (en moneda del booking) -->
-                <div class="detail-row total-row">
-                  <span class="detail-label font-semibold">Total Original</span>
-                  <span class="detail-value font-bold text-lg">
-                    {{ formatCurrency(booking().total_price, booking().currency || 'ARS') }}
-                  </span>
-                </div>
+    <div class="bento-grid-hero">
+      <!-- Main Column -->
+      <div class="space-y-5">
+        <!-- Booking Summary Card -->
+        <article
+          class="glass-card p-bento-md"
+          appHoverLift
+          [liftAmount]="3"
+        >
+          <h2 class="text-lg font-bold text-text-primary mb-4 pb-3 border-b border-border-default">
+            Resumen de la Reserva
+          </h2>
+          @if (booking()) {
+            <div class="space-y-3">
+              <!-- Car Info -->
+              <div class="flex justify-between items-center py-2" appStaggerEnter [staggerIndex]="0">
+                <span class="text-sm text-text-muted">Vehículo</span>
+                <span class="text-sm text-text-primary font-medium">
+                  {{ booking().car?.brand }} {{ booking().car?.model }}
+                </span>
               </div>
-            }
-          </div>
-          <!-- Driver Profile Info -->
-          @if (driverProfileService.profile() && !driverProfileService.loading()) {
-            <div class="driver-profile-card">
-              <h2 class="card-title font-bold font-satoshi">Tu Perfil de Conductor</h2>
-              <div class="driver-profile-content">
-                <!-- Class Badge -->
-                <div class="class-badge-section">
-                  <div class="badge-container" [style.background-color]="classBadge().color">
-                    <span class="badge-icon">{{ classBadge().icon }}</span>
-                    <span class="badge-label">Clase {{ driverClass() }}</span>
-                  </div>
-                  <a [routerLink]="['/profile/driver-profile']" class="view-profile-link">
-                    Ver perfil completo →
-                  </a>
+              <!-- Date Range -->
+              <div class="flex justify-between items-center py-2" appStaggerEnter [staggerIndex]="1">
+                <span class="text-sm text-text-muted">Desde</span>
+                <span class="text-sm text-text-primary font-medium">
+                  {{ booking().start_date | date: 'dd/MM/yyyy' }}
+                </span>
+              </div>
+              <div class="flex justify-between items-center py-2" appStaggerEnter [staggerIndex]="2">
+                <span class="text-sm text-text-muted">Hasta</span>
+                <span class="text-sm text-text-primary font-medium">
+                  {{ booking().end_date | date: 'dd/MM/yyyy' }}
+                </span>
+              </div>
+              <!-- Total -->
+              <div
+                class="flex justify-between items-center pt-4 mt-2 border-t-2 border-border-default"
+                appStaggerEnter
+                [staggerIndex]="3"
+              >
+                <span class="text-sm font-semibold text-text-primary">Total Original</span>
+                <span class="text-balance-md text-text-primary">
+                  {{ formatCurrency(booking().total_price, booking().currency || 'ARS') }}
+                </span>
+              </div>
+            </div>
+          }
+        </article>
+
+        <!-- Driver Profile Card -->
+        @if (driverProfileService.profile() && !driverProfileService.loading()) {
+          <article
+            class="glass-card p-bento-md"
+            appHoverLift
+            [liftAmount]="3"
+          >
+            <h2 class="text-lg font-bold text-text-primary mb-4 pb-3 border-b border-border-default">
+              Tu Perfil de Conductor
+            </h2>
+            <div class="space-y-5">
+              <!-- Class Badge -->
+              <div class="flex justify-between items-center pb-4 border-b border-border-muted">
+                <div
+                  class="inline-flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-white"
+                  [style.background-color]="classBadge().color"
+                >
+                  <span class="text-xl">{{ classBadge().icon }}</span>
+                  <span>Clase {{ driverClass() }}</span>
                 </div>
-                <!-- Applied Multipliers -->
-                <div class="multipliers-section">
-                  <h3 class="multipliers-title font-bold font-satoshi">
-                    Multiplicadores Aplicados
-                  </h3>
-                  <!-- Fee Multiplier -->
-                  <div class="multiplier-row">
-                    <div class="multiplier-info">
-                      <svg
-                        class="multiplier-icon"
-                        [class.discount]="hasDiscount()"
-                        [class.surcharge]="hasSurcharge()"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        @if (hasDiscount()) {
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                          />
-                        }
-                        @if (!hasDiscount()) {
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
-                          />
-                        }
-                      </svg>
-                      <div>
-                        <span class="multiplier-label">Tarifa de Servicio</span>
-                        <p class="multiplier-description">
-                          {{
-                            hasDiscount()
-                              ? 'Descuento por buena conducción'
-                              : hasSurcharge()
-                                ? 'Recargo por clase de riesgo'
-                                : 'Sin ajuste'
-                          }}
-                        </p>
-                      </div>
-                    </div>
-                    <span
-                      class="multiplier-value"
-                      [class.discount]="hasDiscount()"
-                      [class.surcharge]="hasSurcharge()"
+                <a
+                  [routerLink]="['/profile/driver-profile']"
+                  class="text-sm text-info-500 font-medium hover:text-info-600 hover:underline transition-colors"
+                >
+                  Ver perfil completo →
+                </a>
+              </div>
+
+              <!-- Multipliers -->
+              <div class="space-y-3">
+                <h3 class="text-sm font-bold text-text-primary">Multiplicadores Aplicados</h3>
+
+                <!-- Fee Multiplier -->
+                <div
+                  class="flex justify-between items-center p-4 rounded-xl bg-surface-secondary border border-border-muted"
+                  appStaggerEnter
+                  [staggerIndex]="0"
+                >
+                  <div class="flex items-center gap-3">
+                    <svg
+                      class="w-6 h-6"
+                      [class.text-success-600]="hasDiscount()"
+                      [class.text-error-500]="hasSurcharge()"
+                      [class.text-text-muted]="!hasDiscount() && !hasSurcharge()"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      {{ feeDiscountPct() > 0 ? '-' : feeDiscountPct() < 0 ? '+' : ''
-                      }}{{ Math.abs(feeDiscountPct()) }}%
-                    </span>
-                  </div>
-                  <!-- Guarantee Multiplier -->
-                  <div class="multiplier-row">
-                    <div class="multiplier-info">
-                      <svg
-                        class="multiplier-icon"
-                        [class.discount]="hasDiscount()"
-                        [class.surcharge]="hasSurcharge()"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
+                      @if (hasDiscount()) {
                         <path
                           stroke-linecap="round"
                           stroke-linejoin="round"
                           stroke-width="2"
-                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                          d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
                         />
-                      </svg>
-                      <div>
-                        <span class="multiplier-label">Garantía</span>
-                        <p class="multiplier-description">
-                          {{
-                            hasDiscount()
-                              ? 'Descuento en garantía bloqueada'
-                              : hasSurcharge()
-                                ? 'Recargo en garantía bloqueada'
-                                : 'Sin ajuste'
-                          }}
-                        </p>
-                      </div>
+                      } @else {
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
+                        />
+                      }
+                    </svg>
+                    <div>
+                      <span class="text-sm font-semibold text-text-primary block">Tarifa de Servicio</span>
+                      <span class="text-xs text-text-muted">
+                        {{ hasDiscount() ? 'Descuento por buena conducción' :
+                           hasSurcharge() ? 'Recargo por clase de riesgo' : 'Sin ajuste' }}
+                      </span>
                     </div>
-                    <span
-                      class="multiplier-value"
-                      [class.discount]="hasDiscount()"
-                      [class.surcharge]="hasSurcharge()"
-                    >
-                      {{ guaranteeDiscountPct() > 0 ? '-' : guaranteeDiscountPct() < 0 ? '+' : ''
-                      }}{{ Math.abs(guaranteeDiscountPct()) }}%
-                    </span>
                   </div>
+                  <span
+                    class="text-lg font-bold tabular-nums"
+                    [class.text-success-600]="hasDiscount()"
+                    [class.text-error-500]="hasSurcharge()"
+                  >
+                    {{ feeDiscountPct() > 0 ? '-' : feeDiscountPct() < 0 ? '+' : '' }}{{ Math.abs(feeDiscountPct()) }}%
+                  </span>
                 </div>
-                <!-- Explanation -->
-                <div class="explanation-section">
-                  <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <p class="explanation-text">
-                    @if (hasDiscount()) {
-                      <span>
-                        ¡Felicitaciones! Por tu excelente historial de conducción estás recibiendo
-                        descuentos en esta reserva.
+
+                <!-- Guarantee Multiplier -->
+                <div
+                  class="flex justify-between items-center p-4 rounded-xl bg-surface-secondary border border-border-muted"
+                  appStaggerEnter
+                  [staggerIndex]="1"
+                >
+                  <div class="flex items-center gap-3">
+                    <svg
+                      class="w-6 h-6"
+                      [class.text-success-600]="hasDiscount()"
+                      [class.text-error-500]="hasSurcharge()"
+                      [class.text-text-muted]="!hasDiscount() && !hasSurcharge()"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                      />
+                    </svg>
+                    <div>
+                      <span class="text-sm font-semibold text-text-primary block">Garantía</span>
+                      <span class="text-xs text-text-muted">
+                        {{ hasDiscount() ? 'Descuento en garantía bloqueada' :
+                           hasSurcharge() ? 'Recargo en garantía bloqueada' : 'Sin ajuste' }}
                       </span>
-                    }
-                    @if (hasSurcharge()) {
-                      <span>
-                        Debido a tu clase de riesgo actual, se aplican recargos en esta reserva.
-                        Mejora tu clase conduciendo sin siniestros.
-                      </span>
-                    }
-                    @if (!hasDiscount() && !hasSurcharge()) {
-                      <span>
-                        Actualmente tienes la clase base (5). Conduce sin siniestros para obtener
-                        descuentos.
-                      </span>
-                    }
-                  </p>
+                    </div>
+                  </div>
+                  <span
+                    class="text-lg font-bold tabular-nums"
+                    [class.text-success-600]="hasDiscount()"
+                    [class.text-error-500]="hasSurcharge()"
+                  >
+                    {{ guaranteeDiscountPct() > 0 ? '-' : guaranteeDiscountPct() < 0 ? '+' : '' }}{{ Math.abs(guaranteeDiscountPct()) }}%
+                  </span>
                 </div>
               </div>
-            </div>
-          }
-          <!-- Bonus Protector Offer (Optional) -->
-          @if (driverProfileService.profile() && hasSurcharge()) {
-            <div class="protector-offer-card">
-              <div class="protector-header" (click)="toggleProtectorOffer()">
-                <div class="protector-title">
-                  <svg class="shield-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                    />
-                  </svg>
-                  <div>
-                    <h3>¿Quieres proteger tu clase?</h3>
-                    <p class="protector-subtitle">Evita que tu clase suba tras un siniestro</p>
-                  </div>
-                </div>
-                <svg
-                  class="chevron-icon"
-                  [class.expanded]="showProtectorOffer()"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+
+              <!-- Explanation -->
+              <div class="flex items-start gap-3 p-4 rounded-xl bg-info-50 border border-info-200">
+                <svg class="w-5 h-5 text-info-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    d="M19 9l-7 7-7-7"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
+                <p class="text-sm text-info-700 leading-relaxed">
+                  @if (hasDiscount()) {
+                    ¡Felicitaciones! Por tu excelente historial de conducción estás recibiendo descuentos en esta reserva.
+                  } @else if (hasSurcharge()) {
+                    Debido a tu clase de riesgo actual, se aplican recargos. Mejora tu clase conduciendo sin siniestros.
+                  } @else {
+                    Actualmente tienes la clase base (5). Conduce sin siniestros para obtener descuentos.
+                  }
+                </p>
               </div>
-              <div class="protector-content" [class.show]="showProtectorOffer()">
-                <p class="protector-description">
+            </div>
+          </article>
+        }
+
+        <!-- Bonus Protector Offer -->
+        @if (driverProfileService.profile() && hasSurcharge()) {
+          <article class="rounded-2xl border-2 border-warning-400 overflow-hidden shadow-md">
+            <button
+              type="button"
+              class="w-full flex justify-between items-center p-5 bg-gradient-to-r from-warning-100 to-warning-200
+                     hover:from-warning-200 hover:to-warning-300 transition-all cursor-pointer"
+              (click)="toggleProtectorOffer()"
+              appPressScale
+            >
+              <div class="flex items-center gap-4">
+                <svg class="w-8 h-8 text-warning-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  />
+                </svg>
+                <div class="text-left">
+                  <h3 class="text-base font-bold text-warning-900">¿Quieres proteger tu clase?</h3>
+                  <p class="text-sm text-warning-700">Evita que tu clase suba tras un siniestro</p>
+                </div>
+              </div>
+              <svg
+                class="w-6 h-6 text-warning-700 transition-transform duration-300"
+                [class.rotate-180]="showProtectorOffer()"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <div
+              appSpringCollapse
+              [collapsed]="!showProtectorOffer()"
+            >
+              <div class="p-6 bg-white space-y-5">
+                <p class="text-sm text-text-secondary leading-relaxed">
                   El <strong>Bonus Protector</strong> es un seguro opcional que protege tu clase de
                   conductor de subir en caso de siniestros. Ideal si tienes recargos actualmente.
                 </p>
-                <div class="quick-options">
-                  <div class="quick-option">
-                    <div class="option-info">
-                      <span class="option-level">⭐ Básico</span>
-                      <span class="option-coverage">1 siniestro leve</span>
+
+                <!-- Quick Options -->
+                <div class="space-y-3">
+                  @for (option of [
+                    { level: 'Básico', stars: '⭐', coverage: '1 siniestro leve', price: '$15 USD', recommended: false },
+                    { level: 'Estándar', stars: '⭐⭐', coverage: '2 leves o 1 moderado', price: '$25 USD', recommended: true },
+                    { level: 'Premium', stars: '⭐⭐⭐', coverage: '3 leves, 2 moderados o 1 grave', price: '$40 USD', recommended: false }
+                  ]; track option.level; let i = $index) {
+                    <div
+                      class="relative flex justify-between items-center p-4 rounded-xl border transition-all"
+                      [class]="option.recommended
+                        ? 'bg-gradient-to-r from-warning-50 to-warning-100 border-2 border-warning-400'
+                        : 'bg-surface-secondary border-border-muted hover:border-warning-300'"
+                      appStaggerEnter
+                      [staggerIndex]="i"
+                      appHoverLift
+                      [liftAmount]="2"
+                    >
+                      @if (option.recommended) {
+                        <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full
+                                     bg-warning-400 text-warning-900 text-xs font-bold">
+                          Recomendado
+                        </span>
+                      }
+                      <div>
+                        <span class="text-sm font-semibold text-text-primary">{{ option.stars }} {{ option.level }}</span>
+                        <p class="text-xs text-text-muted mt-0.5">{{ option.coverage }}</p>
+                      </div>
+                      <span class="text-lg font-bold text-warning-600 tabular-nums">{{ option.price }}</span>
                     </div>
-                    <div class="option-action">
-                      <span class="option-price">$15 USD</span>
-                    </div>
-                  </div>
-                  <div class="quick-option highlighted">
-                    <div class="quick-option-badge">Recomendado</div>
-                    <div class="option-info">
-                      <span class="option-level">⭐⭐ Estándar</span>
-                      <span class="option-coverage">2 leves o 1 moderado</span>
-                    </div>
-                    <div class="option-action">
-                      <span class="option-price">$25 USD</span>
-                    </div>
-                  </div>
-                  <div class="quick-option">
-                    <div class="option-info">
-                      <span class="option-level font-luxury">⭐⭐⭐ Premium</span>
-                      <span class="option-coverage">3 leves, 2 moderados o 1 grave</span>
-                    </div>
-                    <div class="option-action">
-                      <span class="option-price">$40 USD</span>
-                    </div>
-                  </div>
+                  }
                 </div>
-                <div class="protector-cta">
-                  <a [routerLink]="['/protections']" class="view-details-btn">
+
+                <!-- CTA -->
+                <div class="flex flex-col gap-3 pt-4 border-t border-border-muted">
+                  <a
+                    [routerLink]="['/protections']"
+                    class="block w-full py-3 px-5 rounded-xl bg-warning-400 text-warning-900 text-center
+                           font-semibold hover:bg-warning-500 transition-all"
+                    appPressScale
+                  >
                     Ver detalles completos y comprar →
                   </a>
-                  <button class="skip-protector-btn" (click)="toggleProtectorOffer()">
+                  <button
+                    type="button"
+                    class="w-full py-2.5 px-4 rounded-xl border border-border-default text-text-muted
+                           text-sm hover:bg-surface-secondary transition-all"
+                    (click)="toggleProtectorOffer()"
+                  >
                     Continuar sin protector
                   </button>
                 </div>
               </div>
             </div>
-          }
+          </article>
+        }
+      </div>
+
+      <!-- Sidebar - Payment Section -->
+      <aside class="space-y-5">
+        <!-- Payment Provider Selector -->
+        <div class="glass-card-elevated p-bento-md">
+          <app-payment-provider-selector
+            [amount]="booking()?.total_price || 0"
+            [currency]="booking()?.currency || 'ARS'"
+            [defaultProvider]="selectedProvider()"
+            (providerChange)="handleProviderChange($event)"
+          />
         </div>
-        <div class="checkout-side space-y-6 lg:w-5/12">
-          <!-- Payment Provider Selector -->
-          <div class="payment-section">
-            <app-payment-provider-selector
-              [amount]="booking()?.total_price || 0"
-              [currency]="booking()?.currency || 'ARS'"
-              [defaultProvider]="selectedProvider()"
-              (providerChange)="handleProviderChange($event)"
-            >
-            </app-payment-provider-selector>
+
+        <!-- Amount Display -->
+        @if (amountInProviderCurrency() > 0) {
+          <div
+            class="rounded-2xl p-6 text-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg"
+            appHoverLift
+            [liftAmount]="4"
+          >
+            <p class="text-sm opacity-90 mb-2">
+              Total a pagar con {{ selectedProvider() === 'paypal' ? 'PayPal' : 'MercadoPago' }}:
+            </p>
+            <p class="text-balance-xl font-bold">
+              {{ formatCurrency(amountInProviderCurrency(), providerCurrency()) }}
+            </p>
           </div>
-          <!-- Payment Amount Display -->
-          @if (amountInProviderCurrency() > 0) {
-            <div class="amount-display-card">
-              <div class="amount-display">
-                <p class="amount-label">
-                  Total a pagar con
-                  {{ selectedProvider() === 'paypal' ? 'PayPal' : 'MercadoPago' }}:
-                </p>
-                <p class="amount-value">
-                  {{ formatCurrency(amountInProviderCurrency(), providerCurrency()) }}
-                </p>
-              </div>
-            </div>
-          }
-          <!-- Payment Buttons Section -->
-          <div class="payment-buttons-section">
-            <!-- MercadoPago Payment Button -->
-            @if (isMercadoPago()) {
-              <div class="payment-button-container">
-                <button
-                  class="btn-primary mercadopago-btn"
-                  [disabled]="!isPaymentButtonEnabled() || isProcessingPayment()"
-                  (click)="handleMercadoPagoPayment()"
-                >
-                  @if (isProcessingPayment()) {
-                    <svg class="spinner-small" viewBox="0 0 24 24">
-                      <circle
-                        class="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        stroke-width="4"
-                        fill="none"
-                      />
-                      <path
-                        class="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                  }
-                  @if (!isProcessingPayment()) {
-                    <span>Pagar con MercadoPago</span>
-                  }
-                  @if (isProcessingPayment()) {
-                    <span>Procesando...</span>
-                  }
-                </button>
-                <p class="payment-info">
-                  <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
+        }
+
+        <!-- Payment Buttons -->
+        <div class="space-y-4">
+          <!-- MercadoPago Button -->
+          @if (isMercadoPago()) {
+            <div class="space-y-3">
+              <button
+                type="button"
+                class="w-full py-4 px-6 rounded-xl font-semibold text-white
+                       bg-[#009ee3] hover:bg-[#0088cc] disabled:bg-gray-400 disabled:cursor-not-allowed
+                       flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg"
+                [disabled]="!isPaymentButtonEnabled() || isProcessingPayment()"
+                (click)="handleMercadoPagoPayment()"
+                appPressScale
+                [disabled]="isProcessingPayment()"
+              >
+                @if (isProcessingPayment()) {
+                  <svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Serás redirigido a MercadoPago para completar el pago de forma segura
-                </p>
-              </div>
-            }
-            <!-- PayPal Payment Button -->
-            @if (isPayPal()) {
-              <div class="payment-button-container">
-                <app-paypal-button
-                  [bookingId]="bookingId()"
-                  [useSplitPayment]="true"
-                  [disabled]="!isPaymentButtonEnabled()"
-                  (paymentApproved)="handlePayPalApprove($event)"
-                  (paymentError)="handlePayPalError($event)"
-                >
-                </app-paypal-button>
-                <p class="payment-info">
-                  <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                    />
-                  </svg>
-                  Pago seguro procesado por PayPal
-                </p>
-              </div>
-            }
-          </div>
-          <div class="security-notice">
-            <svg class="lock-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2h-1V9a5 5 0 00-10 0v2H6a2 2 0 00-2 2v6a2 2 0 002 2z"
-              />
-            </svg>
-            <div class="security-text">
-              <p class="font-medium font-luxury">Pago 100% Seguro</p>
-              <p class="text-xs text-text-secondary">
-                Tus datos están protegidos mediante encriptación SSL
+                  <span>Procesando...</span>
+                } @else {
+                  <span>Pagar con MercadoPago</span>
+                }
+              </button>
+              <p class="flex items-center justify-center gap-2 text-xs text-text-muted p-3 bg-surface-secondary rounded-lg">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Serás redirigido a MercadoPago para completar el pago
               </p>
             </div>
+          }
+
+          <!-- PayPal Button -->
+          @if (isPayPal()) {
+            <div class="space-y-3">
+              <app-paypal-button
+                [bookingId]="bookingId()"
+                [useSplitPayment]="true"
+                [disabled]="!isPaymentButtonEnabled()"
+                (paymentApproved)="handlePayPalApprove($event)"
+                (paymentError)="handlePayPalError($event)"
+              />
+              <p class="flex items-center justify-center gap-2 text-xs text-text-muted p-3 bg-surface-secondary rounded-lg">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                Pago seguro procesado por PayPal
+              </p>
+            </div>
+          }
+        </div>
+
+        <!-- Security Notice -->
+        <div class="flex items-center gap-4 p-4 rounded-xl bg-success-50 border border-success-200">
+          <svg class="w-8 h-8 text-success-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2h-1V9a5 5 0 00-10 0v2H6a2 2 0 00-2 2v6a2 2 0 002 2z"
+            />
+          </svg>
+          <div>
+            <p class="font-semibold text-success-700">Pago 100% Seguro</p>
+            <p class="text-xs text-success-600">Tus datos están protegidos mediante encriptación SSL</p>
           </div>
         </div>
-      </div>
-      <!-- Cancel Button -->
-      <div class="cancel-section">
-        <button class="btn-secondary" [disabled]="isProcessingPayment()" (click)="cancelPayment()">
+
+        <!-- Cancel Button -->
+        <button
+          type="button"
+          class="w-full py-3 px-5 rounded-xl border-2 border-border-default text-text-secondary
+                 font-medium hover:bg-surface-secondary hover:border-text-muted transition-all
+                 disabled:opacity-50 disabled:cursor-not-allowed"
+          [disabled]="isProcessingPayment()"
+          (click)="cancelPayment()"
+        >
           Cancelar y Volver
         </button>
-      </div>
-      <!-- Security Notice -->
+      </aside>
     </div>
   }
 </div>

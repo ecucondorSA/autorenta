@@ -14,6 +14,11 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { ToastService } from '@core/services/ui/toast.service';
+// UI 2026 Directives
+import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
+import { PressScaleDirective } from '@shared/directives/press-scale.directive';
+import { SpringCollapseDirective } from '@shared/directives/spring-collapse.directive';
+import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
 import { Booking } from '../../../core/models';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
@@ -165,7 +170,19 @@ const DEFAULT_STATUS_CONFIG: StatusConfig = {
 @Component({
   standalone: true,
   selector: 'app-my-bookings-page',
-  imports: [CommonModule, MoneyPipe, RouterLink, ScrollingModule, TranslateModule, IconComponent],
+  imports: [
+    CommonModule,
+    MoneyPipe,
+    RouterLink,
+    ScrollingModule,
+    TranslateModule,
+    IconComponent,
+    // UI 2026 Directives
+    HoverLiftDirective,
+    PressScaleDirective,
+    StaggerEnterDirective,
+    SpringCollapseDirective,
+  ],
   templateUrl: './my-bookings.page.html',
   styleUrl: './my-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

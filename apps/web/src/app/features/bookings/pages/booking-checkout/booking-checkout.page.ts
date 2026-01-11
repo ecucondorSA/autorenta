@@ -13,6 +13,11 @@ import { PaymentProvider } from '@core/interfaces/payment-gateway.interface';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { DriverProfileService } from '@core/services/auth/driver-profile.service';
 import { PaymentGatewayFactory } from '@core/services/payments/payment-gateway.factory';
+// UI 2026 Directives
+import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
+import { PressScaleDirective } from '@shared/directives/press-scale.directive';
+import { SpringCollapseDirective } from '@shared/directives/spring-collapse.directive';
+import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
 import { PaymentProviderSelectorComponent } from '../../../../shared/components/payment-provider-selector/payment-provider-selector.component';
 import { PayPalButtonComponent } from '../../../../shared/components/paypal-button/paypal-button.component';
 
@@ -36,7 +41,17 @@ import { PayPalButtonComponent } from '../../../../shared/components/paypal-butt
   selector: 'app-booking-checkout',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, PaymentProviderSelectorComponent, PayPalButtonComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    PaymentProviderSelectorComponent,
+    PayPalButtonComponent,
+    // UI 2026 Directives
+    HoverLiftDirective,
+    PressScaleDirective,
+    StaggerEnterDirective,
+    SpringCollapseDirective,
+  ],
   templateUrl: './booking-checkout.page.html',
   styleUrls: ['./booking-checkout.page.css'],
 })

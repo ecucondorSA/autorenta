@@ -23,8 +23,6 @@ import {
   GeminiLiveService,
   LiveAnalysisEvent,
   DetectedAreaState,
-  AreaConfidence,
-  ImageQualityReport,
 } from '@core/services/ai/gemini-live.service';
 import { IconComponent } from '../icon/icon.component';
 

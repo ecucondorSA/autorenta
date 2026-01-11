@@ -54,7 +54,9 @@
     <!-- SECCIÓN 2: SALDO CASH (SECUNDARIA) -->
     <!-- ============================================ -->
     <section
-      class="rounded-2xl sm:rounded-3xl border border-border-default/50 bg-surface-raised p-4 sm:p-6 md:p-8"
+      appStaggerEnter
+      [staggerIndex]="1"
+      class="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8"
     >
       <!-- Header compacto -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
@@ -77,13 +79,14 @@
               Saldo Cash
             </p>
           </div>
-          <h2 class="text-xl sm:text-2xl font-bold text-text-primary">Tu Billetera</h2>
+          <h2 class="text-hero-md font-bold text-text-primary">Tu Billetera</h2>
         </div>
         <div class="flex gap-2">
           <button
             type="button"
             (click)="openDepositModal()"
-            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-cta-default text-cta-text hover:bg-cta-default/90 transition"
+            appPressScale
+            class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-cta-default text-cta-text hover:bg-cta-hover transition-all shadow-sm"
             data-testid="deposit-button-hero"
           >
             <app-icon name="plus" [size]="16" />
@@ -92,7 +95,8 @@
           <button
             type="button"
             (click)="goToTransfer()"
-            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold border border-border-default text-text-secondary hover:bg-surface-secondary/50 transition"
+            appPressScale
+            class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold glass-button"
           >
             <app-icon name="arrow-right-left" [size]="16" />
             Transferir
@@ -100,64 +104,82 @@
         </div>
       </div>
 
-      <!-- Grid de balances compacto -->
+      <!-- Grid de balances (Bento Layout) -->
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <!-- Balance Total -->
+        <!-- Balance Total (Hero Card) -->
         <div
-          class="bg-gradient-to-br from-success-light/10 to-success-light/5 rounded-xl p-4 border border-success-light/30"
+          appHoverLift
+          [liftAmount]="4"
+          class="glass-card-elevated bg-gradient-to-br from-success-light/20 to-success-light/5 rounded-2xl p-5 ring-2 ring-success-500/20"
           data-tour-step="wallet-balance"
         >
-          <p class="text-xs uppercase tracking-wider text-success-strong/80 font-semibold mb-1">
+          <p class="text-xs uppercase tracking-wider text-success-strong/80 font-semibold mb-2">
             Disponible
           </p>
-          <p class="text-2xl sm:text-3xl font-bold text-success-strong">
+          <p class="text-balance-xl font-bold text-success-strong">
             ${{ availableBalanceSummary() | number: '1.2-2' }}
           </p>
         </div>
 
         <!-- Crédito Protegido -->
         <div
-          class="bg-gradient-to-br from-warning-bg/30 to-warning-bg/10 rounded-xl p-4 border border-warning-border/50"
+          appHoverLift
+          [liftAmount]="4"
+          class="glass-card bg-gradient-to-br from-warning-bg/40 to-warning-bg/10 rounded-2xl p-5"
         >
-          <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center justify-between mb-2">
             <p class="text-xs uppercase tracking-wider text-warning-strong/80 font-semibold">
               Protegido
             </p>
-            <app-icon name="lock" [size]="14" cssClass="text-warning-strong/60" />
+            <div class="w-6 h-6 rounded-full bg-warning-bg flex items-center justify-center">
+              <app-icon name="lock" [size]="12" cssClass="text-warning-strong" />
+            </div>
           </div>
-          <p class="text-2xl sm:text-3xl font-bold text-warning-strong">
+          <p class="text-balance-lg font-bold text-warning-strong">
             ${{ protectedCreditBalance() | number: '1.2-2' }}
           </p>
-          <div class="mt-2 w-full bg-warning-border/30 rounded-full h-1.5">
+          <div class="mt-3 w-full bg-warning-border/30 rounded-full h-2 overflow-hidden">
             <div
-              class="bg-warning-strong h-1.5 rounded-full transition-all"
+              class="bg-gradient-to-r from-warning-500 to-warning-400 h-full rounded-full transition-all duration-500"
               [style.width.%]="protectedCreditProgress()"
             ></div>
           </div>
         </div>
 
         <!-- Transferible -->
-        <div class="bg-surface-secondary/50 rounded-xl p-4 border border-border-default/50">
-          <div class="flex items-center justify-between mb-1">
+        <div
+          appHoverLift
+          [liftAmount]="4"
+          class="glass-card rounded-2xl p-5"
+        >
+          <div class="flex items-center justify-between mb-2">
             <p class="text-xs uppercase tracking-wider text-text-secondary font-semibold">
               Transferible
             </p>
-            <app-icon name="arrow-right-left" [size]="14" cssClass="text-text-secondary/60" />
+            <div class="w-6 h-6 rounded-full bg-surface-secondary flex items-center justify-center">
+              <app-icon name="arrow-right-left" [size]="12" cssClass="text-text-secondary" />
+            </div>
           </div>
-          <p class="text-2xl sm:text-3xl font-bold text-text-primary">
+          <p class="text-balance-lg font-bold text-text-primary">
             ${{ transferableBalance() | number: '1.2-2' }}
           </p>
         </div>
 
         <!-- Retirable -->
-        <div class="bg-surface-secondary/50 rounded-xl p-4 border border-border-default/50">
-          <div class="flex items-center justify-between mb-1">
+        <div
+          appHoverLift
+          [liftAmount]="4"
+          class="glass-card rounded-2xl p-5"
+        >
+          <div class="flex items-center justify-between mb-2">
             <p class="text-xs uppercase tracking-wider text-text-secondary font-semibold">
               Retirable
             </p>
-            <app-icon name="arrow-up" [size]="14" cssClass="text-text-secondary/60" />
+            <div class="w-6 h-6 rounded-full bg-surface-secondary flex items-center justify-center">
+              <app-icon name="arrow-up" [size]="12" cssClass="text-text-secondary" />
+            </div>
           </div>
-          <p class="text-2xl sm:text-3xl font-bold text-text-primary">
+          <p class="text-balance-lg font-bold text-text-primary">
             ${{ withdrawableBalance() | number: '1.2-2' }}
           </p>
         </div>
@@ -196,14 +218,16 @@
     <!-- SECCIÓN 3: HISTORIAL UNIFICADO -->
     <!-- ============================================ -->
     <section
-      class="rounded-2xl sm:rounded-3xl border border-border-default/50 bg-surface-raised p-4 sm:p-6 md:p-8"
+      appStaggerEnter
+      [staggerIndex]="2"
+      class="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8"
     >
       <!-- Header con Tabs -->
       <div
         class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 sm:pb-6 border-b border-border-default/30"
       >
         <div>
-          <h2 class="text-xl sm:text-2xl font-bold text-text-primary">Historial de Movimientos</h2>
+          <h2 class="text-hero-md font-bold text-text-primary">Historial de Movimientos</h2>
           <p class="text-sm text-text-secondary mt-1 hidden sm:block">
             Todos tus movimientos en un solo lugar
           </p>
@@ -211,18 +235,19 @@
 
         <!-- Tabs -->
         <div
-          class="flex gap-1 p-1 bg-surface-base rounded-lg border border-border-default/50 overflow-x-auto"
+          class="flex gap-1 p-1 glass rounded-xl overflow-x-auto"
         >
           <button
             type="button"
             (click)="setActiveTab('transactions')"
+            appPressScale
             [ngClass]="{
-              'bg-cta-default/15 text-cta-default border-cta-default/30':
+              'bg-cta-default text-cta-text shadow-sm':
                 activeTab() === 'transactions',
-              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent':
+              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
                 activeTab() !== 'transactions',
             }"
-            class="px-4 py-2 text-sm font-medium rounded-md border transition whitespace-nowrap"
+            class="px-4 py-2.5 text-sm font-medium rounded-lg transition-all whitespace-nowrap"
           >
             <app-icon name="list" [size]="14" cssClass="inline-block mr-1.5" />
             Transacciones
@@ -230,13 +255,14 @@
           <button
             type="button"
             (click)="setActiveTab('transfers')"
+            appPressScale
             [ngClass]="{
-              'bg-cta-default/15 text-cta-default border-cta-default/30':
+              'bg-cta-default text-cta-text shadow-sm':
                 activeTab() === 'transfers',
-              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent':
+              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
                 activeTab() !== 'transfers',
             }"
-            class="px-4 py-2 text-sm font-medium rounded-md border transition whitespace-nowrap"
+            class="px-4 py-2.5 text-sm font-medium rounded-lg transition-all whitespace-nowrap"
           >
             <app-icon name="arrow-right-left" [size]="14" cssClass="inline-block mr-1.5" />
             Transferencias
@@ -244,13 +270,14 @@
           <button
             type="button"
             (click)="setActiveTab('withdrawals')"
+            appPressScale
             [ngClass]="{
-              'bg-cta-default/15 text-cta-default border-cta-default/30':
+              'bg-cta-default text-cta-text shadow-sm':
                 activeTab() === 'withdrawals',
-              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent':
+              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
                 activeTab() !== 'withdrawals',
             }"
-            class="px-4 py-2 text-sm font-medium rounded-md border transition whitespace-nowrap"
+            class="px-4 py-2.5 text-sm font-medium rounded-lg transition-all whitespace-nowrap"
             data-tour-step="withdraw-button"
           >
             <app-icon name="arrow-up" [size]="14" cssClass="inline-block mr-1.5" />
@@ -260,12 +287,13 @@
             <button
               type="button"
               (click)="setActiveTab('coverage')"
+              appPressScale
               [ngClass]="{
-                'bg-amber-500/15 text-amber-600 border-amber-500/30': activeTab() === 'coverage',
-                'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50 border-transparent':
+                'bg-amber-500 text-white shadow-sm': activeTab() === 'coverage',
+                'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
                   activeTab() !== 'coverage',
               }"
-              class="px-4 py-2 text-sm font-medium rounded-md border transition whitespace-nowrap"
+              class="px-4 py-2.5 text-sm font-medium rounded-lg transition-all whitespace-nowrap"
             >
               <app-icon name="shield" [size]="14" cssClass="inline-block mr-1.5" />
               Cobertura
@@ -294,24 +322,26 @@
                 <button
                   type="button"
                   (click)="setWithdrawalMode('form')"
+                  appPressScale
                   [ngClass]="{
-                    'bg-cta-default text-cta-text': withdrawalMode() === 'form',
+                    'bg-cta-default text-cta-text shadow-sm': withdrawalMode() === 'form',
                     'text-text-secondary hover:bg-surface-secondary/50':
                       withdrawalMode() !== 'form',
                   }"
-                  class="px-3 py-2 text-sm font-medium rounded-lg transition"
+                  class="px-4 py-2.5 text-sm font-medium rounded-xl transition-all"
                 >
                   Solicitar retiro
                 </button>
                 <button
                   type="button"
                   (click)="setWithdrawalMode('accounts')"
+                  appPressScale
                   [ngClass]="{
-                    'bg-cta-default text-cta-text': withdrawalMode() === 'accounts',
+                    'bg-cta-default text-cta-text shadow-sm': withdrawalMode() === 'accounts',
                     'text-text-secondary hover:bg-surface-secondary/50':
                       withdrawalMode() !== 'accounts',
                   }"
-                  class="px-3 py-2 text-sm font-medium rounded-lg transition"
+                  class="px-4 py-2.5 text-sm font-medium rounded-xl transition-all"
                 >
                   Cuentas bancarias
                 </button>
@@ -431,16 +461,16 @@
     <!-- ============================================ -->
     <!-- SECCIÓN AYUDA -->
     <!-- ============================================ -->
-    <section>
+    <section appStaggerEnter [staggerIndex]="3">
       <app-wallet-faq></app-wallet-faq>
     </section>
 
-    <section class="text-center pb-4">
+    <section appStaggerEnter [staggerIndex]="4" class="text-center pb-4">
       <p class="text-sm text-text-secondary">
         ¿Necesitas ayuda?
         <a
           href="mailto:autorentardev@gmail.com"
-          class="text-cta-default hover:text-cta-default/80 font-semibold ml-1 transition"
+          class="text-cta-default hover:text-cta-hover font-semibold ml-1 transition-colors"
           >Contacta a soporte</a
         >
       </p>
