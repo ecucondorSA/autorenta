@@ -1,3 +1,10 @@
+## [2.8.9](https://github.com/ecucondorSA/autorenta/compare/v2.8.8...v2.8.9) (2026-01-11)
+
+
+### Bug Fixes
+
+* booking-checkout bracket notation, publish-car-v2 status field ([d471ef8](https://github.com/ecucondorSA/autorenta/commit/d471ef85d2110901e8e9941b4cbe01df3fc82541))
+
 ## [2.8.8](https://github.com/ecucondorSA/autorenta/compare/v2.8.7...v2.8.8) (2026-01-11)
 
 
