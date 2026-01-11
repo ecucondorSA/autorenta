@@ -1,3 +1,10 @@
+## [2.8.10](https://github.com/ecucondorSA/autorenta/compare/v2.8.9...v2.8.10) (2026-01-11)
+
+
+### Bug Fixes
+
+* remove notes field from CreateInspectionParams calls ([639fc6e](https://github.com/ecucondorSA/autorenta/commit/639fc6e210aba8b8c7cef405d8e69797329901ee))
+
 ## [2.8.9](https://github.com/ecucondorSA/autorenta/compare/v2.8.8...v2.8.9) (2026-01-11)
 
 
