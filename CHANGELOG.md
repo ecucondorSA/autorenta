@@ -1,3 +1,10 @@
+## [2.12.1](https://github.com/ecucondorSA/autorenta/compare/v2.12.0...v2.12.1) (2026-01-11)
+
+
+### Bug Fixes
+
+* **docs:** correct stress test with FGO + franchise cap model ([6d50457](https://github.com/ecucondorSA/autorenta/commit/6d50457dcd4bd5c97d35373b6a8c7430adc44258))
+
 # [2.12.0](https://github.com/ecucondorSA/autorenta/compare/v2.11.0...v2.12.0) (2026-01-11)
 
 
