@@ -66,19 +66,19 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
     }).format(amount);
   }
 
-  getBookingTotalUsd(booking: Record<string, any>): number {
+  getBookingTotalUsd(booking: Record<string, unknown>): number {
     const amount =
-      booking.total_price ??
-      booking.total_amount ??
-      (booking.total_cents ? booking.total_cents / 100 : 0);
-    const currency = (booking.currency || 'USD').toUpperCase();
+      booking['total_price'] ??
+      booking['total_amount'] ??
+      (booking['total_cents'] ? Number(booking['total_cents']) / 100 : 0);
+    const currency = (String(booking['currency']) || 'USD').toUpperCase();
     if (currency === 'USD') return Number(amount) || 0;
 
     const fxRate =
-      booking.fx_snapshot ??
-      booking.fx_rate ??
-      booking.fxSnapshot ??
-      booking.fxRate ??
+      booking['fx_snapshot'] ??
+      booking['fx_rate'] ??
+      booking['fxSnapshot'] ??
+      booking['fxRate'] ??
       null;
     if (typeof fxRate === 'number' && fxRate > 0) {
       return Number(amount) / fxRate;

@@ -143,15 +143,17 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
     // If user has subscription discount applied
     if (preauth.discountApplied) {
+      const userTier = this.subscriptionService.tier();
       return {
         withoutSubscription: preauth.baseHoldUsd,
         withSubscription: preauth.holdAmountUsd,
         savings: preauth.baseHoldUsd - preauth.holdAmountUsd,
         hasSubscription: true,
-        userTier: this.subscriptionService.tier(),
-        userTierName: this.subscriptionService.tier()
-          ? SUBSCRIPTION_TIERS[this.subscriptionService.tier()!]?.name
-          : null,
+        userTier,
+        userTierName: userTier ? SUBSCRIPTION_TIERS[userTier]?.name : null,
+        recommendedTierName: userTier ? SUBSCRIPTION_TIERS[userTier]?.name : 'Club Standard',
+        tierPriceUsd: userTier ? (SUBSCRIPTION_TIERS[userTier]?.price_usd ?? 99) : 99,
+        fgoCap: userTier ? (SUBSCRIPTION_TIERS[userTier]?.fgo_cap_usd ?? 800) : 800,
       };
     }
     return null;

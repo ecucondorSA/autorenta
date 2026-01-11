@@ -5,6 +5,7 @@ import {
   PaymentMode,
   FxSnapshot,
   formatUsd,
+  formatArs,
 } from '@core/models/booking-detail-payment.model';
 
 /**
