@@ -1,3 +1,10 @@
+## [2.12.2](https://github.com/ecucondorSA/autorenta/compare/v2.12.1...v2.12.2) (2026-01-11)
+
+
+### Bug Fixes
+
+* **scanner:** fullscreen CSS and camera permissions ([3e3bb63](https://github.com/ecucondorSA/autorenta/commit/3e3bb63bb662898a11cabeab3a8b7e38ff063d3a))
+
 ## [2.12.1](https://github.com/ecucondorSA/autorenta/compare/v2.12.0...v2.12.1) (2026-01-11)
 
 
