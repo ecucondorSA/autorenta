@@ -1,3 +1,10 @@
+# [2.8.0](https://github.com/ecucondorSA/autorenta/compare/v2.7.3...v2.8.0) (2026-01-11)
+
+
+### Features
+
+* add AI visual features and UI enhancements ([ae3b253](https://github.com/ecucondorSA/autorenta/commit/ae3b253d623a5d84f1625f56bbe5eb062cc76d82))
+
 ## [2.7.3](https://github.com/ecucondorSA/autorenta/compare/v2.7.2...v2.7.3) (2026-01-11)
 
 
