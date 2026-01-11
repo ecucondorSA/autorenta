@@ -1,3 +1,10 @@
+# [2.11.0](https://github.com/ecucondorSA/autorenta/compare/v2.10.0...v2.11.0) (2026-01-11)
+
+
+### Features
+
+* **ci:** add monthly FIPE price sync workflow ([51fcf6f](https://github.com/ecucondorSA/autorenta/commit/51fcf6f29c03f9e788691eedfdfeee395318a531))
+
 # [2.10.0](https://github.com/ecucondorSA/autorenta/compare/v2.9.0...v2.10.0) (2026-01-11)
 
 
