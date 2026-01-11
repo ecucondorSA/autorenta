@@ -11,11 +11,11 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../icon/icon.component';
 import { PhotoQualityService } from '@core/services/ai/photo-quality.service';
 import { CosmeticConditionService, CosmeticIssue } from '@core/services/ai/cosmetic-condition.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { IconComponent } from '../icon/icon.component';
 
 // ============================================================================
 // TYPES & INTERFACES

@@ -17,7 +17,6 @@ import { from } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 // Core imports
-import { formatDate } from '../../../shared/utils/date.utils';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BonusMalusService } from '@core/services/payments/bonus-malus.service';
@@ -26,6 +25,7 @@ import { MercadoPagoPaymentService } from '@core/services/payments/mercadopago-p
 import { ToastService } from '@core/services/ui/toast.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import type { PaymentMode } from '@core/models/booking-detail-payment.model';
+import { formatDate } from '../../../shared/utils/date.utils';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { LoadingStateComponent } from '../../../shared/components/loading-state/loading-state.component';
 import { MercadopagoCardFormComponent } from '../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';

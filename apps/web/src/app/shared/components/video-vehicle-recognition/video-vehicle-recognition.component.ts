@@ -9,10 +9,7 @@ import {
   output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  VehicleRecognitionService,
-  VehicleRecognitionResult,
-} from '@core/services/ai/vehicle-recognition.service';
+import { VehicleRecognitionService } from '@core/services/ai/vehicle-recognition.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**

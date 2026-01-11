@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ContractsService, BookingContract } from '@core/services/bookings/contracts.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { ContractPdfViewerComponent } from './components/contract-pdf-viewer.component';
 import { formatDate } from '../../shared/utils/date.utils';
+import { ContractPdfViewerComponent } from './components/contract-pdf-viewer.component';
 
 interface Booking {
   id: string;

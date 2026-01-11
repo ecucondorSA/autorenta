@@ -44,13 +44,13 @@ import {
   RiskCalculation,
 } from '@core/services/verification/risk-calculator.service';
 import type { DateRange } from '@core/models/marketplace.model';
-import type { FranchiseInfo } from '../../bookings/checkout/support/booking-franchise.service';
-import { BookingFranchiseService } from '../../bookings/checkout/support/booking-franchise.service';
-import type { GuaranteeBreakdown } from '../../bookings/checkout/support/risk-calculator';
-import { CheckoutRiskCalculator } from '../../bookings/checkout/support/risk-calculator';
 // UI 2026 Directives
 import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
 import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
+import { BookingFranchiseService } from '../../bookings/checkout/support/booking-franchise.service';
+import { CheckoutRiskCalculator } from '../../bookings/checkout/support/risk-calculator';
+import type { FranchiseInfo } from '../../bookings/checkout/support/booking-franchise.service';
+import type { GuaranteeBreakdown } from '../../bookings/checkout/support/risk-calculator';
 import { Car, CarPhoto, CarStats, Review } from '../../../core/models';
 
 // Components
