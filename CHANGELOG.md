@@ -1,3 +1,10 @@
+## [2.7.1](https://github.com/ecucondorSA/autorenta/compare/v2.7.0...v2.7.1) (2026-01-11)
+
+
+### Bug Fixes
+
+* **bookings:** transition booking b25f2723 to in_progress ([86fa4be](https://github.com/ecucondorSA/autorenta/commit/86fa4be95e786a90fba0ef83abfc9270b2293725))
+
 # [2.7.0](https://github.com/ecucondorSA/autorenta/compare/v2.6.1...v2.7.0) (2026-01-11)
 
 
