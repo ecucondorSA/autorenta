@@ -532,5 +532,85 @@ export const routes: Routes = [
       },
     ],
   },
+  // ============================================================================
+  // STATIC PAGES (Footer Links)
+  // ============================================================================
+  {
+    path: 'help',
+    loadComponent: () =>
+      import('./features/static/help-center/help-center.page').then((m) => m.HelpCenterPage),
+  },
+  {
+    path: 'aircover',
+    loadComponent: () =>
+      import('./features/static/aircover/aircover.page').then((m) => m.AircoverPage),
+  },
+  {
+    path: 'safety',
+    loadComponent: () =>
+      import('./features/static/safety/safety.page').then((m) => m.SafetyPage),
+  },
+  {
+    path: 'cancellation',
+    loadComponent: () =>
+      import('./features/static/cancellation/cancellation.page').then((m) => m.CancellationPage),
+  },
+  {
+    path: 'community',
+    loadComponent: () =>
+      import('./features/static/community/community.page').then((m) => m.CommunityPage),
+  },
+  {
+    path: 'rent-your-car',
+    loadComponent: () =>
+      import('./features/static/rent-your-car/rent-your-car.page').then((m) => m.RentYourCarPage),
+  },
+  {
+    path: 'owner-resources',
+    loadComponent: () =>
+      import('./features/static/owner-resources/owner-resources.page').then(
+        (m) => m.OwnerResourcesPage,
+      ),
+  },
+  {
+    path: 'resources',
+    loadComponent: () =>
+      import('./features/static/resources/resources.page').then((m) => m.ResourcesPage),
+  },
+  {
+    path: 'newsroom',
+    loadComponent: () =>
+      import('./features/static/newsroom/newsroom.page').then((m) => m.NewsroomPage),
+  },
+  {
+    path: 'about',
+    loadComponent: () =>
+      import('./features/static/about/about.page').then((m) => m.AboutPage),
+  },
+  {
+    path: 'careers',
+    loadComponent: () =>
+      import('./features/static/careers/careers.page').then((m) => m.CareersPage),
+  },
+  {
+    path: 'investors',
+    loadComponent: () =>
+      import('./features/static/investors/investors.page').then((m) => m.InvestorsPage),
+  },
+  {
+    path: 'sitemap',
+    loadComponent: () =>
+      import('./features/static/sitemap/sitemap.page').then((m) => m.SitemapPage),
+  },
+  {
+    path: 'company-data',
+    loadComponent: () =>
+      import('./features/static/company-data/company-data.page').then((m) => m.CompanyDataPage),
+  },
+  {
+    path: 'terms',
+    redirectTo: 'terminos',
+    pathMatch: 'full',
+  },
   { path: '**', redirectTo: '/auth/login' },
 ];
