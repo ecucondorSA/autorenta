@@ -1,3 +1,10 @@
+## [2.8.5](https://github.com/ecucondorSA/autorenta/compare/v2.8.4...v2.8.5) (2026-01-11)
+
+
+### Bug Fixes
+
+* resolve remaining TypeScript errors for CI ([0d1606e](https://github.com/ecucondorSA/autorenta/commit/0d1606e6441df5ddc7dc952f45192025cffb08bb))
+
 ## [2.8.4](https://github.com/ecucondorSA/autorenta/compare/v2.8.3...v2.8.4) (2026-01-11)
 
 
