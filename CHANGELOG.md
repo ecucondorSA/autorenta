@@ -1,3 +1,10 @@
+## [2.8.8](https://github.com/ecucondorSA/autorenta/compare/v2.8.7...v2.8.8) (2026-01-11)
+
+
+### Bug Fixes
+
+* resolve remaining TypeScript and Tailwind errors ([d5aa463](https://github.com/ecucondorSA/autorenta/commit/d5aa463c4a1f2b6ad924889b18489774f9d48841))
+
 ## [2.8.7](https://github.com/ecucondorSA/autorenta/compare/v2.8.6...v2.8.7) (2026-01-11)
 
 
