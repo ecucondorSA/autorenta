@@ -19,12 +19,12 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
  * Video Vehicle Recognition Component
  *
  * Allows users to scan their vehicle with the camera and automatically
- * detect brand, model, year, and color using AI.
+ * detect brand, model, year, and color automatically.
  *
  * Features:
  * - Live camera preview with alignment guide
  * - Multi-frame capture for better accuracy
- * - Real-time AI analysis with progress
+ * - Real-time analysis with progress
  * - Confidence score display
  * - One-tap to use detected data
  */
@@ -65,7 +65,7 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
         <!-- Idle State - Start Button -->
         @if (state() === 'idle') {
           <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 flex flex-col items-center justify-center p-6">
-            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center mb-4 shadow-lg shadow-violet-500/30">
+            <div class="w-20 h-20 rounded-full bg-cta-default flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/30">
               <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -78,7 +78,7 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
             <button
               type="button"
               (click)="startCamera()"
-              class="px-6 py-3 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-bold hover:from-violet-600 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2"
+              class="px-6 py-3 bg-cta-default text-cta-text rounded-xl font-bold hover:bg-cta-hover transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2"
             >
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -92,7 +92,7 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
         <!-- Camera Loading -->
         @if (state() === 'camera-loading') {
           <div class="absolute inset-0 bg-slate-900 flex flex-col items-center justify-center">
-            <div class="w-12 h-12 border-4 border-violet-500/30 border-t-violet-500 rounded-full animate-spin mb-4"></div>
+            <div class="w-12 h-12 border-4 border-cta-default/30 border-t-cta-default rounded-full animate-spin mb-4"></div>
             <p class="text-white text-sm">Iniciando cámara...</p>
           </div>
         }
@@ -157,12 +157,12 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
         <!-- Analyzing State -->
         @if (state() === 'analyzing') {
           <div class="absolute inset-0 bg-slate-900/95 flex flex-col items-center justify-center p-6">
-            <!-- AI Animation -->
+            <!-- Analysis Animation -->
             <div class="relative w-24 h-24 mb-6">
-              <div class="absolute inset-0 border-4 border-violet-500/30 rounded-full"></div>
-              <div class="absolute inset-0 border-4 border-transparent border-t-violet-500 rounded-full animate-spin"></div>
-              <div class="absolute inset-2 border-4 border-transparent border-t-purple-500 rounded-full animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
-              <div class="absolute inset-4 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center">
+              <div class="absolute inset-0 border-4 border-cta-default/30 rounded-full"></div>
+              <div class="absolute inset-0 border-4 border-transparent border-t-cta-default rounded-full animate-spin"></div>
+              <div class="absolute inset-2 border-4 border-transparent border-t-cta-hover rounded-full animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
+              <div class="absolute inset-4 bg-cta-default rounded-full flex items-center justify-center">
                 <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -170,7 +170,7 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
               </div>
             </div>
 
-            <h3 class="text-xl font-bold text-white mb-2">Analizando con IA</h3>
+            <h3 class="text-xl font-bold text-white mb-2">Analizando</h3>
             <p class="text-slate-400 text-sm text-center mb-4">
               Identificando marca, modelo y características...
             </p>
@@ -178,11 +178,11 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
             <!-- Progress bar -->
             <div class="w-48 h-2 bg-slate-700 rounded-full overflow-hidden">
               <div
-                class="h-full bg-gradient-to-r from-violet-500 to-purple-600 transition-all duration-300"
+                class="h-full bg-cta-default transition-all duration-300"
                 [style.width.%]="analyzeProgress()"
               ></div>
             </div>
-            <p class="text-violet-400 text-sm mt-2">{{ analyzeProgress() }}%</p>
+            <p class="text-emerald-300 text-sm mt-2">{{ analyzeProgress() }}%</p>
           </div>
         }
 
@@ -286,7 +286,7 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
               <button
                 type="button"
                 (click)="startCamera()"
-                class="px-6 py-3 bg-violet-500 text-white rounded-xl font-bold hover:bg-violet-600 transition-colors"
+                class="px-6 py-3 bg-cta-default text-cta-text rounded-xl font-bold hover:bg-cta-hover transition-colors"
               >
                 Reintentar
               </button>
@@ -298,14 +298,14 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
       <!-- Bottom Info (when not in success state) -->
       @if (state() !== 'success' && state() !== 'error') {
         <div class="bg-slate-800 px-4 py-3 flex items-center gap-3">
-          <div class="w-8 h-8 rounded-full bg-violet-500/20 flex items-center justify-center flex-shrink-0">
-            <svg class="w-4 h-4 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="w-8 h-8 rounded-full bg-cta-default/15 flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-cta-default" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <p class="text-slate-400 text-xs">
-            La IA analiza múltiples frames para identificar tu vehículo con mayor precisión.
+            Se analizan varios frames para identificar tu vehículo con mayor precisión.
           </p>
         </div>
       }
@@ -479,7 +479,7 @@ export class VideoVehicleRecognitionComponent implements OnDestroy {
 
       this.analyzeProgress.set(20);
 
-      // Send to AI for recognition
+      // Send for recognition
       const result = await this.vehicleRecognitionService.recognizeFromBase64(
         frameToAnalyze.replace(/^data:image\/\w+;base64,/, '')
       );

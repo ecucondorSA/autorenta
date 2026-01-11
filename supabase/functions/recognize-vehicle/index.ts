@@ -66,46 +66,61 @@ const GEMINI_MODEL = 'gemini-2.5-flash';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-const VEHICLE_RECOGNITION_PROMPT = `Eres un experto en identificación de vehículos. Analiza esta imagen y determina:
+const VEHICLE_RECOGNITION_PROMPT = `Eres un experto en identificación de vehículos. Analiza esta imagen y determina si hay un vehículo visible.
 
-1. MARCA del vehículo (ej: Toyota, Ford, Chevrolet, Volkswagen, Fiat, Renault, Honda, etc.)
-2. MODELO específico (ej: Corolla, F-150, Cruze, Golf, Palio, Sandero, Civic)
-3. RANGO DE AÑOS probable basado en el diseño (ej: 2018-2022)
-4. COLOR principal del vehículo (ej: blanco, negro, gris, rojo, azul, plata)
+PRIMERO: ¿Hay un vehículo (auto, camioneta, SUV, pickup) claramente visible en la imagen?
+- Si NO hay vehículo o solo se ve parcialmente: confidence = 0
+- Si hay vehículo pero borroso/oscuro: confidence = 20-40
+- Si hay vehículo visible pero no identificable: confidence = 40-60
+- Si puedes identificar marca/modelo: confidence = 60-95
+
+Si hay un vehículo, identifica:
+1. MARCA (ej: Toyota, Ford, Chevrolet, Volkswagen, Fiat, Renault, Honda)
+2. MODELO (ej: Corolla, F-150, Cruze, Golf, Palio, Sandero, Civic)
+3. RANGO DE AÑOS basado en diseño (ej: [2018, 2022])
+4. COLOR principal (blanco, negro, gris, rojo, azul, plata, etc.)
 5. TIPO DE CARROCERÍA:
-   - sedan: 4 puertas, maletero separado
-   - suv: vehículo utilitario deportivo, más alto
-   - hatchback: 5 puertas, compacto
-   - pickup: camioneta con caja de carga
-   - van: furgoneta o monovolumen
+   - sedan: 4 puertas con maletero
+   - suv: utilitario deportivo alto
+   - hatchback: compacto 5 puertas
+   - pickup: con caja de carga
+   - van: furgoneta/monovolumen
    - coupe: 2 puertas deportivo
    - convertible: descapotable
-   - wagon: familiar/station wagon
-   - unknown: no se puede determinar
-
-REGLAS:
-- Si hay múltiples vehículos, analiza el que ocupa MAYOR área de la imagen
-- Si no puedes identificar con certeza, proporciona las 3 opciones más probables
-- El rango de años debe ser coherente con el diseño del vehículo
-- La confianza debe ser 0-100, sé conservador
+   - wagon: station wagon
+   - unknown: no determinable
 
 MARCAS COMUNES EN LATINOAMÉRICA:
 Argentina: Fiat, Volkswagen, Toyota, Ford, Chevrolet, Renault, Peugeot, Citroën
 Ecuador: Chevrolet, Kia, Hyundai, Toyota, Nissan, Mazda
 Brasil: Fiat, Volkswagen, Chevrolet, Hyundai, Toyota, Honda, Renault
 
+IMPORTANTE: Sé GENEROSO con la confianza si ves claramente un auto, incluso si no estás 100% seguro del modelo exacto. Una detección de "probablemente Toyota" con 60% es mejor que no detectar nada.
+
 Responde ÚNICAMENTE con JSON válido:
 {
+  "vehicle_detected": true,
   "brand": "Toyota",
   "model": "Corolla",
   "year_range": [2018, 2022],
   "color": "blanco",
   "body_type": "sedan",
-  "confidence": 85,
+  "confidence": 75,
   "alternatives": [
-    {"brand": "Honda", "model": "Civic", "confidence": 45},
-    {"brand": "Hyundai", "model": "Elantra", "confidence": 30}
+    {"brand": "Honda", "model": "Civic", "confidence": 45}
   ]
+}
+
+Si NO hay vehículo visible:
+{
+  "vehicle_detected": false,
+  "brand": "unknown",
+  "model": "unknown",
+  "year_range": [2000, 2025],
+  "color": "unknown",
+  "body_type": "unknown",
+  "confidence": 0,
+  "alternatives": []
 }`;
 
 // ============================================================================

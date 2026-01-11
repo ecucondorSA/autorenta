@@ -154,7 +154,7 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
               </svg>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="font-bold text-emerald-900">Vehículo detectado por IA</p>
+              <p class="font-bold text-emerald-900">Vehículo detectado automáticamente</p>
               <p class="text-emerald-700 font-medium">
                 {{ detectedVehicle()?.brand }} {{ detectedVehicle()?.model }}
                 {{ detectedVehicle()?.year }}
@@ -249,7 +249,7 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
                     </svg>
                   </div>
                   <span class="text-white text-sm font-medium">{{ photo.progress }}%</span>
-                  <span class="text-white/70 text-xs">Analizando con IA...</span>
+                  <span class="text-white/70 text-xs">Analizando foto...</span>
                 </div>
               }
               @case ('error') {

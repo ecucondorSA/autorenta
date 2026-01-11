@@ -165,7 +165,7 @@ export class PublishCarPhotoService {
     options: GenerateAIPhotosOptions = {},
   ): Promise<void> {
     if (!brand || !model || !year) {
-      alert('Debes seleccionar marca, modelo y año para generar fotos con IA.');
+      alert('Debes seleccionar marca, modelo y año para generar fotos de referencia.');
       return;
     }
 
@@ -184,7 +184,7 @@ export class PublishCarPhotoService {
       // Generación de imágenes se hace vía Worker (server-side) para no exponer keys en el navegador.
       const workerEnabled = Boolean(environment.cloudflareWorkerUrl);
       if (!workerEnabled) {
-        alert('Falta configurar NG_APP_CLOUDFLARE_WORKER_URL (worker de Gemini para imágenes).');
+        alert('Falta configurar NG_APP_CLOUDFLARE_WORKER_URL (servicio de imágenes).');
         return;
       }
 
@@ -229,7 +229,7 @@ export class PublishCarPhotoService {
 
           if (!workerResponse.ok || !workerResult.success || !workerResult.image) {
             const message = workerResult?.error || workerResponse.statusText;
-            throw new Error(message || 'Error al generar foto con IA');
+            throw new Error(message || 'Error al generar la foto');
           }
 
           const workerFile = await this.base64ToFile(
@@ -241,7 +241,7 @@ export class PublishCarPhotoService {
           remainingSlots--;
         } catch (error) {
           console.error(`Error generando foto ${index + 1} con worker:`, error);
-          errors.push(`IA #${index + 1}: ${error instanceof Error ? error.message : 'falló'}`);
+          errors.push(`Foto #${index + 1}: ${error instanceof Error ? error.message : 'falló'}`);
         }
       }
 
@@ -249,17 +249,17 @@ export class PublishCarPhotoService {
         this.uploadedPhotos.set([...currentPhotos, ...generatedPhotos]);
         const errorMsg = errors.length ? ` (algunas fallaron: ${errors.join('; ')})` : '';
         alert(
-          `✨ Se generaron ${generatedPhotos.length} foto(s) con IA${errorMsg}. Revisa consola para ver el modelo usado.`,
+          `Se generaron ${generatedPhotos.length} foto(s)${errorMsg}. Revisa consola para ver el modelo usado.`,
         );
       } else {
         const msg = errors.length
           ? `No se generaron fotos. Errores: ${errors.join('; ')}`
-          : 'No se pudo generar ninguna foto con IA. Verifica NG_APP_CLOUDFLARE_WORKER_URL.';
+          : 'No se pudo generar ninguna foto. Verifica NG_APP_CLOUDFLARE_WORKER_URL.';
         alert(msg);
       }
     } catch (error) {
-      console.error('Error general durante la generación de fotos con IA:', error);
-      alert('Ocurrió un error inesperado al generar fotos con IA. Intenta nuevamente.');
+      console.error('Error general durante la generación de fotos:', error);
+      alert('Ocurrió un error inesperado al generar fotos. Intenta nuevamente.');
     } finally {
       this.isGeneratingAIPhotos.set(false);
     }

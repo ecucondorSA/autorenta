@@ -1,20 +1,19 @@
 <div
-  class="min-h-screen bg-surface-base py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 text-text-primary font-sans antialiased leading-relaxed overflow-x-hidden"
+  class="publish-page min-h-screen bg-surface-base py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 text-text-primary font-sans antialiased leading-relaxed overflow-x-hidden"
 >
-  <div class="max-w-5xl mx-auto">
+  <div class="publish-shell max-w-5xl mx-auto">
     <!-- 1. Header Minimalista e Inspirador -->
-    <header class="mb-10 text-center sm:text-left sm:flex sm:items-end sm:justify-between">
+    <header class="publish-header mb-10 text-center sm:text-left sm:flex sm:items-end sm:justify-between">
       <div>
         <h1 class="h1 mb-2">
           {{
             editMode()
-              ? 'Tu publicación, lista para mejorar.'
-              : 'Publicá tu auto y generá
-          ingresos.'
+              ? 'Tu publicación'
+              : 'Publicá tu auto'
           }}
         </h1>
         <p class="text-base sm:text-lg text-text-secondary font-medium max-w-2xl">
-          Publicalo en minutos. Nosotros gestionamos seguridad, reservas y cobros.
+          Listo en minutos. Gestionamos reservas y cobros.
         </p>
       </div>
       <!-- Indicador de Progreso Sutil -->
@@ -47,11 +46,11 @@
         <form
           [formGroup]="publishForm"
           (ngSubmit)="onSubmit()"
-          class="space-y-8"
+          class="publish-form space-y-8"
           data-testid="publish-form"
         >
           <!-- SECCIÓN 1: IDENTIDAD DEL VEHÍCULO (El "Qué") -->
-          <section class="bg-surface-raised rounded-2xl shadow-sm border border-border-default/80">
+          <section class="publish-section bg-surface-raised rounded-2xl shadow-sm border border-border-default/80">
             <div class="p-5 sm:p-8">
               <div class="flex items-center gap-3 mb-6">
                 <div
@@ -80,19 +79,19 @@
                 <button
                   type="button"
                   (click)="showVideoScanner.set(true)"
-                  class="w-full mb-6 flex items-center justify-center gap-3 px-4 py-4 bg-gradient-to-r from-violet-500/10 to-purple-500/10 border-2 border-dashed border-violet-300 rounded-xl text-violet-700 font-semibold hover:from-violet-500/20 hover:to-purple-500/20 hover:border-violet-400 transition-all group"
+                  class="scanner-button w-full mb-6 flex items-center justify-between gap-3 px-4 py-4 border border-border-default/80 rounded-xl text-text-primary font-semibold hover:border-text-primary/40 transition-all group bg-surface-base/60 backdrop-blur-sm"
                 >
-                  <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div class="w-10 h-10 rounded-full bg-cta-default/10 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <svg class="w-5 h-5 text-cta-default" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <div class="text-left">
-                    <span class="block text-base">Escanear vehículo con IA</span>
-                    <span class="block text-xs text-violet-500 font-normal">Tracking en vivo + marca/modelo + valor de mercado</span>
+                    <span class="block text-base">Escanear vehículo</span>
+                    <span class="block text-xs text-text-secondary font-normal">Completa marca y modelo</span>
                   </div>
-                  <span class="ml-auto px-2 py-1 bg-gradient-to-r from-violet-500 to-purple-600 text-white text-xs font-bold rounded-full animate-pulse">LIVE</span>
+                  <span class="hidden sm:inline text-xs text-text-muted font-medium">Opcional</span>
                 </button>
               }
 
@@ -228,11 +227,11 @@
             }
           </section>
 
-          <!-- SECCIÓN 2: FOTOS (El "Wow" Visual) - AI-Powered -->
+          <!-- SECCIÓN 2: FOTOS (El "Wow" Visual) -->
           <section
-            class="bg-surface-raised rounded-2xl shadow-sm border border-border-default/80 p-5 sm:p-8"
+            class="publish-section bg-surface-raised rounded-2xl shadow-sm border border-border-default/80 p-5 sm:p-8"
           >
-            <!-- Photo Upload con validación AI integrada -->
+            <!-- Photo Upload con validación integrada -->
             <app-photo-upload-ai
               [maxPhotos]="10"
               [enableVehicleDetection]="true"
@@ -243,23 +242,22 @@
               (vehicleDetected)="onVehicleAutoDetected($event)"
             />
 
-            <!-- Botón para generar fotos con IA (si no hay fotos) -->
+            <!-- Botón para generar fotos (si no hay fotos) -->
             @if (uploadedPhotos().length === 0 && selectedFIPEModel()) {
               <div class="mt-6 pt-6 border-t border-border-default/50">
                 <button
                   type="button"
                   (click)="showAIPhotosModal.set(true)"
-                  class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-bold hover:from-violet-600 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                  class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-cta-default text-cta-text rounded-xl font-bold hover:bg-cta-hover transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                 >
                   <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span>Generar fotos profesionales con IA</span>
-                  <span class="px-2 py-0.5 bg-white/20 rounded-full text-xs">Nuevo</span>
+                  <span>Generar fotos de referencia</span>
                 </button>
                 <p class="text-xs text-text-muted text-center mt-2">
-                  ¿No tenés fotos? Generamos fotos de tu {{ getCurrentBrand() }} {{ getCurrentModel() }} automáticamente.
+                  Si no tenés fotos, creamos una base visual de tu {{ getCurrentBrand() }} {{ getCurrentModel() }}.
                 </p>
               </div>
             }
@@ -276,7 +274,7 @@
 
           <!-- SECCIÓN 3: DETALLES TÉCNICOS (Colapsados visualmente en grid) -->
           <section
-            class="bg-surface-raised rounded-2xl shadow-sm border border-border-default/80 p-5 sm:p-8"
+            class="publish-section bg-surface-raised rounded-2xl shadow-sm border border-border-default/80 p-5 sm:p-8"
           >
             <h2 class="h5 mb-6">Detalles básicos</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -439,7 +437,7 @@
 
           <!-- SECCIÓN 3.5: REGLAS DE ALQUILER -->
           <section
-            class="bg-surface-raised rounded-2xl shadow-sm border border-border-default/80 p-5 sm:p-8"
+            class="publish-section bg-surface-raised rounded-2xl shadow-sm border border-border-default/80 p-5 sm:p-8"
           >
             <div class="flex items-center gap-3 mb-6">
               <div
@@ -588,7 +586,7 @@
 
           <!-- SECCIÓN 4: PRECIO Y GANANCIA (El "Why") -->
           <section
-            class="bg-surface-raised rounded-2xl shadow-sm border border-border-default/80 p-5 sm:p-8"
+            class="publish-section bg-surface-raised rounded-2xl shadow-sm border border-border-default/80 p-5 sm:p-8"
           >
             <div class="flex items-center gap-3 mb-6">
               <div
@@ -722,7 +720,7 @@
 
           <!-- SECCIÓN 5: UBICACIÓN -->
           <section
-            class="bg-surface-raised rounded-2xl shadow-sm border border-border-default/80 p-5 sm:p-8 mb-24 sm:mb-0"
+            class="publish-section bg-surface-raised rounded-2xl shadow-sm border border-border-default/80 p-5 sm:p-8 mb-24 sm:mb-0"
           >
             <div class="flex items-center justify-between mb-6">
               <h2 class="h4">Ubicación del auto</h2>
@@ -962,7 +960,7 @@
         <app-host-support-info-panel />
 
         <!-- Preview Simplificado -->
-        <div class="bg-surface-raised rounded-2xl shadow-sm p-6 border border-border-default/80">
+        <div class="publish-section bg-surface-raised rounded-2xl shadow-sm p-6 border border-border-default/80">
           <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
             Vista previa
           </h4>

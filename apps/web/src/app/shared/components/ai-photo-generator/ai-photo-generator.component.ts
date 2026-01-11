@@ -25,9 +25,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
     <div class="ai-photo-generator">
       <!-- Method Selector -->
       <div class="mb-4">
-        <label class="block text-sm font-medium text-text-primary mb-2"
-          >Método de generación:</label
-        >
+        <label class="block text-sm font-medium text-text-primary mb-2">Fuente de fotos</label>
         <div class="flex gap-2">
           <button
             type="button"
@@ -39,7 +37,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
             "
             class="flex-1 px-4 py-2 rounded-lg transition-colors"
           >
-            📸 Stock Photos (Rápido)
+            📸 Fotos reales
           </button>
           <button
             type="button"
@@ -51,14 +49,14 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
             "
             class="flex-1 px-4 py-2 rounded-lg transition-colors"
           >
-            ⚡ Gemini 2.5 Flash
+            ⚡ Generación avanzada
           </button>
         </div>
         <p class="text-xs text-text-secondary mt-2">
           @if (method() === 'stock-photos') {
-            Busca fotos reales de autos similares (más rápido, fotos reales)
+            Busca fotos reales de autos similares (más rápido)
           } @else {
-            Genera fotos con Gemini 2.5 Flash (mejor calidad)
+            Genera fotos de referencia (mejor detalle)
           }
         </p>
       </div>
@@ -108,7 +106,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
         type="button"
         (click)="generatePhotos()"
         [disabled]="generating() || !canGenerate()"
-        class="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-text-inverse rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+        class="w-full px-4 py-3 bg-cta-default text-cta-text rounded-lg hover:bg-cta-hover disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
       >
         @if (generating()) {
           <span class="flex items-center justify-center gap-2">
@@ -128,13 +126,13 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
               ></path>
             </svg>
             @if (method() === 'cloudflare-ai') {
-              Generando con IA (esto puede tardar 5-20 segundos)...
+              Generando fotos (puede tardar unos segundos)...
             } @else {
-              Buscando fotos de stock...
+              Buscando fotos reales...
             }
           </span>
         } @else {
-          ✨ Generar Fotos con IA
+          Generar fotos
         }
       </button>
 
@@ -155,7 +153,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
                 <div
                   class="absolute top-2 right-2 bg-surface-overlay/70 text-text-inverse text-xs px-2 py-1 rounded"
                 >
-                  {{ photo.source === 'cloudflare-ai' ? '🤖 IA' : '📸 Stock' }}
+                  {{ photo.source === 'cloudflare-ai' ? 'Generadas' : 'Reales' }}
                 </div>
               </div>
             }
