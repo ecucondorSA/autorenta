@@ -596,7 +596,7 @@ export class PhotoUploadAIComponent {
     this.updatePhoto(photo.id, { progress: 30 });
 
     try {
-      const result = await this.photoQualityService.validatePhoto(photo.preview);
+      const result = await this.photoQualityService.validatePhoto(photo.preview, 'vehicle');
 
       this.updatePhoto(photo.id, {
         progress: 50,
@@ -649,15 +649,15 @@ export class PhotoUploadAIComponent {
     this.updatePhoto(photo.id, { progress: 90 });
 
     try {
-      const result = await this.vehicleRecognitionService.recognizeVehicle(photo.preview);
+      const result = await this.vehicleRecognitionService.recognizeFromUrl(photo.preview);
 
-      if (result.success && result.confidence >= 70) {
+      if (result.success && result.vehicle && result.vehicle.confidence >= 70) {
         const detected: VehicleAutoDetect = {
-          brand: result.brand || '',
-          model: result.model || '',
-          year: result.year || 0,
-          color: result.color || '',
-          confidence: result.confidence,
+          brand: result.vehicle.brand || '',
+          model: result.vehicle.model || '',
+          year: result.vehicle.year_range?.[0] || 0,
+          color: result.vehicle.color || '',
+          confidence: result.vehicle.confidence,
         };
 
         this.detectedVehicle.set(detected);
@@ -665,11 +665,11 @@ export class PhotoUploadAIComponent {
 
         this.updatePhoto(photo.id, {
           vehicle: {
-            brand: result.brand,
-            model: result.model,
-            year: result.year,
-            color: result.color,
-            confidence: result.confidence,
+            brand: result.vehicle.brand,
+            model: result.vehicle.model,
+            year: result.vehicle.year_range?.[0],
+            color: result.vehicle.color,
+            confidence: result.vehicle.confidence,
           },
         });
       }

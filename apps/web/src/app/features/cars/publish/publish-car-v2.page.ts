@@ -1414,9 +1414,9 @@ export class PublishCarV2Page implements OnInit {
         preview: p.preview,
         position: p.position,
         aiValidation: {
-          quality: p.qualityScore,
-          vehicle: p.vehicleDetection,
-          plates: p.plates,
+          quality: p.quality?.score,
+          vehicle: p.vehicle,
+          plates: p.plates ? [{ text: '', confidence: 1, blurred: p.plates.detected }] : undefined,
         },
       })),
     );

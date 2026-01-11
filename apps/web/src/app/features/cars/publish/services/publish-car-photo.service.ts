@@ -917,21 +917,19 @@ export class PublishCarPhotoService {
       position: p.position,
       qualityResult: p.aiValidation?.quality
         ? {
+            success: true,
             quality: {
               score: p.aiValidation.quality,
               is_acceptable: p.aiValidation.quality >= 50,
               issues: [],
-              recommendations: [],
             },
-            vehicle_detected: p.aiValidation?.vehicle
-              ? {
-                  is_vehicle: true,
-                  confidence: p.aiValidation.vehicle.confidence,
-                  vehicle_type: 'car',
-                  position_detected: p.position || null,
-                  position_match: true,
-                }
-              : undefined,
+            content: {
+              matches_subject: true,
+              detected_subject: 'vehicle',
+              area_coverage: 80,
+              position_detected: p.position,
+            },
+            recommendations: [],
           }
         : undefined,
       platesBlurred: p.aiValidation?.plates?.some((plate) => plate.blurred) ?? false,
@@ -950,9 +948,9 @@ export class PublishCarPhotoService {
         vehicle: {
           brand: v.brand,
           model: v.model,
-          year_range: v.year ? [v.year, v.year] : undefined,
+          year_range: v.year ? [v.year, v.year] : [2020, 2024],
           color: v.color || 'desconocido',
-          body_type: 'car',
+          body_type: 'sedan',
           confidence: v.confidence,
         },
         image_quality: {
