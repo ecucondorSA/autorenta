@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/ecucondorSA/autorenta/compare/v2.4.1...v2.5.0) (2026-01-11)
+
+
+### Features
+
+* gemini live video inspection + network participation + booking completion fix ([9b992c3](https://github.com/ecucondorSA/autorenta/commit/9b992c3dcef5bfdf5402cb85b68d8b5fe56cff88))
+
 ## [2.4.1](https://github.com/ecucondorSA/autorenta/compare/v2.4.0...v2.4.1) (2026-01-11)
 
 
