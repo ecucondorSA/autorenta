@@ -1,3 +1,10 @@
+# [2.12.0](https://github.com/ecucondorSA/autorenta/compare/v2.11.0...v2.12.0) (2026-01-11)
+
+
+### Features
+
+* **fipe:** add cars_fipe_history table for price tracking ([40494a8](https://github.com/ecucondorSA/autorenta/commit/40494a82699d433f053b38be90933626b51a4780))
+
 # [2.11.0](https://github.com/ecucondorSA/autorenta/compare/v2.10.0...v2.11.0) (2026-01-11)
 
 
