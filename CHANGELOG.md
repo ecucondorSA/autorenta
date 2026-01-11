@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/ecucondorSA/autorenta/compare/v2.6.1...v2.7.0) (2026-01-11)
+
+
+### Features
+
+* **bookings:** add unified bilateral flow card with 6-step progress tracker ([dfe79e3](https://github.com/ecucondorSA/autorenta/commit/dfe79e35763ad6376f07a3e53481b382d7f20f47))
+
 ## [2.6.1](https://github.com/ecucondorSA/autorenta/compare/v2.6.0...v2.6.1) (2026-01-11)
 
 
