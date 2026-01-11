@@ -164,22 +164,35 @@ export class OwnerBookingsPage implements OnInit, OnDestroy, ViewWillEnter {
       case 'confirmed':
         return 'Confirmada';
       case 'in_progress':
-        // FIX: Consider completion_status for detailed status
+        // Consider completion_status for detailed status
         if (
           booking.completion_status === 'pending_owner' ||
           booking.completion_status === 'pending_both'
         ) {
-          return 'Confirmar devolución';
+          return 'Tu turno: Confirmar recepción';
         }
         if (booking.completion_status === 'returned') {
-          return 'Inspección pendiente';
+          return 'Tu turno: Inspeccionar vehículo';
         }
         if (booking.completion_status === 'pending_renter') {
-          return 'Esperando al locatario';
+          return 'Esperando al viajero';
         }
-        return 'En curso';
+        return 'Viaje en curso';
+      // V2 states
+      case 'returned':
+        return 'Tu turno: Inspeccionar vehículo';
+      case 'inspected_good':
+        if (booking.owner_confirmed_delivery) {
+          return 'Esperando al viajero';
+        }
+        return 'Vehículo en buen estado';
+      case 'damage_reported':
+        if (booking.owner_confirmed_delivery) {
+          return 'Esperando respuesta del viajero';
+        }
+        return 'Daños reportados';
       case 'completed':
-        return 'Finalizada';
+        return 'Viaje completado';
       case 'cancelled':
         return 'Cancelada';
       case 'expired':
@@ -194,29 +207,42 @@ export class OwnerBookingsPage implements OnInit, OnDestroy, ViewWillEnter {
       case 'pending':
         // Distinguish between approval flow vs payment flow
         return booking.payment_mode
-          ? 'El locatario está esperando tu aprobación.'
-          : 'El locatario debe completar el pago.';
+          ? 'El viajero está esperando tu aprobación.'
+          : 'El viajero debe completar el pago.';
       case 'pending_review':
-        return 'Confirmá la devolución del auto para liberar los fondos.';
+        return 'Confirmá la devolución del vehículo para liberar los fondos.';
       case 'confirmed':
-        return 'Coordiná la entrega del auto con el locatario.';
+        return 'Coordiná la entrega del vehículo con el viajero.';
       case 'in_progress':
-        // FIX: Consider completion_status for detailed hint
+        // Consider completion_status for detailed hint
         if (
           booking.completion_status === 'pending_owner' ||
           booking.completion_status === 'pending_both'
         ) {
-          return 'El locatario devolvió el auto. Ingresá al detalle para confirmar.';
+          return 'El viajero devolvió el vehículo. Ingresá para confirmar la recepción.';
         }
         if (booking.completion_status === 'returned') {
-          return 'Revisá el vehículo e ingresá al detalle para confirmar la recepción.';
+          return 'Revisá el vehículo e ingresá para confirmar que lo recibiste.';
         }
         if (booking.completion_status === 'pending_renter') {
-          return 'Tu confirmación fue registrada. Esperando al locatario.';
+          return 'Confirmaste la recepción. Esperando que el viajero confirme.';
         }
-        return 'El auto está siendo utilizado.';
+        return 'El viajero está usando el vehículo.';
+      // V2 states
+      case 'returned':
+        return 'El viajero devolvió el vehículo. Ingresá para inspeccionar y confirmar.';
+      case 'inspected_good':
+        if (booking.owner_confirmed_delivery) {
+          return 'Confirmaste sin daños. Esperando que el viajero libere el pago.';
+        }
+        return 'Inspección completada sin daños.';
+      case 'damage_reported':
+        if (booking.owner_confirmed_delivery) {
+          return 'Reportaste daños. El viajero debe aceptar o disputar.';
+        }
+        return 'Daños pendientes de confirmación.';
       case 'completed':
-        return 'Alquiler finalizado correctamente.';
+        return 'El viaje finalizó exitosamente. Los fondos fueron liberados.';
       case 'cancelled':
         return 'Esta reserva fue cancelada.';
       default:
@@ -233,9 +259,23 @@ export class OwnerBookingsPage implements OnInit, OnDestroy, ViewWillEnter {
       case 'confirmed':
         return 'badge-success';
       case 'in_progress':
+        // Highlight when owner needs to act
+        if (
+          booking.completion_status === 'pending_owner' ||
+          booking.completion_status === 'pending_both' ||
+          booking.completion_status === 'returned'
+        ) {
+          return 'badge-warning';
+        }
         return 'badge-info';
+      case 'returned':
+        return 'badge-warning'; // Owner needs to act
+      case 'inspected_good':
+        return 'badge-info';
+      case 'damage_reported':
+        return 'badge-warning';
       case 'completed':
-        return 'badge-neutral';
+        return 'badge-success';
       case 'cancelled':
       case 'expired':
         return 'badge-danger';
@@ -253,7 +293,21 @@ export class OwnerBookingsPage implements OnInit, OnDestroy, ViewWillEnter {
       case 'confirmed':
         return '✅';
       case 'in_progress':
+        // Show alert icon when owner needs to act
+        if (
+          booking.completion_status === 'pending_owner' ||
+          booking.completion_status === 'pending_both' ||
+          booking.completion_status === 'returned'
+        ) {
+          return '🔔';
+        }
         return '🚗';
+      case 'returned':
+        return '🔔'; // Owner needs to act
+      case 'inspected_good':
+        return '✓';
+      case 'damage_reported':
+        return '⚠️';
       case 'completed':
         return '🏁';
       case 'cancelled':

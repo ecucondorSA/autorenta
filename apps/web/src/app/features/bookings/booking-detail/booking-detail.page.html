@@ -329,80 +329,13 @@
         }
       </section>
 
-      <!-- 2.5 BILATERAL CONFIRMATION ACTIONS -->
-      <!-- 2.5 BILATERAL CONFIRMATION ACTIONS -->
-      @if (isReturnPhase()) {
-      <!-- CASE 1: VEHICLE RETURNED, WAITING FOR OWNER INSPECTION -->
-      @if (booking()?.status === 'returned' || (booking()?.returned_at && booking()?.status ===
-      'in_progress')) {
-      <div class="mt-6 p-6 rounded-2xl bg-surface-secondary border border-border-default">
-        <div class="flex items-center gap-4 mb-4">
-          <div
-            class="w-12 h-12 rounded-full bg-info-100 text-info-600 flex items-center justify-center text-2xl">
-            <ion-icon name="hourglass-outline"></ion-icon>
-          </div>
-          <div>
-            <h3 class="text-lg font-bold text-text-primary">Vehículo Devuelto</h3>
-            <p class="text-sm text-text-secondary">
-              Confirmado el {{ booking()?.returned_at | date: 'medium' }}
-            </p>
-          </div>
-        </div>
-
-        @if (isOwner()) {
-        <div class="bg-warning-50 border-l-4 border-warning-500 p-4 mb-4">
-          <p class="font-bold text-warning-800">Acción Requerida</p>
-          <p class="text-sm text-warning-700">Debes inspeccionar el vehículo para liberar los fondos
-            o reportar daños.</p>
-        </div>
-        <a [routerLink]="['/bookings', booking()?.id, 'owner-check-out']"
-          class="block w-full py-3 text-center rounded-xl bg-cta-default text-cta-text font-bold hover:brightness-95 transition-all">
-          Iniciar Inspección
-        </a>
-        } @else {
-        <p class="text-sm text-text-muted">
-          Esperando que el propietario revise el estado del vehículo. Te notificaremos cuando la
-          inspección esté lista para tu revisión final.
-        </p>
-        }
-      </div>
-      }
-
-      <!-- CASE 2: OWNER NEEDS TO CONFIRM VEHICLE RETURN (after inspection) -->
-      @if (
-      isOwner() &&
-      (booking()?.status === 'damage_reported' || booking()?.status === 'inspected_good' ||
-      booking()?.inspection_status === 'damaged' || booking()?.inspection_status === 'good') &&
-      !booking()?.owner_confirmed_delivery
-      ) {
-      <div id="owner-confirmation-section" class="mt-6">
-        <app-owner-confirmation [bookingId]="booking()!.id"
-          [ownerConfirmed]="!!booking()?.owner_confirmed_delivery"
-          [renterConfirmed]="!!booking()?.renter_confirmed_payment"
-          (confirmed)="handleConfirmationSuccess($event)"
-          (errorOccurred)="handleConfirmationError($event)"></app-owner-confirmation>
-      </div>
-      }
-
-      <!-- CASE 3: RENTER NEEDS TO CONFIRM (after owner confirmed) -->
-      @if (
-      isRenter() &&
-      (booking()?.status === 'damage_reported' || booking()?.status === 'inspected_good' ||
-      booking()?.inspection_status === 'damaged' || booking()?.inspection_status === 'good') &&
-      !booking()?.renter_confirmed_payment
-      ) {
-      <div id="renter-confirmation-section" class="mt-6">
-        <app-renter-confirmation [bookingId]="booking()!.id"
-          [ownerConfirmed]="!!booking()?.owner_confirmed_delivery"
-          [renterConfirmed]="!!booking()?.renter_confirmed_payment"
-          [damageAmount]="(booking()?.damage_amount_cents ?? 0) / 100"
-          [damageDescription]="booking()?.damage_description ?? null"
-          [depositAmount]="(booking()?.deposit_amount_cents ?? 0) / 100"
-          [checkInPhotos]="checkInPhotos()" [checkOutPhotos]="checkOutPhotos()"
-          (confirmed)="handleConfirmationSuccess($event)"
-          (errorOccurred)="handleConfirmationError($event)"></app-renter-confirmation>
-      </div>
-      }
+      <!-- 2.5 BOOKING FLOW CARD - Estado unificado del flujo bilateral -->
+      @if (booking()?.status !== 'pending' && booking()?.status !== 'pending_payment') {
+        <app-booking-flow-card
+          [booking]="booking()!"
+          [currentUserId]="currentUserId()"
+          (actionRequested)="handleFlowAction($event)"
+        />
       }
 
       <!-- 3. CHECK-IN CRITICAL INFO CARD (Extracted Component) -->

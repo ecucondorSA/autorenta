@@ -96,6 +96,7 @@ import { ReportRenterNoShowComponent } from '../../../shared/components/report-r
 import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component'; // NEW
 import { SettlementSimulatorComponent } from '../../../shared/components/settlement-simulator/settlement-simulator.component';
 import { SidePanelComponent } from '../../../shared/components/side-panel/side-panel.component';
+import { BookingFlowCardComponent, FlowActionEvent } from '../../../shared/components/booking-flow-card/booking-flow-card.component';
 import { BookingActionsCardComponent } from './booking-actions-card.component';
 import { BookingCheckInInfoCardComponent } from './booking-check-in-info-card.component';
 import { BookingExtensionsManagerComponent } from './booking-extensions-manager.component';
@@ -191,6 +192,7 @@ const DISPUTE_STATUSES = new Set<BookingStatus>([
     BookingCheckInInfoCardComponent,
     BookingExtensionsManagerComponent,
     BookingTrafficFinesManagerComponent,
+    BookingFlowCardComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -711,6 +713,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const currentUser = this.authService.session$()?.user;
     return booking?.renter_id === currentUser?.id;
   });
+
+  readonly currentUserId = computed(() => this.authService.session$()?.user?.id ?? '');
 
   readonly backLink = computed(() => (this.isOwner() ? '/bookings/owner' : '/bookings'));
   readonly backLabel = computed(() =>
@@ -1678,6 +1682,21 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       hour: '2-digit',
       minute: '2-digit',
     });
+  }
+
+  // Flow card action handler
+  async handleFlowAction(event: FlowActionEvent): Promise<void> {
+    this.logger.debug('Flow action received:', event);
+
+    // Si la navegación ya fue manejada por el componente, no hacer nada
+    // Solo recargar el booking si fue una acción de confirmación
+    if (event.actionType === 'confirm' || event.actionType === 'resolve') {
+      // Recargar booking después de acciones de confirmación
+      const updated = await this.bookingsService.getBookingById(event.bookingId);
+      if (updated) {
+        this.booking.set(updated);
+      }
+    }
   }
 
   // Confirmation handlers
