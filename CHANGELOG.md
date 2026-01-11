@@ -1,3 +1,10 @@
+## [2.7.2](https://github.com/ecucondorSA/autorenta/compare/v2.7.1...v2.7.2) (2026-01-11)
+
+
+### Bug Fixes
+
+* **bookings:** set returned_at for booking b25f2723 to enable owner inspection ([c45e166](https://github.com/ecucondorSA/autorenta/commit/c45e166098e55877269adaba03763141a77297a6))
+
 ## [2.7.1](https://github.com/ecucondorSA/autorenta/compare/v2.7.0...v2.7.1) (2026-01-11)
 
 
