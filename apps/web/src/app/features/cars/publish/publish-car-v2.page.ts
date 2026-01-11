@@ -1404,7 +1404,7 @@ export class PublishCarV2Page implements OnInit {
 
     // Extract valid photos (those that passed validation or are uploading)
     const validPhotos = photos.filter(
-      (p) => p.validationStatus === 'valid' || p.validationStatus === 'pending',
+      (p) => p.status === 'valid' || p.status === 'pending',
     );
 
     // Sync with photo service - convert PhotoWithAI to files for upload
