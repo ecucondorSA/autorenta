@@ -596,7 +596,7 @@ export class PhotoUploadAIComponent {
     this.updatePhoto(photo.id, { progress: 30 });
 
     try {
-      const result = await this.photoQualityService.validatePhoto(photo.preview, 'vehicle');
+      const result = await this.photoQualityService.validatePhoto(photo.preview, 'vehicle_exterior');
 
       this.updatePhoto(photo.id, {
         progress: 50,

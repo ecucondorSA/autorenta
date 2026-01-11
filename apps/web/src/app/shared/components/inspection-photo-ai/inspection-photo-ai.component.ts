@@ -13,7 +13,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { IconComponent } from '../icon/icon.component';
 import { PhotoQualityService } from '@core/services/ai/photo-quality.service';
-import { CosmeticConditionService, DamageItem } from '@core/services/ai/cosmetic-condition.service';
+import { CosmeticConditionService, CosmeticIssue } from '@core/services/ai/cosmetic-condition.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
@@ -46,7 +46,7 @@ export interface InspectionPhotoAI {
   validationStatus: 'pending' | 'validating' | 'valid' | 'invalid';
   qualityScore?: number;
   issues?: string[];
-  damages?: DamageItem[];
+  damages?: CosmeticIssue[];
   odometerReading?: number;
   fuelLevel?: number;
 }
@@ -67,7 +67,7 @@ export interface PositionConfig {
 export interface InspectionPhotosChangeEvent {
   photos: InspectionPhotoAI[];
   isComplete: boolean;
-  totalDamages: DamageItem[];
+  totalDamages: CosmeticIssue[];
   estimatedOdometer?: number;
   estimatedFuelLevel?: number;
 }
@@ -272,7 +272,7 @@ const INSPECTION_POSITIONS: PositionConfig[] = [
                 <!-- Damage indicator -->
                 @if (photo.damages && photo.damages.length > 0) {
                   <div class="damage-indicator">
-                    <app-icon name="warning" size="sm" />
+                    <app-icon name="warning" [size]="16" />
                     <span>{{ photo.damages.length }}</span>
                   </div>
                 }
@@ -283,14 +283,14 @@ const INSPECTION_POSITIONS: PositionConfig[] = [
                   (click)="removePhoto(position.id); $event.stopPropagation()"
                   aria-label="Eliminar foto"
                 >
-                  <app-icon name="x" size="sm" />
+                  <app-icon name="x" [size]="16" />
                 </button>
               </div>
 
               <!-- Odometer reading -->
               @if (position.detectOdometer && photo.odometerReading) {
                 <div class="reading-badge odometer">
-                  <app-icon name="speedometer" size="sm" />
+                  <app-icon name="speedometer" [size]="16" />
                   <span>{{ photo.odometerReading | number }} km</span>
                 </div>
               }
@@ -298,14 +298,14 @@ const INSPECTION_POSITIONS: PositionConfig[] = [
               <!-- Fuel level -->
               @if (position.detectFuel && photo.fuelLevel !== undefined) {
                 <div class="reading-badge fuel">
-                  <app-icon name="fuel" size="sm" />
+                  <app-icon name="fuel" [size]="16" />
                   <span>{{ photo.fuelLevel }}%</span>
                 </div>
               }
             } @else {
               <!-- Empty state -->
               <div class="empty-state">
-                <app-icon [name]="position.icon" size="lg" />
+                <app-icon [name]="position.icon" [size]="24" />
                 <span class="position-label">{{ position.label }}</span>
                 @if (position.required) {
                   <span class="required-badge">Requerido</span>
@@ -381,7 +381,7 @@ const INSPECTION_POSITIONS: PositionConfig[] = [
     }
 
     .progress-fill {
-      @apply h-full bg-primary-500 transition-all duration-300;
+      @apply h-full bg-cta-default transition-all duration-300;
     }
 
     .progress-fill.complete {
@@ -646,7 +646,7 @@ export class InspectionPhotoAIComponent implements OnInit, OnDestroy {
 
   /** All damages across all photos */
   readonly allDamages = computed(() => {
-    const damages: DamageItem[] = [];
+    const damages: CosmeticIssue[] = [];
     this.photos().forEach((photo) => {
       if (photo.damages) {
         damages.push(...photo.damages);
@@ -807,15 +807,32 @@ export class InspectionPhotoAIComponent implements OnInit, OnDestroy {
         photo.position as 'front' | 'rear' | 'left' | 'right' | 'interior',
       );
 
-      let damages: DamageItem[] = [];
+      let damages: CosmeticIssue[] = [];
       let odometerReading: number | undefined;
       let fuelLevel: number | undefined;
 
       // Run damage detection if enabled
       if (this.enableDamageDetection && positionConfig?.detectDamages) {
-        const damageResult = await this.cosmeticCondition.analyzeCondition(imageUrl);
+        // Map inspection position to vehicle area
+        const areaMap: Record<string, 'front' | 'rear' | 'left' | 'right' | 'interior' | 'dashboard' | 'trunk'> = {
+          front: 'front',
+          rear: 'rear',
+          left_side: 'left',
+          right_side: 'right',
+          front_left: 'front',
+          front_right: 'front',
+          rear_left: 'rear',
+          rear_right: 'rear',
+          interior_front: 'interior',
+          interior_rear: 'interior',
+          dashboard: 'dashboard',
+          odometer: 'dashboard',
+          fuel_gauge: 'dashboard',
+        };
+        const area = areaMap[photo.position] ?? 'front';
+        const damageResult = await this.cosmeticCondition.analyzeArea(imageUrl, area);
         if (damageResult.success) {
-          damages = damageResult.damages;
+          damages = damageResult.issues;
         }
       }
 
@@ -840,7 +857,7 @@ export class InspectionPhotoAIComponent implements OnInit, OnDestroy {
             ...updated[idx],
             validationStatus: qualityResult.quality.is_acceptable ? 'valid' : 'invalid',
             qualityScore: qualityResult.quality.score,
-            issues: qualityResult.quality.issues,
+            issues: qualityResult.quality.issues.map(i => i.description),
             damages,
             odometerReading,
             fuelLevel,
