@@ -146,7 +146,8 @@
               "buildTarget": "web:build:production"
             },
             "development": {
-              "buildTarget": "web:build:development"
+              "buildTarget": "web:build:development",
+              "host": "0.0.0.0"
             },
             "development-no-hmr": {
               "buildTarget": "web:build:development-no-hmr",

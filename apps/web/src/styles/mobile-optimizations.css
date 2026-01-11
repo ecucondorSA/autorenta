@@ -72,6 +72,60 @@ blockquote {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   SCANNER OVERLAY - Hide ALL app UI when camera is open
+   Uses :has() selector for modern browsers (95%+ support)
+   Falls back to .scanner-open class for older browsers
+   ───────────────────────────────────────────────────────────── */
+
+/* Modern approach: Use :has() to detect when scanner exists */
+body:has(app-vehicle-scanner-live) {
+  overflow: hidden !important;
+}
+
+body:has(app-vehicle-scanner-live) ion-tab-bar,
+body:has(app-vehicle-scanner-live) ion-tabs,
+body:has(app-vehicle-scanner-live) .bottom-navigation,
+body:has(app-vehicle-scanner-live) ion-header:not(app-vehicle-scanner-live ion-header),
+body:has(app-vehicle-scanner-live) ion-footer:not(app-vehicle-scanner-live ion-footer) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Force scanner to be on top of EVERYTHING */
+app-vehicle-scanner-live {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important; /* Max 32-bit int */
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  contain: none !important;
+}
+
+/* Break out of any Ionic stacking contexts */
+body:has(app-vehicle-scanner-live) ion-app,
+body:has(app-vehicle-scanner-live) ion-router-outlet,
+body:has(app-vehicle-scanner-live) ion-content {
+  contain: none !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* Fallback for older browsers using class */
+body.scanner-open {
+  overflow: hidden !important;
+}
+
+body.scanner-open ion-tab-bar,
+body.scanner-open ion-tabs,
+body.scanner-open .bottom-navigation {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
    OVERFLOW FIX - Prevenir desbordamiento horizontal
    ───────────────────────────────────────────────────────────── */
 
