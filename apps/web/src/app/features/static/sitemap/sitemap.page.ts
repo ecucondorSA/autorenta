@@ -68,6 +68,6 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar 
       </div>
     </ion-content>
   `,
-  styleUrls: ['../static-shared.css'],
+  styleUrls: ['./static-shared.css'],
 })
 export class SitemapPage { }

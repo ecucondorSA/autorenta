@@ -181,4 +181,4 @@ GRANT EXECUTE ON FUNCTION public.booking_v2_auto_complete_inspection TO authenti
 -- ============================================================================
 -- Migration complete
 -- ============================================================================
-RAISE NOTICE '✅ Booking completion fix applied successfully';
+DO $$ BEGIN RAISE NOTICE '✅ Booking completion fix applied successfully'; END $$;
