@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-01-11T03:18:48.173Z",
+  "generatedAt": "2026-01-11T09:57:54.060Z",
   "categories": {
     "componentSelectors": [],
     "componentClasses": [],
@@ -8,7 +8,6 @@
     "pageBaseNames": [],
     "typeNames": [
       "BankAccount",
-      "DetectedDamage",
       "DisputeKind",
       "DisputeStatus",
       "InspectionStage",
@@ -18,6 +17,7 @@
     "rpcFunctions": [
       "booking_v2_resolve_conclusion",
       "calculate_payment_split",
+      "calculate_preauthorization_with_snapshot",
       "calculate_telemetry_score",
       "cancel_preauth",
       "capture_preauth",
