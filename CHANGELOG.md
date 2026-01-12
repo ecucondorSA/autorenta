@@ -1,3 +1,10 @@
+# [2.16.0](https://github.com/ecucondorSA/autorenta/compare/v2.15.3...v2.16.0) (2026-01-12)
+
+
+### Features
+
+* **marketing:** upgrade to Gemini 3 Flash Preview model ([d717b5d](https://github.com/ecucondorSA/autorenta/commit/d717b5d6831732f5f1fd4bcb6ad39f8ff8a9458e))
+
 ## [2.15.3](https://github.com/ecucondorSA/autorenta/compare/v2.15.2...v2.15.3) (2026-01-12)
 
 
