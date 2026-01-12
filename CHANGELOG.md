@@ -1,3 +1,10 @@
+# [2.19.0](https://github.com/ecucondorSA/autorenta/compare/v2.18.0...v2.19.0) (2026-01-12)
+
+
+### Features
+
+* **marketing:** add Veo fallback chain and detailed error handling ([bffa8c1](https://github.com/ecucondorSA/autorenta/commit/bffa8c172c3c15c8c92e06847bcf1b682c6c1710))
+
 # [2.18.0](https://github.com/ecucondorSA/autorenta/compare/v2.17.0...v2.18.0) (2026-01-12)
 
 
