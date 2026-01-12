@@ -1,0 +1,376 @@
+<div class="min-h-screen bg-gray-50 p-4 md:p-6">
+  <!-- Header -->
+  <div class="mb-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Marketing Automatizado</h1>
+        <p class="text-gray-600">Gestiona publicaciones en redes sociales</p>
+      </div>
+      <button
+        (click)="runScheduler()"
+        class="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        Ejecutar Scheduler
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div class="rounded-lg bg-white p-4 shadow">
+      <div class="text-sm text-gray-500">Pendientes</div>
+      <div class="text-2xl font-bold text-yellow-600">{{ pendingCount() }}</div>
+    </div>
+    <div class="rounded-lg bg-white p-4 shadow">
+      <div class="text-sm text-gray-500">Publicados</div>
+      <div class="text-2xl font-bold text-green-600">{{ publishedCount() }}</div>
+    </div>
+    <div class="rounded-lg bg-white p-4 shadow">
+      <div class="text-sm text-gray-500">Fallidos</div>
+      <div class="text-2xl font-bold text-red-600">{{ failedCount() }}</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="mb-4 border-b border-gray-200">
+    <nav class="-mb-px flex gap-4">
+      <button
+        (click)="setTab('queue')"
+        [class]="activeTab() === 'queue'
+          ? 'border-indigo-500 text-indigo-600'
+          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
+        class="border-b-2 px-1 pb-3 text-sm font-medium"
+      >
+        Cola de Posts
+      </button>
+      <button
+        (click)="setTab('published')"
+        [class]="activeTab() === 'published'
+          ? 'border-indigo-500 text-indigo-600'
+          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
+        class="border-b-2 px-1 pb-3 text-sm font-medium"
+      >
+        Publicados
+      </button>
+      <button
+        (click)="setTab('generate')"
+        [class]="activeTab() === 'generate'
+          ? 'border-indigo-500 text-indigo-600'
+          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
+        class="border-b-2 px-1 pb-3 text-sm font-medium"
+      >
+        Generar Nuevo
+      </button>
+    </nav>
+  </div>
+
+  <!-- Loading -->
+  @if (isLoading()) {
+    <div class="flex justify-center py-12">
+      <div class="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
+    </div>
+  }
+
+  <!-- Queue Tab -->
+  @if (!isLoading() && activeTab() === 'queue') {
+    <div class="space-y-4">
+      @if (queueItems().length === 0) {
+        <div class="rounded-lg bg-white p-8 text-center text-gray-500 shadow">
+          No hay posts en cola
+        </div>
+      }
+
+      @for (item of queueItems(); track item.id) {
+        <div class="rounded-lg bg-white p-4 shadow">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-1">
+              <!-- Platform & Status -->
+              <div class="mb-2 flex items-center gap-2">
+                <span [class]="platformColors[item.platform]" class="rounded-full px-2 py-0.5 text-xs font-medium">
+                  {{ formatPlatform(item.platform) }}
+                </span>
+                <span [class]="statusColors[item.status]" class="rounded-full px-2 py-0.5 text-xs font-medium">
+                  {{ item.status }}
+                </span>
+                <span class="text-xs text-gray-500">
+                  {{ formatContentType(item.content_type) }}
+                </span>
+              </div>
+
+              <!-- Content -->
+              <p class="mb-2 text-gray-900">{{ truncate(item.text_content, 200) }}</p>
+
+              <!-- Hashtags -->
+              @if (item.hashtags?.length) {
+                <div class="mb-2 flex flex-wrap gap-1">
+                  @for (tag of item.hashtags; track tag) {
+                    <span class="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">#{{ tag }}</span>
+                  }
+                </div>
+              }
+
+              <!-- Meta -->
+              <div class="flex items-center gap-4 text-xs text-gray-500">
+                <span>Programado: {{ formatDate(item.scheduled_for) }}</span>
+                @if (item.attempts > 0) {
+                  <span>Intentos: {{ item.attempts }}</span>
+                }
+              </div>
+
+              <!-- Error -->
+              @if (item.error_message) {
+                <div class="mt-2 rounded bg-red-50 p-2 text-sm text-red-700">
+                  {{ item.error_message }}
+                </div>
+              }
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-col gap-2">
+              @if (item.status === 'pending') {
+                <button
+                  (click)="publishNow(item)"
+                  class="rounded bg-green-100 px-3 py-1 text-xs font-medium text-green-700 hover:bg-green-200"
+                >
+                  Publicar Ahora
+                </button>
+                <button
+                  (click)="openEdit(item)"
+                  class="rounded bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-200"
+                >
+                  Editar
+                </button>
+              }
+              @if (item.status === 'failed') {
+                <button
+                  (click)="retryItem(item)"
+                  class="rounded bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700 hover:bg-yellow-200"
+                >
+                  Reintentar
+                </button>
+              }
+              <button
+                (click)="deleteItem(item)"
+                class="rounded bg-red-100 px-3 py-1 text-xs font-medium text-red-700 hover:bg-red-200"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Published Tab -->
+  @if (!isLoading() && activeTab() === 'published') {
+    <div class="space-y-4">
+      @if (publishedPosts().length === 0) {
+        <div class="rounded-lg bg-white p-8 text-center text-gray-500 shadow">
+          No hay posts publicados
+        </div>
+      }
+
+      @for (post of publishedPosts(); track post.id) {
+        <div class="rounded-lg bg-white p-4 shadow">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-1">
+              <div class="mb-2 flex items-center gap-2">
+                <span [class]="platformColors[post.platform]" class="rounded-full px-2 py-0.5 text-xs font-medium">
+                  {{ formatPlatform(post.platform) }}
+                </span>
+                <span class="text-xs text-gray-500">
+                  {{ formatDate(post.published_at) }}
+                </span>
+              </div>
+
+              @if (post.text_content) {
+                <p class="text-gray-900">{{ truncate(post.text_content, 200) }}</p>
+              }
+
+              @if (post.engagement) {
+                <div class="mt-2 flex gap-4 text-sm text-gray-600">
+                  @if (post.engagement['likes']) {
+                    <span>{{ post.engagement['likes'] }} likes</span>
+                  }
+                  @if (post.engagement['comments']) {
+                    <span>{{ post.engagement['comments'] }} comments</span>
+                  }
+                  @if (post.engagement['shares']) {
+                    <span>{{ post.engagement['shares'] }} shares</span>
+                  }
+                </div>
+              }
+            </div>
+
+            @if (post.post_id) {
+              <span class="text-xs text-gray-400">ID: {{ post.post_id }}</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Generate Tab -->
+  @if (!isLoading() && activeTab() === 'generate') {
+    <div class="mx-auto max-w-2xl">
+      <div class="rounded-lg bg-white p-6 shadow">
+        <h2 class="mb-4 text-lg font-semibold">Generar Contenido con IA</h2>
+
+        <div class="space-y-4">
+          <!-- Platform -->
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700">Plataforma</label>
+            <select
+              [ngModel]="generateForm().platform"
+              (ngModelChange)="generateForm.update(f => ({...f, platform: $event}))"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2"
+            >
+              <option value="instagram">Instagram</option>
+              <option value="facebook">Facebook</option>
+              <option value="tiktok">TikTok</option>
+              <option value="twitter">Twitter/X</option>
+            </select>
+          </div>
+
+          <!-- Content Type -->
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700">Tipo de Contenido</label>
+            <select
+              [ngModel]="generateForm().content_type"
+              (ngModelChange)="generateForm.update(f => ({...f, content_type: $event}))"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2"
+            >
+              <option value="tip">Consejo</option>
+              <option value="promo">Promocion</option>
+              <option value="car_spotlight">Auto Destacado</option>
+              <option value="testimonial">Testimonial</option>
+              <option value="seasonal">Estacional</option>
+              <option value="community">Comunidad</option>
+            </select>
+          </div>
+
+          <!-- Theme -->
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700">Tema (opcional)</label>
+            <input
+              type="text"
+              [ngModel]="generateForm().theme"
+              (ngModelChange)="generateForm.update(f => ({...f, theme: $event}))"
+              placeholder="ej: Vacaciones de verano, Black Friday..."
+              class="w-full rounded-lg border border-gray-300 px-3 py-2"
+            />
+          </div>
+
+          <!-- Generate Image -->
+          <div class="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="generate_image"
+              [ngModel]="generateForm().generate_image"
+              (ngModelChange)="generateForm.update(f => ({...f, generate_image: $event}))"
+              class="h-4 w-4 rounded border-gray-300"
+            />
+            <label for="generate_image" class="text-sm text-gray-700">
+              Generar imagen con IA (~$0.03)
+            </label>
+          </div>
+
+          <!-- Generate Button -->
+          <button
+            (click)="generateContent()"
+            [disabled]="isGenerating()"
+            class="w-full rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:bg-gray-400"
+          >
+            @if (isGenerating()) {
+              <span class="flex items-center justify-center gap-2">
+                <span class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                Generando...
+              </span>
+            } @else {
+              Generar con Gemini 2.0
+            }
+          </button>
+        </div>
+
+        <!-- Generated Content -->
+        @if (generatedContent()) {
+          <div class="mt-6 border-t pt-4">
+            <h3 class="mb-2 font-medium text-gray-900">Contenido Generado</h3>
+
+            <div class="rounded-lg bg-gray-50 p-4">
+              <p class="mb-3 text-gray-900">{{ generatedContent()!.caption }}</p>
+
+              <div class="mb-3 flex flex-wrap gap-1">
+                @for (tag of generatedContent()!.hashtags; track tag) {
+                  <span class="rounded bg-indigo-100 px-1.5 py-0.5 text-xs text-indigo-700">#{{ tag }}</span>
+                }
+              </div>
+
+              <p class="text-sm text-gray-600">
+                CTA: {{ generatedContent()!.call_to_action }}
+              </p>
+            </div>
+
+            <button
+              (click)="scheduleGenerated()"
+              class="mt-4 w-full rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700"
+            >
+              Programar para Manana
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Edit Modal -->
+@if (editingItem()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div class="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl">
+      <h2 class="mb-4 text-lg font-semibold">Editar Post</h2>
+
+      <div class="space-y-4">
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700">Contenido</label>
+          <textarea
+            [ngModel]="editForm().text_content"
+            (ngModelChange)="editForm.update(f => ({...f, text_content: $event}))"
+            rows="4"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2"
+          ></textarea>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700">Fecha y Hora</label>
+          <input
+            type="datetime-local"
+            [ngModel]="editForm().scheduled_for"
+            (ngModelChange)="editForm.update(f => ({...f, scheduled_for: $event}))"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2"
+          />
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end gap-3">
+        <button
+          (click)="closeEdit()"
+          class="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="saveEdit()"
+          class="rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
+        >
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+}

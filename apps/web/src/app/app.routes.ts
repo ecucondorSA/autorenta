@@ -301,6 +301,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'marketing',
+        loadComponent: () =>
+          import('./features/admin/marketing/admin-marketing.page').then(
+            (m) => m.AdminMarketingPage,
+          ),
+      },
+      {
         path: 'organizations', // Nueva ruta para organizaciones
         loadComponent: () =>
           import('./features/organizations/pages/organization-dashboard.component').then(
