@@ -1,3 +1,10 @@
+## [2.15.1](https://github.com/ecucondorSA/autorenta/compare/v2.15.0...v2.15.1) (2026-01-12)
+
+
+### Bug Fixes
+
+* **marketing:** correct ToastService calls with required 2 arguments ([9c9a6d7](https://github.com/ecucondorSA/autorenta/commit/9c9a6d72dc0c02e07a1b198c485f1f4d9ade1d9b))
+
 # [2.15.0](https://github.com/ecucondorSA/autorenta/compare/v2.14.1...v2.15.0) (2026-01-12)
 
 
