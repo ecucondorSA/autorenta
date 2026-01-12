@@ -67,7 +67,7 @@
         [ngSrc]="displayImage()!.url"
         [alt]="displayImage()!.alt"
         fill
-        priority
+        [priority]="_priority()"
         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
     }

@@ -78,7 +78,7 @@ export class PublishCarFormService {
         ],
       ], // USD: $10-$500/day
       currency: ['USD', Validators.required],
-      value_usd: [null, [Validators.required, Validators.min(5000), Validators.max(500000)]], // Opcional
+      value_usd: [null, [Validators.required, Validators.min(1000), Validators.max(500000)]], // Opcional
       category_id: [null], // Opcional (se auto-categoriza)
       min_rental_days: [1, [Validators.required, Validators.min(1)]],
       max_rental_days: [30], // Opcional

@@ -120,7 +120,7 @@ export class AdminMarketingPage implements OnInit {
       await Promise.all([this.loadQueue(), this.loadPublished()]);
     } catch (error) {
       console.error('Error loading marketing data:', error);
-      this.toast.error('Error al cargar datos de marketing');
+      this.toast.error('Error', 'No se pudieron cargar los datos de marketing');
     } finally {
       this.isLoading.set(false);
     }
@@ -177,10 +177,10 @@ export class AdminMarketingPage implements OnInit {
       }
 
       this.generatedContent.set(result.text);
-      this.toast.success('Contenido generado');
+      this.toast.success('Listo', 'Contenido generado con Gemini');
     } catch (error) {
       console.error('Error generating content:', error);
-      this.toast.error('Error al generar contenido');
+      this.toast.error('Error', 'No se pudo generar el contenido');
     } finally {
       this.isGenerating.set(false);
     }
@@ -209,13 +209,13 @@ export class AdminMarketingPage implements OnInit {
 
       if (error) throw error;
 
-      this.toast.success('Post programado para mañana 12:00');
+      this.toast.success('Programado', 'Post programado para mañana 12:00');
       this.generatedContent.set(null);
       await this.loadQueue();
       this.setTab('queue');
     } catch (error) {
       console.error('Error scheduling post:', error);
-      this.toast.error('Error al programar post');
+      this.toast.error('Error', 'No se pudo programar el post');
     }
   }
 
@@ -248,12 +248,12 @@ export class AdminMarketingPage implements OnInit {
 
       if (error) throw error;
 
-      this.toast.success('Post actualizado');
+      this.toast.success('Actualizado', 'Post actualizado correctamente');
       this.closeEdit();
       await this.loadQueue();
     } catch (error) {
       console.error('Error updating post:', error);
-      this.toast.error('Error al actualizar post');
+      this.toast.error('Error', 'No se pudo actualizar el post');
     }
   }
 
@@ -269,11 +269,11 @@ export class AdminMarketingPage implements OnInit {
 
       if (error) throw error;
 
-      this.toast.success('Post eliminado');
+      this.toast.success('Eliminado', 'Post eliminado de la cola');
       await this.loadQueue();
     } catch (error) {
       console.error('Error deleting post:', error);
-      this.toast.error('Error al eliminar post');
+      this.toast.error('Error', 'No se pudo eliminar el post');
     }
   }
 
@@ -291,11 +291,11 @@ export class AdminMarketingPage implements OnInit {
 
       if (error) throw error;
 
-      this.toast.success('Post reencolado');
+      this.toast.success('Reencolado', 'El post se reintentará');
       await this.loadQueue();
     } catch (error) {
       console.error('Error retrying post:', error);
-      this.toast.error('Error al reintentar post');
+      this.toast.error('Error', 'No se pudo reencolar el post');
     }
   }
 
@@ -323,11 +323,11 @@ export class AdminMarketingPage implements OnInit {
         throw new Error(result.error || 'Error al publicar');
       }
 
-      this.toast.success(`Publicado en ${item.platform}`);
+      this.toast.success('Publicado', `Post publicado en ${item.platform}`);
       await this.loadData();
     } catch (error) {
       console.error('Error publishing:', error);
-      this.toast.error('Error al publicar');
+      this.toast.error('Error', 'No se pudo publicar el post');
     }
   }
 
@@ -341,11 +341,11 @@ export class AdminMarketingPage implements OnInit {
       if (response.error) throw response.error;
 
       const result = response.data;
-      this.toast.success(`Scheduler: ${result.published || 0} publicados, ${result.failed || 0} fallidos`);
+      this.toast.success('Scheduler', `${result.published || 0} publicados, ${result.failed || 0} fallidos`);
       await this.loadData();
     } catch (error) {
       console.error('Error running scheduler:', error);
-      this.toast.error('Error al ejecutar scheduler');
+      this.toast.error('Error', 'No se pudo ejecutar el scheduler');
     }
   }
 

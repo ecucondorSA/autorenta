@@ -190,7 +190,8 @@ export class BookingStatusComponent {
       return 'Esperando aprobación';
     }
 
-    if (isReturnFlow) {
+    // Return flow: show "En revisión" only if not yet completed
+    if (isReturnFlow && status !== 'completed') {
       return 'En revisión';
     }
 

@@ -37,6 +37,7 @@ import {
   VehicleScannerConfirmData,
 } from '../../../shared/components/vehicle-scanner-live/vehicle-scanner-live.component';
 import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
+import { VisualSelectorComponent, VisualOption } from './components/visual-selector/visual-selector.component';
 
 // ✅ NEW: Extracted services
 import { PublishCarFormService } from './services/publish-car-form.service';
@@ -75,6 +76,7 @@ import { PublishCarPhotoService } from './services/publish-car-photo.service';
     PhotoUploadAIComponent,
     VideoVehicleRecognitionComponent,
     VehicleScannerLiveComponent,
+    VisualSelectorComponent
   ],
   templateUrl: './publish-car-v2.page.html',
   styleUrls: ['./publish-car-v2.page.scss'],
@@ -118,6 +120,25 @@ export class PublishCarV2Page implements OnInit {
 
   // Form reference
   publishForm!: FormGroup;
+
+  // Visual Selector Options
+  readonly transmissionOptions: VisualOption[] = [
+    { value: 'manual', label: 'Manual', icon: 'manual' },
+    { value: 'automatic', label: 'Automática', icon: 'automatic' }
+  ];
+
+  readonly fuelOptions: VisualOption[] = [
+    { value: 'nafta', label: 'Nafta', icon: 'nafta' },
+    { value: 'gasoil', label: 'Diesel', icon: 'gasoil' },
+    { value: 'hibrido', label: 'Híbrido', icon: 'hybrid' },
+    { value: 'electrico', label: 'Eléctrico', icon: 'electric' }
+  ];
+
+  readonly mileageOptions: VisualOption[] = [
+    { value: 200, label: '200 km', subLabel: 'Por día', icon: 'low' },
+    { value: 400, label: '400 km', subLabel: 'Por día', icon: 'mid' },
+    { value: 0, label: 'Ilimitado', subLabel: 'Sin cargo extra', icon: 'unlimited' }
+  ];
 
   // Expose service state to template
   readonly brands = this.formService.brands;

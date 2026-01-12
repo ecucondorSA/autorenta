@@ -315,14 +315,12 @@ export class BookingConfirmationService {
   }
 
   async confirmRenter(params: RenterConfirmParams): Promise<ConfirmAndReleaseResponse> {
-    // Assume 'release funds' means accepting inspection/conclusion
-    // In V2, renter usually only acts if damaged.
-    // If Good, funds auto-release or can use resolveConclusion(accept=true)
-    return this.resolveConclusion({
+    // When owner confirmed without damages, renter confirms to release funds
+    // Use confirmCompletion for the normal flow (no damages)
+    return this.confirmCompletion({
       booking_id: params.booking_id,
       renter_id: params.confirming_user_id,
-      accept_damage: true, // Implicit acceptance for legacy calls
-    }) as unknown as ConfirmAndReleaseResponse;
+    });
   }
 
   /**

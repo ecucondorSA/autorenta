@@ -1697,10 +1697,40 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   async handleFlowAction(event: FlowActionEvent): Promise<void> {
     this.logger.debug('Flow action received:', event);
 
-    // Si la navegación ya fue manejada por el componente, no hacer nada
-    // Solo recargar el booking si fue una acción de confirmación
+    const booking = this.booking();
+    const userId = this.currentUserId();
+
+    if (!booking || !userId) {
+      this.logger.warn('No booking or userId for flow action');
+      return;
+    }
+
+    // Manejar acción de confirmación del renter (liberar pago)
+    if (event.actionType === 'confirm') {
+      const isRenter = booking.renter_id === userId;
+
+      if (isRenter && booking.owner_confirmed_delivery && !booking.renter_confirmed_payment) {
+        try {
+          this.logger.info('Renter confirming payment release', { bookingId: event.bookingId });
+
+          const result = await this.confirmationService.confirmRenter({
+            booking_id: event.bookingId,
+            confirming_user_id: userId,
+          });
+
+          // Mostrar éxito y recargar
+          await this.handleConfirmationSuccess(result);
+          return;
+        } catch (error) {
+          this.logger.error('Error confirming renter release', error);
+          alert('Error al confirmar la liberación del pago. Intentá de nuevo.');
+          return;
+        }
+      }
+    }
+
+    // Para otras acciones o si no se cumple la condición, solo recargar
     if (event.actionType === 'confirm' || event.actionType === 'resolve') {
-      // Recargar booking después de acciones de confirmación
       const updated = await this.bookingsService.getBookingById(event.bookingId);
       if (updated) {
         this.booking.set(updated);
@@ -1710,18 +1740,30 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   // Confirmation handlers
   async handleConfirmationSuccess(result: ConfirmAndReleaseResponse): Promise<void> {
-    // Reload booking to get updated status
-    const bookingId = this.booking()?.id;
-    if (bookingId) {
-      const updated = await this.bookingsService.getBookingById(bookingId);
-      this.booking.set(updated);
+    this.logger.info('Confirmation success', result);
+
+    // Show success message first
+    const message = result?.message || 'Operación completada exitosamente';
+    if (result?.funds_released) {
+      alert(`✅ ${message}\n\n¡Los fondos fueron liberados!`);
+    } else {
+      alert(`✅ ${message}`);
     }
 
-    // Show success message
-    if (result.funds_released) {
-      alert(`✅ ${result.message}\n\n¡Los fondos fueron liberados automáticamente!`);
-    } else {
-      alert(`✅ ${result.message}`);
+    // Force reload booking to get updated status
+    const bookingId = this.booking()?.id;
+    if (bookingId) {
+      try {
+        const updated = await this.bookingsService.getBookingById(bookingId);
+        if (updated) {
+          this.booking.set(updated);
+          this.logger.info('Booking reloaded', { status: updated.status });
+        }
+      } catch (err) {
+        this.logger.error('Error reloading booking', err);
+        // Force page reload as fallback
+        window.location.reload();
+      }
     }
   }
 

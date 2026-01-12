@@ -240,6 +240,7 @@
               [requiredPositions]="['front', 'rear', 'left', 'interior']"
               (photosChange)="onAIPhotosChange($event)"
               (vehicleDetected)="onVehicleAutoDetected($event)"
+              (requestAiGeneration)="showAIPhotosModal.set(true)"
             />
 
             <!-- Botón para generar fotos (si no hay fotos) -->
@@ -307,34 +308,11 @@
               </div>
               <div>
                 <label class="label-text">Transmisión</label>
-                <div class="grid grid-cols-2 gap-2">
-                  <label class="cursor-pointer">
-                    <input
-                      type="radio"
-                      formControlName="transmission"
-                      value="manual"
-                      class="peer hidden"
-                    />
-                    <div
-                      class="radio-card peer-checked:bg-cta-default peer-checked:text-cta-text peer-checked:border-cta-default"
-                    >
-                      Manual
-                    </div>
-                  </label>
-                  <label class="cursor-pointer">
-                    <input
-                      type="radio"
-                      formControlName="transmission"
-                      value="automatic"
-                      class="peer hidden"
-                    />
-                    <div
-                      class="radio-card peer-checked:bg-cta-default peer-checked:text-cta-text peer-checked:border-cta-default"
-                    >
-                      Automática
-                    </div>
-                  </label>
-                </div>
+                <app-visual-selector
+                  formControlName="transmission"
+                  [options]="transmissionOptions"
+                  [cols]="2"
+                ></app-visual-selector>
                 @if (
                   publishForm.get('transmission')?.invalid &&
                   (publishForm.get('transmission')?.dirty ||
@@ -355,13 +333,11 @@
               </div>
               <div>
                 <label class="label-text">Combustible</label>
-                <select formControlName="fuel" class="input-modern">
-                  <option value="" disabled>Seleccionar</option>
-                  <option value="nafta">Nafta</option>
-                  <option value="gasoil">Diesel</option>
-                  <option value="electrico">Eléctrico</option>
-                  <option value="hibrido">Híbrido</option>
-                </select>
+                <app-visual-selector
+                  formControlName="fuel"
+                  [options]="fuelOptions"
+                  [cols]="2"
+                ></app-visual-selector>
                 @if (
                   publishForm.get('fuel')?.invalid &&
                   (publishForm.get('fuel')?.dirty || publishForm.get('fuel')?.touched)
@@ -459,46 +435,13 @@
               <!-- Kilometraje -->
               <div class="md:col-span-2">
                 <label class="label-text">Límite de Kilometraje (por día)</label>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-                  <label class="cursor-pointer">
-                    <input
-                      type="radio"
-                      formControlName="mileage_limit"
-                      [value]="200"
-                      class="peer hidden"
-                    />
-                    <div
-                      class="radio-card peer-checked:bg-cta-default peer-checked:text-cta-text peer-checked:border-cta-default"
-                    >
-                      200 km
-                    </div>
-                  </label>
-                  <label class="cursor-pointer">
-                    <input
-                      type="radio"
-                      formControlName="mileage_limit"
-                      [value]="400"
-                      class="peer hidden"
-                    />
-                    <div
-                      class="radio-card peer-checked:bg-cta-default peer-checked:text-cta-text peer-checked:border-cta-default"
-                    >
-                      400 km
-                    </div>
-                  </label>
-                  <label class="cursor-pointer">
-                    <input
-                      type="radio"
-                      formControlName="mileage_limit"
-                      [value]="0"
-                      class="peer hidden"
-                    />
-                    <div
-                      class="radio-card peer-checked:bg-cta-default peer-checked:text-cta-text peer-checked:border-cta-default"
-                    >
-                      Ilimitado
-                    </div>
-                  </label>
+                <div class="mb-3">
+                  <app-visual-selector
+                    formControlName="mileage_limit"
+                    [options]="mileageOptions"
+                    [cols]="3"
+                    [responsive]="true"
+                  ></app-visual-selector>
                 </div>
                 <!-- Extra KM Price (Conditional) -->
                 @if (publishForm.get('mileage_limit')?.value !== 0) {

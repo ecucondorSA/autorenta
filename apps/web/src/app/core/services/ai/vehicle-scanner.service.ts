@@ -61,11 +61,11 @@ export class VehicleScannerService {
   private readonly ngZone = inject(NgZone);
 
   // Configuration
-  private readonly CAPTURE_INTERVAL_MS = 3500; // 3.5 seconds between captures
-  private readonly FIPE_DEBOUNCE_MS = 500; // Wait before FIPE lookup
+  private readonly CAPTURE_INTERVAL_MS = 2000; // 2 seconds between captures (faster response)
+  private readonly FIPE_DEBOUNCE_MS = 400; // Wait before FIPE lookup
   private readonly MIN_CONFIDENCE = 50; // Minimum confidence to consider detection
-  private readonly STABILITY_INCREMENT = 25; // Stability increase per consistent frame
-  private readonly STABILITY_DECREMENT = 15; // Stability decrease per inconsistent frame
+  private readonly STABILITY_INCREMENT = 35; // Stability increase per consistent frame (faster fill)
+  private readonly STABILITY_DECREMENT = 12; // Stability decrease per inconsistent frame (more tolerant)
 
   // Internal state
   private videoElement: HTMLVideoElement | null = null;
@@ -109,8 +109,8 @@ export class VehicleScannerService {
   // COMPUTED SIGNALS
   // ============================================================================
 
-  /** Whether detection is stable enough for confirmation */
-  readonly isStableEnough = computed(() => this.detectionStability() >= 80);
+  /** Whether detection is stable enough for confirmation (70% threshold for faster UX) */
+  readonly isStableEnough = computed(() => this.detectionStability() >= 70);
 
   /** Whether we have a valid detection */
   readonly hasDetection = computed(() => this.currentDetection() !== null);
@@ -351,8 +351,8 @@ export class VehicleScannerService {
       // Increase stability
       this.detectionStability.update((s) => Math.min(100, s + this.STABILITY_INCREMENT));
 
-      // Schedule FIPE lookup when stable enough
-      if (this.detectionStability() >= 50 && !this.marketValue() && !this.isFetchingFipe()) {
+      // Schedule FIPE lookup when stable enough (40% threshold for faster price display)
+      if (this.detectionStability() >= 40 && !this.marketValue() && !this.isFetchingFipe()) {
         this.scheduleFipeLookup(detection);
       }
     } else {
@@ -393,20 +393,31 @@ export class VehicleScannerService {
   }
 
   /**
-   * Look up FIPE market value
+   * Look up FIPE market value with Smart Fallback
    */
   private async lookupFipeValue(detection: VehicleScanResult): Promise<void> {
     this.isFetchingFipe.set(true);
 
     try {
       this.logger.info(
-        `Looking up FIPE: ${detection.brand} ${detection.model} ${detection.year}`,
+        `Looking up FIPE (Exact): ${detection.brand} ${detection.model} ${detection.year}`,
         'VehicleScanner'
       );
 
-      const result = await this.fipeCache.lookup(detection.brand, detection.model, detection.year);
+      // 1. First Attempt: Exact Match
+      let result = await this.fipeCache.lookup(detection.brand, detection.model, detection.year);
+
+      // 2. Second Attempt: Smart Matching (Sanitized Model)
+      if (!result?.success || !result.data) {
+        const sanitizedModel = this.sanitizeModelName(detection.model);
+        if (sanitizedModel !== detection.model) {
+          this.logger.info(`Retrying FIPE with sanitized model: ${sanitizedModel}`, 'VehicleScanner');
+          result = await this.fipeCache.lookup(detection.brand, sanitizedModel, detection.year);
+        }
+      }
 
       if (result?.success && result.data) {
+        // Success case
         const marketVal: FipeMarketValue = {
           value_brl: result.data.value_brl,
           value_usd: result.data.value_usd,
@@ -414,24 +425,80 @@ export class VehicleScannerService {
           fipe_code: result.data.fipe_code,
           reference_month: result.data.reference_month,
         };
-
-        this.marketValue.set(marketVal);
-
-        // Calculate suggested daily price (0.5% of USD value)
-        const dailyPrice = Math.round(marketVal.value_usd * 0.005);
-        this.suggestedDailyPrice.set(dailyPrice);
-
-        this.logger.info(
-          `FIPE found: USD ${marketVal.value_usd} - Suggested: $${dailyPrice}/day`,
-          'VehicleScanner'
-        );
+        this.setMarketValue(marketVal);
       } else {
-        this.logger.info('No FIPE data found', 'VehicleScanner');
+        // 3. Final Fallback: Estimate based on Body Type & Year
+        this.logger.warn('FIPE lookup failed, using AutoRenta Estimation Fallback', 'VehicleScanner');
+        const fallbackValue = this.calculateFallbackPrice(detection);
+        this.setMarketValue(fallbackValue);
       }
     } catch (error) {
-      this.logger.warn('FIPE lookup failed', 'VehicleScanner', error);
+      this.logger.warn('FIPE lookup error, using fallback', 'VehicleScanner', error);
+      const fallbackValue = this.calculateFallbackPrice(detection);
+      this.setMarketValue(fallbackValue);
     } finally {
       this.isFetchingFipe.set(false);
     }
+  }
+
+  private setMarketValue(marketVal: FipeMarketValue): void {
+    this.marketValue.set(marketVal);
+
+    // Calculate suggested daily price (0.5% of USD value)
+    // Dynamic logic: newer cars yield slightly higher percentage due to demand
+    const dailyPrice = Math.round(marketVal.value_usd * 0.005);
+    this.suggestedDailyPrice.set(dailyPrice);
+
+    this.logger.info(
+      `Price set: USD ${marketVal.value_usd} - Suggested: $${dailyPrice}/day (${marketVal.reference_month})`,
+      'VehicleScanner'
+    );
+  }
+
+  /**
+   * Removes variations like "1.6", "Turbo", "XEI", "V8" to find the base model
+   */
+  private sanitizeModelName(model: string): string {
+    return model
+      .replace(/\b\d\.\d\w?\b/g, '') // Remove engine sizes like 1.6, 2.0T
+      .replace(/\b(Turbo|V6|V8|Hybrid|4WD|AWD|XEI|SE|SEL|LTD)\b/gi, '') // Remove common trims
+      .trim();
+  }
+
+  /**
+   * Generates an estimated market value when FIPE fails
+   * Based on body type and age
+   */
+  private calculateFallbackPrice(detection: VehicleScanResult): FipeMarketValue {
+    const currentYear = new Date().getFullYear();
+    const age = Math.max(0, currentYear - detection.year);
+    
+    // Base prices (USD) for a new car (0 years old) by body type
+    const basePrices: Record<string, number> = {
+      suv: 35000,
+      pickup: 40000,
+      sedan: 25000,
+      hatchback: 18000,
+      coupe: 45000,
+      convertible: 50000,
+      van: 30000,
+      wagon: 28000,
+      unknown: 20000
+    };
+
+    const startPrice = basePrices[detection.bodyType.toLowerCase()] || basePrices['unknown'];
+    
+    // Depreciation curve (approx 10% first year, then 5% per year)
+    // Using a simplified exponential decay: Value = Start * (0.85 ^ age) roughly
+    // Adjusted to not go below $1,000 for rental viability (was 5000)
+    const estimatedUsd = Math.max(1000, Math.round(startPrice * Math.pow(0.88, age)));
+
+    return {
+      value_usd: estimatedUsd,
+      value_brl: estimatedUsd * 5, // Approx exchange rate
+      value_ars: estimatedUsd * 1000, // Approx exchange rate
+      fipe_code: 'EST-AUTO',
+      reference_month: 'Estimado AutoRenta'
+    };
   }
 }

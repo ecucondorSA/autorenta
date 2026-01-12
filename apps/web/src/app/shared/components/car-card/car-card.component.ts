@@ -48,7 +48,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private readonly _isComparing = signal<boolean>(false);
   private readonly _compareDisabled = signal<boolean>(false);
   private readonly _showOwnerActions = signal<boolean>(false);
-  private readonly _priority = signal<boolean>(false);
+  protected readonly _priority = signal<boolean>(false);
   private readonly _urgentMode = signal<boolean>(false);
   private readonly _isMapVariant = signal<boolean>(false);
 

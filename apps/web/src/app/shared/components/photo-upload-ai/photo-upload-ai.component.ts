@@ -130,24 +130,39 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
           </div>
         </div>
 
-        <!-- AI Quality Score Badge -->
-        @if (averageQualityScore() > 0) {
-          <div class="flex items-center gap-2 px-3 py-1.5 rounded-full"
-               [class]="getScoreBadgeClass(averageQualityScore())">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <!-- Header Actions -->
+        <div class="flex items-center gap-2">
+          <!-- AI Generation Button -->
+          <button
+            type="button"
+            (click)="requestAiGeneration.emit()"
+            class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-lg text-xs font-bold shadow-lg hover:shadow-violet-500/30 hover:scale-105 transition-all"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
-            <span class="text-sm font-semibold">{{ averageQualityScore() }}% calidad</span>
-          </div>
-        }
+            GENERAR FOTOS
+          </button>
+
+          <!-- AI Quality Score Badge -->
+          @if (averageQualityScore() > 0) {
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-full"
+                 [class]="getScoreBadgeClass(averageQualityScore())">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span class="text-sm font-semibold">{{ averageQualityScore() }}% calidad</span>
+            </div>
+          }
+        </div>
       </div>
 
       <!-- Vehicle Auto-Detect Banner -->
       @if (detectedVehicle() && showAutoDetect()) {
-        <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-4 animate-fade-in">
+        <div class="detection-banner rounded-xl p-4 animate-fade-in">
           <div class="flex items-start gap-3">
-            <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+            <div class="w-10 h-10 rounded-full bg-emerald-100/50 flex items-center justify-center flex-shrink-0 backdrop-blur-sm">
               <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -155,21 +170,21 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
             </div>
             <div class="flex-1 min-w-0">
               <p class="font-bold text-emerald-900">Vehículo detectado automáticamente</p>
-              <p class="text-emerald-700 font-medium">
+              <p class="text-emerald-800 font-medium">
                 {{ detectedVehicle()?.brand }} {{ detectedVehicle()?.model }}
                 {{ detectedVehicle()?.year }}
                 @if (detectedVehicle()?.color) {
-                  <span class="text-emerald-600">- {{ detectedVehicle()?.color }}</span>
+                  <span class="text-emerald-700">- {{ detectedVehicle()?.color }}</span>
                 }
               </p>
-              <p class="text-xs text-emerald-600 mt-1">
-                {{ detectedVehicle()?.confidence }}% de confianza
+              <p class="text-xs text-emerald-600 mt-1 font-mono">
+                CONFIDENCE: {{ detectedVehicle()?.confidence }}%
               </p>
             </div>
             <button
               type="button"
               (click)="onUseDetectedVehicle()"
-              class="px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold text-sm hover:bg-emerald-700 transition-colors flex-shrink-0"
+              class="px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold text-sm hover:bg-emerald-700 transition-all shadow-md hover:shadow-lg flex-shrink-0"
             >
               Usar estos datos
             </button>
@@ -181,7 +196,8 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         <!-- Upload Dropzone -->
         <label
-          class="aspect-[4/3] relative flex flex-col items-center justify-center border-2 border-dashed rounded-xl cursor-pointer transition-all group"
+          class="aspect-[4/3] relative flex flex-col items-center justify-center border-2 border-dashed rounded-xl cursor-pointer transition-all group overflow-hidden"
+          [class.dropzone-magnetic]="isDragging()"
           [class.border-cta-default]="isDragging()"
           [class.bg-cta-default/5]="isDragging()"
           [class.border-border-default]="!isDragging()"
@@ -193,8 +209,8 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
           (dragleave)="onDragLeave($event)"
           (drop)="onDrop($event)"
         >
-          <div class="flex flex-col items-center gap-2 p-4 text-center">
-            <div class="p-3 bg-surface-secondary rounded-full group-hover:scale-110 transition-transform"
+          <div class="flex flex-col items-center gap-2 p-4 text-center relative z-10">
+            <div class="p-3 bg-surface-secondary rounded-full group-hover:scale-110 transition-transform shadow-sm"
                  [class.bg-cta-default/20]="isDragging()">
               <svg class="w-6 h-6 transition-colors"
                    [class.text-cta-default]="isDragging()"
@@ -225,35 +241,27 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
 
         <!-- Photo Cards -->
         @for (photo of photos(); track photo.id; let i = $index) {
-          <div class="aspect-[4/3] relative rounded-xl overflow-hidden shadow-sm group bg-surface-secondary">
+          <div class="aspect-[4/3] relative rounded-xl overflow-hidden group bg-surface-secondary photo-card">
             <!-- Image -->
             <img
               [src]="photo.plates?.blurredUrl || photo.preview"
               [alt]="'Foto ' + (i + 1)"
               class="w-full h-full object-cover"
-              [class.opacity-50]="photo.status === 'validating'"
+              [class.blur-sm]="photo.status === 'validating'"
             />
 
-            <!-- Validation Overlay -->
+            <!-- Validation Overlay with AI Scan Effect -->
             @switch (photo.status) {
               @case ('validating') {
-                <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-2">
-                  <div class="w-12 h-12 relative">
-                    <svg class="w-12 h-12 animate-spin text-white/30" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" />
-                    </svg>
-                    <svg class="w-12 h-12 absolute inset-0 text-white" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none"
-                        stroke-dasharray="62.83" [attr.stroke-dashoffset]="62.83 - (62.83 * photo.progress / 100)"
-                        class="transition-all duration-300" />
-                    </svg>
+                <div class="absolute inset-0 ai-scanning-overlay flex flex-col items-center justify-center gap-2">
+                  <div class="ai-scan-line"></div>
+                  <div class="relative z-10 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+                     <span class="text-white text-xs font-mono tracking-wider">ANALYZING {{ photo.progress }}%</span>
                   </div>
-                  <span class="text-white text-sm font-medium">{{ photo.progress }}%</span>
-                  <span class="text-white/70 text-xs">Analizando foto...</span>
                 </div>
               }
               @case ('error') {
-                <div class="absolute inset-0 bg-rose-500/80 flex flex-col items-center justify-center gap-2 p-3">
+                <div class="absolute inset-0 bg-rose-500/80 flex flex-col items-center justify-center gap-2 p-3 backdrop-blur-sm">
                   <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -268,7 +276,7 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
               <div class="absolute top-2 left-2">
                 @switch (photo.status) {
                   @case ('valid') {
-                    <div class="flex items-center gap-1 px-2 py-1 bg-emerald-500 text-white rounded-full text-xs font-semibold shadow-sm">
+                    <div class="flex items-center gap-1 px-2 py-1 bg-emerald-500 text-white rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider border border-white/20 backdrop-blur-md">
                       <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                       </svg>
@@ -276,7 +284,7 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
                     </div>
                   }
                   @case ('warning') {
-                    <div class="flex items-center gap-1 px-2 py-1 bg-amber-500 text-white rounded-full text-xs font-semibold shadow-sm">
+                    <div class="flex items-center gap-1 px-2 py-1 bg-amber-500 text-white rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider border border-white/20 backdrop-blur-md">
                       <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -285,7 +293,7 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
                     </div>
                   }
                   @case ('error') {
-                    <div class="flex items-center gap-1 px-2 py-1 bg-rose-500 text-white rounded-full text-xs font-semibold shadow-sm">
+                    <div class="flex items-center gap-1 px-2 py-1 bg-rose-500 text-white rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider border border-white/20 backdrop-blur-md">
                       <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                       </svg>
@@ -298,7 +306,7 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
 
             <!-- Plate Detection Badge -->
             @if (photo.plates?.detected) {
-              <div class="absolute top-2 right-2 px-2 py-1 bg-blue-500 text-white rounded-full text-xs font-semibold shadow-sm flex items-center gap-1">
+              <div class="absolute top-2 right-2 px-2 py-1 bg-blue-500/90 text-white rounded-full text-[10px] font-bold shadow-sm flex items-center gap-1 uppercase tracking-wider border border-white/20 backdrop-blur-md">
                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -311,26 +319,26 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
 
             <!-- Cover Badge -->
             @if (i === 0) {
-              <div class="absolute bottom-2 left-2 px-2 py-1 bg-black/60 backdrop-blur-md rounded-md">
-                <span class="text-xs font-bold text-white uppercase tracking-wider">Portada</span>
+              <div class="absolute bottom-2 left-2 px-2 py-1 badge-glass-dark rounded-md shadow-lg">
+                <span class="text-[10px] font-bold uppercase tracking-wider">Portada</span>
               </div>
             }
 
             <!-- Quality Issues Tooltip -->
             @if (photo.quality?.issues?.length) {
               <div class="absolute bottom-2 right-2 group/tooltip">
-                <div class="p-1.5 bg-amber-500 rounded-full cursor-help">
+                <div class="p-1.5 bg-amber-500 rounded-full cursor-help hover:scale-110 transition-transform shadow-lg border border-white/20">
                   <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <div class="absolute bottom-full right-0 mb-2 w-48 p-2 bg-slate-900 text-white text-xs rounded-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all shadow-lg z-10">
-                  <p class="font-semibold mb-1">Sugerencias:</p>
-                  <ul class="space-y-0.5">
+                <div class="absolute bottom-full right-0 mb-2 w-48 p-3 bg-slate-900/95 text-white text-xs rounded-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all shadow-xl z-10 border border-white/10 backdrop-blur-xl">
+                  <p class="font-bold mb-2 text-amber-400 uppercase tracking-wide text-[10px]">Sugerencias AI</p>
+                  <ul class="space-y-1">
                     @for (issue of photo.quality?.issues; track issue) {
-                      <li class="flex items-start gap-1">
-                        <span class="text-amber-400">•</span>
+                      <li class="flex items-start gap-1.5 leading-tight">
+                        <span class="text-amber-400 mt-0.5">•</span>
                         {{ issue }}
                       </li>
                     }
@@ -340,11 +348,11 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
             }
 
             <!-- Hover Actions -->
-            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-[2px]">
               <button
                 type="button"
                 (click)="removePhoto(i)"
-                class="p-2.5 bg-white/90 text-rose-600 rounded-full hover:bg-white hover:scale-110 transition-all shadow-lg"
+                class="p-3 bg-white text-rose-600 rounded-full hover:bg-rose-50 hover:text-rose-700 hover:scale-110 transition-all shadow-xl"
                 title="Eliminar"
               >
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -356,7 +364,7 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
                 <button
                   type="button"
                   (click)="retryValidation(photo)"
-                  class="p-2.5 bg-white/90 text-blue-600 rounded-full hover:bg-white hover:scale-110 transition-all shadow-lg"
+                  class="p-3 bg-white text-blue-600 rounded-full hover:bg-blue-50 hover:text-blue-700 hover:scale-110 transition-all shadow-xl"
                   title="Reintentar"
                 >
                   <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -371,19 +379,19 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
 
         <!-- Empty Slots with Stencils -->
         @for (slot of emptySlots(); track slot) {
-          <div class="aspect-[4/3] rounded-xl border-2 border-dashed border-border-default/50 bg-surface-secondary/50 flex flex-col items-center justify-center p-3">
+          <div class="aspect-[4/3] rounded-xl stencil-slot flex flex-col items-center justify-center p-3 group/stencil cursor-default">
             <div class="text-center">
-              <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-surface-secondary flex items-center justify-center">
+              <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-white shadow-sm flex items-center justify-center group-hover/stencil:scale-110 transition-transform border border-border-default">
                 @switch (slot) {
                   @case ('front') {
-                    <svg class="w-5 h-5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <svg class="w-6 h-6 stencil-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <rect x="3" y="6" width="18" height="12" rx="2" stroke-width="1.5"/>
                       <circle cx="7" cy="15" r="1.5" stroke-width="1.5"/>
                       <circle cx="17" cy="15" r="1.5" stroke-width="1.5"/>
                     </svg>
                   }
                   @case ('rear') {
-                    <svg class="w-5 h-5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <svg class="w-6 h-6 stencil-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <rect x="3" y="6" width="18" height="12" rx="2" stroke-width="1.5"/>
                       <circle cx="7" cy="15" r="1.5" stroke-width="1.5"/>
                       <circle cx="17" cy="15" r="1.5" stroke-width="1.5"/>
@@ -391,21 +399,21 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
                     </svg>
                   }
                   @case ('interior') {
-                    <svg class="w-5 h-5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <svg class="w-6 h-6 stencil-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <circle cx="12" cy="12" r="3" stroke-width="1.5"/>
                       <path d="M5 12h2M17 12h2M12 5v2M12 17v2" stroke-width="1.5"/>
                     </svg>
                   }
                   @default {
-                    <svg class="w-5 h-5 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="w-6 h-6 stencil-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   }
                 }
               </div>
-              <span class="text-xs font-medium text-text-muted">{{ getPositionLabel(slot) }}</span>
-              <p class="text-[10px] text-text-muted/70 mt-0.5 leading-tight">{{ getPositionHint(slot) }}</p>
+              <span class="text-xs font-bold text-text-secondary uppercase tracking-wider block mb-1 group-hover/stencil:text-cta-default transition-colors">{{ getPositionLabel(slot) }}</span>
+              <p class="text-[10px] text-text-muted mt-0.5 leading-tight max-w-[120px] mx-auto">{{ getPositionHint(slot) }}</p>
             </div>
           </div>
         }
@@ -431,12 +439,112 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
   `,
   styles: [`
     .animate-fade-in {
-      animation: fadeIn 0.3s ease-out;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(10px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* --- PREMIUM PHOTO CARDS --- */
+    .photo-card {
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    }
+    
+    .photo-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+
+    /* --- AI SCANNING EFFECT --- */
+    .ai-scanning-overlay {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
+    }
+
+    .ai-scan-line {
+      position: absolute;
+      left: 0; right: 0; top: 0; height: 2px;
+      background: #00d95f;
+      box-shadow: 0 0 10px #00d95f;
+      animation: photoScan 2s linear infinite;
+    }
+    
+    .ai-scan-line::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0; height: 40px;
+      background: linear-gradient(to top, transparent, rgba(0, 217, 95, 0.2));
+    }
+
+    @keyframes photoScan {
+      0% { top: 0%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* --- GLASS BADGES --- */
+    .badge-glass {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .badge-glass-dark {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* --- WIREFRAME STENCILS --- */
+    .stencil-slot {
+      background-image: radial-gradient(rgba(0,0,0,0.1) 1px, transparent 1px);
+      background-size: 16px 16px;
+      border: 2px dashed rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+
+    .stencil-slot:hover {
+      border-color: rgba(0, 217, 95, 0.4);
+      background-color: rgba(0, 217, 95, 0.02);
+    }
+    
+    .stencil-icon {
+      opacity: 0.4;
+      transition: opacity 0.2s;
+    }
+    
+    .stencil-slot:hover .stencil-icon {
+      opacity: 0.8;
+      color: #00d95f;
+    }
+
+    /* --- DETECTION BANNER --- */
+    .detection-banner {
+      background: linear-gradient(135deg, rgba(236, 253, 245, 0.8) 0%, rgba(209, 250, 229, 0.9) 100%);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2);
+    }
+
+    /* --- DROPZONE --- */
+    .dropzone-magnetic {
+      background-image: radial-gradient(rgba(0, 217, 95, 0.15) 1px, transparent 1px);
+      background-size: 24px 24px;
+      border: 2px dashed rgba(0, 217, 95, 0.5);
+      animation: pulseBorder 2s infinite;
+    }
+
+    @keyframes pulseBorder {
+      0% { border-color: rgba(0, 217, 95, 0.3); background-color: rgba(0, 217, 95, 0.02); }
+      50% { border-color: rgba(0, 217, 95, 0.7); background-color: rgba(0, 217, 95, 0.08); }
+      100% { border-color: rgba(0, 217, 95, 0.3); background-color: rgba(0, 217, 95, 0.02); }
     }
   `],
 })
@@ -455,6 +563,7 @@ export class PhotoUploadAIComponent {
   // Outputs
   readonly photosChange = output<PhotoWithAI[]>();
   readonly vehicleDetected = output<VehicleAutoDetect>();
+  readonly requestAiGeneration = output<void>();
 
   // State
   readonly photos = signal<PhotoWithAI[]>([]);

@@ -51,7 +51,7 @@ export interface VehicleScannerConfirmData {
   template: `
     <div class="fixed inset-0 z-[9999] bg-black full-screen-scan scan-stage fade-in" [class.fade-out]="isClosing()">
       <!-- Header -->
-      <header class="scan-header scan-layer flex items-center justify-between px-4 py-3 sm:py-4 backdrop-blur-sm safe-area-top">
+      <header class="scan-header scan-layer flex items-center justify-between gap-3 px-4 py-3 sm:py-4 backdrop-blur-sm safe-area-top">
         <button
           type="button"
           (click)="cancel()"
@@ -62,8 +62,16 @@ export interface VehicleScannerConfirmData {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        <h2 class="text-white font-semibold tracking-tight">Escanear vehículo</h2>
-        <div class="w-10"></div>
+        <div class="flex-1 min-w-0 text-center sm:text-left">
+          <h2 class="text-white font-semibold tracking-tight">Escanear vehículo</h2>
+          <p class="text-[11px] sm:text-xs text-white/60">Alineá el auto con el marco guía</p>
+        </div>
+        <div class="scan-status-pill" [class.detected]="scanner.hasDetection()" [class.ready]="scanner.isStableEnough()">
+          <span class="scan-status-dot"></span>
+          <span>
+            {{ scanner.isStableEnough() ? 'Listo' : (scanner.hasDetection() ? 'Enfocando' : 'Buscando') }}
+          </span>
+        </div>
       </header>
 
       <!-- Camera View -->
@@ -77,44 +85,191 @@ export interface VehicleScannerConfirmData {
           class="absolute inset-0 w-full h-full object-cover"
           [class.low-light]="lowLight()"
         ></video>
+        <div class="scan-grid"></div>
         <div class="scan-scrim"></div>
 
-        <!-- Guide Frame Corners -->
-        <div class="absolute inset-8 pointer-events-none">
-          <div
-            class="absolute top-0 left-0 w-16 h-16 border-t-3 border-l-3 rounded-tl-xl transition-colors duration-300"
-            [class]="scanner.isStableEnough() ? 'border-neon' : (scanner.hasDetection() ? 'border-neon/60' : 'border-neutral-500/50')"
-            [class.scan-corner-ready]="scanner.isStableEnough()"
-          ></div>
-          <div
-            class="absolute top-0 right-0 w-16 h-16 border-t-3 border-r-3 rounded-tr-xl transition-colors duration-300"
-            [class]="scanner.isStableEnough() ? 'border-neon' : (scanner.hasDetection() ? 'border-neon/60' : 'border-neutral-500/50')"
-            [class.scan-corner-ready]="scanner.isStableEnough()"
-          ></div>
-          <div
-            class="absolute bottom-0 left-0 w-16 h-16 border-b-3 border-l-3 rounded-bl-xl transition-colors duration-300"
-            [class]="scanner.isStableEnough() ? 'border-neon' : (scanner.hasDetection() ? 'border-neon/60' : 'border-neutral-500/50')"
-            [class.scan-corner-ready]="scanner.isStableEnough()"
-          ></div>
-          <div
-            class="absolute bottom-0 right-0 w-16 h-16 border-b-3 border-r-3 rounded-br-xl transition-colors duration-300"
-            [class]="scanner.isStableEnough() ? 'border-neon' : (scanner.hasDetection() ? 'border-neon/60' : 'border-neutral-500/50')"
-            [class.scan-corner-ready]="scanner.isStableEnough()"
-          ></div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="scan-target" [class.ready]="scanner.isStableEnough()">
-              <span class="scan-dot" [class.ready]="scanner.isStableEnough()"></span>
-            </div>
-          </div>
+        <!-- Vehicle Alignment Guide (Professional SVG HUD) -->
+        <div class="absolute inset-4 sm:inset-8 lg:inset-12 pointer-events-none flex items-center justify-center">
+          <svg class="w-full h-full max-w-3xl mx-auto" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <!-- Glow effect for locked state -->
+              <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+
+              <!-- Subtle glow for silhouette -->
+              <filter id="silhouetteGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="2" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+
+              <!-- Scan line gradient -->
+              <linearGradient id="scanLineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="rgba(0, 217, 95, 0)" />
+                <stop offset="50%" stop-color="rgba(0, 217, 95, 0.9)" />
+                <stop offset="100%" stop-color="rgba(0, 217, 95, 0)" />
+              </linearGradient>
+
+              <!-- Ground line gradient -->
+              <linearGradient id="groundGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="rgba(255,255,255,0)" />
+                <stop offset="20%" stop-color="rgba(255,255,255,0.3)" />
+                <stop offset="50%" stop-color="rgba(255,255,255,0.5)" />
+                <stop offset="80%" stop-color="rgba(255,255,255,0.3)" />
+                <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+              </linearGradient>
+            </defs>
+
+            <!-- Corner Brackets (Tech frame) -->
+            <g class="frame-corners transition-all duration-500"
+               [class.corner-detected]="scanner.hasDetection()"
+               [class.corner-locked]="scanner.isStableEnough()">
+              <!-- Top Left -->
+              <path d="M 8 50 L 8 8 L 50 8" stroke-width="2" stroke-linecap="round" fill="none" />
+              <circle cx="8" cy="8" r="3" />
+
+              <!-- Top Right -->
+              <path d="M 350 8 L 392 8 L 392 50" stroke-width="2" stroke-linecap="round" fill="none" />
+              <circle cx="392" cy="8" r="3" />
+
+              <!-- Bottom Left -->
+              <path d="M 8 230 L 8 272 L 50 272" stroke-width="2" stroke-linecap="round" fill="none" />
+              <circle cx="8" cy="272" r="3" />
+
+              <!-- Bottom Right -->
+              <path d="M 350 272 L 392 272 L 392 230" stroke-width="2" stroke-linecap="round" fill="none" />
+              <circle cx="392" cy="272" r="3" />
+            </g>
+
+            <!-- Ground Reference Line -->
+            <line x1="40" y1="220" x2="360" y2="220"
+                  stroke="url(#groundGradient)"
+                  stroke-width="1"
+                  stroke-dasharray="8 4"
+                  class="ground-line" />
+
+            <!-- Side Alignment Ticks -->
+            <g class="alignment-ticks" opacity="0.4">
+              <line x1="5" y1="100" x2="15" y2="100" stroke="white" stroke-width="1" />
+              <line x1="5" y1="140" x2="20" y2="140" stroke="white" stroke-width="1" />
+              <line x1="5" y1="180" x2="15" y2="180" stroke="white" stroke-width="1" />
+              <line x1="385" y1="100" x2="395" y2="100" stroke="white" stroke-width="1" />
+              <line x1="380" y1="140" x2="395" y2="140" stroke="white" stroke-width="1" />
+              <line x1="385" y1="180" x2="395" y2="180" stroke="white" stroke-width="1" />
+            </g>
+
+            <!-- Active Scan Line -->
+            <rect x="25" y="0" width="350" height="2" fill="url(#scanLineGradient)" class="scan-laser-line">
+              <animate attributeName="y" values="20;260;20" dur="3.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1" />
+              <animate attributeName="opacity" values="0;1;1;0" dur="3.5s" repeatCount="indefinite" keyTimes="0;0.05;0.95;1" />
+            </rect>
+
+            <!-- VEHICLE SILHOUETTE (Ghost Guide) -->
+            <g class="vehicle-silhouette"
+               [class.silhouette-visible]="!scanner.hasDetection()"
+               [class.silhouette-detected]="scanner.hasDetection() && !scanner.isStableEnough()"
+               [class.silhouette-locked]="scanner.isStableEnough()">
+
+              <!-- Car Body -->
+              <path [attr.d]="getCurrentSilhouette().body"
+                    class="silhouette-body"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    fill="none" />
+
+              <!-- Windows (slightly offset color) -->
+              <path [attr.d]="getCurrentSilhouette().windows"
+                    class="silhouette-windows"
+                    stroke-width="1.5"
+                    fill="none" />
+
+              <!-- Wheels -->
+              @for (wheel of getCurrentSilhouette().wheels; track $index) {
+                <path [attr.d]="wheel"
+                      class="silhouette-wheel"
+                      stroke-width="2"
+                      fill="none" />
+                <!-- Wheel hub -->
+                <circle [attr.cx]="$index === 0 ? 105 : 330"
+                        [attr.cy]="195"
+                        r="8"
+                        class="silhouette-hub"
+                        stroke-width="1.5"
+                        fill="none" />
+              }
+
+              <!-- Center alignment crosshair (only when not locked) -->
+              @if (!scanner.isStableEnough()) {
+                <g class="crosshair" opacity="0.5">
+                  <line x1="200" y1="125" x2="200" y2="145" stroke="white" stroke-width="1" stroke-dasharray="2 2" />
+                  <line x1="180" y1="135" x2="220" y2="135" stroke="white" stroke-width="1" stroke-dasharray="2 2" />
+                </g>
+              }
+            </g>
+
+            <!-- Lock-on Indicator (appears when stable) -->
+            @if (scanner.isStableEnough()) {
+              <g class="lock-on-indicator" filter="url(#neonGlow)">
+                <!-- Pulsing center lock -->
+                <circle cx="200" cy="140" r="12" stroke="#00d95f" stroke-width="2" fill="none" class="lock-ring-outer">
+                  <animate attributeName="r" values="12;16;12" dur="1.5s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="200" cy="140" r="4" fill="#00d95f" class="lock-dot" />
+
+                <!-- Lock brackets -->
+                <path d="M 175 140 L 185 140" stroke="#00d95f" stroke-width="2" stroke-linecap="round" />
+                <path d="M 215 140 L 225 140" stroke="#00d95f" stroke-width="2" stroke-linecap="round" />
+                <path d="M 200 115 L 200 125" stroke="#00d95f" stroke-width="2" stroke-linecap="round" />
+                <path d="M 200 155 L 200 165" stroke="#00d95f" stroke-width="2" stroke-linecap="round" />
+              </g>
+            }
+
+            <!-- "Align Vehicle" text hint (when searching) -->
+            @if (!scanner.hasDetection()) {
+              <text x="200" y="250"
+                    text-anchor="middle"
+                    class="hint-text"
+                    fill="rgba(255,255,255,0.6)"
+                    font-size="11"
+                    font-family="system-ui, sans-serif"
+                    letter-spacing="0.05em">
+                ALINEÁ EL VEHÍCULO CON LA SILUETA
+              </text>
+            }
+          </svg>
         </div>
 
         <!-- Frame Counter Badge -->
-        <div class="absolute top-4 right-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full hidden sm:flex">
+        <div class="absolute top-4 right-4 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full hidden sm:flex z-20">
           <span class="text-neutral-400 text-xs font-mono">{{ scanner.frameCount() }} frames</span>
         </div>
 
+        <!-- Live alerts -->
+        <div class="scan-alerts scan-layer">
+          <div class="scan-alerts-inner">
+            @if (lowLight()) {
+              <div class="scan-alert scan-alert--warning">
+                <span class="scan-alert-icon">☀️</span>
+                <span>Iluminación baja. Buscá una zona más clara.</span>
+              </div>
+            }
+            @if (scanner.hasDetection() && !scanner.isStableEnough()) {
+              <div class="scan-alert scan-alert--info">
+                <span class="scan-alert-icon">🖐️</span>
+                <span>Estabilizá la cámara para confirmar.</span>
+              </div>
+            }
+          </div>
+        </div>
+
         <!-- Detection Overlay -->
-        <div class="absolute bottom-0 left-0 right-0 p-4 safe-area-bottom scan-layer">
+        <div class="absolute bottom-0 left-0 right-0 p-4 safe-area-bottom scan-layer scan-overlay">
           @if (!isSecureContextSignal()) {
             <div class="scan-warning mb-3">
               <span>Para usar la cámara necesitás HTTPS. Abrí esta página con un enlace seguro.</span>
@@ -159,7 +314,7 @@ export interface VehicleScannerConfirmData {
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      <span class="text-neon/80 text-xs font-medium uppercase tracking-wide">Valor FIPE</span>
+                      <span class="text-neon/80 text-xs font-medium uppercase tracking-wide">Valor de Mercado</span>
                     </div>
                     <span class="text-[10px] text-neon/60">{{ fipe.reference_month }}</span>
                   </div>
@@ -183,11 +338,11 @@ export interface VehicleScannerConfirmData {
               } @else if (scanner.isFetchingFipe()) {
                 <div class="bg-neutral-900/50 rounded-xl p-3 mb-3 flex items-center justify-center gap-2">
                   <div class="w-4 h-4 border-2 border-neon/30 border-t-neon rounded-full animate-spin"></div>
-                  <span class="text-neutral-400 text-sm">Consultando precio de mercado...</span>
+                  <span class="text-neutral-400 text-sm">Analizando mercado...</span>
                 </div>
               } @else if (scanner.detectionStability() >= 50) {
                 <div class="bg-neutral-900/50 rounded-xl p-3 mb-3 flex items-center justify-center">
-                  <span class="text-neutral-500 text-sm">Precio no disponible en FIPE</span>
+                  <span class="text-neutral-500 text-sm">Precio no disponible en AutoRenta</span>
                 </div>
               }
 
@@ -237,10 +392,13 @@ export interface VehicleScannerConfirmData {
                 Mantené el auto centrado y bien iluminado.
               </p>
 
-              <div class="mt-4 flex items-center justify-between border-t border-neutral-800/50 pt-3">
-                <span class="text-neutral-400 text-xs">{{ currentTip().text }}</span>
+              <div class="mt-4 flex items-center justify-between border-t border-neutral-800/50 pt-3 gap-3">
+                <div class="flex items-center gap-2 text-neutral-400 text-xs leading-snug flex-1 min-w-0">
+                  <span class="text-base">{{ currentTip().icon }}</span>
+                  <span>{{ currentTip().text }}</span>
+                </div>
                 <span
-                  class="text-xs font-semibold px-2 py-1 rounded-full"
+                  class="text-xs font-semibold px-2 py-1 rounded-full shrink-0"
                   [class]="scanner.hasDetection() ? 'bg-neon/15 text-neon' : 'bg-white/10 text-neutral-300'"
                 >
                   {{ scanner.hasDetection() ? 'Estable' : 'Ajustar' }}
@@ -253,7 +411,6 @@ export interface VehicleScannerConfirmData {
         <!-- Pro Mode HUD (always on) -->
         <div class="scan-hud scan-layer">
           <div class="scan-hud-inner">
-            <div class="scan-hud-title">Escanear</div>
             <div class="scan-hud-status" [class.ready]="scanner.isStableEnough()">
               {{ scanner.isStableEnough() ? 'Listo' : 'Escaneando' }}
             </div>
@@ -327,7 +484,7 @@ export interface VehicleScannerConfirmData {
           <button
             type="button"
             (click)="confirmAndUse()"
-            class="confirm-btn w-full py-4 bg-neon hover:bg-neon/90 active:bg-neon/80 text-black font-bold rounded-xl transition-all flex items-center justify-center gap-2"
+            class="confirm-btn w-full py-3.5 sm:py-4 bg-neon hover:bg-neon/90 active:bg-neon/80 text-black font-bold rounded-xl transition-all flex items-center justify-center gap-2"
           >
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -335,11 +492,11 @@ export interface VehicleScannerConfirmData {
             Usar estos datos
           </button>
         } @else if (!scanner.hasDetection()) {
-          <p class="text-center text-neutral-500 text-sm py-2">
+          <p class="text-center text-neutral-500 text-xs sm:text-sm py-2">
             Apuntá la cámara hacia un vehículo
           </p>
         } @else {
-          <p class="text-center text-neutral-400 text-sm py-2">
+          <p class="text-center text-neutral-400 text-xs sm:text-sm py-2">
             Mantené estable unos segundos más...
           </p>
         }
@@ -383,8 +540,13 @@ export interface VehicleScannerConfirmData {
       animation: fadeIn 0.3s ease-out;
     }
 
-    /* Force fullscreen - override any parent styles including Ionic */
+    /* Force fullscreen + shared tokens */
     :host {
+      --scan-accent: #00d95f;
+      --scan-accent-soft: rgba(0, 217, 95, 0.2);
+      --scan-glass: rgba(2, 6, 23, 0.72);
+      --scan-footer-space: 96px;
+      --scan-footer-space-mobile: 128px;
       position: fixed !important;
       inset: 0 !important;
       z-index: 999999 !important;
@@ -428,165 +590,17 @@ export interface VehicleScannerConfirmData {
       transform: scale(0.985);
     }
 
-    .scan-scrim {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, rgba(2, 6, 23, 0.15) 0%, rgba(2, 6, 23, 0.45) 55%, rgba(2, 6, 23, 0.7) 100%);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .scan-scrim::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(2, 6, 23, 0.55) 0%, rgba(2, 6, 23, 0) 35%, rgba(2, 6, 23, 0.55) 100%);
-    }
-
-    .scan-target {
-      width: clamp(72px, 10vw, 96px);
-      height: clamp(72px, 10vw, 96px);
-      border-radius: 9999px;
-      border: 1.5px solid rgba(255, 255, 255, 0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 0 1px rgba(0, 217, 95, 0.12);
-    }
-
-    .scan-target.ready {
-      border-color: rgba(0, 217, 95, 0.7);
-      box-shadow: 0 0 0 6px rgba(0, 217, 95, 0.12);
-      animation: pulseReady 1.8s ease-in-out infinite;
-    }
-
-    .scan-target.ready::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 9999px;
-      border: 1px solid rgba(0, 217, 95, 0.6);
-      animation: lockRing 1.6s ease-out infinite;
-    }
-
-    .scan-dot {
-      width: clamp(8px, 1.2vw, 12px);
-      height: clamp(8px, 1.2vw, 12px);
-      border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.6);
-    }
-
-    .scan-dot.ready {
-      background: #00d95f;
-      box-shadow: 0 0 10px rgba(0, 217, 95, 0.6);
-    }
-
-    video.low-light {
-      filter: brightness(1.15) contrast(1.1) saturate(1.05);
-    }
-
-    .scan-corner-ready {
-      box-shadow: 0 0 14px rgba(0, 217, 95, 0.45);
-    }
-
-    .scan-card {
-      background: rgba(2, 6, 23, 0.88);
-      border-color: rgba(148, 163, 184, 0.16);
-      backdrop-filter: blur(18px);
-    }
-
-    .scan-card--detected {
-      background: rgba(2, 6, 23, 0.94);
-      box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.8);
-    }
-
-    .scan-warning {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      color: #fecaca;
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-size: 12px;
-      line-height: 1.4;
-      text-align: center;
-    }
-
-    .scan-hud {
-      top: 0;
-      pointer-events: none;
-      display: flex;
-      justify-content: center;
-    }
-
-    .scan-hud-inner {
-      margin-top: calc(env(safe-area-inset-top, 0px) + 10px);
-      padding: 6px 12px;
-      border-radius: 9999px;
-      background: rgba(2, 6, 23, 0.55);
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      color: white;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      font-size: 12px;
-      letter-spacing: 0.02em;
-    }
-
-    .scan-hud-title {
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.7);
-      font-weight: 600;
-    }
-
-    .scan-hud-status {
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.85);
-    }
-
-    .scan-hud-status.ready {
-      color: #00d95f;
-    }
-
-    @media (max-width: 640px) {
-      .scan-hud-inner {
-        font-size: 11px;
-        padding: 4px 10px;
-      }
-    }
-
-    @keyframes pulseReady {
-      0% { box-shadow: 0 0 0 6px rgba(0, 217, 95, 0.12); }
-      50% { box-shadow: 0 0 0 10px rgba(0, 217, 95, 0.2); }
-      100% { box-shadow: 0 0 0 6px rgba(0, 217, 95, 0.12); }
-    }
-
-    @keyframes lockRing {
-      0% { transform: scale(0.9); opacity: 0; }
-      40% { opacity: 0.8; }
-      100% { transform: scale(1.25); opacity: 0; }
-    }
-
-    @keyframes scanFadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.985);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
     .scan-layer {
       position: absolute;
       left: 0;
       right: 0;
-      z-index: 2;
+      z-index: 4;
     }
 
     .scan-header {
       top: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.35));
+      border-bottom: 1px solid rgba(0, 217, 95, 0.15);
     }
 
     .scan-footer {
@@ -597,55 +611,561 @@ export interface VehicleScannerConfirmData {
       z-index: 1;
     }
 
-    .scan-header {
-      background: linear-gradient(
-        180deg,
-        rgba(0, 0, 0, 0.9) 0%,
-        rgba(0, 0, 0, 0.6) 100%
-      );
-      border-bottom: 1px solid rgba(0, 217, 95, 0.15);
+    .scan-hud {
+      top: calc(env(safe-area-inset-top, 0px) + 70px);
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* --- HI-TECH GRID --- */
+    .scan-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 217, 95, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 95, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 1;
+      mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+      -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+    }
+
+    .scan-scrim {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(2, 6, 23, 0) 40%, rgba(2, 6, 23, 0.8) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* --- HUD STATUS PILL --- */
+    .scan-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 4px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(0, 217, 95, 0.3);
+      color: #00d95f;
+      font-family: 'JetBrains Mono', monospace; /* Tech font if available */
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      box-shadow: 0 0 15px rgba(0, 217, 95, 0.1);
+      backdrop-filter: blur(4px);
+    }
+
+    .scan-status-pill.detected {
+      background: rgba(0, 217, 95, 0.1);
+      border-color: rgba(0, 217, 95, 0.6);
+      box-shadow: 0 0 20px rgba(0, 217, 95, 0.2);
+    }
+
+    .scan-status-pill.ready {
+      background: #00d95f;
+      color: #000;
+      border-color: #00d95f;
+      box-shadow: 0 0 25px rgba(0, 217, 95, 0.6);
+    }
+
+    .scan-status-dot {
+      width: 6px;
+      height: 6px;
+      background: #00d95f;
+      box-shadow: 0 0 8px #00d95f;
+      animation: blink 1s infinite;
+    }
+
+    .scan-status-pill.ready .scan-status-dot {
+      background: #000;
+      box-shadow: none;
+      animation: none;
+    }
+
+    /* --- AR FRAME --- */
+    .scan-frame {
+      position: absolute;
+      inset: 20px;
+      border: 1px solid rgba(0, 217, 95, 0.15);
+      box-shadow: 0 0 30px rgba(0, 217, 95, 0.05);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .scan-frame.detected {
+      inset: 15px; /* Slight expansion breath */
+      border-color: rgba(0, 217, 95, 0.5);
+      box-shadow: 0 0 40px rgba(0, 217, 95, 0.15);
+    }
+
+    .scan-frame.ready {
+      border-color: #00d95f;
+      box-shadow: 0 0 50px rgba(0, 217, 95, 0.4);
+      animation: lockOn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Tech Corners */
+    .scan-frame-corner {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border: 2px solid #00d95f;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+
+    .scan-frame.ready .scan-frame-corner {
+      width: 60px;
+      height: 60px;
+      border-width: 4px;
+      opacity: 1;
+      box-shadow: 0 0 15px #00d95f;
+    }
+
+    .scan-frame-corner.tl { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+    .scan-frame-corner.tr { top: -2px; right: -2px; border-left: 0; border-bottom: 0; }
+    .scan-frame-corner.bl { bottom: -2px; left: -2px; border-right: 0; border-top: 0; }
+    .scan-frame-corner.br { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+
+    /* Laser Scan Line */
+    .scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #00d95f;
+      box-shadow: 0 0 20px #00d95f, 0 0 10px #00d95f;
+      opacity: 0;
+      animation: laserScan 2.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    }
+    
+    .scan-line::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; top: 0; height: 60px;
+      background: linear-gradient(to top, rgba(0, 217, 95, 0.3), transparent);
+    }
+
+    /* --- CENTER RETICLE --- */
+    .scan-target {
+      width: 80px;
+      height: 80px;
+      border: 1px solid rgba(0, 217, 95, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .scan-target::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 2px dashed rgba(0, 217, 95, 0.3);
+      animation: spinSlow 8s linear infinite;
+    }
+
+    .scan-target::after {
+      content: '';
+      position: absolute;
+      inset: -15px;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      border-top-color: rgba(0, 217, 95, 0.5);
+      border-bottom-color: rgba(0, 217, 95, 0.5);
+      animation: spinFast 3s linear infinite;
+    }
+
+    .scan-target.detected {
+      border-color: #00d95f;
+      background: rgba(0, 217, 95, 0.1);
+    }
+
+    .scan-target.ready {
+      background: rgba(0, 217, 95, 0.2);
+      box-shadow: 0 0 30px rgba(0, 217, 95, 0.4);
+      transform: scale(0.9);
+      transition: transform 0.2s;
+    }
+
+    .scan-dot {
+      width: 4px;
+      height: 4px;
+      background: #00d95f;
+      box-shadow: 0 0 10px #00d95f;
+    }
+
+    /* --- ANIMATIONS --- */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    @keyframes laserScan {
+      0% { top: 0%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    @keyframes spinSlow { 100% { transform: rotate(360deg); } }
+    @keyframes spinFast { 100% { transform: rotate(-360deg); } }
+    
+    @keyframes lockOn {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.95); }
+      100% { transform: scale(1); }
+    }
+
+    video.low-light {
+      filter: brightness(1.3) contrast(1.2) saturate(0.8) grayscale(0.2); /* Night vision look */
+    }
+
+    /* --- CARDS & UI --- */
+    .scan-card {
+      background: rgba(10, 10, 10, 0.85); /* Darker, sleek */
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .scan-card--detected {
+      border-color: #00d95f;
+      background: rgba(0, 20, 10, 0.9); /* Slight green tint */
+      box-shadow: 0 0 40px rgba(0, 217, 95, 0.15);
+    }
+
+    .scan-overlay {
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--scan-footer-space));
     }
 
     .scan-footer {
-      background: rgba(0, 0, 0, 0.92);
+      background: rgba(0, 0, 0, 0.72);
       border-color: rgba(0, 217, 95, 0.2);
+      backdrop-filter: blur(12px);
     }
 
-    .scan-card {
-      background: rgba(0, 0, 0, 0.86);
-      border-color: rgba(0, 217, 95, 0.2);
-      box-shadow: 0 24px 50px -36px rgba(0, 217, 95, 0.2);
-      backdrop-filter: blur(16px);
+    .scan-alerts {
+      position: absolute;
+      top: calc(env(safe-area-inset-top, 0px) + 96px);
+      left: 0;
+      right: 0;
+      padding: 0 16px;
+      z-index: 4;
+      pointer-events: none;
     }
 
-    /* Confirm button animation */
-    .confirm-btn {
-      animation: confirmBtnEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 0 20px rgba(0, 217, 95, 0.4), 0 4px 15px rgba(0, 0, 0, 0.3);
+    .scan-alerts-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 460px;
+      margin: 0 auto;
     }
 
-    .confirm-btn:hover {
-      box-shadow: 0 0 30px rgba(0, 217, 95, 0.5), 0 6px 20px rgba(0, 0, 0, 0.3);
-      transform: translateY(-1px);
+    .scan-alert {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.4;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: rgba(226, 232, 240, 0.9);
+      backdrop-filter: blur(8px);
     }
 
-    .confirm-btn:active {
-      transform: translateY(0) scale(0.98);
+    .scan-alert--warning {
+      border-color: rgba(251, 191, 36, 0.5);
+      background: rgba(120, 53, 15, 0.35);
+      color: #fde68a;
     }
 
-    @keyframes confirmBtnEnter {
-      0% {
-        opacity: 0;
-        transform: scale(0.9) translateY(10px);
+    .scan-alert--info {
+      border-color: rgba(0, 217, 95, 0.35);
+      color: rgba(187, 247, 208, 0.95);
+    }
+
+    .scan-alert-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    /* --- HUD TEXT --- */
+    .scan-hud-inner {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(0, 217, 95, 0.2);
+      border-radius: 4px;
+      padding: 8px 14px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .scan-hud-title {
+      display: none;
+    }
+    
+    .scan-hud-status {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .scan-hud-status.ready {
+      color: #00d95f;
+    }
+
+    /* --- DECORATIVE DATA STREAM --- */
+    .scan-data-stream {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: monospace;
+      font-size: 10px;
+      color: rgba(0, 217, 95, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      pointer-events: none;
+    }
+
+    /* Adjustments for existing classes */
+    .scan-warning { background: rgba(200, 50, 50, 0.2); border: 1px solid #f87171; color: #fecaca; }
+    .confirm-btn { 
+      background: #00d95f; 
+      color: black; 
+      text-transform: uppercase; 
+      font-weight: 800; 
+      letter-spacing: 0.05em;
+      border: none;
+    }
+    .confirm-btn:hover { background: #00ff6e; box-shadow: 0 0 20px rgba(0, 217, 95, 0.5); }
+    
+    /* Neon Text Utilities */
+    .text-neon { color: #00d95f; text-shadow: 0 0 10px rgba(0, 217, 95, 0.4); }
+    
+    @media (max-width: 640px) {
+      :host {
+        --scan-footer-space: var(--scan-footer-space-mobile);
       }
-      60% {
-        transform: scale(1.02) translateY(-2px);
+
+      .scan-overlay {
+        padding-left: 14px;
+        padding-right: 14px;
       }
-      100% {
+
+      .scan-footer {
+        padding: 12px 16px;
+      }
+
+      .scan-alerts {
+        top: calc(env(safe-area-inset-top, 0px) + 88px);
+      }
+
+      .scan-hud-inner {
+        padding: 6px 12px;
+      }
+    }
+
+    /* Hide some elements on very small screens */
+    @media (max-height: 600px) {
+      .scan-header p { display: none; }
+      .scan-data-stream { display: none; }
+    }
+
+    /* --- FRAME CORNERS --- */
+    .frame-corners {
+      stroke: rgba(255, 255, 255, 0.35);
+      fill: rgba(255, 255, 255, 0.15);
+    }
+
+    .frame-corners.corner-detected {
+      stroke: rgba(0, 217, 95, 0.6);
+      fill: rgba(0, 217, 95, 0.3);
+    }
+
+    .frame-corners.corner-locked {
+      stroke: #00d95f;
+      fill: #00d95f;
+      filter: drop-shadow(0 0 8px rgba(0, 217, 95, 0.6));
+      animation: cornerPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes cornerPulse {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(0, 217, 95, 0.6)); }
+      50% { filter: drop-shadow(0 0 15px rgba(0, 217, 95, 0.9)); }
+    }
+
+    /* --- VEHICLE SILHOUETTE --- */
+    .vehicle-silhouette {
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    /* Default state: visible, breathing animation */
+    .vehicle-silhouette.silhouette-visible {
+      opacity: 1;
+    }
+
+    .vehicle-silhouette.silhouette-visible .silhouette-body {
+      stroke: rgba(255, 255, 255, 0.5);
+      animation: silhouetteBreathing 3s ease-in-out infinite;
+    }
+
+    .vehicle-silhouette.silhouette-visible .silhouette-windows {
+      stroke: rgba(255, 255, 255, 0.3);
+      animation: silhouetteBreathing 3s ease-in-out infinite 0.2s;
+    }
+
+    .vehicle-silhouette.silhouette-visible .silhouette-wheel,
+    .vehicle-silhouette.silhouette-visible .silhouette-hub {
+      stroke: rgba(255, 255, 255, 0.4);
+      animation: wheelSpin 4s linear infinite;
+    }
+
+    /* Detected state: turning green, pulsing */
+    .vehicle-silhouette.silhouette-detected {
+      opacity: 1;
+    }
+
+    .vehicle-silhouette.silhouette-detected .silhouette-body {
+      stroke: rgba(0, 217, 95, 0.7);
+      stroke-dasharray: 8 4;
+      animation: dashFlow 1.5s linear infinite;
+    }
+
+    .vehicle-silhouette.silhouette-detected .silhouette-windows {
+      stroke: rgba(0, 217, 95, 0.4);
+      stroke-dasharray: 4 4;
+      animation: dashFlow 1.5s linear infinite reverse;
+    }
+
+    .vehicle-silhouette.silhouette-detected .silhouette-wheel,
+    .vehicle-silhouette.silhouette-detected .silhouette-hub {
+      stroke: rgba(0, 217, 95, 0.6);
+    }
+
+    /* Locked state: solid green, glowing */
+    .vehicle-silhouette.silhouette-locked {
+      opacity: 1;
+      filter: drop-shadow(0 0 10px rgba(0, 217, 95, 0.5));
+    }
+
+    .vehicle-silhouette.silhouette-locked .silhouette-body {
+      stroke: #00d95f;
+      stroke-dasharray: none;
+      animation: lockedPulse 1.5s ease-in-out infinite;
+    }
+
+    .vehicle-silhouette.silhouette-locked .silhouette-windows {
+      stroke: rgba(0, 217, 95, 0.6);
+      fill: rgba(0, 217, 95, 0.1);
+      stroke-dasharray: none;
+      animation: none;
+    }
+
+    .vehicle-silhouette.silhouette-locked .silhouette-wheel,
+    .vehicle-silhouette.silhouette-locked .silhouette-hub {
+      stroke: #00d95f;
+      animation: none;
+    }
+
+    /* --- SILHOUETTE ANIMATIONS --- */
+    @keyframes silhouetteBreathing {
+      0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: scale(1.005);
+      }
+    }
+
+    @keyframes wheelSpin {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: 100; }
+    }
+
+    @keyframes dashFlow {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: 24; }
+    }
+
+    @keyframes lockedPulse {
+      0%, 100% {
+        stroke-width: 2;
         opacity: 1;
-        transform: scale(1) translateY(0);
+      }
+      50% {
+        stroke-width: 2.5;
+        opacity: 0.85;
       }
     }
+
+    /* --- SCAN LASER LINE --- */
+    .scan-laser-line {
+      filter: drop-shadow(0 0 6px rgba(0, 217, 95, 0.8));
+    }
+
+    /* --- GROUND LINE --- */
+    .ground-line {
+      animation: groundPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes groundPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.8; }
+    }
+
+    /* --- LOCK-ON INDICATOR --- */
+    .lock-on-indicator {
+      animation: lockOnAppear 0.3s ease-out;
+    }
+
+    @keyframes lockOnAppear {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* --- HINT TEXT --- */
+    .hint-text {
+      text-transform: uppercase;
+      animation: hintFade 2s ease-in-out infinite;
+    }
+
+    @keyframes hintFade {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.9; }
+    }
+
+    /* --- LEGACY UTILITIES (kept for backwards compat) --- */
+    .stroke-neon { stroke: #00d95f; filter: drop-shadow(0 0 4px rgba(0,217,95,0.5)); }
+    .stroke-white-alpha { stroke: rgba(255, 255, 255, 0.4); }
+    .border-neon { border-color: #00d95f !important; box-shadow: 0 0 15px rgba(0,217,95,0.3); }
+
+    .animate-spin-slow { animation: spin 8s linear infinite; }
+    .animate-spin-fast { animation: spin 1s linear infinite; }
+
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .scale-90 { transform: scale(0.9); }
+    .scale-150 { transform: scale(1.5); }
   `],
 })
 export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
@@ -661,6 +1181,109 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
 
   /** Emits when user cancels */
   readonly cancelled = output<void>();
+
+  // GHOST SILHOUETTES (SVG paths) - Professional car outlines centered in 400x300
+  // Each silhouette includes: body, windows, wheels with realistic proportions
+  private readonly GHOST_SILHOUETTES: Record<string, { body: string; windows: string; wheels: string[] }> = {
+    sedan: {
+      // Classic 3-box sedan silhouette - low roof, trunk
+      body: `M 60,185
+             L 60,165 C 60,155 70,140 85,135
+             L 100,115 C 110,95 135,85 180,85
+             L 250,85 C 290,85 315,95 335,120
+             L 350,145 C 365,150 375,160 375,175
+             L 375,185`,
+      windows: `M 110,130 L 125,100 C 135,90 155,87 185,87 L 235,87 C 260,87 275,95 285,110 L 300,130 Z`,
+      wheels: [
+        'M 105,195 m -22,0 a 22,22 0 1,0 44,0 a 22,22 0 1,0 -44,0', // Front wheel
+        'M 330,195 m -22,0 a 22,22 0 1,0 44,0 a 22,22 0 1,0 -44,0'  // Rear wheel
+      ]
+    },
+    suv: {
+      // Tall, boxy SUV silhouette - high roof, squared rear
+      body: `M 55,195
+             L 55,145 C 55,125 70,110 90,105
+             L 105,80 C 115,65 140,55 190,55
+             L 280,55 C 330,55 350,65 360,85
+             L 370,115 C 380,125 385,145 385,165
+             L 385,195`,
+      windows: `M 115,100 L 130,70 C 140,60 165,57 200,57 L 270,57 C 305,57 325,65 335,80 L 350,100 L 350,125 L 115,125 Z`,
+      wheels: [
+        'M 100,205 m -26,0 a 26,26 0 1,0 52,0 a 26,26 0 1,0 -52,0', // Front wheel (bigger)
+        'M 335,205 m -26,0 a 26,26 0 1,0 52,0 a 26,26 0 1,0 -52,0'  // Rear wheel (bigger)
+      ]
+    },
+    hatchback: {
+      // Compact 2-box silhouette - sloped rear
+      body: `M 65,185
+             L 65,160 C 65,145 80,130 95,125
+             L 115,100 C 130,80 160,70 210,70
+             L 280,70 C 325,70 350,90 365,125
+             L 370,160 L 370,185`,
+      windows: `M 125,120 L 140,90 C 155,78 180,72 220,72 L 275,72 C 310,72 335,85 345,105 L 355,120 Z`,
+      wheels: [
+        'M 110,195 m -22,0 a 22,22 0 1,0 44,0 a 22,22 0 1,0 -44,0', // Front wheel
+        'M 325,195 m -22,0 a 22,22 0 1,0 44,0 a 22,22 0 1,0 -44,0'  // Rear wheel
+      ]
+    },
+    pickup: {
+      // Pickup truck with cabin and bed
+      body: `M 50,195
+             L 50,150 C 50,130 65,115 85,110
+             L 100,80 C 115,60 145,50 190,50
+             L 220,50 C 245,50 260,70 265,90
+             L 265,110 L 360,110 C 380,110 390,130 390,155
+             L 390,195`,
+      windows: `M 110,105 L 125,70 C 140,55 170,52 200,52 L 215,52 C 235,52 250,65 255,85 L 255,105 Z`,
+      wheels: [
+        'M 105,205 m -26,0 a 26,26 0 1,0 52,0 a 26,26 0 1,0 -52,0',
+        'M 340,205 m -26,0 a 26,26 0 1,0 52,0 a 26,26 0 1,0 -52,0'
+      ]
+    },
+    coupe: {
+      // Sporty coupe - low, sleek, 2-door proportions
+      body: `M 70,180
+             L 70,160 C 70,145 85,130 105,125
+             L 130,100 C 150,75 185,65 240,65
+             L 290,65 C 340,70 360,95 365,130
+             L 370,160 L 370,180`,
+      windows: `M 140,120 L 160,85 C 175,72 210,67 250,67 L 285,70 C 320,75 340,90 350,115 L 355,120 Z`,
+      wheels: [
+        'M 115,190 m -20,0 a 20,20 0 1,0 40,0 a 20,20 0 1,0 -40,0',
+        'M 325,190 m -20,0 a 20,20 0 1,0 40,0 a 20,20 0 1,0 -40,0'
+      ]
+    },
+    unknown: {
+      // Generic vehicle outline - balanced proportions
+      body: `M 60,190
+             L 60,160 C 60,140 75,125 95,120
+             L 115,95 C 135,70 175,60 230,60
+             L 290,60 C 340,65 360,90 370,125
+             L 375,160 L 375,190`,
+      windows: `M 125,115 L 145,80 C 165,65 200,62 240,62 L 280,65 C 320,70 345,85 355,110 L 360,115 Z`,
+      wheels: [
+        'M 110,200 m -24,0 a 24,24 0 1,0 48,0 a 24,24 0 1,0 -48,0',
+        'M 330,200 m -24,0 a 24,24 0 1,0 48,0 a 24,24 0 1,0 -48,0'
+      ]
+    }
+  };
+
+  /**
+   * Get the current silhouette based on detected body type
+   */
+  getCurrentSilhouette(): { body: string; windows: string; wheels: string[] } {
+    const bodyType = this.scanner.currentDetection()?.bodyType || 'unknown';
+    return this.GHOST_SILHOUETTES[bodyType] || this.GHOST_SILHOUETTES['unknown'];
+  }
+
+  /**
+   * Get dynamic SVG path for the ghost stencil based on detected body type
+   * (Legacy method for backwards compatibility)
+   */
+  getGhostPath(): string {
+    return this.getCurrentSilhouette().body;
+  }
+
 
   /** Camera error message */
   readonly cameraError = signal<string | null>(null);
