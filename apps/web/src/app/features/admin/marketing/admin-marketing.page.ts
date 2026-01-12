@@ -349,6 +349,15 @@ export class AdminMarketingPage implements OnInit {
     }
   }
 
+  // Form update helpers (arrow functions not allowed in AOT templates)
+  updateGenerateFormField(field: 'platform' | 'content_type' | 'theme' | 'generate_image', value: unknown): void {
+    this.generateForm.update((f) => ({ ...f, [field]: value }));
+  }
+
+  updateEditFormField(field: 'text_content' | 'scheduled_for', value: string): void {
+    this.editForm.update((f) => ({ ...f, [field]: value }));
+  }
+
   // Helpers
   formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleString('es-AR', {

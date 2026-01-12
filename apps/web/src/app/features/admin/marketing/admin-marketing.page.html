@@ -227,7 +227,7 @@
             <label class="mb-1 block text-sm font-medium text-gray-700">Plataforma</label>
             <select
               [ngModel]="generateForm().platform"
-              (ngModelChange)="generateForm.update(f => ({...f, platform: $event}))"
+              (ngModelChange)="updateGenerateFormField('platform', $event)"
               class="w-full rounded-lg border border-gray-300 px-3 py-2"
             >
               <option value="instagram">Instagram</option>
@@ -242,7 +242,7 @@
             <label class="mb-1 block text-sm font-medium text-gray-700">Tipo de Contenido</label>
             <select
               [ngModel]="generateForm().content_type"
-              (ngModelChange)="generateForm.update(f => ({...f, content_type: $event}))"
+              (ngModelChange)="updateGenerateFormField('content_type', $event)"
               class="w-full rounded-lg border border-gray-300 px-3 py-2"
             >
               <option value="tip">Consejo</option>
@@ -260,7 +260,7 @@
             <input
               type="text"
               [ngModel]="generateForm().theme"
-              (ngModelChange)="generateForm.update(f => ({...f, theme: $event}))"
+              (ngModelChange)="updateGenerateFormField('theme', $event)"
               placeholder="ej: Vacaciones de verano, Black Friday..."
               class="w-full rounded-lg border border-gray-300 px-3 py-2"
             />
@@ -272,7 +272,7 @@
               type="checkbox"
               id="generate_image"
               [ngModel]="generateForm().generate_image"
-              (ngModelChange)="generateForm.update(f => ({...f, generate_image: $event}))"
+              (ngModelChange)="updateGenerateFormField('generate_image', $event)"
               class="h-4 w-4 rounded border-gray-300"
             />
             <label for="generate_image" class="text-sm text-gray-700">
@@ -340,7 +340,7 @@
           <label class="mb-1 block text-sm font-medium text-gray-700">Contenido</label>
           <textarea
             [ngModel]="editForm().text_content"
-            (ngModelChange)="editForm.update(f => ({...f, text_content: $event}))"
+            (ngModelChange)="updateEditFormField('text_content', $event)"
             rows="4"
             class="w-full rounded-lg border border-gray-300 px-3 py-2"
           ></textarea>
@@ -351,7 +351,7 @@
           <input
             type="datetime-local"
             [ngModel]="editForm().scheduled_for"
-            (ngModelChange)="editForm.update(f => ({...f, scheduled_for: $event}))"
+            (ngModelChange)="updateEditFormField('scheduled_for', $event)"
             class="w-full rounded-lg border border-gray-300 px-3 py-2"
           />
         </div>
