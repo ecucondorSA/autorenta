@@ -1,3 +1,10 @@
+# [2.14.0](https://github.com/ecucondorSA/autorenta/compare/v2.13.3...v2.14.0) (2026-01-12)
+
+
+### Features
+
+* **marketing:** add automated social media publishing system ([ff6ca13](https://github.com/ecucondorSA/autorenta/commit/ff6ca13ec0dc9623e8ba37e5fb2d5f8a37852683))
+
 ## [2.13.3](https://github.com/ecucondorSA/autorenta/compare/v2.13.2...v2.13.3) (2026-01-11)
 
 
