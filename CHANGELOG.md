@@ -1,3 +1,10 @@
+# [2.18.0](https://github.com/ecucondorSA/autorenta/compare/v2.17.0...v2.18.0) (2026-01-12)
+
+
+### Features
+
+* **marketing:** integrate Veo 3.1 for TikTok video generation ([f0dddcc](https://github.com/ecucondorSA/autorenta/commit/f0dddcc71fe38c8dbcb40ca230738ee9e3448ded))
+
 # [2.17.0](https://github.com/ecucondorSA/autorenta/compare/v2.16.0...v2.17.0) (2026-01-12)
 
 
