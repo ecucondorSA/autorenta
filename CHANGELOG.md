@@ -1,3 +1,10 @@
+# [2.17.0](https://github.com/ecucondorSA/autorenta/compare/v2.16.0...v2.17.0) (2026-01-12)
+
+
+### Features
+
+* **marketing:** show generated AI images in dashboard ([2321d43](https://github.com/ecucondorSA/autorenta/commit/2321d43ff37d6bc14cfe698256ab088eaab289c7))
+
 # [2.16.0](https://github.com/ecucondorSA/autorenta/compare/v2.15.3...v2.16.0) (2026-01-12)
 
 
