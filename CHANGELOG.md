@@ -1,3 +1,10 @@
+# [2.15.0](https://github.com/ecucondorSA/autorenta/compare/v2.14.1...v2.15.0) (2026-01-12)
+
+
+### Features
+
+* **marketing:** add admin dashboard and upgrade to Gemini 2.0 Flash ([af67ecb](https://github.com/ecucondorSA/autorenta/commit/af67ecb4620a2717fe3bf1107dcf066d5e8ad099))
+
 ## [2.14.1](https://github.com/ecucondorSA/autorenta/compare/v2.14.0...v2.14.1) (2026-01-12)
 
 
