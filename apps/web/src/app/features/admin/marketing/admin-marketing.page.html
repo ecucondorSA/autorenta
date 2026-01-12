@@ -89,10 +89,10 @@
             <div class="flex-1">
               <!-- Platform & Status -->
               <div class="mb-2 flex items-center gap-2">
-                <span [class]="platformColors[item.platform]" class="rounded-full px-2 py-0.5 text-xs font-medium">
+                <span [class]="getPlatformColor(item.platform)" class="rounded-full px-2 py-0.5 text-xs font-medium">
                   {{ formatPlatform(item.platform) }}
                 </span>
-                <span [class]="statusColors[item.status]" class="rounded-full px-2 py-0.5 text-xs font-medium">
+                <span [class]="getStatusColor(item.status)" class="rounded-full px-2 py-0.5 text-xs font-medium">
                   {{ item.status }}
                 </span>
                 <span class="text-xs text-gray-500">
@@ -179,7 +179,7 @@
           <div class="flex items-start justify-between gap-4">
             <div class="flex-1">
               <div class="mb-2 flex items-center gap-2">
-                <span [class]="platformColors[post.platform]" class="rounded-full px-2 py-0.5 text-xs font-medium">
+                <span [class]="getPlatformColor(post.platform)" class="rounded-full px-2 py-0.5 text-xs font-medium">
                   {{ formatPlatform(post.platform) }}
                 </span>
                 <span class="text-xs text-gray-500">

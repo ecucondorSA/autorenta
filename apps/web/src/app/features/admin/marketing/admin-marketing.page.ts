@@ -358,6 +358,15 @@ export class AdminMarketingPage implements OnInit {
     this.editForm.update((f) => ({ ...f, [field]: value }));
   }
 
+  // Color helpers for platform and status (safe type access)
+  getPlatformColor(platform: string): string {
+    return this.platformColors[platform as Platform] || 'bg-gray-500 text-white';
+  }
+
+  getStatusColor(status: string): string {
+    return this.statusColors[status] || 'bg-gray-100 text-gray-800';
+  }
+
   // Helpers
   formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleString('es-AR', {
