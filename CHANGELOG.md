@@ -1,3 +1,10 @@
+## [2.15.2](https://github.com/ecucondorSA/autorenta/compare/v2.15.1...v2.15.2) (2026-01-12)
+
+
+### Bug Fixes
+
+* **marketing:** replace arrow functions with helper methods for AOT compatibility ([93e3ef8](https://github.com/ecucondorSA/autorenta/commit/93e3ef891f20d4d1001ea97eaf56d2e719f649e5))
+
 ## [2.15.1](https://github.com/ecucondorSA/autorenta/compare/v2.15.0...v2.15.1) (2026-01-12)
 
 
