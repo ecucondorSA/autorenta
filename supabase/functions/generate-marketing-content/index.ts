@@ -162,8 +162,8 @@ serve(async (req) => {
 
     // Generate image if requested
     let imageContent: { url?: string; base64?: string } | undefined;
-    if (generate_image && carData) {
-      imageContent = await generateMarketingImage(carData);
+    if (generate_image) {
+      imageContent = await generateMarketingImage(carData, content_type);
     }
 
     // Calculate suggested post time
@@ -300,30 +300,143 @@ FORMATO DE RESPUESTA (JSON):
 }
 
 // ============================================================================
-// IMAGE GENERATION
+// IMAGE GENERATION WITH LATAM CONTEXT
 // ============================================================================
 
+// LATAM Diversity - People prompts for marketing images
+const LATAM_PEOPLE_SCENES = [
+  // Young woman (25) - urban park
+  'young latin american woman (25 years old) smiling naturally, casual clothing, city park in Buenos Aires background, friendly and approachable, amateur phone photo quality',
+  // Middle-aged man (40) - urban street
+  'middle-aged latin american man (40 years old) with beard, smiling warmly, wearing casual t-shirt, urban street in Montevideo background, authentic look',
+  // Young man (22) - energetic
+  'young latin american man (22 years old) laughing, casual style with cap, sunny day outdoors in Cordoba Argentina, high energy vibe',
+  // Senior woman (60) - garden
+  'senior latin american woman (60 years old) smiling gently, garden background with jacaranda trees, natural light, warm grandmotherly vibe',
+  // Couple traveling
+  'young latin american couple (25-35 years old) joyfully looking at camera, coastal road in Uruguay like Punta del Este background, travel vibe',
+  // Car owner proud
+  'confident latin american car owner (30-45 years old) leaning against car, residential street Buenos Aires, metal gate and colorful wall background',
+];
+
+// LATAM Locations for backgrounds
+const LATAM_LOCATIONS = [
+  'San Telmo Buenos Aires cobblestone street warm afternoon light',
+  'Colonia del Sacramento Uruguay colonial architecture',
+  'Punta del Este Uruguay coastal road sunny day',
+  'Palermo Buenos Aires tree-lined street jacaranda trees',
+  'Montevideo Uruguay rambla waterfront sunset',
+  'Mendoza Argentina wine country mountains background',
+  'Mar del Plata Argentina beach boardwalk',
+  'Rosario Argentina riverside costanera',
+];
+
+// Marketing image prompts by content type
+const MARKETING_IMAGE_PROMPTS: Record<ContentType, string[]> = {
+  tip: [
+    'Phone photo of {person}, giving thumbs up next to a clean modern car, {location}, amateur quality, realistic',
+    'Selfie style photo of {person}, inside car showing dashboard, LEFT HAND DRIVE, {location} visible through window',
+    'Casual photo of {person}, checking tire or car exterior, {location}, helpful educational vibe',
+  ],
+  promo: [
+    'Exciting photo of {person}, keys in hand standing next to modern sedan, {location}, celebration vibe, amateur phone quality',
+    'Happy {person}, opening car door ready for adventure, {location}, promotional energy',
+    'Group of friends ({person} style), gathered around car trunk with luggage, {location}, road trip excitement',
+  ],
+  car_spotlight: [
+    'Beautiful photo of modern car parked on {location}, golden hour light, amateur phone photo quality, no people',
+    'Clean car 3/4 view parked safely by curb, {location}, afternoon light, realistic phone camera',
+    'Car interior from backseat, LEFT HAND DRIVE, steering wheel on left, parked at {location}, clean and inviting',
+  ],
+  testimonial: [
+    'Candid photo of {person}, smiling next to car they rented, {location}, genuine happiness, phone photo quality',
+    'Natural photo of {person}, giving car keys to another person, friendly exchange, {location}',
+    '{person} taking selfie inside rented car, happy expression, {location} visible outside, authentic',
+  ],
+  seasonal: [
+    'Summer vibes: {person} with sunglasses near car, {location}, beach or vacation energy, phone photo',
+    'Holiday road trip: car packed with luggage, {location}, festive atmosphere, amateur quality',
+    'Weekend getaway: {person} stretching happily next to parked car, scenic {location}, relaxed vibe',
+  ],
+  community: [
+    'Friendly {person} waving from car window, {location}, welcoming community vibe, phone photo',
+    'Group selfie of diverse latin american friends near car, {location}, community gathering energy',
+    '{person} showing phone screen (blur) next to car, sharing experience vibe, {location}',
+  ],
+};
+
 async function generateMarketingImage(
-  carData: CarData
+  carData: CarData | null,
+  contentType: ContentType
 ): Promise<{ url?: string; base64?: string } | undefined> {
-  // If car has existing images, return the first one
-  if (carData.images && carData.images.length > 0) {
+  // If car has existing images and it's car_spotlight, use them
+  if (carData?.images && carData.images.length > 0 && contentType === 'car_spotlight') {
     return { url: carData.images[0] };
   }
 
-  // Try to generate with Vertex AI (if configured)
-  const GOOGLE_PROJECT_ID = Deno.env.get('GOOGLE_CLOUD_PROJECT_ID');
-  const GOOGLE_SERVICE_ACCOUNT = Deno.env.get('GOOGLE_SERVICE_ACCOUNT');
-
-  if (!GOOGLE_PROJECT_ID || !GOOGLE_SERVICE_ACCOUNT) {
-    console.log('[generate-marketing-content] No Google Cloud credentials, skipping image generation');
+  // Generate with Gemini 2.5 Flash Image
+  if (!GEMINI_API_KEY) {
+    console.log('[generate-marketing-content] No Gemini API key, skipping image generation');
     return undefined;
   }
 
-  // Use the existing generate-car-images function pattern
-  // For now, return placeholder - full implementation would call Imagen 3
-  console.log('[generate-marketing-content] Image generation would use Imagen 3');
-  return undefined;
+  try {
+    // Select random elements for diversity
+    const person = LATAM_PEOPLE_SCENES[Math.floor(Math.random() * LATAM_PEOPLE_SCENES.length)];
+    const location = LATAM_LOCATIONS[Math.floor(Math.random() * LATAM_LOCATIONS.length)];
+    const promptTemplates = MARKETING_IMAGE_PROMPTS[contentType];
+    const promptTemplate = promptTemplates[Math.floor(Math.random() * promptTemplates.length)];
+
+    // Build final prompt with car details if available
+    let finalPrompt = promptTemplate
+      .replace('{person}', person)
+      .replace('{location}', location);
+
+    if (carData) {
+      finalPrompt += `. The car is a ${carData.color || 'silver'} ${carData.brand} ${carData.model} ${carData.year}.`;
+    }
+
+    // Add style guidelines
+    finalPrompt += ' Style: realistic amateur phone photo, not stock photography, authentic Latin American vibe.';
+
+    console.log('[generate-marketing-content] Generating image with prompt:', finalPrompt.substring(0, 100) + '...');
+
+    // Call Gemini 2.5 Flash Image for image generation
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: finalPrompt }] }],
+          generationConfig: {
+            responseModalities: ['IMAGE'],
+            imageConfig: { aspectRatio: '1:1' }, // Square for social media
+          },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[generate-marketing-content] Gemini image error:', errorText);
+      return undefined;
+    }
+
+    const data = await response.json();
+    const base64Data = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+
+    if (!base64Data) {
+      console.warn('[generate-marketing-content] No image data in response');
+      return undefined;
+    }
+
+    console.log('[generate-marketing-content] Image generated successfully');
+    return { base64: base64Data };
+  } catch (error) {
+    console.error('[generate-marketing-content] Image generation error:', error);
+    return undefined;
+  }
 }
 
 // ============================================================================

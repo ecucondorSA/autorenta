@@ -85,6 +85,7 @@ export class AdminMarketingPage implements OnInit {
     caption: string;
     hashtags: string[];
     call_to_action: string;
+    image_url?: string;
   } | null>(null);
 
   // Edit modal
@@ -176,8 +177,13 @@ export class AdminMarketingPage implements OnInit {
         throw new Error(result.error || 'Error al generar contenido');
       }
 
-      this.generatedContent.set(result.text);
-      this.toast.success('Listo', 'Contenido generado con Gemini');
+      // Include image URL if generated
+      const content = {
+        ...result.text,
+        image_url: result.image?.url || (result.image?.base64 ? `data:image/png;base64,${result.image.base64}` : undefined),
+      };
+      this.generatedContent.set(content);
+      this.toast.success('Listo', result.image ? 'Contenido e imagen generados con Gemini' : 'Contenido generado con Gemini');
     } catch (error) {
       console.error('Error generating content:', error);
       this.toast.error('Error', 'No se pudo generar el contenido');

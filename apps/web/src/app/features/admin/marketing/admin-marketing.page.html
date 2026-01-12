@@ -303,6 +303,14 @@
             <h3 class="mb-2 font-medium text-gray-900">Contenido Generado</h3>
 
             <div class="rounded-lg bg-gray-50 p-4">
+              @if (generatedContent()!.image_url) {
+                <img
+                  [src]="generatedContent()!.image_url"
+                  alt="Imagen generada"
+                  class="mb-4 w-full rounded-lg object-cover"
+                  style="max-height: 300px"
+                />
+              }
               <p class="mb-3 text-gray-900">{{ generatedContent()!.caption }}</p>
 
               <div class="mb-3 flex flex-wrap gap-1">
