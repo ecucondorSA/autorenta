@@ -1,3 +1,10 @@
+## [2.14.1](https://github.com/ecucondorSA/autorenta/compare/v2.14.0...v2.14.1) (2026-01-12)
+
+
+### Bug Fixes
+
+* **migrations:** add missing migration files from previous session ([4d43bcf](https://github.com/ecucondorSA/autorenta/commit/4d43bcf4c2aac9220639852f641ef2d7056144b3))
+
 # [2.14.0](https://github.com/ecucondorSA/autorenta/compare/v2.13.3...v2.14.0) (2026-01-12)
 
 
