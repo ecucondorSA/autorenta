@@ -16,6 +16,8 @@
     ],
     "rpcFunctions": [
       "auto_update_price_per_day",
+      "booking_v2_auto_complete_inspection",
+      "booking_v2_confirm_completion",
       "booking_v2_resolve_conclusion",
       "calculate_payment_split",
       "calculate_preauthorization_with_snapshot",
