@@ -1,0 +1,204 @@
+name: Weekly Content Batch Generation
+
+on:
+  schedule:
+    # Run every Sunday at 8:00 PM Argentina time (23:00 UTC)
+    - cron: '0 23 * * 0'
+  workflow_dispatch:
+    inputs:
+      week_offset:
+        description: 'Generate for N weeks ahead (0=this week, 1=next week)'
+        required: false
+        default: '1'
+        type: string
+
+jobs:
+  generate-weekly-content:
+    name: Generate Week Content
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Generate Content for Each Day
+        id: generate
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          WEEK_OFFSET: ${{ inputs.week_offset || '1' }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+            const weekOffset = parseInt(process.env.WEEK_OFFSET) || 1;
+
+            // Weekly content calendar
+            const weeklySchedule = [
+              { day: 1, contentType: 'tip', platform: 'tiktok', hour: 10 },           // Monday
+              { day: 2, contentType: 'car_spotlight', platform: 'instagram', hour: 12 }, // Tuesday
+              { day: 3, contentType: 'tip', platform: 'tiktok', hour: 10 },           // Wednesday
+              { day: 4, contentType: 'testimonial', platform: 'instagram', hour: 12 }, // Thursday
+              { day: 5, contentType: 'promo', platform: 'facebook', hour: 14 },       // Friday
+              { day: 6, contentType: 'car_spotlight', platform: 'twitter', hour: 11 }, // Saturday
+              { day: 7, contentType: 'community', platform: 'facebook', hour: 15 },   // Sunday
+            ];
+
+            // Calculate start of target week
+            const today = new Date();
+            const currentDay = today.getDay() || 7; // Convert Sunday from 0 to 7
+            const daysUntilMonday = (8 - currentDay) % 7 + (weekOffset - 1) * 7;
+            const startDate = new Date(today);
+            startDate.setDate(today.getDate() + daysUntilMonday);
+            startDate.setHours(0, 0, 0, 0);
+
+            console.log(`Generating content for week starting: ${startDate.toISOString().split('T')[0]}`);
+
+            const generatedContent = [];
+            const errors = [];
+
+            for (const schedule of weeklySchedule) {
+              // Calculate scheduled date/time
+              const scheduledDate = new Date(startDate);
+              scheduledDate.setDate(startDate.getDate() + schedule.day - 1);
+              scheduledDate.setHours(schedule.hour + 3, 0, 0, 0); // +3 for UTC (Argentina is UTC-3)
+
+              console.log(`\nGenerating ${schedule.contentType} for ${schedule.platform} on ${scheduledDate.toISOString()}...`);
+
+              try {
+                // Generate content
+                const genResponse = await fetch(`${supabaseUrl}/functions/v1/generate-marketing-content`, {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${supabaseKey}`,
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    content_type: schedule.contentType,
+                    platform: schedule.platform,
+                    language: 'es',
+                    generate_image: schedule.platform === 'instagram' || schedule.platform === 'facebook',
+                  }),
+                });
+
+                const genResult = await genResponse.json();
+
+                if (!genResult.success) {
+                  throw new Error(genResult.error || 'Generation failed');
+                }
+
+                console.log(`  ✓ Generated: ${genResult.text.caption.substring(0, 50)}...`);
+
+                // Add to queue
+                const queueResponse = await fetch(`${supabaseUrl}/rest/v1/marketing_content_queue`, {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${supabaseKey}`,
+                    'apikey': supabaseKey,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=representation',
+                  },
+                  body: JSON.stringify({
+                    content_type: schedule.contentType,
+                    platform: schedule.platform,
+                    text_content: genResult.text.caption,
+                    media_url: genResult.image?.url || null,
+                    hashtags: genResult.text.hashtags,
+                    call_to_action: genResult.text.call_to_action,
+                    scheduled_for: scheduledDate.toISOString(),
+                    status: 'pending',
+                  }),
+                });
+
+                if (!queueResponse.ok) {
+                  const errorText = await queueResponse.text();
+                  throw new Error(`Queue insert failed: ${errorText}`);
+                }
+
+                const queueResult = await queueResponse.json();
+                console.log(`  ✓ Queued with ID: ${queueResult[0]?.id}`);
+
+                generatedContent.push({
+                  day: schedule.day,
+                  date: scheduledDate.toISOString().split('T')[0],
+                  platform: schedule.platform,
+                  contentType: schedule.contentType,
+                  caption: genResult.text.caption.substring(0, 100),
+                  queueId: queueResult[0]?.id,
+                });
+
+              } catch (error) {
+                console.error(`  ✗ Error: ${error.message}`);
+                errors.push({
+                  day: schedule.day,
+                  platform: schedule.platform,
+                  error: error.message,
+                });
+              }
+
+              // Rate limiting - wait 2 seconds between generations
+              await new Promise(r => setTimeout(r, 2000));
+            }
+
+            core.setOutput('generated_count', generatedContent.length);
+            core.setOutput('error_count', errors.length);
+            core.setOutput('content', JSON.stringify(generatedContent));
+            core.setOutput('errors', JSON.stringify(errors));
+            core.setOutput('week_start', startDate.toISOString().split('T')[0]);
+
+            return { generatedContent, errors };
+
+      - name: Create Weekly Summary Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const weekStart = '${{ steps.generate.outputs.week_start }}';
+            const generatedCount = '${{ steps.generate.outputs.generated_count }}';
+            const errorCount = '${{ steps.generate.outputs.error_count }}';
+            const content = JSON.parse('${{ steps.generate.outputs.content }}' || '[]');
+            const errors = JSON.parse('${{ steps.generate.outputs.errors }}' || '[]');
+
+            const dayNames = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+            let contentTable = '| Day | Platform | Type | Caption Preview |\n|-----|----------|------|----------------|\n';
+            for (const item of content) {
+              contentTable += `| ${dayNames[item.day]} ${item.date} | ${item.platform} | ${item.contentType} | ${item.caption}... |\n`;
+            }
+
+            let errorSection = '';
+            if (errors.length > 0) {
+              errorSection = '\n### Errors\n';
+              for (const err of errors) {
+                errorSection += `- **${dayNames[err.day]}** (${err.platform}): ${err.error}\n`;
+              }
+            }
+
+            const title = `[WEEKLY BATCH] Week of ${weekStart} - ${generatedCount}/7 posts generated`;
+
+            const body = `## Weekly Content Batch - Week of ${weekStart}
+
+### Summary
+| Metric | Value |
+|--------|-------|
+| Posts Generated | ${generatedCount}/7 |
+| Errors | ${errorCount} |
+| Status | ${errorCount === '0' ? '✅ All Ready' : '⚠️ Some Failed'} |
+
+### Scheduled Content
+${contentTable}
+${errorSection}
+
+### Next Steps
+- Posts will be automatically published at their scheduled times
+- Run \`marketing-scheduler\` manually if you want to publish earlier
+- Edit queue items in Supabase if changes needed
+
+---
+*Auto-generated by Weekly Content Batch workflow*`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['marketing', 'weekly-batch', errorCount === '0' ? 'ready' : 'needs-attention'],
+            });

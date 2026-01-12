@@ -1,0 +1,252 @@
+name: Daily Social Media Post
+
+on:
+  schedule:
+    # Run daily at 10:00 AM Argentina time (13:00 UTC)
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    inputs:
+      content_type:
+        description: 'Type of content to generate'
+        required: false
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - tip
+          - promo
+          - car_spotlight
+          - community
+      platform:
+        description: 'Platform to post to'
+        required: false
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - tiktok
+          - instagram
+          - facebook
+          - twitter
+      dry_run:
+        description: 'Dry run (no actual posting)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  generate-and-post:
+    name: Generate & Publish Content
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Determine Content Type & Platform
+        id: config
+        run: |
+          # Get day of week (1=Monday, 7=Sunday)
+          DOW=$(date +%u)
+
+          # Default schedule:
+          # Mon/Wed: Tips on TikTok
+          # Tue/Thu: Car spotlight on Instagram
+          # Fri: Promo on Facebook
+          # Sat: Car spotlight on Twitter
+          # Sun: Community on Facebook
+
+          if [ "${{ inputs.content_type }}" != "auto" ] && [ -n "${{ inputs.content_type }}" ]; then
+            CONTENT_TYPE="${{ inputs.content_type }}"
+          else
+            case $DOW in
+              1|3) CONTENT_TYPE="tip" ;;
+              2|4) CONTENT_TYPE="car_spotlight" ;;
+              5)   CONTENT_TYPE="promo" ;;
+              6)   CONTENT_TYPE="car_spotlight" ;;
+              7)   CONTENT_TYPE="community" ;;
+              *)   CONTENT_TYPE="tip" ;;
+            esac
+          fi
+
+          if [ "${{ inputs.platform }}" != "auto" ] && [ -n "${{ inputs.platform }}" ]; then
+            PLATFORM="${{ inputs.platform }}"
+          else
+            case $DOW in
+              1|3) PLATFORM="tiktok" ;;
+              2|4) PLATFORM="instagram" ;;
+              5|7) PLATFORM="facebook" ;;
+              6)   PLATFORM="twitter" ;;
+              *)   PLATFORM="instagram" ;;
+            esac
+          fi
+
+          echo "content_type=$CONTENT_TYPE" >> $GITHUB_OUTPUT
+          echo "platform=$PLATFORM" >> $GITHUB_OUTPUT
+          echo "dry_run=${{ inputs.dry_run || 'false' }}" >> $GITHUB_OUTPUT
+
+          echo "📅 Day of week: $DOW"
+          echo "📝 Content type: $CONTENT_TYPE"
+          echo "📱 Platform: $PLATFORM"
+
+      - name: Generate Marketing Content
+        id: generate
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          CONTENT_TYPE: ${{ steps.config.outputs.content_type }}
+          PLATFORM: ${{ steps.config.outputs.platform }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+            const contentType = process.env.CONTENT_TYPE;
+            const platform = process.env.PLATFORM;
+
+            console.log(`Generating ${contentType} content for ${platform}...`);
+
+            // Call generate-marketing-content Edge Function
+            const response = await fetch(`${supabaseUrl}/functions/v1/generate-marketing-content`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${supabaseKey}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                content_type: contentType,
+                platform: platform,
+                language: 'es',
+                generate_image: platform === 'instagram' || platform === 'facebook',
+              }),
+            });
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`Generation failed: ${response.status} - ${errorText}`);
+            }
+
+            const result = await response.json();
+
+            if (!result.success) {
+              throw new Error(`Generation failed: ${result.error}`);
+            }
+
+            console.log('Generated content:');
+            console.log(`  Caption: ${result.text.caption.substring(0, 100)}...`);
+            console.log(`  Hashtags: ${result.text.hashtags.join(', ')}`);
+            console.log(`  CTA: ${result.text.call_to_action}`);
+            console.log(`  Image: ${result.image?.url ? 'Yes' : 'No'}`);
+
+            // Store in outputs
+            core.setOutput('caption', result.text.caption);
+            core.setOutput('hashtags', JSON.stringify(result.text.hashtags));
+            core.setOutput('cta', result.text.call_to_action);
+            core.setOutput('media_url', result.image?.url || '');
+            core.setOutput('suggested_time', result.suggested_post_time || '');
+
+            return result;
+
+      - name: Publish to Social Media
+        id: publish
+        if: steps.config.outputs.dry_run != 'true'
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          PLATFORM: ${{ steps.config.outputs.platform }}
+          CAPTION: ${{ steps.generate.outputs.caption }}
+          HASHTAGS: ${{ steps.generate.outputs.hashtags }}
+          MEDIA_URL: ${{ steps.generate.outputs.media_url }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+            const platform = process.env.PLATFORM;
+            const caption = process.env.CAPTION;
+            const hashtags = JSON.parse(process.env.HASHTAGS || '[]');
+            const mediaUrl = process.env.MEDIA_URL;
+
+            console.log(`Publishing to ${platform}...`);
+
+            // Call social-media-publisher Edge Function
+            const response = await fetch(`${supabaseUrl}/functions/v1/social-media-publisher`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${supabaseKey}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                platform: platform,
+                content: {
+                  text: caption,
+                  media_url: mediaUrl || undefined,
+                  media_type: mediaUrl ? 'image' : undefined,
+                  hashtags: hashtags,
+                },
+              }),
+            });
+
+            const result = await response.json();
+
+            if (!result.success) {
+              console.error(`Publishing failed: ${result.error}`);
+              core.setOutput('success', 'false');
+              core.setOutput('error', result.error);
+              return result;
+            }
+
+            console.log(`✅ Published successfully!`);
+            console.log(`  Post ID: ${result.post_id}`);
+            console.log(`  Post URL: ${result.post_url}`);
+
+            core.setOutput('success', 'true');
+            core.setOutput('post_id', result.post_id);
+            core.setOutput('post_url', result.post_url);
+
+            return result;
+
+      - name: Create Summary Issue
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const platform = '${{ steps.config.outputs.platform }}';
+            const contentType = '${{ steps.config.outputs.content_type }}';
+            const dryRun = '${{ steps.config.outputs.dry_run }}' === 'true';
+            const success = '${{ steps.publish.outputs.success }}' === 'true';
+            const postUrl = '${{ steps.publish.outputs.post_url }}';
+            const error = '${{ steps.publish.outputs.error }}';
+            const caption = `${{ steps.generate.outputs.caption }}`.substring(0, 200);
+
+            const today = new Date().toISOString().split('T')[0];
+            const status = dryRun ? '🔵 DRY RUN' : (success ? '✅ SUCCESS' : '❌ FAILED');
+
+            const title = `[SOCIAL MEDIA] ${today} - ${platform.toUpperCase()} - ${status}`;
+
+            let body = `## Daily Social Media Post - ${today}
+
+| Field | Value |
+|-------|-------|
+| Platform | ${platform} |
+| Content Type | ${contentType} |
+| Status | ${status} |
+${postUrl ? `| Post URL | [View Post](${postUrl}) |` : ''}
+${error ? `| Error | ${error} |` : ''}
+
+### Generated Caption
+\`\`\`
+${caption}...
+\`\`\`
+
+---
+*Auto-generated by Daily Social Media Post workflow*`;
+
+            // Only create issue if not dry run, or if failed
+            if (!dryRun || !success) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['marketing', 'social-media', dryRun ? 'dry-run' : (success ? 'success' : 'failed')],
+              });
+            }

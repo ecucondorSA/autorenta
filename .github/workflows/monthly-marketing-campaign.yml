@@ -1,0 +1,298 @@
+name: Monthly Marketing Campaign
+
+on:
+  schedule:
+    # Run on the 1st of each month at 9:00 AM Argentina time (12:00 UTC)
+    - cron: '0 12 1 * *'
+  workflow_dispatch:
+    inputs:
+      campaign_theme:
+        description: 'Campaign theme (leave empty for auto-detect)'
+        required: false
+        type: string
+
+jobs:
+  monthly-campaign:
+    name: Generate Monthly Campaign
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Determine Campaign Theme
+        id: theme
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const month = new Date().getMonth(); // 0-11
+            const userTheme = '${{ inputs.campaign_theme }}';
+
+            // Seasonal themes by month
+            const monthlyThemes = {
+              0: 'Año Nuevo - Nuevos comienzos, nuevos viajes',
+              1: 'Carnaval - Escapadas y aventuras',
+              2: 'Otoño - Road trips de temporada',
+              3: 'Semana Santa - Viajes en familia',
+              4: 'Día de la Madre - Sorprende con un viaje',
+              5: 'Invierno - Escapadas de nieve',
+              6: 'Vacaciones de invierno - Aventuras en familia',
+              7: 'Día del Niño - Viajes especiales',
+              8: 'Primavera - Renovación y descubrimiento',
+              9: 'Día de la Madre (AR) - Regala experiencias',
+              10: 'Black Friday - Las mejores ofertas',
+              11: 'Navidad y Fiestas - Reuniones familiares',
+            };
+
+            const theme = userTheme || monthlyThemes[month] || 'Mes especial en AutoRentar';
+            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                               'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+            console.log(`Campaign theme for ${monthNames[month]}: ${theme}`);
+
+            core.setOutput('theme', theme);
+            core.setOutput('month_name', monthNames[month]);
+            core.setOutput('month_number', month + 1);
+
+            return { theme, monthName: monthNames[month] };
+
+      - name: Collect Last Month Stats
+        id: stats
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            // Calculate last month's date range
+            const now = new Date();
+            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+            const lastMonthStart = lastMonth.toISOString();
+            const lastMonthEnd = thisMonth.toISOString();
+
+            console.log(`Collecting stats from ${lastMonthStart} to ${lastMonthEnd}`);
+
+            const query = async (endpoint) => {
+              const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Prefer': 'count=exact',
+                }
+              });
+              const count = res.headers.get('content-range')?.split('/')[1] || '0';
+              return parseInt(count);
+            };
+
+            // Get key metrics
+            const bookings = await query(
+              `bookings?created_at=gte.${lastMonthStart}&created_at=lt.${lastMonthEnd}&select=id`
+            );
+            const completedBookings = await query(
+              `bookings?status=eq.completed&updated_at=gte.${lastMonthStart}&updated_at=lt.${lastMonthEnd}&select=id`
+            );
+            const newUsers = await query(
+              `profiles?created_at=gte.${lastMonthStart}&created_at=lt.${lastMonthEnd}&select=id`
+            );
+            const newCars = await query(
+              `cars?created_at=gte.${lastMonthStart}&created_at=lt.${lastMonthEnd}&select=id`
+            );
+
+            // Get top cars (most booked)
+            const topCarsRes = await fetch(
+              `${supabaseUrl}/rest/v1/bookings?created_at=gte.${lastMonthStart}&created_at=lt.${lastMonthEnd}&select=car_id,cars(brand,model)&limit=100`,
+              {
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                }
+              }
+            );
+            const topCarsData = await topCarsRes.json();
+
+            // Count bookings per car
+            const carCounts = {};
+            for (const booking of topCarsData) {
+              if (booking.cars) {
+                const key = `${booking.cars.brand} ${booking.cars.model}`;
+                carCounts[key] = (carCounts[key] || 0) + 1;
+              }
+            }
+
+            // Sort and get top 3
+            const topCars = Object.entries(carCounts)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 3)
+              .map(([car, count]) => `${car} (${count} reservas)`);
+
+            const stats = {
+              bookings,
+              completedBookings,
+              newUsers,
+              newCars,
+              topCars,
+            };
+
+            console.log('Last month stats:', stats);
+
+            core.setOutput('bookings', bookings);
+            core.setOutput('completed', completedBookings);
+            core.setOutput('new_users', newUsers);
+            core.setOutput('new_cars', newCars);
+            core.setOutput('top_cars', JSON.stringify(topCars));
+
+            return stats;
+
+      - name: Generate Campaign Content
+        id: generate
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          THEME: ${{ steps.theme.outputs.theme }}
+          MONTH_NAME: ${{ steps.theme.outputs.month_name }}
+          TOP_CARS: ${{ steps.stats.outputs.top_cars }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+            const theme = process.env.THEME;
+            const monthName = process.env.MONTH_NAME;
+            const topCars = JSON.parse(process.env.TOP_CARS || '[]');
+
+            const platforms = ['instagram', 'facebook', 'tiktok', 'twitter'];
+            const results = [];
+
+            for (const platform of platforms) {
+              console.log(`Generating ${platform} campaign post...`);
+
+              try {
+                const response = await fetch(`${supabaseUrl}/functions/v1/generate-marketing-content`, {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${supabaseKey}`,
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    content_type: 'seasonal',
+                    platform: platform,
+                    theme: `${theme}. Mes de ${monthName}. Autos populares: ${topCars.join(', ')}.`,
+                    language: 'es',
+                    generate_image: platform === 'instagram' || platform === 'facebook',
+                  }),
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                  throw new Error(result.error);
+                }
+
+                // Schedule for the 2nd of the month at optimal time
+                const postDate = new Date();
+                postDate.setDate(2);
+                const hours = { instagram: 12, facebook: 13, tiktok: 10, twitter: 8 };
+                postDate.setHours(hours[platform] + 3, 0, 0, 0); // +3 for UTC
+
+                // Add to queue
+                await fetch(`${supabaseUrl}/rest/v1/marketing_content_queue`, {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${supabaseKey}`,
+                    'apikey': supabaseKey,
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    content_type: 'seasonal',
+                    platform: platform,
+                    text_content: result.text.caption,
+                    media_url: result.image?.url || null,
+                    hashtags: result.text.hashtags,
+                    call_to_action: result.text.call_to_action,
+                    scheduled_for: postDate.toISOString(),
+                    status: 'pending',
+                    metadata: { campaign: theme, month: monthName },
+                  }),
+                });
+
+                results.push({
+                  platform,
+                  success: true,
+                  caption: result.text.caption.substring(0, 100),
+                });
+
+                console.log(`  ✓ ${platform}: Queued for ${postDate.toISOString()}`);
+
+              } catch (error) {
+                console.error(`  ✗ ${platform}: ${error.message}`);
+                results.push({
+                  platform,
+                  success: false,
+                  error: error.message,
+                });
+              }
+
+              // Rate limiting
+              await new Promise(r => setTimeout(r, 2000));
+            }
+
+            const successCount = results.filter(r => r.success).length;
+            core.setOutput('results', JSON.stringify(results));
+            core.setOutput('success_count', successCount);
+
+            return results;
+
+      - name: Create Campaign Summary Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const theme = '${{ steps.theme.outputs.theme }}';
+            const monthName = '${{ steps.theme.outputs.month_name }}';
+            const successCount = '${{ steps.generate.outputs.success_count }}';
+            const results = JSON.parse('${{ steps.generate.outputs.results }}' || '[]');
+            const bookings = '${{ steps.stats.outputs.bookings }}';
+            const newUsers = '${{ steps.stats.outputs.new_users }}';
+            const topCars = JSON.parse('${{ steps.stats.outputs.top_cars }}' || '[]');
+
+            let resultsTable = '| Platform | Status | Preview |\n|----------|--------|----------|\n';
+            for (const r of results) {
+              const status = r.success ? '✅' : '❌';
+              const preview = r.success ? r.caption + '...' : r.error;
+              resultsTable += `| ${r.platform} | ${status} | ${preview} |\n`;
+            }
+
+            const title = `[MONTHLY CAMPAIGN] ${monthName} - ${theme.split(' - ')[0]}`;
+
+            const body = `## Monthly Marketing Campaign - ${monthName}
+
+### Theme
+**${theme}**
+
+### Last Month Highlights
+| Metric | Value |
+|--------|-------|
+| Total Bookings | ${bookings} |
+| New Users | ${newUsers} |
+| Top Cars | ${topCars.join(', ') || 'N/A'} |
+
+### Campaign Posts Generated
+${resultsTable}
+
+### Schedule
+- All posts scheduled for the 2nd of ${monthName}
+- Different times per platform for optimal engagement
+- Will be auto-published by marketing-scheduler
+
+---
+*Auto-generated by Monthly Marketing Campaign workflow*`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['marketing', 'monthly-campaign', successCount === '4' ? 'ready' : 'needs-attention'],
+            });
