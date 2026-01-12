@@ -18,6 +18,7 @@ interface QueueItem {
   platform: string;
   text_content: string;
   media_url: string | null;
+  media_type?: string | null;
   hashtags: string[] | null;
   call_to_action: string | null;
   scheduled_for: string;
@@ -86,6 +87,8 @@ export class AdminMarketingPage implements OnInit {
     hashtags: string[];
     call_to_action: string;
     image_url?: string;
+    video_url?: string;
+    video_status?: 'generating' | 'ready' | 'failed';
   } | null>(null);
 
   // Edit modal
@@ -181,9 +184,21 @@ export class AdminMarketingPage implements OnInit {
       const content = {
         ...result.text,
         image_url: result.image?.url || (result.image?.base64 ? `data:image/png;base64,${result.image.base64}` : undefined),
+        video_url: result.video?.url,
+        video_status: result.video?.status,
       };
       this.generatedContent.set(content);
-      this.toast.success('Listo', result.image ? 'Contenido e imagen generados con Gemini' : 'Contenido generado con Gemini');
+
+      // Show appropriate success message
+      let message = 'Contenido generado con Gemini';
+      if (result.video?.status === 'ready') {
+        message = 'Contenido y video generados con Veo 3.1';
+      } else if (result.video?.status === 'generating') {
+        message = 'Contenido generado. Video en proceso (puede tomar unos minutos)';
+      } else if (result.image) {
+        message = 'Contenido e imagen generados con Gemini';
+      }
+      this.toast.success('Listo', message);
     } catch (error) {
       console.error('Error generating content:', error);
       this.toast.error('Error', 'No se pudo generar el contenido');
@@ -197,7 +212,40 @@ export class AdminMarketingPage implements OnInit {
     const form = this.generateForm();
     if (!content) return;
 
+    // TikTok requires video
+    if (form.platform === 'tiktok' && !content.video_url) {
+      if (content.video_status === 'generating') {
+        this.toast.error('Espera', 'El video aún se está generando. Intenta en unos minutos.');
+      } else {
+        this.toast.error('Error', 'TikTok requiere video. Por favor genera el contenido nuevamente.');
+      }
+      return;
+    }
+
+    // Instagram requires image or video
+    if (form.platform === 'instagram' && !content.image_url && !content.video_url) {
+      this.toast.error('Error', 'Instagram requiere imagen o video.');
+      return;
+    }
+
     try {
+      let mediaUrl: string | null = null;
+      let mediaType: string | null = null;
+
+      // Prioritize video for TikTok
+      if (content.video_url) {
+        mediaUrl = content.video_url;
+        mediaType = 'video';
+      } else if (content.image_url) {
+        mediaUrl = content.image_url;
+        mediaType = 'image';
+
+        // Upload base64 image to storage
+        if (this.isDataUrl(mediaUrl)) {
+          mediaUrl = await this.uploadMarketingImage(mediaUrl);
+        }
+      }
+
       // Schedule for tomorrow at optimal time
       const scheduledFor = new Date();
       scheduledFor.setDate(scheduledFor.getDate() + 1);
@@ -207,6 +255,8 @@ export class AdminMarketingPage implements OnInit {
         content_type: form.content_type,
         platform: form.platform,
         text_content: content.caption,
+        media_url: mediaUrl,
+        media_type: mediaType,
         hashtags: content.hashtags,
         call_to_action: content.call_to_action,
         scheduled_for: scheduledFor.toISOString(),
@@ -308,21 +358,59 @@ export class AdminMarketingPage implements OnInit {
   // Publish now
   async publishNow(item: QueueItem): Promise<void> {
     if (!confirm(`¿Publicar ahora en ${item.platform}?`)) return;
+    if ((item.platform === 'instagram' || item.platform === 'tiktok') && !item.media_url) {
+      this.toast.error('Error', 'Instagram y TikTok requieren imagen o video.');
+      return;
+    }
+    if (item.platform === 'tiktok' && item.media_type && item.media_type !== 'video') {
+      this.toast.error('Error', 'TikTok requiere video.');
+      return;
+    }
 
     try {
+      let mediaUrl = item.media_url;
+      let mediaType = item.media_type ?? (mediaUrl ? 'image' : null);
+
+      if (mediaUrl && this.isDataUrl(mediaUrl)) {
+        mediaUrl = await this.uploadMarketingImage(mediaUrl);
+        mediaType = 'image';
+        await this.supabase
+          .from('marketing_content_queue')
+          .update({ media_url: mediaUrl, media_type: mediaType })
+          .eq('id', item.id);
+      }
+
       const response = await this.supabase.functions.invoke('social-media-publisher', {
         body: {
           platform: item.platform,
           content: {
             text: item.text_content,
-            media_url: item.media_url,
+            media_url: mediaUrl ?? undefined,
+            media_type: mediaType ?? undefined,
             hashtags: item.hashtags,
           },
           queue_id: item.id,
         },
       });
 
-      if (response.error) throw response.error;
+      if (response.error) {
+        const err = response.error as { message?: string; context?: { body?: unknown } };
+        let message = err.message || 'Error al publicar';
+        const body = err.context?.body;
+        if (body) {
+          try {
+            const parsed = typeof body === 'string' ? JSON.parse(body) : body;
+            if (parsed && typeof parsed === 'object' && 'error' in parsed) {
+              message = String((parsed as { error?: string }).error || message);
+            } else if (typeof body === 'string') {
+              message = body;
+            }
+          } catch {
+            if (typeof body === 'string') message = body;
+          }
+        }
+        throw new Error(message);
+      }
 
       const result = response.data;
       if (!result.success) {
@@ -335,6 +423,35 @@ export class AdminMarketingPage implements OnInit {
       console.error('Error publishing:', error);
       this.toast.error('Error', 'No se pudo publicar el post');
     }
+  }
+
+  private isDataUrl(url: string | null | undefined): boolean {
+    return Boolean(url && url.startsWith('data:image/'));
+  }
+
+  private async uploadMarketingImage(dataUrl: string): Promise<string> {
+    const { data: authData, error: authError } = await this.supabase.auth.getUser();
+    if (authError) throw authError;
+    const userId = authData.user?.id;
+    if (!userId) throw new Error('Usuario no autenticado');
+
+    const response = await fetch(dataUrl);
+    const blob = await response.blob();
+    const extension = blob.type.split('/')[1] || 'png';
+    const filePath = `${userId}/marketing/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
+
+    const { error: uploadError } = await this.supabase.storage
+      .from('car-images')
+      .upload(filePath, blob, { contentType: blob.type, upsert: false });
+
+    if (uploadError) throw uploadError;
+
+    const { data: publicUrlData } = this.supabase.storage.from('car-images').getPublicUrl(filePath);
+    if (!publicUrlData?.publicUrl) {
+      throw new Error('No se pudo obtener la URL publica de la imagen');
+    }
+
+    return publicUrlData.publicUrl;
   }
 
   // Run scheduler manually

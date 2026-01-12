@@ -33,6 +33,7 @@ interface GenerateContentRequest {
   theme?: string;
   language?: Language;
   generate_image?: boolean;
+  generate_video?: boolean; // For TikTok - uses Veo 3.1
 }
 
 interface GeneratedContent {
@@ -45,6 +46,11 @@ interface GeneratedContent {
   image?: {
     url?: string;
     base64?: string;
+  };
+  video?: {
+    url?: string;
+    operation_id?: string; // For async video generation
+    status?: 'generating' | 'ready' | 'failed';
   };
   suggested_post_time?: string;
   error?: string;
@@ -128,7 +134,7 @@ serve(async (req) => {
 
   try {
     const request: GenerateContentRequest = await req.json();
-    const { content_type, platform, car_id, theme, language = 'es', generate_image = false } = request;
+    const { content_type, platform, car_id, theme, language = 'es', generate_image = false, generate_video = false } = request;
 
     // Validate required fields
     if (!content_type || !platform) {
@@ -166,6 +172,12 @@ serve(async (req) => {
       imageContent = await generateMarketingImage(carData, content_type);
     }
 
+    // Generate video if requested (for TikTok)
+    let videoContent: { url?: string; operation_id?: string; status?: 'generating' | 'ready' | 'failed' } | undefined;
+    if (generate_video || platform === 'tiktok') {
+      videoContent = await generateMarketingVideo(textContent.caption, carData, content_type);
+    }
+
     // Calculate suggested post time
     const suggestedTime = getSuggestedPostTime(platform);
 
@@ -173,6 +185,7 @@ serve(async (req) => {
       success: true,
       text: textContent,
       image: imageContent,
+      video: videoContent,
       suggested_post_time: suggestedTime,
     };
 
@@ -436,6 +449,169 @@ async function generateMarketingImage(
   } catch (error) {
     console.error('[generate-marketing-content] Image generation error:', error);
     return undefined;
+  }
+}
+
+// ============================================================================
+// VIDEO GENERATION WITH VEO 3.1
+// ============================================================================
+
+const VEO_MODEL = 'veo-3.1-generate-preview';
+const VEO_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${VEO_MODEL}:predictLongRunning`;
+
+// Video prompts for TikTok marketing
+const TIKTOK_VIDEO_PROMPTS: Record<ContentType, string[]> = {
+  tip: [
+    'A confident Latin American person in their 30s giving car rental tips directly to camera, friendly smile, natural lighting, urban Buenos Aires street background, vertical 9:16 format, casual vlog style, speaks in Spanish',
+    'Close-up of hands demonstrating car inspection before rental, clean modern sedan, Latin American setting, educational tone, vertical format',
+    'Young Latin American couple checking a rental car together, pointing at tires and mirrors, helpful tutorial vibe, sunny day in Argentina',
+  ],
+  promo: [
+    'Excited Latin American person (25-35) receiving car keys, genuine happiness, modern car in background, celebratory moment, urban setting, vertical 9:16 format',
+    'Time-lapse of booking a car on phone app, then cut to person driving happily on scenic Argentine road, fast-paced promo style',
+    'Multiple quick cuts: app interface, key handover, driving scenes, happy customers, energetic marketing video style',
+  ],
+  car_spotlight: [
+    'Cinematic slow motion walk-around of a modern sedan, {car_description}, golden hour lighting, Argentine cityscape, vertical format, luxury feel',
+    'Interior reveal of car, leather seats, dashboard features, smooth camera movement, aspirational lifestyle content',
+    'Car driving through scenic route in Mendoza wine country, cinematic aerial-style shots, premium vehicle showcase',
+  ],
+  testimonial: [
+    'Real-looking testimonial: Latin American person (30-45) speaking to camera about their car rental experience, living room or outdoor cafe setting, authentic and warm',
+    'Split screen: customer talking about their trip, B-roll of the car and destination, heartfelt story format',
+    'Before/after style: person stressed about transportation, then happy driving a rental car, transformation narrative',
+  ],
+  seasonal: [
+    'Summer road trip vibes: friends loading luggage into car trunk, beach gear visible, excited energy, Punta del Este coastal vibes',
+    'Holiday season: family arriving at vacation destination by car, warm reunion moments, festive atmosphere',
+    'Long weekend getaway: couple driving through scenic mountains, romantic adventure energy, aspirational travel content',
+  ],
+  community: [
+    'Interactive-style video: Latin American host asking viewers questions about travel preferences, engaging eye contact, call-to-action to comment',
+    'Behind-the-scenes of car owner preparing their vehicle for rental, community trust building, authentic content',
+    'Montage of different AutoRentar users waving and saying hello, community celebration, diverse Latin American faces',
+  ],
+};
+
+async function generateMarketingVideo(
+  caption: string,
+  carData: CarData | null,
+  contentType: ContentType
+): Promise<{ url?: string; operation_id?: string; status?: 'generating' | 'ready' | 'failed' } | undefined> {
+  if (!GEMINI_API_KEY) {
+    console.log('[generate-marketing-content] No Gemini API key, skipping video generation');
+    return undefined;
+  }
+
+  try {
+    // Select random video prompt template
+    const promptTemplates = TIKTOK_VIDEO_PROMPTS[contentType];
+    let videoPrompt = promptTemplates[Math.floor(Math.random() * promptTemplates.length)];
+
+    // Replace car description if available
+    if (carData) {
+      const carDescription = `${carData.color || 'silver'} ${carData.brand} ${carData.model} ${carData.year}`;
+      videoPrompt = videoPrompt.replace('{car_description}', carDescription);
+    } else {
+      videoPrompt = videoPrompt.replace('{car_description}', 'modern silver sedan');
+    }
+
+    // Add marketing context
+    videoPrompt += ` This is a marketing video for AutoRentar, a peer-to-peer car rental platform in Latin America. The video should feel authentic, not stock footage. Caption context: "${caption.substring(0, 100)}..."`;
+
+    console.log('[generate-marketing-content] Generating video with Veo 3.1:', videoPrompt.substring(0, 100) + '...');
+
+    // Start video generation (Long Running Operation)
+    const response = await fetch(`${VEO_API_URL}?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        instances: [{
+          prompt: videoPrompt,
+        }],
+        parameters: {
+          aspectRatio: '9:16', // Vertical for TikTok
+          durationSeconds: 8, // TikTok optimal
+          sampleCount: 1,
+          generateAudio: true, // Native audio
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[generate-marketing-content] Veo 3.1 error:', response.status, errorText);
+
+      // If Veo 3.1 is not available, return a status indicating it needs configuration
+      if (response.status === 403 || response.status === 404) {
+        return {
+          status: 'failed',
+          operation_id: undefined,
+          url: undefined,
+        };
+      }
+      return undefined;
+    }
+
+    const operationData = await response.json();
+    const operationName = operationData.name; // LRO operation name
+
+    console.log('[generate-marketing-content] Video generation started, operation:', operationName);
+
+    // Poll for completion (with timeout for Edge Function limits)
+    const maxPollTime = 55000; // 55 seconds (Edge Function timeout is ~60s)
+    const pollInterval = 5000; // 5 seconds
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < maxPollTime) {
+      await new Promise(resolve => setTimeout(resolve, pollInterval));
+
+      const pollResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/${operationName}?key=${GEMINI_API_KEY}`
+      );
+
+      if (!pollResponse.ok) {
+        console.error('[generate-marketing-content] Poll error:', await pollResponse.text());
+        continue;
+      }
+
+      const pollData = await pollResponse.json();
+
+      if (pollData.done) {
+        if (pollData.error) {
+          console.error('[generate-marketing-content] Video generation failed:', pollData.error);
+          return { status: 'failed', operation_id: operationName };
+        }
+
+        // Get video URL from response
+        const videoFile = pollData.response?.generatedVideos?.[0]?.video;
+        if (videoFile) {
+          console.log('[generate-marketing-content] Video generated successfully');
+
+          // The video file contains a URI that can be used to download
+          const videoUri = videoFile.uri || videoFile.name;
+
+          // Download the video to get a usable URL
+          // For now, return the operation details - the video needs to be downloaded separately
+          return {
+            url: videoUri,
+            operation_id: operationName,
+            status: 'ready',
+          };
+        }
+      }
+    }
+
+    // If we timeout, return the operation ID for async processing
+    console.log('[generate-marketing-content] Video still generating, returning operation ID for async processing');
+    return {
+      operation_id: operationName,
+      status: 'generating',
+    };
+
+  } catch (error) {
+    console.error('[generate-marketing-content] Video generation error:', error);
+    return { status: 'failed' };
   }
 }
 
