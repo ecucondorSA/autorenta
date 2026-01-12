@@ -89,6 +89,8 @@ export class AdminMarketingPage implements OnInit {
     image_url?: string;
     video_url?: string;
     video_status?: 'generating' | 'ready' | 'failed';
+    video_error?: string;
+    video_model?: string;
   } | null>(null);
 
   // Edit modal
@@ -180,21 +182,27 @@ export class AdminMarketingPage implements OnInit {
         throw new Error(result.error || 'Error al generar contenido');
       }
 
-      // Include image URL if generated
+      // Include image URL and video info if generated
       const content = {
         ...result.text,
         image_url: result.image?.url || (result.image?.base64 ? `data:image/png;base64,${result.image.base64}` : undefined),
         video_url: result.video?.url,
         video_status: result.video?.status,
+        video_error: result.video?.error,
+        video_model: result.video?.model_used,
       };
       this.generatedContent.set(content);
 
-      // Show appropriate success message
+      // Show appropriate success/error message
       let message = 'Contenido generado con Gemini';
       if (result.video?.status === 'ready') {
-        message = 'Contenido y video generados con Veo 3.1';
+        message = `Contenido y video generados con ${result.video.model_used || 'Veo'}`;
       } else if (result.video?.status === 'generating') {
         message = 'Contenido generado. Video en proceso (puede tomar unos minutos)';
+      } else if (result.video?.status === 'failed' && result.video?.error) {
+        // Show video error but text was generated
+        this.toast.warning('Video no disponible', result.video.error);
+        message = 'Texto generado. Video falló (ver detalles abajo)';
       } else if (result.image) {
         message = 'Contenido e imagen generados con Gemini';
       }

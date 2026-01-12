@@ -51,6 +51,8 @@ interface GeneratedContent {
     url?: string;
     operation_id?: string; // For async video generation
     status?: 'generating' | 'ready' | 'failed';
+    error?: string; // Error message if video generation failed
+    model_used?: string; // Which Veo model was used
   };
   suggested_post_time?: string;
   error?: string;
@@ -453,11 +455,15 @@ async function generateMarketingImage(
 }
 
 // ============================================================================
-// VIDEO GENERATION WITH VEO 3.1
+// VIDEO GENERATION WITH VEO (with fallback chain)
 // ============================================================================
 
-const VEO_MODEL = 'veo-3.1-generate-preview';
-const VEO_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${VEO_MODEL}:predictLongRunning`;
+// Veo models - try in order (3.1 preview → 3.0 stable → 2.0 stable)
+const VEO_MODELS = [
+  { id: 'veo-3.1-generate-preview', name: 'Veo 3.1', cost: '$0.40/s' },
+  { id: 'veo-3.0-generate-001', name: 'Veo 3.0', cost: '$0.35/s' },
+  { id: 'veo-2.0-generate-001', name: 'Veo 2.0', cost: '$0.25/s' },
+];
 
 // Video prompts for TikTok marketing
 const TIKTOK_VIDEO_PROMPTS: Record<ContentType, string[]> = {
@@ -493,126 +499,153 @@ const TIKTOK_VIDEO_PROMPTS: Record<ContentType, string[]> = {
   ],
 };
 
+interface VideoResult {
+  url?: string;
+  operation_id?: string;
+  status?: 'generating' | 'ready' | 'failed';
+  error?: string;
+  model_used?: string;
+}
+
 async function generateMarketingVideo(
   caption: string,
   carData: CarData | null,
   contentType: ContentType
-): Promise<{ url?: string; operation_id?: string; status?: 'generating' | 'ready' | 'failed' } | undefined> {
+): Promise<VideoResult | undefined> {
   if (!GEMINI_API_KEY) {
     console.log('[generate-marketing-content] No Gemini API key, skipping video generation');
-    return undefined;
+    return { status: 'failed', error: 'No GEMINI_API_KEY configured' };
   }
 
-  try {
-    // Select random video prompt template
-    const promptTemplates = TIKTOK_VIDEO_PROMPTS[contentType];
-    let videoPrompt = promptTemplates[Math.floor(Math.random() * promptTemplates.length)];
+  // Build video prompt
+  const promptTemplates = TIKTOK_VIDEO_PROMPTS[contentType];
+  let videoPrompt = promptTemplates[Math.floor(Math.random() * promptTemplates.length)];
 
-    // Replace car description if available
-    if (carData) {
-      const carDescription = `${carData.color || 'silver'} ${carData.brand} ${carData.model} ${carData.year}`;
-      videoPrompt = videoPrompt.replace('{car_description}', carDescription);
-    } else {
-      videoPrompt = videoPrompt.replace('{car_description}', 'modern silver sedan');
-    }
-
-    // Add marketing context
-    videoPrompt += ` This is a marketing video for AutoRentar, a peer-to-peer car rental platform in Latin America. The video should feel authentic, not stock footage. Caption context: "${caption.substring(0, 100)}..."`;
-
-    console.log('[generate-marketing-content] Generating video with Veo 3.1:', videoPrompt.substring(0, 100) + '...');
-
-    // Start video generation (Long Running Operation)
-    const response = await fetch(`${VEO_API_URL}?key=${GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        instances: [{
-          prompt: videoPrompt,
-        }],
-        parameters: {
-          aspectRatio: '9:16', // Vertical for TikTok
-          durationSeconds: 8, // TikTok optimal
-          sampleCount: 1,
-          generateAudio: true, // Native audio
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('[generate-marketing-content] Veo 3.1 error:', response.status, errorText);
-
-      // If Veo 3.1 is not available, return a status indicating it needs configuration
-      if (response.status === 403 || response.status === 404) {
-        return {
-          status: 'failed',
-          operation_id: undefined,
-          url: undefined,
-        };
-      }
-      return undefined;
-    }
-
-    const operationData = await response.json();
-    const operationName = operationData.name; // LRO operation name
-
-    console.log('[generate-marketing-content] Video generation started, operation:', operationName);
-
-    // Poll for completion (with timeout for Edge Function limits)
-    const maxPollTime = 55000; // 55 seconds (Edge Function timeout is ~60s)
-    const pollInterval = 5000; // 5 seconds
-    const startTime = Date.now();
-
-    while (Date.now() - startTime < maxPollTime) {
-      await new Promise(resolve => setTimeout(resolve, pollInterval));
-
-      const pollResponse = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/${operationName}?key=${GEMINI_API_KEY}`
-      );
-
-      if (!pollResponse.ok) {
-        console.error('[generate-marketing-content] Poll error:', await pollResponse.text());
-        continue;
-      }
-
-      const pollData = await pollResponse.json();
-
-      if (pollData.done) {
-        if (pollData.error) {
-          console.error('[generate-marketing-content] Video generation failed:', pollData.error);
-          return { status: 'failed', operation_id: operationName };
-        }
-
-        // Get video URL from response
-        const videoFile = pollData.response?.generatedVideos?.[0]?.video;
-        if (videoFile) {
-          console.log('[generate-marketing-content] Video generated successfully');
-
-          // The video file contains a URI that can be used to download
-          const videoUri = videoFile.uri || videoFile.name;
-
-          // Download the video to get a usable URL
-          // For now, return the operation details - the video needs to be downloaded separately
-          return {
-            url: videoUri,
-            operation_id: operationName,
-            status: 'ready',
-          };
-        }
-      }
-    }
-
-    // If we timeout, return the operation ID for async processing
-    console.log('[generate-marketing-content] Video still generating, returning operation ID for async processing');
-    return {
-      operation_id: operationName,
-      status: 'generating',
-    };
-
-  } catch (error) {
-    console.error('[generate-marketing-content] Video generation error:', error);
-    return { status: 'failed' };
+  if (carData) {
+    const carDescription = `${carData.color || 'silver'} ${carData.brand} ${carData.model} ${carData.year}`;
+    videoPrompt = videoPrompt.replace('{car_description}', carDescription);
+  } else {
+    videoPrompt = videoPrompt.replace('{car_description}', 'modern silver sedan');
   }
+
+  videoPrompt += ` This is a marketing video for AutoRentar, a peer-to-peer car rental platform in Latin America. The video should feel authentic, not stock footage. Caption context: "${caption.substring(0, 100)}..."`;
+
+  // Try each Veo model in order
+  const errors: string[] = [];
+
+  for (const model of VEO_MODELS) {
+    console.log(`[generate-marketing-content] Trying video generation with ${model.name}...`);
+
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model.id}:predictLongRunning?key=${GEMINI_API_KEY}`;
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          instances: [{ prompt: videoPrompt }],
+          parameters: {
+            aspectRatio: '9:16',
+            durationSeconds: 8,
+            sampleCount: 1,
+            generateAudio: true,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        const errorMsg = `${model.name} (${response.status}): ${errorText.substring(0, 200)}`;
+        console.error(`[generate-marketing-content] ${errorMsg}`);
+        errors.push(errorMsg);
+
+        // If 403/404, try next model
+        if (response.status === 403 || response.status === 404 || response.status === 400) {
+          continue;
+        }
+        // For other errors, stop trying
+        break;
+      }
+
+      // Success! Start polling
+      const operationData = await response.json();
+      const operationName = operationData.name;
+
+      console.log(`[generate-marketing-content] ${model.name} started, operation:`, operationName);
+
+      // Poll for completion (max 55s for Edge Function timeout)
+      const maxPollTime = 55000;
+      const pollInterval = 5000;
+      const startTime = Date.now();
+
+      while (Date.now() - startTime < maxPollTime) {
+        await new Promise(resolve => setTimeout(resolve, pollInterval));
+
+        const pollResponse = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/${operationName}?key=${GEMINI_API_KEY}`
+        );
+
+        if (!pollResponse.ok) {
+          console.error('[generate-marketing-content] Poll error:', await pollResponse.text());
+          continue;
+        }
+
+        const pollData = await pollResponse.json();
+
+        if (pollData.done) {
+          if (pollData.error) {
+            console.error('[generate-marketing-content] Video generation failed:', pollData.error);
+            return {
+              status: 'failed',
+              operation_id: operationName,
+              error: pollData.error.message || 'Video generation failed',
+              model_used: model.name,
+            };
+          }
+
+          const videoFile = pollData.response?.generatedVideos?.[0]?.video;
+          if (videoFile) {
+            console.log(`[generate-marketing-content] Video generated with ${model.name}`);
+            return {
+              url: videoFile.uri || videoFile.name,
+              operation_id: operationName,
+              status: 'ready',
+              model_used: model.name,
+            };
+          }
+        }
+      }
+
+      // Timeout - return async status
+      console.log('[generate-marketing-content] Video still generating, returning for async');
+      return {
+        operation_id: operationName,
+        status: 'generating',
+        model_used: model.name,
+      };
+
+    } catch (error) {
+      const errorMsg = `${model.name}: ${error instanceof Error ? error.message : 'Unknown error'}`;
+      console.error(`[generate-marketing-content] ${errorMsg}`);
+      errors.push(errorMsg);
+      continue;
+    }
+  }
+
+  // All models failed
+  const combinedError = errors.length > 0
+    ? `Video generation failed. Tried: ${errors.join(' | ')}`
+    : 'All Veo models unavailable';
+
+  console.error('[generate-marketing-content]', combinedError);
+
+  // Return detailed error for frontend
+  return {
+    status: 'failed',
+    error: combinedError.includes('403')
+      ? 'Veo API requiere billing habilitado en Google AI Studio. Ve a aistudio.google.com → Settings → Billing para habilitar.'
+      : combinedError,
+  };
 }
 
 // ============================================================================
