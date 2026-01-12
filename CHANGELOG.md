@@ -1,3 +1,10 @@
+## [2.15.3](https://github.com/ecucondorSA/autorenta/compare/v2.15.2...v2.15.3) (2026-01-12)
+
+
+### Bug Fixes
+
+* **marketing:** add type-safe color helper methods ([a4f8af3](https://github.com/ecucondorSA/autorenta/commit/a4f8af352c073a72d0d497e14e4201048999e387))
+
 ## [2.15.2](https://github.com/ecucondorSA/autorenta/compare/v2.15.1...v2.15.2) (2026-01-12)
 
 
