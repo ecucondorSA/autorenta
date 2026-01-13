@@ -136,7 +136,7 @@ export class FavoritesService {
           car_id,
           cars (
             *,
-            profiles:owner_id (
+            profiles!cars_owner_id_fkey (
               full_name,
               avatar_url,
               is_superhost

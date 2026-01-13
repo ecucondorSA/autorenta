@@ -15,6 +15,8 @@
     "test:headed:marketplace": "HEADLESS=false tsx specs/booking/browse-cars.spec.ts",
     "test:headed:payment": "HEADLESS=false tsx specs/booking/payment.spec.ts",
     "test:headed:renter-owner": "HEADLESS=false tsx specs/booking/renter-owner-flow.spec.ts",
+    "test:stagehand": "tsx specs/stagehand/investigate-flaky-modules.ts",
+    "test:stagehand:daily": "tsx specs/stagehand/daily-platform-scan.ts",
     "test:all": "npm run test:login && npm run test:marketplace && npm run test:payment",
     "test:all:headed": "HEADLESS=false npm run test:all",
     "test:ci": "HEADLESS=true CI=true npm run test:all",
@@ -25,6 +27,7 @@
     "patchright": "^1.49.1"
   },
   "devDependencies": {
+    "@browserbasehq/stagehand": "^3.0.7",
     "tsx": "^4.7.0",
     "typescript": "^5.4.0"
   }

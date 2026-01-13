@@ -1,0 +1,133 @@
+name: Stagehand Daily Platform Scan
+
+on:
+  schedule:
+    # Run daily at 8:00 AM Argentina time (11:00 UTC)
+    - cron: '0 11 * * *'
+  workflow_dispatch:
+
+jobs:
+  stagehand-daily:
+    name: Stagehand Daily Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BASE_URL: https://autorentar.com
+      STAGEHAND_MODEL: google/gemini-2.5-flash
+      STAGEHAND_FAIL_ON_ERROR: '1'
+      GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.STAGEHAND_GEMINI_API_KEY }}
+      TEST_USER_EMAIL: ${{ secrets.STAGEHAND_TEST_USER_EMAIL }}
+      TEST_USER_PASSWORD: ${{ secrets.STAGEHAND_TEST_USER_PASSWORD }}
+      TEST_OWNER_EMAIL: ${{ secrets.STAGEHAND_TEST_OWNER_EMAIL }}
+      TEST_OWNER_PASSWORD: ${{ secrets.STAGEHAND_TEST_OWNER_PASSWORD }}
+      TEST_ADMIN_EMAIL: ${{ secrets.STAGEHAND_TEST_ADMIN_EMAIL }}
+      TEST_ADMIN_PASSWORD: ${{ secrets.STAGEHAND_TEST_ADMIN_PASSWORD }}
+      TEST_CAR_ID: ${{ secrets.STAGEHAND_TEST_CAR_ID }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: pnpm -C apps/web/e2e exec playwright install --with-deps chromium
+
+      - name: Run Stagehand Daily Scan
+        run: pnpm -C apps/web/e2e test:stagehand:daily
+        env:
+          CI: true
+
+      - name: Locate latest Stagehand report
+        id: stagehand_report
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          REPORT_PATH=$(ls -t apps/web/e2e/reports/stagehand/stagehand-daily-report-*.md 2>/dev/null | head -n 1 || true)
+          echo "path=$REPORT_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Send failure alert
+        if: failure()
+        uses: actions/github-script@v7
+        env:
+          REPORT_PATH: ${{ steps.stagehand_report.outputs.path }}
+        with:
+          script: |
+            const fs = require('fs');
+            const reportPath = process.env.REPORT_PATH;
+            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
+            if (!webhookUrl) return;
+
+            let summary = 'Stagehand daily scan failed.';
+            let failures = [];
+            if (reportPath && fs.existsSync(reportPath)) {
+              const content = fs.readFileSync(reportPath, 'utf8');
+              const lines = content.split('\n');
+              const failureIndex = lines.findIndex((line) => line.startsWith('## Failures'));
+              if (failureIndex >= 0) {
+                for (let i = failureIndex + 1; i < lines.length; i += 1) {
+                  const line = lines[i];
+                  if (line.startsWith('## ')) break;
+                  if (line.startsWith('- ')) failures.push(line.replace(/^- /, ''));
+                }
+              }
+
+              const totalLine = lines.find((line) => line.startsWith('Total steps:')) || '';
+              const failuresLine = lines.find((line) => line.startsWith('Failures:')) || '';
+              const skippedLine = lines.find((line) => line.startsWith('Skipped:')) || '';
+              summary = [totalLine, failuresLine, skippedLine].filter(Boolean).join(' | ') || summary;
+            }
+
+            const maxFailures = failures.slice(0, 10);
+            const failureText = maxFailures.length ? `\nTop failures:\n- ${maxFailures.join('\n- ')}` : '';
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source: 'github',
+                severity: 'high',
+                title: 'Stagehand Daily Scan Failed',
+                message: `${summary}${failureText}`,
+                metadata: {
+                  workflow: 'stagehand-daily',
+                  report_path: reportPath || 'not found',
+                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                },
+                timestamp: new Date().toISOString(),
+              }),
+            });
+
+      - name: Upload Stagehand Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stagehand-daily-reports
+          path: apps/web/e2e/reports/stagehand/
+          retention-days: 14

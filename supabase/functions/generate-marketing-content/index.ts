@@ -77,6 +77,7 @@ const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY') || '';
 const GEMINI_MODEL = 'gemini-3-flash-preview'; // Latest Gemini 3 model (Jan 2026)
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const MARKETING_MEDIA_BUCKET = Deno.env.get('MARKETING_MEDIA_BUCKET') || 'car-images';
 
 // Platform-specific constraints
 const PLATFORM_LIMITS: Record<Platform, { maxChars: number; maxHashtags: number; style: string }> = {
@@ -177,7 +178,7 @@ serve(async (req) => {
     // Generate video if requested (for TikTok)
     let videoContent: { url?: string; operation_id?: string; status?: 'generating' | 'ready' | 'failed' } | undefined;
     if (generate_video || platform === 'tiktok') {
-      videoContent = await generateMarketingVideo(textContent.caption, carData, content_type);
+      videoContent = await generateMarketingVideo(supabase, textContent.caption, carData, content_type);
     }
 
     // Calculate suggested post time
@@ -508,6 +509,7 @@ interface VideoResult {
 }
 
 async function generateMarketingVideo(
+  supabase: ReturnType<typeof createClient>,
   caption: string,
   carData: CarData | null,
   contentType: ContentType
@@ -536,19 +538,21 @@ async function generateMarketingVideo(
   for (const model of VEO_MODELS) {
     console.log(`[generate-marketing-content] Trying video generation with ${model.name}...`);
 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model.id}:predictLongRunning?key=${GEMINI_API_KEY}`;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model.id}:predictLongRunning`;
 
     try {
       const response = await fetch(apiUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': GEMINI_API_KEY,
+        },
         body: JSON.stringify({
           instances: [{ prompt: videoPrompt }],
           parameters: {
             aspectRatio: '9:16',
             durationSeconds: 8,
             sampleCount: 1,
-            generateAudio: true,
           },
         }),
       });
@@ -573,8 +577,8 @@ async function generateMarketingVideo(
 
       console.log(`[generate-marketing-content] ${model.name} started, operation:`, operationName);
 
-      // Poll for completion (max 55s for Edge Function timeout)
-      const maxPollTime = 55000;
+      // Poll for completion (max 120s - Edge Functions can run up to 150s)
+      const maxPollTime = 120000;
       const pollInterval = 5000;
       const startTime = Date.now();
 
@@ -582,7 +586,12 @@ async function generateMarketingVideo(
         await new Promise(resolve => setTimeout(resolve, pollInterval));
 
         const pollResponse = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/${operationName}?key=${GEMINI_API_KEY}`
+          `https://generativelanguage.googleapis.com/v1beta/${operationName}`,
+          {
+            headers: {
+              'x-goog-api-key': GEMINI_API_KEY,
+            },
+          }
         );
 
         if (!pollResponse.ok) {
@@ -603,11 +612,61 @@ async function generateMarketingVideo(
             };
           }
 
-          const videoFile = pollData.response?.generatedVideos?.[0]?.video;
-          if (videoFile) {
+          const videoFile =
+            pollData.response?.generateVideoResponse?.generatedSamples?.[0]?.video ||
+            pollData.response?.generatedVideos?.[0]?.video;
+
+          const videoUri = videoFile?.uri || videoFile?.name;
+          if (videoUri) {
             console.log(`[generate-marketing-content] Video generated with ${model.name}`);
+
+            // Download the video with API key
+            const videoResponse = await fetch(videoUri, {
+              headers: { 'x-goog-api-key': GEMINI_API_KEY },
+            });
+            if (!videoResponse.ok) {
+              const errorText = await videoResponse.text();
+              return {
+                status: 'failed',
+                operation_id: operationName,
+                error: `No se pudo descargar el video (${videoResponse.status}): ${errorText.substring(0, 120)}`,
+                model_used: model.name,
+              };
+            }
+
+            const videoBlob = await videoResponse.blob();
+            const contentType = videoBlob.type || 'video/mp4';
+            const extension = contentType.split('/')[1] || 'mp4';
+            const filePath = `marketing/videos/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
+
+            const { error: uploadError } = await supabase.storage
+              .from(MARKETING_MEDIA_BUCKET)
+              .upload(filePath, videoBlob, { contentType, upsert: false });
+
+            if (uploadError) {
+              return {
+                status: 'failed',
+                operation_id: operationName,
+                error: `No se pudo subir el video a Storage: ${uploadError.message}`,
+                model_used: model.name,
+              };
+            }
+
+            const { data: publicUrlData } = supabase.storage
+              .from(MARKETING_MEDIA_BUCKET)
+              .getPublicUrl(filePath);
+
+            if (!publicUrlData?.publicUrl) {
+              return {
+                status: 'failed',
+                operation_id: operationName,
+                error: 'No se pudo obtener la URL publica del video',
+                model_used: model.name,
+              };
+            }
+
             return {
-              url: videoFile.uri || videoFile.name,
+              url: publicUrlData.publicUrl,
               operation_id: operationName,
               status: 'ready',
               model_used: model.name,

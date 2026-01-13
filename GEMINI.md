@@ -168,6 +168,7 @@ try {
 | `pnpm lint --fix` | Auto-fix linting |
 | `pnpm test:unit` | Tests unitarios (Vitest) |
 | `pnpm test:e2e` | Tests E2E |
+| `export DISPLAY=:0; xdg-open <path>` | Abrir archivos/carpetas en entorno gráfico local |
 | `supabase db diff -f <name>` | Generar migración desde cambios |
 | `supabase gen types typescript` | Regenerar tipos de DB |
 

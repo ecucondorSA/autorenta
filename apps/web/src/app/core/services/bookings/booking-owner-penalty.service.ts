@@ -110,6 +110,8 @@ export class BookingOwnerPenaltyService {
    * Obtiene las penalizaciones de un owner específico por ID
    */
   async getOwnerPenaltiesById(ownerId: string): Promise<OwnerPenalties | null> {
+    if (!ownerId) return null; // Fix: Prevent 400 bad request
+
     try {
       const { data, error } = await this.supabase.rpc('get_owner_penalties', {
         p_owner_id: ownerId,

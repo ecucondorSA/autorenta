@@ -72,7 +72,7 @@ export const Selectors = {
     container: '[data-testid="car-detail"]',
     title: '[data-testid="car-detail-title"]',
     price: '[data-testid="car-detail-price"]',
-    bookButton: '[data-testid="book-button"]',
+    bookButton: '[data-testid="book-now"], [data-testid="book-button"]',
     gallery: '[data-testid="car-gallery"]',
     specs: '[data-testid="car-specs"]',
     reviews: '[data-testid="car-reviews"]',

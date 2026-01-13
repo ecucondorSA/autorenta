@@ -224,9 +224,14 @@ export class BookingsService {
       p_dropoff_lat: locationData.dropoffLat,
       p_dropoff_lng: locationData.dropoffLng,
       p_delivery_required: locationData.deliveryRequired,
-      p_delivery_distance_km: locationData.distanceKm,
-      p_delivery_fee_cents: locationData.deliveryFeeCents,
-      p_distance_risk_tier: locationData.distanceTier,
+      // Fix: DB function calculates these, do not send them as params
+      // p_delivery_distance_km: locationData.distanceKm,
+      // p_delivery_fee_cents: locationData.deliveryFeeCents,
+      // p_distance_risk_tier: locationData.distanceTier,
+      // Fix: Add required dynamic pricing defaults
+      p_use_dynamic_pricing: false,
+      p_price_lock_token: null,
+      p_dynamic_price_snapshot: null,
     });
 
     if (error) {

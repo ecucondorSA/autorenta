@@ -98,6 +98,19 @@
 *   **Acción Directa:** Tareas simples y bien definidas ejecútalas directamente.
 *   **Confirmación:** Cambios complejos (refactor masivo, migración de base de datos) requieren plan y confirmación del usuario.
 *   **Contexto:** No asumas requisitos implícitos. Lee la documentación en `docs/` antes de asumir cómo funciona el sistema de pagos o reservas.
+*   **Autonomía general ante dificultades (intentar antes de preguntar):** Frente a cualquier bloqueo o problema, primero investiga y prueba caminos razonables dentro del repo y el entorno local. Solo después de agotar opciones, informa el resultado y solicita ayuda si es imprescindible. No pidas rutas al usuario: búscalas tú.
+    *   **Descubrimiento de rutas y archivos:** usa búsquedas (`rg`, `find`) y lectura de estructura (`ls`, `tree`) para localizar lo necesario.
+    *   **Revisión de documentación:** lee `README.md`, `docs/`, `CHANGELOG.md`, `MIGRATION_GUIDE_TO_POOL.md`, `SUPABASE_ACCESS.md` y archivos guía existentes.
+    *   **Revisión de configuración:** inspecciona `package.json`, `pnpm-workspace.yaml`, `tsconfig*.json`, `ionic.config.json`, `capacitor.config.js`, `supabase/config.toml` si existe.
+    *   **Evidencia explícita:** al fallar, enumera qué revisaste, qué intentaste y por qué no funcionó, antes de pedir datos adicionales.
+*   **Autonomía con credenciales (no detenerse de inmediato):** Si un problema parece de credenciales, primero investiga y agota las fuentes locales antes de concluir que faltan.
+    *   **Buscar en archivos de entorno:** `.env`, `.env.*`, `.env.local`, `.env.development`, `.env.production`, `.env.example`, `.envrc`.
+    *   **Buscar en código/config local:** `apps/**/src/environments/`, `supabase/**`, `tools/`, `scripts/`, `mcp_config.json`, `mcp/`, `mcp-server/`, `workers/`, `deploy/`.
+    *   **Buscar en docs y setup:** `README.md`, `docs/`, `SUPABASE_ACCESS.md`, `MIGRATION_GUIDE_TO_POOL.md`.
+    *   **Buscar en CI/CD:** revisar `.github/workflows` para nombres de `secrets.*` y variables de entorno esperadas.
+    *   **Buscar en configuración del proyecto:** `package.json` (scripts), `pnpm-workspace.yaml`, `ionic.config.json`, `capacitor.config.js`, `supabase/config.toml` si existe.
+    *   **Aclaración obligatoria:** Los GitHub Secrets no son accesibles desde el repo; deben verificarse en la UI de GitHub. Indicar explícitamente que se buscó en el repo y no se encontraron credenciales.
+    *   **Resultado:** Si no existen, reportar que faltan y enumerar dónde se buscó.
 
 ---
 

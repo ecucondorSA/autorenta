@@ -54,6 +54,11 @@ export class LocationTrackingService {
    * @returns Tracking session ID
    */
   async startTracking(bookingId: string, trackingType: 'check_in' | 'check_out'): Promise<string> {
+    if (!bookingId) throw new Error('Booking ID is required');
+    if (!['check_in', 'check_out'].includes(trackingType)) {
+      throw new Error(`Invalid tracking type: ${trackingType}`);
+    }
+
     try {
       // Start tracking session in database
       const { data, error } = await this.supabaseClient.rpc('start_location_tracking', {
