@@ -1,3 +1,10 @@
+## [2.19.1](https://github.com/ecucondorSA/autorenta/compare/v2.19.0...v2.19.1) (2026-01-13)
+
+
+### Bug Fixes
+
+* **core:** resolve critical RPC 400 errors in booking, tracking and favorites ([5729330](https://github.com/ecucondorSA/autorenta/commit/5729330174bae392bfb780f66f4e3f36261aad75))
+
 # [2.19.0](https://github.com/ecucondorSA/autorenta/compare/v2.18.0...v2.19.0) (2026-01-12)
 
 
