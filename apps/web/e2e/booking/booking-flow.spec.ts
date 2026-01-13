@@ -81,7 +81,9 @@ async function testBookingRequestFlow(test: AutoRentaTest): Promise<void> {
     await test['page'].waitForTimeout(3000);
 
     // Check for booking button
-    const bookButton = await test['page'].$('button:has-text("Reservar"), button:has-text("Solicitar"), [data-testid="book-button"]');
+    const bookButton = await test['page'].$(
+      'button:has-text("Reservar"), button:has-text("Solicitar"), [data-testid="book-now"], [data-testid="book-button"]'
+    );
     console.log(`[E2E] Found booking button: ${!!bookButton}`);
   }
 }
