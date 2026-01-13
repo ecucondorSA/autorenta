@@ -78,56 +78,6 @@
   ],
   "dataGroups": [
     {
-      "name": "api-supabase-rpc-critical",
-      "urls": [
-        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_*",
-        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/payment_*",
-        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/booking_*"
-      ],
-      "cacheConfig": {
-        "strategy": "freshness",
-        "maxSize": 0,
-        "maxAge": "0u",
-        "timeout": "30s"
-      }
-    },
-    {
-      "name": "api-supabase-rpc",
-      "urls": [
-        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/*"
-      ],
-      "cacheConfig": {
-        "strategy": "freshness",
-        "maxSize": 0,
-        "maxAge": "0s",
-        "timeout": "10s"
-      }
-    },
-    {
-      "name": "api-supabase-auth",
-      "urls": [
-        "https://pisqjmoklivzpwufhscx.supabase.co/auth/*"
-      ],
-      "cacheConfig": {
-        "strategy": "freshness",
-        "maxSize": 0,
-        "maxAge": "0s",
-        "timeout": "10s"
-      }
-    },
-    {
-      "name": "api-supabase-functions",
-      "urls": [
-        "https://pisqjmoklivzpwufhscx.supabase.co/functions/*"
-      ],
-      "cacheConfig": {
-        "strategy": "freshness",
-        "maxSize": 0,
-        "maxAge": "0s",
-        "timeout": "30s"
-      }
-    },
-    {
       "name": "api-supabase-fresh",
       "urls": [
         "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bookings*",

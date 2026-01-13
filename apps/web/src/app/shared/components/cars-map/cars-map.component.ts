@@ -637,6 +637,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private setupClustering(): void {
     if (!this.map || !this.mapboxgl) return;
 
+    // Check if style is loaded before adding sources/layers
+    if (!this.map.isStyleLoaded()) {
+      this.map.once('style.load', () => this.setupClustering());
+      return;
+    }
+
     // Remove existing markers
     this.clearMarkers();
 
