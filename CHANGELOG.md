@@ -1,3 +1,10 @@
+# [2.20.0](https://github.com/ecucondorSA/autorenta/compare/v2.19.2...v2.20.0) (2026-01-13)
+
+
+### Features
+
+* **ui:** modernize owner dashboard with glassmorphism and bento grid ([c0a7174](https://github.com/ecucondorSA/autorenta/commit/c0a717409bf5dc65ebfbadd019f7a7e34f58dcc1))
+
 ## [2.19.2](https://github.com/ecucondorSA/autorenta/compare/v2.19.1...v2.19.2) (2026-01-13)
 
 
