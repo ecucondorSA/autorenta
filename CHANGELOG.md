@@ -1,3 +1,10 @@
+## [2.19.2](https://github.com/ecucondorSA/autorenta/compare/v2.19.1...v2.19.2) (2026-01-13)
+
+
+### Bug Fixes
+
+* **core:** resolve mapbox loading race condition and service worker rpc interception ([c7d0f18](https://github.com/ecucondorSA/autorenta/commit/c7d0f18b52649a7080418bb3d42926525ee89b1c))
+
 ## [2.19.1](https://github.com/ecucondorSA/autorenta/compare/v2.19.0...v2.19.1) (2026-01-13)
 
 
