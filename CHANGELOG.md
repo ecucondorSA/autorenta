@@ -1,3 +1,10 @@
+## [2.20.6](https://github.com/ecucondorSA/autorenta/compare/v2.20.5...v2.20.6) (2026-01-14)
+
+
+### Bug Fixes
+
+* **android:** add changesNotSentForReview to Google Play upload ([9259047](https://github.com/ecucondorSA/autorenta/commit/9259047a7abf1990a7b8e75cdd6a5154b391ece1))
+
 ## [2.20.5](https://github.com/ecucondorSA/autorenta/compare/v2.20.4...v2.20.5) (2026-01-14)
 
 
