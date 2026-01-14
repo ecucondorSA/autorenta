@@ -1,3 +1,10 @@
+# [2.21.0](https://github.com/ecucondorSA/autorenta/compare/v2.20.6...v2.21.0) (2026-01-14)
+
+
+### Features
+
+* **ci:** add Android pre-submit check workflow ([d69303f](https://github.com/ecucondorSA/autorenta/commit/d69303f598bbaee74b5e594c7e9a203e880b0700))
+
 ## [2.20.6](https://github.com/ecucondorSA/autorenta/compare/v2.20.5...v2.20.6) (2026-01-14)
 
 
