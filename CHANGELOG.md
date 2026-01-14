@@ -1,3 +1,10 @@
+## [2.20.5](https://github.com/ecucondorSA/autorenta/compare/v2.20.4...v2.20.5) (2026-01-14)
+
+
+### Bug Fixes
+
+* **android:** correct pnpm filter name for capacitor sync ([295e605](https://github.com/ecucondorSA/autorenta/commit/295e6056777fe23f3c3a49e6a2cfe11178f05e7d))
+
 ## [2.20.4](https://github.com/ecucondorSA/autorenta/compare/v2.20.3...v2.20.4) (2026-01-14)
 
 
