@@ -1,0 +1,330 @@
+name: 🔍 Android Pre-Submit Check
+
+on:
+  workflow_dispatch:
+  # También se puede ejecutar antes de upload a Play Store
+  workflow_call:
+    inputs:
+      aab_artifact:
+        description: 'AAB artifact name'
+        required: false
+        type: string
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '10.22.0'
+  JAVA_VERSION: '21'
+
+jobs:
+  build-and-analyze:
+    name: Build & Analyze
+    runs-on: ubuntu-latest
+    outputs:
+      aab_path: ${{ steps.build.outputs.aab_path }}
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(grep 'versionName' apps/web/android/app/build.gradle | head -1 | sed 's/.*versionName "\(.*\)".*/\1/')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📱 Version: $VERSION"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web app
+        run: pnpm build:web
+        env:
+          NODE_ENV: production
+          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
+          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
+          NG_APP_DEFAULT_CURRENCY: "ARS"
+          NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN }}
+          NG_APP_MERCADOPAGO_PUBLIC_KEY: ${{ secrets.NG_APP_MERCADOPAGO_PUBLIC_KEY }}
+
+      - name: Sync Capacitor
+        run: |
+          rm -f apps/web/android/capacitor.settings.gradle
+          rm -f apps/web/android/app/capacitor.build.gradle
+          pnpm --filter autorentar-web exec cap sync android
+
+      - name: Create capacitor-cordova-android-plugins
+        run: |
+          CORDOVA_DIR="apps/web/android/capacitor-cordova-android-plugins"
+          mkdir -p "$CORDOVA_DIR/src/main/libs"
+          cat > "$CORDOVA_DIR/cordova.variables.gradle" << 'EOF'
+          ext {
+            cdvMinSdkVersion = project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 23
+            cdvPluginPostBuildExtras = []
+            cordovaConfig = [:]
+          }
+          EOF
+          cat > "$CORDOVA_DIR/build.gradle" << 'EOF'
+          ext {
+              androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.7.0'
+              cordovaAndroidVersion = project.hasProperty('cordovaAndroidVersion') ? rootProject.ext.cordovaAndroidVersion : '10.1.1'
+          }
+          buildscript {
+              repositories { google(); mavenCentral() }
+              dependencies { classpath 'com.android.tools.build:gradle:8.7.2' }
+          }
+          apply plugin: 'com.android.library'
+          android {
+              namespace "capacitor.cordova.android.plugins"
+              compileSdk project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 35
+              defaultConfig {
+                  minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 23
+                  targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 35
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_21
+                  targetCompatibility JavaVersion.VERSION_21
+              }
+          }
+          repositories { google(); mavenCentral(); flatDir{ dirs 'src/main/libs', 'libs' } }
+          dependencies {
+              implementation fileTree(dir: 'src/main/libs', include: ['*.jar'])
+              implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+              implementation "org.apache.cordova:framework:$cordovaAndroidVersion"
+          }
+          apply from: "cordova.variables.gradle"
+          EOF
+
+      - name: Build Debug APK (for testing)
+        id: build
+        working-directory: apps/web/android
+        run: |
+          ./gradlew assembleDebug --stacktrace
+          APK_PATH="app/build/outputs/apk/debug/app-debug.apk"
+          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+          ls -la $APK_PATH
+
+      - name: Upload APK for testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-${{ steps.version.outputs.version }}
+          path: apps/web/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7
+
+  check-manifest:
+    name: Check AndroidManifest
+    runs-on: ubuntu-latest
+    needs: build-and-analyze
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download APK
+        uses: actions/download-artifact@v4
+        with:
+          name: app-debug-${{ needs.build-and-analyze.outputs.version }}
+          path: ./apk
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Extract and Analyze Manifest
+        id: manifest
+        run: |
+          echo "## 📋 AndroidManifest Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Extract APK
+          unzip -o ./apk/app-debug.apk -d ./extracted
+
+          # Decode AndroidManifest
+          java -jar $ANDROID_HOME/cmdline-tools/latest/lib/apkanalyzer.jar manifest print ./apk/app-debug.apk > manifest.xml 2>/dev/null || \
+            $ANDROID_HOME/build-tools/*/aapt dump xmltree ./apk/app-debug.apk AndroidManifest.xml > manifest.xml
+
+          cat manifest.xml
+
+          # Check for problematic permissions
+          echo "### 🔐 Permissions Check" >> $GITHUB_STEP_SUMMARY
+
+          ISSUES=0
+
+          # Check AD_ID permission
+          if grep -q "AD_ID" manifest.xml; then
+            echo "⚠️ **AD_ID Permission Found** - Ensure your Play Console declaration matches" >> $GITHUB_STEP_SUMMARY
+            echo "::warning::AD_ID permission found - verify Play Console declaration"
+            ISSUES=$((ISSUES + 1))
+          else
+            echo "✅ No AD_ID permission" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Check INTERNET permission
+          if grep -q "android.permission.INTERNET" manifest.xml; then
+            echo "✅ INTERNET permission present" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Check for dangerous permissions
+          DANGEROUS_PERMS=("READ_CONTACTS" "WRITE_CONTACTS" "READ_CALENDAR" "WRITE_CALENDAR" "READ_CALL_LOG" "WRITE_CALL_LOG" "READ_SMS" "SEND_SMS" "RECEIVE_SMS")
+          for perm in "${DANGEROUS_PERMS[@]}"; do
+            if grep -q "$perm" manifest.xml; then
+              echo "⚠️ **$perm** - Requires justification in Play Console" >> $GITHUB_STEP_SUMMARY
+              ISSUES=$((ISSUES + 1))
+            fi
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "issues=$ISSUES" >> $GITHUB_OUTPUT
+
+  check-urls:
+    name: Check Hardcoded URLs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for problematic URLs
+        id: urls
+        run: |
+          echo "## 🔗 URL Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          ISSUES=0
+
+          # Check for localhost URLs in production code
+          echo "### Checking for localhost URLs..." >> $GITHUB_STEP_SUMMARY
+
+          LOCALHOST_HITS=$(grep -r "localhost" apps/web/src --include="*.ts" --include="*.html" -l 2>/dev/null | grep -v ".spec.ts" | grep -v "test" || true)
+
+          if [ -n "$LOCALHOST_HITS" ]; then
+            echo "⚠️ **localhost references found:**" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "$LOCALHOST_HITS" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            ISSUES=$((ISSUES + 1))
+          else
+            echo "✅ No localhost URLs in production code" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Check for http:// (non-secure) URLs
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Checking for non-HTTPS URLs..." >> $GITHUB_STEP_SUMMARY
+
+          HTTP_HITS=$(grep -rn "http://" apps/web/src --include="*.ts" --include="*.html" | grep -v "https://" | grep -v ".spec.ts" | head -10 || true)
+
+          if [ -n "$HTTP_HITS" ]; then
+            echo "⚠️ **Non-HTTPS URLs found:**" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "$HTTP_HITS" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            ISSUES=$((ISSUES + 1))
+          else
+            echo "✅ All URLs use HTTPS" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Check env.js for production values
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Checking env.js configuration..." >> $GITHUB_STEP_SUMMARY
+
+          if grep -q "localhost" apps/web/public/env.js 2>/dev/null; then
+            echo "❌ **env.js contains localhost - will cause ERR_CONNECTION_REFUSED!**" >> $GITHUB_STEP_SUMMARY
+            echo "::error::env.js contains localhost URLs"
+            ISSUES=$((ISSUES + 1))
+          else
+            echo "✅ env.js does not contain localhost" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "issues=$ISSUES" >> $GITHUB_OUTPUT
+
+  check-proguard:
+    name: Check ProGuard Rules
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Analyze ProGuard configuration
+        run: |
+          echo "## 🛡️ ProGuard Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          PROGUARD_FILE="apps/web/android/app/proguard-rules.pro"
+
+          if [ ! -f "$PROGUARD_FILE" ]; then
+            echo "⚠️ No proguard-rules.pro found" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          echo "### Rules found:" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat "$PROGUARD_FILE" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+          # Check for essential Capacitor rules
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Essential Rules Check:" >> $GITHUB_STEP_SUMMARY
+
+          if grep -q "capacitor" "$PROGUARD_FILE"; then
+            echo "✅ Capacitor rules present" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Missing Capacitor ProGuard rules - may cause crashes!" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if grep -q "WebView" "$PROGUARD_FILE"; then
+            echo "✅ WebView rules present" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Consider adding WebView rules" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  summary:
+    name: Generate Summary
+    runs-on: ubuntu-latest
+    needs: [build-and-analyze, check-manifest, check-urls, check-proguard]
+    if: always()
+    steps:
+      - name: Generate Final Report
+        run: |
+          echo "# 📊 Pre-Submit Check Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Version: ${{ needs.build-and-analyze.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Job Results:" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Build & Analyze | ${{ needs.build-and-analyze.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| AndroidManifest | ${{ needs.check-manifest.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| URL Check | ${{ needs.check-urls.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ProGuard | ${{ needs.check-proguard.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.build-and-analyze.result }}" == "success" ] && \
+             [ "${{ needs.check-manifest.result }}" == "success" ] && \
+             [ "${{ needs.check-urls.result }}" == "success" ] && \
+             [ "${{ needs.check-proguard.result }}" == "success" ]; then
+            echo "## ✅ All checks passed! Ready for Google Play submission." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ⚠️ Some checks need attention before submission." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "*See individual job summaries above for details*" >> $GITHUB_STEP_SUMMARY
