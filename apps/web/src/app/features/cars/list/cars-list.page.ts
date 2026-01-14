@@ -1419,25 +1419,12 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * Inicia el auto-scroll del carousel
-   * Se mueve automáticamente cada 3 segundos
+   * Auto-scroll del carousel DESACTIVADO
+   * El usuario prefiere control manual tipo Tinder
    */
   startCarouselAutoScroll(): void {
-    if (!this.isBrowser) return;
-
-    // Limpiar interval existente
-    this.stopCarouselAutoScroll();
-
-    // Iniciar auto-scroll después de 2 segundos (dar tiempo a que cargue)
-    if (this.carouselAutoScrollTimeout) {
-      clearTimeout(this.carouselAutoScrollTimeout);
-    }
-
-    this.carouselAutoScrollTimeout = setTimeout(() => {
-      this.carouselAutoScrollInterval = setInterval(() => {
-        this.scrollCarouselNext();
-      }, 3000); // Cada 3 segundos
-    }, 2000);
+    // DISABLED: Auto-scroll desactivado para mejor UX manual tipo Tinder
+    return;
   }
 
   /**
