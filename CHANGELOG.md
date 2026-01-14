@@ -1,3 +1,10 @@
+## [2.20.4](https://github.com/ecucondorSA/autorenta/compare/v2.20.3...v2.20.4) (2026-01-14)
+
+
+### Bug Fixes
+
+* **android:** remove capacitor generated files from git tracking ([33ac770](https://github.com/ecucondorSA/autorenta/commit/33ac7700b37f47ddf5d37ca01c27892db04f8c63))
+
 ## [2.20.3](https://github.com/ecucondorSA/autorenta/compare/v2.20.2...v2.20.3) (2026-01-14)
 
 
