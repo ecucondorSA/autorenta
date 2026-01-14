@@ -97,7 +97,7 @@ jobs:
           # Remove generated Capacitor files to ensure they are regenerated with correct pnpm paths
           rm -f apps/web/android/capacitor.settings.gradle
           rm -f apps/web/android/app/capacitor.build.gradle
-          pnpm --filter @autorenta/web exec cap sync android
+          pnpm --filter autorentar-web exec cap sync android
 
       - name: Workaround for missing capacitor-cordova-android-plugins
         run: |
