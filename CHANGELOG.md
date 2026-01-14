@@ -1,3 +1,10 @@
+## [2.20.2](https://github.com/ecucondorSA/autorenta/compare/v2.20.1...v2.20.2) (2026-01-14)
+
+
+### Bug Fixes
+
+* **dashboard:** remove duplicate closing tags causing build failure ([bae98ca](https://github.com/ecucondorSA/autorenta/commit/bae98ca2c8dcbc26aed8ba867a70fb0a45865002))
+
 ## [2.20.1](https://github.com/ecucondorSA/autorenta/compare/v2.20.0...v2.20.1) (2026-01-14)
 
 
