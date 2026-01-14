@@ -253,6 +253,7 @@ jobs:
           releaseFiles: ./aab/*.aab
           track: internal
           status: completed
+          changesNotSentForReview: true
 
       - name: Upload Summary
         run: |
