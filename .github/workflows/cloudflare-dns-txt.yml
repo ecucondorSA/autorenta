@@ -1,0 +1,75 @@
+name: 🔧 Add DNS TXT Record (Cloudflare)
+
+on:
+  workflow_dispatch:
+    inputs:
+      domain:
+        description: 'Domain name (e.g., autorentar.com)'
+        required: true
+        type: string
+      txt_name:
+        description: 'TXT record name (use @ for root)'
+        required: true
+        default: '@'
+        type: string
+      txt_value:
+        description: 'TXT record value'
+        required: true
+        type: string
+
+jobs:
+  add-txt-record:
+    name: Add TXT Record
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Zone ID
+        id: zone
+        run: |
+          ZONE_ID=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones?name=${{ inputs.domain }}" \
+            -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+            -H "Content-Type: application/json" | jq -r '.result[0].id')
+
+          if [ "$ZONE_ID" == "null" ] || [ -z "$ZONE_ID" ]; then
+            echo "❌ Zone not found for domain: ${{ inputs.domain }}"
+            exit 1
+          fi
+
+          echo "zone_id=$ZONE_ID" >> $GITHUB_OUTPUT
+          echo "✅ Found Zone ID: $ZONE_ID"
+
+      - name: Add TXT Record
+        run: |
+          # Determine the record name
+          if [ "${{ inputs.txt_name }}" == "@" ]; then
+            RECORD_NAME="${{ inputs.domain }}"
+          else
+            RECORD_NAME="${{ inputs.txt_name }}.${{ inputs.domain }}"
+          fi
+
+          echo "Adding TXT record: $RECORD_NAME"
+
+          RESPONSE=$(curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${{ steps.zone.outputs.zone_id }}/dns_records" \
+            -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{
+              "type": "TXT",
+              "name": "'"$RECORD_NAME"'",
+              "content": "${{ inputs.txt_value }}",
+              "ttl": 3600
+            }')
+
+          SUCCESS=$(echo $RESPONSE | jq -r '.success')
+
+          if [ "$SUCCESS" == "true" ]; then
+            echo "✅ TXT record added successfully!"
+            echo "## ✅ DNS Record Added" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- **Domain:** ${{ inputs.domain }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Type:** TXT" >> $GITHUB_STEP_SUMMARY
+            echo "- **Name:** $RECORD_NAME" >> $GITHUB_STEP_SUMMARY
+            echo "- **Value:** ${{ inputs.txt_value }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Failed to add TXT record"
+            echo "$RESPONSE" | jq .
+            exit 1
+          fi
