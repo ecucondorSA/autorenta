@@ -1,3 +1,10 @@
+## [2.21.2](https://github.com/ecucondorSA/autorenta/compare/v2.21.1...v2.21.2) (2026-01-14)
+
+
+### Bug Fixes
+
+* **maps:** clustering race condition and Tinder-style carousel sync ([302ad3f](https://github.com/ecucondorSA/autorenta/commit/302ad3fee11e7d4270a26f9f58142290f62554d0)), closes [#unifiedCarousel](https://github.com/ecucondorSA/autorenta/issues/unifiedCarousel)
+
 ## [2.21.1](https://github.com/ecucondorSA/autorenta/compare/v2.21.0...v2.21.1) (2026-01-14)
 
 
