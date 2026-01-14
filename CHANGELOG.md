@@ -1,3 +1,10 @@
+## [2.20.1](https://github.com/ecucondorSA/autorenta/compare/v2.20.0...v2.20.1) (2026-01-14)
+
+
+### Bug Fixes
+
+* **android:** resolve Google Play broken functionality rejection ([97a09a6](https://github.com/ecucondorSA/autorenta/commit/97a09a61c75f7b30c2e1aaae14da262b0b1c2e6c))
+
 # [2.20.0](https://github.com/ecucondorSA/autorenta/compare/v2.19.2...v2.20.0) (2026-01-13)
 
 
