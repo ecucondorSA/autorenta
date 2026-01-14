@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {
   Component,
   computed,
@@ -19,6 +19,9 @@ import { FgoStatus } from '@core/models/fgo.model';
 import { ParticipationPeriod } from '@core/models/participation.model';
 import { MissingDocumentsWidgetComponent } from '@shared/components/missing-documents-widget/missing-documents-widget.component';
 import { VehicleDocsSummaryWidgetComponent } from '@shared/components/vehicle-docs-summary-widget/vehicle-docs-summary-widget.component';
+import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
+import { PressScaleDirective } from '@shared/directives/press-scale.directive';
+import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { MultiCarCalendarComponent } from './components/multi-car-calendar/multi-car-calendar.component';
 import { PayoutsHistoryComponent } from './components/payouts-history/payouts-history.component';
@@ -32,6 +35,7 @@ import { NetworkParticipationWidgetComponent } from './widgets/network-participa
   selector: 'app-owner-dashboard',
   imports: [
     CommonModule,
+    DatePipe,
     RouterLink,
     MoneyPipe,
     TranslateModule,
@@ -42,6 +46,9 @@ import { NetworkParticipationWidgetComponent } from './widgets/network-participa
     PayoutsWidgetComponent,
     StatisticsWidgetComponent,
     NetworkParticipationWidgetComponent,
+    HoverLiftDirective,
+    PressScaleDirective,
+    StaggerEnterDirective,
   ],
   templateUrl: './owner-dashboard.page.html',
   styleUrls: ['./owner-dashboard.page.css'],
