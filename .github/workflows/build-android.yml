@@ -93,7 +93,11 @@ jobs:
           NG_APP_SENTRY_ENVIRONMENT: "production"
 
       - name: Sync Capacitor
-        run: pnpm --filter @autorenta/web exec cap sync android
+        run: |
+          # Remove generated Capacitor files to ensure they are regenerated with correct pnpm paths
+          rm -f apps/web/android/capacitor.settings.gradle
+          rm -f apps/web/android/app/capacitor.build.gradle
+          pnpm --filter @autorenta/web exec cap sync android
 
       - name: Workaround for missing capacitor-cordova-android-plugins
         run: |
