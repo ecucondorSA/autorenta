@@ -1,3 +1,10 @@
+## [2.20.3](https://github.com/ecucondorSA/autorenta/compare/v2.20.2...v2.20.3) (2026-01-14)
+
+
+### Bug Fixes
+
+* **dashboard:** add missing directive imports for build ([fe1495f](https://github.com/ecucondorSA/autorenta/commit/fe1495f03f0dedaef10fd9dcf9e41cf0d2d7dc40))
+
 ## [2.20.2](https://github.com/ecucondorSA/autorenta/compare/v2.20.1...v2.20.2) (2026-01-14)
 
 
