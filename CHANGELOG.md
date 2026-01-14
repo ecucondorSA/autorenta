@@ -1,3 +1,10 @@
+## [2.21.3](https://github.com/ecucondorSA/autorenta/compare/v2.21.2...v2.21.3) (2026-01-14)
+
+
+### Bug Fixes
+
+* **ux:** disable carousel auto-scroll for manual Tinder-style experience ([7b9d5a0](https://github.com/ecucondorSA/autorenta/commit/7b9d5a0ae0f80e1245bb567661bd4689251d26d8))
+
 ## [2.21.2](https://github.com/ecucondorSA/autorenta/compare/v2.21.1...v2.21.2) (2026-01-14)
 
 
