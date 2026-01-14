@@ -1,3 +1,10 @@
+## [2.21.1](https://github.com/ecucondorSA/autorenta/compare/v2.21.0...v2.21.1) (2026-01-14)
+
+
+### Bug Fixes
+
+* **android:** remove env.js from git tracking ([b816a89](https://github.com/ecucondorSA/autorenta/commit/b816a89d6c1df41e5423c4706d20c57404c8621e))
+
 # [2.21.0](https://github.com/ecucondorSA/autorenta/compare/v2.20.6...v2.21.0) (2026-01-14)
 
 
