@@ -1254,6 +1254,79 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
     // 🚀 INFINITE SCROLL: Setup IntersectionObserver for auto-loading more cars
     if (this.isBrowser) {
       this.setupInfiniteScroll();
+      this.setupCarouselScrollSync();
+    }
+  }
+
+  /**
+   * Setup scroll listener for Tinder-style carousel-map sync
+   */
+  private carouselScrollTimeout: ReturnType<typeof setTimeout> | null = null;
+  private lastSyncedCarId: string | null = null;
+
+  private setupCarouselScrollSync(): void {
+    // Wait for carousel to be available
+    setTimeout(() => {
+      const carousel = this.unifiedCarousel?.nativeElement;
+      if (!carousel) return;
+
+      carousel.addEventListener('scroll', this.onCarouselScroll.bind(this), { passive: true });
+    }, 500);
+  }
+
+  /**
+   * Handle carousel scroll - sync map with centered car (Tinder-style)
+   */
+  private onCarouselScroll(): void {
+    // Debounce scroll events
+    if (this.carouselScrollTimeout) {
+      clearTimeout(this.carouselScrollTimeout);
+    }
+
+    this.carouselScrollTimeout = setTimeout(() => {
+      this.syncMapWithCenteredCard();
+    }, 150); // 150ms debounce for smooth experience
+  }
+
+  /**
+   * Find the centered card in carousel and sync map to that car's location
+   */
+  private syncMapWithCenteredCard(): void {
+    const carousel = this.unifiedCarousel?.nativeElement;
+    if (!carousel || !this.carsMapComponent) return;
+
+    // Find all car cards in carousel
+    const cards = carousel.querySelectorAll('[data-car-id]') as NodeListOf<HTMLElement>;
+    if (!cards.length) return;
+
+    const carouselRect = carousel.getBoundingClientRect();
+    const carouselCenter = carouselRect.left + carouselRect.width / 2;
+
+    let closestCard: HTMLElement | null = null;
+    let closestDistance = Infinity;
+
+    // Find the card closest to the center of the carousel
+    cards.forEach((card) => {
+      const cardRect = card.getBoundingClientRect();
+      const cardCenter = cardRect.left + cardRect.width / 2;
+      const distance = Math.abs(cardCenter - carouselCenter);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestCard = card;
+      }
+    });
+
+    if (closestCard) {
+      const card = closestCard as HTMLElement;
+      const carId = card.getAttribute('data-car-id');
+
+      // Only sync if it's a different car (avoid unnecessary animations)
+      if (carId && carId !== this.lastSyncedCarId) {
+        this.lastSyncedCarId = carId;
+        // Only fly to location, don't select (avoids showing "Rentar ahora" panel)
+        this.carsMapComponent.flyToCarLocation(carId);
+      }
     }
   }
 
@@ -1273,6 +1346,11 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
     // 🚀 INFINITE SCROLL: Cleanup observer
     if (this.infiniteScrollObserver) {
       this.infiniteScrollObserver.disconnect();
+    }
+    // Clean up carousel scroll sync timeout
+    if (this.carouselScrollTimeout) {
+      clearTimeout(this.carouselScrollTimeout);
+      this.carouselScrollTimeout = null;
     }
     this.stopCarouselAutoScroll();
   }
@@ -1630,6 +1708,41 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
       this.scrollToCarInCarousel(carId);
     } else {
       this.scrollToCarCard(carId);
+    }
+  }
+
+  /**
+   * Handle click on carousel card - sync with map
+   * First click: select car and fly to it on map
+   * Second click (same car): navigate to detail
+   */
+  onCarouselCardClick(carId: string, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const previousCarId = this.selectedCarId();
+
+    // If same car is already selected, navigate to detail
+    if (previousCarId === carId) {
+      this.router.navigate(['/cars', carId]);
+      return;
+    }
+
+    // Select the car
+    this.selectedCarId.set(carId);
+
+    // Pause carousel auto-scroll
+    this.stopCarouselAutoScroll();
+    this.carouselAutoScrollResumeTimeout = setTimeout(() => {
+      if (this.recommendedCars().length >= 3) {
+        this.startCarouselAutoScroll();
+      }
+      this.carouselAutoScrollResumeTimeout = undefined;
+    }, 8000);
+
+    // Fly to car location on map
+    if (this.carsMapComponent) {
+      this.carsMapComponent.flyToCarLocation(carId);
     }
   }
 

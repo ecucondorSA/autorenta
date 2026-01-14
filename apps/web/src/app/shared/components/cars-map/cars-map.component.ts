@@ -311,9 +311,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private clusterLayerId = 'cars-cluster-layer';
   private clusterCountLayerId = 'cars-cluster-count';
   // Mapbox optimization: Clustering is efficient for 10K+ cars (Supercluster handles 400K)
-  public clusteringThreshold = 3; // Activate clustering at 3+ cars (Airbnb style) - public for template access
-  private clusterMaxZoom = 12; // Zoom level where clusters stop and individual markers show
+  public clusteringThreshold = 1; // Activate clustering at 2+ cars - public for template access
+  private clusterMaxZoom = 12; // Zoom level where clusters stop and individual markers show (synced with source clusterMaxZoom)
   private isShowingPhotoMarkers = false; // Track if we're showing HTML markers with photos
+  private hasInitializedHybridMode = false; // Track first-run of hybrid mode
   private virtualizationThreshold = 1000; // Only virtualize if NOT clustering (10K+ without clustering)
   private viewportBuffer = 0.1; // 10% buffer around viewport for smoother experience
   private maxVisibleMarkers = 500; // Increased for better 10K+ experience when not clustering
@@ -637,9 +638,15 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private setupClustering(): void {
     if (!this.map || !this.mapboxgl) return;
 
-    // Check if style is loaded before adding sources/layers
-    if (!this.map.isStyleLoaded()) {
-      this.map.once('style.load', () => this.setupClustering());
+    // Check if style is ready for adding sources/layers
+    // Note: isStyleLoaded() can return false with Mapbox Standard (imported style)
+    // even when the map is functionally ready, so we also check for the style object
+    const style = this.map.getStyle();
+    const hasStyle = style && style.layers && style.layers.length > 0;
+
+    if (!this.map.isStyleLoaded() && !hasStyle) {
+      // Use 'idle' event as fallback - more reliable than 'style.load' for imported styles
+      this.map.once('idle', () => this.setupClustering());
       return;
     }
 
@@ -894,9 +901,11 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const currentZoom = this.map.getZoom();
     const shouldShowPhotoMarkers = currentZoom > this.clusterMaxZoom;
 
-    // Only update if state changed
-    if (shouldShowPhotoMarkers === this.isShowingPhotoMarkers) return;
+    // Always apply on first run OR when state changes
+    const isFirstRun = this.isShowingPhotoMarkers === false && !this.hasInitializedHybridMode;
+    if (!isFirstRun && shouldShowPhotoMarkers === this.isShowingPhotoMarkers) return;
 
+    this.hasInitializedHybridMode = true;
     this.isShowingPhotoMarkers = shouldShowPhotoMarkers;
 
     if (shouldShowPhotoMarkers) {
@@ -1687,15 +1696,27 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     componentRef.setInput('selected', this.selectedCarId === car['carId']);
     componentRef.setInput('userLocation', this.userLocation || undefined);
 
-    // Subscribe to output events
-    componentRef.instance.viewDetails.subscribe((carId: string) => {
-      this.carSelected.emit(carId);
-    });
+    // Subscribe to output events (with safety check for closed subjects)
+    try {
+      if (!componentRef.instance.viewDetails.closed) {
+        componentRef.instance.viewDetails.subscribe((carId: string) => {
+          this.carSelected.emit(carId);
+        });
+      }
+    } catch {
+      // EventEmitter might be closed from pool reuse, ignore
+    }
 
-    componentRef.instance.quickBook.subscribe((carId: string) => {
-      this.openBookingPanelForCarId(carId);
-      this.quickBook.emit(carId);
-    });
+    try {
+      if (!componentRef.instance.quickBook.closed) {
+        componentRef.instance.quickBook.subscribe((carId: string) => {
+          this.openBookingPanelForCarId(carId);
+          this.quickBook.emit(carId);
+        });
+      }
+    } catch {
+      // EventEmitter might be closed from pool reuse, ignore
+    }
 
     // Show the element (it might have been hidden in pool)
     const element = componentRef.location.nativeElement as HTMLElement;
@@ -1874,9 +1895,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.deg2rad(lat1)) *
-        Math.cos(this.deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c; // Distance in km
     return d;
@@ -2126,7 +2147,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     const lat2 = Math.asin(
       Math.sin(lat1) * Math.cos(distanceMeters / R) +
-        Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
+      Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
     );
 
     const lng2 =
@@ -2761,10 +2782,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    * Update markers when cars input changes
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['cars'] && !changes['cars'].firstChange && this.map) {
-      // Update spatial index first, then markers
+    if (changes['cars'] && this.map) {
+      // Update spatial index first, then markers (handle first data arrival)
       this.updateSpatialIndex();
-      this.scheduleDebouncedUpdate(() => this.updateMarkersBasedOnCount());
+      this.updateMarkersBasedOnCount();
     }
     if (changes['selectedCarId'] && !changes['selectedCarId'].firstChange && this.map) {
       const previousId = changes['selectedCarId'].previousValue;
