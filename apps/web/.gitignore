@@ -54,3 +54,6 @@ e2e/.browser-profile-test/
 
 # E2E reports (generated)
 e2e/reports/
+
+# Generated environment config (has localhost in dev)
+public/env.js
