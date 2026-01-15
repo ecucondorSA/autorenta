@@ -50,7 +50,7 @@ export function Slide12Tecnologia() {
             width: '100%',
             textAlign: 'center'
           }}>
-            Validación de Identidad
+            KYC en Tiempo Real
           </p>
           <div style={{
             width: '100%',
@@ -60,12 +60,28 @@ export function Slide12Tecnologia() {
             background: '#fff'
           }}>
             <img
-              src="/assets/validacion_id.png"
-              alt="Validación ID"
+              src="/assets/product-experience/trust_kyc_cam.png"
+              alt="Validación ID con KYC Cam"
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'contain'
+                objectFit: 'cover',
+                borderRadius: '4px'
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                const fallback = e.currentTarget.parentElement;
+                if (fallback) {
+                  fallback.innerHTML = `
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 4px; color: white; text-align: center; padding: 20px;">
+                      <div>
+                        <div style="font-size: 48px; margin-bottom: 16px;">📱</div>
+                        <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">KYC Validación</div>
+                        <div style="font-size: 14px; opacity: 0.8;">Selfie + DNI + IA</div>
+                      </div>
+                    </div>
+                  `;
+                }
               }}
             />
           </div>
