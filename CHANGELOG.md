@@ -1,3 +1,10 @@
+# [2.27.0](https://github.com/ecucondorSA/autorenta/compare/v2.26.0...v2.27.0) (2026-01-15)
+
+
+### Features
+
+* update Slide 12 with verification completed image ([6d87798](https://github.com/ecucondorSA/autorenta/commit/6d877985d16501c57c8c777f6a411f988a813208))
+
 # [2.26.0](https://github.com/ecucondorSA/autorenta/compare/v2.25.0...v2.26.0) (2026-01-15)
 
 
