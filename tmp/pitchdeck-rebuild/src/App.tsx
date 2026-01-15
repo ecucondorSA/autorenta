@@ -12,21 +12,22 @@ import { Slide07Mercado } from './slides/Slide07Mercado';
 import { Slide08ModosDeRiesgo } from './slides/Slide08FailureModes';
 import { Slide09Economia } from './slides/Slide09Economics';
 import { Slide10ProteccionRiesgo } from './slides/Slide10RiskPolicy';
+import { Slide11ProductUI } from './slides/Slide11ProductUI';
 import { Slide12Tecnologia } from './slides/Slide12Tecnologia';
 import { Slide13Evidencia } from './slides/Slide13Evidencia';
 import { Slide14EstrategiaMercado } from './slides/Slide14GTM';
 import { Slide15Validacion } from './slides/Slide15Validation';
 import { Slide16Estrategia } from './slides/Slide16Estrategia';
-import { Slide17Fintech } from './slides/Slide17Fintech';
+import { Slide17Crecimiento } from './slides/Slide17Crecimiento';
 import { Slide18Vision } from './slides/Slide18Vision';
 import { Slide19Metricas } from './slides/Slide19KPIs';
 import { Slide20PlanMaestro } from './slides/Slide20MasterPlan';
 import { Slide21Demostración } from './slides/Slide21Demo';
 import { Slide22Competencia } from './slides/Slide22Competencia';
 import { Slide23Crecimiento } from './slides/Slide23Growth';
-import { Slide24Equipo } from './slides/Slide24Equipo';
-import { Slide25Crecimiento } from './slides/Slide25Crecimiento';
-import { Slide26Inversion } from './slides/Slide26Inversion';
+import { Slide24Inversion } from './slides/Slide24Inversion';
+import { Slide25Fintech } from './slides/Slide25Fintech';
+import { Slide26Equipo } from './slides/Slide26Equipo';
 
 const slides = [
   Slide01Cover,
@@ -39,21 +40,22 @@ const slides = [
   Slide08ModosDeRiesgo,
   Slide09Economia,
   Slide10ProteccionRiesgo,
+  Slide11ProductUI,
   Slide12Tecnologia,
   Slide13Evidencia,
   Slide14EstrategiaMercado,
   Slide15Validacion,
   Slide16Estrategia,
-  Slide17Fintech,
+  Slide17Crecimiento,
   Slide18Vision,
   Slide19Metricas,
   Slide20PlanMaestro,
   Slide21Demostración,
   Slide22Competencia,
   Slide23Crecimiento,
-  Slide24Equipo,
-  Slide25Crecimiento,
-  Slide26Inversion,
+  Slide24Inversion,
+  Slide25Fintech,
+  Slide26Equipo,
 ];
 
 function App() {

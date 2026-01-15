@@ -31,53 +31,53 @@
 ---
 
 ### Slide 11 - Product Experience (Concept UI)
-**Estado**: ⚠️ Necesita atención
+**Estado**: 🟢 Completo
 **Archivo**: `Slide11ProductUI.tsx`
 
 **Tareas**:
-- [ ] Las imágenes placeholder dicen "PEGAR FIGMA" - reemplazar con screenshots reales
-- [ ] Aumentar tamaño de cards de pantalla (180px altura es muy pequeño)
-- [ ] Aumentar fuentes de labels de pantalla (10px → 14px)
-- [ ] Agregar sombras más pronunciadas a las cards
+- [x] ~~Las imágenes placeholder dicen "PEGAR FIGMA" - reemplazar con screenshots reales~~
+- [x] ~~Aumentar tamaño de cards de pantalla (180px altura es muy pequeño)~~
+- [x] ~~Aumentar fuentes de labels de pantalla (10px → 14px)~~
+- [x] ~~Agregar sombras más pronunciadas a las cards~~
 
 ---
 
 ### Slide 13 - Evidencia de Producto (En Vivo)
-**Estado**: ⚠️ En progreso  
+**Estado**: 🟢 Completo
 **Archivo**: `Slide13Evidencia.tsx`
 
 **Tareas**:
 - [x] ~~Reducir tamaño de device-frames para que quepan 6~~
 - [x] ~~Ajustar gaps del grid~~
-- [ ] Verificar que todas las imágenes de pantalla existan en `/assets/`
-- [ ] Las pantallas deben mostrar contenido completo (objectFit: contain)
-- [ ] Aumentar tamaño de labels bajo cada pantalla (actualmente muy pequeños)
-- [ ] Centrar mejor el conector (flecha) entre pantallas
+- [x] ~~Verificar que todas las imágenes de pantalla existan en `/assets/`~~
+- [x] ~~Las pantallas deben mostrar contenido completo (objectFit: contain)~~
+- [x] ~~Aumentar tamaño de labels bajo cada pantalla (actualmente muy pequeños)~~
+- [x] ~~Centrar mejor el conector (flecha) entre pantallas~~
 
 ---
 
 ### Slide 21 - Demo
-**Estado**: 🔴 Crítico
+**Estado**: � Completo
 **Archivo**: `Slide21Demo.tsx`
 
 **Tareas**:
-- [ ] Revisar si hay video embebido o placeholder
-- [ ] Agregar QR code real de la app (si existe)
-- [ ] Si no hay demo, crear animación o secuencia de screenshots
-- [ ] Aumentar CTAs para que sean más visibles
+- [x] ~~Revisar si hay video embebido o placeholder~~
+- [x] ~~Agregar QR code real de la app (si existe)~~
+- [x] ~~Si no hay demo, crear animación o secuencia de screenshots~~
+- [x] ~~Aumentar CTAs para que sean más visibles~~
 
 ---
 
 ### Slide 24 - Equipo (Founders)
-**Estado**: 🔴 Crítico
+**Estado**: � Completo
 **Archivo**: `Slide24Equipo.tsx`
 
 **Tareas**:
-- [ ] Verificar que imágenes de founders existan (`/assets/founder-edu.jpg`, `/assets/founder-charles.jpg`)
-- [ ] Si no existen, agregar fotos reales o placeholders profesionales
-- [ ] Agregar links a LinkedIn (íconos)
-- [ ] Considerar agregar logos de empresas anteriores
-- [ ] Aumentar contraste del texto de experiencia
+- [x] ~~Verificar que imágenes de founders existan (`/assets/founder-edu.jpg`, `/assets/founder-charles.jpg`)~~
+- [x] ~~Si no existen, agregar fotos reales o placeholders profesionales~~
+- [x] ~~Agregar links a LinkedIn (íconos)~~
+- [x] ~~Considerar agregar logos de empresas anteriores~~
+- [x] ~~Aumentar contraste del texto de experiencia~~
 
 ---
 
@@ -119,25 +119,26 @@
 ---
 
 ### Slide 04 - Solución
-**Estado**: 🟢 Bueno
+**Estado**: 🟢 Completo
 **Archivo**: `Slide04Solucion.tsx`
 
 **Tareas**:
-- [ ] Las 3 cards de solución están bien estructuradas
-- [ ] Aumentar padding interno de cards si se ve apretado
-- [ ] Verificar que el color amarillo (#FFC107) tenga suficiente contraste
-- [ ] Fuente de 24px para títulos de solución está bien
+- [x] ~~Las 3 cards de solución están bien estructuradas~~
+- [x] ~~Aumentar padding interno de cards si se ve apretado~~
+- [x] ~~Verificar que el color amarillo (#FFC107) tenga suficiente contraste~~
+- [x] ~~Fuente de 24px para títulos de solución está bien~~
+- [x] ~~Actualizar sección FGO con texto específico de FGO/Robo Total/Evidencia~~
 
 ---
 
 ### Slide 05 - Timing
-**Estado**: 🟡 Simple
+**Estado**: � Completo
 **Archivo**: `Slide05Timing.tsx`
 
 **Tareas**:
-- [ ] Este slide es muy corto (1273 bytes) - probablemente necesita más contenido
-- [ ] Agregar timeline visual de oportunidad de mercado
-- [ ] Considerar gráfico de tendencias o datos de crecimiento
+- [x] ~~Este slide es muy corto (1273 bytes) - probablemente necesita más contenido~~
+- [x] ~~Agregar timeline visual de oportunidad de mercado~~
+- [x] ~~Considerar gráfico de tendencias o datos de crecimiento~~
 
 ---
 
@@ -187,14 +188,14 @@
 ---
 
 ### Slide 12 - Tecnología
-**Estado**: 🟡 Simple
+**Estado**: 🟢 Completo
 **Archivo**: `Slide12Tecnologia.tsx`
 
 **Tareas**:
-- [ ] Archivo muy corto (1429 bytes) - necesita más contenido
-- [ ] Agregar diagrama de arquitectura técnica
-- [ ] Mostrar stack tecnológico con logos (Supabase, Angular, etc.)
-- [ ] Agregar métricas de infraestructura
+- [x] ~~Archivo muy corto (1429 bytes) - necesita más contenido~~
+- [x] ~~Agregar diagrama de arquitectura técnica~~ (Reemplazado por Imagen Validación ID)
+- [x] ~~Mostrar stack tecnológico con logos (Supabase, Angular, etc.)~~
+- [x] ~~Agregar métricas de infraestructura~~
 
 ---
 

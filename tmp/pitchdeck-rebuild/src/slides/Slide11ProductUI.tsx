@@ -6,7 +6,7 @@ export function Slide11ProductUI() {
     {
       title: 'FLUJO: RESERVA',
       screens: [
-        { name: 'Discovery & Map', img: '/assets/product-experience/booking_discovery.png' },
+        { name: 'Discovery', img: '/assets/product-experience/booking_discovery.png' },
         { name: 'Confirmación', img: '/assets/product-experience/booking_confirmacion.png' },
       ],
       reduce: ['Abandono por UX', 'Transparencia Precios']
@@ -36,48 +36,46 @@ export function Slide11ProductUI() {
         subtitle="UX diseñada para reducción de fricción y riesgo."
       />
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '40px',
-        marginTop: '48px'
+      <div className="grid-3" style={{
+        marginTop: '32px',
+        gap: '32px',
+        alignItems: 'start'
       }}>
         {flows.map((f, i) => (
-          <div key={i} style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '24px'
-          }}>
-            <div style={{
+          <div key={i} className="flex-col gap-16" style={{ height: '100%' }}>
+            <div className="section-header" style={{
               fontSize: '20px',
-              fontWeight: '700',
-              color: 'var(--accent-green)',
               textAlign: 'center',
-              marginBottom: '16px'
+              marginBottom: '8px',
+              color: 'var(--accent-green)',
+              letterSpacing: '1px'
             }}>
               {f.title}
             </div>
 
             {f.screens.map((screen, j) => (
-              <Card key={j}>
+              <Card key={j} style={{
+                padding: '0',
+                overflow: 'hidden',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                border: '1px solid rgba(255,255,255,0.1)'
+              }}>
                 <div style={{
-                  height: '280px', // Increased from 180px
+                  height: '300px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: 'var(--text-muted)',
-                  fontSize: '16px', // Increased from 14px
+                  fontSize: '14px',
                   position: 'relative',
                   overflow: 'hidden',
-                  background: 'var(--bg-card)',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.3)'
+                  background: '#0a0a0a'
                 }}>
                   <img
                     src={screen.img}
                     alt={screen.name}
                     onError={(e) => {
-                      const img = e.currentTarget;
+                      const img = e.currentTarget as HTMLImageElement;
                       img.style.display = 'none';
                       const fallback = img.parentElement?.querySelector('[data-fallback="true"]');
                       if (fallback instanceof HTMLElement) fallback.style.display = 'block';
@@ -85,30 +83,12 @@ export function Slide11ProductUI() {
                     style={{
                       width: '100%',
                       height: '100%',
-                      objectFit: 'cover',
-                      objectPosition: 'top',
-                      display: 'block',
-                      borderRadius: '8px'
+                      objectFit: 'contain',
+                      display: 'block'
                     }}
                   />
-                  <div data-fallback="true" style={{
-                    display: 'none',
-                    textAlign: 'center',
-                    padding: '20px',
-                    background: 'linear-gradient(135deg, #2A2A2A 0%, #1E1E1E 100%)',
-                    borderRadius: '8px',
-                    border: '2px dashed var(--accent-green)',
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                    gap: '12px'
-                  }}>
-                    <div style={{ fontSize: '24px' }}>📱</div>
-                    <div style={{ fontSize: '16px', fontWeight: '600' }}>{screen.name}</div>
-                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Screenshot disponible</div>
+                  <div data-fallback="true" style={{ display: 'none', color: '#666' }}>
+                    {screen.name}
                   </div>
                   <div style={{
                     position: 'absolute',

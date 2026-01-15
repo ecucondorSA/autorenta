@@ -6,12 +6,12 @@ export function Slide21Demostración() {
     <SlideLayout>
       <SlideHeader
         title="Demo en Vivo"
-        subtitle="Probá la plataforma ahora mismo."
+        subtitle="Probá la plataforma ahora mismo (MVP Operativo)."
       />
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+        gridTemplateColumns: '1.2fr 0.8fr', // Give more space to mockup
         gap: '60px',
         marginTop: '40px',
         alignItems: 'center'
@@ -26,7 +26,7 @@ export function Slide21Demostración() {
             alt="AutoRenta App"
             style={{
               width: '100%',
-              maxWidth: '600px',
+              maxWidth: '700px',
               height: 'auto',
               filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))'
             }}
@@ -39,38 +39,42 @@ export function Slide21Demostración() {
           <div style={{
             background: 'var(--bg-card)',
             border: '2px solid var(--accent-green)',
-            borderRadius: '16px',
+            borderRadius: '24px',
             padding: '32px',
-            textAlign: 'center'
+            textAlign: 'center',
+            boxShadow: '0 0 40px rgba(0, 208, 132, 0.15)'
           }}>
             <p style={{
-              fontSize: '16px',
+              fontSize: '18px',
               color: 'var(--accent-green)',
-              marginBottom: '16px',
-              fontWeight: '600',
+              marginBottom: '20px',
+              fontWeight: '700',
               textTransform: 'uppercase',
-              letterSpacing: '2px'
+              letterSpacing: '3px'
             }}>
               Escaneá para probar
             </p>
 
-            {/* QR Placeholder */}
+            {/* QR Image */}
             <div style={{
-              width: '180px',
-              height: '180px',
+              width: '200px',
+              height: '200px',
               background: 'white',
-              borderRadius: '12px',
-              margin: '0 auto 16px',
+              borderRadius: '16px',
+              margin: '0 auto 20px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '14px',
-              color: '#333'
+              padding: '10px'
             }}>
-              [QR CODE]
+              <img
+                src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://app.autorentar.com&color=000000&bgcolor=ffffff"
+                alt="QR Code"
+                style={{ width: '100%', height: '100%' }}
+              />
             </div>
 
-            <p style={{ fontSize: '20px', color: 'var(--text-primary)', fontWeight: '600' }}>
+            <p style={{ fontSize: '24px', color: 'var(--text-primary)', fontWeight: '700', letterSpacing: '1px' }}>
               app.autorentar.com
             </p>
           </div>
@@ -79,28 +83,30 @@ export function Slide21Demostración() {
           <div style={{
             background: 'var(--bg-card)',
             border: '1px solid var(--border-subtle)',
-            borderRadius: '12px',
+            borderRadius: '16px',
             padding: '24px'
           }}>
             <p style={{
-              fontSize: '14px',
+              fontSize: '16px',
               color: 'var(--text-muted)',
               marginBottom: '16px',
-              textTransform: 'uppercase'
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              fontWeight: '600'
             }}>
               Credenciales Demo Inversor
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Usuario:</span>
-                <span style={{ color: 'var(--accent-green)', fontFamily: 'monospace', fontSize: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
+                <span style={{ color: 'var(--text-muted)', fontSize: '18px' }}>Usuario:</span>
+                <span style={{ color: 'var(--accent-green)', fontFamily: 'monospace', fontSize: '20px', fontWeight: 'bold' }}>
                   investor@autorentar.com
                 </span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Contraseña:</span>
-                <span style={{ color: 'var(--accent-green)', fontFamily: 'monospace', fontSize: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: 'var(--text-muted)', fontSize: '18px' }}>Pass:</span>
+                <span style={{ color: 'var(--accent-green)', fontFamily: 'monospace', fontSize: '20px', fontWeight: 'bold' }}>
                   demo2026
                 </span>
               </div>
@@ -111,23 +117,23 @@ export function Slide21Demostración() {
           <div style={{
             background: 'rgba(0,208,132,0.1)',
             border: '1px solid var(--accent-green)',
-            borderRadius: '12px',
-            padding: '20px'
+            borderRadius: '16px',
+            padding: '24px'
           }}>
-            <p style={{ fontSize: '14px', color: 'var(--accent-green)', marginBottom: '12px', fontWeight: '600' }}>
+            <p style={{ fontSize: '16px', color: 'var(--accent-green)', marginBottom: '16px', fontWeight: '700' }}>
               ✓ QUÉ PODÉS HACER:
             </p>
             <ul style={{
-              fontSize: '14px',
-              color: 'var(--text-secondary)',
+              fontSize: '16px',
+              color: 'var(--text-primary)',
               lineHeight: 1.8,
-              paddingLeft: '20px',
+              paddingLeft: '24px',
               margin: 0
             }}>
-              <li>Navegar el Marketplace completo</li>
-              <li>Simular una reserva end-to-end</li>
-              <li>Ver la Billetera Virtual</li>
-              <li>Explorar el Panel de Propietario</li>
+              <li>Navegar el <strong>Marketplace</strong> en tiempo real</li>
+              <li>Simular flujo de <strong>Reserva & Pagos</strong></li>
+              <li>Explorar la <strong>Billetera Virtual</strong></li>
+              <li>Auditar el <strong>Panel de Propietario</strong></li>
             </ul>
           </div>
         </div>

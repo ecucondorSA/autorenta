@@ -4,123 +4,152 @@ import { SlideLayout, SlideHeader } from '../components/SlideLayout';
 export function Slide12Tecnologia() {
   const stack = [
     { name: 'Frontend', tech: 'Angular 18 + Ionic', icon: '📱' },
-    { name: 'Backend', tech: 'Supabase (PostgreSQL)', icon: '🗄️' },
-    { name: 'Auth', tech: 'Biometría + OAuth', icon: '🔐' },
+    { name: 'Backend', tech: 'Supabase (Postgres)', icon: '🗄️' },
     { name: 'Pagos', tech: 'MercadoPago API', icon: '💳' },
     { name: 'IA', tech: 'Gemini Vision', icon: '🤖' },
-    { name: 'Deploy', tech: 'Cloudflare + GitHub', icon: '☁️' }
   ];
 
   const metricas = [
     { label: 'Uptime', value: '99.9%', color: 'var(--accent-green)' },
-    { label: 'P95 Latency', value: '<200ms', color: 'var(--accent-green)' },
     { label: 'Edge Functions', value: '45+', color: 'var(--text-primary)' },
-    { label: 'Cobertura Tests', value: '78%', color: 'var(--text-primary)' }
   ];
 
   return (
     <SlideLayout>
       <SlideHeader
-        title="Stack Tecnológico"
-        subtitle="Arquitectura moderna, escalable y de bajo costo."
+        title="Tecnología & Validación"
+        subtitle="Infraestructura robusta con validación de identidad en tiempo real."
       />
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+        gridTemplateColumns: 'minmax(300px, 1fr) 1.5fr',
         gap: '48px',
-        marginTop: '48px'
+        marginTop: '32px',
+        height: '100%'
       }}>
-        {/* Left - Stack */}
-        <div>
+        {/* Left - Validacion ID Image */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--bg-card)',
+          borderRadius: '16px',
+          padding: '16px',
+          border: '1px solid var(--border-subtle)',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+        }}>
           <p style={{
             fontSize: '14px',
-            color: 'var(--text-muted)',
-            marginBottom: '24px',
+            color: 'var(--accent-green)',
+            marginBottom: '12px',
+            fontWeight: '700',
             textTransform: 'uppercase',
-            letterSpacing: '2px'
+            letterSpacing: '1px',
+            width: '100%',
+            textAlign: 'center'
           }}>
-            Stack Principal
+            Validación de Identidad
           </p>
+          <div style={{
+            width: '100%',
+            height: '100%',
+            overflow: 'hidden',
+            borderRadius: '8px',
+            background: '#fff'
+          }}>
+            <img
+              src="/assets/validacion_id.png"
+              alt="Validación ID"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain'
+              }}
+            />
+          </div>
+        </div>
 
+        {/* Right - Stack & Metrics */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* Stack Grid */}
+          <div>
+            <p style={{
+              fontSize: '14px',
+              color: 'var(--text-muted)',
+              marginBottom: '16px',
+              textTransform: 'uppercase',
+              letterSpacing: '2px'
+            }}>
+              Core Stack
+            </p>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '16px'
+            }}>
+              {stack.map((s, i) => (
+                <div key={i} style={{
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px'
+                }}>
+                  <span style={{ fontSize: '24px' }}>{s.icon}</span>
+                  <div>
+                    <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{s.name}</p>
+                    <p style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>{s.tech}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Metrics */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gap: '16px'
           }}>
-            {stack.map((s, i) => (
-              <div key={i} style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: '12px',
-                padding: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px'
-              }}>
-                <span style={{ fontSize: '32px' }}>{s.icon}</span>
-                <div>
-                  <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{s.name}</p>
-                  <p style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)' }}>{s.tech}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right - Metrics & Features */}
-        <div>
-          <p style={{
-            fontSize: '14px',
-            color: 'var(--text-muted)',
-            marginBottom: '24px',
-            textTransform: 'uppercase',
-            letterSpacing: '2px'
-          }}>
-            Métricas de Producción
-          </p>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '16px',
-            marginBottom: '32px'
-          }}>
             {metricas.map((m, i) => (
               <div key={i} style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border-subtle)',
+                background: 'rgba(255, 255, 255, 0.05)',
                 borderRadius: '12px',
-                padding: '20px',
+                padding: '16px',
                 textAlign: 'center'
               }}>
-                <p style={{ fontSize: '32px', fontWeight: '700', color: m.color }}>{m.value}</p>
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{m.label}</p>
+                <p style={{ fontSize: '28px', fontWeight: '700', color: m.color }}>{m.value}</p>
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{m.label}</p>
               </div>
             ))}
           </div>
 
-          {/* Key Features */}
+          {/* Features Box */}
           <div style={{
             background: 'rgba(0, 208, 132, 0.1)',
             border: '1px solid var(--accent-green)',
             borderRadius: '12px',
-            padding: '24px'
+            padding: '20px',
+            marginTop: 'auto'
           }}>
-            <p style={{ fontSize: '14px', color: 'var(--accent-green)', marginBottom: '16px', fontWeight: '600' }}>
+            <p style={{ fontSize: '14px', color: 'var(--accent-green)', marginBottom: '12px', fontWeight: '600' }}>
               ✓ VENTAJAS TÉCNICAS
             </p>
             <ul style={{
-              fontSize: '15px',
+              fontSize: '14px',
               color: 'var(--text-secondary)',
-              lineHeight: 2,
+              lineHeight: 1.8,
               paddingLeft: '20px',
               margin: 0
             }}>
-              <li>Row Level Security (RLS) nativo en PostgreSQL</li>
-              <li>Edge Functions para lógica de negocio serverless</li>
-              <li>Código unificado Web + Android (Capacitor)</li>
-              <li>CI/CD automático con GitHub Actions</li>
+              <li>Row Level Security (RLS) nativo en DB</li>
+              <li>Edge Functions serverless (Deno/Node)</li>
+              <li>Código unificado Web/Mobile (Monorepo)</li>
+              <li>CI/CD automático Deployment</li>
             </ul>
           </div>
         </div>

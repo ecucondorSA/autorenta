@@ -197,17 +197,17 @@ export function Slide04Solucion() {
               lineHeight: '1.5',
               marginBottom: '12px'
             }}>
-              < USD 500, franquicias de seguro, lucro cesante
+              Cubre: Daños menores (&lt; USD 500), franquicias de seguro y lucro cesante.
             </p>
             <div style={{
               background: 'rgba(0,208,132,0.1)',
               padding: '8px 12px',
               borderRadius: '8px',
-              fontSize: '12px',
+              fontSize: '11px',
               fontWeight: '600',
               color: 'var(--accent-green)'
             }}>
-              Financiado: 10% reservas + Pool Propietarios
+              Financiado por: 10% de cada reserva + Aportes de Propietarios (Pool).
             </div>
           </div>
 
@@ -232,17 +232,17 @@ export function Slide04Solucion() {
               lineHeight: '1.5',
               marginBottom: '12px'
             }}>
-              Póliza madre (Partner) o póliza endosada del propietario
+              Cubre: Póliza de Seguro Madre (Partner) o Póliza del Propietario (endosada).
             </p>
             <div style={{
               background: 'rgba(0,208,132,0.1)',
               padding: '8px 12px',
               borderRadius: '8px',
-              fontSize: '12px',
+              fontSize: '11px',
               fontWeight: '600',
               color: 'var(--accent-green)'
             }}>
-              FGO cubre deducible → Propietario paga $0
+              El FGO cubre el deducible para que el propietario no pague nada.
             </div>
           </div>
 
@@ -267,17 +267,17 @@ export function Slide04Solucion() {
               lineHeight: '1.5',
               marginBottom: '12px'
             }}>
-              Video registro de entrada obligatorio. Sin video validado = responsabilidad total arrendatario
+              Regla: Sin video de registro de salida validado, el arrendatario asume responsabilidad total.
             </p>
             <div style={{
               background: 'rgba(0,208,132,0.1)',
               padding: '8px 12px',
               borderRadius: '8px',
-              fontSize: '12px',
+              fontSize: '11px',
               fontWeight: '600',
               color: 'var(--accent-green)'
             }}>
-              Blockchain/Server = Árbitro final
+              La evidencia en Blockchain/Server actúa como árbitro final.
             </div>
           </div>
         </div>
