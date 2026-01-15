@@ -69,44 +69,51 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
         <!-- Vertical Stepper -->
         <div class="relative space-y-0">
           <!-- Vertical Line -->
-          <div class="absolute left-[27px] top-8 bottom-8 w-0.5 bg-border-subtle -z-10"></div>
+          <div class="absolute left-[19px] top-8 bottom-8 w-px bg-border-subtle -z-10"></div>
 
           <!-- STEP 1: Contact -->
-          <div class="relative pb-8 group">
+          <div class="relative pb-6 group">
             <div class="flex gap-4">
               <!-- Indicator -->
               <div class="flex-shrink-0 mt-1">
-                <div class="w-14 h-14 rounded-full border-4 border-surface-base flex items-center justify-center transition-colors duration-300"
+                <div class="w-10 h-10 rounded-full border-2 border-surface-base flex items-center justify-center transition-all duration-300 shadow-sm"
                   [class]="getStepCircleClass(1)">
                   @if (isLevelComplete(1)) {
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                   } @else {
-                    <span class="text-lg font-bold">1</span>
+                    <span class="text-sm font-bold">1</span>
                   }
                 </div>
               </div>
 
               <!-- Content Card -->
-              <div class="flex-1">
-                <div class="bg-surface-raised rounded-2xl border border-border-subtle overflow-hidden transition-all duration-300 hover:shadow-md"
-                  [class.ring-2]="expandedSections().has(1) && !isLevelComplete(1)"
-                  [class.ring-cta-default]="expandedSections().has(1) && !isLevelComplete(1)">
-                  
-                  <button (click)="toggleSection(1)" class="w-full px-6 py-5 flex items-center justify-between text-left">
+              <div class="flex-1 transition-all duration-300">
+                <div 
+                  class="rounded-2xl overflow-hidden transition-all duration-300"
+                  [class.bg-surface-raised]="expandedSections().has(1)"
+                  [class.border]="expandedSections().has(1)"
+                  [class.border-border-subtle]="expandedSections().has(1)"
+                  [class.shadow-sm]="expandedSections().has(1)"
+                >
+                  <button (click)="toggleSection(1)" class="w-full px-4 py-3 flex items-center justify-between text-left group-hover:bg-surface-hover/30 rounded-xl transition-colors">
                     <div>
-                      <h3 class="font-semibold text-text-primary">Datos de Contacto</h3>
-                      <p class="text-sm text-text-secondary mt-0.5">Email y teléfono celular</p>
+                      <h3 class="font-semibold text-text-primary text-base">Datos de Contacto</h3>
+                      @if (!expandedSections().has(1)) {
+                        <p class="text-xs text-text-secondary mt-0.5">Email y teléfono celular</p>
+                      }
                     </div>
                     @if (isLevelComplete(1)) {
-                      <span class="text-xs font-medium bg-success-100 text-success-700 px-2.5 py-1 rounded-full">Completado</span>
+                      <div class="w-6 h-6 rounded-full bg-success-50 text-success-600 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                      </div>
                     } @else {
-                      <svg class="w-5 h-5 text-text-muted transition-transform" [class.rotate-180]="expandedSections().has(1)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                      <svg class="w-5 h-5 text-text-muted transition-transform duration-300" [class.rotate-180]="expandedSections().has(1)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     }
                   </button>
 
                   <div class="transition-all duration-300 ease-out overflow-hidden"
                     [class]="expandedSections().has(1) ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'">
-                    <div class="px-6 pb-6 pt-2 space-y-4 border-t border-border-subtle/50">
+                    <div class="px-4 pb-6 pt-2 space-y-4">
                       <app-email-verification></app-email-verification>
                       <app-phone-verification></app-phone-verification>
                     </div>
@@ -117,55 +124,60 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
           </div>
 
           <!-- STEP 2: Documents -->
-          <div class="relative pb-8 group" [class.opacity-50]="!canAccessLevel(2)">
+          <div class="relative pb-6 group" [class.opacity-50]="!canAccessLevel(2)">
             <div class="flex gap-4">
               <!-- Indicator -->
               <div class="flex-shrink-0 mt-1">
-                <div class="w-14 h-14 rounded-full border-4 border-surface-base flex items-center justify-center transition-colors duration-300"
+                <div class="w-10 h-10 rounded-full border-2 border-surface-base flex items-center justify-center transition-colors duration-300 shadow-sm"
                   [class]="getStepCircleClass(2)">
                   @if (isLevelComplete(2)) {
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                   } @else if (!canAccessLevel(2)) {
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                   } @else {
-                    <span class="text-lg font-bold">2</span>
+                    <span class="text-sm font-bold">2</span>
                   }
                 </div>
               </div>
 
               <!-- Content Card -->
-              <div class="flex-1">
-                <div class="bg-surface-raised rounded-2xl border border-border-subtle overflow-hidden transition-all duration-300"
-                   [class.hover:shadow-md]="canAccessLevel(2)"
-                   [class.ring-2]="expandedSections().has(2) && !isLevelComplete(2)"
-                   [class.ring-cta-default]="expandedSections().has(2) && !isLevelComplete(2)">
-                  
+              <div class="flex-1 transition-all duration-300">
+                <div 
+                  class="rounded-2xl overflow-hidden transition-all duration-300"
+                  [class.bg-surface-raised]="expandedSections().has(2) && canAccessLevel(2)"
+                  [class.border]="expandedSections().has(2) && canAccessLevel(2)"
+                  [class.border-border-subtle]="expandedSections().has(2) && canAccessLevel(2)"
+                  [class.shadow-sm]="expandedSections().has(2) && canAccessLevel(2)"
+                >
                   <button (click)="canAccessLevel(2) && toggleSection(2)" 
                     [disabled]="!canAccessLevel(2)"
-                    class="w-full px-6 py-5 flex items-center justify-between text-left disabled:cursor-not-allowed">
+                    class="w-full px-4 py-3 flex items-center justify-between text-left group-hover:bg-surface-hover/30 rounded-xl transition-colors disabled:cursor-not-allowed">
                     <div>
-                      <h3 class="font-semibold text-text-primary">Documentos Oficiales</h3>
-                      <p class="text-sm text-text-secondary mt-0.5">DNI y Licencia de Conducir</p>
+                      <h3 class="font-semibold text-text-primary text-base">Documentos Oficiales</h3>
+                      @if (!expandedSections().has(2)) {
+                        <p class="text-xs text-text-secondary mt-0.5">DNI y Licencia de Conducir</p>
+                      }
                     </div>
                     @if (isLevelComplete(2)) {
-                      <span class="text-xs font-medium bg-success-100 text-success-700 px-2.5 py-1 rounded-full">Completado</span>
+                      <div class="w-6 h-6 rounded-full bg-success-50 text-success-600 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                      </div>
                     } @else if (canAccessLevel(2)) {
-                      <svg class="w-5 h-5 text-text-muted transition-transform" [class.rotate-180]="expandedSections().has(2)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                      <svg class="w-5 h-5 text-text-muted transition-transform duration-300" [class.rotate-180]="expandedSections().has(2)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     }
                   </button>
 
                   <div class="transition-all duration-300 ease-out overflow-hidden"
                     [class]="expandedSections().has(2) && canAccessLevel(2) ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'">
-                    <div class="px-6 pb-6 pt-2 space-y-8 border-t border-border-subtle/50">
+                    <div class="px-4 pb-6 pt-2 space-y-8">
                       
                       <!-- DNI Block -->
-                      <div class="space-y-4">
+                      <div class="space-y-3">
                         <div class="flex items-center justify-between">
-                          <h4 class="text-sm font-semibold text-text-primary uppercase tracking-wide">Documento de Identidad</h4>
+                          <h4 class="text-xs font-bold text-text-muted uppercase tracking-wider">Documento de Identidad</h4>
                           @if (isDniVerified()) {
-                            <span class="flex items-center gap-1 text-xs font-medium text-success-600">
-                              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                              Verificado
+                            <span class="flex items-center gap-1 text-[10px] font-bold text-success-600 bg-success-50 px-2 py-0.5 rounded-full">
+                              VERIFICADO
                             </span>
                           }
                         </div>
@@ -174,16 +186,15 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                         }
                       </div>
 
-                      <div class="h-px bg-border-subtle"></div>
+                      <div class="h-px bg-border-subtle w-full"></div>
 
                       <!-- License Block -->
-                      <div class="space-y-4">
+                      <div class="space-y-3">
                         <div class="flex items-center justify-between">
-                          <h4 class="text-sm font-semibold text-text-primary uppercase tracking-wide">Licencia de Conducir</h4>
+                          <h4 class="text-xs font-bold text-text-muted uppercase tracking-wider">Licencia de Conducir</h4>
                           @if (isLicenseVerified()) {
-                            <span class="flex items-center gap-1 text-xs font-medium text-success-600">
-                              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                              Verificado
+                            <span class="flex items-center gap-1 text-[10px] font-bold text-success-600 bg-success-50 px-2 py-0.5 rounded-full">
+                              VERIFICADO
                             </span>
                           }
                         </div>
@@ -200,46 +211,52 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
           </div>
 
           <!-- STEP 3: Identity -->
-          <div class="relative pb-8 group" [class.opacity-50]="!canAccessLevel(3)">
+          <div class="relative pb-6 group" [class.opacity-50]="!canAccessLevel(3)">
             <div class="flex gap-4">
               <!-- Indicator -->
               <div class="flex-shrink-0 mt-1">
-                <div class="w-14 h-14 rounded-full border-4 border-surface-base flex items-center justify-center transition-colors duration-300"
+                <div class="w-10 h-10 rounded-full border-2 border-surface-base flex items-center justify-center transition-colors duration-300 shadow-sm"
                   [class]="getStepCircleClass(3)">
                   @if (isLevelComplete(3)) {
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                   } @else if (!canAccessLevel(3)) {
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                   } @else {
-                    <span class="text-lg font-bold">3</span>
+                    <span class="text-sm font-bold">3</span>
                   }
                 </div>
               </div>
 
               <!-- Content Card -->
-              <div class="flex-1">
-                <div class="bg-surface-raised rounded-2xl border border-border-subtle overflow-hidden transition-all duration-300"
-                   [class.hover:shadow-md]="canAccessLevel(3)"
-                   [class.ring-2]="expandedSections().has(3) && !isLevelComplete(3)"
-                   [class.ring-cta-default]="expandedSections().has(3) && !isLevelComplete(3)">
-                  
+              <div class="flex-1 transition-all duration-300">
+                <div 
+                  class="rounded-2xl overflow-hidden transition-all duration-300"
+                  [class.bg-surface-raised]="expandedSections().has(3) && canAccessLevel(3)"
+                  [class.border]="expandedSections().has(3) && canAccessLevel(3)"
+                  [class.border-border-subtle]="expandedSections().has(3) && canAccessLevel(3)"
+                  [class.shadow-sm]="expandedSections().has(3) && canAccessLevel(3)"
+                >
                   <button (click)="canAccessLevel(3) && toggleSection(3)" 
                     [disabled]="!canAccessLevel(3)"
-                    class="w-full px-6 py-5 flex items-center justify-between text-left disabled:cursor-not-allowed">
+                    class="w-full px-4 py-3 flex items-center justify-between text-left group-hover:bg-surface-hover/30 rounded-xl transition-colors disabled:cursor-not-allowed">
                     <div>
-                      <h3 class="font-semibold text-text-primary">Prueba de Vida</h3>
-                      <p class="text-sm text-text-secondary mt-0.5">Video selfie para validar identidad</p>
+                      <h3 class="font-semibold text-text-primary text-base">Prueba de Vida</h3>
+                      @if (!expandedSections().has(3)) {
+                        <p class="text-xs text-text-secondary mt-0.5">Video selfie para validar identidad</p>
+                      }
                     </div>
                     @if (isLevelComplete(3)) {
-                      <span class="text-xs font-medium bg-success-100 text-success-700 px-2.5 py-1 rounded-full">Completado</span>
+                      <div class="w-6 h-6 rounded-full bg-success-50 text-success-600 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                      </div>
                     } @else if (canAccessLevel(3)) {
-                      <svg class="w-5 h-5 text-text-muted transition-transform" [class.rotate-180]="expandedSections().has(3)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                      <svg class="w-5 h-5 text-text-muted transition-transform duration-300" [class.rotate-180]="expandedSections().has(3)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     }
                   </button>
 
                   <div class="transition-all duration-300 ease-out overflow-hidden"
                     [class]="expandedSections().has(3) && canAccessLevel(3) ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'">
-                    <div class="px-6 pb-6 pt-2 border-t border-border-subtle/50">
+                    <div class="px-4 pb-6 pt-2">
                       <app-selfie-capture></app-selfie-capture>
                     </div>
                   </div>

@@ -30,497 +30,179 @@ interface ExtractedField {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DecimalPipe],
   template: `
-    <div class="space-y-5">
-      <!-- Country Selector - Segmented Control -->
+    <div class="space-y-6">
+      <!-- Country Selector (Compact) -->
       @if (!hideCountrySelector()) {
-        <div class="relative flex p-1 rounded-xl bg-surface-secondary/80">
-          <div
-            class="absolute inset-y-1 rounded-lg bg-cta-default shadow-md transition-all duration-300 ease-out"
-            [style.left]="selectedCountry() === 'AR' ? '4px' : 'calc(50% + 2px)'"
-            [style.width]="'calc(50% - 6px)'"
-          ></div>
-          <button
-            (click)="selectCountry('AR')"
-            class="relative z-10 flex-1 py-3 rounded-lg text-sm font-semibold transition-colors duration-200 flex items-center justify-center gap-2"
-            [class]="
-              selectedCountry() === 'AR'
-                ? 'text-cta-text'
-                : 'text-text-secondary hover:text-text-primary'
-            "
-          >
-            <span class="text-base">🇦🇷</span> Argentina
-          </button>
-          <button
-            (click)="selectCountry('EC')"
-            class="relative z-10 flex-1 py-3 rounded-lg text-sm font-semibold transition-colors duration-200 flex items-center justify-center gap-2"
-            [class]="
-              selectedCountry() === 'EC'
-                ? 'text-cta-text'
-                : 'text-text-secondary hover:text-text-primary'
-            "
-          >
-            <span class="text-base">🇪🇨</span> Ecuador
-          </button>
+        <div class="flex items-center justify-between p-1">
+          <label class="text-sm font-medium text-text-secondary">País de emisión</label>
+          <div class="relative group">
+            <div class="flex gap-2">
+              <button 
+                (click)="selectCountry('AR')"
+                class="px-3 py-1 text-sm font-semibold rounded-lg transition-colors"
+                [class]="selectedCountry() === 'AR' ? 'bg-cta-default/10 text-cta-default' : 'text-text-secondary hover:text-text-primary'"
+              >
+                🇦🇷 Argentina
+              </button>
+              <button 
+                (click)="selectCountry('EC')"
+                class="px-3 py-1 text-sm font-semibold rounded-lg transition-colors"
+                [class]="selectedCountry() === 'EC' ? 'bg-cta-default/10 text-cta-default' : 'text-text-secondary hover:text-text-primary'"
+              >
+                🇪🇨 Ecuador
+              </button>
+            </div>
+          </div>
         </div>
       }
 
-      <!-- Document Title -->
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-lg bg-cta-default/10 flex items-center justify-center">
-          <svg
-            class="w-5 h-5 text-cta-default"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-            />
-          </svg>
-        </div>
-        <div>
-          <h3 class="text-base font-bold text-text-primary">Licencia de Conducir</h3>
-          <p class="text-xs text-text-muted">Habilitación para conducir</p>
-        </div>
-      </div>
-
-      <!-- Upload Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- FRENTE -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-sm font-medium text-text-primary">Frente</span>
-            @if (frontUploaded() && !uploadingFront()) {
-              <span class="text-xs px-2 py-0.5 rounded-full bg-success-100 text-success-700"
-                >Listo</span
-              >
-            }
-          </div>
-
-          <!-- Drop Zone -->
-          <div
-            class="relative w-full rounded-xl overflow-hidden transition-all duration-300 cursor-pointer group"
-            style="aspect-ratio: 85.6 / 54;"
-            [class]="getFrontZoneClass()"
-            (click)="frontGalleryInput.click()"
-            (dragover)="onDragOver($event, 'front')"
-            (dragleave)="onDragLeave('front')"
-            (drop)="onDrop($event, 'license_front')"
-          >
-            @if (!frontPreview() && !uploadingFront()) {
-              <div
-                class="absolute inset-0 flex flex-col items-center justify-center p-4 transition-all duration-200"
-              >
-                <div
-                  class="w-14 h-14 rounded-full bg-surface-hover/50 flex items-center justify-center mb-3 group-hover:bg-cta-default/10 group-hover:scale-110 transition-all"
-                >
-                  <svg
-                    class="w-7 h-7 text-text-muted group-hover:text-cta-default transition-colors"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                    />
-                  </svg>
-                </div>
-                <span
-                  class="text-sm font-medium text-text-secondary group-hover:text-text-primary transition-colors"
-                  >Frente de la licencia</span
-                >
-                <span class="text-xs text-text-muted mt-1">Arrastra o haz clic para subir</span>
-              </div>
-            }
-
-            @if (frontPreview() && !uploadingFront()) {
-              <img
-                [src]="frontPreview()"
-                class="w-full h-full object-cover"
-                alt="Frente Licencia"
-              />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-              >
-                <div class="absolute bottom-3 left-3">
-                  <span class="text-xs text-white/80">Clic para cambiar</span>
-                </div>
-              </div>
-              <div
-                class="absolute top-3 right-3 w-7 h-7 rounded-full bg-success-500 text-white flex items-center justify-center shadow-lg animate-scale-in"
-              >
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-            }
-
-            @if (uploadingFront()) {
-              <div
-                class="absolute inset-0 bg-surface-base/90 backdrop-blur-sm flex flex-col items-center justify-center"
-              >
-                <div class="relative w-16 h-16">
-                  <svg class="w-16 h-16 transform -rotate-90">
-                    <circle
-                      cx="32"
-                      cy="32"
-                      r="28"
-                      stroke-width="4"
-                      class="fill-none stroke-surface-hover"
-                    />
-                    <circle
-                      cx="32"
-                      cy="32"
-                      r="28"
-                      stroke-width="4"
-                      class="fill-none stroke-cta-default transition-all duration-300"
-                      stroke-linecap="round"
-                      [attr.stroke-dasharray]="176"
-                      [attr.stroke-dashoffset]="176 - (176 * frontProgress()) / 100"
-                    />
-                  </svg>
-                  <span
-                    class="absolute inset-0 flex items-center justify-center text-sm font-bold text-cta-default"
-                  >
-                    {{ frontProgress() }}%
-                  </span>
-                </div>
-                <span class="mt-3 text-sm text-text-secondary">Procesando...</span>
-              </div>
-            }
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="flex gap-2">
-            <label class="flex-1 md:hidden">
-              <input
-                #frontCameraInput
-                type="file"
-                accept="image/*"
-                capture="environment"
-                (change)="onFileSelected($event, 'license_front')"
-                class="hidden"
-              />
-              <div
-                class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-cta-default text-cta-text font-medium text-sm cursor-pointer hover:bg-cta-hover active:scale-[0.98] transition-all"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                Cámara
-              </div>
-            </label>
-            <label class="flex-1">
-              <input
-                #frontGalleryInput
-                type="file"
-                accept="image/*"
-                (change)="onFileSelected($event, 'license_front')"
-                class="hidden"
-              />
-              <div
-                class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-medium text-sm cursor-pointer active:scale-[0.98] transition-all"
-                [class]="
-                  frontPreview()
-                    ? 'bg-surface-secondary text-text-primary hover:bg-surface-hover border border-border-default'
-                    : 'bg-cta-default text-cta-text hover:bg-cta-hover'
-                "
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                {{ frontPreview() ? 'Cambiar' : 'Galería' }}
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <!-- DORSO -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-sm font-medium text-text-primary">Dorso</span>
-            @if (backUploaded() && !uploadingBack()) {
-              <span class="text-xs px-2 py-0.5 rounded-full bg-success-100 text-success-700"
-                >Listo</span
-              >
-            }
-          </div>
-
-          <div
-            class="relative w-full rounded-xl overflow-hidden transition-all duration-300 cursor-pointer group"
-            style="aspect-ratio: 85.6 / 54;"
-            [class]="getBackZoneClass()"
-            (click)="backGalleryInput.click()"
-            (dragover)="onDragOver($event, 'back')"
-            (dragleave)="onDragLeave('back')"
-            (drop)="onDrop($event, 'license_back')"
-          >
-            @if (!backPreview() && !uploadingBack()) {
-              <div
-                class="absolute inset-0 flex flex-col items-center justify-center p-4 transition-all duration-200"
-              >
-                <div
-                  class="w-14 h-14 rounded-full bg-surface-hover/50 flex items-center justify-center mb-3 group-hover:bg-cta-default/10 group-hover:scale-110 transition-all"
-                >
-                  <svg
-                    class="w-7 h-7 text-text-muted group-hover:text-cta-default transition-colors"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                </div>
-                <span
-                  class="text-sm font-medium text-text-secondary group-hover:text-text-primary transition-colors"
-                  >Dorso de la licencia</span
-                >
-                <span class="text-xs text-text-muted mt-1">Arrastra o haz clic para subir</span>
-              </div>
-            }
-
-            @if (backPreview() && !uploadingBack()) {
-              <img [src]="backPreview()" class="w-full h-full object-cover" alt="Dorso Licencia" />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-              >
-                <div class="absolute bottom-3 left-3">
-                  <span class="text-xs text-white/80">Clic para cambiar</span>
-                </div>
-              </div>
-              <div
-                class="absolute top-3 right-3 w-7 h-7 rounded-full bg-success-500 text-white flex items-center justify-center shadow-lg animate-scale-in"
-              >
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-            }
-
-            @if (uploadingBack()) {
-              <div
-                class="absolute inset-0 bg-surface-base/90 backdrop-blur-sm flex flex-col items-center justify-center"
-              >
-                <div class="relative w-16 h-16">
-                  <svg class="w-16 h-16 transform -rotate-90">
-                    <circle
-                      cx="32"
-                      cy="32"
-                      r="28"
-                      stroke-width="4"
-                      class="fill-none stroke-surface-hover"
-                    />
-                    <circle
-                      cx="32"
-                      cy="32"
-                      r="28"
-                      stroke-width="4"
-                      class="fill-none stroke-cta-default transition-all duration-300"
-                      stroke-linecap="round"
-                      [attr.stroke-dasharray]="176"
-                      [attr.stroke-dashoffset]="176 - (176 * backProgress()) / 100"
-                    />
-                  </svg>
-                  <span
-                    class="absolute inset-0 flex items-center justify-center text-sm font-bold text-cta-default"
-                  >
-                    {{ backProgress() }}%
-                  </span>
-                </div>
-                <span class="mt-3 text-sm text-text-secondary">Procesando...</span>
-              </div>
-            }
-          </div>
-
-          <div class="flex gap-2">
-            <label class="flex-1 md:hidden">
-              <input
-                #backCameraInput
-                type="file"
-                accept="image/*"
-                capture="environment"
-                (change)="onFileSelected($event, 'license_back')"
-                class="hidden"
-              />
-              <div
-                class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-cta-default text-cta-text font-medium text-sm cursor-pointer hover:bg-cta-hover active:scale-[0.98] transition-all"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                Cámara
-              </div>
-            </label>
-            <label class="flex-1">
-              <input
-                #backGalleryInput
-                type="file"
-                accept="image/*"
-                (change)="onFileSelected($event, 'license_back')"
-                class="hidden"
-              />
-              <div
-                class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-medium text-sm cursor-pointer active:scale-[0.98] transition-all"
-                [class]="
-                  backPreview()
-                    ? 'bg-surface-secondary text-text-primary hover:bg-surface-hover border border-border-default'
-                    : 'bg-cta-default text-cta-text hover:bg-cta-hover'
-                "
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                {{ backPreview() ? 'Cambiar' : 'Galería' }}
-              </div>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- OCR Results Card -->
-      @if (frontOcrResult() || backOcrResult()) {
-        <div
-          class="rounded-xl border border-border-default overflow-hidden bg-gradient-to-br from-surface-raised to-surface-base animate-fade-in-up"
+      <!-- Compact Upload Rows -->
+      <div class="space-y-3">
+        <!-- FRONT ROW -->
+        <div 
+          class="relative group rounded-2xl border border-border-default bg-surface-base hover:border-cta-default/30 hover:shadow-sm transition-all duration-300 overflow-hidden"
+          [class.ring-2]="isDraggingFront()"
+          [class.ring-cta-default]="isDraggingFront()"
+          (dragover)="onDragOver($event, 'front')"
+          (dragleave)="onDragLeave('front')"
+          (drop)="onDrop($event, 'license_front')"
         >
-          <div
-            class="p-4 border-b border-border-default/50 bg-gradient-to-r from-transparent to-surface-secondary/30"
-          >
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-10 h-10 rounded-full flex items-center justify-center"
-                  [class]="getConfidenceIconClass()"
-                >
-                  @if (isVerified() && !isExpired()) {
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  } @else {
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                      />
-                    </svg>
-                  }
+          <div class="flex items-center p-3 sm:p-4 gap-4">
+            <!-- Icon / Preview Thumbnail -->
+            <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative">
+              @if (frontPreview()) {
+                <img [src]="frontPreview()" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-black/10"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                   <div class="w-5 h-5 bg-success-500 rounded-full text-white flex items-center justify-center shadow-sm">
+                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                   </div>
                 </div>
-                <div>
-                  <h4 class="font-semibold text-text-primary">Datos de Licencia</h4>
-                  <p class="text-xs text-text-secondary">Verificación automática OCR</p>
-                </div>
-              </div>
+              } @else {
+                <svg class="w-6 h-6 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              }
+            </div>
 
-              <div class="relative w-14 h-14">
-                <svg class="w-14 h-14 transform -rotate-90">
-                  <circle
-                    cx="28"
-                    cy="28"
-                    r="24"
-                    stroke-width="5"
-                    class="fill-none stroke-surface-hover"
-                  />
-                  <circle
-                    cx="28"
-                    cy="28"
-                    r="24"
-                    stroke-width="5"
-                    class="fill-none transition-all duration-1000 ease-out"
-                    stroke-linecap="round"
-                    [class]="getConfidence() >= 70 ? 'stroke-success-500' : 'stroke-warning-500'"
-                    [attr.stroke-dasharray]="150.8"
-                    [attr.stroke-dashoffset]="150.8 - (150.8 * getConfidence()) / 100"
-                  />
-                </svg>
-                <span
-                  class="absolute inset-0 flex items-center justify-center text-sm font-bold"
-                  [class]="getConfidence() >= 70 ? 'text-success-600' : 'text-warning-600'"
+            <!-- Text Content -->
+            <div class="flex-grow min-w-0">
+              <h4 class="font-semibold text-text-primary text-sm sm:text-base">Frente de la licencia</h4>
+              <p class="text-xs text-text-secondary truncate">
+                @if (frontUploaded()) {
+                  Foto cargada correctamente
+                } @else {
+                  Datos legibles, sin reflejos
+                }
+              </p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex-shrink-0">
+              <input #frontInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, 'license_front')" />
+              @if (uploadingFront()) {
+                <div class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin"></div>
+              } @else {
+                <button 
+                  (click)="frontInput.click()"
+                  class="px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                  [class]="frontPreview() ? 'text-text-primary hover:bg-surface-hover' : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'"
                 >
-                  {{ getConfidence() | number: '1.0-0' }}%
-                </span>
-              </div>
+                  {{ frontPreview() ? 'Cambiar' : 'Subir' }}
+                </button>
+              }
             </div>
           </div>
+          
+          <!-- Progress Bar -->
+          @if (uploadingFront()) {
+            <div class="absolute bottom-0 left-0 h-1 bg-cta-default transition-all duration-300" [style.width.%]="frontProgress()"></div>
+          }
+        </div>
 
-          <div class="p-4 grid grid-cols-2 gap-4">
-            @for (field of extractedFields(); track field.key; let i = $index) {
-              <div class="animate-fade-in-up" [style.animation-delay]="i * 100 + 'ms'">
-                <span class="text-xs text-text-muted uppercase tracking-wide">{{
-                  field.label
-                }}</span>
-                <p
-                  class="mt-1 font-semibold flex items-center gap-2"
-                  [class]="field.isExpired ? 'text-error-600' : 'text-text-primary'"
+        <!-- BACK ROW -->
+        <div 
+          class="relative group rounded-2xl border border-border-default bg-surface-base hover:border-cta-default/30 hover:shadow-sm transition-all duration-300 overflow-hidden"
+          [class.ring-2]="isDraggingBack()"
+          [class.ring-cta-default]="isDraggingBack()"
+          (dragover)="onDragOver($event, 'back')"
+          (dragleave)="onDragLeave('back')"
+          (drop)="onDrop($event, 'license_back')"
+        >
+          <div class="flex items-center p-3 sm:p-4 gap-4">
+            <!-- Icon / Preview -->
+            <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative">
+              @if (backPreview()) {
+                <img [src]="backPreview()" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-black/10"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                   <div class="w-5 h-5 bg-success-500 rounded-full text-white flex items-center justify-center shadow-sm">
+                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                   </div>
+                </div>
+              } @else {
+                <svg class="w-6 h-6 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              }
+            </div>
+
+            <!-- Text Content -->
+            <div class="flex-grow min-w-0">
+              <h4 class="font-semibold text-text-primary text-sm sm:text-base">Dorso de la licencia</h4>
+              <p class="text-xs text-text-secondary truncate">
+                @if (backUploaded()) {
+                  Foto cargada correctamente
+                } @else {
+                  Información visible
+                }
+              </p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex-shrink-0">
+              <input #backInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, 'license_back')" />
+              @if (uploadingBack()) {
+                <div class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin"></div>
+              } @else {
+                <button 
+                  (click)="backInput.click()"
+                  class="px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                  [class]="backPreview() ? 'text-text-primary hover:bg-surface-hover' : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'"
                 >
+                  {{ backPreview() ? 'Cambiar' : 'Subir' }}
+                </button>
+              }
+            </div>
+          </div>
+          
+          <!-- Progress Bar -->
+          @if (uploadingBack()) {
+            <div class="absolute bottom-0 left-0 h-1 bg-cta-default transition-all duration-300" [style.width.%]="backProgress()"></div>
+          }
+        </div>
+      </div>
+
+      <!-- OCR Results (Minimalist) -->
+      @if (frontOcrResult() || backOcrResult()) {
+        <div class="rounded-2xl bg-surface-secondary/30 border border-border-default overflow-hidden">
+          <div class="px-4 py-3 border-b border-border-default/50 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              <span class="text-xs font-semibold text-text-secondary uppercase tracking-wide">Datos Extraídos</span>
+            </div>
+            @if (isVerified() && !isExpired()) {
+              <span class="text-xs font-bold text-success-600 bg-success-50 px-2 py-0.5 rounded">AUTO VERIFICADO</span>
+            }
+          </div>
+
+          <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            @for (field of extractedFields(); track field.key) {
+              <div>
+                <span class="text-[10px] text-text-muted uppercase tracking-wider block mb-0.5">{{ field.label }}</span>
+                <p class="mt-1 font-semibold flex items-center gap-1.5"
+                   [class]="field.isExpired ? 'text-error-600' : 'text-text-primary'">
                   {{ field.value }}
                   @if (field.isExpired) {
-                    <span class="text-xs px-1.5 py-0.5 rounded bg-error-100 text-error-700"
-                      >VENCIDA</span
-                    >
+                    <span class="text-[10px] bg-error-100 text-error-700 px-1.5 py-0.5 rounded">VENCIDA</span>
                   } @else if (field.verified) {
-                    <svg class="w-4 h-4 text-success-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
+                    <svg class="w-3 h-3 text-success-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                   }
                 </p>
               </div>
@@ -528,77 +210,33 @@ interface ExtractedField {
           </div>
 
           @if (hasWarnings()) {
-            <div class="px-4 pb-4">
-              <div class="p-3 rounded-lg bg-warning-100/50 border border-warning-200">
-                <div class="flex items-start gap-2">
-                  <svg
-                    class="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                    />
-                  </svg>
-                  <div class="space-y-1">
-                    @for (warning of getAllWarnings(); track warning) {
-                      <p class="text-sm text-warning-700">{{ warning }}</p>
-                    }
-                  </div>
-                </div>
-              </div>
+            <div class="px-4 py-2 bg-warning-50 border-t border-warning-100">
+              @for (warning of getAllWarnings(); track $index) {
+                <p class="text-xs text-warning-700 flex items-center gap-1">
+                  <span>⚠️</span> {{ warning }}
+                </p>
+              }
             </div>
           }
         </div>
 
         <!-- Expiry Warning -->
         @if (isExpired()) {
-          <div
-            class="p-3 rounded-xl bg-error-50 border border-error-200 text-sm text-error-700 flex items-center gap-3"
-          >
-            <div
-              class="w-8 h-8 rounded-full bg-error-100 flex items-center justify-center flex-shrink-0"
-            >
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+          <div class="p-3 rounded-xl bg-error-50 border border-error-200 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-error-100 flex items-center justify-center flex-shrink-0 text-error-600">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
             </div>
-            <span class="font-medium"
-              >Tu licencia está vencida. Debes renovarla para poder reservar.</span
-            >
+            <p class="text-sm font-medium text-error-800">Licencia vencida. No podrás reservar.</p>
           </div>
         }
 
         <!-- Status Message -->
         <div class="p-3 rounded-xl text-sm flex items-center gap-3" [class]="getStatusClass()">
-          <div
-            class="w-8 h-8 rounded-full bg-current/10 flex items-center justify-center flex-shrink-0"
-          >
+          <div class="w-8 h-8 rounded-full bg-current/10 flex items-center justify-center flex-shrink-0">
             @if (isVerified() && !isExpired()) {
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
             } @else {
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             }
           </div>
           <span class="font-medium">{{ getStatusMessage() }}</span>
