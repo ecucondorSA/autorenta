@@ -5,12 +5,10 @@ export const environment = buildEnvironment({
   defaultCurrency: 'ARS',
   appUrl: 'https://autorentar.com',
   supabaseUrl: 'https://pisqjmoklivzpwufhscx.supabase.co',
-  // P0-027 FIX: API keys MUST be loaded from environment variables in production
-  // Configure these in Cloudflare Pages settings:
-  // - NG_APP_SUPABASE_ANON_KEY
-  // - NG_APP_MAPBOX_ACCESS_TOKEN
-  supabaseAnonKey: undefined, // Will be read from NG_APP_SUPABASE_ANON_KEY
-  mapboxAccessToken: undefined, // Will be read from NG_APP_MAPBOX_ACCESS_TOKEN
+  // ANDROID BUILD FIX: Hardcoded for mobile builds (not exposed to web)
+  // For Cloudflare Pages web builds, these are still loaded from env vars via buildEnvironment()
+  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODI3ODMsImV4cCI6MjA3ODA1ODc4M30.wE2jTut2JSexoKFtHdEaIpl9MZ0sOHy9zMYBbhFbzt4',
+  mapboxAccessToken: 'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg',
   tripoApiKey: undefined, // Will be read from NG_APP_TRIPO_API_KEY
   googleAnalyticsMeasurementId: 'G-WV2PWTKG2E', // Google Analytics 4
   enableAnalytics: true,

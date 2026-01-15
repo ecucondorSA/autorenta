@@ -14,7 +14,7 @@ set -e
 #
 # PREREQUISITOS:
 # 1. gcloud CLI instalado y autenticado
-# 2. Proyecto GCP creado (autorenta-prod)
+# 2. Proyecto GCP creado (autorentar-prod)
 # 3. APIs habilitadas:
 #    - Cloud Run
 #    - Cloud Storage
@@ -28,7 +28,11 @@ set -e
 #
 # ============================================
 
-PROJECT_ID="autorenta-prod"
+# 2. Proyecto GCP creado (autorentar-prod)
+# 3. Google Cloud SDK instalado y autenticado (gcloud auth login)
+
+# Configuración
+PROJECT_ID="autorentar-prod"
 REGION="us-central1"
 
 echo "🚀 Deploying Video Damage Detection to GCP..."

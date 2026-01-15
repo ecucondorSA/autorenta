@@ -1,0 +1,462 @@
+El Problema: 3 Barreras Reales
+Por qué no existe un 'Turo' real en LatAm hoy.
+
+
+1. Barrera Financiera (Acceso)
+
+La mayoría no tiene tarjetas con cupos altos (>USD 1500).
+SOLUCIÓN: Wallet propietaria + Pre-auth fraccionada.
+
+2. Barrera de Confianza (Miedo)
+
+El dueño teme al fraude, robos o daños sin culpables.
+SOLUCIÓN: Identidad verificada y arbitraje con pruebas.
+
+3. Barrera de Rentabilidad (Dinero)
+
+Precios estáticos en inflación = Pérdida.
+SOLUCIÓN: Pricing dinámico basado en demanda.
+La Solución: Infraestructura Vertical
+Más que un marketplace: un Sistema Operativo.
+
+
+1. Motor de Pagos y Garantías
+
+Ledger de doble entrada. Split payments automático.
+Gestión de depósitos y garantías (Escrow lógico).
+
+2. Trust OS (Sistema de Confianza)
+
+KYC Biométrico 'Hard Gate' obligatorio.
+Inspección de video 360° + Detección de daños por IA.
+
+3. Legal-Tech Engine
+
+Contratos de comodato digitales firmados al instante.
+Evidencia vinculante para resolución de disputas.
+Por Qué Ahora (Timing)
+La convergencia de 3 factores macro en LatAm.
+
+
+Inflación & Estacionalidad
+
+La volatilidad de precios hace indispensable el Pricing Dinámico
+para proteger el valor del activo.
+
+Exclusión Financiera
+
+El mercado exige soluciones de movilidad que no dependan
+de tarjetas de crédito bancarias tradicionales.
+
+Riesgo del Activo
+
+La tecnología de video y biometría es accesible y barata
+para mitigar el riesgo de fraude masivamente.
+Fuentes: Estimaciones internas basadas en datos de renting LATAM (2024) y supuestos de conversión del mercado informal.
+METODOLOGÍA: TAM: car-rentals + sharing; SAM: BA+CABA; SOM: 2-3% adopción x take rate x ticket medio; supuestos conservadores.
+Aprendizaje
+Market Failure
+Lecciones del
+            Estructural
+               Mercado
+               Modes · Design
+                        (LatAm)Requirements
+Modos
+Por quéde
+        fallaron
+          Falla
+Aprendizaje  de los pioneros
+                 Fleety/Pegcar
+                 Históricos vs.enRequisitos
+                                  yLatAm
+                                    por qué
+                                          para
+                                            AutoRenta
+                                            de asegurar
+                                               Diseño. escala.
+                                                        escala.
+
+
+MODOS
+El ERROR
+FAILUREDE
+        MODES
+         (CASOS
+          FALLA(BRAZIL
+                (BRASIL & PEGCAR)
+                             STUDY)
+                        - PIONEROS)
+                 FLEETYCASE                                                                 REQUISITOS
+                                                                                            DISEÑO
+                                                                                            LA SOLUCIÓN
+                                                                                                   CORRECTIVO
+                                                                                                       DE
+                                                                                                        (DISEÑO
+                                                                                                          DISEÑO
+                                                                                                               AUTORENTA
+                                                                                                                AUTORENTA)
+                                                                                                                 AUTORENTA
+
+1. Payment
+   Access Constraint
+           Lockout (Exclusión)
+                     (Acceso)                                                               1. Wallet
+                                                                                               Inclusión
+                                                                                                      Propietaria
+                                                                                                         Financiera
+                                                                                                                  + Pre-auth
+
+Dependencia
+Exigieron       de de
+           tarjeta tarjetas  debancaria
+                       crédito    crédito bancarias.
+                                          con cupo
+                                           para    alto.
+                                                garantías.                                         propia
+                                                                                            Permitimos    + FGO
+                                                                                            Wallet propietaria + Pre-auth
+                                                                                                        garantías (Fondo   de
+                                                                                                                   con saldo    Garantía
+                                                                                                                            fraccionada.   Operativa).
+                                                                                                                                en cuenta/débito.
+Limitó el TAM   al
+                real
+                   20%
+                     a  solo
+                         de  la
+                              la población
+                                 población  bancarizada.
+                                            bancarizada.
+Resultado: Rechazaron al 80% de la demanda LatAm.                                           Desbloquea   demanda    masiva
+                                                                                                                    sin riesgosincrediticio.
+                                                                                                                                  riesgo
+                                                                                            Resultado: Acceso a un mercado 10x más grande.crediticio.
+
+
+2. 'Runway
+   Runway Constraint
+           Trap' (Caja)
+                      (Caja)                                                                2. Unit
+                                                                                               Rentabilidad
+                                                                                                    Economics
+                                                                                                            Unitaria
+                                                                                                              Reales
+                                                                                                              Positivos
+
+Burn-rate   altoantes
+Modelo dealto    burn-rate
+                       de lograr
+                            esperando
+                                 densidad  liquidez
+                                               de red.
+                                                    orgánica.                               Diseñado
+                                                                                            Modelo  depara
+                                                                                            Margen diseñadorentabilidad
+                                                                                                              para MC
+                                                                                                       contribución  realpositivo
+                                                                                                                         unitaria
+                                                                                                                          desde desde
+                                                                                                                                   desde
+                                                                                                                                  la     reserva
+                                                                                                                                         el día
+                                                                                                                                     reserva #1.1.#1.
+Modelo
+Cierres por
+        insostenible
+Se quedaron    sin de
+            falta     capital
+                       sin capital
+                   fondos     antes
+                           antes   infinito.
+                                   dede   lograr
+                                      lograr      densidad.
+                                               densidad.                                    No dependemos
+                                                                                            Crecimiento
+                                                                                            Crecimiento           eficiente
+                                                                                                             de subsidiar
+                                                                                                        orgánico
+                                                                                                        sostenible,            escalable.
+                                                                                                                           lay operación.
+                                                                                                                     no dependiente    de VC eterno.
+
+
+3. Fricción
+   Ops Constraint
+            Operativa
+                   (Operación)                                                              3. Trust OS Automatizado
+
+Verificación
+Procesos     manual ydedisputas
+           manuales               subjetivas.
+                         verificación  y soporte                                            Biometría + Evidencia
+                                                                                            Verificación   biométricaVideo + Arbitraje
+                                                                                                                              IA. de daños
+                                                                                                                     y arbitraje       IA. por IA
+Unit Economics
+elevaron         destruidos
+                 negativos
+          los costos        por
+                             por
+                     unitarios   costo
+                                  costo
+                                (Unit   de
+                                         desoporte
+                                            soporte.
+                                      Economics    humano.
+                                                 negativos).                                Escala
+                                                                                            Soporte                           (Costocero.
+                                                                                                                          marginal    marginal ~0).
+                                                                                                                con costodrásticamente.
+                                                                                                         costo automatizado
+                                                                                                        riesgo
+                                                                                            reducenelyelsoporteoperativo
+
+
+
+
+Fuentes: Gazeta do Povo (Análisis cierre Pegcar/Fleety); Reportes internos renting LatAm.
+Economía
+Investor Audit:
+          por Reserva
+                Unit Economics
+                        (Unit Economics)
+                                & Risk
+Transparencia
+Cómo  hacemosfinanciera
+               dinero real
+                        y operativa
+                           gestionando
+                                    (Datos
+                                       el riesgo.
+                                            Piloto).
+
+
+SPLIT DE TICKET (AOV USD 120)                                                                   EMBUDO DE CONVERSIÓN (REAL)
+GMV / Ticket Promedio                                                         USD 120.00                         Valor bruto de la reserva (3-4 días).
+Ticket Bruto (GMV)                                USD 120.00                               300
+                                                                           Valor total pagado         Negociaciones Iniciadas
+                                                                                              por renter.                                           (Intención Alta)
+
+                                                                                                        ·
+TakeRate
+Take Rate(15%)
+           (15%)                                  USD 18.00                Ingreso
+                                                                             USDNeto (Revenue).
+                                                                                   18.00        ~120              IngresoIniciada
+                                                                                                            Verificación   Neto de AutoRenta.       (Trust Gap)
+
+FGO (10%)                                         USD 12.00                                   ·
+                                                                           Fondo Garantía (Pasivo/Reservado).
+Costo Procesamiento (PSP)                                                     - USD 4.20
+                                                                                       ~70                  Aprobados
+                                                                                                                 MercadoPago
+                                                                                                                      & Intento/ Pago
+                                                                                                                                 Pasarela (3.5%). (Payment Gap)
+Costo Pagos (PSP)                                 - USD 4.20               Procesamiento (3.5%).
+                                                                                                        ·
+Costo  Riesgo & Soporte
+Costo Riesgo/Soporte                              - USD 3.00                           50 (2.5%).Reservas
+                                                                            - USDincidencia
+                                                                           Estimado 3.00                  Completadas
+                                                                                                     Fraude,                         16% Conversión Total
+                                                                                                             KYB, Seguro residual (2.5%).
+
+
+CONTRIBUTION MARGIN
+Margen de Contribución                            + USD 10.80              (Neto
+                                                                             USD por 10.80
+                                                                                     Reserva)             Neto por transacción (60% Margen).
+                                                                                          DIAGNÓSTICO: El producto funciona (CM Positivo). El capital es para
+                                                                                          automatizar Trust OS y subir conversión del 16% al 25-30%.
+STRESS TEST: Si el costo de riesgo sube 50% (a USD 4.50), el margen
+cae a USD 9.30 pero sigue siendo positivo.
+
+
+     CONCLUSIÓN DE ESCALABILIDAD:
+
+     Cada reserva es rentable. El CAC se recupera en la 2da reserva (LTV > 10x CAC).
+
+
+BASE DEL MODELO:
+· Datos: Basados en piloto controlado y benchmarks de industria (Take Rate 15%).
+· Stress Test: Si la tasa de incidentes se duplica (5%), el margen sigue siendo positivo (+USD 7.80).
+Risk Policy & Coverage (Trust OS)
+Reglas claras: qué cubre el FGO y cómo gestionamos excepciones.
+
+
+1. FGO (Fondo Garantía Operativa)
+
+Cubre: Daños menores (< USD 500), franquicias de seguro y lucro cesante.
+Financiado por: 10% de cada reserva + Aportes de Owners (Pool).
+
+
+2. Robo Total & Destrucción
+
+Cubre: Póliza de Seguro Madre (Partner) o Póliza del Owner (endosada).
+El FGO cubre el deducible para que el owner no pague nada.
+
+
+3. Evidencia Vinculante (Video Check-in)
+
+Regla: Sin video de check-out validado, el renter asume responsabilidad total.
+La evidencia en Blockchain/Server actúa como árbitro final.
+
+
+INCIDENTE -> EVIDENCIA AI -> FGO PAGA (INSTANTÁNEO) -> RECOBRO AL RENTER (DIFERIDO)
+METRICAS SANDBOX: p95 < 150ms | Error Rate < 0.1% | Uptime 99.9%
+Tecnología: Validada y Escalable
+Riesgo técnico mitigado con arquitectura moderna.
+
+
+Seguridad & Arquitectura
+
+Microservicios Edge (Supabase) + RLS.
+Diseñado para alta concurrencia y seguridad de datos.
+
+Estabilidad Transaccional
+
+Ledger con bloqueos optimistas.
+Medimos estabilidad y p95 en entornos de sandbox y piloto.
+
+Omnicanalidad Real
+
+Código unificado para Web y Android.
+Despliegue continuo sin tiempos de inactividad.
+Evidencia de Producto (En Vivo)
+Infraestructura operativa hoy. (Espacio para Capturas)
+
+FLUJO DE RESERVA                                CORE FINTECH                          TRUST OS
+
+           PEGAR: Mapa / Selección                         PEGAR: Wallet / Saldo                 PEGAR: Validación ID
+
+
+
+
+             PEGAR: Confirmación                         PEGAR: Garantía / Pre-auth          PEGAR: Check-in Evidencia
+
+
+
+
+                                       ·· IMPORTANTE: PEGAR CAPTURAS REALES AQUÍ ANTES DE ENVIAR
+Go-to-Market Strategy
+Foco inicial: Argentina + Comunidades Digitales.
+
+
+
+
+CANALES ACTIVOS (HOY)                              EJECUCIÓN INICIAL (Q1-Q2)
+
+· 5,000+ Contactos Directos (Waitlist)             · Foco Geográfico: CABA/GBA
+
+· Alianzas con flotas locales                      · Estrategia: 'Land & Expand' via comunidades
+
+· Canal EcuCondor (Audiencia validada)             · CAC Objetivo: < USD 15
+Visión: El Seguro cambia de Foco
+Del perfil del Conductor · Al riesgo del Activo.
+
+
+1. El Cuello de Botella Hoy
+
+El dueño carga con la exposición (robo, daños).
+AutoRenta reduce este riesgo mediante tecnología.
+
+
+2. Punto de Control
+
+Controlamos la capa operativa necesaria:
+Identidad + Evidencia (Video) + Pagos + Reglas.
+
+
+3. Tesis a Futuro
+
+Con ADAS/Autonomía, el seguro se centra en el Operador.
+Nuestra infraestructura sirve para ambos mundos.
+KPIs Piloto (Q1 2026)
+Métricas de validación operativa (Periodo: 90 días).
+
+
+
+
+MÉTRICA                                            VALOR (TARGET)                                  DEFINICIÓN / IMPACTO
+
+
+
+Tasa de Incidentes                                 < 5%                                            Siniestralidad controlada vs media mercado.
+
+
+NPS Propietarios                                   > 8.0                                           Satisfacción de oferta (Retention driver).
+
+
+Tasa de Verificación                               45%                                             Conversión de usuarios que pasan Biometría (Hard Gate).
+
+
+Ticket Promedio                                    USD 120                                         Valor bruto por transacción (GMV unitario).
+
+
+Disputas Automatizadas                             80%                                             Resolución sin intervención humana (Evidencia).
+
+
+
+
+DEFINICIONES:
+· Incidente: Daño reportado > USD 100 o robo. · NPS: Net Promoter Score (encuesta post-viaje).
+· Tasa Verificación: % de usuarios registrados que completan KYC. · Periodo: Datos proyectados Piloto Q1 2026.
+Growth: Adquisición de Bajo Costo
+Validación del experimento 'Frontera WiFi'.
+
+
+EMBUDO MATEMÁTICO (1 NODO / MES)
+
+Tráfico Potencial (Paso Fronterizo)                    3,000 / día · 90,000 / mes
+
+Adopción WiFi (Opt-in 10%)                             9,000 usuarios / mes
+
+Conversión a Registro (15%)                            1,350 nuevos perfiles
+
+Verificados (Hard Gate 45%)                            607 usuarios listos para reservar
+
+
+
+
+HIPÓTESIS: CAC Proyectado < USD 0.50 por usuario verificado.
+Escalable mediante replicación de nodos en puntos estratégicos de LatAm.
+El Equipo (Founders)
+Ejecución probada en Fintech y Movilidad.
+
+
+
+
+      FOTO
+                     EDUARDO MARQUES (CEO)
+                     Producto & Tecnología (Full-stack). Ex-Fintech.
+                     Lideró la arquitectura de EcuCondor (Pagos).
+
+
+
+
+      FOTO
+                     CHARLES REBOLLO (COO)
+                     Operaciones & Flota. Experto en Logística.
+                     Gestión de siniestros y redes de talleres.
+Estrategia de Crecimiento (Hipótesis)
+Experimento de adquisición de bajo costo (Frontera).
+
+
+Hipótesis
+
+Captar tráfico de 'paso fronterizo' vía WiFi gratis convierte
+a usuarios calificados (con auto y documentos) a bajo costo.
+
+
+Experimento
+
+Instalación de nodos WiFi en pasos clave (AR-BR, AR-UY).
+Registro obligatorio para acceso a internet.
+
+
+Métricas Esperadas (30 días)
+
+? Costo por Lead (CPL): < USD 0.50
+? Conversión a Registro: 15%
+? Usuarios Verificados: 1,500+
+

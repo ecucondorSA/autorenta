@@ -1,0 +1,176 @@
+{
+  "version": "1.0.0",
+  "source": "AutoRentar-PitchDeck-STRATEGIC-V14-ENGINEERING.pdf",
+  "generated": "2026-01-13T21:34:27.384511",
+  "colors": {
+    "primary": {
+      "name": "Verde AutoRentar",
+      "description": "Color principal de marca para CTAs, logo y estados activos",
+      "colors": {
+        "DEFAULT": "#22C55E",
+        "light": "#4ADE80",
+        "dark": "#16A34A",
+        "hover": "#16A34A",
+        "pressed": "#15803D"
+      }
+    },
+    "accent": {
+      "name": "Verde Lima/Acento",
+      "description": "Usado para subtítulos de sección, labels destacados, métricas importantes",
+      "colors": {
+        "lime": "#D4ED31",
+        "lime_alt": "#CDFF00",
+        "cyan": "#2DD4BF",
+        "cyan_dark": "#14B8A6"
+      }
+    },
+    "backgrounds": {
+      "name": "Fondos Oscuros",
+      "description": "Sistema de fondos para modo pitch deck (dark)",
+      "colors": {
+        "dark_primary": "#0F172A",
+        "dark_card": "#1E293B",
+        "dark_elevated": "#334155",
+        "dark_hover": "#475569"
+      }
+    },
+    "text": {
+      "name": "Colores de Texto",
+      "description": "Sistema tipográfico para pitch deck",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#94A3B8",
+        "muted": "#64748B",
+        "inverse": "#0F172A"
+      }
+    },
+    "semantic": {
+      "name": "Colores Semánticos",
+      "description": "Estados y feedback visual",
+      "colors": {
+        "success": "#22C55E",
+        "error": "#EF4444",
+        "error_light": "#F87171",
+        "warning": "#F59E0B",
+        "info": "#3B82F6"
+      }
+    },
+    "failure_modes": {
+      "name": "Modos de Falla (Slide Comparativo)",
+      "description": "Colores usados en slides de comparación error/solución",
+      "colors": {
+        "failure_label": "#EF4444",
+        "solution_label": "#22C55E"
+      }
+    }
+  },
+  "typography": {
+    "fonts": {
+      "primary": [
+        "Inter",
+        "system-ui",
+        "sans-serif"
+      ],
+      "display": [
+        "Inter",
+        "sans-serif"
+      ],
+      "mono": [
+        "JetBrains Mono",
+        "monospace"
+      ]
+    },
+    "weights": {
+      "normal": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700,
+      "black": 900
+    },
+    "styles": {
+      "title": {
+        "description": "Títulos de slide principales",
+        "weight": "bold",
+        "tracking": "-0.02em",
+        "example": "El Problema: 3 Barreras Reales"
+      },
+      "subtitle_label": {
+        "description": "Labels de sección en uppercase",
+        "weight": "medium",
+        "tracking": "0.1em",
+        "transform": "uppercase",
+        "color": "accent.lime",
+        "example": "EL GANCHO, PRUEBA DE EJECUCION"
+      },
+      "metric_large": {
+        "description": "Números grandes de métricas",
+        "weight": "bold",
+        "example": "USD 989M, 300+, < 150ms"
+      },
+      "body": {
+        "description": "Texto de párrafos y descripciones",
+        "weight": "normal",
+        "color": "text.secondary"
+      }
+    }
+  },
+  "components": {
+    "card": {
+      "description": "Cards estándar del pitch deck",
+      "styles": {
+        "background": "#1E293B",
+        "border_radius": "8px",
+        "padding": "24px",
+        "border": "none"
+      }
+    },
+    "card_highlighted": {
+      "description": "Cards con borde destacado (credenciales, CTAs)",
+      "styles": {
+        "background": "#1E293B",
+        "border_radius": "8px",
+        "padding": "24px",
+        "border": "1px solid #2DD4BF"
+      }
+    },
+    "metric_box": {
+      "description": "Contenedores de métricas numéricas",
+      "styles": {
+        "background": "#1E293B",
+        "border_radius": "8px",
+        "padding": "16px 24px"
+      }
+    },
+    "timeline_phase": {
+      "description": "Fases del timeline vertical",
+      "styles": {
+        "active_color": "#22C55E",
+        "pending_color": "#64748B",
+        "bar_color": "#334155"
+      }
+    }
+  },
+  "tailwindExtension": {
+    "pitchDeck": {
+      "primary": {
+        "DEFAULT": "#22C55E",
+        "light": "#4ADE80",
+        "dark": "#16A34A"
+      },
+      "accent": {
+        "lime": "#D4ED31",
+        "cyan": "#2DD4BF"
+      },
+      "bg": {
+        "dark": "#0F172A",
+        "card": "#1E293B",
+        "elevated": "#334155"
+      },
+      "text": {
+        "primary": "#FFFFFF",
+        "secondary": "#94A3B8",
+        "muted": "#64748B"
+      }
+    }
+  }
+}

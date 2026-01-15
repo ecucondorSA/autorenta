@@ -26,7 +26,7 @@ export const environment = buildEnvironment({
   supabaseAnonKey:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODI3ODMsImV4cCI6MjA3ODA1ODc4M30.wE2jTut2JSexoKFtHdEaIpl9MZ0sOHy9zMYBbhFbzt4',
   mapboxAccessToken:
-    'pk.eyJ1IjoicGhpbGxpcGNsYXJrIiwiYSI6ImNscW51enR3cTBqOWMybG8wZ2h1amxyeHoifQ.1D6wH_ePZ2n3M0t7mH01gQ',
+    'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg',
   tripoApiKey: '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',
   googleAnalyticsMeasurementId: '',
   enableAnalytics: false,

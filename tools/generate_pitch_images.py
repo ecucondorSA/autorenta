@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate images for AutoRentar Pitch Deck using Gemini API (google-genai)
+Generate images for AutoRentar Pitch Deck V14 using Gemini API (google-genai)
 """
 
 import os
@@ -9,6 +9,7 @@ from google import genai
 from google.genai import types
 
 # Configure API
+# Using the key found in the original file or environment variable
 API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyCJIdveA5iCElCbfkBC9gXv24VktHRjftU')
 
 # Create client
@@ -18,49 +19,37 @@ client = genai.Client(api_key=API_KEY)
 OUTPUT_DIR = Path('/home/edu/autorenta/docs/pitch/images')
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# Image prompts for pitch deck
+# Common style for UI screens
+STYLE_SUFFIX = " High fidelity UI design, mobile app screen, dark mode #111111 background, neon green #00CC66 accents, clean typography, modern fintech aesthetic, 8k resolution, highly detailed, flat design."
+
+# Image prompts for pitch deck V14
 PROMPTS = {
-    "hero_car": """
-    Photorealistic image of a modern premium sedan car parked on a vibrant
-    Buenos Aires street at golden hour sunset. The car has subtle neon green
-    accent lighting. Modern Latin American city backdrop with colonial and
-    contemporary architecture. Professional automotive photography style,
-    cinematic lighting. The mood conveys trust, innovation, and shared mobility.
+    "ui_1_discovery": f"""
+    Mobile app map interface showing Buenos Aires streets in dark mode. Bright green location pins scattered. A bottom card overlay shows a white Toyota Corolla, 'Premium Sedan', '$45/day'. Clean sans-serif text. {STYLE_SUFFIX}
     """,
 
-    "owner_happy": """
-    Photorealistic image of a happy professional person in their 30s standing
-    next to their car with a smartphone showing earnings. Warm, trustworthy
-    expression. Urban residential background. Natural lighting, lifestyle
-    photography style. Conveys passive income and satisfaction from car sharing.
+    "ui_2_booking": f"""
+    Mobile app booking summary screen. Dark background. Header 'Reservation Confirmed' in green. Central card showing car thumbnail, dates 'Jan 12 - Jan 15', Total '$135'. Bottom button 'Open Wallet'. Minimalist. {STYLE_SUFFIX}
     """,
 
-    "renter_keys": """
-    Photorealistic close-up of hands exchanging car keys between two people.
-    Modern car visible in background. Professional, clean aesthetic.
-    Natural lighting. Represents peer-to-peer car sharing transaction moment.
-    Trust and connection between people.
+    "ui_3_wallet": f"""
+    Mobile app wallet dashboard. Dark mode. Large text '$1,250.00' in white. Green graph line going up. List of 'Recent Transactions' below. 'Add Funds' button in green. Fintech style. {STYLE_SUFFIX}
     """,
 
-    "app_dashboard": """
-    Modern smartphone mockup displaying a car rental app dashboard.
-    Dark theme UI with bright green accents. Shows car listings, map with
-    location pins, booking calendar, and earnings graph. Clean, minimalist
-    fintech design. 3D render style with subtle shadows. Tech startup aesthetic.
+    "ui_4_preauth": f"""
+    Mobile app security deposit screen. Dark mode. A shield icon with a checkmark. Text 'Pre-authorization Active'. Amount '$500.00' in grey. 'Funds on hold' status. Secure and clean design. {STYLE_SUFFIX}
     """,
 
-    "verification": """
-    Futuristic biometric verification concept. Face scan with digital overlay,
-    fingerprint recognition visualization. Blue and green tech colors on dark
-    background. Conveys security, trust, and modern technology.
-    Abstract tech-illustration style. Digital identity verification.
+    "ui_5_kyc": f"""
+    Mobile app selfie verification screen. A user's face (photorealistic) framed by a green oval scanner line. Text 'Verifying Identity...'. Dark background with tech grid overlay. Biometric style. {STYLE_SUFFIX}
     """,
 
-    "latam_expansion": """
-    Stylized digital map visualization of South America highlighting Argentina,
-    Brazil, Uruguay and Ecuador. Glowing green connection lines between major
-    cities. Dark background with luminous nodes. Modern data visualization
-    infographic style. Shows business expansion and regional connectivity.
+    "ui_6_inspection": f"""
+    Mobile app video recording screen. View of a car bumper. Augmented Reality (AR) overlay: a bounding box detecting a scratch. Tag 'Minor Scratch Detected'. Recording timer 00:15. Tech interface. {STYLE_SUFFIX}
+    """,
+
+    "team_founders": """
+    Professional headshot of two tech co-founders standing together. One is a software engineer (30s, smart casual), the other is an operations expert (30s, smart casual). Modern office background with glass and tech vibes. Confident, trustworthy, visionary. 8k resolution, cinematic lighting.
     """
 }
 
@@ -70,13 +59,16 @@ def generate_image(prompt_name: str, prompt: str):
     print(f"Generating: {prompt_name}")
     print(f"{'='*50}")
 
+    # Determine aspect ratio based on prompt type
+    aspect_ratio = "9:16" if prompt_name.startswith("ui_") else "16:9"
+
     try:
         response = client.models.generate_images(
-            model='imagen-4.0-fast-generate-001',
+            model='imagen-3.0-generate-001',
             prompt=prompt.strip(),
             config=types.GenerateImagesConfig(
                 number_of_images=1,
-                aspect_ratio="16:9",
+                aspect_ratio=aspect_ratio,
                 output_mime_type="image/png"
             )
         )
@@ -98,13 +90,41 @@ def generate_image(prompt_name: str, prompt: str):
 
     except Exception as e:
         print(f"Error generating {prompt_name}: {type(e).__name__}: {e}")
-        return False
+        # Fallback to fast model if 3.0 fails or is not available
+        try:
+            print("Retrying with fast model...")
+            response = client.models.generate_images(
+                model='imagen-4.0-fast-generate-001',
+                prompt=prompt.strip(),
+                config=types.GenerateImagesConfig(
+                    number_of_images=1,
+                    aspect_ratio=aspect_ratio,
+                    output_mime_type="image/png"
+                )
+            )
+            if response.generated_images:
+                image = response.generated_images[0]
+                output_path = OUTPUT_DIR / f"{prompt_name}.png"
+                with open(output_path, 'wb') as f:
+                    f.write(image.image.image_bytes)
+                print(f"Saved (Fast Model): {output_path}")
+                return True
+        except Exception as e2:
+            print(f"Fallback failed: {e2}")
+            return False
 
 def main():
-    print("AutoRentar Pitch Deck Image Generator")
+    print("AutoRentar Pitch Deck V14 Image Generator")
     print("="*50)
     print(f"Output directory: {OUTPUT_DIR}")
     print(f"Images to generate: {len(PROMPTS)}")
+
+    # Install google-genai if missing (basic check)
+    try:
+        import google.genai
+    except ImportError:
+        print("Installing google-genai...")
+        os.system("pip install google-genai")
 
     success_count = 0
     for name, prompt in PROMPTS.items():
@@ -114,12 +134,6 @@ def main():
     print(f"\n{'='*50}")
     print(f"Generation complete: {success_count}/{len(PROMPTS)} images")
     print(f"Output: {OUTPUT_DIR}")
-
-    # List generated images
-    if success_count > 0:
-        print("\nGenerated files:")
-        for f in OUTPUT_DIR.glob("*.png"):
-            print(f"  - {f.name} ({f.stat().st_size / 1024:.1f} KB)")
 
 if __name__ == "__main__":
     main()

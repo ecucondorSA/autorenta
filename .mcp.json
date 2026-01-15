@@ -15,6 +15,40 @@
       "env": {
         "SUPABASE_ACCESS_TOKEN": "sbp_4984abf7ac0af3d977b989b674c19875539c014b"
       }
+    },
+    "autorenta-ops": {
+      "command": "/home/edu/autorenta/mcp/autorenta-ops/venv/bin/python",
+      "args": [
+        "/home/edu/autorenta/mcp/autorenta-ops/server.py"
+      ],
+      "env": {}
+    },
+    "prompt-refiner": {
+      "command": "/home/edu/autorenta/mcp/prompt-refiner/venv/bin/python",
+      "args": [
+        "/home/edu/autorenta/mcp/prompt-refiner/server.py"
+      ],
+      "env": {}
+    },
+    "docs-navigator": {
+      "command": "/home/edu/autorenta/mcp/docs-navigator/venv/bin/python",
+      "args": [
+        "/home/edu/autorenta/mcp/docs-navigator/server.py"
+      ],
+      "env": {}
+    },
+    "autorenta-platform": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/home/edu/autorenta/mcp-server/dist/index.js"
+      ],
+      "env": {
+        "SUPABASE_URL": "https://pisqjmoklivzpwufhscx.supabase.co",
+        "SUPABASE_SERVICE_ROLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjQ4Mjc4MywiZXhwIjoyMDc4MDU4NzgzfQ.SiACo6rXnbu0B091FZEgmyoXK0-EzxKd9YeO4pls0eQ",
+        "ENABLE_CACHE": "true",
+        "CACHE_TTL": "600"
+      }
     }
   }
 }

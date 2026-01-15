@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Autorenta</string>
-    <string name="title_activity_main">Autorenta</string>
-    <string name="package_name">com.autorenta.app</string>
-    <string name="custom_url_scheme">com.autorenta.app</string>
+    <string name="app_name">Autorentar</string>
+    <string name="title_activity_main">Autorentar</string>
+    <string name="package_name">com.autorentar.app</string>
+    <string name="custom_url_scheme">com.autorentar.app</string>
+    <string name="facebook_app_id">4435998730015502</string>
+    <string name="fb_login_protocol_scheme">fb4435998730015502</string>
 </resources>

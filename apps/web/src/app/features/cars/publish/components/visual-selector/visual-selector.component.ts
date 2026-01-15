@@ -14,8 +14,8 @@ export class SafeHtmlPipe implements PipeTransform {
   }
 }
 
-export interface VisualOption {
-  value: any;
+export interface VisualOption<T = unknown> {
+  value: T;
   label: string;
   subLabel?: string;
   icon: string; // key for the internal icon map
@@ -112,35 +112,35 @@ export interface VisualOption {
     }
   `]
 })
-export class VisualSelectorComponent implements ControlValueAccessor {
-  @Input() options: VisualOption[] = [];
+export class VisualSelectorComponent<T = unknown> implements ControlValueAccessor {
+  @Input() options: VisualOption<T>[] = [];
   @Input() label = '';
   @Input() cols = 2;
   @Input() responsive = true;
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
 
-  value = signal<any>(null);
+  value = signal<T | null>(null);
   disabled = signal(false);
 
-  private onChange: (value: any) => void = () => {};
+  private onChange: (value: T | null) => void = () => {};
   private onTouched: () => void = () => {};
 
-  select(val: any) {
+  select(val: T) {
     if (this.disabled()) return;
     this.value.set(val);
     this.onChange(val);
     this.onTouched();
   }
 
-  writeValue(val: any): void {
+  writeValue(val: T | null): void {
     this.value.set(val);
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: T | null) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 

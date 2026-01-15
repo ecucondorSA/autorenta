@@ -23,6 +23,53 @@ import { chromium } from 'patchright';
 // ========== Helper ==========
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+/**
+ * Moves the mouse to (x, y) following a human-like Bezier curve path.
+ * @param {import('playwright').Page} page
+ * @param {number} targetX
+ * @param {number} targetY
+ */
+async function humanMove(page, targetX, targetY) {
+  // We can't easily get the current mouse position in Playwright without tracking it manually.
+  // We'll trust the start to be 0,0 or the previous known position if we tracked it.
+  // Ideally, the mcp server should track `this.mousePos`, but for now we assume discrete actions.
+  // To make it look real, we arc from a random "off" point if we don't know where we are,
+  // or we just animate the end of the curve.
+  //
+  // For robustness, we will just animate from (0,0) or the center if unknown, 
+  // but actually Playwright's mouse.move simply warps or moves linearly.
+  // To get the bezier effect, we need to send intermediate steps.
+  
+  const start = { x: 0, y: 0 }; // Simplified assumption for stateless calls
+  
+  // Random control points
+  const cp1 = {
+    x: start.x + (targetX - start.x) / 2 + (Math.random() * 100 - 50),
+    y: start.y + (Math.random() * 100 - 50)
+  };
+  const cp2 = {
+    x: targetX - (Math.random() * 100 - 50),
+    y: targetY + (targetY - start.y) / 2 + (Math.random() * 100 - 50)
+  };
+
+  const steps = 25; 
+  for (let i = 1; i <= steps; i++) {
+    const t = i / steps;
+    const x = Math.pow(1-t, 3) * start.x + 
+              3 * Math.pow(1-t, 2) * t * cp1.x + 
+              3 * (1-t) * Math.pow(t, 2) * cp2.x + 
+              Math.pow(t, 3) * targetX;
+    const y = Math.pow(1-t, 3) * start.y + 
+              3 * Math.pow(1-t, 2) * t * cp1.y + 
+              3 * (1-t) * Math.pow(t, 2) * cp2.y + 
+              Math.pow(t, 3) * targetY;
+
+    await page.mouse.move(x, y);
+    // Micro-hesitancy
+    await page.waitForTimeout(Math.random() * 10 + 5); 
+  }
+}
+
 // ========== MercadoPago Transfer ==========
 async function mpTransfer(page, alias, amount, expectedName) {
   const log = (msg) => console.error(`[MP] ${msg}`);
@@ -377,11 +424,72 @@ class PatchrightStreamingMCP {
       console.error(`[MCP] Profile: ${CONFIG.profilePath}`);
 
       const launch = async () => {
+        const os = await import('os');
+        const path = await import('path');
+        // Video dir requires a persistent path to save files
+        this.videoDir = path.join(os.tmpdir(), 'mcp-videos');
+
         this.context = await chromium.launchPersistentContext(CONFIG.profilePath, {
           headless: CONFIG.headless,
           executablePath: CONFIG.executablePath,
-          viewport: null, // Natural viewport
-          // NO custom userAgent or headers (patchright recommendation)
+          viewport: { width: 1280, height: 720 }, // Fixed viewport for video consistency
+          recordVideo: {
+            dir: this.videoDir,
+            size: { width: 1280, height: 720 }
+          },
+          args: [
+            '--disable-blink-features=AutomationControlled',
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-infobars',
+            '--window-position=0,0'
+          ],
+          ignoreDefaultArgs: ['--enable-automation'],
+        });
+
+        // 🛡️ MILITARY GRADE STEALTH INJECTION V2 (Enhanced WebGL/Audio/Canvas)
+        await this.context.addInitScript(() => {
+            // 1. Spoof WebGL Vendor/Renderer (Intel Iris OpenGL Engine)
+            const getParameter = WebGLRenderingContext.prototype.getParameter;
+            WebGLRenderingContext.prototype.getParameter = function(parameter) {
+                if (parameter === 37445) return 'Intel Inc.'; // UNMASKED_VENDOR_WEBGL
+                if (parameter === 37446) return 'Intel Iris OpenGL Engine'; // UNMASKED_RENDERER_WEBGL
+                return getParameter.apply(this, [parameter]);
+            };
+
+            // 2. Spoof Navigator Hardware
+            Object.defineProperties(navigator, {
+                hardwareConcurrency: { get: () => 8 },
+                deviceMemory: { get: () => 8 },
+                webdriver: { get: () => undefined },
+            });
+
+            // 3. AudioContext Fingerprint Noise
+            const originalCreateOscillator = AudioContext.prototype.createOscillator;
+            AudioContext.prototype.createOscillator = function() {
+                const oscillator = originalCreateOscillator.apply(this, arguments);
+                const originalStart = oscillator.start;
+                oscillator.start = function(when = 0) {
+                    return originalStart.apply(this, [when + (Math.random() * 1e-6)]);
+                };
+                return oscillator;
+            };
+
+            // 4. Mock chrome.runtime
+            if (!window.chrome) { window.chrome = {}; }
+            if (!window.chrome.runtime) { window.chrome.runtime = {}; }
+
+            // 5. Mock permissions
+            const originalQuery = window.navigator.permissions.query;
+            window.navigator.permissions.query = (parameters) => (
+                parameters.name === 'notifications' ?
+                Promise.resolve({ state: Notification.permission }) :
+                originalQuery(parameters)
+            );
+
+            // 6. Mock plugins & languages
+            Object.defineProperty(navigator, 'plugins', { get: () => [1, 2, 3] });
+            Object.defineProperty(navigator, 'languages', { get: () => ['es-AR', 'es', 'en-US', 'en'] });
         });
 
         this.context.on('close', () => {
@@ -421,6 +529,9 @@ class PatchrightStreamingMCP {
   }
 
   async setupPageListeners() {
+    if (this.page._mcpListenersAttached) return;
+    this.page._mcpListenersAttached = true;
+
     // Console messages
     this.page.on('console', msg => {
       this.pushEvent(EventType.CONSOLE, {
@@ -475,6 +586,41 @@ class PatchrightStreamingMCP {
       });
     });
 
+    // Popups (new tabs/windows)
+    this.page.on('popup', async popup => {
+        try {
+            await popup.waitForLoadState('domcontentloaded');
+            const title = await popup.title().catch(() => 'New Tab');
+            this.pushEvent('popup', {
+                url: popup.url(),
+                title: title
+            });
+            console.error(`[MCP] New tab opened: ${title} (${popup.url()})`);
+        } catch (e) {
+             this.pushEvent('popup_error', { error: e.message });
+        }
+    });
+
+    // Downloads
+    this.page.on('download', async download => {
+        const suggested = download.suggestedFilename();
+        this.pushEvent('download_started', { filename: suggested, url: download.url() });
+        try {
+             // Save to a temporary location or user defined downloads folder
+             const fs = await import('fs');
+             const path = await import('path');
+             const os = await import('os');
+             const downloadPath = await download.path();
+             if (downloadPath) {
+                 const dest = path.join(os.tmpdir(), `mcp-download-${Date.now()}-${suggested}`);
+                 await download.saveAs(dest);
+                 this.pushEvent('download_completed', { filename: suggested, path: dest });
+             }
+        } catch (e) {
+            this.pushEvent('download_error', { error: e.message });
+        }
+    });
+
     console.error('[MCP] Page listeners attached (no CDP - stealth mode)');
   }
 
@@ -502,7 +648,9 @@ class PatchrightStreamingMCP {
           inputSchema: {
             type: 'object',
             properties: {
-              url: { type: 'string', description: 'URL to navigate to' }
+              url: { type: 'string', description: 'URL to navigate to' },
+              waitUntil: { type: 'string', enum: ['load', 'domcontentloaded', 'networkidle', 'commit'], description: 'Wait condition (default: domcontentloaded)' },
+              timeout: { type: 'number', description: 'Timeout in ms' }
             },
             required: ['url']
           }
@@ -513,7 +661,9 @@ class PatchrightStreamingMCP {
           inputSchema: {
             type: 'object',
             properties: {
-              selector: { type: 'string', description: 'CSS selector' }
+              selector: { type: 'string', description: 'CSS selector' },
+              timeout: { type: 'number', description: 'Custom timeout in ms' },
+              force: { type: 'boolean', description: 'Force click (bypass checks)' }
             },
             required: ['selector']
           }
@@ -586,6 +736,40 @@ class PatchrightStreamingMCP {
             },
             required: ['selector']
           }
+        },
+        // === Tab Management ===
+        {
+          name: 'stream_list_tabs',
+          description: 'List all open tabs/pages',
+          inputSchema: { type: 'object', properties: {} }
+        },
+        {
+          name: 'stream_switch_tab',
+          description: 'Switch control to another tab by index or title/url matching',
+          inputSchema: {
+             type: 'object',
+             properties: {
+                 index: { type: 'number', description: 'Tab index (0-based)' },
+                 match: { type: 'string', description: 'String to match in title or URL' }
+             }
+          }
+        },
+        // === Resource Optimization ===
+        {
+            name: 'stream_block_resources',
+            description: 'Block resource types (images, fonts) to speed up loading',
+            inputSchema: {
+                type: 'object',
+                properties: {
+                    types: { 
+                        type: 'array', 
+                        items: { type: 'string', enum: ['image', 'font', 'stylesheet', 'media', 'script'] },
+                        description: 'Resource types to block'
+                    },
+                    enable: { type: 'boolean', description: 'Enable or disable blocking (default: true)' }
+                },
+                required: ['enable']
+            }
         },
         {
           name: 'stream_close',
@@ -858,6 +1042,19 @@ class PatchrightStreamingMCP {
             required: ['action']
           }
         },
+        // === Video & Evidence ===
+        {
+          name: 'stream_video',
+          description: 'Manage video recording (get current video path, start/stop not supported yet as it is auto-on)',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              action: { type: 'string', enum: ['get_path', 'save'], description: 'Action' },
+              savePath: { type: 'string', description: 'Path to save video to (for save action)' }
+            },
+            required: ['action']
+          }
+        },
         {
           name: 'stream_drag_drop',
           description: 'Drag and drop elements (sliders, kanban, file drops)',
@@ -951,8 +1148,8 @@ class PatchrightStreamingMCP {
               const eventsBefore = this.lastEventId;
 
               await page.goto(args.url, {
-                waitUntil: 'domcontentloaded',
-                timeout: CONFIG.navigationTimeoutMs,
+                waitUntil: args.waitUntil || 'domcontentloaded',
+                timeout: args.timeout || CONFIG.navigationTimeoutMs,
               });
 
               return {
@@ -970,7 +1167,35 @@ class PatchrightStreamingMCP {
               const { page } = await this.ensureBrowser();
               const eventsBefore = this.lastEventId;
 
-              await page.click(args.selector, { timeout: CONFIG.selectorTimeoutMs });
+              // 🤖 10/10 STEALTH CLICK
+              try {
+                // Wait for element
+                const el = await page.waitForSelector(args.selector, { 
+                    timeout: args.timeout || CONFIG.selectorTimeoutMs,
+                    state: 'visible' 
+                });
+                
+                // Scroll & Measure
+                await el.scrollIntoViewIfNeeded();
+                const box = await el.boundingBox();
+                
+                if (box) {
+                    // Human Move & Click
+                    const targetX = box.x + box.width / 2;
+                    const targetY = box.y + box.height / 2;
+                    await humanMove(page, targetX, targetY);
+                    await page.mouse.click(targetX, targetY);
+                } else {
+                    await page.click(args.selector, { force: args.force });
+                }
+              } catch (e) {
+                 console.error('[Stealth] Human click failed, using standard:', e.message);
+                 await page.click(args.selector, {
+                    timeout: args.timeout || CONFIG.selectorTimeoutMs,
+                    force: args.force || false
+                 });
+              }
+
               await page.waitForTimeout(CONFIG.postActionDelayMs);
 
               return {
@@ -1129,6 +1354,73 @@ class PatchrightStreamingMCP {
               };
             });
             break;
+          }
+
+          case 'stream_list_tabs': {
+            const { context, page: currentPage } = await this.ensureBrowser();
+            const pages = context.pages();
+            const list = await Promise.all(pages.map(async (p, i) => ({
+                index: i,
+                url: p.url(),
+                title: await p.title().catch(() => 'Err'),
+                isActive: p === currentPage
+            })));
+            result = { tabs: list, count: list.length };
+            break;
+          }
+
+          case 'stream_switch_tab': {
+             const { context } = await this.ensureBrowser();
+             const pages = context.pages();
+             let targetPage = null;
+             let method = '';
+
+             if (typeof args.index === 'number') {
+                 if (args.index >= 0 && args.index < pages.length) {
+                     targetPage = pages[args.index];
+                     method = `index ${args.index}`;
+                 }
+             } else if (args.match) {
+                 for (const p of pages) {
+                     const url = p.url();
+                     const title = await p.title().catch(() => '');
+                     if (url.includes(args.match) || title.includes(args.match)) {
+                         targetPage = p;
+                         method = `match "${args.match}"`;
+                         break;
+                     }
+                 }
+             }
+
+             if (targetPage) {
+                 this.page = targetPage;
+                 await targetPage.bringToFront();
+                 await this.setupPageListeners(); // Ensure listeners are attached
+                 result = { switched: true, method, url: targetPage.url() };
+             } else {
+                 throw new Error(`Tab not found (count: ${pages.length})`);
+             }
+             break;
+          }
+
+          case 'stream_block_resources': {
+              const { context } = await this.ensureBrowser();
+              if (args.enable) {
+                  const types = args.types || ['image', 'font', 'media'];
+                  await context.route('**/*', async (route) => {
+                      if (types.includes(route.request().resourceType())) {
+                          await route.abort();
+                      } else {
+                          await route.fallback();
+                      }
+                  });
+                  result = { blocked: true, types };
+              } else {
+                  await context.unroute('**/*'); // Warning: clears all routes including auth mocks?
+                  // Better: keep track of this specific handler. But unroute('**/*') is safest effectively.
+                  result = { blocked: false };
+              }
+              break;
           }
 
           case 'stream_close': {
@@ -1529,6 +1821,27 @@ class PatchrightStreamingMCP {
                 break;
             }
             break;
+          }
+
+          case 'stream_video': {
+              const { page } = await this.ensureBrowser();
+              const video = page.video();
+              if (video) {
+                  const currentPath = await video.path();
+                  if (args.action === 'save' && args.savePath) {
+                      const fs = await import('fs');
+                      // Note: Video file is locked until page closes.
+                      // We must await page close to save fully, OR copy what we have.
+                      // For now, we return the temp path.
+                      await video.saveAs(args.savePath); // Playwright handles this even if open
+                      result = { saved: args.savePath };
+                  } else {
+                      result = { path: currentPath, status: 'recording' };
+                  }
+              } else {
+                  result = { error: 'Video recording not enabled or available' };
+              }
+              break;
           }
 
           case 'stream_drag_drop': {

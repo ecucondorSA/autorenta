@@ -7,6 +7,8 @@
   },
   "scripts": {
     "ng": "ng",
+    "predev": "node scripts/env/generate-env.js",
+    "dev": "node scripts/env/start-with-env.mjs --configuration development-low-spec",
     "start": "node scripts/env/start-with-env.mjs > app_start.log 2>&1",
     "start:no-hmr": "ng serve --configuration development-no-hmr",
     "clean-restart": "./scripts/clean-restart.sh",

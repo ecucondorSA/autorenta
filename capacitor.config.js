@@ -1,12 +1,14 @@
 
 
 const config = {
-  appId: 'com.autorenta.app',
-  appName: 'Autorenta',
+  appId: 'com.autorentar.app',
+  appName: 'Autorentar',
   webDir: 'apps/web/dist/web/browser',
   server: {
     androidScheme: 'https',
     iosScheme: 'https',
+    url: 'https://autorentar.com',
+    allowNavigation: ['autorentar.com', '*.autorentar.com']
   },
   plugins: {
     SplashScreen: {
@@ -32,6 +34,9 @@ const config = {
       resize: 'native',
       style: 'dark',
       resizeOnFullScreen: true,
+    },
+    FacebookLogin: {
+      appId: '4435998730015502',
     },
   },
 };

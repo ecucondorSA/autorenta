@@ -134,26 +134,37 @@
       (function () {
         // Detect if running in Capacitor
         var isCapacitor = window.Capacitor !== undefined ||
-                          (window.location.protocol === 'https:' && window.location.hostname === 'localhost');
+          (window.location.protocol === 'https:' && window.location.hostname === 'localhost');
 
         try {
           var xhr = new XMLHttpRequest();
           // Use simple path without cache-busting query for better Capacitor compatibility
           var envPath = isCapacitor ? '/env.js' : '/env.js?v=' + Date.now();
+          console.log('[ENV] 🔄 Loading environment from:', envPath);
           xhr.open('GET', envPath, false); // Synchronous
-          xhr.timeout = 5000; // 5 second timeout
+
           xhr.send();
+          console.log('[ENV] 📡 XHR status:', xhr.status);
           if (xhr.status === 200 && xhr.responseText) {
+            console.log('[ENV] 📄 Response (first 100 chars):', xhr.responseText.substring(0, 100));
             eval(xhr.responseText);
+            if (window.__env) {
+              console.log('[ENV] ✅ Successfully loaded window.__env with', Object.keys(window.__env).length, 'variables');
+              console.log('[ENV] 🔑 Mapbox token loaded:', window.__env.NG_APP_MAPBOX_ACCESS_TOKEN ? 'YES (' + window.__env.NG_APP_MAPBOX_ACCESS_TOKEN.substring(0, 15) + '...)' : 'NO');
+            } else {
+              console.error('[ENV] ❌ eval() ran but window.__env is still undefined');
+            }
           } else {
-            console.warn('env.js returned status:', xhr.status);
+            console.warn('[ENV] ⚠️ env.js returned status:', xhr.status);
           }
         } catch (e) {
-          console.warn('Failed to load env.js:', e.message || e);
+          console.error('[ENV] ❌ Failed to load env.js:', e.message || e);
           // Initialize empty env to prevent app from breaking
           window.__env = window.__env || {};
         }
       })();
+    } else {
+      console.log('[ENV] ℹ️ window.__env already exists (preloaded)');
     }
   </script>
 

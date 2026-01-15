@@ -1,5 +1,6 @@
 import { registerAuditTools } from './audit.js';
 import { registerCodeAnalysisTools } from './code-analysis.js';
+import { registerFinanceTools } from './finance.js';
 import { z } from 'zod';
 export function registerTools(server, supabase, audit) {
     // Register audit tools if audit client is provided
@@ -8,6 +9,8 @@ export function registerTools(server, supabase, audit) {
     }
     // Register code analysis and auto-fix tools
     registerCodeAnalysisTools(server);
+    // Register finance tools
+    registerFinanceTools(server, supabase);
     // Tool: Aprobar una reserva pendiente
     server.registerTool('approve_booking', async (args) => {
         const schema = z.object({
