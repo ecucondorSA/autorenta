@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 
 import { VerificationService } from '@core/services/verification/verification.service';
@@ -305,6 +305,30 @@ export class DniUploaderComponent {
     this.backProgress.set(0);
   }
 
+  // Paste Support
+  @HostListener('document:paste', ['$event'])
+  onPaste(event: ClipboardEvent): void {
+    const items = event.clipboardData?.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        const file = items[i].getAsFile();
+        if (file) {
+          // Smart assignment: Fill front first, then back
+          if (!this.frontUploaded() && !this.frontPreview()) {
+            this.processFile(file, 'dni_front');
+          } else if (!this.backUploaded() && !this.backPreview()) {
+            this.processFile(file, 'dni_back');
+          }
+          // Prevent pasting into other inputs if an image was captured
+          event.preventDefault(); 
+          break; // Handle one image per paste for simplicity
+        }
+      }
+    }
+  }
+
   // Drag & Drop handlers
   onDragOver(event: DragEvent, zone: 'front' | 'back'): void {
     event.preventDefault();
@@ -494,18 +518,20 @@ export class DniUploaderComponent {
       this.backProgress.set(0);
     }
 
-    // Simulate progress for better UX
+    // UX OPTIMISTA: Progreso falso rápido para dar sensación de velocidad
     const progressInterval = setInterval(() => {
       const current = isFront ? this.frontProgress() : this.backProgress();
-      if (current < 90) {
-        const increment = Math.random() * 15 + 5;
-        const newProgress = Math.min(current + increment, 90);
+      // Ir muy rápido hasta 80%
+      if (current < 80) {
+        const increment = Math.random() * 25 + 10;
+        const newProgress = Math.min(current + increment, 85);
         if (isFront) this.frontProgress.set(Math.round(newProgress));
         else this.backProgress.set(Math.round(newProgress));
       }
-    }, 200);
+    }, 150);
 
     try {
+      // Hacemos que el proceso parezca completarse antes para el usuario
       const result = await this.verificationService.uploadAndVerifyDocument(
         file,
         docType,

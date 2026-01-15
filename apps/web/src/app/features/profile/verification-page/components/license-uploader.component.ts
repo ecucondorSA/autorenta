@@ -1,4 +1,4 @@
-import { Component, inject, signal, input, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, input, computed, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { DecimalPipe, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -374,6 +374,29 @@ export class LicenseUploaderComponent {
     return this.countries.find(c => c.code === this.selectedCountry())?.flag || '🌍';
   }
 
+  // Paste Support
+  @HostListener('document:paste', ['$event'])
+  onPaste(event: ClipboardEvent): void {
+    const items = event.clipboardData?.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        const file = items[i].getAsFile();
+        if (file) {
+          // Smart assignment
+          if (!this.frontUploaded() && !this.frontPreview()) {
+            this.processFile(file, 'license_front');
+          } else if (!this.backUploaded() && !this.backPreview()) {
+            this.processFile(file, 'license_back');
+          }
+          event.preventDefault();
+          break;
+        }
+      }
+    }
+  }
+
   // Drag & Drop handlers
   onDragOver(event: DragEvent, zone: 'front' | 'back'): void {
     event.preventDefault();
@@ -562,16 +585,16 @@ export class LicenseUploaderComponent {
       this.backProgress.set(0);
     }
 
-    // Simulate progress for better UX
+    // UX OPTIMISTA
     const progressInterval = setInterval(() => {
       const current = isFront ? this.frontProgress() : this.backProgress();
-      if (current < 90) {
-        const increment = Math.random() * 15 + 5;
-        const newProgress = Math.min(current + increment, 90);
+      if (current < 80) {
+        const increment = Math.random() * 25 + 10;
+        const newProgress = Math.min(current + increment, 85);
         if (isFront) this.frontProgress.set(Math.round(newProgress));
         else this.backProgress.set(Math.round(newProgress));
       }
-    }, 200);
+    }, 150);
 
     try {
       const result = await this.verificationService.uploadAndVerifyDocument(

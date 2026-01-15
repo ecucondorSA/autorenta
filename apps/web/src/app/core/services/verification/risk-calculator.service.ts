@@ -98,6 +98,7 @@ export class RiskCalculatorService {
     let guaranteeMultiplier = 1.0;
     let driverClass: number | undefined;
     let guaranteeDiscountPct: number | undefined;
+    let totalTrips = 0;
 
     if (userId) {
       try {
@@ -110,11 +111,22 @@ export class RiskCalculatorService {
           guaranteeMultiplier = profile.guarantee_multiplier || 1.0;
           driverClass = profile.class;
           guaranteeDiscountPct = Math.round((1.0 - guaranteeMultiplier) * 100);
+          totalTrips = profile.total_trips || 0;
+        } else {
+          // SECURITY HARDENING: New user (no profile) starts with 2.0x guarantee
+          guaranteeMultiplier = 2.0;
+          driverClass = 0;
+          console.warn('[RiskCalculatorService] Nuevo usuario detectado. Aplicando multiplicador de riesgo 2.0x');
         }
       } catch (err) {
-        console.warn('[RiskCalculatorService] Error al obtener perfil de conductor:', err);
-        // Continuar con multiplicador 1.0 (sin ajuste)
+        console.warn('[RiskCalculatorService] Error al obtener perfil de conductor, aplicando default conservador:', err);
+        guaranteeMultiplier = 2.0;
       }
+    }
+
+    // SECURITY HARDENING: Block luxury cars for new users
+    if (totalTrips < 3 && (bucket === 'luxury' || bucket === 'ultra-luxury')) {
+      throw new Error('Lo sentimos, para alquilar vehículos de esta categoría necesitas haber completado al menos 3 reservas exitosas en la plataforma.');
     }
 
     // Determinar tipo de garantía

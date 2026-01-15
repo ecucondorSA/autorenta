@@ -95,6 +95,7 @@
     "@capacitor/status-bar": "^7.0.4",
     "@capgo/capacitor-native-biometric": "^7.6.0",
     "@ionic/angular": "8.6.0",
+    "@mediapipe/tasks-vision": "0.10.22-rc.20250304",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
     "@sentry/angular": "9.46.0",
