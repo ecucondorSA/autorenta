@@ -1,3 +1,11 @@
+# [2.22.0](https://github.com/ecucondorSA/autorenta/compare/v2.21.3...v2.22.0) (2026-01-15)
+
+
+### Features
+
+* add Patchright streaming MCP server and mobile captures ([8eb487a](https://github.com/ecucondorSA/autorenta/commit/8eb487a3bb5cd28b7f4512ee0fe2325d4f383d6f))
+* add remaining pitch deck rebuild files ([b587f6a](https://github.com/ecucondorSA/autorenta/commit/b587f6a37fe16daf61e36084fc6e9a67b20cab67))
+
 ## [2.21.3](https://github.com/ecucondorSA/autorenta/compare/v2.21.2...v2.21.3) (2026-01-14)
 
 
