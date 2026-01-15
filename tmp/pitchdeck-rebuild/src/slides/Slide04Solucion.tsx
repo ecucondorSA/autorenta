@@ -45,7 +45,7 @@ export function Slide04Solucion() {
     <SlideLayout>
       <SlideHeader
         title="La Solución: Confianza Sin Bancos"
-        subtitle="4 pilares tecnológicos que reemplazan el puntaje crediticio."
+        subtitle="4 pilares tecnológicos + FGO que garantizan cero riesgo para propietarios."
       />
 
       {/* 4 Pillars Grid */}
@@ -139,44 +139,188 @@ export function Slide04Solucion() {
         ))}
       </div>
 
-      {/* Bottom Result */}
+      {/* Business Model: FGO */}
       <div style={{
-        marginTop: '48px',
-        display: 'flex',
-        justifyContent: 'center',
-        gap: '48px'
+        marginTop: '64px',
+        background: 'linear-gradient(135deg, rgba(0,208,132,0.1) 0%, rgba(0,208,132,0.05) 100%)',
+        border: '2px solid rgba(0,208,132,0.3)',
+        borderRadius: '20px',
+        padding: '40px',
+        position: 'relative'
       }}>
+        {/* Title */}
         <div style={{
-          background: 'var(--bg-secondary)',
-          padding: '20px 40px',
-          borderRadius: '12px',
-          borderLeft: '4px solid var(--danger)',
-          textAlign: 'center'
+          textAlign: 'center',
+          marginBottom: '32px'
         }}>
-          <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>ANTES</p>
-          <p style={{ fontSize: '32px', fontWeight: '700', color: 'var(--danger)' }}>70%</p>
-          <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Rechazados</p>
+          <h2 style={{
+            fontSize: '36px',
+            fontWeight: '700',
+            color: 'var(--accent-green)',
+            marginBottom: '8px'
+          }}>
+            💰 FGO: Fondo Garantía Operativa
+          </h2>
+          <p style={{
+            fontSize: '18px',
+            color: 'var(--text-secondary)'
+          }}>
+            Modelo de negocio que garantiza cero riesgo para propietarios
+          </p>
         </div>
 
+        {/* FGO Components Grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '24px',
+          marginBottom: '40px'
+        }}>
+          {/* FGO Coverage */}
+          <div style={{
+            background: 'var(--bg-card)',
+            padding: '24px',
+            borderRadius: '12px',
+            border: '1px solid var(--border-subtle)'
+          }}>
+            <h4 style={{
+              fontSize: '20px',
+              fontWeight: '700',
+              color: 'var(--accent-green)',
+              marginBottom: '12px'
+            }}>
+              1. Daños Menores
+            </h4>
+            <p style={{
+              fontSize: '14px',
+              color: 'var(--text-secondary)',
+              lineHeight: '1.5',
+              marginBottom: '12px'
+            }}>
+              < USD 500, franquicias de seguro, lucro cesante
+            </p>
+            <div style={{
+              background: 'rgba(0,208,132,0.1)',
+              padding: '8px 12px',
+              borderRadius: '8px',
+              fontSize: '12px',
+              fontWeight: '600',
+              color: 'var(--accent-green)'
+            }}>
+              Financiado: 10% reservas + Pool Propietarios
+            </div>
+          </div>
+
+          {/* Insurance Coverage */}
+          <div style={{
+            background: 'var(--bg-card)',
+            padding: '24px',
+            borderRadius: '12px',
+            border: '1px solid var(--border-subtle)'
+          }}>
+            <h4 style={{
+              fontSize: '20px',
+              fontWeight: '700',
+              color: 'var(--accent-green)',
+              marginBottom: '12px'
+            }}>
+              2. Robo Total & Destrucción
+            </h4>
+            <p style={{
+              fontSize: '14px',
+              color: 'var(--text-secondary)',
+              lineHeight: '1.5',
+              marginBottom: '12px'
+            }}>
+              Póliza madre (Partner) o póliza endosada del propietario
+            </p>
+            <div style={{
+              background: 'rgba(0,208,132,0.1)',
+              padding: '8px 12px',
+              borderRadius: '8px',
+              fontSize: '12px',
+              fontWeight: '600',
+              color: 'var(--accent-green)'
+            }}>
+              FGO cubre deducible → Propietario paga $0
+            </div>
+          </div>
+
+          {/* Evidence System */}
+          <div style={{
+            background: 'var(--bg-card)',
+            padding: '24px',
+            borderRadius: '12px',
+            border: '1px solid var(--border-subtle)'
+          }}>
+            <h4 style={{
+              fontSize: '20px',
+              fontWeight: '700',
+              color: 'var(--accent-green)',
+              marginBottom: '12px'
+            }}>
+              3. Evidencia Vinculante
+            </h4>
+            <p style={{
+              fontSize: '14px',
+              color: 'var(--text-secondary)',
+              lineHeight: '1.5',
+              marginBottom: '12px'
+            }}>
+              Video registro de entrada obligatorio. Sin video validado = responsabilidad total arrendatario
+            </p>
+            <div style={{
+              background: 'rgba(0,208,132,0.1)',
+              padding: '8px 12px',
+              borderRadius: '8px',
+              fontSize: '12px',
+              fontWeight: '600',
+              color: 'var(--accent-green)'
+            }}>
+              Blockchain/Server = Árbitro final
+            </div>
+          </div>
+        </div>
+
+        {/* Business Impact */}
         <div style={{
           display: 'flex',
-          alignItems: 'center',
-          fontSize: '48px',
-          color: 'var(--accent-green)'
+          justifyContent: 'center',
+          gap: '48px',
+          marginTop: '32px'
         }}>
-          →
-        </div>
+          <div style={{
+            background: 'var(--bg-secondary)',
+            padding: '20px 40px',
+            borderRadius: '12px',
+            borderLeft: '4px solid var(--danger)',
+            textAlign: 'center'
+          }}>
+            <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>SIN FGO</p>
+            <p style={{ fontSize: '32px', fontWeight: '700', color: 'var(--danger)' }}>0%</p>
+            <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Propietarios</p>
+          </div>
 
-        <div style={{
-          background: 'var(--bg-secondary)',
-          padding: '20px 40px',
-          borderRadius: '12px',
-          borderLeft: '4px solid var(--accent-green)',
-          textAlign: 'center'
-        }}>
-          <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>AHORA</p>
-          <p style={{ fontSize: '32px', fontWeight: '700', color: 'var(--accent-green)' }}>100%</p>
-          <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Pueden Alquilar</p>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            fontSize: '48px',
+            color: 'var(--accent-green)'
+          }}>
+            →
+          </div>
+
+          <div style={{
+            background: 'var(--bg-secondary)',
+            padding: '20px 40px',
+            borderRadius: '12px',
+            borderLeft: '4px solid var(--accent-green)',
+            textAlign: 'center'
+          }}>
+            <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px' }}>CON FGO</p>
+            <p style={{ fontSize: '32px', fontWeight: '700', color: 'var(--accent-green)' }}>100%</p>
+            <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Adopción</p>
+          </div>
         </div>
       </div>
     </SlideLayout>
