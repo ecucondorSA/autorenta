@@ -1,7 +1,7 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
 
-export function Slide25Crecimiento() {
+export function Slide17Crecimiento() {
   return (
     <SlideLayout>
       <SlideHeader

@@ -1,7 +1,7 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
 
-export function Slide17Fintech() {
+export function Slide25Fintech() {
   const flujo = [
     { step: '1', icon: '💳', title: 'Depósito', desc: 'Usuario carga saldo a Billetera Virtual' },
     { step: '2', icon: '🔒', title: 'Pre-Auth', desc: 'Se bloquea garantía (T+2)' },

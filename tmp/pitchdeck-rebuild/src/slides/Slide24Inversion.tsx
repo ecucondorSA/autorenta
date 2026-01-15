@@ -1,7 +1,7 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
 
-export function Slide26Inversion() {
+export function Slide24Inversion() {
   return (
     <SlideLayout>
       <SlideHeader

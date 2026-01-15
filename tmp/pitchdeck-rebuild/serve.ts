@@ -24,24 +24,24 @@ Bun.serve({
     if (path === "/App.js") {
       return new Response(Bun.file("./out/App.js"), { headers: { "Content-Type": "application/javascript", ...noCacheHeaders } });
     }
-    
+
     // Serve assets from original assets folder
     if (path.startsWith("/assets/")) {
-       return new Response(Bun.file("." + path), { headers: noCacheHeaders });
+      return new Response(Bun.file("." + path), { headers: noCacheHeaders });
     }
 
     // Serve bundled assets from out folder
     const outFile = Bun.file("./out" + path);
     if (await outFile.exists()) {
-        return new Response(outFile, { headers: noCacheHeaders });
+      return new Response(outFile, { headers: noCacheHeaders });
     }
 
     // Fallback: try relative to root
     const rootFile = Bun.file("." + path);
     if (await rootFile.exists()) {
-        return new Response(rootFile, { headers: noCacheHeaders });
+      return new Response(rootFile, { headers: noCacheHeaders });
     }
-    
+
     return new Response("Not found: " + path, { status: 404 });
   },
 });

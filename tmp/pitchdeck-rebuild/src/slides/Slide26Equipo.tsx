@@ -1,7 +1,7 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
 
-export function Slide24Equipo() {
+export function Slide26Equipo() {
   const founders = [
     {
       name: 'EDUARDO MARQUES',
