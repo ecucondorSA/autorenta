@@ -109,24 +109,34 @@
       [class.hidden]="viewMode() === 'map'"
       [class.lg:block]="true"
     >
-      <!-- 🔎 BARRA DE BÚSQUEDA PROFESIONAL -->
+      <!-- 🔎 BARRA DE BÚSQUEDA MODERNA 2025 -->
       <div
-        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-6"
+        class="bg-gradient-to-br from-white via-surface-base to-white rounded-3xl shadow-2xl border border-border-subtle/50 p-8 mb-8 backdrop-blur-sm"
       >
+        <!-- Hero Title -->
+        <div class="text-center mb-8">
+          <h2 class="text-2xl lg:text-3xl font-black text-text-primary mb-2">
+            Encuentra tu auto perfecto
+          </h2>
+          <p class="text-text-secondary text-lg">
+            Más de 10,000 autos verificados te esperan
+          </p>
+        </div>
+
         <!-- Fila Principal: Búsqueda + Fechas -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
           <!-- Input Búsqueda -->
-          <div class="lg:col-span-7 relative">
+          <div class="lg:col-span-7 relative group">
             <label
               for="search-cars-input"
-              class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1"
+              class="block text-sm font-bold text-text-primary mb-3"
             >
-              Ubicación o Auto
+              📍 Ubicación o modelo de auto
             </label>
             <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                 <svg
-                  class="w-5 h-5 text-slate-400 group-focus-within:text-cyan-600 transition-colors"
+                  class="w-6 h-6 text-text-muted group-focus-within:text-cta-default transition-all duration-300 group-focus-within:scale-110"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -134,7 +144,7 @@
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    stroke-width="2"
+                    stroke-width="2.5"
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                   />
                 </svg>
@@ -150,16 +160,16 @@
                 [attr.aria-expanded]="searchSuggestions().length > 0"
                 aria-label="Buscar vehículos"
                 aria-controls="search-suggestions"
-                placeholder="Ej. Toyota Corolla en Centro..."
-                class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all font-medium"
+                placeholder="Ej. Toyota Corolla en Palermo..."
+                class="w-full pl-14 pr-5 py-4 bg-surface-secondary/50 border-2 border-border-subtle rounded-2xl text-text-primary placeholder:text-text-muted focus:ring-4 focus:ring-cta-default/20 focus:border-cta-default transition-all duration-300 font-medium text-lg shadow-sm hover:shadow-md"
               />
 
-              <!-- Sugerencias (Dropdown) -->
+              <!-- Sugerencias (Dropdown Moderno) -->
               @if (searchSuggestions().length > 0) {
                 <div
                   id="search-suggestions"
                   role="listbox"
-                  class="absolute inset-x-0 top-full mt-2 z-20 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+                  class="absolute inset-x-0 top-full mt-3 z-30 bg-surface-raised/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300"
                 >
                   @for (suggestion of searchSuggestions(); track suggestion; let idx = $index) {
                     <button
@@ -167,7 +177,7 @@
                       role="option"
                       [id]="'search-suggestion-' + idx"
                       (click)="onSuggestionClick(suggestion)"
-                      class="w-full text-left px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-3 border-b border-slate-50 last:border-0"
+                      class="w-full text-left px-5 py-4 text-text-primary hover:bg-cta-default/10 transition-all duration-200 flex items-center gap-4 border-b border-border-subtle/30 last:border-0 group"
                     >
                       <svg
                         class="w-4 h-4 text-slate-400"
@@ -211,35 +221,41 @@
           </div>
         </div>
 
+        <!-- CTA Principal -->
+        <div class="text-center">
+          <button
+            (click)="onSearchSubmit()"
+            class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cta-default to-cta-hover text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 active:scale-95 transition-all duration-300"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            Buscar autos disponibles
+          </button>
+          <p class="text-sm text-text-secondary mt-3">
+            ✓ Verificación completa • ✓ Seguro incluido • ✓ Soporte 24/7
+          </p>
+        </div>
+
         <!-- Separador sutil -->
-        <div class="h-px w-full bg-slate-100 mb-6"></div>
+        <div class="h-px w-full bg-gradient-to-r from-transparent via-border-subtle to-transparent my-8"></div>
 
         <!-- Fila Secundaria: Filtros Avanzados -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Filtro Distancia -->
-          <div>
+          <div class="group">
             <label
               for="filter-max-distance"
-              class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1"
+              class="block text-sm font-bold text-text-primary mb-3 flex items-center gap-2"
             >
-              Radio (Km)
-            </label>
-            <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  class="w-4 h-4 text-slate-400 group-focus-within:text-cyan-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                  />
+              <div class="w-5 h-5 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
                 </svg>
               </div>
+              Radio de búsqueda
+            </label>
+            <div class="relative group">
               <input
                 id="filter-max-distance"
                 type="number"
@@ -249,7 +265,7 @@
                     $any($event.target).value ? parseFloat($any($event.target).value) : null
                   )
                 "
-                placeholder="Ilimitado"
+                placeholder="Sin límite"
                 min="0"
                 step="5"
                 class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all"
@@ -283,22 +299,27 @@
                 placeholder="0"
                 min="0"
                 step="100"
-                class="w-full pl-7 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all"
-              aria-label="0" />
+                class="w-full pl-4 pr-4 py-3 bg-surface-secondary/50 border-2 border-border-subtle rounded-xl text-text-primary placeholder:text-text-muted focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-300 font-medium"
+                aria-label="Precio mínimo" />
             </div>
           </div>
 
           <!-- Precio Máximo -->
-          <div>
+          <div class="group">
             <label
               for="filter-max-price"
-              class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1"
+              class="block text-sm font-bold text-text-primary mb-3 flex items-center gap-2"
             >
-              Precio Max
+              <div class="w-5 h-5 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                </svg>
+              </div>
+              Precio máximo
             </label>
             <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span class="text-slate-400 text-sm font-semibold group-focus-within:text-cyan-500"
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <span class="text-text-muted text-base font-bold"
                   >$</span
                 >
               </div>
@@ -314,9 +335,25 @@
                 placeholder="Ilimitado"
                 min="0"
                 step="100"
-                class="w-full pl-7 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all"
-              aria-label="Ilimitado" />
+                class="w-full pl-4 pr-4 py-3 bg-surface-secondary/50 border-2 border-border-subtle rounded-xl text-text-primary placeholder:text-text-muted focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-300 font-medium"
+                aria-label="Precio máximo" />
             </div>
+          </div>
+
+          <!-- Calificación Mínima -->
+          <div class="group">
+            <label
+              for="filter-min-rating"
+              class="block text-sm font-bold text-text-primary mb-3 flex items-center gap-2"
+            >
+              <div class="w-5 h-5 rounded-lg bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
+                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              </div>
+              Calificación mínima
+            </label>
+            <div class="relative group">
           </div>
 
           <!-- Calificación -->
@@ -328,17 +365,6 @@
               Estrellas
             </label>
             <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  class="w-4 h-4 text-slate-400 group-focus-within:text-amber-500 transition-colors"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                  />
-                </svg>
-              </div>
               <select
                 id="filter-min-rating"
                 [value]="minRating() ?? ''"
@@ -347,7 +373,7 @@
                     $any($event.target).value ? parseFloat($any($event.target).value) : null
                   )
                 "
-                class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all appearance-none cursor-pointer"
+                class="w-full pl-4 pr-10 py-3 bg-surface-secondary/50 border-2 border-border-subtle rounded-xl text-text-primary focus:ring-4 focus:ring-yellow-500/20 focus:border-yellow-500 transition-all duration-300 font-medium appearance-none cursor-pointer"
               >
                 <option value="">Todas</option>
                 <option value="4.5">4.5+ Excelente</option>

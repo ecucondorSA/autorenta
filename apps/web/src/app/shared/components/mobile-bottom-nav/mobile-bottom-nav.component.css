@@ -136,8 +136,9 @@
 }
 
 .nav-item:hover:not(.nav-item--active) {
-  background: rgba(167, 216, 244, 0.08); /* cta-default con opacidad */
-  transform: translateY(-2px) translateZ(0);
+  background: linear-gradient(135deg, rgba(167, 216, 244, 0.1) 0%, rgba(167, 216, 244, 0.05) 100%);
+  transform: translateY(-3px) scale(1.05) translateZ(0);
+  box-shadow: 0 8px 16px rgba(167, 216, 244, 0.15);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -426,13 +427,13 @@
   transform: translate(-50%, 50%);
   z-index: 10;
 
-  width: 60px;
-  height: 60px;
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
 
-  background: linear-gradient(135deg, var(--cta-default) 0%, #5ba3c9 100%);
+  background: linear-gradient(135deg, var(--cta-default) 0%, var(--cta-hover) 50%, #5ba3c9 100%);
   color: white;
 
   display: flex;
@@ -440,28 +441,41 @@
   justify-content: center;
 
   box-shadow:
-    0 4px 20px rgba(167, 216, 244, 0.5),
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 8px 32px rgba(167, 216, 244, 0.6),
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
 
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* Prevenir selección */
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+
+  /* Add subtle animation */
+  animation: gentleFloat 3s ease-in-out infinite;
+}
+
+@keyframes gentleFloat {
+  0%, 100% { transform: translate(-50%, 50%) translateY(0px); }
+  50% { transform: translate(-50%, 50%) translateY(-3px); }
 }
 
 .rentarfast-fab:hover {
-  transform: translate(-50%, 50%) scale(1.08);
+  transform: translate(-50%, 50%) scale(1.12) rotate(5deg);
   box-shadow:
-    0 6px 28px rgba(167, 216, 244, 0.6),
-    0 4px 12px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 12px 40px rgba(167, 216, 244, 0.8),
+    0 6px 20px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #00D95F 0%, #00C553 50%, #5ba3c9 100%);
+  animation: none; /* Stop floating on hover */
 }
 
 .rentarfast-fab:active {
-  transform: translate(-50%, 50%) scale(0.95);
+  transform: translate(-50%, 50%) scale(1.05) rotate(2deg);
+  transition: all 0.1s ease;
 }
 
 /* Glow effect behind FAB */
