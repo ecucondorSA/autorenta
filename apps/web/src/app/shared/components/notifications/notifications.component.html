@@ -72,13 +72,13 @@
       <!-- No notifications -->
       @if (notifications().length === 0) {
         <div class="empty-state">
-          <div class="w-16 h-16 rounded-full bg-surface-secondary flex items-center justify-center mb-4">
-            <svg class="w-8 h-8 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-            </svg>
-          </div>
-          <p class="font-medium text-text-primary">Sin novedades</p>
-          <p class="text-sm text-text-secondary mb-4 max-w-[200px]">Te avisaremos cuando haya actividad importante.</p>
+           <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-surface-base to-surface-secondary flex items-center justify-center mb-6 shadow-lg border border-border-subtle">
+             <svg class="w-10 h-10 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+             </svg>
+           </div>
+           <p class="font-bold text-text-primary text-lg mb-2">¡Todo al día!</p>
+           <p class="text-sm text-text-secondary mb-6 max-w-[240px] leading-relaxed">Te notificaremos cuando haya actividad importante en tu cuenta.</p>
           
           <button
             class="verify-docs-btn"
@@ -91,18 +91,18 @@
       }
 
       <!-- Notifications -->
-      @for (notification of recentNotifications(); track notification) {
-        <div class="notification-item group" [class.unread]="!notification.read">
+       @for (notification of recentNotifications(); track notification) {
+         <div class="notification-item group" [class.unread]="!notification.read" [class]="notification.type">
           <div class="notification-main" (click)="handleNotificationClick(notification)">
             <div class="notification-icon-wrapper">
               {{ getNotificationIcon(notification.type) }}
             </div>
             <div class="notification-content">
-              <div class="flex justify-between items-start gap-2">
-                <h4 class="text-sm font-semibold text-text-primary leading-tight">{{ notification.title }}</h4>
-                <span class="text-[10px] text-text-muted whitespace-nowrap">{{ getTimeAgo(notification.createdAt) }}</span>
-              </div>
-              <p class="text-sm text-text-secondary mt-1 leading-snug">{{ notification.message }}</p>
+             <div class="flex justify-between items-start gap-2">
+                 <h4 class="font-bold text-text-primary leading-tight text-sm">{{ notification.title }}</h4>
+                 <span class="text-[11px] text-text-muted whitespace-nowrap font-medium">{{ getTimeAgo(notification.createdAt) }}</span>
+               </div>
+               <p class="text-[13px] text-text-secondary mt-2 leading-relaxed">{{ notification.message }}</p>
               
               @if (notification.actionText) {
                 <div class="mt-2 inline-flex items-center gap-1 text-xs font-medium text-cta-default">

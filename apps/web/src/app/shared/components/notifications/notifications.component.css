@@ -9,29 +9,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
   border: none;
-  background: var(--surface-raised); /* Blanco del sistema */
+  background: linear-gradient(135deg, var(--surface-raised) 0%, var(--surface-secondary) 100%);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .notifications-bell:hover {
-  background: var(--surface-secondary); /* Fondo secundario */
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, var(--surface-secondary) 0%, var(--surface-hover) 100%);
+  transform: translateY(-3px) scale(1.05);
   box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.12),
-    0 0 16px rgba(167, 216, 244, 0.1); /* cta-default glow */
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    0 0 24px rgba(167, 216, 244, 0.15); /* cta-default glow */
+}
+
+.notifications-bell:active {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    0 0 12px rgba(167, 216, 244, 0.1);
 }
 
 .notifications-bell.has-unread {
-  background: rgba(167, 216, 244, 0.15); /* cta-default con opacidad */
+  background: linear-gradient(135deg, rgba(167, 216, 244, 0.2) 0%, rgba(167, 216, 244, 0.1) 100%);
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.08),
-    0 0 12px rgba(167, 216, 244, 0.2); /* cta-default glow */
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    0 0 16px rgba(167, 216, 244, 0.25); /* cta-default glow */
 }
 
 .notifications-bell.has-unread .bell-icon {
@@ -169,30 +176,31 @@
 /* Dropdown */
 .notifications-dropdown {
   position: absolute;
-  top: 56px;
-  right: -8px;
-  width: 360px;
+  top: 60px;
+  right: -12px;
+  width: 380px;
   max-width: calc(100vw - 2rem);
-  background: var(--surface-raised);
-  border-radius: 24px;
+  background: linear-gradient(135deg, var(--surface-raised) 0%, var(--surface-base) 100%);
+  border-radius: 28px;
   box-shadow:
-    0 0 0 1px rgba(0,0,0,0.05),
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05),
-    0 20px 40px -5px rgba(0, 0, 0, 0.1);
+    0 0 0 1px rgba(0,0,0,0.08),
+    0 20px 25px -5px rgba(0, 0, 0, 0.15),
+    0 10px 10px -5px rgba(0, 0, 0, 0.08),
+    0 25px 50px -12px rgba(0, 0, 0, 0.25);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px) scale(0.96);
+  transform: translateY(-12px) scale(0.95) rotateX(-5deg);
   transform-origin: top right;
-  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 1000;
   overflow: hidden;
+  backdrop-filter: blur(12px);
 }
 
 .notifications-dropdown.show {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0) scale(1);
+  transform: translateY(0) scale(1) rotateX(0deg);
 }
 
 /* Header */
@@ -206,11 +214,12 @@
 }
 
 .dropdown-header h3 {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   color: var(--text-primary);
   margin: 0;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
 .header-actions {
@@ -220,22 +229,29 @@
 }
 
 .icon-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-secondary);
-  background: transparent;
-  border: none;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .icon-btn:hover {
   background: var(--surface-hover);
   color: var(--text-primary);
+  border-color: var(--border-default);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.icon-btn:active {
+  transform: scale(0.95);
 }
 
 /* Connection Status (Dot only) */
@@ -261,45 +277,97 @@
 /* Item */
 .notification-item {
   position: relative;
-  border-radius: 16px;
-  transition: background-color 0.2s;
+  border-radius: 20px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
 }
 
 .notification-item:hover {
-  background-color: var(--surface-hover);
+  background: linear-gradient(135deg, var(--surface-hover) 0%, var(--surface-secondary) 100%);
+  border-color: var(--border-subtle);
+  transform: translateX(2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .notification-main {
   display: flex;
-  gap: 12px;
-  padding: 12px;
+  gap: 14px;
+  padding: 16px;
   cursor: pointer;
+  position: relative;
 }
 
 .notification-icon-wrapper {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   background: var(--surface-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 600;
   flex-shrink: 0;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.notification-icon-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.notification-item:hover .notification-icon-wrapper::before {
+  opacity: 1;
 }
 
 .notification-item.unread .notification-main {
-  background-color: rgba(var(--cta-rgb), 0.03);
+  background: linear-gradient(135deg, rgba(var(--cta-rgb), 0.05) 0%, rgba(var(--cta-rgb), 0.02) 100%);
+}
+
+/* Status-specific styling */
+.notification-item.success .notification-icon-wrapper {
+  background: linear-gradient(135deg, var(--success-light) 0%, var(--success-default) 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.notification-item.warning .notification-icon-wrapper {
+  background: linear-gradient(135deg, var(--warning-light) 0%, var(--warning-default) 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.notification-item.error .notification-icon-wrapper {
+  background: linear-gradient(135deg, var(--error-light) 0%, var(--error-default) 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.notification-item.info .notification-icon-wrapper {
+  background: linear-gradient(135deg, var(--info-light) 0%, var(--info-default) 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 /* Empty State */
 .empty-state {
-  padding: 40px 20px;
+  padding: 48px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  background: linear-gradient(135deg, var(--surface-secondary) 0%, var(--surface-base) 100%);
+  border-radius: 16px;
+  margin: 16px;
+  border: 1px solid var(--border-subtle);
 }
 
 .verify-docs-btn {
@@ -307,21 +375,26 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
-  background: var(--surface-secondary);
-  color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 10px;
-  border: 1px solid var(--border-default);
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--cta-default) 0%, var(--cta-hover) 100%);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(var(--cta-rgb), 0.3);
 }
 
 .verify-docs-btn:hover {
-  background: var(--surface-hover);
-  border-color: var(--border-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(var(--cta-rgb), 0.4);
+}
+
+.verify-docs-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(var(--cta-rgb), 0.3);
 }
 
 /* Delete Button */

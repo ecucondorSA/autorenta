@@ -152,13 +152,13 @@ export class NotificationsComponent {
   getNotificationIcon(type: NotificationItem['type']): string {
     switch (type) {
       case 'success':
-        return '✅';
+        return '✓';
       case 'warning':
-        return '⚠️';
+        return '⚠';
       case 'error':
-        return '❌';
+        return '✕';
       default:
-        return 'ℹ️';
+        return 'ℹ';
     }
   }
 }
