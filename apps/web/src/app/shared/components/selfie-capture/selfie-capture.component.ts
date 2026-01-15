@@ -18,8 +18,12 @@ import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
   standalone: true,
   selector: 'app-selfie-capture',
   imports: [TranslateModule],
-  template: `
-    <div class="space-y-4">
+   template: `
+     <!-- Screen Reader Announcements -->
+     <div aria-live="polite" aria-atomic="true" class="sr-only" id="selfie-status-announcements">{{ getStatusMessage() }}</div>
+     <div aria-live="assertive" aria-atomic="true" class="sr-only" id="selfie-paste-announcements"></div>
+
+     <div class="space-y-4">
       <!-- Verified State (Compact Row) -->
       @if (status().isVerified) {
         <div class="rounded-2xl border border-success-200 bg-success-50 overflow-hidden">
@@ -97,16 +101,17 @@ import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
           <!-- Camera Container -->
           <div class="relative rounded-2xl overflow-hidden bg-black shadow-lg aspect-[3/4] max-w-sm mx-auto border-2 border-border-muted ring-1 ring-white/10">
             
-            <!-- Video Element -->
-            <video
-              #videoPreview
-              [hidden]="!isCameraActive() && !hasVideo()"
-              [class.opacity-50]="!isCameraActive() && !hasVideo()"
-              autoplay
-              playsinline
-              muted
-              class="w-full h-full object-cover transform scale-x-[-1]"
-            ></video>
+             <!-- Video Element -->
+             <video
+               #videoPreview
+               [hidden]="!isCameraActive() && !hasVideo()"
+               [class.opacity-50]="!isCameraActive() && !hasVideo()"
+               autoplay
+               playsinline
+               muted
+               aria-label="Vista previa de la cámara para captura de selfie"
+               class="w-full h-full object-cover transform scale-x-[-1]"
+             ></video>
 
             <!-- Analysis Canvas (Oval & Landmarks) -->
             <canvas 
@@ -161,10 +166,11 @@ import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
             <!-- Start Button Overlay -->
             @if (isModelLoaded() && !isCameraActive() && !hasVideo()) {
               <div class="absolute inset-0 flex items-center justify-center z-10 bg-black/40 backdrop-blur-md">
-                <button
-                  (click)="startSmartCamera()"
-                  class="px-8 py-4 bg-cta-default text-white rounded-full font-bold shadow-xl hover:scale-105 transition-transform flex items-center gap-2"
-                >
+                 <button
+                   (click)="startSmartCamera()"
+                   aria-label="Iniciar cámara para captura de selfie con verificación facial"
+                   class="px-8 py-4 bg-cta-default text-white rounded-full font-bold shadow-xl hover:scale-105 transition-transform flex items-center gap-2"
+                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                   Iniciar Cámara
                 </button>
@@ -183,12 +189,13 @@ import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
           <!-- Action Buttons (Post-Capture) -->
           @if (hasVideo()) {
             <div class="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-2">
-              <button
-                type="button"
-                (click)="submitVideo()"
-                [disabled]="processing()"
-                class="w-full px-6 py-3.5 bg-cta-default text-white rounded-xl font-semibold hover:bg-cta-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md active:scale-[0.98]"
-              >
+               <button
+                 type="button"
+                 (click)="submitVideo()"
+                 [disabled]="processing()"
+                 aria-label="Confirmar y enviar selfie para verificación facial"
+                 class="w-full px-6 py-3.5 bg-cta-default text-white rounded-xl font-semibold hover:bg-cta-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md active:scale-[0.98]"
+               >
                 @if (processing()) {
                   <span class="flex items-center justify-center gap-2">
                     <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
@@ -202,12 +209,13 @@ import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
                 }
               </button>
               
-              <button
-                type="button"
-                (click)="retake()"
-                [disabled]="processing()"
-                class="w-full px-6 py-3.5 bg-surface-base border border-border-default text-text-primary rounded-xl font-medium hover:bg-surface-raised transition-all active:scale-[0.98]"
-              >
+               <button
+                 type="button"
+                 (click)="retake()"
+                 [disabled]="processing()"
+                 aria-label="Volver a grabar selfie"
+                 class="w-full px-6 py-3.5 bg-surface-base border border-border-default text-text-primary rounded-xl font-medium hover:bg-surface-raised transition-all active:scale-[0.98]"
+               >
                 Grabar de nuevo
               </button>
             </div>
@@ -273,9 +281,8 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     await this.faceVerificationService.checkFaceVerificationStatus();
     await this.identityLevelService.loadIdentityLevel();
-    
-    // Preload MediaPipe model
-    this.initializeFaceLandmarker();
+
+    // MediaPipe will be loaded on demand when camera starts
   }
 
   ngOnDestroy(): void {
@@ -315,10 +322,15 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
   /**
    * Start Camera and Analysis Loop
    */
-  async startSmartCamera() {
-    this.faceVerificationService.clearError();
-    
-    try {
+   async startSmartCamera() {
+     this.faceVerificationService.clearError();
+
+     // Lazy load MediaPipe if not already loaded
+     if (!this.faceLandmarker) {
+       await this.initializeFaceLandmarker();
+     }
+
+     try {
       this.mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { 
           width: 1280, 
@@ -635,9 +647,28 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
       : 'bg-surface-raised border border-border-default text-text-secondary';
   }
   getStatusLabel(): string { return this.status().isVerified ? 'Verificado' : 'Requerido'; }
-  getStatusLabelClass(): string {
-    return this.status().isVerified 
-      ? 'bg-success-light/10 text-success-strong' 
-      : 'bg-surface-base border border-border-default text-text-secondary';
-  }
+   getStatusLabelClass(): string {
+     return this.status().isVerified
+       ? 'bg-success-light/10 text-success-strong'
+       : 'bg-surface-base border border-border-default text-text-secondary';
+   }
+
+   getStatusMessage(): string {
+     if (this.status().isVerified) {
+       return 'Identidad validada exitosamente.';
+     }
+     if (this.processing()) {
+       return 'Validando identidad facial.';
+     }
+     if (this.hasVideo()) {
+       return 'Selfie grabado, listo para enviar.';
+     }
+     if (this.isRecording()) {
+       return 'Grabando selfie con verificación liveness.';
+     }
+     if (this.isCameraActive()) {
+       return 'Cámara activa, esperando detección de rostro.';
+     }
+     return 'Inicia la cámara para captura de selfie.';
+   }
 }

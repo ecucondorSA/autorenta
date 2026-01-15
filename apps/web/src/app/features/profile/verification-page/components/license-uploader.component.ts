@@ -40,89 +40,99 @@ interface ExtractedField {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DecimalPipe, CommonModule, FormsModule],
-  template: `
-    <div class="space-y-6">
+   template: `
+     <!-- Screen Reader Announcements -->
+     <div aria-live="polite" aria-atomic="true" class="sr-only" id="license-status-announcements">{{ getStatusMessage() }}</div>
+     <div aria-live="assertive" aria-atomic="true" class="sr-only" id="license-paste-announcements"></div>
+
+     <div class="space-y-6">
       <!-- Country Selector (Compact) -->
       @if (!hideCountrySelector()) {
-        <div class="flex items-center justify-between p-1">
-          <label class="text-sm font-medium text-text-secondary">País de emisión</label>
-          <div class="relative group">
-            <select
-              [ngModel]="selectedCountry()"
-              (ngModelChange)="selectCountry($event)"
-              class="appearance-none bg-transparent pl-8 pr-8 py-1.5 text-right font-semibold text-text-primary focus:ring-0 cursor-pointer hover:text-cta-default transition-colors border-none focus:outline-none"
-            >
-              @for (country of countries; track country.code) {
-                <option [value]="country.code">
-                  {{ country.name }}
-                </option>
-              }
-            </select>
-            <div class="absolute left-0 top-1/2 -translate-y-1/2 text-lg pointer-events-none">
-              {{ getSelectedCountryFlag() }}
-            </div>
-            <div class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted group-hover:text-cta-default transition-colors">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-            </div>
-          </div>
+         <div class="flex items-center justify-between p-1">
+           <label for="license-country-select" class="text-sm font-medium text-text-secondary">País de emisión</label>
+           <div class="relative group">
+             <select
+               id="license-country-select"
+               [ngModel]="selectedCountry()"
+               (ngModelChange)="selectCountry($event)"
+               aria-label="Seleccionar país de emisión de la licencia de conducir"
+               class="appearance-none bg-transparent pl-8 pr-8 py-1.5 text-right font-semibold text-text-primary focus:ring-0 cursor-pointer hover:text-cta-default transition-colors border-none focus:outline-none"
+             >
+               @for (country of countries; track country.code) {
+                 <option [value]="country.code">
+                   {{ country.name }}
+                 </option>
+               }
+             </select>
+             <div class="absolute left-0 top-1/2 -translate-y-1/2 text-lg pointer-events-none" aria-hidden="true">
+               {{ getSelectedCountryFlag() }}
+             </div>
+             <div class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted group-hover:text-cta-default transition-colors" aria-hidden="true">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+             </div>
+           </div>
           <p class="text-[10px] text-text-muted mt-1 px-1">Aceptamos licencias digitales y físicas vigentes.</p>
         </div>
       }
 
       <!-- Compact Upload Rows -->
       <div class="space-y-3">
-        <!-- FRONT ROW -->
-        <div 
-          class="relative group rounded-2xl border border-border-default bg-surface-base hover:border-cta-default/30 hover:shadow-sm transition-all duration-300 overflow-hidden"
-          [class.ring-2]="isDraggingFront()"
-          [class.ring-cta-default]="isDraggingFront()"
-          (dragover)="onDragOver($event, 'front')"
-          (dragleave)="onDragLeave('front')"
-          (drop)="onDrop($event, 'license_front')"
-        >
+         <!-- FRONT ROW -->
+         <div
+           class="relative group rounded-2xl border border-border-default bg-surface-base hover:border-cta-default/30 hover:shadow-sm transition-all duration-300 overflow-hidden"
+           [class.ring-2]="isDraggingFront()"
+           [class.ring-cta-default]="isDraggingFront()"
+           (dragover)="onDragOver($event, 'front')"
+           (dragleave)="onDragLeave('front')"
+           (drop)="onDrop($event, 'license_front')"
+           role="region"
+           aria-labelledby="license-front-label"
+           aria-describedby="license-front-desc"
+         >
           <div class="flex items-center p-3 sm:p-4 gap-4">
-            <!-- Icon / Preview Thumbnail -->
-            <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative">
-              @if (frontPreview()) {
-                <img [src]="frontPreview()" class="w-full h-full object-cover" />
-                <div class="absolute inset-0 bg-black/10"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                   <div class="w-5 h-5 bg-success-500 rounded-full text-white flex items-center justify-center shadow-sm">
-                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                   </div>
-                </div>
-              } @else {
-                <svg class="w-6 h-6 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-              }
-            </div>
+             <!-- Icon / Preview Thumbnail -->
+             <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative" aria-hidden="true">
+               @if (frontPreview()) {
+                 <img [src]="frontPreview()" class="w-full h-full object-cover" alt="Vista previa del frente de la licencia" />
+                 <div class="absolute inset-0 bg-black/10"></div>
+                 <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-5 h-5 bg-success-500 rounded-full text-white flex items-center justify-center shadow-sm">
+                      <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    </div>
+                 </div>
+               } @else {
+                 <svg class="w-6 h-6 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+               }
+             </div>
 
-            <!-- Text Content -->
-            <div class="flex-grow min-w-0">
-              <h4 class="font-semibold text-text-primary text-sm sm:text-base">Frente de la licencia</h4>
-              <p class="text-xs text-text-secondary truncate">
-                @if (frontUploaded()) {
-                  Foto cargada correctamente
-                } @else {
-                  Datos legibles, sin reflejos
-                }
-              </p>
-            </div>
+             <!-- Text Content -->
+             <div class="flex-grow min-w-0">
+               <h4 id="license-front-label" class="font-semibold text-text-primary text-sm sm:text-base">Frente de la licencia</h4>
+               <p id="license-front-desc" class="text-xs text-text-secondary truncate">
+                 @if (frontUploaded()) {
+                   Foto cargada correctamente
+                 } @else {
+                   Datos legibles, sin reflejos. Puedes arrastrar y soltar o usar pegar desde el portapapeles.
+                 }
+               </p>
+             </div>
 
-            <!-- Actions -->
-            <div class="flex-shrink-0">
-              <input #frontInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, 'license_front')" />
-              @if (uploadingFront()) {
-                <div class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin"></div>
-              } @else {
-                <button 
-                  (click)="frontInput.click()"
-                  class="px-4 py-2 rounded-xl text-sm font-medium transition-colors"
-                  [class]="frontPreview() ? 'text-text-primary hover:bg-surface-hover' : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'"
-                >
-                  {{ frontPreview() ? 'Cambiar' : 'Subir' }}
-                </button>
-              }
-            </div>
+             <!-- Actions -->
+             <div class="flex-shrink-0">
+               <input #frontInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, 'license_front')" aria-label="Seleccionar archivo de imagen para el frente de la licencia" />
+               @if (uploadingFront()) {
+                 <div class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin" role="progressbar" aria-label="Subiendo imagen del frente de la licencia" [attr.aria-valuenow]="frontProgress()" aria-valuemin="0" aria-valuemax="100"></div>
+               } @else {
+                 <button
+                   (click)="frontInput.click()"
+                   [attr.aria-label]="frontPreview() ? 'Cambiar imagen del frente de la licencia' : 'Subir imagen del frente de la licencia'"
+                   class="px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                   [class]="frontPreview() ? 'text-text-primary hover:bg-surface-hover' : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'"
+                 >
+                   {{ frontPreview() ? 'Cambiar' : 'Subir' }}
+                 </button>
+               }
+             </div>
           </div>
           
           <!-- Progress Bar -->
@@ -131,15 +141,18 @@ interface ExtractedField {
           }
         </div>
 
-        <!-- BACK ROW -->
-        <div 
-          class="relative group rounded-2xl border border-border-default bg-surface-base hover:border-cta-default/30 hover:shadow-sm transition-all duration-300 overflow-hidden"
-          [class.ring-2]="isDraggingBack()"
-          [class.ring-cta-default]="isDraggingBack()"
-          (dragover)="onDragOver($event, 'back')"
-          (dragleave)="onDragLeave('back')"
-          (drop)="onDrop($event, 'license_back')"
-        >
+         <!-- BACK ROW -->
+         <div
+           class="relative group rounded-2xl border border-border-default bg-surface-base hover:border-cta-default/30 hover:shadow-sm transition-all duration-300 overflow-hidden"
+           [class.ring-2]="isDraggingBack()"
+           [class.ring-cta-default]="isDraggingBack()"
+           (dragover)="onDragOver($event, 'back')"
+           (dragleave)="onDragLeave('back')"
+           (drop)="onDrop($event, 'license_back')"
+           role="region"
+           aria-labelledby="license-back-label"
+           aria-describedby="license-back-desc"
+         >
           <div class="flex items-center p-3 sm:p-4 gap-4">
             <!-- Icon / Preview -->
             <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative">
@@ -156,33 +169,34 @@ interface ExtractedField {
               }
             </div>
 
-            <!-- Text Content -->
-            <div class="flex-grow min-w-0">
-              <h4 class="font-semibold text-text-primary text-sm sm:text-base">Dorso de la licencia</h4>
-              <p class="text-xs text-text-secondary truncate">
-                @if (backUploaded()) {
-                  Foto cargada correctamente
-                } @else {
-                  Información visible
-                }
-              </p>
-            </div>
+             <!-- Text Content -->
+             <div class="flex-grow min-w-0">
+               <h4 id="license-back-label" class="font-semibold text-text-primary text-sm sm:text-base">Dorso de la licencia</h4>
+               <p id="license-back-desc" class="text-xs text-text-secondary truncate">
+                 @if (backUploaded()) {
+                   Foto cargada correctamente
+                 } @else {
+                   Información visible. Puedes arrastrar y soltar o usar pegar desde el portapapeles.
+                 }
+               </p>
+             </div>
 
-            <!-- Actions -->
-            <div class="flex-shrink-0">
-              <input #backInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, 'license_back')" />
-              @if (uploadingBack()) {
-                <div class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin"></div>
-              } @else {
-                <button 
-                  (click)="backInput.click()"
-                  class="px-4 py-2 rounded-xl text-sm font-medium transition-colors"
-                  [class]="backPreview() ? 'text-text-primary hover:bg-surface-hover' : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'"
-                >
-                  {{ backPreview() ? 'Cambiar' : 'Subir' }}
-                </button>
-              }
-            </div>
+             <!-- Actions -->
+             <div class="flex-shrink-0">
+               <input #backInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, 'license_back')" aria-label="Seleccionar archivo de imagen para el dorso de la licencia" />
+               @if (uploadingBack()) {
+                 <div class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin" role="progressbar" aria-label="Subiendo imagen del dorso de la licencia" [attr.aria-valuenow]="backProgress()" aria-valuemin="0" aria-valuemax="100"></div>
+               } @else {
+                 <button
+                   (click)="backInput.click()"
+                   [attr.aria-label]="backPreview() ? 'Cambiar imagen del dorso de la licencia' : 'Subir imagen del dorso de la licencia'"
+                   class="px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                   [class]="backPreview() ? 'text-text-primary hover:bg-surface-hover' : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'"
+                 >
+                   {{ backPreview() ? 'Cambiar' : 'Subir' }}
+                 </button>
+               }
+             </div>
           </div>
           
           <!-- Progress Bar -->
@@ -374,28 +388,55 @@ export class LicenseUploaderComponent {
     return this.countries.find(c => c.code === this.selectedCountry())?.flag || '🌍';
   }
 
-  // Paste Support
-  @HostListener('document:paste', ['$event'])
-  onPaste(event: ClipboardEvent): void {
-    const items = event.clipboardData?.items;
-    if (!items) return;
+   // Paste Support
+   @HostListener('document:paste', ['$event'])
+   onPaste(event: ClipboardEvent): void {
+     const items = event.clipboardData?.items;
+     if (!items) return;
 
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].type.indexOf('image') !== -1) {
-        const file = items[i].getAsFile();
-        if (file) {
-          // Smart assignment
-          if (!this.frontUploaded() && !this.frontPreview()) {
-            this.processFile(file, 'license_front');
-          } else if (!this.backUploaded() && !this.backPreview()) {
-            this.processFile(file, 'license_back');
-          }
-          event.preventDefault();
-          break;
-        }
-      }
-    }
-  }
+     for (let i = 0; i < items.length; i++) {
+       if (items[i].type.indexOf('image') !== -1) {
+          const file = items[i].getAsFile();
+          if (file) {
+            // Validate file size (max 10MB)
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            if (file.size > maxSize) {
+              this.announcePaste('Imagen demasiado grande. Máximo 10MB.');
+              event.preventDefault();
+              break;
+            }
+
+            // Smart assignment
+           let targetType: 'license_front' | 'license_back' | null = null;
+           if (!this.frontUploaded() && !this.frontPreview()) {
+             targetType = 'license_front';
+           } else if (!this.backUploaded() && !this.backPreview()) {
+             targetType = 'license_back';
+           }
+           if (targetType) {
+             this.processFile(file, targetType);
+             // Announce paste action
+             const side = targetType === 'license_front' ? 'frente' : 'dorso';
+             this.announcePaste(`Imagen pegada para el ${side} de la licencia`);
+           }
+           event.preventDefault();
+           break;
+         }
+       }
+     }
+   }
+
+   private announcePaste(message: string): void {
+     // Update the paste announcements div
+     const announcementDiv = document.getElementById('license-paste-announcements');
+     if (announcementDiv) {
+       announcementDiv.textContent = message;
+       // Clear after a short delay
+       setTimeout(() => {
+         announcementDiv.textContent = '';
+       }, 1000);
+     }
+   }
 
   // Drag & Drop handlers
   onDragOver(event: DragEvent, zone: 'front' | 'back'): void {
