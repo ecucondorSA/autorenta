@@ -1,3 +1,10 @@
+# [2.26.0](https://github.com/ecucondorSA/autorenta/compare/v2.25.0...v2.26.0) (2026-01-15)
+
+
+### Features
+
+* update Slide 12 validation image ([7290df6](https://github.com/ecucondorSA/autorenta/commit/7290df6703b90accdf7bcf56545c535a732a4330))
+
 # [2.25.0](https://github.com/ecucondorSA/autorenta/compare/v2.24.0...v2.25.0) (2026-01-15)
 
 
