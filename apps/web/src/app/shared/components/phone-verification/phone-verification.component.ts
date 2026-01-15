@@ -17,66 +17,44 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
   selector: 'app-phone-verification',
   imports: [FormsModule, TranslateModule],
   template: `
-    <div class="bg-surface-raised rounded-lg border border-border-default p-6">
-      <!-- Header -->
-      <div class="flex items-start justify-between mb-4">
-        <div class="flex items-center gap-3">
-          <div
-            class="w-10 h-10 rounded-full flex items-center justify-center text-lg"
-            [class]="getStatusBadgeClass()"
-          >
-            {{ getStatusIcon() }}
-          </div>
-          <div>
-            <h4 class="font-semibold text-text-primary">Verificación de Teléfono</h4>
-            <p class="text-sm text-text-secondary">
-              {{ status().value || 'No configurado' }}
-            </p>
-          </div>
-        </div>
-        <span class="text-xs font-medium px-2 py-1 rounded-full" [class]="getStatusLabelClass()">
-          {{ getStatusLabel() }}
-        </span>
-      </div>
-
-      <!-- Verified State -->
-      @if (status().isVerified) {
-        <div class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg">
-          <div class="flex items-center gap-2 text-success-strong">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="text-sm font-medium">Teléfono verificado exitosamente</span>
-          </div>
-          <p class="text-xs text-success-strong mt-2">
-            Verificado el {{ formatDate(status().verifiedAt) }}
+    <div class="space-y-4">
+      <!-- Status Row -->
+      <div class="flex items-center justify-between">
+        <div>
+          <h4 class="text-sm font-semibold text-text-primary uppercase tracking-wide">Teléfono</h4>
+          <p class="text-sm text-text-secondary">
+            {{ status().value || 'No configurado' }}
           </p>
         </div>
-      }
+        
+        @if (status().isVerified) {
+          <span class="flex items-center gap-1 text-xs font-medium text-success-600 bg-success-50 px-2 py-1 rounded-full">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            Verificado
+          </span>
+        } @else {
+          <span class="flex items-center gap-1 text-xs font-medium text-warning-700 bg-warning-50 px-2 py-1 rounded-full">
+            Pendiente
+          </span>
+        }
+      </div>
 
-      <!-- Pending State -->
+      <!-- Pending Action -->
       @if (!status().isVerified) {
-        <div class="space-y-4">
+        <div class="animate-fade-in">
           <!-- Phone Input (if OTP not sent yet) -->
           @if (!status().otpSent) {
             <div class="space-y-4">
-              <div class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg">
-                <p class="text-sm text-cta-default">
-                  Ingresa tu número de teléfono para recibir un código de verificación por SMS.
-                </p>
+              <div class="p-4 bg-surface-secondary/50 rounded-lg text-sm text-text-secondary border border-border-subtle">
+                <p>Ingresa tu número para recibir un código SMS.</p>
               </div>
+              
               <div>
-                <label for="phone" class="block text-sm font-medium text-text-primary mb-2">
-                  Número de teléfono
-                </label>
+                <label for="phone" class="sr-only">Número de teléfono</label>
                 <div class="flex gap-2">
                   <select
                     [(ngModel)]="countryCode"
-                    class="block w-24 rounded-lg border-border-muted shadow-sm focus:ring-cta-default focus:border-cta-default text-sm"
+                    class="block w-24 rounded-xl border-border-default shadow-sm focus:ring-cta-default focus:border-cta-default text-sm bg-surface-base"
                   >
                     <option value="+54">🇦🇷 +54</option>
                     <option value="+1">🇺🇸 +1</option>
@@ -90,74 +68,40 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                     [(ngModel)]="phoneNumber"
                     placeholder="11 2345 6789"
                     maxlength="15"
-                    class="flex-grow block rounded-lg border-border-muted shadow-sm focus:ring-cta-default focus:border-cta-default text-sm"
+                    class="flex-grow block rounded-xl border-border-default shadow-sm focus:ring-cta-default focus:border-cta-default text-sm bg-surface-base"
                     [disabled]="loading()"
                   />
                 </div>
-                <p class="text-xs text-text-secondary mt-1">
-                  Formato: sin el 0 inicial. Ej: 11 2345 6789
-                </p>
               </div>
+
               <button
                 type="button"
                 (click)="sendOTP()"
                 [disabled]="!canSendOTP() || loading()"
-                class="w-full px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                [class]="
-                  canSendOTP()
-                    ? 'bg-cta-default text-cta-text hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2'
-                    : 'bg-surface-hover text-text-secondary cursor-not-allowed'
-                "
+                class="w-full px-4 py-2.5 bg-cta-default text-white font-medium rounded-xl hover:bg-cta-hover transition-colors shadow-sm disabled:opacity-50 disabled:shadow-none"
               >
-                @if (!loading()) {
-                  <span class="flex items-center justify-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-                      />
-                    </svg>
-                    <span>{{
-                      cooldownRemaining() > 0
-                        ? 'Espera ' + cooldownRemaining() + 's'
-                        : 'Enviar código'
-                    }}</span>
-                  </span>
-                }
                 @if (loading()) {
                   <span class="flex items-center justify-center gap-2">
-                    <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                     <span>Enviando...</span>
                   </span>
+                } @else {
+                  {{ cooldownRemaining() > 0 ? 'Espera ' + cooldownRemaining() + 's' : 'Enviar código' }}
                 }
               </button>
-              <!-- Rate Limit Warning -->
-              @if (remainingAttempts() < 3) {
-                <div
-                  class="p-3 bg-warning-light/10 border border-warning-light/40 rounded-lg text-sm text-warning-strong"
-                >
-                  ⚠️ Te quedan {{ remainingAttempts() }} intentos en esta hora
-                </div>
-              }
             </div>
           }
+
           <!-- OTP Input (if OTP sent) -->
           @if (status().otpSent) {
-            <div class="space-y-4">
-              <div class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg">
-                <p class="text-sm text-cta-default font-medium">
-                  Código enviado a {{ status().value }}
-                </p>
-                <p class="text-xs text-cta-default mt-1">
-                  Ingresa el código de 6 dígitos que recibiste por SMS
-                </p>
+            <div class="space-y-4 animate-fade-in-up">
+              <div class="text-center">
+                <p class="text-sm text-text-secondary">Código enviado a <span class="font-semibold text-text-primary">{{ status().value }}</span></p>
+                <button (click)="cancelOTP()" class="text-xs text-cta-default hover:underline mt-1">Cambiar número</button>
               </div>
+
               <div>
-                <label for="otp" class="block text-sm font-medium text-text-primary mb-2">
-                  Código de verificación
-                </label>
+                <label for="otp" class="sr-only">Código de verificación</label>
                 <input
                   id="otp"
                   type="text"
@@ -166,89 +110,51 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
                   maxlength="6"
                   inputmode="numeric"
                   pattern="[0-9]*"
-                  class="block w-full rounded-lg border-border-muted shadow-sm focus:ring-cta-default focus:border-cta-default text-center h4 tracking-widest font-mono"
+                  class="block w-full rounded-xl border-border-default shadow-sm focus:ring-cta-default focus:border-cta-default text-center text-2xl tracking-[0.5em] font-mono py-3"
                   [disabled]="loading()"
                   (input)="onOTPInput($event)"
                 />
-                <p class="text-xs text-text-secondary mt-1 text-center">Solo números, 6 dígitos</p>
               </div>
-              <div class="flex gap-2">
-                <button
-                  type="button"
-                  (click)="verifyOTP()"
-                  [disabled]="!canVerifyOTP() || loading()"
-                  class="flex-grow px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  [class]="
-                    canVerifyOTP()
-                      ? 'bg-success-light text-text-primary hover:bg-success-light focus:ring-2 focus:ring-success-light focus:ring-offset-2'
-                      : 'bg-surface-hover text-text-secondary cursor-not-allowed'
-                  "
-                >
-                  @if (!loading()) {
-                    <span class="flex items-center justify-center gap-2">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      <span>Verificar código</span>
-                    </span>
-                  }
-                  @if (loading()) {
-                    <span class="flex items-center justify-center gap-2">
-                      <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                      <span>Verificando...</span>
-                    </span>
-                  }
-                </button>
-                <button
-                  type="button"
-                  (click)="cancelOTP()"
-                  [disabled]="loading()"
-                  class="px-4 py-3 text-sm font-medium text-text-primary bg-surface-raised border border-border-muted rounded-lg hover:bg-surface-base focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:opacity-50"
-                >
-                  Cambiar número
-                </button>
-              </div>
+
               <button
                 type="button"
-                (click)="resendOTP()"
-                [disabled]="!canResend() || loading()"
-                class="w-full px-4 py-2 text-sm text-cta-default hover:text-cta-default disabled:text-text-muted"
+                (click)="verifyOTP()"
+                [disabled]="!canVerifyOTP() || loading()"
+                class="w-full px-4 py-2.5 bg-cta-default text-white font-medium rounded-xl hover:bg-cta-hover transition-colors shadow-sm disabled:opacity-50 disabled:shadow-none"
               >
-                {{
-                  cooldownRemaining() > 0
-                    ? 'Reenviar en ' + cooldownRemaining() + 's'
-                    : '¿No recibiste el código? Reenviar'
-                }}
+                @if (loading()) {
+                  <span class="flex items-center justify-center gap-2">
+                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>Verificando...</span>
+                  </span>
+                } @else {
+                  Verificar
+                }
               </button>
+
+              <div class="text-center">
+                <button
+                  type="button"
+                  (click)="resendOTP()"
+                  [disabled]="!canResend() || loading()"
+                  class="text-sm text-text-secondary hover:text-cta-default disabled:opacity-50 transition-colors"
+                >
+                  {{ cooldownRemaining() > 0 ? 'Reenviar en ' + cooldownRemaining() + 's' : '¿No llegó? Reenviar' }}
+                </button>
+              </div>
             </div>
           }
-          <!-- Success Message -->
+
           @if (successMessage()) {
-            <div
-              class="p-3 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-strong"
-            >
+            <div class="mt-3 p-3 bg-success-50 text-success-700 text-sm rounded-lg text-center animate-fade-in">
               {{ successMessage() }}
             </div>
           }
-          <!-- Error Message -->
           @if (error()) {
-            <div
-              class="p-3 bg-error-bg border border-error-border rounded-lg text-sm text-error-strong"
-            >
+            <div class="mt-3 p-3 bg-error-50 text-error-700 text-sm rounded-lg text-center animate-fade-in">
               {{ error() }}
             </div>
           }
-          <!-- Help Text -->
-          <div class="text-xs text-text-secondary space-y-1">
-            <p>• El código expira en 10 minutos</p>
-            <p>• Máximo 3 intentos por hora</p>
-            <p>• Revisa que tu teléfono pueda recibir SMS</p>
-          </div>
         </div>
       }
     </div>

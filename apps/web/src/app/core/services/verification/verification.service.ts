@@ -379,14 +379,14 @@ export class VerificationService implements OnDestroy {
    * @param imageBase64 - Imagen en base64 (sin prefijo data:...)
    * @param documentType - 'dni' o 'license'
    * @param side - 'front' o 'back'
-   * @param country - 'AR' (Argentina) o 'EC' (Ecuador)
+   * @param country - Código de país (ej: 'AR', 'EC', 'US', etc.)
    * @returns Resultado de la verificación OCR
    */
   async verifyDocumentOcr(
     imageBase64: string,
     documentType: 'dni' | 'license',
     side: 'front' | 'back',
-    country: 'AR' | 'EC',
+    country: string,
   ): Promise<{
     success: boolean;
     ocr_confidence: number;
@@ -444,7 +444,7 @@ export class VerificationService implements OnDestroy {
   async uploadAndVerifyDocument(
     file: File,
     docType: string,
-    country: 'AR' | 'EC',
+    country: string,
   ): Promise<{
     storagePath: string;
     ocrResult: {
@@ -474,16 +474,22 @@ export class VerificationService implements OnDestroy {
 
     // 3. Llamar a verify-document para OCR con base64
     let ocrResult = null;
-    try {
-      ocrResult = await this.verifyDocumentOcr(base64, documentType, side, country);
+    
+    // Only run OCR for supported countries to avoid backend errors
+    if (['AR', 'EC'].includes(country)) {
+      try {
+        ocrResult = await this.verifyDocumentOcr(base64, documentType, side, country);
 
-      this.logger.info('Document OCR verification completed', {
-        docType,
-        success: ocrResult.success,
-        confidence: ocrResult.ocr_confidence,
-      });
-    } catch (ocrError) {
-      this.logger.warn('OCR verification failed, document still uploading', ocrError);
+        this.logger.info('Document OCR verification completed', {
+          docType,
+          success: ocrResult.success,
+          confidence: ocrResult.ocr_confidence,
+        });
+      } catch (ocrError) {
+        this.logger.warn('OCR verification failed, document still uploading', ocrError);
+      }
+    } else {
+      this.logger.info(`Skipping OCR for unsupported country: ${country}`);
     }
 
     // 4. Esperar a que termine el upload

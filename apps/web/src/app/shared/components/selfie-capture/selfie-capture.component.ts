@@ -20,50 +20,28 @@ import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
   selector: 'app-selfie-capture',
   imports: [TranslateModule],
   template: `
-    <div class="bg-surface-raised rounded-lg border border-border-default p-6">
-      <!-- Header -->
-      <div class="flex items-start justify-between mb-4">
-        <div class="flex items-center gap-3">
-          <div
-            class="w-10 h-10 rounded-full flex items-center justify-center text-lg transition-colors"
-            [class]="getStatusBadgeClass()"
-          >
-            {{ getStatusIcon() }}
-          </div>
-          <div>
-            <h4 class="font-semibold text-text-primary">Biometría Facial</h4>
-            <p class="text-sm text-text-secondary">Prueba de vida y validación de identidad</p>
-          </div>
-        </div>
-        <span class="text-xs font-medium px-2 py-1 rounded-full" [class]="getStatusLabelClass()">
-          {{ getStatusLabel() }}
-        </span>
-      </div>
-
+    <div class="space-y-4">
       <!-- Verified State -->
       @if (status().isVerified) {
-        <div class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div class="flex items-center gap-2 text-success-strong">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <span class="text-sm font-medium">Identidad validada</span>
+        <div class="p-4 bg-success-50 border border-success-200 rounded-xl animate-in fade-in flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center text-success-600">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
           </div>
-          <div class="mt-3 space-y-1 text-sm pl-7">
-            <p class="text-text-secondary">Tu rostro coincide con tu documento.</p>
+          <div>
+            <p class="font-semibold text-success-800">Identidad validada</p>
+            <p class="text-sm text-success-700">Tu rostro coincide con tu documento.</p>
           </div>
         </div>
       }
 
       <!-- Level 2 Required -->
       @if (status().requiresLevel2) {
-        <div class="p-4 bg-warning-light/10 border border-warning-light/40 rounded-lg">
-          <p class="text-sm text-warning-strong">
-            ⚠️ Debes validar tu documento (Level 2) antes de realizar la prueba de vida.
+        <div class="p-4 bg-warning-50 border border-warning-200 rounded-xl flex gap-3">
+          <div class="flex-shrink-0 mt-0.5 text-warning-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          </div>
+          <p class="text-sm text-warning-800">
+            Debes validar tu documento (Paso 2) antes de realizar la prueba de vida.
           </p>
         </div>
       }
@@ -72,16 +50,14 @@ import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
       @if (!status().isVerified && !status().requiresLevel2) {
         <div class="space-y-4">
           
-          <!-- Instructions Panel (Changes dynamically) -->
+          <!-- Instructions Panel -->
           @if (isModelLoaded() && (isCameraActive() || isRecording())) {
              <div 
-              class="p-3 rounded-lg text-center font-medium transition-all duration-300"
+              class="p-3 rounded-xl text-center font-medium transition-all duration-300 shadow-sm"
               [class.bg-cta-default]="instructionState() === 'good'"
               [class.text-white]="instructionState() === 'good'"
-              [class.bg-surface-base]="instructionState() !== 'good'"
+              [class.bg-surface-secondary]="instructionState() !== 'good'"
               [class.text-text-primary]="instructionState() !== 'good'"
-              [class.border]="instructionState() !== 'good'"
-              [class.border-cta-default]="instructionState() !== 'good'"
              >
                @switch (instructionState()) {
                  @case ('no-face') { 🔍 Coloca tu rostro frente a la cámara }
@@ -97,18 +73,18 @@ import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
                 }
              </div>
           } @else if (!hasVideo()) {
-             <div class="p-4 bg-surface-base border border-border-muted rounded-lg space-y-2">
-              <p class="text-sm font-medium text-text-primary">Instrucciones:</p>
-              <ul class="text-sm text-text-secondary space-y-1 ml-4 list-disc">
-                <li>Busca un lugar iluminado</li>
-                <li>Quítate gorras o gafas oscuras</li>
-                <li>Sigue las instrucciones en pantalla</li>
+             <div class="p-4 bg-surface-secondary/50 border border-border-subtle rounded-xl">
+              <p class="text-sm font-semibold text-text-primary mb-2">Instrucciones:</p>
+              <ul class="text-sm text-text-secondary space-y-1.5 list-disc pl-4">
+                <li>Busca un lugar con buena iluminación</li>
+                <li>Quítate gorras, gafas oscuras o barbijo</li>
+                <li>Sigue las instrucciones en pantalla (sonreír/parpadear)</li>
               </ul>
             </div>
           }
 
           <!-- Camera Container -->
-          <div class="relative rounded-xl overflow-hidden bg-black shadow-inner aspect-[3/4] max-w-sm mx-auto border-2 border-border-muted">
+          <div class="relative rounded-2xl overflow-hidden bg-black shadow-lg aspect-[3/4] max-w-sm mx-auto border-2 border-border-muted ring-1 ring-white/10">
             
             <!-- Video Element -->
             <video
@@ -173,12 +149,13 @@ import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
 
             <!-- Start Button Overlay -->
             @if (isModelLoaded() && !isCameraActive() && !hasVideo()) {
-              <div class="absolute inset-0 flex items-center justify-center z-10 bg-black/40 backdrop-blur-sm">
+              <div class="absolute inset-0 flex items-center justify-center z-10 bg-black/40 backdrop-blur-md">
                 <button
                   (click)="startSmartCamera()"
-                  class="px-6 py-3 bg-cta-default text-white rounded-full font-semibold shadow-lg hover:scale-105 transition-transform"
+                  class="px-8 py-4 bg-cta-default text-white rounded-full font-bold shadow-xl hover:scale-105 transition-transform flex items-center gap-2"
                 >
-                  Iniciar Reconocimiento
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                  Iniciar Cámara
                 </button>
               </div>
             }
@@ -199,7 +176,7 @@ import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
                 type="button"
                 (click)="submitVideo()"
                 [disabled]="processing()"
-                class="w-full px-6 py-3 bg-cta-default text-white rounded-lg font-medium hover:bg-cta-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
+                class="w-full px-6 py-3.5 bg-cta-default text-white rounded-xl font-semibold hover:bg-cta-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md active:scale-[0.98]"
               >
                 @if (processing()) {
                   <span class="flex items-center justify-center gap-2">
@@ -207,7 +184,7 @@ import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
                       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Verificando...
+                    Validando Identidad...
                   </span>
                 } @else {
                   Confirmar y Enviar
@@ -218,21 +195,21 @@ import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
                 type="button"
                 (click)="retake()"
                 [disabled]="processing()"
-                class="w-full px-6 py-3 bg-surface-base border border-border-default text-text-primary rounded-lg font-medium hover:bg-surface-raised transition-all"
+                class="w-full px-6 py-3.5 bg-surface-base border border-border-default text-text-primary rounded-xl font-medium hover:bg-surface-raised transition-all active:scale-[0.98]"
               >
-                Intentar de nuevo
+                Grabar de nuevo
               </button>
             </div>
           }
 
           <!-- Error Message -->
           @if (error()) {
-            <div class="p-4 bg-error-bg border border-error-border rounded-lg flex gap-3 items-start animate-in fade-in">
-              <span class="text-error-strong text-lg">⚠️</span>
+            <div class="p-4 bg-error-50 border border-error-100 rounded-xl flex gap-3 items-start animate-in fade-in">
+              <span class="text-error-600 text-lg">⚠️</span>
               <div class="flex-grow">
-                <p class="text-sm text-error-strong font-medium">{{ error() }}</p>
+                <p class="text-sm text-error-800 font-medium">{{ error() }}</p>
                 @if (hasVideo()) {
-                   <button (click)="retake()" class="text-xs text-error-strong underline mt-1">Reintentar</button>
+                   <button (click)="retake()" class="text-xs text-error-700 underline mt-1 font-medium">Intentar nuevamente</button>
                 }
               </div>
             </div>

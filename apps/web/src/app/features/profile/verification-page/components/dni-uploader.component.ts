@@ -1,9 +1,20 @@
 import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 
 import { VerificationService } from '@core/services/verification/verification.service';
+import { FormsModule } from '@angular/forms';
 
-type Country = 'AR' | 'EC';
+const COUNTRIES = [
+  { code: 'AR', name: 'Argentina', flag: '🇦🇷', docName: 'DNI' },
+  { code: 'EC', name: 'Ecuador', flag: '🇪🇨', docName: 'Cédula' },
+  { code: 'UY', name: 'Uruguay', flag: '🇺🇾', docName: 'Cédula' },
+  { code: 'CL', name: 'Chile', flag: '🇨🇱', docName: 'RUT' },
+  { code: 'BR', name: 'Brasil', flag: '🇧🇷', docName: 'CPF' },
+  { code: 'CO', name: 'Colombia', flag: '🇨🇴', docName: 'Cédula' },
+  { code: 'MX', name: 'México', flag: '🇲🇽', docName: 'INE/IFE' },
+  { code: 'US', name: 'USA', flag: '🇺🇸', docName: 'ID / Passport' },
+  { code: 'OTHER', name: 'Otro / Other', flag: '🌍', docName: 'Documento ID' },
+];
 
 interface OcrResultDisplay {
   success: boolean;
@@ -26,39 +37,37 @@ interface ExtractedField {
   selector: 'app-dni-uploader',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, CommonModule, FormsModule],
   template: `
     <div class="space-y-5">
-      <!-- Country Selector - Segmented Control -->
-      <div class="relative flex p-1 rounded-xl bg-surface-secondary/80">
-        <!-- Animated background pill -->
-        <div
-          class="absolute inset-y-1 rounded-lg bg-cta-default shadow-md transition-all duration-300 ease-out"
-          [style.left]="selectedCountry() === 'AR' ? '4px' : 'calc(50% + 2px)'"
-          [style.width]="'calc(50% - 6px)'"
-        ></div>
-        <button
-          (click)="selectCountry('AR')"
-          class="relative z-10 flex-1 py-3 rounded-lg text-sm font-semibold transition-colors duration-200 flex items-center justify-center gap-2"
-          [class]="
-            selectedCountry() === 'AR'
-              ? 'text-cta-text'
-              : 'text-text-secondary hover:text-text-primary'
-          "
-        >
-          <span class="text-base">🇦🇷</span> Argentina
-        </button>
-        <button
-          (click)="selectCountry('EC')"
-          class="relative z-10 flex-1 py-3 rounded-lg text-sm font-semibold transition-colors duration-200 flex items-center justify-center gap-2"
-          [class]="
-            selectedCountry() === 'EC'
-              ? 'text-cta-text'
-              : 'text-text-secondary hover:text-text-primary'
-          "
-        >
-          <span class="text-base">🇪🇨</span> Ecuador
-        </button>
+      <!-- Country Selector -->
+      <div class="relative">
+        <label class="block text-xs font-medium text-text-secondary mb-1.5 uppercase tracking-wide">
+          País de emisión del documento
+        </label>
+        <div class="relative">
+          <select
+            [ngModel]="selectedCountry()"
+            (ngModelChange)="selectCountry($event)"
+            class="w-full appearance-none bg-surface-base border border-border-default rounded-xl py-3 pl-11 pr-10 text-text-primary font-medium focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all cursor-pointer"
+          >
+            @for (country of countries; track country.code) {
+              <option [value]="country.code">
+                {{ country.flag }} {{ country.name }}
+              </option>
+            }
+          </select>
+          <!-- Flag Icon -->
+          <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xl pointer-events-none">
+            {{ getSelectedCountryFlag() }}
+          </div>
+          <!-- Chevron Icon -->
+          <div class="absolute right-3.5 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
       </div>
 
       <!-- Document Title -->
@@ -80,9 +89,9 @@ interface ExtractedField {
         </div>
         <div>
           <h3 class="text-base font-bold text-text-primary">
-            {{ selectedCountry() === 'AR' ? 'DNI Argentina' : 'Cédula Ecuador' }}
+            {{ getDocumentName() }}
           </h3>
-          <p class="text-xs text-text-muted">Documento de identidad</p>
+          <p class="text-xs text-text-muted">Documento de identidad oficial</p>
         </div>
       </div>
 
@@ -670,8 +679,10 @@ interface ExtractedField {
 export class DniUploaderComponent {
   private verificationService = inject(VerificationService);
 
+  readonly countries = COUNTRIES;
+
   // Country selection
-  selectedCountry = signal<Country>('AR');
+  selectedCountry = signal<string>('AR');
 
   // Upload states
   uploadingFront = signal(false);
@@ -717,7 +728,7 @@ export class DniUploaderComponent {
     if (docNumber) {
       fields.push({
         key: 'number',
-        label: this.selectedCountry() === 'AR' ? 'DNI' : 'Cédula',
+        label: this.getDocumentName(),
         value: docNumber,
         verified: isVerified,
       });
@@ -726,7 +737,7 @@ export class DniUploaderComponent {
     return fields;
   });
 
-  selectCountry(country: Country): void {
+  selectCountry(country: string): void {
     this.selectedCountry.set(country);
     // Reset state when country changes
     this.frontPreview.set(null);
@@ -846,7 +857,7 @@ export class DniUploaderComponent {
   }
 
   getStatusMessage(): string {
-    const docName = this.selectedCountry() === 'AR' ? 'DNI' : 'Cédula';
+    const docName = this.getDocumentName();
     const frontConf = this.frontOcrResult()?.confidence || 0;
     const backConf = this.backOcrResult()?.confidence || 0;
     const frontSuccess = this.frontOcrResult()?.success;
@@ -882,6 +893,15 @@ export class DniUploaderComponent {
     }
 
     return `Procesando verificación...`;
+  }
+
+  getDocumentName(): string {
+    const c = this.countries.find(c => c.code === this.selectedCountry());
+    return c ? `${c.docName} ${c.name}` : 'Documento';
+  }
+
+  getSelectedCountryFlag(): string {
+    return this.countries.find(c => c.code === this.selectedCountry())?.flag || '🌍';
   }
 
   async onFileSelected(event: Event, type: 'dni_front' | 'dni_back'): Promise<void> {
