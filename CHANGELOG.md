@@ -1,3 +1,10 @@
+# [2.24.0](https://github.com/ecucondorSA/autorenta/compare/v2.23.0...v2.24.0) (2026-01-15)
+
+
+### Features
+
+* add FGO business model to Slide 4 ([8025bd0](https://github.com/ecucondorSA/autorenta/commit/8025bd0231d27b2b94191f9585fba6480d1519da))
+
 # [2.23.0](https://github.com/ecucondorSA/autorenta/compare/v2.22.2...v2.23.0) (2026-01-15)
 
 
