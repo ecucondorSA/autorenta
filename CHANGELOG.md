@@ -1,3 +1,10 @@
+## [2.22.2](https://github.com/ecucondorSA/autorenta/compare/v2.22.1...v2.22.2) (2026-01-15)
+
+
+### Bug Fixes
+
+* expand CSP to include all Facebook domains ([fd168a7](https://github.com/ecucondorSA/autorenta/commit/fd168a70a7dd574ae805f7d07d7ed13045ede5ce))
+
 ## [2.22.1](https://github.com/ecucondorSA/autorenta/compare/v2.22.0...v2.22.1) (2026-01-15)
 
 
