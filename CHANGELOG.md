@@ -1,3 +1,14 @@
+# [2.29.0](https://github.com/ecucondorSA/autorenta/compare/v2.28.0...v2.29.0) (2026-01-15)
+
+
+### Features
+
+* **ui:** apply next-level professional density and styling to verification flow ([adf32a7](https://github.com/ecucondorSA/autorenta/commit/adf32a7e9aa75bfba8d30de2b88df50b770ea374))
+* **ui:** redesign notifications component and finalize verification flow polish ([b987eb1](https://github.com/ecucondorSA/autorenta/commit/b987eb1c696c73338ee5e90aa88c479cad0390e7))
+* **ui:** redesign verification page with vertical stepper and clean layout ([b05b95a](https://github.com/ecucondorSA/autorenta/commit/b05b95af94e001e808b06c050be271f08b56ddc9))
+* **verification:** enhance document uploaders with validation and error handling ([1885700](https://github.com/ecucondorSA/autorenta/commit/1885700198e728398f2ce1db569b151473023e94))
+* **web:** add liveness detection with challenges (smile/blink) and improved UI/UX for selfie capture ([9911a69](https://github.com/ecucondorSA/autorenta/commit/9911a69f12d44dd8208a06f039818919a27d9c49))
+
 # [2.28.0](https://github.com/ecucondorSA/autorenta/compare/v2.27.1...v2.28.0) (2026-01-15)
 
 
