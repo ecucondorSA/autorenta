@@ -1,9 +1,20 @@
 import { Component, inject, signal, input, computed, ChangeDetectionStrategy } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { VerificationService } from '@core/services/verification/verification.service';
 
-type Country = 'AR' | 'EC';
+const COUNTRIES = [
+  { code: 'AR', name: 'Argentina', flag: '🇦🇷' },
+  { code: 'EC', name: 'Ecuador', flag: '🇪🇨' },
+  { code: 'UY', name: 'Uruguay', flag: '🇺🇾' },
+  { code: 'CL', name: 'Chile', flag: '🇨🇱' },
+  { code: 'BR', name: 'Brasil', flag: '🇧🇷' },
+  { code: 'CO', name: 'Colombia', flag: '🇨🇴' },
+  { code: 'MX', name: 'México', flag: '🇲🇽' },
+  { code: 'US', name: 'USA', flag: '🇺🇸' },
+  { code: 'OTHER', name: 'Otro / Other', flag: '🌍' },
+];
 
 interface LicenseOcrResultDisplay {
   success: boolean;
@@ -28,7 +39,7 @@ interface ExtractedField {
   selector: 'app-license-uploader',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, CommonModule, FormsModule],
   template: `
     <div class="space-y-6">
       <!-- Country Selector (Compact) -->
@@ -36,23 +47,25 @@ interface ExtractedField {
         <div class="flex items-center justify-between p-1">
           <label class="text-sm font-medium text-text-secondary">País de emisión</label>
           <div class="relative group">
-            <div class="flex gap-2">
-              <button 
-                (click)="selectCountry('AR')"
-                class="px-3 py-1 text-sm font-semibold rounded-lg transition-colors"
-                [class]="selectedCountry() === 'AR' ? 'bg-cta-default/10 text-cta-default' : 'text-text-secondary hover:text-text-primary'"
-              >
-                🇦🇷 Argentina
-              </button>
-              <button 
-                (click)="selectCountry('EC')"
-                class="px-3 py-1 text-sm font-semibold rounded-lg transition-colors"
-                [class]="selectedCountry() === 'EC' ? 'bg-cta-default/10 text-cta-default' : 'text-text-secondary hover:text-text-primary'"
-              >
-                🇪🇨 Ecuador
-              </button>
+            <select
+              [ngModel]="selectedCountry()"
+              (ngModelChange)="selectCountry($event)"
+              class="appearance-none bg-transparent pl-8 pr-8 py-1.5 text-right font-semibold text-text-primary focus:ring-0 cursor-pointer hover:text-cta-default transition-colors border-none focus:outline-none"
+            >
+              @for (country of countries; track country.code) {
+                <option [value]="country.code">
+                  {{ country.name }}
+                </option>
+              }
+            </select>
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 text-lg pointer-events-none">
+              {{ getSelectedCountryFlag() }}
+            </div>
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted group-hover:text-cta-default transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </div>
           </div>
+          <p class="text-[10px] text-text-muted mt-1 px-1">Aceptamos licencias digitales y físicas vigentes.</p>
         </div>
       }
 
@@ -248,12 +261,14 @@ interface ExtractedField {
 export class LicenseUploaderComponent {
   private verificationService = inject(VerificationService);
 
+  readonly countries = COUNTRIES;
+
   // Input para ocultar el selector de país si ya se seleccionó en DNI
   hideCountrySelector = input(false);
-  initialCountry = input<Country>('AR');
+  initialCountry = input<string>('AR');
 
   // Country selection
-  selectedCountry = signal<Country>('AR');
+  selectedCountry = signal<string>('AR');
 
   // Upload states
   uploadingFront = signal(false);
@@ -342,7 +357,7 @@ export class LicenseUploaderComponent {
     }
   }
 
-  selectCountry(country: Country): void {
+  selectCountry(country: string): void {
     this.selectedCountry.set(country);
     // Reset state when country changes
     this.frontPreview.set(null);
@@ -353,6 +368,10 @@ export class LicenseUploaderComponent {
     this.backOcrResult.set(null);
     this.frontProgress.set(0);
     this.backProgress.set(0);
+  }
+
+  getSelectedCountryFlag(): string {
+    return this.countries.find(c => c.code === this.selectedCountry())?.flag || '🌍';
   }
 
   // Drag & Drop handlers

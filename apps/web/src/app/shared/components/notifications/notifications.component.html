@@ -33,119 +33,96 @@
     (clickOutside)="closeDropdown()"
   >
     <div class="dropdown-header">
-      <h3>Notificaciones</h3>
+      <div class="flex items-center gap-2">
+        <h3>Notificaciones</h3>
+        @if (unreadCount() > 0) {
+          <span class="bg-cta-default text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ unreadCount() }}</span>
+        }
+      </div>
       <div class="header-actions">
-        <!-- Connection Status Indicator -->
+        <!-- Connection Status -->
         <div
           class="connection-status"
           [class.connected]="isConnected()"
           [class.error]="hasConnectionError()"
           [class.connecting]="isConnecting()"
+          [title]="getConnectionStatusMessage()"
         >
           <span class="status-dot"></span>
-          <span class="status-text">{{ getConnectionStatusMessage() }}</span>
         </div>
-        <button
-          class="refresh-btn"
-          (click)="refreshNotifications(); $event.stopPropagation()"
-          title="Actualizar notificaciones"
-          type="button"
-        >
-          <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-            />
-          </svg>
-        </button>
-        @if (hasConnectionError()) {
+        
+        <div class="flex items-center gap-1">
+          @if (unreadCount() > 0) {
+            <button class="icon-btn" (click)="markAllAsRead()" title="Marcar leídas">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </button>
+          }
           <button
-            class="reconnect-btn"
-            (click)="reconnect(); $event.stopPropagation()"
-            title="Reconectar"
-            type="button"
+            class="icon-btn"
+            (click)="refreshNotifications(); $event.stopPropagation()"
+            title="Actualizar"
           >
-            🔄 Reconectar
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
           </button>
-        }
-        @if (unreadCount() > 0) {
-          <button class="mark-all-read" (click)="markAllAsRead()">Marcar todas como leídas</button>
-        }
+        </div>
       </div>
     </div>
 
-    <div class="notifications-list">
+    <div class="notifications-list custom-scrollbar">
       <!-- No notifications -->
       @if (notifications().length === 0) {
         <div class="empty-state">
-          <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-            />
-          </svg>
-          <p>No tienes notificaciones</p>
+          <div class="w-16 h-16 rounded-full bg-surface-secondary flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+          </div>
+          <p class="font-medium text-text-primary">Sin novedades</p>
+          <p class="text-sm text-text-secondary mb-4 max-w-[200px]">Te avisaremos cuando haya actividad importante.</p>
+          
           <button
-            class="generate-notifications-btn"
+            class="verify-docs-btn"
             (click)="generateMissingDocumentNotifications(); $event.stopPropagation()"
-            type="button"
           >
-            Verificar documentos faltantes
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Verificar estado de documentos
           </button>
         </div>
       }
 
       <!-- Notifications -->
       @for (notification of recentNotifications(); track notification) {
-        <div class="notification-item" [class.unread]="!notification.read">
+        <div class="notification-item group" [class.unread]="!notification.read">
           <div class="notification-main" (click)="handleNotificationClick(notification)">
-            <div class="notification-icon">
+            <div class="notification-icon-wrapper">
               {{ getNotificationIcon(notification.type) }}
             </div>
             <div class="notification-content">
-              <div class="notification-header">
-                <h4 class="notification-title font-bold font-satoshi">{{ notification.title }}</h4>
-                <span class="notification-time">{{ getTimeAgo(notification.createdAt) }}</span>
+              <div class="flex justify-between items-start gap-2">
+                <h4 class="text-sm font-semibold text-text-primary leading-tight">{{ notification.title }}</h4>
+                <span class="text-[10px] text-text-muted whitespace-nowrap">{{ getTimeAgo(notification.createdAt) }}</span>
               </div>
-              <p class="notification-message">{{ notification.message }}</p>
+              <p class="text-sm text-text-secondary mt-1 leading-snug">{{ notification.message }}</p>
+              
               @if (notification.actionText) {
-                <div class="notification-action">
-                  <span class="action-text">{{ notification.actionText }}</span>
-                  <svg class="action-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
+                <div class="mt-2 inline-flex items-center gap-1 text-xs font-medium text-cta-default">
+                  {{ notification.actionText }}
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </div>
               }
             </div>
-            <!-- Unread indicator -->
             @if (!notification.read) {
-              <div class="unread-dot"></div>
+              <div class="w-2 h-2 rounded-full bg-cta-default flex-shrink-0 mt-1.5"></div>
             }
           </div>
-          <!-- Delete button -->
+          
+          <!-- Delete button (visible on hover) -->
           <button
-            class="notification-delete-btn"
+            class="delete-btn"
             (click)="deleteNotification(notification); $event.stopPropagation()"
-            title="Eliminar notificación"
-            type="button"
+            title="Eliminar"
           >
-            <svg class="delete-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-              />
-            </svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         </div>
       }
@@ -153,7 +130,9 @@
 
     @if (notifications().length > 5) {
       <div class="dropdown-footer">
-        <a href="/notifications" class="view-all-link"> Ver todas las notificaciones </a>
+        <a href="/notifications" class="text-xs font-medium text-text-secondary hover:text-text-primary transition-colors">
+          Ver historial completo
+        </a>
       </div>
     }
   </div>

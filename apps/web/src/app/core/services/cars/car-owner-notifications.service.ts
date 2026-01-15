@@ -798,9 +798,9 @@ export class CarOwnerNotificationsService {
    */
   private getDocumentKindLabel(kind: string): string {
     const labels: Record<string, string> = {
-      registration: 'Cédula Verde / Título',
+      registration: 'Registro / Título de Propiedad',
       insurance: 'Póliza de Seguro',
-      technical_inspection: 'Revisión Técnica (VTV)',
+      technical_inspection: 'Inspección Técnica Vehicular',
       circulation_permit: 'Permiso de Circulación',
       ownership_proof: 'Comprobante de Titularidad',
     };
