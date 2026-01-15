@@ -1,3 +1,10 @@
+## [2.22.1](https://github.com/ecucondorSA/autorenta/compare/v2.22.0...v2.22.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* update CSP to allow Facebook SDK and pravatar.cc ([7ea986d](https://github.com/ecucondorSA/autorenta/commit/7ea986dd43745356c4a1b875fbb1400959071629))
+
 # [2.22.0](https://github.com/ecucondorSA/autorenta/compare/v2.21.3...v2.22.0) (2026-01-15)
 
 
