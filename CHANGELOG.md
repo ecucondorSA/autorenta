@@ -1,3 +1,10 @@
+# [2.25.0](https://github.com/ecucondorSA/autorenta/compare/v2.24.0...v2.25.0) (2026-01-15)
+
+
+### Features
+
+* reorder pitchdeck slides for better flow ([97e098d](https://github.com/ecucondorSA/autorenta/commit/97e098d6cc5db638e70d3069fc7902a8e04ea107))
+
 # [2.24.0](https://github.com/ecucondorSA/autorenta/compare/v2.23.0...v2.24.0) (2026-01-15)
 
 
