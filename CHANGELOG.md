@@ -1,3 +1,10 @@
+## [2.27.1](https://github.com/ecucondorSA/autorenta/compare/v2.27.0...v2.27.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* correct slide function exports to match file names ([3454fb5](https://github.com/ecucondorSA/autorenta/commit/3454fb518b209164643a4481f0206075e717d8ff))
+
 # [2.27.0](https://github.com/ecucondorSA/autorenta/compare/v2.26.0...v2.27.0) (2026-01-15)
 
 
