@@ -1,3 +1,10 @@
+# [2.23.0](https://github.com/ecucondorSA/autorenta/compare/v2.22.2...v2.23.0) (2026-01-15)
+
+
+### Features
+
+* improve pitchdeck slides UI/UX ([06bb5ea](https://github.com/ecucondorSA/autorenta/commit/06bb5ea633f6c2eea58c3a3044eb59c0c9a8aeca))
+
 ## [2.22.2](https://github.com/ecucondorSA/autorenta/compare/v2.22.1...v2.22.2) (2026-01-15)
 
 
