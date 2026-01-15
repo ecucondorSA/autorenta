@@ -1,3 +1,10 @@
+# [2.28.0](https://github.com/ecucondorSA/autorenta/compare/v2.27.1...v2.28.0) (2026-01-15)
+
+
+### Features
+
+* **i18n:** migrate Slide03Problema and Slide04Solucion to use translations ([c2b2fc6](https://github.com/ecucondorSA/autorenta/commit/c2b2fc69a114bb5ac3f96101ba3ad8209df2f9c3))
+
 ## [2.27.1](https://github.com/ecucondorSA/autorenta/compare/v2.27.0...v2.27.1) (2026-01-15)
 
 
