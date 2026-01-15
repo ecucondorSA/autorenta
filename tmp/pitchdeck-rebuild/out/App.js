@@ -18980,58 +18980,122 @@ function Slide17Fintech() {
 // src/slides/Slide18Vision.tsx
 var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide18Vision() {
-  const puntos = [
-    {
-      num: 1,
-      title: "El Cuello de Botella Hoy",
-      items: [
-        "El dueño carga con la exposicion (robo, daños).",
-        "AutoRenta reduce este riesgo mediante tecnologia."
-      ]
+  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+    className: "slide slide--centered",
+    style: {
+      backgroundImage: `linear-gradient(to bottom, rgba(13,13,13,0.7), rgba(13,13,13,0.85)), url(/assets/vision-background.png)`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      position: "relative",
+      padding: "80px"
     },
-    {
-      num: 2,
-      title: "Punto de Control",
-      items: [
-        "Controlamos la capa operativa necesaria:",
-        "Identidad + Evidencia (Video) + Pagos + Reglas."
-      ]
-    },
-    {
-      num: 3,
-      title: "Tesis a Futuro",
-      items: [
-        "Con ADAS/Autonomia, el seguro se centra en el Operador.",
-        "Nuestra infraestructura sirve para ambos mundos."
-      ]
-    }
-  ];
-  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(SlideHeader, {
-        title: "Vision: El Seguro cambia de Foco",
-        subtitle: "Del perfil del Conductor · Al riesgo del Activo."
+      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+        style: {
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "1000px",
+          height: "500px",
+          background: "radial-gradient(ellipse, rgba(0,208,132,0.15) 0%, transparent 70%)",
+          pointerEvents: "none"
+        }
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
-        className: "flex-col gap-48",
-        style: { marginTop: "64px" },
-        children: puntos.map((p) => /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
-          className: "flex-col gap-12",
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("h3", {
-              style: { fontSize: "32px", fontWeight: "600" },
-              children: [
-                p.num,
-                ". ",
-                p.title
-              ]
-            }, undefined, true, undefined, this),
-            p.items.map((item, i) => /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
-              style: { fontSize: "22px", color: "var(--text-secondary)" },
-              children: item
-            }, i, false, undefined, this))
-          ]
-        }, p.num, true, undefined, this))
+        style: { textAlign: "center", position: "relative", zIndex: 1 },
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
+            style: {
+              fontSize: "20px",
+              color: "var(--accent-green)",
+              fontWeight: "600",
+              marginBottom: "24px",
+              textTransform: "uppercase",
+              letterSpacing: "4px"
+            },
+            children: "Nuestra Visión"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("h1", {
+            style: {
+              fontSize: "72px",
+              fontWeight: "700",
+              lineHeight: 1.1,
+              marginBottom: "32px",
+              maxWidth: "1100px"
+            },
+            children: [
+              "Democratizar la Movilidad",
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("br", {}, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
+                style: { color: "var(--accent-green)" },
+                children: "en Latinoamérica"
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
+            style: {
+              fontSize: "28px",
+              color: "var(--text-secondary)",
+              maxWidth: "800px",
+              margin: "0 auto 48px",
+              lineHeight: 1.5
+            },
+            children: "Un futuro donde cualquier persona pueda acceder a un vehículo sin importar su historial crediticio."
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+            style: {
+              display: "flex",
+              justifyContent: "center",
+              gap: "64px",
+              marginTop: "48px"
+            },
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+                style: { textAlign: "center" },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
+                    style: { fontSize: "56px", fontWeight: "700", color: "var(--accent-green)" },
+                    children: "8.4M"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
+                    style: { fontSize: "16px", color: "var(--text-muted)" },
+                    children: "Vehículos en Argentina"
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+                style: { textAlign: "center" },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
+                    style: { fontSize: "56px", fontWeight: "700", color: "var(--accent-green)" },
+                    children: "$84B"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
+                    style: { fontSize: "16px", color: "var(--text-muted)" },
+                    children: "En activos subutilizados"
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+                style: { textAlign: "center" },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
+                    style: { fontSize: "56px", fontWeight: "700", color: "var(--accent-green)" },
+                    children: "70%"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
+                    style: { fontSize: "16px", color: "var(--text-muted)" },
+                    children: "Mercado desatendido"
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this)
+            ]
+          }, undefined, true, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+        className: "diamond"
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
@@ -19189,104 +19253,166 @@ function Slide20PlanMaestro() {
 // src/slides/Slide21Demo.tsx
 var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide21Demostraci_n() {
-  const alcance = [
-    "Navegacion completa del Marketplace.",
-    "Simulacion de Reserva (End-to-End).",
-    "Visualizacion de Billetera Virtual y Carga de Saldo (Demostración).",
-    "Acceso a Panel de Control de Propietario (Vista Solo Lectura)."
-  ];
-  const restricciones = [
-    "Pagos reales deshabilitados (Mode Entorno de Pruebas).",
-    "Datos personales anonimizados.",
-    "Publicacion de vehiculos bloqueada.",
-    "Sin acceso a contratos legales vinculantes."
-  ];
   return /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(SlideLayout, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(SlideHeader, {
-        title: "Acceso Demostración Inversor (Entorno de Pruebas)",
-        subtitle: "Due diligence tecnica habilitada sin riesgo."
+        title: "Demo en Vivo",
+        subtitle: "Probá la plataforma ahora mismo."
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-        className: "grid-2",
-        style: { marginTop: "64px" },
+        style: {
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "60px",
+          marginTop: "40px",
+          alignItems: "center"
+        },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(Card, {
-            accent: true,
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-                className: "section-header",
-                children: "CREDENCIALES DE ACCESO"
-              }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-                className: "flex-col gap-24",
-                style: { marginTop: "24px" },
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
-                    style: { fontSize: "22px" },
-                    children: [
-                      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
-                        style: { color: "var(--text-muted)" },
-                        children: "URL: "
-                      }, undefined, false, undefined, this),
-                      "app.autorentar.com/demo"
-                    ]
-                  }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
-                    style: { fontSize: "22px" },
-                    children: [
-                      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
-                        style: { color: "var(--text-muted)" },
-                        children: "User: "
-                      }, undefined, false, undefined, this),
-                      "investor@autorentar.com"
-                    ]
-                  }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
-                    style: { fontSize: "22px" },
-                    children: [
-                      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
-                        style: { color: "var(--text-muted)" },
-                        children: "Pass: "
-                      }, undefined, false, undefined, this),
-                      "demo2026"
-                    ]
-                  }, undefined, true, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
-            ]
-          }, undefined, true, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-            className: "flex-col gap-24",
+            style: {
+              display: "flex",
+              justifyContent: "center"
+            },
+            children: /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("img", {
+              src: "/assets/app-mockups.png",
+              alt: "AutoRenta App",
+              style: {
+                width: "100%",
+                maxWidth: "600px",
+                height: "auto",
+                filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.4))"
+              }
+            }, undefined, false, undefined, this)
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+            style: { display: "flex", flexDirection: "column", gap: "24px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(Card, {
+              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+                style: {
+                  background: "var(--bg-card)",
+                  border: "2px solid var(--accent-green)",
+                  borderRadius: "16px",
+                  padding: "32px",
+                  textAlign: "center"
+                },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-                    className: "section-header",
-                    style: { color: "var(--accent-green)" },
-                    children: "QUE PUEDES HACER (ALCANCE):"
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
+                    style: {
+                      fontSize: "16px",
+                      color: "var(--accent-green)",
+                      marginBottom: "16px",
+                      fontWeight: "600",
+                      textTransform: "uppercase",
+                      letterSpacing: "2px"
+                    },
+                    children: "Escaneá para probar"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("ul", {
-                    className: "list",
-                    children: alcance.map((a, i) => /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("li", {
-                      children: a
-                    }, i, false, undefined, this))
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+                    style: {
+                      width: "180px",
+                      height: "180px",
+                      background: "white",
+                      borderRadius: "12px",
+                      margin: "0 auto 16px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "14px",
+                      color: "#333"
+                    },
+                    children: "[QR CODE]"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
+                    style: { fontSize: "20px", color: "var(--text-primary)", fontWeight: "600" },
+                    children: "app.autorentar.com"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(Card, {
+              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+                style: {
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border-subtle)",
+                  borderRadius: "12px",
+                  padding: "24px"
+                },
                 children: [
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
+                    style: {
+                      fontSize: "14px",
+                      color: "var(--text-muted)",
+                      marginBottom: "16px",
+                      textTransform: "uppercase"
+                    },
+                    children: "Credenciales Demo Inversor"
+                  }, undefined, false, undefined, this),
                   /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-                    className: "section-header",
-                    style: { color: "var(--danger)" },
-                    children: "RESTRICCIONES DE SEGURIDAD:"
+                    style: { display: "flex", flexDirection: "column", gap: "12px" },
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+                        style: { display: "flex", justifyContent: "space-between" },
+                        children: [
+                          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
+                            style: { color: "var(--text-muted)" },
+                            children: "Usuario:"
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
+                            style: { color: "var(--accent-green)", fontFamily: "monospace", fontSize: "16px" },
+                            children: "investor@autorentar.com"
+                          }, undefined, false, undefined, this)
+                        ]
+                      }, undefined, true, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+                        style: { display: "flex", justifyContent: "space-between" },
+                        children: [
+                          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
+                            style: { color: "var(--text-muted)" },
+                            children: "Contraseña:"
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
+                            style: { color: "var(--accent-green)", fontFamily: "monospace", fontSize: "16px" },
+                            children: "demo2026"
+                          }, undefined, false, undefined, this)
+                        ]
+                      }, undefined, true, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+                style: {
+                  background: "rgba(0,208,132,0.1)",
+                  border: "1px solid var(--accent-green)",
+                  borderRadius: "12px",
+                  padding: "20px"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--accent-green)", marginBottom: "12px", fontWeight: "600" },
+                    children: "✓ QUÉ PODÉS HACER:"
                   }, undefined, false, undefined, this),
                   /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("ul", {
-                    className: "list",
-                    children: restricciones.map((r, i) => /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("li", {
-                      children: r
-                    }, i, false, undefined, this))
-                  }, undefined, false, undefined, this)
+                    style: {
+                      fontSize: "14px",
+                      color: "var(--text-secondary)",
+                      lineHeight: 1.8,
+                      paddingLeft: "20px",
+                      margin: 0
+                    },
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("li", {
+                        children: "Navegar el Marketplace completo"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("li", {
+                        children: "Simular una reserva end-to-end"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("li", {
+                        children: "Ver la Billetera Virtual"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("li", {
+                        children: "Explorar el Panel de Propietario"
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this)
             ]
@@ -19607,78 +19733,163 @@ function Slide25Crecimiento() {
 // src/slides/Slide26Inversion.tsx
 var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide26Inversion() {
-  const ronda = [
-    "Autonomia: 18 meses.",
-    "Objetivo: 100k+ Usuarios.",
-    "",
-    "USO DE FONDOS:",
-    "50% Ingenieria (Escala Supabase + IA).",
-    "30% Liquidez y Seguro (Fondo P2P).",
-    "20% Crecimiento (Nodos WiFi)."
-  ];
-  const estrategia = [
-    "PROBLEMA:",
-    "Captar propietarios via Ads es caro (Costo Adquisicion > USD 15).",
-    "",
-    "SOLUCION (HACK):",
-    "WiFi Gratis de alta velocidad en pasos fronterizos.",
-    "Para conectar: Registro obligatorio de vehiculo.",
-    "(Marca, Modelo, Año, DNI/Licencia).",
-    "",
-    "RESULTADO ESPERADO:",
-    "100k+ perfiles pre-verificados (Ene-Mar).",
-    "Conversion: Activacion automatica en alta demanda.",
-    "Costo Adquisicion proyectado: < USD 0.50 por lead calificado."
-  ];
   return /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(SlideLayout, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(SlideHeader, {
-        title: "Oportunidad de Inversion",
-        subtitle: "Capital para escalar infraestructura y liquidez."
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
-        style: {
-          fontSize: "24px",
-          color: "var(--text-secondary)",
-          textAlign: "center",
-          marginBottom: "48px"
-        },
-        children: "18 meses de autonomia para escalar a 100k+ usuarios"
+        title: "Oportunidad de Inversión",
+        subtitle: "Ronda Semilla para escalar infraestructura y liquidez."
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
-        className: "grid-2",
+        style: {
+          display: "grid",
+          gridTemplateColumns: "1fr 1.2fr",
+          gap: "60px",
+          marginTop: "40px",
+          alignItems: "center"
+        },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Card, {
+          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+            style: { display: "flex", flexDirection: "column", alignItems: "center" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("h3", {
-                style: { fontSize: "24px", fontWeight: "700", marginBottom: "24px" },
-                children: "RONDA SEMILLA: USD 500k"
-              }, undefined, false, undefined, this),
-              ronda.map((r, i) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
                 style: {
-                  fontSize: "18px",
-                  color: r.startsWith("USO") ? "var(--text-muted)" : "var(--text-secondary)",
-                  marginBottom: "8px"
+                  background: "linear-gradient(135deg, var(--accent-green) 0%, #00a86b 100%)",
+                  padding: "24px 48px",
+                  borderRadius: "16px",
+                  marginBottom: "32px",
+                  boxShadow: "0 20px 40px rgba(0,208,132,0.3)"
                 },
-                children: r === "" ? /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("br", {}, undefined, false, undefined, this) : `· ${r}`
-              }, i, false, undefined, this))
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                    style: { fontSize: "18px", color: "rgba(0,0,0,0.6)", marginBottom: "4px", textAlign: "center" },
+                    children: "RONDA SEMILLA"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                    style: { fontSize: "56px", fontWeight: "800", color: "var(--bg-primary)", textAlign: "center" },
+                    children: "USD $500K"
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("img", {
+                src: "/assets/investment-pie-chart.png",
+                alt: "Uso de Fondos",
+                style: {
+                  width: "380px",
+                  height: "auto",
+                  filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.3))"
+                }
+              }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Card, {
+          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+            style: { display: "flex", flexDirection: "column", gap: "24px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("h3", {
-                style: { fontSize: "24px", fontWeight: "700", marginBottom: "24px" },
-                children: "ESTRATEGIA FRONTERA (Motor de Crecimiento)"
-              }, undefined, false, undefined, this),
-              estrategia.map((s, i) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
                 style: {
-                  fontSize: "16px",
-                  color: s.endsWith(":") ? "var(--text-muted)" : "var(--text-secondary)",
-                  marginBottom: "6px",
-                  fontWeight: s.endsWith(":") ? "600" : "400"
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border-subtle)",
+                  borderRadius: "12px",
+                  padding: "24px"
                 },
-                children: s === "" ? /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("br", {}, undefined, false, undefined, this) : s.endsWith(":") ? s : `· ${s}`
-              }, i, false, undefined, this))
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--text-muted)", marginBottom: "8px", textTransform: "uppercase" },
+                    children: "Autonomía"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                    style: { fontSize: "32px", fontWeight: "700", color: "var(--accent-green)" },
+                    children: "18 Meses"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                    style: { fontSize: "16px", color: "var(--text-secondary)" },
+                    children: "Para escalar a 100k+ usuarios activos"
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                style: {
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border-subtle)",
+                  borderRadius: "12px",
+                  padding: "24px"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--text-muted)", marginBottom: "16px", textTransform: "uppercase" },
+                    children: "Uso de Fondos"
+                  }, undefined, false, undefined, this),
+                  [
+                    { pct: "50%", label: "Ingeniería", desc: "Escala Supabase + IA", color: "var(--accent-green)" },
+                    { pct: "30%", label: "Liquidez", desc: "Fondo P2P + Seguros", color: "#4DD0E1" },
+                    { pct: "20%", label: "Crecimiento", desc: "Nodos WiFi Fronterizos", color: "#FFB74D" }
+                  ].map((item, i) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                    style: {
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "16px",
+                      marginBottom: i < 2 ? "16px" : 0
+                    },
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                        style: {
+                          width: "48px",
+                          height: "48px",
+                          borderRadius: "8px",
+                          background: item.color,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "16px",
+                          fontWeight: "700",
+                          color: "var(--bg-primary)"
+                        },
+                        children: item.pct
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                        children: [
+                          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                            style: { fontSize: "18px", fontWeight: "600", color: "var(--text-primary)" },
+                            children: item.label
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                            style: { fontSize: "14px", color: "var(--text-muted)" },
+                            children: item.desc
+                          }, undefined, false, undefined, this)
+                        ]
+                      }, undefined, true, undefined, this)
+                    ]
+                  }, i, true, undefined, this))
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                style: {
+                  background: "rgba(0,208,132,0.1)",
+                  border: "1px solid var(--accent-green)",
+                  borderRadius: "12px",
+                  padding: "20px"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--accent-green)", marginBottom: "8px", fontWeight: "600" },
+                    children: "\uD83D\uDE80 GROWTH HACK: WiFi Fronterizo"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                    style: { fontSize: "15px", color: "var(--text-secondary)", lineHeight: 1.5 },
+                    children: [
+                      "WiFi gratis en pasos fronterizos → Registro obligatorio de vehículo →",
+                      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("strong", {
+                        style: { color: "var(--accent-green)" },
+                        children: [
+                          " CAC ",
+                          "<",
+                          " $0.50"
+                        ]
+                      }, undefined, true, undefined, this),
+                      " (vs $15+ en Ads)"
+                    ]
+                  }, undefined, true, undefined, this)
+                ]
+              }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this)
         ]
