@@ -17772,40 +17772,119 @@ var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide05Momento() {
   const factores = [
     {
-      title: "Inflacion & Estacionalidad",
-      desc: "La volatilidad de precios hace indispensable el Pricing Dinamico para proteger el valor del activo."
+      icon: "\uD83D\uDCC8",
+      title: "Inflación & Crisis Económica",
+      stat: "200%+",
+      statLabel: "Inflación anual",
+      desc: "La clase media busca ingresos extra. Un auto parado es un pasivo. Alquilarlo genera USD $200-400/mes."
     },
     {
-      title: "Exclusion Financiera",
-      desc: "El mercado exige soluciones de movilidad que no dependan de tarjetas de credito bancarias tradicionales."
+      icon: "\uD83D\uDEAB",
+      title: "Exclusión Financiera",
+      stat: "70%",
+      statLabel: "Sin crédito formal",
+      desc: "Las rentadoras tradicionales rechazan al 70%. Mercado cautivo sin alternativas digitales."
     },
     {
-      title: "Riesgo del Activo",
-      desc: "La tecnologia de video y biometria es accesible y barata para mitigar el riesgo de fraude masivamente."
+      icon: "\uD83E\uDD16",
+      title: "Tecnología Accesible",
+      stat: "<$0.01",
+      statLabel: "Costo por verificación IA",
+      desc: "Biometría, video-análisis y contratos digitales son commodity. El timing es ahora."
     }
   ];
   return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(SlideLayout, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(SlideHeader, {
-        title: "Por Que Ahora (Momento)",
-        subtitle: "La convergencia de 3 factores macro en LatAm."
+        title: "¿Por Qué Ahora?",
+        subtitle: "3 factores macro convergen en Argentina 2026."
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
-        className: "flex-col gap-48",
-        style: { marginTop: "64px" },
+        style: {
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "32px",
+          marginTop: "60px"
+        },
         children: factores.map((f, i) => /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
-          className: "flex-col gap-12",
+          style: {
+            background: "var(--bg-card)",
+            border: i === 0 ? "2px solid var(--accent-green)" : "1px solid var(--border-subtle)",
+            borderRadius: "16px",
+            padding: "32px",
+            display: "flex",
+            flexDirection: "column",
+            position: "relative"
+          },
           children: [
+            /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+              style: {
+                fontSize: "48px",
+                marginBottom: "20px"
+              },
+              children: f.icon
+            }, undefined, false, undefined, this),
             /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("h3", {
-              style: { fontSize: "32px", fontWeight: "600" },
+              style: {
+                fontSize: "24px",
+                fontWeight: "700",
+                marginBottom: "20px",
+                color: "var(--text-primary)"
+              },
               children: f.title
             }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+              style: {
+                background: "rgba(0, 208, 132, 0.1)",
+                borderRadius: "12px",
+                padding: "16px",
+                marginBottom: "20px",
+                textAlign: "center"
+              },
+              children: [
+                /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+                  style: {
+                    fontSize: "36px",
+                    fontWeight: "800",
+                    color: "var(--accent-green)",
+                    marginBottom: "4px"
+                  },
+                  children: f.stat
+                }, undefined, false, undefined, this),
+                /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+                  style: {
+                    fontSize: "14px",
+                    color: "var(--text-muted)"
+                  },
+                  children: f.statLabel
+                }, undefined, false, undefined, this)
+              ]
+            }, undefined, true, undefined, this),
             /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
-              style: { fontSize: "22px", color: "var(--text-secondary)" },
+              style: {
+                fontSize: "16px",
+                color: "var(--text-secondary)",
+                lineHeight: 1.6,
+                flex: 1
+              },
               children: f.desc
             }, undefined, false, undefined, this)
           ]
         }, i, true, undefined, this))
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+        style: {
+          marginTop: "48px",
+          textAlign: "center"
+        },
+        children: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+          style: {
+            fontSize: "28px",
+            color: "var(--accent-green)",
+            fontWeight: "600"
+          },
+          children: "\uD83C\uDFAF La ventana de oportunidad está abierta. El que ejecute primero, gana."
+        }, undefined, false, undefined, this)
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
@@ -18412,76 +18491,159 @@ function Slide08ModosDeRiesgo() {
 // src/slides/Slide09Economics.tsx
 var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide09Economia() {
-  const rows = [
-    { label: "AOV (Ticket Objetivo)", value: "USD 120.00", desc: "Alquiler promedio 3-4 dias (Benchmark).", color: "var(--text-primary)" },
-    { label: "Take Rate (15%)", value: "USD 18.00", desc: "Revenue Plataforma.", color: "var(--accent-green)" },
-    { label: "FGO (10%)", value: "USD 12.00", desc: "Fondo de Garantia (Pasivo/Pool).", color: "var(--text-primary)" },
-    { label: "Costos PSP & Soporte", value: "- USD 7.20", desc: "Pagos (3.5%) + Riesgo Est. (2.5%).", color: "var(--danger)" }
-  ];
-  const protections = [
-    "Billetera Virtual Pre-Funded: Elimina el riesgo de impago (Brecha de Pago = 0).",
-    "Video Registro de Entrada: Reduce disputas subjetivas (Costo de Riesgo baja 40%).",
-    "Barrera Biométrica KYC: Bloquea identidad sintetica antes de reservar."
-  ];
   return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(SlideLayout, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(SlideHeader, {
-        title: "La Ecuación (Economía Objetivo)",
-        subtitle: "Modelo matematico de viabilidad por unidad (Primeros Principios)."
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
-        style: { fontSize: "20px", color: "var(--accent-green)", marginBottom: "48px" },
-        children: "MARGEN DE CONTRIBUCIÓN = (AOV x COMISIÓN) - COSTOS - RIESGO"
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-        className: "flex-col gap-24",
-        style: { marginBottom: "48px" },
-        children: rows.map((r, i) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-          style: {
-            display: "grid",
-            gridTemplateColumns: "280px 160px 1fr",
-            alignItems: "center",
-            gap: "32px"
-          },
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
-              style: { fontSize: "22px" },
-              children: r.label
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
-              style: { fontSize: "28px", fontWeight: "700", color: r.color },
-              children: r.value
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
-              style: { fontSize: "18px", color: "var(--text-muted)" },
-              children: r.desc
-            }, undefined, false, undefined, this)
-          ]
-        }, i, true, undefined, this))
+        title: "Unit Economics",
+        subtitle: "Modelo rentable desde la primera transacción."
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
         style: {
-          background: "var(--accent-green)",
-          padding: "24px 48px",
-          borderRadius: "8px",
-          marginBottom: "48px"
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "48px",
+          marginTop: "40px"
         },
-        children: /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
-          style: { fontSize: "24px", fontWeight: "700", color: "var(--bg-primary)", textAlign: "center" },
-          children: "TARGET MARGIN: USD 10.80 por reserva (Positivo desde Day 1)."
-        }, undefined, false, undefined, this)
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-        className: "section-header",
-        style: { color: "var(--accent-yellow)" },
-        children: "COMO EL 'SISTEMA CONFIANZA' PROTEGE EL MARGEN:"
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("ul", {
-        className: "list",
-        children: protections.map((p, i) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("li", {
-          children: p
-        }, i, false, undefined, this))
-      }, undefined, false, undefined, this)
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
+                style: {
+                  fontSize: "14px",
+                  color: "var(--text-muted)",
+                  marginBottom: "24px",
+                  textTransform: "uppercase",
+                  letterSpacing: "2px"
+                },
+                children: "Desglose por Transacción"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+                style: { display: "flex", flexDirection: "column", gap: "12px" },
+                children: [
+                  { label: "Ticket Promedio (AOV)", value: "$120", bar: 100, color: "var(--text-primary)", plus: true },
+                  { label: "Take Rate (15%)", value: "$18", bar: 60, color: "var(--accent-green)", plus: true },
+                  { label: "FGO Pool (10%)", value: "$12", bar: 40, color: "#4DD0E1", plus: false },
+                  { label: "PSP + Soporte", value: "-$7.20", bar: 25, color: "var(--danger)", plus: false }
+                ].map((item, i) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+                  style: {
+                    display: "grid",
+                    gridTemplateColumns: "180px 80px 1fr",
+                    alignItems: "center",
+                    gap: "16px"
+                  },
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
+                      style: { fontSize: "14px", color: "var(--text-secondary)" },
+                      children: item.label
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
+                      style: {
+                        fontSize: "20px",
+                        fontWeight: "700",
+                        color: item.color,
+                        textAlign: "right"
+                      },
+                      children: item.value
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+                      style: {
+                        height: "32px",
+                        width: `${item.bar}%`,
+                        background: item.color,
+                        borderRadius: "4px",
+                        opacity: 0.8
+                      }
+                    }, undefined, false, undefined, this)
+                  ]
+                }, i, true, undefined, this))
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+                style: {
+                  marginTop: "24px",
+                  padding: "20px",
+                  background: "var(--accent-green)",
+                  borderRadius: "12px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
+                    style: { fontSize: "18px", fontWeight: "600", color: "var(--bg-primary)" },
+                    children: "MARGEN NETO"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
+                    style: { fontSize: "32px", fontWeight: "800", color: "var(--bg-primary)" },
+                    children: "$10.80"
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
+                style: {
+                  marginTop: "12px",
+                  fontSize: "14px",
+                  color: "var(--accent-green)",
+                  textAlign: "center"
+                },
+                children: "✓ Rentable desde Day 1"
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+            style: { display: "flex", flexDirection: "column", gap: "20px" },
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
+                style: {
+                  fontSize: "14px",
+                  color: "var(--text-muted)",
+                  marginBottom: "4px",
+                  textTransform: "uppercase",
+                  letterSpacing: "2px"
+                },
+                children: "Métricas Clave"
+              }, undefined, false, undefined, this),
+              [
+                { label: "LTV (12 meses)", value: "$324", desc: "~27 reservas/año por usuario activo" },
+                { label: "CAC Objetivo", value: "<$15", desc: "WiFi hack reduce a <$0.50" },
+                { label: "LTV:CAC Ratio", value: "21x", desc: "Benchmark SaaS: 3x mínimo", highlight: true },
+                { label: "Payback", value: "<30 días", desc: "Recuperación inmediata" }
+              ].map((m, i) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+                style: {
+                  background: m.highlight ? "rgba(0,208,132,0.15)" : "var(--bg-card)",
+                  border: m.highlight ? "2px solid var(--accent-green)" : "1px solid var(--border-subtle)",
+                  borderRadius: "12px",
+                  padding: "20px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
+                        style: { fontSize: "14px", color: "var(--text-muted)" },
+                        children: m.label
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
+                        style: { fontSize: "12px", color: "var(--text-secondary)", marginTop: "4px" },
+                        children: m.desc
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
+                    style: {
+                      fontSize: "28px",
+                      fontWeight: "800",
+                      color: m.highlight ? "var(--accent-green)" : "var(--text-primary)"
+                    },
+                    children: m.value
+                  }, undefined, false, undefined, this)
+                ]
+              }, i, true, undefined, this))
+            ]
+          }, undefined, true, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
     ]
   }, undefined, true, undefined, this);
 }
@@ -18563,52 +18725,164 @@ function Slide10ProteccionRiesgo() {
 // src/slides/Slide12Tecnologia.tsx
 var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide12Tecnologia() {
-  const pilares = [
-    {
-      title: "Seguridad & Arquitectura",
-      items: [
-        "Microservicios Edge (Supabase) + RLS.",
-        "Diseñado para alta concurrencia y seguridad de datos."
-      ]
-    },
-    {
-      title: "Estabilidad Transaccional",
-      items: [
-        "Libro Contable con bloqueos optimistas.",
-        "Medimos estabilidad y p95 en entornos de entorno de pruebas y piloto."
-      ]
-    },
-    {
-      title: "Omnicanalidad Real",
-      items: [
-        "Codigo unificado para Web y Android.",
-        "Despliegue continuo sin tiempos de inactividad."
-      ]
-    }
+  const stack = [
+    { name: "Frontend", tech: "Angular 18 + Ionic", icon: "\uD83D\uDCF1" },
+    { name: "Backend", tech: "Supabase (PostgreSQL)", icon: "\uD83D\uDDC4️" },
+    { name: "Auth", tech: "Biometría + OAuth", icon: "\uD83D\uDD10" },
+    { name: "Pagos", tech: "MercadoPago API", icon: "\uD83D\uDCB3" },
+    { name: "IA", tech: "Gemini Vision", icon: "\uD83E\uDD16" },
+    { name: "Deploy", tech: "Cloudflare + GitHub", icon: "☁️" }
+  ];
+  const metricas = [
+    { label: "Uptime", value: "99.9%", color: "var(--accent-green)" },
+    { label: "P95 Latency", value: "<200ms", color: "var(--accent-green)" },
+    { label: "Edge Functions", value: "45+", color: "var(--text-primary)" },
+    { label: "Cobertura Tests", value: "78%", color: "var(--text-primary)" }
   ];
   return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(SlideLayout, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(SlideHeader, {
-        title: "Tecnologia: Validada y Escalable",
-        subtitle: "Riesgo tecnico mitigado con arquitectura moderna."
+        title: "Stack Tecnológico",
+        subtitle: "Arquitectura moderna, escalable y de bajo costo."
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
-        className: "flex-col gap-48",
-        style: { marginTop: "64px" },
-        children: pilares.map((p, i) => /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
-          className: "flex-col gap-12",
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("h3", {
-              style: { fontSize: "32px", fontWeight: "600" },
-              children: p.title
-            }, undefined, false, undefined, this),
-            p.items.map((item, j) => /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("p", {
-              style: { fontSize: "22px", color: "var(--text-secondary)" },
-              children: item
-            }, j, false, undefined, this))
-          ]
-        }, i, true, undefined, this))
-      }, undefined, false, undefined, this)
+        style: {
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "48px",
+          marginTop: "48px"
+        },
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("p", {
+                style: {
+                  fontSize: "14px",
+                  color: "var(--text-muted)",
+                  marginBottom: "24px",
+                  textTransform: "uppercase",
+                  letterSpacing: "2px"
+                },
+                children: "Stack Principal"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+                style: {
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "16px"
+                },
+                children: stack.map((s, i) => /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+                  style: {
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border-subtle)",
+                    borderRadius: "12px",
+                    padding: "20px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px"
+                  },
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("span", {
+                      style: { fontSize: "32px" },
+                      children: s.icon
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+                      children: [
+                        /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("p", {
+                          style: { fontSize: "12px", color: "var(--text-muted)" },
+                          children: s.name
+                        }, undefined, false, undefined, this),
+                        /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("p", {
+                          style: { fontSize: "16px", fontWeight: "600", color: "var(--text-primary)" },
+                          children: s.tech
+                        }, undefined, false, undefined, this)
+                      ]
+                    }, undefined, true, undefined, this)
+                  ]
+                }, i, true, undefined, this))
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("p", {
+                style: {
+                  fontSize: "14px",
+                  color: "var(--text-muted)",
+                  marginBottom: "24px",
+                  textTransform: "uppercase",
+                  letterSpacing: "2px"
+                },
+                children: "Métricas de Producción"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+                style: {
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "16px",
+                  marginBottom: "32px"
+                },
+                children: metricas.map((m, i) => /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+                  style: {
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border-subtle)",
+                    borderRadius: "12px",
+                    padding: "20px",
+                    textAlign: "center"
+                  },
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("p", {
+                      style: { fontSize: "32px", fontWeight: "700", color: m.color },
+                      children: m.value
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("p", {
+                      style: { fontSize: "14px", color: "var(--text-muted)" },
+                      children: m.label
+                    }, undefined, false, undefined, this)
+                  ]
+                }, i, true, undefined, this))
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+                style: {
+                  background: "rgba(0, 208, 132, 0.1)",
+                  border: "1px solid var(--accent-green)",
+                  borderRadius: "12px",
+                  padding: "24px"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--accent-green)", marginBottom: "16px", fontWeight: "600" },
+                    children: "✓ VENTAJAS TÉCNICAS"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("ul", {
+                    style: {
+                      fontSize: "15px",
+                      color: "var(--text-secondary)",
+                      lineHeight: 2,
+                      paddingLeft: "20px",
+                      margin: 0
+                    },
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("li", {
+                        children: "Row Level Security (RLS) nativo en PostgreSQL"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("li", {
+                        children: "Edge Functions para lógica de negocio serverless"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("li", {
+                        children: "Código unificado Web + Android (Capacitor)"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("li", {
+                        children: "CI/CD automático con GitHub Actions"
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this)
+                ]
+              }, undefined, true, undefined, this)
+            ]
+          }, undefined, true, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
     ]
   }, undefined, true, undefined, this);
 }
@@ -18710,52 +18984,170 @@ function Slide13Evidencia() {
 // src/slides/Slide14GTM.tsx
 var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide14EstrategiaMercado() {
-  const canales = [
-    "5,000+ Contactos Directos (Waitlist)",
-    "Alianzas con flotas locales",
-    "Canal EcuCondor (Audiencia validada)"
-  ];
-  const ejecucion = [
-    "Foco Geografico: CABA/GBA",
-    "Estrategia: 'Land & Expand' via comunidades",
-    "Costo Adquisicion Objetivo: < USD 15"
+  const funnel = [
+    { stage: "AWARENESS", value: "100K+", desc: "WiFi Fronterizo → Registro vehicular", color: "var(--text-muted)", width: "100%" },
+    { stage: "INTEREST", value: "30K", desc: "Push notifications en alta demanda", color: "var(--text-secondary)", width: "80%" },
+    { stage: "ACTIVATION", value: "5K", desc: "Primera publicación de vehículo", color: "var(--text-primary)", width: "60%" },
+    { stage: "REVENUE", value: "1.5K", desc: "Primera reserva completada", color: "var(--accent-green)", width: "40%" }
   ];
   return /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(SlideLayout, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(SlideHeader, {
-        title: "Estrategia de Mercado",
-        subtitle: "Foco inicial: Argentina + Comunidades Digitales."
+        title: "Go-To-Market",
+        subtitle: "Estrategia de adquisición de bajo costo."
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
-        className: "grid-2",
-        style: { marginTop: "64px" },
+        style: {
+          display: "grid",
+          gridTemplateColumns: "1.2fr 1fr",
+          gap: "60px",
+          marginTop: "48px",
+          alignItems: "center"
+        },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(Card, {
+          /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
-                className: "section-header",
-                children: "CANALES ACTIVOS (HOY)"
+              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
+                style: {
+                  fontSize: "14px",
+                  color: "var(--text-muted)",
+                  marginBottom: "24px",
+                  textTransform: "uppercase",
+                  letterSpacing: "2px"
+                },
+                children: "Funnel de Conversión (Proyección Q1-Q2)"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("ul", {
-                className: "list",
-                children: canales.map((c, i) => /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("li", {
-                  children: c
+              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+                style: { display: "flex", flexDirection: "column", gap: "12px" },
+                children: funnel.map((f, i) => /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+                  style: {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px"
+                  },
+                  children: /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+                    style: {
+                      background: `linear-gradient(90deg, ${f.color} 0%, rgba(0,208,132,0.3) 100%)`,
+                      height: "56px",
+                      width: f.width,
+                      borderRadius: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "0 20px",
+                      justifyContent: "space-between"
+                    },
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("span", {
+                        style: { fontSize: "14px", fontWeight: "600", color: "var(--bg-primary)" },
+                        children: f.stage
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("span", {
+                        style: { fontSize: "24px", fontWeight: "800", color: "var(--bg-primary)" },
+                        children: f.value
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this)
                 }, i, false, undefined, this))
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
+                style: {
+                  fontSize: "14px",
+                  color: "var(--text-muted)",
+                  marginTop: "16px"
+                },
+                children: "Conversión total: 1.5% (benchmark industria: 0.5-2%)"
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(Card, {
+          /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+            style: { display: "flex", flexDirection: "column", gap: "20px" },
             children: [
               /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
-                className: "section-header",
-                children: "EJECUCION INICIAL (Q1-Q2)"
-              }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("ul", {
-                className: "list",
-                children: ejecucion.map((e, i) => /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("li", {
-                  children: e
-                }, i, false, undefined, this))
-              }, undefined, false, undefined, this)
+                style: {
+                  background: "var(--bg-card)",
+                  border: "2px solid var(--accent-green)",
+                  borderRadius: "12px",
+                  padding: "24px"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--accent-green)", marginBottom: "12px", fontWeight: "600" },
+                    children: "\uD83D\uDE80 CANAL PRINCIPAL: WiFi Fronterizo"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
+                    style: { fontSize: "18px", color: "var(--text-primary)", marginBottom: "8px" },
+                    children: [
+                      "CAC proyectado: ",
+                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("strong", {
+                        style: { color: "var(--accent-green)" },
+                        children: [
+                          "<",
+                          " $0.50"
+                        ]
+                      }, undefined, true, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--text-secondary)" },
+                    children: "vs $15+ en Facebook/Google Ads"
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+                style: {
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border-subtle)",
+                  borderRadius: "12px",
+                  padding: "24px"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--text-muted)", marginBottom: "12px" },
+                    children: "CANALES SECUNDARIOS"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("ul", {
+                    style: {
+                      fontSize: "15px",
+                      color: "var(--text-secondary)",
+                      lineHeight: 2,
+                      paddingLeft: "20px",
+                      margin: 0
+                    },
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("li", {
+                        children: "5,000+ Waitlist (EcuCondor)"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("li", {
+                        children: "Alianzas flotas locales"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("li", {
+                        children: "Referidos (bonus en billetera)"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("li", {
+                        children: "SEO orgánico"
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+                style: {
+                  background: "var(--bg-secondary)",
+                  borderRadius: "12px",
+                  padding: "16px",
+                  textAlign: "center"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--text-muted)" },
+                    children: "Foco geográfico inicial"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
+                    style: { fontSize: "24px", fontWeight: "700", color: "var(--text-primary)" },
+                    children: "\uD83C\uDDE6\uD83C\uDDF7 CABA + GBA"
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this)
         ]
@@ -18906,71 +19298,179 @@ function Slide16Estrategia() {
 // src/slides/Slide17Fintech.tsx
 var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide17Fintech() {
-  const coreBancario = [
-    "Libro Contable de doble entrada (Debit/Credit).",
-    "Billetera Virtual digitales por usuario (sin licencia bancaria).",
-    "Pagos Divididos & Pre-autorizaciones (T+2).",
-    "Bloqueos transaccionales (Advisory Locks)."
-  ];
-  const arquitectura = [
-    "100% Serverless (Supabase Edge Functions).",
-    "Latencia < 50ms en LatAm (Global Edge Network).",
-    "Motor de Riesgo con IA (Gemini 2.5).",
-    "Front-end Omnicanal (Web + Android + iOS)."
+  const flujo = [
+    { step: "1", icon: "\uD83D\uDCB3", title: "Depósito", desc: "Usuario carga saldo a Billetera Virtual" },
+    { step: "2", icon: "\uD83D\uDD12", title: "Pre-Auth", desc: "Se bloquea garantía (T+2)" },
+    { step: "3", icon: "\uD83D\uDE97", title: "Reserva", desc: "Se descuenta del saldo el alquiler" },
+    { step: "4", icon: "✅", title: "Liberación", desc: "Sin daños: garantía liberada automáticamente" }
   ];
   return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(SlideLayout, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(SlideHeader, {
-        title: "Plataforma Fintech Vertical",
-        subtitle: "Infraestructura propietaria. No es un MVP."
+        title: "Motor Fintech",
+        subtitle: "Infraestructura propietaria de pagos y garantías."
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-        className: "grid-2",
-        style: { marginTop: "48px" },
+        style: {
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "48px",
+          marginTop: "40px"
+        },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(Card, {
+          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-                className: "section-header",
-                children: "CORE BANCARIO & LEDGER"
+              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
+                style: {
+                  fontSize: "14px",
+                  color: "var(--text-muted)",
+                  marginBottom: "24px",
+                  textTransform: "uppercase",
+                  letterSpacing: "2px"
+                },
+                children: "Flujo de Fondos"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("ul", {
-                className: "list",
-                children: coreBancario.map((c, i) => /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("li", {
-                  children: c
-                }, i, false, undefined, this))
+              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+                style: { display: "flex", flexDirection: "column", gap: "16px" },
+                children: flujo.map((f, i) => /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+                  style: {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "20px",
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border-subtle)",
+                    borderRadius: "12px",
+                    padding: "20px",
+                    position: "relative"
+                  },
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+                      style: {
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "50%",
+                        background: "var(--accent-green)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "18px",
+                        fontWeight: "700",
+                        color: "var(--bg-primary)"
+                      },
+                      children: f.step
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
+                      style: { fontSize: "32px" },
+                      children: f.icon
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+                      children: [
+                        /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
+                          style: { fontSize: "18px", fontWeight: "600", color: "var(--text-primary)" },
+                          children: f.title
+                        }, undefined, false, undefined, this),
+                        /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
+                          style: { fontSize: "14px", color: "var(--text-muted)" },
+                          children: f.desc
+                        }, undefined, false, undefined, this)
+                      ]
+                    }, undefined, true, undefined, this),
+                    i < flujo.length - 1 && /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+                      style: {
+                        position: "absolute",
+                        bottom: "-16px",
+                        left: "39px",
+                        width: "2px",
+                        height: "16px",
+                        background: "var(--accent-green)"
+                      }
+                    }, undefined, false, undefined, this)
+                  ]
+                }, i, true, undefined, this))
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(Card, {
+          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+            style: { display: "flex", flexDirection: "column", gap: "20px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-                className: "section-header",
-                children: "ARQUITECTURA EDGE & AI"
+              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
+                style: {
+                  fontSize: "14px",
+                  color: "var(--text-muted)",
+                  marginBottom: "4px",
+                  textTransform: "uppercase",
+                  letterSpacing: "2px"
+                },
+                children: "Capacidades Core"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("ul", {
-                className: "list",
-                children: arquitectura.map((a, i) => /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("li", {
-                  children: a
-                }, i, false, undefined, this))
-              }, undefined, false, undefined, this)
+              [
+                { icon: "\uD83D\uDCD2", title: "Libro Contable", desc: "Doble entrada (Debit/Credit) con integridad transaccional" },
+                { icon: "\uD83D\uDCB0", title: "Billetera Virtual", desc: "Sin licencia bancaria requerida (comodato)" },
+                { icon: "\uD83D\uDD10", title: "Pre-Autorizaciones", desc: "Bloqueo de garantía con liberación automática (T+2)" },
+                { icon: "\uD83E\uDD16", title: "Motor de Riesgo IA", desc: "Scoring de comportamiento + detección de fraude" }
+              ].map((c, i) => /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+                style: {
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border-subtle)",
+                  borderRadius: "12px",
+                  padding: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "16px"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
+                    style: { fontSize: "36px" },
+                    children: c.icon
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
+                        style: { fontSize: "16px", fontWeight: "600", color: "var(--text-primary)" },
+                        children: c.title
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
+                        style: { fontSize: "13px", color: "var(--text-muted)" },
+                        children: c.desc
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this)
+                ]
+              }, i, true, undefined, this)),
+              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+                style: {
+                  background: "rgba(0,208,132,0.1)",
+                  border: "1px solid var(--accent-green)",
+                  borderRadius: "12px",
+                  padding: "16px",
+                  textAlign: "center"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--text-muted)", marginBottom: "8px" },
+                    children: "Integración de Pagos"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
+                    style: { fontSize: "24px", fontWeight: "700", color: "var(--accent-green)" },
+                    children: "MercadoPago API"
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
         style: {
+          marginTop: "32px",
+          padding: "16px 32px",
           background: "var(--accent-green)",
-          padding: "24px 48px",
           borderRadius: "8px",
-          position: "absolute",
-          bottom: "80px",
-          left: "80px",
-          right: "80px"
+          textAlign: "center"
         },
         children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
-          style: { fontSize: "24px", fontWeight: "700", color: "var(--bg-primary)" },
-          children: "ESTADO ACTUAL: 100% OPERATIVO EN PRODUCCION"
+          style: { fontSize: "18px", fontWeight: "700", color: "var(--bg-primary)" },
+          children: "✓ 100% OPERATIVO EN PRODUCCIÓN"
         }, undefined, false, undefined, this)
       }, undefined, false, undefined, this)
     ]
@@ -19104,56 +19604,150 @@ function Slide18Vision() {
 // src/slides/Slide19KPIs.tsx
 var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide19Metricas() {
-  const columnas = [
+  const metricas = [
     {
-      title: "TRACCION",
+      category: "TRACCIÓN",
+      icon: "\uD83D\uDCC8",
+      color: "var(--accent-green)",
       items: [
-        "50 Reservas Completadas.",
-        "USD 100 Ticket Promedio.",
-        "10 Propietarios Iniciales (Aliados)."
+        { label: "Reservas Completadas", value: "50+", target: true },
+        { label: "Ticket Promedio", value: "$100", target: true },
+        { label: "Propietarios Activos", value: "10", target: true }
       ]
     },
     {
-      title: "RIESGO & SEGURIDAD",
+      category: "RIESGO",
+      icon: "\uD83D\uDEE1️",
+      color: "#4DD0E1",
       items: [
-        "< 5% Tasa de Incidentes.",
-        "100% Cobertura de Seguro.",
-        "0 Fraudes de Identidad (Biometria)."
+        { label: "Tasa de Incidentes", value: "<5%", target: true },
+        { label: "Cobertura Seguro", value: "100%", target: true },
+        { label: "Fraudes Identidad", value: "0", target: true }
       ]
     },
     {
-      title: "RETENCION",
+      category: "RETENCIÓN",
+      icon: "\uD83D\uDD04",
+      color: "#FFB74D",
       items: [
-        "> 30% Retencion de Usuarios.",
-        "NPS Propietarios > 7.",
-        "Feedback Loop Semanal."
+        { label: "Retención Usuarios", value: ">30%", target: false },
+        { label: "NPS Propietarios", value: ">7", target: false },
+        { label: "Feedback Loop", value: "Semanal", target: true }
       ]
     }
   ];
   return /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(SlideLayout, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(SlideHeader, {
-        title: "Metricas Piloto Q1 2026",
-        subtitle: "Validacion de metricas reales con riesgo acotado."
+        title: "Métricas Piloto Q1 2026",
+        subtitle: "KPIs objetivo para validación con riesgo acotado."
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
-        className: "grid-3",
-        style: { marginTop: "64px" },
-        children: columnas.map((col, i) => /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(Card, {
+        style: {
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "24px",
+          marginTop: "48px"
+        },
+        children: metricas.map((m, i) => /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+          style: {
+            background: "var(--bg-card)",
+            border: `2px solid ${m.color}`,
+            borderRadius: "16px",
+            padding: "28px",
+            position: "relative"
+          },
           children: [
             /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
-              className: "section-header",
-              children: col.title
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("ul", {
-              className: "list",
-              children: col.items.map((item, j) => /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("li", {
-                children: item
-              }, j, false, undefined, this))
+              style: {
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                marginBottom: "24px"
+              },
+              children: [
+                /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+                  style: { fontSize: "36px" },
+                  children: m.icon
+                }, undefined, false, undefined, this),
+                /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+                  style: {
+                    fontSize: "16px",
+                    fontWeight: "700",
+                    color: m.color,
+                    letterSpacing: "1px"
+                  },
+                  children: m.category
+                }, undefined, false, undefined, this)
+              ]
+            }, undefined, true, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+              style: { display: "flex", flexDirection: "column", gap: "16px" },
+              children: m.items.map((item, j) => /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+                style: {
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "12px 16px",
+                  background: "var(--bg-secondary)",
+                  borderRadius: "8px"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+                    style: {
+                      fontSize: "14px",
+                      color: "var(--text-secondary)"
+                    },
+                    children: item.label
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+                    style: {
+                      fontSize: "20px",
+                      fontWeight: "700",
+                      color: item.target ? "var(--accent-green)" : "var(--text-primary)"
+                    },
+                    children: item.value
+                  }, undefined, false, undefined, this)
+                ]
+              }, j, true, undefined, this))
             }, undefined, false, undefined, this)
           ]
         }, i, true, undefined, this))
-      }, undefined, false, undefined, this)
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+        style: {
+          marginTop: "40px",
+          display: "flex",
+          justifyContent: "center",
+          gap: "32px"
+        },
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+            style: { display: "flex", alignItems: "center", gap: "8px" },
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+                style: { width: "12px", height: "12px", borderRadius: "50%", background: "var(--accent-green)" }
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+                style: { fontSize: "14px", color: "var(--text-muted)" },
+                children: "Meta alcanzable"
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+            style: { display: "flex", alignItems: "center", gap: "8px" },
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+                style: { width: "12px", height: "12px", borderRadius: "50%", background: "var(--text-primary)" }
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+                style: { fontSize: "14px", color: "var(--text-muted)" },
+                children: "En seguimiento"
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
     ]
   }, undefined, true, undefined, this);
 }
@@ -19426,54 +20020,168 @@ function Slide21Demostraci_n() {
 // src/slides/Slide22Competencia.tsx
 var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide22Competencia() {
-  const alternativas = [
-    "Agencias Tradicionales: Burocracia y Costo Alto.",
-    "Informalidad (FB/WhatsApp): Alto riesgo de estafa/daños.",
-    "Apps Genericas: Sin motor de riesgo especifico.",
-    "Friccion Alta: Depositos manuales o efectivo."
+  const competitors = [
+    {
+      name: "Rentadoras Tradicionales",
+      icon: "\uD83C\uDFE2",
+      cons: ["Burocracia alta", "Precios +30%", "Requiere TC internacional"],
+      score: 20
+    },
+    {
+      name: "Facebook / WhatsApp",
+      icon: "\uD83D\uDCF1",
+      cons: ["Sin verificación", "Alto riesgo fraude", "Sin protección legal"],
+      score: 30
+    },
+    {
+      name: "Apps Genéricas",
+      icon: "\uD83D\uDCF2",
+      cons: ["Sin motor de riesgo", "Sin billetera virtual", "UX deficiente"],
+      score: 45
+    }
   ];
-  const diferencia = [
-    "Sistema de Confianza: KYC Biometrico + Scoring de comportamiento.",
-    "Nucleo Fintech: Libro Contable + Billetera Virtual + Pre-autorización (T+2).",
-    "Eficiencia: Precios 30% menores que agencias.",
-    "Seguridad: Cobertura y contratos digitales."
+  const ventajas = [
+    { icon: "\uD83D\uDD10", label: "KYC Biométrico", desc: "Verificación de identidad obligatoria" },
+    { icon: "\uD83D\uDCB0", label: "Billetera Virtual", desc: "Garantía pre-depositada sin TC" },
+    { icon: "\uD83D\uDCF9", label: "Video-Inspección IA", desc: "Evidencia legal automática" },
+    { icon: "\uD83D\uDCCB", label: "Contrato Digital", desc: "Comodato con validez jurídica" },
+    { icon: "\uD83D\uDCB8", label: "Precios -30%", desc: "vs rentadoras tradicionales" },
+    { icon: "⚡", label: "Proceso 100% Digital", desc: "Sin papeles ni sucursales" }
   ];
   return /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(SlideLayout, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(SlideHeader, {
         title: "Ventaja Competitiva",
-        subtitle: "Posicionamiento: Alta Confianza (Sistema de Confianza) + Costo Eficiente."
+        subtitle: "AutoRenta vs. Alternativas existentes."
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
-        className: "grid-2",
-        style: { marginTop: "64px" },
+        style: {
+          display: "grid",
+          gridTemplateColumns: "1fr 1.3fr",
+          gap: "48px",
+          marginTop: "40px"
+        },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(Card, {
+          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
-                className: "section-header",
-                children: "ALTERNATIVAS ACTUALES"
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
+                style: {
+                  fontSize: "14px",
+                  color: "var(--danger)",
+                  marginBottom: "20px",
+                  textTransform: "uppercase",
+                  letterSpacing: "2px"
+                },
+                children: "❌ Alternativas Actuales"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("ul", {
-                className: "list",
-                children: alternativas.map((a, i) => /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("li", {
-                  children: a
-                }, i, false, undefined, this))
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                style: { display: "flex", flexDirection: "column", gap: "16px" },
+                children: competitors.map((c, i) => /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                  style: {
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border-subtle)",
+                    borderRadius: "12px",
+                    padding: "20px"
+                  },
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                      style: { display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" },
+                      children: [
+                        /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
+                          style: { fontSize: "28px" },
+                          children: c.icon
+                        }, undefined, false, undefined, this),
+                        /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
+                          style: { fontSize: "18px", fontWeight: "600", color: "var(--text-primary)" },
+                          children: c.name
+                        }, undefined, false, undefined, this)
+                      ]
+                    }, undefined, true, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                      style: { display: "flex", flexWrap: "wrap", gap: "8px" },
+                      children: c.cons.map((con, j) => /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
+                        style: {
+                          fontSize: "12px",
+                          padding: "4px 10px",
+                          background: "rgba(255,68,68,0.15)",
+                          color: "var(--danger)",
+                          borderRadius: "100px"
+                        },
+                        children: con
+                      }, j, false, undefined, this))
+                    }, undefined, false, undefined, this)
+                  ]
+                }, i, true, undefined, this))
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(Card, {
-            accent: true,
+          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
-                className: "section-header",
-                children: "LA DIFERENCIA AUTORENTA"
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
+                style: {
+                  fontSize: "14px",
+                  color: "var(--accent-green)",
+                  marginBottom: "20px",
+                  textTransform: "uppercase",
+                  letterSpacing: "2px"
+                },
+                children: "✓ La Diferencia AutoRenta"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("ul", {
-                className: "list",
-                children: diferencia.map((d, i) => /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("li", {
-                  children: d
-                }, i, false, undefined, this))
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                style: {
+                  background: "linear-gradient(180deg, var(--bg-card) 0%, rgba(0,208,132,0.08) 100%)",
+                  border: "2px solid var(--accent-green)",
+                  borderRadius: "16px",
+                  padding: "24px"
+                },
+                children: /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                  style: {
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "16px"
+                  },
+                  children: ventajas.map((v, i) => /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                    style: {
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "12px",
+                      padding: "12px",
+                      background: "var(--bg-secondary)",
+                      borderRadius: "8px"
+                    },
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
+                        style: { fontSize: "24px" },
+                        children: v.icon
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                        children: [
+                          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
+                            style: { fontSize: "14px", fontWeight: "600", color: "var(--accent-green)" },
+                            children: v.label
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
+                            style: { fontSize: "12px", color: "var(--text-muted)" },
+                            children: v.desc
+                          }, undefined, false, undefined, this)
+                        ]
+                      }, undefined, true, undefined, this)
+                    ]
+                  }, i, true, undefined, this))
+                }, undefined, false, undefined, this)
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                style: {
+                  marginTop: "20px",
+                  padding: "16px",
+                  background: "var(--accent-green)",
+                  borderRadius: "8px",
+                  textAlign: "center"
+                },
+                children: /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
+                  style: { fontSize: "16px", fontWeight: "600", color: "var(--bg-primary)" },
+                  children: "Posicionamiento: Alta Confianza + Bajo Costo"
+                }, undefined, false, undefined, this)
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this)

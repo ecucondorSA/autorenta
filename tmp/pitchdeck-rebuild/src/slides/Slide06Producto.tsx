@@ -3,54 +3,40 @@ import { SlideLayout, SlideHeader } from '../components/SlideLayout';
 
 // SVG Icons para cada paso
 const icons = {
-  registro: (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-      <path d="M12 11v4" />
-    </svg>
-  ),
   busqueda: (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
-      <line x1="9" y1="3" x2="9" y2="18" />
-      <line x1="15" y1="6" x2="15" y2="21" />
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
     </svg>
   ),
   reserva: (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-      <line x1="1" y1="10" x2="23" y2="10" />
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
     </svg>
   ),
   checkin: (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="23 7 16 12 23 17 23 7" />
-      <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-    </svg>
-  ),
-  uso: (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
     </svg>
   ),
   devolucion: (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="9 11 12 14 22 4" />
-      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="23 4 23 10 17 10" />
+      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
     </svg>
   )
 };
 
 export function Slide06Producto() {
   const pasos = [
-    { num: 1, name: 'REGISTRO', desc: 'Verificación biométrica + CNH validado por IA', icon: icons.registro },
-    { num: 2, name: 'BÚSQUEDA', desc: 'Mapa interactivo con filtros y disponibilidad en tiempo real', icon: icons.busqueda },
-    { num: 3, name: 'RESERVA', desc: 'Pagos divididos, depósito pre-autorizado', icon: icons.reserva },
-    { num: 4, name: 'CHECK-IN', desc: 'Video-inspección guiada por IA (evidencia legal)', icon: icons.checkin },
-    { num: 5, name: 'USO', desc: 'Soporte 24/7 + tracking opcional', icon: icons.uso },
-    { num: 6, name: 'DEVOLUCIÓN', desc: 'Inspección final + liberación instantánea', icon: icons.devolucion }
+    { num: 1, name: 'ENCUENTRA', desc: 'Mapa interactivo en tiempo real con filtros avanzados.', icon: icons.busqueda },
+    { num: 2, name: 'RESERVA', desc: 'Pago seguro, depósito pre-autorizado sin fricción.', icon: icons.reserva },
+    { num: 3, name: 'CHECK-IN', desc: 'Validación de identidad y video-inspección con IA.', icon: icons.checkin },
+    { num: 4, name: 'DEVUELVE', desc: 'Cierre de contrato instantáneo y liberación de garantía.', icon: icons.devolucion }
   ];
 
   return (
@@ -66,18 +52,18 @@ export function Slide06Producto() {
         marginTop: '20px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '16px'
+        gap: '24px'
       }}>
 
         {/* Background Glow */}
         <div style={{
           position: 'absolute',
-          top: '50%',
+          top: '40%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '800px',
           height: '400px',
-          background: 'radial-gradient(ellipse, rgba(0, 208, 132, 0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(0, 208, 132, 0.1) 0%, transparent 70%)',
           pointerEvents: 'none',
           zIndex: 0
         }} />
@@ -86,14 +72,15 @@ export function Slide06Producto() {
         <div style={{
           position: 'relative',
           zIndex: 1,
-          padding: '0 40px'
+          padding: '0 40px',
+          marginBottom: '20px'
         }}>
           {/* Connection Line */}
           <div style={{
             position: 'absolute',
             top: '48px',
-            left: '120px',
-            right: '120px',
+            left: '150px',
+            right: '150px',
             height: '3px',
             background: 'linear-gradient(90deg, var(--accent-green) 0%, rgba(0, 208, 132, 0.3) 50%, var(--accent-green) 100%)',
             zIndex: 0
@@ -102,12 +89,12 @@ export function Slide06Producto() {
           {/* Steps */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(6, 1fr)',
-            gap: '16px',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '32px',
             position: 'relative',
             zIndex: 1
           }}>
-            {pasos.map((p, idx) => (
+            {pasos.map((p) => (
               <div key={p.num} style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -126,7 +113,8 @@ export function Slide06Producto() {
                   justifyContent: 'center',
                   color: 'var(--accent-green)',
                   boxShadow: '0 0 30px rgba(0, 208, 132, 0.3), inset 0 0 20px rgba(0, 208, 132, 0.1)',
-                  position: 'relative'
+                  position: 'relative',
+                  backgroundColor: '#1E1E1E' // Ensure solid background behind icon to cover line
                 }}>
                   {p.icon}
                   {/* Step Number Badge */}
@@ -134,15 +122,15 @@ export function Slide06Producto() {
                     position: 'absolute',
                     top: '-4px',
                     right: '-4px',
-                    width: '28px',
-                    height: '28px',
+                    width: '32px',
+                    height: '32px',
                     background: 'var(--accent-green)',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '18px',
-                    fontWeight: '700',
+                    fontSize: '20px',
+                    fontWeight: '800',
                     color: 'var(--bg-primary)',
                     boxShadow: '0 4px 12px rgba(0, 208, 132, 0.4)'
                   }}>
@@ -152,10 +140,10 @@ export function Slide06Producto() {
 
                 {/* Step Name */}
                 <div style={{
-                  marginTop: '20px',
-                  fontSize: '18px',
+                  marginTop: '24px',
+                  fontSize: '24px',
                   letterSpacing: '2px',
-                  fontWeight: '700',
+                  fontWeight: '800',
                   color: 'var(--accent-green)'
                 }}>
                   {p.name}
@@ -163,11 +151,11 @@ export function Slide06Producto() {
 
                 {/* Step Description */}
                 <div style={{
-                  marginTop: '8px',
-                  fontSize: '16px',
+                  marginTop: '12px',
+                  fontSize: '18px',
                   color: 'var(--text-secondary)',
-                  lineHeight: '1.5',
-                  maxWidth: '200px'
+                  lineHeight: '1.4',
+                  maxWidth: '240px'
                 }}>
                   {p.desc}
                 </div>
@@ -176,40 +164,90 @@ export function Slide06Producto() {
           </div>
         </div>
 
-        {/* Hero Car Image */}
+        {/* App Mockups Grid */}
         <div style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           flex: 1,
-          position: 'relative'
+          position: 'relative',
+          minHeight: '200px'
         }}>
           <div style={{
             position: 'relative',
-            width: '2800px',
-            height: '900px'
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '20px',
+            maxWidth: '900px',
+            width: '100%'
           }}>
-            {/* Glow behind car */}
+            {/* Glow behind mockups */}
             <div style={{
               position: 'absolute',
-              bottom: '0',
+              bottom: '20px',
               left: '50%',
               transform: 'translateX(-50%)',
-              width: '600px',
+              width: '100%',
               height: '80px',
               background: 'radial-gradient(ellipse, rgba(0, 208, 132, 0.3) 0%, transparent 70%)',
-              filter: 'blur(20px)'
+              filter: 'blur(40px)',
+              zIndex: 0
             }} />
-            <img
-              src="/assets/app-mockups.png"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))'
-              }}
-              alt="Hero Car"
-            />
+
+            {/* App Screenshots */}
+            {[
+              { src: '/assets/product-experience/booking_discovery.png', alt: 'Búsqueda y Discovery', label: 'ENCUENTRA' },
+              { src: '/assets/product-experience/fintech_billetera_virtual.png', alt: 'Billetera Virtual', label: 'RESERVA' },
+              { src: '/assets/product-experience/trust_video_check.png', alt: 'Video Check', label: 'CHECK-IN' }
+            ].map((mockup, idx) => (
+              <div key={idx} style={{
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '12px',
+                zIndex: 1
+              }}>
+                <div style={{
+                  width: '180px',
+                  height: '320px',
+                  background: 'linear-gradient(135deg, #2A2A2A 0%, #1A1A1A 100%)',
+                  borderRadius: '24px',
+                  border: '2px solid rgba(255, 255, 255, 0.1)',
+                  overflow: 'hidden',
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)',
+                  position: 'relative'
+                }}>
+                  <img
+                    src={mockup.src}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block'
+                    }}
+                    alt={mockup.alt}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.parentElement!.innerHTML = `
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">
+                          ${mockup.alt}<br/>Imagen no disponible
+                        </div>
+                      `;
+                    }}
+                  />
+                </div>
+                <div style={{
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: 'var(--accent-green)',
+                  letterSpacing: '1px',
+                  textAlign: 'center'
+                }}>
+                  {mockup.label}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -217,28 +255,31 @@ export function Slide06Producto() {
         <div style={{
           display: 'flex',
           justifyContent: 'center',
-          gap: '24px',
-          zIndex: 1
+          gap: '32px',
+          zIndex: 1,
+          marginBottom: '20px'
         }}>
           {[
-            { icon: '📱', text: '100% desde tu celular' },
-            { icon: '📄', text: 'Sin papeles' },
-            { icon: '⚡', text: 'Liberación instantánea' }
+            { icon: '📱', text: '100% Mobile' },
+            { icon: '📄', text: 'Zero Paperwork' },
+            { icon: '⚡', text: 'Instant Access' }
           ].map((item, idx) => (
             <div key={idx} style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
-              background: 'rgba(0, 208, 132, 0.1)',
-              border: '1px solid rgba(0, 208, 132, 0.3)',
-              padding: '16px 32px',
-              borderRadius: '100px'
+              gap: '12px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              padding: '12px 24px',
+              borderRadius: '50px',
+              backdropFilter: 'blur(10px)'
             }}>
-              <span style={{ fontSize: '28px' }}>{item.icon}</span>
+              <span style={{ fontSize: '24px' }}>{item.icon}</span>
               <span style={{
-                fontSize: '20px',
+                fontSize: '18px',
                 fontWeight: '600',
-                color: 'var(--text-primary)'
+                color: 'var(--text-primary)',
+                letterSpacing: '0.5px'
               }}>
                 {item.text}
               </span>

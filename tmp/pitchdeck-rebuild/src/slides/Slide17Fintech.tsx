@@ -1,55 +1,161 @@
 import React from 'react';
-import { SlideLayout, SlideHeader, Card } from '../components/SlideLayout';
+import { SlideLayout, SlideHeader } from '../components/SlideLayout';
 
 export function Slide17Fintech() {
-  const coreBancario = [
-    'Libro Contable de doble entrada (Debit/Credit).',
-    'Billetera Virtual digitales por usuario (sin licencia bancaria).',
-    'Pagos Divididos & Pre-autorizaciones (T+2).',
-    'Bloqueos transaccionales (Advisory Locks).'
-  ];
-
-  const arquitectura = [
-    '100% Serverless (Supabase Edge Functions).',
-    'Latencia < 50ms en LatAm (Global Edge Network).',
-    'Motor de Riesgo con IA (Gemini 2.5).',
-    'Front-end Omnicanal (Web + Android + iOS).'
+  const flujo = [
+    { step: '1', icon: '💳', title: 'Depósito', desc: 'Usuario carga saldo a Billetera Virtual' },
+    { step: '2', icon: '🔒', title: 'Pre-Auth', desc: 'Se bloquea garantía (T+2)' },
+    { step: '3', icon: '🚗', title: 'Reserva', desc: 'Se descuenta del saldo el alquiler' },
+    { step: '4', icon: '✅', title: 'Liberación', desc: 'Sin daños: garantía liberada automáticamente' }
   ];
 
   return (
     <SlideLayout>
       <SlideHeader
-        title="Plataforma Fintech Vertical"
-        subtitle="Infraestructura propietaria. No es un MVP."
+        title="Motor Fintech"
+        subtitle="Infraestructura propietaria de pagos y garantías."
       />
 
-      <div className="grid-2" style={{ marginTop: '48px' }}>
-        <Card>
-          <div className="section-header">CORE BANCARIO & LEDGER</div>
-          <ul className="list">
-            {coreBancario.map((c, i) => <li key={i}>{c}</li>)}
-          </ul>
-        </Card>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '48px',
+        marginTop: '40px'
+      }}>
+        {/* Left - Flow */}
+        <div>
+          <p style={{
+            fontSize: '14px',
+            color: 'var(--text-muted)',
+            marginBottom: '24px',
+            textTransform: 'uppercase',
+            letterSpacing: '2px'
+          }}>
+            Flujo de Fondos
+          </p>
 
-        <Card>
-          <div className="section-header">ARQUITECTURA EDGE & AI</div>
-          <ul className="list">
-            {arquitectura.map((a, i) => <li key={i}>{a}</li>)}
-          </ul>
-        </Card>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {flujo.map((f, i) => (
+              <div key={i} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '20px',
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '12px',
+                padding: '20px',
+                position: 'relative'
+              }}>
+                {/* Step Number */}
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  background: 'var(--accent-green)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '18px',
+                  fontWeight: '700',
+                  color: 'var(--bg-primary)'
+                }}>
+                  {f.step}
+                </div>
+
+                <span style={{ fontSize: '32px' }}>{f.icon}</span>
+
+                <div>
+                  <p style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>
+                    {f.title}
+                  </p>
+                  <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
+                    {f.desc}
+                  </p>
+                </div>
+
+                {/* Connector */}
+                {i < flujo.length - 1 && (
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '-16px',
+                    left: '39px',
+                    width: '2px',
+                    height: '16px',
+                    background: 'var(--accent-green)'
+                  }} />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right - Features */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <p style={{
+            fontSize: '14px',
+            color: 'var(--text-muted)',
+            marginBottom: '4px',
+            textTransform: 'uppercase',
+            letterSpacing: '2px'
+          }}>
+            Capacidades Core
+          </p>
+
+          {[
+            { icon: '📒', title: 'Libro Contable', desc: 'Doble entrada (Debit/Credit) con integridad transaccional' },
+            { icon: '💰', title: 'Billetera Virtual', desc: 'Sin licencia bancaria requerida (comodato)' },
+            { icon: '🔐', title: 'Pre-Autorizaciones', desc: 'Bloqueo de garantía con liberación automática (T+2)' },
+            { icon: '🤖', title: 'Motor de Riesgo IA', desc: 'Scoring de comportamiento + detección de fraude' }
+          ].map((c, i) => (
+            <div key={i} style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '12px',
+              padding: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px'
+            }}>
+              <span style={{ fontSize: '36px' }}>{c.icon}</span>
+              <div>
+                <p style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)' }}>
+                  {c.title}
+                </p>
+                <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+                  {c.desc}
+                </p>
+              </div>
+            </div>
+          ))}
+
+          {/* Integration */}
+          <div style={{
+            background: 'rgba(0,208,132,0.1)',
+            border: '1px solid var(--accent-green)',
+            borderRadius: '12px',
+            padding: '16px',
+            textAlign: 'center'
+          }}>
+            <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '8px' }}>
+              Integración de Pagos
+            </p>
+            <p style={{ fontSize: '24px', fontWeight: '700', color: 'var(--accent-green)' }}>
+              MercadoPago API
+            </p>
+          </div>
+        </div>
       </div>
 
+      {/* Status Bar */}
       <div style={{
+        marginTop: '32px',
+        padding: '16px 32px',
         background: 'var(--accent-green)',
-        padding: '24px 48px',
         borderRadius: '8px',
-        position: 'absolute',
-        bottom: '80px',
-        left: '80px',
-        right: '80px'
+        textAlign: 'center'
       }}>
-        <p style={{ fontSize: '24px', fontWeight: '700', color: 'var(--bg-primary)' }}>
-          ESTADO ACTUAL: 100% OPERATIVO EN PRODUCCION
+        <p style={{ fontSize: '18px', fontWeight: '700', color: 'var(--bg-primary)' }}>
+          ✓ 100% OPERATIVO EN PRODUCCIÓN
         </p>
       </div>
     </SlideLayout>

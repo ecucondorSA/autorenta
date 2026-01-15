@@ -18,15 +18,15 @@
 ## 🔴 PRIORIDAD ALTA
 
 ### Slide 06 - Producto (Flujo 100% Digital)
-**Estado**: ⚠️ En progreso
+**Estado**: 🟢 Completo
 **Archivo**: `Slide06Producto.tsx`
 
 **Tareas**:
 - [x] ~~Reemplazar imagen genérica de auto por mockups de app~~
 - [x] ~~Aumentar tamaño de fuentes (paso nombres, descripciones)~~
-- [ ] Ajustar tamaño de imagen mockups para que no se corte
-- [ ] Verificar que badges inferiores sean visibles
-- [ ] Considerar reducir a 4 pasos clave en lugar de 6 (menos saturación visual)
+- [x] ~~Ajustar tamaño de imagen mockups para que no se corte~~
+- [x] ~~Verificar que badges inferiores sean visibles~~
+- [x] ~~Considerar reducir a 4 pasos clave en lugar de 6 (menos saturación visual)~~
 
 ---
 
