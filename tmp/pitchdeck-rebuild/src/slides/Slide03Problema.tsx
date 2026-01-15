@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide03Problema() {
+  const { t } = useTranslations();
   return (
     <div className="slide slide--centered" style={{
       position: 'relative'
@@ -25,8 +27,8 @@ export function Slide03Problema() {
         color: 'var(--accent-yellow)',
         textShadow: '0 0 100px rgba(230,255,0,0.3)',
         marginBottom: '48px'
-      }}>
-        CONFIANZA.
+      }}      >
+        {t('slide03Problema.title')}
       </h1>
 
       <p style={{
@@ -35,7 +37,7 @@ export function Slide03Problema() {
         fontWeight: '500',
         marginBottom: '24px'
       }}>
-        El cuello de botella es la confianza.
+        {t('slide03Problema.subtitle')}
       </p>
 
       <p style={{
@@ -46,7 +48,7 @@ export function Slide03Problema() {
         lineHeight: 1.6,
         marginBottom: '64px'
       }}>
-        Las plataformas P2P actuales fallan porque no pueden garantizar seguridad.
+        {t('slide03Problema.description')}
       </p>
 
       {/* Fear questions */}
@@ -57,9 +59,9 @@ export function Slide03Problema() {
         alignItems: 'center'
       }}>
         {[
-          '¿Me robarán el auto?',
-          '¿Quién paga los daños?',
-          '¿Qué pasa si mienten?'
+          t('slide03Problema.question1'),
+          t('slide03Problema.question2'),
+          t('slide03Problema.question3')
         ].map((q, i) => (
           <p key={i} style={{
             fontSize: '22px',
@@ -78,7 +80,7 @@ export function Slide03Problema() {
         fontSize: '20px',
         color: 'var(--text-secondary)'
       }}>
-        Sin una solución tecnológica al <span style={{ color: 'var(--accent-green)' }}>Miedo</span>, el mercado no escala.
+         {t('slide03Problema.bottomText')} <span style={{ color: 'var(--accent-green)' }}>{t('slide03Problema.bottomHighlight')}</span>{t('slide03Problema.bottomEnd')}
       </p>
 
       <div className="diamond" />

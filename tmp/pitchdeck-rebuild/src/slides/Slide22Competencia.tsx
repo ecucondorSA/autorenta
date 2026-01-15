@@ -1,42 +1,129 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide22Competencia() {
+  const { t } = useTranslations();
+  
   const competitors = [
     {
-      name: 'Rentadoras Tradicionales',
-      icon: '🏢',
-      cons: ['Burocracia alta', 'Precios +30%', 'Requiere TC internacional'],
+      name: t('slide22.competitors.traditional.name'),
+      icon: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="8" width="18" height="13" stroke="#B0B0B0" strokeWidth="2"/>
+          <path d="M7 8V5C7 3.89543 7.89543 3 9 3H15C16.1046 3 17 3.89543 17 5V8" stroke="#B0B0B0" strokeWidth="2"/>
+          <line x1="3" y1="12" x2="21" y2="12" stroke="#B0B0B0" strokeWidth="2"/>
+        </svg>
+      ),
+      cons: [
+        t('slide22.competitors.traditional.con1'),
+        t('slide22.competitors.traditional.con2'),
+        t('slide22.competitors.traditional.con3')
+      ],
       score: 20
     },
     {
-      name: 'Facebook / WhatsApp',
-      icon: '📱',
-      cons: ['Sin verificación', 'Alto riesgo fraude', 'Sin protección legal'],
+      name: t('slide22.competitors.social.name'),
+      icon: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <rect x="6" y="2" width="12" height="20" rx="2" stroke="#B0B0B0" strokeWidth="2"/>
+          <line x1="10" y1="18" x2="14" y2="18" stroke="#B0B0B0" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      ),
+      cons: [
+        t('slide22.competitors.social.con1'),
+        t('slide22.competitors.social.con2'),
+        t('slide22.competitors.social.con3')
+      ],
       score: 30
     },
     {
-      name: 'Apps Genéricas',
-      icon: '📲',
-      cons: ['Sin motor de riesgo', 'Sin billetera virtual', 'UX deficiente'],
+      name: t('slide22.competitors.generic.name'),
+      icon: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <rect x="5" y="3" width="14" height="18" rx="2" stroke="#B0B0B0" strokeWidth="2"/>
+          <rect x="8" y="7" width="3" height="3" fill="#B0B0B0"/>
+          <rect x="13" y="7" width="3" height="3" fill="#B0B0B0"/>
+          <rect x="8" y="12" width="3" height="3" fill="#B0B0B0"/>
+          <rect x="13" y="12" width="3" height="3" fill="#B0B0B0"/>
+        </svg>
+      ),
+      cons: [
+        t('slide22.competitors.generic.con1'),
+        t('slide22.competitors.generic.con2'),
+        t('slide22.competitors.generic.con3')
+      ],
       score: 45
     }
   ];
 
   const ventajas = [
-    { icon: '🔐', label: 'KYC Biométrico', desc: 'Verificación de identidad obligatoria' },
-    { icon: '💰', label: 'Billetera Virtual', desc: 'Garantía pre-depositada sin TC' },
-    { icon: '📹', label: 'Video-Inspección IA', desc: 'Evidencia legal automática' },
-    { icon: '📋', label: 'Contrato Digital', desc: 'Comodato con validez jurídica' },
-    { icon: '💸', label: 'Precios -30%', desc: 'vs rentadoras tradicionales' },
-    { icon: '⚡', label: 'Proceso 100% Digital', desc: 'Sin papeles ni sucursales' }
+    {
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect x="5" y="11" width="14" height="10" rx="2" stroke="#00D084" strokeWidth="2"/>
+          <path d="M8 11V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V11" stroke="#00D084" strokeWidth="2"/>
+          <circle cx="12" cy="16" r="1.5" fill="#00D084"/>
+        </svg>
+      ),
+      label: t('slide22.advantages.kyc.label'),
+      desc: t('slide22.advantages.kyc.desc')
+    },
+    {
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#00D084" strokeWidth="2"/>
+          <path d="M12 6V18M8 10H16M8 14H16" stroke="#00D084" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      ),
+      label: t('slide22.advantages.wallet.label'),
+      desc: t('slide22.advantages.wallet.desc')
+    },
+    {
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="5" width="18" height="14" rx="2" stroke="#00D084" strokeWidth="2"/>
+          <circle cx="12" cy="12" r="3" stroke="#00D084" strokeWidth="2"/>
+        </svg>
+      ),
+      label: t('slide22.advantages.video.label'),
+      desc: t('slide22.advantages.video.desc')
+    },
+    {
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect x="4" y="3" width="16" height="18" rx="2" stroke="#00D084" strokeWidth="2"/>
+          <path d="M8 8H16M8 12H16M8 16H13" stroke="#00D084" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      ),
+      label: t('slide22.advantages.contract.label'),
+      desc: t('slide22.advantages.contract.desc')
+    },
+    {
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2V6M12 18V22M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M2 12H6M18 12H22M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93" stroke="#00D084" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      ),
+      label: t('slide22.advantages.pricing.label'),
+      desc: t('slide22.advantages.pricing.desc')
+    },
+    {
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M13 2L4 14H11L10 22L20 10H13L13 2Z" fill="#E6FF00"/>
+        </svg>
+      ),
+      label: t('slide22.advantages.digital.label'),
+      desc: t('slide22.advantages.digital.desc')
+    }
   ];
 
   return (
     <SlideLayout>
       <SlideHeader
-        title="Ventaja Competitiva"
-        subtitle="AutoRenta vs. Alternativas existentes."
+        title={t('slide22.title')}
+        subtitle={t('slide22.subtitle')}
       />
 
       <div style={{
@@ -52,9 +139,16 @@ export function Slide22Competencia() {
             color: 'var(--danger)',
             marginBottom: '20px',
             textTransform: 'uppercase',
-            letterSpacing: '2px'
+            letterSpacing: '2px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
           }}>
-            ❌ Alternativas Actuales
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="#FF4444" strokeWidth="2"/>
+              <path d="M15 9L9 15M9 9L15 15" stroke="#FF4444" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            {t('slide22.alternatives')}
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -66,7 +160,7 @@ export function Slide22Competencia() {
                 padding: '20px'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '28px' }}>{c.icon}</span>
+                  {c.icon}
                   <span style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>
                     {c.name}
                   </span>
@@ -96,9 +190,16 @@ export function Slide22Competencia() {
             color: 'var(--accent-green)',
             marginBottom: '20px',
             textTransform: 'uppercase',
-            letterSpacing: '2px'
+            letterSpacing: '2px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
           }}>
-            ✓ La Diferencia AutoRenta
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="#00D084" strokeWidth="2"/>
+              <path d="M8 12L11 15L16 9" stroke="#00D084" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            {t('slide22.difference')}
           </p>
 
           <div style={{
@@ -121,7 +222,7 @@ export function Slide22Competencia() {
                   background: 'var(--bg-secondary)',
                   borderRadius: '8px'
                 }}>
-                  <span style={{ fontSize: '24px' }}>{v.icon}</span>
+                  {v.icon}
                   <div>
                     <p style={{ fontSize: '14px', fontWeight: '600', color: 'var(--accent-green)' }}>
                       {v.label}
@@ -144,7 +245,7 @@ export function Slide22Competencia() {
             textAlign: 'center'
           }}>
             <p style={{ fontSize: '16px', fontWeight: '600', color: 'var(--bg-primary)' }}>
-              Posicionamiento: Alta Confianza + Bajo Costo
+              {t('slide22.positioning')}
             </p>
           </div>
         </div>

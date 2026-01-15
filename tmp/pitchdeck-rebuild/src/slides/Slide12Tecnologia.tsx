@@ -1,12 +1,15 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide12Tecnologia() {
+  const { t } = useTranslations();
+
   const stack = [
-    { name: 'Frontend', tech: 'Angular 18 + Ionic', icon: '📱' },
-    { name: 'Backend', tech: 'Supabase (Postgres)', icon: '🗄️' },
-    { name: 'Pagos', tech: 'MercadoPago API', icon: '💳' },
-    { name: 'IA', tech: 'Gemini Vision', icon: '🤖' },
+    { name: t('slide12.stackItems.frontend'), tech: t('slide12.stackTech.frontend'), icon: '📱' },
+    { name: t('slide12.stackItems.backend'), tech: t('slide12.stackTech.backend'), icon: '🗄️' },
+    { name: t('slide12.stackItems.pagos'), tech: t('slide12.stackTech.pagos'), icon: '💳' },
+    { name: t('slide12.stackItems.ia'), tech: t('slide12.stackTech.ia'), icon: '🤖' },
   ];
 
   const metricas = [
@@ -17,28 +20,32 @@ export function Slide12Tecnologia() {
   return (
     <SlideLayout>
       <SlideHeader
-        title="Tecnología & Validación"
-        subtitle="Infraestructura robusta con validación de identidad en tiempo real."
+        title={t('slide12.title')}
+        subtitle={t('slide12.subtitle')}
       />
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'minmax(300px, 1fr) 1.5fr',
-        gap: '48px',
+        gridTemplateColumns: 'minmax(0, 360px) minmax(0, 1fr)',
+        gap: '40px',
         marginTop: '32px',
-        height: '100%'
+        height: '100%',
+        maxWidth: '1600px',
+        margin: '32px auto 0'
       }}>
         {/* Left - Validacion ID Image */}
         <div style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           background: 'var(--bg-card)',
           borderRadius: '16px',
           padding: '16px',
           border: '1px solid var(--border-subtle)',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+          boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+          maxHeight: '520px',
+          overflow: 'hidden'
         }}>
           <p style={{
             fontSize: '14px',
@@ -48,13 +55,15 @@ export function Slide12Tecnologia() {
             textTransform: 'uppercase',
             letterSpacing: '1px',
             width: '100%',
-            textAlign: 'center'
+            textAlign: 'center',
+            flexShrink: 0
           }}>
-            Verificación Completada
+            {t('slide12.verificacionCompletada')}
           </p>
           <div style={{
             width: '100%',
-            height: '100%',
+            flex: 1,
+            minHeight: 0,
             overflow: 'hidden',
             borderRadius: '8px',
             background: '#fff'
@@ -65,7 +74,8 @@ export function Slide12Tecnologia() {
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover',
+                objectFit: 'contain',
+                objectPosition: 'top center',
                 borderRadius: '4px'
               }}
               onError={(e) => {
@@ -75,7 +85,12 @@ export function Slide12Tecnologia() {
                   fallback.innerHTML = `
                     <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #00D084 0%, #00A86B 100%); border-radius: 4px; color: white; text-align: center; padding: 20px;">
                       <div>
-                        <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+                        <div style="margin-bottom: 16px;">
+                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+                            <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
                         <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Verificación Exitosa</div>
                         <div style="font-size: 14px; opacity: 0.8;">Proceso completado</div>
                       </div>
@@ -153,7 +168,7 @@ export function Slide12Tecnologia() {
             marginTop: 'auto'
           }}>
             <p style={{ fontSize: '14px', color: 'var(--accent-green)', marginBottom: '12px', fontWeight: '600' }}>
-              ✓ VENTAJAS TÉCNICAS
+              ✓ {t('slide12.ventajasTecnicas')}
             </p>
             <ul style={{
               fontSize: '14px',
@@ -162,10 +177,10 @@ export function Slide12Tecnologia() {
               paddingLeft: '20px',
               margin: 0
             }}>
-              <li>Row Level Security (RLS) nativo en DB</li>
-              <li>Edge Functions serverless (Deno/Node)</li>
-              <li>Código unificado Web/Mobile (Monorepo)</li>
-              <li>CI/CD automático Deployment</li>
+              <li>{t('slide12.ventaja1')}</li>
+              <li>{t('slide12.ventaja2')}</li>
+              <li>{t('slide12.ventaja3')}</li>
+              <li>{t('slide12.ventaja4')}</li>
             </ul>
           </div>
         </div>

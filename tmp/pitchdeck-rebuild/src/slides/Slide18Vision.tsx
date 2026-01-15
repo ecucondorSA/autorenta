@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide18Vision() {
+  const { t } = useTranslations();
   return (
     <div className="slide slide--centered" style={{
       backgroundImage: `linear-gradient(to bottom, rgba(13,13,13,0.7), rgba(13,13,13,0.85)), url(/assets/vision-background.png)`,
@@ -31,7 +33,7 @@ export function Slide18Vision() {
           textTransform: 'uppercase',
           letterSpacing: '4px'
         }}>
-          Nuestra Visión
+          {t('slide18.visionLabel')}
         </p>
 
         <h1 style={{
@@ -41,8 +43,8 @@ export function Slide18Vision() {
           marginBottom: '32px',
           maxWidth: '1100px'
         }}>
-          Democratizar la Movilidad<br />
-          <span style={{ color: 'var(--accent-green)' }}>en Latinoamérica</span>
+          {t('slide18.title')}<br />
+          <span style={{ color: 'var(--accent-green)' }}>{t('slide18.subtitle')}</span>
         </h1>
 
         <p style={{
@@ -52,8 +54,7 @@ export function Slide18Vision() {
           margin: '0 auto 48px',
           lineHeight: 1.5
         }}>
-          Un futuro donde cualquier persona pueda acceder a un vehículo
-          sin importar su historial crediticio.
+          {t('slide18.description')}
         </p>
 
         {/* Key Stats */}
@@ -65,15 +66,15 @@ export function Slide18Vision() {
         }}>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '56px', fontWeight: '700', color: 'var(--accent-green)' }}>8.4M</p>
-            <p style={{ fontSize: '16px', color: 'var(--text-muted)' }}>Vehículos en Argentina</p>
+            <p style={{ fontSize: '16px', color: 'var(--text-muted)' }}>{t('slide18.stat1.label')}</p>
           </div>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '56px', fontWeight: '700', color: 'var(--accent-green)' }}>$84B</p>
-            <p style={{ fontSize: '16px', color: 'var(--text-muted)' }}>En activos subutilizados</p>
+            <p style={{ fontSize: '16px', color: 'var(--text-muted)' }}>{t('slide18.stat2.label')}</p>
           </div>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '56px', fontWeight: '700', color: 'var(--accent-green)' }}>70%</p>
-            <p style={{ fontSize: '16px', color: 'var(--text-muted)' }}>Mercado desatendido</p>
+            <p style={{ fontSize: '16px', color: 'var(--text-muted)' }}>{t('slide18.stat3.label')}</p>
           </div>
         </div>
       </div>

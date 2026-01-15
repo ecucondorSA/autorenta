@@ -1,42 +1,62 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide05Momento() {
+  const { t, lang } = useTranslations();
+  
   const factores = [
     {
-      icon: '📈',
-      title: 'Crisis & Inflación',
-      stat: '200%+',
-      statLabel: 'Inflación anul',
-      desc: 'El auto parado es un pasivo costoso. Alquilarlo genera USD $200-400/mes.'
+      icon: (
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+          <path d="M3 17L9 11L13 15L21 7" stroke="#00D084" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M17 7H21V11" stroke="#00D084" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      ),
+      title: t('slide05.factor1Title'),
+      stat: t('slide05.factor1Stat'),
+      statLabel: t('slide05.factor1StatLabel'),
+      desc: t('slide05.factor1Desc')
     },
     {
-      icon: '🚫',
-      title: 'Exclusión Financiera',
-      stat: '70%',
-      statLabel: 'Sin tarjeta crédito',
-      desc: 'Rentadoras tradicionales rechazan al 70%. Mercado cautivo masivo.'
+      icon: (
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#FF4444" strokeWidth="2"/>
+          <path d="M15 9L9 15M9 9L15 15" stroke="#FF4444" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      ),
+      title: t('slide05.factor2Title'),
+      stat: t('slide05.factor2Stat'),
+      statLabel: t('slide05.factor2StatLabel'),
+      desc: t('slide05.factor2Desc')
     },
     {
-      icon: '🤖',
-      title: 'Madurez Digital',
-      stat: '<$0.01',
-      statLabel: 'Costo validación',
-      desc: 'IA, Biometría y Smart Contracts permiten operar sin sucursales físicas.'
+      icon: (
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+          <rect x="4" y="4" width="16" height="16" rx="2" stroke="#00D084" strokeWidth="2"/>
+          <circle cx="9" cy="10" r="1.5" fill="#00D084"/>
+          <circle cx="15" cy="10" r="1.5" fill="#00D084"/>
+          <path d="M9 15H15" stroke="#00D084" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      ),
+      title: t('slide05.factor3Title'),
+      stat: t('slide05.factor3Stat'),
+      statLabel: t('slide05.factor3StatLabel'),
+      desc: t('slide05.factor3Desc')
     }
   ];
 
   const timeline = [
-    { year: '2024', label: 'Supply Surge', sub: 'Crisis = Owners buscan renta' },
-    { year: '2025', label: 'Tech Enabled', sub: 'IA reduce costos operativos' },
-    { year: '2026', label: 'Mass Adoption', sub: 'Cambio cultural Ownership → Access' }
+    { year: '2024', label: t('slide05.timeline2024Label'), sub: t('slide05.timeline2024Sub') },
+    { year: '2025', label: t('slide05.timeline2025Label'), sub: t('slide05.timeline2025Sub') },
+    { year: '2026', label: t('slide05.timeline2026Label'), sub: t('slide05.timeline2026Sub') }
   ];
 
   return (
     <SlideLayout>
       <SlideHeader
-        title="¿Por Qué Ahora?"
-        subtitle="3 factores macro convergen en una tormenta perfecta de oportunidad."
+        title={t('slide05.title')}
+        subtitle={t('slide05.subtitle')}
       />
 
       {/* Cards Section */}
@@ -56,7 +76,7 @@ export function Slide05Momento() {
             flexDirection: 'column',
             position: 'relative'
           }}>
-            <div style={{ fontSize: '40px', marginBottom: '16px' }}>{f.icon}</div>
+            <div style={{ marginBottom: '16px' }}>{f.icon}</div>
             <h3 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px', color: 'var(--text-primary)' }}>
               {f.title}
             </h3>
@@ -88,7 +108,7 @@ export function Slide05Momento() {
           fontWeight: '600',
           textAlign: 'center'
         }}>
-          Cronología de la Oportunidad
+          {t('slide05.cronologia')}
         </p>
 
         {/* Timeline Line */}
@@ -133,12 +153,6 @@ export function Slide05Momento() {
         </div>
       </div>
 
-      {/* Bottom CTA */}
-      <div style={{ marginTop: '32px', textAlign: 'center' }}>
-        <p style={{ fontSize: '22px', color: 'var(--accent-green)', fontWeight: '600' }}>
-          🎯 La ventana de oportunidad está abierta. El que ejecute primero, gana.
-        </p>
-      </div>
     </SlideLayout>
   );
 }

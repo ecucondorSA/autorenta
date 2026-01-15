@@ -1,12 +1,15 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide21Demostración() {
+  const { t } = useTranslations();
+  
   return (
     <SlideLayout>
       <SlideHeader
-        title="Demo en Vivo"
-        subtitle="Probá la plataforma ahora mismo (MVP Operativo)."
+        title={t('slide21.title')}
+        subtitle={t('slide21.subtitle')}
       />
 
       <div style={{
@@ -52,7 +55,7 @@ export function Slide21Demostración() {
               textTransform: 'uppercase',
               letterSpacing: '3px'
             }}>
-              Escaneá para probar
+              {t('slide21.qrLabel')}
             </p>
 
             {/* QR Image */}
@@ -75,7 +78,7 @@ export function Slide21Demostración() {
             </div>
 
             <p style={{ fontSize: '24px', color: 'var(--text-primary)', fontWeight: '700', letterSpacing: '1px' }}>
-              app.autorentar.com
+              {t('slide21.url')}
             </p>
           </div>
 
@@ -94,18 +97,18 @@ export function Slide21Demostración() {
               letterSpacing: '1px',
               fontWeight: '600'
             }}>
-              Credenciales Demo Inversor
+              {t('slide21.credentials.title')}
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
-                <span style={{ color: 'var(--text-muted)', fontSize: '18px' }}>Usuario:</span>
+                <span style={{ color: 'var(--text-muted)', fontSize: '18px' }}>{t('slide21.credentials.user')}:</span>
                 <span style={{ color: 'var(--accent-green)', fontFamily: 'monospace', fontSize: '20px', fontWeight: 'bold' }}>
                   investor@autorentar.com
                 </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: 'var(--text-muted)', fontSize: '18px' }}>Pass:</span>
+                <span style={{ color: 'var(--text-muted)', fontSize: '18px' }}>{t('slide21.credentials.pass')}:</span>
                 <span style={{ color: 'var(--accent-green)', fontFamily: 'monospace', fontSize: '20px', fontWeight: 'bold' }}>
                   demo2026
                 </span>
@@ -121,7 +124,7 @@ export function Slide21Demostración() {
             padding: '24px'
           }}>
             <p style={{ fontSize: '16px', color: 'var(--accent-green)', marginBottom: '16px', fontWeight: '700' }}>
-              ✓ QUÉ PODÉS HACER:
+              ✓ {t('slide21.features.title')}:
             </p>
             <ul style={{
               fontSize: '16px',
@@ -130,10 +133,10 @@ export function Slide21Demostración() {
               paddingLeft: '24px',
               margin: 0
             }}>
-              <li>Navegar el <strong>Marketplace</strong> en tiempo real</li>
-              <li>Simular flujo de <strong>Reserva & Pagos</strong></li>
-              <li>Explorar la <strong>Billetera Virtual</strong></li>
-              <li>Auditar el <strong>Panel de Propietario</strong></li>
+              <li>{t('slide21.features.item1')}</li>
+              <li>{t('slide21.features.item2')}</li>
+              <li>{t('slide21.features.item3')}</li>
+              <li>{t('slide21.features.item4')}</li>
             </ul>
           </div>
         </div>

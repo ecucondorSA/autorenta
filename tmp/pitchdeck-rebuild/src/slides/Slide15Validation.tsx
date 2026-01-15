@@ -1,19 +1,21 @@
 import React from 'react';
 import { SlideLayout, SlideHeader, Card, Metric } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide15Validacion() {
+  const { t } = useTranslations();
   const metrics = [
-    { label: 'Demand Pressure (Waitlist)', value: '300+', desc: 'Usuarios organicos solicitando acceso (Organic Pull).' },
-    { label: 'Filter Efficiency (KYC)', value: '45%', desc: "Tasa de usuarios que superan el 'Barrera Biométrica' biometrico.", yellow: true },
-    { label: 'Tasa de Rechazo por Riesgo', value: '55%', desc: 'Usuarios bloqueados preventivamente (Fraude evitado).', danger: true },
-    { label: 'Latencia de Transaccion', value: '< 150ms', desc: 'Tiempo de respuesta del Libro Contable en pruebas de carga.' }
+    { label: t('slide15.metric1Label'), value: t('slide15.metric1Value'), desc: 'Usuarios orgánicos solicitando acceso (Organic Pull).' },
+    { label: t('slide15.metric2Label'), value: t('slide15.metric2Value'), desc: "Tasa de usuarios que superan el 'Barrera Biométrica' biométrico.", yellow: true },
+    { label: t('slide15.metric3Label'), value: t('slide15.metric3Value'), desc: 'Usuarios bloqueados preventivamente (Fraude evitado).', danger: true },
+    { label: t('slide15.metric4Label'), value: t('slide15.metric4Value'), desc: 'Tiempo de respuesta del Libro Contable en pruebas de carga.' }
   ];
 
   return (
     <SlideLayout>
       <SlideHeader
-        title="Validación del Sistema (Datos Alpha)"
-        subtitle="Pruebas de estres del 'Sistema de Confianza' en entorno real."
+        title={t('slide15.title')}
+        subtitle={t('slide15.subtitle')}
       />
 
       <div className="flex-col gap-32" style={{ marginTop: '48px' }}>

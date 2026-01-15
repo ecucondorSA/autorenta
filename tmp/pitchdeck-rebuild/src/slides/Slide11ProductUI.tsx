@@ -1,29 +1,32 @@
 import React from 'react';
 import { SlideLayout, SlideHeader, Card } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide11ProductUI() {
+  const { t } = useTranslations();
+  
   const flows = [
     {
-      title: 'FLUJO: RESERVA',
+      title: t('slide11.flujoReserva'),
       screens: [
-        { name: 'Discovery', img: '/assets/product-experience/booking_discovery.png' },
-        { name: 'Confirmación', img: '/assets/product-experience/booking_confirmacion.png' },
+        { name: t('slide11.discovery'), img: '/assets/product-experience/booking_discovery.png' },
+        { name: t('slide11.confirmacion'), img: '/assets/product-experience/booking_confirmacion.png' },
       ],
       reduce: ['Abandono por UX', 'Transparencia Precios']
     },
     {
-      title: 'FLUJO: FINTECH',
+      title: t('slide11.flujoFintech'),
       screens: [
-        { name: 'Billetera Virtual', img: '/assets/product-experience/fintech_billetera_virtual.png' },
-        { name: 'Hold/Garantía', img: '/assets/product-experience/fintech_hold_garantia.png' },
+        { name: t('slide11.billeteraVirtual'), img: '/assets/product-experience/fintech_billetera_virtual.png' },
+        { name: t('slide11.holdGarantia'), img: '/assets/product-experience/fintech_hold_garantia.png' },
       ],
       reduce: ['Impago', 'Siniestralidad']
     },
     {
-      title: 'FLUJO: CONFIANZA',
+      title: t('slide11.flujoConfianza'),
       screens: [
-        { name: 'KYC Cam', img: '/assets/product-experience/trust_kyc_cam.png' },
-        { name: 'Video Check', img: '/assets/product-experience/trust_video_check.png' },
+        { name: t('slide11.kycCam'), img: '/assets/product-experience/trust_kyc_cam.png' },
+        { name: t('slide11.videoCheck'), img: '/assets/product-experience/trust_video_check.png' },
       ],
       reduce: ['Fraude Identidad', 'Disputas Daños']
     }
@@ -32,8 +35,8 @@ export function Slide11ProductUI() {
   return (
     <SlideLayout>
       <SlideHeader
-        title="Product Experience (Concept UI)"
-        subtitle="UX diseñada para reducción de fricción y riesgo."
+        title={t('slide11.title')}
+        subtitle={t('slide11.subtitle')}
       />
 
       <div className="grid-3" style={{

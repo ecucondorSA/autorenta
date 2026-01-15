@@ -1,27 +1,29 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide13Evidencia() {
+  const { t } = useTranslations();
+
   const flows = [
     {
-      title: 'Flujo de Reserva',
+      title: t('slide13.flujoReserva'),
       screens: [
-        { name: 'Mapa / Seleccion', img: '/assets/1_cars_list.jpg' },
-        { name: 'Confirmacion', img: '/assets/3_car_detail.jpg' }
+        { name: t('slide13.mapaSeleccion'), img: '/assets/1_cars_list.jpg' },
+        { name: t('slide13.confirmacion'), img: '/assets/3_car_detail.jpg' }
       ]
     },
     {
-      title: 'Core Fintech',
+      title: t('slide13.coreFintech'),
       screens: [
-        { name: 'Billetera Virtual', img: '/assets/2_wallet.jpg' },
-        { name: 'Garantía / Historial', img: '/assets/5_bookings_history.jpg' }
+        { name: t('slide13.billeteraVirtual'), img: '/assets/2_wallet.jpg' },
+        { name: t('slide13.garantiaHistorial'), img: '/assets/5_bookings_history.jpg' }
       ]
     },
     {
-      title: 'Sistema Confianza',
+      title: t('slide13.sistemaConfianza'),
       screens: [
-        { name: 'Validacion ID', img: '/assets/validacion_id.png' },
-        { name: 'Registro Evidencia', img: '/assets/06_evidence_entry.png' }
+        { name: t('slide13.validacionID'), img: '/assets/validacion_id.png' }
       ]
     }
   ];
@@ -29,8 +31,8 @@ export function Slide13Evidencia() {
   return (
     <SlideLayout>
       <SlideHeader
-        title="Evidencia de Producto (En Vivo)"
-        subtitle="Infraestructura operativa y flujos validados hoy."
+        title={t('slide13.title')}
+        subtitle={t('slide13.subtitle')}
       />
 
       <div style={{
@@ -46,9 +48,9 @@ export function Slide13Evidencia() {
 
             <div style={{
               display: 'flex',
-              alignItems: 'stretch', // Align items to stretch to allow center alignment of arrow
+              alignItems: 'stretch',
               justifyContent: 'center',
-              gap: '8px'
+              gap: '16px'
             }}>
               {f.screens.map((screen, j) => (
                 <React.Fragment key={j}>
@@ -58,7 +60,10 @@ export function Slide13Evidencia() {
                       borderRadius: '16px',
                       overflow: 'hidden',
                       border: '4px solid #333',
-                      boxShadow: '0 10px 20px rgba(0,0,0,0.3)'
+                      boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+                      width: '100%',
+                      maxWidth: '180px',
+                      height: '380px'
                     }}>
                       {screen.img ? (
                         <img
@@ -68,14 +73,15 @@ export function Slide13Evidencia() {
                           style={{
                             width: '100%',
                             height: '100%',
-                            objectFit: 'contain',
+                            objectFit: 'cover',
+                            objectPosition: 'top center',
                             background: '#0a0a0a'
                           }}
                         />
                       ) : (
-                        <div style={{ padding: '20px', textAlign: 'center', fontSize: '12px' }}>
-                          Missing: {screen.name}
-                        </div>
+                         <div style={{ padding: '20px', textAlign: 'center', fontSize: '12px' }}>
+                           {t('slide13.missing')} {screen.name}
+                         </div>
                       )}
                     </div>
                     <div className="screen-label-v2" style={{
@@ -94,7 +100,7 @@ export function Slide13Evidencia() {
                       alignSelf: 'center',
                       fontSize: '24px',
                       color: 'var(--accent-green)',
-                      marginBottom: '30px' // Offset for label height
+                      marginBottom: '30px'
                     }}>
                       →
                     </div>

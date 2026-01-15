@@ -1,30 +1,33 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide10ProteccionRiesgo() {
+  const { t } = useTranslations();
+  
   const policies = [
     {
       num: 1,
-      title: 'FGO (Fondo Garantia Operativa)',
+      title: t('slide10.fgoTitle'),
       items: [
-        'Cubre: Daños menores (< USD 500), franquicias de seguro y lucro cesante.',
-        'Financiado por: 10% de cada reserva + Aportes de Propietarios (Pool).'
+        t('slide10.fgoItem1'),
+        t('slide10.fgoItem2')
       ]
     },
     {
       num: 2,
-      title: 'Robo Total & Destruccion',
+      title: t('slide10.roboTitle'),
       items: [
-        'Cubre: Poliza de Seguro Madre (Partner) o Poliza del Propietario (endosada).',
-        'El FGO cubre el deducible para que el propietario no pague nada.'
+        t('slide10.roboItem1'),
+        t('slide10.roboItem2')
       ]
     },
     {
       num: 3,
-      title: 'Evidencia Vinculante (Video Registro de Entrada)',
+      title: t('slide10.evidenciaTitle'),
       items: [
-        'Regla: Sin video de registro de salida validado, el arrendatario asume responsabilidad total.',
-        'La evidencia en Blockchain/Server actua como arbitro final.'
+        t('slide10.evidenciaItem1'),
+        t('slide10.evidenciaItem2')
       ]
     }
   ];
@@ -32,8 +35,8 @@ export function Slide10ProteccionRiesgo() {
   return (
     <SlideLayout>
       <SlideHeader
-        title="Política de Riesgo y Cobertura (Sistema de Confianza)"
-        subtitle="Reglas claras: que cubre el FGO y como gestionamos excepciones."
+        title={t('slide10.title')}
+        subtitle={t('slide10.subtitle')}
       />
 
       <div className="flex-col gap-48" style={{ marginTop: '48px' }}>
@@ -60,7 +63,7 @@ export function Slide10ProteccionRiesgo() {
         paddingTop: '24px'
       }}>
         <p style={{ fontSize: '18px', color: 'var(--accent-green)' }}>
-          INCIDENTE → EVIDENCIA AI → FGO PAGA (INSTANTANEO) → RECOBRO AL ARRENDATARIO (DIFERIDO)
+          INCIDENTE → EVIDENCIA AI → FGO PAGA (INSTANTÁNEO) → RECOBRO AL ARRENDATARIO (DIFERIDO)
         </p>
       </div>
     </SlideLayout>

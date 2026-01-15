@@ -1,36 +1,39 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide19Metricas() {
+  const { t } = useTranslations();
+  
   const metricas = [
     {
-      category: 'TRACCIÓN',
+      category: t('slide19.category1'),
       icon: '📈',
       color: 'var(--accent-green)',
       items: [
-        { label: 'Reservas Completadas', value: '50+', target: true },
-        { label: 'Ticket Promedio', value: '$100', target: true },
-        { label: 'Propietarios Activos', value: '10', target: true }
+        { label: t('slide19.traction.item1.label'), value: t('slide19.traction.item1.value'), target: true },
+        { label: t('slide19.traction.item2.label'), value: t('slide19.traction.item2.value'), target: true },
+        { label: t('slide19.traction.item3.label'), value: t('slide19.traction.item3.value'), target: true }
       ]
     },
     {
-      category: 'RIESGO',
+      category: t('slide19.category2'),
       icon: '🛡️',
       color: '#4DD0E1',
       items: [
-        { label: 'Tasa de Incidentes', value: '<5%', target: true },
-        { label: 'Cobertura Seguro', value: '100%', target: true },
-        { label: 'Fraudes Identidad', value: '0', target: true }
+        { label: t('slide19.risk.item1.label'), value: t('slide19.risk.item1.value'), target: true },
+        { label: t('slide19.risk.item2.label'), value: t('slide19.risk.item2.value'), target: true },
+        { label: t('slide19.risk.item3.label'), value: t('slide19.risk.item3.value'), target: true }
       ]
     },
     {
-      category: 'RETENCIÓN',
+      category: t('slide19.category3'),
       icon: '🔄',
       color: '#FFB74D',
       items: [
-        { label: 'Retención Usuarios', value: '>30%', target: false },
-        { label: 'NPS Propietarios', value: '>7', target: false },
-        { label: 'Feedback Loop', value: 'Semanal', target: true }
+        { label: t('slide19.retention.item1.label'), value: t('slide19.retention.item1.value'), target: false },
+        { label: t('slide19.retention.item2.label'), value: t('slide19.retention.item2.value'), target: false },
+        { label: t('slide19.retention.item3.label'), value: t('slide19.retention.item3.value'), target: true }
       ]
     }
   ];
@@ -38,8 +41,8 @@ export function Slide19Metricas() {
   return (
     <SlideLayout>
       <SlideHeader
-        title="Métricas Piloto Q1 2026"
-        subtitle="KPIs objetivo para validación con riesgo acotado."
+        title={t('slide19.title')}
+        subtitle={t('slide19.subtitle')}
       />
 
       <div style={{
@@ -114,11 +117,11 @@ export function Slide19Metricas() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--accent-green)' }} />
-          <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>Meta alcanzable</span>
+          <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{t('slide19.status.target')}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--text-primary)' }} />
-          <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>En seguimiento</span>
+          <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{t('slide19.status.tracking')}</span>
         </div>
       </div>
     </SlideLayout>

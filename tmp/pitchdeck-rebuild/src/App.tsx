@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+import { LanguageProvider, useTranslations } from './LanguageContext';
+import type { Language } from './translations';
 
 // Importar todas las slides
 import { Slide01Cover } from './slides/Slide01Cover';
@@ -58,9 +60,13 @@ const slides = [
   Slide26Equipo,
 ];
 
-function App() {
+function AppContent() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showAll, setShowAll] = useState(false);
+  const [lang, setLang] = useState<Language>(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return (urlParams.get('lang') as Language) || 'es';
+  });
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -123,8 +129,30 @@ function App() {
         <button onClick={() => setCurrentSlide((p) => Math.min(p + 1, slides.length - 1))}>▶</button>
         <button onClick={() => setCurrentSlide(slides.length - 1)}>⏭</button>
         <button onClick={() => setShowAll(true)} style={{ marginLeft: '16px' }}>📄 Todas</button>
+        <button onClick={() => {
+          const newLang: Language = lang === 'es' ? 'pt' : 'es';
+          setLang(newLang);
+          const url = new URL(window.location.href);
+          url.searchParams.set('lang', newLang);
+          window.history.replaceState({}, '', url.toString());
+        }} style={{ marginLeft: '8px', background: lang === 'pt' ? 'var(--accent-green)' : 'var(--bg-card)', color: lang === 'pt' ? 'var(--bg-primary)' : 'var(--text-primary)' }}>
+          {lang === 'es' ? '🇺🇸 PT' : '🇧🇷 ES'}
+        </button>
       </div>
     </div>
+  );
+}
+
+function App() {
+  const [lang] = useState<Language>(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return (urlParams.get('lang') as Language) || 'es';
+  });
+
+  return (
+    <LanguageProvider lang={lang}>
+      <AppContent />
+    </LanguageProvider>
   );
 }
 

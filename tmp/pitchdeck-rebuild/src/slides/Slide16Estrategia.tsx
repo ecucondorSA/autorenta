@@ -1,38 +1,41 @@
 import React from 'react';
 import { SlideLayout, SlideHeader, Card } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide16Estrategia() {
+  const { t } = useTranslations();
+  
   const canales = [
-    '5,000+ Contactos Directos (Waitlist).',
-    '30+ Comunidades Activas (WhatsApp/FB).',
-    'Alianzas con flotas locales y universidades.',
-    'Canal EcuCondor (Audiencia validada).'
+    t('slide16.canales.item1'),
+    t('slide16.canales.item2'),
+    t('slide16.canales.item3'),
+    t('slide16.canales.item4')
   ];
 
   const ejecucion = [
-    'Foco Geografico: Argentina (CABA/GBA).',
-    "Estrategia: 'Land & Expand' via comunidades.",
-    'Costo de Adquisicion (Costo Adquisicion): < USD 15.',
-    'Validacion de demanda: 100% Organica.'
+    t('slide16.ejecucion.item1'),
+    t('slide16.ejecucion.item2'),
+    t('slide16.ejecucion.item3'),
+    t('slide16.ejecucion.item4')
   ];
 
   return (
     <SlideLayout>
       <SlideHeader
-        title="Estrategia de Mercado"
-        subtitle="Foco inicial: Argentina + Comunidades Digitales."
+        title={t('slide16.title')}
+        subtitle={t('slide16.subtitle')}
       />
 
       <div className="grid-2" style={{ marginTop: '64px' }}>
         <Card>
-          <div className="section-header">CANALES ACTIVOS</div>
+          <div className="section-header">{t('slide16.canales.title')}</div>
           <ul className="list">
             {canales.map((c, i) => <li key={i}>{c}</li>)}
           </ul>
         </Card>
 
         <Card>
-          <div className="section-header">EJECUCION INICIAL</div>
+          <div className="section-header">{t('slide16.ejecucion.title')}</div>
           <ul className="list">
             {ejecucion.map((e, i) => <li key={i}>{e}</li>)}
           </ul>
@@ -45,10 +48,10 @@ export function Slide16Estrategia() {
         left: '80px'
       }}>
         <h3 style={{ fontSize: '48px', fontWeight: '700', color: 'var(--accent-yellow)' }}>
-          Argentina
+          {t('slide16.focusCountry')}
         </h3>
         <p style={{ fontSize: '16px', color: 'var(--text-muted)', letterSpacing: '2px' }}>
-          PAIS FOCO INICIAL
+          {t('slide16.focusLabel')}
         </p>
       </div>
     </SlideLayout>

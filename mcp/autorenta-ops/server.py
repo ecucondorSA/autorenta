@@ -48,7 +48,7 @@ async def get_car(query: str) -> str:
     return str(car)
 
 @mcp.tool()
-async def list_bookings(status: Optional[str] = None, limit: int = 10) -> str:
+async def list_bookings(status: str = "", limit: int = 10) -> str:
     """
     List recent bookings, optionally filtered by status.
     Statuses: pending_payment, pending_owner_approval, confirmed, in_progress, completed, cancelled

@@ -847,229 +847,6 @@ var require_react = __commonJS((exports, module) => {
   }
 });
 
-// node_modules/react/cjs/react-jsx-dev-runtime.development.js
-var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
-  var React = __toESM(require_react());
-  (function() {
-    function getComponentNameFromType(type) {
-      if (type == null)
-        return null;
-      if (typeof type === "function")
-        return type.$$typeof === REACT_CLIENT_REFERENCE ? null : type.displayName || type.name || null;
-      if (typeof type === "string")
-        return type;
-      switch (type) {
-        case REACT_FRAGMENT_TYPE:
-          return "Fragment";
-        case REACT_PROFILER_TYPE:
-          return "Profiler";
-        case REACT_STRICT_MODE_TYPE:
-          return "StrictMode";
-        case REACT_SUSPENSE_TYPE:
-          return "Suspense";
-        case REACT_SUSPENSE_LIST_TYPE:
-          return "SuspenseList";
-        case REACT_ACTIVITY_TYPE:
-          return "Activity";
-      }
-      if (typeof type === "object")
-        switch (typeof type.tag === "number" && console.error("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."), type.$$typeof) {
-          case REACT_PORTAL_TYPE:
-            return "Portal";
-          case REACT_CONTEXT_TYPE:
-            return type.displayName || "Context";
-          case REACT_CONSUMER_TYPE:
-            return (type._context.displayName || "Context") + ".Consumer";
-          case REACT_FORWARD_REF_TYPE:
-            var innerType = type.render;
-            type = type.displayName;
-            type || (type = innerType.displayName || innerType.name || "", type = type !== "" ? "ForwardRef(" + type + ")" : "ForwardRef");
-            return type;
-          case REACT_MEMO_TYPE:
-            return innerType = type.displayName || null, innerType !== null ? innerType : getComponentNameFromType(type.type) || "Memo";
-          case REACT_LAZY_TYPE:
-            innerType = type._payload;
-            type = type._init;
-            try {
-              return getComponentNameFromType(type(innerType));
-            } catch (x) {}
-        }
-      return null;
-    }
-    function testStringCoercion(value) {
-      return "" + value;
-    }
-    function checkKeyStringCoercion(value) {
-      try {
-        testStringCoercion(value);
-        var JSCompiler_inline_result = false;
-      } catch (e) {
-        JSCompiler_inline_result = true;
-      }
-      if (JSCompiler_inline_result) {
-        JSCompiler_inline_result = console;
-        var JSCompiler_temp_const = JSCompiler_inline_result.error;
-        var JSCompiler_inline_result$jscomp$0 = typeof Symbol === "function" && Symbol.toStringTag && value[Symbol.toStringTag] || value.constructor.name || "Object";
-        JSCompiler_temp_const.call(JSCompiler_inline_result, "The provided key is an unsupported type %s. This value must be coerced to a string before using it here.", JSCompiler_inline_result$jscomp$0);
-        return testStringCoercion(value);
-      }
-    }
-    function getTaskName(type) {
-      if (type === REACT_FRAGMENT_TYPE)
-        return "<>";
-      if (typeof type === "object" && type !== null && type.$$typeof === REACT_LAZY_TYPE)
-        return "<...>";
-      try {
-        var name = getComponentNameFromType(type);
-        return name ? "<" + name + ">" : "<...>";
-      } catch (x) {
-        return "<...>";
-      }
-    }
-    function getOwner() {
-      var dispatcher = ReactSharedInternals.A;
-      return dispatcher === null ? null : dispatcher.getOwner();
-    }
-    function UnknownOwner() {
-      return Error("react-stack-top-frame");
-    }
-    function hasValidKey(config) {
-      if (hasOwnProperty.call(config, "key")) {
-        var getter = Object.getOwnPropertyDescriptor(config, "key").get;
-        if (getter && getter.isReactWarning)
-          return false;
-      }
-      return config.key !== undefined;
-    }
-    function defineKeyPropWarningGetter(props, displayName) {
-      function warnAboutAccessingKey() {
-        specialPropKeyWarningShown || (specialPropKeyWarningShown = true, console.error("%s: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://react.dev/link/special-props)", displayName));
-      }
-      warnAboutAccessingKey.isReactWarning = true;
-      Object.defineProperty(props, "key", {
-        get: warnAboutAccessingKey,
-        configurable: true
-      });
-    }
-    function elementRefGetterWithDeprecationWarning() {
-      var componentName = getComponentNameFromType(this.type);
-      didWarnAboutElementRef[componentName] || (didWarnAboutElementRef[componentName] = true, console.error("Accessing element.ref was removed in React 19. ref is now a regular prop. It will be removed from the JSX Element type in a future release."));
-      componentName = this.props.ref;
-      return componentName !== undefined ? componentName : null;
-    }
-    function ReactElement(type, key, props, owner, debugStack, debugTask) {
-      var refProp = props.ref;
-      type = {
-        $$typeof: REACT_ELEMENT_TYPE,
-        type,
-        key,
-        props,
-        _owner: owner
-      };
-      (refProp !== undefined ? refProp : null) !== null ? Object.defineProperty(type, "ref", {
-        enumerable: false,
-        get: elementRefGetterWithDeprecationWarning
-      }) : Object.defineProperty(type, "ref", { enumerable: false, value: null });
-      type._store = {};
-      Object.defineProperty(type._store, "validated", {
-        configurable: false,
-        enumerable: false,
-        writable: true,
-        value: 0
-      });
-      Object.defineProperty(type, "_debugInfo", {
-        configurable: false,
-        enumerable: false,
-        writable: true,
-        value: null
-      });
-      Object.defineProperty(type, "_debugStack", {
-        configurable: false,
-        enumerable: false,
-        writable: true,
-        value: debugStack
-      });
-      Object.defineProperty(type, "_debugTask", {
-        configurable: false,
-        enumerable: false,
-        writable: true,
-        value: debugTask
-      });
-      Object.freeze && (Object.freeze(type.props), Object.freeze(type));
-      return type;
-    }
-    function jsxDEVImpl(type, config, maybeKey, isStaticChildren, debugStack, debugTask) {
-      var children = config.children;
-      if (children !== undefined)
-        if (isStaticChildren)
-          if (isArrayImpl(children)) {
-            for (isStaticChildren = 0;isStaticChildren < children.length; isStaticChildren++)
-              validateChildKeys(children[isStaticChildren]);
-            Object.freeze && Object.freeze(children);
-          } else
-            console.error("React.jsx: Static children should always be an array. You are likely explicitly calling React.jsxs or React.jsxDEV. Use the Babel transform instead.");
-        else
-          validateChildKeys(children);
-      if (hasOwnProperty.call(config, "key")) {
-        children = getComponentNameFromType(type);
-        var keys = Object.keys(config).filter(function(k) {
-          return k !== "key";
-        });
-        isStaticChildren = 0 < keys.length ? "{key: someKey, " + keys.join(": ..., ") + ": ...}" : "{key: someKey}";
-        didWarnAboutKeySpread[children + isStaticChildren] || (keys = 0 < keys.length ? "{" + keys.join(": ..., ") + ": ...}" : "{}", console.error(`A props object containing a "key" prop is being spread into JSX:
-  let props = %s;
-  <%s {...props} />
-React keys must be passed directly to JSX without using spread:
-  let props = %s;
-  <%s key={someKey} {...props} />`, isStaticChildren, children, keys, children), didWarnAboutKeySpread[children + isStaticChildren] = true);
-      }
-      children = null;
-      maybeKey !== undefined && (checkKeyStringCoercion(maybeKey), children = "" + maybeKey);
-      hasValidKey(config) && (checkKeyStringCoercion(config.key), children = "" + config.key);
-      if ("key" in config) {
-        maybeKey = {};
-        for (var propName in config)
-          propName !== "key" && (maybeKey[propName] = config[propName]);
-      } else
-        maybeKey = config;
-      children && defineKeyPropWarningGetter(maybeKey, typeof type === "function" ? type.displayName || type.name || "Unknown" : type);
-      return ReactElement(type, children, maybeKey, getOwner(), debugStack, debugTask);
-    }
-    function validateChildKeys(node) {
-      isValidElement(node) ? node._store && (node._store.validated = 1) : typeof node === "object" && node !== null && node.$$typeof === REACT_LAZY_TYPE && (node._payload.status === "fulfilled" ? isValidElement(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
-    }
-    function isValidElement(object) {
-      return typeof object === "object" && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
-    }
-    var REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = Symbol.for("react.memo"), REACT_LAZY_TYPE = Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = Symbol.for("react.activity"), REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), ReactSharedInternals = React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, hasOwnProperty = Object.prototype.hasOwnProperty, isArrayImpl = Array.isArray, createTask = console.createTask ? console.createTask : function() {
-      return null;
-    };
-    React = {
-      react_stack_bottom_frame: function(callStackForError) {
-        return callStackForError();
-      }
-    };
-    var specialPropKeyWarningShown;
-    var didWarnAboutElementRef = {};
-    var unknownOwnerDebugStack = React.react_stack_bottom_frame.bind(React, UnknownOwner)();
-    var unknownOwnerDebugTask = createTask(getTaskName(UnknownOwner));
-    var didWarnAboutKeySpread = {};
-    exports.Fragment = REACT_FRAGMENT_TYPE;
-    exports.jsxDEV = function(type, config, maybeKey, isStaticChildren) {
-      var trackActualOwner = 1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
-      return jsxDEVImpl(type, config, maybeKey, isStaticChildren, trackActualOwner ? Error("react-stack-top-frame") : unknownOwnerDebugStack, trackActualOwner ? createTask(getTaskName(type)) : unknownOwnerDebugTask);
-    };
-  })();
-});
-
-// node_modules/react/jsx-dev-runtime.js
-var require_jsx_dev_runtime = __commonJS((exports, module) => {
-  var react_jsx_dev_runtime_development = __toESM(require_react_jsx_dev_runtime_development());
-  if (false) {} else {
-    module.exports = react_jsx_dev_runtime_development;
-  }
-});
-
 // node_modules/scheduler/cjs/scheduler.development.js
 var require_scheduler_development = __commonJS((exports) => {
   (function() {
@@ -1335,7 +1112,7 @@ var require_scheduler = __commonJS((exports, module) => {
 
 // node_modules/react-dom/cjs/react-dom.development.js
 var require_react_dom_development = __commonJS((exports) => {
-  var React2 = __toESM(require_react());
+  var React = __toESM(require_react());
   (function() {
     function noop() {}
     function testStringCoercion(value) {
@@ -1396,7 +1173,7 @@ See https://react.dev/link/invalid-hook-call for tips about how to debug and fix
       },
       p: 0,
       findDOMNode: null
-    }, REACT_PORTAL_TYPE = Symbol.for("react.portal"), ReactSharedInternals = React2.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+    }, REACT_PORTAL_TYPE = Symbol.for("react.portal"), ReactSharedInternals = React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     typeof Map === "function" && Map.prototype != null && typeof Map.prototype.forEach === "function" && typeof Set === "function" && Set.prototype != null && typeof Set.prototype.clear === "function" && typeof Set.prototype.forEach === "function" || console.error("React depends on Map and Set built-in types. Make sure that you load a polyfill in older browsers. https://reactjs.org/link/react-polyfills");
     exports.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = Internals;
     exports.createPortal = function(children, container) {
@@ -1527,7 +1304,7 @@ var require_react_dom = __commonJS((exports, module) => {
 // node_modules/react-dom/cjs/react-dom-client.development.js
 var require_react_dom_client_development = __commonJS((exports) => {
   var Scheduler = __toESM(require_scheduler());
-  var React2 = __toESM(require_react());
+  var React = __toESM(require_react());
   var ReactDOM = __toESM(require_react_dom());
   (function() {
     function findHook(fiber, id) {
@@ -2815,7 +2592,7 @@ Error generating stack: ` + x.message + `
       type === "number" && getActiveElement(node.ownerDocument) === node || node.defaultValue === "" + value || (node.defaultValue = "" + value);
     }
     function validateOptionProps(element, props) {
-      props.value == null && (typeof props.children === "object" && props.children !== null ? React2.Children.forEach(props.children, function(child) {
+      props.value == null && (typeof props.children === "object" && props.children !== null ? React.Children.forEach(props.children, function(child) {
         child == null || typeof child === "string" || typeof child === "number" || typeof child === "bigint" || didWarnInvalidChild || (didWarnInvalidChild = true, console.error("Cannot infer the option value of complex children. Pass a `value` prop or use a plain string as children to <option>."));
       }) : props.dangerouslySetInnerHTML == null || didWarnInvalidInnerHTML || (didWarnInvalidInnerHTML = true, console.error("Pass a `value` prop if you set dangerouslyInnerHTML so React knows which value should be selected.")));
       props.selected == null || didWarnSelectedSetOnOption || (console.error("Use the `defaultValue` or `value` props on <select> instead of setting `selected` on <option>."), didWarnSelectedSetOnOption = true);
@@ -14365,7 +14142,7 @@ Check the render method of %s.`, getComponentNameFromFiber(current) || "Unknown"
     Symbol.for("react.tracing_marker");
     var REACT_MEMO_CACHE_SENTINEL = Symbol.for("react.memo_cache_sentinel");
     Symbol.for("react.view_transition");
-    var MAYBE_ITERATOR_SYMBOL = Symbol.iterator, REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), isArrayImpl = Array.isArray, ReactSharedInternals = React2.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, NotPending = Object.freeze({
+    var MAYBE_ITERATOR_SYMBOL = Symbol.iterator, REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), isArrayImpl = Array.isArray, ReactSharedInternals = React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, NotPending = Object.freeze({
       pending: false,
       data: null,
       method: null,
@@ -17000,7 +16777,7 @@ Check the top-level render call using <` + componentName2 + ">.");
       }
     };
     (function() {
-      var isomorphicReactPackageVersion = React2.version;
+      var isomorphicReactPackageVersion = React.version;
       if (isomorphicReactPackageVersion !== "19.2.3")
         throw Error(`Incompatible React versions: The "react" and "react-dom" packages must have the exact same version. Instead got:
   - react:      ` + (isomorphicReactPackageVersion + `
@@ -17100,115 +16877,550 @@ var require_client = __commonJS((exports, module) => {
   }
 });
 
+// node_modules/react/cjs/react-jsx-dev-runtime.development.js
+var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
+  var React = __toESM(require_react());
+  (function() {
+    function getComponentNameFromType(type) {
+      if (type == null)
+        return null;
+      if (typeof type === "function")
+        return type.$$typeof === REACT_CLIENT_REFERENCE ? null : type.displayName || type.name || null;
+      if (typeof type === "string")
+        return type;
+      switch (type) {
+        case REACT_FRAGMENT_TYPE:
+          return "Fragment";
+        case REACT_PROFILER_TYPE:
+          return "Profiler";
+        case REACT_STRICT_MODE_TYPE:
+          return "StrictMode";
+        case REACT_SUSPENSE_TYPE:
+          return "Suspense";
+        case REACT_SUSPENSE_LIST_TYPE:
+          return "SuspenseList";
+        case REACT_ACTIVITY_TYPE:
+          return "Activity";
+      }
+      if (typeof type === "object")
+        switch (typeof type.tag === "number" && console.error("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."), type.$$typeof) {
+          case REACT_PORTAL_TYPE:
+            return "Portal";
+          case REACT_CONTEXT_TYPE:
+            return type.displayName || "Context";
+          case REACT_CONSUMER_TYPE:
+            return (type._context.displayName || "Context") + ".Consumer";
+          case REACT_FORWARD_REF_TYPE:
+            var innerType = type.render;
+            type = type.displayName;
+            type || (type = innerType.displayName || innerType.name || "", type = type !== "" ? "ForwardRef(" + type + ")" : "ForwardRef");
+            return type;
+          case REACT_MEMO_TYPE:
+            return innerType = type.displayName || null, innerType !== null ? innerType : getComponentNameFromType(type.type) || "Memo";
+          case REACT_LAZY_TYPE:
+            innerType = type._payload;
+            type = type._init;
+            try {
+              return getComponentNameFromType(type(innerType));
+            } catch (x) {}
+        }
+      return null;
+    }
+    function testStringCoercion(value) {
+      return "" + value;
+    }
+    function checkKeyStringCoercion(value) {
+      try {
+        testStringCoercion(value);
+        var JSCompiler_inline_result = false;
+      } catch (e) {
+        JSCompiler_inline_result = true;
+      }
+      if (JSCompiler_inline_result) {
+        JSCompiler_inline_result = console;
+        var JSCompiler_temp_const = JSCompiler_inline_result.error;
+        var JSCompiler_inline_result$jscomp$0 = typeof Symbol === "function" && Symbol.toStringTag && value[Symbol.toStringTag] || value.constructor.name || "Object";
+        JSCompiler_temp_const.call(JSCompiler_inline_result, "The provided key is an unsupported type %s. This value must be coerced to a string before using it here.", JSCompiler_inline_result$jscomp$0);
+        return testStringCoercion(value);
+      }
+    }
+    function getTaskName(type) {
+      if (type === REACT_FRAGMENT_TYPE)
+        return "<>";
+      if (typeof type === "object" && type !== null && type.$$typeof === REACT_LAZY_TYPE)
+        return "<...>";
+      try {
+        var name = getComponentNameFromType(type);
+        return name ? "<" + name + ">" : "<...>";
+      } catch (x) {
+        return "<...>";
+      }
+    }
+    function getOwner() {
+      var dispatcher = ReactSharedInternals.A;
+      return dispatcher === null ? null : dispatcher.getOwner();
+    }
+    function UnknownOwner() {
+      return Error("react-stack-top-frame");
+    }
+    function hasValidKey(config) {
+      if (hasOwnProperty.call(config, "key")) {
+        var getter = Object.getOwnPropertyDescriptor(config, "key").get;
+        if (getter && getter.isReactWarning)
+          return false;
+      }
+      return config.key !== undefined;
+    }
+    function defineKeyPropWarningGetter(props, displayName) {
+      function warnAboutAccessingKey() {
+        specialPropKeyWarningShown || (specialPropKeyWarningShown = true, console.error("%s: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://react.dev/link/special-props)", displayName));
+      }
+      warnAboutAccessingKey.isReactWarning = true;
+      Object.defineProperty(props, "key", {
+        get: warnAboutAccessingKey,
+        configurable: true
+      });
+    }
+    function elementRefGetterWithDeprecationWarning() {
+      var componentName = getComponentNameFromType(this.type);
+      didWarnAboutElementRef[componentName] || (didWarnAboutElementRef[componentName] = true, console.error("Accessing element.ref was removed in React 19. ref is now a regular prop. It will be removed from the JSX Element type in a future release."));
+      componentName = this.props.ref;
+      return componentName !== undefined ? componentName : null;
+    }
+    function ReactElement(type, key, props, owner, debugStack, debugTask) {
+      var refProp = props.ref;
+      type = {
+        $$typeof: REACT_ELEMENT_TYPE,
+        type,
+        key,
+        props,
+        _owner: owner
+      };
+      (refProp !== undefined ? refProp : null) !== null ? Object.defineProperty(type, "ref", {
+        enumerable: false,
+        get: elementRefGetterWithDeprecationWarning
+      }) : Object.defineProperty(type, "ref", { enumerable: false, value: null });
+      type._store = {};
+      Object.defineProperty(type._store, "validated", {
+        configurable: false,
+        enumerable: false,
+        writable: true,
+        value: 0
+      });
+      Object.defineProperty(type, "_debugInfo", {
+        configurable: false,
+        enumerable: false,
+        writable: true,
+        value: null
+      });
+      Object.defineProperty(type, "_debugStack", {
+        configurable: false,
+        enumerable: false,
+        writable: true,
+        value: debugStack
+      });
+      Object.defineProperty(type, "_debugTask", {
+        configurable: false,
+        enumerable: false,
+        writable: true,
+        value: debugTask
+      });
+      Object.freeze && (Object.freeze(type.props), Object.freeze(type));
+      return type;
+    }
+    function jsxDEVImpl(type, config, maybeKey, isStaticChildren, debugStack, debugTask) {
+      var children = config.children;
+      if (children !== undefined)
+        if (isStaticChildren)
+          if (isArrayImpl(children)) {
+            for (isStaticChildren = 0;isStaticChildren < children.length; isStaticChildren++)
+              validateChildKeys(children[isStaticChildren]);
+            Object.freeze && Object.freeze(children);
+          } else
+            console.error("React.jsx: Static children should always be an array. You are likely explicitly calling React.jsxs or React.jsxDEV. Use the Babel transform instead.");
+        else
+          validateChildKeys(children);
+      if (hasOwnProperty.call(config, "key")) {
+        children = getComponentNameFromType(type);
+        var keys = Object.keys(config).filter(function(k) {
+          return k !== "key";
+        });
+        isStaticChildren = 0 < keys.length ? "{key: someKey, " + keys.join(": ..., ") + ": ...}" : "{key: someKey}";
+        didWarnAboutKeySpread[children + isStaticChildren] || (keys = 0 < keys.length ? "{" + keys.join(": ..., ") + ": ...}" : "{}", console.error(`A props object containing a "key" prop is being spread into JSX:
+  let props = %s;
+  <%s {...props} />
+React keys must be passed directly to JSX without using spread:
+  let props = %s;
+  <%s key={someKey} {...props} />`, isStaticChildren, children, keys, children), didWarnAboutKeySpread[children + isStaticChildren] = true);
+      }
+      children = null;
+      maybeKey !== undefined && (checkKeyStringCoercion(maybeKey), children = "" + maybeKey);
+      hasValidKey(config) && (checkKeyStringCoercion(config.key), children = "" + config.key);
+      if ("key" in config) {
+        maybeKey = {};
+        for (var propName in config)
+          propName !== "key" && (maybeKey[propName] = config[propName]);
+      } else
+        maybeKey = config;
+      children && defineKeyPropWarningGetter(maybeKey, typeof type === "function" ? type.displayName || type.name || "Unknown" : type);
+      return ReactElement(type, children, maybeKey, getOwner(), debugStack, debugTask);
+    }
+    function validateChildKeys(node) {
+      isValidElement(node) ? node._store && (node._store.validated = 1) : typeof node === "object" && node !== null && node.$$typeof === REACT_LAZY_TYPE && (node._payload.status === "fulfilled" ? isValidElement(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
+    }
+    function isValidElement(object) {
+      return typeof object === "object" && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+    }
+    var REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = Symbol.for("react.memo"), REACT_LAZY_TYPE = Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = Symbol.for("react.activity"), REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), ReactSharedInternals = React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, hasOwnProperty = Object.prototype.hasOwnProperty, isArrayImpl = Array.isArray, createTask = console.createTask ? console.createTask : function() {
+      return null;
+    };
+    React = {
+      react_stack_bottom_frame: function(callStackForError) {
+        return callStackForError();
+      }
+    };
+    var specialPropKeyWarningShown;
+    var didWarnAboutElementRef = {};
+    var unknownOwnerDebugStack = React.react_stack_bottom_frame.bind(React, UnknownOwner)();
+    var unknownOwnerDebugTask = createTask(getTaskName(UnknownOwner));
+    var didWarnAboutKeySpread = {};
+    exports.Fragment = REACT_FRAGMENT_TYPE;
+    exports.jsxDEV = function(type, config, maybeKey, isStaticChildren) {
+      var trackActualOwner = 1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
+      return jsxDEVImpl(type, config, maybeKey, isStaticChildren, trackActualOwner ? Error("react-stack-top-frame") : unknownOwnerDebugStack, trackActualOwner ? createTask(getTaskName(type)) : unknownOwnerDebugTask);
+    };
+  })();
+});
+
+// node_modules/react/jsx-dev-runtime.js
+var require_jsx_dev_runtime = __commonJS((exports, module) => {
+  var react_jsx_dev_runtime_development = __toESM(require_react_jsx_dev_runtime_development());
+  if (false) {} else {
+    module.exports = react_jsx_dev_runtime_development;
+  }
+});
+
+// src/App.tsx
+var import_react3 = __toESM(require_react(), 1);
+var import_client = __toESM(require_client(), 1);
+
+// src/LanguageContext.tsx
+var import_react = __toESM(require_react(), 1);
+
+// src/translations.ts
+var translations = {
+  es: {
+    slide01: {
+      title: "El Activo Más Ineficiente del Mundo.",
+      subtitle1: "Tasa de Uso: < 5%",
+      subtitle2: "La propiedad vehicular es un error financiero para la clase media:",
+      subtitle3: "Un pasivo de $20k depreciándose el 95% del tiempo.",
+      footer: "ARGENTINA | 2026"
+    },
+    slide02: {
+      title: "El Problema de Movilidad de la Clase Media",
+      subtitle: "3 opciones, todas defectuosas:",
+      option1: "PROPIO",
+      option1Desc: `US$20k inicial
+Deprecia 20%/año
+Uso <5%
+Seguro + Patente + Garage`,
+      option2: "ALQUILAR",
+      option2Desc: `US$80/día (turista)
+US$1200/mes (largo plazo)
+Sin kilometraje ilimitado`,
+      option3: "REMIS",
+      option3Desc: `US$3/km (Uber/Bolt)
+US$900/mes promedio
+Sin privacidad ni flexibilidad`,
+      highlight: "NADIE OFRECE FLEXIBILIDAD + BAJO COSTO"
+    },
+    slide03: {
+      title: "El Problema: Espacios Muertos + Alta Fricción",
+      subtitle: "La propiedad vehicular es ineficiente en tres dimensiones:",
+      point1Title: "USO TEMPORAL",
+      point1Desc: "Ocupado 5% del tiempo, estacionado 95%",
+      point2Title: "COSTO FINANCIERO",
+      point2Desc: "US$20k depreciándose mientras no se usa",
+      point3Title: "FRICTION",
+      point3Desc: "Seguro, patente, garaje, mantenimiento"
+    },
+    slide04: {
+      title: "Solución: Movilidad como Servicio",
+      subtitle: "Autorenta: Carsharing descentralizado con gestión de flotas P2P",
+      concept: "CONCEPTO",
+      conceptDesc: "Conectar propietarios de autos ociosos con conductores que necesitan movilidad flexible.",
+      features: "CARACTERÍSTICAS",
+      feature1Title: "DESCENTRALIZADO",
+      feature1Desc: "Sin garajes costosos. Los autos están donde están los propietarios.",
+      feature2Title: "GARANTÍA BIOMÉTRICA",
+      feature2Desc: "Validación facial para prevenir fraudes y asegurar devolución.",
+      feature3Title: "SEGURO INTEGRADO",
+      feature3Desc: "Cobertura completa para propietarios y conductores.",
+      feature4Title: "RUTAS FLEXIBLES",
+      feature4Desc: "Retiro y devolución en puntos de la comunidad."
+    },
+    slide23: {
+      title: "Crecimiento: Adquisición de Bajo Costo",
+      subtitle: "Validación del experimento 'Frontera WiFi'.",
+      funnelTitle: "EMBUDO MATEMÁTICO (1 NODO / MES)",
+      funnel1: "Trafico Potencial (Paso Fronterizo)",
+      funnel1Value: "3,000 / dia · 90,000 / mes",
+      funnel2: "Adopcion WiFi (Opt-in 10%)",
+      funnel2Value: "9,000 usuarios / mes",
+      funnel3: "Conversion a Registro (15%)",
+      funnel3Value: "1,350 nuevos perfiles",
+      funnel4: "Verificados (Barrera Biométrica 45%)",
+      funnel4Value: "607 usuarios listos para reservar",
+      cac: "CAC Proyectado: < USD 0.50 por usuario verificado",
+      scalable: "Escalable mediante replicación de nodos en LatAm."
+    },
+    slide26: {
+      title: "El Equipo (Founders)",
+      subtitle: "Ejecución probada en Fintech y Movilidad.",
+      linkedin: "LinkedIn"
+    }
+  },
+  pt: {
+    slide01: {
+      title: "O Ativo Mais Ineficiente do Mundo.",
+      subtitle1: "Taxa de Uso: < 5%",
+      subtitle2: "A propriedade veicular é um erro financeiro para a classe média:",
+      subtitle3: "Um passivo de $20k depreciando 95% do tempo.",
+      footer: "ARGENTINA | 2026"
+    },
+    slide02: {
+      title: "O Problema de Mobilidade da Classe Média",
+      subtitle: "3 opções, todas defeituosas:",
+      option1: "PRÓPRIO",
+      option1Desc: `US$20k inicial
+Deprecia 20%/ano
+Uso <5%
+Seguro + Patente + Garagem`,
+      option2: "ALUGAR",
+      option2Desc: `US$80/dia (turista)
+US$1200/mês (longo prazo)
+Sem quilometragem ilimitada`,
+      option3: "REMIS",
+      option3Desc: `US$3/km (Uber/Bolt)
+US$900/mês médio
+Sem privacidade nem flexibilidade`,
+      highlight: "NINGUÉM OFERECE FLEXIBILIDADE + BAIXO CUSTO"
+    },
+    slide03: {
+      title: "O Problema: Espaços Mortos + Alta Fricção",
+      subtitle: "A propriedade veicular é ineficiente em três dimensões:",
+      point1Title: "USO TEMPORAL",
+      point1Desc: "Ocupado 5% do tempo, estacionado 95%",
+      point2Title: "CUSTO FINANCEIRO",
+      point2Desc: "US$20k depreciando enquanto não se usa",
+      point3Title: "FRICTION",
+      point3Desc: "Seguro, patente, garagem, manutenção"
+    },
+    slide04: {
+      title: "Solução: Mobilidade como Serviço",
+      subtitle: "Autorenta: Carsharing descentralizado com gestão de frotas P2P",
+      concept: "CONCEITO",
+      conceptDesc: "Conectar proprietários de carros ociosos com motoristas que precisam de mobilidade flexível.",
+      features: "CARACTERÍSTICAS",
+      feature1Title: "DESCENTRALIZADO",
+      feature1Desc: "Sem garagens custosos. Os carros estão onde estão os proprietários.",
+      feature2Title: "GARANTIA BIOMÉTRICA",
+      feature2Desc: "Validação facial para prevenir fraudes e garantir devolução.",
+      feature3Title: "SEGURO INTEGRADO",
+      feature3Desc: "Cobertura completa para proprietários e motoristas.",
+      feature4Title: "ROTAS FLEXÍVEIS",
+      feature4Desc: "Retirada e devolução em pontos da comunidade."
+    },
+    slide23: {
+      title: "Crescimento: Aquisição de Baixo Custo",
+      subtitle: "Validação do experimento 'Fronteira WiFi'.",
+      funnelTitle: "FUNIL MATEMÁTICO (1 NÓDULO / MÊS)",
+      funnel1: "Tráfego Potencial (Passo de Fronteira)",
+      funnel1Value: "3,000 / dia · 90,000 / mês",
+      funnel2: "Adoção WiFi (Opt-in 10%)",
+      funnel2Value: "9,000 usuários / mês",
+      funnel3: "Conversão a Registro (15%)",
+      funnel3Value: "1,350 novos perfis",
+      funnel4: "Verificados (Barreira Biométrica 45%)",
+      funnel4Value: "607 usuários prontos para reservar",
+      cac: "CAC Projetado: < USD 0.50 por usuário verificado",
+      scalable: "Escalável mediante replicação de nódulos na LatAm."
+    },
+    slide26: {
+      title: "A Equipe (Founders)",
+      subtitle: "Execução provada em Fintech e Mobilidade.",
+      linkedin: "LinkedIn"
+    }
+  }
+};
+function t(lang, key) {
+  const keys = key.split(".");
+  let value = translations[lang];
+  for (const k of keys) {
+    value = value?.[k];
+  }
+  return value || key;
+}
+
+// src/LanguageContext.tsx
+var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
+var LanguageContext = import_react.createContext(undefined);
+function LanguageProvider({ children, lang }) {
+  return /* @__PURE__ */ jsx_dev_runtime.jsxDEV(LanguageContext.Provider, {
+    value: { lang, t: (key) => t(lang, key) },
+    children
+  }, undefined, false, undefined, this);
+}
+function useTranslations() {
+  const context = import_react.useContext(LanguageContext);
+  if (!context) {
+    throw new Error("useTranslations must be used within LanguageProvider");
+  }
+  return context;
+}
+
 // assets/parking-lot.png
-var parking_lot_default = "../parking-lot-qbv7ztq3.png";
+var parking_lot_default = "./parking-lot-qbv7ztq3.png";
 
 // src/slides/Slide01Cover.tsx
-var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide01Cover() {
-  return /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+  const { t: t2 } = useTranslations();
+  return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
     className: "slide slide--centered",
     style: {
-      backgroundImage: `linear-gradient(to bottom, rgba(13,13,13,0.6), rgba(13,13,13,0.92)), url(${parking_lot_default})`,
+      backgroundImage: `linear-gradient(to bottom, rgba(13,13,13,0.5), rgba(13,13,13,0.85)), url(${parking_lot_default})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
-      position: "relative"
+      position: "relative",
+      overflow: "hidden"
     },
     children: [
-      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
         style: {
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: "800px",
-          height: "400px",
-          background: "radial-gradient(ellipse, rgba(0,208,132,0.1) 0%, transparent 70%)",
-          pointerEvents: "none"
+          width: "1000px",
+          height: "600px",
+          background: "radial-gradient(ellipse, rgba(0,208,132,0.18) 0%, transparent 75%)",
+          pointerEvents: "none",
+          zIndex: 1
         }
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("h1", {
+      /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("h1", {
         style: {
-          fontSize: "84px",
-          fontWeight: "700",
-          lineHeight: 1.1,
+          fontSize: "92px",
+          fontWeight: "800",
+          lineHeight: 1.05,
           marginBottom: "48px",
           textAlign: "center",
-          maxWidth: "1200px"
+          maxWidth: "1300px",
+          zIndex: 2,
+          animation: "fadeInUp 1s ease-out"
         },
-        children: "El Activo Más Ineficiente del Mundo."
+        children: t2("slide01.title")
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
         style: {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "16px"
+          gap: "20px",
+          zIndex: 2,
+          animation: "fadeInUp 1.2s ease-out"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
             style: {
-              fontSize: "32px",
+              fontSize: "36px",
               color: "var(--accent-green)",
-              fontWeight: "600"
+              fontWeight: "700",
+              letterSpacing: "1px"
+            },
+            children: t2("slide01.subtitle1")
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+            style: {
+              fontSize: "24px",
+              color: "var(--text-secondary)",
+              maxWidth: "800px",
+              textAlign: "center",
+              lineHeight: 1.5
             },
             children: [
-              "Tasa de Uso: ",
-              "<",
-              " 5%"
+              t2("slide01.subtitle2"),
+              t2("slide01.subtitle3")
             ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
-            style: {
-              fontSize: "22px",
-              color: "var(--text-secondary)",
-              maxWidth: "700px",
-              textAlign: "center"
-            },
-            children: "La propiedad vehicular es un error financiero para la clase media: Un pasivo de $20k depreciándose el 95% del tiempo."
-          }, undefined, false, undefined, this)
+          }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
         style: {
           position: "absolute",
-          bottom: "60px",
+          bottom: "70px",
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "12px"
+          gap: "16px",
+          zIndex: 2
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
             style: {
               background: "var(--accent-green)",
-              padding: "12px 28px",
-              borderRadius: "6px",
-              fontSize: "20px",
-              fontWeight: "700",
-              color: "var(--bg-primary)"
+              padding: "16px 40px",
+              borderRadius: "8px",
+              fontSize: "26px",
+              fontWeight: "800",
+              color: "var(--bg-primary)",
+              boxShadow: "0 10px 30px rgba(0,208,132,0.3)",
+              letterSpacing: "2px"
             },
             children: "AUTORENTAR"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
-            style: { fontSize: "14px", color: "var(--text-muted)" },
-            children: "Argentina | 2026"
-          }, undefined, false, undefined, this)
+          /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+            style: { display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" },
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+                style: { fontSize: "16px", color: "var(--text-muted)", fontWeight: "500", letterSpacing: "1px" },
+                children: t2("slide01.footer")
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+                style: { fontSize: "14px", color: "var(--text-secondary)", fontWeight: "500" },
+                children: "eduardomarques@campus.fmed.uba.ar"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+                style: { fontSize: "14px", color: "var(--text-secondary)", fontWeight: "500" },
+                children: "autorentardev@gmail.com"
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
         className: "diamond"
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("style", {
+        children: `
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 }
 
 // src/slides/Slide02Gancho.tsx
-var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide02Gancho() {
-  return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
     className: "slide",
     style: {
       padding: "80px",
@@ -17217,10 +17429,10 @@ function Slide02Gancho() {
       justifyContent: "center"
     },
     children: [
-      /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
         style: { textAlign: "center", marginBottom: "64px" },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
             style: {
               fontSize: "24px",
               color: "var(--danger)",
@@ -17231,7 +17443,7 @@ function Slide02Gancho() {
             },
             children: "El Problema"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("h1", {
+          /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("h1", {
             style: {
               fontSize: "72px",
               fontWeight: "700",
@@ -17240,14 +17452,14 @@ function Slide02Gancho() {
             },
             children: [
               "70% de Latinoamérica",
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("br", {}, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("br", {}, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("span", {
                 style: { color: "var(--danger)" },
                 children: "No Puede Alquilar un Auto."
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
             style: {
               fontSize: "28px",
               color: "var(--text-secondary)",
@@ -17258,7 +17470,7 @@ function Slide02Gancho() {
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
         style: {
           display: "grid",
           gridTemplateColumns: "1fr auto 1fr",
@@ -17268,7 +17480,7 @@ function Slide02Gancho() {
           margin: "0 auto"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
             style: {
               background: "var(--bg-card)",
               border: "2px solid var(--danger)",
@@ -17277,14 +17489,14 @@ function Slide02Gancho() {
               textAlign: "center"
             },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
                 style: {
                   fontSize: "80px",
                   marginBottom: "16px"
                 },
                 children: "\uD83D\uDEAB"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
                 style: {
                   fontSize: "48px",
                   fontWeight: "700",
@@ -17293,7 +17505,7 @@ function Slide02Gancho() {
                 },
                 children: "70%"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
                 style: {
                   fontSize: "20px",
                   color: "var(--text-secondary)",
@@ -17301,27 +17513,27 @@ function Slide02Gancho() {
                 },
                 children: "Rechazados por el Sistema"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
                 style: {
                   fontSize: "14px",
                   color: "var(--text-muted)",
                   lineHeight: 1.6
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
                     children: "• Sin tarjeta de crédito internacional"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
                     children: "• Sin historial crediticio"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
                     children: "• Trabajadores informales"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
             style: {
               display: "flex",
               flexDirection: "column",
@@ -17329,7 +17541,7 @@ function Slide02Gancho() {
               gap: "16px"
             },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
                 style: {
                   width: "80px",
                   height: "80px",
@@ -17344,7 +17556,7 @@ function Slide02Gancho() {
                 },
                 children: "→"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
                 style: {
                   fontSize: "18px",
                   color: "var(--accent-green)",
@@ -17353,13 +17565,13 @@ function Slide02Gancho() {
                 },
                 children: [
                   "AutoRenta",
-                  /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("br", {}, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("br", {}, undefined, false, undefined, this),
                   "los desbloquea"
                 ]
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
             style: {
               background: "var(--bg-card)",
               border: "2px solid var(--accent-green)",
@@ -17368,14 +17580,14 @@ function Slide02Gancho() {
               textAlign: "center"
             },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
                 style: {
                   fontSize: "80px",
                   marginBottom: "16px"
                 },
                 children: "✓"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
                 style: {
                   fontSize: "48px",
                   fontWeight: "700",
@@ -17384,7 +17596,7 @@ function Slide02Gancho() {
                 },
                 children: "3x TAM"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
                 style: {
                   fontSize: "20px",
                   color: "var(--text-secondary)",
@@ -17392,20 +17604,20 @@ function Slide02Gancho() {
                 },
                 children: "Mercado Desbloqueado"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
                 style: {
                   fontSize: "14px",
                   color: "var(--text-muted)",
                   lineHeight: 1.6
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
                     children: "• Garantía en efectivo (Billetera)"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
                     children: "• Verificación biométrica"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
                     children: "• Contrato digital instantáneo"
                   }, undefined, false, undefined, this)
                 ]
@@ -17414,7 +17626,7 @@ function Slide02Gancho() {
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
         className: "diamond"
       }, undefined, false, undefined, this)
     ]
@@ -17422,15 +17634,15 @@ function Slide02Gancho() {
 }
 
 // src/slides/Slide03Problema.tsx
-var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide03Problema() {
-  return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
     className: "slide slide--centered",
     style: {
       position: "relative"
     },
     children: [
-      /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
         style: {
           position: "absolute",
           top: "50%",
@@ -17442,7 +17654,7 @@ function Slide03Problema() {
           pointerEvents: "none"
         }
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("h1", {
+      /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("h1", {
         style: {
           fontSize: "180px",
           fontWeight: "700",
@@ -17453,7 +17665,7 @@ function Slide03Problema() {
         },
         children: "CONFIANZA."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
+      /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("p", {
         style: {
           fontSize: "36px",
           color: "var(--text-primary)",
@@ -17462,7 +17674,7 @@ function Slide03Problema() {
         },
         children: "El cuello de botella es la confianza."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
+      /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("p", {
         style: {
           fontSize: "24px",
           color: "var(--text-secondary)",
@@ -17473,7 +17685,7 @@ function Slide03Problema() {
         },
         children: "Las plataformas P2P actuales fallan porque no pueden garantizar seguridad."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
         style: {
           display: "flex",
           flexDirection: "column",
@@ -17484,7 +17696,7 @@ function Slide03Problema() {
           "¿Me robarán el auto?",
           "¿Quién paga los daños?",
           "¿Qué pasa si mienten?"
-        ].map((q, i) => /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
+        ].map((q, i) => /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("p", {
           style: {
             fontSize: "22px",
             color: "var(--text-muted)",
@@ -17496,7 +17708,7 @@ function Slide03Problema() {
           ]
         }, i, true, undefined, this))
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("p", {
+      /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("p", {
         style: {
           position: "absolute",
           bottom: "80px",
@@ -17505,14 +17717,14 @@ function Slide03Problema() {
         },
         children: [
           "Sin una solución tecnológica al ",
-          /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("span", {
+          /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("span", {
             style: { color: "var(--accent-green)" },
             children: "Miedo"
           }, undefined, false, undefined, this),
           ", el mercado no escala."
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
         className: "diamond"
       }, undefined, false, undefined, this)
     ]
@@ -17520,30 +17732,30 @@ function Slide03Problema() {
 }
 
 // src/components/SlideLayout.tsx
-var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
 function SlideLayout({ children, centered, className = "" }) {
-  return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
     className: `slide ${centered ? "slide--centered" : ""} ${className}`,
     children: [
       children,
-      /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
         className: "diamond"
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 }
 function SlideHeader({ tag, title, subtitle, smallTitle }) {
-  return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("header", {
+  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("header", {
     children: [
-      tag && /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
+      tag && /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
         className: "slide-tag",
         children: tag
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("h1", {
+      /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("h1", {
         className: `slide-title ${smallTitle ? "slide-title--small" : ""}`,
         children: title
       }, undefined, false, undefined, this),
-      subtitle && /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("p", {
+      subtitle && /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
         className: "slide-subtitle",
         children: subtitle
       }, undefined, false, undefined, this)
@@ -17551,7 +17763,7 @@ function SlideHeader({ tag, title, subtitle, smallTitle }) {
   }, undefined, true, undefined, this);
 }
 function Card({ children, accent, className = "", ...rest }) {
-  return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
     className: `card ${accent ? "card--accent" : ""} ${className}`,
     ...rest,
     children
@@ -17559,12 +17771,32 @@ function Card({ children, accent, className = "", ...rest }) {
 }
 
 // src/slides/Slide04Solucion.tsx
-var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide04Solucion() {
   const soluciones = [
     {
       num: "01",
-      icon: "\uD83D\uDCB0",
+      icon: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("svg", {
+        width: "56",
+        height: "56",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("circle", {
+            cx: "12",
+            cy: "12",
+            r: "10",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("path", {
+            d: "M12 6V18M8 10H16M8 14H16",
+            stroke: "#00D084",
+            strokeWidth: "2",
+            strokeLinecap: "round"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
       problema: "Sin tarjeta de crédito",
       solucion: "Billetera Virtual",
       descripcion: "Garantía en efectivo pre-depositada. Sin bancos, sin rechazos.",
@@ -17573,7 +17805,34 @@ function Slide04Solucion() {
     },
     {
       num: "02",
-      icon: "\uD83D\uDD10",
+      icon: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("svg", {
+        width: "56",
+        height: "56",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("rect", {
+            x: "5",
+            y: "11",
+            width: "14",
+            height: "10",
+            rx: "2",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("path", {
+            d: "M8 11V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V11",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("circle", {
+            cx: "12",
+            cy: "16",
+            r: "1.5",
+            fill: "#00D084"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
       problema: "¿Puedo confiar?",
       solucion: "Identidad Verificada por IA",
       descripcion: "Selfie + DNI + Verificación biométrica obligatoria.",
@@ -17582,7 +17841,36 @@ function Slide04Solucion() {
     },
     {
       num: "03",
-      icon: "\uD83D\uDCF9",
+      icon: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("svg", {
+        width: "56",
+        height: "56",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("rect", {
+            x: "3",
+            y: "5",
+            width: "18",
+            height: "14",
+            rx: "2",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("circle", {
+            cx: "12",
+            cy: "12",
+            r: "3",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("circle", {
+            cx: "12",
+            cy: "12",
+            r: "1",
+            fill: "#00D084"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
       problema: "Disputas por daños",
       solucion: "Video-Inspección 360°",
       descripcion: "IA detecta daños automáticamente. Evidencia legal irrefutable.",
@@ -17591,7 +17879,29 @@ function Slide04Solucion() {
     },
     {
       num: "04",
-      icon: "\uD83D\uDCCB",
+      icon: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("svg", {
+        width: "56",
+        height: "56",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("rect", {
+            x: "4",
+            y: "3",
+            width: "16",
+            height: "18",
+            rx: "2",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("path", {
+            d: "M8 8H16M8 12H16M8 16H13",
+            stroke: "#00D084",
+            strokeWidth: "2",
+            strokeLinecap: "round"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
       problema: "¿Cómo me protejo?",
       solucion: "Contrato Digital Vinculante",
       descripcion: "Comodato firmado digitalmente con validez legal completa.",
@@ -17599,92 +17909,103 @@ function Slide04Solucion() {
       color: "var(--accent-green)"
     }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(SlideHeader, {
         title: "La Solución: Confianza Sin Bancos",
         subtitle: "4 pilares tecnológicos + FGO que garantizan cero riesgo para propietarios."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
         style: {
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "24px",
-          marginTop: "48px"
+          gap: "10px",
+          marginTop: "20px",
+          maxWidth: "1350px",
+          margin: "20px auto 0",
+          width: "100%"
         },
-        children: soluciones.map((s, i) => /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+        children: soluciones.map((s, i) => /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
           style: {
             background: "linear-gradient(180deg, var(--bg-card) 0%, rgba(0,208,132,0.05) 100%)",
             border: "1px solid var(--accent-green)",
-            borderRadius: "16px",
-            padding: "32px 24px",
+            borderRadius: "10px",
+            padding: "18px 12px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textAlign: "center",
             position: "relative",
-            overflow: "hidden"
+            overflow: "hidden",
+            maxWidth: "100%"
           },
           children: [
-            /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
               style: {
                 position: "absolute",
-                top: "12px",
-                left: "12px",
-                fontSize: "14px",
+                top: "8px",
+                left: "8px",
+                fontSize: "11px",
                 fontWeight: "700",
                 color: "var(--accent-green)",
                 opacity: 0.5
               },
               children: s.num
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
               style: {
-                fontSize: "56px",
-                marginBottom: "20px",
+                marginBottom: "10px",
                 filter: "drop-shadow(0 4px 12px rgba(0,208,132,0.3))"
               },
               children: s.icon
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
+            /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
               style: {
-                fontSize: "14px",
+                fontSize: "12px",
                 color: "var(--danger)",
                 textDecoration: "line-through",
-                marginBottom: "12px",
+                marginBottom: "8px",
                 opacity: 0.7
               },
               children: s.problema
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("h3", {
+            /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("h3", {
               style: {
-                fontSize: "22px",
+                fontSize: "15px",
                 fontWeight: "700",
                 color: "var(--text-primary)",
-                marginBottom: "12px",
-                lineHeight: 1.2
+                marginBottom: "6px",
+                lineHeight: 1.1,
+                wordBreak: "break-word",
+                hyphens: "auto"
               },
               children: s.solucion
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
+            /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
               style: {
-                fontSize: "15px",
+                fontSize: "12px",
                 color: "var(--text-secondary)",
-                lineHeight: 1.5,
-                marginBottom: "20px",
-                flex: 1
+                lineHeight: 1.4,
+                marginBottom: "12px",
+                flex: 1,
+                wordWrap: "break-word",
+                overflowWrap: "break-word"
               },
               children: s.descripcion
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
               style: {
                 background: "rgba(0, 208, 132, 0.15)",
                 border: "1px solid var(--accent-green)",
                 borderRadius: "100px",
-                padding: "8px 16px",
-                fontSize: "13px",
+                padding: "4px 10px",
+                fontSize: "10px",
                 fontWeight: "600",
-                color: "var(--accent-green)"
+                color: "var(--accent-green)",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: "100%"
               },
               children: [
                 "✓ ",
@@ -17694,226 +18015,261 @@ function Slide04Solucion() {
           ]
         }, i, true, undefined, this))
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
         style: {
-          marginTop: "64px",
+          marginTop: "25px",
           background: "linear-gradient(135deg, rgba(0,208,132,0.1) 0%, rgba(0,208,132,0.05) 100%)",
           border: "2px solid rgba(0,208,132,0.3)",
-          borderRadius: "20px",
-          padding: "40px",
-          position: "relative"
+          borderRadius: "16px",
+          padding: "20px",
+          position: "relative",
+          maxWidth: "1350px",
+          margin: "25px auto 0",
+          width: "100%"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
             style: {
               textAlign: "center",
-              marginBottom: "32px"
+              marginBottom: "16px"
             },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("h2", {
+              /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("h2", {
                 style: {
-                  fontSize: "36px",
+                  fontSize: "24px",
                   fontWeight: "700",
                   color: "var(--accent-green)",
-                  marginBottom: "8px"
+                  marginBottom: "4px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "10px"
                 },
-                children: "\uD83D\uDCB0 FGO: Fondo Garantía Operativa"
-              }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("svg", {
+                    width: "24",
+                    height: "24",
+                    viewBox: "0 0 24 24",
+                    fill: "none",
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("circle", {
+                        cx: "12",
+                        cy: "12",
+                        r: "10",
+                        stroke: "#00D084",
+                        strokeWidth: "2"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("path", {
+                        d: "M12 6V18M8 10H16M8 14H16",
+                        stroke: "#00D084",
+                        strokeWidth: "2",
+                        strokeLinecap: "round"
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  "FGO: Fondo Garantía Operativa"
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
                 style: {
-                  fontSize: "18px",
+                  fontSize: "14px",
                   color: "var(--text-secondary)"
                 },
                 children: "Modelo de negocio que garantiza cero riesgo para propietarios"
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
             style: {
               display: "grid",
               gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "24px",
-              marginBottom: "40px"
+              gap: "12px",
+              marginBottom: "16px"
             },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
                 style: {
                   background: "var(--bg-card)",
-                  padding: "24px",
-                  borderRadius: "12px",
-                  border: "1px solid var(--border-subtle)"
+                  padding: "12px",
+                  borderRadius: "10px",
+                  border: "1px solid var(--border-subtle)",
+                  maxWidth: "100%"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("h4", {
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("h4", {
                     style: {
-                      fontSize: "20px",
+                      fontSize: "15px",
                       fontWeight: "700",
                       color: "var(--accent-green)",
-                      marginBottom: "12px"
+                      marginBottom: "8px"
                     },
                     children: "1. Daños Menores"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
                     style: {
-                      fontSize: "14px",
+                      fontSize: "12px",
                       color: "var(--text-secondary)",
-                      lineHeight: "1.5",
-                      marginBottom: "12px"
+                      lineHeight: "1.4",
+                      marginBottom: "8px"
                     },
-                    children: "Cubre: Daños menores (< USD 500), franquicias de seguro y lucro cesante."
+                    children: "Cubre: Daños menores (< USD 500), franquicias y lucro cesante."
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
                     style: {
                       background: "rgba(0,208,132,0.1)",
-                      padding: "8px 12px",
-                      borderRadius: "8px",
-                      fontSize: "11px",
+                      padding: "6px 8px",
+                      borderRadius: "6px",
+                      fontSize: "9px",
                       fontWeight: "600",
                       color: "var(--accent-green)"
                     },
-                    children: "Financiado por: 10% de cada reserva + Aportes de Propietarios (Pool)."
+                    children: "10% de cada reserva + Aportes de Propietarios"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
                 style: {
                   background: "var(--bg-card)",
-                  padding: "24px",
-                  borderRadius: "12px",
-                  border: "1px solid var(--border-subtle)"
+                  padding: "12px",
+                  borderRadius: "10px",
+                  border: "1px solid var(--border-subtle)",
+                  maxWidth: "100%"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("h4", {
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("h4", {
                     style: {
-                      fontSize: "20px",
+                      fontSize: "15px",
                       fontWeight: "700",
                       color: "var(--accent-green)",
-                      marginBottom: "12px"
+                      marginBottom: "8px"
                     },
-                    children: "2. Robo Total & Destrucción"
+                    children: "2. Robo Total"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
                     style: {
-                      fontSize: "14px",
+                      fontSize: "12px",
                       color: "var(--text-secondary)",
-                      lineHeight: "1.5",
-                      marginBottom: "12px"
+                      lineHeight: "1.4",
+                      marginBottom: "8px"
                     },
-                    children: "Cubre: Póliza de Seguro Madre (Partner) o Póliza del Propietario (endosada)."
+                    children: "Cubre: Póliza de Seguro Madre o del Propietario (endosada)."
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
                     style: {
                       background: "rgba(0,208,132,0.1)",
-                      padding: "8px 12px",
-                      borderRadius: "8px",
-                      fontSize: "11px",
+                      padding: "6px 8px",
+                      borderRadius: "6px",
+                      fontSize: "9px",
                       fontWeight: "600",
                       color: "var(--accent-green)"
                     },
-                    children: "El FGO cubre el deducible para que el propietario no pague nada."
+                    children: "FGO cubre el deducible para que el propietario no pague."
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
                 style: {
                   background: "var(--bg-card)",
-                  padding: "24px",
-                  borderRadius: "12px",
-                  border: "1px solid var(--border-subtle)"
+                  padding: "12px",
+                  borderRadius: "10px",
+                  border: "1px solid var(--border-subtle)",
+                  maxWidth: "100%"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("h4", {
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("h4", {
                     style: {
-                      fontSize: "20px",
+                      fontSize: "15px",
                       fontWeight: "700",
                       color: "var(--accent-green)",
-                      marginBottom: "12px"
+                      marginBottom: "8px"
                     },
-                    children: "3. Evidencia Vinculante"
+                    children: "3. Evidencia"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
                     style: {
-                      fontSize: "14px",
+                      fontSize: "12px",
                       color: "var(--text-secondary)",
-                      lineHeight: "1.5",
-                      marginBottom: "12px"
+                      lineHeight: "1.4",
+                      marginBottom: "8px"
                     },
-                    children: "Regla: Sin video de registro de salida validado, el arrendatario asume responsabilidad total."
+                    children: "Sin video de registro validado, arrendatario asume responsabilidad."
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
                     style: {
                       background: "rgba(0,208,132,0.1)",
-                      padding: "8px 12px",
-                      borderRadius: "8px",
-                      fontSize: "11px",
+                      padding: "6px 8px",
+                      borderRadius: "6px",
+                      fontSize: "9px",
                       fontWeight: "600",
                       color: "var(--accent-green)"
                     },
-                    children: "La evidencia en Blockchain/Server actúa como árbitro final."
+                    children: "Evidencia en Blockchain/Server actúa como árbitro final."
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
             style: {
               display: "flex",
               justifyContent: "center",
-              gap: "48px",
-              marginTop: "32px"
+              gap: "24px",
+              marginTop: "12px",
+              alignItems: "center"
             },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
                 style: {
                   background: "var(--bg-secondary)",
-                  padding: "20px 40px",
-                  borderRadius: "12px",
+                  padding: "12px 24px",
+                  borderRadius: "10px",
                   borderLeft: "4px solid var(--danger)",
-                  textAlign: "center"
+                  textAlign: "center",
+                  minWidth: "120px"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
-                    style: { fontSize: "14px", color: "var(--text-muted)", marginBottom: "4px" },
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+                    style: { fontSize: "11px", color: "var(--text-muted)", marginBottom: "2px" },
                     children: "SIN FGO"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
-                    style: { fontSize: "32px", fontWeight: "700", color: "var(--danger)" },
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+                    style: { fontSize: "24px", fontWeight: "700", color: "var(--danger)" },
                     children: "0%"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
-                    style: { fontSize: "14px", color: "var(--text-secondary)" },
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+                    style: { fontSize: "11px", color: "var(--text-secondary)" },
                     children: "Propietarios"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
                 style: {
-                  display: "flex",
-                  alignItems: "center",
-                  fontSize: "48px",
-                  color: "var(--accent-green)"
+                  fontSize: "28px",
+                  color: "var(--accent-green)",
+                  fontWeight: "700"
                 },
                 children: "→"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
                 style: {
                   background: "var(--bg-secondary)",
-                  padding: "20px 40px",
-                  borderRadius: "12px",
+                  padding: "12px 24px",
+                  borderRadius: "10px",
                   borderLeft: "4px solid var(--accent-green)",
-                  textAlign: "center"
+                  textAlign: "center",
+                  minWidth: "120px"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
-                    style: { fontSize: "14px", color: "var(--text-muted)", marginBottom: "4px" },
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+                    style: { fontSize: "11px", color: "var(--text-muted)", marginBottom: "2px" },
                     children: "CON FGO"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
-                    style: { fontSize: "32px", fontWeight: "700", color: "var(--accent-green)" },
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+                    style: { fontSize: "24px", fontWeight: "700", color: "var(--accent-green)" },
                     children: "100%"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("p", {
-                    style: { fontSize: "14px", color: "var(--text-secondary)" },
+                  /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+                    style: { fontSize: "11px", color: "var(--text-secondary)" },
                     children: "Adopción"
                   }, undefined, false, undefined, this)
                 ]
@@ -17927,25 +18283,100 @@ function Slide04Solucion() {
 }
 
 // src/slides/Slide05Timing.tsx
-var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide05Momento() {
   const factores = [
     {
-      icon: "\uD83D\uDCC8",
+      icon: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("svg", {
+        width: "40",
+        height: "40",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("path", {
+            d: "M3 17L9 11L13 15L21 7",
+            stroke: "#00D084",
+            strokeWidth: "2",
+            strokeLinecap: "round",
+            strokeLinejoin: "round"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("path", {
+            d: "M17 7H21V11",
+            stroke: "#00D084",
+            strokeWidth: "2",
+            strokeLinecap: "round",
+            strokeLinejoin: "round"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
       title: "Crisis & Inflación",
       stat: "200%+",
-      statLabel: "Inflación anul",
+      statLabel: "Inflación anual",
       desc: "El auto parado es un pasivo costoso. Alquilarlo genera USD $200-400/mes."
     },
     {
-      icon: "\uD83D\uDEAB",
+      icon: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("svg", {
+        width: "40",
+        height: "40",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("circle", {
+            cx: "12",
+            cy: "12",
+            r: "10",
+            stroke: "#FF4444",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("path", {
+            d: "M15 9L9 15M9 9L15 15",
+            stroke: "#FF4444",
+            strokeWidth: "2",
+            strokeLinecap: "round"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
       title: "Exclusión Financiera",
       stat: "70%",
       statLabel: "Sin tarjeta crédito",
       desc: "Rentadoras tradicionales rechazan al 70%. Mercado cautivo masivo."
     },
     {
-      icon: "\uD83E\uDD16",
+      icon: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("svg", {
+        width: "40",
+        height: "40",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("rect", {
+            x: "4",
+            y: "4",
+            width: "16",
+            height: "16",
+            rx: "2",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("circle", {
+            cx: "9",
+            cy: "10",
+            r: "1.5",
+            fill: "#00D084"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("circle", {
+            cx: "15",
+            cy: "10",
+            r: "1.5",
+            fill: "#00D084"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("path", {
+            d: "M9 15H15",
+            stroke: "#00D084",
+            strokeWidth: "2",
+            strokeLinecap: "round"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
       title: "Madurez Digital",
       stat: "<$0.01",
       statLabel: "Costo validación",
@@ -17957,20 +18388,20 @@ function Slide05Momento() {
     { year: "2025", label: "Tech Enabled", sub: "IA reduce costos operativos" },
     { year: "2026", label: "Mass Adoption", sub: "Cambio cultural Ownership → Access" }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(SlideHeader, {
         title: "¿Por Qué Ahora?",
         subtitle: "3 factores macro convergen en una tormenta perfecta de oportunidad."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
         style: {
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
           gap: "24px",
           marginTop: "32px"
         },
-        children: factores.map((f, i) => /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+        children: factores.map((f, i) => /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
           style: {
             background: "var(--bg-card)",
             border: i === 0 ? "2px solid var(--accent-green)" : "1px solid var(--border-subtle)",
@@ -17981,15 +18412,15 @@ function Slide05Momento() {
             position: "relative"
           },
           children: [
-            /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
-              style: { fontSize: "40px", marginBottom: "16px" },
+            /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+              style: { marginBottom: "16px" },
               children: f.icon
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("h3", {
+            /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("h3", {
               style: { fontSize: "20px", fontWeight: "700", marginBottom: "12px", color: "var(--text-primary)" },
               children: f.title
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
               style: {
                 background: "rgba(0, 208, 132, 0.1)",
                 borderRadius: "8px",
@@ -17998,27 +18429,27 @@ function Slide05Momento() {
                 textAlign: "center"
               },
               children: [
-                /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+                /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("p", {
                   style: { fontSize: "32px", fontWeight: "800", color: "var(--accent-green)", marginBottom: "4px" },
                   children: f.stat
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+                /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("p", {
                   style: { fontSize: "12px", color: "var(--text-muted)" },
                   children: f.statLabel
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+            /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("p", {
               style: { fontSize: "15px", color: "var(--text-secondary)", lineHeight: 1.5 },
               children: f.desc
             }, undefined, false, undefined, this)
           ]
         }, i, true, undefined, this))
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
         style: { marginTop: "40px", position: "relative", padding: "0 40px" },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("p", {
             style: {
               fontSize: "18px",
               color: "var(--text-primary)",
@@ -18028,7 +18459,7 @@ function Slide05Momento() {
             },
             children: "Cronología de la Oportunidad"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
             style: {
               position: "absolute",
               top: "86px",
@@ -18039,7 +18470,7 @@ function Slide05Momento() {
               zIndex: 0
             }
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
             style: {
               display: "grid",
               gridTemplateColumns: "1fr 1fr 1fr",
@@ -18047,10 +18478,10 @@ function Slide05Momento() {
               position: "relative",
               zIndex: 1
             },
-            children: timeline.map((t, i) => /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+            children: timeline.map((t2, i) => /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
               style: { textAlign: "center" },
               children: [
-                /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+                /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
                   style: {
                     width: "16px",
                     height: "16px",
@@ -18060,38 +18491,31 @@ function Slide05Momento() {
                     boxShadow: "0 0 10px var(--accent-green)"
                   }
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+                /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
                   style: { fontSize: "24px", fontWeight: "800", color: "var(--text-primary)", marginBottom: "8px" },
-                  children: t.year
+                  children: t2.year
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+                /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
                   style: { fontSize: "18px", fontWeight: "700", color: "var(--accent-green)", marginBottom: "4px" },
-                  children: t.label
+                  children: t2.label
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+                /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
                   style: { fontSize: "14px", color: "var(--text-secondary)" },
-                  children: t.sub
+                  children: t2.sub
                 }, undefined, false, undefined, this)
               ]
             }, i, true, undefined, this))
           }, undefined, false, undefined, this)
         ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
-        style: { marginTop: "32px", textAlign: "center" },
-        children: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("p", {
-          style: { fontSize: "22px", color: "var(--accent-green)", fontWeight: "600" },
-          children: "\uD83C\uDFAF La ventana de oportunidad está abierta. El que ejecute primero, gana."
-        }, undefined, false, undefined, this)
-      }, undefined, false, undefined, this)
+      }, undefined, true, undefined, this)
     ]
   }, undefined, true, undefined, this);
 }
 
 // src/slides/Slide06Producto.tsx
-var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
 var icons = {
-  busqueda: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("svg", {
+  busqueda: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("svg", {
     width: "48",
     height: "48",
     viewBox: "0 0 24 24",
@@ -18101,12 +18525,12 @@ var icons = {
     strokeLinecap: "round",
     strokeLinejoin: "round",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("circle", {
+      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("circle", {
         cx: "11",
         cy: "11",
         r: "8"
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("line", {
+      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("line", {
         x1: "21",
         y1: "21",
         x2: "16.65",
@@ -18114,7 +18538,7 @@ var icons = {
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this),
-  reserva: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("svg", {
+  reserva: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("svg", {
     width: "48",
     height: "48",
     viewBox: "0 0 24 24",
@@ -18124,7 +18548,7 @@ var icons = {
     strokeLinecap: "round",
     strokeLinejoin: "round",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("rect", {
+      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("rect", {
         x: "3",
         y: "4",
         width: "18",
@@ -18132,19 +18556,19 @@ var icons = {
         rx: "2",
         ry: "2"
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("line", {
+      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("line", {
         x1: "16",
         y1: "2",
         x2: "16",
         y2: "6"
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("line", {
+      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("line", {
         x1: "8",
         y1: "2",
         x2: "8",
         y2: "6"
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("line", {
+      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("line", {
         x1: "3",
         y1: "10",
         x2: "21",
@@ -18152,7 +18576,7 @@ var icons = {
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this),
-  checkin: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("svg", {
+  checkin: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("svg", {
     width: "48",
     height: "48",
     viewBox: "0 0 24 24",
@@ -18162,15 +18586,15 @@ var icons = {
     strokeLinecap: "round",
     strokeLinejoin: "round",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("path", {
+      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("path", {
         d: "M22 11.08V12a10 10 0 1 1-5.93-9.14"
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("polyline", {
+      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("polyline", {
         points: "22 4 12 14.01 9 11.01"
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this),
-  devolucion: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("svg", {
+  devolucion: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("svg", {
     width: "48",
     height: "48",
     viewBox: "0 0 24 24",
@@ -18180,10 +18604,10 @@ var icons = {
     strokeLinecap: "round",
     strokeLinejoin: "round",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("polyline", {
+      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("polyline", {
         points: "23 4 23 10 17 10"
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("path", {
+      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("path", {
         d: "M20.49 15a9 9 0 1 1-2.12-9.36L23 10"
       }, undefined, false, undefined, this)
     ]
@@ -18196,13 +18620,13 @@ function Slide06Producto() {
     { num: 3, name: "CHECK-IN", desc: "Validación de identidad y video-inspección con IA.", icon: icons.checkin },
     { num: 4, name: "DEVUELVE", desc: "Cierre de contrato instantáneo y liberación de garantía.", icon: icons.devolucion }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(SlideHeader, {
         title: "Producto (Flujo 100% Digital)",
         subtitle: "Una experiencia premium diseñada para la confianza y la velocidad."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
         style: {
           position: "relative",
           flex: 1,
@@ -18212,7 +18636,7 @@ function Slide06Producto() {
           gap: "24px"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
             style: {
               position: "absolute",
               top: "40%",
@@ -18225,7 +18649,7 @@ function Slide06Producto() {
               zIndex: 0
             }
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
             style: {
               position: "relative",
               zIndex: 1,
@@ -18233,7 +18657,7 @@ function Slide06Producto() {
               marginBottom: "20px"
             },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
                 style: {
                   position: "absolute",
                   top: "48px",
@@ -18244,7 +18668,7 @@ function Slide06Producto() {
                   zIndex: 0
                 }
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
                 style: {
                   display: "grid",
                   gridTemplateColumns: "repeat(4, 1fr)",
@@ -18252,7 +18676,7 @@ function Slide06Producto() {
                   position: "relative",
                   zIndex: 1
                 },
-                children: pasos.map((p) => /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+                children: pasos.map((p) => /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
                   style: {
                     display: "flex",
                     flexDirection: "column",
@@ -18260,7 +18684,7 @@ function Slide06Producto() {
                     textAlign: "center"
                   },
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
                       style: {
                         width: "96px",
                         height: "96px",
@@ -18277,7 +18701,7 @@ function Slide06Producto() {
                       },
                       children: [
                         p.icon,
-                        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+                        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
                           style: {
                             position: "absolute",
                             top: "-4px",
@@ -18298,7 +18722,7 @@ function Slide06Producto() {
                         }, undefined, false, undefined, this)
                       ]
                     }, undefined, true, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
                       style: {
                         marginTop: "24px",
                         fontSize: "24px",
@@ -18308,7 +18732,7 @@ function Slide06Producto() {
                       },
                       children: p.name
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
                       style: {
                         marginTop: "12px",
                         fontSize: "18px",
@@ -18323,7 +18747,7 @@ function Slide06Producto() {
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
             style: {
               display: "flex",
               justifyContent: "center",
@@ -18332,7 +18756,7 @@ function Slide06Producto() {
               position: "relative",
               minHeight: "200px"
             },
-            children: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+            children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
               style: {
                 position: "relative",
                 display: "grid",
@@ -18342,7 +18766,7 @@ function Slide06Producto() {
                 width: "100%"
               },
               children: [
-                /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
                   style: {
                     position: "absolute",
                     bottom: "20px",
@@ -18356,10 +18780,10 @@ function Slide06Producto() {
                   }
                 }, undefined, false, undefined, this),
                 [
-                  { src: "/assets/product-experience/booking_discovery.png", alt: "Búsqueda y Discovery", label: "ENCUENTRA" },
-                  { src: "/assets/product-experience/fintech_billetera_virtual.png", alt: "Billetera Virtual", label: "RESERVA" },
-                  { src: "/assets/product-experience/trust_video_check.png", alt: "Video Check", label: "CHECK-IN" }
-                ].map((mockup, idx) => /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+                  { src: "/assets/product-experience/booking_discovery.png", alt: "Mapa de Autos", label: "ENCUENTRA" },
+                  { src: "/assets/product-experience/fintech_billetera_virtual.png", alt: "Billetera Virtual", label: "WALLET" },
+                  { src: "/assets/product-experience/trust_video_check.png", alt: "Video Check con IA", label: "CHECK-IN" }
+                ].map((mockup, idx) => /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
                   style: {
                     position: "relative",
                     display: "flex",
@@ -18369,7 +18793,7 @@ function Slide06Producto() {
                     zIndex: 1
                   },
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
                       style: {
                         width: "180px",
                         height: "320px",
@@ -18380,7 +18804,7 @@ function Slide06Producto() {
                         boxShadow: "0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)",
                         position: "relative"
                       },
-                      children: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("img", {
+                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("img", {
                         src: mockup.src,
                         style: {
                           width: "100%",
@@ -18399,7 +18823,7 @@ function Slide06Producto() {
                         }
                       }, undefined, false, undefined, this)
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
                       style: {
                         fontSize: "14px",
                         fontWeight: "600",
@@ -18414,7 +18838,7 @@ function Slide06Producto() {
               ]
             }, undefined, true, undefined, this)
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
             style: {
               display: "flex",
               justifyContent: "center",
@@ -18423,10 +18847,74 @@ function Slide06Producto() {
               marginBottom: "20px"
             },
             children: [
-              { icon: "\uD83D\uDCF1", text: "100% Mobile" },
-              { icon: "\uD83D\uDCC4", text: "Zero Paperwork" },
-              { icon: "⚡", text: "Instant Access" }
-            ].map((item, idx) => /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+              {
+                icon: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("svg", {
+                  width: "24",
+                  height: "24",
+                  viewBox: "0 0 24 24",
+                  fill: "none",
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("rect", {
+                      x: "6",
+                      y: "2",
+                      width: "12",
+                      height: "20",
+                      rx: "2",
+                      stroke: "#00D084",
+                      strokeWidth: "2"
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("line", {
+                      x1: "10",
+                      y1: "18",
+                      x2: "14",
+                      y2: "18",
+                      stroke: "#00D084",
+                      strokeWidth: "2",
+                      strokeLinecap: "round"
+                    }, undefined, false, undefined, this)
+                  ]
+                }, undefined, true, undefined, this),
+                text: "100% Mobile"
+              },
+              {
+                icon: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("svg", {
+                  width: "24",
+                  height: "24",
+                  viewBox: "0 0 24 24",
+                  fill: "none",
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("path", {
+                      d: "M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z",
+                      stroke: "#00D084",
+                      strokeWidth: "2",
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round"
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("polyline", {
+                      points: "14,2 14,8 20,8",
+                      stroke: "#00D084",
+                      strokeWidth: "2",
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round"
+                    }, undefined, false, undefined, this)
+                  ]
+                }, undefined, true, undefined, this),
+                text: "Zero Paperwork"
+              },
+              {
+                icon: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("svg", {
+                  width: "24",
+                  height: "24",
+                  viewBox: "0 0 24 24",
+                  fill: "none",
+                  children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("path", {
+                    d: "M13 2L4 14H11L10 22L20 10H13L13 2Z",
+                    fill: "#E6FF00"
+                  }, undefined, false, undefined, this)
+                }, undefined, false, undefined, this),
+                text: "Instant Access"
+              }
+            ].map((item, idx) => /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
               style: {
                 display: "flex",
                 alignItems: "center",
@@ -18438,11 +18926,8 @@ function Slide06Producto() {
                 backdropFilter: "blur(10px)"
               },
               children: [
-                /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("span", {
-                  style: { fontSize: "24px" },
-                  children: item.icon
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("span", {
+                item.icon,
+                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
                   style: {
                     fontSize: "18px",
                     fontWeight: "600",
@@ -18461,7 +18946,7 @@ function Slide06Producto() {
 }
 
 // src/slides/Slide07Mercado.tsx
-var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide07Mercado() {
   const focos = [
     "USD $84B en activos depreciándose diariamente por falta de uso.",
@@ -18469,19 +18954,19 @@ function Slide07Mercado() {
     "LATAM car-sharing crece 22.7% CAGR 2024-2030.",
     "Viento de cola macro: clase media busca ingresos extra en 2026."
   ];
-  return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(SlideHeader, {
         title: "Mercado (TAM / SAM / SOM)",
         subtitle: "Oportunidad real en Argentina con expansión LATAM."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
         style: { display: "flex", marginTop: "48px", height: "600px", gap: "80px", alignItems: "center" },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
             style: { position: "relative", width: "600px", height: "600px", flexShrink: 0 },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                 style: {
                   position: "absolute",
                   top: "0",
@@ -18498,17 +18983,17 @@ function Slide07Mercado() {
                   color: "var(--text-muted)"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                     style: { fontWeight: "700", fontSize: "24px" },
                     children: "TAM (ARG)"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                     style: { fontSize: "32px" },
                     children: "USD 989M"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                 style: {
                   position: "absolute",
                   top: "100px",
@@ -18525,17 +19010,17 @@ function Slide07Mercado() {
                   color: "var(--text-secondary)"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                     style: { fontWeight: "700", fontSize: "24px" },
                     children: "SAM (Car-sharing)"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                     style: { fontSize: "36px", color: "var(--text-primary)" },
                     children: "USD 12.4M"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                 style: {
                   position: "absolute",
                   top: "220px",
@@ -18552,11 +19037,11 @@ function Slide07Mercado() {
                   color: "var(--bg-primary)"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                     style: { fontWeight: "700", fontSize: "18px" },
                     children: "SOM (3 Años)"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                     style: { fontSize: "42px", fontWeight: "800" },
                     children: "$1.1M"
                   }, undefined, false, undefined, this)
@@ -18564,26 +19049,26 @@ function Slide07Mercado() {
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
             style: { flex: 1, display: "flex", flexDirection: "column", gap: "32px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(Card, {
+              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(Card, {
                 style: { padding: "40px" },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                     className: "section-header",
                     children: "POR QUÉ AHORA"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("ul", {
+                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("ul", {
                     className: "list",
-                    children: focos.map((f, i) => /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
+                    children: focos.map((f, i) => /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("li", {
                       style: { fontSize: "24px", marginBottom: "16px" },
                       children: f
                     }, i, false, undefined, this))
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                 style: {
                   background: "var(--bg-secondary)",
                   padding: "24px",
@@ -18591,11 +19076,11 @@ function Slide07Mercado() {
                   borderLeft: "4px solid var(--accent-green)"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                     style: { fontSize: "14px", color: "var(--text-muted)", marginBottom: "8px", textTransform: "uppercase" },
                     children: "Validación de Mercado"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
                     style: { fontSize: "20px", color: "var(--text-primary)" },
                     children: '"Cada día que un auto está estacionado, pierde ~$15 USD en depreciación. Eso son $5,500/año por vehículo."'
                   }, undefined, false, undefined, this)
@@ -18605,7 +19090,7 @@ function Slide07Mercado() {
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
         style: {
           position: "absolute",
           bottom: "40px",
@@ -18621,49 +19106,49 @@ function Slide07Mercado() {
 }
 
 // src/slides/Slide08FailureModes.tsx
-var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide08ModosDeRiesgo() {
   const comparisons = [
     {
-      fallo: { title: "1. Access Restriccion (Acceso)", desc: "Dependencia de tarjetas de credito con cupo alto. Limito el TAM real a solo la poblacion bancarizada." },
-      solution: { title: "1. Inclusion Financiera", desc: "Billetera Virtual propia + FGO (Fondo de Garantia Operativa). Desbloquea demanda masiva sin riesgo crediticio." }
+      fallo: { title: "1. Access Restriccion (Acceso)", desc: "Dependencia de tarjetas de credito con cupo alto. Limito el TAM real a solo la población bancarizada." },
+      solution: { title: "1. Inclusion Financiera", desc: "Billetera Virtual propia + FGO (Fondo de Garantía Operativa). Desbloquea demanda masiva sin riesgo crediticio." }
     },
     {
       fallo: { title: "2. Autonomia Restriccion (Caja)", desc: "Modelo de alto tasa de quema esperando liquidez organica. Cierres por falta de capital antes de lograr densidad." },
       solution: { title: "2. Rentabilidad Unitaria", desc: "Modelo diseñado para MC positivo desde reserva #1. Crecimiento organico eficiente y escalable." }
     },
     {
-      fallo: { title: "3. Ops Restriccion (Operacion)", desc: "Verificacion manual y disputas subjetivas. Unit Economia negativos por costo de soporte humano." },
+      fallo: { title: "3. Ops Restriccion (Operacion)", desc: "Verificación manual y disputas subjetivas. Unit Economia negativos por costo de soporte humano." },
       solution: { title: "3. Sistema de Confianza Automatizado", desc: "Biometria + Evidencia Video + IA. Soporte y riesgo automatizado (Costo marginal ~0)." }
     }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(SlideHeader, {
         title: "Modos de Fallo del Mercado · Requisitos de Diseño",
         subtitle: "Aprendizaje de los pioneros en LatAm para asegurar escala."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
         className: "grid-2",
         style: { marginTop: "32px" },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
             className: "flex-col gap-16",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
                 className: "section-header",
                 style: { color: "var(--danger)" },
                 children: "MODOS DE FALLO (CASO BRASIL)"
               }, undefined, false, undefined, this),
-              comparisons.map((c, i) => /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+              comparisons.map((c, i) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
                 className: "flex-col gap-8",
                 style: { marginBottom: "24px" },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h4", {
+                  /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("h4", {
                     style: { fontSize: "24px", fontWeight: "600" },
                     children: c.fallo.title
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
                     style: { fontSize: "18px", color: "var(--text-secondary)" },
                     children: c.fallo.desc
                   }, undefined, false, undefined, this)
@@ -18671,22 +19156,22 @@ function Slide08ModosDeRiesgo() {
               }, i, true, undefined, this))
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
             className: "flex-col gap-16",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
                 className: "section-header",
                 children: "REQUISITOS DE DISEÑO AUTORENTA"
               }, undefined, false, undefined, this),
-              comparisons.map((c, i) => /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+              comparisons.map((c, i) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
                 className: "flex-col gap-8",
                 style: { marginBottom: "24px" },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h4", {
+                  /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("h4", {
                     style: { fontSize: "24px", fontWeight: "600" },
                     children: c.solution.title
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
                     style: { fontSize: "18px", color: "var(--text-secondary)" },
                     children: c.solution.desc
                   }, undefined, false, undefined, this)
@@ -18701,15 +19186,15 @@ function Slide08ModosDeRiesgo() {
 }
 
 // src/slides/Slide09Economics.tsx
-var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide09Economia() {
-  return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(SlideHeader, {
         title: "Unit Economics",
         subtitle: "Modelo rentable desde la primera transacción."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
         style: {
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
@@ -18717,9 +19202,9 @@ function Slide09Economia() {
           marginTop: "40px"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("p", {
                 style: {
                   fontSize: "14px",
                   color: "var(--text-muted)",
@@ -18729,14 +19214,14 @@ function Slide09Economia() {
                 },
                 children: "Desglose por Transacción"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
                 style: { display: "flex", flexDirection: "column", gap: "12px" },
                 children: [
                   { label: "Ticket Promedio (AOV)", value: "$120", bar: 100, color: "var(--text-primary)", plus: true },
                   { label: "Take Rate (15%)", value: "$18", bar: 60, color: "var(--accent-green)", plus: true },
                   { label: "FGO Pool (10%)", value: "$12", bar: 40, color: "#4DD0E1", plus: false },
                   { label: "PSP + Soporte", value: "-$7.20", bar: 25, color: "var(--danger)", plus: false }
-                ].map((item, i) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+                ].map((item, i) => /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
                   style: {
                     display: "grid",
                     gridTemplateColumns: "180px 80px 1fr",
@@ -18744,11 +19229,11 @@ function Slide09Economia() {
                     gap: "16px"
                   },
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
+                    /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("span", {
                       style: { fontSize: "14px", color: "var(--text-secondary)" },
                       children: item.label
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
+                    /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("span", {
                       style: {
                         fontSize: "20px",
                         fontWeight: "700",
@@ -18757,7 +19242,7 @@ function Slide09Economia() {
                       },
                       children: item.value
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
                       style: {
                         height: "32px",
                         width: `${item.bar}%`,
@@ -18769,7 +19254,7 @@ function Slide09Economia() {
                   ]
                 }, i, true, undefined, this))
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
                 style: {
                   marginTop: "24px",
                   padding: "20px",
@@ -18780,17 +19265,17 @@ function Slide09Economia() {
                   alignItems: "center"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("span", {
                     style: { fontSize: "18px", fontWeight: "600", color: "var(--bg-primary)" },
                     children: "MARGEN NETO"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("span", {
                     style: { fontSize: "32px", fontWeight: "800", color: "var(--bg-primary)" },
                     children: "$10.80"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("p", {
                 style: {
                   marginTop: "12px",
                   fontSize: "14px",
@@ -18801,10 +19286,10 @@ function Slide09Economia() {
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
             style: { display: "flex", flexDirection: "column", gap: "20px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("p", {
                 style: {
                   fontSize: "14px",
                   color: "var(--text-muted)",
@@ -18819,7 +19304,7 @@ function Slide09Economia() {
                 { label: "CAC Objetivo", value: "<$15", desc: "WiFi hack reduce a <$0.50" },
                 { label: "LTV:CAC Ratio", value: "21x", desc: "Benchmark SaaS: 3x mínimo", highlight: true },
                 { label: "Payback", value: "<30 días", desc: "Recuperación inmediata" }
-              ].map((m, i) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+              ].map((m, i) => /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
                 style: {
                   background: m.highlight ? "rgba(0,208,132,0.15)" : "var(--bg-card)",
                   border: m.highlight ? "2px solid var(--accent-green)" : "1px solid var(--border-subtle)",
@@ -18830,19 +19315,19 @@ function Slide09Economia() {
                   alignItems: "center"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
+                      /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("p", {
                         style: { fontSize: "14px", color: "var(--text-muted)" },
                         children: m.label
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
+                      /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("p", {
                         style: { fontSize: "12px", color: "var(--text-secondary)", marginTop: "4px" },
                         children: m.desc
                       }, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("span", {
                     style: {
                       fontSize: "28px",
                       fontWeight: "800",
@@ -18861,12 +19346,12 @@ function Slide09Economia() {
 }
 
 // src/slides/Slide10RiskPolicy.tsx
-var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide10ProteccionRiesgo() {
   const policies = [
     {
       num: 1,
-      title: "FGO (Fondo Garantia Operativa)",
+      title: "FGO (Fondo Garantía Operativa)",
       items: [
         "Cubre: Daños menores (< USD 500), franquicias de seguro y lucro cesante.",
         "Financiado por: 10% de cada reserva + Aportes de Propietarios (Pool)."
@@ -18874,9 +19359,9 @@ function Slide10ProteccionRiesgo() {
     },
     {
       num: 2,
-      title: "Robo Total & Destruccion",
+      title: "Robo Total & Destrucción",
       items: [
-        "Cubre: Poliza de Seguro Madre (Partner) o Poliza del Propietario (endosada).",
+        "Cubre: Póliza de Seguro Madre (Partner) o Póliza del Propietario (endosada).",
         "El FGO cubre el deducible para que el propietario no pague nada."
       ]
     },
@@ -18885,23 +19370,23 @@ function Slide10ProteccionRiesgo() {
       title: "Evidencia Vinculante (Video Registro de Entrada)",
       items: [
         "Regla: Sin video de registro de salida validado, el arrendatario asume responsabilidad total.",
-        "La evidencia en Blockchain/Server actua como arbitro final."
+        "La evidencia en Blockchain/Server actúa como árbitro final."
       ]
     }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(SlideHeader, {
         title: "Política de Riesgo y Cobertura (Sistema de Confianza)",
-        subtitle: "Reglas claras: que cubre el FGO y como gestionamos excepciones."
+        subtitle: "Reglas claras: qué cubre el FGO y cómo gestionamos excepciones."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
         className: "flex-col gap-48",
         style: { marginTop: "48px" },
-        children: policies.map((p) => /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
+        children: policies.map((p) => /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
           className: "flex-col gap-12",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("h3", {
+            /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("h3", {
               style: { fontSize: "32px", fontWeight: "600", color: "var(--accent-green)" },
               children: [
                 p.num,
@@ -18909,14 +19394,14 @@ function Slide10ProteccionRiesgo() {
                 p.title
               ]
             }, undefined, true, undefined, this),
-            p.items.map((item, i) => /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("p", {
+            p.items.map((item, i) => /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("p", {
               style: { fontSize: "22px", color: "var(--text-secondary)", paddingLeft: "24px" },
               children: item
             }, i, false, undefined, this))
           ]
         }, p.num, true, undefined, this))
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
         style: {
           position: "absolute",
           bottom: "80px",
@@ -18925,9 +19410,9 @@ function Slide10ProteccionRiesgo() {
           borderTop: "2px solid var(--accent-green)",
           paddingTop: "24px"
         },
-        children: /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("p", {
+        children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("p", {
           style: { fontSize: "18px", color: "var(--accent-green)" },
-          children: "INCIDENTE → EVIDENCIA AI → FGO PAGA (INSTANTANEO) → RECOBRO AL ARRENDATARIO (DIFERIDO)"
+          children: "INCIDENTE → EVIDENCIA AI → FGO PAGA (INSTANTÁNEO) → RECOBRO AL ARRENDATARIO (DIFERIDO)"
         }, undefined, false, undefined, this)
       }, undefined, false, undefined, this)
     ]
@@ -18935,7 +19420,7 @@ function Slide10ProteccionRiesgo() {
 }
 
 // src/slides/Slide11ProductUI.tsx
-var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide11ProductUI() {
   const flows = [
     {
@@ -18963,24 +19448,24 @@ function Slide11ProductUI() {
       reduce: ["Fraude Identidad", "Disputas Daños"]
     }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(SlideHeader, {
         title: "Product Experience (Concept UI)",
         subtitle: "UX diseñada para reducción de fricción y riesgo."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
         className: "grid-3",
         style: {
           marginTop: "32px",
           gap: "32px",
           alignItems: "start"
         },
-        children: flows.map((f, i) => /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+        children: flows.map((f, i) => /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
           className: "flex-col gap-16",
           style: { height: "100%" },
           children: [
-            /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
               className: "section-header",
               style: {
                 fontSize: "20px",
@@ -18991,14 +19476,14 @@ function Slide11ProductUI() {
               },
               children: f.title
             }, undefined, false, undefined, this),
-            f.screens.map((screen, j) => /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(Card, {
+            f.screens.map((screen, j) => /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(Card, {
               style: {
                 padding: "0",
                 overflow: "hidden",
                 boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
                 border: "1px solid rgba(255,255,255,0.1)"
               },
-              children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+              children: /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
                 style: {
                   height: "300px",
                   display: "flex",
@@ -19011,7 +19496,7 @@ function Slide11ProductUI() {
                   background: "#0a0a0a"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("img", {
+                  /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("img", {
                     src: screen.img,
                     alt: screen.name,
                     onError: (e) => {
@@ -19028,12 +19513,12 @@ function Slide11ProductUI() {
                       display: "block"
                     }
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
                     "data-fallback": "true",
                     style: { display: "none", color: "#666" },
                     children: screen.name
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
                     style: {
                       position: "absolute",
                       bottom: 0,
@@ -19052,9 +19537,9 @@ function Slide11ProductUI() {
                 ]
               }, undefined, true, undefined, this)
             }, j, false, undefined, this)),
-            /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
               style: { display: "flex", flexDirection: "column", gap: "8px" },
-              children: f.reduce.map((r, j) => /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+              children: f.reduce.map((r, j) => /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
                 style: {
                   fontSize: "16px",
                   fontWeight: "600",
@@ -19079,7 +19564,7 @@ function Slide11ProductUI() {
 }
 
 // src/slides/Slide12Tecnologia.tsx
-var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide12Tecnologia() {
   const stack = [
     { name: "Frontend", tech: "Angular 18 + Ionic", icon: "\uD83D\uDCF1" },
@@ -19091,35 +19576,39 @@ function Slide12Tecnologia() {
     { label: "Uptime", value: "99.9%", color: "var(--accent-green)" },
     { label: "Edge Functions", value: "45+", color: "var(--text-primary)" }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(SlideHeader, {
         title: "Tecnología & Validación",
         subtitle: "Infraestructura robusta con validación de identidad en tiempo real."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
         style: {
           display: "grid",
-          gridTemplateColumns: "minmax(300px, 1fr) 1.5fr",
-          gap: "48px",
+          gridTemplateColumns: "minmax(0, 360px) minmax(0, 1fr)",
+          gap: "40px",
           marginTop: "32px",
-          height: "100%"
+          height: "100%",
+          maxWidth: "1600px",
+          margin: "32px auto 0"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
             style: {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               background: "var(--bg-card)",
               borderRadius: "16px",
               padding: "16px",
               border: "1px solid var(--border-subtle)",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.2)"
+              boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+              maxHeight: "520px",
+              overflow: "hidden"
             },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
                 style: {
                   fontSize: "14px",
                   color: "var(--accent-green)",
@@ -19128,25 +19617,28 @@ function Slide12Tecnologia() {
                   textTransform: "uppercase",
                   letterSpacing: "1px",
                   width: "100%",
-                  textAlign: "center"
+                  textAlign: "center",
+                  flexShrink: 0
                 },
                 children: "Verificación Completada"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
                 style: {
                   width: "100%",
-                  height: "100%",
+                  flex: 1,
+                  minHeight: 0,
                   overflow: "hidden",
                   borderRadius: "8px",
                   background: "#fff"
                 },
-                children: /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("img", {
+                children: /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("img", {
                   src: "/assets/verification_completed.png",
                   alt: "Verificación Completada",
                   style: {
                     width: "100%",
                     height: "100%",
-                    objectFit: "cover",
+                    objectFit: "contain",
+                    objectPosition: "top center",
                     borderRadius: "4px"
                   },
                   onError: (e) => {
@@ -19156,7 +19648,12 @@ function Slide12Tecnologia() {
                       fallback.innerHTML = `
                     <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #00D084 0%, #00A86B 100%); border-radius: 4px; color: white; text-align: center; padding: 20px;">
                       <div>
-                        <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+                        <div style="margin-bottom: 16px;">
+                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+                            <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
                         <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Verificación Exitosa</div>
                         <div style="font-size: 14px; opacity: 0.8;">Proceso completado</div>
                       </div>
@@ -19168,12 +19665,12 @@ function Slide12Tecnologia() {
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
             style: { display: "flex", flexDirection: "column", gap: "24px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
                     style: {
                       fontSize: "14px",
                       color: "var(--text-muted)",
@@ -19183,13 +19680,13 @@ function Slide12Tecnologia() {
                     },
                     children: "Core Stack"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
                     style: {
                       display: "grid",
                       gridTemplateColumns: "1fr 1fr",
                       gap: "16px"
                     },
-                    children: stack.map((s, i) => /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+                    children: stack.map((s, i) => /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
                       style: {
                         background: "var(--bg-card)",
                         border: "1px solid var(--border-subtle)",
@@ -19200,17 +19697,17 @@ function Slide12Tecnologia() {
                         gap: "12px"
                       },
                       children: [
-                        /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("span", {
+                        /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("span", {
                           style: { fontSize: "24px" },
                           children: s.icon
                         }, undefined, false, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+                        /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
                           children: [
-                            /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("p", {
+                            /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
                               style: { fontSize: "11px", color: "var(--text-muted)" },
                               children: s.name
                             }, undefined, false, undefined, this),
-                            /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("p", {
+                            /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
                               style: { fontSize: "14px", fontWeight: "600", color: "var(--text-primary)" },
                               children: s.tech
                             }, undefined, false, undefined, this)
@@ -19221,13 +19718,13 @@ function Slide12Tecnologia() {
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
                 style: {
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr",
                   gap: "16px"
                 },
-                children: metricas.map((m, i) => /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+                children: metricas.map((m, i) => /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
                   style: {
                     background: "rgba(255, 255, 255, 0.05)",
                     borderRadius: "12px",
@@ -19235,18 +19732,18 @@ function Slide12Tecnologia() {
                     textAlign: "center"
                   },
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("p", {
+                    /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
                       style: { fontSize: "28px", fontWeight: "700", color: m.color },
                       children: m.value
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("p", {
+                    /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
                       style: { fontSize: "12px", color: "var(--text-muted)" },
                       children: m.label
                     }, undefined, false, undefined, this)
                   ]
                 }, i, true, undefined, this))
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
                 style: {
                   background: "rgba(0, 208, 132, 0.1)",
                   border: "1px solid var(--accent-green)",
@@ -19255,11 +19752,11 @@ function Slide12Tecnologia() {
                   marginTop: "auto"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("p", {
                     style: { fontSize: "14px", color: "var(--accent-green)", marginBottom: "12px", fontWeight: "600" },
                     children: "✓ VENTAJAS TÉCNICAS"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("ul", {
+                  /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("ul", {
                     style: {
                       fontSize: "14px",
                       color: "var(--text-secondary)",
@@ -19268,16 +19765,16 @@ function Slide12Tecnologia() {
                       margin: 0
                     },
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("li", {
+                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("li", {
                         children: "Row Level Security (RLS) nativo en DB"
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("li", {
+                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("li", {
                         children: "Edge Functions serverless (Deno/Node)"
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("li", {
+                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("li", {
                         children: "Código unificado Web/Mobile (Monorepo)"
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("li", {
+                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("li", {
                         children: "CI/CD automático Deployment"
                       }, undefined, false, undefined, this)
                     ]
@@ -19293,15 +19790,15 @@ function Slide12Tecnologia() {
 }
 
 // src/slides/Slide13Evidencia.tsx
-var import_react = __toESM(require_react(), 1);
-var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
+var import_react2 = __toESM(require_react(), 1);
+var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide13Evidencia() {
   const flows = [
     {
       title: "Flujo de Reserva",
       screens: [
-        { name: "Mapa / Seleccion", img: "/assets/1_cars_list.jpg" },
-        { name: "Confirmacion", img: "/assets/3_car_detail.jpg" }
+        { name: "Mapa / Selección", img: "/assets/1_cars_list.jpg" },
+        { name: "Confirmación", img: "/assets/3_car_detail.jpg" }
       ]
     },
     {
@@ -19314,18 +19811,17 @@ function Slide13Evidencia() {
     {
       title: "Sistema Confianza",
       screens: [
-        { name: "Validacion ID", img: "/assets/validacion_id.png" },
-        { name: "Registro Evidencia", img: "/assets/06_evidence_entry.png" }
+        { name: "Validación ID", img: "/assets/validacion_id.png" }
       ]
     }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(SlideHeader, {
         title: "Evidencia de Producto (En Vivo)",
         subtitle: "Infraestructura operativa y flujos validados hoy."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
         style: {
           display: "grid",
           gridTemplateColumns: "1fr 1fr 1fr",
@@ -19333,47 +19829,51 @@ function Slide13Evidencia() {
           marginTop: "20px",
           padding: "0 20px"
         },
-        children: flows.map((f, i) => /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+        children: flows.map((f, i) => /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
           className: "flex-col",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
               className: "section-header",
               style: { marginBottom: "24px" },
               children: f.title
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
               style: {
                 display: "flex",
                 alignItems: "stretch",
                 justifyContent: "center",
-                gap: "8px"
+                gap: "16px"
               },
-              children: f.screens.map((screen, j) => /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(import_react.default.Fragment, {
+              children: f.screens.map((screen, j) => /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(import_react2.default.Fragment, {
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
                     className: "flex-col align-center",
                     style: { flex: 1 },
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
                         className: "device-frame",
                         style: {
                           background: "#1A1A1A",
                           borderRadius: "16px",
                           overflow: "hidden",
                           border: "4px solid #333",
-                          boxShadow: "0 10px 20px rgba(0,0,0,0.3)"
+                          boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
+                          width: "100%",
+                          maxWidth: "180px",
+                          height: "380px"
                         },
-                        children: screen.img ? /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("img", {
+                        children: screen.img ? /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("img", {
                           src: screen.img,
                           className: "device-screen",
                           alt: screen.name,
                           style: {
                             width: "100%",
                             height: "100%",
-                            objectFit: "contain",
+                            objectFit: "cover",
+                            objectPosition: "top center",
                             background: "#0a0a0a"
                           }
-                        }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+                        }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
                           style: { padding: "20px", textAlign: "center", fontSize: "12px" },
                           children: [
                             "Missing: ",
@@ -19381,7 +19881,7 @@ function Slide13Evidencia() {
                           ]
                         }, undefined, true, undefined, this)
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
                         className: "screen-label-v2",
                         style: {
                           fontSize: "14px",
@@ -19393,7 +19893,7 @@ function Slide13Evidencia() {
                       }, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this),
-                  j === 0 && /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
+                  j === 0 && /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
                     className: "flow-connector",
                     style: {
                       alignSelf: "center",
@@ -19414,7 +19914,7 @@ function Slide13Evidencia() {
 }
 
 // src/slides/Slide14GTM.tsx
-var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide14EstrategiaMercado() {
   const funnel = [
     { stage: "AWARENESS", value: "100K+", desc: "WiFi Fronterizo → Registro vehicular", color: "var(--text-muted)", width: "100%" },
@@ -19422,13 +19922,13 @@ function Slide14EstrategiaMercado() {
     { stage: "ACTIVATION", value: "5K", desc: "Primera publicación de vehículo", color: "var(--text-primary)", width: "60%" },
     { stage: "REVENUE", value: "1.5K", desc: "Primera reserva completada", color: "var(--accent-green)", width: "40%" }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(SlideHeader, {
         title: "Go-To-Market",
         subtitle: "Estrategia de adquisición de bajo costo."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
         style: {
           display: "grid",
           gridTemplateColumns: "1.2fr 1fr",
@@ -19437,9 +19937,9 @@ function Slide14EstrategiaMercado() {
           alignItems: "center"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("p", {
                 style: {
                   fontSize: "14px",
                   color: "var(--text-muted)",
@@ -19449,15 +19949,15 @@ function Slide14EstrategiaMercado() {
                 },
                 children: "Funnel de Conversión (Proyección Q1-Q2)"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
                 style: { display: "flex", flexDirection: "column", gap: "12px" },
-                children: funnel.map((f, i) => /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+                children: funnel.map((f, i) => /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
                   style: {
                     display: "flex",
                     alignItems: "center",
                     gap: "16px"
                   },
-                  children: /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+                  children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
                     style: {
                       background: `linear-gradient(90deg, ${f.color} 0%, rgba(0,208,132,0.3) 100%)`,
                       height: "56px",
@@ -19469,11 +19969,11 @@ function Slide14EstrategiaMercado() {
                       justifyContent: "space-between"
                     },
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("span", {
+                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
                         style: { fontSize: "14px", fontWeight: "600", color: "var(--bg-primary)" },
                         children: f.stage
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("span", {
+                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
                         style: { fontSize: "24px", fontWeight: "800", color: "var(--bg-primary)" },
                         children: f.value
                       }, undefined, false, undefined, this)
@@ -19481,7 +19981,7 @@ function Slide14EstrategiaMercado() {
                   }, undefined, true, undefined, this)
                 }, i, false, undefined, this))
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("p", {
                 style: {
                   fontSize: "14px",
                   color: "var(--text-muted)",
@@ -19491,10 +19991,10 @@ function Slide14EstrategiaMercado() {
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
             style: { display: "flex", flexDirection: "column", gap: "20px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
                 style: {
                   background: "var(--bg-card)",
                   border: "2px solid var(--accent-green)",
@@ -19502,15 +20002,36 @@ function Slide14EstrategiaMercado() {
                   padding: "24px"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("p", {
-                    style: { fontSize: "14px", color: "var(--accent-green)", marginBottom: "12px", fontWeight: "600" },
-                    children: "\uD83D\uDE80 CANAL PRINCIPAL: WiFi Fronterizo"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--accent-green)", marginBottom: "12px", fontWeight: "600", display: "flex", alignItems: "center", gap: "8px" },
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("svg", {
+                        width: "16",
+                        height: "16",
+                        viewBox: "0 0 24 24",
+                        fill: "none",
+                        children: [
+                          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("path", {
+                            d: "M12 2L4 22H12L20 2H12Z",
+                            stroke: "#00D084",
+                            strokeWidth: "2",
+                            strokeLinejoin: "round"
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("path", {
+                            d: "M12 22V14",
+                            stroke: "#00D084",
+                            strokeWidth: "2"
+                          }, undefined, false, undefined, this)
+                        ]
+                      }, undefined, true, undefined, this),
+                      "CANAL PRINCIPAL: WiFi Fronterizo"
+                    ]
+                  }, undefined, true, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("p", {
                     style: { fontSize: "18px", color: "var(--text-primary)", marginBottom: "8px" },
                     children: [
                       "CAC proyectado: ",
-                      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("strong", {
+                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("strong", {
                         style: { color: "var(--accent-green)" },
                         children: [
                           "<",
@@ -19519,13 +20040,13 @@ function Slide14EstrategiaMercado() {
                       }, undefined, true, undefined, this)
                     ]
                   }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("p", {
                     style: { fontSize: "14px", color: "var(--text-secondary)" },
                     children: "vs $15+ en Facebook/Google Ads"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
                 style: {
                   background: "var(--bg-card)",
                   border: "1px solid var(--border-subtle)",
@@ -19533,11 +20054,11 @@ function Slide14EstrategiaMercado() {
                   padding: "24px"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("p", {
                     style: { fontSize: "14px", color: "var(--text-muted)", marginBottom: "12px" },
                     children: "CANALES SECUNDARIOS"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("ul", {
+                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("ul", {
                     style: {
                       fontSize: "15px",
                       color: "var(--text-secondary)",
@@ -19546,23 +20067,23 @@ function Slide14EstrategiaMercado() {
                       margin: 0
                     },
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("li", {
+                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("li", {
                         children: "5,000+ Waitlist (EcuCondor)"
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("li", {
+                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("li", {
                         children: "Alianzas flotas locales"
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("li", {
+                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("li", {
                         children: "Referidos (bonus en billetera)"
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("li", {
+                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("li", {
                         children: "SEO orgánico"
                       }, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
                 style: {
                   background: "var(--bg-secondary)",
                   borderRadius: "12px",
@@ -19570,11 +20091,11 @@ function Slide14EstrategiaMercado() {
                   textAlign: "center"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("p", {
                     style: { fontSize: "14px", color: "var(--text-muted)" },
                     children: "Foco geográfico inicial"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("p", {
                     style: { fontSize: "24px", fontWeight: "700", color: "var(--text-primary)" },
                     children: "\uD83C\uDDE6\uD83C\uDDF7 CABA + GBA"
                   }, undefined, false, undefined, this)
@@ -19589,34 +20110,34 @@ function Slide14EstrategiaMercado() {
 }
 
 // src/slides/Slide15Validation.tsx
-var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide15Validacion() {
   const metrics = [
-    { label: "Demand Pressure (Waitlist)", value: "300+", desc: "Usuarios organicos solicitando acceso (Organic Pull)." },
-    { label: "Filter Efficiency (KYC)", value: "45%", desc: "Tasa de usuarios que superan el 'Barrera Biométrica' biometrico.", yellow: true },
+    { label: "Demand Pressure (Waitlist)", value: "300+", desc: "Usuarios orgánicos solicitando acceso (Organic Pull)." },
+    { label: "Filter Efficiency (KYC)", value: "45%", desc: "Tasa de usuarios que superan el 'Barrera Biométrica' biométrico.", yellow: true },
     { label: "Tasa de Rechazo por Riesgo", value: "55%", desc: "Usuarios bloqueados preventivamente (Fraude evitado).", danger: true },
     { label: "Latencia de Transaccion", value: "< 150ms", desc: "Tiempo de respuesta del Libro Contable en pruebas de carga." }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(SlideHeader, {
         title: "Validación del Sistema (Datos Alpha)",
         subtitle: "Pruebas de estres del 'Sistema de Confianza' en entorno real."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
         className: "flex-col gap-32",
         style: { marginTop: "48px" },
-        children: metrics.map((m, i) => /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+        children: metrics.map((m, i) => /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
           className: "grid-2",
           style: { alignItems: "center" },
           children: [
-            /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(Card, {
+            /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(Card, {
               children: [
-                /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
+                /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
                   style: { fontSize: "14px", color: "var(--text-muted)", display: "block", marginBottom: "8px" },
                   children: m.label
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
+                /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
                   style: {
                     fontSize: "56px",
                     fontWeight: "700",
@@ -19626,22 +20147,22 @@ function Slide15Validacion() {
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("p", {
+            /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
               style: { fontSize: "22px", color: "var(--text-secondary)" },
               children: m.desc
             }, undefined, false, undefined, this)
           ]
         }, i, true, undefined, this))
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
         style: { marginTop: "32px" },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
             className: "section-header",
             style: { color: "var(--accent-yellow)" },
             children: "INFRAESTRUCTURA LISTA (LOIS)"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
             style: { fontSize: "20px", color: "var(--text-secondary)" },
             children: "· Integracion KYC/Biometria: COMPLETADA."
           }, undefined, false, undefined, this)
@@ -19652,7 +20173,7 @@ function Slide15Validacion() {
 }
 
 // src/slides/Slide16Estrategia.tsx
-var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide16Estrategia() {
   const canales = [
     "5,000+ Contactos Directos (Waitlist).",
@@ -19661,44 +20182,44 @@ function Slide16Estrategia() {
     "Canal EcuCondor (Audiencia validada)."
   ];
   const ejecucion = [
-    "Foco Geografico: Argentina (CABA/GBA).",
-    "Estrategia: 'Land & Expand' via comunidades.",
-    "Costo de Adquisicion (Costo Adquisicion): < USD 15.",
-    "Validacion de demanda: 100% Organica."
+    "Foco Geográfico: Argentina (CABA/GBA).",
+    "Estrategia: 'Land & Expand' vía comunidades.",
+    "Costo de Adquisición (CAC): < USD 15.",
+    "Validación de demanda: 100% Orgánica."
   ];
-  return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(SlideHeader, {
         title: "Estrategia de Mercado",
         subtitle: "Foco inicial: Argentina + Comunidades Digitales."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
         className: "grid-2",
         style: { marginTop: "64px" },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(Card, {
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(Card, {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
                 className: "section-header",
                 children: "CANALES ACTIVOS"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("ul", {
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("ul", {
                 className: "list",
-                children: canales.map((c, i) => /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("li", {
+                children: canales.map((c, i) => /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("li", {
                   children: c
                 }, i, false, undefined, this))
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(Card, {
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(Card, {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
                 className: "section-header",
-                children: "EJECUCION INICIAL"
+                children: "EJECUCIÓN INICIAL"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("ul", {
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("ul", {
                 className: "list",
-                children: ejecucion.map((e, i) => /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("li", {
+                children: ejecucion.map((e, i) => /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("li", {
                   children: e
                 }, i, false, undefined, this))
               }, undefined, false, undefined, this)
@@ -19706,20 +20227,20 @@ function Slide16Estrategia() {
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
         style: {
           position: "absolute",
           bottom: "80px",
           left: "80px"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("h3", {
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("h3", {
             style: { fontSize: "48px", fontWeight: "700", color: "var(--accent-yellow)" },
             children: "Argentina"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
             style: { fontSize: "16px", color: "var(--text-muted)", letterSpacing: "2px" },
-            children: "PAIS FOCO INICIAL"
+            children: "PAÍS FOCO INICIAL"
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this)
@@ -19728,69 +20249,69 @@ function Slide16Estrategia() {
 }
 
 // src/slides/Slide17Crecimiento.tsx
-var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide17Crecimiento() {
-  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(SlideHeader, {
-        title: "Estrategia de Crecimiento (Hipotesis)",
-        subtitle: "Experimento de adquisicion de bajo costo (Frontera)."
+      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(SlideHeader, {
+        title: "Estrategia de Crecimiento (Hipótesis)",
+        subtitle: "Experimento de adquisición de bajo costo (Frontera)."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
         className: "flex-col gap-48",
         style: { marginTop: "64px" },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
             className: "flex-col gap-12",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("h3", {
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("h3", {
                 style: { fontSize: "32px", fontWeight: "600" },
-                children: "Hipotesis"
+                children: "Hipótesis"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
                 style: { fontSize: "22px", color: "var(--text-secondary)" },
-                children: "Captar trafico de 'paso fronterizo' via WiFi gratis convierte a usuarios calificados (con auto y documentos) a bajo costo."
+                children: "Captar tráfico de 'paso fronterizo' vía WiFi gratis convierte a usuarios calificados (con auto y documentos) a bajo costo."
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
             className: "flex-col gap-12",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("h3", {
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("h3", {
                 style: { fontSize: "32px", fontWeight: "600" },
                 children: "Experimento"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
                 style: { fontSize: "22px", color: "var(--text-secondary)" },
-                children: "Instalacion de nodos WiFi en pasos clave (AR-BR, AR-UY)."
+                children: "Instalación de nodos WiFi en pasos clave (AR-BR, AR-UY)."
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
                 style: { fontSize: "22px", color: "var(--text-secondary)" },
                 children: "Registro obligatorio para acceso a internet."
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
             className: "flex-col gap-12",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("h3", {
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("h3", {
                 style: { fontSize: "32px", fontWeight: "600" },
-                children: "Metricas Esperadas (30 dias)"
+                children: "Métricas Esperadas (30 días)"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("ul", {
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("ul", {
                 className: "list",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("li", {
+                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("li", {
                     children: [
                       "Costo por Lead (CPL): ",
                       "<",
                       " USD 0.50"
                     ]
                   }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("li", {
-                    children: "Conversion a Registro: 15%"
+                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("li", {
+                    children: "Conversión a Registro: 15%"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("li", {
+                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("li", {
                     children: "Usuarios Verificados: 1,500+"
                   }, undefined, false, undefined, this)
                 ]
@@ -19804,9 +20325,9 @@ function Slide17Crecimiento() {
 }
 
 // src/slides/Slide18Vision.tsx
-var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide18Vision() {
-  return /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
     className: "slide slide--centered",
     style: {
       backgroundImage: `linear-gradient(to bottom, rgba(13,13,13,0.7), rgba(13,13,13,0.85)), url(/assets/vision-background.png)`,
@@ -19816,7 +20337,7 @@ function Slide18Vision() {
       padding: "80px"
     },
     children: [
-      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
         style: {
           position: "absolute",
           top: "50%",
@@ -19828,10 +20349,10 @@ function Slide18Vision() {
           pointerEvents: "none"
         }
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
         style: { textAlign: "center", position: "relative", zIndex: 1 },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
             style: {
               fontSize: "20px",
               color: "var(--accent-green)",
@@ -19842,7 +20363,7 @@ function Slide18Vision() {
             },
             children: "Nuestra Visión"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("h1", {
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("h1", {
             style: {
               fontSize: "72px",
               fontWeight: "700",
@@ -19852,14 +20373,14 @@ function Slide18Vision() {
             },
             children: [
               "Democratizar la Movilidad",
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("br", {}, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("br", {}, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
                 style: { color: "var(--accent-green)" },
                 children: "en Latinoamérica"
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
             style: {
               fontSize: "28px",
               color: "var(--text-secondary)",
@@ -19869,7 +20390,7 @@ function Slide18Vision() {
             },
             children: "Un futuro donde cualquier persona pueda acceder a un vehículo sin importar su historial crediticio."
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
             style: {
               display: "flex",
               justifyContent: "center",
@@ -19877,40 +20398,40 @@ function Slide18Vision() {
               marginTop: "48px"
             },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
                 style: { textAlign: "center" },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
                     style: { fontSize: "56px", fontWeight: "700", color: "var(--accent-green)" },
                     children: "8.4M"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
                     style: { fontSize: "16px", color: "var(--text-muted)" },
                     children: "Vehículos en Argentina"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
                 style: { textAlign: "center" },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
                     style: { fontSize: "56px", fontWeight: "700", color: "var(--accent-green)" },
                     children: "$84B"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
                     style: { fontSize: "16px", color: "var(--text-muted)" },
                     children: "En activos subutilizados"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
                 style: { textAlign: "center" },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
                     style: { fontSize: "56px", fontWeight: "700", color: "var(--accent-green)" },
                     children: "70%"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
                     style: { fontSize: "16px", color: "var(--text-muted)" },
                     children: "Mercado desatendido"
                   }, undefined, false, undefined, this)
@@ -19920,7 +20441,7 @@ function Slide18Vision() {
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
         className: "diamond"
       }, undefined, false, undefined, this)
     ]
@@ -19928,7 +20449,7 @@ function Slide18Vision() {
 }
 
 // src/slides/Slide19KPIs.tsx
-var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide19Metricas() {
   const metricas = [
     {
@@ -19962,20 +20483,20 @@ function Slide19Metricas() {
       ]
     }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(SlideHeader, {
         title: "Métricas Piloto Q1 2026",
         subtitle: "KPIs objetivo para validación con riesgo acotado."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
         style: {
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
           gap: "24px",
           marginTop: "48px"
         },
-        children: metricas.map((m, i) => /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+        children: metricas.map((m, i) => /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
           style: {
             background: "var(--bg-card)",
             border: `2px solid ${m.color}`,
@@ -19984,7 +20505,7 @@ function Slide19Metricas() {
             position: "relative"
           },
           children: [
-            /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
               style: {
                 display: "flex",
                 alignItems: "center",
@@ -19992,11 +20513,11 @@ function Slide19Metricas() {
                 marginBottom: "24px"
               },
               children: [
-                /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+                /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
                   style: { fontSize: "36px" },
                   children: m.icon
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+                /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
                   style: {
                     fontSize: "16px",
                     fontWeight: "700",
@@ -20007,9 +20528,9 @@ function Slide19Metricas() {
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
               style: { display: "flex", flexDirection: "column", gap: "16px" },
-              children: m.items.map((item, j) => /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+              children: m.items.map((item, j) => /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
                 style: {
                   display: "flex",
                   justifyContent: "space-between",
@@ -20019,14 +20540,14 @@ function Slide19Metricas() {
                   borderRadius: "8px"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
                     style: {
                       fontSize: "14px",
                       color: "var(--text-secondary)"
                     },
                     children: item.label
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
                     style: {
                       fontSize: "20px",
                       fontWeight: "700",
@@ -20040,7 +20561,7 @@ function Slide19Metricas() {
           ]
         }, i, true, undefined, this))
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
         style: {
           marginTop: "40px",
           display: "flex",
@@ -20048,25 +20569,25 @@ function Slide19Metricas() {
           gap: "32px"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
             style: { display: "flex", alignItems: "center", gap: "8px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
                 style: { width: "12px", height: "12px", borderRadius: "50%", background: "var(--accent-green)" }
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
                 style: { fontSize: "14px", color: "var(--text-muted)" },
                 children: "Meta alcanzable"
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
             style: { display: "flex", alignItems: "center", gap: "8px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
                 style: { width: "12px", height: "12px", borderRadius: "50%", background: "var(--text-primary)" }
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
                 style: { fontSize: "14px", color: "var(--text-muted)" },
                 children: "En seguimiento"
               }, undefined, false, undefined, this)
@@ -20079,7 +20600,7 @@ function Slide19Metricas() {
 }
 
 // src/slides/Slide20MasterPlan.tsx
-var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide20PlanMaestro() {
   const fases = [
     {
@@ -20090,7 +20611,7 @@ function Slide20PlanMaestro() {
       completed: true
     },
     {
-      title: "FASE 2: ALPHA TEST (VALIDACION)",
+      title: "FASE 2: ALPHA TEST (VALIDACIÓN)",
       desc: "Probar el sistema con 50 viajes manuales y Waitlist.",
       status: "STATUS: COMPLETADO (Data obtenida).",
       active: false,
@@ -20099,25 +20620,25 @@ function Slide20PlanMaestro() {
     {
       title: "FASE 3: LIQUIDITY INJECTION (ESTA RONDA)",
       desc: "Capitalizar el FGO y subsidiar oferta para lograr densidad.",
-      status: "OBJETIVO: 18 Meses de Autonomia -> Ronda A.",
+      status: "OBJETIVO: 18 Meses de Autonomía -> Ronda A.",
       active: true,
       completed: false
     }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(SlideHeader, {
         title: "El Plan Maestro (Execution)",
         subtitle: "Estrategia secuencial de despliegue de capital."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
         className: "flex-col gap-48",
         style: { marginTop: "64px" },
         children: [
-          fases.map((f, i) => /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+          fases.map((f, i) => /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
             style: { display: "flex", alignItems: "flex-start", gap: "24px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
                 style: {
                   width: "24px",
                   height: "24px",
@@ -20128,10 +20649,10 @@ function Slide20PlanMaestro() {
                   marginTop: "6px"
                 }
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
                 className: "flex-col gap-8",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("h3", {
+                  /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("h3", {
                     style: {
                       fontSize: "28px",
                       fontWeight: "600",
@@ -20139,11 +20660,11 @@ function Slide20PlanMaestro() {
                     },
                     children: f.title
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
                     style: { fontSize: "20px", color: "var(--text-secondary)" },
                     children: f.desc
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
                     style: { fontSize: "18px", color: "var(--text-muted)" },
                     children: f.status
                   }, undefined, false, undefined, this)
@@ -20151,16 +20672,16 @@ function Slide20PlanMaestro() {
               }, undefined, true, undefined, this)
             ]
           }, i, true, undefined, this)),
-          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
             style: { marginTop: "24px", paddingLeft: "48px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
                 style: { fontSize: "20px", color: "var(--text-secondary)" },
-                children: "Expansion regional y gestion de flotas autonomas."
+                children: "Expansión regional y gestión de flotas autónomas."
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
                 style: { fontSize: "18px", color: "var(--text-muted)" },
-                children: "VISION: 2027+."
+                children: "VISIÓN: 2027+."
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this)
@@ -20171,15 +20692,15 @@ function Slide20PlanMaestro() {
 }
 
 // src/slides/Slide21Demo.tsx
-var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide21Demostraci_n() {
-  return /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(SlideHeader, {
         title: "Demo en Vivo",
         subtitle: "Probá la plataforma ahora mismo (MVP Operativo)."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
         style: {
           display: "grid",
           gridTemplateColumns: "1.2fr 0.8fr",
@@ -20188,12 +20709,12 @@ function Slide21Demostraci_n() {
           alignItems: "center"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
             style: {
               display: "flex",
               justifyContent: "center"
             },
-            children: /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("img", {
+            children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("img", {
               src: "/assets/app-mockups.png",
               alt: "AutoRenta App",
               style: {
@@ -20204,10 +20725,10 @@ function Slide21Demostraci_n() {
               }
             }, undefined, false, undefined, this)
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
             style: { display: "flex", flexDirection: "column", gap: "24px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
                 style: {
                   background: "var(--bg-card)",
                   border: "2px solid var(--accent-green)",
@@ -20217,7 +20738,7 @@ function Slide21Demostraci_n() {
                   boxShadow: "0 0 40px rgba(0, 208, 132, 0.15)"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
                     style: {
                       fontSize: "18px",
                       color: "var(--accent-green)",
@@ -20228,7 +20749,7 @@ function Slide21Demostraci_n() {
                     },
                     children: "Escaneá para probar"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
                     style: {
                       width: "200px",
                       height: "200px",
@@ -20240,19 +20761,19 @@ function Slide21Demostraci_n() {
                       justifyContent: "center",
                       padding: "10px"
                     },
-                    children: /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("img", {
+                    children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("img", {
                       src: "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://app.autorentar.com&color=000000&bgcolor=ffffff",
                       alt: "QR Code",
                       style: { width: "100%", height: "100%" }
                     }, undefined, false, undefined, this)
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
                     style: { fontSize: "24px", color: "var(--text-primary)", fontWeight: "700", letterSpacing: "1px" },
                     children: "app.autorentar.com"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
                 style: {
                   background: "var(--bg-card)",
                   border: "1px solid var(--border-subtle)",
@@ -20260,7 +20781,7 @@ function Slide21Demostraci_n() {
                   padding: "24px"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
                     style: {
                       fontSize: "16px",
                       color: "var(--text-muted)",
@@ -20271,30 +20792,30 @@ function Slide21Demostraci_n() {
                     },
                     children: "Credenciales Demo Inversor"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
                     style: { display: "flex", flexDirection: "column", gap: "16px" },
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
                         style: { display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" },
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
+                          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("span", {
                             style: { color: "var(--text-muted)", fontSize: "18px" },
                             children: "Usuario:"
                           }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
+                          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("span", {
                             style: { color: "var(--accent-green)", fontFamily: "monospace", fontSize: "20px", fontWeight: "bold" },
                             children: "investor@autorentar.com"
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
                         style: { display: "flex", justifyContent: "space-between", alignItems: "center" },
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
+                          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("span", {
                             style: { color: "var(--text-muted)", fontSize: "18px" },
                             children: "Pass:"
                           }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
+                          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("span", {
                             style: { color: "var(--accent-green)", fontFamily: "monospace", fontSize: "20px", fontWeight: "bold" },
                             children: "demo2026"
                           }, undefined, false, undefined, this)
@@ -20304,7 +20825,7 @@ function Slide21Demostraci_n() {
                   }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
                 style: {
                   background: "rgba(0,208,132,0.1)",
                   border: "1px solid var(--accent-green)",
@@ -20312,11 +20833,11 @@ function Slide21Demostraci_n() {
                   padding: "24px"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
                     style: { fontSize: "16px", color: "var(--accent-green)", marginBottom: "16px", fontWeight: "700" },
                     children: "✓ QUÉ PODÉS HACER:"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("ul", {
+                  /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("ul", {
                     style: {
                       fontSize: "16px",
                       color: "var(--text-primary)",
@@ -20325,35 +20846,35 @@ function Slide21Demostraci_n() {
                       margin: 0
                     },
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("li", {
+                      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("li", {
                         children: [
                           "Navegar el ",
-                          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("strong", {
+                          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("strong", {
                             children: "Marketplace"
                           }, undefined, false, undefined, this),
                           " en tiempo real"
                         ]
                       }, undefined, true, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("li", {
+                      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("li", {
                         children: [
                           "Simular flujo de ",
-                          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("strong", {
+                          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("strong", {
                             children: "Reserva & Pagos"
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("li", {
+                      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("li", {
                         children: [
                           "Explorar la ",
-                          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("strong", {
+                          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("strong", {
                             children: "Billetera Virtual"
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("li", {
+                      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("li", {
                         children: [
                           "Auditar el ",
-                          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("strong", {
+                          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("strong", {
                             children: "Panel de Propietario"
                           }, undefined, false, undefined, this)
                         ]
@@ -20371,43 +20892,276 @@ function Slide21Demostraci_n() {
 }
 
 // src/slides/Slide22Competencia.tsx
-var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide22Competencia() {
   const competitors = [
     {
       name: "Rentadoras Tradicionales",
-      icon: "\uD83C\uDFE2",
+      icon: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("svg", {
+        width: "28",
+        height: "28",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("rect", {
+            x: "3",
+            y: "8",
+            width: "18",
+            height: "13",
+            stroke: "#B0B0B0",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("path", {
+            d: "M7 8V5C7 3.89543 7.89543 3 9 3H15C16.1046 3 17 3.89543 17 5V8",
+            stroke: "#B0B0B0",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("line", {
+            x1: "3",
+            y1: "12",
+            x2: "21",
+            y2: "12",
+            stroke: "#B0B0B0",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
       cons: ["Burocracia alta", "Precios +30%", "Requiere TC internacional"],
       score: 20
     },
     {
       name: "Facebook / WhatsApp",
-      icon: "\uD83D\uDCF1",
+      icon: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("svg", {
+        width: "28",
+        height: "28",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("rect", {
+            x: "6",
+            y: "2",
+            width: "12",
+            height: "20",
+            rx: "2",
+            stroke: "#B0B0B0",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("line", {
+            x1: "10",
+            y1: "18",
+            x2: "14",
+            y2: "18",
+            stroke: "#B0B0B0",
+            strokeWidth: "2",
+            strokeLinecap: "round"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
       cons: ["Sin verificación", "Alto riesgo fraude", "Sin protección legal"],
       score: 30
     },
     {
       name: "Apps Genéricas",
-      icon: "\uD83D\uDCF2",
+      icon: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("svg", {
+        width: "28",
+        height: "28",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("rect", {
+            x: "5",
+            y: "3",
+            width: "14",
+            height: "18",
+            rx: "2",
+            stroke: "#B0B0B0",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("rect", {
+            x: "8",
+            y: "7",
+            width: "3",
+            height: "3",
+            fill: "#B0B0B0"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("rect", {
+            x: "13",
+            y: "7",
+            width: "3",
+            height: "3",
+            fill: "#B0B0B0"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("rect", {
+            x: "8",
+            y: "12",
+            width: "3",
+            height: "3",
+            fill: "#B0B0B0"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("rect", {
+            x: "13",
+            y: "12",
+            width: "3",
+            height: "3",
+            fill: "#B0B0B0"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
       cons: ["Sin motor de riesgo", "Sin billetera virtual", "UX deficiente"],
       score: 45
     }
   ];
   const ventajas = [
-    { icon: "\uD83D\uDD10", label: "KYC Biométrico", desc: "Verificación de identidad obligatoria" },
-    { icon: "\uD83D\uDCB0", label: "Billetera Virtual", desc: "Garantía pre-depositada sin TC" },
-    { icon: "\uD83D\uDCF9", label: "Video-Inspección IA", desc: "Evidencia legal automática" },
-    { icon: "\uD83D\uDCCB", label: "Contrato Digital", desc: "Comodato con validez jurídica" },
-    { icon: "\uD83D\uDCB8", label: "Precios -30%", desc: "vs rentadoras tradicionales" },
-    { icon: "⚡", label: "Proceso 100% Digital", desc: "Sin papeles ni sucursales" }
+    {
+      icon: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("svg", {
+        width: "24",
+        height: "24",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("rect", {
+            x: "5",
+            y: "11",
+            width: "14",
+            height: "10",
+            rx: "2",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("path", {
+            d: "M8 11V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V11",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("circle", {
+            cx: "12",
+            cy: "16",
+            r: "1.5",
+            fill: "#00D084"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      label: "KYC Biométrico",
+      desc: "Verificación de identidad obligatoria"
+    },
+    {
+      icon: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("svg", {
+        width: "24",
+        height: "24",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("circle", {
+            cx: "12",
+            cy: "12",
+            r: "10",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("path", {
+            d: "M12 6V18M8 10H16M8 14H16",
+            stroke: "#00D084",
+            strokeWidth: "2",
+            strokeLinecap: "round"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      label: "Billetera Virtual",
+      desc: "Garantía pre-depositada sin TC"
+    },
+    {
+      icon: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("svg", {
+        width: "24",
+        height: "24",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("rect", {
+            x: "3",
+            y: "5",
+            width: "18",
+            height: "14",
+            rx: "2",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("circle", {
+            cx: "12",
+            cy: "12",
+            r: "3",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      label: "Video-Inspección IA",
+      desc: "Evidencia legal automática"
+    },
+    {
+      icon: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("svg", {
+        width: "24",
+        height: "24",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("rect", {
+            x: "4",
+            y: "3",
+            width: "16",
+            height: "18",
+            rx: "2",
+            stroke: "#00D084",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("path", {
+            d: "M8 8H16M8 12H16M8 16H13",
+            stroke: "#00D084",
+            strokeWidth: "2",
+            strokeLinecap: "round"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      label: "Contrato Digital",
+      desc: "Comodato con validez jurídica"
+    },
+    {
+      icon: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("svg", {
+        width: "24",
+        height: "24",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("path", {
+          d: "M12 2V6M12 18V22M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M2 12H6M18 12H22M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93",
+          stroke: "#00D084",
+          strokeWidth: "2",
+          strokeLinecap: "round"
+        }, undefined, false, undefined, this)
+      }, undefined, false, undefined, this),
+      label: "Precios -30%",
+      desc: "vs rentadoras tradicionales"
+    },
+    {
+      icon: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("svg", {
+        width: "24",
+        height: "24",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("path", {
+          d: "M13 2L4 14H11L10 22L20 10H13L13 2Z",
+          fill: "#E6FF00"
+        }, undefined, false, undefined, this)
+      }, undefined, false, undefined, this),
+      label: "Proceso 100% Digital",
+      desc: "Sin papeles ni sucursales"
+    }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(SlideHeader, {
         title: "Ventaja Competitiva",
         subtitle: "AutoRenta vs. Alternativas existentes."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
         style: {
           display: "grid",
           gridTemplateColumns: "1fr 1.3fr",
@@ -20415,21 +21169,47 @@ function Slide22Competencia() {
           marginTop: "40px"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("p", {
                 style: {
                   fontSize: "14px",
                   color: "var(--danger)",
                   marginBottom: "20px",
                   textTransform: "uppercase",
-                  letterSpacing: "2px"
+                  letterSpacing: "2px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px"
                 },
-                children: "❌ Alternativas Actuales"
-              }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("svg", {
+                    width: "16",
+                    height: "16",
+                    viewBox: "0 0 24 24",
+                    fill: "none",
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("circle", {
+                        cx: "12",
+                        cy: "12",
+                        r: "10",
+                        stroke: "#FF4444",
+                        strokeWidth: "2"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("path", {
+                        d: "M15 9L9 15M9 9L15 15",
+                        stroke: "#FF4444",
+                        strokeWidth: "2",
+                        strokeLinecap: "round"
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  "Alternativas Actuales"
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
                 style: { display: "flex", flexDirection: "column", gap: "16px" },
-                children: competitors.map((c, i) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+                children: competitors.map((c, i) => /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
                   style: {
                     background: "var(--bg-card)",
                     border: "1px solid var(--border-subtle)",
@@ -20437,22 +21217,19 @@ function Slide22Competencia() {
                     padding: "20px"
                   },
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
                       style: { display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" },
                       children: [
-                        /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("span", {
-                          style: { fontSize: "28px" },
-                          children: c.icon
-                        }, undefined, false, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("span", {
+                        c.icon,
+                        /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("span", {
                           style: { fontSize: "18px", fontWeight: "600", color: "var(--text-primary)" },
                           children: c.name
                         }, undefined, false, undefined, this)
                       ]
                     }, undefined, true, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
                       style: { display: "flex", flexWrap: "wrap", gap: "8px" },
-                      children: c.cons.map((con, j) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("span", {
+                      children: c.cons.map((con, j) => /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("span", {
                         style: {
                           fontSize: "12px",
                           padding: "4px 10px",
@@ -20468,32 +21245,59 @@ function Slide22Competencia() {
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("p", {
                 style: {
                   fontSize: "14px",
                   color: "var(--accent-green)",
                   marginBottom: "20px",
                   textTransform: "uppercase",
-                  letterSpacing: "2px"
+                  letterSpacing: "2px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px"
                 },
-                children: "✓ La Diferencia AutoRenta"
-              }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("svg", {
+                    width: "16",
+                    height: "16",
+                    viewBox: "0 0 24 24",
+                    fill: "none",
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("circle", {
+                        cx: "12",
+                        cy: "12",
+                        r: "10",
+                        stroke: "#00D084",
+                        strokeWidth: "2"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("path", {
+                        d: "M8 12L11 15L16 9",
+                        stroke: "#00D084",
+                        strokeWidth: "2",
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round"
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  "La Diferencia AutoRenta"
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
                 style: {
                   background: "linear-gradient(180deg, var(--bg-card) 0%, rgba(0,208,132,0.08) 100%)",
                   border: "2px solid var(--accent-green)",
                   borderRadius: "16px",
                   padding: "24px"
                 },
-                children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+                children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
                   style: {
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
                     gap: "16px"
                   },
-                  children: ventajas.map((v, i) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+                  children: ventajas.map((v, i) => /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
                     style: {
                       display: "flex",
                       alignItems: "flex-start",
@@ -20503,17 +21307,14 @@ function Slide22Competencia() {
                       borderRadius: "8px"
                     },
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("span", {
-                        style: { fontSize: "24px" },
-                        children: v.icon
-                      }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+                      v.icon,
+                      /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
+                          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("p", {
                             style: { fontSize: "14px", fontWeight: "600", color: "var(--accent-green)" },
                             children: v.label
                           }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
+                          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("p", {
                             style: { fontSize: "12px", color: "var(--text-muted)" },
                             children: v.desc
                           }, undefined, false, undefined, this)
@@ -20523,7 +21324,7 @@ function Slide22Competencia() {
                   }, i, true, undefined, this))
                 }, undefined, false, undefined, this)
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
                 style: {
                   marginTop: "20px",
                   padding: "16px",
@@ -20531,7 +21332,7 @@ function Slide22Competencia() {
                   borderRadius: "8px",
                   textAlign: "center"
                 },
-                children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
+                children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("p", {
                   style: { fontSize: "16px", fontWeight: "600", color: "var(--bg-primary)" },
                   children: "Posicionamiento: Alta Confianza + Bajo Costo"
                 }, undefined, false, undefined, this)
@@ -20545,62 +21346,94 @@ function Slide22Competencia() {
 }
 
 // src/slides/Slide23Growth.tsx
-var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime25 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide23Crecimiento() {
+  const { t: t2 } = useTranslations();
   const embudo = [
-    { label: "Trafico Potencial (Paso Fronterizo)", value: "3,000 / dia · 90,000 / mes" },
-    { label: "Adopcion WiFi (Opt-in 10%)", value: "9,000 usuarios / mes" },
-    { label: "Conversion a Registro (15%)", value: "1,350 nuevos perfiles" },
-    { label: "Verificados (Barrera Biométrica 45%)", value: "607 usuarios listos para reservar" }
+    { label: t2("slide23.funnel1"), value: t2("slide23.funnel1Value") },
+    { label: t2("slide23.funnel2"), value: t2("slide23.funnel2Value") },
+    { label: t2("slide23.funnel3"), value: t2("slide23.funnel3Value") },
+    { label: t2("slide23.funnel4"), value: t2("slide23.funnel4Value") }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(SlideHeader, {
-        title: "Crecimiento: Adquisicion de Bajo Costo",
-        subtitle: "Validacion del experimento 'Frontera WiFi'."
+      /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(SlideHeader, {
+        title: t2("slide23.title"),
+        subtitle: t2("slide23.subtitle")
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
-        className: "section-header",
-        style: { marginTop: "48px" },
-        children: "EMBUDO MATEMATICO (1 NODO / MES)"
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
-        className: "flex-col gap-32",
-        style: { marginTop: "32px" },
-        children: embudo.map((e, i) => /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
-          style: {
-            display: "grid",
-            gridTemplateColumns: "400px 1fr",
-            alignItems: "center",
-            gap: "48px"
-          },
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("span", {
-              style: { fontSize: "22px", color: "var(--text-secondary)" },
-              children: e.label
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("span", {
-              style: { fontSize: "28px", fontWeight: "700", color: "var(--text-primary)" },
-              children: e.value
-            }, undefined, false, undefined, this)
-          ]
-        }, i, true, undefined, this))
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
-        style: { marginTop: "64px" },
+      /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+        style: {
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "48px",
+          marginTop: "32px"
+        },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("p", {
-            style: { fontSize: "20px", color: "var(--text-secondary)" },
+          /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+            style: {
+              borderRadius: "16px",
+              overflow: "hidden",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
+            },
+            children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("img", {
+              src: "/assets/border_queue_billboard_promo.jpg",
+              alt: "Billboard AutoRentar en frontera",
+              style: { width: "100%", height: "100%", objectFit: "cover" }
+            }, undefined, false, undefined, this)
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
             children: [
-              "HIPOTESIS: Costo Adquisicion Proyectado ",
-              "<",
-              " USD 0.50 por usuario verificado."
+              /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+                className: "section-header",
+                style: { marginBottom: "24px" },
+                children: t2("slide23.funnelTitle")
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+                className: "flex-col",
+                style: { gap: "20px" },
+                children: embudo.map((e, i) => /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+                  style: {
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border-subtle)",
+                    borderRadius: "12px",
+                    padding: "16px 20px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                  },
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("span", {
+                      style: { fontSize: "16px", color: "var(--text-secondary)" },
+                      children: e.label
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("span", {
+                      style: { fontSize: "18px", fontWeight: "700", color: "var(--accent-green)" },
+                      children: e.value
+                    }, undefined, false, undefined, this)
+                  ]
+                }, i, true, undefined, this))
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+                style: {
+                  marginTop: "24px",
+                  padding: "16px",
+                  background: "rgba(0, 208, 132, 0.1)",
+                  border: "1px solid var(--accent-green)",
+                  borderRadius: "12px"
+                },
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("p", {
+                    style: { fontSize: "16px", color: "var(--accent-green)", fontWeight: "600" },
+                    children: t2("slide23.cac")
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--text-muted)", marginTop: "8px" },
+                    children: t2("slide23.scalable")
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this)
             ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("p", {
-            style: { fontSize: "18px", color: "var(--text-muted)", marginTop: "12px" },
-            children: "Escalable mediante replicacion de nodos en puntos estrategicos de LatAm."
-          }, undefined, false, undefined, this)
+          }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this)
     ]
@@ -20608,15 +21441,15 @@ function Slide23Crecimiento() {
 }
 
 // src/slides/Slide24Inversion.tsx
-var jsx_dev_runtime25 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide24Inversion() {
-  return /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(SlideHeader, {
         title: "Oportunidad de Inversión",
         subtitle: "Ronda Semilla para escalar infraestructura y liquidez."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
         style: {
           display: "grid",
           gridTemplateColumns: "1fr 1.2fr",
@@ -20625,10 +21458,10 @@ function Slide24Inversion() {
           alignItems: "center"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
             style: { display: "flex", flexDirection: "column", alignItems: "center" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
                 style: {
                   background: "linear-gradient(135deg, var(--accent-green) 0%, #00a86b 100%)",
                   padding: "24px 48px",
@@ -20637,17 +21470,17 @@ function Slide24Inversion() {
                   boxShadow: "0 20px 40px rgba(0,208,132,0.3)"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
                     style: { fontSize: "18px", color: "rgba(0,0,0,0.6)", marginBottom: "4px", textAlign: "center" },
                     children: "RONDA SEMILLA"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
                     style: { fontSize: "56px", fontWeight: "800", color: "var(--bg-primary)", textAlign: "center" },
                     children: "USD $500K"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("img", {
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("img", {
                 src: "/assets/investment-pie-chart.png",
                 alt: "Uso de Fondos",
                 style: {
@@ -20658,10 +21491,10 @@ function Slide24Inversion() {
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
             style: { display: "flex", flexDirection: "column", gap: "24px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
                 style: {
                   background: "var(--bg-card)",
                   border: "1px solid var(--border-subtle)",
@@ -20669,21 +21502,21 @@ function Slide24Inversion() {
                   padding: "24px"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
                     style: { fontSize: "14px", color: "var(--text-muted)", marginBottom: "8px", textTransform: "uppercase" },
                     children: "Autonomía"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
                     style: { fontSize: "32px", fontWeight: "700", color: "var(--accent-green)" },
                     children: "18 Meses"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
                     style: { fontSize: "16px", color: "var(--text-secondary)" },
                     children: "Para escalar a 100k+ usuarios activos"
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
                 style: {
                   background: "var(--bg-card)",
                   border: "1px solid var(--border-subtle)",
@@ -20691,7 +21524,7 @@ function Slide24Inversion() {
                   padding: "24px"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
                     style: { fontSize: "14px", color: "var(--text-muted)", marginBottom: "16px", textTransform: "uppercase" },
                     children: "Uso de Fondos"
                   }, undefined, false, undefined, this),
@@ -20699,7 +21532,7 @@ function Slide24Inversion() {
                     { pct: "50%", label: "Ingeniería", desc: "Escala Supabase + IA", color: "var(--accent-green)" },
                     { pct: "30%", label: "Liquidez", desc: "Fondo P2P + Seguros", color: "#4DD0E1" },
                     { pct: "20%", label: "Crecimiento", desc: "Nodos WiFi Fronterizos", color: "#FFB74D" }
-                  ].map((item, i) => /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+                  ].map((item, i) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
                     style: {
                       display: "flex",
                       alignItems: "center",
@@ -20707,7 +21540,7 @@ function Slide24Inversion() {
                       marginBottom: i < 2 ? "16px" : 0
                     },
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
                         style: {
                           width: "48px",
                           height: "48px",
@@ -20722,13 +21555,13 @@ function Slide24Inversion() {
                         },
                         children: item.pct
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("p", {
+                          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
                             style: { fontSize: "18px", fontWeight: "600", color: "var(--text-primary)" },
                             children: item.label
                           }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("p", {
+                          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
                             style: { fontSize: "14px", color: "var(--text-muted)" },
                             children: item.desc
                           }, undefined, false, undefined, this)
@@ -20738,7 +21571,7 @@ function Slide24Inversion() {
                   }, i, true, undefined, this))
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
                 style: {
                   background: "rgba(0,208,132,0.1)",
                   border: "1px solid var(--accent-green)",
@@ -20746,15 +21579,36 @@ function Slide24Inversion() {
                   padding: "20px"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("p", {
-                    style: { fontSize: "14px", color: "var(--accent-green)", marginBottom: "8px", fontWeight: "600" },
-                    children: "\uD83D\uDE80 GROWTH HACK: WiFi Fronterizo"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                    style: { fontSize: "14px", color: "var(--accent-green)", marginBottom: "8px", fontWeight: "600", display: "flex", alignItems: "center", gap: "8px" },
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("svg", {
+                        width: "16",
+                        height: "16",
+                        viewBox: "0 0 24 24",
+                        fill: "none",
+                        children: [
+                          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("path", {
+                            d: "M12 2L4 22H12L20 2H12Z",
+                            stroke: "#00D084",
+                            strokeWidth: "2",
+                            strokeLinejoin: "round"
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("path", {
+                            d: "M12 22V14",
+                            stroke: "#00D084",
+                            strokeWidth: "2"
+                          }, undefined, false, undefined, this)
+                        ]
+                      }, undefined, true, undefined, this),
+                      "GROWTH HACK: WiFi Fronterizo"
+                    ]
+                  }, undefined, true, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
                     style: { fontSize: "15px", color: "var(--text-secondary)", lineHeight: 1.5 },
                     children: [
                       "WiFi gratis en pasos fronterizos → Registro obligatorio de vehículo →",
-                      /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("strong", {
+                      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("strong", {
                         style: { color: "var(--accent-green)" },
                         children: [
                           " CAC ",
@@ -20776,21 +21630,147 @@ function Slide24Inversion() {
 }
 
 // src/slides/Slide25Fintech.tsx
-var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime27 = __toESM(require_jsx_dev_runtime(), 1);
+var flujoIcons = {
+  deposito: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("svg", {
+    width: "32",
+    height: "32",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("rect", {
+        x: "2",
+        y: "5",
+        width: "20",
+        height: "14",
+        rx: "2",
+        stroke: "#00D084",
+        strokeWidth: "2"
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("line", {
+        x1: "2",
+        y1: "10",
+        x2: "22",
+        y2: "10",
+        stroke: "#00D084",
+        strokeWidth: "2"
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("rect", {
+        x: "4",
+        y: "13",
+        width: "4",
+        height: "2",
+        rx: "1",
+        fill: "#00D084"
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this),
+  preauth: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("svg", {
+    width: "32",
+    height: "32",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("rect", {
+        x: "5",
+        y: "11",
+        width: "14",
+        height: "10",
+        rx: "2",
+        stroke: "#00D084",
+        strokeWidth: "2"
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("path", {
+        d: "M8 11V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V11",
+        stroke: "#00D084",
+        strokeWidth: "2"
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("circle", {
+        cx: "12",
+        cy: "16",
+        r: "1.5",
+        fill: "#00D084"
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this),
+  reserva: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("svg", {
+    width: "32",
+    height: "32",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("path", {
+        d: "M7 17H4C3.44772 17 3 16.5523 3 16V15C3 14.4477 3.44772 14 4 14H7",
+        stroke: "#00D084",
+        strokeWidth: "2",
+        strokeLinecap: "round"
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("path", {
+        d: "M17 17H20C20.5523 17 21 16.5523 21 16V15C21 14.4477 20.5523 14 20 14H17",
+        stroke: "#00D084",
+        strokeWidth: "2",
+        strokeLinecap: "round"
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("rect", {
+        x: "5",
+        y: "7",
+        width: "14",
+        height: "10",
+        rx: "2",
+        stroke: "#00D084",
+        strokeWidth: "2"
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("circle", {
+        cx: "8",
+        cy: "14",
+        r: "1.5",
+        fill: "#00D084"
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("circle", {
+        cx: "16",
+        cy: "14",
+        r: "1.5",
+        fill: "#00D084"
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this),
+  liberacion: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("svg", {
+    width: "32",
+    height: "32",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("circle", {
+        cx: "12",
+        cy: "12",
+        r: "10",
+        stroke: "#00D084",
+        strokeWidth: "2"
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("path", {
+        d: "M8 12L11 15L16 9",
+        stroke: "#00D084",
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round"
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this)
+};
 function Slide25Fintech() {
   const flujo = [
-    { step: "1", icon: "\uD83D\uDCB3", title: "Depósito", desc: "Usuario carga saldo a Billetera Virtual" },
-    { step: "2", icon: "\uD83D\uDD12", title: "Pre-Auth", desc: "Se bloquea garantía (T+2)" },
-    { step: "3", icon: "\uD83D\uDE97", title: "Reserva", desc: "Se descuenta del saldo el alquiler" },
-    { step: "4", icon: "✅", title: "Liberación", desc: "Sin daños: garantía liberada automáticamente" }
+    { step: "1", iconKey: "deposito", title: "Depósito", desc: "Usuario carga saldo a Billetera Virtual" },
+    { step: "2", iconKey: "preauth", title: "Pre-Auth", desc: "Se bloquea garantía (T+2)" },
+    { step: "3", iconKey: "reserva", title: "Reserva", desc: "Se descuenta del saldo el alquiler" },
+    { step: "4", iconKey: "liberacion", title: "Liberación", desc: "Sin daños: garantía liberada automáticamente" }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(SlideHeader, {
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(SlideHeader, {
         title: "Motor Fintech",
         subtitle: "Infraestructura propietaria de pagos y garantías."
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
         style: {
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
@@ -20798,9 +21778,9 @@ function Slide25Fintech() {
           marginTop: "40px"
         },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
                 style: {
                   fontSize: "14px",
                   color: "var(--text-muted)",
@@ -20810,9 +21790,9 @@ function Slide25Fintech() {
                 },
                 children: "Flujo de Fondos"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
                 style: { display: "flex", flexDirection: "column", gap: "16px" },
-                children: flujo.map((f, i) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                children: flujo.map((f, i) => /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
                   style: {
                     display: "flex",
                     alignItems: "center",
@@ -20824,7 +21804,7 @@ function Slide25Fintech() {
                     position: "relative"
                   },
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
                       style: {
                         width: "40px",
                         height: "40px",
@@ -20839,23 +21819,20 @@ function Slide25Fintech() {
                       },
                       children: f.step
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
-                      style: { fontSize: "32px" },
-                      children: f.icon
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                    flujoIcons[f.iconKey],
+                    /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
                       children: [
-                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                        /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
                           style: { fontSize: "18px", fontWeight: "600", color: "var(--text-primary)" },
                           children: f.title
                         }, undefined, false, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                        /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
                           style: { fontSize: "14px", color: "var(--text-muted)" },
                           children: f.desc
                         }, undefined, false, undefined, this)
                       ]
                     }, undefined, true, undefined, this),
-                    i < flujo.length - 1 && /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                    i < flujo.length - 1 && /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
                       style: {
                         position: "absolute",
                         bottom: "-16px",
@@ -20870,10 +21847,10 @@ function Slide25Fintech() {
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
             style: { display: "flex", flexDirection: "column", gap: "20px" },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
                 style: {
                   fontSize: "14px",
                   color: "var(--text-muted)",
@@ -20884,11 +21861,137 @@ function Slide25Fintech() {
                 children: "Capacidades Core"
               }, undefined, false, undefined, this),
               [
-                { icon: "\uD83D\uDCD2", title: "Libro Contable", desc: "Doble entrada (Debit/Credit) con integridad transaccional" },
-                { icon: "\uD83D\uDCB0", title: "Billetera Virtual", desc: "Sin licencia bancaria requerida (comodato)" },
-                { icon: "\uD83D\uDD10", title: "Pre-Autorizaciones", desc: "Bloqueo de garantía con liberación automática (T+2)" },
-                { icon: "\uD83E\uDD16", title: "Motor de Riesgo IA", desc: "Scoring de comportamiento + detección de fraude" }
-              ].map((c, i) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                {
+                  icon: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("svg", {
+                    width: "36",
+                    height: "36",
+                    viewBox: "0 0 24 24",
+                    fill: "none",
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("rect", {
+                        x: "4",
+                        y: "3",
+                        width: "16",
+                        height: "18",
+                        rx: "2",
+                        stroke: "#00D084",
+                        strokeWidth: "2"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("path", {
+                        d: "M8 8H16M8 12H16M8 16H13",
+                        stroke: "#00D084",
+                        strokeWidth: "2",
+                        strokeLinecap: "round"
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  title: "Libro Contable",
+                  desc: "Doble entrada (Debit/Credit) con integridad transaccional"
+                },
+                {
+                  icon: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("svg", {
+                    width: "36",
+                    height: "36",
+                    viewBox: "0 0 24 24",
+                    fill: "none",
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("circle", {
+                        cx: "12",
+                        cy: "12",
+                        r: "10",
+                        stroke: "#00D084",
+                        strokeWidth: "2"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("path", {
+                        d: "M12 6V18M8 10H16M8 14H16",
+                        stroke: "#00D084",
+                        strokeWidth: "2",
+                        strokeLinecap: "round"
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  title: "Billetera Virtual",
+                  desc: "Sin licencia bancaria requerida (comodato)"
+                },
+                {
+                  icon: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("svg", {
+                    width: "36",
+                    height: "36",
+                    viewBox: "0 0 24 24",
+                    fill: "none",
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("rect", {
+                        x: "5",
+                        y: "11",
+                        width: "14",
+                        height: "10",
+                        rx: "2",
+                        stroke: "#00D084",
+                        strokeWidth: "2"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("path", {
+                        d: "M8 11V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V11",
+                        stroke: "#00D084",
+                        strokeWidth: "2"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("circle", {
+                        cx: "12",
+                        cy: "16",
+                        r: "1.5",
+                        fill: "#00D084"
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  title: "Pre-Autorizaciones",
+                  desc: "Bloqueo de garantía con liberación automática (T+2)"
+                },
+                {
+                  icon: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("svg", {
+                    width: "36",
+                    height: "36",
+                    viewBox: "0 0 24 24",
+                    fill: "none",
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("rect", {
+                        x: "6",
+                        y: "4",
+                        width: "12",
+                        height: "16",
+                        rx: "2",
+                        stroke: "#00D084",
+                        strokeWidth: "2"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("circle", {
+                        cx: "12",
+                        cy: "9",
+                        r: "2",
+                        stroke: "#00D084",
+                        strokeWidth: "2"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("path", {
+                        d: "M9 15H15",
+                        stroke: "#00D084",
+                        strokeWidth: "2",
+                        strokeLinecap: "round"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("circle", {
+                        cx: "9",
+                        cy: "9",
+                        r: "0.5",
+                        fill: "#00D084"
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("circle", {
+                        cx: "15",
+                        cy: "9",
+                        r: "0.5",
+                        fill: "#00D084"
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  title: "Motor de Riesgo IA",
+                  desc: "Scoring de comportamiento + detección de fraude"
+                }
+              ].map((c, i) => /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
                 style: {
                   background: "var(--bg-card)",
                   border: "1px solid var(--border-subtle)",
@@ -20899,17 +22002,14 @@ function Slide25Fintech() {
                   gap: "16px"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
-                    style: { fontSize: "36px" },
-                    children: c.icon
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                  c.icon,
+                  /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
                         style: { fontSize: "16px", fontWeight: "600", color: "var(--text-primary)" },
                         children: c.title
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
                         style: { fontSize: "13px", color: "var(--text-muted)" },
                         children: c.desc
                       }, undefined, false, undefined, this)
@@ -20917,7 +22017,7 @@ function Slide25Fintech() {
                   }, undefined, true, undefined, this)
                 ]
               }, i, true, undefined, this)),
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
                 style: {
                   background: "rgba(0,208,132,0.1)",
                   border: "1px solid var(--accent-green)",
@@ -20926,11 +22026,11 @@ function Slide25Fintech() {
                   textAlign: "center"
                 },
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
                     style: { fontSize: "14px", color: "var(--text-muted)", marginBottom: "8px" },
                     children: "Integración de Pagos"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
                     style: { fontSize: "24px", fontWeight: "700", color: "var(--accent-green)" },
                     children: "MercadoPago API"
                   }, undefined, false, undefined, this)
@@ -20940,7 +22040,7 @@ function Slide25Fintech() {
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
         style: {
           marginTop: "32px",
           padding: "16px 32px",
@@ -20948,50 +22048,68 @@ function Slide25Fintech() {
           borderRadius: "8px",
           textAlign: "center"
         },
-        children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
-          style: { fontSize: "18px", fontWeight: "700", color: "var(--bg-primary)" },
-          children: "✓ 100% OPERATIVO EN PRODUCCIÓN"
-        }, undefined, false, undefined, this)
+        children: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
+          style: { fontSize: "18px", fontWeight: "700", color: "var(--bg-primary)", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" },
+          children: [
+            /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("svg", {
+              width: "20",
+              height: "20",
+              viewBox: "0 0 24 24",
+              fill: "none",
+              children: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("path", {
+                d: "M20 6L9 17L4 12",
+                stroke: "var(--bg-primary)",
+                strokeWidth: "3",
+                strokeLinecap: "round",
+                strokeLinejoin: "round"
+              }, undefined, false, undefined, this)
+            }, undefined, false, undefined, this),
+            "100% OPERATIVO EN PRODUCCIÓN"
+          ]
+        }, undefined, true, undefined, this)
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 }
 
 // src/slides/Slide26Equipo.tsx
-var jsx_dev_runtime27 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
 function Slide26Equipo() {
+  const { t: t2 } = useTranslations();
   const founders = [
     {
       name: "EDUARDO MARQUES",
       title: "CEO & Product Architect",
       img: "/assets/founder-edu.jpg",
-      linkedin: "https://linkedin.com/in/eduardo-marques",
+      initials: null,
+      linkedin: "https://linkedin.com/in/eduardo-marques-b00739249",
       role: "Producto & Tecnología (Full-stack). Ex-Fintech.",
       exp: "Lideró la arquitectura de EcuCondor (Pagos)."
     },
     {
-      name: "CHARLES REBOLLO",
+      name: "CHARLIS REBOLLO",
       title: "COO & Fleet Ops",
-      img: "/assets/founder-charles.jpg",
-      linkedin: "https://linkedin.com/in/charles-rebollo",
+      img: null,
+      initials: "CR",
+      linkedin: "https://linkedin.com/in/charlis-rebollo",
       role: "Operaciones & Logística.",
       exp: "Gestión de siniestros y redes de talleres."
     }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(SlideLayout, {
+  return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(SlideLayout, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(SlideHeader, {
-        title: "El Equipo (Founders)",
-        subtitle: "Ejecución probada en Fintech y Movilidad."
+      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(SlideHeader, {
+        title: t2("slide26.title"),
+        subtitle: t2("slide26.subtitle")
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
         style: {
           display: "flex",
           gap: "60px",
           marginTop: "80px",
           justifyContent: "center"
         },
-        children: founders.map((f, i) => /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+        children: founders.map((f, i) => /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
           style: {
             background: "var(--bg-card)",
             border: "1px solid var(--border-subtle)",
@@ -21005,7 +22123,7 @@ function Slide26Equipo() {
             boxShadow: "0 20px 40px rgba(0,0,0,0.2)"
           },
           children: [
-            /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
               style: {
                 width: "180px",
                 height: "180px",
@@ -21013,15 +22131,38 @@ function Slide26Equipo() {
                 overflow: "hidden",
                 marginBottom: "32px",
                 border: "4px solid var(--accent-green)",
-                boxShadow: "0 0 20px var(--accent-green-dim)"
+                boxShadow: "0 0 20px var(--accent-green-dim)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: f.img ? "transparent" : "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)"
               },
-              children: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("img", {
+              children: f.img ? /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("img", {
                 src: f.img,
                 alt: f.name,
                 style: { width: "100%", height: "100%", objectFit: "cover" }
-              }, undefined, false, undefined, this)
+              }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("svg", {
+                width: "120",
+                height: "120",
+                viewBox: "0 0 24 24",
+                fill: "none",
+                stroke: "var(--accent-green)",
+                strokeWidth: "1.5",
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("circle", {
+                    cx: "12",
+                    cy: "8",
+                    r: "4"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("path", {
+                    d: "M4 20c0-4 4-6 8-6s8 2 8 6"
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this)
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("h3", {
+            /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("h3", {
               style: {
                 fontSize: "32px",
                 fontWeight: "700",
@@ -21030,7 +22171,7 @@ function Slide26Equipo() {
               },
               children: f.name
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
               style: {
                 fontSize: "18px",
                 color: "var(--accent-green)",
@@ -21041,7 +22182,7 @@ function Slide26Equipo() {
               },
               children: f.title
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
+            /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
               style: {
                 fontSize: "20px",
                 color: "var(--text-secondary)",
@@ -21050,7 +22191,7 @@ function Slide26Equipo() {
               },
               children: f.role
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
+            /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
               style: {
                 fontSize: "18px",
                 color: "var(--text-secondary)",
@@ -21061,45 +22202,114 @@ function Slide26Equipo() {
               },
               children: f.exp
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("a", {
-              href: f.linkedin,
-              target: "_blank",
-              rel: "noopener noreferrer",
-              style: {
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "8px 16px",
-                background: "rgba(0, 208, 132, 0.1)",
-                border: "1px solid var(--accent-green)",
-                borderRadius: "20px",
-                color: "var(--accent-green)",
-                textDecoration: "none",
-                fontSize: "16px",
-                fontWeight: "600",
-                transition: "all 0.3s ease"
-              },
-              onMouseEnter: (e) => {
-                const el = e.currentTarget;
-                el.style.background = "rgba(0, 208, 132, 0.2)";
-                el.style.transform = "translateY(-2px)";
-              },
-              onMouseLeave: (e) => {
-                const el = e.currentTarget;
-                el.style.background = "rgba(0, 208, 132, 0.1)";
-                el.style.transform = "translateY(0)";
-              },
+            /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+              style: { display: "flex", flexDirection: "column", gap: "12px", width: "100%" },
               children: [
-                /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("svg", {
-                  width: "20",
-                  height: "20",
-                  viewBox: "0 0 24 24",
-                  fill: "currentColor",
-                  children: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("path", {
-                    d: "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
-                  }, undefined, false, undefined, this)
-                }, undefined, false, undefined, this),
-                "LinkedIn"
+                /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("a", {
+                  href: f.linkedin,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                  style: {
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                    padding: "8px 16px",
+                    background: "rgba(0, 208, 132, 0.1)",
+                    border: "1px solid var(--accent-green)",
+                    borderRadius: "20px",
+                    color: "var(--accent-green)",
+                    textDecoration: "none",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    transition: "all 0.3s ease"
+                  },
+                  onMouseEnter: (e) => {
+                    const el = e.currentTarget;
+                    el.style.background = "rgba(0, 208, 132, 0.2)";
+                    el.style.transform = "translateY(-2px)";
+                  },
+                  onMouseLeave: (e) => {
+                    const el = e.currentTarget;
+                    el.style.background = "rgba(0, 208, 132, 0.1)";
+                    el.style.transform = "translateY(0)";
+                  },
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("svg", {
+                      width: "20",
+                      height: "20",
+                      viewBox: "0 0 24 24",
+                      fill: "currentColor",
+                      children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("path", {
+                        d: "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                      }, undefined, false, undefined, this)
+                    }, undefined, false, undefined, this),
+                    t2("slide26.linkedin")
+                  ]
+                }, undefined, true, undefined, this),
+                i === 0 && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                  style: { display: "flex", flexDirection: "column", gap: "6px", alignItems: "center" },
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("a", {
+                      href: "mailto:eduardomarques@campus.fmed.uba.ar",
+                      style: {
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "6px",
+                        padding: "6px 12px",
+                        background: "rgba(255, 255, 255, 0.05)",
+                        border: "1px solid var(--border-subtle)",
+                        borderRadius: "12px",
+                        color: "var(--text-secondary)",
+                        textDecoration: "none",
+                        fontSize: "13px",
+                        fontWeight: "500",
+                        transition: "all 0.3s ease"
+                      },
+                      onMouseEnter: (e) => {
+                        const el = e.currentTarget;
+                        el.style.background = "rgba(255, 255, 255, 0.1)";
+                        el.style.borderColor = "var(--accent-green)";
+                      },
+                      onMouseLeave: (e) => {
+                        const el = e.currentTarget;
+                        el.style.background = "rgba(255, 255, 255, 0.05)";
+                        el.style.borderColor = "var(--border-subtle)";
+                      },
+                      children: "eduardomarques@campus.fmed.uba.ar"
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("a", {
+                      href: "mailto:autorentardev@gmail.com",
+                      style: {
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "6px",
+                        padding: "6px 12px",
+                        background: "rgba(255, 255, 255, 0.05)",
+                        border: "1px solid var(--border-subtle)",
+                        borderRadius: "12px",
+                        color: "var(--text-secondary)",
+                        textDecoration: "none",
+                        fontSize: "13px",
+                        fontWeight: "500",
+                        transition: "all 0.3s ease"
+                      },
+                      onMouseEnter: (e) => {
+                        const el = e.currentTarget;
+                        el.style.background = "rgba(255, 255, 255, 0.1)";
+                        el.style.borderColor = "var(--accent-green)";
+                      },
+                      onMouseLeave: (e) => {
+                        const el = e.currentTarget;
+                        el.style.background = "rgba(255, 255, 255, 0.05)";
+                        el.style.borderColor = "var(--border-subtle)";
+                      },
+                      children: "autorentardev@gmail.com"
+                    }, undefined, false, undefined, this)
+                  ]
+                }, undefined, true, undefined, this)
               ]
             }, undefined, true, undefined, this)
           ]
@@ -21110,9 +22320,7 @@ function Slide26Equipo() {
 }
 
 // src/App.tsx
-var import_react2 = __toESM(require_react(), 1);
-var import_client = __toESM(require_client(), 1);
-var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime29 = __toESM(require_jsx_dev_runtime(), 1);
 var slides = [
   Slide01Cover,
   Slide02Gancho,
@@ -21141,10 +22349,14 @@ var slides = [
   Slide25Fintech,
   Slide26Equipo
 ];
-function App() {
-  const [currentSlide, setCurrentSlide] = import_react2.useState(0);
-  const [showAll, setShowAll] = import_react2.useState(false);
-  import_react2.useEffect(() => {
+function AppContent() {
+  const [currentSlide, setCurrentSlide] = import_react3.useState(0);
+  const [showAll, setShowAll] = import_react3.useState(false);
+  const [lang, setLang] = import_react3.useState(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("lang") || "es";
+  });
+  import_react3.useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "ArrowRight" || e.key === " ") {
         setCurrentSlide((prev) => Math.min(prev + 1, slides.length - 1));
@@ -21161,7 +22373,7 @@ function App() {
   }, []);
   const CurrentSlideComponent = slides[currentSlide];
   if (showAll) {
-    return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+    return /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
       id: "all-slides",
       style: {
         display: "flex",
@@ -21169,14 +22381,14 @@ function App() {
         gap: "0",
         background: "var(--bg-primary)"
       },
-      children: slides.map((SlideComponent, index) => /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+      children: slides.map((SlideComponent, index) => /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
         className: "slide-wrapper",
         "data-slide": index + 1,
-        children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(SlideComponent, {}, undefined, false, undefined, this)
+        children: /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(SlideComponent, {}, undefined, false, undefined, this)
       }, index, false, undefined, this))
     }, undefined, false, undefined, this);
   }
-  return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
     style: {
       width: "100vw",
       height: "100vh",
@@ -21187,25 +22399,25 @@ function App() {
       background: "#000"
     },
     children: [
-      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
         style: {
           transform: "scale(0.5)",
           transformOrigin: "center center"
         },
-        children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(CurrentSlideComponent, {}, undefined, false, undefined, this)
+        children: /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(CurrentSlideComponent, {}, undefined, false, undefined, this)
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
         className: "slide-nav",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+          /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
             onClick: () => setCurrentSlide(0),
             children: "⏮"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+          /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
             onClick: () => setCurrentSlide((p) => Math.max(p - 1, 0)),
             children: "◀"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
+          /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("span", {
             className: "slide-counter",
             children: [
               currentSlide + 1,
@@ -21213,26 +22425,47 @@ function App() {
               slides.length
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+          /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
             onClick: () => setCurrentSlide((p) => Math.min(p + 1, slides.length - 1)),
             children: "▶"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+          /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
             onClick: () => setCurrentSlide(slides.length - 1),
             children: "⏭"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+          /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
             onClick: () => setShowAll(true),
             style: { marginLeft: "16px" },
             children: "\uD83D\uDCC4 Todas"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
+            onClick: () => {
+              const newLang = lang === "es" ? "pt" : "es";
+              setLang(newLang);
+              const url = new URL(window.location.href);
+              url.searchParams.set("lang", newLang);
+              window.history.replaceState({}, "", url.toString());
+            },
+            style: { marginLeft: "8px", background: lang === "pt" ? "var(--accent-green)" : "var(--bg-card)", color: lang === "pt" ? "var(--bg-primary)" : "var(--text-primary)" },
+            children: lang === "es" ? "\uD83C\uDDFA\uD83C\uDDF8 PT" : "\uD83C\uDDE7\uD83C\uDDF7 ES"
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this)
     ]
   }, undefined, true, undefined, this);
 }
+function App() {
+  const [lang] = import_react3.useState(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("lang") || "es";
+  });
+  return /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(LanguageProvider, {
+    lang,
+    children: /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(AppContent, {}, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
 var root = import_client.createRoot(document.getElementById("root"));
-root.render(/* @__PURE__ */ jsx_dev_runtime28.jsxDEV(App, {}, undefined, false, undefined, this));
+root.render(/* @__PURE__ */ jsx_dev_runtime29.jsxDEV(App, {}, undefined, false, undefined, this));
 export {
   slides
 };

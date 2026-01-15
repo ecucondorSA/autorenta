@@ -1,26 +1,29 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide20PlanMaestro() {
+  const { t } = useTranslations();
+  
   const fases = [
     {
-      title: 'FASE 1: R&D + CORE INFRA',
-      desc: 'Construir Sistema de Confianza, Billetera Virtual y Contratos.',
-      status: 'STATUS: COMPLETADO (Bootstrap).',
+      title: t('slide20.phase1.title'),
+      desc: t('slide20.phase1.desc'),
+      status: t('slide20.phase1.status'),
       active: false,
       completed: true
     },
     {
-      title: 'FASE 2: ALPHA TEST (VALIDACION)',
-      desc: 'Probar el sistema con 50 viajes manuales y Waitlist.',
-      status: 'STATUS: COMPLETADO (Data obtenida).',
+      title: t('slide20.phase2.title'),
+      desc: t('slide20.phase2.desc'),
+      status: t('slide20.phase2.status'),
       active: false,
       completed: true
     },
     {
-      title: 'FASE 3: LIQUIDITY INJECTION (ESTA RONDA)',
-      desc: 'Capitalizar el FGO y subsidiar oferta para lograr densidad.',
-      status: 'OBJETIVO: 18 Meses de Autonomia -> Ronda A.',
+      title: t('slide20.phase3.title'),
+      desc: t('slide20.phase3.desc'),
+      status: t('slide20.phase3.status'),
       active: true,
       completed: false
     }
@@ -29,8 +32,8 @@ export function Slide20PlanMaestro() {
   return (
     <SlideLayout>
       <SlideHeader
-        title="El Plan Maestro (Execution)"
-        subtitle="Estrategia secuencial de despliegue de capital."
+        title={t('slide20.title')}
+        subtitle={t('slide20.subtitle')}
       />
 
       <div className="flex-col gap-48" style={{ marginTop: '64px' }}>
@@ -65,10 +68,10 @@ export function Slide20PlanMaestro() {
 
         <div style={{ marginTop: '24px', paddingLeft: '48px' }}>
           <p style={{ fontSize: '20px', color: 'var(--text-secondary)' }}>
-            Expansion regional y gestion de flotas autonomas.
+            {t('slide20.phase4.title')}
           </p>
           <p style={{ fontSize: '18px', color: 'var(--text-muted)' }}>
-            VISION: 2027+.
+            {t('slide20.phase4.status')}
           </p>
         </div>
       </div>

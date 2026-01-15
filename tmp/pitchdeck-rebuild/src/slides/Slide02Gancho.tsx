@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide02Gancho() {
+  const { t } = useTranslations();
   return (
     <div className="slide" style={{
       padding: '80px',
@@ -27,7 +29,7 @@ export function Slide02Gancho() {
           marginBottom: '24px'
         }}>
           70% de Latinoamérica<br />
-          <span style={{ color: 'var(--danger)' }}>No Puede Alquilar un Auto.</span>
+          <span style={{ color: 'var(--danger)' }}>{t('slide02.title')}</span>
         </h1>
         <p style={{
           fontSize: '28px',
@@ -35,7 +37,7 @@ export function Slide02Gancho() {
           maxWidth: '900px',
           margin: '0 auto'
         }}>
-          Las rentadoras exigen tarjetas de crédito con cupos de USD $2,000+
+          {t('slide02.subtitle')}
         </p>
       </div>
 

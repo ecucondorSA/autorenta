@@ -1,7 +1,10 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide14EstrategiaMercado() {
+  const { t } = useTranslations();
+
   const funnel = [
     { stage: 'AWARENESS', value: '100K+', desc: 'WiFi Fronterizo → Registro vehicular', color: 'var(--text-muted)', width: '100%' },
     { stage: 'INTEREST', value: '30K', desc: 'Push notifications en alta demanda', color: 'var(--text-secondary)', width: '80%' },
@@ -12,8 +15,8 @@ export function Slide14EstrategiaMercado() {
   return (
     <SlideLayout>
       <SlideHeader
-        title="Go-To-Market"
-        subtitle="Estrategia de adquisición de bajo costo."
+        title={t('slide14.title')}
+        subtitle={t('slide14.subtitle')}
       />
 
       <div style={{
@@ -32,7 +35,7 @@ export function Slide14EstrategiaMercado() {
             textTransform: 'uppercase',
             letterSpacing: '2px'
           }}>
-            Funnel de Conversión (Proyección Q1-Q2)
+            {t('slide14.funnelTitle')}
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -69,7 +72,7 @@ export function Slide14EstrategiaMercado() {
             color: 'var(--text-muted)',
             marginTop: '16px'
           }}>
-            Conversión total: 1.5% (benchmark industria: 0.5-2%)
+            {t('slide14.conversionTotal')}
           </p>
         </div>
 
@@ -81,14 +84,18 @@ export function Slide14EstrategiaMercado() {
             borderRadius: '12px',
             padding: '24px'
           }}>
-            <p style={{ fontSize: '14px', color: 'var(--accent-green)', marginBottom: '12px', fontWeight: '600' }}>
-              🚀 CANAL PRINCIPAL: WiFi Fronterizo
+            <p style={{ fontSize: '14px', color: 'var(--accent-green)', marginBottom: '12px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L4 22H12L20 2H12Z" stroke="#00D084" strokeWidth="2" strokeLinejoin="round"/>
+                <path d="M12 22V14" stroke="#00D084" strokeWidth="2"/>
+              </svg>
+              {t('slide14.canalPrincipal')}
             </p>
             <p style={{ fontSize: '18px', color: 'var(--text-primary)', marginBottom: '8px' }}>
-              CAC proyectado: <strong style={{ color: 'var(--accent-green)' }}>{'<'} $0.50</strong>
+              {t('slide14.cacProyectado')} <strong style={{ color: 'var(--accent-green)' }}>{'<'} $0.50</strong>
             </p>
             <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
-              vs $15+ en Facebook/Google Ads
+              {t('slide14.vsAds')}
             </p>
           </div>
 
@@ -99,7 +106,7 @@ export function Slide14EstrategiaMercado() {
             padding: '24px'
           }}>
             <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '12px' }}>
-              CANALES SECUNDARIOS
+              {t('slide14.canalesSecundarios')}
             </p>
             <ul style={{
               fontSize: '15px',
@@ -108,10 +115,10 @@ export function Slide14EstrategiaMercado() {
               paddingLeft: '20px',
               margin: 0
             }}>
-              <li>5,000+ Waitlist (EcuCondor)</li>
-              <li>Alianzas flotas locales</li>
-              <li>Referidos (bonus en billetera)</li>
-              <li>SEO orgánico</li>
+              <li>{t('slide14.waitlist')}</li>
+              <li>{t('slide14.alianzas')}</li>
+              <li>{t('slide14.referidos')}</li>
+              <li>{t('slide14.seo')}</li>
             </ul>
           </div>
 
@@ -122,10 +129,10 @@ export function Slide14EstrategiaMercado() {
             textAlign: 'center'
           }}>
             <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
-              Foco geográfico inicial
+              {t('slide14.focoGeografico')}
             </p>
             <p style={{ fontSize: '24px', fontWeight: '700', color: 'var(--text-primary)' }}>
-              🇦🇷 CABA + GBA
+              {t('slide14.cabaGba')}
             </p>
           </div>
         </div>

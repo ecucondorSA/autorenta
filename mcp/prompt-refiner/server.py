@@ -80,7 +80,7 @@ Formato de Respuesta JSON esperado:
 async def refine_user_prompt(
     raw_prompt: str, 
     platform_context: str, 
-    previous_answers: Optional[Dict[str, str]] = None
+    previous_answers: Dict[str, str] = {}
 ) -> str:
     """
     Analiza un prompt de usuario, evalúa su ambigüedad y devuelve prompts optimizados o preguntas de clarificación.

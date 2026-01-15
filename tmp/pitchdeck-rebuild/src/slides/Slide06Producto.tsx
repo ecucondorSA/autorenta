@@ -1,5 +1,6 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 // SVG Icons para cada paso
 const icons = {
@@ -32,18 +33,20 @@ const icons = {
 };
 
 export function Slide06Producto() {
+  const { t } = useTranslations();
+  
   const pasos = [
-    { num: 1, name: 'ENCUENTRA', desc: 'Mapa interactivo en tiempo real con filtros avanzados.', icon: icons.busqueda },
-    { num: 2, name: 'RESERVA', desc: 'Pago seguro, depósito pre-autorizado sin fricción.', icon: icons.reserva },
-    { num: 3, name: 'CHECK-IN', desc: 'Validación de identidad y video-inspección con IA.', icon: icons.checkin },
-    { num: 4, name: 'DEVUELVE', desc: 'Cierre de contrato instantáneo y liberación de garantía.', icon: icons.devolucion }
+    { num: 1, name: t('slide06.step1Name'), desc: t('slide06.step1Desc'), icon: icons.busqueda },
+    { num: 2, name: t('slide06.step2Name'), desc: t('slide06.step2Desc'), icon: icons.reserva },
+    { num: 3, name: t('slide06.step3Name'), desc: t('slide06.step3Desc'), icon: icons.checkin },
+    { num: 4, name: t('slide06.step4Name'), desc: t('slide06.step4Desc'), icon: icons.devolucion }
   ];
 
   return (
     <SlideLayout>
       <SlideHeader
-        title="Producto (Flujo 100% Digital)"
-        subtitle="Una experiencia premium diseñada para la confianza y la velocidad."
+        title={t('slide06.title')}
+        subtitle={t('slide06.subtitle')}
       />
 
       <div style={{
@@ -196,9 +199,9 @@ export function Slide06Producto() {
 
             {/* App Screenshots */}
             {[
-              { src: '/assets/product-experience/booking_discovery.png', alt: 'Búsqueda y Discovery', label: 'ENCUENTRA' },
-              { src: '/assets/product-experience/fintech_billetera_virtual.png', alt: 'Billetera Virtual', label: 'RESERVA' },
-              { src: '/assets/product-experience/trust_video_check.png', alt: 'Video Check', label: 'CHECK-IN' }
+              { src: '/assets/product-experience/booking_discovery.png', alt: 'Mapa de Autos', label: 'ENCUENTRA' },
+              { src: '/assets/product-experience/fintech_billetera_virtual.png', alt: 'Billetera Virtual', label: 'WALLET' },
+              { src: '/assets/product-experience/trust_video_check.png', alt: 'Video Check con IA', label: 'CHECK-IN' }
             ].map((mockup, idx) => (
               <div key={idx} style={{
                 position: 'relative',
@@ -260,9 +263,32 @@ export function Slide06Producto() {
           marginBottom: '20px'
         }}>
           {[
-            { icon: '📱', text: '100% Mobile' },
-            { icon: '📄', text: 'Zero Paperwork' },
-            { icon: '⚡', text: 'Instant Access' }
+            {
+              icon: (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect x="6" y="2" width="12" height="20" rx="2" stroke="#00D084" strokeWidth="2"/>
+                  <line x1="10" y1="18" x2="14" y2="18" stroke="#00D084" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              ),
+              text: t('slide06.badge1')
+            },
+            {
+              icon: (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="#00D084" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <polyline points="14,2 14,8 20,8" stroke="#00D084" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              ),
+              text: t('slide06.badge2')
+            },
+            {
+              icon: (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M13 2L4 14H11L10 22L20 10H13L13 2Z" fill="#E6FF00"/>
+                </svg>
+              ),
+              text: t('slide06.badge3')
+            }
           ].map((item, idx) => (
             <div key={idx} style={{
               display: 'flex',
@@ -274,7 +300,7 @@ export function Slide06Producto() {
               borderRadius: '50px',
               backdropFilter: 'blur(10px)'
             }}>
-              <span style={{ fontSize: '24px' }}>{item.icon}</span>
+              {item.icon}
               <span style={{
                 fontSize: '18px',
                 fontWeight: '600',

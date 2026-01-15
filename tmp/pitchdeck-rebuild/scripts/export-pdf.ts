@@ -4,6 +4,8 @@ const TOTAL_SLIDES = 26;
 const SLIDE_WIDTH = 1920;
 const SLIDE_HEIGHT = 1080;
 
+const lang = process.argv[2] || 'es';
+
 async function exportToPDF() {
   console.log('Starting PDF export...');
 
@@ -20,7 +22,7 @@ async function exportToPDF() {
 
   // Navigate to the app with all slides visible
   console.log('Loading slides...');
-  await page.goto('http://localhost:3000');
+  await page.goto(`http://localhost:3000?lang=${lang}`);
 
   // Click "Todas" (or fallback to "All") to show all slides
   const todas = page.locator('button:has-text("Todas")');
@@ -36,7 +38,7 @@ async function exportToPDF() {
 
   // Generate PDF
   console.log('Generating PDF...');
-  const pdfPath = '/home/edu/autorenta/tmp/pitchdeck-rebuild/autorenta-pitchdeck.pdf';
+  const pdfPath = `/home/edu/autorenta/tmp/pitchdeck-rebuild/autorenta-pitchdeck-${lang}.pdf`;
 
   await page.pdf({
     path: pdfPath,

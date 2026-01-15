@@ -1,45 +1,47 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide17Crecimiento() {
+  const { t } = useTranslations();
+  
   return (
     <SlideLayout>
       <SlideHeader
-        title="Estrategia de Crecimiento (Hipotesis)"
-        subtitle="Experimento de adquisicion de bajo costo (Frontera)."
+        title={t('slide17.title')}
+        subtitle={t('slide17.subtitle')}
       />
 
       <div className="flex-col gap-48" style={{ marginTop: '64px' }}>
         <div className="flex-col gap-12">
           <h3 style={{ fontSize: '32px', fontWeight: '600' }}>
-            Hipotesis
+            {t('slide17.hypothesis.title')}
           </h3>
           <p style={{ fontSize: '22px', color: 'var(--text-secondary)' }}>
-            Captar trafico de 'paso fronterizo' via WiFi gratis convierte
-            a usuarios calificados (con auto y documentos) a bajo costo.
+            {t('slide17.hypothesis.desc')}
           </p>
         </div>
 
         <div className="flex-col gap-12">
           <h3 style={{ fontSize: '32px', fontWeight: '600' }}>
-            Experimento
+            {t('slide17.experiment.title')}
           </h3>
           <p style={{ fontSize: '22px', color: 'var(--text-secondary)' }}>
-            Instalacion de nodos WiFi en pasos clave (AR-BR, AR-UY).
+            {t('slide17.experiment.desc1')}
           </p>
           <p style={{ fontSize: '22px', color: 'var(--text-secondary)' }}>
-            Registro obligatorio para acceso a internet.
+            {t('slide17.experiment.desc2')}
           </p>
         </div>
 
         <div className="flex-col gap-12">
           <h3 style={{ fontSize: '32px', fontWeight: '600' }}>
-            Metricas Esperadas (30 dias)
+            {t('slide17.metrics.title')}
           </h3>
           <ul className="list">
-            <li>Costo por Lead (CPL): {'<'} USD 0.50</li>
-            <li>Conversion a Registro: 15%</li>
-            <li>Usuarios Verificados: 1,500+</li>
+            <li>{t('slide17.metrics.cpl')}</li>
+            <li>{t('slide17.metrics.conversion')}</li>
+            <li>{t('slide17.metrics.users')}</li>
           </ul>
         </div>
       </div>

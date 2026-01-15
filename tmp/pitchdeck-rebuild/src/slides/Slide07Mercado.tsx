@@ -1,19 +1,22 @@
 import React from 'react';
 import { SlideLayout, SlideHeader, Card } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide07Mercado() {
+  const { t } = useTranslations();
+  
   const focos = [
-    'USD $84B en activos depreciándose diariamente por falta de uso.',
-    'BA + CABA: 8.44M vehículos activos (DNRPA) - promedio $10k USD.',
-    'LATAM car-sharing crece 22.7% CAGR 2024-2030.',
-    'Viento de cola macro: clase media busca ingresos extra en 2026.'
+    t('slide07.foco1'),
+    t('slide07.foco2'),
+    t('slide07.foco3'),
+    t('slide07.foco4')
   ];
 
   return (
     <SlideLayout>
       <SlideHeader
-        title="Mercado (TAM / SAM / SOM)"
-        subtitle="Oportunidad real en Argentina con expansión LATAM."
+        title={t('slide07.title')}
+        subtitle={t('slide07.subtitle')}
       />
 
       <div style={{ display: 'flex', marginTop: '48px', height: '600px', gap: '80px', alignItems: 'center' }}>
@@ -33,8 +36,8 @@ export function Slide07Mercado() {
             paddingTop: '40px',
             color: 'var(--text-muted)'
           }}>
-            <div style={{ fontWeight: '700', fontSize: '24px' }}>TAM (ARG)</div>
-            <div style={{ fontSize: '32px' }}>USD 989M</div>
+            <div style={{ fontWeight: '700', fontSize: '24px' }}>{t('slide07.tam')}</div>
+            <div style={{ fontSize: '32px' }}>{t('slide07.tamValue')}</div>
           </div>
 
           {/* SAM */}
@@ -50,8 +53,8 @@ export function Slide07Mercado() {
             paddingTop: '60px',
             color: 'var(--text-secondary)'
           }}>
-            <div style={{ fontWeight: '700', fontSize: '24px' }}>SAM (Car-sharing)</div>
-            <div style={{ fontSize: '36px', color: 'var(--text-primary)' }}>USD 12.4M</div>
+            <div style={{ fontWeight: '700', fontSize: '24px' }}>{t('slide07.sam')}</div>
+            <div style={{ fontSize: '36px', color: 'var(--text-primary)' }}>{t('slide07.samValue')}</div>
           </div>
 
           {/* SOM */}
@@ -67,15 +70,15 @@ export function Slide07Mercado() {
             alignItems: 'center',
             color: 'var(--bg-primary)'
           }}>
-            <div style={{ fontWeight: '700', fontSize: '18px' }}>SOM (3 Años)</div>
-            <div style={{ fontSize: '42px', fontWeight: '800' }}>$1.1M</div>
+            <div style={{ fontWeight: '700', fontSize: '18px' }}>{t('slide07.som')}</div>
+            <div style={{ fontSize: '42px', fontWeight: '800' }}>{t('slide07.somValue')}</div>
           </div>
         </div>
 
         {/* Right - Focus points */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '32px' }}>
           <Card style={{ padding: '40px' }}>
-            <div className="section-header">POR QUÉ AHORA</div>
+            <div className="section-header">{t('slide07.porQueAhora')}</div>
             <ul className="list">
               {focos.map((f, i) => (
                 <li key={i} style={{ fontSize: '24px', marginBottom: '16px' }}>{f}</li>
@@ -107,7 +110,7 @@ export function Slide07Mercado() {
         color: 'var(--text-muted)',
         maxWidth: '80%'
       }}>
-        Fuentes: Estimaciones internas basadas en datos de renting LATAM (2024), Reporte DNRPA y supuestos de conversión del mercado informal.
+        {t('slide07.fuente')} basadas en datos de renting LATAM (2024), Reporte DNRPA y supuestos de conversión del mercado informal.
       </p>
     </SlideLayout>
   );

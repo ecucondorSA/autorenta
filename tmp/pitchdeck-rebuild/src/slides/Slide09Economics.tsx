@@ -1,12 +1,14 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide09Economia() {
+  const { t } = useTranslations();
   return (
     <SlideLayout>
       <SlideHeader
-        title="Unit Economics"
-        subtitle="Modelo rentable desde la primera transacción."
+        title={t('slide09.title')}
+        subtitle={t('slide09.subtitle')}
       />
 
       <div style={{
@@ -24,16 +26,16 @@ export function Slide09Economia() {
             textTransform: 'uppercase',
             letterSpacing: '2px'
           }}>
-            Desglose por Transacción
+            {t('slide09.desglose')}
           </p>
 
           {/* Waterfall Chart */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
-              { label: 'Ticket Promedio (AOV)', value: '$120', bar: 100, color: 'var(--text-primary)', plus: true },
-              { label: 'Take Rate (15%)', value: '$18', bar: 60, color: 'var(--accent-green)', plus: true },
-              { label: 'FGO Pool (10%)', value: '$12', bar: 40, color: '#4DD0E1', plus: false },
-              { label: 'PSP + Soporte', value: '-$7.20', bar: 25, color: 'var(--danger)', plus: false }
+              { label: t('slide09.ticketPromedio'), value: '$120', bar: 100, color: 'var(--text-primary)', plus: true },
+              { label: t('slide09.takeRate'), value: '$18', bar: 60, color: 'var(--accent-green)', plus: true },
+              { label: t('slide09.fgoPool'), value: '$12', bar: 40, color: '#4DD0E1', plus: false },
+              { label: t('slide09.pspSoporte'), value: '-$7.20', bar: 25, color: 'var(--danger)', plus: false }
             ].map((item, i) => (
               <div key={i} style={{
                 display: 'grid',
@@ -74,7 +76,7 @@ export function Slide09Economia() {
             alignItems: 'center'
           }}>
             <span style={{ fontSize: '18px', fontWeight: '600', color: 'var(--bg-primary)' }}>
-              MARGEN NETO
+              {t('slide09.margenNeto')}
             </span>
             <span style={{ fontSize: '32px', fontWeight: '800', color: 'var(--bg-primary)' }}>
               $10.80
@@ -87,7 +89,7 @@ export function Slide09Economia() {
             color: 'var(--accent-green)',
             textAlign: 'center'
           }}>
-            ✓ Rentable desde Day 1
+            {t('slide09.rentableDay1')}
           </p>
         </div>
 
@@ -100,14 +102,14 @@ export function Slide09Economia() {
             textTransform: 'uppercase',
             letterSpacing: '2px'
           }}>
-            Métricas Clave
+            {t('slide09.metricasClave')}
           </p>
 
           {[
-            { label: 'LTV (12 meses)', value: '$324', desc: '~27 reservas/año por usuario activo' },
+            { label: 'LTV (12 meses)', value: '$324', desc: t('slide09.ltvDesc') },
             { label: 'CAC Objetivo', value: '<$15', desc: 'WiFi hack reduce a <$0.50' },
             { label: 'LTV:CAC Ratio', value: '21x', desc: 'Benchmark SaaS: 3x mínimo', highlight: true },
-            { label: 'Payback', value: '<30 días', desc: 'Recuperación inmediata' }
+            { label: t('slide09.paybackMeses'), value: '<30 días', desc: 'Recuperación inmediata' }
           ].map((m, i) => (
             <div key={i} style={{
               background: m.highlight ? 'rgba(0,208,132,0.15)' : 'var(--bg-card)',

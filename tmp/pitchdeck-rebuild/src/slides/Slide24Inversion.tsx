@@ -1,12 +1,15 @@
 import React from 'react';
 import { SlideLayout, SlideHeader } from '../components/SlideLayout';
+import { useTranslations } from '../LanguageContext';
 
 export function Slide24Inversion() {
+  const { t } = useTranslations();
+  
   return (
     <SlideLayout>
       <SlideHeader
-        title="Oportunidad de Inversión"
-        subtitle="Ronda Semilla para escalar infraestructura y liquidez."
+        title={t('slide24.title')}
+        subtitle={t('slide24.subtitle')}
       />
 
       <div style={{
@@ -27,10 +30,10 @@ export function Slide24Inversion() {
             boxShadow: '0 20px 40px rgba(0,208,132,0.3)'
           }}>
             <p style={{ fontSize: '18px', color: 'rgba(0,0,0,0.6)', marginBottom: '4px', textAlign: 'center' }}>
-              RONDA SEMILLA
+              {t('slide24.roundLabel')}
             </p>
             <p style={{ fontSize: '56px', fontWeight: '800', color: 'var(--bg-primary)', textAlign: 'center' }}>
-              USD $500K
+              {t('slide24.amount')}
             </p>
           </div>
 
@@ -56,13 +59,13 @@ export function Slide24Inversion() {
             padding: '24px'
           }}>
             <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '8px', textTransform: 'uppercase' }}>
-              Autonomía
+              {t('slide24.runway.title')}
             </p>
             <p style={{ fontSize: '32px', fontWeight: '700', color: 'var(--accent-green)' }}>
-              18 Meses
+              {t('slide24.runway.value')}
             </p>
             <p style={{ fontSize: '16px', color: 'var(--text-secondary)' }}>
-              Para escalar a 100k+ usuarios activos
+              {t('slide24.runway.desc')}
             </p>
           </div>
 
@@ -74,13 +77,13 @@ export function Slide24Inversion() {
             padding: '24px'
           }}>
             <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '16px', textTransform: 'uppercase' }}>
-              Uso de Fondos
+              {t('slide24.useOfFunds.title')}
             </p>
 
             {[
-              { pct: '50%', label: 'Ingeniería', desc: 'Escala Supabase + IA', color: 'var(--accent-green)' },
-              { pct: '30%', label: 'Liquidez', desc: 'Fondo P2P + Seguros', color: '#4DD0E1' },
-              { pct: '20%', label: 'Crecimiento', desc: 'Nodos WiFi Fronterizos', color: '#FFB74D' }
+              { pct: '50%', label: t('slide24.useOfFunds.engineering.label'), desc: t('slide24.useOfFunds.engineering.desc'), color: 'var(--accent-green)' },
+              { pct: '30%', label: t('slide24.useOfFunds.liquidity.label'), desc: t('slide24.useOfFunds.liquidity.desc'), color: '#4DD0E1' },
+              { pct: '20%', label: t('slide24.useOfFunds.growth.label'), desc: t('slide24.useOfFunds.growth.desc'), color: '#FFB74D' }
             ].map((item, i) => (
               <div key={i} style={{
                 display: 'flex',
@@ -121,12 +124,16 @@ export function Slide24Inversion() {
             borderRadius: '12px',
             padding: '20px'
           }}>
-            <p style={{ fontSize: '14px', color: 'var(--accent-green)', marginBottom: '8px', fontWeight: '600' }}>
-              🚀 GROWTH HACK: WiFi Fronterizo
+            <p style={{ fontSize: '14px', color: 'var(--accent-green)', marginBottom: '8px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L4 22H12L20 2H12Z" stroke="#00D084" strokeWidth="2" strokeLinejoin="round"/>
+                <path d="M12 22V14" stroke="#00D084" strokeWidth="2"/>
+              </svg>
+              {t('slide24.growthHack.title')}
             </p>
             <p style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-              WiFi gratis en pasos fronterizos → Registro obligatorio de vehículo →
-              <strong style={{ color: 'var(--accent-green)' }}> CAC {'<'} $0.50</strong> (vs $15+ en Ads)
+              {t('slide24.growthHack.desc1')}
+              <strong style={{ color: 'var(--accent-green)' }}> {t('slide24.growthHack.desc2')}</strong> {t('slide24.growthHack.desc3')}
             </p>
           </div>
         </div>
