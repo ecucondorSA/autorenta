@@ -1,3 +1,47 @@
+# [3.0.0](https://github.com/ecucondorSA/autorenta/compare/v2.30.3...v3.0.0) (2026-01-16)
+
+
+### Build System
+
+* **android:** implementar solución robusta para remover permiso AD_ID ([051d714](https://github.com/ecucondorSA/autorenta/commit/051d714be632168b6a12fb12e8927756956387d8))
+
+
+### BREAKING CHANGES
+
+* **android:** Ninguno
+
+Implementa un enfoque multi-capa profesional para remover el permiso
+com.google.android.gms.permission.AD_ID que se hereda de dependencias transitivas:
+
+1. Manifest Merge (Primary)
+   - Usa tools:node="remove" en AndroidManifest.xml
+   - Oficial de Android, future-proof
+   - Documentado con comentarios explicativos
+
+2. Gradle Configuration (Defensive)
+   - Logging durante el build confirmando remoción
+   - Safeguard adicional contra regresiones
+
+3. Automated Verification (Validation)
+   - Script verify-ad-id-removal.sh chequea APK/AAB compilado
+   - Integrado en CI/CD workflow
+   - Previene uploads con permiso AD_ID accidental
+
+4. Documentación Completa
+   - AD_ID_PERMISSION_REMOVAL.md explica la estrategia
+   - Incluye troubleshooting y referencias
+   - Mantenible a largo plazo
+
+Cambios:
+- Modified: build.gradle (añade logging en afterEvaluate)
+- Modified: build-android.yml (añade step de verificación en CI)
+- New: verify-ad-id-removal.sh (script de validación)
+- New: AD_ID_PERMISSION_REMOVAL.md (documentación)
+
+Versión afectada: v1.0.11 ya compilada exitosamente sin errores
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+
 ## [2.30.3](https://github.com/ecucondorSA/autorenta/compare/v2.30.2...v2.30.3) (2026-01-16)
 
 
