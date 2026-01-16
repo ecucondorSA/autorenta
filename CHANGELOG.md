@@ -1,3 +1,10 @@
+## [2.30.3](https://github.com/ecucondorSA/autorenta/compare/v2.30.2...v2.30.3) (2026-01-16)
+
+
+### Bug Fixes
+
+* **android:** remove AD_ID permission from transitive dependencies ([a44278b](https://github.com/ecucondorSA/autorenta/commit/a44278b7d7c062b36db29bb18ec3a17893993172))
+
 ## [2.30.2](https://github.com/ecucondorSA/autorenta/compare/v2.30.1...v2.30.2) (2026-01-16)
 
 
