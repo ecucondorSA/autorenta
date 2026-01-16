@@ -19,6 +19,8 @@ const LINKEDIN_PAGE_ID = Deno.env.get("LINKEDIN_PAGE_ID")!;
 const TIKTOK_ACCESS_TOKEN = Deno.env.get("TIKTOK_ACCESS_TOKEN")!;
 const TIKTOK_BUSINESS_ID = Deno.env.get("TIKTOK_BUSINESS_ID")!;
 
+const GRAPH_API_VERSION = "v20.0";
+
 interface PublishRequest {
   campaignId: string;
   title: string;
@@ -35,6 +37,25 @@ interface PublishResult {
   postId?: string;
   postUrl?: string;
   error?: string;
+}
+
+// ============================================================================
+// VALIDAR CREDENCIALES DE FACEBOOK
+// ============================================================================
+async function validateFacebookCredentials(): Promise<boolean> {
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/${GRAPH_API_VERSION}/me?access_token=${FACEBOOK_ACCESS_TOKEN}`
+    );
+    if (!response.ok) {
+      throw new Error("Invalid Facebook access token");
+    }
+    console.log("✅ Facebook credentials validated");
+    return true;
+  } catch (error) {
+    console.error("❌ Facebook credential validation failed:", error);
+    return false;
+  }
 }
 
 // ============================================================================
@@ -57,7 +78,7 @@ async function publishToFacebook(
     }
 
     const response = await fetch(
-      `https://graph.facebook.com/v18.0/${FACEBOOK_PAGE_ID}/feed`,
+      `https://graph.facebook.com/${GRAPH_API_VERSION}/${FACEBOOK_PAGE_ID}/feed`,
       {
         method: "POST",
         body: body,
@@ -91,6 +112,25 @@ async function publishToFacebook(
 }
 
 // ============================================================================
+// VALIDAR CREDENCIALES DE INSTAGRAM
+// ============================================================================
+async function validateInstagramCredentials(): Promise<boolean> {
+  try {
+    const response = await fetch(
+      `https://graph.instagram.com/${GRAPH_API_VERSION}/${INSTAGRAM_BUSINESS_ID}?access_token=${INSTAGRAM_ACCESS_TOKEN}`
+    );
+    if (!response.ok) {
+      throw new Error("Invalid Instagram access token or business account ID");
+    }
+    console.log("✅ Instagram credentials validated");
+    return true;
+  } catch (error) {
+    console.error("❌ Instagram credential validation failed:", error);
+    return false;
+  }
+}
+
+// ============================================================================
 // PUBLICAR A INSTAGRAM
 // ============================================================================
 async function publishToInstagram(
@@ -106,7 +146,7 @@ async function publishToInstagram(
 
     // Step 1: Create container
     const containerResponse = await fetch(
-      `https://graph.instagram.com/v18.0/${INSTAGRAM_BUSINESS_ID}/media`,
+      `https://graph.instagram.com/${GRAPH_API_VERSION}/${INSTAGRAM_BUSINESS_ID}/media`,
       {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -127,7 +167,7 @@ async function publishToInstagram(
 
     // Step 2: Publish container
     const publishResponse = await fetch(
-      `https://graph.instagram.com/v18.0/${INSTAGRAM_BUSINESS_ID}/media_publish`,
+      `https://graph.instagram.com/${GRAPH_API_VERSION}/${INSTAGRAM_BUSINESS_ID}/media_publish`,
       {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -252,6 +292,31 @@ async function publishToTikTok(
 }
 
 // ============================================================================
+// VALIDAR TODAS LAS CREDENCIALES
+// ============================================================================
+async function validateAllCredentials(platforms: string[]): Promise<Map<string, boolean>> {
+  const validationResults = new Map<string, boolean>();
+
+  if (platforms.includes("facebook")) {
+    validationResults.set("facebook", await validateFacebookCredentials());
+  }
+
+  if (platforms.includes("instagram")) {
+    validationResults.set("instagram", await validateInstagramCredentials());
+  }
+
+  if (platforms.includes("linkedin")) {
+    validationResults.set("linkedin", LINKEDIN_ACCESS_TOKEN ? true : false);
+  }
+
+  if (platforms.includes("tiktok")) {
+    validationResults.set("tiktok", TIKTOK_ACCESS_TOKEN ? true : false);
+  }
+
+  return validationResults;
+}
+
+// ============================================================================
 // MAIN FUNCTION
 // ============================================================================
 Deno.serve(async (req) => {
@@ -277,6 +342,30 @@ Deno.serve(async (req) => {
         }
       );
     }
+
+    // Validar credenciales antes de intentar publicar
+    console.log("🔐 Validating credentials for platforms:", payload.platforms);
+    const credentialValidation = await validateAllCredentials(payload.platforms);
+
+    const invalidPlatforms = Array.from(credentialValidation.entries())
+      .filter(([_, isValid]) => !isValid)
+      .map(([platform, _]) => platform);
+
+    if (invalidPlatforms.length > 0) {
+      console.error("❌ Invalid credentials for platforms:", invalidPlatforms);
+      return new Response(
+        JSON.stringify({
+          error: `Invalid credentials for: ${invalidPlatforms.join(", ")}`,
+          invalidPlatforms
+        }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    console.log("✅ All credentials validated successfully");
 
     // Preparar contenido
     const content = `${payload.title}\n\n${payload.description}\n\n${payload.ctaText}\n${payload.ctaUrl}`;

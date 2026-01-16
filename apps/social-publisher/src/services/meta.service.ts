@@ -11,17 +11,35 @@ interface MetaConfig {
 }
 
 export class MetaService {
-  private readonly baseUrl = 'https://graph.instagram.com/v19.0';
+  private readonly API_VERSION = 'v20.0';
+  private readonly baseUrl = `https://graph.instagram.com/${this.API_VERSION}`;
+  private readonly facebookBaseUrl = `https://graph.facebook.com/${this.API_VERSION}`;
   private config: MetaConfig;
 
   constructor(config: MetaConfig) {
     this.config = config;
   }
 
-  async publishFacebook(content: SocialContent): Promise<PublishResult> {
-    const startTime = performance.now();
-
+  async validateCredentials(): Promise<boolean> {
     try {
+      const response = await fetch(
+        `${this.facebookBaseUrl}/me?access_token=${this.config.accessToken}`
+      );
+      return response.ok;
+    } catch (error) {
+      console.error('Meta credentials validation failed:', error);
+      return false;
+    }
+  }
+
+  async publishFacebook(content: SocialContent): Promise<PublishResult> {
+    try {
+      // Validate credentials first
+      const isValid = await this.validateCredentials();
+      if (!isValid) {
+        throw new Error('Invalid Facebook credentials');
+      }
+
       let postData: Record<string, any> = {
         message: content.text,
         access_token: this.config.accessToken,
@@ -40,7 +58,7 @@ export class MetaService {
       }
 
       const response = await fetch(
-        `https://graph.facebook.com/v19.0/${this.config.pageId}/feed`,
+        `${this.facebookBaseUrl}/${this.config.pageId}/feed`,
         {
           method: 'POST',
           headers: {
@@ -116,10 +134,14 @@ export class MetaService {
         formData.append('source', blob, `media.${item.type}`);
         formData.append('access_token', this.config.accessToken);
 
-        const uploadResponse = await fetch(`https://graph.facebook.com/v19.0/me/photos`, {
-          method: 'POST',
-          body: formData,
-        });
+        // Fixed: Use pageId instead of /me/photos (deprecated endpoint)
+        const uploadResponse = await fetch(
+          `${this.facebookBaseUrl}/${this.config.pageId}/photos`,
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
 
         if (!uploadResponse.ok) {
           throw new Error('Failed to upload to Facebook');
@@ -140,23 +162,27 @@ export class MetaService {
 
     for (const item of media) {
       try {
-        const formData = new FormData();
-        const response = await fetch(item.url);
-        const blob = await response.blob();
-        formData.append('image_url', item.url);
-        formData.append('media_type', item.type === 'video' ? 'VIDEO' : 'IMAGE');
-        formData.append('access_token', this.config.accessToken);
-
+        // Instagram requires image_url as URL parameter, not FormData with blob
         const uploadResponse = await fetch(
           `${this.baseUrl}/${this.config.businessAccountId}/media`,
           {
             method: 'POST',
-            body: formData,
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              image_url: item.url,
+              media_type: item.type === 'video' ? 'VIDEO' : 'IMAGE',
+              access_token: this.config.accessToken,
+            }).toString(),
           }
         );
 
         if (!uploadResponse.ok) {
-          throw new Error('Failed to upload to Instagram');
+          const errorData = await uploadResponse.json();
+          throw new Error(
+            `Instagram media upload failed: ${errorData.error?.message || uploadResponse.statusText}`
+          );
         }
 
         const data: any = await uploadResponse.json();
@@ -202,7 +228,8 @@ export class MetaService {
         },
         body: new URLSearchParams({
           media_type: 'CAROUSEL',
-          children: mediaIds.join(','),
+          // Fixed: Use media_ids instead of children parameter
+          media_ids: mediaIds.join(','),
           caption: caption,
           access_token: this.config.accessToken,
         }).toString(),
@@ -210,7 +237,10 @@ export class MetaService {
     );
 
     if (!response.ok) {
-      throw new Error('Failed to create Instagram carousel');
+      const errorData = await response.json();
+      throw new Error(
+        `Instagram carousel creation failed: ${errorData.error?.message || response.statusText}`
+      );
     }
 
     const data: any = await response.json();
