@@ -1,0 +1,240 @@
+name: Campaign - Owner Acquisition
+
+on:
+  schedule:
+    # Run 3 times per week (Monday, Wednesday, Friday at 8 AM ART)
+    - cron: '0 11 * * 1,3,5'
+  workflow_dispatch:
+    inputs:
+      template:
+        description: 'Template to use'
+        required: false
+        default: 'testimonial_earnings'
+        type: choice
+        options:
+          - testimonial_earnings
+          - comparison_vs_turo
+          - tutorial_publish_car
+          - dashboard_preview
+          - earnings_breakdown
+          - fgo_protection
+          - reward_pool_benefit
+      platform:
+        description: 'Social platform'
+        required: false
+        default: 'facebook'
+        type: choice
+        options:
+          - facebook
+          - instagram
+          - tiktok
+          - twitter
+          - linkedin
+      dry_run:
+        description: 'Dry run (no actual posting)'
+        required: false
+        default: false
+        type: boolean
+      generate_image:
+        description: 'Generate new image'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  generate-campaign:
+    name: Generate Owner Acquisition Campaign
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Select template
+        id: template_config
+        run: |
+          DOW=$(date +%u)  # 1=Monday, 7=Sunday
+
+          # Default template schedule
+          if [ "${{ inputs.template }}" != "" ]; then
+            TEMPLATE="${{ inputs.template }}"
+          else
+            case $DOW in
+              1) TEMPLATE="testimonial_earnings" ;;
+              3) TEMPLATE="comparison_vs_turo" ;;
+              5) TEMPLATE="earnings_breakdown" ;;
+              *) TEMPLATE="tutorial_publish_car" ;;
+            esac
+          fi
+
+          PLATFORM="${{ inputs.platform || 'facebook' }}"
+          GENERATE_IMAGE="${{ inputs.generate_image || 'true' }}"
+
+          echo "template=$TEMPLATE" >> $GITHUB_OUTPUT
+          echo "platform=$PLATFORM" >> $GITHUB_OUTPUT
+          echo "generate_image=$GENERATE_IMAGE" >> $GITHUB_OUTPUT
+
+          echo "📋 Template: $TEMPLATE"
+          echo "📱 Platform: $PLATFORM"
+          echo "🖼️  Generate Image: $GENERATE_IMAGE"
+
+      - name: Generate campaign content
+        id: content_generator
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          STABILITY_API_KEY: ${{ secrets.STABILITY_API_KEY }}
+          TEMPLATE: ${{ steps.template_config.outputs.template }}
+          PLATFORM: ${{ steps.template_config.outputs.platform }}
+          GENERATE_IMAGE: ${{ steps.template_config.outputs.generate_image }}
+        run: |
+          bun << 'EOF'
+          import { ownerAcquisitionTemplates, renderTemplate } from './scripts/marketing/templates/owner-acquisition-templates.ts';
+          import { OptimalPostingTimeCalculator } from './scripts/marketing/generators/optimal-posting-time-calculator.ts';
+          import { MarketingImageGenerator, createImageRequest } from './scripts/marketing/generators/image-generator.ts';
+
+          const templateName = process.env.TEMPLATE;
+          const platform = process.env.PLATFORM;
+          const generateImage = process.env.GENERATE_IMAGE === 'true';
+
+          // 1. Get template
+          const template = ownerAcquisitionTemplates[templateName];
+          if (!template) {
+            throw new Error(`Template ${templateName} not found`);
+          }
+
+          // 2. Render with sample data
+          const variables = {
+            ownerName: 'Juan García',
+            earnings: 'R$ 2.500',
+            carBrand: 'Toyota',
+            carModel: 'Corolla 2021',
+            carYear: '2021',
+            city: 'São Paulo',
+            rating: '4.9',
+            occupancyRate: '85%',
+            cta: 'https://app.autorenta.com/owner/register?ref=campaign-owner-acq-1'
+          };
+
+          const { caption, hashtags } = renderTemplate(template, variables);
+
+          // 3. Get optimal posting time
+          const optimalTime = OptimalPostingTimeCalculator.calculateOptimalTimes(
+            platform,
+            'owners',
+            template.category === 'testimonial' ? 'testimonial' : 'promotion'
+          );
+
+          // 4. Generate image if requested
+          let imageUrl = '';
+          if (generateImage && process.env.GEMINI_API_KEY) {
+            try {
+              const imageGenerator = new MarketingImageGenerator(
+                process.env.GEMINI_API_KEY,
+                process.env.STABILITY_API_KEY,
+                process.env.SUPABASE_URL
+              );
+
+              const imageRequest = createImageRequest(
+                'owner_acquisition',
+                templateName,
+                variables,
+                platform
+              );
+
+              const generatedImage = await imageGenerator.generateMarketingImage(imageRequest);
+              imageUrl = generatedImage.url;
+              console.log('✅ Image generated');
+            } catch (error) {
+              console.warn('⚠️  Image generation failed:', error.message);
+            }
+          }
+
+          // 5. Output results
+          console.log(`
+          ✅ Campaign Content Generated
+
+          📝 Template: ${templateName}
+          📱 Platform: ${platform}
+
+          🎯 Caption:
+          ${caption.substring(0, 200)}...
+
+          #️⃣  Hashtags: ${hashtags.join(' ')}
+
+          🕐 Best posting time: ${optimalTime.bestTime}
+          ${imageUrl ? `🖼️  Image: ${imageUrl}` : ''}
+          `);
+
+          core.setOutput('caption', caption);
+          core.setOutput('hashtags', JSON.stringify(hashtags));
+          core.setOutput('best_time', optimalTime.bestTime);
+          core.setOutput('image_url', imageUrl);
+          core.setOutput('template', templateName);
+          EOF
+
+      - name: Save metrics
+        if: success()
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          # Save campaign metrics to database
+          bun << 'EOF'
+          const { createClient } = await import("@supabase/supabase-js");
+
+          const supabase = createClient(
+            process.env.SUPABASE_URL,
+            process.env.SUPABASE_SERVICE_KEY
+          );
+
+          // Record that campaign was generated
+          const { data, error } = await supabase
+            .from('campaign_events')
+            .insert({
+              campaign_id: 'owner-acquisition-campaign-001',
+              event_type: 'campaign_generated',
+              platform: '${{ steps.template_config.outputs.platform }}',
+              metadata: {
+                template: '${{ steps.content_generator.outputs.template }}',
+                timestamp: new Date().toISOString()
+              }
+            });
+
+          if (error) {
+            console.error('Failed to save metrics:', error.message);
+          } else {
+            console.log('✅ Metrics saved');
+          }
+          EOF
+
+      - name: Create summary
+        if: always()
+        run: |
+          echo "## 🎯 Owner Acquisition Campaign"
+          echo ""
+          echo "✅ Template: ${{ steps.content_generator.outputs.template }}"
+          echo "📱 Platform: ${{ steps.template_config.outputs.platform }}"
+          echo "🕐 Best Time: ${{ steps.content_generator.outputs.best_time }}"
+          echo ""
+          echo "### Content Preview:"
+          echo '```'
+          echo "${{ steps.content_generator.outputs.caption }}" | head -200
+          echo '```'
+          echo ""
+          echo "### Hashtags:"
+          echo "${{ steps.content_generator.outputs.hashtags }}"
+          echo ""
+          if [ "${{ steps.content_generator.outputs.image_url }}" != "" ]; then
+            echo "### Image:"
+            echo "![${{ steps.content_generator.outputs.template }}](${{ steps.content_generator.outputs.image_url }})"
+          fi
+

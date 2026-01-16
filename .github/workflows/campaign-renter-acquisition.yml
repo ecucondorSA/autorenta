@@ -1,0 +1,259 @@
+name: Campaign - Renter Acquisition
+
+on:
+  schedule:
+    # Run 4 times per week (Tuesday, Thursday, Saturday, Sunday)
+    - cron: '0 14 * * 2,4,6,0'
+  workflow_dispatch:
+    inputs:
+      template:
+        description: 'Template to use'
+        required: false
+        default: 'free_credit_300'
+        type: choice
+        options:
+          - free_credit_300
+          - no_credit_card
+          - price_comparison
+          - rentarfast_ai_chat
+          - ai_inspection_verification
+          - dynamic_pricing_savings
+          - instant_confirmation
+      platform:
+        description: 'Social platform'
+        required: false
+        default: 'tiktok'
+        type: choice
+        options:
+          - facebook
+          - instagram
+          - tiktok
+          - twitter
+      dry_run:
+        description: 'Dry run (no actual posting)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  generate-campaign:
+    name: Generate Renter Acquisition Campaign
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Select template
+        id: template_config
+        run: |
+          DOW=$(date +%u)
+
+          # Rotation schedule optimized for conversions
+          if [ "${{ inputs.template }}" != "" ]; then
+            TEMPLATE="${{ inputs.template }}"
+          else
+            case $DOW in
+              2) TEMPLATE="free_credit_300" ;;              # Tuesday - strongest offer
+              4) TEMPLATE="ai_inspection_verification" ;;   # Thursday - trust
+              6) TEMPLATE="price_comparison" ;;             # Saturday - value
+              0) TEMPLATE="instant_confirmation" ;;         # Sunday - convenience
+              *) TEMPLATE="rentarfast_ai_chat" ;;
+            esac
+          fi
+
+          PLATFORM="${{ inputs.platform || 'tiktok' }}"
+
+          echo "template=$TEMPLATE" >> $GITHUB_OUTPUT
+          echo "platform=$PLATFORM" >> $GITHUB_OUTPUT
+
+          echo "📋 Template: $TEMPLATE"
+          echo "📱 Platform: $PLATFORM"
+
+      - name: Determine target city
+        id: city_selector
+        run: |
+          # Rotate cities for geographic diversity
+          CITIES=("São Paulo" "Rio de Janeiro" "Belo Horizonte" "Brasília" "Curitiba")
+          DOY=$(date +%j)
+          CITY_INDEX=$((DOY % 5))
+          CITY=${CITIES[$CITY_INDEX]}
+
+          echo "city=$CITY" >> $GITHUB_OUTPUT
+          echo "📍 Target city: $CITY"
+
+      - name: Generate renter campaign content
+        id: content_generator
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          STABILITY_API_KEY: ${{ secrets.STABILITY_API_KEY }}
+          TEMPLATE: ${{ steps.template_config.outputs.template }}
+          PLATFORM: ${{ steps.template_config.outputs.platform }}
+          CITY: ${{ steps.city_selector.outputs.city }}
+        run: |
+          bun << 'EOF'
+          import { renterAcquisitionTemplates, renderTemplate, getConversionOptimizedTemplates } from './scripts/marketing/templates/renter-acquisition-templates.ts';
+          import { OptimalPostingTimeCalculator } from './scripts/marketing/generators/optimal-posting-time-calculator.ts';
+          import { MarketingImageGenerator, createImageRequest, imageContextPresets } from './scripts/marketing/generators/image-generator.ts';
+
+          const templateName = process.env.TEMPLATE;
+          const platform = process.env.PLATFORM;
+          const city = process.env.CITY;
+
+          // 1. Get template
+          const template = renterAcquisitionTemplates[templateName];
+          if (!template) {
+            throw new Error(`Template ${templateName} not found`);
+          }
+
+          // 2. Render with context variables
+          const variables = {
+            city: city,
+            region: 'Brasil',
+            cta: 'https://app.autorenta.com/renters/signup?promo=free-credit-300&ref=campaign-renter-acq-1',
+            discount: '30-40%'
+          };
+
+          const { caption, hashtags } = renderTemplate(template, variables);
+
+          // 3. Get optimal posting time for renters (high evening/night engagement)
+          const optimalTime = OptimalPostingTimeCalculator.calculateOptimalTimes(
+            platform,
+            'renters',
+            template.category === 'free_credit' ? 'urgency' : 'promotion'
+          );
+
+          // 4. Generate image
+          let imageUrl = '';
+          try {
+            const imageGenerator = new MarketingImageGenerator(
+              process.env.GEMINI_API_KEY,
+              process.env.STABILITY_API_KEY,
+              process.env.SUPABASE_URL
+            );
+
+            const imageRequest = createImageRequest(
+              'renter_acquisition',
+              templateName,
+              variables,
+              platform
+            );
+
+            const generatedImage = await imageGenerator.generateMarketingImage(imageRequest);
+            imageUrl = generatedImage.url;
+            console.log('✅ Image generated');
+          } catch (error) {
+            console.warn('⚠️  Image generation failed:', error.message);
+          }
+
+          // 5. A/B testing suggestion
+          const conversionTemplates = getConversionOptimizedTemplates();
+          const topConverter = conversionTemplates[0];
+
+          console.log(`
+          ✅ Renter Campaign Content Generated
+
+          📝 Template: ${templateName}
+          📱 Platform: ${platform}
+          📍 City: ${city}
+
+          🎯 Caption:
+          ${caption.substring(0, 250)}...
+
+          #️⃣  Hashtags: ${hashtags.join(' ')}
+
+          🕐 Best posting time: ${optimalTime.bestTime}
+          💡 Expected engagement: ${optimalTime.recommendations[0]?.expectedEngagement}
+          ${imageUrl ? `🖼️  Image: Generated` : '⚠️  No image'}
+
+          💡 Tip: "${topConverter.name}" has highest conversion rate
+          `);
+
+          core.setOutput('caption', caption);
+          core.setOutput('hashtags', JSON.stringify(hashtags));
+          core.setOutput('best_time', optimalTime.bestTime);
+          core.setOutput('image_url', imageUrl);
+          core.setOutput('template', templateName);
+          EOF
+
+      - name: Save campaign event
+        if: success()
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          bun << 'EOF'
+          const { createClient } = await import("@supabase/supabase-js");
+
+          const supabase = createClient(
+            process.env.SUPABASE_URL,
+            process.env.SUPABASE_SERVICE_KEY
+          );
+
+          // Track campaign generation
+          const { error } = await supabase
+            .from('campaign_events')
+            .insert({
+              campaign_id: 'renter-acquisition-campaign-001',
+              event_type: 'campaign_generated',
+              platform: '${{ steps.template_config.outputs.platform }}',
+              metadata: {
+                template: '${{ steps.content_generator.outputs.template }}',
+                city: '${{ steps.city_selector.outputs.city }}',
+                timestamp: new Date().toISOString()
+              }
+            });
+
+          if (error) {
+            console.warn('Failed to save event:', error.message);
+          }
+          EOF
+
+      - name: Create GitHub issue
+        if: always() && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const platform = '${{ steps.template_config.outputs.platform }}';
+            const template = '${{ steps.content_generator.outputs.template }}';
+            const caption = `${{ steps.content_generator.outputs.caption }}`.substring(0, 300);
+            const bestTime = '${{ steps.content_generator.outputs.best_time }}';
+
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[RENTER CAMPAIGN] ${platform} - ${template}`,
+              body: `
+## Renter Acquisition Campaign Generated
+
+📱 **Platform:** ${platform}
+📝 **Template:** ${template}
+🕐 **Best Time:** ${bestTime}
+
+### Preview
+\`\`\`
+${caption}...
+\`\`\`
+
+### Actions
+- [ ] Review content
+- [ ] Post to ${platform}
+- [ ] Monitor first hour engagement
+- [ ] Share results
+
+Generated: ${new Date().toISOString()}
+              `,
+              labels: ['marketing', 'renter-acquisition', 'automated']
+            });
+
+            console.log(`✅ Issue created: ${issue.data.html_url}`);
+
