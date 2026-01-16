@@ -202,6 +202,15 @@ jobs:
         working-directory: apps/web/android
         run: ./gradlew assembleDebug
 
+      - name: Verify AD_ID Permission Removal
+        if: github.event.inputs.build_type == 'release'
+        working-directory: apps/web/android
+        run: |
+          echo "🔍 Verifying AD_ID permission removal..."
+          ./verify-ad-id-removal.sh app/build/outputs/bundle/release/app-release.aab
+          echo ""
+          echo "✅ Security verification passed"
+
       - name: Rename AAB
         run: |
           VERSION="${{ steps.version.outputs.version }}"

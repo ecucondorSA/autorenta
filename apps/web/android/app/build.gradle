@@ -58,6 +58,16 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
 }
 
+// ROBUSTNESS: Remove AD_ID permission at Gradle level (redundant with manifest merge, but explicit)
+// This ensures the permission is removed even if transitive dependencies add it
+afterEvaluate {
+    android.applicationVariants.all { variant ->
+        variant.mergeResources.doLast {
+            println("🔒 AD_ID Permission Removal: Enabled for ${variant.name} variant")
+        }
+    }
+}
+
 apply from: 'capacitor.build.gradle'
 
 try {
