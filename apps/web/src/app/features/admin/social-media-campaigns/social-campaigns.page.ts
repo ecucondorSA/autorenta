@@ -1,9 +1,25 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonSelect, IonSelectOption, IonSpinner, IonText, IonToolbar, IonCheckbox } from '@ionic/angular/standalone';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { ToastService } from '../../../core/services/toast.service';
+
+interface CampaignSchedule {
+  id: string;
+  name: string;
+  title: string;
+  description_content: string;
+  image_url: string | null;
+  cta_text: string;
+  cta_url: string;
+  platforms: string[];
+  scheduled_for: string;
+  time_until_publish?: string;
+  time_since_publish?: string;
+  status: string;
+  post_ids?: Record<string, string> | null;
+}
 
 @Component({
   selector: 'app-social-campaigns',
@@ -126,7 +142,7 @@ import { ToastService } from '../../../core/services/toast.service';
             <p>No hay campañas programadas próximamente</p>
           </div>
 
-          <div *ngFor="let campaign of upcomingCampaigns()" class="campaign-item ion-margin-bottom">
+          <div *ngFor="let campaign of upcomingCampaigns(); trackBy: trackByCampaignId" class="campaign-item ion-margin-bottom">
             <h3>{{ campaign.name }}</h3>
             <p>{{ campaign.title }}</p>
             <div class="campaign-meta">
@@ -154,7 +170,7 @@ import { ToastService } from '../../../core/services/toast.service';
             <p>No hay campañas publicadas recientemente</p>
           </div>
 
-          <div *ngFor="let campaign of recentlyPublished()" class="campaign-item ion-margin-bottom">
+          <div *ngFor="let campaign of recentlyPublished(); trackBy: trackByCampaignId" class="campaign-item ion-margin-bottom">
             <h3>{{ campaign.name }}</h3>
             <p>{{ campaign.title }}</p>
             <div class="campaign-meta">
@@ -252,15 +268,19 @@ export class SocialCampaignsPage implements OnInit {
   campaignForm!: FormGroup;
 
   isSubmitting = signal(false);
-  upcomingCampaigns = signal<any[]>([]);
-  recentlyPublished = signal<any[]>([]);
+  upcomingCampaigns = signal<CampaignSchedule[]>([]);
+  recentlyPublished = signal<CampaignSchedule[]>([]);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.initForm();
     this.loadCampaigns();
   }
 
-  private initForm() {
+  trackByCampaignId(_index: number, campaign: CampaignSchedule): string {
+    return campaign.id;
+  }
+
+  private initForm(): void {
     this.campaignForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
@@ -275,12 +295,12 @@ export class SocialCampaignsPage implements OnInit {
     });
   }
 
-  private async loadCampaigns() {
+  private async loadCampaigns(): Promise<void> {
     try {
       // Cargar campañas próximas
       const { data: upcoming } = await this.supabase
         .from('upcoming_scheduled_campaigns')
-        .select('*');
+        .select('*') as { data: CampaignSchedule[] | null };
 
       if (upcoming) {
         this.upcomingCampaigns.set(upcoming);
@@ -289,7 +309,7 @@ export class SocialCampaignsPage implements OnInit {
       // Cargar campañas recientes
       const { data: recent } = await this.supabase
         .from('recently_published_campaigns')
-        .select('*');
+        .select('*') as { data: CampaignSchedule[] | null };
 
       if (recent) {
         this.recentlyPublished.set(recent);
@@ -299,7 +319,7 @@ export class SocialCampaignsPage implements OnInit {
     }
   }
 
-  async createCampaign() {
+  async createCampaign(): Promise<void> {
     if (!this.campaignForm.valid) {
       this.toastService.show('Por favor completa todos los campos', 'error');
       return;
@@ -333,22 +353,22 @@ export class SocialCampaignsPage implements OnInit {
 
       this.toastService.show('✅ Campaña programada exitosamente', 'success');
       this.campaignForm.reset();
-      this.loadCampaigns();
-    } catch (error: any) {
+      await this.loadCampaigns();
+    } catch (error) {
       console.error('Error creating campaign:', error);
-      this.toastService.show(`Error: ${error.message}`, 'error');
+      this.toastService.show(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
     } finally {
       this.isSubmitting.set(false);
     }
   }
 
-  async publishNow(campaignId: string) {
+  async publishNow(campaignId: string): Promise<void> {
     try {
       const { data: campaign } = await this.supabase
         .from('campaign_schedules')
         .select('*')
         .eq('id', campaignId)
-        .single();
+        .single() as { data: CampaignSchedule };
 
       if (!campaign) {
         this.toastService.show('Campaña no encontrada', 'error');
@@ -382,14 +402,14 @@ export class SocialCampaignsPage implements OnInit {
       if (!response.ok) throw new Error('Error publishing campaign');
 
       this.toastService.show('✅ Campaña publicada a todas las plataformas', 'success');
-      this.loadCampaigns();
-    } catch (error: any) {
+      await this.loadCampaigns();
+    } catch (error) {
       console.error('Error publishing campaign:', error);
-      this.toastService.show(`Error: ${error.message}`, 'error');
+      this.toastService.show(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
     }
   }
 
-  async deleteCampaign(campaignId: string) {
+  async deleteCampaign(campaignId: string): Promise<void> {
     try {
       const { error } = await this.supabase
         .from('campaign_schedules')
@@ -399,10 +419,10 @@ export class SocialCampaignsPage implements OnInit {
       if (error) throw error;
 
       this.toastService.show('✅ Campaña cancelada', 'success');
-      this.loadCampaigns();
-    } catch (error: any) {
+      await this.loadCampaigns();
+    } catch (error) {
       console.error('Error deleting campaign:', error);
-      this.toastService.show(`Error: ${error.message}`, 'error');
+      this.toastService.show(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
     }
   }
 }
