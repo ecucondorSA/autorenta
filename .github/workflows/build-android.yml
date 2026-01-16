@@ -1,5 +1,8 @@
 name: 📱 Build Android AAB
 
+# Automated Android build, verification, and deployment to Google Play
+# Features: Auto-bump versionCode, AD_ID security check, auto-commit
+
 on:
   workflow_dispatch:
     inputs:
