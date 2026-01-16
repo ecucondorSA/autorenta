@@ -4,7 +4,7 @@
 
 import { Component, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 interface PublishResult {
@@ -391,8 +391,9 @@ export class SocialPublisherComponent {
     }
   }
 
-  onFilesSelected(event: any) {
-    const files = Array.from(event.target.files) as File[];
+  onFilesSelected(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const files = Array.from(target.files || []) as File[];
     this.selectedFiles.set([...this.selectedFiles(), ...files]);
   }
 
