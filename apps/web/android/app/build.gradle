@@ -20,9 +20,9 @@ android {
     signingConfigs {
         release {
             storeFile file("../keystore/autorentar-release.keystore")
-            storePassword System.getenv("KEYSTORE_PASSWORD") ?: "autorentar2025"
+            storePassword System.getenv("KEYSTORE_PASSWORD")
             keyAlias "autorentar"
-            keyPassword System.getenv("KEY_PASSWORD") ?: "autorentar2025"
+            keyPassword System.getenv("KEY_PASSWORD")
         }
     }
 
