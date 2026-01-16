@@ -1,3 +1,10 @@
+## [2.30.2](https://github.com/ecucondorSA/autorenta/compare/v2.30.1...v2.30.2) (2026-01-16)
+
+
+### Bug Fixes
+
+* **cars-list:** fix unclosed div causing template compilation error ([bcc1f5a](https://github.com/ecucondorSA/autorenta/commit/bcc1f5ac96d6835d66b3df7a5666de102fba708a))
+
 ## [2.30.1](https://github.com/ecucondorSA/autorenta/compare/v2.30.0...v2.30.1) (2026-01-16)
 
 
