@@ -1,3 +1,10 @@
+## [2.30.1](https://github.com/ecucondorSA/autorenta/compare/v2.30.0...v2.30.1) (2026-01-16)
+
+
+### Bug Fixes
+
+* **dashboard:** fix template compilation errors with date/time display ([43d7d53](https://github.com/ecucondorSA/autorenta/commit/43d7d53715e698461a79b426170c1545730a99e4))
+
 # [2.30.0](https://github.com/ecucondorSA/autorenta/compare/v2.29.0...v2.30.0) (2026-01-16)
 
 
