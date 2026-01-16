@@ -245,13 +245,13 @@ jobs:
           name: autorentar-release-${{ needs.build-aab.outputs.version }}
           path: ./aab
 
-      - name: Upload to Google Play (Internal Track)
+      - name: Upload to Google Play (Closed Testing Track)
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
           packageName: com.autorentar.app
           releaseFiles: ./aab/*.aab
-          track: internal
+          track: closed_testing
           status: completed
           changesNotSentForReview: true
 
@@ -259,7 +259,7 @@ jobs:
         run: |
           echo "## 🚀 Google Play Upload" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Track:** internal" >> $GITHUB_STEP_SUMMARY
+          echo "- **Track:** closed_testing" >> $GITHUB_STEP_SUMMARY
           echo "- **Status:** completed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "The AAB is now available in Google Play Console for internal testing." >> $GITHUB_STEP_SUMMARY
+          echo "The AAB is now available in Google Play Console for closed testing." >> $GITHUB_STEP_SUMMARY
