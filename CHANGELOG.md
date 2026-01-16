@@ -1,3 +1,18 @@
+# [2.30.0](https://github.com/ecucondorSA/autorenta/compare/v2.29.0...v2.30.0) (2026-01-16)
+
+
+### Bug Fixes
+
+* **android:** configure Play Store SDK requirements and remove hardcoded credentials ([4209148](https://github.com/ecucondorSA/autorenta/commit/4209148cc7ab6ef9265aa6c53b658d8a8b5d2cef))
+
+
+### Features
+
+* **ui:** add accessibility improvements and performance optimizations ([9dd649d](https://github.com/ecucondorSA/autorenta/commit/9dd649d80253c5e74e9bbca95e31c03cae2c244a))
+* **ui:** comprehensive platform UI modernization ([b948ad1](https://github.com/ecucondorSA/autorenta/commit/b948ad131e1eb7fca2559fc771c7e02bb3142dd7))
+* **ui:** modern dashboard and car cards redesign ([81e8501](https://github.com/ecucondorSA/autorenta/commit/81e8501c8c2052e6140d0d11b93d9415b5757d79))
+* **ui:** professional notification UI redesign ([477aff2](https://github.com/ecucondorSA/autorenta/commit/477aff28f026cbe6c4776a21290c87b317e11161))
+
 # [2.29.0](https://github.com/ecucondorSA/autorenta/compare/v2.28.0...v2.29.0) (2026-01-15)
 
 
