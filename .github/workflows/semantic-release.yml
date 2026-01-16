@@ -1,0 +1,67 @@
+name: 🚀 Semantic Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release:
+    name: Semantic Release
+    runs-on: ubuntu-latest
+    if: github.event.repository.private == false || github.run_number > 0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+      - name: Trigger Android Build on Release
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const buildGradlePath = 'apps/web/android/app/build.gradle';
+            const content = fs.readFileSync(buildGradlePath, 'utf-8');
+            const versionMatch = content.match(/versionName\s+"([^"]+)"/);
+            const version = versionMatch ? versionMatch[1] : null;
+
+            if (version && version !== 'unknown') {
+              console.log(`✅ Version released: ${version}`);
+
+              // Trigger Android build workflow
+              await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'build-android.yml',
+                ref: 'main',
+                inputs: {
+                  build_type: 'release',
+                  upload_to_play_store: 'true',
+                  auto_version_bump: 'false'
+                }
+              });
+
+              console.log(`✅ Android build workflow triggered`);
+            }
