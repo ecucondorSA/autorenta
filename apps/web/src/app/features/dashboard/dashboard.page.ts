@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, computed } from '@angular/core';
 import { CalendarWidgetComponent } from './widgets/calendar.component';
 import { PayoutsWidgetComponent } from './widgets/payouts.component';
 import { StatisticsWidgetComponent } from './widgets/statistics.component';
@@ -20,8 +20,8 @@ import { StatisticsWidgetComponent } from './widgets/statistics.component';
             </div>
             <div class="hidden lg:flex items-center gap-4">
               <div class="text-right">
-                <div class="text-2xl font-black">{{ new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }) }}</div>
-                <div class="text-cta-text/60">{{ new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) }}</div>
+                <div class="text-2xl font-black">{{ currentDate() }}</div>
+                <div class="text-cta-text/60">{{ currentTime() }}</div>
               </div>
               <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center">
                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -117,4 +117,19 @@ import { StatisticsWidgetComponent } from './widgets/statistics.component';
   `,
   styles: [``],
 })
-export class DashboardPage {}
+export class DashboardPage {
+  currentDate = computed(() =>
+    new Date().toLocaleDateString('es-ES', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long'
+    })
+  );
+
+  currentTime = computed(() =>
+    new Date().toLocaleTimeString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  );
+}
