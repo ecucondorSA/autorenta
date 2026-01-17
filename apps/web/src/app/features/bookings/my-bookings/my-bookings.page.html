@@ -136,10 +136,8 @@
             <span class="sm:hidden">Acción</span>
           </p>
           @if (dashboardStats().actionRequired > 0) {
-            <span class="absolute top-3 right-3 flex h-3 w-3">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-warning-500 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-warning-500"></span>
-            </span>
+            <!-- FIX: Removed animate-ping to prevent CLS/layout shift issues -->
+            <span class="absolute top-3 right-3 h-3 w-3 rounded-full bg-warning-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]"></span>
           }
         </button>
 
@@ -390,7 +388,8 @@
     @if (isPendingApproval(booking)) {
       <div class="px-3 pb-3">
         <div class="flex items-center gap-2 text-xs text-warning-strong bg-warning-bg/30 rounded-lg px-3 py-2">
-          <span class="w-2 h-2 rounded-full bg-warning-500 animate-pulse"></span>
+          <!-- FIX: Removed animate-pulse to prevent CLS issues -->
+          <span class="w-2 h-2 rounded-full bg-warning-500"></span>
           <span>El propietario está revisando tu solicitud</span>
         </div>
       </div>
