@@ -1,0 +1,91 @@
+name: Weekly Newsletter
+
+on:
+  schedule:
+    # Todos los viernes a las 14:00 UTC (9:00 AM Ecuador)
+    - cron: '0 14 * * 5'
+
+  workflow_dispatch:
+    inputs:
+      edition_id:
+        description: 'ID de edición específica (opcional)'
+        required: false
+        type: string
+      target_audience:
+        description: 'Audiencia objetivo'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - 'all'
+          - 'owners'
+          - 'renters'
+
+jobs:
+  send-newsletter:
+    name: Enviar newsletter semanal
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Enviar newsletter
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          echo "📧 Preparando newsletter semanal..."
+
+          # Get active subscribers count
+          SUBSCRIBERS=$(curl -s \
+            "$SUPABASE_URL/rest/v1/email_subscribers?status=eq.active&select=count" \
+            -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "Prefer: count=exact")
+
+          echo "Total suscriptores activos: $SUBSCRIBERS"
+
+          # Get latest newsletter edition (or scheduled one)
+          EDITION=$(curl -s \
+            "$SUPABASE_URL/rest/v1/newsletter_editions?status=eq.scheduled&order=scheduled_at.asc&limit=1" \
+            -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY")
+
+          if [ "$EDITION" = "[]" ]; then
+            echo "⚠️ No hay newsletter programado para esta semana"
+            echo "Creando newsletter automático con Gemini..."
+
+            # Generate newsletter content with AI
+            bun run scripts/generate-newsletter.ts
+          else
+            EDITION_ID=$(echo "$EDITION" | jq -r '.[0].id')
+            echo "📰 Enviando edición: $EDITION_ID"
+
+            # Update status to 'sending'
+            curl -s -X PATCH \
+              "$SUPABASE_URL/rest/v1/newsletter_editions?id=eq.$EDITION_ID" \
+              -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
+              -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+              -H "Content-Type: application/json" \
+              -d '{"status": "sending"}'
+
+            # Process and send newsletter
+            bun run scripts/send-newsletter.ts "$EDITION_ID"
+          fi
+
+      - name: Registrar resultado
+        if: always()
+        run: |
+          echo "## Resultado de Newsletter Semanal" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Fecha (Ecuador):** $(TZ='America/Guayaquil' date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Estado:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
