@@ -291,7 +291,7 @@ CREATE OR REPLACE VIEW public.v_inactive_subscribers AS
 SELECT
   s.*,
   EXTRACT(DAY FROM (now() - COALESCE(s.last_activity_at, s.created_at))) as days_inactive,
-  p.first_name as profile_first_name,
+  p.full_name as profile_name,
   p.role as profile_role
 FROM public.email_subscribers s
 LEFT JOIN public.profiles p ON s.user_id = p.id
