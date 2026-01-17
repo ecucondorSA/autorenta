@@ -1,3 +1,9 @@
+## [3.1.4](https://github.com/ecucondorSA/autorenta/compare/v3.1.3...v3.1.4) (2026-01-17)
+
+### 🐛 Bug Fixes
+
+* **e2e:** increase timeouts for CI stability ([ddf17a0](https://github.com/ecucondorSA/autorenta/commit/ddf17a0202e9f6d480fe6a34600d4928a09503c2))
+
 ## [3.1.3](https://github.com/ecucondorSA/autorenta/compare/v3.1.2...v3.1.3) (2026-01-17)
 
 ### 🐛 Bug Fixes
