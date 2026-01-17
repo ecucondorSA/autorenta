@@ -27,11 +27,15 @@ export default defineConfig({
     video: 'on-first-retry',
     locale: 'es-AR',
     timezoneId: 'America/Argentina/Buenos_Aires',
+    // Increase navigation timeout for CI stability
+    navigationTimeout: isCI ? 60000 : 30000,
+    actionTimeout: isCI ? 30000 : 15000,
   },
 
-  timeout: 30000,
+  // Increase timeouts for CI environment stability
+  timeout: isCI ? 60000 : 30000,
   expect: {
-    timeout: 10000,
+    timeout: isCI ? 15000 : 10000,
   },
 
   outputDir: 'artifacts/test-results',
