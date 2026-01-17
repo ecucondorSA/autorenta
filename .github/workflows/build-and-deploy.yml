@@ -66,14 +66,9 @@ jobs:
       - name: Repair Migration History (if needed)
         run: |
           # Mark old migrations with incomplete timestamps as reverted
-          # List remote migration history first to diagnose
-          echo "=== Remote migration history ==="
-          supabase migration list 2>&1 || true
-          echo "=== Attempting repairs ==="
-          # Repair all potential problematic versions
+          # so they can be re-applied with correct YYYYMMDDHHMMSS format
+          supabase migration repair --status reverted 20251218 2>/dev/null || true
           supabase migration repair --status reverted 20260116 2>/dev/null || true
-          supabase migration repair --status reverted 20260116_create_social_credentials_table 2>/dev/null || true
-          supabase migration repair --status reverted 20260116_setup_social_media_cron 2>/dev/null || true
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
