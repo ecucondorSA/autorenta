@@ -60,17 +60,17 @@
       <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
         @for (_ of [1, 2, 3]; track _) {
           <div
-            class="h-24 rounded-2xl glass animate-pulse"
+            class="h-24 rounded-2xl glass bg-gradient-to-r from-surface-secondary/50 to-surface-secondary/20"
           ></div>
         }
       </div>
       <div class="space-y-4">
         @for (_ of [1, 2]; track _) {
           <div class="rounded-2xl glass-card overflow-hidden">
-            <div class="h-16 bg-surface-secondary/50 animate-pulse"></div>
+            <div class="h-16 bg-gradient-to-r from-surface-secondary/50 to-surface-secondary/20"></div>
             <div class="p-3 space-y-3">
               @for (__ of [1, 2]; track __) {
-                <div class="h-24 rounded-xl bg-surface-raised/50 animate-pulse"></div>
+                <div class="h-24 rounded-xl bg-gradient-to-r from-surface-raised/50 to-surface-raised/20"></div>
               }
             </div>
           </div>
