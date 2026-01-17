@@ -5,6 +5,11 @@ import { VerificationGuard } from '@core/guards/verification.guard';
 export const BOOKINGS_ROUTES: Routes = [
   {
     path: '',
+    loadComponent: () => import('./bookings-hub/bookings-hub.page').then((m) => m.BookingsHubPage),
+  },
+  {
+    // Legacy route for direct access to my-bookings list
+    path: 'list',
     loadComponent: () => import('./my-bookings/my-bookings.page').then((m) => m.MyBookingsPage),
   },
   {
