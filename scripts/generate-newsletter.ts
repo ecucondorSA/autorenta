@@ -41,7 +41,7 @@ async function generateNewsletterContent(): Promise<NewsletterContent> {
   const weekNumber = Math.ceil((new Date().getTime() - new Date(new Date().getFullYear(), 0, 1).getTime()) / 604800000);
   const currentMonth = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(new Date());
 
-  const prompt = `Eres el copywriter de AutoRenta, una plataforma de alquiler de autos peer-to-peer (como Airbnb para autos) en Ecuador, Argentina, Uruguay y Brasil.
+  const prompt = `Eres el copywriter de AutoRentar, una plataforma de alquiler de autos peer-to-peer (como Airbnb para autos) en Ecuador, Argentina, Uruguay y Brasil.
 
 Genera contenido para el newsletter semanal #${weekNumber} de ${currentMonth}.
 
@@ -126,7 +126,7 @@ function buildNewsletterHtml(content: NewsletterContent): string {
           <!-- Header -->
           <tr>
             <td style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 40px; text-align: center;">
-              <h1 style="margin: 0; color: white; font-size: 32px; font-weight: 700;">🚗 AutoRenta</h1>
+              <h1 style="margin: 0; color: white; font-size: 32px; font-weight: 700;">🚗 AutoRentar</h1>
               <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.9); font-size: 16px;">Newsletter Semanal</p>
             </td>
           </tr>
@@ -211,7 +211,7 @@ function buildNewsletterHtml(content: NewsletterContent): string {
                 <a href="{{unsubscribe_url}}" style="color: #9ca3af;">Cancelar suscripción</a>
               </p>
               <p style="margin: 0; color: #9ca3af; font-size: 12px;">
-                © ${new Date().getFullYear()} AutoRenta. Ecuador | Argentina | Uruguay | Brasil
+                © ${new Date().getFullYear()} AutoRentar. Ecuador | Argentina | Uruguay | Brasil
               </p>
             </td>
           </tr>
@@ -272,7 +272,7 @@ async function saveNewsletterEdition(content: NewsletterContent, html: string) {
 
 async function main() {
   console.log("═══════════════════════════════════════");
-  console.log("   Generador de Newsletter AutoRenta");
+  console.log("   Generador de Newsletter AutoRentar");
   console.log("═══════════════════════════════════════\n");
 
   console.log("🤖 Generando contenido con Gemini...");

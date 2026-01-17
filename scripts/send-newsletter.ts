@@ -97,7 +97,7 @@ async function sendEmail(
       Authorization: `Bearer ${RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: "AutoRenta Newsletter <newsletter@autorentar.com>",
+      from: "AutoRentar Newsletter <newsletter@autorentar.com>",
       to: [subscriber.email],
       subject: edition.subject,
       html: html,
@@ -162,7 +162,7 @@ async function main() {
   const editionId = process.argv[2];
 
   console.log("═══════════════════════════════════════");
-  console.log("   Envío de Newsletter AutoRenta");
+  console.log("   Envío de Newsletter AutoRentar");
   console.log("═══════════════════════════════════════\n");
 
   // Get edition

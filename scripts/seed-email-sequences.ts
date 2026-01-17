@@ -28,7 +28,7 @@ const WELCOME_OWNER_STEPS: SequenceStep[] = [
     step_number: 1,
     delay_days: 0,
     delay_hours: 0,
-    subject: "🚗 ¡Bienvenido a AutoRenta, {{first_name}}!",
+    subject: "🚗 ¡Bienvenido a AutoRentar, {{first_name}}!",
     html_content: `
 <!DOCTYPE html>
 <html lang="es">
@@ -38,11 +38,11 @@ const WELCOME_OWNER_STEPS: SequenceStep[] = [
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="background-color: white; border-radius: 12px; overflow: hidden;">
         <tr><td style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 40px; text-align: center;">
-          <h1 style="margin: 0; color: white; font-size: 28px;">🚗 ¡Bienvenido a AutoRenta!</h1>
+          <h1 style="margin: 0; color: white; font-size: 28px;">🚗 ¡Bienvenido a AutoRentar!</h1>
         </td></tr>
         <tr><td style="padding: 30px 40px;">
           <p style="color: #374151; font-size: 16px; line-height: 1.6;">¡Hola <strong>{{first_name}}</strong>!</p>
-          <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">Nos emociona que te hayas unido a la comunidad de propietarios de AutoRenta. Estás a un paso de empezar a generar ingresos con tu vehículo.</p>
+          <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">Nos emociona que te hayas unido a la comunidad de propietarios de AutoRentar. Estás a un paso de empezar a generar ingresos con tu vehículo.</p>
           <p style="color: #4b5563; font-size: 16px; line-height: 1.6;"><strong>¿Qué sigue?</strong></p>
           <ul style="color: #4b5563; font-size: 16px; line-height: 1.8;">
             <li>Completa tu perfil y verificación</li>
@@ -158,7 +158,7 @@ const WELCOME_OWNER_STEPS: SequenceStep[] = [
           <h1 style="margin: 0; color: white; font-size: 24px;">🛡️ Tu auto está protegido</h1>
         </td></tr>
         <tr><td style="padding: 30px 40px;">
-          <p style="color: #374151; font-size: 16px;">{{first_name}}, sabemos que confiar tu auto a desconocidos puede generar dudas. Por eso, AutoRenta incluye:</p>
+          <p style="color: #374151; font-size: 16px;">{{first_name}}, sabemos que confiar tu auto a desconocidos puede generar dudas. Por eso, AutoRentar incluye:</p>
           <div style="margin: 20px 0;">
             <div style="display: flex; align-items: start; margin-bottom: 16px;">
               <span style="font-size: 24px; margin-right: 12px;">✓</span>
@@ -248,7 +248,7 @@ const WELCOME_RENTER_STEPS: SequenceStep[] = [
     step_number: 1,
     delay_days: 0,
     delay_hours: 0,
-    subject: "🚗 ¡Bienvenido a AutoRenta, {{first_name}}!",
+    subject: "🚗 ¡Bienvenido a AutoRentar, {{first_name}}!",
     html_content: `
 <!DOCTYPE html>
 <html lang="es">
@@ -258,11 +258,11 @@ const WELCOME_RENTER_STEPS: SequenceStep[] = [
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="background-color: white; border-radius: 12px; overflow: hidden;">
         <tr><td style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 40px; text-align: center;">
-          <h1 style="margin: 0; color: white; font-size: 28px;">🚗 ¡Bienvenido a AutoRenta!</h1>
+          <h1 style="margin: 0; color: white; font-size: 28px;">🚗 ¡Bienvenido a AutoRentar!</h1>
         </td></tr>
         <tr><td style="padding: 30px 40px;">
           <p style="color: #374151; font-size: 16px; line-height: 1.6;">¡Hola <strong>{{first_name}}</strong>!</p>
-          <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">Gracias por unirte a AutoRenta. Ahora tienes acceso a cientos de vehículos en Ecuador, Argentina, Uruguay y Brasil.</p>
+          <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">Gracias por unirte a AutoRentar. Ahora tienes acceso a cientos de vehículos en Ecuador, Argentina, Uruguay y Brasil.</p>
           <p style="color: #4b5563; font-size: 16px; line-height: 1.6;"><strong>¿Cómo funciona?</strong></p>
           <ol style="color: #4b5563; font-size: 16px; line-height: 1.8;">
             <li>Busca el auto perfecto para tu viaje</li>
@@ -286,7 +286,7 @@ const WELCOME_RENTER_STEPS: SequenceStep[] = [
     step_number: 2,
     delay_days: 2,
     delay_hours: 0,
-    subject: "💳 Conoce la Billetera Virtual AutoRenta",
+    subject: "💳 Conoce la Billetera Virtual AutoRentar",
     html_content: `
 <!DOCTYPE html>
 <html lang="es">
@@ -300,7 +300,7 @@ const WELCOME_RENTER_STEPS: SequenceStep[] = [
         </td></tr>
         <tr><td style="padding: 30px 40px;">
           <p style="color: #374151; font-size: 16px;">{{first_name}}, ¿sabías que puedes alquilar autos sin tarjeta de crédito?</p>
-          <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">Con la <strong>Billetera Virtual AutoRenta</strong> puedes:</p>
+          <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">Con la <strong>Billetera Virtual AutoRentar</strong> puedes:</p>
           <ul style="color: #4b5563; font-size: 16px; line-height: 1.8;">
             <li>Recargar saldo desde cualquier método de pago</li>
             <li>Pagar alquileres sin necesidad de tarjeta de crédito</li>
@@ -389,7 +389,7 @@ const REENGAGEMENT_STEPS: SequenceStep[] = [
         </td></tr>
         <tr><td style="padding: 30px 40px;">
           <p style="color: #374151; font-size: 16px;">Hola {{first_name}},</p>
-          <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">Ha pasado un tiempo desde tu última visita a AutoRenta. ¿Hay algo en lo que podamos ayudarte?</p>
+          <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">Ha pasado un tiempo desde tu última visita a AutoRentar. ¿Hay algo en lo que podamos ayudarte?</p>
           <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">Mientras no estabas, hemos añadido:</p>
           <ul style="color: #4b5563; font-size: 16px; line-height: 1.8;">
             <li>Nuevos vehículos en tu zona</li>
@@ -397,7 +397,7 @@ const REENGAGEMENT_STEPS: SequenceStep[] = [
             <li>Más opciones de pago</li>
           </ul>
           <p style="text-align: center; margin: 30px 0;">
-            <a href="https://autorentar.com" style="display: inline-block; padding: 14px 32px; background-color: #ef4444; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Volver a AutoRenta</a>
+            <a href="https://autorentar.com" style="display: inline-block; padding: 14px 32px; background-color: #ef4444; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Volver a AutoRentar</a>
           </p>
         </td></tr>
         <tr><td style="padding: 20px 40px; background-color: #f9fafb; text-align: center;">
