@@ -116,6 +116,7 @@ export class BookingValidationService {
 
       // Detect errors that should activate waitlist
       const isUnavailableError =
+        errorLower === 'overlap' || // Direct OVERLAP error from RPC
         errorLower.includes('conflicting key') ||
         errorLower.includes('exclusion constraint') ||
         errorLower.includes('bookings_no_overlap') ||
