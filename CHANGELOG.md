@@ -1,3 +1,9 @@
+## [3.1.2](https://github.com/ecucondorSA/autorenta/compare/v3.1.1...v3.1.2) (2026-01-17)
+
+### 🐛 Bug Fixes
+
+* **calendar:** use correct CSS variables for available legend dot ([c4054c4](https://github.com/ecucondorSA/autorenta/commit/c4054c41650db0e52834139afd2d78bc7f00145e))
+
 ## [3.1.1](https://github.com/ecucondorSA/autorenta/compare/v3.1.0...v3.1.1) (2026-01-17)
 
 ### 🐛 Bug Fixes
