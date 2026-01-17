@@ -189,7 +189,7 @@
       </div>
       <!-- ===== COLLAPSIBLE SECTIONS ===== -->
       <div class="space-y-4">
-        @for (section of bookingsBySection(); track section; let i = $index) {
+        @for (section of bookingsBySection(); track section.id; let i = $index) {
           <!-- Section (only show if has bookings) -->
           @if (section.count > 0) {
             <div
@@ -249,7 +249,7 @@
                     </cdk-virtual-scroll-viewport>
                   } @else {
                     <div class="space-y-3">
-                      @for (booking of section.bookings; track booking) {
+                      @for (booking of section.bookings; track booking.id) {
                         <ng-container
                           *ngTemplateOutlet="bookingCard; context: { $implicit: booking }"
                         ></ng-container>
