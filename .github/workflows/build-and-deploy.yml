@@ -63,6 +63,14 @@ jobs:
         env:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
+      - name: Repair Migration History (if needed)
+        run: |
+          # Repair migrations with incomplete timestamps that were applied remotely
+          supabase migration repair --status applied 20260116 2>/dev/null || true
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+
       - name: Apply Migrations
         run: supabase db push --include-all
         env:
