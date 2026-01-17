@@ -1175,9 +1175,21 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
         // Fallback to old flow if booking creation fails
         await this.router.navigate(['/bookings/detail-payment'], { queryParams });
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('[CarDetail] Error creating booking:', error);
-      // Fallback to old flow on error
+
+      // Handle specific RPC errors with user-friendly messages
+      const errorMessage = (error as { message?: string })?.message;
+      if (errorMessage === 'OVERLAP') {
+        this.bookingError.set(
+          'Las fechas seleccionadas no están disponibles. Por favor elegí otras fechas.'
+        );
+        // Re-open date picker so user can select new dates
+        this.openDatePicker();
+        return;
+      }
+
+      // Fallback to old flow on other errors
       await this.router.navigate(['/bookings/detail-payment'], { queryParams });
     }
   }

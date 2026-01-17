@@ -1,29 +1,39 @@
-<div class="date-picker-container">
-  <!-- Header with icon and label -->
-  <div class="date-picker-header">
-    <div class="header-content">
-      <svg
-        class="calendar-icon"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-        />
-      </svg>
-      <label for="dateRangeInput" class="label-text">{{ label }}</label>
-    </div>
-
-    @if (from() || to()) {
-      <button type="button" (click)="clearRange()" class="clear-button">
+<!-- Modo Compacto (estilo Airbnb) -->
+@if (compact) {
+  <div
+    class="relative cursor-pointer"
+    (click)="handleDateInputClick()"
+    (keydown.enter)="handleDateInputClick()"
+    tabindex="0"
+  >
+    <input
+      type="text"
+      id="dateRangeInput"
+      name="dateRangeInput"
+      class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+      placeholder="Agregar fechas"
+      aria-label="Seleccionar fechas de recogida y devolución"
+      #dateRangeInput
+    />
+    @if (!from() && !to()) {
+      <span class="text-sm text-slate-400">Agregar fechas</span>
+    } @else {
+      <span class="text-sm text-slate-600">
+        {{ from() | date: 'dd MMM' }} → {{ to() | date: 'dd MMM' }}
+        @if (selectedDays()) {
+          <span class="text-slate-400">({{ selectedDays() }}d)</span>
+        }
+      </span>
+    }
+  </div>
+} @else {
+  <!-- Modo Normal -->
+  <div class="date-picker-container">
+    <!-- Header with icon and label -->
+    <div class="date-picker-header">
+      <div class="header-content">
         <svg
-          class="clear-icon"
+          class="calendar-icon"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -34,38 +44,16 @@
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
           />
         </svg>
-        <span>Limpiar</span>
-      </button>
-    }
-  </div>
+        <label for="dateRangeInput" class="label-text">{{ label }}</label>
+      </div>
 
-  <!-- Date Selection Input -->
-  <div
-    class="date-input-wrapper relative"
-    (click)="handleDateInputClick()"
-    (keydown.enter)="handleDateInputClick()"
-    tabindex="0"
-  >
-    <!-- Hidden Flatpickr Input (Covers the entire wrapper) -->
-    <input
-      type="text"
-      id="dateRangeInput"
-      name="dateRangeInput"
-      class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-      placeholder="Fecha inicio  →  Fecha fin"
-      aria-label="Seleccionar fechas de recogida y devolución"
-      #dateRangeInput
-    />
-
-    <div class="date-display">
-      @if (!from() && !to()) {
-        <div class="date-placeholder">
-          <span class="placeholder-text">Recogida y Devolución</span>
+      @if (from() || to()) {
+        <button type="button" (click)="clearRange()" class="clear-button">
           <svg
-            class="chevron-icon"
+            class="clear-icon"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -76,20 +64,38 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M19 9l-7 7-7-7"
+              d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-        </div>
+          <span>Limpiar</span>
+        </button>
       }
+    </div>
 
-      @if (from() || to()) {
-        <div class="date-selected">
-          <div class="date-range">
-            <span class="date-from" data-testid="date-from">{{
-              from() ? (from() | date: 'dd MMM yyyy') : 'Fecha inicio'
-            }}</span>
+    <!-- Date Selection Input -->
+    <div
+      class="date-input-wrapper relative"
+      (click)="handleDateInputClick()"
+      (keydown.enter)="handleDateInputClick()"
+      tabindex="0"
+    >
+      <!-- Hidden Flatpickr Input (Covers the entire wrapper) -->
+      <input
+        type="text"
+        id="dateRangeInput"
+        name="dateRangeInput"
+        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+        placeholder="Fecha inicio  →  Fecha fin"
+        aria-label="Seleccionar fechas de recogida y devolución"
+        #dateRangeInput
+      />
+
+      <div class="date-display">
+        @if (!from() && !to()) {
+          <div class="date-placeholder">
+            <span class="placeholder-text">Recogida y Devolución</span>
             <svg
-              class="arrow-icon"
+              class="chevron-icon"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -100,25 +106,49 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                d="M19 9l-7 7-7-7"
               />
             </svg>
-            <span class="date-to" data-testid="date-to">{{
-              to() ? (to() | date: 'dd MMM yyyy') : 'Fecha fin'
-            }}</span>
           </div>
-          @if (selectedDays()) {
-            <span class="duration-badge">
-              {{ selectedDays() }} día{{ (selectedDays() ?? 0) > 1 ? 's' : '' }}
-            </span>
-          }
-        </div>
-      }
-    </div>
-  </div>
+        }
 
-  <!-- Availability feedback -->
-  @if (from() && to()) {
+        @if (from() || to()) {
+          <div class="date-selected">
+            <div class="date-range">
+              <span class="date-from" data-testid="date-from">{{
+                from() ? (from() | date: 'dd MMM yyyy') : 'Fecha inicio'
+              }}</span>
+              <svg
+                class="arrow-icon"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+              <span class="date-to" data-testid="date-to">{{
+                to() ? (to() | date: 'dd MMM yyyy') : 'Fecha fin'
+              }}</span>
+            </div>
+            @if (selectedDays()) {
+              <span class="duration-badge">
+                {{ selectedDays() }} día{{ (selectedDays() ?? 0) > 1 ? 's' : '' }}
+              </span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Availability feedback (solo modo normal) -->
+    @if (from() && to()) {
     <div class="mt-1">
       <!-- Loading state -->
       @if (isCheckingAvailability()) {
@@ -288,9 +318,8 @@
       }
     </div>
   }
-
-  <!-- Modal de calendario inline - REMOVIDO: Componente de Ionic eliminado -->
-</div>
+  </div>
+}
 
 <ng-template #fromPlaceholder>
   <span class="text-base font-semibold text-text-secondary">Elegí fecha</span>

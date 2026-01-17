@@ -108,67 +108,45 @@
         'hidden lg:block': viewMode() === 'map'
       }"
     >
-      <!-- 🔎 BARRA DE BÚSQUEDA MODERNA 2025 -->
-      <div
-        class="bg-gradient-to-br from-white via-surface-base to-white rounded-3xl shadow-2xl border border-border-subtle/50 p-8 mb-8 backdrop-blur-sm"
-      >
-        <!-- Hero Title -->
-        <div class="text-center mb-8">
-          <h2 class="text-2xl lg:text-3xl font-black text-text-primary mb-2">
+      <!-- 🔎 BARRA DE BÚSQUEDA ESTILO AIRBNB -->
+      <div class="mb-8">
+        <!-- Título compacto -->
+        <div class="text-center mb-6">
+          <h2 class="text-xl lg:text-2xl font-bold text-text-primary">
             Encuentra tu auto perfecto
           </h2>
-          <p class="text-text-secondary text-lg">
-            Más de 10,000 autos verificados te esperan
-          </p>
         </div>
 
-        <!-- Fila Principal: Búsqueda + Fechas -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
-          <!-- Input Búsqueda -->
-          <div class="lg:col-span-7 relative group">
-            <label
-              for="search-cars-input"
-              class="block text-sm font-bold text-text-primary mb-3"
-            >
-              📍 Ubicación o modelo de auto
-            </label>
-            <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                <svg
-                  class="w-6 h-6 text-text-muted group-focus-within:text-cta-default transition-all duration-300 group-focus-within:scale-110"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2.5"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
-              <input
-                id="search-cars-input"
-                type="text"
-                data-testid="search-input"
-                [value]="searchQuery()"
-                (input)="onSearchInput($event)"
-                (keyup.enter)="onSearchSubmit()"
-                aria-autocomplete="list"
-                [attr.aria-expanded]="searchSuggestions().length > 0"
-                aria-label="Buscar vehículos"
-                aria-controls="search-suggestions"
-                placeholder="Ej. Toyota Corolla en Palermo..."
-                class="w-full pl-14 pr-5 py-4 bg-surface-secondary/50 border-2 border-border-subtle rounded-2xl text-text-primary placeholder:text-text-muted focus:ring-4 focus:ring-cta-default/20 focus:border-cta-default transition-all duration-300 font-medium text-lg shadow-sm hover:shadow-md"
-              />
+        <!-- Barra única de búsqueda -->
+        <div class="relative max-w-4xl mx-auto">
+          <div class="flex flex-col lg:flex-row items-stretch bg-white rounded-full shadow-lg border border-slate-200 hover:shadow-xl transition-shadow duration-300 overflow-hidden">
 
-              <!-- Sugerencias (Dropdown Moderno) -->
+            <!-- Ubicación -->
+            <div class="flex-1 relative group">
+              <div class="px-6 py-4 cursor-pointer hover:bg-slate-50 transition-colors rounded-l-full">
+                <label class="block text-xs font-semibold text-slate-800 mb-0.5">Ubicación</label>
+                <input
+                  id="search-cars-input"
+                  type="text"
+                  data-testid="search-input"
+                  [value]="searchQuery()"
+                  (input)="onSearchInput($event)"
+                  (keyup.enter)="onSearchSubmit()"
+                  aria-autocomplete="list"
+                  [attr.aria-expanded]="searchSuggestions().length > 0"
+                  aria-label="Buscar vehículos"
+                  aria-controls="search-suggestions"
+                  placeholder="¿A dónde vas?"
+                  class="w-full bg-transparent text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none"
+                />
+              </div>
+
+              <!-- Sugerencias dropdown -->
               @if (searchSuggestions().length > 0) {
                 <div
                   id="search-suggestions"
                   role="listbox"
-                  class="absolute inset-x-0 top-full mt-3 z-30 bg-surface-raised/95 backdrop-blur-xl border border-border-subtle rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300"
+                  class="absolute left-0 right-0 top-full mt-2 z-50 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
                 >
                   @for (suggestion of searchSuggestions(); track suggestion; let idx = $index) {
                     <button
@@ -176,65 +154,74 @@
                       role="option"
                       [id]="'search-suggestion-' + idx"
                       (click)="onSuggestionClick(suggestion)"
-                      class="w-full text-left px-5 py-4 text-text-primary hover:bg-cta-default/10 transition-all duration-200 flex items-center gap-4 border-b border-border-subtle/30 last:border-0 group"
+                      class="w-full text-left px-4 py-3 text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-3 border-b border-slate-100 last:border-0"
                     >
-                      <svg
-                        class="w-4 h-4 text-slate-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      {{ suggestion }}
+                      <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        </svg>
+                      </span>
+                      <span class="text-sm">{{ suggestion }}</span>
                     </button>
                   }
                 </div>
               }
             </div>
+
+            <!-- Divisor vertical (solo desktop) -->
+            <div class="hidden lg:block w-px bg-slate-200 my-3"></div>
+
+            <!-- Fechas -->
+            <div class="flex-1 lg:flex-[1.2]">
+              <div class="px-6 py-4 hover:bg-slate-50 transition-colors">
+                <label class="block text-xs font-semibold text-slate-800 mb-0.5">Fechas</label>
+                <app-date-range-picker
+                  [initialFrom]="dateRange().from"
+                  [initialTo]="dateRange().to"
+                  (rangeChange)="onRangeChange($event)"
+                  [compact]="true"
+                />
+              </div>
+            </div>
+
+            <!-- Botón buscar (circular en desktop) -->
+            <div class="p-2 flex items-center">
+              <button
+                (click)="onSearchSubmit()"
+                class="w-full lg:w-12 lg:h-12 flex items-center justify-center gap-2 px-6 py-3 lg:p-0 bg-[#39ff14] hover:bg-[#2ecc11] text-black font-semibold rounded-full shadow-lg hover:shadow-[0_0_20px_rgba(57,255,20,0.5)] transform hover:scale-105 active:scale-95 transition-all duration-200"
+                aria-label="Buscar"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <span class="lg:hidden">Buscar</span>
+              </button>
+            </div>
           </div>
 
-          <!-- Selector de Fechas -->
-          <div class="lg:col-span-5">
-            <label
-              class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1"
-            >
-              Fechas de Viaje
-            </label>
-            <app-date-range-picker
-              [initialFrom]="dateRange().from"
-              [initialTo]="dateRange().to"
-              (rangeChange)="onRangeChange($event)"
-            />
+          <!-- Badges de confianza -->
+          <div class="flex items-center justify-center gap-4 mt-4 text-xs text-slate-500">
+            <span class="flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 text-[#39ff14]" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+              Verificados
+            </span>
+            <span class="flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 text-[#39ff14]" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+              Seguro incluido
+            </span>
+            <span class="flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 text-[#39ff14]" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+              Soporte 24/7
+            </span>
           </div>
         </div>
-
-        <!-- CTA Principal -->
-        <div class="text-center">
-          <button
-            (click)="onSearchSubmit()"
-            class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cta-default to-cta-hover text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 active:scale-95 transition-all duration-300"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            Buscar autos disponibles
-          </button>
-          <p class="text-sm text-text-secondary mt-3">
-            ✓ Verificación completa • ✓ Seguro incluido • ✓ Soporte 24/7
-          </p>
-        </div>
+      </div>
 
         <!-- Footer de Filtros: Toggle + Limpiar -->
         <div class="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
@@ -297,7 +284,6 @@
             </button>
           }
         </div>
-      </div>
 
       <!-- Error State -->
       @if (loadError()) {
@@ -720,7 +706,7 @@
       <!-- LIST VIEW -->
       @if (viewMode() === 'list') {
         <div class="flex flex-col gap-4 max-w-5xl mx-auto list-view">
-          @for (car of premiumCars(); track car.id) {
+          @for (car of premiumCars(); track car.id; let idx = $index) {
             <a
               [routerLink]="['/cars', car.id]"
               (click)="onCarouselCardClick(car.id, $event)"
@@ -741,6 +727,7 @@
                   [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
                   [alt]="car.brand + ' ' + car.model"
                   fill
+                  [priority]="idx < 2"
                   sizes="(min-width: 1024px) 25vw, (min-width: 768px) 35vw, (min-width: 640px) 45vw, 100vw"
                   class="w-full h-full object-cover"
                 />
@@ -1039,7 +1026,7 @@
             class="flex flex-nowrap gap-2.5 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-1"
             style="-webkit-overflow-scrolling: touch"
           >
-          @for (car of premiumCars(); track car.id) {
+          @for (car of premiumCars(); track car.id; let idx = $index) {
             <a
               [routerLink]="['/cars', car.id]"
               (click)="onCarouselCardClick(car.id, $event)"
@@ -1057,6 +1044,7 @@
                     [alt]="car.brand + ' ' + car.model"
                     width="92"
                     height="100"
+                    [priority]="idx < 3"
                     class="w-full h-full object-cover"
                   />
                   <!-- Subtle gradient overlay -->

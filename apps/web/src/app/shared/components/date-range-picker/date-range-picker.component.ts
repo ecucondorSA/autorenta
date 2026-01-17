@@ -61,6 +61,7 @@ export class DateRangePickerComponent implements AfterViewInit, OnChanges, OnDes
   @Input() dailyPrice: number | null | undefined = null;
   @Input() showPrices = true;
   @Input() carId: string | null = null;
+  @Input() compact = false;
   @Input() availabilityChecker:
     | ((carId: string, from: string, to: string) => Promise<boolean>)
     | null = null;
