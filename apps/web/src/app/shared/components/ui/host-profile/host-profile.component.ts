@@ -59,7 +59,7 @@ export interface HostProfile {
         </div>
       </div>
       
-      <button class="contact-button" (click)="onContact.emit()">
+      <button class="contact-button" (click)="contactHost.emit()">
         💬 Contactar
       </button>
     </div>
@@ -185,7 +185,7 @@ export interface HostProfile {
 })
 export class HostProfileComponent {
   @Input() host!: HostProfile;
-  @Output() onContact = new EventEmitter<void>();
+  @Output() contactHost = new EventEmitter<void>();
 
   formatJoinDate(date: Date): string {
     const months = Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24 * 30));

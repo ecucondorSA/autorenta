@@ -423,7 +423,7 @@ export class SocialPublisherComponent {
             .split(',')
             .map((h) => h.trim())
             .filter((h) => h.length > 0),
-          scheduledFor: this.scheduledDate() ? new Date(this.scheduledDate()) : undefined,
+          scheduledFor: this.scheduledDate() ? new Date(this.scheduledDate()!) : undefined,
         },
       };
 

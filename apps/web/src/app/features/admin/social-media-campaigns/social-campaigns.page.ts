@@ -2,8 +2,9 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonSelect, IonSelectOption, IonSpinner, IonText, IonToolbar, IonCheckbox } from '@ionic/angular/standalone';
-import { injectSupabase } from '../../../core/services/supabase-client.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { injectSupabase } from '../../../core/services/infrastructure/supabase-client.service';
+import { ToastService } from '../../../core/services/ui/toast.service';
+import { environment } from '../../../../environments/environment';
 
 interface CampaignSchedule {
   id: string;
@@ -321,7 +322,7 @@ export class SocialCampaignsPage implements OnInit {
 
   async createCampaign(): Promise<void> {
     if (!this.campaignForm.valid) {
-      this.toastService.show('Por favor completa todos los campos', 'error');
+      this.toastService.error('Formulario incompleto', 'Por favor completa todos los campos');
       return;
     }
 
@@ -351,12 +352,12 @@ export class SocialCampaignsPage implements OnInit {
 
       if (error) throw error;
 
-      this.toastService.show('✅ Campaña programada exitosamente', 'success');
+      this.toastService.success('Éxito', 'Campaña programada exitosamente');
       this.campaignForm.reset();
       await this.loadCampaigns();
     } catch (error) {
       console.error('Error creating campaign:', error);
-      this.toastService.show(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
+      this.toastService.error('Error', error instanceof Error ? error.message : 'Error desconocido');
     } finally {
       this.isSubmitting.set(false);
     }
@@ -371,21 +372,19 @@ export class SocialCampaignsPage implements OnInit {
         .single() as { data: CampaignSchedule };
 
       if (!campaign) {
-        this.toastService.show('Campaña no encontrada', 'error');
+        this.toastService.error('Error', 'Campaña no encontrada');
         return;
       }
 
       // Llamar a Edge Function
+      const { data: sessionData } = await this.supabase.auth.getSession();
       const response = await fetch(
-        new URL(
-          '/functions/v1/publish-to-social-media',
-          this.supabase.getUrl()
-        ).toString(),
+        `${environment.supabaseUrl}/functions/v1/publish-to-social-media`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.supabase.getSession()?.access_token}`,
+            Authorization: `Bearer ${sessionData?.session?.access_token ?? ''}`,
           },
           body: JSON.stringify({
             campaignId,
@@ -401,11 +400,11 @@ export class SocialCampaignsPage implements OnInit {
 
       if (!response.ok) throw new Error('Error publishing campaign');
 
-      this.toastService.show('✅ Campaña publicada a todas las plataformas', 'success');
+      this.toastService.success('Éxito', 'Campaña publicada a todas las plataformas');
       await this.loadCampaigns();
     } catch (error) {
       console.error('Error publishing campaign:', error);
-      this.toastService.show(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
+      this.toastService.error('Error', error instanceof Error ? error.message : 'Error desconocido');
     }
   }
 
@@ -418,11 +417,11 @@ export class SocialCampaignsPage implements OnInit {
 
       if (error) throw error;
 
-      this.toastService.show('✅ Campaña cancelada', 'success');
+      this.toastService.success('Éxito', 'Campaña cancelada');
       await this.loadCampaigns();
     } catch (error) {
       console.error('Error deleting campaign:', error);
-      this.toastService.show(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
+      this.toastService.error('Error', error instanceof Error ? error.message : 'Error desconocido');
     }
   }
 }
