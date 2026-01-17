@@ -1,3 +1,9 @@
+## [3.1.1](https://github.com/ecucondorSA/autorenta/compare/v3.1.0...v3.1.1) (2026-01-17)
+
+### 🐛 Bug Fixes
+
+* **booking:** add await to router.navigate and fix calendar legend color ([875dc6f](https://github.com/ecucondorSA/autorenta/commit/875dc6fbcd6d52f69bd71c744576ccb2ea89b40c))
+
 ## [3.1.0](https://github.com/ecucondorSA/autorenta/compare/v3.0.0...v3.1.0) (2026-01-17)
 
 ### ✨ Features
