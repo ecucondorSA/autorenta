@@ -26,13 +26,14 @@ CREATE TABLE IF NOT EXISTS public.social_media_credentials (
   created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
--- Índices
-CREATE INDEX idx_social_credentials_platform ON public.social_media_credentials(platform);
-CREATE INDEX idx_social_credentials_is_active ON public.social_media_credentials(is_active);
+-- Índices (idempotent)
+CREATE INDEX IF NOT EXISTS idx_social_credentials_platform ON public.social_media_credentials(platform);
+CREATE INDEX IF NOT EXISTS idx_social_credentials_is_active ON public.social_media_credentials(is_active);
 
 -- RLS: Solo admins pueden acceder
 ALTER TABLE public.social_media_credentials ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Admins can manage social credentials" ON public.social_media_credentials;
 CREATE POLICY "Admins can manage social credentials"
   ON public.social_media_credentials
   FOR ALL
@@ -81,14 +82,15 @@ CREATE TABLE IF NOT EXISTS public.campaign_schedules (
   created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL
 );
 
--- Índices
-CREATE INDEX idx_campaign_schedules_status ON public.campaign_schedules(status);
-CREATE INDEX idx_campaign_schedules_scheduled_for ON public.campaign_schedules(scheduled_for);
-CREATE INDEX idx_campaign_schedules_created_by ON public.campaign_schedules(created_by);
+-- Índices (idempotent)
+CREATE INDEX IF NOT EXISTS idx_campaign_schedules_status ON public.campaign_schedules(status);
+CREATE INDEX IF NOT EXISTS idx_campaign_schedules_scheduled_for ON public.campaign_schedules(scheduled_for);
+CREATE INDEX IF NOT EXISTS idx_campaign_schedules_created_by ON public.campaign_schedules(created_by);
 
 -- RLS
 ALTER TABLE public.campaign_schedules ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Admins can manage campaign schedules" ON public.campaign_schedules;
 CREATE POLICY "Admins can manage campaign schedules"
   ON public.campaign_schedules
   FOR ALL
@@ -122,14 +124,15 @@ CREATE TABLE IF NOT EXISTS public.social_publishing_log (
   completed_at TIMESTAMP WITH TIME ZONE
 );
 
--- Índices
-CREATE INDEX idx_publishing_log_campaign ON public.social_publishing_log(campaign_id);
-CREATE INDEX idx_publishing_log_platform ON public.social_publishing_log(platform);
-CREATE INDEX idx_publishing_log_status ON public.social_publishing_log(status);
+-- Índices (idempotent)
+CREATE INDEX IF NOT EXISTS idx_publishing_log_campaign ON public.social_publishing_log(campaign_id);
+CREATE INDEX IF NOT EXISTS idx_publishing_log_platform ON public.social_publishing_log(platform);
+CREATE INDEX IF NOT EXISTS idx_publishing_log_status ON public.social_publishing_log(status);
 
 -- RLS
 ALTER TABLE public.social_publishing_log ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Admins can view publishing logs" ON public.social_publishing_log;
 CREATE POLICY "Admins can view publishing logs"
   ON public.social_publishing_log
   FOR SELECT

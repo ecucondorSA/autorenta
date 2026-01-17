@@ -72,9 +72,17 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- ============================================================================
--- 3. SCHEDULE THE CRON JOB
+-- 3. SCHEDULE THE CRON JOB (idempotent)
 -- ============================================================================
 -- Ejecutar cada minuto para revisar campaña con horarios cercanos
+-- First unschedule if exists
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM cron.job WHERE jobname = 'publish-scheduled-campaigns') THEN
+    PERFORM cron.unschedule('publish-scheduled-campaigns');
+  END IF;
+END $$;
+
 SELECT cron.schedule(
   'publish-scheduled-campaigns',  -- Job name
   '* * * * *',                     -- Every minute
@@ -121,14 +129,15 @@ CREATE TABLE IF NOT EXISTS public.social_publishing_scheduler_log (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 
--- Índices
-CREATE INDEX idx_scheduler_log_job_name ON public.social_publishing_scheduler_log(job_name);
-CREATE INDEX idx_scheduler_log_status ON public.social_publishing_scheduler_log(status);
-CREATE INDEX idx_scheduler_log_execution_time ON public.social_publishing_scheduler_log(execution_time);
+-- Índices (idempotent)
+CREATE INDEX IF NOT EXISTS idx_scheduler_log_job_name ON public.social_publishing_scheduler_log(job_name);
+CREATE INDEX IF NOT EXISTS idx_scheduler_log_status ON public.social_publishing_scheduler_log(status);
+CREATE INDEX IF NOT EXISTS idx_scheduler_log_execution_time ON public.social_publishing_scheduler_log(execution_time);
 
 -- RLS
 ALTER TABLE public.social_publishing_scheduler_log ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Admins can view scheduler logs" ON public.social_publishing_scheduler_log;
 CREATE POLICY "Admins can view scheduler logs"
   ON public.social_publishing_scheduler_log
   FOR SELECT
