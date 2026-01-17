@@ -20,7 +20,7 @@
       <a
         routerLink="/cars"
         appPressScale
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cta-default text-cta-text font-semibold text-sm hover:bg-cta-hover transition-all"
+        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cta-default text-cta-text font-semibold text-sm hover:bg-cta-hover transition-colors"
       >
         <app-icon name="car-outline" [size]="18"></app-icon>
         <span>Buscar autos</span>
@@ -35,7 +35,7 @@
         <button
           (click)="setStatusFilter(filter)"
           appPressScale
-          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all border"
+          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors border"
           [class]="statusFilter() === filter
             ? 'bg-cta-default text-cta-text border-cta-default shadow-sm'
             : 'bg-surface-raised text-text-secondary border-border-default hover:bg-surface-secondary hover:text-text-primary'"
@@ -105,7 +105,7 @@
         <p class="text-text-secondary mb-6">Explorá autos disponibles y hacé tu primera reserva</p>
         <a
           routerLink="/cars"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-cta-default hover:bg-cta-hover text-cta-text rounded-xl font-semibold transition-all"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-cta-default hover:bg-cta-hover text-cta-text rounded-xl font-semibold transition-colors"
         >
           <app-icon name="car-outline" [size]="20"></app-icon>
           <span class="pr-0.5 font-friendly">Explorar Autos</span>
@@ -121,7 +121,7 @@
         <button
           (click)="dashboardStats().actionRequired > 0 && focusSection('action-required')"
           [disabled]="dashboardStats().actionRequired === 0"
-                    class="summary-card glass-lite col-span-2 sm:col-span-1 relative glass-card-elevated p-4 rounded-2xl text-left transition-all"
+                    class="summary-card glass-lite col-span-2 sm:col-span-1 relative glass-card-elevated p-4 rounded-2xl text-left"
           [class.opacity-50]="dashboardStats().actionRequired === 0"
           [class.cursor-not-allowed]="dashboardStats().actionRequired === 0"
           [class]="dashboardStats().actionRequired > 0 ? 'ring-2 ring-warning-500/30 bg-warning-bg/30' : ''"
@@ -142,7 +142,7 @@
         <button
           (click)="dashboardStats().active > 0 && focusSection('active')"
           [disabled]="dashboardStats().active === 0"
-                    class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left transition-all"
+                    class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left"
           [class.opacity-50]="dashboardStats().active === 0"
           [class.cursor-not-allowed]="dashboardStats().active === 0"
           [class]="dashboardStats().active > 0 ? 'ring-2 ring-success-500/30 bg-success-bg/30' : ''"
@@ -163,7 +163,7 @@
         <button
           (click)="dashboardStats().history > 0 && focusSection('history')"
           [disabled]="dashboardStats().history === 0"
-                    class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left transition-all"
+                    class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left"
           [class.opacity-50]="dashboardStats().history === 0"
           [class.cursor-not-allowed]="dashboardStats().history === 0"
         >
@@ -258,7 +258,7 @@
           <button
             (click)="setStatusFilter('all'); expandAllSections()"
             appPressScale
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-surface-secondary text-text-primary font-medium text-sm hover:bg-surface-raised transition-all"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-surface-secondary text-text-primary font-medium text-sm hover:bg-surface-raised transition-colors"
           >
             Ver todas las reservas ({{ dashboardStats().total }})
           </button>
@@ -365,7 +365,7 @@
           [queryParams]="{ bookingId: booking.id }"
           (click)="$event.stopPropagation()"
           appPressScale
-          class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-cta-default text-cta-text text-sm font-semibold hover:bg-cta-hover transition-all"
+          class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-cta-default text-cta-text text-sm font-semibold hover:bg-cta-hover transition-colors"
         >
           <app-icon name="credit-card" [size]="14" /> Completar Pago
         </button>
