@@ -19,7 +19,12 @@ interface CampaignSchedule {
   time_until_publish?: string;
   time_since_publish?: string;
   status: string;
-  post_ids?: Record<string, string> | null;
+  post_ids?: {
+    facebook?: string;
+    instagram?: string;
+    linkedin?: string;
+    tiktok?: string;
+  } | null;
 }
 
 @Component({
