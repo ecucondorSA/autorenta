@@ -65,8 +65,9 @@ jobs:
 
       - name: Repair Migration History (if needed)
         run: |
-          # Repair migrations with incomplete timestamps that were applied remotely
-          supabase migration repair --status applied 20260116 2>/dev/null || true
+          # Mark old migrations with incomplete timestamps as reverted
+          # These were applied with wrong format (20260116 instead of 20260116HHMMSS)
+          supabase migration repair --status reverted 20260116 2>/dev/null || true
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
