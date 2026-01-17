@@ -122,8 +122,6 @@
           (click)="dashboardStats().actionRequired > 0 && focusSection('action-required')"
           [disabled]="dashboardStats().actionRequired === 0"
           appHoverLift
-          appStaggerEnter
-          [staggerIndex]="0"
           class="summary-card glass-lite col-span-2 sm:col-span-1 relative glass-card-elevated p-4 rounded-2xl text-left transition-all"
           [class.opacity-50]="dashboardStats().actionRequired === 0"
           [class.cursor-not-allowed]="dashboardStats().actionRequired === 0"
@@ -146,8 +144,6 @@
           (click)="dashboardStats().active > 0 && focusSection('active')"
           [disabled]="dashboardStats().active === 0"
           appHoverLift
-          appStaggerEnter
-          [staggerIndex]="1"
           class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left transition-all"
           [class.opacity-50]="dashboardStats().active === 0"
           [class.cursor-not-allowed]="dashboardStats().active === 0"
@@ -170,8 +166,6 @@
           (click)="dashboardStats().history > 0 && focusSection('history')"
           [disabled]="dashboardStats().history === 0"
           appHoverLift
-          appStaggerEnter
-          [staggerIndex]="2"
           class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left transition-all"
           [class.opacity-50]="dashboardStats().history === 0"
           [class.cursor-not-allowed]="dashboardStats().history === 0"
@@ -192,9 +186,8 @@
         @for (section of bookingsBySection(); track section.id; let i = $index) {
           <!-- Section (only show if has bookings) -->
           @if (section.count > 0) {
+            <!-- FIX: Removed appStaggerEnter to prevent continuous CLS/layout shifts -->
             <div
-              appStaggerEnter
-              [staggerIndex]="i + 3"
               class="glass-lite glass-card rounded-2xl overflow-hidden"
             >
               <!-- Section Header (clickable) -->
