@@ -121,8 +121,7 @@
         <button
           (click)="dashboardStats().actionRequired > 0 && focusSection('action-required')"
           [disabled]="dashboardStats().actionRequired === 0"
-          appHoverLift
-          class="summary-card glass-lite col-span-2 sm:col-span-1 relative glass-card-elevated p-4 rounded-2xl text-left transition-all"
+                    class="summary-card glass-lite col-span-2 sm:col-span-1 relative glass-card-elevated p-4 rounded-2xl text-left transition-all"
           [class.opacity-50]="dashboardStats().actionRequired === 0"
           [class.cursor-not-allowed]="dashboardStats().actionRequired === 0"
           [class]="dashboardStats().actionRequired > 0 ? 'ring-2 ring-warning-500/30 bg-warning-bg/30' : ''"
@@ -143,8 +142,7 @@
         <button
           (click)="dashboardStats().active > 0 && focusSection('active')"
           [disabled]="dashboardStats().active === 0"
-          appHoverLift
-          class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left transition-all"
+                    class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left transition-all"
           [class.opacity-50]="dashboardStats().active === 0"
           [class.cursor-not-allowed]="dashboardStats().active === 0"
           [class]="dashboardStats().active > 0 ? 'ring-2 ring-success-500/30 bg-success-bg/30' : ''"
@@ -165,8 +163,7 @@
         <button
           (click)="dashboardStats().history > 0 && focusSection('history')"
           [disabled]="dashboardStats().history === 0"
-          appHoverLift
-          class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left transition-all"
+                    class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left transition-all"
           [class.opacity-50]="dashboardStats().history === 0"
           [class.cursor-not-allowed]="dashboardStats().history === 0"
         >
@@ -226,8 +223,8 @@
                 </div>
               </button>
 
-              <!-- Section Content (collapsible with spring animation) -->
-              <div appSpringCollapse [collapsed]="!section.expanded">
+              <!-- Section Content (simple show/hide - no animation to prevent CLS) -->
+              @if (section.expanded) {
                 <div class="p-3 pt-0 space-y-3">
                   <!-- Use Virtual Scrolling for History section with many items -->
                   @if (section.id === 'history' && section.count > 10) {
@@ -250,7 +247,7 @@
                     </div>
                   }
                 </div>
-              </div>
+              }
             </div>
           }
         }
@@ -274,9 +271,7 @@
 <!-- ===== BOOKING CARD TEMPLATE (COMPACT) ===== -->
 <ng-template #bookingCard let-booking>
   <article
-    appHoverLift
-    [liftAmount]="4"
-    class="glass-card rounded-xl overflow-hidden border-l-4 transition-all"
+    class="glass-card rounded-xl overflow-hidden border-l-4 hover:shadow-md transition-shadow"
     [ngClass]="statusBorderClass(booking)"
     data-testid="booking-card"
   >
