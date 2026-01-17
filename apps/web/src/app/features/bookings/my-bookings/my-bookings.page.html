@@ -190,7 +190,6 @@
               <!-- Section Header (clickable) -->
               <button
                 (click)="toggleSection(section.id)"
-                appPressScale
                 class="w-full flex items-center justify-between p-4 text-left transition-colors hover:bg-surface-secondary/30"
                 [class]="section.id === 'action-required' ? 'bg-warning-bg/20' : section.id === 'active' ? 'bg-success-bg/20' : 'bg-surface-secondary/10'"
               >
@@ -212,7 +211,7 @@
                     </span>
                   }
                   <svg
-                    class="w-5 h-5 text-text-secondary transition-transform duration-300"
+                    class="w-5 h-5 text-text-secondary"
                     [class.rotate-180]="section.expanded"
                     fill="none"
                     viewBox="0 0 24 24"
