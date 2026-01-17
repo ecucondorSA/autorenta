@@ -1358,7 +1358,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       this.pendingBookingData.set(null);
 
       // After creating a booking, take the user to the booking request step (pre-auth + message)
-      this.router.navigate(['/bookings', result.booking.id, 'detail-payment']);
+      await this.router.navigate(['/bookings', result.booking.id, 'detail-payment']);
     } catch (err: unknown) {
       // Track: Booking failed (exception)
       this.analytics.trackEvent('booking_failed', {
