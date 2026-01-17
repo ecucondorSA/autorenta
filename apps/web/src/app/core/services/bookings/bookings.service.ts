@@ -166,12 +166,38 @@ export class BookingsService {
       this.updateBooking.bind(this),
     );
 
-    // Recalculate pricing breakdown
-    await this.recalculatePricing(bookingId);
+    // ✅ FIX: Initialize finalBooking with basic data as fallback
+    let finalBooking: Booking = { ...(data as Booking), id: bookingId };
 
-    // Fetch the updated booking
-    const updated = await this.getBookingById(bookingId);
-    const finalBooking = updated || { ...(data as Booking), id: bookingId };
+    // ✅ FIX: Post-creation operations are non-blocking
+    // If these fail, the booking ALREADY EXISTS - don't block the user flow
+    try {
+      // Recalculate pricing breakdown
+      await this.recalculatePricing(bookingId);
+
+      // Fetch the updated booking with full details
+      const updated = await this.getBookingById(bookingId);
+      if (updated) {
+        finalBooking = updated;
+      }
+    } catch (postError) {
+      // ⚠️ WARNING: Don't block - the booking ALREADY EXISTS in the database
+      this.logger.warn(
+        `Post-creation operations failed for booking ${bookingId}, but booking was created successfully`,
+        'BookingsService',
+        postError instanceof Error ? postError : new Error(String(postError)),
+      );
+
+      // Create issue for manual review (fire and forget - don't block)
+      this.createPaymentIssue({
+        booking_id: bookingId,
+        issue_type: 'post_creation_failure',
+        severity: 'medium',
+        description: `recalculatePricing or getBookingById failed: ${postError instanceof Error ? postError.message : String(postError)}`,
+      }).catch(() => {
+        // Silently ignore - this is a best-effort background operation
+      });
+    }
 
     // 🎯 TikTok Events: Track PlaceAnOrder
     const placeOrderContentName = this.getBookingCarTitle(finalBooking);
@@ -267,12 +293,35 @@ export class BookingsService {
       this.updateBooking.bind(this),
     );
 
-    // Recalculate pricing breakdown
-    await this.recalculatePricing(bookingId);
+    // ✅ FIX: Initialize finalBooking with basic data as fallback
+    let finalBooking: Booking = { ...(data as Booking), id: bookingId };
 
-    // Fetch the updated booking
-    const updated = await this.getBookingById(bookingId);
-    const finalBooking = updated || { ...(data as Booking), id: bookingId };
+    // ✅ FIX: Post-creation operations are non-blocking
+    try {
+      // Recalculate pricing breakdown
+      await this.recalculatePricing(bookingId);
+
+      // Fetch the updated booking with full details
+      const updated = await this.getBookingById(bookingId);
+      if (updated) {
+        finalBooking = updated;
+      }
+    } catch (postError) {
+      // ⚠️ WARNING: Don't block - the booking ALREADY EXISTS
+      this.logger.warn(
+        `Post-creation operations failed for booking ${bookingId}, but booking was created successfully`,
+        'BookingsService',
+        postError instanceof Error ? postError : new Error(String(postError)),
+      );
+
+      // Create issue for manual review (fire and forget)
+      this.createPaymentIssue({
+        booking_id: bookingId,
+        issue_type: 'post_creation_failure',
+        severity: 'medium',
+        description: `recalculatePricing or getBookingById failed: ${postError instanceof Error ? postError.message : String(postError)}`,
+      }).catch(() => {});
+    }
 
     // 🎯 TikTok Events: Track PlaceAnOrder
     const placeOrderWithLocationContentName = this.getBookingCarTitle(finalBooking);
