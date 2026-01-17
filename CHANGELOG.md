@@ -1,3 +1,9 @@
+## [3.1.3](https://github.com/ecucondorSA/autorenta/compare/v3.1.2...v3.1.3) (2026-01-17)
+
+### 🐛 Bug Fixes
+
+* **calendar:** remove ::ng-deep from legend dot selectors ([ba095a5](https://github.com/ecucondorSA/autorenta/commit/ba095a56258a221e554bc953e06d3b46f123c378))
+
 ## [3.1.2](https://github.com/ecucondorSA/autorenta/compare/v3.1.1...v3.1.2) (2026-01-17)
 
 ### 🐛 Bug Fixes
