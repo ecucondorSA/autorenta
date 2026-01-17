@@ -1,3 +1,49 @@
+## [3.1.0](https://github.com/ecucondorSA/autorenta/compare/v3.0.0...v3.1.0) (2026-01-17)
+
+### ✨ Features
+
+* **bookings:** add Context-Driven Page Orchestrator for /bookings ([04fe071](https://github.com/ecucondorSA/autorenta/commit/04fe0712bf3d2a3147856a767eddc9fe7e9b1292))
+* complete Instagram API integration for marketing campaigns ([ac8e4bb](https://github.com/ecucondorSA/autorenta/commit/ac8e4bb8c9a6010018f39875f9d809f8369a70de))
+* **email:** add complete email marketing & lead nurturing system ([46e0f49](https://github.com/ecucondorSA/autorenta/commit/46e0f4937d3ffca225aee3bca6a6acde7183c067))
+* **marketing:** activate social media system with test credentials ([993e884](https://github.com/ecucondorSA/autorenta/commit/993e884f00321b47811ae7a8b6249d6d2129d365))
+* **marketing:** implement automated social media publishing system ([c2281a8](https://github.com/ecucondorSA/autorenta/commit/c2281a899d37f495591bb30816a1d0b8e82c027a))
+* **social-publisher:** add multi-platform social media publisher ([e8b7257](https://github.com/ecucondorSA/autorenta/commit/e8b72571adcfa26043c089c5532fe725e5e038bb))
+* **ui:** add design system tokens and reusable UI components ([4ffbb40](https://github.com/ecucondorSA/autorenta/commit/4ffbb400d766c28a403d159eb984b533bbf7e899))
+
+### 🐛 Bug Fixes
+
+* **bookings:** eliminate all CSS transforms causing CLS/temblor ([6748d47](https://github.com/ecucondorSA/autorenta/commit/6748d472ceea1a6bed3eb5cabf3babe1de1a0333))
+* **booking:** show booking error messages in UI ([533d8b6](https://github.com/ecucondorSA/autorenta/commit/533d8b6a6f97f2f9431f8ba571777ca6e369f1c3))
+* **bookings:** make post-creation operations non-blocking ([ba66cfb](https://github.com/ecucondorSA/autorenta/commit/ba66cfb06c48bc29408e27d61b424934a1f88e9a))
+* **bookings:** remove appSpringCollapse and appHoverLift to eliminate CLS ([4cb50c1](https://github.com/ecucondorSA/autorenta/commit/4cb50c19146d8f65be44834170e03eb63e5a8340))
+* **bookings:** remove appStaggerEnter causing continuous CLS ([f90df04](https://github.com/ecucondorSA/autorenta/commit/f90df0437421e3afc32ed079935649ee23c393eb))
+* **bookings:** remove directives causing continuous DOM mutations ([9518dc0](https://github.com/ecucondorSA/autorenta/commit/9518dc0bf6d910c08723aa00726acd1a97201a51))
+* **bookings:** remove infinite CSS animations causing CLS/temblor ([c8e0d94](https://github.com/ecucondorSA/autorenta/commit/c8e0d94f6fc1d437be130b381eb95dcd484df1e7))
+* **bookings:** use stable track IDs to prevent re-animation ([8d5c7bf](https://github.com/ecucondorSA/autorenta/commit/8d5c7bf1649c1cf601d83134d02074c604d13001))
+* **cars-list:** fix map layout and remove extra filters ([3a8596d](https://github.com/ecucondorSA/autorenta/commit/3a8596d19f4566cb88ec26a17c67ef1fca6d0c87))
+* **ci:** add migration list diagnostic and repair more versions ([7524142](https://github.com/ecucondorSA/autorenta/commit/752414208a49f5fe889ee48be4df925818b373bc))
+* **ci:** add missing semantic-release plugins ([039a12f](https://github.com/ecucondorSA/autorenta/commit/039a12f1679cffbfff7d97d4413f2a0919574991))
+* **ci:** usar track 'internal' en lugar de 'closed_testing' (no existe en Google Play) ([175b721](https://github.com/ecucondorSA/autorenta/commit/175b7214f13075455d4cd6e7b8ed210cc703d9c5))
+* **ci:** use --status reverted for migration repair ([4ca667a](https://github.com/ecucondorSA/autorenta/commit/4ca667ae6f01b7fef5cedacdbffd641cb36c1c3a))
+* **csp:** actualizar Content Security Policy para Facebook API ([8065acd](https://github.com/ecucondorSA/autorenta/commit/8065acd9d6423f968d11a0041bd8f933c837a725))
+* **email:** correct brand name from AutoRenta to AutoRentar ([d508725](https://github.com/ecucondorSA/autorenta/commit/d508725b7d8f79ba1d62a08b595965031213bd98))
+* **migrations:** make all migrations idempotent with IF NOT EXISTS ([2fad4c4](https://github.com/ecucondorSA/autorenta/commit/2fad4c40aba9cddf045210320072510010151fe4))
+* **migrations:** rename 20251218 to correct format and repair both versions ([aa8bfb4](https://github.com/ecucondorSA/autorenta/commit/aa8bfb45ca88fd0a483756079b98367d7cd075af))
+* **migrations:** rename migration files to correct timestamp format ([8393e6b](https://github.com/ecucondorSA/autorenta/commit/8393e6bbb78c3c2bf522fb7164b9fe001a5969c7))
+* **migrations:** use full_name instead of first_name for profiles table ([b70462d](https://github.com/ecucondorSA/autorenta/commit/b70462de9466c0b16d2157a23d3802b3217ec348))
+* resolve compilation errors and HTML template issue ([1be670a](https://github.com/ecucondorSA/autorenta/commit/1be670a3a58bec60673c270ca22bbd7c4be3e4f9))
+* **social-campaigns:** resolve TypeScript linting warnings ([95b506b](https://github.com/ecucondorSA/autorenta/commit/95b506b2bdd5bcd4bb7f5d3bd92483fe92b1af16))
+* **social-campaigns:** use explicit type for post_ids instead of Record ([0af0b41](https://github.com/ecucondorSA/autorenta/commit/0af0b4143703600dc1d665fc9f83a4a3045882aa))
+* **social-publisher:** use signal getter syntax in template ([5e59b05](https://github.com/ecucondorSA/autorenta/commit/5e59b055fa19089823bf8d2bfdf1a322c32b9afd))
+* **social-publishing:** actualizar API v18/v19 → v20, corregir bugs Instagram/Facebook ([08f1cc5](https://github.com/ecucondorSA/autorenta/commit/08f1cc52c30ddefc2b288ff19c69e54df1cf1eff))
+* **ui:** remove infinite CSS animations causing CLS/temblor ([26a40b9](https://github.com/ecucondorSA/autorenta/commit/26a40b92ae32769ea632b962445d752627f5fc20))
+
+### 👷 CI/CD
+
+* **android:** implementar sistema COMPLETAMENTE automatizado de release ([532a82f](https://github.com/ecucondorSA/autorenta/commit/532a82f02d2b73eaa2fece0cc69bec781213fb00))
+* **android:** solución completamente automatizada para build y deploy ([e3daa24](https://github.com/ecucondorSA/autorenta/commit/e3daa244035bd9438494a5ca236631271c9b8160))
+* force GitHub Actions cache refresh for build-android workflow ([a0c3f91](https://github.com/ecucondorSA/autorenta/commit/a0c3f91d8f3fcc0e42494f608c9547810c252a8b))
+
 # [3.0.0](https://github.com/ecucondorSA/autorenta/compare/v2.30.3...v3.0.0) (2026-01-16)
 
 
