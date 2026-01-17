@@ -1,3 +1,9 @@
+## [3.2.1](https://github.com/ecucondorSA/autorenta/compare/v3.2.0...v3.2.1) (2026-01-17)
+
+### 🐛 Bug Fixes
+
+* **booking:** detect OVERLAP error for user-friendly message ([87c794f](https://github.com/ecucondorSA/autorenta/commit/87c794fbef4c02cd6f9fbb276484d39bab2f9450))
+
 ## [3.2.0](https://github.com/ecucondorSA/autorenta/compare/v3.1.4...v3.2.0) (2026-01-17)
 
 ### ✨ Features
