@@ -129,7 +129,8 @@ interface PublishResponse {
           <ion-item>
             <ion-label position="floating">Agendar para más tarde (opcional)</ion-label>
             <ion-datetime
-              [(ngModel)]="scheduledDate"
+              [ngModel]="scheduledDate()"
+              (ngModelChange)="scheduledDate.set($event)"
               display-format="DD/MM/YYYY HH:mm"
             ></ion-datetime>
           </ion-item>
@@ -169,7 +170,7 @@ interface PublishResponse {
           [disabled]="isPublishing() || selectedPlatforms().length === 0 || !contentText"
         >
           <ion-icon name="rocket" slot="start"></ion-icon>
-          {{ scheduledDate ? 'Agendar' : 'Publicar Ahora' }}
+          {{ scheduledDate() ? 'Agendar' : 'Publicar Ahora' }}
         </ion-button>
 
         <ion-button
