@@ -450,6 +450,42 @@
         </div>
         }
 
+        <!-- Booking Error Message -->
+        @if (bookingError()) {
+        <div class="mb-4 p-4 rounded-2xl bg-error-bg/20 border border-error-border text-error-default">
+          <div class="flex items-start gap-3">
+            <app-icon name="alert-circle" [size]="20" cssClass="flex-shrink-0 mt-0.5" />
+            <div class="flex-1">
+              <p class="text-sm font-medium">{{ bookingError() }}</p>
+              @if (suggestedDateRanges().length > 0) {
+              <div class="mt-3 flex flex-wrap gap-2">
+                @for (suggestion of suggestedDateRanges(); track suggestion.startDate) {
+                <button
+                  (click)="applySuggestedDates(suggestion)"
+                  class="px-3 py-1.5 text-xs font-bold bg-surface-raised border border-border-default rounded-lg hover:border-cta-default transition-all">
+                  {{ formatSuggestionDate(suggestion.startDate) }} - {{ formatSuggestionDate(suggestion.endDate) }}
+                  <span class="text-text-muted">({{ suggestion.daysCount }}d)</span>
+                </button>
+                }
+              </div>
+              }
+              @if (canWaitlist()) {
+              <button
+                (click)="addToWaitlist()"
+                [disabled]="addingToWaitlist()"
+                class="mt-3 text-xs font-bold text-cta-default hover:underline">
+                @if (!addingToWaitlist()) {
+                Avisarme cuando esté disponible
+                } @else {
+                Agregando...
+                }
+              </button>
+              }
+            </div>
+          </div>
+        </div>
+        }
+
         <!-- CTA Button -->
         <button (click)="onBookClick()"
           data-testid="book-now"
@@ -561,5 +597,6 @@
   [ctaText]="canBook() ? 'Solicitar Reserva' : 'Seleccionar Fechas'" [showCalendarIcon]="!canBook()"
   [disabled]="bookingInProgress() || isCarOwner()" [loading]="bookingInProgress()"
   [expressMode]="expressMode()" [showTermsCheckbox]="!!canBook()" [termsAccepted]="termsAccepted()"
+  [errorMessage]="bookingError()"
   (termsAcceptedChange)="termsAccepted.set($event)" (ctaClick)="onBookClick()" />
 }

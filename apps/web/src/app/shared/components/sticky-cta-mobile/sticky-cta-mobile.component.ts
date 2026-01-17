@@ -26,6 +26,8 @@ export class StickyCtaMobileComponent {
   @Input() showTermsCheckbox = false;
   /** Current state of terms acceptance */
   @Input() termsAccepted = false;
+  /** Error message to display */
+  @Input() errorMessage: string | null = null;
   @Output() readonly ctaClick = new EventEmitter<void>();
   @Output() readonly termsAcceptedChange = new EventEmitter<boolean>();
 
