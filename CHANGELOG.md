@@ -1,3 +1,9 @@
+## [3.2.0](https://github.com/ecucondorSA/autorenta/compare/v3.1.4...v3.2.0) (2026-01-17)
+
+### ✨ Features
+
+* **booking:** show friendly error message for date overlap ([d4f84cf](https://github.com/ecucondorSA/autorenta/commit/d4f84cf11783b2ad9ff01f6cca822bd36ef3e57a))
+
 ## [3.1.4](https://github.com/ecucondorSA/autorenta/compare/v3.1.3...v3.1.4) (2026-01-17)
 
 ### 🐛 Bug Fixes
