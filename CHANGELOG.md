@@ -1,3 +1,9 @@
+## [3.4.2](https://github.com/ecucondorSA/autorenta/compare/v3.4.1...v3.4.2) (2026-01-19)
+
+### 🐛 Bug Fixes
+
+* **web:** add success-light color alias to tailwind config ([6255677](https://github.com/ecucondorSA/autorenta/commit/6255677e50881ed4239d0b6e6706b41a8f738bd4))
+
 ## [3.4.1](https://github.com/ecucondorSA/autorenta/compare/v3.4.0...v3.4.1) (2026-01-19)
 
 ### 🐛 Bug Fixes
