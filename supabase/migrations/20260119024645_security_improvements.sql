@@ -25,21 +25,11 @@ SELECT
   p.rating_count,
   p.created_at,
   -- These are trust indicators, not sensitive data
-  CASE
-    WHEN p.email_verified THEN true
-    ELSE false
-  END AS email_verified,
-  CASE
-    WHEN p.phone_verified THEN true
-    ELSE false
-  END AS phone_verified,
-  -- Verification badges
-  CASE
-    WHEN p.is_verified THEN true
-    ELSE false
-  END AS is_verified
-FROM public.profiles p
-WHERE p.is_active = true OR p.is_active IS NULL;
+  COALESCE(p.email_verified, false) AS email_verified,
+  COALESCE(p.phone_verified, false) AS phone_verified,
+  -- Computed verification status (both email and phone verified)
+  (COALESCE(p.email_verified, false) AND COALESCE(p.phone_verified, false)) AS is_verified
+FROM public.profiles p;
 
 -- Grant access to the view
 GRANT SELECT ON public.public_owner_info TO authenticated;
