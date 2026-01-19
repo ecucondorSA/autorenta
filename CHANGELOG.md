@@ -1,3 +1,9 @@
+## [3.4.3](https://github.com/ecucondorSA/autorenta/compare/v3.4.2...v3.4.3) (2026-01-19)
+
+### 🐛 Bug Fixes
+
+* **android:** make AD_ID check a warning instead of error ([8b9b5dd](https://github.com/ecucondorSA/autorenta/commit/8b9b5ddb3d8a8c51e2f9b69f6a239a77cb6da252))
+
 ## [3.4.2](https://github.com/ecucondorSA/autorenta/compare/v3.4.1...v3.4.2) (2026-01-19)
 
 ### 🐛 Bug Fixes
