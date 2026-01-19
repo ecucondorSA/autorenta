@@ -1,3 +1,9 @@
+## [3.2.2](https://github.com/ecucondorSA/autorenta/compare/v3.2.1...v3.2.2) (2026-01-19)
+
+### 🐛 Bug Fixes
+
+* **security:** remove hardcoded API keys and add secret detection ([f04302c](https://github.com/ecucondorSA/autorenta/commit/f04302c21fd009120ae8a070a0121f875e4ab490))
+
 ## [3.2.1](https://github.com/ecucondorSA/autorenta/compare/v3.2.0...v3.2.1) (2026-01-17)
 
 ### 🐛 Bug Fixes
