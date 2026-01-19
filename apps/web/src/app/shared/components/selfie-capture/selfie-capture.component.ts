@@ -9,10 +9,31 @@ import {
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { FaceVerificationService } from '@core/services/verification/face-verification.service';
 import { IdentityLevelService } from '@core/services/verification/identity-level.service';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
+
+/** MediaPipe FaceLandmarker normalized landmark point */
+interface NormalizedLandmark {
+  x: number;
+  y: number;
+  z?: number;
+  visibility?: number;
+}
+
+/** MediaPipe blendshape category */
+interface BlendshapeCategory {
+  categoryName: string;
+  score: number;
+  index: number;
+}
+
+/** MediaPipe face blendshapes result */
+interface FaceBlendshapes {
+  categories: BlendshapeCategory[];
+}
 
 @Component({
   standalone: true,
@@ -247,6 +268,7 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
   private readonly faceVerificationService = inject(FaceVerificationService);
   private readonly identityLevelService = inject(IdentityLevelService);
   private readonly supabase = injectSupabase();
+  private readonly logger = inject(LoggerService).createChildLogger('SelfieCapture');
 
   @ViewChild('videoPreview') videoPreview!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvasOutput') canvasOutput!: ElementRef<HTMLCanvasElement>;
@@ -276,7 +298,7 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
   private lastVideoTime = -1;
   private animationFrameId: number | null = null;
   private goodStateStartTime: number | null = null;
-  private recordingInterval: any = null;
+  private recordingInterval: ReturnType<typeof setInterval> | null = null;
 
   async ngOnInit(): Promise<void> {
     await this.faceVerificationService.checkFaceVerificationStatus();
@@ -295,12 +317,12 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
   /**
    * Initialize MediaPipe Face Landmarker
    */
-  async initializeFaceLandmarker() {
+  async initializeFaceLandmarker(): Promise<void> {
     try {
       const filesetResolver = await FilesetResolver.forVisionTasks(
         'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm'
       );
-      
+
       this.faceLandmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
         baseOptions: {
           modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
@@ -310,11 +332,11 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
         runningMode: 'VIDEO',
         numFaces: 1
       });
-      
+
       this.isModelLoaded.set(true);
-      console.log('FaceLandmarker loaded');
-    } catch (err) {
-      console.error('Failed to load FaceLandmarker', err);
+      this.logger.info('FaceLandmarker loaded');
+    } catch (error) {
+      this.logger.error('Failed to load FaceLandmarker', error);
       this.faceVerificationService.error.set('No se pudo cargar el módulo de IA. Recarga la página.');
     }
   }
@@ -322,38 +344,38 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
   /**
    * Start Camera and Analysis Loop
    */
-   async startSmartCamera() {
-     this.faceVerificationService.clearError();
+  async startSmartCamera(): Promise<void> {
+    this.faceVerificationService.clearError();
 
-     // Lazy load MediaPipe if not already loaded
-     if (!this.faceLandmarker) {
-       await this.initializeFaceLandmarker();
-     }
+    // Lazy load MediaPipe if not already loaded
+    if (!this.faceLandmarker) {
+      await this.initializeFaceLandmarker();
+    }
 
-     try {
+    try {
       this.mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { 
-          width: 1280, 
+        video: {
+          width: 1280,
           height: 720,
-          facingMode: 'user' 
+          facingMode: 'user'
         },
         audio: false,
       });
 
       const video = this.videoPreview.nativeElement;
       video.srcObject = this.mediaStream;
-      
+
       await new Promise<void>((resolve) => {
         video.onloadedmetadata = () => {
-          video.play();
+          void video.play();
           resolve();
         };
       });
 
       this.isCameraActive.set(true);
       this.predictWebcam();
-    } catch (err) {
-      console.error('Camera Error:', err);
+    } catch (error) {
+      this.logger.error('Camera error', error);
       this.faceVerificationService.error.set('Permiso de cámara denegado. Habilítalo en tu navegador.');
     }
   }
@@ -361,13 +383,13 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
   /**
    * Main Prediction Loop
    */
-  async predictWebcam() {
+  async predictWebcam(): Promise<void> {
     if (!this.isCameraActive() || !this.faceLandmarker) return;
 
     const video = this.videoPreview.nativeElement;
     const canvas = this.canvasOutput.nativeElement;
     const ctx = canvas.getContext('2d');
-    
+
     if (!ctx) return;
 
     // Resize canvas to match video
@@ -376,42 +398,48 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
       canvas.height = video.videoHeight;
     }
 
-      const startTimeMs = performance.now();
-      
-      if (this.lastVideoTime !== video.currentTime) {
-        this.lastVideoTime = video.currentTime;
-        
-        const results = this.faceLandmarker.detectForVideo(video, startTimeMs);
+    const startTimeMs = performance.now();
 
-        // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (this.lastVideoTime !== video.currentTime) {
+      this.lastVideoTime = video.currentTime;
 
-        if (results.faceLandmarks && results.faceLandmarks.length > 0) {
-          const landmarks = results.faceLandmarks[0];
-          const blendshapes = results.faceBlendshapes ? results.faceBlendshapes[0] : null;
-          
-          // Analyze Geometry & Expressions
-          this.analyzeFace(landmarks, blendshapes, canvas.width, canvas.height);
-          
-          // Optional: Draw landmarks for "tech" feel (subtle)
-          // this.drawLandmarks(ctx, landmarks); 
-        } else {
-          this.instructionState.set('no-face');
-          this.goodStateStartTime = null;
-          this.resetChallenge();
-        }
+      const results = this.faceLandmarker.detectForVideo(video, startTimeMs);
+
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (results.faceLandmarks && results.faceLandmarks.length > 0) {
+        const landmarks = results.faceLandmarks[0];
+        const blendshapes = results.faceBlendshapes ? results.faceBlendshapes[0] : null;
+
+        // Analyze Geometry & Expressions
+        this.analyzeFace(landmarks, blendshapes, canvas.width, canvas.height);
+
+        // Optional: Draw landmarks for "tech" feel (subtle)
+        // this.drawLandmarks(ctx, landmarks);
+      } else {
+        this.instructionState.set('no-face');
+        this.goodStateStartTime = null;
+        this.resetChallenge();
       }
+    }
 
-      if (this.isCameraActive()) {
+    if (this.isCameraActive()) {
       this.animationFrameId = requestAnimationFrame(() => this.predictWebcam());
     }
   }
 
+
   /**
    * Main Analysis Logic: Geometry + Liveness
    */
-  private analyzeFace(landmarks: any[], blendshapes: any | null, width: number, height: number) {
-    if (this.isRecording()) return; 
+  private analyzeFace(
+    landmarks: NormalizedLandmark[],
+    blendshapes: FaceBlendshapes | null,
+    _width: number,
+    _height: number
+  ): void {
+    if (this.isRecording()) return;
 
     // 1. Geometry Check
     const geometryState = this.checkFaceGeometry(landmarks);
@@ -450,17 +478,19 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
     }
   }
 
-  private checkFaceGeometry(landmarks: any[]): string {
-    const xs = landmarks.map((l: any) => l.x);
-    const ys = landmarks.map((l: any) => l.y);
+  private checkFaceGeometry(landmarks: NormalizedLandmark[]): string {
+    const xs = landmarks.map((l) => l.x);
+    const ys = landmarks.map((l) => l.y);
     const minX = Math.min(...xs);
     const maxX = Math.max(...xs);
-    // const minY = Math.min(...ys);
-    // const maxY = Math.max(...ys);
+    const minY = Math.min(...ys);
+    const maxY = Math.max(...ys);
 
     const faceWidth = maxX - minX;
     const faceCenterX = (minX + maxX) / 2;
-    const faceCenterY = (Math.min(...ys) + Math.max(...ys)) / 2;
+    const faceCenterY = (minY + maxY) / 2;
+
+
 
     // Rules
     const isCenteredX = faceCenterX > 0.35 && faceCenterX < 0.65;
@@ -475,29 +505,29 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
     return 'good';
   }
 
-  private startChallenge() {
+  private startChallenge(): void {
     // Randomly pick Smile or Blink
     const challenges: ('smile' | 'blink')[] = ['smile', 'blink'];
     const next = challenges[Math.floor(Math.random() * challenges.length)];
-    
+
     this.currentChallenge.set(next);
-    
+
     // Haptic feedback if available
     if (navigator.vibrate) navigator.vibrate(50);
   }
 
-  private checkChallenge(blendshapes: any): boolean {
+  private checkChallenge(blendshapes: FaceBlendshapes): boolean {
     const categories = blendshapes.categories;
     if (!categories) return false;
 
     // Helper to get score
-    const getScore = (name: string) => categories.find((c: any) => c.categoryName === name)?.score || 0;
+    const getScore = (name: string) => categories.find((c) => c.categoryName === name)?.score ?? 0;
 
     if (this.currentChallenge() === 'smile') {
       const smileScore = (getScore('mouthSmileLeft') + getScore('mouthSmileRight')) / 2;
       return smileScore > 0.5; // Threshold for smile
     }
-    
+
     if (this.currentChallenge() === 'blink') {
       const blinkScore = (getScore('eyeBlinkLeft') + getScore('eyeBlinkRight')) / 2;
       return blinkScore > 0.5; // Threshold for blink
@@ -506,15 +536,15 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  private resetChallenge() {
+  private resetChallenge(): void {
     this.goodStateStartTime = null;
     this.currentChallenge.set('none');
     this.challengeCompleted.set(false);
   }
 
-  startRecording() {
+  startRecording(): void {
     if (this.isRecording() || !this.mediaStream) return;
-    
+
     this.isRecording.set(true);
     this.instructionState.set('recording');
     this.goodStateStartTime = null;
@@ -525,8 +555,8 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
       });
 
       this.recordedChunks = [];
-      this.mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) this.recordedChunks.push(e.data);
+      this.mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) this.recordedChunks.push(event.data);
       };
 
       this.mediaRecorder.onstop = () => {
@@ -549,14 +579,14 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
         }
       }, 1000);
 
-    } catch (e) {
-      console.error('Recorder error:', e);
+    } catch (error) {
+      this.logger.error('Recorder error', error);
       this.faceVerificationService.error.set('Error al iniciar grabación.');
       this.isRecording.set(false);
     }
   }
 
-  stopRecording() {
+  stopRecording(): void {
     if (this.recordingInterval) {
       clearInterval(this.recordingInterval);
       this.recordingInterval = null;
@@ -567,9 +597,9 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
     this.isRecording.set(false);
   }
 
-  stopCamera() {
+  stopCamera(): void {
     if (this.mediaStream) {
-      this.mediaStream.getTracks().forEach(track => track.stop());
+      this.mediaStream.getTracks().forEach((track) => track.stop());
       this.mediaStream = null;
     }
     this.isCameraActive.set(false);
@@ -579,7 +609,7 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
     }
   }
 
-  retake() {
+  retake(): void {
     if (this.videoPreview?.nativeElement?.src) {
       URL.revokeObjectURL(this.videoPreview.nativeElement.src);
     }
@@ -587,7 +617,7 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
     this.recordedChunks = [];
     this.instructionState.set('no-face');
     this.resetChallenge(); // Reset logic
-    
+
     // Restart camera
     if (this.isModelLoaded()) {
       this.startSmartCamera();
@@ -603,16 +633,16 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
     return '#F59E0B'; // Orange/Yellow for adjustments
   }
 
-  async submitVideo() {
+  async submitVideo(): Promise<void> {
     if (!this.recordedChunks.length) return;
-    
+
     try {
       const blob = new Blob(this.recordedChunks, { type: 'video/webm' });
       const file = new File([blob], `selfie_${Date.now()}.webm`, { type: 'video/webm' });
 
       // Current flow: Upload video -> Backend verifies
       // Step 3 (Backend) will assume this video is good because we validated it here.
-      
+
       const videoUrl = await this.faceVerificationService.uploadSelfieVideo(file);
 
       const { data: { user } } = await this.supabase.auth.getUser();
@@ -633,42 +663,43 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
         .getPublicUrl(docs[0].storage_path);
 
       await this.faceVerificationService.verifyFace(videoUrl, urlData.publicUrl);
-      
-    } catch (e) {
-      console.error(e);
+
+    } catch (error) {
+      this.logger.error('Selfie verification failed', error);
       // Error is handled by service signal
     }
   }
 
   getStatusIcon(): string { return this.status().isVerified ? '✓' : '👤'; }
-  getStatusBadgeClass(): string { 
-    return this.status().isVerified 
-      ? 'bg-success-light/20 text-success-strong' 
+  getStatusBadgeClass(): string {
+    return this.status().isVerified
+      ? 'bg-success-light/20 text-success-strong'
       : 'bg-surface-raised border border-border-default text-text-secondary';
   }
   getStatusLabel(): string { return this.status().isVerified ? 'Verificado' : 'Requerido'; }
-   getStatusLabelClass(): string {
-     return this.status().isVerified
-       ? 'bg-success-light/10 text-success-strong'
-       : 'bg-surface-base border border-border-default text-text-secondary';
-   }
+  getStatusLabelClass(): string {
+    return this.status().isVerified
+      ? 'bg-success-light/10 text-success-strong'
+      : 'bg-surface-base border border-border-default text-text-secondary';
+  }
 
-   getStatusMessage(): string {
-     if (this.status().isVerified) {
-       return 'Identidad validada exitosamente.';
-     }
-     if (this.processing()) {
-       return 'Validando identidad facial.';
-     }
-     if (this.hasVideo()) {
-       return 'Selfie grabado, listo para enviar.';
-     }
-     if (this.isRecording()) {
-       return 'Grabando selfie con verificación liveness.';
-     }
-     if (this.isCameraActive()) {
-       return 'Cámara activa, esperando detección de rostro.';
-     }
-     return 'Inicia la cámara para captura de selfie.';
-   }
+  getStatusMessage(): string {
+    if (this.status().isVerified) {
+      return 'Identidad validada exitosamente.';
+    }
+    if (this.processing()) {
+      return 'Validando identidad facial.';
+    }
+    if (this.hasVideo()) {
+      return 'Selfie grabado, listo para enviar.';
+    }
+    if (this.isRecording()) {
+      return 'Grabando selfie con verificación liveness.';
+    }
+    if (this.isCameraActive()) {
+      return 'Cámara activa, esperando detección de rostro.';
+    }
+    return 'Inicia la cámara para captura de selfie.';
+  }
 }
+
