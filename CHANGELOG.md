@@ -1,3 +1,13 @@
+## [3.2.9](https://github.com/ecucondorSA/autorenta/compare/v3.2.8...v3.2.9) (2026-01-19)
+
+### 🐛 Bug Fixes
+
+* **seo:** fix TypeScript errors in seo-landing page ([7dbe710](https://github.com/ecucondorSA/autorenta/commit/7dbe710eac327a496abffeadd2558eeb0575f44f))
+
+### 👷 CI/CD
+
+* **android:** add secret fallbacks for existing GitHub secrets ([5edefd4](https://github.com/ecucondorSA/autorenta/commit/5edefd4e800c51aceb25453b1c2ce0d112282b70))
+
 ## [3.2.8](https://github.com/ecucondorSA/autorenta/compare/v3.2.7...v3.2.8) (2026-01-19)
 
 ### 🐛 Bug Fixes
