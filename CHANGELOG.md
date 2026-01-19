@@ -1,3 +1,9 @@
+## [3.2.5](https://github.com/ecucondorSA/autorenta/compare/v3.2.4...v3.2.5) (2026-01-19)
+
+### 🐛 Bug Fixes
+
+* **ci:** grant issues permission to commission workflow ([edf75a4](https://github.com/ecucondorSA/autorenta/commit/edf75a400b63c1b3f1ef685b501192a62a9773d1))
+
 ## [3.2.4](https://github.com/ecucondorSA/autorenta/compare/v3.2.3...v3.2.4) (2026-01-19)
 
 ### 🐛 Bug Fixes
