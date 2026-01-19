@@ -1,3 +1,9 @@
+## [3.4.0](https://github.com/ecucondorSA/autorenta/compare/v3.3.0...v3.4.0) (2026-01-19)
+
+### ✨ Features
+
+* **seo:** expand footer SEO with 137+ internal links ([9f5e560](https://github.com/ecucondorSA/autorenta/commit/9f5e5601eb4416b11b511696b103a084d49e8f44))
+
 ## [3.3.0](https://github.com/ecucondorSA/autorenta/compare/v3.2.9...v3.3.0) (2026-01-19)
 
 ### ✨ Features
