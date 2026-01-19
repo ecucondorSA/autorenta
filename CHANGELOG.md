@@ -1,3 +1,9 @@
+## [3.2.4](https://github.com/ecucondorSA/autorenta/compare/v3.2.3...v3.2.4) (2026-01-19)
+
+### 🐛 Bug Fixes
+
+* **ci:** align workflows with pnpm and logging ([62e4255](https://github.com/ecucondorSA/autorenta/commit/62e425546cd039fb4672aa8fd980af1a3afdc203))
+
 ## [3.2.3](https://github.com/ecucondorSA/autorenta/compare/v3.2.2...v3.2.3) (2026-01-19)
 
 ### 🐛 Bug Fixes
