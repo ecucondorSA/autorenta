@@ -35,10 +35,10 @@ jobs:
             const daysBack = parseInt('${{ inputs.days_back }}' || '7');
 
             const query = async (endpoint) => {
-              const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
+              const res = await fetch(supabaseUrl + '/rest/v1/' + endpoint, {
                 headers: {
                   'apikey': supabaseKey,
-                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Authorization': 'Bearer ' + supabaseKey,
                 }
               });
               return res.json();
@@ -48,7 +48,7 @@ jobs:
             fromDate.setDate(fromDate.getDate() - daysBack);
             const fromDateStr = fromDate.toISOString();
 
-            console.log(`Reconciling commissions from ${fromDateStr}`);
+            console.log('Reconciling commissions from ' + fromDateStr);
 
             const issues = [];
             const stats = {
@@ -65,8 +65,7 @@ jobs:
               `bookings?status=in.(confirmed,in_progress,completed)&created_at=gte.${fromDateStr}&select=id,total_amount_ars,platform_fee_ars,owner_id,renter_id,status`
             );
 
-            console.log(`Found ${bookings.length} bookings to check`);
-            stats.bookings_checked = bookings.length;
+            console.log('Found ' + bookings.length + ' bookings to check');            stats.bookings_checked = bookings.length;
 
             const EXPECTED_COMMISSION_RATE = 0.15; // 15%
 
@@ -86,7 +85,7 @@ jobs:
                   booking_id: booking.id,
                   total_amount: booking.total_amount_ars,
                   expected_commission: expectedCommission,
-                  message: `Booking ${booking.id.substring(0, 8)}... has no platform fee recorded`,
+                  message: 'Booking ' + booking.id.substring(0, 8) + '... has no platform fee recorded',
                 });
                 continue;
               }
@@ -107,7 +106,8 @@ jobs:
                   expected_rate: '15%',
                   actual_rate: (actualRate * 100).toFixed(2) + '%',
                   difference: expectedCommission - actualCommission,
-                  message: `Booking ${booking.id.substring(0, 8)}... has ${(actualRate * 100).toFixed(1)}% fee instead of 15%`,
+                  message: 'Booking ' + booking.id.substring(0, 8) + '... has ' +
+                    (actualRate * 100).toFixed(1) + '% fee instead of 15%',
                 });
               }
             }
@@ -137,7 +137,8 @@ jobs:
                       payment_id: payment.id,
                       mp_fee: payment.marketplace_fee,
                       db_fee: booking.platform_fee_ars,
-                      message: `MP fee (${payment.marketplace_fee}) doesn't match DB (${booking.platform_fee_ars})`,
+                      message: 'MP fee (' + payment.marketplace_fee + ') doesn\'t match DB (' +
+                      booking.platform_fee_ars + ')',
                     });
                   }
                 }
@@ -148,15 +149,16 @@ jobs:
             const totalDifference = stats.expected_commission_total - stats.actual_commission_total;
 
             console.log('\n=== Commission Reconciliation ===');
-            console.log(`Period: Last ${daysBack} days`);
-            console.log(`Bookings checked: ${stats.bookings_checked}`);
-            console.log(`Expected commissions: ARS ${stats.expected_commission_total.toFixed(2)}`);
-            console.log(`Actual commissions: ARS ${stats.actual_commission_total.toFixed(2)}`);
-            console.log(`Difference: ARS ${totalDifference.toFixed(2)}`);
-            console.log(`MP fees collected: ARS ${mpFeesTotal.toFixed(2)}`);
-            console.log(`\nIssues found: ${issues.length}`);
-            console.log(`- Missing commissions: ${stats.missing_commissions}`);
-            console.log(`- Wrong percentage: ${stats.wrong_percentage}`);
+            console.log('Period: Last ' + daysBack + ' days');
+            console.log('Bookings checked: ' + stats.bookings_checked);
+            console.log('Expected commissions: ARS ' + stats.expected_commission_total.toFixed(2));
+            console.log('Actual commissions: ARS ' + stats.actual_commission_total.toFixed(2));
+            console.log('Difference: ARS ' + totalDifference.toFixed(2));
+            console.log('MP fees collected: ARS ' + mpFeesTotal.toFixed(2));
+            console.log('\nIssues found: ' + issues.length);
+            console.log('- Missing commissions: ' + stats.missing_commissions);
+            console.log('- Wrong percentage: ' + stats.wrong_percentage);
+
 
             if (issues.length > 0) {
               console.log('\nIssues:', JSON.stringify(issues.slice(0, 10), null, 2));
@@ -171,7 +173,7 @@ jobs:
 
             // Fail if significant discrepancies
             if (Math.abs(totalDifference) > 10000 || stats.missing_commissions > 5) {
-              core.setFailed(`Commission discrepancies detected: ARS ${totalDifference.toFixed(2)} difference`);
+              core.setFailed('Commission discrepancies detected: ARS ' + totalDifference.toFixed(2) + ' difference');
             }
 
             return { stats, issues };
@@ -190,38 +192,40 @@ jobs:
             const diffNum = parseFloat(difference);
             const status = Math.abs(diffNum) < 100 ? '✅' : (Math.abs(diffNum) < 10000 ? '⚠️' : '❌');
 
+            const title = '[COMMISSION REPORT] ' + status +
+              ' Weekly Reconciliation - Diff: ARS ' + difference;
+            const actionItems = parseInt(issuesCount) > 0
+              ? '- [ ] Review ' + issuesCount + ' discrepancies\n' +
+                '- [ ] Verify MercadoPago dashboard matches\n' +
+                '- [ ] Investigate missing commissions'
+              : '- No action required - all commissions reconciled';
+
+            const body =
+              '## Commission Reconciliation Report\n\n' +
+              '**Period:** Last 7 days\n' +
+              '**Status:** ' + status + '\n\n' +
+              '### Summary\n' +
+              '| Metric | Value |\n' +
+              '|--------|-------|\n' +
+              '| Bookings Checked | ' + bookingsChecked + ' |\n' +
+              '| Expected Commissions (15%) | ARS ' + expectedTotal + ' |\n' +
+              '| Actual Commissions | ARS ' + actualTotal + ' |\n' +
+              '| **Difference** | **ARS ' + difference + '** |\n' +
+              '| MercadoPago Fees | ARS ' + mpFees + ' |\n' +
+              '| Issues Found | ' + issuesCount + ' |\n\n' +
+              '### Commission Rate\n' +
+              '- Expected: 15% of GMV\n' +
+              '- Platform receives fees via MercadoPago split payments\n\n' +
+              '### Action Items\n' +
+              actionItems + '\n\n' +
+              '---\n' +
+              '*Auto-generated by Commission Reconciliation workflow*';
+
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `[COMMISSION REPORT] ${status} Weekly Reconciliation - Diff: ARS ${difference}`,
-              body: `## Commission Reconciliation Report
-
-**Period:** Last 7 days
-**Status:** ${status}
-
-### Summary
-| Metric | Value |
-|--------|-------|
-| Bookings Checked | ${bookingsChecked} |
-| Expected Commissions (15%) | ARS ${expectedTotal} |
-| Actual Commissions | ARS ${actualTotal} |
-| **Difference** | **ARS ${difference}** |
-| MercadoPago Fees | ARS ${mpFees} |
-| Issues Found | ${issuesCount} |
-
-### Commission Rate
-- Expected: 15% of GMV
-- Platform receives fees via MercadoPago split payments
-
-### Action Items
-${parseInt(issuesCount) > 0 ? `
-- [ ] Review ${issuesCount} discrepancies
-- [ ] Verify MercadoPago dashboard matches
-- [ ] Investigate missing commissions
-` : '- No action required - all commissions reconciled'}
-
----
-*Auto-generated by Commission Reconciliation workflow*`,
+              title: title,
+              body: body,
               labels: ['report', 'commissions', 'finance'],
             });
 
@@ -248,7 +252,8 @@ ${parseInt(issuesCount) > 0 ? `
                 message: 'Significant commission discrepancies detected. Review required.',
                 metadata: {
                   workflow: 'commission-reconciliation',
-                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                  run_url: 'https://github.com/' + context.repo.owner + '/' + context.repo.repo +
+                    '/actions/runs/' + context.runId,
                 },
                 timestamp: new Date().toISOString(),
               }),

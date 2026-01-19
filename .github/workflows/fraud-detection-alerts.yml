@@ -30,11 +30,11 @@ jobs:
 
             const query = async (table, params = '') => {
               const res = await fetch(
-                `${supabaseUrl}/rest/v1/${table}${params}`,
+                supabaseUrl + '/rest/v1/' + table + params,
                 {
                   headers: {
                     'apikey': supabaseKey,
-                    'Authorization': `Bearer ${supabaseKey}`,
+                    'Authorization': 'Bearer ' + supabaseKey,
                   }
                 }
               );
@@ -63,7 +63,7 @@ jobs:
                   severity: 'high',
                   user_id: userId,
                   count: count,
-                  message: `User ${userId.substring(0, 8)}... had ${count} failed payments in the last hour`,
+                  message: 'User ' + userId.substring(0, 8) + '... had ' + count + ' failed payments in the last hour',
                 });
               }
             }
@@ -87,7 +87,7 @@ jobs:
                   severity: 'medium',
                   user_id: renterId,
                   count: count,
-                  message: `User ${renterId.substring(0, 8)}... made ${count} booking attempts in the last hour`,
+                  message: 'User ' + renterId.substring(0, 8) + '... made ' + count + ' booking attempts in the last hour',
                 });
               }
             }
@@ -107,7 +107,7 @@ jobs:
                   user_id: t.user_id,
                   amount_ars: t.amount_cents / 100,
                   kind: t.kind,
-                  message: `Large transfer of ARS ${(t.amount_cents / 100).toLocaleString()} detected`,
+                  message: 'Large transfer of ARS ' + (t.amount_cents / 100).toLocaleString() + ' detected',
                 });
               }
             }
@@ -131,7 +131,7 @@ jobs:
                   severity: 'medium',
                   user_id: ownerId,
                   count: count,
-                  message: `Owner ${ownerId.substring(0, 8)}... cancelled ${count} bookings in 24h`,
+                  message: 'Owner ' + ownerId.substring(0, 8) + '... cancelled ' + count + ' bookings in 24h',
                 });
               }
             }
@@ -156,7 +156,8 @@ jobs:
                   booking_id: booking.id,
                   user_id: booking.renter_id,
                   amount_ars: booking.total_amount_ars,
-                  message: `Unverified user attempting high-value booking of ARS ${booking.total_amount_ars.toLocaleString()}`,
+                  message: 'Unverified user attempting high-value booking of ARS ' +
+                    booking.total_amount_ars.toLocaleString(),
                 });
               }
             }
@@ -180,19 +181,16 @@ jobs:
                   severity: 'high',
                   user_id: userId,
                   total_ars: totalCents / 100,
-                  message: `User ${userId.substring(0, 8)}... received ARS ${(totalCents / 100).toLocaleString()} in refunds in 24h`,
+                  message: 'User ' + userId.substring(0, 8) + '... received ARS ' +
+                    (totalCents / 100).toLocaleString() + ' in refunds in 24h',
                 });
               }
             }
 
             // Report results
-            console.log(`Found ${alerts.length} suspicious patterns`);
+            console.log('Found ' + alerts.length + ' suspicious patterns');
+            console.log('Critical: ' + criticalAlerts.length + ', High: ' + highAlerts.length + ', Medium: ' + mediumAlerts.length);
 
-            const criticalAlerts = alerts.filter(a => a.severity === 'critical');
-            const highAlerts = alerts.filter(a => a.severity === 'high');
-            const mediumAlerts = alerts.filter(a => a.severity === 'medium');
-
-            console.log(`Critical: ${criticalAlerts.length}, High: ${highAlerts.length}, Medium: ${mediumAlerts.length}`);
 
             if (alerts.length > 0) {
               console.log('Alerts:', JSON.stringify(alerts, null, 2));
@@ -202,35 +200,36 @@ jobs:
             if (highAlerts.length > 0 || criticalAlerts.length > 0) {
               const alertsSummary = [...criticalAlerts, ...highAlerts]
                 .slice(0, 10)
-                .map(a => `- **${a.type}** (${a.severity}): ${a.message}`)
+                .map(alert => '- **' + alert.type + '** (' + alert.severity + '): ' + alert.message)
                 .join('\n');
+
+              const title = '[FRAUD ALERT] ' + (criticalAlerts.length + highAlerts.length) +
+                ' suspicious patterns detected';
+              const body =
+                '## Fraud Detection Alert\n\n' +
+                '**Critical Alerts:** ' + criticalAlerts.length + '\n' +
+                '**High Alerts:** ' + highAlerts.length + '\n' +
+                '**Medium Alerts:** ' + mediumAlerts.length + '\n\n' +
+                '### Detected Patterns\n' +
+                alertsSummary + '\n\n' +
+                '### Recommended Actions\n' +
+                '1. Review affected user accounts\n' +
+                '2. Check transaction history\n' +
+                '3. Consider temporary account restrictions if needed\n' +
+                '4. Document findings\n\n' +
+                '---\n' +
+                '*Auto-generated by Fraud Detection workflow*';
 
               await github.rest.issues.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                title: `[FRAUD ALERT] ${criticalAlerts.length + highAlerts.length} suspicious patterns detected`,
-                body: `## Fraud Detection Alert
-
-**Critical Alerts:** ${criticalAlerts.length}
-**High Alerts:** ${highAlerts.length}
-**Medium Alerts:** ${mediumAlerts.length}
-
-### Detected Patterns
-${alertsSummary}
-
-### Recommended Actions
-1. Review affected user accounts
-2. Check transaction history
-3. Consider temporary account restrictions if needed
-4. Document findings
-
----
-*Auto-generated by Fraud Detection workflow*`,
+                title: title,
+                body: body,
                 labels: ['alert', 'security', 'fraud'],
               });
 
               if (criticalAlerts.length > 0) {
-                core.setFailed(`Critical fraud patterns detected`);
+                core.setFailed('Critical fraud patterns detected');
               }
             }
 
@@ -259,7 +258,8 @@ ${alertsSummary}
                 message: 'The fraud detection system has identified critical suspicious patterns requiring immediate attention.',
                 metadata: {
                   workflow: 'fraud-detection-alerts',
-                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                  run_url: 'https://github.com/' + context.repo.owner + '/' + context.repo.repo +
+                    '/actions/runs/' + context.runId,
                 },
                 timestamp: new Date().toISOString(),
               }),

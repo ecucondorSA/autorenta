@@ -163,24 +163,19 @@ jobs:
           const conversionTemplates = getConversionOptimizedTemplates();
           const topConverter = conversionTemplates[0];
 
-          console.log(`
-          ✅ Renter Campaign Content Generated
-
-          📝 Template: ${templateName}
-          📱 Platform: ${platform}
-          📍 City: ${city}
-
-          🎯 Caption:
-          ${caption.substring(0, 250)}...
-
-          #️⃣  Hashtags: ${hashtags.join(' ')}
-
-          🕐 Best posting time: ${optimalTime.bestTime}
-          💡 Expected engagement: ${optimalTime.recommendations[0]?.expectedEngagement}
-          ${imageUrl ? `🖼️  Image: Generated` : '⚠️  No image'}
-
-          💡 Tip: "${topConverter.name}" has highest conversion rate
-          `);
+          console.log(
+            '\n✅ Renter Campaign Content Generated\n\n' +
+            '📝 Template: ' + templateName + '\n' +
+            '📱 Platform: ' + platform + '\n' +
+            '📍 City: ' + city + '\n\n' +
+            '🎯 Caption:\n' +
+            caption.substring(0, 250) + '...\n\n' +
+            '#️⃣  Hashtags: ' + hashtags.join(' ') + '\n\n' +
+            '🕐 Best posting time: ' + optimalTime.bestTime + '\n' +
+            '💡 Expected engagement: ' + optimalTime.recommendations[0]?.expectedEngagement + '\n' +
+            (imageUrl ? '🖼️  Image: Generated' : '⚠️  No image') + '\n\n' +
+            '💡 Tip: "' + topConverter.name + '" has highest conversion rate\n'
+          );
 
           core.setOutput('caption', caption);
           core.setOutput('hashtags', JSON.stringify(hashtags));
@@ -229,35 +224,32 @@ jobs:
           script: |
             const platform = '${{ steps.template_config.outputs.platform }}';
             const template = '${{ steps.content_generator.outputs.template }}';
-            const caption = `${{ steps.content_generator.outputs.caption }}`.substring(0, 300);
+            const caption = `${{ steps.content_generator.outputs.caption }}`.replace(/`/g, '').substring(0, 300);
             const bestTime = '${{ steps.content_generator.outputs.best_time }}';
+
+            const body =
+              '## Renter Acquisition Campaign Generated\n\n' +
+              '📱 **Platform:** ' + platform + '\n' +
+              '📝 **Template:** ' + template + '\n' +
+              '🕐 **Best Time:** ' + bestTime + '\n\n' +
+              '### Preview\n' +
+              '```\n' +
+              caption + '...\n' +
+              '```\n\n' +
+              '### Actions\n' +
+              '- [ ] Review content\n' +
+              '- [ ] Post to ' + platform + '\n' +
+              '- [ ] Monitor first hour engagement\n' +
+              '- [ ] Share results\n\n' +
+              'Generated: ' + new Date().toISOString();
 
             const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `[RENTER CAMPAIGN] ${platform} - ${template}`,
-              body: `
-## Renter Acquisition Campaign Generated
-
-📱 **Platform:** ${platform}
-📝 **Template:** ${template}
-🕐 **Best Time:** ${bestTime}
-
-### Preview
-\`\`\`
-${caption}...
-\`\`\`
-
-### Actions
-- [ ] Review content
-- [ ] Post to ${platform}
-- [ ] Monitor first hour engagement
-- [ ] Share results
-
-Generated: ${new Date().toISOString()}
-              `,
+              title: '[RENTER CAMPAIGN] ' + platform + ' - ' + template,
+              body: body,
               labels: ['marketing', 'renter-acquisition', 'automated']
             });
 
-            console.log(`✅ Issue created: ${issue.data.html_url}`);
+            console.log('✅ Issue created: ' + issue.data.html_url);
 

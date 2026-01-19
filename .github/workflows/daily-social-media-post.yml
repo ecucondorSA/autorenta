@@ -106,13 +106,13 @@ jobs:
             const contentType = process.env.CONTENT_TYPE;
             const platform = process.env.PLATFORM;
 
-            console.log(`Generating ${contentType} content for ${platform}...`);
+            console.log('Generating ' + contentType + ' content for ' + platform + '...');
 
             // Call generate-marketing-content Edge Function
-            const response = await fetch(`${supabaseUrl}/functions/v1/generate-marketing-content`, {
+            const response = await fetch(supabaseUrl + '/functions/v1/generate-marketing-content', {
               method: 'POST',
               headers: {
-                'Authorization': `Bearer ${supabaseKey}`,
+                'Authorization': 'Bearer ' + supabaseKey,
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
@@ -125,20 +125,20 @@ jobs:
 
             if (!response.ok) {
               const errorText = await response.text();
-              throw new Error(`Generation failed: ${response.status} - ${errorText}`);
+              throw new Error('Generation failed: ' + response.status + ' - ' + errorText);
             }
 
             const result = await response.json();
 
             if (!result.success) {
-              throw new Error(`Generation failed: ${result.error}`);
+              throw new Error('Generation failed: ' + result.error);
             }
 
             console.log('Generated content:');
-            console.log(`  Caption: ${result.text.caption.substring(0, 100)}...`);
-            console.log(`  Hashtags: ${result.text.hashtags.join(', ')}`);
-            console.log(`  CTA: ${result.text.call_to_action}`);
-            console.log(`  Image: ${result.image?.url ? 'Yes' : 'No'}`);
+            console.log('  Caption: ' + result.text.caption.substring(0, 100) + '...');
+            console.log('  Hashtags: ' + result.text.hashtags.join(', '));
+            console.log('  CTA: ' + result.text.call_to_action);
+            console.log('  Image: ' + (result.image?.url ? 'Yes' : 'No'));
 
             // Store in outputs
             core.setOutput('caption', result.text.caption);
@@ -169,13 +169,13 @@ jobs:
             const hashtags = JSON.parse(process.env.HASHTAGS || '[]');
             const mediaUrl = process.env.MEDIA_URL;
 
-            console.log(`Publishing to ${platform}...`);
+            console.log('Publishing to ' + platform + '...');
 
             // Call social-media-publisher Edge Function
-            const response = await fetch(`${supabaseUrl}/functions/v1/social-media-publisher`, {
+            const response = await fetch(supabaseUrl + '/functions/v1/social-media-publisher', {
               method: 'POST',
               headers: {
-                'Authorization': `Bearer ${supabaseKey}`,
+                'Authorization': 'Bearer ' + supabaseKey,
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
@@ -192,15 +192,15 @@ jobs:
             const result = await response.json();
 
             if (!result.success) {
-              console.error(`Publishing failed: ${result.error}`);
+              console.error('Publishing failed: ' + result.error);
               core.setOutput('success', 'false');
               core.setOutput('error', result.error);
               return result;
             }
 
-            console.log(`✅ Published successfully!`);
-            console.log(`  Post ID: ${result.post_id}`);
-            console.log(`  Post URL: ${result.post_url}`);
+            console.log('✅ Published successfully!');
+            console.log('  Post ID: ' + result.post_id);
+            console.log('  Post URL: ' + result.post_url);
 
             core.setOutput('success', 'true');
             core.setOutput('post_id', result.post_id);
@@ -220,11 +220,11 @@ jobs:
             const postUrl = '${{ steps.publish.outputs.post_url }}';
             const error = '${{ steps.publish.outputs.error }}';
             const caption = `${{ steps.generate.outputs.caption }}`.replace(/`/g, '').substring(0, 200);
-
             const today = new Date().toISOString().split('T')[0];
             const status = dryRun ? '🔵 DRY RUN' : (success ? '✅ SUCCESS' : '❌ FAILED');
 
-            const title = `[SOCIAL MEDIA] ${today} - ${platform.toUpperCase()} - ${status}`;
+            const title = '[SOCIAL MEDIA] ' + today + ' - ' + platform.toUpperCase() + ' - ' + status;
+
 
             let body = '## Daily Social Media Post - ' + today + '\n\n' +
               '| Field | Value |\n' +

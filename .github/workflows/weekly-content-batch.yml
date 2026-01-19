@@ -55,7 +55,7 @@ jobs:
             startDate.setDate(today.getDate() + daysUntilMonday);
             startDate.setHours(0, 0, 0, 0);
 
-            console.log(`Generating content for week starting: ${startDate.toISOString().split('T')[0]}`);
+            console.log('Generating content for week starting: ' + startDate.toISOString().split('T')[0]);
 
             const generatedContent = [];
             const errors = [];
@@ -66,14 +66,15 @@ jobs:
               scheduledDate.setDate(startDate.getDate() + schedule.day - 1);
               scheduledDate.setHours(schedule.hour + 3, 0, 0, 0); // +3 for UTC (Argentina is UTC-3)
 
-              console.log(`\nGenerating ${schedule.contentType} for ${schedule.platform} on ${scheduledDate.toISOString()}...`);
+              console.log('\nGenerating ' + schedule.contentType + ' for ' + schedule.platform +
+                ' on ' + scheduledDate.toISOString() + '...');
 
               try {
                 // Generate content
-                const genResponse = await fetch(`${supabaseUrl}/functions/v1/generate-marketing-content`, {
+                const genResponse = await fetch(supabaseUrl + '/functions/v1/generate-marketing-content', {
                   method: 'POST',
                   headers: {
-                    'Authorization': `Bearer ${supabaseKey}`,
+                    'Authorization': 'Bearer ' + supabaseKey,
                     'Content-Type': 'application/json',
                   },
                   body: JSON.stringify({
@@ -90,13 +91,13 @@ jobs:
                   throw new Error(genResult.error || 'Generation failed');
                 }
 
-                console.log(`  ✓ Generated: ${genResult.text.caption.substring(0, 50)}...`);
+                console.log('  ✓ Generated: ' + genResult.text.caption.substring(0, 50) + '...');
 
                 // Add to queue
-                const queueResponse = await fetch(`${supabaseUrl}/rest/v1/marketing_content_queue`, {
+                const queueResponse = await fetch(supabaseUrl + '/rest/v1/marketing_content_queue', {
                   method: 'POST',
                   headers: {
-                    'Authorization': `Bearer ${supabaseKey}`,
+                    'Authorization': 'Bearer ' + supabaseKey,
                     'apikey': supabaseKey,
                     'Content-Type': 'application/json',
                     'Prefer': 'return=representation',
@@ -115,11 +116,11 @@ jobs:
 
                 if (!queueResponse.ok) {
                   const errorText = await queueResponse.text();
-                  throw new Error(`Queue insert failed: ${errorText}`);
+                  throw new Error('Queue insert failed: ' + errorText);
                 }
 
                 const queueResult = await queueResponse.json();
-                console.log(`  ✓ Queued with ID: ${queueResult[0]?.id}`);
+                console.log('  ✓ Queued with ID: ' + queueResult[0]?.id);
 
                 generatedContent.push({
                   day: schedule.day,
@@ -131,7 +132,7 @@ jobs:
                 });
 
               } catch (error) {
-                console.error(`  ✗ Error: ${error.message}`);
+                console.error('  ✗ Error: ' + error.message);
                 errors.push({
                   day: schedule.day,
                   platform: schedule.platform,
@@ -165,39 +166,37 @@ jobs:
 
             let contentTable = '| Day | Platform | Type | Caption Preview |\n|-----|----------|------|----------------|\n';
             for (const item of content) {
-              contentTable += `| ${dayNames[item.day]} ${item.date} | ${item.platform} | ${item.contentType} | ${item.caption}... |\n`;
+              contentTable += '| ' + dayNames[item.day] + ' ' + item.date + ' | ' + item.platform +
+                ' | ' + item.contentType + ' | ' + item.caption + '... |\n';
             }
 
             let errorSection = '';
             if (errors.length > 0) {
               errorSection = '\n### Errors\n';
               for (const err of errors) {
-                errorSection += `- **${dayNames[err.day]}** (${err.platform}): ${err.error}\n`;
+                errorSection += '- **' + dayNames[err.day] + '** (' + err.platform + '): ' + err.error + '\n';
               }
             }
 
-            const title = `[WEEKLY BATCH] Week of ${weekStart} - ${generatedCount}/7 posts generated`;
+            const title = '[WEEKLY BATCH] Week of ' + weekStart + ' - ' + generatedCount + '/7 posts generated';
 
-            const body = `## Weekly Content Batch - Week of ${weekStart}
+            const body = '## Weekly Content Batch - Week of ' + weekStart + '\n\n' +
+              '### Summary\n' +
+              '| Metric | Value |\n' +
+              '|--------|-------|\n' +
+              '| Posts Generated | ' + generatedCount + '/7 |\n' +
+              '| Errors | ' + errorCount + ' |\n' +
+              '| Status | ' + (errorCount === '0' ? '✅ All Ready' : '⚠️ Some Failed') + ' |\n\n' +
+              '### Scheduled Content\n' +
+              contentTable + '\n' +
+              errorSection + '\n\n' +
+              '### Next Steps\n' +
+              '- Posts will be automatically published at their scheduled times\n' +
+              '- Run `marketing-scheduler` manually if you want to publish earlier\n' +
+              '- Edit queue items in Supabase if changes needed\n\n' +
+              '---\n' +
+              '*Auto-generated by Weekly Content Batch workflow*';
 
-### Summary
-| Metric | Value |
-|--------|-------|
-| Posts Generated | ${generatedCount}/7 |
-| Errors | ${errorCount} |
-| Status | ${errorCount === '0' ? '✅ All Ready' : '⚠️ Some Failed'} |
-
-### Scheduled Content
-${contentTable}
-${errorSection}
-
-### Next Steps
-- Posts will be automatically published at their scheduled times
-- Run \`marketing-scheduler\` manually if you want to publish earlier
-- Edit queue items in Supabase if changes needed
-
----
-*Auto-generated by Weekly Content Batch workflow*`;
 
             await github.rest.issues.create({
               owner: context.repo.owner,

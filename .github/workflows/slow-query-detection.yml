@@ -29,18 +29,18 @@ jobs:
             const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
             const rpc = async (fnName, params = {}) => {
-              const res = await fetch(`${supabaseUrl}/rest/v1/rpc/${fnName}`, {
+              const res = await fetch(supabaseUrl + '/rest/v1/rpc/' + fnName, {
                 method: 'POST',
                 headers: {
                   'apikey': supabaseKey,
-                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Authorization': 'Bearer ' + supabaseKey,
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(params),
               });
               if (!res.ok) {
                 const text = await res.text();
-                throw new Error(`RPC ${fnName} failed: ${res.status} - ${text}`);
+                throw new Error('RPC ' + fnName + ' failed: ' + res.status + ' - ' + text);
               }
               return res.json();
             };
@@ -80,7 +80,7 @@ jobs:
                       max_time_ms: q.max_time_ms,
                       calls: q.calls,
                       query: q.query_preview,
-                      message: `Query averaging ${q.mean_time_ms}ms (${q.calls} calls)`,
+                      message: 'Query averaging ' + q.mean_time_ms + 'ms (' + q.calls + ' calls)',
                     });
                   } else if (q.mean_time_ms > 500) {
                     issues.push({
@@ -89,7 +89,7 @@ jobs:
                       mean_time_ms: q.mean_time_ms,
                       calls: q.calls,
                       query: q.query_preview,
-                      message: `Query averaging ${q.mean_time_ms}ms`,
+                      message: 'Query averaging ' + q.mean_time_ms + 'ms',
                     });
                   }
                 }
@@ -124,7 +124,7 @@ jobs:
                       severity: 'medium',
                       table: table.tablename,
                       size: table.total_size,
-                      message: `Table ${table.tablename} is ${table.total_size}`,
+                      message: 'Table ' + table.tablename + ' is ' + table.total_size,
                     });
                   }
                 }
@@ -162,7 +162,7 @@ jobs:
                     table: table.tablename,
                     seq_scans: table.seq_scan,
                     rows_scanned: table.seq_tup_read,
-                    message: `Table ${table.tablename} has ${table.seq_scan} sequential scans`,
+                    message: 'Table ' + table.tablename + ' has ' + table.seq_scan + ' sequential scans',
                   });
                 }
               }
@@ -187,7 +187,7 @@ jobs:
 
               if (Array.isArray(connections) && connections[0]) {
                 const conn = connections[0];
-                console.log(`Connections: ${conn.total_connections} total, ${conn.active} active`);
+                console.log('Connections: ' + conn.total_connections + ' total, ' + conn.active + ' active');
 
                 if (conn.total_connections > 80) {
                   issues.push({
@@ -195,7 +195,7 @@ jobs:
                     severity: 'high',
                     total: conn.total_connections,
                     active: conn.active,
-                    message: `${conn.total_connections} database connections (${conn.active} active)`,
+                    message: conn.total_connections + ' database connections (' + conn.active + ' active)',
                   });
                 }
 
@@ -204,7 +204,7 @@ jobs:
                     type: 'IDLE_IN_TRANSACTION',
                     severity: 'medium',
                     count: conn.idle_in_transaction,
-                    message: `${conn.idle_in_transaction} connections idle in transaction`,
+                    message: conn.idle_in_transaction + ' connections idle in transaction',
                   });
                 }
               }
@@ -237,7 +237,7 @@ jobs:
                     pid: q.pid,
                     duration: q.duration,
                     query: q.query_preview,
-                    message: `Query running for ${q.duration}`,
+                    message: 'Query running for ' + q.duration,
                   });
                 }
               }
@@ -247,25 +247,18 @@ jobs:
 
             // Report
             console.log('\n=== Slow Query Detection ===');
-            console.log(`Issues found: ${issues.length}`);
-
-            const highIssues = issues.filter(i => i.severity === 'high');
-            const mediumIssues = issues.filter(i => i.severity === 'medium');
-
-            console.log(`High: ${highIssues.length}, Medium: ${mediumIssues.length}`);
-
-            if (issues.length > 0) {
-              console.log('\nIssues:', JSON.stringify(issues.slice(0, 10), null, 2));
-            }
+            console.log('Issues found: ' + issues.length);
+            console.log('High: ' + highIssues.length + ', Medium: ' + mediumIssues.length);
 
             core.setOutput('total_issues', issues.length);
             core.setOutput('high_issues', highIssues.length);
 
             if (highIssues.length > 0) {
-              core.setFailed(`${highIssues.length} high priority database performance issues detected`);
+              core.setFailed(highIssues.length + ' high priority database performance issues detected');
             }
 
             return { issues };
+
 
       - name: Create Issue on Problems
         if: failure()
@@ -275,33 +268,33 @@ jobs:
             const totalIssues = '${{ steps.queries.outputs.total_issues }}';
             const highIssues = '${{ steps.queries.outputs.high_issues }}';
 
+            const title = '[DB PERFORMANCE] ' + highIssues + ' slow query issues detected';
+            const body =
+              '## Database Performance Alert\n\n' +
+              '**Total Issues:** ' + totalIssues + '\n' +
+              '**High Priority:** ' + highIssues + '\n\n' +
+              '### Potential Issues\n' +
+              '- Slow queries (>500ms average)\n' +
+              '- Missing indexes causing sequential scans\n' +
+              '- High connection count\n' +
+              '- Long-running transactions\n\n' +
+              '### Action Required\n' +
+              '1. Review pg_stat_statements for slow queries\n' +
+              '2. Add indexes for frequently queried columns\n' +
+              '3. Check for connection leaks\n' +
+              '4. Consider query optimization\n\n' +
+              '### Links\n' +
+              '- [Workflow Run](https://github.com/' + context.repo.owner + '/' + context.repo.repo +
+              '/actions/runs/' + context.runId + ')\n' +
+              '- [Supabase Dashboard](https://supabase.com/dashboard)\n\n' +
+              '---\n' +
+              '*Auto-generated by Slow Query Detection workflow*';
+
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `[DB PERFORMANCE] ${highIssues} slow query issues detected`,
-              body: `## Database Performance Alert
-
-**Total Issues:** ${totalIssues}
-**High Priority:** ${highIssues}
-
-### Potential Issues
-- Slow queries (>500ms average)
-- Missing indexes causing sequential scans
-- High connection count
-- Long-running transactions
-
-### Action Required
-1. Review pg_stat_statements for slow queries
-2. Add indexes for frequently queried columns
-3. Check for connection leaks
-4. Consider query optimization
-
-### Links
-- [Workflow Run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
-- [Supabase Dashboard](https://supabase.com/dashboard)
-
----
-*Auto-generated by Slow Query Detection workflow*`,
+              title: title,
+              body: body,
               labels: ['alert', 'database', 'performance'],
             });
 
@@ -328,7 +321,8 @@ jobs:
                 message: 'Slow queries or database performance issues have been detected.',
                 metadata: {
                   workflow: 'slow-query-detection',
-                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                  run_url: 'https://github.com/' + context.repo.owner + '/' + context.repo.repo +
+                    '/actions/runs/' + context.runId,
                 },
                 timestamp: new Date().toISOString(),
               }),

@@ -32,10 +32,10 @@ jobs:
             const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
             const query = async (endpoint) => {
-              const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
+              const res = await fetch(supabaseUrl + '/rest/v1/' + endpoint, {
                 headers: {
                   'apikey': supabaseKey,
-                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Authorization': 'Bearer ' + supabaseKey,
                   'Prefer': 'count=exact',
                 }
               });
@@ -74,7 +74,8 @@ jobs:
 
               if (totalPayments > 0) {
                 const paymentErrorRate = (failedPayments / totalPayments) * 100;
-                console.log(`   Payment error rate: ${paymentErrorRate.toFixed(1)}% (${failedPayments}/${totalPayments})`);
+                console.log('   Payment error rate: ' + paymentErrorRate.toFixed(1) + '% (' +
+                  failedPayments + '/' + totalPayments + ')');
 
                 if (paymentErrorRate > 20) {
                   stats.issues.push({
@@ -82,7 +83,7 @@ jobs:
                     severity: 'critical',
                     rate: paymentErrorRate.toFixed(1),
                     count: failedPayments,
-                    message: `${paymentErrorRate.toFixed(1)}% payment failure rate`,
+                    message: paymentErrorRate.toFixed(1) + '% payment failure rate',
                   });
                 } else if (paymentErrorRate > 10) {
                   stats.issues.push({
@@ -90,7 +91,7 @@ jobs:
                     severity: 'high',
                     rate: paymentErrorRate.toFixed(1),
                     count: failedPayments,
-                    message: `${paymentErrorRate.toFixed(1)}% payment failure rate`,
+                    message: paymentErrorRate.toFixed(1) + '% payment failure rate',
                   });
                 }
               }
@@ -109,14 +110,14 @@ jobs:
               );
 
               stats.booking_failures = failedBookings + cancelledBookings;
-              console.log(`   Booking failures: ${stats.booking_failures}`);
+              console.log('   Booking failures: ' + stats.booking_failures);
 
               if (stats.booking_failures > 5) {
                 stats.issues.push({
                   type: 'BOOKING_FAILURES',
                   severity: 'high',
                   count: stats.booking_failures,
-                  message: `${stats.booking_failures} booking failures in the last hour`,
+                  message: stats.booking_failures + ' booking failures in the last hour',
                 });
               }
             } catch (e) {
@@ -131,14 +132,14 @@ jobs:
               );
 
               stats.api_errors = errorLogs;
-              console.log(`   Error logs: ${errorLogs}`);
+              console.log('   Error logs: ' + errorLogs);
 
               if (errorLogs > 50) {
                 stats.issues.push({
                   type: 'HIGH_ERROR_VOLUME',
                   severity: 'high',
                   count: errorLogs,
-                  message: `${errorLogs} errors logged in the last hour`,
+                  message: errorLogs + ' errors logged in the last hour',
                 });
               }
 
@@ -162,14 +163,14 @@ jobs:
               );
 
               stats.auth_errors = authFailures;
-              console.log(`   Auth failures: ${authFailures}`);
+              console.log('   Auth failures: ' + authFailures);
 
               if (authFailures > 20) {
                 stats.issues.push({
                   type: 'HIGH_AUTH_FAILURES',
                   severity: 'medium',
                   count: authFailures,
-                  message: `${authFailures} auth failures in the last hour`,
+                  message: authFailures + ' auth failures in the last hour',
                 });
               }
             } catch (e) {
@@ -185,14 +186,14 @@ jobs:
               );
 
               stats.edge_function_errors = functionErrors;
-              console.log(`   Edge function errors: ${functionErrors}`);
+              console.log('   Edge function errors: ' + functionErrors);
 
               if (functionErrors > 10) {
                 stats.issues.push({
                   type: 'EDGE_FUNCTION_ERRORS',
                   severity: 'medium',
                   count: functionErrors,
-                  message: `${functionErrors} edge function errors in the last hour`,
+                  message: functionErrors + ' edge function errors in the last hour',
                 });
               }
             } catch (e) {
@@ -211,10 +212,10 @@ jobs:
                   type: 'WALLET_ERRORS',
                   severity: 'high',
                   count: walletErrors,
-                  message: `${walletErrors} wallet transaction failures`,
+                  message: walletErrors + ' wallet transaction failures',
                 });
               }
-              console.log(`   Wallet errors: ${walletErrors}`);
+              console.log('   Wallet errors: ' + walletErrors);
             } catch (e) {
               console.log('   ⚠️ Could not check wallet errors');
             }
@@ -226,11 +227,11 @@ jobs:
 
             // Summary
             console.log('\n=== Error Rate Summary ===');
-            console.log(`Total errors (1h): ${stats.total_errors}`);
-            console.log(`Payment errors: ${stats.payment_errors}`);
-            console.log(`Booking failures: ${stats.booking_failures}`);
-            console.log(`API errors: ${stats.api_errors}`);
-            console.log(`Issues found: ${stats.issues.length}`);
+            console.log('Total errors (1h): ' + stats.total_errors);
+            console.log('Payment errors: ' + stats.payment_errors);
+            console.log('Booking failures: ' + stats.booking_failures);
+            console.log('API errors: ' + stats.api_errors);
+            console.log('Issues found: ' + stats.issues.length);
 
             core.setOutput('total_errors', stats.total_errors);
             core.setOutput('payment_errors', stats.payment_errors);
@@ -241,9 +242,9 @@ jobs:
             const highIssues = stats.issues.filter(i => i.severity === 'high');
 
             if (criticalIssues.length > 0) {
-              core.setFailed(`Critical error rate detected: ${criticalIssues[0].message}`);
+              core.setFailed('Critical error rate detected: ' + criticalIssues[0].message);
             } else if (highIssues.length >= 2) {
-              core.setFailed(`Multiple high severity error patterns detected`);
+              core.setFailed('Multiple high severity error patterns detected');
             }
 
             return stats;
@@ -255,39 +256,37 @@ jobs:
           script: |
             const stats = JSON.parse('${{ steps.errors.outputs.stats }}' || '{}');
 
-            const issuesList = stats.issues?.map(i =>
-              `- **${i.type}** (${i.severity}): ${i.message}`
+            const issuesList = stats.issues?.map((issue) =>
+              '- **' + issue.type + '** (' + issue.severity + '): ' + issue.message
             ).join('\n') || 'Unknown issues';
+
+            const body =
+              '## Error Rate Alert\n\n' +
+              '**Period:** Last 1 hour\n' +
+              '**Total Errors:** ' + stats.total_errors + '\n\n' +
+              '### Error Breakdown\n' +
+              '| Category | Count |\n' +
+              '|----------|-------|\n' +
+              '| Payment Errors | ' + stats.payment_errors + ' |\n' +
+              '| Booking Failures | ' + stats.booking_failures + ' |\n' +
+              '| API Errors | ' + stats.api_errors + ' |\n' +
+              '| Auth Errors | ' + stats.auth_errors + ' |\n' +
+              '| Edge Function Errors | ' + stats.edge_function_errors + ' |\n\n' +
+              '### Issues Detected\n' +
+              issuesList + '\n\n' +
+              '### Recommended Actions\n' +
+              '1. Check application logs for stack traces\n' +
+              '2. Review recent deployments\n' +
+              '3. Check third-party service status (MercadoPago, etc.)\n' +
+              '4. Monitor Sentry for detailed error reports\n\n' +
+              '---\n' +
+              '*Auto-generated by Error Rate Monitoring workflow*';
 
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `[ERROR ALERT] High error rates detected`,
-              body: `## Error Rate Alert
-
-**Period:** Last 1 hour
-**Total Errors:** ${stats.total_errors}
-
-### Error Breakdown
-| Category | Count |
-|----------|-------|
-| Payment Errors | ${stats.payment_errors} |
-| Booking Failures | ${stats.booking_failures} |
-| API Errors | ${stats.api_errors} |
-| Auth Errors | ${stats.auth_errors} |
-| Edge Function Errors | ${stats.edge_function_errors} |
-
-### Issues Detected
-${issuesList}
-
-### Recommended Actions
-1. Check application logs for stack traces
-2. Review recent deployments
-3. Check third-party service status (MercadoPago, etc.)
-4. Monitor Sentry for detailed error reports
-
----
-*Auto-generated by Error Rate Monitoring workflow*`,
+              title: '[ERROR ALERT] High error rates detected',
+              body: body,
               labels: ['alert', 'errors', 'monitoring'],
             });
 
@@ -313,11 +312,12 @@ ${issuesList}
                 source: 'github',
                 severity: 'high',
                 title: 'High Error Rate Detected',
-                message: `${totalErrors} errors detected in the last hour. Investigation required.`,
+                message: totalErrors + ' errors detected in the last hour. Investigation required.',
                 metadata: {
                   workflow: 'error-rate-monitoring',
                   total_errors: totalErrors,
-                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                  run_url: 'https://github.com/' + context.repo.owner + '/' + context.repo.repo +
+                    '/actions/runs/' + context.runId,
                 },
                 timestamp: new Date().toISOString(),
               }),

@@ -50,7 +50,7 @@ jobs:
             const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
                                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-            console.log(`Campaign theme for ${monthNames[month]}: ${theme}`);
+            console.log('Campaign theme for ' + monthNames[month] + ': ' + theme);
 
             core.setOutput('theme', theme);
             core.setOutput('month_name', monthNames[month]);
@@ -77,13 +77,13 @@ jobs:
             const lastMonthStart = lastMonth.toISOString();
             const lastMonthEnd = thisMonth.toISOString();
 
-            console.log(`Collecting stats from ${lastMonthStart} to ${lastMonthEnd}`);
+            console.log('Collecting stats from ' + lastMonthStart + ' to ' + lastMonthEnd);
 
             const query = async (endpoint) => {
-              const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
+              const res = await fetch(supabaseUrl + '/rest/v1/' + endpoint, {
                 headers: {
                   'apikey': supabaseKey,
-                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Authorization': 'Bearer ' + supabaseKey,
                   'Prefer': 'count=exact',
                 }
               });
@@ -107,11 +107,12 @@ jobs:
 
             // Get top cars (most booked)
             const topCarsRes = await fetch(
-              `${supabaseUrl}/rest/v1/bookings?created_at=gte.${lastMonthStart}&created_at=lt.${lastMonthEnd}&select=car_id,cars(brand,model)&limit=100`,
+              supabaseUrl + '/rest/v1/bookings?created_at=gte.' + lastMonthStart +
+                '&created_at=lt.' + lastMonthEnd + '&select=car_id,cars(brand,model)&limit=100',
               {
                 headers: {
                   'apikey': supabaseKey,
-                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Authorization': 'Bearer ' + supabaseKey,
                 }
               }
             );
@@ -121,7 +122,7 @@ jobs:
             const carCounts = {};
             for (const booking of topCarsData) {
               if (booking.cars) {
-                const key = `${booking.cars.brand} ${booking.cars.model}`;
+                const key = booking.cars.brand + ' ' + booking.cars.model;
                 carCounts[key] = (carCounts[key] || 0) + 1;
               }
             }
@@ -130,7 +131,7 @@ jobs:
             const topCars = Object.entries(carCounts)
               .sort((a, b) => b[1] - a[1])
               .slice(0, 3)
-              .map(([car, count]) => `${car} (${count} reservas)`);
+              .map(([car, count]) => car + ' (' + count + ' reservas)');
 
             const stats = {
               bookings,
@@ -171,19 +172,19 @@ jobs:
             const results = [];
 
             for (const platform of platforms) {
-              console.log(`Generating ${platform} campaign post...`);
+              console.log('Generating ' + platform + ' campaign post...');
 
               try {
-                const response = await fetch(`${supabaseUrl}/functions/v1/generate-marketing-content`, {
+                const response = await fetch(supabaseUrl + '/functions/v1/generate-marketing-content', {
                   method: 'POST',
                   headers: {
-                    'Authorization': `Bearer ${supabaseKey}`,
+                    'Authorization': 'Bearer ' + supabaseKey,
                     'Content-Type': 'application/json',
                   },
                   body: JSON.stringify({
                     content_type: 'seasonal',
                     platform: platform,
-                    theme: `${theme}. Mes de ${monthName}. Autos populares: ${topCars.join(', ')}.`,
+                    theme: theme + '. Mes de ' + monthName + '. Autos populares: ' + topCars.join(', ') + '.',
                     language: 'es',
                     generate_image: platform === 'instagram' || platform === 'facebook',
                   }),
@@ -202,10 +203,10 @@ jobs:
                 postDate.setHours(hours[platform] + 3, 0, 0, 0); // +3 for UTC
 
                 // Add to queue
-                await fetch(`${supabaseUrl}/rest/v1/marketing_content_queue`, {
+                await fetch(supabaseUrl + '/rest/v1/marketing_content_queue', {
                   method: 'POST',
                   headers: {
-                    'Authorization': `Bearer ${supabaseKey}`,
+                    'Authorization': 'Bearer ' + supabaseKey,
                     'apikey': supabaseKey,
                     'Content-Type': 'application/json',
                   },
@@ -228,10 +229,10 @@ jobs:
                   caption: result.text.caption.substring(0, 100),
                 });
 
-                console.log(`  ✓ ${platform}: Queued for ${postDate.toISOString()}`);
+                console.log('  ✓ ' + platform + ': Queued for ' + postDate.toISOString());
 
               } catch (error) {
-                console.error(`  ✗ ${platform}: ${error.message}`);
+                console.error('  ✗ ' + platform + ': ' + error.message);
                 results.push({
                   platform,
                   success: false,
@@ -265,33 +266,29 @@ jobs:
             for (const r of results) {
               const status = r.success ? '✅' : '❌';
               const preview = r.success ? r.caption + '...' : r.error;
-              resultsTable += `| ${r.platform} | ${status} | ${preview} |\n`;
+              resultsTable += '| ' + r.platform + ' | ' + status + ' | ' + preview + ' |\n';
             }
 
-            const title = `[MONTHLY CAMPAIGN] ${monthName} - ${theme.split(' - ')[0]}`;
+            const title = '[MONTHLY CAMPAIGN] ' + monthName + ' - ' + theme.split(' - ')[0];
 
-            const body = `## Monthly Marketing Campaign - ${monthName}
-
-### Theme
-**${theme}**
-
-### Last Month Highlights
-| Metric | Value |
-|--------|-------|
-| Total Bookings | ${bookings} |
-| New Users | ${newUsers} |
-| Top Cars | ${topCars.join(', ') || 'N/A'} |
-
-### Campaign Posts Generated
-${resultsTable}
-
-### Schedule
-- All posts scheduled for the 2nd of ${monthName}
-- Different times per platform for optimal engagement
-- Will be auto-published by marketing-scheduler
-
----
-*Auto-generated by Monthly Marketing Campaign workflow*`;
+            const body =
+              '## Monthly Marketing Campaign - ' + monthName + '\n\n' +
+              '### Theme\n' +
+              '**' + theme + '**\n\n' +
+              '### Last Month Highlights\n' +
+              '| Metric | Value |\n' +
+              '|--------|-------|\n' +
+              '| Total Bookings | ' + bookings + ' |\n' +
+              '| New Users | ' + newUsers + ' |\n' +
+              '| Top Cars | ' + (topCars.join(', ') || 'N/A') + ' |\n\n' +
+              '### Campaign Posts Generated\n' +
+              resultsTable + '\n' +
+              '### Schedule\n' +
+              '- All posts scheduled for the 2nd of ' + monthName + '\n' +
+              '- Different times per platform for optimal engagement\n' +
+              '- Will be auto-published by marketing-scheduler\n\n' +
+              '---\n' +
+              '*Auto-generated by Monthly Marketing Campaign workflow*';
 
             await github.rest.issues.create({
               owner: context.repo.owner,

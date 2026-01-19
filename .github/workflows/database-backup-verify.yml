@@ -30,11 +30,11 @@ jobs:
             const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
             const rpc = async (fnName, params = {}) => {
-              const res = await fetch(`${supabaseUrl}/rest/v1/rpc/${fnName}`, {
+              const res = await fetch(supabaseUrl + '/rest/v1/rpc/' + fnName, {
                 method: 'POST',
                 headers: {
                   'apikey': supabaseKey,
-                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Authorization': 'Bearer ' + supabaseKey,
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(params),
@@ -86,15 +86,14 @@ jobs:
 
               if (tables && tables[0]) {
                 status.tables_count = parseInt(tables[0].count);
-                console.log(`   ✅ Found ${status.tables_count} tables in public schema`);
-
+                console.log('   ✅ Found ' + status.tables_count + ' tables in public schema');
                 // Alert if table count changes significantly
                 // This would need a baseline to compare against
                 if (status.tables_count < 10) {
                   status.issues.push({
                     type: 'LOW_TABLE_COUNT',
                     severity: 'high',
-                    message: `Only ${status.tables_count} tables found - possible schema issue`,
+                    message: 'Only ' + status.tables_count + ' tables found - possible schema issue',
                   });
                 }
               }
@@ -126,8 +125,7 @@ jobs:
                   transactions: activity[0].recent_transactions,
                 };
 
-                console.log(`   ✅ ${totalActivity} records modified in last 24h`);
-              }
+                console.log('   ✅ ' + totalActivity + ' records modified in last 24h');              }
             } catch (e) {
               console.log('   ⚠️ Could not check activity');
             }
@@ -138,7 +136,7 @@ jobs:
 
             for (const table of criticalTables) {
               try {
-                const countSQL = `SELECT count(*) as count FROM ${table}`;
+                const countSQL = 'SELECT count(*) as count FROM ' + table;
                 const result = await rpc('execute_sql', { query: countSQL });
 
                 if (result && result[0]) {
@@ -154,14 +152,14 @@ jobs:
                       type: 'EMPTY_CRITICAL_TABLE',
                       severity: 'high',
                       table,
-                      message: `Critical table ${table} is empty`,
+                      message: 'Critical table ' + table + ' is empty',
                     });
                   }
 
-                  console.log(`   ${count > 0 ? '✅' : '❌'} ${table}: ${count} rows`);
+                  console.log('   ' + (count > 0 ? '✅' : '❌') + ' ' + table + ': ' + count + ' rows');
                 }
               } catch (e) {
-                console.log(`   ⚠️ Could not check ${table}`);
+                console.log('   ⚠️ Could not check ' + table);
               }
             }
 
@@ -186,7 +184,7 @@ jobs:
                   status.issues.push({
                     type: 'ORPHANED_RECORDS',
                     severity: 'medium',
-                    message: `Found ${orphanedBookings} orphaned bookings, ${orphanedPayments} orphaned payments`,
+                    message: 'Found ' + orphanedBookings + ' orphaned bookings, ' + orphanedPayments + ' orphaned payments',
                   });
                   console.log(`   ⚠️ Found orphaned records`);
                 } else {
@@ -220,10 +218,10 @@ jobs:
 
             // Summary
             console.log('\n=== Backup Verification Summary ===');
-            console.log(`Database healthy: ${status.database_healthy ? '✅' : '❌'}`);
-            console.log(`Tables: ${status.tables_count}`);
-            console.log(`Recent activity: ${status.recent_activity ? '✅' : '⚠️'}`);
-            console.log(`Issues: ${status.issues.length}`);
+            console.log('Database healthy: ' + (status.database_healthy ? '✅' : '❌'));
+            console.log('Tables: ' + status.tables_count);
+            console.log('Recent activity: ' + (status.recent_activity ? '✅' : '⚠️'));
+            console.log('Issues: ' + status.issues.length);
 
             core.setOutput('database_healthy', status.database_healthy);
             core.setOutput('tables_count', status.tables_count);
@@ -244,44 +242,41 @@ jobs:
           script: |
             const status = JSON.parse('${{ steps.verify.outputs.status }}' || '{}');
 
-            const issuesList = status.issues?.map(i =>
-              `- **${i.type}** (${i.severity}): ${i.message}`
+            const issuesList = status.issues?.map((issue) =>
+              '- **' + issue.type + '** (' + issue.severity + '): ' + issue.message
             ).join('\n') || 'Unknown issues';
 
-            const integrityTable = status.data_integrity?.map(t =>
-              `| ${t.table} | ${t.count} | ${t.ok ? '✅' : '❌'} |`
+            const integrityTable = status.data_integrity?.map((table) =>
+              '| ' + table.table + ' | ' + table.count + ' | ' + (table.ok ? '✅' : '❌') + ' |'
             ).join('\n') || 'No data';
+
+            const body =
+              '## Database Backup Verification Alert\n\n' +
+              '**Database Healthy:** ' + (status.database_healthy ? '✅' : '❌') + '\n' +
+              '**Tables Count:** ' + status.tables_count + '\n\n' +
+              '### Issues Detected\n' +
+              issuesList + '\n\n' +
+              '### Critical Tables\n' +
+              '| Table | Rows | Status |\n' +
+              '|-------|------|--------|\n' +
+              integrityTable + '\n\n' +
+              '### Recommended Actions\n' +
+              '1. Check Supabase dashboard for backup status\n' +
+              '2. Verify database connectivity\n' +
+              '3. Review migration history\n' +
+              '4. Contact Supabase support if backups are failing\n\n' +
+              '### Supabase Backup Info\n' +
+              '- Supabase provides automatic daily backups\n' +
+              '- Point-in-Time Recovery (PITR) available on Pro plan\n' +
+              '- Check dashboard: Project Settings > Database > Backups\n\n' +
+              '---\n' +
+              '*Auto-generated by Database Backup Verify workflow*';
 
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `[BACKUP ALERT] Database verification failed`,
-              body: `## Database Backup Verification Alert
-
-**Database Healthy:** ${status.database_healthy ? '✅' : '❌'}
-**Tables Count:** ${status.tables_count}
-
-### Issues Detected
-${issuesList}
-
-### Critical Tables
-| Table | Rows | Status |
-|-------|------|--------|
-${integrityTable}
-
-### Recommended Actions
-1. Check Supabase dashboard for backup status
-2. Verify database connectivity
-3. Review migration history
-4. Contact Supabase support if backups are failing
-
-### Supabase Backup Info
-- Supabase provides automatic daily backups
-- Point-in-Time Recovery (PITR) available on Pro plan
-- Check dashboard: Project Settings > Database > Backups
-
----
-*Auto-generated by Database Backup Verify workflow*`,
+              title: '[BACKUP ALERT] Database verification failed',
+              body: body,
               labels: ['alert', 'database', 'backup'],
             });
 
@@ -308,7 +303,8 @@ ${integrityTable}
                 message: 'Database health check failed. Backup integrity may be at risk.',
                 metadata: {
                   workflow: 'database-backup-verify',
-                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                  run_url: 'https://github.com/' + context.repo.owner + '/' + context.repo.repo +
+                    '/actions/runs/' + context.runId,
                 },
                 timestamp: new Date().toISOString(),
               }),

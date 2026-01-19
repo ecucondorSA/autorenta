@@ -29,10 +29,10 @@ jobs:
             const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
             const query = async (endpoint) => {
-              const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
+              const res = await fetch(supabaseUrl + '/rest/v1/' + endpoint, {
                 headers: {
                   'apikey': supabaseKey,
-                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Authorization': 'Bearer ' + supabaseKey,
                 }
               });
               if (!res.ok) return [];
@@ -97,7 +97,8 @@ jobs:
                     severity: 'high',
                     booking_id: booking.id,
                     hours_ago: hoursAgo,
-                    message: `Booking ${booking.id.substring(0, 8)}... confirmed ${hoursAgo}h ago without confirmation email`,
+                    message: 'Booking ' + booking.id.substring(0, 8) + '... confirmed ' + hoursAgo +
+                      'h ago without confirmation email',
                   });
                 }
               }
@@ -127,7 +128,8 @@ jobs:
                   type: 'HIGH_PUSH_FAILURE_RATE',
                   severity: 'high',
                   failure_rate: ((stats.push.failed / pushTotal) * 100).toFixed(1) + '%',
-                  message: `Push notification failure rate is ${((stats.push.failed / pushTotal) * 100).toFixed(1)}%`,
+                  message: 'Push notification failure rate is ' +
+                    ((stats.push.failed / pushTotal) * 100).toFixed(1) + '%',
                 });
               }
             } catch (e) {
@@ -154,7 +156,8 @@ jobs:
                   type: 'HIGH_OTP_EXPIRY_RATE',
                   severity: 'medium',
                   expiry_rate: ((otpExpired / otps.length) * 100).toFixed(1) + '%',
-                  message: `${((otpExpired / otps.length) * 100).toFixed(1)}% of WhatsApp OTPs expired without verification`,
+                  message: ((otpExpired / otps.length) * 100).toFixed(1) +
+                    '% of WhatsApp OTPs expired without verification',
                 });
               }
             } catch (e) {
@@ -172,14 +175,14 @@ jobs:
                 type: 'STUCK_PHONE_VERIFICATIONS',
                 severity: 'medium',
                 count: stuckVerifications.length,
-                message: `${stuckVerifications.length} users have phone numbers but unverified for >24h`,
+                message: stuckVerifications.length + ' users have phone numbers but unverified for >24h',
               });
             }
 
             // Report
             console.log('\n=== Notification Delivery Audit ===');
             console.log('Stats:', JSON.stringify(stats, null, 2));
-            console.log(`Issues found: ${issues.length}`);
+            console.log('Issues found: ' + issues.length);
 
             if (issues.length > 0) {
               console.log('Issues:', JSON.stringify(issues, null, 2));
@@ -199,12 +202,12 @@ jobs:
             const totalFailed = stats.email.failed + stats.push.failed + stats.whatsapp.failed;
             const failureRate = totalSent > 0 ? (totalFailed / (totalSent + totalFailed)) * 100 : 0;
 
-            console.log(`\nOverall failure rate: ${failureRate.toFixed(1)}%`);
+            console.log('\nOverall failure rate: ' + failureRate.toFixed(1) + '%');
 
             if (criticalIssues.length > 0 || highIssues.length > 3) {
-              core.setFailed(`Notification delivery issues detected: ${highIssues.length} high priority`);
+              core.setFailed('Notification delivery issues detected: ' + highIssues.length + ' high priority');
             } else if (failureRate > 10) {
-              core.setFailed(`High notification failure rate: ${failureRate.toFixed(1)}%`);
+              core.setFailed('High notification failure rate: ' + failureRate.toFixed(1) + '%');
             }
 
             return { stats, issues };
@@ -218,29 +221,29 @@ jobs:
             const emailSent = '${{ steps.notifications.outputs.email_sent }}';
             const emailFailed = '${{ steps.notifications.outputs.email_failed }}';
 
+            const title = '[NOTIFICATION ALERT] Delivery issues detected';
+            const body =
+              '## Notification Delivery Alert\n\n' +
+              '**Issues Detected:** ' + totalIssues + '\n\n' +
+              '### Email Stats (last 6h)\n' +
+              '- Sent: ' + emailSent + '\n' +
+              '- Failed: ' + emailFailed + '\n\n' +
+              '### Action Required\n' +
+              '1. Check email service provider status (Resend/SendGrid)\n' +
+              '2. Review failed notification logs\n' +
+              '3. Check WhatsApp API connectivity\n' +
+              '4. Verify push notification certificates\n\n' +
+              '### Links\n' +
+              '- [Workflow Run](https://github.com/' + context.repo.owner + '/' + context.repo.repo +
+              '/actions/runs/' + context.runId + ')\n\n' +
+              '---\n' +
+              '*Auto-generated by Notification Delivery Audit workflow*';
+
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `[NOTIFICATION ALERT] Delivery issues detected`,
-              body: `## Notification Delivery Alert
-
-**Issues Detected:** ${totalIssues}
-
-### Email Stats (last 6h)
-- Sent: ${emailSent}
-- Failed: ${emailFailed}
-
-### Action Required
-1. Check email service provider status (Resend/SendGrid)
-2. Review failed notification logs
-3. Check WhatsApp API connectivity
-4. Verify push notification certificates
-
-### Links
-- [Workflow Run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
-
----
-*Auto-generated by Notification Delivery Audit workflow*`,
+              title: title,
+              body: body,
               labels: ['alert', 'notifications'],
             });
 
@@ -267,7 +270,8 @@ jobs:
                 message: 'The notification delivery audit detected issues with email, push, or WhatsApp notifications.',
                 metadata: {
                   workflow: 'notification-delivery-audit',
-                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                  run_url: 'https://github.com/' + context.repo.owner + '/' + context.repo.repo +
+                    '/actions/runs/' + context.runId,
                 },
                 timestamp: new Date().toISOString(),
               }),

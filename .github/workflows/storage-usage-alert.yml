@@ -29,11 +29,11 @@ jobs:
             const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
             const rpc = async (fnName, params = {}) => {
-              const res = await fetch(`${supabaseUrl}/rest/v1/rpc/${fnName}`, {
+              const res = await fetch(supabaseUrl + '/rest/v1/rpc/' + fnName, {
                 method: 'POST',
                 headers: {
                   'apikey': supabaseKey,
-                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Authorization': 'Bearer ' + supabaseKey,
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(params),
@@ -43,10 +43,10 @@ jobs:
             };
 
             const query = async (endpoint) => {
-              const res = await fetch(`${supabaseUrl}/rest/v1/${endpoint}`, {
+              const res = await fetch(supabaseUrl + '/rest/v1/' + endpoint, {
                 headers: {
                   'apikey': supabaseKey,
-                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Authorization': 'Bearer ' + supabaseKey,
                 }
               });
               return res.json();
@@ -66,9 +66,9 @@ jobs:
             console.log('Checking storage usage...\n');
 
             // 1. List all storage buckets
-            const bucketsRes = await fetch(`${supabaseUrl}/storage/v1/bucket`, {
+            const bucketsRes = await fetch(supabaseUrl + '/storage/v1/bucket', {
               headers: {
-                'Authorization': `Bearer ${supabaseKey}`,
+                'Authorization': 'Bearer ' + supabaseKey,
               }
             });
 
@@ -76,17 +76,17 @@ jobs:
               console.log('Could not fetch buckets, checking via SQL...');
             } else {
               const buckets = await bucketsRes.json();
-              console.log(`Found ${buckets.length} storage buckets`);
+              console.log('Found ' + buckets.length + ' storage buckets');
 
               for (const bucket of buckets) {
-                console.log(`Checking bucket: ${bucket.name}`);
+                console.log('Checking bucket: ' + bucket.name);
 
                 // Get bucket size via listing (approximate)
                 const objectsRes = await fetch(
-                  `${supabaseUrl}/storage/v1/object/list/${bucket.name}?limit=1000`,
+                  supabaseUrl + '/storage/v1/object/list/' + bucket.name + '?limit=1000',
                   {
                     headers: {
-                      'Authorization': `Bearer ${supabaseKey}`,
+                      'Authorization': 'Bearer ' + supabaseKey,
                     }
                   }
                 );
@@ -122,7 +122,7 @@ jobs:
               if (dbSize && dbSize[0]) {
                 storage.database_size = dbSize[0].db_size;
                 storage.database_size_bytes = dbSize[0].db_size_bytes;
-                console.log(`Database size: ${dbSize[0].db_size}`);
+                console.log('Database size: ' + dbSize[0].db_size);
               }
             } catch (e) {
               console.log('Could not get database size');
@@ -158,10 +158,10 @@ jobs:
             storage.usage_percentage = usagePercentage.toFixed(1);
             storage.limit_gb = STORAGE_LIMIT_GB;
 
-            console.log(`\n=== Storage Summary ===`);
-            console.log(`Total storage: ${(storage.total_size_bytes / (1024 * 1024)).toFixed(2)} MB`);
-            console.log(`Files: ${storage.total_files}`);
-            console.log(`Usage: ${storage.usage_percentage}% of ${STORAGE_LIMIT_GB}GB limit`);
+            console.log('\n=== Storage Summary ===');
+            console.log('Total storage: ' + (storage.total_size_bytes / (1024 * 1024)).toFixed(2) + ' MB');
+            console.log('Files: ' + storage.total_files);
+            console.log('Usage: ' + storage.usage_percentage + '% of ' + STORAGE_LIMIT_GB + 'GB limit');
 
             // 5. Check for issues
             if (usagePercentage > 90) {
@@ -177,23 +177,40 @@ jobs:
                 message: `Storage at ${storage.usage_percentage}% - cleanup recommended`,
               });
             } else if (usagePercentage > 70) {
-              storage.issues.push({
-                type: 'STORAGE_WARNING',
-                severity: 'medium',
-                message: `Storage at ${storage.usage_percentage}% - monitor closely`,
-              });
-            }
+                storage.issues.push({
+                  type: 'STORAGE_CRITICAL',
+                  severity: 'critical',
+                  usage: storage.usage_percentage,
+                  message: 'Storage at ' + storage.usage_percentage + '% - immediate action required',
+                });
+              } else if (storage.usage_percentage > 75) {
+                storage.issues.push({
+                  type: 'STORAGE_HIGH',
+                  severity: 'high',
+                  usage: storage.usage_percentage,
+                  message: 'Storage at ' + storage.usage_percentage + '% - cleanup recommended',
+                });
+              } else if (storage.usage_percentage > 60) {
+                storage.issues.push({
+                  type: 'STORAGE_WARNING',
+                  severity: 'medium',
+                  usage: storage.usage_percentage,
+                  message: 'Storage at ' + storage.usage_percentage + '% - monitor closely',
+                });
+              }
+
 
             // Check for very large buckets
             for (const bucket of storage.buckets) {
               if (bucket.size_bytes > 500 * 1024 * 1024) { // 500MB
-                storage.issues.push({
-                  type: 'LARGE_BUCKET',
-                  severity: 'medium',
-                  bucket: bucket.name,
-                  size: bucket.size_mb + 'MB',
-                  message: `Bucket ${bucket.name} is ${bucket.size_mb}MB`,
-                });
+                  storage.issues.push({
+                    type: 'LARGE_BUCKET',
+                    severity: 'medium',
+                    bucket: bucket.name,
+                    size_mb: bucket.size_mb,
+                    message: 'Bucket ' + bucket.name + ' is ' + bucket.size_mb + 'MB',
+                  });
+
               }
             }
 
@@ -219,35 +236,38 @@ jobs:
             const usagePercentage = '${{ steps.storage.outputs.usage_percentage }}';
             const totalMB = '${{ steps.storage.outputs.total_mb }}';
 
-            const bucketsTable = storage.buckets?.map(b =>
-              `| ${b.name} | ${b.size_mb} MB | ${b.file_count} |`
+            const bucketsTable = storage.buckets?.map(bucket =>
+              '| ' + bucket.name + ' | ' + bucket.size_mb + ' MB | ' + bucket.file_count + ' |'
             ).join('\n') || 'No data';
+
+            const title = '[STORAGE ALERT] Usage at ' + usagePercentage + '%';
+            const largeTables = storage.large_tables?.length
+              ? storage.large_tables.map((table) => '- **' + table.tablename + '**: ' + table.size).join('\n')
+              : 'No data';
+
+            const body =
+              '## Storage Usage Alert\n\n' +
+              '**Current Usage:** ' + totalMB + ' MB (' + usagePercentage + '%)\n' +
+              '**Limit:** ' + (storage.limit_gb || 1) + ' GB\n\n' +
+              '### Buckets\n' +
+              '| Bucket | Size | Files |\n' +
+              '|--------|------|-------|\n' +
+              bucketsTable + '\n\n' +
+              '### Large Tables\n' +
+              largeTables + '\n\n' +
+              '### Recommended Actions\n' +
+              '1. Clean up old/unused files from storage buckets\n' +
+              '2. Archive old data to external storage\n' +
+              '3. Consider upgrading Supabase plan\n' +
+              '4. Review and delete old backups\n\n' +
+              '---\n' +
+              '*Auto-generated by Storage Usage Alert workflow*';
 
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `[STORAGE ALERT] Usage at ${usagePercentage}%`,
-              body: `## Storage Usage Alert
-
-**Current Usage:** ${totalMB} MB (${usagePercentage}%)
-**Limit:** ${storage.limit_gb || 1} GB
-
-### Buckets
-| Bucket | Size | Files |
-|--------|------|-------|
-${bucketsTable}
-
-### Large Tables
-${storage.large_tables?.map(t => `- **${t.tablename}**: ${t.size}`).join('\n') || 'No data'}
-
-### Recommended Actions
-1. Clean up old/unused files from storage buckets
-2. Archive old data to external storage
-3. Consider upgrading Supabase plan
-4. Review and delete old backups
-
----
-*Auto-generated by Storage Usage Alert workflow*`,
+              title: title,
+              body: body,
               labels: ['alert', 'storage', 'infrastructure'],
             });
 
@@ -273,10 +293,11 @@ ${storage.large_tables?.map(t => `- **${t.tablename}**: ${t.size}`).join('\n') |
                 source: 'github',
                 severity: parseFloat(usagePercentage) > 90 ? 'critical' : 'high',
                 title: 'Storage Usage Alert',
-                message: `Storage usage at ${usagePercentage}%. Cleanup required.`,
+                message: 'Storage usage at ' + usagePercentage + '%. Cleanup required.',
                 metadata: {
                   workflow: 'storage-usage-alert',
-                  run_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+                  run_url: 'https://github.com/' + context.repo.owner + '/' + context.repo.repo +
+                    '/actions/runs/' + context.runId,
                 },
                 timestamp: new Date().toISOString(),
               }),

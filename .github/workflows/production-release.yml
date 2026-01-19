@@ -22,9 +22,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with: { version: ${{ env.PNPM_VERSION }} }
+        with:
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
-        with: { node-version: ${{ env.NODE_VERSION }}, cache: 'pnpm' }
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
       
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
@@ -41,7 +44,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
-        with: { version: latest }
+        with:
+          version: latest
       
       - name: Link & Push Migrations
         run: |
@@ -65,39 +69,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with: { version: ${{ env.PNPM_VERSION }} }
+        with:
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
-        with: { node-version: ${{ env.NODE_VERSION }}, cache: 'pnpm' }
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
       
       - run: pnpm install --frozen-lockfile
       - run: pnpm build:web
-        env: { NODE_ENV: production }
+        env:
+          NODE_ENV: production
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/web/www --project-name=autorenta --branch=main --commit-dirty=true
-
-  # 4. ANDROID BUILD: Corre en paralelo a la web, pero después de validar calidad
-  build-android:
-    name: 🤖 Build Android APK
-    needs: quality-check # No espera a la web, pero sí al Quality Gate
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with: { version: ${{ env.PNPM_VERSION }} }
-      - uses: actions/setup-node@v4
-        with: { node-version: ${{ env.NODE_VERSION }}, cache: 'pnpm' }
-      - uses: actions/setup-java@v4
-        with: { distribution: 'temurin', java-version: '17' }
-      - uses: android-actions/setup-android@v3
-
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build:web
-        env: { NODE_ENV: production }
 
       - name: Sync Capacitor
         run: pnpm --filter @autorenta/web exec cap sync android
