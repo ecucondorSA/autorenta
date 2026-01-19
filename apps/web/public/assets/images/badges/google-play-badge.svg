@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 135 40" width="135" height="40">
+  <rect width="135" height="40" rx="5" fill="#000"/>
+  <!-- Play Store Icon -->
+  <g transform="translate(10, 8)">
+    <path fill="#00D4FF" d="M0 2.5v19L12 12z"/>
+    <path fill="#00F076" d="M0 21.5L12 12l3.5 3.5-12 8z"/>
+    <path fill="#FFBC00" d="M0 2.5l15.5 10-3.5 3.5z"/>
+    <path fill="#F33E52" d="M12 12l3.5-3.5 5.5 3.5-5.5 3.5z"/>
+  </g>
+  <g fill="#fff" font-family="system-ui, -apple-system, sans-serif">
+    <text x="40" y="13" font-size="6.5" letter-spacing=".2" text-transform="uppercase">Disponible en</text>
+    <text x="40" y="28" font-size="13" font-weight="600">Google Play</text>
+  </g>
+</svg>

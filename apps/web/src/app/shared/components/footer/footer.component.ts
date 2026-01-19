@@ -76,22 +76,38 @@ export class FooterComponent {
     {
       name: 'Facebook',
       icon: 'facebook',
-      url: 'https://facebook.com/autorenta',
-      ariaLabel: 'Visita nuestro Facebook',
-    },
-    {
-      name: 'Twitter',
-      icon: 'twitter',
-      url: 'https://twitter.com/autorenta',
-      ariaLabel: 'Visita nuestro Twitter',
+      url: 'https://facebook.com/autorentar',
+      ariaLabel: 'Síguenos en Facebook',
     },
     {
       name: 'Instagram',
       icon: 'instagram',
-      url: 'https://instagram.com/autorenta',
-      ariaLabel: 'Visita nuestro Instagram',
+      url: 'https://instagram.com/autorentar',
+      ariaLabel: 'Síguenos en Instagram',
+    },
+    {
+      name: 'TikTok',
+      icon: 'tiktok',
+      url: 'https://tiktok.com/@autorentar',
+      ariaLabel: 'Síguenos en TikTok',
+    },
+    {
+      name: 'YouTube',
+      icon: 'youtube',
+      url: 'https://youtube.com/@autorentar',
+      ariaLabel: 'Suscríbete en YouTube',
+    },
+    {
+      name: 'LinkedIn',
+      icon: 'linkedin',
+      url: 'https://linkedin.com/company/autorentar',
+      ariaLabel: 'Síguenos en LinkedIn',
     },
   ]);
+
+  // App store links
+  appStoreUrl = 'https://apps.apple.com/app/autorentar';
+  playStoreUrl = 'https://play.google.com/store/apps/details?id=com.autorentar.app';
 
   legalLinks = signal([
     { label: 'Privacidad', url: '/privacy' },

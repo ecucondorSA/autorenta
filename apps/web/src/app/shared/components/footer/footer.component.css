@@ -343,6 +343,78 @@
 }
 
 /* ============================================
+   App Store Badges
+   ============================================ */
+
+.app-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: 0.5rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--border-muted, #d0d7e2);
+}
+
+.app-badge {
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s ease;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.app-badge:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.app-badge:focus-visible {
+  outline: 2px solid var(--border-focus, #222222);
+  outline-offset: 2px;
+}
+
+.app-badge img {
+  display: block;
+  height: 40px;
+  width: auto;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .app-badges {
+    border-left-color: var(--border-muted, #334155);
+  }
+
+  .app-badge img {
+    filter: brightness(0.9);
+  }
+
+  .app-badge:hover img {
+    filter: brightness(1);
+  }
+}
+
+/* Mobile: Stack badges vertically */
+@media (max-width: 1023px) {
+  .app-badges {
+    border-left: none;
+    margin-left: 0;
+    padding-left: 0;
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .app-badges {
+    width: 100%;
+    justify-content: center;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid var(--border-muted, #d0d7e2);
+  }
+}
+
+/* ============================================
    Responsive Adjustments
    ============================================ */
 

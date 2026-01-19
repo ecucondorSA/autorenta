@@ -60,7 +60,7 @@
         </nav>
       </div>
 
-      <!-- Right: Language, Currency, Social -->
+      <!-- Right: Language, Currency, Social, Apps -->
       <div class="footer-bottom-right">
         <!-- Language Selector -->
         <button
@@ -97,6 +97,40 @@
               <app-icon [name]="social.icon" [size]="18" cssClass="social-icon" />
             </a>
           }
+        </div>
+
+        <!-- App Store Badges -->
+        <div class="app-badges">
+          <a
+            [href]="appStoreUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="app-badge"
+            aria-label="Descargar en App Store"
+          >
+            <img
+              src="/assets/images/badges/app-store-badge.svg"
+              alt="Descargar en App Store"
+              width="120"
+              height="40"
+              loading="lazy"
+            />
+          </a>
+          <a
+            [href]="playStoreUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="app-badge"
+            aria-label="Disponible en Google Play"
+          >
+            <img
+              src="/assets/images/badges/google-play-badge.svg"
+              alt="Disponible en Google Play"
+              width="135"
+              height="40"
+              loading="lazy"
+            />
+          </a>
         </div>
       </div>
     </div>
