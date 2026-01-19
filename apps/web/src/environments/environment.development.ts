@@ -6,9 +6,11 @@ import { buildEnvironment } from './environment.base';
  * ⚠️ SECURITY: NO hardcodear secrets en este archivo
  *
  * Secrets se leen de variables de entorno:
+ * - NG_APP_SUPABASE_URL
  * - NG_APP_SUPABASE_ANON_KEY
  * - NG_APP_MAPBOX_ACCESS_TOKEN
- * - NG_APP_PAYPAL_CLIENT_ID
+ * - NG_APP_TRIPO_API_KEY
+ * - NG_APP_GOOGLE_GEOLOCATION_API_KEY
  *
  * Setup:
  * 1. Copiar .env.local.example a .env.local
@@ -22,17 +24,17 @@ export const environment = buildEnvironment({
   defaultCurrency: 'ARS',
   appUrl: 'http://localhost:4200',
   cloudflareWorkerUrl: 'http://localhost:8788',
-  supabaseUrl: 'https://pisqjmoklivzpwufhscx.supabase.co',
-  supabaseAnonKey:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODI3ODMsImV4cCI6MjA3ODA1ODc4M30.wE2jTut2JSexoKFtHdEaIpl9MZ0sOHy9zMYBbhFbzt4',
-  mapboxAccessToken:
-    'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg',
-  tripoApiKey: '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',
+  // Keys se leen de .env.local via NG_APP_* variables
+  // NO hardcodear valores aquí - usar .env.local
+  supabaseUrl: '', // NG_APP_SUPABASE_URL
+  supabaseAnonKey: '', // NG_APP_SUPABASE_ANON_KEY
+  mapboxAccessToken: '', // NG_APP_MAPBOX_ACCESS_TOKEN
+  tripoApiKey: '', // NG_APP_TRIPO_API_KEY
   googleAnalyticsMeasurementId: '',
   enableAnalytics: false,
-  docVerifierUrl: 'https://pisqjmoklivzpwufhscx.supabase.co/functions/v1',
-  pdfWorkerUrl: 'https://autorent-pdf-generator.marques-eduardo95466020.workers.dev',
-  googleGeolocationApiKey: 'AIzaSyD9VrprbZaNVWrY5CThI2mHpp_SuriWRHY',
+  docVerifierUrl: '', // NG_APP_DOC_VERIFIER_URL (se construye desde supabaseUrl)
+  pdfWorkerUrl: '', // NG_APP_PDF_WORKER_URL
+  googleGeolocationApiKey: '', // NG_APP_GOOGLE_GEOLOCATION_API_KEY
   // Logging: debug level shows all logs in development
   logLevel: 'debug' as const,
 });

@@ -9,8 +9,15 @@ from google import genai
 from google.genai import types
 
 # Configure API
-# Using the key found in the original file or environment variable
-API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyCJIdveA5iCElCbfkBC9gXv24VktHRjftU')
+# ⚠️ SECURITY: API key MUST be set via environment variable
+API_KEY = os.environ.get('GEMINI_API_KEY')
+if not API_KEY:
+    print("❌ Error: GEMINI_API_KEY environment variable is not set")
+    print("")
+    print("To fix this, set the environment variable before running:")
+    print("  export GEMINI_API_KEY=your_key")
+    print("  python generate_pitch_images.py")
+    exit(1)
 
 # Create client
 client = genai.Client(api_key=API_KEY)

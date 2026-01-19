@@ -1,8 +1,9 @@
 const fs = require('fs');
 const https = require('https');
+const { getGeminiApiUrl } = require('./config');
 
 // Configuración
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=AIzaSyCaCYhyWhBrOSfNsIKsiWH4MMgD7J7_zVw';
+const API_URL = getGeminiApiUrl();
 
 // ==========================================
 // 1. GENERADOR DE PROMPTS "HUMANIZADOS"

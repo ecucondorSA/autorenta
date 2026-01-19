@@ -7,7 +7,8 @@
         "/home/edu/autorenta/tools/gemini-suite-mcp/dist/index.js"
       ],
       "env": {
-        "GEMINI_API_KEY": "AIzaSyCJIdveA5iCElCbfkBC9gXv24VktHRjftU"
+        "_comment": "Set GEMINI_API_KEY in your shell environment: export GEMINI_API_KEY=your_key",
+        "GEMINI_API_KEY": "${GEMINI_API_KEY}"
       }
     }
   }

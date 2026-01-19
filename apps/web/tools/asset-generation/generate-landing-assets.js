@@ -2,9 +2,10 @@ const fs = require('fs');
 const https = require('https');
 const sharp = require('sharp');
 const path = require('path');
+const { getGeminiApiUrl } = require('./config');
 
 // Configuración
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=AIzaSyCaCYhyWhBrOSfNsIKsiWH4MMgD7J7_zVw';
+const API_URL = getGeminiApiUrl();
 const MAX_DIMENSION_LANDING = 1920; 
 const QUALITY = 85;
 
