@@ -13,11 +13,12 @@ module.exports = {
          ═══════════════════════════════════════════════════════════════ */
 
       /* ─────────────────────────────────────────────────────────────
-         Tipografía - Sistema Satoshi (Masterplan v2.1)
+         Tipografía - Sistema Simplificado (2 fuentes)
+         Based on Airbnb/Turo/Zapier analysis: 1-2 fonts max
          ───────────────────────────────────────────────────────────── */
       fontFamily: {
+        // Primary font - Satoshi for all UI
         sans: [
-          'Inter', // Inter ahora es la primera opción para sans
           'Satoshi',
           '-apple-system',
           'BlinkMacSystemFont',
@@ -27,9 +28,9 @@ module.exports = {
           'Arial',
           'sans-serif',
         ],
+        // Alias for backwards compatibility
         satoshi: [
           'Satoshi',
-          'Inter',
           '-apple-system',
           'BlinkMacSystemFont',
           '"Segoe UI"',
@@ -38,20 +39,29 @@ module.exports = {
           'Arial',
           'sans-serif',
         ],
-        // Friendly & Community (Airbnb style)
+        // Mono font - JetBrains Mono for prices, codes, data
+        mono: [
+          '"JetBrains Mono"',
+          'ui-monospace',
+          'SFMono-Regular',
+          '"SF Mono"',
+          'Menlo',
+          'Consolas',
+          'monospace',
+        ],
+        // Backwards compatibility aliases (all map to Satoshi now)
         friendly: [
-          '"Plus Jakarta Sans"',
-          'Outfit',
-          'Inter',
-          'sans-serif',
-        ],
-        // Premium & Luxury (Uber Black style)
-        luxury: [
-          '"Clash Display"',
           'Satoshi',
+          '-apple-system',
+          'BlinkMacSystemFont',
           'sans-serif',
         ],
-        mono: 'var(--font-mono)',
+        luxury: [
+          'Satoshi',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'sans-serif',
+        ],
       },
 
       /* Escala Tipográfica Fluida - Responsive con clamp()

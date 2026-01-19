@@ -2,11 +2,9 @@
 /* ALL @import RULES MUST COME FIRST */
 /* ============================================ */
 
-/* 🔠 Satoshi Font (New Standard - Masterplan v2.1 - Self Hosted) */
+/* 🔠 Font System - Simplified (Satoshi + JetBrains Mono only)
+   See fonts.css for full documentation */
 @import './styles/fonts.css';
-
-/* 🔠 Google Fonts - JetBrains Mono (Tech/Data) */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 /* 🎚️ Responsive Tokens - CSS custom properties */
 @import './styles/responsive-tokens.css';
@@ -94,16 +92,6 @@ body.p-overflow-hidden,
 body.modal-open,
 body.no-scroll {
   overflow-y: auto !important;
-}
-
-/* 🎨 Fuente Inter - Premium UI Typography
-   Self-hosted variable font optimizado para performance */
-@font-face {
-  font-family: 'Inter';
-  src: url('/assets/fonts/inter-var.woff2') format('woff2-variations');
-  font-weight: 100 900;
-  font-display: swap;
-  font-style: normal;
 }
 
 /* ═══════════════════════════════════════════════════════════════

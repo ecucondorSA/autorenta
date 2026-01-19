@@ -1,225 +1,200 @@
 /**
- * 🎨 Tokens de Color para Tailwind CSS
+ * 🎨 Tokens de Color para Tailwind CSS - Refactored
  *
- * Exporta los tokens centralizados en formato compatible con Tailwind.
- * Este archivo actúa como puente entre el sistema TypeScript y Tailwind.
+ * Based on industry leaders analysis (Airbnb, Turo, Zapier, Booking):
+ * - Strong primary color (verde neón #00D95F)
+ * - Clean white backgrounds
+ * - High contrast text
  */
 
-// Importar tokens desde el archivo TypeScript
-// Nota: Tailwind requiere valores estáticos, por lo que importamos directamente
+// Core Palette
 const palette = {
+  // Brand Colors
+  brand: {
+    primary: '#00D95F',      // Verde neón - CTA principal
+    primaryHover: '#00BF54', // Verde neón hover
+    primaryActive: '#00A648', // Verde neón active
+    secondary: '#1A1A1A',    // Negro suave - textos
+  },
+
+  // Neutral Colors
   neutral: {
-    black: '#050505',
-    ivory: '#F8F4EC',
-    beige: '#DFD2BF',
-  },
-  gray: {
-    G100: '#111111',
-    G80: '#2B2B2B',
-    G60: '#4E4E4E',
-    G40: '#7B7B7B',
-    G20: '#BCBCBC',
-    G10: '#E3E3E3',
-    G05: '#F5F5F5',
-  },
-  accent: {
-    blue: {
-      primary: '#A7D8F4', // Azul pastel - Synced with colors.ts
-      hover: '#8EC9EC',   // Estado hover - Synced with colors.ts
-    },
-    neon: {
-      primary: '#00D95F', // Verde neón radioactivo - CTA principal
-      hover: '#00C553',   // Estado hover
-      pressed: '#00B048', // Estado pressed/active
-    },
+    white: '#FFFFFF',
+    gray50: '#F7F7F7',
+    gray100: '#F3F4F6',
+    gray200: '#E5E7EB',
+    gray300: '#D1D5DB',
+    gray400: '#9CA3AF',
+    gray500: '#6B7280',
+    gray600: '#4B5563',
+    gray700: '#374151',
+    gray800: '#1F2937',
+    gray900: '#111827',
+    black: '#1A1A1A',
   },
 
-  feedback: {
-    error: {
-      rust: '#B25E5E',
-    },
-    success: {
-      olive: '#9DB38B',
-    },
+  // Semantic Colors
+  semantic: {
+    success: '#10B981',
+    warning: '#F59E0B',
+    error: '#EF4444',
+    info: '#3B82F6',
   },
 };
 
 /**
- * Light Theme - Synced with colors.ts
- * Source of truth: src/config/theme/colors.ts
+ * Theme Tokens
  */
-const lightTheme = {
-  // Surfaces
-  surfaceBase: palette.neutral.ivory,        // #F8F4EC
-  surfaceRaised: '#FFFFFF',
-  surfaceSecondary: palette.neutral.beige,   // #DFD2BF - Synced with colors.ts
-  surfaceElevated: palette.gray.G05,         // #F5F5F5
+const theme = {
+  // Surfaces (backgrounds)
+  surfaceBase: palette.neutral.white,       // White background
+  surfaceSecondary: palette.neutral.gray50, // Light gray for cards
+  surfaceElevated: palette.neutral.white,   // Elevated cards
+  surfaceRaised: palette.neutral.white,     // Raised elements
 
-  // Text - Synced with colors.ts
-  textPrimary: palette.neutral.black,        // #050505
-  textSecondary: palette.gray.G60,           // #4E4E4E
-  textMuted: palette.gray.G40,               // #7B7B7B
-  textInverse: palette.neutral.ivory,        // #F8F4EC
+  // Text
+  textPrimary: palette.neutral.black,       // #1A1A1A
+  textSecondary: palette.neutral.gray500,   // #6B7280
+  textMuted: palette.neutral.gray400,       // #9CA3AF
+  textInverse: palette.neutral.white,       // White on dark
 
-  // Borders - Synced with colors.ts
-  borderDefault: palette.gray.G20,           // #BCBCBC
-  borderMuted: palette.gray.G10,             // #E3E3E3
-  borderFocus: '#3B6E8F',                    // Azul más saturado para contraste
+  // Borders
+  borderDefault: palette.neutral.gray200,   // #E5E7EB
+  borderMuted: palette.neutral.gray100,     // #F3F4F6
+  borderFocus: palette.brand.primary,       // Verde neón for focus
 
-  // CTA - Azul pastel (synced with colors.ts)
-  ctaDefault: palette.accent.blue.primary,   // #A7D8F4
-  ctaHover: palette.accent.blue.hover,       // #8EC9EC
-  ctaText: palette.neutral.black,            // #050505 - Negro sobre azul pastel
-
-  // Feedback states
-  infoLight: palette.accent.blue.primary,    // #A7D8F4
-  infoDark: '#6BA8D4',
-  successLight: palette.feedback.success.olive, // #9DB38B
-  warningLight: '#C4A882',                   // Beige cálido
-  errorLight: palette.feedback.error.rust,   // #B25E5E
-
-  // Overlays
-  overlayDark: 'rgba(5, 5, 5, 0.7)',
-  overlayLight: 'rgba(248, 244, 236, 0.9)',
+  // CTA (Call to Action) - Verde Neón as primary
+  ctaDefault: palette.brand.primary,        // #00D95F
+  ctaHover: palette.brand.primaryHover,     // #00BF54
+  ctaPressed: palette.brand.primaryActive,  // #00A648
+  ctaText: '#000000',                       // Black text on green
 };
 
 /**
- * Colores para Tailwind CSS
- * Estructura compatible con theme.extend.colors
+ * Tailwind Colors Export
  */
 module.exports = {
-  // Colores base
+  // Base Colors
   black: palette.neutral.black,
-  white: '#FFFFFF',
+  white: palette.neutral.white,
   transparent: 'transparent',
   current: 'currentColor',
 
-  // Fondos principales
-  ivory: palette.neutral.ivory,
-  beige: palette.neutral.beige,
+  // Brand Colors
+  brand: {
+    primary: palette.brand.primary,
+    'primary-hover': palette.brand.primaryHover,
+    'primary-active': palette.brand.primaryActive,
+    secondary: palette.brand.secondary,
+  },
 
-  // Escala de grises (nueva paleta unificada)
+  // Gray Scale (Tailwind standard)
   gray: {
-    100: palette.gray.G100,
-    80: palette.gray.G80,
-    60: palette.gray.G60,
-    40: palette.gray.G40,
-    20: palette.gray.G20,
-    10: palette.gray.G10,
-    5: palette.gray.G05,
+    50: palette.neutral.gray50,
+    100: palette.neutral.gray100,
+    200: palette.neutral.gray200,
+    300: palette.neutral.gray300,
+    400: palette.neutral.gray400,
+    500: palette.neutral.gray500,
+    600: palette.neutral.gray600,
+    700: palette.neutral.gray700,
+    800: palette.neutral.gray800,
+    900: palette.neutral.gray900,
   },
 
-  // Acentos azules pastel
-  accent: {
-    blue: {
-      DEFAULT: palette.accent.blue.primary,
-      hover: palette.accent.blue.hover,
-    },
-    neon: {
-      DEFAULT: palette.accent.neon.primary,
-      hover: palette.accent.neon.hover,
-      pressed: palette.accent.neon.pressed,
-    },
-  },
-
-
-  // Tokens semánticos (para uso directo en Tailwind)
+  // Semantic Surface Tokens
   surface: {
-    base: lightTheme.surfaceBase,
-    raised: lightTheme.surfaceRaised,
-    secondary: lightTheme.surfaceSecondary,
-    elevated: lightTheme.surfaceElevated,
+    base: theme.surfaceBase,
+    secondary: theme.surfaceSecondary,
+    elevated: theme.surfaceElevated,
+    raised: theme.surfaceRaised,
   },
 
+  // Semantic Text Tokens
   text: {
-    primary: lightTheme.textPrimary,
-    secondary: lightTheme.textSecondary,
-    muted: lightTheme.textMuted,
-    inverse: lightTheme.textInverse,
+    primary: theme.textPrimary,
+    secondary: theme.textSecondary,
+    muted: theme.textMuted,
+    inverse: theme.textInverse,
   },
 
+  // Semantic Border Tokens
   border: {
-    DEFAULT: lightTheme.borderDefault,
-    muted: lightTheme.borderMuted,
-    focus: lightTheme.borderFocus,
-    default: lightTheme.borderDefault, // Alias para bg-border-default
+    DEFAULT: theme.borderDefault,
+    default: theme.borderDefault,
+    muted: theme.borderMuted,
+    focus: theme.borderFocus,
   },
 
+  // CTA Tokens (Verde Neón)
   cta: {
-    DEFAULT: lightTheme.ctaDefault,
-    default: lightTheme.ctaDefault, // Alias para bg-cta-default
-    hover: lightTheme.ctaHover,
-    text: lightTheme.ctaText,
+    DEFAULT: theme.ctaDefault,
+    default: theme.ctaDefault,
+    hover: theme.ctaHover,
+    pressed: theme.ctaPressed,
+    text: theme.ctaText,
   },
 
-  info: {
-    light: lightTheme.infoLight,
-    dark: lightTheme.infoDark,
+  // Accent Colors
+  accent: {
+    neon: {
+      DEFAULT: palette.brand.primary,
+      hover: palette.brand.primaryHover,
+      pressed: palette.brand.primaryActive,
+    },
   },
 
+  // Semantic Feedback Colors
   success: {
-    light: lightTheme.successLight,
+    DEFAULT: palette.semantic.success,
+    light: '#D1FAE5',
+    dark: '#065F46',
   },
 
   warning: {
-    light: lightTheme.warningLight,
+    DEFAULT: palette.semantic.warning,
+    light: '#FEF3C7',
+    dark: '#92400E',
   },
 
   error: {
-    light: lightTheme.errorLight,
+    DEFAULT: palette.semantic.error,
+    light: '#FEE2E2',
+    dark: '#991B1B',
   },
 
-  // ─── CTA Neon (Verde Neón - Alto Impacto) ───
-  'cta-neon': {
-    DEFAULT: palette.accent.neon.primary,  // #00D95F
-    hover: palette.accent.neon.hover,      // #00C553
-    pressed: palette.accent.neon.pressed,  // #00B048
-    text: '#000000',                        // Negro para contraste
+  info: {
+    DEFAULT: palette.semantic.info,
+    light: '#DBEAFE',
+    dark: '#1E40AF',
   },
 
-  // ─── Clases planas para uso con @apply ───
-  // Estas clases permiten usar bg-cta-default, border-border-default, etc. en @apply
-  'cta-default': lightTheme.ctaDefault,
-  'cta-hover': lightTheme.ctaHover,
-  'cta-text': lightTheme.ctaText,
-  'cta-neon-default': palette.accent.neon.primary,
-  'cta-neon-hover': palette.accent.neon.hover,
-  'cta-neon-pressed': palette.accent.neon.pressed,
-  'border-default': lightTheme.borderDefault,
-  'border-muted': lightTheme.borderMuted,
-  'border-focus': lightTheme.borderFocus,
-  'surface-base': lightTheme.surfaceBase,
-  'surface-raised': lightTheme.surfaceRaised,
-  'surface-secondary': lightTheme.surfaceSecondary,
-  'surface-elevated': lightTheme.surfaceElevated,
-  'text-primary': lightTheme.textPrimary,
-  'text-secondary': lightTheme.textSecondary,
-  'text-muted': lightTheme.textMuted,
-  'text-inverse': lightTheme.textInverse,
-  'success-light': lightTheme.successLight,
-  'warning-light': lightTheme.warningLight,
-  'error-light': lightTheme.errorLight,
-  'info-light': lightTheme.infoLight,
-  'info-dark': lightTheme.infoDark,
+  // ─── Flat classes for @apply ───
+  'cta-default': theme.ctaDefault,
+  'cta-hover': theme.ctaHover,
+  'cta-text': theme.ctaText,
+  'border-default': theme.borderDefault,
+  'border-muted': theme.borderMuted,
+  'border-focus': theme.borderFocus,
+  'surface-base': theme.surfaceBase,
+  'surface-secondary': theme.surfaceSecondary,
+  'surface-elevated': theme.surfaceElevated,
+  'text-primary': theme.textPrimary,
+  'text-secondary': theme.textSecondary,
+  'text-muted': theme.textMuted,
+  'text-inverse': theme.textInverse,
 
-  // ─── Compatibilidad con código existente ───
-  // Mantener colores legacy durante migración gradual
-  'ivory-soft': palette.neutral.ivory,
-  'sand-light': '#EDEAE3', // Mantener para compatibilidad
-  'white-pure': '#FFFFFF',
-  'pearl-gray': palette.gray.G20,
+  // ─── Legacy compatibility (gradual migration) ───
+  ivory: palette.neutral.white,           // Was #F8F4EC, now white
+  beige: palette.neutral.gray100,         // Was #DFD2BF
+  'ivory-soft': palette.neutral.white,
+  'white-pure': palette.neutral.white,
+  'pearl-gray': palette.neutral.gray200,
   'smoke-black': palette.neutral.black,
-  'charcoal-medium': palette.gray.G60,
-  'ash-gray': palette.gray.G40,
-  'graphite-dark': '#121212',
-  'anthracite': '#1E1E1E',
-  'slate-deep': '#2A2A2A',
-  'ivory-luminous': '#FAF9F6',
-  'pearl-light': '#E5E3DD',
-  'accent-petrol': '#2C4A52', // Mantener para compatibilidad
-  'accent-warm': '#705D44', // Mantener para compatibilidad (Darkened)
+  'charcoal-medium': palette.neutral.gray600,
+  'ash-gray': palette.neutral.gray400,
 
-  // Sistema de grises legacy (para migración gradual)
+  // Neutral scale for legacy code
   neutral: {
     50: '#FAFAF9',
     100: '#F5F5F4',
