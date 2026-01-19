@@ -194,3 +194,20 @@ mcp_config.*.json
 # Development environment files that may contain secrets
 *.local.json
 **/config.local.json
+
+# Build outputs (all dist folders)
+**/dist/
+*.tsbuildinfo
+.turbo/
+
+# Temporary folders
+**/tmp/
+**/hdri_temp/
+
+# IDE specific
+.cursor/
+.agent/
+
+# Pitch decks (don't belong in repo)
+*.pptx
+deck-assets/

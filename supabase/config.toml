@@ -27,3 +27,7 @@ verify_jwt = false
 [functions.sync-booking-to-calendar]
 # Requires JWT verification (user must be authenticated)
 verify_jwt = true
+
+[functions.sitemap]
+# Sitemap must be public for Google Bot
+verify_jwt = false

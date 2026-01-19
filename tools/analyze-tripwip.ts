@@ -37,56 +37,74 @@ async function analyzeTripWip() {
     
     // 1. Navegar a TripWip
     console.log('\n🧭 1. Navegando a TripWip...');
-    // Intentamos ir a una página de búsqueda o listado si es posible, o al home
     await client.call('stream_navigate', { 
       url: 'https://www.tripwip.app/' 
     });
     
-    // Esperar carga
-    await new Promise(r => setTimeout(r, 5000));
+    // Esperar hidratación
+    await new Promise(r => setTimeout(r, 4000));
+
+    // 2. EXTRACCIÓN PROFUNDA (Deep Extraction)
+    console.log('\n💉 2. Ejecutando extracción de datos internos...');
     
-    // Intentar buscar un enlace a "Alquilar" o "Autos"
-    console.log('   🔍 Buscando enlace a vehículos...');
-    try {
-        // Buscamos botones comunes
-        const searchBtn = 'text=Buscar';
-        await client.call('stream_click', { selector: searchBtn });
-        console.log('   👆 Click en Buscar...');
-        await new Promise(r => setTimeout(r, 5000));
-    } catch (e) {
-        console.log('   ⚠️ No se encontró botón Buscar directo.');
-    }
-
-    // Intentar encontrar una tarjeta de auto
-    console.log('   ⏳ Esperando lista de autos...');
-    try {
-      // Selectores genéricos de tarjetas (clases suelen cambiar, buscamos estructura)
-      // Buscamos algo que parezca un precio o un modelo
-      await client.call('stream_wait_for', { selector: 'img', timeout: 10000 });
-    } catch (e) {
-      console.log('   ⚠️ Timeout esperando lista.');
-    }
-
-    // 2. Screenshot del listado (o home)
-    console.log('\n📸 2. Capturando pantalla actual...');
-    const shot = await client.call('stream_screenshot', { fullPage: false });
-    console.log(shot);
-
-    // 3. Análisis de DOM
-    const analysis = await client.call('stream_evaluate', {
+    const extraction = await client.call('stream_evaluate', {
       script: `
         (() => {
+          // A. Extraer __NEXT_DATA__ (La mina de oro)
+          const nextData = window.__NEXT_DATA__ || {};
+          
+          // B. Buscar claves en variables de entorno runtime
+          const env = nextData.runtimeConfig || nextData.env || nextData.props?.pageProps?.env || {};
+          
+          // C. Analizar el formulario de búsqueda para ingeniería inversa
+          const searchInputs = Array.from(document.querySelectorAll('input, select, textarea')).map(el => ({
+            tag: el.tagName,
+            id: el.id,
+            name: el.name,
+            placeholder: el.placeholder,
+            type: el.type,
+            value: el.value,
+            class: el.className
+          }));
+
+          // D. Buscar enlaces profundos para entender la estructura de URL
+          const deepLinks = Array.from(document.querySelectorAll('a'))
+            .map(a => a.getAttribute('href'))
+            .filter(href => href && href.startsWith('/'))
+            .slice(0, 20);
+
+          // E. Intentar encontrar la instancia de Supabase en memoria
+          // A veces los desarrolladores la exponen en window sin querer
+          let supabaseConfig = null;
+          try {
+             const chunkKeys = Object.keys(window).filter(k => k.toLowerCase().includes('supabase'));
+             supabaseConfig = chunkKeys;
+          } catch(e) {}
+
           return {
-            title: document.title,
-            meta_desc: document.querySelector('meta[name="description"]')?.content,
-            h1: document.querySelector('h1')?.innerText,
-            links: Array.from(document.querySelectorAll('a')).map(a => a.href).slice(0, 5)
+            buildId: nextData.buildId,
+            props: nextData.props ? Object.keys(nextData.props) : [],
+            pagePropsKeys: nextData.props?.pageProps ? Object.keys(nextData.props.pageProps) : [],
+            envVars: env,
+            searchFormStructure: searchInputs,
+            internalRoutes: deepLinks,
+            supabaseHints: supabaseConfig
           };
         })()
       `
     });
-    console.log(analysis);
 
+    console.log('\n📊 DATOS EXTRAÍDOS:');
+    console.log(JSON.stringify(extraction, null, 2));
+
+    /*
+    // 3. Screenshot de referencia
+    console.log('\n📸 3. Capturando evidencia visual...');
+    const shot = await client.call('stream_screenshot', { fullPage: false });
+    console.log(shot);
+    */
+    
+    /* OLD LOGIC REMOVED */
   } catch (error) {
     console.error('❌ Error:', error);
   } finally {

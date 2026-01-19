@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.autorentar.app',
+  appId: 'app.autorenta.io',
   appName: 'Autorentar',
   webDir: 'dist/web/browser',
   server: {
@@ -9,8 +9,8 @@ const config: CapacitorConfig = {
   },
   android: {
     buildOptions: {
-      keystorePath: 'keystore/autorentar-release.keystore',
-      keystoreAlias: 'autorentar',
+      keystorePath: 'keystore/autorenta-release.keystore',
+      keystoreAlias: 'autorenta',
     },
   },
   plugins: {

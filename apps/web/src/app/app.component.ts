@@ -40,6 +40,7 @@ import { NotificationsService } from '@core/services/infrastructure/user-notific
 import { routeAnimations } from '@core/animations/route-animations'; // Importar animaciones
 import { GuidedTourService } from './core/guided-tour';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { SeoFooterComponent } from './core/components/seo-footer/seo-footer.component';
 import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
 import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
@@ -79,6 +80,7 @@ import { OfflineBannerComponent } from './shared/components/offline-banner/offli
     NotificationsComponent,
     ShareButtonComponent,
     FooterComponent,
+    SeoFooterComponent,
     IconComponent,
     SplashScreenComponent,
     MobileMenuDrawerComponent,

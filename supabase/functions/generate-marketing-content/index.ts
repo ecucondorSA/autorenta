@@ -34,6 +34,7 @@ interface GenerateContentRequest {
   language?: Language;
   generate_image?: boolean;
   generate_video?: boolean; // For TikTok - uses Veo 3.1
+  batch_mode?: boolean; // Generate posts for all daily slots
 }
 
 interface GeneratedContent {
@@ -56,6 +57,12 @@ interface GeneratedContent {
   };
   suggested_post_time?: string;
   error?: string;
+}
+
+interface BatchGeneratedContent {
+  success: boolean;
+  batch_results: GeneratedContent[];
+  count: number;
 }
 
 interface CarData {
@@ -137,64 +144,151 @@ serve(async (req) => {
 
   try {
     const request: GenerateContentRequest = await req.json();
-    const { content_type, platform, car_id, theme, language = 'es', generate_image = false, generate_video = false } = request;
+    const { content_type, platform, car_id, theme, language = 'es', generate_image = false, generate_video = false, batch_mode = false, save_to_db = false } = request;
 
     // Validate required fields
     if (!content_type || !platform) {
       throw new Error('content_type and platform are required');
     }
 
-    console.log(`[generate-marketing-content] Generating ${content_type} for ${platform}`);
+    console.log(`[generate-marketing-content] Generating ${content_type} for ${platform} (Batch: ${batch_mode}, Save: ${save_to_db})`);
 
     // Initialize Supabase client
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-    // Get car data if needed
-    let carData: CarData | null = null;
-    if (car_id || content_type === 'car_spotlight') {
-      carData = await getCarData(supabase, car_id);
+    // Determine target times
+    const targetTimes = batch_mode ? getAllSuggestedPostTimes(platform) : [getSuggestedPostTime(platform)];
+    const results: GeneratedContent[] = [];
+
+    // Process each time slot
+    for (const timeStr of targetTimes) {
+        // Get car data
+        let carData: CarData | null = null;
+        if (car_id) {
+            carData = await getCarData(supabase, car_id);
+        } else if (content_type === 'car_spotlight') {
+            carData = await getRandomAvailableCar(supabase);
+        }
+
+        // Generate text
+        const textContent = await generateTextContent({
+            content_type,
+            platform,
+            carData,
+            theme,
+            language,
+        });
+
+        // Generate image
+        let imageContent: { url?: string; base64?: string } | undefined;
+        if (generate_image) {
+            imageContent = await generateMarketingImage(carData, content_type);
+            
+            // Upload image if saving to DB and we have base64
+            if (save_to_db && imageContent?.base64) {
+                const contentType = 'image/png'; // Gemini returns PNG usually
+                const extension = 'png';
+                const filePath = `marketing/images/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
+                
+                // Convert base64 to Blob/Uint8Array
+                const binString = atob(imageContent.base64);
+                const bytes = new Uint8Array(binString.length);
+                for (let i = 0; i < binString.length; i++) {
+                    bytes[i] = binString.charCodeAt(i);
+                }
+                
+                const { error: uploadError } = await supabase.storage
+                    .from(MARKETING_MEDIA_BUCKET)
+                    .upload(filePath, bytes, { contentType, upsert: false });
+
+                if (!uploadError) {
+                    const { data: publicUrlData } = supabase.storage
+                        .from(MARKETING_MEDIA_BUCKET)
+                        .getPublicUrl(filePath);
+                    
+                    if (publicUrlData?.publicUrl) {
+                        imageContent.url = publicUrlData.publicUrl;
+                        // Optional: Clear base64 to save bandwidth in response if URL is available
+                        // imageContent.base64 = undefined; 
+                    }
+                } else {
+                    console.error('[generate-marketing-content] Image upload failed:', uploadError);
+                }
+            }
+        }
+
+        // Generate video
+        let videoContent: { url?: string; operation_id?: string; status?: 'generating' | 'ready' | 'failed' } | undefined;
+        if (generate_video || platform === 'tiktok') {
+            videoContent = await generateMarketingVideo(supabase, textContent.caption, carData, content_type);
+        }
+
+        const resultItem: GeneratedContent = {
+            success: true,
+            text: textContent,
+            image: imageContent,
+            video: videoContent,
+            suggested_post_time: timeStr,
+        };
+
+        results.push(resultItem);
+
+        // Save to DB if requested
+        if (save_to_db) {
+            const mediaUrl = videoContent?.url || imageContent?.url;
+            const mediaType = videoContent ? 'video' : imageContent ? 'image' : null;
+
+            // Only save if we have media (if requested) or if it's text-only
+            // If video is still generating (status='generating'), we might want to save it with a flag?
+            // For simplicity, we save what we have. If video comes later, it's tricky.
+            // Veo video generation saves to storage but returns 'generating' if it takes too long.
+            // If it returns 'ready', we have the URL.
+            
+            const queueItem = {
+                platform,
+                content_type,
+                text_content: textContent.caption,
+                media_url: mediaUrl,
+                media_type: mediaType,
+                hashtags: textContent.hashtags,
+                scheduled_for: timeStr,
+                status: 'pending',
+                metadata: {
+                    car_id: carData?.id,
+                    theme,
+                    language,
+                    video_operation_id: videoContent?.operation_id // Save for tracking
+                }
+            };
+
+            const { error: dbError } = await supabase
+                .from('marketing_content_queue')
+                .insert(queueItem);
+
+            if (dbError) {
+                console.error('[generate-marketing-content] DB insert failed:', dbError);
+                resultItem.error = `DB Save Failed: ${dbError.message}`;
+            } else {
+                console.log(`[generate-marketing-content] Saved post for ${timeStr}`);
+            }
+        }
     }
 
-    // Get random car if spotlight without specific car
-    if (content_type === 'car_spotlight' && !carData) {
-      carData = await getRandomAvailableCar(supabase);
+    if (batch_mode) {
+        const batchResponse: BatchGeneratedContent = {
+            success: true,
+            batch_results: results,
+            count: results.length
+        };
+        return new Response(JSON.stringify(batchResponse), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+    } else {
+        return new Response(JSON.stringify(results[0]), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
     }
 
-    // Generate text content with Gemini
-    const textContent = await generateTextContent({
-      content_type,
-      platform,
-      carData,
-      theme,
-      language,
-    });
-
-    // Generate image if requested
-    let imageContent: { url?: string; base64?: string } | undefined;
-    if (generate_image) {
-      imageContent = await generateMarketingImage(carData, content_type);
-    }
-
-    // Generate video if requested (for TikTok)
-    let videoContent: { url?: string; operation_id?: string; status?: 'generating' | 'ready' | 'failed' } | undefined;
-    if (generate_video || platform === 'tiktok') {
-      videoContent = await generateMarketingVideo(supabase, textContent.caption, carData, content_type);
-    }
-
-    // Calculate suggested post time
-    const suggestedTime = getSuggestedPostTime(platform);
-
-    const response: GeneratedContent = {
-      success: true,
-      text: textContent,
-      image: imageContent,
-      video: videoContent,
-      suggested_post_time: suggestedTime,
-    };
-
-    return new Response(JSON.stringify(response), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
   } catch (error) {
     console.error('[generate-marketing-content] Error:', error);
     return new Response(
@@ -316,68 +410,68 @@ FORMATO DE RESPUESTA (JSON):
 }
 
 // ============================================================================
-// IMAGE GENERATION WITH LATAM CONTEXT
+// IMAGE GENERATION WITH LATAM CONTEXT (PROMPTS V2 - PREMIUM)
 // ============================================================================
 
-// LATAM Diversity - People prompts for marketing images
+// High-quality personas with specific style details
 const LATAM_PEOPLE_SCENES = [
-  // Young woman (25) - urban park
-  'young latin american woman (25 years old) smiling naturally, casual clothing, city park in Buenos Aires background, friendly and approachable, amateur phone photo quality',
-  // Middle-aged man (40) - urban street
-  'middle-aged latin american man (40 years old) with beard, smiling warmly, wearing casual t-shirt, urban street in Montevideo background, authentic look',
-  // Young man (22) - energetic
-  'young latin american man (22 years old) laughing, casual style with cap, sunny day outdoors in Cordoba Argentina, high energy vibe',
-  // Senior woman (60) - garden
-  'senior latin american woman (60 years old) smiling gently, garden background with jacaranda trees, natural light, warm grandmotherly vibe',
-  // Couple traveling
-  'young latin american couple (25-35 years old) joyfully looking at camera, coastal road in Uruguay like Punta del Este background, travel vibe',
-  // Car owner proud
-  'confident latin american car owner (30-45 years old) leaning against car, residential street Buenos Aires, metal gate and colorful wall background',
+  'a stylish Latin American woman (28 years old), wearing a beige trench coat and sunglasses, looking confident and happy, wind in hair',
+  'a handsome Latin American man (35 years old), casual-chic style, white linen shirt, beard, smiling authentically at the camera',
+  'an adventurous young Latin American couple (25s), wearing travel gear and backpacks, laughing together, genuine connection',
+  'a modern Latin American digital nomad (24), holding an iced coffee, wearing stylish streetwear, leaning relaxed',
+  'a sophisticated Latin American senior woman (60), elegant silver hair, wearing a colorful scarf, smiling warmly',
+  'a cool Latin American guy (22) with curly hair, wearing a retro football jersey style t-shirt, energetic vibe'
 ];
 
-// LATAM Locations for backgrounds
+// Atmospheric locations with lighting cues
 const LATAM_LOCATIONS = [
-  'San Telmo Buenos Aires cobblestone street warm afternoon light',
-  'Colonia del Sacramento Uruguay colonial architecture',
-  'Punta del Este Uruguay coastal road sunny day',
-  'Palermo Buenos Aires tree-lined street jacaranda trees',
-  'Montevideo Uruguay rambla waterfront sunset',
-  'Mendoza Argentina wine country mountains background',
-  'Mar del Plata Argentina beach boardwalk',
-  'Rosario Argentina riverside costanera',
+  'a charming cobblestone street in San Telmo Buenos Aires, dappled sunlight through trees, colonial architecture background',
+  'the modern waterfront rambla of Montevideo, clean concrete lines, bright blue sky, ocean horizon in background',
+  'a scenic vineyard road in Mendoza, Andes mountains faintly visible in the distance, warm golden hour lighting',
+  'a vibrant urban street in Cordoba with colorful murals (blur background), soft afternoon shadow',
+  'a coastal road in Punta del Este, pine trees and sand dunes visible, bright summer lighting',
+  'a modern architectural garage or valet zone, concrete and glass textures, premium city vibe'
 ];
 
-// Marketing image prompts by content type
+// Photography styles to rotate quality
+const PHOTO_STYLES = [
+  'Shot on 35mm film, Kodak Portra 400 grain, warm tones, nostalgic travel vibe',
+  'High-end editorial photography, shot on Canon R5, 50mm f/1.2 lens, shallow depth of field (bokeh), sharp focus on subject',
+  'Authentic influencer lifestyle shot, iPhone 15 Pro Max quality, HDR, bright and airy, high contrast',
+  'Cinematic lighting, sun flare, golden hour, volumetric light, 8k resolution, highly detailed'
+];
+
+// Improved Prompt Templates
 const MARKETING_IMAGE_PROMPTS: Record<ContentType, string[]> = {
   tip: [
-    'Phone photo of {person}, giving thumbs up next to a clean modern car, {location}, amateur quality, realistic',
-    'Selfie style photo of {person}, inside car showing dashboard, LEFT HAND DRIVE, {location} visible through window',
-    'Casual photo of {person}, checking tire or car exterior, {location}, helpful educational vibe',
+    'POV shot (Point of View) of {person} holding a modern car key fob, focus on the hand and keys, {car_desc} blurred in the background parked on {location}. {style}.',
+    'Close-up lifestyle shot of {person} adjusting the rear-view mirror inside a {car_desc}, interior perspective, safe driving vibe, {location} visible through windshield. {style}.',
+    'Over-the-shoulder shot of {person} looking at a smartphone map app next to a {car_desc}, ready for a trip, {location} background. {style}.'
   ],
   promo: [
-    'Exciting photo of {person}, keys in hand standing next to modern sedan, {location}, celebration vibe, amateur phone quality',
-    'Happy {person}, opening car door ready for adventure, {location}, promotional energy',
-    'Group of friends ({person} style), gathered around car trunk with luggage, {location}, road trip excitement',
+    'Hero shot: {person} jumping in the air or raising hands in victory holding car keys next to a shiny {car_desc}, {location}, celebration energy, sparks of joy. {style}.',
+    'Lifestyle luxury: {person} leaning confidently against the hood of a {car_desc}, arms crossed, smiling, {location}, "own the road" energy. {style}.',
+    'Travel aesthetic: The trunk of a {car_desc} open, filled with stylish vintage luggage and a guitar, {person} closing it happily, {location}, road trip ready. {style}.'
   ],
   car_spotlight: [
-    'Beautiful photo of modern car parked on {location}, golden hour light, amateur phone photo quality, no people',
-    'Clean car 3/4 view parked safely by curb, {location}, afternoon light, realistic phone camera',
-    'Car interior from backseat, LEFT HAND DRIVE, steering wheel on left, parked at {location}, clean and inviting',
+    'Automotive editorial shot: Low angle view of a {car_desc} parked on {location}, wet pavement reflections, dramatic sky, headlights on, powerful stance. {style}.',
+    'Detail shot: Close up of the front grille and headlight of a {car_desc}, sun flare hitting the metal, {location} blurred background, premium feeling. {style}.',
+    'Side profile motion blur: A {car_desc} driving dynamically through {location}, wheels spinning (motion blur), sharp focus on car body, cinematic chase feel. {style}.'
   ],
   testimonial: [
-    'Candid photo of {person}, smiling next to car they rented, {location}, genuine happiness, phone photo quality',
-    'Natural photo of {person}, giving car keys to another person, friendly exchange, {location}',
-    '{person} taking selfie inside rented car, happy expression, {location} visible outside, authentic',
+    'Portrait photography: {person} leaning out of the driver window of a {car_desc}, big genuine smile, wind in hair, {location}, feeling of freedom. {style}.',
+    'Candid moment: {person} high-fiving a friend (or receiving keys), natural laughter, standing next to {car_desc}, {location}, trust and community vibe. {style}.',
+    'Selfie perspective: {person} taking a high-angle selfie with the {car_desc} visible behind them, {location}, "just got my ride" excitement. {style}.'
   ],
   seasonal: [
-    'Summer vibes: {person} with sunglasses near car, {location}, beach or vacation energy, phone photo',
-    'Holiday road trip: car packed with luggage, {location}, festive atmosphere, amateur quality',
-    'Weekend getaway: {person} stretching happily next to parked car, scenic {location}, relaxed vibe',
+    'Seasonal atmosphere: {car_desc} parked at {location} with {person} sitting on the hood watching a sunset, warm orange and purple sky, romantic travel vibe. {style}.',
+    'Holiday vibe: {person} loading wrapped gifts into a {car_desc}, {location} with festive lights in background (bokeh), cozy atmosphere. {style}.',
+    'Summer escape: {car_desc} parked near a beach access (sand visible), {person} holding a surfboard or beach bag, sunny flare, {location}. {style}.'
   ],
   community: [
-    'Friendly {person} waving from car window, {location}, welcoming community vibe, phone photo',
-    'Group selfie of diverse latin american friends near car, {location}, community gathering energy',
-    '{person} showing phone screen (blur) next to car, sharing experience vibe, {location}',
+    'Community warmth: {person} handing car keys to another diverse person, both smiling, close up on the exchange, {car_desc} background, {location}. {style}.',
+    'Group shot: Three diverse Latin American friends laughing inside a {car_desc} (seen through windshield), road trip snacks, happy chaos, {location}. {style}.',
+    'Owner pride: {person} washing or polishing a {car_desc}, water droplets sparkling in sun, {location}, care and quality theme. {style}.'
   ],
 };
 
@@ -385,8 +479,8 @@ async function generateMarketingImage(
   carData: CarData | null,
   contentType: ContentType
 ): Promise<{ url?: string; base64?: string } | undefined> {
-  // If car has existing images and it's car_spotlight, use them
-  if (carData?.images && carData.images.length > 0 && contentType === 'car_spotlight') {
+  // If car has existing images and it's car_spotlight, use them (50% chance to still generate AI art for variety)
+  if (carData?.images && carData.images.length > 0 && contentType === 'car_spotlight' && Math.random() > 0.5) {
     return { url: carData.images[0] };
   }
 
@@ -397,25 +491,31 @@ async function generateMarketingImage(
   }
 
   try {
-    // Select random elements for diversity
+    // Select random elements
     const person = LATAM_PEOPLE_SCENES[Math.floor(Math.random() * LATAM_PEOPLE_SCENES.length)];
     const location = LATAM_LOCATIONS[Math.floor(Math.random() * LATAM_LOCATIONS.length)];
+    const style = PHOTO_STYLES[Math.floor(Math.random() * PHOTO_STYLES.length)];
+    
     const promptTemplates = MARKETING_IMAGE_PROMPTS[contentType];
     const promptTemplate = promptTemplates[Math.floor(Math.random() * promptTemplates.length)];
 
-    // Build final prompt with car details if available
-    let finalPrompt = promptTemplate
-      .replace('{person}', person)
-      .replace('{location}', location);
-
+    // Define Car Description
+    let carDesc = 'modern silver sedan';
     if (carData) {
-      finalPrompt += `. The car is a ${carData.color || 'silver'} ${carData.brand} ${carData.model} ${carData.year}.`;
+      carDesc = `${carData.color || 'metallic'} ${carData.brand} ${carData.model} (${carData.year})`;
     }
 
-    // Add style guidelines
-    finalPrompt += ' Style: realistic amateur phone photo, not stock photography, authentic Latin American vibe.';
+    // Build final prompt
+    let finalPrompt = promptTemplate
+      .replace('{person}', person)
+      .replace('{location}', location)
+      .replace('{car_desc}', carDesc)
+      .replace('{style}', style);
 
-    console.log('[generate-marketing-content] Generating image with prompt:', finalPrompt.substring(0, 100) + '...');
+    // Add technical negative prompt / guidelines
+    finalPrompt += ' Ensure the car steering wheel is on the LEFT side (Latin America standard). High detail, realistic texture, no text overlays, no watermarks, photorealistic.';
+
+    console.log('[generate-marketing-content] Generating image with PROMPT V2:', finalPrompt);
 
     // Call Gemini 2.5 Flash Image for image generation
     const response = await fetch(
@@ -755,7 +855,7 @@ async function getRandomAvailableCar(
 // SCHEDULING HELPERS
 // ============================================================================
 
-function getSuggestedPostTime(platform: Platform): string {
+function getBestTimes(platform: Platform): { hour: number; minute: number }[] {
   // Best posting times for Argentina (UTC-3)
   const bestTimes: Record<Platform, { hour: number; minute: number }[]> = {
     tiktok: [
@@ -779,8 +879,11 @@ function getSuggestedPostTime(platform: Platform): string {
       { hour: 17, minute: 0 },
     ],
   };
+  return bestTimes[platform];
+}
 
-  const times = bestTimes[platform];
+function getSuggestedPostTime(platform: Platform): string {
+  const times = getBestTimes(platform);
   const randomTime = times[Math.floor(Math.random() * times.length)];
 
   // Create date for tomorrow at the suggested time (Argentina timezone)
@@ -789,4 +892,16 @@ function getSuggestedPostTime(platform: Platform): string {
   tomorrow.setHours(randomTime.hour + 3, randomTime.minute, 0, 0); // +3 for UTC
 
   return tomorrow.toISOString();
+}
+
+function getAllSuggestedPostTimes(platform: Platform): string[] {
+  const times = getBestTimes(platform);
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  return times.map(time => {
+    const date = new Date(tomorrow);
+    date.setHours(time.hour + 3, time.minute, 0, 0); // +3 for UTC
+    return date.toISOString();
+  });
 }

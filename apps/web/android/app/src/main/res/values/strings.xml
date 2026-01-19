@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">Autorentar</string>
     <string name="title_activity_main">Autorentar</string>
-    <string name="package_name">com.autorentar.app</string>
-    <string name="custom_url_scheme">com.autorentar.app</string>
-    <string name="facebook_app_id">4435998730015502</string>
-    <string name="fb_login_protocol_scheme">fb4435998730015502</string>
-    <string name="facebook_client_token">b93293e764bad81ea3d88b4011c8c07d</string>
+    <string name="package_name">app.autorenta.io</string>
+    <string name="custom_url_scheme">app.autorenta.io</string>
 </resources>

@@ -619,5 +619,18 @@ export const routes: Routes = [
     redirectTo: 'terminos',
     pathMatch: 'full',
   },
+  
+  // ============================================================================
+  // SEO LANDING PAGES (Dynamic Routes)
+  // ============================================================================
+  {
+    path: 'alquiler-autos/:city',
+    loadComponent: () => import('./features/seo/landing/seo-landing.page').then(m => m.SeoLandingPage),
+  },
+  {
+    path: 'rentar/:brand',
+    loadComponent: () => import('./features/seo/landing/seo-landing.page').then(m => m.SeoLandingPage),
+  },
+  
   { path: '**', redirectTo: '/auth/login' },
 ];

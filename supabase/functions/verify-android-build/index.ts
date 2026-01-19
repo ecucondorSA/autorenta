@@ -185,12 +185,12 @@ function verifyBuildLocally(appInfo: {
     errors.push('versionCode must be greater than 0');
   }
 
-  if (appInfo.packageName === 'com.autorentar.app') {
+  if (appInfo.packageName === 'app.autorenta.io') {
     checks.packageName.passed = true;
     checks.packageName.message = '✅ Package name is correct';
   } else {
     checks.packageName.passed = false;
-    checks.packageName.message = `❌ Package name mismatch. Expected: com.autorentar.app, Got: ${appInfo.packageName}`;
+    checks.packageName.message = `❌ Package name mismatch. Expected: app.autorenta.io, Got: ${appInfo.packageName}`;
     errors.push('Package name does not match expected value');
   }
 
