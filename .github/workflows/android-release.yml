@@ -269,7 +269,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
-          packageName: com.autorentar.app
+          packageName: app.autorentar
           releaseFiles: ./aab/app-release.aab
           track: internal
           status: completed

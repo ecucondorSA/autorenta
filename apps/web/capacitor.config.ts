@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.autorenta.io',
+  appId: 'app.autorentar',
   appName: 'Autorentar',
   webDir: 'dist/web/browser',
   server: {
