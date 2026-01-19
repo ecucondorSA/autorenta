@@ -1,3 +1,9 @@
+## [3.2.3](https://github.com/ecucondorSA/autorenta/compare/v3.2.2...v3.2.3) (2026-01-19)
+
+### 🐛 Bug Fixes
+
+* **db:** correct column names in public_owner_info view ([21ec67f](https://github.com/ecucondorSA/autorenta/commit/21ec67fc85db3eebc08f98c8c34e2aa2842c3c1d))
+
 ## [3.2.2](https://github.com/ecucondorSA/autorenta/compare/v3.2.1...v3.2.2) (2026-01-19)
 
 ### 🐛 Bug Fixes
