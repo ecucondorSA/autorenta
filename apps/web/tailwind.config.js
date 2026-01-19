@@ -211,6 +211,7 @@ module.exports = {
 
         // Semantic Colors - Success (Verde Oliva) - WCAG AA Validated
         success: {
+          light: 'var(--success-100)',
           50: 'var(--success-50)',
           100: 'var(--success-100)',
           200: 'var(--success-200)',

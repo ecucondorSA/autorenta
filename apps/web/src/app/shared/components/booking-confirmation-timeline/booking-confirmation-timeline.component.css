@@ -122,11 +122,11 @@
 }
 
 .timeline-step-badge--completed {
-  @apply bg-success-light/20 text-success-800;
+  @apply bg-green-100 text-green-800;
 }
 
 .timeline-step-badge--pending {
-  @apply bg-warning-light/20 text-warning-900;
+  @apply bg-amber-100 text-amber-900;
 }
 
 .timeline-step-description {
