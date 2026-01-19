@@ -60,11 +60,12 @@ jobs:
         run: pnpm build:web
         env:
           NODE_ENV: production
-          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
-          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
+          # Core - with fallbacks to existing secrets
+          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL || secrets.SUPABASE_URL }}
+          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY || secrets.SUPABASE_ANON_KEY }}
           NG_APP_DEFAULT_CURRENCY: "ARS"
-          NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN }}
-          NG_APP_MERCADOPAGO_PUBLIC_KEY: ${{ secrets.NG_APP_MERCADOPAGO_PUBLIC_KEY }}
+          NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN || secrets.MAPBOX_ACCESS_TOKEN }}
+          NG_APP_MERCADOPAGO_PUBLIC_KEY: ${{ secrets.NG_APP_MERCADOPAGO_PUBLIC_KEY || secrets.MERCADOPAGO_PROD_PUBLIC_KEY }}
 
       - name: Sync Capacitor
         run: |

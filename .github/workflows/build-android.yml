@@ -111,13 +111,15 @@ jobs:
         run: pnpm build:web
         env:
           NODE_ENV: production
-          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
-          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
+          # Core - with fallbacks to existing secrets
+          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL || secrets.SUPABASE_URL }}
+          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY || secrets.SUPABASE_ANON_KEY }}
           NG_APP_DEFAULT_CURRENCY: "ARS"
+          NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN || secrets.MAPBOX_ACCESS_TOKEN }}
+          NG_APP_MERCADOPAGO_PUBLIC_KEY: ${{ secrets.NG_APP_MERCADOPAGO_PUBLIC_KEY || secrets.MERCADOPAGO_PROD_PUBLIC_KEY }}
+          # Optional - will be empty if not configured
           NG_APP_PAYMENTS_WEBHOOK_URL: ${{ secrets.NG_APP_PAYMENTS_WEBHOOK_URL }}
-          NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN }}
           NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: ${{ secrets.NG_APP_CAR_LOCATIONS_EDGE_FUNCTION }}
-          NG_APP_MERCADOPAGO_PUBLIC_KEY: ${{ secrets.NG_APP_MERCADOPAGO_PUBLIC_KEY }}
           NG_APP_CLOUDFLARE_WORKER_URL: ${{ secrets.NG_APP_CLOUDFLARE_WORKER_URL }}
           NG_APP_TIKTOK_CLIENT_ID: ${{ secrets.NG_APP_TIKTOK_CLIENT_ID }}
           NG_APP_GOOGLE_CALENDAR_ID: ${{ secrets.NG_APP_GOOGLE_CALENDAR_ID }}
