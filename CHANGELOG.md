@@ -1,3 +1,9 @@
+## [3.2.7](https://github.com/ecucondorSA/autorenta/compare/v3.2.6...v3.2.7) (2026-01-19)
+
+### 🐛 Bug Fixes
+
+* **ci:** repair daily social workflow YAML ([7c381e1](https://github.com/ecucondorSA/autorenta/commit/7c381e1bd8dec7270b9bf91da9fa26d83f52784e))
+
 ## [3.2.6](https://github.com/ecucondorSA/autorenta/compare/v3.2.5...v3.2.6) (2026-01-19)
 
 ### 🐛 Bug Fixes
