@@ -1,3 +1,9 @@
+## [3.4.1](https://github.com/ecucondorSA/autorenta/compare/v3.4.0...v3.4.1) (2026-01-19)
+
+### 🐛 Bug Fixes
+
+* **android:** remove AD_ID permission for privacy compliance ([ec9279f](https://github.com/ecucondorSA/autorenta/commit/ec9279faf74cfb4af69c3ad377eb06547989dd6b))
+
 ## [3.4.0](https://github.com/ecucondorSA/autorenta/compare/v3.3.0...v3.4.0) (2026-01-19)
 
 ### ✨ Features
