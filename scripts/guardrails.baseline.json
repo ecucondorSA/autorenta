@@ -16,6 +16,7 @@
     ],
     "rpcFunctions": [
       "auto_update_price_per_day",
+      "publish_scheduled_campaigns",
       "booking_v2_auto_complete_inspection",
       "booking_v2_confirm_completion",
       "booking_v2_resolve_conclusion",
