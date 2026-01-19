@@ -62,7 +62,7 @@ import { IonicModule } from '@ionic/angular';
                 <div class="group relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
                   <div class="aspect-[4/3] w-full overflow-hidden bg-gray-100">
                     <img
-                      [src]="car.images[0]"
+                      [src]="car.images?.[0] || '/assets/placeholder-car.webp'"
                       class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       [alt]="car.brand + ' ' + car.model"
                     />
@@ -74,7 +74,7 @@ import { IonicModule } from '@ionic/angular';
                     <p class="text-sm text-gray-500">{{ car.year }} • {{ car.transmission }}</p>
                     <div class="mt-4 flex items-center justify-between">
                       <span class="text-lg font-bold text-brand-primary">
-                        {{ car.pricePerDay | currency }} / día
+                        {{ car.price_per_day | currency }} / día
                       </span>
                       <a
                         [routerLink]="['/cars', car.id]"
