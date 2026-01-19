@@ -1,3 +1,9 @@
+## [3.2.8](https://github.com/ecucondorSA/autorenta/compare/v3.2.7...v3.2.8) (2026-01-19)
+
+### 🐛 Bug Fixes
+
+* **ci:** repair workflow YAML templates ([e2bf933](https://github.com/ecucondorSA/autorenta/commit/e2bf933be9e0edb15635bb3504b1d177f904a4e0))
+
 ## [3.2.7](https://github.com/ecucondorSA/autorenta/compare/v3.2.6...v3.2.7) (2026-01-19)
 
 ### 🐛 Bug Fixes
