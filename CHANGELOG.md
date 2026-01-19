@@ -1,3 +1,9 @@
+## [3.2.6](https://github.com/ecucondorSA/autorenta/compare/v3.2.5...v3.2.6) (2026-01-19)
+
+### 🐛 Bug Fixes
+
+* **ci:** add issue permissions to workflows ([7b02381](https://github.com/ecucondorSA/autorenta/commit/7b023817bb2fe9543d5b1e77d6964e30b58bf53e))
+
 ## [3.2.5](https://github.com/ecucondorSA/autorenta/compare/v3.2.4...v3.2.5) (2026-01-19)
 
 ### 🐛 Bug Fixes
