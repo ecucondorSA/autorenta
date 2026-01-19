@@ -34,6 +34,10 @@ on:
         default: false
         type: boolean
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   generate-and-post:
     name: Generate & Publish Content

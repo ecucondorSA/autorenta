@@ -35,6 +35,10 @@ on:
         default: false
         type: boolean
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   generate-campaign:
     name: Generate Renter Acquisition Campaign

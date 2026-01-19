@@ -6,6 +6,10 @@ on:
     - cron: '0 4 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   verify-backups:
     name: Verify Database Backups

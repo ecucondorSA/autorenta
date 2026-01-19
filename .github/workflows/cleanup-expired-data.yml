@@ -12,6 +12,10 @@ on:
         default: 'false'
         type: boolean
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   cleanup:
     name: Cleanup Expired Data

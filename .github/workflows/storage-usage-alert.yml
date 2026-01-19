@@ -6,6 +6,10 @@ on:
     - cron: '0 5 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   check-storage:
     name: Check Storage Usage

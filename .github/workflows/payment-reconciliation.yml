@@ -11,6 +11,10 @@ on:
         required: false
         default: '1'
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   reconcile:
     name: Reconcile MercadoPago Payments

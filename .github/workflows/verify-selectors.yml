@@ -18,6 +18,10 @@ on:
       - 'tools/analyze-test-selectors.mjs'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   verify-selectors:
     name: Verify E2E Test Selectors

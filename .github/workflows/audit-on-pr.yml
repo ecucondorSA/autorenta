@@ -9,6 +9,10 @@ on:
       - 'apps/web/src/**'
       - '.github/workflows/audit-on-pr.yml'
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   audit:
     runs-on: ubuntu-latest
