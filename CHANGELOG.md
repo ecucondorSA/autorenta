@@ -1,3 +1,9 @@
+## [3.3.0](https://github.com/ecucondorSA/autorenta/compare/v3.2.9...v3.3.0) (2026-01-19)
+
+### ✨ Features
+
+* **android:** migrate to new package name app.autorentar ([a6771ec](https://github.com/ecucondorSA/autorenta/commit/a6771ec0c06d766b69e743707a48807b4170135c))
+
 ## [3.2.9](https://github.com/ecucondorSA/autorenta/compare/v3.2.8...v3.2.9) (2026-01-19)
 
 ### 🐛 Bug Fixes
