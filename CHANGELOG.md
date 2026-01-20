@@ -1,3 +1,9 @@
+## [3.7.0](https://github.com/ecucondorSA/autorenta/compare/v3.6.0...v3.7.0) (2026-01-20)
+
+### ✨ Features
+
+* **marketing:** add social SEO optimization guidelines ([3182b16](https://github.com/ecucondorSA/autorenta/commit/3182b1612fde405ffdbb1a76f49958876ddc4ddb))
+
 ## [3.6.0](https://github.com/ecucondorSA/autorenta/compare/v3.5.1...v3.6.0) (2026-01-20)
 
 ### ✨ Features
