@@ -28,11 +28,11 @@
  * ```
  */
 
-import { Injectable, inject, signal, computed, PLATFORM_ID } from '@angular/core';
+import { Injectable, inject, signal, computed, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Capacitor } from '@capacitor/core';
-import { Geolocation, Position, WatchPositionCallback } from '@capacitor/geolocation';
-import { Subject, interval, Subscription, BehaviorSubject } from 'rxjs';
+import { Geolocation, Position } from '@capacitor/geolocation';
+import { Subject, interval, Subscription } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
@@ -84,7 +84,7 @@ export interface TrackingStatus {
 @Injectable({
   providedIn: 'root',
 })
-export class VehicleTrackingService {
+export class VehicleTrackingService implements OnDestroy {
   private readonly supabaseService = inject(SupabaseClientService);
   private readonly logger = inject(LoggerService);
   private readonly platformId = inject(PLATFORM_ID);
@@ -392,7 +392,7 @@ export class VehicleTrackingService {
           speed_limit_kmh: 120
         });
       }
-    } catch (error) {
+    } catch {
       this.logger.warn('[VehicleTracking] Failed to load settings, using defaults');
       this._settings.set({
         tracking_enabled: true,
@@ -405,7 +405,7 @@ export class VehicleTrackingService {
     }
   }
 
-  private async startWatching(bookingId: string): Promise<void> {
+  private async startWatching(_bookingId: string): Promise<void> {
     const options = {
       enableHighAccuracy: true,
       timeout: 30000,
