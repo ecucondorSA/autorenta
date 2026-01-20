@@ -1,3 +1,9 @@
+## [3.15.0](https://github.com/ecucondorSA/autorenta/compare/v3.14.0...v3.15.0) (2026-01-20)
+
+### ✨ Features
+
+* **verification:** implement real face comparison with AWS Rekognition ([20717b8](https://github.com/ecucondorSA/autorenta/commit/20717b832545fe9dff850e4b26ee1c9c10b55994))
+
 ## [3.14.0](https://github.com/ecucondorSA/autorenta/compare/v3.13.2...v3.14.0) (2026-01-20)
 
 ### ✨ Features
