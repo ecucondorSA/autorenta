@@ -1,3 +1,9 @@
+## [3.17.0](https://github.com/ecucondorSA/autorenta/compare/v3.16.1...v3.17.0) (2026-01-20)
+
+### ✨ Features
+
+* **tracking:** add VehicleTrackingService for continuous rental tracking ([f962d5b](https://github.com/ecucondorSA/autorenta/commit/f962d5bd0c93151f0ce2bcebdfe12ab8bf92fbb2))
+
 ## [3.16.1](https://github.com/ecucondorSA/autorenta/compare/v3.16.0...v3.16.1) (2026-01-20)
 
 ### 🐛 Bug Fixes
