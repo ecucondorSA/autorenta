@@ -1,3 +1,9 @@
+## [3.16.0](https://github.com/ecucondorSA/autorenta/compare/v3.15.0...v3.16.0) (2026-01-20)
+
+### ✨ Features
+
+* **personalization:** add SDUI, generative UI, design tokens and contextual personalization ([702ae30](https://github.com/ecucondorSA/autorenta/commit/702ae305641fdd8f9c74d2b5e77d6f4e80892f50))
+
 ## [3.15.0](https://github.com/ecucondorSA/autorenta/compare/v3.14.0...v3.15.0) (2026-01-20)
 
 ### ✨ Features
