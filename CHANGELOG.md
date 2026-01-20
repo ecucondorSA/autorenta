@@ -1,3 +1,9 @@
+## [3.17.3](https://github.com/ecucondorSA/autorenta/compare/v3.17.2...v3.17.3) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* **tracking:** use correct column names brand/plate instead of make/license_plate ([a036ded](https://github.com/ecucondorSA/autorenta/commit/a036ded9c9e3433b1030da8622291ceb6cb64895))
+
 ## [3.17.2](https://github.com/ecucondorSA/autorenta/compare/v3.17.1...v3.17.2) (2026-01-20)
 
 ### 🐛 Bug Fixes
