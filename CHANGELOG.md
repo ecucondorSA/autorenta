@@ -1,3 +1,9 @@
+## [3.12.0](https://github.com/ecucondorSA/autorenta/compare/v3.11.0...v3.12.0) (2026-01-20)
+
+### ✨ Features
+
+* add short URLs for app download (/app, /android, /descarga) ([3771f95](https://github.com/ecucondorSA/autorenta/commit/3771f953f643f5db4bea1f5fa98cda40c94524c9))
+
 ## [3.11.0](https://github.com/ecucondorSA/autorenta/compare/v3.10.0...v3.11.0) (2026-01-20)
 
 ### ✨ Features
