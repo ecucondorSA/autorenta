@@ -31,7 +31,7 @@
 import { Injectable, inject, signal, computed, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Capacitor } from '@capacitor/core';
-import { Geolocation, type Position as CapacitorPosition, type CallbackID } from '@capacitor/geolocation';
+import { Geolocation, Position as CapacitorPosition, CallbackID } from '@capacitor/geolocation';
 import { Subject, interval, Subscription } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
