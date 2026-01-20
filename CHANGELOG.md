@@ -1,3 +1,9 @@
+## [3.10.0](https://github.com/ecucondorSA/autorenta/compare/v3.9.0...v3.10.0) (2026-01-20)
+
+### ✨ Features
+
+* **marketing:** SEO 2026 optimization for Instagram and Facebook ([b6fb152](https://github.com/ecucondorSA/autorenta/commit/b6fb152d3c35d50b62b881eee12374bf2d4320d7))
+
 ## [3.9.0](https://github.com/ecucondorSA/autorenta/compare/v3.8.3...v3.9.0) (2026-01-20)
 
 ### ✨ Features
