@@ -1,3 +1,13 @@
+## [3.8.1](https://github.com/ecucondorSA/autorenta/compare/v3.8.0...v3.8.1) (2026-01-20)
+
+### ♻️ Refactoring
+
+* **marketing:** consolidate social media publishing functions ([f7f24a8](https://github.com/ecucondorSA/autorenta/commit/f7f24a83fdae948f79d95d541e538197d1da7702))
+
+### 📚 Documentation
+
+* add Nosis/CertiSend API registration guide ([decf46d](https://github.com/ecucondorSA/autorenta/commit/decf46d12f0bc052ddb2b54ec4f32a13faa718a2))
+
 ## [3.8.0](https://github.com/ecucondorSA/autorenta/compare/v3.7.0...v3.8.0) (2026-01-20)
 
 ### ✨ Features
