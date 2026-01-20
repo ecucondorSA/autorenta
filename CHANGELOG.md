@@ -1,3 +1,9 @@
+## [3.16.1](https://github.com/ecucondorSA/autorenta/compare/v3.16.0...v3.16.1) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* **contextual:** rename SpecialEvent to ContextualEvent ([a7fea93](https://github.com/ecucondorSA/autorenta/commit/a7fea9322fcca362dbe6d2132d8222a012d1feed))
+
 ## [3.16.0](https://github.com/ecucondorSA/autorenta/compare/v3.15.0...v3.16.0) (2026-01-20)
 
 ### ✨ Features
