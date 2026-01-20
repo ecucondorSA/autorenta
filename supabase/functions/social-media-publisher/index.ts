@@ -30,8 +30,10 @@ interface PublishRequest {
   content: {
     text: string;
     media_url?: string;
-    media_type?: 'image' | 'video';
+    media_type?: 'image' | 'video' | 'reels';
     hashtags?: string[];
+    alt_text?: string; // SEO 2026: Alt text for accessibility and search
+    seo_keywords?: string[]; // SEO 2026: Keywords for tracking
   };
   queue_id?: string;
 }
@@ -294,8 +296,20 @@ async function publishToInstagram(
       access_token: accessToken,
     };
 
+    // SEO 2026: Add alt text for accessibility and search indexing
+    if (content.alt_text) {
+      createMediaParams.alt_text = content.alt_text;
+      console.log('[Instagram] Adding alt_text for SEO:', content.alt_text.substring(0, 50) + '...');
+    }
+
     if (content.media_url) {
-      if (content.media_type === 'video') {
+      if (content.media_type === 'reels') {
+        // SEO 2026: Reels have priority in Instagram algorithm
+        createMediaParams.media_type = 'REELS';
+        createMediaParams.video_url = content.media_url;
+        createMediaParams.share_to_feed = 'true'; // Also show in feed
+        console.log('[Instagram] Publishing as REELS (algorithm priority)');
+      } else if (content.media_type === 'video') {
         createMediaParams.media_type = 'VIDEO';
         createMediaParams.video_url = content.media_url;
       } else {
@@ -428,16 +442,26 @@ async function publishToFacebook(
       access_token: accessToken,
     };
 
-    if (content.media_url && content.media_type === 'video') {
-      // Video post
+    if (content.media_url && (content.media_type === 'video' || content.media_type === 'reels')) {
+      // Video post (Reels also publish as video on Facebook)
       endpoint = `${META_GRAPH_API}/${pageId}/videos`;
       params.file_url = content.media_url;
       params.description = message;
+      // SEO 2026: Alt text for video accessibility
+      if (content.alt_text) {
+        params.alt_text = content.alt_text;
+        console.log('[Facebook] Adding alt_text for video SEO');
+      }
     } else if (content.media_url) {
       // Photo post
       endpoint = `${META_GRAPH_API}/${pageId}/photos`;
       params.url = content.media_url;
       params.caption = message;
+      // SEO 2026: Alt text for image accessibility and search
+      if (content.alt_text) {
+        params.alt_text = content.alt_text;
+        console.log('[Facebook] Adding alt_text for image SEO');
+      }
     } else {
       // Text-only post
       endpoint = `${META_GRAPH_API}/${pageId}/feed`;

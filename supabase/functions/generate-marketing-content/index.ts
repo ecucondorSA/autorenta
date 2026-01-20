@@ -180,13 +180,14 @@ serve(async (req) => {
             carData = await getRandomAvailableCar(supabase);
         }
 
-        // Generate text
+        // Generate text (with A/B testing support)
         const textContent = await generateTextContent({
             content_type,
             platform,
             carData,
             theme,
             language,
+            supabase,
         });
 
         // Generate image
@@ -254,15 +255,18 @@ serve(async (req) => {
                 hashtags: textContent.hashtags,
                 scheduled_for: timeStr,
                 status: 'pending',
+                hook_variant_id: textContent.hook_variant_id || null,
                 metadata: {
                     car_id: carData?.id,
                     theme,
                     language,
                     video_operation_id: videoContent?.operation_id,
-                    // SEO 2025 fields
+                    // SEO 2026 fields
                     alt_text: textContent.alt_text || '',
                     seo_keywords: textContent.seo_keywords || [],
-                    call_to_action: textContent.call_to_action || ''
+                    call_to_action: textContent.call_to_action || '',
+                    // A/B Testing tracking
+                    hook_variant_id: textContent.hook_variant_id || null
                 }
             };
 
@@ -319,9 +323,33 @@ async function generateTextContent(params: {
   carData: CarData | null;
   theme?: string;
   language: Language;
-}): Promise<{ caption: string; hashtags: string[]; call_to_action: string }> {
-  const { content_type, platform, carData, theme, language } = params;
+  supabase?: ReturnType<typeof createClient>;
+}): Promise<{ caption: string; hashtags: string[]; call_to_action: string; alt_text?: string; seo_keywords?: string[]; hook_variant_id?: string }> {
+  const { content_type, platform, carData, theme, language, supabase } = params;
   const platformConfig = PLATFORM_LIMITS[platform];
+
+  // A/B Testing: Select hook variant from database
+  let hookVariantId: string | undefined;
+  let hookTemplate: string | undefined;
+  if (supabase) {
+    try {
+      const { data: hookData, error: hookError } = await supabase
+        .rpc('select_hook_variant', { p_content_type: content_type });
+
+      if (!hookError && hookData?.[0]) {
+        hookVariantId = hookData[0].variant_id;
+        hookTemplate = hookData[0].hook_template;
+        console.log(`[A/B Testing] Selected hook variant: ${hookData[0].variant_name}`);
+
+        // Track impression
+        if (hookVariantId) {
+          await supabase.rpc('track_hook_impression', { p_variant_id: hookVariantId });
+        }
+      }
+    } catch (err) {
+      console.warn('[A/B Testing] Failed to get hook variant:', err);
+    }
+  }
 
   // Build the prompt
   let template = CONTENT_TEMPLATES[content_type];
@@ -405,11 +433,17 @@ ENFOQUE DE PLATAFORMAS:
 
 1. ESTRUCTURA DEL CAPTION (Hook → Valor → CTA):
    HOOK (primera línea - CRÍTICO, solo 3 segundos para captar):
+   ${hookTemplate ? `
+   🎯 A/B TEST - USAR ESTE HOOK COMO BASE:
+   "${hookTemplate}"
+   Adapta este template al contenido manteniendo su estructura.
+   Reemplaza placeholders: {{porcentaje}} → "40", {{numero}} → "3", {{destino}} → ciudad relevante
+   ` : `
    - Pregunta intrigante: "¿Cansado de pagar de más por alquilar?"
    - Dato sorprendente: "40% más barato que rentadoras tradicionales"
    - Curiosidad: "El secreto que las rentadoras no quieren que sepas"
    - Problema: "Filas eternas, costos ocultos, autos viejos..."
-   - Bold statement: "Nunca más vas a alquilar igual"
+   - Bold statement: "Nunca más vas a alquilar igual"`}
 
    VALOR (cuerpo - usar fórmula PAS):
    - Problem: Identifica el dolor del usuario
@@ -581,6 +615,7 @@ FORMATO DE RESPUESTA (JSON):
       call_to_action: callToAction,
       alt_text: parsed.alt_text || '',
       seo_keywords: parsed.seo_keywords || [],
+      hook_variant_id: hookVariantId,
     };
   } catch {
     // If JSON parsing fails, try to extract content
@@ -591,6 +626,7 @@ FORMATO DE RESPUESTA (JSON):
       call_to_action: 'Descubrí más en autorentar.com\n📲 Descargá la app: https://play.google.com/apps/test/app.autorentar/70',
       alt_text: 'AutoRentar - Alquiler de autos entre personas en Latinoamérica',
       seo_keywords: ['alquiler de autos', 'rent a car', 'road trip'],
+      hook_variant_id: hookVariantId,
     };
   }
 }

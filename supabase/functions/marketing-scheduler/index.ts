@@ -37,6 +37,12 @@ interface QueueItem {
   scheduled_for: string;
   status: string;
   attempts: number;
+  // SEO 2026: Metadata with alt_text and keywords
+  metadata: {
+    alt_text?: string;
+    seo_keywords?: string[];
+    hook_variant?: string; // For A/B testing
+  } | null;
 }
 
 interface SchedulerResult {
@@ -90,10 +96,10 @@ serve(async (req) => {
     // Initialize Supabase
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-    // Get pending posts that are due
+    // Get pending posts that are due (including metadata for SEO 2026)
     const { data: pendingPosts, error: fetchError } = await supabase
       .from('marketing_content_queue')
-      .select('*')
+      .select('id, content_type, platform, text_content, media_url, media_type, hashtags, scheduled_for, status, attempts, metadata')
       .eq('status', 'pending')
       .lte('scheduled_for', new Date().toISOString())
       .lt('attempts', 3)
@@ -172,6 +178,9 @@ serve(async (req) => {
               media_url: post.media_url,
               media_type: post.media_type,
               hashtags: post.hashtags,
+              // SEO 2026: Pass alt_text and keywords from metadata
+              alt_text: post.metadata?.alt_text,
+              seo_keywords: post.metadata?.seo_keywords,
             },
             queue_id: post.id,
           }),
