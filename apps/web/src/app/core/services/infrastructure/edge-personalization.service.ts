@@ -33,6 +33,8 @@ export interface GeoData {
   timezone: string;
   currency: string;
   locale: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface AbVariants {

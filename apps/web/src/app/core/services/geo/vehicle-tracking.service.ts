@@ -31,11 +31,12 @@
 import { Injectable, inject, signal, computed, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Capacitor } from '@capacitor/core';
-import { Geolocation, Position } from '@capacitor/geolocation';
+import { Geolocation, type Position as CapacitorPosition, type CallbackID } from '@capacitor/geolocation';
 import { Subject, interval, Subscription } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { environment } from '../../../../environments/environment';
 
 // =============================================================================
 // TYPES
@@ -77,6 +78,31 @@ export interface TrackingStatus {
   errorMessage: string | null;
 }
 
+// RPC response types
+interface LatestLocationResponse {
+  success: boolean;
+  latitude?: number;
+  longitude?: number;
+  accuracy?: number;
+  speed?: number;
+  heading?: number;
+  recorded_at?: string;
+  error?: string;
+}
+
+interface LocationHistoryResponse {
+  success: boolean;
+  total?: number;
+  locations?: Array<{
+    latitude: number;
+    longitude: number;
+    speed?: number;
+    heading?: number;
+    recorded_at: string;
+  }>;
+  error?: string;
+}
+
 // =============================================================================
 // SERVICE
 // =============================================================================
@@ -116,7 +142,7 @@ export class VehicleTrackingService implements OnDestroy {
   readonly alerts$ = this._alerts$.asObservable();
 
   // Private state
-  private watchId: string | null = null;
+  private watchId: string | CallbackID | null = null;
   private updateInterval: Subscription | null = null;
   private activeBookingId: string | null = null;
   private destroy$ = new Subject<void>();
@@ -224,20 +250,21 @@ export class VehicleTrackingService implements OnDestroy {
       const { data, error } = await this.supabaseService.getClient()
         .rpc('get_vehicle_latest_location', { p_booking_id: bookingId });
 
-      if (error || !data?.success) {
+      const result = data as LatestLocationResponse | null;
+      if (error || !result?.success || !result.latitude || !result.longitude) {
         return null;
       }
 
       return {
-        latitude: data.latitude,
-        longitude: data.longitude,
-        accuracy: data.accuracy,
-        speed: data.speed,
-        heading: data.heading,
-        timestamp: new Date(data.recorded_at)
+        latitude: result.latitude,
+        longitude: result.longitude,
+        accuracy: result.accuracy,
+        speed: result.speed,
+        heading: result.heading,
+        timestamp: new Date(result.recorded_at || Date.now())
       };
-    } catch (error) {
-      this.logger.error('[VehicleTracking] Failed to get latest location:', error);
+    } catch (err) {
+      this.logger.error('[VehicleTracking] Failed to get latest location:', err);
       return null;
     }
   }
@@ -258,21 +285,22 @@ export class VehicleTrackingService implements OnDestroy {
           p_offset: offset
         });
 
-      if (error || !data?.success) {
+      const result = data as LocationHistoryResponse | null;
+      if (error || !result?.success || !result.locations) {
         return { locations: [], total: 0 };
       }
 
-      const locations = data.locations.map((loc: Record<string, unknown>) => ({
-        latitude: loc.latitude as number,
-        longitude: loc.longitude as number,
-        speed: loc.speed as number | undefined,
-        heading: loc.heading as number | undefined,
-        timestamp: new Date(loc.recorded_at as string)
+      const locations = result.locations.map((loc) => ({
+        latitude: loc.latitude,
+        longitude: loc.longitude,
+        speed: loc.speed,
+        heading: loc.heading,
+        timestamp: new Date(loc.recorded_at)
       }));
 
-      return { locations, total: data.total };
-    } catch (error) {
-      this.logger.error('[VehicleTracking] Failed to get location history:', error);
+      return { locations, total: result.total || 0 };
+    } catch (err) {
+      this.logger.error('[VehicleTracking] Failed to get location history:', err);
       return { locations: [], total: 0 };
     }
   }
@@ -413,15 +441,18 @@ export class VehicleTrackingService implements OnDestroy {
     };
 
     if (this.isNative) {
-      this.watchId = await Geolocation.watchPosition(options, (position, err) => {
-        if (err) {
-          this.logger.warn('[VehicleTracking] Position error:', err);
-          return;
+      this.watchId = await Geolocation.watchPosition(
+        options,
+        (position: CapacitorPosition | null, err?: Error) => {
+          if (err) {
+            this.logger.warn('[VehicleTracking] Position error:', err);
+            return;
+          }
+          if (position) {
+            this.handlePositionUpdate(position);
+          }
         }
-        if (position) {
-          this.handlePositionUpdate(position);
-        }
-      });
+      );
     } else {
       const id = navigator.geolocation.watchPosition(
         (position) => this.handlePositionUpdate(position),
@@ -432,7 +463,7 @@ export class VehicleTrackingService implements OnDestroy {
     }
   }
 
-  private handlePositionUpdate(position: Position | GeolocationPosition): void {
+  private handlePositionUpdate(position: CapacitorPosition | GeolocationPosition): void {
     const coords = position.coords;
     const location: VehicleLocation = {
       latitude: coords.latitude,
@@ -479,7 +510,7 @@ export class VehicleTrackingService implements OnDestroy {
       }
 
       const response = await fetch(
-        `${import.meta.env['VITE_SUPABASE_URL'] || ''}/functions/v1/vehicle-location-update`,
+        `${environment.supabaseUrl}/functions/v1/vehicle-location-update`,
         {
           method: 'POST',
           headers: {
@@ -570,8 +601,10 @@ export class VehicleTrackingService implements OnDestroy {
         return `Vehículo salió de la zona permitida`;
       case 'enter':
         return `Vehículo entró a zona restringida`;
-      case 'speed_limit':
-        return `Velocidad excesiva: ${Math.round((alert.speed_at_alert as number) * 3.6)} km/h`;
+      case 'speed_limit': {
+        const speedAtAlert = alert['speed_at_alert'] as number | undefined;
+        return `Velocidad excesiva: ${Math.round((speedAtAlert || 0) * 3.6)} km/h`;
+      }
       default:
         return `Alerta de tracking: ${type}`;
     }
