@@ -362,11 +362,18 @@ CONTEXTO ESTACIONAL - ¡ES VERANO! 🌴☀️
 🚗 SOBRE AUTORENTAR:
 AutoRentar conecta personas que quieren alquilar un auto con propietarios que ofrecen sus vehículos. Es más económico, más flexible y más humano que las rentadoras tradicionales.
 
-📲 LINKS IMPORTANTES - PROMOCIONAR ACTIVAMENTE:
+📲 LINKS - ¡¡¡OBLIGATORIO INCLUIR EN CADA POST!!!:
 - Web: https://autorentar.com
 - 🆕 APP ANDROID (BETA ABIERTA): https://play.google.com/apps/test/app.autorentar/70
-  → ¡Invita a los usuarios a probar la app! Está en beta pública y queremos su feedback
-  → Usa frases como: "¡Bajá la app y probala!", "Descargá la beta en Google Play", "Sé de los primeros en probar la app"
+
+⚠️ REGLA CRÍTICA - LINK DE LA APP:
+SIEMPRE debes incluir el link de Google Play en el caption. ES OBLIGATORIO.
+Formato: "📲 Descargá la app: https://play.google.com/apps/test/app.autorentar/70"
+O variantes como:
+- "¡Bajá la app y probala! 👉 https://play.google.com/apps/test/app.autorentar/70"
+- "Probá nuestra beta: https://play.google.com/apps/test/app.autorentar/70"
+- "Sé de los primeros en probar la app 📱 https://play.google.com/apps/test/app.autorentar/70"
+El link DEBE aparecer visible en el texto del post, no solo como CTA separado.
 
 ${summerContext}
 ENFOQUE DE PLATAFORMAS:
