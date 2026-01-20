@@ -92,10 +92,11 @@ const SUPABASE_SERVICE_KEY = (
 const MARKETING_MEDIA_BUCKET = Deno.env.get('MARKETING_MEDIA_BUCKET') || 'car-images';
 
 // Platform-specific constraints
+// SEO 2025: Instagram ya no prioriza hashtags, máximo 5 relevantes es óptimo
 const PLATFORM_LIMITS: Record<Platform, { maxChars: number; maxHashtags: number; style: string }> = {
   tiktok: { maxChars: 150, maxHashtags: 5, style: 'casual, trendy, with emojis' },
-  instagram: { maxChars: 2200, maxHashtags: 30, style: 'engaging, visual-focused, lifestyle' },
-  facebook: { maxChars: 500, maxHashtags: 5, style: 'conversational, community-focused' },
+  instagram: { maxChars: 2200, maxHashtags: 5, style: 'engaging, visual-focused, lifestyle, SEO-optimized' },
+  facebook: { maxChars: 500, maxHashtags: 5, style: 'conversational, community-focused, authentic' },
   twitter: { maxChars: 280, maxHashtags: 3, style: 'concise, punchy, news-like' },
 };
 
@@ -257,7 +258,11 @@ serve(async (req) => {
                     car_id: carData?.id,
                     theme,
                     language,
-                    video_operation_id: videoContent?.operation_id // Save for tracking
+                    video_operation_id: videoContent?.operation_id,
+                    // SEO 2025 fields
+                    alt_text: textContent.alt_text || '',
+                    seo_keywords: textContent.seo_keywords || [],
+                    call_to_action: textContent.call_to_action || ''
                 }
             };
 
@@ -369,51 +374,118 @@ ENFOQUE DE PLATAFORMAS:
 - Tono Instagram: Visual, lifestyle, aspiracional, historias de viaje
 - Tono Facebook: Conversacional, comunidad, testimonios, ofertas
 
-📈 SEO SOCIAL - OPTIMIZACIÓN PARA DESCUBRIMIENTO:
+📈 SEO SOCIAL 10/10 - ALGORITMO 2025-2026:
+
+⚠️ CAMBIOS CRÍTICOS DEL ALGORITMO:
+- Instagram eliminó seguir hashtags (dic 2024) → Keywords > Hashtags ahora
+- Posts públicos aparecen en Google/Bing (julio 2025) → SEO tradicional aplica
+- El algoritmo prioriza: engagement, calidad de contenido, keywords en captions
+- Facebook también indexa en Google → Mayor alcance orgánico
+
 1. ESTRUCTURA DEL CAPTION (Hook → Valor → CTA):
-   - HOOK (primera línea): Pregunta intrigante, dato sorprendente, o emoji llamativo. DEBE captar en 3 segundos.
-   - VALOR: Beneficio claro, historia relatable, tip útil
-   - CTA: Acción específica al final
+   HOOK (primera línea - CRÍTICO, solo 3 segundos para captar):
+   - Pregunta intrigante: "¿Cansado de pagar de más por alquilar?"
+   - Dato sorprendente: "40% más barato que rentadoras tradicionales"
+   - Curiosidad: "El secreto que las rentadoras no quieren que sepas"
+   - Problema: "Filas eternas, costos ocultos, autos viejos..."
+   - Bold statement: "Nunca más vas a alquilar igual"
 
-2. HASHTAGS ESTRATÉGICOS (usar mix):
-   - DE MARCA: #AutoRentar #AlquilerEntrePersonas
-   - TRENDING/POPULARES: #RoadTrip #Viajes #Verano2026 #Travel
-   - DE NICHO: #AlquilerDeAutos #RentACar #ViajarEnAuto
-   - GEOGRÁFICOS: #Argentina #Brasil #Florianópolis #SantaCatarina #BuenosAires #Montevideo
-   - ESTACIONALES: #VeranoSudamericano #VacacionesDeVerano #EscapadaDeVerano
+   VALOR (cuerpo - usar fórmula PAS):
+   - Problem: Identifica el dolor del usuario
+   - Agitate: Profundiza en el problema
+   - Solve: AutoRentar es la solución
 
-3. KEYWORDS NATURALES (incluir en el texto):
-   - "alquiler de autos", "rent a car", "aluguel de carros"
-   - "viaje", "road trip", "vacaciones", "escapada"
-   - Nombres de destinos populares
+   CTA (final - específico y accionable):
+   - "Guardá este post 📌" → Aumenta saves
+   - "Compartí con quien viaja pronto 📤" → Aumenta shares
+   - "Contanos en comentarios 👇" → Aumenta comments
+   - "Link en bio → Bajá la app" → Tráfico
 
-4. ENGAGEMENT BOOSTERS:
-   - Termina con una PREGUNTA para generar comentarios ("¿Cuál es tu destino soñado?", "¿Ya conocés Floripa?")
-   - Usa emojis relevantes (🚗🌴☀️✈️🏖️) pero sin exceso (máx 5)
-   - Menciona @autorentar para que la gente pueda encontrarnos
+2. HASHTAGS (NUEVA ESTRATEGIA 2025 - MÁXIMO 5):
+   ❌ NO usar 30 hashtags - el algoritmo lo penaliza
+   ✅ Usar 3-5 hashtags ULTRA relevantes
 
-REGLAS:
+   Mix obligatorio:
+   - 1 de MARCA: #AutoRentar
+   - 1-2 de NICHO (10K-200K posts): #AlquilerDeAutos #AlquilerEntrePersonas
+   - 1-2 GEOGRÁFICOS: #Florianópolis #Argentina #Uruguay
+
+   COLOCAR en el caption, NO en comentario (mejor indexación)
+
+3. KEYWORDS SEO (MÁS IMPORTANTES QUE HASHTAGS):
+   Long-tail keywords (específicos = mejor ranking):
+   - "alquiler de autos entre personas en Argentina"
+   - "rent a car barato en Florianópolis"
+   - "aluguel de carros particular Brasil"
+
+   Keywords primarias (incluir naturalmente):
+   - alquiler de autos, rent a car, aluguel de carros
+   - viaje, road trip, vacaciones, escapada
+   - económico, barato, ahorro, sin intermediarios
+
+   Keywords geográficas:
+   - Florianópolis, Santa Catarina, Punta del Este, Mar del Plata
+   - Buenos Aires, Montevideo, São Paulo, Rio de Janeiro
+
+4. ALT TEXT SEO (NUEVO - Google indexa imágenes):
+   Generar alt_text descriptivo con keywords:
+   - ❌ "auto"
+   - ✅ "Pareja joven alquilando auto en Florianópolis para road trip de verano con AutoRentar"
+   - Máximo 125 caracteres
+   - Incluir: marca, acción, ubicación, contexto
+
+5. ENGAGEMENT BOOSTERS (sin ser spam):
+   ❌ PROHIBIDO engagement bait: "Like si estás de acuerdo", "Comenta SÍ"
+   ✅ PERMITIDO: Preguntas genuinas que inviten conversación
+
+   Buenos ejemplos:
+   - "¿Cuál es tu destino soñado para este verano? 👇"
+   - "¿Ya conocés Floripa? Contanos tu experiencia"
+   - "¿Qué auto elegirías para tu road trip?"
+
+   Emojis: Máximo 5, relevantes, no al azar
+   - Viaje: 🚗 ✈️ 🗺️
+   - Verano: ☀️ 🌴 🏖️
+   - Acción: 👇 📲 ➡️
+
+6. CONTENIDO AUTÉNTICO (Facebook penaliza AI puro):
+   - Tono humano, conversacional, con personalidad
+   - Historias reales > claims genéricos
+   - Incluir: nombres de lugares reales, situaciones cotidianas
+   - Variedad en cada post (no repetir fórmulas)
+
+REGLAS TÉCNICAS:
 - Idioma: ${language === 'es' ? 'Español latinoamericano (voseo rioplatense OK)' : 'Portugués brasileño (informal, amigable)'}
 - Máximo ${platformConfig.maxChars} caracteres para el caption
-- Máximo ${platformConfig.maxHashtags} hashtags relevantes
+- Máximo 5 hashtags (NUNCA más, el algoritmo penaliza)
 - Tono: ${platformConfig.style}
 - NUNCA inventar precios o datos falsos
-- SIEMPRE incluir @autorentar o mencionar la marca
-- Los hashtags deben ser en ${language === 'es' ? 'español' : 'portugués'}
-- INCLUIR el link de Google Play cuando hables de la app o la experiencia móvil
-- Ser INVITATIVO: invitar a probar, a unirse, a ser parte de la comunidad
+- SIEMPRE mencionar @autorentar o AutoRentar
+- Hashtags en ${language === 'es' ? 'español' : 'portugués'}
+- INCLUIR link de Google Play: https://play.google.com/apps/test/app.autorentar/70
 
-LLAMADOS A LA ACCIÓN SUGERIDOS:
-- "¡Bajá la app y reservá tu próximo viaje! 🚗"
-- "Probá AutoRentar gratis → link en bio"
-- "¿Listo para tu road trip de verano? 🌴"
-- "Unite a miles que ya viajan diferente"
+REGLAS SEO:
+- Primera línea = HOOK irresistible (pregunta, dato, o problema)
+- Keywords naturales en el texto (no forzados)
+- Pregunta de engagement al FINAL (genera comentarios)
+- CTA específico (guardar, compartir, comentar, o link)
+- NO engagement bait ("Like si...", "Comenta SÍ")
+- Emojis: máximo 5, relevantes al contenido
+
+CTAs DE ALTO RENDIMIENTO:
+- "📌 Guardá este post para tu próximo viaje"
+- "📤 Compartí con quien planea escaparse"
+- "👇 Contanos: ¿cuál es tu destino soñado?"
+- "📲 Bajá la app → link en bio"
+- "➡️ Más info en autorentar.com"
 
 FORMATO DE RESPUESTA (JSON):
 {
-  "caption": "texto del post sin hashtags (incluir pregunta de engagement al final)",
-  "hashtags": ["hashtag1", "hashtag2", ...],
-  "call_to_action": "frase de call-to-action"
+  "caption": "Hook potente\\n\\nCuerpo con valor y keywords\\n\\nPregunta de engagement + CTA",
+  "hashtags": ["AutoRentar", "hashtag2", "hashtag3", "hashtag4", "hashtag5"],
+  "call_to_action": "CTA principal del post",
+  "alt_text": "Descripción SEO de la imagen (máx 125 chars) con keywords: marca, acción, ubicación",
+  "seo_keywords": ["keyword1", "keyword2", "keyword3"]
 }`;
 
   const userPrompt = template;
@@ -449,21 +521,27 @@ FORMATO DE RESPUESTA (JSON):
     throw new Error('No response from Gemini');
   }
 
-  // Parse JSON response
+  // Parse JSON response with SEO fields
   try {
     const parsed = JSON.parse(textResponse);
+    // Limitar hashtags a 5 máximo (SEO 2025)
+    const limitedHashtags = (parsed.hashtags || []).slice(0, 5);
     return {
       caption: parsed.caption || '',
-      hashtags: parsed.hashtags || [],
+      hashtags: limitedHashtags,
       call_to_action: parsed.call_to_action || '',
+      alt_text: parsed.alt_text || '',
+      seo_keywords: parsed.seo_keywords || [],
     };
   } catch {
     // If JSON parsing fails, try to extract content
     console.warn('[generate-marketing-content] Failed to parse JSON, using raw response');
     return {
       caption: textResponse.substring(0, platformConfig.maxChars),
-      hashtags: ['autorentar', 'alquilerdeautos'],
-      call_to_action: 'Descubre más en autorentar.com',
+      hashtags: ['AutoRentar', 'AlquilerDeAutos', 'RoadTrip'],
+      call_to_action: 'Descubrí más en autorentar.com',
+      alt_text: 'AutoRentar - Alquiler de autos entre personas en Latinoamérica',
+      seo_keywords: ['alquiler de autos', 'rent a car', 'road trip'],
     };
   }
 }
