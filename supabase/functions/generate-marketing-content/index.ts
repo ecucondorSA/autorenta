@@ -35,6 +35,7 @@ interface GenerateContentRequest {
   generate_image?: boolean;
   generate_video?: boolean; // For TikTok - uses Veo 3.1
   batch_mode?: boolean; // Generate posts for all daily slots
+  save_to_db?: boolean;
 }
 
 interface GeneratedContent {
@@ -82,8 +83,12 @@ interface CarData {
 
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY') || '';
 const GEMINI_MODEL = 'gemini-3-flash-preview'; // Latest Gemini 3 model (Jan 2026)
-const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
-const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const SUPABASE_URL = (Deno.env.get('SUPABASE_URL') || '').trim();
+const SUPABASE_SERVICE_KEY = (
+  Deno.env.get('SERVICE_ROLE_KEY') ||
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ||
+  ''
+).trim();
 const MARKETING_MEDIA_BUCKET = Deno.env.get('MARKETING_MEDIA_BUCKET') || 'car-images';
 
 // Platform-specific constraints
@@ -181,38 +186,26 @@ serve(async (req) => {
 
         // Generate image
         let imageContent: { url?: string; base64?: string } | undefined;
+        let imageUploadError: string | undefined;
         if (generate_image) {
             imageContent = await generateMarketingImage(carData, content_type);
-            
+
             // Upload image if saving to DB and we have base64
             if (save_to_db && imageContent?.base64) {
-                const contentType = 'image/png'; // Gemini returns PNG usually
-                const extension = 'png';
-                const filePath = `marketing/images/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
-                
-                // Convert base64 to Blob/Uint8Array
-                const binString = atob(imageContent.base64);
-                const bytes = new Uint8Array(binString.length);
-                for (let i = 0; i < binString.length; i++) {
-                    bytes[i] = binString.charCodeAt(i);
-                }
-                
-                const { error: uploadError } = await supabase.storage
-                    .from(MARKETING_MEDIA_BUCKET)
-                    .upload(filePath, bytes, { contentType, upsert: false });
+                const uploadResult = await uploadMarketingImageToStorage({
+                    base64: imageContent.base64,
+                    bucket: MARKETING_MEDIA_BUCKET,
+                    contentType: 'image/png',
+                    prefix: 'marketing/images',
+                });
 
-                if (!uploadError) {
-                    const { data: publicUrlData } = supabase.storage
-                        .from(MARKETING_MEDIA_BUCKET)
-                        .getPublicUrl(filePath);
-                    
-                    if (publicUrlData?.publicUrl) {
-                        imageContent.url = publicUrlData.publicUrl;
-                        // Optional: Clear base64 to save bandwidth in response if URL is available
-                        // imageContent.base64 = undefined; 
-                    }
+                if (uploadResult?.publicUrl) {
+                    imageContent.url = uploadResult.publicUrl;
+                    // Optional: Clear base64 to save bandwidth in response if URL is available
+                    // imageContent.base64 = undefined;
                 } else {
-                    console.error('[generate-marketing-content] Image upload failed:', uploadError);
+                    imageUploadError = uploadResult?.error || 'Unknown storage error';
+                    console.error('[generate-marketing-content] Image upload failed:', imageUploadError);
                 }
             }
         }
@@ -230,6 +223,9 @@ serve(async (req) => {
             video: videoContent,
             suggested_post_time: timeStr,
         };
+        if (imageUploadError) {
+            resultItem.error = `Image upload failed: ${imageUploadError}`;
+        }
 
         results.push(resultItem);
 
@@ -341,6 +337,11 @@ async function generateTextContent(params: {
 
   const systemPrompt = `Eres un experto en marketing de redes sociales para AutoRentar, una plataforma de alquiler de autos entre personas en Latinoamérica.
 
+LINKS IMPORTANTES:
+- Web: https://autorentar.com
+- App Android (Beta): https://play.google.com/apps/test/app.autorentar/70
+- Cuando menciones la app, invita a probarla en Google Play (link de prueba disponible)
+
 REGLAS:
 - Idioma: ${language === 'es' ? 'Español latinoamericano' : 'Portugués brasileño'}
 - Máximo ${platformConfig.maxChars} caracteres para el caption
@@ -349,6 +350,7 @@ REGLAS:
 - NUNCA inventar precios o datos falsos
 - SIEMPRE incluir @autorentar o mencionar la marca
 - Los hashtags deben ser en ${language === 'es' ? 'español' : 'portugués'}
+- Si el contenido es sobre la app móvil, incluye el link de Google Play
 
 FORMATO DE RESPUESTA (JSON):
 {
@@ -552,6 +554,48 @@ async function generateMarketingImage(
   } catch (error) {
     console.error('[generate-marketing-content] Image generation error:', error);
     return undefined;
+  }
+}
+
+async function uploadMarketingImageToStorage(params: {
+  base64: string;
+  bucket: string;
+  contentType: string;
+  prefix: string;
+}): Promise<{ publicUrl?: string; path?: string; error?: string } | undefined> {
+  try {
+    const { base64, bucket, contentType, prefix } = params;
+    const extension = contentType.split('/')[1] || 'png';
+    const uniqueId = typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const filePath = `${prefix}/${uniqueId}.${extension}`;
+
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+
+    const uploadUrl = `${SUPABASE_URL}/storage/v1/object/${bucket}/${filePath}`;
+    const uploadResponse = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+        'Content-Type': contentType,
+      },
+      body: bytes,
+    });
+
+    if (!uploadResponse.ok) {
+      const errorText = await uploadResponse.text();
+      return { error: `Storage upload failed (${uploadResponse.status}): ${errorText}` };
+    }
+
+    const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${filePath}`;
+    return { publicUrl, path: filePath };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : 'Unknown storage error' };
   }
 }
 

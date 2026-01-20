@@ -36,9 +36,12 @@ Estas variables son visibles para cualquier usuario que inspeccione el código f
 Estos secretos se inyectan en el runtime de Deno. Son invisibles al exterior.
 
 ### Core & Infraestructura
-*   **`SUPABASE_SERVICE_ROLE_KEY`**: La llave maestra. Permite bypass de RLS.
+*   **`SERVICE_ROLE_KEY`**: Alias de la llave maestra para Edge Functions (usar este nombre en Supabase Secrets).
     *   *Uso:* Tareas administrativas, cron jobs, webhooks privilegiados.
+    *   *Nota:* El prefijo `SUPABASE_` está reservado en Supabase Secrets. En runtime se puede leer `SERVICE_ROLE_KEY` o `SUPABASE_SERVICE_ROLE_KEY`.
     *   *Riesgo:* 🔴 CRÍTICO. Si se filtra, tienen control total de la DB.
+*   **`SUPABASE_SERVICE_ROLE_KEY`**: La llave maestra (para entornos locales o CI).
+    *   *Uso:* Igual que `SERVICE_ROLE_KEY`.
 *   **`SUPABASE_DB_URL`**: String de conexión PostgreSQL directo (`postgres://...`).
     *   *Uso:* Migraciones, Drizzle/Prisma (si se usa), conexiones directas.
 
