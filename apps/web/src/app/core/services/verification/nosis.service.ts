@@ -1,4 +1,4 @@
-import { computed, Injectable, OnDestroy, signal } from '@angular/core';
+import { computed, inject, Injectable, OnDestroy, signal } from '@angular/core';
 import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
@@ -43,7 +43,7 @@ import type {
 })
 export class NosisService implements OnDestroy {
   private readonly supabase: SupabaseClient = injectSupabase();
-  private readonly logger = new LoggerService('NosisService');
+  private readonly logger = inject(LoggerService).createChildLogger('NosisService');
 
   // Realtime subscription
   private realtimeChannel?: RealtimeChannel;
