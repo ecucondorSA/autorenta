@@ -526,10 +526,24 @@ FORMATO DE RESPUESTA (JSON):
     const parsed = JSON.parse(textResponse);
     // Limitar hashtags a 5 máximo (SEO 2025)
     const limitedHashtags = (parsed.hashtags || []).slice(0, 5);
+
+    // Post-procesamiento: Asegurar que el link de Google Play esté presente
+    const GOOGLE_PLAY_LINK = 'https://play.google.com/apps/test/app.autorentar/70';
+    let caption = parsed.caption || '';
+    let callToAction = parsed.call_to_action || '';
+
+    // Si el caption no contiene el link de Google Play, añadirlo al call_to_action
+    if (!caption.includes('play.google.com') && !callToAction.includes('play.google.com')) {
+      console.log('[generate-marketing-content] Adding Google Play link (not in original content)');
+      callToAction = callToAction
+        ? `${callToAction}\n📲 Descargá la app: ${GOOGLE_PLAY_LINK}`
+        : `📲 Descargá la app: ${GOOGLE_PLAY_LINK}`;
+    }
+
     return {
-      caption: parsed.caption || '',
+      caption,
       hashtags: limitedHashtags,
-      call_to_action: parsed.call_to_action || '',
+      call_to_action: callToAction,
       alt_text: parsed.alt_text || '',
       seo_keywords: parsed.seo_keywords || [],
     };
@@ -539,7 +553,7 @@ FORMATO DE RESPUESTA (JSON):
     return {
       caption: textResponse.substring(0, platformConfig.maxChars),
       hashtags: ['AutoRentar', 'AlquilerDeAutos', 'RoadTrip'],
-      call_to_action: 'Descubrí más en autorentar.com',
+      call_to_action: 'Descubrí más en autorentar.com\n📲 Descargá la app: https://play.google.com/apps/test/app.autorentar/70',
       alt_text: 'AutoRentar - Alquiler de autos entre personas en Latinoamérica',
       seo_keywords: ['alquiler de autos', 'rent a car', 'road trip'],
     };
