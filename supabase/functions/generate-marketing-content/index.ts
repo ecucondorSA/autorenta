@@ -107,10 +107,12 @@ const CONTENT_TEMPLATES: Record<ContentType, string> = {
     Termina con un call-to-action sutil hacia AutoRentar.`,
 
   promo: `Genera un post promocional para AutoRentar.
-    Destaca: ahorro vs rentadoras tradicionales, facilidad de uso, confianza.
+    Destaca: ahorro vs rentadoras tradicionales (hasta 40% menos), facilidad de uso, confianza entre personas.
+    IMPORTANTE: Invita a descargar la app de Google Play (beta abierta).
     Tono: {style}
     Incluye oferta o beneficio específico.
-    Call-to-action claro al final.`,
+    Call-to-action claro: descargá la app, probala gratis, reservá tu próximo viaje.
+    Genera FOMO (Fear Of Missing Out): "Miles ya viajan así", "Sé de los primeros", "Los mejores autos se reservan rápido".`,
 
   car_spotlight: `Genera un post destacando este vehículo disponible en AutoRentar:
     {car_details}
@@ -126,9 +128,11 @@ const CONTENT_TEMPLATES: Record<ContentType, string> = {
 
   seasonal: `Genera un post para la temporada/evento: {theme}
     Relacionado con alquiler de autos para {theme}.
+    Si es VERANO: enfócate en road trips a la playa, escapadas de fin de semana, destinos como Florianópolis, Santa Catarina, Punta del Este, Mar del Plata.
+    Transmite la emoción de la libertad veraniega, el viento en la cara, la carretera hacia el mar.
     Tono: {style}
-    Incluye oferta estacional si aplica.
-    Call-to-action relevante.`,
+    Invita a probar la app de AutoRentar para reservar su auto de verano.
+    Call-to-action que genere urgencia de temporada ("¡Reservá antes que se agoten!", "Este verano, viajá diferente").`,
 
   community: `Genera un post de engagement para la comunidad de AutoRentar.
     Pregunta o encuesta sobre: preferencias de viaje, experiencias, tips.
@@ -335,22 +339,52 @@ async function generateTextContent(params: {
     template = template.replace('{car_details}', carDetails);
   }
 
+  // Determinar si estamos en temporada de verano (dic-mar para hemisferio sur)
+  const currentMonth = new Date().getMonth(); // 0-11
+  const isSummerSeason = currentMonth >= 11 || currentMonth <= 2; // dic, ene, feb, mar
+
+  const summerContext = isSummerSeason ? `
+CONTEXTO ESTACIONAL - ¡ES VERANO! 🌴☀️
+- Estamos en pleno verano sudamericano (la mejor época para viajar)
+- Destinos trending: Florianópolis, Balneário Camboriú, Bombinhas, Praia do Rosa (Santa Catarina), Punta del Este, Mar del Plata, Buzios, Arraial do Cabo
+- El tono debe transmitir: libertad, aventura, escapadas de verano, road trips a la playa
+- Menciona el calor, el sol, las vacaciones, la playa cuando sea relevante
+- Usa vocabulario de verano: "escapada", "road trip", "playa", "vacaciones", "aventura veraniega"
+` : '';
+
   const systemPrompt = `Eres un experto en marketing de redes sociales para AutoRentar, una plataforma de alquiler de autos entre personas en Latinoamérica.
 
-LINKS IMPORTANTES:
+🚗 SOBRE AUTORENTAR:
+AutoRentar conecta personas que quieren alquilar un auto con propietarios que ofrecen sus vehículos. Es más económico, más flexible y más humano que las rentadoras tradicionales.
+
+📲 LINKS IMPORTANTES - PROMOCIONAR ACTIVAMENTE:
 - Web: https://autorentar.com
-- App Android (Beta): https://play.google.com/apps/test/app.autorentar/70
-- Cuando menciones la app, invita a probarla en Google Play (link de prueba disponible)
+- 🆕 APP ANDROID (BETA ABIERTA): https://play.google.com/apps/test/app.autorentar/70
+  → ¡Invita a los usuarios a probar la app! Está en beta pública y queremos su feedback
+  → Usa frases como: "¡Bajá la app y probala!", "Descargá la beta en Google Play", "Sé de los primeros en probar la app"
+
+${summerContext}
+ENFOQUE DE PLATAFORMAS:
+- PRIORIDAD: Instagram y Facebook (nuestra audiencia principal está ahí)
+- Tono Instagram: Visual, lifestyle, aspiracional, historias de viaje
+- Tono Facebook: Conversacional, comunidad, testimonios, ofertas
 
 REGLAS:
-- Idioma: ${language === 'es' ? 'Español latinoamericano' : 'Portugués brasileño'}
+- Idioma: ${language === 'es' ? 'Español latinoamericano (voseo rioplatense OK)' : 'Portugués brasileño (informal, amigable)'}
 - Máximo ${platformConfig.maxChars} caracteres para el caption
 - Máximo ${platformConfig.maxHashtags} hashtags relevantes
 - Tono: ${platformConfig.style}
 - NUNCA inventar precios o datos falsos
 - SIEMPRE incluir @autorentar o mencionar la marca
 - Los hashtags deben ser en ${language === 'es' ? 'español' : 'portugués'}
-- Si el contenido es sobre la app móvil, incluye el link de Google Play
+- INCLUIR el link de Google Play cuando hables de la app o la experiencia móvil
+- Ser INVITATIVO: invitar a probar, a unirse, a ser parte de la comunidad
+
+LLAMADOS A LA ACCIÓN SUGERIDOS:
+- "¡Bajá la app y reservá tu próximo viaje! 🚗"
+- "Probá AutoRentar gratis → link en bio"
+- "¿Listo para tu road trip de verano? 🌴"
+- "Unite a miles que ya viajan diferente"
 
 FORMATO DE RESPUESTA (JSON):
 {
@@ -425,13 +459,26 @@ const LATAM_PEOPLE_SCENES = [
   'a cool Latin American guy (22) with curly hair, wearing a retro football jersey style t-shirt, energetic vibe'
 ];
 
-// Atmospheric locations with lighting cues
+// Atmospheric locations with lighting cues - SUMMER FOCUSED 🌴
 const LATAM_LOCATIONS = [
+  // Argentina
   'a charming cobblestone street in San Telmo Buenos Aires, dappled sunlight through trees, colonial architecture background',
-  'the modern waterfront rambla of Montevideo, clean concrete lines, bright blue sky, ocean horizon in background',
   'a scenic vineyard road in Mendoza, Andes mountains faintly visible in the distance, warm golden hour lighting',
-  'a vibrant urban street in Cordoba with colorful murals (blur background), soft afternoon shadow',
-  'a coastal road in Punta del Este, pine trees and sand dunes visible, bright summer lighting',
+  'the beachfront of Mar del Plata, Atlantic ocean waves, summer crowds, vibrant coastal energy',
+  // Uruguay
+  'the modern waterfront rambla of Montevideo, clean concrete lines, bright blue sky, ocean horizon in background',
+  'a coastal road in Punta del Este, pine trees and sand dunes visible, bright summer lighting, luxury resort vibes',
+  'José Ignacio lighthouse in the background, bohemian beach town atmosphere, golden hour',
+  // Brazil - SANTA CATARINA (SUMMER HOTSPOT)
+  'Florianópolis beachfront (Praia da Joaquina), turquoise waters, surfers in background, tropical summer paradise',
+  'Balneário Camboriú seafront promenade, modern skyscrapers, cable car visible, Brazilian Riviera vibes',
+  'Praia do Rosa (Santa Catarina), pristine beach, lush green hills, bohemian surf town atmosphere',
+  'Bombinhas beach road, crystal clear waters, boats in the marina, summer vacation paradise',
+  'scenic coastal road SC-406 in Florianópolis, ocean views, palm trees, convertible weather',
+  // Brazil - Other
+  'Buzios waterfront (Rio de Janeiro), cobblestone streets, boutique shops, Mediterranean charm in Brazil',
+  'Arraial do Cabo (Brazilian Caribbean), white sand beach, impossibly blue water, road trip destination',
+  // Urban premium
   'a modern architectural garage or valet zone, concrete and glass textures, premium city vibe'
 ];
 
