@@ -1,3 +1,9 @@
+## [3.13.2](https://github.com/ecucondorSA/autorenta/compare/v3.13.1...v3.13.2) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* use correct AuthService API (session$) in recommendations service ([633718c](https://github.com/ecucondorSA/autorenta/commit/633718c8704394eed51e7e7802f33e587b5fea54))
+
 ## [3.13.1](https://github.com/ecucondorSA/autorenta/compare/v3.13.0...v3.13.1) (2026-01-20)
 
 ### 🐛 Bug Fixes
