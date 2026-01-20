@@ -24,6 +24,11 @@ const redirectsContent = `# Cloudflare Pages - SPA Routing
 # Todas las rutas de la aplicación Angular deben redirigir a index.html
 # Esto permite que Angular Router maneje las rutas, incluyendo /auth/callback
 
+# App download redirects (short URLs for social media)
+/app      https://play.google.com/apps/test/app.autorentar/70    302
+/android  https://play.google.com/apps/test/app.autorentar/70    302
+/descarga https://play.google.com/apps/test/app.autorentar/70    302
+
 # Rutas específicas de la aplicación
 /auth/* /index.html 200
 /cars/* /index.html 200
