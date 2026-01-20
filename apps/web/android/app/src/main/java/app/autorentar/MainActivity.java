@@ -1,4 +1,4 @@
-package app.autorenta.io;
+package app.autorentar;
 
 import com.getcapacitor.BridgeActivity;
 
