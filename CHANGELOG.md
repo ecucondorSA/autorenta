@@ -1,3 +1,9 @@
+## [3.14.0](https://github.com/ecucondorSA/autorenta/compare/v3.13.2...v3.14.0) (2026-01-20)
+
+### ✨ Features
+
+* **payments:** implement pre-auth renewal system for LATAM ([c7f616b](https://github.com/ecucondorSA/autorenta/commit/c7f616bcfdb28fcccafd142e68040653a80ceccf))
+
 ## [3.13.2](https://github.com/ecucondorSA/autorenta/compare/v3.13.1...v3.13.2) (2026-01-20)
 
 ### 🐛 Bug Fixes
