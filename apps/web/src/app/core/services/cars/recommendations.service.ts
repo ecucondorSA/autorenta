@@ -119,7 +119,7 @@ export class RecommendationsService {
   async getPersonalizedRecommendations(limit = 10): Promise<RecommendationResult> {
     try {
       this.isLoading.set(true);
-      const userId = this.auth.currentUser()?.id;
+      const userId = this.auth.session$()?.user?.id;
 
       if (!userId) {
         // Usuario no autenticado - mostrar populares
@@ -258,7 +258,7 @@ export class RecommendationsService {
    */
   async getRecentlyViewed(limit = 10): Promise<RecommendationResult> {
     try {
-      const userId = this.auth.currentUser()?.id;
+      const userId = this.auth.session$()?.user?.id;
       if (!userId) {
         return { cars: [], reason: 'not_authenticated' };
       }
@@ -311,7 +311,7 @@ export class RecommendationsService {
    */
   async trackCarView(carId: string): Promise<void> {
     try {
-      const userId = this.auth.currentUser()?.id;
+      const userId = this.auth.session$()?.user?.id;
       if (!userId) return;
 
       await this.supabase.from('car_views').insert({
@@ -338,7 +338,7 @@ export class RecommendationsService {
     location?: { lat: number; lng: number; city?: string };
   }): Promise<void> {
     try {
-      const userId = this.auth.currentUser()?.id;
+      const userId = this.auth.session$()?.user?.id;
       if (!userId) return;
 
       await this.supabase.from('search_history').insert({
