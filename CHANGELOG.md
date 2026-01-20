@@ -1,3 +1,9 @@
+## [3.8.2](https://github.com/ecucondorSA/autorenta/compare/v3.8.1...v3.8.2) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* **nosis:** use inject() for LoggerService ([28399f0](https://github.com/ecucondorSA/autorenta/commit/28399f0233abe4f1491a9453f98c425169ec5828))
+
 ## [3.8.1](https://github.com/ecucondorSA/autorenta/compare/v3.8.0...v3.8.1) (2026-01-20)
 
 ### ♻️ Refactoring
