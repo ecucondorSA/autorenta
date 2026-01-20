@@ -1,3 +1,13 @@
+## [3.13.0](https://github.com/ecucondorSA/autorenta/compare/v3.12.3...v3.13.0) (2026-01-20)
+
+### ✨ Features
+
+* **personalization:** add remote config, enhanced feature flags, edge personalization and recommendations system ([ec936c6](https://github.com/ecucondorSA/autorenta/commit/ec936c669c51718ac7923df292e9b4bc5722fd7b))
+
+### 📚 Documentation
+
+* add ROADMAP-2026 competitive analysis guide ([87236c5](https://github.com/ecucondorSA/autorenta/commit/87236c5aef146c15b85a7ef9562ae149d35aff1e))
+
 ## [3.12.3](https://github.com/ecucondorSA/autorenta/compare/v3.12.2...v3.12.3) (2026-01-20)
 
 ### 🐛 Bug Fixes
