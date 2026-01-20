@@ -5,6 +5,7 @@ export * from '@core/services/verification/fgo-v1-1.service';
 export * from '@core/services/verification/fgo.service';
 export * from '@core/services/verification/identity-level.service';
 export * from '@core/services/verification/incident-detector.service';
+export * from '@core/services/verification/nosis.service';
 export * from '@core/services/verification/risk-calculator.service';
 export * from '@core/services/verification/risk-matrix.service';
 export * from '@core/services/verification/risk.service';

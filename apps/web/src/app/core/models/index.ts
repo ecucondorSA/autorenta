@@ -904,3 +904,6 @@ export * from './subscription.model';
 
 // Export Participation models (Negocio en Participacion)
 export * from './participation.model';
+
+// Export Credit Report models (Nosis/Veraz integration)
+export * from './credit-report.model';
