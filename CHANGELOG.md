@@ -1,3 +1,9 @@
+## [3.17.6](https://github.com/ecucondorSA/autorenta/compare/v3.17.5...v3.17.6) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* **types:** use local PositionLike interface for vehicle tracking ([a3cc96a](https://github.com/ecucondorSA/autorenta/commit/a3cc96ac5ccf9e7aca6a0e16024c8235f9e15ac7))
+
 ## [3.17.5](https://github.com/ecucondorSA/autorenta/compare/v3.17.4...v3.17.5) (2026-01-20)
 
 ### 🐛 Bug Fixes
