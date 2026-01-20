@@ -1,3 +1,9 @@
+## [3.9.0](https://github.com/ecucondorSA/autorenta/compare/v3.8.3...v3.9.0) (2026-01-20)
+
+### ✨ Features
+
+* **marketing:** make Google Play link mandatory in generated content ([1a15776](https://github.com/ecucondorSA/autorenta/commit/1a1577693a31819b2e144a3a7b3ed5947addecbb))
+
 ## [3.8.3](https://github.com/ecucondorSA/autorenta/compare/v3.8.2...v3.8.3) (2026-01-20)
 
 ### 🐛 Bug Fixes
