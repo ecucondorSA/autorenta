@@ -369,6 +369,29 @@ ENFOQUE DE PLATAFORMAS:
 - Tono Instagram: Visual, lifestyle, aspiracional, historias de viaje
 - Tono Facebook: Conversacional, comunidad, testimonios, ofertas
 
+📈 SEO SOCIAL - OPTIMIZACIÓN PARA DESCUBRIMIENTO:
+1. ESTRUCTURA DEL CAPTION (Hook → Valor → CTA):
+   - HOOK (primera línea): Pregunta intrigante, dato sorprendente, o emoji llamativo. DEBE captar en 3 segundos.
+   - VALOR: Beneficio claro, historia relatable, tip útil
+   - CTA: Acción específica al final
+
+2. HASHTAGS ESTRATÉGICOS (usar mix):
+   - DE MARCA: #AutoRentar #AlquilerEntrePersonas
+   - TRENDING/POPULARES: #RoadTrip #Viajes #Verano2026 #Travel
+   - DE NICHO: #AlquilerDeAutos #RentACar #ViajarEnAuto
+   - GEOGRÁFICOS: #Argentina #Brasil #Florianópolis #SantaCatarina #BuenosAires #Montevideo
+   - ESTACIONALES: #VeranoSudamericano #VacacionesDeVerano #EscapadaDeVerano
+
+3. KEYWORDS NATURALES (incluir en el texto):
+   - "alquiler de autos", "rent a car", "aluguel de carros"
+   - "viaje", "road trip", "vacaciones", "escapada"
+   - Nombres de destinos populares
+
+4. ENGAGEMENT BOOSTERS:
+   - Termina con una PREGUNTA para generar comentarios ("¿Cuál es tu destino soñado?", "¿Ya conocés Floripa?")
+   - Usa emojis relevantes (🚗🌴☀️✈️🏖️) pero sin exceso (máx 5)
+   - Menciona @autorentar para que la gente pueda encontrarnos
+
 REGLAS:
 - Idioma: ${language === 'es' ? 'Español latinoamericano (voseo rioplatense OK)' : 'Portugués brasileño (informal, amigable)'}
 - Máximo ${platformConfig.maxChars} caracteres para el caption
@@ -388,7 +411,7 @@ LLAMADOS A LA ACCIÓN SUGERIDOS:
 
 FORMATO DE RESPUESTA (JSON):
 {
-  "caption": "texto del post sin hashtags",
+  "caption": "texto del post sin hashtags (incluir pregunta de engagement al final)",
   "hashtags": ["hashtag1", "hashtag2", ...],
   "call_to_action": "frase de call-to-action"
 }`;
