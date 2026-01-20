@@ -1,3 +1,9 @@
+## [3.13.1](https://github.com/ecucondorSA/autorenta/compare/v3.13.0...v3.13.1) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* resolve TypeScript strict mode errors in personalization services ([45c3963](https://github.com/ecucondorSA/autorenta/commit/45c396322e7a830847433d557937980ef2c1fcc2))
+
 ## [3.13.0](https://github.com/ecucondorSA/autorenta/compare/v3.12.3...v3.13.0) (2026-01-20)
 
 ### ✨ Features
