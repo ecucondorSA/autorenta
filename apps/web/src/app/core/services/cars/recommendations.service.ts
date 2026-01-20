@@ -392,16 +392,22 @@ export class RecommendationsService {
       // De búsquedas
       searches?.forEach((s) => {
         const params = s.search_params as Record<string, unknown>;
-        if (params.type) carTypes[params.type as string] = (carTypes[params.type as string] || 0) + 1;
-        if (params.priceMin) prices.push(params.priceMin as number);
-        if (params.priceMax) prices.push(params.priceMax as number);
-        if (params.location) locations.push(params.location as { lat: number; lng: number; city: string });
+        const carType = params['type'] as string | undefined;
+        const priceMin = params['priceMin'] as number | undefined;
+        const priceMax = params['priceMax'] as number | undefined;
+        const location = params['location'] as { lat: number; lng: number; city: string } | undefined;
+
+        if (carType) carTypes[carType] = (carTypes[carType] || 0) + 1;
+        if (priceMin) prices.push(priceMin);
+        if (priceMax) prices.push(priceMax);
+        if (location) locations.push(location);
       });
 
       // De bookings
       bookings?.forEach((b) => {
-        const car = b.cars as { type: string } | null;
-        if (car?.type) carTypes[car.type] = (carTypes[car.type] || 0) + 5; // Peso mayor
+        const carData = b.cars as unknown;
+        const carType = Array.isArray(carData) ? (carData[0] as { type?: string })?.type : (carData as { type?: string } | null)?.type;
+        if (carType) carTypes[carType] = (carTypes[carType] || 0) + 5; // Peso mayor
       });
 
       // Calcular preferencias
@@ -418,7 +424,10 @@ export class RecommendationsService {
         },
         searchLocations: locations.slice(0, 5),
         viewedCars: views?.map((v) => v.car_id) ?? [],
-        bookedCarTypes: bookings?.map((b) => (b.cars as { type: string })?.type).filter(Boolean) ?? [],
+        bookedCarTypes: bookings?.map((b) => {
+          const carData = b.cars as unknown;
+          return Array.isArray(carData) ? (carData[0] as { type?: string })?.type : (carData as { type?: string } | null)?.type;
+        }).filter((t): t is string => Boolean(t)) ?? [],
       };
 
       this.userPreferences.set(prefs);

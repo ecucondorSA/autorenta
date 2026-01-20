@@ -88,7 +88,7 @@ export class RemoteConfigService {
    * Obtiene un valor booleano
    */
   getBoolean(key: string, defaultValue: boolean): boolean {
-    const value = this.get(key, defaultValue);
+    const value = this.get<unknown>(key, defaultValue);
     if (typeof value === 'boolean') return value;
     if (typeof value === 'string') {
       return value.toLowerCase() === 'true' || value === '1';
