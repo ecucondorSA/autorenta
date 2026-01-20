@@ -1,3 +1,9 @@
+## [3.5.1](https://github.com/ecucondorSA/autorenta/compare/v3.5.0...v3.5.1) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* **storage:** allow video/mp4 uploads in car-images bucket ([9b201fb](https://github.com/ecucondorSA/autorenta/commit/9b201fba5037f99374f339cbdf0649e5d2075400))
+
 ## [3.5.0](https://github.com/ecucondorSA/autorenta/compare/v3.4.3...v3.5.0) (2026-01-20)
 
 ### ✨ Features
