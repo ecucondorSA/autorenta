@@ -1,3 +1,9 @@
+## [3.17.1](https://github.com/ecucondorSA/autorenta/compare/v3.17.0...v3.17.1) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* **tracking:** resolve lint warnings in VehicleTrackingService ([5ba3560](https://github.com/ecucondorSA/autorenta/commit/5ba356064b3cebefb225980637bdec940729e9f9))
+
 ## [3.17.0](https://github.com/ecucondorSA/autorenta/compare/v3.16.1...v3.17.0) (2026-01-20)
 
 ### ✨ Features
