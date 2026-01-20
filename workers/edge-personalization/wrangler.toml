@@ -1,0 +1,30 @@
+# Edge Personalization Worker
+# Cloudflare Worker para personalización en el edge
+
+name = "autorentar-edge-personalization"
+main = "index.ts"
+compatibility_date = "2024-01-01"
+
+# Rutas
+routes = [
+  { pattern = "autorentar.com/edge-api/*", zone_name = "autorentar.com" },
+  { pattern = "www.autorentar.com/edge-api/*", zone_name = "autorentar.com" }
+]
+
+# KV Namespace para cache de configuración
+[[kv_namespaces]]
+binding = "EDGE_CONFIG"
+id = "your-kv-namespace-id"  # Reemplazar con ID real
+preview_id = "your-preview-kv-namespace-id"  # Reemplazar con ID real
+
+# Variables de entorno (secrets se configuran via wrangler secret)
+[vars]
+ENVIRONMENT = "production"
+
+# Para desarrollo local
+[env.development]
+vars = { ENVIRONMENT = "development" }
+
+# Secrets (configurar con: wrangler secret put SUPABASE_URL)
+# - SUPABASE_URL
+# - SUPABASE_ANON_KEY

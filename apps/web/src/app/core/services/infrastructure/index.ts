@@ -1,5 +1,6 @@
 export * from './analytics.service';
 export * from './auto-refresh.service';
+export * from './edge-personalization.service';
 export * from './email.service';
 export * from './encryption.service';
 export * from './error-handler.service';
@@ -20,6 +21,7 @@ export * from './pwa-install.service';
 export * from './pwa.service';
 export * from './rate-limiter.service';
 export * from './realtime-connection.service';
+export * from './remote-config.service';
 export * from './sentry.service';
 export * from './supabase-client.service';
 export * from './telemetry.service';
