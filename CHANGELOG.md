@@ -1,3 +1,9 @@
+## [3.12.2](https://github.com/ecucondorSA/autorenta/compare/v3.12.1...v3.12.2) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* **marketing:** enforce optimal posting times for social media ([be32fde](https://github.com/ecucondorSA/autorenta/commit/be32fdecdb7b79f6a3adfea2a8ef005d49ce682c))
+
 ## [3.12.1](https://github.com/ecucondorSA/autorenta/compare/v3.12.0...v3.12.1) (2026-01-20)
 
 ### 🐛 Bug Fixes
