@@ -1,3 +1,9 @@
+## [3.17.2](https://github.com/ecucondorSA/autorenta/compare/v3.17.1...v3.17.2) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* **tracking:** use cars.owner_id instead of bookings.owner_id ([f925316](https://github.com/ecucondorSA/autorenta/commit/f925316951f3cbc54109ce6ca42ad90fdd6dddc3))
+
 ## [3.17.1](https://github.com/ecucondorSA/autorenta/compare/v3.17.0...v3.17.1) (2026-01-20)
 
 ### 🐛 Bug Fixes
