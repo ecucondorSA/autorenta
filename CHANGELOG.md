@@ -1,3 +1,9 @@
+## [3.8.0](https://github.com/ecucondorSA/autorenta/compare/v3.7.0...v3.8.0) (2026-01-20)
+
+### ✨ Features
+
+* **verification:** add Nosis/Veraz credit verification for Argentina ([ca4f7d9](https://github.com/ecucondorSA/autorenta/commit/ca4f7d9eee94e75f0264e5896d0d6b4f19b01a40))
+
 ## [3.7.0](https://github.com/ecucondorSA/autorenta/compare/v3.6.0...v3.7.0) (2026-01-20)
 
 ### ✨ Features
