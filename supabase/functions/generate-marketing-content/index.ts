@@ -366,19 +366,33 @@ AutoRentar conecta personas que quieren alquilar un auto con propietarios que of
 - Web: https://autorentar.com
 - 🆕 APP ANDROID (BETA ABIERTA): https://play.google.com/apps/test/app.autorentar/70
 
-⚠️ REGLA CRÍTICA - LINK DE LA APP:
-SIEMPRE debes incluir el link de Google Play en el caption. ES OBLIGATORIO.
-Formato: "📲 Descargá la app: https://play.google.com/apps/test/app.autorentar/70"
-O variantes como:
-- "¡Bajá la app y probala! 👉 https://play.google.com/apps/test/app.autorentar/70"
-- "Probá nuestra beta: https://play.google.com/apps/test/app.autorentar/70"
-- "Sé de los primeros en probar la app 📱 https://play.google.com/apps/test/app.autorentar/70"
-El link DEBE aparecer visible en el texto del post, no solo como CTA separado.
+⚠️ REGLA CRÍTICA - LINK EN BIO (Instagram 2026):
+Los links en captions de Instagram NO son clickeables. Por eso:
+- Para INSTAGRAM: Usar "📲 Link en bio" o "👆 Bajá la app desde el link en bio"
+- Para FACEBOOK: Sí incluir el link completo (es clickeable)
+- Para TWITTER/TIKTOK: Incluir link completo
+
+NUNCA mostrar URL larga en Instagram (es spam visual y no funciona).
+El link de Google Play está en el bio: play.google.com/apps/test/app.autorentar/70
 
 ${summerContext}
+🎬 REELS STRATEGY (Instagram 2026 - PRIORITARIO):
+- Reels son el motor de descubrimiento #1 en Instagram
+- El algoritmo prioriza: Watch time > Saves > Shares > Comments > Likes
+- Hook en primeros 3 segundos es CRÍTICO (retención)
+- Formato ideal: Hook fuerte → Valor rápido → CTA claro
+- Audio trending aumenta alcance (mencionar "🎵 Audio trending" si aplica)
+
+📊 MÉTRICAS QUE IMPORTAN (2026):
+1. Watch time / retención (lo más importante)
+2. Saves (indica contenido valioso)
+3. Shares (indica contenido viral)
+4. Comments genuinos (no engagement bait)
+5. Likes (lo menos importante ahora)
+
 ENFOQUE DE PLATAFORMAS:
 - PRIORIDAD: Instagram y Facebook (nuestra audiencia principal está ahí)
-- Tono Instagram: Visual, lifestyle, aspiracional, historias de viaje
+- Tono Instagram: Visual, lifestyle, aspiracional, historias de viaje, REELS-first
 - Tono Facebook: Conversacional, comunidad, testimonios, ofertas
 
 📈 SEO SOCIAL 10/10 - ALGORITMO 2025-2026:
@@ -534,17 +548,31 @@ FORMATO DE RESPUESTA (JSON):
     // Limitar hashtags a 5 máximo (SEO 2025)
     const limitedHashtags = (parsed.hashtags || []).slice(0, 5);
 
-    // Post-procesamiento: Asegurar que el link de Google Play esté presente
+    // Post-procesamiento: Asegurar CTA de app según plataforma
     const GOOGLE_PLAY_LINK = 'https://play.google.com/apps/test/app.autorentar/70';
     let caption = parsed.caption || '';
     let callToAction = parsed.call_to_action || '';
 
-    // Si el caption no contiene el link de Google Play, añadirlo al call_to_action
-    if (!caption.includes('play.google.com') && !callToAction.includes('play.google.com')) {
-      console.log('[generate-marketing-content] Adding Google Play link (not in original content)');
-      callToAction = callToAction
-        ? `${callToAction}\n📲 Descargá la app: ${GOOGLE_PLAY_LINK}`
-        : `📲 Descargá la app: ${GOOGLE_PLAY_LINK}`;
+    // Verificar si ya tiene mención de la app
+    const hasAppMention = caption.includes('play.google.com') ||
+                          caption.includes('link en bio') ||
+                          caption.includes('Link en bio') ||
+                          callToAction.includes('play.google.com') ||
+                          callToAction.includes('link en bio');
+
+    if (!hasAppMention) {
+      console.log(`[generate-marketing-content] Adding app CTA for ${platform}`);
+      // Instagram: "Link en bio" (links no son clickeables en captions)
+      // Otras plataformas: URL completa
+      if (platform === 'instagram') {
+        callToAction = callToAction
+          ? `${callToAction}\n📲 Bajá la app → Link en bio`
+          : `📲 Bajá la app → Link en bio`;
+      } else {
+        callToAction = callToAction
+          ? `${callToAction}\n📲 Descargá la app: ${GOOGLE_PLAY_LINK}`
+          : `📲 Descargá la app: ${GOOGLE_PLAY_LINK}`;
+      }
     }
 
     return {
