@@ -1,3 +1,9 @@
+## [3.12.3](https://github.com/ecucondorSA/autorenta/compare/v3.12.2...v3.12.3) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* **android:** add ProGuard rules and fix MainActivity package ([24c45b8](https://github.com/ecucondorSA/autorenta/commit/24c45b871b3afa894b210a0eaa9b9da7676daa4f))
+
 ## [3.12.2](https://github.com/ecucondorSA/autorenta/compare/v3.12.1...v3.12.2) (2026-01-20)
 
 ### 🐛 Bug Fixes
