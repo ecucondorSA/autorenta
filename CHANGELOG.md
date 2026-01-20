@@ -1,3 +1,9 @@
+## [3.5.0](https://github.com/ecucondorSA/autorenta/compare/v3.4.3...v3.5.0) (2026-01-20)
+
+### ✨ Features
+
+* **marketing:** add Google Play beta test link to content generation prompt ([7dd585a](https://github.com/ecucondorSA/autorenta/commit/7dd585aaea72819d70e918be1b24dfbba5f19ad7))
+
 ## [3.4.3](https://github.com/ecucondorSA/autorenta/compare/v3.4.2...v3.4.3) (2026-01-19)
 
 ### 🐛 Bug Fixes
