@@ -1,3 +1,13 @@
+## [3.11.0](https://github.com/ecucondorSA/autorenta/compare/v3.10.0...v3.11.0) (2026-01-20)
+
+### ✨ Features
+
+* **marketing:** implement SEO 2026 features ([e5acbb4](https://github.com/ecucondorSA/autorenta/commit/e5acbb49faf3115b32570b061fc6166184d1cef8))
+
+### 📚 Documentation
+
+* add Social Media SEO 2026 guide ([c547af3](https://github.com/ecucondorSA/autorenta/commit/c547af320c6a38e51ba904c05cb9295871b2fcfc))
+
 ## [3.10.0](https://github.com/ecucondorSA/autorenta/compare/v3.9.0...v3.10.0) (2026-01-20)
 
 ### ✨ Features
