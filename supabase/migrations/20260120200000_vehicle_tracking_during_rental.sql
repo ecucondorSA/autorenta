@@ -158,8 +158,9 @@ CREATE POLICY "Booking participants can view location history"
   USING (
     EXISTS (
       SELECT 1 FROM bookings b
+      JOIN cars c ON c.id = b.car_id
       WHERE b.id = vehicle_location_history.booking_id
-      AND (b.renter_id = (SELECT auth.uid()) OR b.owner_id = (SELECT auth.uid()))
+      AND (b.renter_id = (SELECT auth.uid()) OR c.owner_id = (SELECT auth.uid()))
     )
   );
 
@@ -187,8 +188,9 @@ CREATE POLICY "Booking participants can view geofences"
   USING (
     EXISTS (
       SELECT 1 FROM bookings b
+      JOIN cars c ON c.id = b.car_id
       WHERE b.id = geofence_zones.booking_id
-      AND (b.renter_id = (SELECT auth.uid()) OR b.owner_id = (SELECT auth.uid()))
+      AND (b.renter_id = (SELECT auth.uid()) OR c.owner_id = (SELECT auth.uid()))
     )
   );
 
@@ -198,8 +200,9 @@ CREATE POLICY "Owner can create geofences"
   WITH CHECK (
     EXISTS (
       SELECT 1 FROM bookings b
+      JOIN cars c ON c.id = b.car_id
       WHERE b.id = geofence_zones.booking_id
-      AND b.owner_id = (SELECT auth.uid())
+      AND c.owner_id = (SELECT auth.uid())
     )
   );
 
@@ -209,8 +212,9 @@ CREATE POLICY "Booking participants can view alerts"
   USING (
     EXISTS (
       SELECT 1 FROM bookings b
+      JOIN cars c ON c.id = b.car_id
       WHERE b.id = geofence_alerts.booking_id
-      AND (b.renter_id = (SELECT auth.uid()) OR b.owner_id = (SELECT auth.uid()))
+      AND (b.renter_id = (SELECT auth.uid()) OR c.owner_id = (SELECT auth.uid()))
     )
   );
 
@@ -220,8 +224,9 @@ CREATE POLICY "Booking participants can view tracking settings"
   USING (
     EXISTS (
       SELECT 1 FROM bookings b
+      JOIN cars c ON c.id = b.car_id
       WHERE b.id = booking_tracking_settings.booking_id
-      AND (b.renter_id = (SELECT auth.uid()) OR b.owner_id = (SELECT auth.uid()))
+      AND (b.renter_id = (SELECT auth.uid()) OR c.owner_id = (SELECT auth.uid()))
     )
   );
 
@@ -231,8 +236,9 @@ CREATE POLICY "Owner can manage tracking settings"
   USING (
     EXISTS (
       SELECT 1 FROM bookings b
+      JOIN cars c ON c.id = b.car_id
       WHERE b.id = booking_tracking_settings.booking_id
-      AND b.owner_id = (SELECT auth.uid())
+      AND c.owner_id = (SELECT auth.uid())
     )
   );
 
@@ -438,9 +444,10 @@ DECLARE
 BEGIN
   -- Check if user has access to this booking
   IF NOT EXISTS (
-    SELECT 1 FROM bookings
-    WHERE id = p_booking_id
-    AND (renter_id = auth.uid() OR owner_id = auth.uid())
+    SELECT 1 FROM bookings b
+    JOIN cars c ON c.id = b.car_id
+    WHERE b.id = p_booking_id
+    AND (b.renter_id = auth.uid() OR c.owner_id = auth.uid())
   ) THEN
     RETURN jsonb_build_object('success', false, 'error', 'Access denied');
   END IF;
@@ -554,9 +561,9 @@ SELECT
   b.id AS booking_id,
   b.car_id,
   b.renter_id,
-  b.owner_id,
-  b.start_date,
-  b.end_date,
+  c.owner_id,
+  b.start_at,
+  b.end_at,
   c.make,
   c.model,
   c.license_plate,
