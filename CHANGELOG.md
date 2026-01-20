@@ -1,3 +1,9 @@
+## [3.17.5](https://github.com/ecucondorSA/autorenta/compare/v3.17.4...v3.17.5) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* **types:** correct Capacitor type imports in vehicle-tracking ([6fbb349](https://github.com/ecucondorSA/autorenta/commit/6fbb349821492cd73bb44dc7fbbee9897c337baa))
+
 ## [3.17.4](https://github.com/ecucondorSA/autorenta/compare/v3.17.3...v3.17.4) (2026-01-20)
 
 ### 🐛 Bug Fixes
