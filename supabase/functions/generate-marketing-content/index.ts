@@ -1134,43 +1134,71 @@ async function getRandomAvailableCar(
 
 function getBestTimes(platform: Platform): { hour: number; minute: number }[] {
   // Best posting times for Argentina (UTC-3)
+  // Based on engagement data for Latin American audiences
   const bestTimes: Record<Platform, { hour: number; minute: number }[]> = {
     tiktok: [
-      { hour: 9, minute: 0 },
-      { hour: 12, minute: 0 },
-      { hour: 19, minute: 0 },
+      { hour: 9, minute: 0 },   // 9am Argentina
+      { hour: 12, minute: 0 },  // 12pm Argentina
+      { hour: 19, minute: 0 },  // 7pm Argentina
     ],
     instagram: [
-      { hour: 12, minute: 0 },
-      { hour: 17, minute: 0 },
-      { hour: 21, minute: 0 },
+      { hour: 12, minute: 0 },  // 12pm Argentina
+      { hour: 17, minute: 0 },  // 5pm Argentina
+      { hour: 21, minute: 0 },  // 9pm Argentina
     ],
     facebook: [
-      { hour: 13, minute: 0 },
-      { hour: 16, minute: 0 },
-      { hour: 20, minute: 0 },
+      { hour: 13, minute: 0 },  // 1pm Argentina
+      { hour: 16, minute: 0 },  // 4pm Argentina
+      { hour: 20, minute: 0 },  // 8pm Argentina
     ],
     twitter: [
-      { hour: 8, minute: 0 },
-      { hour: 12, minute: 0 },
-      { hour: 17, minute: 0 },
+      { hour: 8, minute: 0 },   // 8am Argentina
+      { hour: 12, minute: 0 },  // 12pm Argentina
+      { hour: 17, minute: 0 },  // 5pm Argentina
     ],
   };
   return bestTimes[platform];
 }
 
+/**
+ * Get the next optimal posting time for a platform.
+ * Finds the next available slot today or tomorrow at optimal hours.
+ * Argentina timezone (UTC-3) is used for calculations.
+ */
 function getSuggestedPostTime(platform: Platform): string {
   const times = getBestTimes(platform);
-  const randomTime = times[Math.floor(Math.random() * times.length)];
+  const now = new Date();
 
-  // Create date for tomorrow at the suggested time (Argentina timezone)
-  const tomorrow = new Date();
+  // Check today and tomorrow for available slots
+  for (let daysAhead = 0; daysAhead <= 1; daysAhead++) {
+    for (const time of times) {
+      const targetDate = new Date(now);
+      targetDate.setDate(targetDate.getDate() + daysAhead);
+
+      // Set time in UTC (Argentina hour + 3 = UTC)
+      targetDate.setUTCHours(time.hour + 3, time.minute, 0, 0);
+
+      // If this time is at least 1 hour in the future, use it
+      if (targetDate.getTime() > now.getTime() + 60 * 60 * 1000) {
+        console.log(`[scheduling] Next optimal time for ${platform}: ${targetDate.toISOString()} (${time.hour}:00 Argentina)`);
+        return targetDate.toISOString();
+      }
+    }
+  }
+
+  // Fallback: tomorrow at the first optimal hour
+  const tomorrow = new Date(now);
   tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setHours(randomTime.hour + 3, randomTime.minute, 0, 0); // +3 for UTC
+  tomorrow.setUTCHours(times[0].hour + 3, times[0].minute, 0, 0);
 
+  console.log(`[scheduling] Fallback time for ${platform}: ${tomorrow.toISOString()}`);
   return tomorrow.toISOString();
 }
 
+/**
+ * Get all optimal posting times for batch generation.
+ * Returns times for the next day to allow proper scheduling.
+ */
 function getAllSuggestedPostTimes(platform: Platform): string[] {
   const times = getBestTimes(platform);
   const tomorrow = new Date();
@@ -1178,7 +1206,7 @@ function getAllSuggestedPostTimes(platform: Platform): string[] {
 
   return times.map(time => {
     const date = new Date(tomorrow);
-    date.setHours(time.hour + 3, time.minute, 0, 0); // +3 for UTC
+    date.setUTCHours(time.hour + 3, time.minute, 0, 0); // Argentina hour + 3 = UTC
     return date.toISOString();
   });
 }
