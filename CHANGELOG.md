@@ -1,3 +1,9 @@
+## [3.12.1](https://github.com/ecucondorSA/autorenta/compare/v3.12.0...v3.12.1) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* add app redirects to cloudflare config script ([224fa40](https://github.com/ecucondorSA/autorenta/commit/224fa4058a02a8539efb5e14bb39cfa2d6ba3681))
+
 ## [3.12.0](https://github.com/ecucondorSA/autorenta/compare/v3.11.0...v3.12.0) (2026-01-20)
 
 ### ✨ Features
