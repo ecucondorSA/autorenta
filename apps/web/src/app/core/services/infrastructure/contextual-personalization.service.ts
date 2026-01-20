@@ -35,7 +35,7 @@ export interface WeatherData {
   description: string;
 }
 
-export interface SpecialEvent {
+export interface ContextualEvent {
   id: string;
   name: string;
   type: 'holiday' | 'promo' | 'seasonal' | 'local';
@@ -72,7 +72,7 @@ export interface PersonalizationContext {
   timezone: string;
 
   // Eventos
-  activeEvents: SpecialEvent[];
+  activeEvents: ContextualEvent[];
   hasPromotion: boolean;
 
   // Usuario
@@ -105,7 +105,7 @@ export class ContextualPersonalizationService implements OnDestroy {
 
   // Estado
   private readonly context = signal<PersonalizationContext>(this.buildInitialContext());
-  private readonly activeEvents = signal<SpecialEvent[]>([]);
+  private readonly activeEvents = signal<ContextualEvent[]>([]);
   private readonly weatherData = signal<WeatherData | null>(null);
   private updateInterval?: ReturnType<typeof setInterval>;
 
@@ -351,7 +351,7 @@ export class ContextualPersonalizationService implements OnDestroy {
   /**
    * Obtiene el evento activo más relevante
    */
-  getPrimaryEvent(): SpecialEvent | null {
+  getPrimaryEvent(): ContextualEvent | null {
     const events = this.activeEvents();
     if (events.length === 0) return null;
 
@@ -427,7 +427,7 @@ export class ContextualPersonalizationService implements OnDestroy {
 
       if (error) throw error;
 
-      const events: SpecialEvent[] = (data || []).map((e) => ({
+      const events: ContextualEvent[] = (data || []).map((e) => ({
         id: e.id,
         name: e.name,
         type: e.type,
@@ -453,7 +453,7 @@ export class ContextualPersonalizationService implements OnDestroy {
     const month = now.getMonth();
     const day = now.getDate();
 
-    const fallbackEvents: SpecialEvent[] = [];
+    const fallbackEvents: ContextualEvent[] = [];
 
     // Eventos por fecha
     if (month === 11 && day >= 20 && day <= 31) {
