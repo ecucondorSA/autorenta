@@ -2,6 +2,11 @@
 # https://developers.cloudflare.com/pages/platform/redirects
 # Este archivo se copia automáticamente al build y se sobrescribe por create-cloudflare-config.js
 
+# App download redirects (short URLs for social media)
+/app      https://play.google.com/apps/test/app.autorentar/70    302
+/android  https://play.google.com/apps/test/app.autorentar/70    302
+/descarga https://play.google.com/apps/test/app.autorentar/70    302
+
 # Redirect all requests to index.html for Angular SPA routing
 # IMPORTANTE: Esto permite que Angular maneje todas las rutas, incluyendo /auth/callback
 /*    /index.html   200
