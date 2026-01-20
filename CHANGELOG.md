@@ -1,3 +1,9 @@
+## [3.6.0](https://github.com/ecucondorSA/autorenta/compare/v3.5.1...v3.6.0) (2026-01-20)
+
+### ✨ Features
+
+* **marketing:** enhance content generation with summer focus and Google Play beta link ([930c47c](https://github.com/ecucondorSA/autorenta/commit/930c47cae2303a9d061c8492a839ba912774f8ff))
+
 ## [3.5.1](https://github.com/ecucondorSA/autorenta/compare/v3.5.0...v3.5.1) (2026-01-20)
 
 ### 🐛 Bug Fixes
