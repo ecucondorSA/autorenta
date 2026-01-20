@@ -31,7 +31,7 @@
 import { Injectable, inject, signal, computed, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Capacitor } from '@capacitor/core';
-import { Geolocation, Position as CapacitorPosition, CallbackID } from '@capacitor/geolocation';
+import { Geolocation } from '@capacitor/geolocation';
 import { Subject, interval, Subscription } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
@@ -41,6 +41,22 @@ import { environment } from '../../../../environments/environment';
 // =============================================================================
 // TYPES
 // =============================================================================
+
+/**
+ * Common position interface compatible with both Capacitor and browser APIs
+ */
+interface PositionLike {
+  timestamp: number;
+  coords: {
+    latitude: number;
+    longitude: number;
+    accuracy: number | null;
+    altitude: number | null;
+    altitudeAccuracy: number | null;
+    heading: number | null;
+    speed: number | null;
+  };
+}
 
 export interface VehicleLocation {
   latitude: number;
@@ -142,7 +158,7 @@ export class VehicleTrackingService implements OnDestroy {
   readonly alerts$ = this._alerts$.asObservable();
 
   // Private state
-  private watchId: string | CallbackID | null = null;
+  private watchId: string | null = null;
   private updateInterval: Subscription | null = null;
   private activeBookingId: string | null = null;
   private destroy$ = new Subject<void>();
@@ -443,7 +459,7 @@ export class VehicleTrackingService implements OnDestroy {
     if (this.isNative) {
       this.watchId = await Geolocation.watchPosition(
         options,
-        (position: CapacitorPosition | null, err?: Error) => {
+        (position: PositionLike | null, err?: Error) => {
           if (err) {
             this.logger.warn('[VehicleTracking] Position error:', err);
             return;
@@ -463,7 +479,7 @@ export class VehicleTrackingService implements OnDestroy {
     }
   }
 
-  private handlePositionUpdate(position: CapacitorPosition | GeolocationPosition): void {
+  private handlePositionUpdate(position: PositionLike | GeolocationPosition): void {
     const coords = position.coords;
     const location: VehicleLocation = {
       latitude: coords.latitude,
