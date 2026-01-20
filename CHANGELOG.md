@@ -1,3 +1,9 @@
+## [3.17.4](https://github.com/ecucondorSA/autorenta/compare/v3.17.3...v3.17.4) (2026-01-20)
+
+### 🐛 Bug Fixes
+
+* **types:** add latitude/longitude to GeoData interface ([6fee54b](https://github.com/ecucondorSA/autorenta/commit/6fee54bf0e476ae649c85f2cdcb82d7b82331bac))
+
 ## [3.17.3](https://github.com/ecucondorSA/autorenta/compare/v3.17.2...v3.17.3) (2026-01-20)
 
 ### 🐛 Bug Fixes
