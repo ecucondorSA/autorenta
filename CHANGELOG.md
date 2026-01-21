@@ -1,3 +1,9 @@
+## [3.24.0](https://github.com/ecucondorSA/autorenta/compare/v3.23.1...v3.24.0) (2026-01-21)
+
+### ✨ Features
+
+* **ui:** premium design overhaul with Rooda-inspired styling ([825af2f](https://github.com/ecucondorSA/autorenta/commit/825af2f3286f3e8a72b6cd9c4a1b85d03e7f97f6))
+
 ## [3.23.1](https://github.com/ecucondorSA/autorenta/compare/v3.23.0...v3.23.1) (2026-01-21)
 
 ### 🐛 Bug Fixes
