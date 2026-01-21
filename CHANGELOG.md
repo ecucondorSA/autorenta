@@ -1,3 +1,9 @@
+## [3.20.1](https://github.com/ecucondorSA/autorenta/compare/v3.20.0...v3.20.1) (2026-01-21)
+
+### ♻️ Refactoring
+
+* **ui:** rediseño profesional - login modal, colores unificados, botones ([0c89d24](https://github.com/ecucondorSA/autorenta/commit/0c89d24089e8b1cfbcec5098ea3d318cff803bff)), closes [#00D95F](https://github.com/ecucondorSA/autorenta/issues/00D95F)
+
 ## [3.20.0](https://github.com/ecucondorSA/autorenta/compare/v3.19.5...v3.20.0) (2026-01-21)
 
 ### ✨ Features
