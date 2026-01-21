@@ -1,3 +1,9 @@
+## [3.18.0](https://github.com/ecucondorSA/autorenta/compare/v3.17.6...v3.18.0) (2026-01-21)
+
+### ✨ Features
+
+* **instant-booking:** implement instant booking system with risk score ([e8ac0dd](https://github.com/ecucondorSA/autorenta/commit/e8ac0ddb08e62122b4d0eccd15ed562012555639))
+
 ## [3.17.6](https://github.com/ecucondorSA/autorenta/compare/v3.17.5...v3.17.6) (2026-01-20)
 
 ### 🐛 Bug Fixes
