@@ -1,3 +1,9 @@
+## [3.21.5](https://github.com/ecucondorSA/autorenta/compare/v3.21.4...v3.21.5) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **facebook-auth:** remove invalid 'email' scope permission ([1eb374c](https://github.com/ecucondorSA/autorenta/commit/1eb374c06965dea09457c7334141ff3594343d2b))
+
 ## [3.21.4](https://github.com/ecucondorSA/autorenta/compare/v3.21.3...v3.21.4) (2026-01-21)
 
 ### ⚡ Performance
