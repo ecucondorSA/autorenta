@@ -1,3 +1,9 @@
+## [3.23.1](https://github.com/ecucondorSA/autorenta/compare/v3.23.0...v3.23.1) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **ui:** improve login social buttons responsiveness and layout ([f4b06d2](https://github.com/ecucondorSA/autorenta/commit/f4b06d25453f5c0166764938def3033fd1244925))
+
 ## [3.23.0](https://github.com/ecucondorSA/autorenta/compare/v3.22.2...v3.23.0) (2026-01-21)
 
 ### ✨ Features
