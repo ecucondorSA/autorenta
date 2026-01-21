@@ -1,3 +1,9 @@
+## [3.24.1](https://github.com/ecucondorSA/autorenta/compare/v3.24.0...v3.24.1) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **guardrails:** resolve duplicate type definitions ([811df7b](https://github.com/ecucondorSA/autorenta/commit/811df7b656b0b95463e0aec519915d6a781afb6f))
+
 ## [3.24.0](https://github.com/ecucondorSA/autorenta/compare/v3.23.1...v3.24.0) (2026-01-21)
 
 ### ✨ Features
