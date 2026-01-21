@@ -115,7 +115,7 @@ export class NotificationsService implements OnDestroy {
     await this.loadNotificationsInternal();
   }
 
-  async getSettings(): Promise<NotificationPreferences | null> {
+  async getSettings(): Promise<UserNotificationSettings | null> {
     try {
       const {
         data: { user },
@@ -129,14 +129,14 @@ export class NotificationsService implements OnDestroy {
         .maybeSingle();
 
       if (error) throw error;
-      return (data?.preferences as NotificationPreferences) || null;
+      return (data?.preferences as UserNotificationSettings) || null;
     } catch (error) {
       this.logger.warn('Failed to load notification settings', 'NotificationsService', error);
       return null;
     }
   }
 
-  async saveSettings(preferences: NotificationPreferences): Promise<void> {
+  async saveSettings(preferences: UserNotificationSettings): Promise<void> {
     const {
       data: { user },
     } = await this.supabase.auth.getUser();
