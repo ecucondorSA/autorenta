@@ -296,6 +296,7 @@ export class AppComponent implements OnInit {
     this.loadPendingApprovalCount();
     this.pushNotificationService.initializePushNotifications();
     this.initializeLocalNotificationListeners();
+    this.initializePushNotificationListeners();
     this.initializeProfileMenuCloseOnNavigation();
     this.checkVerificationPage(this.router.url);
 
@@ -499,6 +500,47 @@ export class AppComponent implements OnInit {
     LocalNotifications.addListener('localNotificationReceived', (notification: { id: number; title?: string; body?: string }) => {
       console.log('[Notification] Received while app open:', notification);
     });
+  }
+
+  /**
+   * Initialize listeners for push notification clicks (FCM)
+   * Handles navigation when user taps on a push notification (works even when app was closed)
+   */
+  private initializePushNotificationListeners(): void {
+    if (!Capacitor.isNativePlatform()) {
+      return;
+    }
+
+    // Subscribe to push notification clicks
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (this.pushNotificationService.notificationClicks$ as any)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((action: { action: string; notification?: { data?: Record<string, unknown> } }) => {
+        console.log('[Push] Notification action performed:', action);
+
+        // Extract navigation data from notification
+        const data = action.notification?.data as { cta_link?: string; route?: string; bookingId?: string } | undefined;
+        const route = data?.cta_link || data?.route;
+
+        if (route) {
+          console.log('[Push] Navigating to:', route);
+          // Use setTimeout to ensure app is fully initialized after cold start
+          setTimeout(() => {
+            this.router.navigate([route], {
+              queryParams: data?.bookingId ? { id: data.bookingId } : undefined,
+            });
+          }, 100);
+        }
+      });
+
+    // Subscribe to push messages received while app is open
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (this.pushNotificationService.messages$ as any)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((message: unknown) => {
+        console.log('[Push] Message received while app open:', message);
+        // Optionally show an in-app notification or toast
+      });
   }
 
   /**
