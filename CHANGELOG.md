@@ -1,3 +1,9 @@
+## [3.19.1](https://github.com/ecucondorSA/autorenta/compare/v3.19.0...v3.19.1) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **instant-booking:** use getCurrentUser() instead of non-existent currentUserId() ([4fc0518](https://github.com/ecucondorSA/autorenta/commit/4fc051812d5cc784544d56b77712205be728db98))
+
 ## [3.19.0](https://github.com/ecucondorSA/autorenta/compare/v3.18.0...v3.19.0) (2026-01-21)
 
 ### ✨ Features
