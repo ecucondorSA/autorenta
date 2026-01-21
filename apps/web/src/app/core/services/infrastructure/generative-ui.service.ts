@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
+import { AuthService } from '../auth/auth.service';
 import { injectSupabase } from './supabase-client.service';
 import { LoggerService } from './logger.service';
-import { AuthService } from '../auth/auth.service';
 
 /**
  * Generative UI Service
@@ -232,7 +232,7 @@ export class GenerativeUIService {
 
       this.setCache(cacheKey, result);
       return result;
-    } catch (err) {
+    } catch {
       return {
         content: this.getFallbackWelcome(timeOfDay, context?.isNewUser),
         confidence: 0.5,
@@ -261,7 +261,7 @@ export class GenerativeUIService {
 
       if (error) throw error;
       return data.suggestions || this.getFallbackSearchSuggestions();
-    } catch (err) {
+    } catch {
       return this.getFallbackSearchSuggestions();
     }
   }

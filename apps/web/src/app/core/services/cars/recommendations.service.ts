@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { injectSupabase } from '../infrastructure/supabase-client.service';
 import { LoggerService } from '../infrastructure/logger.service';
 import { AuthService } from '../auth/auth.service';
@@ -25,15 +25,6 @@ import { Car } from '../../models/car.model';
  * const popular = await this.recommendations.getPopularNearby(lat, lng);
  * ```
  */
-
-interface RecommendationContext {
-  userId?: string;
-  currentCarId?: string;
-  location?: { lat: number; lng: number };
-  priceRange?: { min: number; max: number };
-  carType?: string;
-  limit?: number;
-}
 
 interface UserPreferences {
   preferredCarTypes: string[];

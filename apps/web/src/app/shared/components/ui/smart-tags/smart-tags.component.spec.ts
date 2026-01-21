@@ -4,8 +4,8 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SmartTagsComponent, SmartTag } from './smart-tags.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SmartTagsComponent, SmartTag } from './smart-tags.component';
 
 describe('SmartTagsComponent', () => {
   let component: SmartTagsComponent;

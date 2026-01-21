@@ -116,9 +116,8 @@ export class RemoteConfigService {
   /**
    * Obtiene valores por categoría
    */
-  getByCategory(category: string): Record<string, unknown> {
+  getByCategory(_category: string): Record<string, unknown> {
     const allConfig = this.state().config;
-    const result: Record<string, unknown> = {};
 
     // Nota: esto requiere que guardemos la categoría en el valor
     // Por ahora retorna todas las configs

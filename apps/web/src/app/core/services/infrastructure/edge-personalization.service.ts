@@ -1,7 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from './logger.service';
-import { environment } from '../../../../environments/environment';
 
 /**
  * Edge Personalization Service
@@ -203,7 +202,7 @@ export class EdgePersonalizationService {
       const geoData = (await response.json()) as GeoData;
       this.state.update((s) => ({ ...s, geoData }));
       this.saveGeoToStorage(geoData);
-    } catch (err) {
+    } catch {
       // Usar datos cacheados o defaults
       const cached = this.loadGeoFromStorage();
       if (!cached) {

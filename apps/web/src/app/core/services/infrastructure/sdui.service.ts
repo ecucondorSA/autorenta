@@ -269,7 +269,7 @@ export class SDUIService {
         metadata,
         created_at: new Date().toISOString(),
       });
-    } catch (err) {
+    } catch {
       // No bloquear por errores de analytics
       this.logger.warn('SDUI analytics tracking failed', { componentId, eventType });
     }

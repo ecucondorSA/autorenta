@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { scaleUpOnHoverAnimation } from '../../../../../styles/design-system/tokens/animations';
 
@@ -72,7 +72,7 @@ export class IconButtonComponent {
     }
   }
 
-  onClickHandler(event: MouseEvent): void {
+  onClickHandler(_event: MouseEvent): void {
     if (!this.disabled) {
       if (navigator.vibrate) {
         navigator.vibrate(10);
