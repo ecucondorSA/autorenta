@@ -1,3 +1,9 @@
+## [3.19.2](https://github.com/ecucondorSA/autorenta/compare/v3.19.1...v3.19.2) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **lint:** resolve all 15 eslint warnings ([5b49d76](https://github.com/ecucondorSA/autorenta/commit/5b49d76f303ada50681e417d43357a17666a4433))
+
 ## [3.19.1](https://github.com/ecucondorSA/autorenta/compare/v3.19.0...v3.19.1) (2026-01-21)
 
 ### 🐛 Bug Fixes
