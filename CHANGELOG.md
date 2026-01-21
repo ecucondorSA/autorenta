@@ -1,3 +1,9 @@
+## [3.19.4](https://github.com/ecucondorSA/autorenta/compare/v3.19.3...v3.19.4) (2026-01-21)
+
+### ⚡ Performance
+
+* **hdri:** increase rotation smoothing for faster response (0.08 -> 0.18) ([8dc8fe1](https://github.com/ecucondorSA/autorenta/commit/8dc8fe11ecba1bf2abf2d0f8ceff3fb61d55d107))
+
 ## [3.19.3](https://github.com/ecucondorSA/autorenta/compare/v3.19.2...v3.19.3) (2026-01-21)
 
 ### ⚡ Performance
