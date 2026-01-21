@@ -1,3 +1,9 @@
+## [3.22.2](https://github.com/ecucondorSA/autorenta/compare/v3.22.1...v3.22.2) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **deps:** add @simplewebauthn/types for WebAuthn type definitions ([3972b98](https://github.com/ecucondorSA/autorenta/commit/3972b98e5e546bd6f90f6383ab4b20259453bd77))
+
 ## [3.22.1](https://github.com/ecucondorSA/autorenta/compare/v3.22.0...v3.22.1) (2026-01-21)
 
 ### 🐛 Bug Fixes
