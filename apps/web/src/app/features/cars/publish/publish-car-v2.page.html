@@ -659,6 +659,76 @@
                 </div>
               </label>
             </div>
+
+            <!-- Instant Booking (Reserva al Instante) -->
+            <div class="mt-6 p-5 border border-emerald-200 bg-gradient-to-br from-emerald-50/50 to-teal-50/30 rounded-2xl">
+              <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-lg font-bold text-slate-800">Reserva al Instante</h3>
+                    <span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-wider rounded-full">BETA</span>
+                  </div>
+                  <p class="text-sm text-slate-600 mb-4">
+                    Permite que renters verificados y con buen historial reserven tu auto sin necesidad de aprobación manual.
+                    Las reservas van directamente a pago.
+                  </p>
+
+                  <label class="flex items-center cursor-pointer group mb-4">
+                    <input
+                      type="checkbox"
+                      formControlName="instant_booking_enabled"
+                      class="w-5 h-5 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500"
+                    />
+                    <span class="ml-3 text-sm font-semibold text-slate-700 group-hover:text-emerald-600 transition">
+                      Habilitar Reserva al Instante
+                    </span>
+                  </label>
+
+                  @if (publishForm.get('instant_booking_enabled')?.value) {
+                    <div class="space-y-4 pt-4 border-t border-emerald-200/50">
+                      <!-- Puntaje mínimo -->
+                      <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                          Puntaje de confianza mínimo: <span class="font-bold text-emerald-600">{{ publishForm.get('instant_booking_min_score')?.value }}</span>
+                        </label>
+                        <input
+                          type="range"
+                          formControlName="instant_booking_min_score"
+                          min="0"
+                          max="100"
+                          step="5"
+                          class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                        />
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                          <span>Cualquiera (0)</span>
+                          <span>Muy alto (100)</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">
+                          Renters con menor puntaje deberán esperar tu aprobación manual.
+                        </p>
+                      </div>
+
+                      <!-- Requerir verificación -->
+                      <label class="flex items-center cursor-pointer group">
+                        <input
+                          type="checkbox"
+                          formControlName="instant_booking_require_verified"
+                          class="w-4 h-4 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500"
+                        />
+                        <span class="ml-2 text-sm text-slate-600 group-hover:text-slate-800 transition">
+                          Requerir identidad y licencia verificadas
+                        </span>
+                      </label>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
           </section>
 
           <!-- SECCIÓN 5: UBICACIÓN -->

@@ -10,6 +10,7 @@ export * from '@core/services/bookings/booking-flow-logger.service';
 export * from '@core/services/bookings/booking-flow.service';
 export * from '@core/services/bookings/booking-initiation.service';
 export * from '@core/services/bookings/booking-insurance-helper.service';
+export * from '@core/services/bookings/instant-booking.service';
 export * from '@core/services/bookings/booking-notifications.service';
 export * from '@core/services/bookings/booking-ops.service';
 export * from '@core/services/bookings/booking-owner-penalty.service';

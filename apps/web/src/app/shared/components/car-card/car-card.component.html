@@ -8,6 +8,30 @@
   [class.urgent-mode]="urgentMode"
   [class.map-mini-card]="mapVariant"
 >
+  <!-- Badge de Reserva Instantánea (Flotante) -->
+  @if (hasInstantBooking() && !urgentMode) {
+    <div
+      class="absolute top-3 left-3 z-20 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-1.5 border border-white/20"
+    >
+      <svg
+        class="w-3.5 h-3.5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2.5"
+          d="M13 10V3L4 14h7v7l9-11h-7z"
+        />
+      </svg>
+      RESERVA AL INSTANTE
+    </div>
+  }
+
   <!-- Badge de urgencia (Flotante) -->
   @if (urgentMode && urgentAvailability()?.available) {
     <div

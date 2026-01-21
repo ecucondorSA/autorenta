@@ -259,6 +259,15 @@ export class CarCardComponent implements OnInit, OnDestroy {
     return url.startsWith('data:image');
   }
 
+  /**
+   * Verifica si el auto tiene Instant Booking habilitado
+   */
+  readonly hasInstantBooking = computed(() => {
+    const car = this._car();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (car as any)?.instant_booking_enabled === true;
+  });
+
   readonly topFeatures = computed(() => {
     const car = this._car();
     if (!car?.features) return [];

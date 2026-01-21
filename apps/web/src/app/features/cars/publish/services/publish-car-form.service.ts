@@ -87,6 +87,11 @@ export class PublishCarFormService {
       insurance_included: [false],
       auto_approval: [true],
 
+      // Instant Booking - Permite reservas sin aprobación para renters verificados
+      instant_booking_enabled: [false],
+      instant_booking_min_score: [70, [Validators.min(0), Validators.max(100)]],
+      instant_booking_require_verified: [true],
+
       // Location - Opcional
       location_street: ['', Validators.required],
       location_street_number: ['', Validators.required],
