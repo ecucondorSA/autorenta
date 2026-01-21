@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
+import { GoogleOneTapService } from '@core/services/auth/google-one-tap.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { HdriBackgroundComponent } from '../../../shared/components/hdri-background/hdri-background.component';
@@ -30,29 +31,59 @@ import { HdriBackgroundComponent } from '../../../shared/components/hdri-backgro
     }
   `],
 })
-export class LoginPage implements OnInit {
+export class LoginPage implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly analytics = inject(AnalyticsService);
+  private readonly googleOneTap = inject(GoogleOneTapService);
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly showForm = signal(false);
   readonly isAuthenticated = this.auth.isAuthenticated;
+  readonly oneTapState = this.googleOneTap.state;
+  readonly oneTapAvailable = this.googleOneTap.isAvailable;
+
+  constructor() {
+    // Escuchar cuando One-Tap tenga éxito para trackear analytics
+    effect(() => {
+      if (this.oneTapState() === 'success') {
+        this.analytics.trackEvent('login', {
+          method: 'google_one_tap',
+          source: 'login_page',
+          step: 'completed',
+        });
+      }
+    });
+  }
 
   readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // Si venimos redirigidos desde una ruta protegida, abrimos el formulario directo.
     const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
     if (returnUrl) {
       this.showForm.set(true);
     }
+
+    // Inicializar Google One-Tap si está disponible
+    if (this.oneTapAvailable && !this.isAuthenticated()) {
+      const initialized = await this.googleOneTap.initialize();
+      if (initialized) {
+        // Mostrar el prompt de One-Tap automáticamente
+        this.googleOneTap.showPrompt();
+      }
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Cancelar One-Tap si está mostrándose
+    this.googleOneTap.cancel();
   }
 
   openForm(): void {

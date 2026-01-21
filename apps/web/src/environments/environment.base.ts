@@ -17,6 +17,12 @@ interface TikTokConfig {
   clientId?: string;
 }
 
+interface GoogleOneTapConfig {
+  clientId?: string;
+  autoSelect?: boolean;
+  cancelOnTapOutside?: boolean;
+}
+
 /**
  * Log levels for configurable logging
  * - 'debug': All logs (debug, info, warn, error, critical)
@@ -63,6 +69,7 @@ interface EnvDefaults {
   googleCalendarClientId?: string;
   googleGeolocationApiKey?: string;
   tiktok?: TikTokConfig;
+  googleOneTap?: GoogleOneTapConfig;
   // GCP Video Damage Detection
   videoIngestionUrl?: string;
   gcpProjectId?: string;
@@ -177,6 +184,11 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   ),
   tiktok: {
     clientId: resolve('NG_APP_TIKTOK_CLIENT_ID', defaults.tiktok?.clientId),
+  },
+  googleOneTap: {
+    clientId: resolve('NG_APP_GOOGLE_ONE_TAP_CLIENT_ID', defaults.googleOneTap?.clientId),
+    autoSelect: defaults.googleOneTap?.autoSelect ?? true,
+    cancelOnTapOutside: defaults.googleOneTap?.cancelOnTapOutside ?? true,
   },
   // GCP Video Damage Detection
   videoIngestionUrl: resolve('NG_APP_VIDEO_INGESTION_URL', defaults.videoIngestionUrl ?? ''),
