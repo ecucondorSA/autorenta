@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FacebookLogin, FacebookLoginResponse } from '@capacitor-community/facebook-login';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
@@ -9,19 +10,61 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
 export class FacebookAuthService {
   private readonly supabase = injectSupabase();
   private readonly logger = inject(LoggerService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private initialized = false;
 
   constructor() {
-    this.initialize();
+    // Don't initialize in constructor - wait for explicit call or first login
+  }
+
+  /**
+   * Wait for Facebook SDK to be loaded (web only)
+   */
+  private waitForFacebookSDK(timeout = 10000): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // If not in browser, resolve immediately
+      if (!isPlatformBrowser(this.platformId)) {
+        resolve();
+        return;
+      }
+
+      // If FB is already defined, resolve immediately
+      if (typeof (window as unknown as { FB?: unknown }).FB !== 'undefined') {
+        resolve();
+        return;
+      }
+
+      // Wait for fbAsyncInit
+      const startTime = Date.now();
+      const checkInterval = setInterval(() => {
+        if (typeof (window as unknown as { FB?: unknown }).FB !== 'undefined') {
+          clearInterval(checkInterval);
+          resolve();
+        } else if (Date.now() - startTime > timeout) {
+          clearInterval(checkInterval);
+          reject(new Error('Facebook SDK failed to load within timeout'));
+        }
+      }, 100);
+    });
   }
 
   /**
    * Initialize Facebook Login (required for Web)
    */
   async initialize(): Promise<void> {
+    if (this.initialized) return;
+
     try {
+      // Wait for FB SDK to be ready on web
+      if (isPlatformBrowser(this.platformId)) {
+        await this.waitForFacebookSDK();
+      }
+
       await FacebookLogin.initialize({ appId: '4435998730015502' });
+      this.initialized = true;
+      this.logger.debug('Facebook Login initialized successfully', 'FacebookAuthService');
     } catch (error) {
-      this.logger.error('Failed to initialize Facebook Login', 'FacebookAuthService', error);
+      this.logger.warn('Failed to initialize Facebook Login - feature disabled', 'FacebookAuthService', error);
     }
   }
 
@@ -33,6 +76,11 @@ export class FacebookAuthService {
    */
    async login(): Promise<void> {
      try {
+       // Ensure initialized before login
+       if (!this.initialized) {
+         await this.initialize();
+       }
+
        this.logger.debug('Starting Facebook Login...', 'FacebookAuthService');
 
        // Facebook valid permissions: https://developers.facebook.com/docs/facebook-login/permissions
