@@ -1,3 +1,9 @@
+## [3.24.2](https://github.com/ecucondorSA/autorenta/compare/v3.24.1...v3.24.2) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **guardrails:** update remaining NotificationPreferences references ([a64e089](https://github.com/ecucondorSA/autorenta/commit/a64e0899693bbb7e159a697f897379e6fd2419d1))
+
 ## [3.24.1](https://github.com/ecucondorSA/autorenta/compare/v3.24.0...v3.24.1) (2026-01-21)
 
 ### 🐛 Bug Fixes
