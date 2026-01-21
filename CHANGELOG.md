@@ -1,3 +1,9 @@
+## [3.26.3](https://github.com/ecucondorSA/autorenta/compare/v3.26.2...v3.26.3) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **passkeys:** use type 'email' instead of 'magiclink' in verifyOtp ([59dd12a](https://github.com/ecucondorSA/autorenta/commit/59dd12af249435bf6181251780eddcd5fa607982))
+
 ## [3.26.2](https://github.com/ecucondorSA/autorenta/compare/v3.26.1...v3.26.2) (2026-01-21)
 
 ### 🐛 Bug Fixes
