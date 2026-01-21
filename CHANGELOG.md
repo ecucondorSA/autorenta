@@ -1,3 +1,9 @@
+## [3.25.0](https://github.com/ecucondorSA/autorenta/compare/v3.24.2...v3.25.0) (2026-01-21)
+
+### ✨ Features
+
+* **assets:** add premium design images for marketplace ([19c248e](https://github.com/ecucondorSA/autorenta/commit/19c248e629ce5f1902952f40c964574b4478ab86))
+
 ## [3.24.2](https://github.com/ecucondorSA/autorenta/compare/v3.24.1...v3.24.2) (2026-01-21)
 
 ### 🐛 Bug Fixes
