@@ -1,3 +1,9 @@
+## [3.22.0](https://github.com/ecucondorSA/autorenta/compare/v3.21.5...v3.22.0) (2026-01-21)
+
+### ✨ Features
+
+* **auth:** add Passkeys/WebAuthn biometric login and Facebook button ([2ef8153](https://github.com/ecucondorSA/autorenta/commit/2ef8153ef6e2b1f6cf82820ebf1271f923d0a96b))
+
 ## [3.21.5](https://github.com/ecucondorSA/autorenta/compare/v3.21.4...v3.21.5) (2026-01-21)
 
 ### 🐛 Bug Fixes
