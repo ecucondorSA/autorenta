@@ -119,7 +119,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   private targetRotationY = 0.3;
   private targetRotationX = 0;
   // Smoothing factor: lower = heavier/slower movement (0.05 = very smooth, 0.2 = responsive)
-  private rotationSmoothing = 0.08;
+  private rotationSmoothing = 0.18;
   // Drag sensitivity: lower = heavier feel (reduced from 0.005)
   private readonly DRAG_SENSITIVITY_X = 0.002;
   private readonly DRAG_SENSITIVITY_Y = 0.0012;
