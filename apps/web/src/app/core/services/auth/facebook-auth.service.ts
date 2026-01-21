@@ -31,13 +31,15 @@ export class FacebookAuthService {
    * 2. Get Access Token
    * 3. Exchange for Supabase Session via Edge Function
    */
-  async login(): Promise<void> {
-    try {
-      this.logger.debug('Starting Facebook Login...', 'FacebookAuthService');
+   async login(): Promise<void> {
+     try {
+       this.logger.debug('Starting Facebook Login...', 'FacebookAuthService');
 
-      const FACEBOOK_PERMISSIONS = ['email', 'public_profile'];
+       // Facebook valid permissions: https://developers.facebook.com/docs/facebook-login/permissions
+       // Removed 'email' - use 'user_email' instead for user profile data
+       const FACEBOOK_PERMISSIONS = ['public_profile'];
 
-      const result = await FacebookLogin.login({ permissions: FACEBOOK_PERMISSIONS }) as FacebookLoginResponse;
+       const result = await FacebookLogin.login({ permissions: FACEBOOK_PERMISSIONS }) as FacebookLoginResponse;
 
       if (!result.accessToken) {
         throw new Error('No access token received from Facebook Login');
