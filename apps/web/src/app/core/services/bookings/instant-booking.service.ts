@@ -113,14 +113,15 @@ export class InstantBookingService {
   async canInstantBook(carId: string): Promise<InstantBookingCheckResult> {
     this._isLoading.set(true);
     try {
-      const userId = this.auth.currentUserId();
-      if (!userId) {
+      const user = await this.auth.getCurrentUser();
+      if (!user) {
         return {
           allowed: false,
           reason: 'not_authenticated',
           message: 'Debes iniciar sesión para reservar',
         };
       }
+      const userId = user.id;
 
       const { data, error } = await this.supabase.rpc('can_instant_book', {
         p_car_id: carId,
@@ -167,14 +168,15 @@ export class InstantBookingService {
   ): Promise<InstantBookingResult> {
     this._isLoading.set(true);
     try {
-      const userId = this.auth.currentUserId();
-      if (!userId) {
+      const user = await this.auth.getCurrentUser();
+      if (!user) {
         return {
           success: false,
           reason: 'not_authenticated',
           message: 'Debes iniciar sesión para reservar',
         };
       }
+      const userId = user.id;
 
       const { data, error } = await this.supabase.rpc('process_instant_booking', {
         p_car_id: carId,
@@ -206,8 +208,9 @@ export class InstantBookingService {
   async calculateRiskScore(): Promise<number> {
     this._isLoading.set(true);
     try {
-      const userId = this.auth.currentUserId();
-      if (!userId) return 0;
+      const user = await this.auth.getCurrentUser();
+      if (!user) return 0;
+      const userId = user.id;
 
       const { data, error } = await this.supabase.rpc('calculate_renter_risk_score', {
         p_user_id: userId,
@@ -230,8 +233,9 @@ export class InstantBookingService {
    * Obtiene el historial de cambios del risk score
    */
   async getRiskScoreHistory(limit = 10): Promise<RiskScoreHistoryEntry[]> {
-    const userId = this.auth.currentUserId();
-    if (!userId) return [];
+    const user = await this.auth.getCurrentUser();
+    if (!user) return [];
+    const userId = user.id;
 
     const { data, error } = await this.supabase
       .from('risk_score_history')
@@ -252,8 +256,9 @@ export class InstantBookingService {
    * Obtiene el perfil de riesgo del usuario actual
    */
   async getRenterRiskProfile(): Promise<RenterRiskProfile | null> {
-    const userId = this.auth.currentUserId();
-    if (!userId) return null;
+    const user = await this.auth.getCurrentUser();
+    if (!user) return null;
+    const userId = user.id;
 
     const { data, error } = await this.supabase
       .from('profiles')
