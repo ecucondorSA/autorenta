@@ -128,8 +128,8 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   private lastMouseX = 0;
   private lastMouseY = 0;
 
-  // Performance: FPS Throttling (30fps saves 50% CPU vs 60fps)
-  private readonly targetFPS = 30;
+  // Performance: FPS Throttling (60fps for smooth mobile experience)
+  private readonly targetFPS = 60;
   private lastFrameTime = 0;
 
   // Performance: Visibility Detection (pause when not in viewport)
