@@ -6,10 +6,8 @@
     @defer (on viewport) {
       <app-hdri-background
         #hdriViewer
-        [srcLowDay]="'/assets/hdri/suburban_parking_area_1k.webp'"
-        [srcHighDay]="'/assets/hdri/suburban_parking_area_8k.webp'"
+        src="/assets/hdri/suburban_parking_area_8k.webp"
         [autoRotate]="true"
-        [rotateSpeed]="0.0012"
         [enableInteraction]="true"
         [initialRotationY]="4.5"
         (hdriLoaded)="onHdriLoaded()"
@@ -29,7 +27,7 @@
   <!-- Floating Header -->
   <header
     [class.glass-header]="isScrolled()"
-    class="absolute top-0 left-0 right-0 z-50 px-6 py-4 pointer-events-none transition-all duration-300"
+    class="absolute header-safe left-0 right-0 z-50 px-6 pb-4 pointer-events-none transition-all duration-300"
   >
     <div class="max-w-7xl mx-auto flex items-center justify-between pointer-events-auto">
       <!-- Left: Logo Autorentar -->
@@ -84,7 +82,7 @@
   </header>
 
   <!-- Minimal Content Overlay - Bottom Left -->
-  <div class="absolute bottom-0 left-0 right-0 z-40 p-6 sm:p-10 lg:p-16 pointer-events-none">
+  <div class="absolute bottom-0 left-0 right-0 z-40 p-6 pb-[100px] sm:p-10 sm:pb-10 lg:p-16 pointer-events-none">
     <div class="max-w-md pointer-events-auto">
       <!-- Headline -->
       <h1
@@ -1150,7 +1148,7 @@
         <ul class="space-y-5 mb-10">
           <li class="scroll-reveal flex items-start gap-4">
             <div
-              class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm"
+              class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm mt-1"
             >
               <svg
                 class="w-5 h-5 text-emerald-600"
@@ -1167,15 +1165,15 @@
               </svg>
             </div>
             <div>
-              <span class="text-text-primary font-medium font-luxury">Acreditación en 24hs</span>
-              <p class="text-text-secondary text-sm">
+              <span class="text-text-primary font-medium font-luxury block mb-0.5">Acreditación en 24hs</span>
+              <p class="text-text-secondary text-sm leading-relaxed">
                 Recibís tu saldo al día siguiente, sin excusas ni demoras
               </p>
             </div>
           </li>
           <li class="scroll-reveal flex items-start gap-4">
             <div
-              class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm"
+              class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm mt-1"
             >
               <svg
                 class="w-5 h-5 text-emerald-600"
@@ -1192,8 +1190,8 @@
               </svg>
             </div>
             <div>
-              <span class="text-text-primary font-medium font-luxury">Tu auto protegido</span>
-              <p class="text-text-secondary text-sm">
+              <span class="text-text-primary font-medium font-luxury block mb-0.5">Tu auto protegido</span>
+              <p class="text-text-secondary text-sm leading-relaxed">
                 Conectamos propietarios con aseguradoras verificadas. Tu auto debe tener seguro
                 propio.
               </p>
@@ -1201,7 +1199,7 @@
           </li>
           <li class="scroll-reveal flex items-start gap-4">
             <div
-              class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm"
+              class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm mt-1"
             >
               <svg
                 class="w-5 h-5 text-emerald-600"
@@ -1218,8 +1216,8 @@
               </svg>
             </div>
             <div>
-              <span class="text-text-primary font-medium">Vos controlás</span>
-              <p class="text-text-secondary text-sm">
+              <span class="text-text-primary font-medium block mb-0.5">Vos controlás</span>
+              <p class="text-text-secondary text-sm leading-relaxed">
                 Bloqueá días, definí el aporte diario, aceptá quien quieras
               </p>
             </div>
@@ -1230,7 +1228,7 @@
           (click)="onPublishClick()"
           class="btn-shimmer btn-primary-glow px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-2 shadow-xl"
         >
-          Compartir mi auto (registro sin cargo)
+          Publicar auto gratis
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
