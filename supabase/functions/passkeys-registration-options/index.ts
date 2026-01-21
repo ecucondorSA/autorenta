@@ -71,12 +71,16 @@ serve(async (req) => {
 
     const excludeCredentialIds = existingPasskeys?.map((p) => p.credential_id) || [];
 
+    // Obtener origin para determinar rpId correcto
+    const origin = req.headers.get('Origin');
+
     // Generar opciones de registro
     const options: PublicKeyCredentialCreationOptionsJSON = generateRegistrationOptions({
       userId: user.id,
       userName,
       userDisplayName,
       excludeCredentialIds,
+      origin,
     });
 
     // Guardar challenge para verificación posterior

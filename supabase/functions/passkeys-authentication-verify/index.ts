@@ -162,13 +162,33 @@ serve(async (req) => {
       .delete()
       .eq('id', challengeRecord.id);
 
-    // Crear sesión para el usuario
-    const { data: sessionData, error: sessionError } = await supabaseAdmin.auth.admin.createSession(
-      passkey.user_id
-    );
+    // Obtener email del usuario para generar sesión
+    const { data: userData, error: userDataError } = await supabaseAdmin.auth.admin.getUserById(passkey.user_id);
 
-    if (sessionError) {
-      console.error('Error creating session:', sessionError);
+    if (userDataError || !userData.user?.email) {
+      console.error('Error getting user:', userDataError);
+      throw new Error('Failed to get user data');
+    }
+
+    // Generar magic link para crear sesión (sin enviarlo por email)
+    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+      type: 'magiclink',
+      email: userData.user.email,
+    });
+
+    if (linkError || !linkData.properties?.hashed_token) {
+      console.error('Error generating link:', linkError);
+      throw new Error('Failed to generate session link');
+    }
+
+    // Verificar el token para obtener la sesión
+    const { data: sessionData, error: sessionError } = await supabaseAdmin.auth.verifyOtp({
+      token_hash: linkData.properties.hashed_token,
+      type: 'magiclink',
+    });
+
+    if (sessionError || !sessionData.session) {
+      console.error('Error verifying OTP:', sessionError);
       throw new Error('Failed to create session');
     }
 

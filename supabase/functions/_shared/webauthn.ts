@@ -103,9 +103,16 @@ export const RP_NAME = 'Autorentar';
 const ALLOWED_ORIGINS = [
   'https://autorentar.com',
   'https://www.autorentar.com',
+  'https://autorenta.com',
+  'https://www.autorenta.com',
+  'https://autorenta-web.pages.dev',
+  'https://autorentar.pages.dev',
   'http://localhost:4200',
   'http://127.0.0.1:4200',
 ];
+
+// Cloudflare Pages genera subdominios únicos para cada deployment
+const CLOUDFLARE_PAGES_PATTERN = /^https:\/\/[a-z0-9]+\.autorentar\.pages\.dev$/;
 
 /**
  * Determina el RP_ID basado en el origin de la solicitud
@@ -282,8 +289,10 @@ export function verifyClientData(
     return { verified: false, error: 'Challenge mismatch' };
   }
 
-  // Verificar origin
-  if (!ALLOWED_ORIGINS.includes(clientData.origin)) {
+  // Verificar origin (incluye Cloudflare Pages subdomains)
+  const isAllowedOrigin = ALLOWED_ORIGINS.includes(clientData.origin) ||
+    CLOUDFLARE_PAGES_PATTERN.test(clientData.origin);
+  if (!isAllowedOrigin) {
     return { verified: false, error: `Invalid origin: ${clientData.origin}` };
   }
 
