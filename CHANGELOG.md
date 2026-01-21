@@ -1,3 +1,9 @@
+## [3.20.2](https://github.com/ecucondorSA/autorenta/compare/v3.20.1...v3.20.2) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **push:** resolve TypeScript union type incompatibility in notification observables ([ce26ca6](https://github.com/ecucondorSA/autorenta/commit/ce26ca63d0d3b4a187022583bb0641f7954fb9ac))
+
 ## [3.20.1](https://github.com/ecucondorSA/autorenta/compare/v3.20.0...v3.20.1) (2026-01-21)
 
 ### ♻️ Refactoring
