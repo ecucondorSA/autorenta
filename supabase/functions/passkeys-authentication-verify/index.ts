@@ -184,7 +184,7 @@ serve(async (req) => {
     // Verificar el token para obtener la sesión
     const { data: sessionData, error: sessionError } = await supabaseAdmin.auth.verifyOtp({
       token_hash: linkData.properties.hashed_token,
-      type: 'magiclink',
+      type: 'email',
     });
 
     if (sessionError || !sessionData.session) {
