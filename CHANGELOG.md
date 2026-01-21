@@ -1,3 +1,9 @@
+## [3.19.5](https://github.com/ecucondorSA/autorenta/compare/v3.19.4...v3.19.5) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **hdri:** use LQIP pattern in marketplace (1K→8K) like login page ([7eb5a3f](https://github.com/ecucondorSA/autorenta/commit/7eb5a3fecd354a1fbc11fbb8f62f12afcd7515af))
+
 ## [3.19.4](https://github.com/ecucondorSA/autorenta/compare/v3.19.3...v3.19.4) (2026-01-21)
 
 ### ⚡ Performance
