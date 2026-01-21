@@ -1,3 +1,9 @@
+## [3.21.2](https://github.com/ecucondorSA/autorenta/compare/v3.21.1...v3.21.2) (2026-01-21)
+
+### ⚡ Performance
+
+* **hdri:** reduce rotation speed by 50% ([6437992](https://github.com/ecucondorSA/autorenta/commit/6437992d35ff2bec6f805e82b200ed2d63cc2b99))
+
 ## [3.21.1](https://github.com/ecucondorSA/autorenta/compare/v3.21.0...v3.21.1) (2026-01-21)
 
 ### 🐛 Bug Fixes
