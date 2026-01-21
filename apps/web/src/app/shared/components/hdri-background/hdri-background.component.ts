@@ -92,10 +92,10 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     this.srcHighDay = value;
   }
 
-  @Input() autoRotate = true;
-  @Input() rotateSpeed = 0.0002; // Slow cinematic rotation (slower than frame rate)
-  @Input() enableInteraction = true;
-  @Input() initialRotationY = 1.24; // Start showing the city in night mode
+   @Input() autoRotate = true;
+   @Input() rotateSpeed = 0.00008; // Very slow cinematic rotation (50% slower than default)
+   @Input() enableInteraction = true;
+   @Input() initialRotationY = 1.24; // Start showing the city in night mode
 
   @Output() hdriLoaded = new EventEmitter<void>();
 
