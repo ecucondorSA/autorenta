@@ -98,8 +98,6 @@ export interface PasskeyRecord {
 // ============================================
 
 export const RP_NAME = 'Autorentar';
-export const RP_ID = Deno.env.get('WEBAUTHN_RP_ID') || 'autorentar.com';
-export const ORIGIN = Deno.env.get('WEBAUTHN_ORIGIN') || 'https://autorentar.com';
 
 // En desarrollo, permitir localhost
 const ALLOWED_ORIGINS = [
@@ -108,6 +106,21 @@ const ALLOWED_ORIGINS = [
   'http://localhost:4200',
   'http://127.0.0.1:4200',
 ];
+
+/**
+ * Determina el RP_ID basado en el origin de la solicitud
+ * - localhost -> 'localhost'
+ * - producción -> 'autorentar.com'
+ */
+export function getRpId(origin?: string | null): string {
+  if (origin && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
+    return 'localhost';
+  }
+  return Deno.env.get('WEBAUTHN_RP_ID') || 'autorentar.com';
+}
+
+// Default para compatibilidad
+export const RP_ID = Deno.env.get('WEBAUTHN_RP_ID') || 'autorentar.com';
 
 // ============================================
 // BASE64URL UTILITIES
@@ -158,20 +171,22 @@ export interface GenerateRegistrationOptionsParams {
   userName: string;
   userDisplayName: string;
   excludeCredentialIds?: string[];
+  origin?: string | null;
 }
 
 export function generateRegistrationOptions(
   params: GenerateRegistrationOptionsParams
 ): PublicKeyCredentialCreationOptionsJSON {
-  const { userId, userName, userDisplayName, excludeCredentialIds = [] } = params;
+  const { userId, userName, userDisplayName, excludeCredentialIds = [], origin } = params;
 
   const challenge = generateChallenge();
+  const rpId = getRpId(origin);
 
   const options: PublicKeyCredentialCreationOptionsJSON = {
     challenge,
     rp: {
       name: RP_NAME,
-      id: RP_ID,
+      id: rpId,
     },
     user: {
       id: base64UrlEncode(new TextEncoder().encode(userId)),
