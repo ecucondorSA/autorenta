@@ -1,3 +1,9 @@
+## [3.21.4](https://github.com/ecucondorSA/autorenta/compare/v3.21.3...v3.21.4) (2026-01-21)
+
+### ⚡ Performance
+
+* **login:** reduce HDRI rotation speed by 50% ([9196151](https://github.com/ecucondorSA/autorenta/commit/9196151e01f308599fbdd14051478f274e32248c))
+
 ## [3.21.3](https://github.com/ecucondorSA/autorenta/compare/v3.21.2...v3.21.3) (2026-01-21)
 
 ### 🐛 Bug Fixes
