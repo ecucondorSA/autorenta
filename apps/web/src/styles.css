@@ -398,30 +398,30 @@ ion-toast.toast-modern {
     /* ─── Bordes ─── */
     --border-default: #e3e3e3; /* Gray G10 */
     --border-muted: #f3f4f6; /* Gray 50 */
-    --border-focus: #39ff14; /* Neón Focus (v2.1) */
+    --border-focus: #00D95F; /* Verde Neón Unificado */
     --border-hover: #1a1a1a; /* Dark hover */
     --border-error: #ff2a2a; /* Digital Red */
-    --border-success: #39ff14; /* Neón Green */
+    --border-success: #00D95F; /* Verde Neón Unificado */
 
-    /* ─── CTAs y Acciones (Secure Energy v2.1) ─── */
-    --cta-default: #39ff14; /* Verde Neón - Primary Action */
-    --cta-hover: #2ecc11; /* Shade */
-    --cta-pressed: #25a50e; /* Pressed */
+    /* ─── CTAs y Acciones - Verde Neón Unificado ─── */
+    --cta-default: #00D95F; /* Verde Neón - Primary Action */
+    --cta-hover: #00C553; /* Hover state */
+    --cta-pressed: #00B048; /* Pressed state */
     --cta-text: #000000; /* Negro para máximo contraste */
 
-    /* ─── CTA Secondary (Amarillo Voltage) ─── */
-    --cta-secondary: #faff00; /* Amarillo Vivo - Voltage */
-    --cta-secondary-hover: #d4d900; /* Shade */
-    --cta-secondary-text: #000000; /* Negro */
+    /* ─── CTA Secondary (Outline/Ghost) ─── */
+    --cta-secondary: transparent;
+    --cta-secondary-hover: rgba(0, 217, 95, 0.1);
+    --cta-secondary-text: #000000;
 
     /* ─── CTA Info / Safety (Azul) ─── */
     --cta-info: #0066ff; /* Safety Blue */
     --cta-info-text: #ffffff; /* Blanco */
 
-    /* ─── CTA Neon (Alias) ─── */
-    --cta-neon: #39ff14; /* Verde Neón */
-    --cta-neon-hover: #2ecc11;
-    --cta-neon-pressed: #25a50e;
+    /* ─── CTA Neon (Alias para compatibilidad) ─── */
+    --cta-neon: #00D95F; /* Verde Neón */
+    --cta-neon-hover: #00C553;
+    --cta-neon-pressed: #00B048;
     --cta-neon-text: #000000;
 
     /* ─── Estados y Feedback ─── */
@@ -441,7 +441,7 @@ ion-toast.toast-modern {
     --success-200: #bbf7d0;
     --success-300: #86efac;
     --success-400: #4ade80;
-    --success-500: #39ff14; /* Neón Green */
+    --success-500: #00D95F; /* Verde Neón Unificado */
     --success-600: #16a34a;
     --success-700: #15803d;
     --success-800: #166534;
@@ -452,7 +452,7 @@ ion-toast.toast-modern {
     --warning-200: #fef08a;
     --warning-300: #fde047;
     --warning-400: #facc15;
-    --warning-500: #faff00; /* Voltage Yellow */
+    --warning-500: #F59E0B; /* Amber Warning */
     --warning-600: #ca8a04;
     --warning-700: #a16207;
     --warning-800: #854d0e;
@@ -512,15 +512,15 @@ ion-toast.toast-modern {
     --overlay-light: rgba(255, 255, 255, 0.9); /* Standard light overlay */
     --surface-overlay: rgba(0, 0, 0, 0.6);
 
-    /* ─── Elevation System (Sombras) ─── */
-    --elevation-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-    --elevation-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-    --elevation-3: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-    --elevation-4: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    --elevation-5: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    /* ─── Elevation System (4 niveles simplificados) ─── */
+    --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --elevation-2: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --elevation-3: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --elevation-4: 0 16px 32px rgba(0, 0, 0, 0.14);
+    --elevation-5: var(--elevation-4); /* Alias para compatibilidad */
 
     /* ─── Focus Rings (Accesibilidad) ─── */
-    --ring-focus: 0 0 0 3px rgba(57, 255, 20, 0.3); /* Neon Focus */
+    --ring-focus: 0 0 0 3px rgba(0, 217, 95, 0.3); /* Verde Neón Focus */
     --ring-error: 0 0 0 3px rgba(255, 42, 42, 0.3); /* Error Red Focus */
 
     /* ─── Typography Tokens ─── */
@@ -1181,53 +1181,55 @@ ion-toast.toast-modern {
   }
 
   /* ─────────────────────────────────────────────────────────────
-     Botones - Sistema Tech Brutalism (Masterplan v2.1)
+     Sistema de Botones - 3 Variantes Profesionales
      ───────────────────────────────────────────────────────────── */
 
   .btn-base {
-    @apply px-6 py-3 rounded-tech font-bold text-sm tracking-wide;
-    @apply transition-all uppercase;
-    @apply focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2;
+    @apply px-6 py-3 rounded-xl font-semibold text-sm;
+    @apply transition-all;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
     transition-duration: var(--duration-fast);
+    min-height: 44px; /* WCAG touch target */
   }
 
+  /* Primary: Verde neón, texto negro - Para CTAs principales */
   .btn-primary {
-    @apply btn-base bg-text-primary text-text-inverse;
-    @apply border-2 border-transparent;
-    @apply hover:bg-text-secondary hover:-translate-y-1 hover:shadow-hard;
-    @apply active:translate-y-0 active:shadow-none;
-    @apply focus-visible:ring-text-primary;
-  }
-
-  .btn-secondary {
-    @apply btn-base bg-surface-base text-text-primary;
-    @apply border-2 border-text-primary;
-    @apply hover:bg-surface-secondary hover:-translate-y-1 hover:shadow-hard;
-    @apply active:translate-y-0 active:shadow-none;
-    @apply focus-visible:ring-text-secondary;
-  }
-
-  .btn-accent {
     @apply btn-base;
-    @apply border-2 border-black;
-    @apply hover:-translate-y-1 hover:shadow-hard;
-    @apply active:translate-y-0 active:shadow-none;
-    background-color: var(--cta-default); /* Neón */
+    background-color: var(--cta-default);
     color: var(--cta-text);
+    @apply hover:shadow-elevation-2;
+    @apply active:scale-[0.98];
+    --tw-ring-color: var(--cta-default);
   }
 
-  .btn-accent:hover {
+  .btn-primary:hover {
     background-color: var(--cta-hover);
-    box-shadow:
-      4px 4px 0px 0px #000000,
-      0 0 20px rgba(57, 255, 20, 0.4); /* Hard + Glow */
   }
 
+  .btn-primary:active {
+    background-color: var(--cta-pressed);
+  }
+
+  /* Secondary: Outline negro - Para acciones secundarias */
+  .btn-secondary {
+    @apply btn-base bg-white text-text-primary;
+    @apply border border-border-default;
+    @apply hover:bg-surface-secondary hover:border-text-primary;
+    @apply active:scale-[0.98];
+    --tw-ring-color: var(--text-primary);
+  }
+
+  /* Ghost: Sin borde, sutil - Para links y cancelar */
   .btn-ghost {
     @apply btn-base bg-transparent text-text-secondary;
-    @apply rounded-xl normal-case font-medium; /* "Soft Human" para ghost buttons */
-    @apply hover:bg-surface-secondary active:scale-95;
-    @apply focus-visible:ring-text-secondary;
+    @apply hover:bg-surface-secondary hover:text-text-primary;
+    @apply active:scale-[0.98];
+    --tw-ring-color: var(--text-secondary);
+  }
+
+  /* Accent: Alias de primary para compatibilidad */
+  .btn-accent {
+    @apply btn-primary;
   }
 
   /* Icon buttons - WCAG 2.5.5 compliant (44x44px minimum) */
@@ -1591,18 +1593,18 @@ ion-toast.toast-modern {
   }
 
   .nav-link-highlight {
-    /* Radioactive Identity - High Contrast */
-    background-color: #39ff14 !important; /* Neón */
+    /* Verde Neón Unificado */
+    background-color: #00D95F !important;
     color: #000000 !important;
-    box-shadow: 0 8px 25px rgba(57, 255, 20, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 217, 95, 0.3);
     border: none;
     font-weight: 800;
     letter-spacing: -0.01em;
   }
 
   .nav-link-highlight:hover {
-    background-color: #2ecc11 !important;
-    box-shadow: 0 12px 30px rgba(57, 255, 20, 0.4);
+    background-color: #00C553 !important;
+    box-shadow: 0 12px 30px rgba(0, 217, 95, 0.4);
     color: #000000 !important;
     transform: translateY(-1px);
   }

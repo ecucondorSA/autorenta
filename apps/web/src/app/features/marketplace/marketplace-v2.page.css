@@ -680,18 +680,7 @@
   pointer-events: none;
 }
 
-/* Subtle asymmetry - makes cards feel less "templated" */
-.car-card-premium:nth-child(3n + 2) {
-  border-radius: 1.5rem 1rem 1.5rem 1rem;
-}
-
-.car-card-premium:nth-child(4n + 1) {
-  transform: rotate(-0.3deg);
-}
-
-.car-card-premium:nth-child(4n + 3) {
-  transform: rotate(0.3deg);
-}
+/* Cards con border-radius uniforme - diseño profesional */
 
 .car-card-premium:hover {
   background: var(--surface-hover);

@@ -371,10 +371,10 @@ module.exports = {
          Sombras - Elevation System + Legacy
          ───────────────────────────────────────────────────────────── */
       boxShadow: {
-        // Masterplan v2.1 - Tech Brutalism & Neon
+        // Sistema de Shadows - Profesional
         'hard': '4px 4px 0px 0px #000000',     // Sombra sólida de alto contraste
         'hard-sm': '2px 2px 0px 0px #000000',  // Para elementos pequeños
-        'neon-glow': '0 0 15px rgba(0, 217, 95, 0.6)', // Resplandor verde neón (#00D95F)
+        'neon-glow': '0 0 15px rgba(0, 217, 95, 0.5)', // Resplandor verde neón (#00D95F)
 
         // Elevation System (Design Proposals v2)
         'elevation-1': 'var(--elevation-1)',
