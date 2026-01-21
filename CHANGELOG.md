@@ -1,3 +1,9 @@
+## [3.21.1](https://github.com/ecucondorSA/autorenta/compare/v3.21.0...v3.21.1) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **splash:** remove fixed delay and hide on app initialization ([a3d5f5d](https://github.com/ecucondorSA/autorenta/commit/a3d5f5d4a662a51d6465ab71c85765fee19896ae))
+
 ## [3.21.0](https://github.com/ecucondorSA/autorenta/compare/v3.20.2...v3.21.0) (2026-01-21)
 
 ### ✨ Features
