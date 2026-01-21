@@ -6,8 +6,10 @@
     @defer (on viewport) {
       <app-hdri-background
         #hdriViewer
-        src="/assets/hdri/suburban_parking_area_8k.webp"
+        [srcLowDay]="'/assets/hdri/suburban_parking_area_1k.webp'"
+        [srcHighDay]="'/assets/hdri/suburban_parking_area_8k.webp'"
         [autoRotate]="true"
+        [rotateSpeed]="0.0012"
         [enableInteraction]="true"
         [initialRotationY]="4.5"
         (hdriLoaded)="onHdriLoaded()"
