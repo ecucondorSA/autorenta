@@ -12,7 +12,7 @@ import {
 import type {
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON,
-} from '@simplewebauthn/browser';
+} from '@simplewebauthn/types';
 
 export type PasskeyState = 'idle' | 'checking' | 'registering' | 'authenticating' | 'success' | 'error';
 

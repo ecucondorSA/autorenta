@@ -136,6 +136,7 @@
     "@cloudflare/workers-types": "^4.20251205.0",
     "@compodoc/compodoc": "^1.1.32",
     "@sentry/cli": "^2.58.2",
+    "@simplewebauthn/types": "^12.0.0",
     "@testing-library/angular": "^18.1.1",
     "@testing-library/jest-dom": "^6.7.0",
     "@testing-library/user-event": "^14.6.1",
