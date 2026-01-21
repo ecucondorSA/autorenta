@@ -268,8 +268,6 @@ export class GoogleOneTapService {
    * Maneja las notificaciones del prompt (display, skipped, dismissed)
    */
   private handlePromptMoment(notification: GooglePromptMomentNotification): void {
-    const momentType = notification.getMomentType();
-
     if (notification.isDisplayMoment()) {
       if (notification.isDisplayed()) {
         this.logger.debug('One-Tap: Prompt displayed', 'GoogleOneTap');

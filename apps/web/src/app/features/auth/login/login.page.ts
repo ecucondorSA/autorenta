@@ -3,7 +3,9 @@ import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, OnInit, 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
+import { FacebookAuthService } from '@core/services/auth/facebook-auth.service';
 import { GoogleOneTapService } from '@core/services/auth/google-one-tap.service';
+import { PasskeysService } from '@core/services/auth/passkeys.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { HdriBackgroundComponent } from '../../../shared/components/hdri-background/hdri-background.component';
@@ -38,6 +40,8 @@ export class LoginPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly analytics = inject(AnalyticsService);
   private readonly googleOneTap = inject(GoogleOneTapService);
+  private readonly facebookAuth = inject(FacebookAuthService);
+  private readonly passkeys = inject(PasskeysService);
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -45,6 +49,8 @@ export class LoginPage implements OnInit, OnDestroy {
   readonly isAuthenticated = this.auth.isAuthenticated;
   readonly oneTapState = this.googleOneTap.state;
   readonly oneTapAvailable = this.googleOneTap.isAvailable;
+  readonly passkeysSupported = this.passkeys.isSupported;
+  readonly passkeysState = this.passkeys.state;
 
   constructor() {
     // Escuchar cuando One-Tap tenga éxito para trackear analytics
@@ -201,6 +207,86 @@ export class LoginPage implements OnInit, OnDestroy {
     } finally {
       // Timeout para permitir redirección antes de resetear loading
       setTimeout(() => this.loading.set(false), 3000);
+    }
+  }
+
+  async signInWithFacebook(): Promise<void> {
+    if (this.loading()) return;
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.analytics.trackEvent('login', {
+      method: 'facebook',
+      source: 'login_page',
+      step: 'initiated',
+    });
+
+    try {
+      await this.facebookAuth.login();
+
+      this.analytics.trackEvent('login', {
+        method: 'facebook',
+        source: 'login_page',
+        step: 'completed',
+      });
+
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/cars/list';
+      await this.router.navigateByUrl(returnUrl);
+    } catch (err) {
+      this.analytics.trackEvent('login', {
+        method: 'facebook',
+        source: 'login_page',
+        error_message: err instanceof Error ? err.message : 'unknown',
+      });
+
+      this.error.set(
+        err instanceof Error ? err.message : 'No pudimos conectar con Facebook. Intentá nuevamente.',
+      );
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async signInWithPasskey(): Promise<void> {
+    if (this.loading()) return;
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.analytics.trackEvent('login', {
+      method: 'passkey',
+      source: 'login_page',
+      step: 'initiated',
+    });
+
+    try {
+      const success = await this.passkeys.authenticate();
+
+      if (success) {
+        this.analytics.trackEvent('login', {
+          method: 'passkey',
+          source: 'login_page',
+          step: 'completed',
+        });
+
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/cars/list';
+        await this.router.navigateByUrl(returnUrl);
+      } else {
+        this.error.set(this.passkeys.error() || 'No pudimos autenticar con passkey');
+      }
+    } catch (err) {
+      this.analytics.trackEvent('login', {
+        method: 'passkey',
+        source: 'login_page',
+        error_message: err instanceof Error ? err.message : 'unknown',
+      });
+
+      this.error.set(
+        err instanceof Error ? err.message : 'Error al autenticar con passkey',
+      );
+    } finally {
+      this.loading.set(false);
     }
   }
 }

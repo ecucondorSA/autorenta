@@ -262,7 +262,7 @@ export class SplashScreenComponent implements OnInit {
    ngOnInit(): void {
      // Splash will remain visible until explicitly hidden by the app
      // The parent component must call hideSplash() when ready
-     // No automatic hiding
+     void 0; // Intentionally empty - no automatic hiding
    }
 
   /**
