@@ -1,3 +1,9 @@
+## [3.26.2](https://github.com/ecucondorSA/autorenta/compare/v3.26.1...v3.26.2) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **passkeys:** fix session creation using generateLink+verifyOtp pattern ([1144b40](https://github.com/ecucondorSA/autorenta/commit/1144b408af7a4bae1b1bf082d5f26e9fe94ffef7))
+
 ## [3.26.1](https://github.com/ecucondorSA/autorenta/compare/v3.26.0...v3.26.1) (2026-01-21)
 
 ### 🐛 Bug Fixes
