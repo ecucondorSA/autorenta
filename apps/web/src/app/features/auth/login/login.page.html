@@ -13,7 +13,7 @@
       [srcLowNight]="'/assets/hdri/laufenurg_church_1k.webp'"
       [srcHighNight]="'/assets/hdri/laufenurg_church_8k.webp'"
       [autoRotate]="true"
-      [rotateSpeed]="0.0012"
+      [rotateSpeed]="0.0006"
       [enableInteraction]="true"
       class="w-full h-full"
     >
@@ -127,13 +127,13 @@
 
         <div class="px-6 pb-6">
           <!-- Social Login Buttons -->
-          <div class="grid grid-cols-2 gap-3 mb-4">
+          <div class="grid grid-cols-3 gap-2 mb-4">
             <button
               type="button"
               (click)="signInWithGoogle()"
               [disabled]="loading()"
               data-testid="login-google-button"
-              class="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-border-default bg-surface-base text-text-primary font-medium hover:bg-surface-secondary hover:border-border-default/80 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              class="inline-flex items-center justify-center gap-1.5 py-3 px-2 rounded-2xl border border-border-default bg-surface-base text-text-primary font-medium hover:bg-surface-secondary hover:border-border-default/80 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg class="w-5 h-5" viewBox="0 0 48 48">
                 <path fill="#EA4335" d="M24 9.5c3.13 0 5.2 1.35 6.4 2.48l4.36-4.36C31.97 5.2 28.3 3.5 24 3.5 14.9 3.5 7.2 8.88 4.1 16.7l5.23 4.06C11.08 14.33 17.1 9.5 24 9.5z"/>
@@ -141,19 +141,31 @@
                 <path fill="#FBBC05" d="M9.33 28.76c-.52-1.55-.82-3.2-.82-4.9 0-1.7.3-3.35.82-4.9L4.1 14.9C2.7 17.74 1.9 20.9 1.9 23.86c0 2.96.8 6.12 2.2 8.96l5.23-4.06z"/>
                 <path fill="#34A853" d="M24 44.2c6.3 0 11.6-2.08 15.46-5.65l-5.37-4.17c-2.18 1.46-4.98 2.33-10.1 2.33-6.9 0-12.92-4.83-14.67-11.26L4.1 32.82C7.2 40.64 14.9 44.2 24 44.2z"/>
               </svg>
-              <span class="text-sm">Google</span>
+              <span class="text-xs font-semibold">Google</span>
+            </button>
+            <button
+              type="button"
+              (click)="signInWithFacebook()"
+              [disabled]="loading()"
+              data-testid="login-facebook-button"
+              class="inline-flex items-center justify-center gap-1.5 py-3 px-2 rounded-2xl border border-border-default bg-surface-base text-text-primary font-medium hover:bg-surface-secondary hover:border-border-default/80 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <svg class="w-5 h-5 text-[#1877F2]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+              <span class="text-xs font-semibold">Facebook</span>
             </button>
             <button
               type="button"
               (click)="signInWithTikTok()"
               [disabled]="loading()"
               data-testid="login-tiktok-button"
-              class="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-border-default bg-surface-base text-text-primary font-medium hover:bg-surface-secondary hover:border-border-default/80 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              class="inline-flex items-center justify-center gap-1.5 py-3 px-2 rounded-2xl border border-border-default bg-surface-base text-text-primary font-medium hover:bg-surface-secondary hover:border-border-default/80 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M21 7.5a6.8 6.8 0 01-4.1-1.4V15a6 6 0 11-6-6c.2 0 .4 0 .6.03V12a3 3 0 10 2.4 2.94V2h3.1c.3 2.1 1.9 3.8 4 4v1.5z"/>
               </svg>
-              <span class="text-sm">TikTok</span>
+              <span class="text-xs font-semibold">TikTok</span>
             </button>
           </div>
 
