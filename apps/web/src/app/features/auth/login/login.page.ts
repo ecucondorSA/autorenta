@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
-
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -99,6 +99,14 @@ export class LoginPage implements OnInit, OnDestroy {
   closeForm(): void {
     this.showForm.set(false);
     this.error.set(null);
+  }
+
+  async hapticFeedback(): Promise<void> {
+    await Haptics.impact({ style: ImpactStyle.Light });
+  }
+
+  async hapticImpact(): Promise<void> {
+    await Haptics.impact({ style: ImpactStyle.Medium });
   }
 
   async submit(): Promise<void> {
