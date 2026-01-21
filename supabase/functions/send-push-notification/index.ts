@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { encode as base64Encode } from 'https://deno.land/std@0.168.0/encoding/base64.ts';
 
 // ============================================================================
 // SMART PUSH NOTIFICATION EDGE FUNCTION
@@ -7,32 +8,46 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 //
 // Procesa la cola de notificaciones y envía via Firebase Cloud Messaging
 // Soporta:
+//   - FCM HTTP v1 API (nueva, requiere Service Account)
+//   - FCM Legacy API (fallback, requiere Server Key)
 //   - Procesamiento de cola (cron job)
 //   - Envío directo (webhook de DB trigger)
 //   - Templates con placeholders dinámicos
 // ============================================================================
 
-interface NotificationPayload {
-  to: string;
-  notification: {
-    title: string;
-    body: string;
-    icon?: string;
-    click_action?: string;
-  };
-  data?: Record<string, string>;
-  android?: {
-    priority: 'high' | 'normal';
-    notification?: {
-      sound?: string;
-      channel_id?: string;
+interface ServiceAccount {
+  type: string;
+  project_id: string;
+  private_key_id: string;
+  private_key: string;
+  client_email: string;
+  client_id: string;
+  auth_uri: string;
+  token_uri: string;
+}
+
+interface FCMv1Message {
+  message: {
+    token: string;
+    notification: {
+      title: string;
+      body: string;
     };
-  };
-  apns?: {
-    payload?: {
-      aps?: {
+    data?: Record<string, string>;
+    android?: {
+      priority: 'HIGH' | 'NORMAL';
+      notification?: {
         sound?: string;
-        badge?: number;
+        channel_id?: string;
+        click_action?: string;
+      };
+    };
+    apns?: {
+      payload?: {
+        aps?: {
+          sound?: string;
+          badge?: number;
+        };
       };
     };
   };
@@ -63,95 +78,204 @@ interface ProcessResult {
   error?: string;
 }
 
-// Render template placeholders
-function renderTemplate(template: string, data: Record<string, unknown>): string {
-  return template.replace(/\{\{(\w+)\}\}/g, (_, key) => {
-    const value = data[key];
-    return value !== undefined ? String(value) : `{{${key}}}`;
+// Cache for access token
+let cachedAccessToken: { token: string; expiry: number } | null = null;
+
+/**
+ * Create a JWT for Google OAuth2 authentication
+ */
+async function createJWT(serviceAccount: ServiceAccount): Promise<string> {
+  const header = {
+    alg: 'RS256',
+    typ: 'JWT',
+  };
+
+  const now = Math.floor(Date.now() / 1000);
+  const payload = {
+    iss: serviceAccount.client_email,
+    sub: serviceAccount.client_email,
+    aud: 'https://oauth2.googleapis.com/token',
+    iat: now,
+    exp: now + 3600, // 1 hour
+    scope: 'https://www.googleapis.com/auth/firebase.messaging',
+  };
+
+  // Base64url encode header and payload
+  const encoder = new TextEncoder();
+  const headerB64 = base64UrlEncode(JSON.stringify(header));
+  const payloadB64 = base64UrlEncode(JSON.stringify(payload));
+  const signatureInput = `${headerB64}.${payloadB64}`;
+
+  // Import the private key and sign
+  const privateKey = await importPrivateKey(serviceAccount.private_key);
+  const signature = await crypto.subtle.sign(
+    { name: 'RSASSA-PKCS1-v1_5' },
+    privateKey,
+    encoder.encode(signatureInput)
+  );
+
+  const signatureB64 = base64UrlEncode(new Uint8Array(signature));
+  return `${signatureInput}.${signatureB64}`;
+}
+
+/**
+ * Base64url encode (no padding, URL-safe)
+ */
+function base64UrlEncode(input: string | Uint8Array): string {
+  const bytes = typeof input === 'string' ? new TextEncoder().encode(input) : input;
+  const base64 = base64Encode(bytes);
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+/**
+ * Import RSA private key from PEM format
+ */
+async function importPrivateKey(pem: string): Promise<CryptoKey> {
+  // Remove PEM headers and decode
+  const pemContents = pem
+    .replace(/-----BEGIN PRIVATE KEY-----/g, '')
+    .replace(/-----END PRIVATE KEY-----/g, '')
+    .replace(/\s/g, '');
+
+  const binaryDer = Uint8Array.from(atob(pemContents), c => c.charCodeAt(0));
+
+  return await crypto.subtle.importKey(
+    'pkcs8',
+    binaryDer,
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+}
+
+/**
+ * Get OAuth2 access token using Service Account
+ */
+async function getAccessToken(serviceAccount: ServiceAccount): Promise<string> {
+  // Check cache
+  if (cachedAccessToken && Date.now() < cachedAccessToken.expiry - 60000) {
+    return cachedAccessToken.token;
+  }
+
+  const jwt = await createJWT(serviceAccount);
+
+  const response = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+      assertion: jwt,
+    }),
   });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Failed to get access token: ${error}`);
+  }
+
+  const data = await response.json();
+
+  // Cache the token
+  cachedAccessToken = {
+    token: data.access_token,
+    expiry: Date.now() + (data.expires_in * 1000),
+  };
+
+  return data.access_token;
 }
 
-// Get Firebase priority based on notification priority
-function getFirebasePriority(priority: string): 'high' | 'normal' {
-  return ['critical', 'high'].includes(priority) ? 'high' : 'normal';
+/**
+ * Get Firebase priority based on notification priority
+ */
+function getFirebasePriority(priority: string): 'HIGH' | 'NORMAL' {
+  return ['critical', 'high'].includes(priority) ? 'HIGH' : 'NORMAL';
 }
 
-// Send push notification via FCM Legacy API
-async function sendFCMNotification(
-  fcmServerKey: string,
+/**
+ * Send push notification via FCM HTTP v1 API
+ */
+async function sendFCMv1Notification(
+  accessToken: string,
+  projectId: string,
   token: string,
-  notification: QueuedNotification,
-  platform: string
+  notification: QueuedNotification
 ): Promise<{ success: boolean; error?: string }> {
-  const payload: NotificationPayload = {
-    to: token,
-    notification: {
-      title: notification.title,
-      body: notification.body,
-      icon: '/assets/icons/icon-192x192.png',
-      click_action: notification.cta_link || 'FLUTTER_NOTIFICATION_CLICK',
-    },
-    data: {
-      notification_id: notification.id,
-      template_code: notification.template_code,
-      cta_link: notification.cta_link || '',
-      ...Object.fromEntries(
-        Object.entries(notification.data || {}).map(([k, v]) => [k, String(v)])
-      ),
-    },
-    android: {
-      priority: getFirebasePriority(notification.priority),
+  const message: FCMv1Message = {
+    message: {
+      token: token,
       notification: {
-        sound: 'default',
-        channel_id: notification.priority === 'critical' ? 'urgent' : 'default',
+        title: notification.title,
+        body: notification.body,
       },
-    },
-    apns: {
-      payload: {
-        aps: {
+      data: {
+        notification_id: notification.id,
+        template_code: notification.template_code,
+        cta_link: notification.cta_link || '',
+        route: notification.cta_link || '',
+        ...Object.fromEntries(
+          Object.entries(notification.data || {}).map(([k, v]) => [k, String(v)])
+        ),
+      },
+      android: {
+        priority: getFirebasePriority(notification.priority),
+        notification: {
           sound: 'default',
-          badge: 1,
+          channel_id: notification.priority === 'critical' ? 'urgent' : 'default',
+          click_action: 'FCM_PLUGIN_ACTIVITY',
+        },
+      },
+      apns: {
+        payload: {
+          aps: {
+            sound: 'default',
+            badge: 1,
+          },
         },
       },
     },
   };
 
   try {
-    const response = await fetch('https://fcm.googleapis.com/fcm/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `key=${fcmServerKey}`,
-      },
-      body: JSON.stringify(payload),
-    });
+    const response = await fetch(
+      `https://fcm.googleapis.com/v1/projects/${projectId}/messages:send`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(message),
+      }
+    );
 
     if (!response.ok) {
       const errorBody = await response.text();
-      console.error(`FCM error for token ${token.substring(0, 20)}...: ${response.status}`, errorBody);
+      console.error(`FCM v1 error for token ${token.substring(0, 20)}...: ${response.status}`, errorBody);
+
+      // Check for specific error types
+      if (errorBody.includes('UNREGISTERED') || errorBody.includes('INVALID_ARGUMENT')) {
+        return { success: false, error: 'InvalidRegistration' };
+      }
+
       return { success: false, error: `FCM ${response.status}: ${errorBody}` };
     }
 
     const result = await response.json();
-
-    // Check for token errors (invalid, unregistered)
-    if (result.failure > 0 && result.results?.[0]?.error) {
-      const error = result.results[0].error;
-      console.warn(`FCM token error: ${error}`);
-      return { success: false, error };
-    }
-
+    console.log(`FCM v1 success: ${result.name}`);
     return { success: true };
   } catch (error) {
-    console.error('FCM request failed:', error);
+    console.error('FCM v1 request failed:', error);
     return { success: false, error: error.message };
   }
 }
 
-// Process a single notification from the queue
+/**
+ * Process a single notification from the queue
+ */
 async function processNotification(
   supabase: ReturnType<typeof createClient>,
-  fcmServerKey: string,
+  accessToken: string,
+  projectId: string,
   notification: QueuedNotification
 ): Promise<ProcessResult> {
   const result: ProcessResult = {
@@ -177,8 +301,8 @@ async function processNotification(
   }
 
   // Send to all tokens
-  const sendPromises = notification.tokens.map(async ({ token, platform }) => {
-    const sendResult = await sendFCMNotification(fcmServerKey, token, notification, platform);
+  const sendPromises = notification.tokens.map(async ({ token }) => {
+    const sendResult = await sendFCMv1Notification(accessToken, projectId, token, notification);
 
     if (sendResult.success) {
       result.tokens_sent++;
@@ -186,8 +310,8 @@ async function processNotification(
       result.tokens_failed++;
 
       // Handle invalid tokens - should be cleaned up
-      if (sendResult.error?.includes('NotRegistered') ||
-          sendResult.error?.includes('InvalidRegistration')) {
+      if (sendResult.error?.includes('InvalidRegistration') ||
+          sendResult.error?.includes('UNREGISTERED')) {
         console.log(`Removing invalid token: ${token.substring(0, 20)}...`);
         await supabase
           .from('push_tokens')
@@ -235,11 +359,46 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Get FCM Server Key
-    const fcmServerKey = Deno.env.get('FCM_SERVER_KEY');
-    if (!fcmServerKey) {
-      throw new Error('FCM_SERVER_KEY not configured');
+    // Get Google Service Account (base64 encoded or plain JSON)
+    const b64Value = Deno.env.get('GOOGLE_SERVICE_ACCOUNT_B64');
+    const plainValue = Deno.env.get('GOOGLE_SERVICE_ACCOUNT');
+
+    console.log('[Config] B64 env present:', !!b64Value, 'Plain env present:', !!plainValue);
+
+    let serviceAccountJson: string;
+
+    if (b64Value) {
+      // Decode from base64
+      try {
+        serviceAccountJson = atob(b64Value);
+        console.log('[Config] Decoded from base64, length:', serviceAccountJson.length);
+      } catch (e) {
+        console.error('Failed to decode base64:', e);
+        throw new Error('Invalid GOOGLE_SERVICE_ACCOUNT_B64 encoding');
+      }
+    } else if (plainValue) {
+      serviceAccountJson = plainValue;
+      console.log('[Config] Using plain JSON, length:', serviceAccountJson.length);
+    } else {
+      throw new Error('GOOGLE_SERVICE_ACCOUNT not configured (neither B64 nor plain)');
     }
+
+    let serviceAccount: ServiceAccount;
+    try {
+      serviceAccount = JSON.parse(serviceAccountJson);
+      console.log('[Config] Parsed OK, project_id:', serviceAccount.project_id);
+    } catch (parseError) {
+      console.error('Failed to parse GOOGLE_SERVICE_ACCOUNT:', parseError);
+      console.error('JSON starts with:', serviceAccountJson.substring(0, 100));
+      console.error('Character at position 230-240:', serviceAccountJson.substring(230, 240));
+      console.error('JSON length:', serviceAccountJson.length);
+      throw new Error(`Invalid GOOGLE_SERVICE_ACCOUNT JSON: ${parseError.message}`);
+    }
+    const projectId = serviceAccount.project_id;
+
+    // Get access token
+    const accessToken = await getAccessToken(serviceAccount);
+    console.log(`[FCM v1] Using project: ${projectId}`);
 
     let results: ProcessResult[] = [];
 
@@ -248,6 +407,34 @@ serve(async (req) => {
 
     if (contentType.includes('application/json')) {
       const body = await req.json();
+
+      // Direct send to specific token (for testing)
+      if (body.action === 'send_direct' && body.token) {
+        console.log(`[Direct] Sending to token: ${body.token.substring(0, 20)}...`);
+
+        const notification: QueuedNotification = {
+          id: 'direct-' + Date.now(),
+          user_id: body.user_id || 'test',
+          template_code: 'direct',
+          title: body.title || '🚗 AutoRenta',
+          body: body.body || 'Notificación de prueba',
+          data: body.data || {},
+          channels: ['push'],
+          priority: body.priority || 'high',
+          cta_link: body.route || '/bookings',
+          tokens: [{ token: body.token, platform: 'android' }],
+        };
+
+        const sendResult = await sendFCMv1Notification(accessToken, projectId, body.token, notification);
+
+        return new Response(JSON.stringify({
+          success: sendResult.success,
+          error: sendResult.error,
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: sendResult.success ? 200 : 500,
+        });
+      }
 
       // Direct webhook from database trigger
       if (body.record) {
@@ -275,7 +462,7 @@ serve(async (req) => {
             tokens: tokens.map(t => ({ token: t.token, platform: t.platform })),
           };
 
-          const result = await processNotification(supabaseAdmin, fcmServerKey, queuedNotification);
+          const result = await processNotification(supabaseAdmin, accessToken, projectId, queuedNotification);
           results.push(result);
         } else {
           console.log(`[Webhook] No active tokens for user ${notification.user_id}`);
@@ -301,7 +488,7 @@ serve(async (req) => {
 
         // Process each notification
         for (const notification of pending || []) {
-          const result = await processNotification(supabaseAdmin, fcmServerKey, notification);
+          const result = await processNotification(supabaseAdmin, accessToken, projectId, notification);
           results.push(result);
         }
       }
@@ -325,7 +512,7 @@ serve(async (req) => {
 
       // Process each notification
       for (const notification of pending || []) {
-        const result = await processNotification(supabaseAdmin, fcmServerKey, notification);
+        const result = await processNotification(supabaseAdmin, accessToken, projectId, notification);
         results.push(result);
       }
     }

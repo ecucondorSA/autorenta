@@ -361,6 +361,52 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   SAFE AREA UTILITIES - Para elementos absolute/fixed
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Padding top para safe area (notch/status bar) */
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0);
+}
+
+/* Padding bottom para safe area (gesture bar/home indicator) */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Top position con safe area offset */
+.top-safe {
+  top: env(safe-area-inset-top, 0);
+}
+
+/* Bottom position con safe area offset */
+.bottom-safe {
+  bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Margin top para safe area */
+.mt-safe {
+  margin-top: env(safe-area-inset-top, 0);
+}
+
+/* Margin bottom para safe area */
+.mb-safe {
+  margin-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Header flotante con safe area - combina top-0 + padding */
+.header-safe {
+  top: 0;
+  padding-top: max(1rem, env(safe-area-inset-top, 0));
+}
+
+/* Footer flotante con safe area */
+.footer-safe {
+  bottom: 0;
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0));
+}
+
+/* ═══════════════════════════════════════════════════════════════
    TEXT UTILITIES - Responsive
    ═══════════════════════════════════════════════════════════════ */
 

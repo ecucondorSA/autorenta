@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { SwPush } from '@angular/service-worker';
 import { Capacitor } from '@capacitor/core';
+import { Device } from '@capacitor/device';
 import {
   ActionPerformed,
   PushNotifications,
@@ -131,7 +132,9 @@ export class PushNotificationService {
       // Listen for registration success
       PushNotifications.addListener('registration', async (token: Token) => {
         this.logger.debug('Push registration success, token:', token.value);
-        await this.saveTokenToDatabase(token.value, 'fcm');
+        // Detect platform: iOS uses APNS, Android uses FCM
+        const platform = Capacitor.getPlatform() === 'ios' ? 'apns' : 'fcm';
+        await this.saveTokenToDatabase(token.value, platform);
       });
 
       // Listen for registration errors
@@ -189,41 +192,83 @@ export class PushNotificationService {
   /**
    * Saves the push subscription token to the database.
    * @param token The token string (endpoint for web, FCM token for native)
-   * @param platform The platform type ('web' | 'fcm')
+   * @param platform The platform type ('web' | 'fcm' | 'apns')
    */
-  private async saveTokenToDatabase(token: string, platform: 'web' | 'fcm'): Promise<void> {
+  private async saveTokenToDatabase(token: string, platform: 'web' | 'fcm' | 'apns'): Promise<void> {
     // Ensure we have a user
     const user = await this.authService.getCurrentUser();
     if (!user) return;
+
+    // Get device info for native platforms
+    let deviceInfo: Record<string, unknown> = {};
+    if (this.isNative) {
+      try {
+        const info = await Device.getInfo();
+        deviceInfo = {
+          model: info.model,
+          platform: info.platform,
+          os_version: info.osVersion,
+          manufacturer: info.manufacturer,
+          is_virtual: info.isVirtual,
+        };
+      } catch {
+        // Silently fail if device info not available
+      }
+    } else {
+      // Web browser info
+      deviceInfo = {
+        platform: 'web',
+        user_agent: navigator.userAgent,
+      };
+    }
 
     const { error } = await this.supabase.from('push_tokens').upsert(
       {
         user_id: user.id,
         token: token,
         platform: platform,
+        is_active: true,
+        device_info: deviceInfo,
+        last_used_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },
       { onConflict: 'token' },
     );
 
     if (error) {
-      console.error('Error saving push token:', error);
+      this.logger.error('Error saving push token:', error);
       throw error;
     }
+
+    this.logger.info(`Push token saved successfully (${platform})`);
   }
 
   /**
-   * Remove push token from database (call on logout)
+   * Deactivate push tokens on logout (mark as inactive instead of deleting)
    */
   public async removeToken(): Promise<void> {
     const user = await this.authService.getCurrentUser();
     if (!user) return;
 
-    // Get current token
+    // Mark all tokens for this user as inactive (don't delete for tracking)
+    const { error } = await this.supabase
+      .from('push_tokens')
+      .update({ is_active: false, updated_at: new Date().toISOString() })
+      .eq('user_id', user.id);
+
+    if (error) {
+      this.logger.error('Error deactivating push tokens:', error);
+    } else {
+      this.logger.info('Push tokens deactivated on logout');
+    }
+
+    // Unregister from native push if on mobile
     if (this.isNative) {
-      // For native, we need to get the token from storage or registration
-      // This is handled by removing all tokens for the user on logout
-      await this.supabase.from('push_tokens').delete().eq('user_id', user.id);
+      try {
+        await PushNotifications.removeAllListeners();
+      } catch {
+        // Silently fail
+      }
     }
   }
 

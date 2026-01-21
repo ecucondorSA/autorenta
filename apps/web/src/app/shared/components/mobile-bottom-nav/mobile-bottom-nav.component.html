@@ -4,7 +4,7 @@
 
 <nav
   class="mobile-bottom-nav"
-  [class.mobile-bottom-nav--hidden]="isHidden()"
+  [class.mobile-bottom-nav--hidden]="isHidden() || isKeyboardVisible()"
   role="navigation"
   aria-label="Navegación principal móvil"
 >

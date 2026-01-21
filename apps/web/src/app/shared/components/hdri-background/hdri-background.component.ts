@@ -28,7 +28,7 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
  *
  * Performance Optimizations (Industry Best Practices):
  * - LQIP Pattern: Loads 1K placeholder (~23KB) first, then swaps to 8K (~5.8MB)
- * - FPS Throttling: 30fps instead of 60fps (50% CPU reduction)
+ * - Dynamic FPS: 60fps when active/auto-rotating, 30fps when idle
  * - IntersectionObserver: Pauses render loop when not visible
  * - Idle Detection: Pauses when no interaction for 3s (if autoRotate=false)
  *
@@ -93,7 +93,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   }
 
   @Input() autoRotate = true;
-  @Input() rotateSpeed = 0.0006; // Moderate speed rotation
+  @Input() rotateSpeed = 0.0002; // Slow cinematic rotation (slower than frame rate)
   @Input() enableInteraction = true;
   @Input() initialRotationY = 1.24; // Start showing the city in night mode
 
@@ -119,7 +119,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   private targetRotationY = 0.3;
   private targetRotationX = 0;
   // Smoothing factor: lower = heavier/slower movement (0.05 = very smooth, 0.2 = responsive)
-  private rotationSmoothing = 0.18;
+  private rotationSmoothing = 0.08;
   // Drag sensitivity: lower = heavier feel (reduced from 0.005)
   private readonly DRAG_SENSITIVITY_X = 0.002;
   private readonly DRAG_SENSITIVITY_Y = 0.0012;
@@ -128,8 +128,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   private lastMouseX = 0;
   private lastMouseY = 0;
 
-  // Performance: FPS Throttling (60fps for smooth mobile experience)
-  private readonly targetFPS = 60;
+  // Performance: Time-based animation (no FPS throttling - let rAF handle it)
   private lastFrameTime = 0;
 
   // Performance: Visibility Detection (pause when not in viewport)
@@ -547,12 +546,14 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
   /**
    * Optimized Render Loop with:
-   * - FPS Throttling: 30fps instead of 60fps (50% CPU reduction)
+   * - NO FPS Throttling: Let requestAnimationFrame handle timing (smoother on mobile)
+   * - Time-based animation: Consistent speed regardless of frame rate
    * - Visibility Detection: Skip rendering when not visible
    * - Idle Detection: Skip rendering when idle and not auto-rotating
    * - Smooth rotation interpolation for weighted, premium feel
    *
-   * @see https://thewebdev.info/2024/04/13/how-to-limit-framerate-in-three-js-to-increase-performance-requestanimationframe-with-javascript/
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices
+   * @see https://web.dev/speed-rendering/
    */
   private startRenderLoop(): void {
     if (this.isDestroyed) return;
@@ -569,20 +570,30 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       // 2. Skip if idle and not auto-rotating (save CPU when user isn't interacting)
       if (this.isIdle && !this.autoRotate && !this.isDragging) return;
 
-      // 3. FPS Throttling: Only render at target FPS (30fps = 33.33ms per frame)
+      // 3. Calculate delta time (NO throttling - render every frame for smoothness)
+      if (this.lastFrameTime === 0) {
+        this.lastFrameTime = currentTime;
+        this.draw();
+        return;
+      }
+
       const deltaTime = currentTime - this.lastFrameTime;
-      if (deltaTime < 1000 / this.targetFPS) return;
       this.lastFrameTime = currentTime;
 
-      // 4. Update target rotation if auto-rotating
+      // Clamp delta to avoid jumps after tab switch or lag spikes
+      const clampedDelta = Math.min(deltaTime, 100);
+
+      // 4. Update target rotation if auto-rotating (pure time-based, not frame-based)
       if (this.autoRotate && !this.isDragging) {
-        this.targetRotationY += this.rotateSpeed;
+        // rotateSpeed is radians per millisecond
+        this.targetRotationY += this.rotateSpeed * clampedDelta;
       }
 
       // 5. Smooth interpolation (lerp) for weighted, cadenced movement
-      // This creates the "heavy" feel - rotation gradually catches up to target
-      this.rotationY += (this.targetRotationY - this.rotationY) * this.rotationSmoothing;
-      this.rotationX += (this.targetRotationX - this.rotationX) * this.rotationSmoothing;
+      // Frame-rate independent smoothing using exponential decay
+      const smoothingFactor = 1 - Math.exp(-this.rotationSmoothing * clampedDelta * 0.06);
+      this.rotationY += (this.targetRotationY - this.rotationY) * smoothingFactor;
+      this.rotationX += (this.targetRotationX - this.rotationX) * smoothingFactor;
 
       // 6. Render frame
       this.draw();

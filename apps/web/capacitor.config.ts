@@ -34,6 +34,11 @@ const config: CapacitorConfig = {
       resize: 'body',
       resizeOnFullScreen: true,
     },
+    SafeArea: {
+      detectViewportFitCoverChanges: true,
+      initialViewportFitCover: true,
+      offsetForKeyboardInsetBug: true,
+    },
   },
 };
 

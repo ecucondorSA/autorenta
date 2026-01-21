@@ -15,6 +15,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { filter, fromEvent, throttleTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Keyboard } from '@capacitor/keyboard';
+import { Capacitor } from '@capacitor/core';
 import { UnreadMessagesService } from '@core/services/bookings/unread-messages.service';
 import { NavIconComponent } from '../nav-icon/nav-icon.component';
 
@@ -48,6 +50,7 @@ export class MobileBottomNavComponent implements OnInit {
 
   readonly currentRoute = signal<string>('');
   readonly isHidden = signal(false);
+  readonly isKeyboardVisible = signal(false);
 
   private lastScrollY = 0;
   private readonly scrollThreshold = 50;
@@ -102,6 +105,35 @@ export class MobileBottomNavComponent implements OnInit {
       });
 
     this.setupScrollListener();
+    this.setupKeyboardListener();
+  }
+
+  /**
+   * Sets up keyboard visibility listener
+   * Hides nav when keyboard is open for cleaner UX
+   */
+  private setupKeyboardListener(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    // Use Capacitor Keyboard plugin on native
+    if (Capacitor.isNativePlatform()) {
+      Keyboard.addListener('keyboardWillShow', () => {
+        this.ngZone.run(() => this.isKeyboardVisible.set(true));
+      });
+
+      Keyboard.addListener('keyboardWillHide', () => {
+        this.ngZone.run(() => this.isKeyboardVisible.set(false));
+      });
+    } else {
+      // Fallback for web: use visualViewport API
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+          // Keyboard is likely open if viewport height is significantly smaller than window height
+          const isKeyboardOpen = window.visualViewport!.height < window.innerHeight * 0.75;
+          this.ngZone.run(() => this.isKeyboardVisible.set(isKeyboardOpen));
+        });
+      }
+    }
   }
 
   /**

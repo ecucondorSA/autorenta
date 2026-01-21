@@ -206,6 +206,9 @@ importers:
       '@capacitor-community/facebook-login':
         specifier: ^8.0.0
         version: 8.0.0
+      '@capacitor-community/safe-area':
+        specifier: ^7.0.0
+        version: 7.0.0(@capacitor/core@7.4.4)
       '@capacitor/android':
         specifier: ^7.4.4
         version: 7.4.4(@capacitor/core@7.4.4)
@@ -218,12 +221,18 @@ importers:
       '@capacitor/core':
         specifier: ^7.4.4
         version: 7.4.4
+      '@capacitor/device':
+        specifier: ^8.0.0
+        version: 8.0.0(@capacitor/core@7.4.4)
       '@capacitor/geolocation':
         specifier: ^7.1.6
         version: 7.1.6(@capacitor/core@7.4.4)
       '@capacitor/haptics':
         specifier: ^7.0.3
         version: 7.0.3(@capacitor/core@7.4.4)
+      '@capacitor/keyboard':
+        specifier: ^8.0.0
+        version: 8.0.0(@capacitor/core@7.4.4)
       '@capacitor/local-notifications':
         specifier: ^7.0.4
         version: 7.0.4(@capacitor/core@7.4.4)
@@ -1494,6 +1503,11 @@ packages:
     resolution: {integrity: sha512-Wua8mEI+kKa805pJvQZupY4qGR8Wjo24BxFcD0lqNxRSS/4kxerkhFYrDBaGVasvGA5nqXjopHYgr1rpbpIg1Q==}
     engines: {node: '>=22.0.0'}
 
+  '@capacitor-community/safe-area@7.0.0':
+    resolution: {integrity: sha512-+bze1ChJasYBvLtgp2mFeAHxiOmXqHvb1adtO0MbobZ/5WCrTsOi6ebECJkUpao4MJ4mqCBOus0jOXJXwx3YgA==}
+    peerDependencies:
+      '@capacitor/core': '>=7.0.0'
+
   '@capacitor/android@7.4.4':
     resolution: {integrity: sha512-y8knfV1JXNrd6XZZLZireGT+EBCN0lvOo+HZ/s7L8LkrPBu4nY5UZn0Wxz4yOezItEII9rqYJSHsS5fMJG9gdw==}
     peerDependencies:
@@ -1520,6 +1534,11 @@ packages:
   '@capacitor/core@8.0.1':
     resolution: {integrity: sha512-5UqSWxGMp/B8KhYu7rAijqNtYslhcLh+TrbfU48PfdMDsPfaU/VY48sMNzC22xL8BmoFoql/3SKyP+pavTOvOA==}
 
+  '@capacitor/device@8.0.0':
+    resolution: {integrity: sha512-qFmlTDnAvUwIg93YUF3u3ovqpDFqUl2RFkf2dVIF8Py7vTA+GjQIHQWITcBKfeUENoVXPNn04t5nxg5mAkjNEA==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
+
   '@capacitor/geolocation@7.1.6':
     resolution: {integrity: sha512-K+SXF8X01sEyCLb1ITqir5Gi3qMNnua7TMdxKmxYBAJATUGoHzJQ0itslkoP4HM6JZac+f8lTpRl1RMWKErRIg==}
     peerDependencies:
@@ -1529,6 +1548,11 @@ packages:
     resolution: {integrity: sha512-6O5W4jtYKPGrulqt3pEeXKH1vWT5deSUoiiN2sVj7F6UgrEOxCmm06XS07Eeum0lDXEmksKARwtA+iQwHPswtA==}
     peerDependencies:
       '@capacitor/core': '>=7.0.0'
+
+  '@capacitor/keyboard@8.0.0':
+    resolution: {integrity: sha512-ycPW6iQyFwzDK95jihesj5EGiyyGSfbBqNek11iNp9tBOB7zDeYkUA2S/vPpOETt3dhP6pWr7a9gNVGuEfj11g==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
 
   '@capacitor/local-notifications@7.0.4':
     resolution: {integrity: sha512-A6xd64dcgWX75w3yrah83JN/NkiBH6kF0oXCFAt2Vrp5potnyNQgasibRyCmIY5RIn3slkDl3mUPkplXaIk8pw==}
@@ -8742,10 +8766,12 @@ packages:
   tar@6.2.1:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   tar@7.5.2:
     resolution: {integrity: sha512-7NyxrTE4Anh8km8iEy7o0QYPs+0JKBTj5ZaqHg6B39erLg0qYXN3BijtShwbsNSvQ+LN75+KV+C4QR/f6Gwnpg==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   terser-webpack-plugin@5.3.15:
     resolution: {integrity: sha512-PGkOdpRFK+rb1TzVz+msVhw4YMRT9txLF4kRqvJhGhCM324xuR3REBSHALN+l+sAhKUmz0aotnjp5D+P83mLhQ==}
@@ -11436,6 +11462,10 @@ snapshots:
     dependencies:
       '@capacitor/core': 8.0.1
 
+  '@capacitor-community/safe-area@7.0.0(@capacitor/core@7.4.4)':
+    dependencies:
+      '@capacitor/core': 7.4.4
+
   '@capacitor/android@7.4.4(@capacitor/core@7.4.4)':
     dependencies:
       '@capacitor/core': 7.4.4
@@ -11478,6 +11508,10 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@capacitor/device@8.0.0(@capacitor/core@7.4.4)':
+    dependencies:
+      '@capacitor/core': 7.4.4
+
   '@capacitor/geolocation@7.1.6(@capacitor/core@7.4.4)':
     dependencies:
       '@capacitor/core': 7.4.4
@@ -11490,6 +11524,10 @@ snapshots:
   '@capacitor/haptics@7.0.3(@capacitor/core@8.0.1)':
     dependencies:
       '@capacitor/core': 8.0.1
+
+  '@capacitor/keyboard@8.0.0(@capacitor/core@7.4.4)':
+    dependencies:
+      '@capacitor/core': 7.4.4
 
   '@capacitor/local-notifications@7.0.4(@capacitor/core@7.4.4)':
     dependencies:
@@ -14006,7 +14044,7 @@ snapshots:
       std-env: 3.10.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@25.0.2)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@26.1.0(bufferutil@4.1.0))(less@4.4.0)(sass@1.90.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
+      vitest: 3.2.4(@types/node@20.19.25)(@vitest/ui@3.2.4)(jiti@1.21.7)(jsdom@26.1.0(bufferutil@4.1.0))(less@4.4.0)(sass@1.90.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -14063,7 +14101,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@25.0.2)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@26.1.0(bufferutil@4.1.0))(less@4.4.0)(sass@1.90.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
+      vitest: 3.2.4(@types/node@20.19.25)(@vitest/ui@3.2.4)(jiti@1.21.7)(jsdom@26.1.0(bufferutil@4.1.0))(less@4.4.0)(sass@1.90.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
 
   '@vitest/utils@3.2.4':
     dependencies:

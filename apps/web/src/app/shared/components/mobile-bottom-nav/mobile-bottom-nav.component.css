@@ -62,8 +62,8 @@
   /* Sin border-radius - pegado al borde inferior */
   border-radius: 0;
 
-  /* Padding: arriba 8px, lados 8px, abajo = safe area + 8px mínimo para labels */
-  padding: 8px 8px max(8px, env(safe-area-inset-bottom, 8px));
+  /* Padding: arriba 8px, lados 8px, abajo = mínimo 28px o safe-area (gesture bar Android ~24-48px) */
+  padding: 8px 8px max(28px, calc(12px + env(safe-area-inset-bottom, 0px)));
 
   box-shadow:
     0 -8px 32px rgba(167, 216, 244, 0.15),
@@ -371,13 +371,21 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Soporte para notch/safe area en iPhone
+   Soporte para notch/safe area en iPhone/Android
    ───────────────────────────────────────────────────────────── */
 
 @supports (padding: env(safe-area-inset-bottom)) {
   .nav-container {
-    /* Solo usar safe-area si existe, sino 0 */
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    /* Mínimo 28px para gesture bar + safe-area si es mayor */
+    padding-bottom: max(28px, calc(12px + env(safe-area-inset-bottom, 0px)));
+  }
+}
+
+/* Android/iOS standalone: asegurar padding suficiente para gesture bar */
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  .nav-container {
+    /* Mínimo 32px para apps instaladas */
+    padding-bottom: max(32px, calc(12px + env(safe-area-inset-bottom, 20px)));
   }
 }
 
