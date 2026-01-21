@@ -1,3 +1,13 @@
+## [3.21.0](https://github.com/ecucondorSA/autorenta/compare/v3.20.2...v3.21.0) (2026-01-21)
+
+### ✨ Features
+
+* **notifications:** harden FCM push notification system ([cf98453](https://github.com/ecucondorSA/autorenta/commit/cf98453ae7be6083d68bbd05f0e0fe1496ca1b3e))
+
+### 🐛 Bug Fixes
+
+* **marketplace:** add bottom padding for mobile nav bar ([1b30e77](https://github.com/ecucondorSA/autorenta/commit/1b30e77a3be88a796c4db77b26f7c5ba0af40d8f))
+
 ## [3.20.2](https://github.com/ecucondorSA/autorenta/compare/v3.20.1...v3.20.2) (2026-01-21)
 
 ### 🐛 Bug Fixes
