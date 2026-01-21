@@ -1,3 +1,9 @@
+## [3.26.0](https://github.com/ecucondorSA/autorenta/compare/v3.25.0...v3.26.0) (2026-01-21)
+
+### ✨ Features
+
+* **auth:** implement WebAuthn/Passkeys authentication ([04a4b92](https://github.com/ecucondorSA/autorenta/commit/04a4b92799e4349c48102a2adb5bd8948aa663e4))
+
 ## [3.25.0](https://github.com/ecucondorSA/autorenta/compare/v3.24.2...v3.25.0) (2026-01-21)
 
 ### ✨ Features
