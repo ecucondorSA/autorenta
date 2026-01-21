@@ -1,3 +1,9 @@
+## [3.23.0](https://github.com/ecucondorSA/autorenta/compare/v3.22.2...v3.23.0) (2026-01-21)
+
+### ✨ Features
+
+* **ui:** apply premium UI/UX overhaul to login & splash transition ([6ea7e47](https://github.com/ecucondorSA/autorenta/commit/6ea7e47dc05d6e55e2216a9d5f44ff1cc81565b1))
+
 ## [3.22.2](https://github.com/ecucondorSA/autorenta/compare/v3.22.1...v3.22.2) (2026-01-21)
 
 ### 🐛 Bug Fixes
