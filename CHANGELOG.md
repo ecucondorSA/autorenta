@@ -1,3 +1,9 @@
+## [3.20.0](https://github.com/ecucondorSA/autorenta/compare/v3.19.5...v3.20.0) (2026-01-21)
+
+### ✨ Features
+
+* **android:** configure Firebase, Sentry and local notifications ([d5eb9f5](https://github.com/ecucondorSA/autorenta/commit/d5eb9f58081a8135a50fe191ab7edd9001402e99))
+
 ## [3.19.5](https://github.com/ecucondorSA/autorenta/compare/v3.19.4...v3.19.5) (2026-01-21)
 
 ### 🐛 Bug Fixes
