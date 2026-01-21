@@ -29,7 +29,7 @@ interface NotificationRow {
 
 type NotificationListItem = NotificationItem & { dbType: string };
 
-export type NotificationPreferences = {
+export type UserNotificationSettings = {
   browserPushEnabled: boolean;
   browserPushPermission: NotificationPermission;
   bookingUpdates: boolean;

@@ -21,7 +21,7 @@ export type NotificationTemplateType =
   | 'wallet_deposit_confirmed'
   | 'wallet_withdrawal_completed';
 
-export interface NotificationTemplate {
+export interface NotificationTemplateConfig {
   title: string;
   body: string;
   action_url?: string;
@@ -65,7 +65,7 @@ export class NotificationTemplatesService {
   getTemplate(
     type: NotificationTemplateType,
     variables: Record<string, string> = {},
-  ): NotificationTemplate {
+  ): NotificationTemplateConfig {
     // Sanitize all variables before using them
     const sanitizedVars: Record<string, string> = {};
     for (const key in variables) {

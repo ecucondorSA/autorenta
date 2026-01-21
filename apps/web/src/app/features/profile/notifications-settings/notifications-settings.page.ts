@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import {
-  NotificationPreferences,
+  UserNotificationSettings,
   NotificationsService,
 } from '@core/services/infrastructure/user-notifications.service';
 
@@ -102,7 +102,7 @@ export class NotificationsSettingsPage implements OnInit {
     const savedSettings = localStorage.getItem('notification_settings');
     if (!savedSettings) return;
     try {
-      const parsed = JSON.parse(savedSettings) as NotificationPreferences;
+      const parsed = JSON.parse(savedSettings) as UserNotificationSettings;
       this.settings.set({ ...this.settings(), ...parsed });
     } catch (error) {
       this.logger.warn(
