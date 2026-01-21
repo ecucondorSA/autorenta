@@ -1,3 +1,9 @@
+## [3.19.3](https://github.com/ecucondorSA/autorenta/compare/v3.19.2...v3.19.3) (2026-01-21)
+
+### ⚡ Performance
+
+* **hdri:** increase FPS from 30 to 60 for smoother mobile experience ([96bd85b](https://github.com/ecucondorSA/autorenta/commit/96bd85bbb75a20d300a7ac759202f2059ebd6661))
+
 ## [3.19.2](https://github.com/ecucondorSA/autorenta/compare/v3.19.1...v3.19.2) (2026-01-21)
 
 ### 🐛 Bug Fixes
