@@ -223,6 +223,7 @@ export class AppComponent implements OnInit {
   readonly fullBleedLayout = signal(false);
   readonly hideFooter = signal(false);
   readonly hideMobileNav = signal(false);
+  readonly hideHeader = signal(false);
   readonly userProfile = signal<UserProfile | null>(null);
   readonly isOnVerificationPage = signal(false);
   readonly isHomePage = signal(false); // Header transparente en homepage
@@ -231,6 +232,7 @@ export class AppComponent implements OnInit {
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
   @ViewChild('sidebarPanel', { read: ElementRef }) sidebarPanel?: ElementRef<HTMLElement>;
   @ViewChild('profileButton', { read: ElementRef }) profileButton?: ElementRef<HTMLButtonElement>;
+  @ViewChild(SplashScreenComponent) splashScreen?: SplashScreenComponent;
 
   /**
    * Elements to exclude from profile menu click-outside detection
@@ -304,7 +306,8 @@ export class AppComponent implements OnInit {
     if (Capacitor.isNativePlatform()) {
       try {
         void StatusBar.setOverlaysWebView({ overlay: true });
-        void StatusBar.setStyle({ style: Style.Light }); // O Dark según el tema
+        void StatusBar.setBackgroundColor({ color: '#00000000' }); // Transparent
+        void StatusBar.setStyle({ style: Style.Dark }); // Dark icons on light background
       } catch (e) {
         console.warn('StatusBar not available', e);
       }
@@ -319,6 +322,22 @@ export class AppComponent implements OnInit {
     this.mobileBottomNavPortal.menuOpen$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.openMobileMenuDrawer());
+
+    // Hide splash screen when app initialization is complete
+    this.hideSplashWhenReady();
+  }
+
+  /**
+   * Hide splash screen after initial app data is loaded
+   */
+  private hideSplashWhenReady(): void {
+    // Use a small delay to ensure all initial data is loaded
+    // This prevents the splash from hiding too quickly
+    setTimeout(() => {
+      if (this.splashScreen) {
+        this.splashScreen.hideSplash();
+      }
+    }, 500);
   }
 
   private initializeTheme(): void {
@@ -366,6 +385,7 @@ export class AppComponent implements OnInit {
 
     this.hideFooter.set(Boolean(current?.snapshot.data?.['hideFooter']));
     this.hideMobileNav.set(Boolean(current?.snapshot.data?.['hideMobileNav']));
+    this.hideHeader.set(Boolean(current?.snapshot.data?.['hideHeader']));
     this.mobileBottomNavPortal.setHidden(this.hideMobileNav());
 
     // Detectar si estamos en el homepage para header transparente

@@ -5,6 +5,8 @@ import {
   OnInit,
   Output,
   signal,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 
 /**
@@ -260,13 +262,19 @@ export class SplashScreenComponent implements OnInit {
   fadeOut = signal(false);
 
   ngOnInit(): void {
-    // Auto-hide after animation
+    // Splash will remain visible until explicitly hidden by the app
+    // The parent component must call hideSplash() when ready
+  }
+
+  /**
+   * Hide the splash screen with fade-out animation
+   * Call this method when the app is fully initialized
+   */
+  hideSplash(): void {
+    this.fadeOut.set(true);
     setTimeout(() => {
-      this.fadeOut.set(true);
-      setTimeout(() => {
-        this.visible.set(false);
-        this.splashComplete.emit();
-      }, 500);
-    }, 2000); // Show for 2 seconds
+      this.visible.set(false);
+      this.splashComplete.emit();
+    }, 500);
   }
 }
