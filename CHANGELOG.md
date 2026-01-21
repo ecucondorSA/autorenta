@@ -1,3 +1,9 @@
+## [3.26.1](https://github.com/ecucondorSA/autorenta/compare/v3.26.0...v3.26.1) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **passkeys:** add CORS headers for baggage/sentry-trace and add passkeys UI to security page ([1f5c169](https://github.com/ecucondorSA/autorenta/commit/1f5c169da5cc3ce494a21d1637ab1a2bf4d6d0c3))
+
 ## [3.26.0](https://github.com/ecucondorSA/autorenta/compare/v3.25.0...v3.26.0) (2026-01-21)
 
 ### ✨ Features
