@@ -1,3 +1,9 @@
+## [3.19.0](https://github.com/ecucondorSA/autorenta/compare/v3.18.0...v3.19.0) (2026-01-21)
+
+### ✨ Features
+
+* **notifications:** implement smart notification system with Firebase ([8695223](https://github.com/ecucondorSA/autorenta/commit/86952235120534231bfc831ee9b664653938a839))
+
 ## [3.18.0](https://github.com/ecucondorSA/autorenta/compare/v3.17.6...v3.18.0) (2026-01-21)
 
 ### ✨ Features
