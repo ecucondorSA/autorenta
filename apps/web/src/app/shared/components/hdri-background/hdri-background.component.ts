@@ -93,7 +93,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   }
 
    @Input() autoRotate = true;
-   @Input() rotateSpeed = 0.00008; // Very slow cinematic rotation (50% slower than default)
+   @Input() rotateSpeed = 0.000005; // Extremely slow, barely perceptible rotation
    @Input() enableInteraction = true;
    @Input() initialRotationY = 1.24; // Start showing the city in night mode
 
@@ -830,10 +830,10 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
       // 1. Prepare for movement (very slow, cinematic feel)
       const originalSmoothing = this.rotationSmoothing;
-      this.rotationSmoothing = 0.02; // Significantly reduced speed
+      this.rotationSmoothing = 0.015; // Even slower for subtle movement
 
-      // 2. Look Left (90 degrees = 1.57 rad)
-      this.targetRotationY -= 1.57;
+      // 2. Look Left (~30 degrees = 0.52 rad) - subtle glance
+      this.targetRotationY -= 0.52;
 
       setTimeout(() => {
         if (this.isDragging || this.isDestroyed) {
@@ -841,8 +841,8 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
           return;
         }
 
-        // 3. Look Right (Sweep 180 degrees to +90)
-        this.targetRotationY += 3.14;
+        // 3. Look Right (Sweep ~60 degrees total)
+        this.targetRotationY += 1.04;
 
         setTimeout(() => {
           if (this.isDragging || this.isDestroyed) {
@@ -851,15 +851,15 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
           }
 
           // 4. Return to Center
-          this.targetRotationY -= 1.57;
+          this.targetRotationY -= 0.52;
 
-          // Restore heavy smoothing for "cinematic" feel
+          // Restore smoothing
           setTimeout(() => {
             this.rotationSmoothing = originalSmoothing;
-          }, 2500);
+          }, 3000);
 
-        }, 2500); // Hold right longer
-      }, 2500); // Hold left longer
+        }, 3000); // Hold right longer
+      }, 3000); // Hold left longer
     }, 2000); // Start delay
   }
 
