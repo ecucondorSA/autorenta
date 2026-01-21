@@ -1,3 +1,9 @@
+## [3.22.1](https://github.com/ecucondorSA/autorenta/compare/v3.22.0...v3.22.1) (2026-01-21)
+
+### 🐛 Bug Fixes
+
+* **deps:** add @simplewebauthn/browser to package.json ([010afb7](https://github.com/ecucondorSA/autorenta/commit/010afb7263129a86bc2ca863db2d14c08eace692))
+
 ## [3.22.0](https://github.com/ecucondorSA/autorenta/compare/v3.21.5...v3.22.0) (2026-01-21)
 
 ### ✨ Features
