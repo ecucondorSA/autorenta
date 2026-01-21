@@ -25,7 +25,7 @@ export const environment = buildEnvironment({
   // Sentry Configuration
   // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
   // NG_APP_SENTRY_DSN - Sentry Project DSN
-  sentryDsn: '', // Se configura via NG_APP_SENTRY_DSN
+  sentryDsn: 'https://54be91389910bcd0eb95f27bd18b5ba9@o4510747355447296.ingest.us.sentry.io/4510747372552192',
   sentryEnvironment: 'production',
   sentryTracesSampleRate: 0.1, // 10% sampling for performance monitoring
   // Google Calendar Configuration

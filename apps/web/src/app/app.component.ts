@@ -21,6 +21,7 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { filter } from 'rxjs';
@@ -294,6 +295,7 @@ export class AppComponent implements OnInit {
     this.loadUserProfile();
     this.loadPendingApprovalCount();
     this.pushNotificationService.initializePushNotifications();
+    this.initializeLocalNotificationListeners();
     this.initializeProfileMenuCloseOnNavigation();
     this.checkVerificationPage(this.router.url);
 
@@ -467,6 +469,36 @@ export class AppComponent implements OnInit {
     const isOnVerificationPage = verificationRoutes.some((route) => url.includes(route));
 
     this.isOnVerificationPage.set(isOnVerificationPage);
+  }
+
+  /**
+   * Initialize listeners for local notification clicks
+   * Handles navigation when user taps on a notification
+   */
+  private initializeLocalNotificationListeners(): void {
+    if (!Capacitor.isNativePlatform()) {
+      return;
+    }
+
+    // Listen for notification clicks
+    LocalNotifications.addListener('localNotificationActionPerformed', (action: { actionId: string; inputValue?: string; notification: { id: number; title?: string; body?: string; extra?: unknown } }) => {
+      console.log('[Notification] Action performed:', action);
+
+      const extra = action.notification.extra as { route?: string; bookingId?: string } | undefined;
+
+      if (extra?.route) {
+        // Navigate to the specified route
+        console.log('[Notification] Navigating to:', extra.route);
+        this.router.navigate([extra.route], {
+          queryParams: extra.bookingId ? { id: extra.bookingId } : undefined,
+        });
+      }
+    });
+
+    // Listen for notifications received while app is open
+    LocalNotifications.addListener('localNotificationReceived', (notification: { id: number; title?: string; body?: string }) => {
+      console.log('[Notification] Received while app open:', notification);
+    });
   }
 
   /**
