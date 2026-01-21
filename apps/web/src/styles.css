@@ -678,8 +678,7 @@ ion-toast.toast-modern {
     color: var(--text-primary);
     font-size: 16px;
     line-height: 1.6;
-    letter-spacing: 0.003em; /* Micro-ajuste para Inter - óptima legibilidad */
-    padding-top: env(safe-area-inset-top, 0);
+    letter-spacing: 0.003em;
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
