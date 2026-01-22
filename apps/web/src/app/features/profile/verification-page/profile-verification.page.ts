@@ -179,6 +179,14 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                             <span class="flex items-center gap-1 text-[10px] font-bold text-success-600 bg-success-50 px-2 py-0.5 rounded-full">
                               VERIFICADO
                             </span>
+                          } @else if (isDniInReview()) {
+                            <span class="flex items-center gap-1 text-[10px] font-bold text-warning-600 bg-warning-50 px-2 py-0.5 rounded-full">
+                              EN REVISIÓN
+                            </span>
+                          } @else {
+                            <span class="flex items-center gap-1 text-[10px] font-bold text-text-muted bg-surface-secondary px-2 py-0.5 rounded-full">
+                              PENDIENTE
+                            </span>
                           }
                         </div>
                         @if (!isDniVerified()) {
@@ -195,6 +203,14 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                           @if (isLicenseVerified()) {
                             <span class="flex items-center gap-1 text-[10px] font-bold text-success-600 bg-success-50 px-2 py-0.5 rounded-full">
                               VERIFICADO
+                            </span>
+                          } @else if (isLicenseInReview()) {
+                            <span class="flex items-center gap-1 text-[10px] font-bold text-warning-600 bg-warning-50 px-2 py-0.5 rounded-full">
+                              EN REVISIÓN
+                            </span>
+                          } @else {
+                            <span class="flex items-center gap-1 text-[10px] font-bold text-text-muted bg-surface-secondary px-2 py-0.5 rounded-full">
+                              PENDIENTE
                             </span>
                           }
                         </div>
@@ -336,6 +352,7 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
 
   // Get verification progress data
   readonly verificationProgress = this.identityService.verificationProgress;
+  readonly identityLevel = this.identityService.identityLevel;
   readonly requirements = computed(() => this.verificationProgress()?.requirements);
 
   // Progress percentage from service
@@ -455,8 +472,24 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
     return this.requirements()?.level_2?.document_verified ?? false;
   }
 
+  isDniInReview(): boolean {
+    // Documento subido pero no verificado
+    const identity = this.identityLevel();
+    const verified = this.isDniVerified();
+    if (verified) return false;
+    return !!(identity?.document_front_url || identity?.document_back_url);
+  }
+
   isLicenseVerified(): boolean {
     return this.requirements()?.level_2?.driver_license_verified ?? false;
+  }
+
+  isLicenseInReview(): boolean {
+    // Licencia subida pero no verificada
+    const identity = this.identityLevel();
+    const verified = this.isLicenseVerified();
+    if (verified) return false;
+    return !!identity?.driver_license_url;
   }
 
   getProgressLabel(): string {
