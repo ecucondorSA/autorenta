@@ -36,25 +36,34 @@ export class BiometricAuthService {
    * Verifica disponibilidad completa: biometría + credenciales guardadas
    */
   async checkAvailability(): Promise<BiometricAvailability> {
+    console.log('[Biometric] checkAvailability - isNative:', Capacitor.isNativePlatform());
+
     // Solo funciona en dispositivos nativos
     if (!Capacitor.isNativePlatform()) {
       return { available: false, type: BiometryType.NONE, typeName: 'none', hasCredentials: false };
     }
 
     try {
-      const [biometricResult, credentialsResult] = await Promise.all([
-        NativeBiometric.isAvailable(),
-        NativeBiometric.isCredentialsSaved({ server: CREDENTIAL_SERVER }).catch(() => ({ hasSavedCredentials: false })),
-      ]);
+      const biometricResult = await NativeBiometric.isAvailable();
+      console.log('[Biometric] isAvailable:', JSON.stringify(biometricResult));
+
+      const credentialsResult = await NativeBiometric.isCredentialsSaved({ server: CREDENTIAL_SERVER }).catch((err: unknown) => {
+        console.log('[Biometric] isCredentialsSaved error:', err);
+        return { isSaved: false };
+      });
+      console.log('[Biometric] credentials:', JSON.stringify(credentialsResult));
 
       const type = biometricResult.biometryType;
       const typeName = this.getTypeName(type);
-      const hasCredentials = credentialsResult.hasSavedCredentials;
+      // API returns 'isSaved' not 'hasSavedCredentials'
+      const hasCredentials = (credentialsResult as { isSaved?: boolean }).isSaved ?? false;
 
       // Actualizar signals
       this.biometryType.set(type);
       this.hasStoredCredentials.set(hasCredentials);
       this.isReady.set(biometricResult.isAvailable && hasCredentials);
+
+      console.log('[Biometric] READY:', this.isReady(), 'available:', biometricResult.isAvailable, 'hasCreds:', hasCredentials);
 
       return {
         available: biometricResult.isAvailable,
@@ -62,7 +71,8 @@ export class BiometricAuthService {
         typeName,
         hasCredentials,
       };
-    } catch {
+    } catch (err: unknown) {
+      console.error('[Biometric] checkAvailability error:', err);
       this.isReady.set(false);
       this.hasStoredCredentials.set(false);
       return { available: false, type: BiometryType.NONE, typeName: 'none', hasCredentials: false };
@@ -73,9 +83,14 @@ export class BiometricAuthService {
    * Guarda credenciales después de un login exitoso
    */
   async saveCredentials(email: string, password: string): Promise<boolean> {
-    if (!Capacitor.isNativePlatform()) return false;
+    console.log('[Biometric] saveCredentials called for:', email);
+    if (!Capacitor.isNativePlatform()) {
+      console.log('[Biometric] Not native, skipping save');
+      return false;
+    }
 
     try {
+      console.log('[Biometric] Calling setCredentials...');
       await NativeBiometric.setCredentials({
         server: CREDENTIAL_SERVER,
         username: email,
@@ -83,9 +98,10 @@ export class BiometricAuthService {
       });
       this.hasStoredCredentials.set(true);
       this.isReady.set(true);
+      console.log('[Biometric] Credentials SAVED successfully!');
       return true;
     } catch (error) {
-      console.error('Failed to save biometric credentials:', error);
+      console.error('[Biometric] Failed to save credentials:', error);
       return false;
     }
   }

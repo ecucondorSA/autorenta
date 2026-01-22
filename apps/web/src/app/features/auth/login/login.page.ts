@@ -59,6 +59,12 @@ export class LoginPage implements OnInit, OnDestroy {
   readonly biometricLoading = signal(false);
   readonly biometryLabel = signal('Huella digital');
 
+  // Prompt para activar biometría después del login
+  readonly showBiometricPrompt = signal(false);
+  readonly biometricPromptLoading = signal(false);
+  private pendingCredentials: { email: string; password: string } | null = null;
+  private pendingReturnUrl: string = '/cars/list';
+
   constructor() {
     // Escuchar cuando One-Tap tenga éxito para trackear analytics
     effect(() => {
@@ -137,22 +143,25 @@ export class LoginPage implements OnInit, OnDestroy {
       const { email, password } = this.form.getRawValue();
       await this.auth.signIn(email, password);
 
-      // Guardar credenciales para biometría (si está disponible)
-      const biometricStatus = await this.biometric.checkAvailability();
-      if (biometricStatus.available && !biometricStatus.hasCredentials) {
-        // Guardar silenciosamente para el próximo login
-        await this.biometric.saveCredentials(email, password);
-      }
-
       // Track successful login
       this.analytics.trackEvent('login', {
         method: 'email',
         source: 'login_page',
       });
 
-      // Get returnUrl from query params, default to /cars/list for better UX after login
+      // Verificar si biometría está disponible y no tiene credenciales
+      const biometricStatus = await this.biometric.checkAvailability();
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/cars/list';
-      await this.router.navigateByUrl(returnUrl);
+
+      if (biometricStatus.available && !biometricStatus.hasCredentials) {
+        // Mostrar prompt para activar biometría
+        this.pendingCredentials = { email, password };
+        this.pendingReturnUrl = returnUrl;
+        this.showBiometricPrompt.set(true);
+      } else {
+        // Navegar directamente
+        await this.router.navigateByUrl(returnUrl);
+      }
     } catch (err) {
       // Track failed login
       this.analytics.trackEvent('login', {
@@ -316,6 +325,60 @@ export class LoginPage implements OnInit, OnDestroy {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  /**
+   * Aceptar activar biometría después del login
+   */
+  async acceptBiometricSetup(): Promise<void> {
+    if (!this.pendingCredentials) {
+      this.skipBiometricSetup();
+      return;
+    }
+
+    this.biometricPromptLoading.set(true);
+
+    try {
+      // Verificar identidad con biometría primero
+      const verified = await this.biometric.authenticate('Registra tu huella para acceso rápido');
+
+      if (verified) {
+        // Guardar credenciales
+        const saved = await this.biometric.saveCredentials(
+          this.pendingCredentials.email,
+          this.pendingCredentials.password
+        );
+
+        if (saved) {
+          await Haptics.impact({ style: ImpactStyle.Heavy });
+          this.analytics.trackEvent('biometric_setup', {
+            action: 'activated',
+            source: 'login_prompt',
+          });
+        }
+      }
+    } catch (err) {
+      console.error('Error setting up biometric:', err);
+    } finally {
+      this.biometricPromptLoading.set(false);
+      this.showBiometricPrompt.set(false);
+      this.pendingCredentials = null;
+      await this.router.navigateByUrl(this.pendingReturnUrl);
+    }
+  }
+
+  /**
+   * Omitir activación de biometría
+   */
+  async skipBiometricSetup(): Promise<void> {
+    this.analytics.trackEvent('biometric_setup', {
+      action: 'skipped',
+      source: 'login_prompt',
+    });
+
+    this.showBiometricPrompt.set(false);
+    this.pendingCredentials = null;
+    await this.router.navigateByUrl(this.pendingReturnUrl);
   }
 
   /**
