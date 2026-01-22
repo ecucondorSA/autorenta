@@ -1,3 +1,9 @@
+## [3.27.0](https://github.com/ecucondorSA/autorenta/compare/v3.26.3...v3.27.0) (2026-01-22)
+
+### ✨ Features
+
+* **auth:** add bank-style biometric login button ([544cdd3](https://github.com/ecucondorSA/autorenta/commit/544cdd38deb995348a3ea2651c423e95d9adfc71))
+
 ## [3.26.3](https://github.com/ecucondorSA/autorenta/compare/v3.26.2...v3.26.3) (2026-01-21)
 
 ### 🐛 Bug Fixes
