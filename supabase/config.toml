@@ -31,3 +31,19 @@ verify_jwt = true
 [functions.sitemap]
 # Sitemap must be public for Google Bot
 verify_jwt = false
+
+[functions.passkeys-registration-options]
+# Passkey registration options - requires authentication
+verify_jwt = true
+
+[functions.passkeys-registration-verify]
+# Passkey registration verification - requires authentication
+verify_jwt = true
+
+[functions.passkeys-authentication-options]
+# Passkey authentication options - public (before login)
+verify_jwt = false
+
+[functions.passkeys-authentication-verify]
+# Passkey authentication verification - public (creates session)
+verify_jwt = false

@@ -59,11 +59,13 @@ serve(async (req) => {
       .single();
 
     if (passkeyError || !passkey) {
+      console.error('Passkey lookup failed:', passkeyError, 'credential.id:', credential.id);
       return new Response(
-        JSON.stringify({ error: 'Passkey not found' }),
+        JSON.stringify({ error: 'Passkey not found', credentialId: credential.id, dbError: passkeyError }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+    console.log('Passkey found for user:', passkey.user_id);
 
     // Obtener challenge guardado (cualquier challenge de autenticación no expirado)
     const { data: challengeRecord, error: challengeError } = await supabaseAdmin
@@ -76,11 +78,13 @@ serve(async (req) => {
       .single();
 
     if (challengeError || !challengeRecord) {
+      console.error('Challenge lookup failed:', challengeError);
       return new Response(
-        JSON.stringify({ error: 'Challenge expired or not found. Please try again.' }),
+        JSON.stringify({ error: 'Challenge expired or not found', dbError: challengeError }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+    console.log('Challenge found:', challengeRecord.challenge.substring(0, 20) + '...');
 
     // Verificar clientDataJSON
     const clientData = parseClientDataJSON(credential.response.clientDataJSON);
@@ -91,11 +95,21 @@ serve(async (req) => {
     );
 
     if (!clientDataVerification.verified) {
+      console.error('Client data verification failed:', clientDataVerification.error);
+      console.error('ClientData:', JSON.stringify(clientData));
+      console.error('Expected challenge:', challengeRecord.challenge);
       return new Response(
-        JSON.stringify({ error: clientDataVerification.error }),
+        JSON.stringify({
+          error: clientDataVerification.error,
+          step: 'clientDataVerification',
+          clientDataOrigin: clientData.origin,
+          clientDataChallenge: clientData.challenge?.substring(0, 20) + '...',
+          expectedChallenge: challengeRecord.challenge.substring(0, 20) + '...',
+        }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+    console.log('Client data verified OK');
 
     // Parsear authenticatorData
     const authenticatorDataBytes = base64UrlDecode(credential.response.authenticatorData);
@@ -141,11 +155,17 @@ serve(async (req) => {
     );
 
     if (!signatureValid) {
+      console.error('Signature verification failed for credential:', credential.id);
       return new Response(
-        JSON.stringify({ error: 'Signature verification failed' }),
+        JSON.stringify({
+          error: 'Signature verification failed',
+          step: 'signatureVerification',
+          credentialId: credential.id,
+        }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+    console.log('Signature verified OK');
 
     // Actualizar contador y last_used_at
     await supabaseAdmin
@@ -163,34 +183,68 @@ serve(async (req) => {
       .eq('id', challengeRecord.id);
 
     // Obtener email del usuario para generar sesión
+    console.log('Step 1: Getting user data for:', passkey.user_id);
     const { data: userData, error: userDataError } = await supabaseAdmin.auth.admin.getUserById(passkey.user_id);
 
     if (userDataError || !userData.user?.email) {
       console.error('Error getting user:', userDataError);
-      throw new Error('Failed to get user data');
+      throw new Error(`Failed to get user data: ${JSON.stringify(userDataError)}`);
     }
+    console.log('Step 1 OK: User email:', userData.user.email);
 
-    // Generar magic link para crear sesión (sin enviarlo por email)
+    // Generar magic link para crear sesión (sin enviar email)
+    console.log('Step 2: Generating magiclink');
     const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
       type: 'magiclink',
       email: userData.user.email,
     });
 
-    if (linkError || !linkData.properties?.hashed_token) {
+    if (linkError) {
       console.error('Error generating link:', linkError);
-      throw new Error('Failed to generate session link');
+      throw new Error(`Failed to generate link: ${JSON.stringify(linkError)}`);
     }
+    if (!linkData.properties?.hashed_token) {
+      console.error('No hashed_token in response:', linkData);
+      throw new Error(`No hashed_token in link response`);
+    }
+    console.log('Step 2 OK: Got hashed_token');
 
     // Verificar el token para obtener la sesión
+    // Nota: Usar 'email' en lugar de 'magiclink' según documentación oficial
+    // https://github.com/orgs/supabase/discussions/12627
+    console.log('Step 3: Verifying OTP with email type');
     const { data: sessionData, error: sessionError } = await supabaseAdmin.auth.verifyOtp({
       token_hash: linkData.properties.hashed_token,
       type: 'email',
     });
 
-    if (sessionError || !sessionData.session) {
-      console.error('Error verifying OTP:', sessionError);
-      throw new Error('Failed to create session');
+    if (sessionError) {
+      console.error('Error verifying OTP:', JSON.stringify(sessionError, null, 2));
+      // Retornar error detallado para debugging
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Session creation failed',
+          step: 'verifyOtp',
+          details: sessionError,
+          tokenHashPreview: linkData.properties.hashed_token.substring(0, 20) + '...',
+        }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
+    if (!sessionData.session) {
+      console.error('No session in response:', JSON.stringify(sessionData, null, 2));
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'No session returned',
+          step: 'verifyOtp',
+          sessionData: sessionData,
+        }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    console.log('Step 3 OK: Session created');
 
     console.log(`✅ Passkey authentication successful for user ${passkey.user_id}`);
 
@@ -203,11 +257,14 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('❌ Error in passkeys-authentication-verify:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    const errorStack = error instanceof Error ? error.stack : '';
+    console.error('❌ Error in passkeys-authentication-verify:', errorMessage, errorStack);
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : 'Internal server error',
+        error: errorMessage,
+        debug: errorStack?.substring(0, 500),
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
