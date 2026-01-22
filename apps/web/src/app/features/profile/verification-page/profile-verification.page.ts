@@ -173,19 +173,19 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                       
                       <!-- DNI Block -->
                       <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                          <h4 class="text-xs font-bold text-text-muted uppercase tracking-wider">Documento de Identidad</h4>
+                        <div class="flex items-center justify-between gap-2">
+                          <h4 class="text-xs font-bold text-text-muted uppercase tracking-wider truncate">Documento de Identidad</h4>
                           @if (isDniVerified()) {
-                            <span class="flex items-center gap-1 text-[10px] font-bold text-success-600 bg-success-50 px-2 py-0.5 rounded-full">
-                              VERIFICADO
+                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold text-white bg-green-500 px-3 py-1 rounded-full">
+                              ✓ VERIFICADO
                             </span>
                           } @else if (isDniInReview()) {
-                            <span class="flex items-center gap-1 text-[10px] font-bold text-warning-600 bg-warning-50 px-2 py-0.5 rounded-full">
-                              EN REVISIÓN
+                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold text-white bg-yellow-500 px-3 py-1 rounded-full">
+                              ⏳ EN REVISIÓN
                             </span>
                           } @else {
-                            <span class="flex items-center gap-1 text-[10px] font-bold text-text-muted bg-surface-secondary px-2 py-0.5 rounded-full">
-                              PENDIENTE
+                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold text-white bg-red-500 px-3 py-1 rounded-full">
+                              ⚠ PENDIENTE
                             </span>
                           }
                         </div>
@@ -198,19 +198,19 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
 
                       <!-- License Block -->
                       <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                          <h4 class="text-xs font-bold text-text-muted uppercase tracking-wider">Licencia de Conducir</h4>
+                        <div class="flex items-center justify-between gap-2">
+                          <h4 class="text-xs font-bold text-text-muted uppercase tracking-wider truncate">Licencia de Conducir</h4>
                           @if (isLicenseVerified()) {
-                            <span class="flex items-center gap-1 text-[10px] font-bold text-success-600 bg-success-50 px-2 py-0.5 rounded-full">
-                              VERIFICADO
+                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold text-white bg-green-500 px-3 py-1 rounded-full">
+                              ✓ VERIFICADO
                             </span>
                           } @else if (isLicenseInReview()) {
-                            <span class="flex items-center gap-1 text-[10px] font-bold text-warning-600 bg-warning-50 px-2 py-0.5 rounded-full">
-                              EN REVISIÓN
+                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold text-white bg-yellow-500 px-3 py-1 rounded-full">
+                              ⏳ EN REVISIÓN
                             </span>
                           } @else {
-                            <span class="flex items-center gap-1 text-[10px] font-bold text-text-muted bg-surface-secondary px-2 py-0.5 rounded-full">
-                              PENDIENTE
+                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold text-white bg-red-500 px-3 py-1 rounded-full">
+                              ⚠ PENDIENTE
                             </span>
                           }
                         </div>
