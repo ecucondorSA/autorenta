@@ -3,6 +3,7 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
+import { BiometricAuthService } from '@core/services/auth/biometric-auth.service';
 import { FacebookAuthService } from '@core/services/auth/facebook-auth.service';
 import { GoogleOneTapService } from '@core/services/auth/google-one-tap.service';
 import { PasskeysService } from '@core/services/auth/passkeys.service';
@@ -42,6 +43,7 @@ export class LoginPage implements OnInit, OnDestroy {
   private readonly googleOneTap = inject(GoogleOneTapService);
   private readonly facebookAuth = inject(FacebookAuthService);
   private readonly passkeys = inject(PasskeysService);
+  private readonly biometric = inject(BiometricAuthService);
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -51,6 +53,11 @@ export class LoginPage implements OnInit, OnDestroy {
   readonly oneTapAvailable = this.googleOneTap.isAvailable;
   readonly passkeysSupported = this.passkeys.isSupported;
   readonly passkeysState = this.passkeys.state;
+
+  // Biometría nativa (huella/Face ID)
+  readonly biometricReady = this.biometric.isReady;
+  readonly biometricLoading = signal(false);
+  readonly biometryLabel = signal('Huella digital');
 
   constructor() {
     // Escuchar cuando One-Tap tenga éxito para trackear analytics
@@ -75,6 +82,12 @@ export class LoginPage implements OnInit, OnDestroy {
     const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
     if (returnUrl) {
       this.showForm.set(true);
+    }
+
+    // Verificar disponibilidad de biometría nativa
+    const biometricStatus = await this.biometric.checkAvailability();
+    if (biometricStatus.available) {
+      this.biometryLabel.set(this.biometric.getBiometryLabel());
     }
 
     // Inicializar Google One-Tap si está disponible
@@ -123,6 +136,13 @@ export class LoginPage implements OnInit, OnDestroy {
     try {
       const { email, password } = this.form.getRawValue();
       await this.auth.signIn(email, password);
+
+      // Guardar credenciales para biometría (si está disponible)
+      const biometricStatus = await this.biometric.checkAvailability();
+      if (biometricStatus.available && !biometricStatus.hasCredentials) {
+        // Guardar silenciosamente para el próximo login
+        await this.biometric.saveCredentials(email, password);
+      }
 
       // Track successful login
       this.analytics.trackEvent('login', {
@@ -295,6 +315,62 @@ export class LoginPage implements OnInit, OnDestroy {
       );
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  /**
+   * Login con biometría nativa (huella/Face ID) - Estilo banco
+   */
+  async signInWithBiometric(): Promise<void> {
+    if (this.biometricLoading()) return;
+
+    this.biometricLoading.set(true);
+    this.error.set(null);
+
+    // Haptic feedback al tocar
+    await Haptics.impact({ style: ImpactStyle.Medium });
+
+    this.analytics.trackEvent('login', {
+      method: 'biometric_native',
+      source: 'login_page',
+      step: 'initiated',
+    });
+
+    try {
+      const credentials = await this.biometric.loginWithBiometric();
+
+      if (credentials) {
+        // Login con las credenciales recuperadas
+        await this.auth.signIn(credentials.email, credentials.password);
+
+        // Haptic success
+        await Haptics.impact({ style: ImpactStyle.Heavy });
+
+        this.analytics.trackEvent('login', {
+          method: 'biometric_native',
+          source: 'login_page',
+          step: 'completed',
+        });
+
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/cars/list';
+        await this.router.navigateByUrl(returnUrl);
+      } else {
+        this.error.set('No se pudo autenticar. Intentá con tu email y contraseña.');
+        this.showForm.set(true);
+      }
+    } catch (err) {
+      this.analytics.trackEvent('login', {
+        method: 'biometric_native',
+        source: 'login_page',
+        error_message: err instanceof Error ? err.message : 'unknown',
+      });
+
+      this.error.set(
+        err instanceof Error ? err.message : 'Error de autenticación biométrica',
+      );
+      this.showForm.set(true);
+    } finally {
+      this.biometricLoading.set(false);
     }
   }
 }
