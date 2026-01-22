@@ -1,3 +1,9 @@
+## [3.28.1](https://github.com/ecucondorSA/autorenta/compare/v3.28.0...v3.28.1) (2026-01-22)
+
+### 🐛 Bug Fixes
+
+* **verification:** add status badges and fix confusing icon ([c536184](https://github.com/ecucondorSA/autorenta/commit/c5361842be3ca625c20e4939a740253bc5de4082))
+
 ## [3.28.0](https://github.com/ecucondorSA/autorenta/compare/v3.27.1...v3.28.0) (2026-01-22)
 
 ### ✨ Features
