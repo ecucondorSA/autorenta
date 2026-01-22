@@ -1,3 +1,9 @@
+## [3.28.2](https://github.com/ecucondorSA/autorenta/compare/v3.28.1...v3.28.2) (2026-01-22)
+
+### 🐛 Bug Fixes
+
+* **verification:** improve badge visibility with flex-shrink-0 ([ad9ded3](https://github.com/ecucondorSA/autorenta/commit/ad9ded3d26ce9eedf0c26e81218607ed53ffa534))
+
 ## [3.28.1](https://github.com/ecucondorSA/autorenta/compare/v3.28.0...v3.28.1) (2026-01-22)
 
 ### 🐛 Bug Fixes
