@@ -1,3 +1,9 @@
+## [3.27.1](https://github.com/ecucondorSA/autorenta/compare/v3.27.0...v3.27.1) (2026-01-22)
+
+### 🐛 Bug Fixes
+
+* **passkeys:** add debug logging and JWT config for passkey functions ([2cd0b2f](https://github.com/ecucondorSA/autorenta/commit/2cd0b2f7fd0ca1206aa0a1548bad70c2f46bd189))
+
 ## [3.27.0](https://github.com/ecucondorSA/autorenta/compare/v3.26.3...v3.27.0) (2026-01-22)
 
 ### ✨ Features
