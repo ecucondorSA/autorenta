@@ -1,3 +1,9 @@
+## [3.31.1](https://github.com/ecucondorSA/autorenta/compare/v3.31.0...v3.31.1) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **guardrails:** consolidate duplicate RPC functions in migrations ([d489212](https://github.com/ecucondorSA/autorenta/commit/d4892126f8446f42e2d69395a57f5a64cd6e0493))
+
 ## [3.31.0](https://github.com/ecucondorSA/autorenta/compare/v3.30.0...v3.31.0) (2026-01-23)
 
 ### ✨ Features
