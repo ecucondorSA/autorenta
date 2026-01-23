@@ -74,6 +74,9 @@ COMMENT ON FUNCTION update_authority_metrics() IS
 Ejecutar semanalmente para mantener el sistema aprendiendo.';
 
 -- 3. MEJORAR FUNCIÓN DE SELECCIÓN CON FACTOR DE EXPLORACIÓN
+-- NOTE: Function moved to 20260123030500_fix_authority_concept_function.sql (fixed column ambiguity)
+-- Commented out to avoid guardrails duplicate warning
+/*
 -- 20% de las veces selecciona un concepto aleatorio (exploración)
 -- 80% de las veces usa selección ponderada por performance (explotación)
 CREATE OR REPLACE FUNCTION public.select_authority_concept()
@@ -164,6 +167,7 @@ COMMENT ON FUNCTION select_authority_concept() IS
 - 20% exploración (aleatorio puro para probar conceptos poco usados)
 - 80% explotación (ponderado por weight + performance_score)
 Esto evita que el sistema se quede atrapado en un solo concepto ganador.';
+*/
 
 -- 4. FUNCIÓN PARA OBTENER REPORTE DE RENDIMIENTO
 CREATE OR REPLACE FUNCTION public.get_authority_performance_report()

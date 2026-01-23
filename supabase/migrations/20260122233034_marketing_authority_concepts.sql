@@ -132,6 +132,9 @@ VALUES
 ON CONFLICT DO NOTHING;
 
 -- 3. FUNCIÓN PARA SELECCIONAR CONCEPTO ALEATORIO PONDERADO
+-- NOTE: Function moved to 20260123030500_fix_authority_concept_function.sql (with ε-greedy strategy)
+-- Commented out to avoid guardrails duplicate warning
+/*
 CREATE OR REPLACE FUNCTION public.select_authority_concept()
 RETURNS TABLE (
   concept_id UUID,
@@ -183,6 +186,7 @@ BEGIN
   END LOOP;
 END;
 $$;
+*/
 
 -- 4. AGREGAR COLUMNA DE REFERENCIA A MARKETING_CONTENT_QUEUE
 ALTER TABLE marketing_content_queue
@@ -194,9 +198,9 @@ COMMENT ON TABLE marketing_authority_concepts IS
 Conecta dolores de crianza con analogías financieras de activos parados.
 Diseñado para scroll-stopping en Instagram con carga emocional.';
 
-COMMENT ON FUNCTION select_authority_concept() IS
-'Selecciona un concepto de autoridad aleatorio usando pesos.
-Retorna term_name, parenting_pain_point, financial_analogy, image_scene_concept.';
+-- COMMENT ON FUNCTION select_authority_concept() - moved to 20260123030500
+-- 'Selecciona un concepto de autoridad aleatorio usando pesos.
+-- Retorna term_name, parenting_pain_point, financial_analogy, image_scene_concept.';
 
 -- 6. LOG DE MIGRACIÓN
 INSERT INTO public.social_publishing_scheduler_log (

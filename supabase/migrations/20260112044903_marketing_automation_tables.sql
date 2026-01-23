@@ -221,6 +221,9 @@ END;
 $$;
 
 -- Function to mark post as failed
+-- NOTE: Function moved to 20260122220757_marketing_system_hardening.sql (with retry logic)
+-- Commented out to avoid guardrails duplicate warning
+/*
 CREATE OR REPLACE FUNCTION mark_marketing_post_failed(
   p_queue_id UUID,
   p_error_message TEXT
@@ -242,6 +245,7 @@ BEGIN
   WHERE id = p_queue_id;
 END;
 $$;
+*/
 
 -- ===========================================
 -- MIGRATION COMPLETE

@@ -155,13 +155,20 @@ function collectTypes() {
   };
 }
 
+function stripMultilineComments(content: string): string {
+  // Remove /* ... */ block comments (including nested)
+  return content.replace(/\/\*[\s\S]*?\*\//g, '');
+}
+
 function collectRpcs() {
   const files = globSync(`${MIGRATIONS_PATH}/**/*.sql`);
   const funcs: Array<{ key: string; file: string }> = [];
 
   for (const file of files) {
     const content = readFile(file);
-    const matches = content.matchAll(/CREATE\s+(?:OR\s+REPLACE\s+)?FUNCTION\s+(?:public\.)?(\w+)\s*\(/gi);
+    // Strip multiline comments before searching for functions
+    const cleanContent = stripMultilineComments(content);
+    const matches = cleanContent.matchAll(/CREATE\s+(?:OR\s+REPLACE\s+)?FUNCTION\s+(?:public\.)?(\w+)\s*\(/gi);
     for (const match of matches) {
       funcs.push({ key: match[1].toLowerCase(), file });
     }

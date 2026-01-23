@@ -3,6 +3,9 @@
 -- Created: 2026-01-19
 
 -- 1. Create the generation function
+-- NOTE: Function moved to 20260123025200_content_mix_strategy.sql (Content Mix 40/40/20)
+-- Commented out to avoid guardrails duplicate warning
+/*
 CREATE OR REPLACE FUNCTION public.generate_daily_content_batch()
 RETURNS void
 LANGUAGE plpgsql
@@ -65,6 +68,7 @@ BEGIN
   END LOOP;
 END;
 $$;
+*/
 
 -- 2. Schedule the cron job (Daily at 06:00 UTC)
 -- This ensures posts are generated early in the day for the 09:00, 12:00, 19:00 slots.

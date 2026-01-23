@@ -6,7 +6,10 @@
 
 -- ============================================================================
 -- 1. UPDATE generate_daily_content_batch() to exclude TikTok and Twitter
+-- NOTE: Function moved to 20260123025200_content_mix_strategy.sql (Content Mix 40/40/20)
+-- Commented out to avoid guardrails duplicate warning
 -- ============================================================================
+/*
 CREATE OR REPLACE FUNCTION public.generate_daily_content_batch()
 RETURNS void
 LANGUAGE plpgsql
@@ -69,6 +72,7 @@ $$;
 COMMENT ON FUNCTION public.generate_daily_content_batch() IS
 'Generates daily marketing content for Instagram and Facebook only.
 TikTok and Twitter SUSPENDED as of 2026-01-22 (APIs not functioning).';
+*/
 
 -- ============================================================================
 -- 2. Cancel any pending TikTok/Twitter posts in queue
