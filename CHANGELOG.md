@@ -1,3 +1,9 @@
+## [3.31.0](https://github.com/ecucondorSA/autorenta/compare/v3.30.0...v3.31.0) (2026-01-23)
+
+### ✨ Features
+
+* **marketing:** implement Content Mix 40/40/20 strategy ([ca80de4](https://github.com/ecucondorSA/autorenta/commit/ca80de42ab79ef2c30e733a76f2c7e0a85c52073))
+
 ## [3.30.0](https://github.com/ecucondorSA/autorenta/compare/v3.29.0...v3.30.0) (2026-01-23)
 
 ### ✨ Features
