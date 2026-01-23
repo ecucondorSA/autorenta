@@ -1,3 +1,9 @@
+## [3.32.7](https://github.com/ecucondorSA/autorenta/compare/v3.32.6...v3.32.7) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **build:** add missing closing brace in cloudflare config script ([e99a7ac](https://github.com/ecucondorSA/autorenta/commit/e99a7ac60b110743ae1978f95fea5417f85b59cb))
+
 ## [3.32.6](https://github.com/ecucondorSA/autorenta/compare/v3.32.5...v3.32.6) (2026-01-23)
 
 ### 🐛 Bug Fixes
