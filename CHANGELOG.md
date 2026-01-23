@@ -1,3 +1,9 @@
+## [3.32.0](https://github.com/ecucondorSA/autorenta/compare/v3.31.2...v3.32.0) (2026-01-23)
+
+### ✨ Features
+
+* **e2e:** implement Zero Tolerance Console Error Guardian ([d4af8b9](https://github.com/ecucondorSA/autorenta/commit/d4af8b90b8b3d94a62536511f7ea8d7c1eda63f0))
+
 ## [3.31.2](https://github.com/ecucondorSA/autorenta/compare/v3.31.1...v3.31.2) (2026-01-23)
 
 ### 🐛 Bug Fixes
