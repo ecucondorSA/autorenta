@@ -23,7 +23,8 @@ import { getCorsHeaders } from '../_shared/cors.ts';
 // ============================================================================
 
 type ContentType = 'tip' | 'promo' | 'car_spotlight' | 'testimonial' | 'seasonal' | 'community';
-type Platform = 'tiktok' | 'instagram' | 'facebook' | 'twitter';
+// ACTIVE PLATFORMS ONLY (TikTok/Twitter suspended 2026-01-22)
+type Platform = 'instagram' | 'facebook';
 type Language = 'es' | 'pt';
 
 interface GenerateContentRequest {
@@ -33,7 +34,6 @@ interface GenerateContentRequest {
   theme?: string;
   language?: Language;
   generate_image?: boolean;
-  generate_video?: boolean; // For TikTok - uses Veo 3.1
   batch_mode?: boolean; // Generate posts for all daily slots
   save_to_db?: boolean;
 }
@@ -48,13 +48,6 @@ interface GeneratedContent {
   image?: {
     url?: string;
     base64?: string;
-  };
-  video?: {
-    url?: string;
-    operation_id?: string; // For async video generation
-    status?: 'generating' | 'ready' | 'failed';
-    error?: string; // Error message if video generation failed
-    model_used?: string; // Which Veo model was used
   };
   suggested_post_time?: string;
   error?: string;
@@ -91,13 +84,11 @@ const SUPABASE_SERVICE_KEY = (
 ).trim();
 const MARKETING_MEDIA_BUCKET = Deno.env.get('MARKETING_MEDIA_BUCKET') || 'car-images';
 
-// Platform-specific constraints
+// Platform-specific constraints (TikTok/Twitter suspended 2026-01-22)
 // SEO 2025: Instagram ya no prioriza hashtags, máximo 5 relevantes es óptimo
 const PLATFORM_LIMITS: Record<Platform, { maxChars: number; maxHashtags: number; style: string }> = {
-  tiktok: { maxChars: 150, maxHashtags: 5, style: 'casual, trendy, with emojis' },
   instagram: { maxChars: 2200, maxHashtags: 5, style: 'engaging, visual-focused, lifestyle, SEO-optimized' },
   facebook: { maxChars: 500, maxHashtags: 5, style: 'conversational, community-focused, authentic' },
-  twitter: { maxChars: 280, maxHashtags: 3, style: 'concise, punchy, news-like' },
 };
 
 // Content type templates
@@ -154,7 +145,7 @@ serve(async (req) => {
 
   try {
     const request: GenerateContentRequest = await req.json();
-    const { content_type, platform, car_id, theme, language = 'es', generate_image = false, generate_video = false, batch_mode = false, save_to_db = false } = request;
+    const { content_type, platform, car_id, theme, language = 'es', generate_image = false, batch_mode = false, save_to_db = false } = request;
 
     // Validate required fields
     if (!content_type || !platform) {
@@ -216,17 +207,10 @@ serve(async (req) => {
             }
         }
 
-        // Generate video
-        let videoContent: { url?: string; operation_id?: string; status?: 'generating' | 'ready' | 'failed' } | undefined;
-        if (generate_video || platform === 'tiktok') {
-            videoContent = await generateMarketingVideo(supabase, textContent.caption, carData, content_type);
-        }
-
         const resultItem: GeneratedContent = {
             success: true,
             text: textContent,
             image: imageContent,
-            video: videoContent,
             suggested_post_time: timeStr,
         };
         if (imageUploadError) {
@@ -237,15 +221,9 @@ serve(async (req) => {
 
         // Save to DB if requested
         if (save_to_db) {
-            const mediaUrl = videoContent?.url || imageContent?.url;
-            const mediaType = videoContent ? 'video' : imageContent ? 'image' : null;
+            const mediaUrl = imageContent?.url;
+            const mediaType = imageContent ? 'image' : null;
 
-            // Only save if we have media (if requested) or if it's text-only
-            // If video is still generating (status='generating'), we might want to save it with a flag?
-            // For simplicity, we save what we have. If video comes later, it's tricky.
-            // Veo video generation saves to storage but returns 'generating' if it takes too long.
-            // If it returns 'ready', we have the URL.
-            
             const queueItem = {
                 platform,
                 content_type,
@@ -260,7 +238,6 @@ serve(async (req) => {
                     car_id: carData?.id,
                     theme,
                     language,
-                    video_operation_id: videoContent?.operation_id,
                     // SEO 2026 fields
                     alt_text: textContent.alt_text || '',
                     seo_keywords: textContent.seo_keywords || [],
@@ -833,258 +810,6 @@ async function uploadMarketingImageToStorage(params: {
 }
 
 // ============================================================================
-// VIDEO GENERATION WITH VEO (with fallback chain)
-// ============================================================================
-
-// Veo models - try in order (3.1 preview → 3.0 stable → 2.0 stable)
-const VEO_MODELS = [
-  { id: 'veo-3.1-generate-preview', name: 'Veo 3.1', cost: '$0.40/s' },
-  { id: 'veo-3.0-generate-001', name: 'Veo 3.0', cost: '$0.35/s' },
-  { id: 'veo-2.0-generate-001', name: 'Veo 2.0', cost: '$0.25/s' },
-];
-
-// Video prompts for TikTok marketing
-const TIKTOK_VIDEO_PROMPTS: Record<ContentType, string[]> = {
-  tip: [
-    'A confident Latin American person in their 30s giving car rental tips directly to camera, friendly smile, natural lighting, urban Buenos Aires street background, vertical 9:16 format, casual vlog style, speaks in Spanish',
-    'Close-up of hands demonstrating car inspection before rental, clean modern sedan, Latin American setting, educational tone, vertical format',
-    'Young Latin American couple checking a rental car together, pointing at tires and mirrors, helpful tutorial vibe, sunny day in Argentina',
-  ],
-  promo: [
-    'Excited Latin American person (25-35) receiving car keys, genuine happiness, modern car in background, celebratory moment, urban setting, vertical 9:16 format',
-    'Time-lapse of booking a car on phone app, then cut to person driving happily on scenic Argentine road, fast-paced promo style',
-    'Multiple quick cuts: app interface, key handover, driving scenes, happy customers, energetic marketing video style',
-  ],
-  car_spotlight: [
-    'Cinematic slow motion walk-around of a modern sedan, {car_description}, golden hour lighting, Argentine cityscape, vertical format, luxury feel',
-    'Interior reveal of car, leather seats, dashboard features, smooth camera movement, aspirational lifestyle content',
-    'Car driving through scenic route in Mendoza wine country, cinematic aerial-style shots, premium vehicle showcase',
-  ],
-  testimonial: [
-    'Real-looking testimonial: Latin American person (30-45) speaking to camera about their car rental experience, living room or outdoor cafe setting, authentic and warm',
-    'Split screen: customer talking about their trip, B-roll of the car and destination, heartfelt story format',
-    'Before/after style: person stressed about transportation, then happy driving a rental car, transformation narrative',
-  ],
-  seasonal: [
-    'Summer road trip vibes: friends loading luggage into car trunk, beach gear visible, excited energy, Punta del Este coastal vibes',
-    'Holiday season: family arriving at vacation destination by car, warm reunion moments, festive atmosphere',
-    'Long weekend getaway: couple driving through scenic mountains, romantic adventure energy, aspirational travel content',
-  ],
-  community: [
-    'Interactive-style video: Latin American host asking viewers questions about travel preferences, engaging eye contact, call-to-action to comment',
-    'Behind-the-scenes of car owner preparing their vehicle for rental, community trust building, authentic content',
-    'Montage of different AutoRentar users waving and saying hello, community celebration, diverse Latin American faces',
-  ],
-};
-
-interface VideoResult {
-  url?: string;
-  operation_id?: string;
-  status?: 'generating' | 'ready' | 'failed';
-  error?: string;
-  model_used?: string;
-}
-
-async function generateMarketingVideo(
-  supabase: ReturnType<typeof createClient>,
-  caption: string,
-  carData: CarData | null,
-  contentType: ContentType
-): Promise<VideoResult | undefined> {
-  if (!GEMINI_API_KEY) {
-    console.log('[generate-marketing-content] No Gemini API key, skipping video generation');
-    return { status: 'failed', error: 'No GEMINI_API_KEY configured' };
-  }
-
-  // Build video prompt
-  const promptTemplates = TIKTOK_VIDEO_PROMPTS[contentType];
-  let videoPrompt = promptTemplates[Math.floor(Math.random() * promptTemplates.length)];
-
-  if (carData) {
-    const carDescription = `${carData.color || 'silver'} ${carData.brand} ${carData.model} ${carData.year}`;
-    videoPrompt = videoPrompt.replace('{car_description}', carDescription);
-  } else {
-    videoPrompt = videoPrompt.replace('{car_description}', 'modern silver sedan');
-  }
-
-  videoPrompt += ` This is a marketing video for AutoRentar, a peer-to-peer car rental platform in Latin America. The video should feel authentic, not stock footage. Caption context: "${caption.substring(0, 100)}..."`;
-
-  // Try each Veo model in order
-  const errors: string[] = [];
-
-  for (const model of VEO_MODELS) {
-    console.log(`[generate-marketing-content] Trying video generation with ${model.name}...`);
-
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model.id}:predictLongRunning`;
-
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': GEMINI_API_KEY,
-        },
-        body: JSON.stringify({
-          instances: [{ prompt: videoPrompt }],
-          parameters: {
-            aspectRatio: '9:16',
-            durationSeconds: 8,
-            sampleCount: 1,
-          },
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        const errorMsg = `${model.name} (${response.status}): ${errorText.substring(0, 200)}`;
-        console.error(`[generate-marketing-content] ${errorMsg}`);
-        errors.push(errorMsg);
-
-        // If 403/404, try next model
-        if (response.status === 403 || response.status === 404 || response.status === 400) {
-          continue;
-        }
-        // For other errors, stop trying
-        break;
-      }
-
-      // Success! Start polling
-      const operationData = await response.json();
-      const operationName = operationData.name;
-
-      console.log(`[generate-marketing-content] ${model.name} started, operation:`, operationName);
-
-      // Poll for completion (max 120s - Edge Functions can run up to 150s)
-      const maxPollTime = 120000;
-      const pollInterval = 5000;
-      const startTime = Date.now();
-
-      while (Date.now() - startTime < maxPollTime) {
-        await new Promise(resolve => setTimeout(resolve, pollInterval));
-
-        const pollResponse = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/${operationName}`,
-          {
-            headers: {
-              'x-goog-api-key': GEMINI_API_KEY,
-            },
-          }
-        );
-
-        if (!pollResponse.ok) {
-          console.error('[generate-marketing-content] Poll error:', await pollResponse.text());
-          continue;
-        }
-
-        const pollData = await pollResponse.json();
-
-        if (pollData.done) {
-          if (pollData.error) {
-            console.error('[generate-marketing-content] Video generation failed:', pollData.error);
-            return {
-              status: 'failed',
-              operation_id: operationName,
-              error: pollData.error.message || 'Video generation failed',
-              model_used: model.name,
-            };
-          }
-
-          const videoFile =
-            pollData.response?.generateVideoResponse?.generatedSamples?.[0]?.video ||
-            pollData.response?.generatedVideos?.[0]?.video;
-
-          const videoUri = videoFile?.uri || videoFile?.name;
-          if (videoUri) {
-            console.log(`[generate-marketing-content] Video generated with ${model.name}`);
-
-            // Download the video with API key
-            const videoResponse = await fetch(videoUri, {
-              headers: { 'x-goog-api-key': GEMINI_API_KEY },
-            });
-            if (!videoResponse.ok) {
-              const errorText = await videoResponse.text();
-              return {
-                status: 'failed',
-                operation_id: operationName,
-                error: `No se pudo descargar el video (${videoResponse.status}): ${errorText.substring(0, 120)}`,
-                model_used: model.name,
-              };
-            }
-
-            const videoBlob = await videoResponse.blob();
-            const contentType = videoBlob.type || 'video/mp4';
-            const extension = contentType.split('/')[1] || 'mp4';
-            const filePath = `marketing/videos/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
-
-            const { error: uploadError } = await supabase.storage
-              .from(MARKETING_MEDIA_BUCKET)
-              .upload(filePath, videoBlob, { contentType, upsert: false });
-
-            if (uploadError) {
-              return {
-                status: 'failed',
-                operation_id: operationName,
-                error: `No se pudo subir el video a Storage: ${uploadError.message}`,
-                model_used: model.name,
-              };
-            }
-
-            const { data: publicUrlData } = supabase.storage
-              .from(MARKETING_MEDIA_BUCKET)
-              .getPublicUrl(filePath);
-
-            if (!publicUrlData?.publicUrl) {
-              return {
-                status: 'failed',
-                operation_id: operationName,
-                error: 'No se pudo obtener la URL publica del video',
-                model_used: model.name,
-              };
-            }
-
-            return {
-              url: publicUrlData.publicUrl,
-              operation_id: operationName,
-              status: 'ready',
-              model_used: model.name,
-            };
-          }
-        }
-      }
-
-      // Timeout - return async status
-      console.log('[generate-marketing-content] Video still generating, returning for async');
-      return {
-        operation_id: operationName,
-        status: 'generating',
-        model_used: model.name,
-      };
-
-    } catch (error) {
-      const errorMsg = `${model.name}: ${error instanceof Error ? error.message : 'Unknown error'}`;
-      console.error(`[generate-marketing-content] ${errorMsg}`);
-      errors.push(errorMsg);
-      continue;
-    }
-  }
-
-  // All models failed
-  const combinedError = errors.length > 0
-    ? `Video generation failed. Tried: ${errors.join(' | ')}`
-    : 'All Veo models unavailable';
-
-  console.error('[generate-marketing-content]', combinedError);
-
-  // Return detailed error for frontend
-  return {
-    status: 'failed',
-    error: combinedError.includes('403')
-      ? 'Veo API requiere billing habilitado en Google AI Studio. Ve a aistudio.google.com → Settings → Billing para habilitar.'
-      : combinedError,
-  };
-}
-
-// ============================================================================
 // DATABASE HELPERS
 // ============================================================================
 
@@ -1135,12 +860,8 @@ async function getRandomAvailableCar(
 function getBestTimes(platform: Platform): { hour: number; minute: number }[] {
   // Best posting times for Argentina (UTC-3)
   // Based on engagement data for Latin American audiences
+  // TikTok/Twitter suspended 2026-01-22
   const bestTimes: Record<Platform, { hour: number; minute: number }[]> = {
-    tiktok: [
-      { hour: 9, minute: 0 },   // 9am Argentina
-      { hour: 12, minute: 0 },  // 12pm Argentina
-      { hour: 19, minute: 0 },  // 7pm Argentina
-    ],
     instagram: [
       { hour: 12, minute: 0 },  // 12pm Argentina
       { hour: 17, minute: 0 },  // 5pm Argentina
@@ -1150,11 +871,6 @@ function getBestTimes(platform: Platform): { hour: number; minute: number }[] {
       { hour: 13, minute: 0 },  // 1pm Argentina
       { hour: 16, minute: 0 },  // 4pm Argentina
       { hour: 20, minute: 0 },  // 8pm Argentina
-    ],
-    twitter: [
-      { hour: 8, minute: 0 },   // 8am Argentina
-      { hour: 12, minute: 0 },  // 12pm Argentina
-      { hour: 17, minute: 0 },  // 5pm Argentina
     ],
   };
   return bestTimes[platform];
