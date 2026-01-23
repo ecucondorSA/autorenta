@@ -1,3 +1,9 @@
+## [3.32.1](https://github.com/ecucondorSA/autorenta/compare/v3.32.0...v3.32.1) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **e2e:** isolate Guardian tests with [@guardian](https://github.com/guardian) tag ([80f8b6e](https://github.com/ecucondorSA/autorenta/commit/80f8b6e35b478ef12cd0a14bb47e6593ccd4348b))
+
 ## [3.32.0](https://github.com/ecucondorSA/autorenta/compare/v3.31.2...v3.32.0) (2026-01-23)
 
 ### ✨ Features
