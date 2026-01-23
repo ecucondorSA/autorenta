@@ -1,3 +1,9 @@
+## [3.31.2](https://github.com/ecucondorSA/autorenta/compare/v3.31.1...v3.31.2) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **csp:** add Google Identity Services and Facebook SDK to CSP ([9b40cf6](https://github.com/ecucondorSA/autorenta/commit/9b40cf693bac4adeeee5a2dc9faf53b0e1acd586))
+
 ## [3.31.1](https://github.com/ecucondorSA/autorenta/compare/v3.31.0...v3.31.1) (2026-01-23)
 
 ### 🐛 Bug Fixes
