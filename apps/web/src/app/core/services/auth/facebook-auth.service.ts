@@ -155,32 +155,24 @@ export class FacebookAuthService {
         throw new Error('No access token received from Facebook Login');
       }
 
-      this.logger.debug('Facebook Access Token received. Verifying with backend...', 'FacebookAuthService');
+      this.logger.debug('Facebook Access Token received. Signing in with Supabase...', 'FacebookAuthService');
 
-      // Exchange token for Supabase Session
-      const { data, error } = await this.supabase.functions.invoke('facebook-native-login', {
-        body: { accessToken: result.accessToken.token },
+      // Use Supabase's native signInWithIdToken for Facebook
+      // Facebook access tokens are accepted as idToken by Supabase
+      const { data, error } = await this.supabase.auth.signInWithIdToken({
+        provider: 'facebook',
+        token: result.accessToken.token,
       });
 
       if (error) {
-        throw new Error(`Edge Function Error: ${error.message}`);
+        throw new Error(`Supabase Auth Error: ${error.message}`);
       }
 
-      if (!data.success || !data.session) {
-        throw new Error(data.error || 'Failed to create session from Facebook token');
+      if (!data.session) {
+        throw new Error('Failed to create session from Facebook token');
       }
 
-      this.logger.debug('Session created. Setting Supabase session...', 'FacebookAuthService');
-
-      // Set Session in Supabase Client
-      const { error: setSessionError } = await this.supabase.auth.setSession({
-        access_token: data.session.access_token,
-        refresh_token: data.session.refresh_token,
-      });
-
-      if (setSessionError) {
-        throw new Error(`Failed to set session: ${setSessionError.message}`);
-      }
+      this.logger.debug('Session created successfully', 'FacebookAuthService');
 
       this.logger.info('Facebook Login Successful', 'FacebookAuthService');
 
