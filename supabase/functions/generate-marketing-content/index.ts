@@ -22,10 +22,20 @@ import { getCorsHeaders } from '../_shared/cors.ts';
 // TYPES
 // ============================================================================
 
-type ContentType = 'tip' | 'promo' | 'car_spotlight' | 'testimonial' | 'seasonal' | 'community';
+// Content types: legacy + new authority system
+type ContentType = 'tip' | 'promo' | 'car_spotlight' | 'testimonial' | 'seasonal' | 'community' | 'authority';
 // ACTIVE PLATFORMS ONLY (TikTok/Twitter suspended 2026-01-22)
 type Platform = 'instagram' | 'facebook';
 type Language = 'es' | 'pt';
+
+// Authority Concept from database (scroll-stopping psychology)
+interface AuthorityConcept {
+  concept_id: string;
+  term_name: string;
+  parenting_pain_point: string;
+  financial_analogy: string;
+  image_scene_concept: string;
+}
 
 interface GenerateContentRequest {
   content_type: ContentType;
@@ -156,6 +166,20 @@ serve(async (req) => {
 
     // Initialize Supabase client
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+    // ========================================================================
+    // AUTHORITY POSTS - New scroll-stopping psychology system
+    // ========================================================================
+    if (content_type === 'authority') {
+      const authorityResult = await generateAuthorityPost(supabase, platform, save_to_db);
+      return new Response(JSON.stringify(authorityResult), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // ========================================================================
+    // LEGACY CONTENT TYPES (tip, promo, car_spotlight, etc.)
+    // ========================================================================
 
     // Determine target times
     const targetTimes = batch_mode ? getAllSuggestedPostTimes(platform) : [getSuggestedPostTime(platform)];
@@ -653,6 +677,33 @@ const PHOTO_STYLES = [
   'Cinematic lighting, sun flare, golden hour, volumetric light, 8k resolution, highly detailed'
 ];
 
+// Authority post styles - Moody, emotional, scroll-stopping
+const AUTHORITY_PHOTO_STYLES = [
+  'Shot on 35mm film, Kodak Portra 400 grain, candid documentary style, honest textures.',
+  'Cinematic lighting, moody atmosphere, shallow depth of field, high-end editorial portrait.',
+  'Natural window light, 8k resolution, highly realistic, professional color grading.',
+  'iPhone 15 Pro Max quality, HDR, dramatic shadows, authentic emotional moment.'
+];
+
+// Stressed subjects for authority posts - Real, unfiltered moments
+const AUTHORITY_STRESSED_SUBJECTS = [
+  'A tired Latin American mother (30s) with messy hair, dark circles under eyes, holding a crying baby.',
+  'A stressed Latin American father (35s) sitting at a table surrounded by bills and baby bottles, looking overwhelmed.',
+  'A young Latin American couple having a tense discussion in a cluttered living room, body language shows tension.',
+  'A man staring blankly at his dusty car in a dark garage, shoulders slumped, looking burdened.',
+  'A woman alone on a couch, laptop open, baby monitor in hand, exhausted expression, 3AM lighting.',
+  'A parent scrolling phone with worried expression while older relatives point and give unsolicited advice.'
+];
+
+// Domestic settings for authority posts - Authentic Latin American homes
+const AUTHORITY_DOMESTIC_SETTINGS = [
+  'Realistic mess of family life in a Buenos Aires apartment, natural window light, toys scattered.',
+  'Dimly lit garage, concrete floor, feeling of confinement and stagnancy, dust particles visible.',
+  'Chaotic kitchen counter with baby gear and financial documents spread out, harsh fluorescent light.',
+  'Small living room in Montevideo, modest but clean, family photos on wall, cramped feeling.',
+  'Modern São Paulo apartment balcony, city lights below, sense of isolation despite proximity.'
+];
+
 // Improved Prompt Templates
 const MARKETING_IMAGE_PROMPTS: Record<ContentType, string[]> = {
   tip: [
@@ -806,6 +857,260 @@ async function uploadMarketingImageToStorage(params: {
     return { publicUrl, path: filePath };
   } catch (error) {
     return { error: error instanceof Error ? error.message : 'Unknown storage error' };
+  }
+}
+
+// ============================================================================
+// AUTHORITY POST GENERATION (Scroll-Stopping Psychology)
+// ============================================================================
+
+/**
+ * Generates an authority post using psychological concepts from the database.
+ * Uses a 4-paragraph structure: Drama → Bridge → Authority → CTA
+ */
+async function generateAuthorityPost(
+  supabase: ReturnType<typeof createClient>,
+  platform: Platform,
+  saveToDb: boolean
+): Promise<GeneratedContent> {
+  console.log('[authority] Starting authority post generation...');
+
+  // 1. GET STRATEGIC CONCEPT FROM DATABASE
+  const { data: conceptData, error: conceptError } = await supabase
+    .rpc('select_authority_concept');
+
+  if (conceptError || !conceptData?.[0]) {
+    console.error('[authority] Failed to get concept:', conceptError);
+    throw new Error('No authority concept available');
+  }
+
+  const concept: AuthorityConcept = conceptData[0];
+  console.log(`[authority] Selected concept: ${concept.term_name}`);
+
+  // 2. GENERATE EMOTIONAL IMAGE
+  const imageResult = await generateAuthorityImage(concept.image_scene_concept);
+
+  let mediaUrl: string | undefined;
+  if (imageResult?.base64 && saveToDb) {
+    const uploadResult = await uploadMarketingImageToStorage({
+      base64: imageResult.base64,
+      bucket: MARKETING_MEDIA_BUCKET,
+      contentType: 'image/png',
+      prefix: 'marketing/authority',
+    });
+    if (uploadResult?.publicUrl) {
+      mediaUrl = uploadResult.publicUrl;
+      console.log('[authority] Image uploaded:', mediaUrl);
+    }
+  }
+
+  // 3. GENERATE NARRATIVE TEXT (4-paragraph structure)
+  const textContent = await generateAuthorityText(concept, platform);
+
+  // 4. SAVE TO DATABASE IF REQUESTED
+  if (saveToDb) {
+    const scheduledFor = getSuggestedPostTime(platform);
+
+    const { error: insertError } = await supabase
+      .from('marketing_content_queue')
+      .insert({
+        content_type: 'authority',
+        platform,
+        text_content: textContent.caption,
+        media_url: mediaUrl,
+        media_type: 'image',
+        hashtags: textContent.hashtags,
+        scheduled_for: scheduledFor,
+        status: 'pending',
+        authority_concept_id: concept.concept_id,
+        metadata: {
+          authority_term: concept.term_name,
+          logic_applied: 'parenting_finance_bridge',
+          alt_text: textContent.alt_text,
+          seo_keywords: textContent.seo_keywords,
+        },
+      });
+
+    if (insertError) {
+      console.error('[authority] DB insert failed:', insertError);
+    } else {
+      console.log('[authority] Post saved to queue for:', scheduledFor);
+    }
+  }
+
+  return {
+    success: true,
+    text: textContent,
+    image: imageResult ? { url: mediaUrl, base64: imageResult.base64 } : undefined,
+    suggested_post_time: getSuggestedPostTime(platform),
+  };
+}
+
+/**
+ * Generates the emotional scroll-stopping image using the concept's scene.
+ * Combines: image_scene_concept + random stressed subject + domestic setting + style
+ */
+async function generateAuthorityImage(imageSceneConcept: string): Promise<{ base64?: string } | undefined> {
+  if (!GEMINI_API_KEY) {
+    console.log('[authority] No Gemini API key, skipping image generation');
+    return undefined;
+  }
+
+  try {
+    const style = AUTHORITY_PHOTO_STYLES[Math.floor(Math.random() * AUTHORITY_PHOTO_STYLES.length)];
+    const subject = AUTHORITY_STRESSED_SUBJECTS[Math.floor(Math.random() * AUTHORITY_STRESSED_SUBJECTS.length)];
+    const setting = AUTHORITY_DOMESTIC_SETTINGS[Math.floor(Math.random() * AUTHORITY_DOMESTIC_SETTINGS.length)];
+
+    // Combine all elements for maximum emotional impact
+    const finalPrompt = `
+      Candid 35mm film photography. ${subject}
+      Setting: ${setting}
+      Scene context: ${imageSceneConcept}
+      Emotion: Overwhelmed, raw, authentic, unfiltered, messy reality.
+      Style: ${style}
+      Technical: Kodak Portra 400 grain, cinematic lighting, realistic textures, sweat visible, imperfect skin, no makeup, 1:1 aspect ratio, no text overlays, photorealistic.
+    `.trim();
+
+    console.log('[authority] Generating image with prompt:', finalPrompt.substring(0, 100) + '...');
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: finalPrompt }] }],
+          generationConfig: {
+            responseModalities: ['IMAGE'],
+            imageConfig: { aspectRatio: '1:1' },
+          },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[authority] Gemini image error:', errorText);
+      return undefined;
+    }
+
+    const data = await response.json();
+    const base64Data = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+
+    if (!base64Data) {
+      console.warn('[authority] No image data in response');
+      return undefined;
+    }
+
+    console.log('[authority] Image generated successfully');
+    return { base64: base64Data };
+  } catch (error) {
+    console.error('[authority] Image generation error:', error);
+    return undefined;
+  }
+}
+
+/**
+ * Generates the 4-paragraph authority text using the psychological concept.
+ */
+async function generateAuthorityText(
+  concept: AuthorityConcept,
+  platform: Platform
+): Promise<{ caption: string; hashtags: string[]; call_to_action: string; alt_text?: string; seo_keywords?: string[] }> {
+  const platformConfig = PLATFORM_LIMITS[platform];
+
+  const systemPrompt = `Actúa como un experto en psicología del comportamiento y fundador de AutoRentar.
+Escribe un caption de Instagram con esta estructura exacta de 4 párrafos:
+
+1. EL DRAMA FAMILIAR (Hook emocional):
+   Basado en: "${concept.parenting_pain_point}"
+   Sé empático y crudo. Conecta con el dolor real de padres/madres.
+   Usa "Te dicen..." o "Te pasa que..." para generar identificación inmediata.
+
+2. EL PUENTE A AUTORENTAR:
+   Conecta ese cansancio emocional con el peso financiero de un auto parado.
+   Transición natural: "Igual que con tu hijo, con tu auto también..."
+   Muestra que es el MISMO patrón de consejos no solicitados.
+
+3. LA AUTORIDAD TÉCNICA:
+   Explica el término psicológico: "${concept.term_name}"
+   Aplícalo a la analogía financiera: "${concept.financial_analogy}"
+   Usa datos o lógica que demuestre expertise (no inventes números).
+
+4. CIERRE Y CTA:
+   Recomendación de AutoRentar como solución para filtrar el ruido.
+   CTA claro: "Link en bio" para Instagram.
+   Tono: confianza, no venta agresiva.
+
+REGLAS TÉCNICAS:
+- Idioma: Español latinoamericano (voseo rioplatense OK)
+- Máximo ${platformConfig.maxChars} caracteres
+- Máximo 5 hashtags ultra-relevantes
+- Tono: Brutalmente honesto, intelectual, profesional, empático
+- NO uses emojis excesivos (máximo 3-4, bien ubicados)
+- NO hagas engagement bait ("Like si...", "Comenta SÍ")
+- SIEMPRE menciona @autorentar o AutoRentar
+
+HASHTAGS OBLIGATORIOS:
+- #AutoRentar (marca)
+- 1-2 de nicho financiero/parenting
+- 1-2 geográficos (Argentina, Uruguay, Brasil)
+
+FORMATO DE RESPUESTA (JSON):
+{
+  "caption": "Párrafo 1\\n\\nPárrafo 2\\n\\nPárrafo 3\\n\\nPárrafo 4 + CTA",
+  "hashtags": ["AutoRentar", "hashtag2", "hashtag3", "hashtag4", "hashtag5"],
+  "call_to_action": "📲 Link en bio para empezar",
+  "alt_text": "Descripción emocional de la escena para SEO (máx 125 chars)",
+  "seo_keywords": ["keyword1", "keyword2", "keyword3"]
+}`;
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: systemPrompt }] }],
+        generationConfig: {
+          temperature: 0.85, // Slightly higher for more creative emotional content
+          maxOutputTokens: 1500,
+          responseMimeType: 'application/json',
+        },
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Gemini API error: ${response.status} - ${errorText}`);
+  }
+
+  const data = await response.json();
+  const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+  if (!textResponse) {
+    throw new Error('No response from Gemini for authority text');
+  }
+
+  try {
+    const parsed = JSON.parse(textResponse);
+    return {
+      caption: parsed.caption || '',
+      hashtags: (parsed.hashtags || []).slice(0, 5),
+      call_to_action: parsed.call_to_action || '📲 Link en bio',
+      alt_text: parsed.alt_text || '',
+      seo_keywords: parsed.seo_keywords || [],
+    };
+  } catch {
+    console.warn('[authority] Failed to parse JSON, using raw response');
+    return {
+      caption: textResponse.substring(0, platformConfig.maxChars),
+      hashtags: ['AutoRentar', 'FinanzasPersonales', 'Crianza'],
+      call_to_action: '📲 Link en bio para empezar',
+      alt_text: `Authority post sobre ${concept.term_name}`,
+      seo_keywords: ['autorentar', 'alquiler de autos', concept.term_name.toLowerCase()],
+    };
   }
 }
 
