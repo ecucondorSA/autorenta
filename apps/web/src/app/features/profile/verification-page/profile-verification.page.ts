@@ -176,15 +176,15 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                         <div class="flex items-center justify-between gap-2">
                           <h4 class="text-xs font-bold text-text-muted uppercase tracking-wider truncate">Documento de Identidad</h4>
                           @if (isDniVerified()) {
-                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold text-white bg-green-500 px-3 py-1 rounded-full">
+                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full" style="background-color: #22c55e; color: white;">
                               ✓ VERIFICADO
                             </span>
                           } @else if (isDniInReview()) {
-                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold text-white bg-yellow-500 px-3 py-1 rounded-full">
+                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full" style="background-color: #eab308; color: black;">
                               ⏳ EN REVISIÓN
                             </span>
                           } @else {
-                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold text-white bg-red-500 px-3 py-1 rounded-full">
+                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full" style="background-color: #ef4444; color: white;">
                               ⚠ PENDIENTE
                             </span>
                           }
@@ -201,15 +201,15 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                         <div class="flex items-center justify-between gap-2">
                           <h4 class="text-xs font-bold text-text-muted uppercase tracking-wider truncate">Licencia de Conducir</h4>
                           @if (isLicenseVerified()) {
-                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold text-white bg-green-500 px-3 py-1 rounded-full">
+                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full" style="background-color: #22c55e; color: white;">
                               ✓ VERIFICADO
                             </span>
                           } @else if (isLicenseInReview()) {
-                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold text-white bg-yellow-500 px-3 py-1 rounded-full">
+                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full" style="background-color: #eab308; color: black;">
                               ⏳ EN REVISIÓN
                             </span>
                           } @else {
-                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold text-white bg-red-500 px-3 py-1 rounded-full">
+                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full" style="background-color: #ef4444; color: white;">
                               ⚠ PENDIENTE
                             </span>
                           }

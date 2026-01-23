@@ -22,8 +22,8 @@ import { getCorsHeaders } from '../_shared/cors.ts';
 // TYPES
 // ============================================================================
 
-// Content types: legacy + new authority system
-type ContentType = 'tip' | 'promo' | 'car_spotlight' | 'testimonial' | 'seasonal' | 'community' | 'authority';
+// Content types: legacy + new authority system + expanded types
+type ContentType = 'tip' | 'promo' | 'car_spotlight' | 'testimonial' | 'seasonal' | 'community' | 'authority' | 'emotional' | 'educational' | 'promotional';
 // ACTIVE PLATFORMS ONLY (TikTok/Twitter suspended 2026-01-22)
 type Platform = 'instagram' | 'facebook';
 type Language = 'es' | 'pt';
@@ -140,6 +140,36 @@ const CONTENT_TEMPLATES: Record<ContentType, string> = {
     Pregunta o encuesta sobre: preferencias de viaje, experiencias, tips.
     Tono: {style}
     Invita a comentar y compartir.`,
+
+  // Alias: promotional -> promo (mismo contenido)
+  promotional: `Genera un post promocional para AutoRentar.
+    Destaca: ahorro vs rentadoras tradicionales (hasta 40% menos), facilidad de uso, confianza entre personas.
+    IMPORTANTE: Invita a descargar la app de Google Play (beta abierta).
+    Tono: {style}
+    Incluye oferta o beneficio específico.
+    Call-to-action claro: descargá la app, probala gratis, reservá tu próximo viaje.
+    Genera FOMO (Fear Of Missing Out): "Miles ya viajan así", "Sé de los primeros", "Los mejores autos se reservan rápido".`,
+
+  // Nuevo: emotional (conexión emocional profunda)
+  emotional: `Genera un post emocional y profundo para AutoRentar.
+    Enfoque: Conectar con los sueños, miedos y aspiraciones del usuario.
+    Temas: libertad, independencia, momentos con familia, escapar de la rutina, lograr metas.
+    Estructura: Historia corta → Reflexión → Conexión con AutoRentar
+    Tono: {style}, pero más íntimo y vulnerable.
+    NO vendas directamente, cuenta una historia que resuene.
+    Ejemplo de hook: "Hay viajes que cambian todo..." o "¿Cuándo fue la última vez que manejaste sin destino?"`,
+
+  // Nuevo: educational (contenido de valor informativo)
+  educational: `Genera un post educativo/informativo para AutoRentar.
+    Enfoque: Enseñar algo útil sobre autos, viajes, finanzas personales o economía colaborativa.
+    Formatos sugeridos:
+    - "5 cosas que no sabías sobre..."
+    - "Error #1 que cometen los que alquilan..."
+    - "Cómo calcular si te conviene alquilar vs comprar"
+    - "Checklist antes de un road trip"
+    Tono: {style}, experto pero accesible.
+    Incluye datos o tips concretos (no genéricos).
+    CTA: Guardar el post, compartir con alguien que lo necesite.`,
 };
 
 // ============================================================================
@@ -243,43 +273,58 @@ serve(async (req) => {
 
         results.push(resultItem);
 
-        // Save to DB if requested
+        // Save to DB if requested - DUAL PLATFORM (Instagram + Facebook)
         if (save_to_db) {
             const mediaUrl = imageContent?.url;
             const mediaType = imageContent ? 'image' : null;
 
-            const queueItem = {
-                platform,
-                content_type,
-                text_content: textContent.caption,
-                media_url: mediaUrl,
-                media_type: mediaType,
-                hashtags: textContent.hashtags,
-                scheduled_for: timeStr,
-                status: 'pending',
-                hook_variant_id: textContent.hook_variant_id || null,
-                metadata: {
-                    car_id: carData?.id,
-                    theme,
-                    language,
-                    // SEO 2026 fields
-                    alt_text: textContent.alt_text || '',
-                    seo_keywords: textContent.seo_keywords || [],
-                    call_to_action: textContent.call_to_action || '',
-                    // A/B Testing tracking
-                    hook_variant_id: textContent.hook_variant_id || null
+            // HARDENED: Always insert for BOTH platforms (Instagram + Facebook)
+            const ACTIVE_PLATFORMS: Platform[] = ['instagram', 'facebook'];
+
+            for (const targetPlatform of ACTIVE_PLATFORMS) {
+                // Get platform-specific scheduled time
+                const platformTimeStr = targetPlatform === platform
+                    ? timeStr
+                    : getSuggestedPostTime(targetPlatform);
+
+                const queueItem = {
+                    platform: targetPlatform,
+                    content_type,
+                    text_content: textContent.caption,
+                    media_url: mediaUrl,
+                    media_type: mediaType,
+                    hashtags: textContent.hashtags,
+                    scheduled_for: platformTimeStr,
+                    status: 'pending',
+                    hook_variant_id: textContent.hook_variant_id || null,
+                    metadata: {
+                        car_id: carData?.id,
+                        theme,
+                        language,
+                        // SEO 2026 fields
+                        alt_text: textContent.alt_text || '',
+                        seo_keywords: textContent.seo_keywords || [],
+                        call_to_action: textContent.call_to_action || '',
+                        // A/B Testing tracking
+                        hook_variant_id: textContent.hook_variant_id || null,
+                        // Track dual-platform generation
+                        dual_platform_batch: true,
+                        original_platform: platform,
+                    }
+                };
+
+                const { error: dbError } = await supabase
+                    .from('marketing_content_queue')
+                    .insert(queueItem);
+
+                if (dbError) {
+                    console.error(`[generate-marketing-content] DB insert failed for ${targetPlatform}:`, dbError);
+                    if (targetPlatform === platform) {
+                        resultItem.error = `DB Save Failed: ${dbError.message}`;
+                    }
+                } else {
+                    console.log(`[generate-marketing-content] Saved post for ${targetPlatform} at ${platformTimeStr}`);
                 }
-            };
-
-            const { error: dbError } = await supabase
-                .from('marketing_content_queue')
-                .insert(queueItem);
-
-            if (dbError) {
-                console.error('[generate-marketing-content] DB insert failed:', dbError);
-                resultItem.error = `DB Save Failed: ${dbError.message}`;
-            } else {
-                console.log(`[generate-marketing-content] Saved post for ${timeStr}`);
             }
         }
     }
@@ -736,6 +781,29 @@ const MARKETING_IMAGE_PROMPTS: Record<ContentType, string[]> = {
     'Group shot: Three diverse Latin American friends laughing inside a {car_desc} (seen through windshield), road trip snacks, happy chaos, {location}. {style}.',
     'Owner pride: {person} washing or polishing a {car_desc}, water droplets sparkling in sun, {location}, care and quality theme. {style}.'
   ],
+
+  // Promotional: mismo que promo
+  promotional: [
+    'Hero shot: {person} jumping in the air or raising hands in victory holding car keys next to a shiny {car_desc}, {location}, celebration energy, sparks of joy. {style}.',
+    'Lifestyle luxury: {person} leaning confidently against the hood of a {car_desc}, arms crossed, smiling, {location}, "own the road" energy. {style}.',
+    'Travel aesthetic: The trunk of a {car_desc} open, filled with stylish vintage luggage and a guitar, {person} closing it happily, {location}, road trip ready. {style}.'
+  ],
+
+  // Emotional: momentos íntimos y reflexivos
+  emotional: [
+    'Cinematic moment: {person} sitting alone in a {car_desc} at golden hour, looking out the window pensively, {location}, introspective mood, beautiful melancholy. {style}.',
+    'Freedom shot: {person} with arms stretched out of the sunroof of a {car_desc}, hair blowing in wind, {location}, pure joy and liberation. {style}.',
+    'Family bond: Parent and child silhouette inside a {car_desc} at sunset, tender moment, {location}, emotional warmth, nostalgia. {style}.',
+    'New beginnings: {person} standing next to a {car_desc} looking at a vast open road ahead, {location}, hopeful horizon, cinematic wide angle. {style}.'
+  ],
+
+  // Educational: infográfico visual, tips
+  educational: [
+    'Expert vibe: {person} checking the tires of a {car_desc} with a checklist in hand, {location}, professional and helpful mood. {style}.',
+    'POV learning: Close-up of hands on steering wheel of a {car_desc}, dashboard visible, driving lesson aesthetic, {location}. {style}.',
+    'Before/After: Split composition - one side showing stressed person at rental counter, other side showing relaxed {person} with {car_desc} keys via app, {location}. {style}.',
+    'Money smart: {person} smiling while looking at phone calculator next to a {car_desc}, saving money concept, {location}, smart consumer vibe. {style}.'
+  ],
 };
 
 async function generateMarketingImage(
@@ -887,8 +955,8 @@ async function generateAuthorityPost(
   const concept: AuthorityConcept = conceptData[0];
   console.log(`[authority] Selected concept: ${concept.term_name}`);
 
-  // 2. GENERATE EMOTIONAL IMAGE
-  const imageResult = await generateAuthorityImage(concept.image_scene_concept);
+  // 2. GENERATE SPLIT-SCREEN IMAGE (parenting pain | auto pain)
+  const imageResult = await generateAuthorityImage(concept);
 
   let mediaUrl: string | undefined;
   if (imageResult?.base64 && saveToDb) {
@@ -907,34 +975,42 @@ async function generateAuthorityPost(
   // 3. GENERATE NARRATIVE TEXT (4-paragraph structure)
   const textContent = await generateAuthorityText(concept, platform);
 
-  // 4. SAVE TO DATABASE IF REQUESTED
+  // 4. SAVE TO DATABASE IF REQUESTED - DUAL PLATFORM (Instagram + Facebook)
   if (saveToDb) {
-    const scheduledFor = getSuggestedPostTime(platform);
+    // HARDENED: Always insert for BOTH platforms (Instagram + Facebook)
+    const ACTIVE_PLATFORMS: Platform[] = ['instagram', 'facebook'];
 
-    const { error: insertError } = await supabase
-      .from('marketing_content_queue')
-      .insert({
-        content_type: 'authority',
-        platform,
-        text_content: textContent.caption,
-        media_url: mediaUrl,
-        media_type: 'image',
-        hashtags: textContent.hashtags,
-        scheduled_for: scheduledFor,
-        status: 'pending',
-        authority_concept_id: concept.concept_id,
-        metadata: {
-          authority_term: concept.term_name,
-          logic_applied: 'parenting_finance_bridge',
-          alt_text: textContent.alt_text,
-          seo_keywords: textContent.seo_keywords,
-        },
-      });
+    for (const targetPlatform of ACTIVE_PLATFORMS) {
+      const scheduledFor = getSuggestedPostTime(targetPlatform);
 
-    if (insertError) {
-      console.error('[authority] DB insert failed:', insertError);
-    } else {
-      console.log('[authority] Post saved to queue for:', scheduledFor);
+      const { error: insertError } = await supabase
+        .from('marketing_content_queue')
+        .insert({
+          content_type: 'authority',
+          platform: targetPlatform,
+          text_content: textContent.caption,
+          media_url: mediaUrl,
+          media_type: 'image',
+          hashtags: textContent.hashtags,
+          scheduled_for: scheduledFor,
+          status: 'pending',
+          authority_concept_id: concept.concept_id,
+          metadata: {
+            authority_term: concept.term_name,
+            logic_applied: 'parenting_finance_bridge',
+            alt_text: textContent.alt_text,
+            seo_keywords: textContent.seo_keywords,
+            // Track dual-platform generation
+            dual_platform_batch: true,
+            original_platform: platform,
+          },
+        });
+
+      if (insertError) {
+        console.error(`[authority] DB insert failed for ${targetPlatform}:`, insertError);
+      } else {
+        console.log(`[authority] Post saved to queue for ${targetPlatform} at:`, scheduledFor);
+      }
     }
   }
 
@@ -947,10 +1023,15 @@ async function generateAuthorityPost(
 }
 
 /**
- * Generates the emotional scroll-stopping image using the concept's scene.
- * Combines: image_scene_concept + random stressed subject + domestic setting + style
+ * Generates SPLIT-SCREEN authority images showing the parallel between
+ * parenting struggles and car ownership struggles.
+ *
+ * Format: LEFT side = parenting pain | RIGHT side = auto/financial pain
+ * This creates the visual "bridge" that connects emotional resonance to AutoRentar's value proposition.
  */
-async function generateAuthorityImage(imageSceneConcept: string): Promise<{ base64?: string } | undefined> {
+async function generateAuthorityImage(
+  concept: AuthorityConcept
+): Promise<{ base64?: string } | undefined> {
   if (!GEMINI_API_KEY) {
     console.log('[authority] No Gemini API key, skipping image generation');
     return undefined;
@@ -958,17 +1039,67 @@ async function generateAuthorityImage(imageSceneConcept: string): Promise<{ base
 
   try {
     const style = AUTHORITY_PHOTO_STYLES[Math.floor(Math.random() * AUTHORITY_PHOTO_STYLES.length)];
-    const subject = AUTHORITY_STRESSED_SUBJECTS[Math.floor(Math.random() * AUTHORITY_STRESSED_SUBJECTS.length)];
-    const setting = AUTHORITY_DOMESTIC_SETTINGS[Math.floor(Math.random() * AUTHORITY_DOMESTIC_SETTINGS.length)];
 
-    // Combine all elements for maximum emotional impact
+    // Extract short phrases for speech bubbles from concept
+    // parenting_pain_point usually starts with 'Te dicen "X"' - extract X
+    // financial_analogy usually starts with 'Te dices "X"' or 'Piensas "X"' - extract X
+    const extractQuote = (text: string): string => {
+      // Try to extract text between quotes
+      const quoteMatch = text.match(/"([^"]+)"/);
+      if (quoteMatch) {
+        // Truncate to max 25 chars for bubble readability
+        const quote = quoteMatch[1];
+        return quote.length > 30 ? quote.substring(0, 27) + '...' : quote;
+      }
+      // Fallback: take first sentence, truncate
+      const firstSentence = text.split(/[.,!]/)[0];
+      return firstSentence.length > 30 ? firstSentence.substring(0, 27) + '...' : firstSentence;
+    };
+
+    const parentingQuote = extractQuote(concept.parenting_pain_point);
+    const financialQuote = extractQuote(concept.financial_analogy);
+
+    console.log(`[authority] Bubble texts - Left: "${parentingQuote}" | Right: "${financialQuote}"`);
+
+    // Build SPLIT-SCREEN prompt with DYNAMIC text from concept
     const finalPrompt = `
-      Candid 35mm film photography. ${subject}
-      Setting: ${setting}
-      Scene context: ${imageSceneConcept}
-      Emotion: Overwhelmed, raw, authentic, unfiltered, messy reality.
-      Style: ${style}
-      Technical: Kodak Portra 400 grain, cinematic lighting, realistic textures, sweat visible, imperfect skin, no makeup, 1:1 aspect ratio, no text overlays, photorealistic.
+DIPTYCH COMPOSITION - SPLIT EXACTLY IN HALF VERTICALLY:
+
+CONCEPT: "${concept.term_name}"
+
+=== LEFT PANEL - PARENTING STRUGGLE ===
+MAIN SUBJECT: Exhausted Latin American mother (30s), messy hair, dark circles, holding a crying baby vigorously.
+Setting: Realistic home interior, natural but somber lighting emphasizing tiredness, toys scattered.
+
+CRITICAL ELEMENT - SPEECH BUBBLE WITH TEXT:
+A comic-style speech bubble floating above/beside the mother containing:
+- An older woman (grandmother/mother-in-law type) with stern/warning expression
+- VISIBLE TEXT IN SPANISH inside the bubble: "${parentingQuote}"
+- The text must be clearly legible, white background bubble, black text, max 2 lines
+
+=== RIGHT PANEL - AUTO/FINANCIAL PARALLEL ===
+MAIN SUBJECT: Worried Latin American man (30s) in a garage, holding dollar bills or looking at paperwork with concern.
+Setting: Garage or driveway, a car completely covered by a gray protective tarp (unused, "frozen asset").
+
+CRITICAL ELEMENT - SPEECH BUBBLE WITH TEXT:
+A comic-style speech bubble floating above/beside the man containing:
+- A younger man (friend/colleague type) with simplistic smile
+- VISIBLE TEXT IN SPANISH inside the bubble: "${financialQuote}"
+- The text must be clearly legible, white background bubble, black text, max 2 lines
+
+=== VISUAL UNITY ===
+- Both panels must feel connected: same color grading, same emotional weight
+- The thought bubbles should be visually similar (same style, same size relative to panel)
+- The viewer instantly understands: "This is the SAME PATTERN of irrational advice causing stress"
+- Both protagonists show visible stress caused by the "noise" from secondary characters
+
+=== TECHNICAL REQUIREMENTS ===
+- Aspect ratio: 1:1 (square for Instagram)
+- Split EXACTLY in half with subtle vertical divider
+- ${style}
+- Kodak Portra 400 film grain, cinematic lighting
+- Photorealistic, Latin American subjects (Buenos Aires/Montevideo aesthetic)
+- The thought bubbles are semi-transparent, dreamlike, floating above subjects
     `.trim();
 
     console.log('[authority] Generating image with prompt:', finalPrompt.substring(0, 100) + '...');

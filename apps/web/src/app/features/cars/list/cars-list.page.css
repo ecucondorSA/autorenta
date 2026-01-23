@@ -10,6 +10,20 @@
   min-height: calc(100vh - var(--header-height, 60px));
 }
 
+/* Handset (incluye landscape): mantener mapa full-bleed aunque el ancho sea grande */
+.cars-marketplace.handset-map .cars-list-layout {
+  flex-direction: column;
+  height: 100vh !important;
+}
+
+.cars-marketplace.handset-map .cars-map-panel {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-left: none !important;
+}
+
 /* Main Layout */
 .marketplace-container {
   display: grid;

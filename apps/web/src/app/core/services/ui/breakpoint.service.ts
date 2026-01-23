@@ -51,8 +51,17 @@ export class BreakpointService {
   /** Ancho actual de la ventana */
   readonly width: Signal<number>;
 
+  /** Alto actual de la ventana */
+  readonly height: Signal<number>;
+
+  /** Dimensión más corta del viewport (útil para detectar teléfonos en landscape) */
+  readonly minDimension: Signal<number>;
+
   /** < 768px - Mobile phones */
   readonly isMobile: Signal<boolean>;
+
+  /** Dimensión corta < 768px - Handset (incluye landscape) */
+  readonly isHandset: Signal<boolean>;
 
   /** >= 768px && < 1024px - Tablets */
   readonly isTablet: Signal<boolean>;
@@ -79,29 +88,34 @@ export class BreakpointService {
 
     // Default width for SSR (desktop first approach or mobile first, here using desktop)
     const defaultWidth = isBrowser ? window.innerWidth : 1024;
+    const defaultHeight = isBrowser ? window.innerHeight : 768;
 
     // Observable del resize con throttle para performance
     const resize$ = isBrowser
       ? fromEvent(window, 'resize').pipe(
           throttleTime(150, undefined, { leading: true, trailing: true }),
-          map(() => window.innerWidth),
-          startWith(window.innerWidth),
+          map(() => ({ width: window.innerWidth, height: window.innerHeight })),
+          startWith({ width: window.innerWidth, height: window.innerHeight }),
         )
-      : of(defaultWidth); // Static value for SSR
+      : of({ width: defaultWidth, height: defaultHeight }); // Static value for SSR
 
     // Convertir a signal
-    this.width = toSignal(resize$, { initialValue: defaultWidth });
+    const size = toSignal(resize$, { initialValue: { width: defaultWidth, height: defaultHeight } });
+    this.width = computed(() => size().width);
+    this.height = computed(() => size().height);
+    this.minDimension = computed(() => Math.min(this.width(), this.height()));
 
     // Signals computados para cada breakpoint
     this.isMobile = computed(() => this.width() < BREAKPOINTS.md);
+    this.isHandset = computed(() => this.minDimension() < BREAKPOINTS.md);
     this.isTablet = computed(() => this.width() >= BREAKPOINTS.md && this.width() < BREAKPOINTS.lg);
     this.isDesktop = computed(() => this.width() >= BREAKPOINTS.lg);
     this.isSmallMobile = computed(() => this.width() < BREAKPOINTS.sm);
     this.isLargeDesktop = computed(() => this.width() >= BREAKPOINTS.xl);
 
     // Orientación
-    this.isPortrait = computed(() => (isBrowser ? window.innerHeight > window.innerWidth : false));
-    this.isLandscape = computed(() => (isBrowser ? window.innerHeight <= window.innerWidth : true));
+    this.isPortrait = computed(() => this.height() > this.width());
+    this.isLandscape = computed(() => this.height() <= this.width());
 
     // Breakpoint actual
     this.current = computed(() => {

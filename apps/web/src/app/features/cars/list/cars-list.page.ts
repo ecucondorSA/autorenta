@@ -217,6 +217,7 @@ export class CarsListPage implements OnInit, OnDestroy, AfterViewInit {
   readonly favoriteCars = signal<Set<string>>(new Set());
   readonly expressModeSignal = signal(true);
   readonly isMobile = this.breakpoint.isMobile;
+  readonly isHandset = this.breakpoint.isHandset;
   readonly isDesktop = this.breakpoint.isDesktop;
 
   // View Mode (grid, list, map)

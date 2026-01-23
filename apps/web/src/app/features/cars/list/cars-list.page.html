@@ -1,5 +1,6 @@
 <section
   class="cars-marketplace bg-surface-base transition-colors duration-300 min-h-screen"
+  [class.handset-map]="viewMode() === 'map' && isHandset()"
 >
   <!-- Barra superior fija -->
   <!-- Recompilation trigger 1 -->
@@ -96,17 +97,17 @@
 
   <!-- 🎯 SPLIT VIEW CONTAINER (Desktop: side-by-side, Mobile: toggle) -->
   <div
-    class="flex flex-col lg:flex-row lg:h-[calc(100vh-4rem)]"
-    [class.h-screen]="viewMode() === 'map' && !isDesktop()"
+    class="cars-list-layout flex flex-col lg:flex-row lg:h-[calc(100vh-4rem)]"
+    [class.h-screen]="viewMode() === 'map' && isHandset()"
   >
     <!-- 📦 LEFT PANEL: Lista de Autos (scrollable independiente) -->
     <div
-      class="w-full lg:overflow-y-auto lg:h-full px-4 sm:px-6 py-6"
+      class="cars-list-panel w-full lg:overflow-y-auto lg:h-full px-4 sm:px-6 py-6"
       [ngClass]="{
         'lg:w-1/2 xl:w-[55%]': viewMode() === 'map',
-        'lg:w-full xl:w-full': viewMode() !== 'map',
-        'hidden lg:block': viewMode() === 'map'
+        'lg:w-full xl:w-full': viewMode() !== 'map'
       }"
+      [class.hidden]="viewMode() === 'map' && isHandset()"
     >
       <!-- 🔎 BARRA DE BÚSQUEDA ESTILO AIRBNB -->
       <div class="mb-8">
@@ -887,7 +888,7 @@
     <!-- 🗺️ RIGHT PANEL: Mapa (Desktop: fixed height, Mobile: fullscreen) -->
     @if (viewMode() === 'map') {
       <div
-        class="w-full lg:w-1/2 xl:w-[45%] fixed inset-0 z-40 lg:relative lg:inset-auto lg:z-auto lg:h-full flex-shrink-0 overflow-hidden lg:border-l lg:border-slate-200"
+        class="cars-map-panel w-full lg:w-1/2 xl:w-[45%] fixed inset-0 z-40 lg:relative lg:inset-auto lg:z-auto lg:h-full flex-shrink-0 overflow-hidden lg:border-l lg:border-slate-200"
         data-testid="cars-map"
       >
         @if (loading() && premiumCars().length === 0) {
