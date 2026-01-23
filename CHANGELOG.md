@@ -1,3 +1,9 @@
+## [3.32.9](https://github.com/ecucondorSA/autorenta/compare/v3.32.8...v3.32.9) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **csp:** clean _headers format - remove inline comments ([6edbfbd](https://github.com/ecucondorSA/autorenta/commit/6edbfbdb64d0da588abd56a217f9af77e34056fe))
+
 ## [3.32.8](https://github.com/ecucondorSA/autorenta/compare/v3.32.7...v3.32.8) (2026-01-23)
 
 ### 🐛 Bug Fixes
