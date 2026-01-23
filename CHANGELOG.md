@@ -1,3 +1,9 @@
+## [3.32.6](https://github.com/ecucondorSA/autorenta/compare/v3.32.5...v3.32.6) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **csp:** use public/_headers as single source of truth in build script ([966f64c](https://github.com/ecucondorSA/autorenta/commit/966f64c7c3b2326eaeb15a72f3b5f81528bdf6ef))
+
 ## [3.32.5](https://github.com/ecucondorSA/autorenta/compare/v3.32.4...v3.32.5) (2026-01-23)
 
 ### 🐛 Bug Fixes
