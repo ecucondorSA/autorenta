@@ -1,3 +1,9 @@
+## [3.32.3](https://github.com/ecucondorSA/autorenta/compare/v3.32.2...v3.32.3) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **auth:** improve Facebook SDK async loading handling ([f4dfcb3](https://github.com/ecucondorSA/autorenta/commit/f4dfcb34cc61f8eb1e1588f5ea54f32e484ca3be))
+
 ## [3.32.2](https://github.com/ecucondorSA/autorenta/compare/v3.32.1...v3.32.2) (2026-01-23)
 
 ### 🐛 Bug Fixes
