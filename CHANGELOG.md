@@ -1,3 +1,9 @@
+## [3.28.3](https://github.com/ecucondorSA/autorenta/compare/v3.28.2...v3.28.3) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **marketing:** harden marketing automation system ([5fd78c7](https://github.com/ecucondorSA/autorenta/commit/5fd78c7761870dab0405cd206f1aacc28d44b237))
+
 ## [3.28.2](https://github.com/ecucondorSA/autorenta/compare/v3.28.1...v3.28.2) (2026-01-22)
 
 ### 🐛 Bug Fixes
