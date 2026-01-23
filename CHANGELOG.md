@@ -1,3 +1,9 @@
+## [3.32.5](https://github.com/ecucondorSA/autorenta/compare/v3.32.4...v3.32.5) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **fonts:** add missing JetBrains Mono variable font ([4f0fee5](https://github.com/ecucondorSA/autorenta/commit/4f0fee54dfdfd3f31afd39df83b6041eb0a2e234))
+
 ## [3.32.4](https://github.com/ecucondorSA/autorenta/compare/v3.32.3...v3.32.4) (2026-01-23)
 
 ### 🐛 Bug Fixes
