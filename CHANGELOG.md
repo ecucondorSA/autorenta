@@ -1,3 +1,9 @@
+## [3.30.0](https://github.com/ecucondorSA/autorenta/compare/v3.29.0...v3.30.0) (2026-01-23)
+
+### ✨ Features
+
+* **marketing:** add authority metrics feedback loop with weekly reports ([47777bf](https://github.com/ecucondorSA/autorenta/commit/47777bf96ca88dd9acfe161205d8d53c99f53c9d))
+
 ## [3.29.0](https://github.com/ecucondorSA/autorenta/compare/v3.28.4...v3.29.0) (2026-01-23)
 
 ### ✨ Features
