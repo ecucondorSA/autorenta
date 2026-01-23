@@ -1,3 +1,9 @@
+## [3.32.10](https://github.com/ecucondorSA/autorenta/compare/v3.32.9...v3.32.10) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **csp:** add www.facebook.com to CSP meta tag in index.html ([6bc8b18](https://github.com/ecucondorSA/autorenta/commit/6bc8b18000efbde3eda6bffd41df61c80c245fb8))
+
 ## [3.32.9](https://github.com/ecucondorSA/autorenta/compare/v3.32.8...v3.32.9) (2026-01-23)
 
 ### 🐛 Bug Fixes
