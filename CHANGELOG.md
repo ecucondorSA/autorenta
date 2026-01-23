@@ -1,3 +1,9 @@
+## [3.32.12](https://github.com/ecucondorSA/autorenta/compare/v3.32.11...v3.32.12) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **auth:** improve Facebook token extraction and logging ([6f34aa3](https://github.com/ecucondorSA/autorenta/commit/6f34aa3ef33e19c8812a2fbd531f91ebb680d5ab))
+
 ## [3.32.11](https://github.com/ecucondorSA/autorenta/compare/v3.32.10...v3.32.11) (2026-01-23)
 
 ### 🐛 Bug Fixes
