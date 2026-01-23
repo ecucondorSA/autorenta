@@ -1,3 +1,9 @@
+## [3.29.0](https://github.com/ecucondorSA/autorenta/compare/v3.28.4...v3.29.0) (2026-01-23)
+
+### ✨ Features
+
+* **marketing:** add authority posts system with psychological concepts ([a23c020](https://github.com/ecucondorSA/autorenta/commit/a23c0207f872206d9a2a98bdbdce54b615ecf999))
+
 ## [3.28.4](https://github.com/ecucondorSA/autorenta/compare/v3.28.3...v3.28.4) (2026-01-23)
 
 ### ♻️ Refactoring
