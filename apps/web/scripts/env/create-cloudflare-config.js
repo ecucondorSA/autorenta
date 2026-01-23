@@ -111,6 +111,7 @@ if (fs.existsSync(publicHeadersPath)) {
   Pragma: no-cache
   Expires: 0
 `;
+}
 
 // Step 1: Skip copying files (we will deploy the browser directory directly)
 // Angular builds to dist/web/browser/
