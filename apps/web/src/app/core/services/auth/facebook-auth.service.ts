@@ -155,13 +155,21 @@ export class FacebookAuthService {
         throw new Error('No access token received from Facebook Login');
       }
 
-      this.logger.debug('Facebook Access Token received. Signing in with Supabase...', 'FacebookAuthService');
+      // Extract token - handle both web SDK and native formats
+      const token = result.accessToken.token || (result.accessToken as unknown as { tokenString?: string }).tokenString;
+
+      if (!token) {
+        this.logger.error('Token structure:', 'FacebookAuthService', result.accessToken);
+        throw new Error('Could not extract token from Facebook response');
+      }
+
+      this.logger.debug(`Facebook Access Token received (${token.substring(0, 20)}...). Signing in with Supabase...`, 'FacebookAuthService');
 
       // Use Supabase's native signInWithIdToken for Facebook
       // Facebook access tokens are accepted as idToken by Supabase
       const { data, error } = await this.supabase.auth.signInWithIdToken({
         provider: 'facebook',
-        token: result.accessToken.token,
+        token: token,
       });
 
       if (error) {
