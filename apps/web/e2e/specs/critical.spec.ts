@@ -1,7 +1,7 @@
 /**
- * Critical E2E Tests - Playwright
+ * Guardian E2E Tests - Playwright
  *
- * @tags @critical
+ * @tags @guardian
  *
  * These tests run on every PR and must pass before merge.
  * They validate the most critical user flows and detect runtime errors.
@@ -11,6 +11,8 @@
  * - Font loading errors (OTS) → FAIL
  * - Network failures → FAIL
  * - JavaScript exceptions → FAIL
+ *
+ * Run with: npx playwright test --grep @guardian
  */
 import { test, expect } from '@playwright/test';
 
@@ -65,7 +67,7 @@ function isFatalError(message: string): boolean {
 // CRITICAL FLOW TESTS
 // ============================================
 
-test.describe('Critical Flows @critical', () => {
+test.describe('Critical Flows @guardian', () => {
   test('home page loads successfully', async ({ page }) => {
     const response = await page.goto('/', { waitUntil: 'domcontentloaded' });
 
@@ -114,7 +116,7 @@ test.describe('Critical Flows @critical', () => {
 // ZERO TOLERANCE CONSOLE ERROR TESTS
 // ============================================
 
-test.describe('Console Error Guardian @critical', () => {
+test.describe('Console Error Guardian @guardian', () => {
   for (const url of CRITICAL_PAGES) {
     test(`zero console errors on ${url}`, async ({ page }) => {
       const consoleErrors: string[] = [];
@@ -162,7 +164,7 @@ test.describe('Console Error Guardian @critical', () => {
 // FONT LOADING TESTS (OTS Parsing)
 // ============================================
 
-test.describe('Font Loading Guardian @critical', () => {
+test.describe('Font Loading Guardian @guardian', () => {
   test('fonts load without OTS parsing errors', async ({ page }) => {
     const fontErrors: string[] = [];
 
@@ -197,7 +199,7 @@ test.describe('Font Loading Guardian @critical', () => {
 // API HEALTH TESTS
 // ============================================
 
-test.describe('API Health Guardian @critical', () => {
+test.describe('API Health Guardian @guardian', () => {
   test('Supabase API is reachable', async ({ page }) => {
     const apiErrors: string[] = [];
 
@@ -227,7 +229,7 @@ test.describe('API Health Guardian @critical', () => {
 // SMOKE TESTS
 // ============================================
 
-test.describe('Smoke Tests @critical', () => {
+test.describe('Smoke Tests @guardian', () => {
   test('app bundle loads without chunk errors', async ({ page }) => {
     const chunkErrors: string[] = [];
 
