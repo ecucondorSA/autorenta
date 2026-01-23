@@ -1,3 +1,9 @@
+## [3.33.0](https://github.com/ecucondorSA/autorenta/compare/v3.32.12...v3.33.0) (2026-01-23)
+
+### ✨ Features
+
+* **ev:** implement P0 EV P2P requirements ([45e6e6f](https://github.com/ecucondorSA/autorenta/commit/45e6e6f49e9474c88960fb36bf16e9fd2b829f2f))
+
 ## [3.32.12](https://github.com/ecucondorSA/autorenta/compare/v3.32.11...v3.32.12) (2026-01-23)
 
 ### 🐛 Bug Fixes
