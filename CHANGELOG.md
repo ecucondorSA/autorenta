@@ -1,3 +1,9 @@
+## [3.28.4](https://github.com/ecucondorSA/autorenta/compare/v3.28.3...v3.28.4) (2026-01-23)
+
+### ♻️ Refactoring
+
+* **marketing:** remove dead TikTok/Twitter video generation code ([fe0a890](https://github.com/ecucondorSA/autorenta/commit/fe0a8909e3eaaaa716319eb0c4b8dac617d1c0e3))
+
 ## [3.28.3](https://github.com/ecucondorSA/autorenta/compare/v3.28.2...v3.28.3) (2026-01-23)
 
 ### 🐛 Bug Fixes
