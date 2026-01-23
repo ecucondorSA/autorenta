@@ -1,3 +1,9 @@
+## [3.32.8](https://github.com/ecucondorSA/autorenta/compare/v3.32.7...v3.32.8) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **csp:** add www.facebook.com to connect-src for Facebook SDK ([92b7d62](https://github.com/ecucondorSA/autorenta/commit/92b7d621026c339037f6c741e2e2312de94db7d9))
+
 ## [3.32.7](https://github.com/ecucondorSA/autorenta/compare/v3.32.6...v3.32.7) (2026-01-23)
 
 ### 🐛 Bug Fixes
