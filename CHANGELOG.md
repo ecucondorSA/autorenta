@@ -1,3 +1,9 @@
+## [3.32.4](https://github.com/ecucondorSA/autorenta/compare/v3.32.3...v3.32.4) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **e2e:** use domcontentloaded instead of networkidle for CI stability ([9b84902](https://github.com/ecucondorSA/autorenta/commit/9b84902b16f11c2ea6c49f1d987c42ec33783b6e))
+
 ## [3.32.3](https://github.com/ecucondorSA/autorenta/compare/v3.32.2...v3.32.3) (2026-01-23)
 
 ### 🐛 Bug Fixes
