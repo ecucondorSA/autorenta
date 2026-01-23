@@ -172,7 +172,7 @@ jobs:
           npx serve -s dist/web/browser -l 4200 &
           sleep 10
           curl -sf http://localhost:4200 > /dev/null && echo "Server is up"
-          npx playwright test --config=e2e/playwright.config.ts --grep @guardian
+          npx playwright test e2e/specs/critical.spec.ts --config=e2e/playwright.config.ts
         env:
           CI: true
           E2E_WEB_URL: http://localhost:4200
