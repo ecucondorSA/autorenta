@@ -1,3 +1,9 @@
+## [3.32.2](https://github.com/ecucondorSA/autorenta/compare/v3.32.1...v3.32.2) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **ci:** run specific critical.spec.ts file instead of grep ([e159dbb](https://github.com/ecucondorSA/autorenta/commit/e159dbba5d6175d67d7c7a2c24011af1572003a5))
+
 ## [3.32.1](https://github.com/ecucondorSA/autorenta/compare/v3.32.0...v3.32.1) (2026-01-23)
 
 ### 🐛 Bug Fixes
