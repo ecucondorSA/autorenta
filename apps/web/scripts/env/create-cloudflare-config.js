@@ -48,31 +48,26 @@ const redirectsContent = `# Cloudflare Pages - SPA Routing
 /*  /index.html  200
 `;
 
-// _headers - Headers de seguridad y cache
-const headersContent = `# Headers globales de seguridad
+// _headers - Read from public/_headers (single source of truth)
+// This ensures CSP and other headers are always in sync
+const publicHeadersPath = path.join(__dirname, '../../public/_headers');
+let headersContent;
+
+if (fs.existsSync(publicHeadersPath)) {
+  headersContent = fs.readFileSync(publicHeadersPath, 'utf8');
+  console.log('📋 Using _headers from public/ directory (single source of truth)');
+} else {
+  // Fallback headers if public/_headers doesn't exist
+  console.warn('⚠️  Warning: public/_headers not found, using fallback');
+  headersContent = `# Headers globales de seguridad
 /*
-  # Prevenir clickjacking
   X-Frame-Options: DENY
-
-  # Prevenir MIME-type sniffing
   X-Content-Type-Options: nosniff
-
-  # Habilitar XSS protection en navegadores antiguos
   X-XSS-Protection: 1; mode=block
-
-  # Política de referrer
   Referrer-Policy: strict-origin-when-cross-origin
-
-  # Permissions Policy (reemplaza Feature-Policy)
-  # camera=(self) permite acceso a cámara para el scanner de vehículos
   Permissions-Policy: geolocation=(self), microphone=(), camera=(self), payment=(self), usb=(), magnetometer=(), gyroscope=(), accelerometer=()
-
-  # HTTP Strict Transport Security (HSTS)
-  # Fuerza HTTPS por 1 año, incluye subdominios
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-
-  # Content Security Policy
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://sdk.mercadopago.com https://static.cloudflareinsights.com https://unpkg.com https://www.gstatic.com https://www.googletagmanager.com https://http2.mlstatic.com https://*.mercadolivre.com; style-src 'self' 'unsafe-inline' https://api.mapbox.com https://fonts.googleapis.com https://unpkg.com https://api.fontshare.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com https://unpkg.com https://cdn.fontshare.com; connect-src 'self' blob: data: https://*.supabase.co https://api.mapbox.com https://events.mapbox.com https://api.mercadopago.com https://*.workers.dev wss://*.supabase.co https://cloudflareinsights.com https://static.cloudflareinsights.com https://parallelum.com.br https://api.binance.com https://data-api.binance.vision https://sdk.mercadopago.com https://unpkg.com https://www.gstatic.com https://fonts.gstatic.com https://www.google-analytics.com https://region1.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com https://*.googletagmanager.com https://api.unsplash.com https://images.unsplash.com https://ui-avatars.com https://ipapi.co https://http2.mlstatic.com https://*.mercadolivre.com https://api.fontshare.com https://cdn.fontshare.com https://*.sentry.io https://*.ingest.sentry.io https://*.run.app wss://*.run.app; frame-src 'self' https://www.mercadopago.com https://www.mercadopago.com.ar https://mercadopago.com.ar https://sdk.mercadopago.com https://calendar.google.com https://www.mercadolivre.com; worker-src 'self' blob: https://www.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self' https://www.mercadopago.com;
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com https://www.googletagmanager.com https://*.google-analytics.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.mlstatic.com https://api.mapbox.com https://unpkg.com https://www.gstatic.com https://ajax.googleapis.com https://static.cloudflareinsights.com https://connect.facebook.net https://*.facebook.com https://*.facebook.net https://graph.facebook.com https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.mapbox.com https://unpkg.com https://*.mlstatic.com https://api.fontshare.com https://accounts.google.com; img-src 'self' data: https: blob: https://i.pravatar.cc https://*.facebook.com https://platform-lookaside.fbsbx.com https://*.googleusercontent.com; font-src 'self' data: https://fonts.gstatic.com https://unpkg.com https://*.mlstatic.com https://cdn.fontshare.com; media-src 'self' blob:; connect-src 'self' blob: data: https://*.sentry.io https://*.supabase.co wss://*.supabase.co https://*.mercadopago.com https://api.mercadopago.com https://events.mercadopago.com https://*.mercadolibre.com https://*.mlstatic.com https://*.workers.dev https://*.run.app wss://*.run.app https://api.mapbox.com https://events.mapbox.com https://*.mapbox.com https://sql.mapbox.com https://*.googletagmanager.com https://www.googletagmanager.com https://*.google-analytics.com https://www.google-analytics.com https://*.analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://www.googleapis.com https://generativelanguage.googleapis.com wss://generativelanguage.googleapis.com https://api.binance.com https://data-api.binance.vision https://parallelum.com.br https://unpkg.com https://www.gstatic.com https://fonts.gstatic.com https://api.unsplash.com https://images.unsplash.com https://ui-avatars.com https://ipapi.co https://placehold.co https://api.fontshare.com https://cdn.fontshare.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://graph.facebook.com https://connect.facebook.net https://i.pravatar.cc https://accounts.google.com https://oauth2.googleapis.com; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.ar https://mercadopago.com.ar https://*.mercadolibre.com https://sdk.mercadopago.com https://calendar.google.com https://*.facebook.com https://web.facebook.com https://accounts.google.com; worker-src 'self' blob: https://www.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self' https://*.mercadopago.com https://accounts.google.com;
 
 # Cache para assets con hash (1 año)
 /*.js
