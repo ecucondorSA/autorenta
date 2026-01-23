@@ -1,3 +1,9 @@
+## [3.32.11](https://github.com/ecucondorSA/autorenta/compare/v3.32.10...v3.32.11) (2026-01-23)
+
+### 🐛 Bug Fixes
+
+* **auth:** use Supabase native signInWithIdToken for Facebook login ([c8eee3b](https://github.com/ecucondorSA/autorenta/commit/c8eee3bbb64a81d03cbae474147ae91a31240ff7))
+
 ## [3.32.10](https://github.com/ecucondorSA/autorenta/compare/v3.32.9...v3.32.10) (2026-01-23)
 
 ### 🐛 Bug Fixes
