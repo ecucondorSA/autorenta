@@ -182,10 +182,45 @@ async function getCredentials(
     return null;
   }
 
-  // Check if token is expired and needs refresh
-  if (data.token_expires_at && new Date(data.token_expires_at) < new Date()) {
-    console.warn(`[social-media-publisher] Token expired for ${platform}, needs refresh`);
-    // TODO: Implement token refresh for each platform
+  // Check if token is expired
+  if (data.token_expires_at) {
+    const expiresAt = new Date(data.token_expires_at);
+    const now = new Date();
+    const daysUntilExpiry = Math.floor((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (expiresAt < now) {
+      // Token is EXPIRED - cannot proceed
+      console.error(`[social-media-publisher] TOKEN EXPIRED for ${platform}. Expired on ${data.token_expires_at}`);
+
+      // Update credential record with error
+      await supabase
+        .from('social_media_credentials')
+        .update({
+          last_error: `Token expired on ${data.token_expires_at}. Please renew.`,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('platform', platform);
+
+      // Return null to force controlled failure
+      return null;
+    }
+
+    if (daysUntilExpiry <= 7) {
+      // Token expiring soon - log warning but continue
+      console.warn(
+        `[social-media-publisher] TOKEN EXPIRING SOON for ${platform}. ` +
+        `Expires in ${daysUntilExpiry} days (${data.token_expires_at}). Please renew soon!`
+      );
+
+      // Update credential with warning (don't mark as error yet)
+      await supabase
+        .from('social_media_credentials')
+        .update({
+          last_error: `Token expires in ${daysUntilExpiry} days. Renew before ${data.token_expires_at}`,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('platform', platform);
+    }
   }
 
   return data as PlatformCredentials;

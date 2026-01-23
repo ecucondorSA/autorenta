@@ -24,6 +24,7 @@ import { getCorsHeaders } from '../_shared/cors.ts';
 interface SchedulerRequest {
   max_posts?: number;
   dry_run?: boolean;
+  retry_mode?: boolean; // Process posts that are due for retry
 }
 
 interface QueueItem {
@@ -90,21 +91,34 @@ serve(async (req) => {
 
     const maxPosts = request.max_posts || 10;
     const dryRun = request.dry_run || false;
+    const retryMode = request.retry_mode || false;
 
-    console.log(`[marketing-scheduler] Starting scheduler run (max: ${maxPosts}, dry_run: ${dryRun})`);
+    console.log(`[marketing-scheduler] Starting scheduler run (max: ${maxPosts}, dry_run: ${dryRun}, retry_mode: ${retryMode})`);
 
     // Initialize Supabase
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-    // Get pending posts that are due (including metadata for SEO 2026)
-    const { data: pendingPosts, error: fetchError } = await supabase
+    // Build query based on mode
+    let query = supabase
       .from('marketing_content_queue')
-      .select('id, content_type, platform, text_content, media_url, media_type, hashtags, scheduled_for, status, attempts, metadata')
+      .select('id, content_type, platform, text_content, media_url, media_type, hashtags, scheduled_for, status, attempts, metadata, next_retry_at')
       .eq('status', 'pending')
-      .lte('scheduled_for', new Date().toISOString())
-      .lt('attempts', 3)
+      .lt('attempts', 5)  // Increased max attempts to 5
       .order('scheduled_for', { ascending: true })
       .limit(maxPosts);
+
+    if (retryMode) {
+      // In retry mode: only process posts that have failed before and are due for retry
+      query = query
+        .gt('attempts', 0)
+        .lte('next_retry_at', new Date().toISOString());
+      console.log('[marketing-scheduler] Retry mode: processing posts due for retry');
+    } else {
+      // Normal mode: process new posts that haven't been attempted yet or are past scheduled time
+      query = query.lte('scheduled_for', new Date().toISOString());
+    }
+
+    const { data: pendingPosts, error: fetchError } = await query;
 
     if (fetchError) {
       throw new Error(`Failed to fetch pending posts: ${fetchError.message}`);
@@ -196,30 +210,69 @@ serve(async (req) => {
             success: true,
             post_id: publishResult.post_id,
           });
+
+          // Update queue item as published
+          await supabase
+            .from('marketing_content_queue')
+            .update({
+              status: 'published',
+              published_at: new Date().toISOString(),
+              error_message: null,
+            })
+            .eq('id', post.id);
         } else {
           result.failed++;
+          const errorMsg = publishResult.error || 'Unknown publishing error';
           result.results.push({
             queue_id: post.id,
             platform: post.platform,
             success: false,
-            error: publishResult.error,
+            error: errorMsg,
           });
+
+          // Check if this is a token-related error (don't retry these)
+          const isTokenError = errorMsg.toLowerCase().includes('token') ||
+                              errorMsg.toLowerCase().includes('expired') ||
+                              errorMsg.toLowerCase().includes('oauth') ||
+                              errorMsg.toLowerCase().includes('unauthorized') ||
+                              errorMsg.toLowerCase().includes('credentials');
+
+          if (isTokenError) {
+            console.error(`[marketing-scheduler] Token error for ${post.platform}: ${errorMsg}. NOT retrying.`);
+            // Mark as failed without retry (move directly to higher attempt count)
+            await supabase
+              .from('marketing_content_queue')
+              .update({
+                status: 'failed',
+                attempts: 5, // Max attempts to prevent retry
+                error_message: `TOKEN ERROR: ${errorMsg}. Manual intervention required.`,
+                last_error_at: new Date().toISOString(),
+              })
+              .eq('id', post.id);
+          } else {
+            // Normal error - use retry logic with backoff
+            await supabase.rpc('mark_marketing_post_failed', {
+              p_queue_id: post.id,
+              p_error_message: errorMsg,
+            });
+          }
         }
       } catch (error) {
         console.error(`[marketing-scheduler] Error processing ${post.id}:`, error);
         result.failed++;
+        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
         result.results.push({
           queue_id: post.id,
           platform: post.platform,
           success: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: errorMsg,
         });
 
-        // Mark as failed in DB
+        // Mark as failed in DB with retry logic
         if (!dryRun) {
           await supabase.rpc('mark_marketing_post_failed', {
             p_queue_id: post.id,
-            p_error_message: error instanceof Error ? error.message : 'Unknown error',
+            p_error_message: errorMsg,
           });
         }
       }
