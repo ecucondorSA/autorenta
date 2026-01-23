@@ -18,6 +18,34 @@ export interface FaceVerificationResult {
     liveness_checks?: string[];
   };
   error?: string;
+  // KYC blocking info
+  is_blocked?: boolean;
+  block_reason?: string;
+  attempts_remaining?: number;
+}
+
+/**
+ * KYC Block Status
+ */
+export interface KycBlockStatus {
+  blocked: boolean;
+  reason?: string;
+  attempts: number;
+  lastFailedAt?: string;
+  blockedAt?: string;
+}
+
+/**
+ * Custom error for KYC blocked users
+ */
+export class KycBlockedError extends Error {
+  constructor(
+    public readonly reason: string,
+    public readonly attempts: number = 0,
+  ) {
+    super(reason);
+    this.name = 'KycBlockedError';
+  }
 }
 
 /**
@@ -72,6 +100,7 @@ export class FaceVerificationService {
   readonly processing = signal(false);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly kycBlockStatus = signal<KycBlockStatus | null>(null);
 
   /**
    * Check current face verification status
@@ -119,6 +148,55 @@ export class FaceVerificationService {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  /**
+   * Check if user is KYC blocked (face verification)
+   * @returns KYC block status with details
+   */
+  async isUserKycBlocked(): Promise<KycBlockStatus> {
+    try {
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+
+      if (!user) {
+        return { blocked: false, attempts: 0 };
+      }
+
+      const { data, error } = await this.supabase.rpc('is_kyc_blocked', {
+        p_user_id: user.id,
+      });
+
+      if (error) {
+        console.error('Error checking KYC block status:', error);
+        return { blocked: false, attempts: 0 };
+      }
+
+      const result = data?.[0];
+      const blockStatus: KycBlockStatus = {
+        blocked: result?.blocked ?? false,
+        reason: result?.reason ?? undefined,
+        attempts: result?.attempts ?? 0,
+        lastFailedAt: result?.last_failed_at ?? undefined,
+        blockedAt: result?.blocked_at ?? undefined,
+      };
+
+      this.kycBlockStatus.set(blockStatus);
+      return blockStatus;
+    } catch (err) {
+      console.error('Error checking KYC block status:', err);
+      return { blocked: false, attempts: 0 };
+    }
+  }
+
+  /**
+   * Get remaining verification attempts
+   */
+  getRemainingAttempts(): number {
+    const status = this.kycBlockStatus();
+    if (!status) return 5;
+    return Math.max(0, 5 - status.attempts);
   }
 
   /**
@@ -214,12 +292,22 @@ export class FaceVerificationService {
    * @param videoUrl URL of uploaded selfie video
    * @param documentUrl URL of ID document photo (from Level 2)
    * @returns Verification result with face match score
+   * @throws KycBlockedError if user is blocked
    */
   async verifyFace(videoUrl: string, documentUrl: string): Promise<FaceVerificationResult> {
     this.processing.set(true);
     this['error'].set(null);
 
     try {
+      // Check if user is KYC blocked FIRST
+      const blockStatus = await this.isUserKycBlocked();
+      if (blockStatus.blocked) {
+        throw new KycBlockedError(
+          blockStatus.reason || 'Tu cuenta está bloqueada para verificación facial. Contacta a soporte.',
+          blockStatus.attempts,
+        );
+      }
+
       const {
         data: { user },
       } = await this.supabase.auth.getUser();
@@ -248,15 +336,32 @@ export class FaceVerificationService {
 
       const result: FaceVerificationResult = await response.json();
 
+      // Check if user was blocked during this attempt
+      if (result.is_blocked) {
+        // Refresh block status
+        await this.isUserKycBlocked();
+        throw new KycBlockedError(
+          result.block_reason || 'Tu cuenta ha sido bloqueada. Contacta a soporte.',
+          5 - (result.attempts_remaining || 0),
+        );
+      }
+
       if (!result.success) {
-        throw new Error(result['error'] || 'Verificación facial fallida');
+        // Include remaining attempts in error message
+        const attemptsInfo = result.attempts_remaining !== undefined
+          ? ` (${result.attempts_remaining} intentos restantes)`
+          : '';
+        throw new Error((result['error'] || 'Verificación facial fallida') + attemptsInfo);
       }
 
       // Update user_identity_levels with results
       await this.updateIdentityLevelWithResults(user['id'], videoUrl, result);
 
-      // Refresh status
-      await this.checkFaceVerificationStatus();
+      // Refresh status (including block status)
+      await Promise.all([
+        this.checkFaceVerificationStatus(),
+        this.isUserKycBlocked(),
+      ]);
 
       return result;
     } catch (err) {

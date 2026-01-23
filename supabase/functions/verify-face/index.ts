@@ -43,6 +43,10 @@ interface VerifyFaceResponse {
     source_confidence?: number;
     target_confidence?: number;
   };
+  // KYC blocking info
+  is_blocked?: boolean;
+  block_reason?: string;
+  attempts_remaining?: number;
 }
 
 // Minimum video size to indicate it's a real video (not a static image)
@@ -197,6 +201,34 @@ serve(async (req) => {
     console.log("[verify-face] Document URL:", document_url.substring(0, 80) + "...");
     console.log("[verify-face] Video URL:", video_url.substring(0, 80) + "...");
 
+    // Initialize Supabase client for KYC blocking checks
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Step 0: Check if user is KYC blocked
+    console.log("[verify-face] Checking KYC block status...");
+    const { data: blockStatus } = await supabase.rpc('is_kyc_blocked', { p_user_id: user_id });
+
+    if (blockStatus?.[0]?.blocked) {
+      console.log("[verify-face] User is KYC blocked:", blockStatus[0].reason);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          is_blocked: true,
+          block_reason: blockStatus[0].reason,
+          error: "Tu cuenta está bloqueada para verificación facial. Por favor, contacta a soporte para asistencia.",
+        } as VerifyFaceResponse),
+        {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const currentAttempts = blockStatus?.[0]?.attempts || 0;
+    const attemptsRemaining = Math.max(0, 5 - currentAttempts);
+
     // Step 1: Verify video is real (basic liveness check)
     console.log("[verify-face] Checking video size for liveness...");
     const videoCheck = await checkVideoSize(video_url);
@@ -264,34 +296,65 @@ serve(async (req) => {
 
     console.log("[verify-face] Verification result:", response);
 
-    // Step 5: Update database with verification result
+    // Step 5: Update database with verification result and handle blocking
     try {
-      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-      const supabase = createClient(supabaseUrl, supabaseKey);
+      // Si la verificación falló con score < 70%, incrementar intentos
+      if (!response.success && (response.face_match_score || 0) < FACE_MATCH_THRESHOLD) {
+        console.log("[verify-face] Verification failed, incrementing attempts...");
 
-      await supabase
-        .from('user_identity_levels')
-        .upsert({
-          user_id,
-          face_match_score: response.face_match_score,
-          liveness_score: response.liveness_score,
-          face_verification_method: response.verification_method,
-          face_verified_at: response.success ? new Date().toISOString() : null,
-          updated_at: new Date().toISOString(),
-        }, {
-          onConflict: 'user_id',
+        const { data: blockResult } = await supabase.rpc('increment_face_verification_attempts', {
+          p_user_id: user_id,
+          p_face_match_score: response.face_match_score || 0,
         });
 
-      // Si la verificación fue exitosa, actualizar el perfil
-      if (response.success) {
+        if (blockResult?.[0]) {
+          const newAttempts = blockResult[0].new_attempts;
+          const isNowBlocked = blockResult[0].is_now_blocked;
+
+          console.log(`[verify-face] Attempts: ${newAttempts}, Blocked: ${isNowBlocked}`);
+
+          // Add blocking info to response
+          response.attempts_remaining = Math.max(0, 5 - newAttempts);
+
+          if (isNowBlocked) {
+            response.is_blocked = true;
+            response.block_reason = blockResult[0].block_reason;
+            response.error = `Tu cuenta ha sido bloqueada después de ${newAttempts} intentos fallidos. Por favor, contacta a soporte.`;
+          } else {
+            // Add helpful message about remaining attempts
+            response.error = `${response.error || 'Verificación facial fallida.'} Te quedan ${5 - newAttempts} intentos.`;
+          }
+        }
+      } else {
+        // Update identity levels with successful verification
         await supabase
-          .from('profiles')
-          .update({
-            face_verified: true,
-            face_verified_at: new Date().toISOString(),
-          })
-          .eq('id', user_id);
+          .from('user_identity_levels')
+          .upsert({
+            user_id,
+            face_match_score: response.face_match_score,
+            liveness_score: response.liveness_score,
+            face_verification_method: response.verification_method,
+            face_verified_at: response.success ? new Date().toISOString() : null,
+            // Reset attempts on success
+            face_verification_attempts: response.success ? 0 : undefined,
+            updated_at: new Date().toISOString(),
+          }, {
+            onConflict: 'user_id',
+          });
+
+        // Si la verificación fue exitosa, actualizar el perfil
+        if (response.success) {
+          await supabase
+            .from('profiles')
+            .update({
+              face_verified: true,
+              face_verified_at: new Date().toISOString(),
+            })
+            .eq('id', user_id);
+
+          // Add success info
+          response.attempts_remaining = 5;
+        }
       }
     } catch (dbError) {
       console.error('[verify-face] Database update error:', dbError);
