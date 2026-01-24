@@ -177,16 +177,23 @@ serve(async (req) => {
   const driverResult = results.find((result) => result.role === 'driver');
   if (driverResult) {
     profileUpdates.id_verified = driverResult.status === 'VERIFICADO';
-    if (docByKind['driver_license']) {
-      updates.push(
-        adminClient
-          .from('user_documents')
-          .update({
-            status: mapStatusToKyc(driverResult.status),
-            notes: driverResult.notes ?? docByKind['driver_license'].notes ?? null,
-          })
-          .eq('id', docByKind['driver_license'].id),
-      );
+    const licenseDocs = ['driver_license', 'license_front', 'license_back']
+      .map((kind) => docByKind[kind])
+      .filter(Boolean) as DocumentRecord[];
+
+    if (licenseDocs.length > 0) {
+      const nextStatus = mapStatusToKyc(driverResult.status);
+      licenseDocs.forEach((doc) => {
+        updates.push(
+          adminClient
+            .from('user_documents')
+            .update({
+              status: nextStatus,
+              notes: driverResult.notes ?? doc.notes ?? null,
+            })
+            .eq('id', doc.id),
+        );
+      });
     }
   }
 
@@ -241,18 +248,83 @@ serve(async (req) => {
   });
 });
 
+const DOCUMENT_BUCKETS = ['verification-docs', 'documents'] as const;
+const KNOWN_DOC_KINDS = new Set([
+  'gov_id_front',
+  'gov_id_back',
+  'driver_license',
+  'license_front',
+  'license_back',
+  'vehicle_registration',
+  'vehicle_insurance',
+  'utility_bill',
+  'selfie',
+  'criminal_record',
+]);
+
+const MISSING_DOC_ALIASES: Record<string, string[]> = {
+  licencia: ['driver_license'],
+  'driver_license': ['driver_license'],
+  license: ['driver_license'],
+  'license_front': ['driver_license'],
+  'license_back': ['driver_license'],
+  dni: ['gov_id_front', 'gov_id_back'],
+  'gov_id': ['gov_id_front', 'gov_id_back'],
+  'gov_id_front': ['gov_id_front'],
+  'gov_id_back': ['gov_id_back'],
+  cedula: ['gov_id_front', 'gov_id_back'],
+  cedula_auto: ['vehicle_registration'],
+  'vehicle_registration': ['vehicle_registration'],
+  'vehicle_insurance': ['vehicle_insurance'],
+};
+
+function normalizeMissingDoc(raw: string): string[] {
+  const trimmed = raw.trim();
+  const key = trimmed.toLowerCase().replace(/\s+/g, '_');
+  if (MISSING_DOC_ALIASES[key]) {
+    return MISSING_DOC_ALIASES[key];
+  }
+
+  if (KNOWN_DOC_KINDS.has(trimmed)) {
+    return [trimmed];
+  }
+
+  const lowered = trimmed.toLowerCase();
+  if (KNOWN_DOC_KINDS.has(lowered)) {
+    return [lowered];
+  }
+
+  return [];
+}
+
+async function createSignedUrl(
+  adminClient: ReturnType<typeof createClient>,
+  storagePath: string,
+): Promise<string | null> {
+  for (const bucket of DOCUMENT_BUCKETS) {
+    const { data, error } = await adminClient.storage.from(bucket).createSignedUrl(
+      storagePath,
+      60 * 60,
+    );
+
+    if (!error && data?.signedUrl) {
+      return data.signedUrl;
+    }
+  }
+
+  return null;
+}
+
 async function buildSignedDocuments(
   adminClient: ReturnType<typeof createClient>,
   documents: DocumentRecord[],
 ) {
   const signed: Array<Record<string, unknown>> = [];
   for (const doc of documents) {
-    const { data, error } = await adminClient.storage
-      .from('documents')
-      .createSignedUrl(doc.storage_path, 60 * 60);
+    const signedUrl = await createSignedUrl(adminClient, doc.storage_path);
 
-    if (error || !data?.signedUrl) {
-      console.warn('[verify-user-docs] Could not create signed URL for', doc.id, error);
+    if (!signedUrl) {
+      console.warn('[verify-user-docs] Could not create signed URL for', doc.id);
       continue;
     }
 
@@ -260,7 +332,7 @@ async function buildSignedDocuments(
       id: doc.id,
       kind: doc.kind,
       status: doc.status,
-      url: data.signedUrl,
+      url: signedUrl,
       created_at: doc.created_at,
     });
   }
@@ -311,69 +383,15 @@ function evaluateDriver(
   aiResult: Record<string, unknown> | undefined,
   profile: Record<string, any>,
 ): VerificationResult {
-  const missing: string[] = [];
-  const licenseDoc = docs['driver_license'];
-
-  if (!licenseDoc) {
-    missing.push('licencia');
-  }
-
-  let status: VerificationResult['status'] = 'PENDIENTE';
-  let notes: string | undefined;
-
-  if (aiResult && typeof aiResult.status === 'string') {
-    const aiStatus = aiResult.status.toUpperCase();
-    if (aiStatus === 'VERIFICADO' || aiStatus === 'RECHAZADO' || aiStatus === 'PENDIENTE') {
-      status = aiStatus as VerificationResult['status'];
-    }
-    if (typeof aiResult.notes === 'string') {
-      notes = aiResult.notes;
-    }
-    if (Array.isArray(aiResult.missing_docs)) {
-      aiResult.missing_docs.forEach((item: unknown) => {
-        if (typeof item === 'string' && !missing.includes(item)) {
-          missing.push(item);
-        }
-      });
-    }
-  } else if (!DOC_VERIFIER_URL) {
-    // ⚠️ SEGURIDAD: Sin verificador externo, NUNCA auto-aprobar.
-    // Requiere verificación manual por admin o configuración de DOC_VERIFIER_URL.
-    status = 'PENDIENTE';
-    notes = 'Requiere verificación manual (DOC_VERIFIER_URL no configurado).';
-  }
-
-  if (missing.length > 0 && status === 'VERIFICADO') {
-    status = 'PENDIENTE';
-  }
-
-  return {
-    user_id: userId,
-    role: 'driver',
-    status,
-    missing_docs: missing,
-    notes,
-    metadata: {
-      full_name: profile.full_name,
-      ai: aiResult ?? null,
-    },
-  };
-}
-
-function evaluateOwner(
-  userId: string,
-  docs: Record<string, DocumentRecord>,
-  aiResult: Record<string, unknown> | undefined,
-  profile: Record<string, any>,
-): VerificationResult {
   const missing = new Set<string>();
+  const licenseDocs = [
+    docs['driver_license'],
+    docs['license_front'],
+    docs['license_back'],
+  ].filter(Boolean) as DocumentRecord[];
 
-  if (!docs['gov_id_front'] && !docs['gov_id_back']) {
-    missing.add('dni');
-  }
-
-  if (!docs['vehicle_registration']) {
-    missing.add('cedula_auto');
+  if (licenseDocs.length === 0) {
+    missing.add('driver_license');
   }
 
   let status: VerificationResult['status'] = 'PENDIENTE';
@@ -390,7 +408,71 @@ function evaluateOwner(
     if (Array.isArray(aiResult.missing_docs)) {
       aiResult.missing_docs.forEach((item: unknown) => {
         if (typeof item === 'string') {
-          missing.add(item);
+          normalizeMissingDoc(item).forEach((docId) => missing.add(docId));
+        }
+      });
+    }
+  } else if (!DOC_VERIFIER_URL) {
+    // ⚠️ SEGURIDAD: Sin verificador externo, NUNCA auto-aprobar.
+    // Requiere verificación manual por admin o configuración de DOC_VERIFIER_URL.
+    status = 'PENDIENTE';
+    notes = 'Requiere verificación manual (DOC_VERIFIER_URL no configurado).';
+  }
+
+  if (missing.size > 0 && status === 'VERIFICADO') {
+    status = 'PENDIENTE';
+  }
+
+  return {
+    user_id: userId,
+    role: 'driver',
+    status,
+    missing_docs: Array.from(missing),
+    notes,
+    metadata: {
+      full_name: profile.full_name,
+      ai: aiResult ?? null,
+    },
+  };
+}
+
+function evaluateOwner(
+  userId: string,
+  docs: Record<string, DocumentRecord>,
+  aiResult: Record<string, unknown> | undefined,
+  profile: Record<string, any>,
+): VerificationResult {
+  const missing = new Set<string>();
+
+  const hasGovFront = !!docs['gov_id_front'];
+  const hasGovBack = !!docs['gov_id_back'];
+
+  if (!hasGovFront) {
+    missing.add('gov_id_front');
+  }
+  if (!hasGovBack) {
+    missing.add('gov_id_back');
+  }
+
+  if (!docs['vehicle_registration']) {
+    missing.add('vehicle_registration');
+  }
+
+  let status: VerificationResult['status'] = 'PENDIENTE';
+  let notes: string | undefined;
+
+  if (aiResult && typeof aiResult.status === 'string') {
+    const aiStatus = aiResult.status.toUpperCase();
+    if (aiStatus === 'VERIFICADO' || aiStatus === 'RECHAZADO' || aiStatus === 'PENDIENTE') {
+      status = aiStatus as VerificationResult['status'];
+    }
+    if (typeof aiResult.notes === 'string') {
+      notes = aiResult.notes;
+    }
+    if (Array.isArray(aiResult.missing_docs)) {
+      aiResult.missing_docs.forEach((item: unknown) => {
+        if (typeof item === 'string') {
+          normalizeMissingDoc(item).forEach((docId) => missing.add(docId));
         }
       });
     }

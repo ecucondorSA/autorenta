@@ -1,5 +1,6 @@
 import { Component, inject, signal, computed, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
+import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 
 import { VerificationService } from '@core/services/verification/verification.service';
 import { FormsModule } from '@angular/forms';
@@ -33,6 +34,8 @@ interface ExtractedField {
   verified: boolean;
 }
 
+const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB (mobile-friendly)
+
 @Component({
   selector: 'app-dni-uploader',
   standalone: true,
@@ -44,6 +47,11 @@ interface ExtractedField {
     <div aria-live="assertive" aria-atomic="true" class="sr-only" id="paste-announcements"></div>
 
     <div class="space-y-6">
+      @if (uploadError()) {
+        <div class="rounded-xl border border-error-border bg-error-bg/60 px-4 py-3 text-sm text-error-strong" role="alert" aria-live="polite">
+          {{ uploadError() }}
+        </div>
+      }
       <!-- Country Selector (Compact) -->
       <div class="flex items-center justify-between p-1">
         <label for="country-select" class="text-sm font-medium text-text-secondary">País de emisión</label>
@@ -84,7 +92,7 @@ interface ExtractedField {
           aria-labelledby="front-label"
           aria-describedby="front-desc"
         >
-          <div class="flex items-center p-3 sm:p-4 gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-center p-3 sm:p-4 gap-4">
             <!-- Icon / Preview Thumbnail -->
             <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative" aria-hidden="true">
               @if (frontPreview()) {
@@ -114,17 +122,17 @@ interface ExtractedField {
 
             <!-- Actions -->
             <div class="flex-shrink-0">
-              <input #frontInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, 'dni_front')" aria-label="Seleccionar archivo de imagen para el frente del documento" />
+              <input #frontInput type="file" accept="image/*" capture="environment" class="hidden" (change)="onFileSelected($event, 'dni_front')" aria-label="Seleccionar archivo de imagen para el frente del documento" />
               @if (uploadingFront()) {
                 <div class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin" role="progressbar" aria-label="Subiendo imagen del frente del documento" [attr.aria-valuenow]="frontProgress()" aria-valuemin="0" aria-valuemax="100"></div>
               } @else {
                 <button
                   (click)="frontInput.click()"
                   [attr.aria-label]="frontPreview() ? 'Cambiar imagen del frente del documento' : 'Subir imagen del frente del documento'"
-                  class="px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                  class="w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-medium transition-colors"
                   [class]="frontPreview() ? 'text-text-primary hover:bg-surface-hover' : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'"
                 >
-                  {{ frontPreview() ? 'Cambiar' : 'Subir' }}
+                  {{ frontPreview() ? 'Cambiar' : 'Tomar foto' }}
                 </button>
               }
             </div>
@@ -148,7 +156,7 @@ interface ExtractedField {
           aria-labelledby="back-label"
           aria-describedby="back-desc"
         >
-          <div class="flex items-center p-3 sm:p-4 gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-center p-3 sm:p-4 gap-4">
             <!-- Icon / Preview -->
             <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative">
               @if (backPreview()) {
@@ -178,17 +186,17 @@ interface ExtractedField {
 
             <!-- Actions -->
             <div class="flex-shrink-0">
-              <input #backInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, 'dni_back')" aria-label="Seleccionar archivo de imagen para el dorso del documento" />
+              <input #backInput type="file" accept="image/*" capture="environment" class="hidden" (change)="onFileSelected($event, 'dni_back')" aria-label="Seleccionar archivo de imagen para el dorso del documento" />
               @if (uploadingBack()) {
                 <div class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin" role="progressbar" aria-label="Subiendo imagen del dorso del documento" [attr.aria-valuenow]="backProgress()" aria-valuemin="0" aria-valuemax="100"></div>
               } @else {
                 <button
                   (click)="backInput.click()"
                   [attr.aria-label]="backPreview() ? 'Cambiar imagen del dorso del documento' : 'Subir imagen del dorso del documento'"
-                  class="px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                  class="w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-medium transition-colors"
                   [class]="backPreview() ? 'text-text-primary hover:bg-surface-hover' : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'"
                 >
-                  {{ backPreview() ? 'Cambiar' : 'Subir' }}
+                  {{ backPreview() ? 'Cambiar' : 'Tomar foto' }}
                 </button>
               }
             </div>
@@ -276,6 +284,7 @@ export class DniUploaderComponent {
   // OCR Results
   frontOcrResult = signal<OcrResultDisplay | null>(null);
   backOcrResult = signal<OcrResultDisplay | null>(null);
+  uploadError = signal<string | null>(null);
 
   // Computed: Extracted fields for display
   extractedFields = computed<ExtractedField[]>(() => {
@@ -317,6 +326,7 @@ export class DniUploaderComponent {
     this.backOcrResult.set(null);
     this.frontProgress.set(0);
     this.backProgress.set(0);
+    this.uploadError.set(null);
   }
 
   // Paste Support
@@ -329,10 +339,14 @@ export class DniUploaderComponent {
       if (items[i].type.indexOf('image') !== -1) {
         const file = items[i].getAsFile();
         if (file) {
-          // Validate file size (max 10MB)
-          const maxSize = 10 * 1024 * 1024; // 10MB
-          if (file.size > maxSize) {
-            this.announcePaste('Imagen demasiado grande. Máximo 10MB.');
+          // Validate file size (max 2MB)
+          if (file.size > MAX_UPLOAD_BYTES) {
+            this.setUploadError('Imagen demasiado grande. Máximo 2MB.');
+            event.preventDefault();
+            break;
+          }
+
+          if (!this.validateSelectedFile(file)) {
             event.preventDefault();
             break;
           }
@@ -397,7 +411,7 @@ export class DniUploaderComponent {
     this.isDraggingBack.set(false);
 
     const file = event.dataTransfer?.files[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith('image/') && this.validateSelectedFile(file)) {
       this.processFile(file, type);
     }
   }
@@ -529,6 +543,11 @@ export class DniUploaderComponent {
     const file = input?.files?.[0];
     if (!file) return;
 
+    if (!this.validateSelectedFile(file)) {
+      if (input) input.value = '';
+      return;
+    }
+
     await this.processFile(file, type);
 
     // Clear input for re-selection of same file
@@ -538,6 +557,8 @@ export class DniUploaderComponent {
   private async processFile(file: File, type: 'dni_front' | 'dni_back'): Promise<void> {
     const docType = type === 'dni_front' ? 'gov_id_front' : 'gov_id_back';
     const isFront = type === 'dni_front';
+
+    this.uploadError.set(null);
 
     // Preview local inmediata
     const reader = new FileReader();
@@ -622,6 +643,7 @@ export class DniUploaderComponent {
     } catch (error) {
       clearInterval(progressInterval);
       console.error('Error uploading document:', error);
+      this.setUploadError('No pudimos subir la foto. Intenta nuevamente con mejor luz.');
 
       // Clear preview on error
       if (isFront) {
@@ -635,5 +657,25 @@ export class DniUploaderComponent {
       if (isFront) this.uploadingFront.set(false);
       else this.uploadingBack.set(false);
     }
+  }
+
+  private validateSelectedFile(file: File): boolean {
+    const validation = validateFile(file, {
+      maxSizeBytes: MAX_UPLOAD_BYTES,
+      allowedMimeTypes: DEFAULT_IMAGE_MIME_TYPES,
+    });
+
+    if (!validation.valid) {
+      this.setUploadError(validation.error || 'Archivo no válido');
+      return false;
+    }
+
+    this.uploadError.set(null);
+    return true;
+  }
+
+  private setUploadError(message: string): void {
+    this.uploadError.set(message);
+    this.announcePaste(message);
   }
 }

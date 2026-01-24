@@ -3,6 +3,7 @@ import { DecimalPipe, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { VerificationService } from '@core/services/verification/verification.service';
+import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 
 const COUNTRIES = [
   { code: 'AR', name: 'Argentina', flag: '🇦🇷' },
@@ -35,6 +36,8 @@ interface ExtractedField {
   isExpired?: boolean;
 }
 
+const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB (mobile-friendly)
+
 @Component({
   selector: 'app-license-uploader',
   standalone: true,
@@ -46,6 +49,11 @@ interface ExtractedField {
      <div aria-live="assertive" aria-atomic="true" class="sr-only" id="license-paste-announcements"></div>
 
      <div class="space-y-6">
+      @if (uploadError()) {
+        <div class="rounded-xl border border-error-border bg-error-bg/60 px-4 py-3 text-sm text-error-strong" role="alert" aria-live="polite">
+          {{ uploadError() }}
+        </div>
+      }
       <!-- Country Selector (Compact) -->
       @if (!hideCountrySelector()) {
          <div class="flex items-center justify-between p-1">
@@ -89,7 +97,7 @@ interface ExtractedField {
            aria-labelledby="license-front-label"
            aria-describedby="license-front-desc"
          >
-          <div class="flex items-center p-3 sm:p-4 gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-center p-3 sm:p-4 gap-4">
              <!-- Icon / Preview Thumbnail -->
              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative" aria-hidden="true">
                @if (frontPreview()) {
@@ -119,17 +127,17 @@ interface ExtractedField {
 
              <!-- Actions -->
              <div class="flex-shrink-0">
-               <input #frontInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, 'license_front')" aria-label="Seleccionar archivo de imagen para el frente de la licencia" />
+               <input #frontInput type="file" accept="image/*" capture="environment" class="hidden" (change)="onFileSelected($event, 'license_front')" aria-label="Seleccionar archivo de imagen para el frente de la licencia" />
                @if (uploadingFront()) {
                  <div class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin" role="progressbar" aria-label="Subiendo imagen del frente de la licencia" [attr.aria-valuenow]="frontProgress()" aria-valuemin="0" aria-valuemax="100"></div>
                } @else {
                  <button
                    (click)="frontInput.click()"
                    [attr.aria-label]="frontPreview() ? 'Cambiar imagen del frente de la licencia' : 'Subir imagen del frente de la licencia'"
-                   class="px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                   class="w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-medium transition-colors"
                    [class]="frontPreview() ? 'text-text-primary hover:bg-surface-hover' : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'"
                  >
-                   {{ frontPreview() ? 'Cambiar' : 'Subir' }}
+                   {{ frontPreview() ? 'Cambiar' : 'Tomar foto' }}
                  </button>
                }
              </div>
@@ -153,7 +161,7 @@ interface ExtractedField {
            aria-labelledby="license-back-label"
            aria-describedby="license-back-desc"
          >
-          <div class="flex items-center p-3 sm:p-4 gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-center p-3 sm:p-4 gap-4">
             <!-- Icon / Preview -->
             <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative">
               @if (backPreview()) {
@@ -183,17 +191,17 @@ interface ExtractedField {
 
              <!-- Actions -->
              <div class="flex-shrink-0">
-               <input #backInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, 'license_back')" aria-label="Seleccionar archivo de imagen para el dorso de la licencia" />
+               <input #backInput type="file" accept="image/*" capture="environment" class="hidden" (change)="onFileSelected($event, 'license_back')" aria-label="Seleccionar archivo de imagen para el dorso de la licencia" />
                @if (uploadingBack()) {
                  <div class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin" role="progressbar" aria-label="Subiendo imagen del dorso de la licencia" [attr.aria-valuenow]="backProgress()" aria-valuemin="0" aria-valuemax="100"></div>
                } @else {
                  <button
                    (click)="backInput.click()"
                    [attr.aria-label]="backPreview() ? 'Cambiar imagen del dorso de la licencia' : 'Subir imagen del dorso de la licencia'"
-                   class="px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                   class="w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-medium transition-colors"
                    [class]="backPreview() ? 'text-text-primary hover:bg-surface-hover' : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'"
                  >
-                   {{ backPreview() ? 'Cambiar' : 'Subir' }}
+                   {{ backPreview() ? 'Cambiar' : 'Tomar foto' }}
                  </button>
                }
              </div>
@@ -307,6 +315,7 @@ export class LicenseUploaderComponent {
   // OCR Results
   frontOcrResult = signal<LicenseOcrResultDisplay | null>(null);
   backOcrResult = signal<LicenseOcrResultDisplay | null>(null);
+  uploadError = signal<string | null>(null);
 
   // Computed: Extracted fields for display
   extractedFields = computed<ExtractedField[]>(() => {
@@ -382,6 +391,7 @@ export class LicenseUploaderComponent {
     this.backOcrResult.set(null);
     this.frontProgress.set(0);
     this.backProgress.set(0);
+    this.uploadError.set(null);
   }
 
   getSelectedCountryFlag(): string {
@@ -398,10 +408,14 @@ export class LicenseUploaderComponent {
        if (items[i].type.indexOf('image') !== -1) {
           const file = items[i].getAsFile();
           if (file) {
-            // Validate file size (max 10MB)
-            const maxSize = 10 * 1024 * 1024; // 10MB
-            if (file.size > maxSize) {
-              this.announcePaste('Imagen demasiado grande. Máximo 10MB.');
+            // Validate file size (max 2MB)
+            if (file.size > MAX_UPLOAD_BYTES) {
+              this.setUploadError('Imagen demasiado grande. Máximo 2MB.');
+              event.preventDefault();
+              break;
+            }
+
+            if (!this.validateSelectedFile(file)) {
               event.preventDefault();
               break;
             }
@@ -465,7 +479,7 @@ export class LicenseUploaderComponent {
     this.isDraggingBack.set(false);
 
     const file = event.dataTransfer?.files[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith('image/') && this.validateSelectedFile(file)) {
       this.processFile(file, type);
     }
   }
@@ -596,6 +610,11 @@ export class LicenseUploaderComponent {
     const file = input?.files?.[0];
     if (!file) return;
 
+    if (!this.validateSelectedFile(file)) {
+      if (input) input.value = '';
+      return;
+    }
+
     await this.processFile(file, type);
 
     // Clear input for re-selection of same file
@@ -605,6 +624,8 @@ export class LicenseUploaderComponent {
   private async processFile(file: File, type: 'license_front' | 'license_back'): Promise<void> {
     const docType = type === 'license_front' ? 'license_front' : 'license_back';
     const isFront = type === 'license_front';
+
+    this.uploadError.set(null);
 
     // Preview local inmediata
     const reader = new FileReader();
@@ -682,6 +703,7 @@ export class LicenseUploaderComponent {
     } catch (error) {
       clearInterval(progressInterval);
       console.error('Error uploading license:', error);
+      this.setUploadError('No pudimos subir la foto. Intenta nuevamente con mejor luz.');
 
       // Clear preview on error
       if (isFront) {
@@ -695,5 +717,25 @@ export class LicenseUploaderComponent {
       if (isFront) this.uploadingFront.set(false);
       else this.uploadingBack.set(false);
     }
+  }
+
+  private validateSelectedFile(file: File): boolean {
+    const validation = validateFile(file, {
+      maxSizeBytes: MAX_UPLOAD_BYTES,
+      allowedMimeTypes: DEFAULT_IMAGE_MIME_TYPES,
+    });
+
+    if (!validation.valid) {
+      this.setUploadError(validation.error || 'Archivo no válido');
+      return false;
+    }
+
+    this.uploadError.set(null);
+    return true;
+  }
+
+  private setUploadError(message: string): void {
+    this.uploadError.set(message);
+    this.announcePaste(message);
   }
 }

@@ -451,6 +451,33 @@ export class VerificationPage implements OnInit {
         map[doc.kind] = doc;
       }
     }
+
+    if (!map['driver_license']) {
+      const licenseDocs = [map['license_front'], map['license_back']].filter(
+        Boolean,
+      ) as UserDocument[];
+
+      if (licenseDocs.length > 0) {
+        const hasRejected = licenseDocs.some((doc) => doc.status === 'rejected');
+        const hasPending = licenseDocs.some((doc) => doc.status === 'pending');
+        const hasVerified = licenseDocs.some((doc) => doc.status === 'verified');
+
+        const status = hasRejected
+          ? 'rejected'
+          : hasPending
+            ? 'pending'
+            : hasVerified
+              ? 'verified'
+              : licenseDocs[0].status;
+
+        map['driver_license'] = {
+          ...licenseDocs[0],
+          kind: 'driver_license',
+          status,
+        };
+      }
+    }
+
     return map;
   });
 

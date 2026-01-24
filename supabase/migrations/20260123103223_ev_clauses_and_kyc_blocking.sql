@@ -29,8 +29,8 @@ CREATE INDEX IF NOT EXISTS idx_user_identity_levels_face_attempts
   ON user_identity_levels(face_verification_attempts)
   WHERE face_verification_attempts > 0;
 
--- Create user_blocks table for audit trail
-CREATE TABLE IF NOT EXISTS user_blocks (
+-- Create kyc_user_blocks table for audit trail
+CREATE TABLE IF NOT EXISTS kyc_user_blocks (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   reason TEXT NOT NULL,
@@ -44,12 +44,13 @@ CREATE TABLE IF NOT EXISTS user_blocks (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Enable RLS on user_blocks
-ALTER TABLE user_blocks ENABLE ROW LEVEL SECURITY;
+-- Enable RLS on kyc_user_blocks
+ALTER TABLE kyc_user_blocks ENABLE ROW LEVEL SECURITY;
 
 -- Admin can view all blocks
+DROP POLICY IF EXISTS "Admins can view all blocks" ON kyc_user_blocks;
 CREATE POLICY "Admins can view all blocks"
-  ON user_blocks FOR SELECT
+  ON kyc_user_blocks FOR SELECT
   USING (
     EXISTS (
       SELECT 1 FROM profiles p
@@ -58,8 +59,9 @@ CREATE POLICY "Admins can view all blocks"
   );
 
 -- Admin can manage blocks
+DROP POLICY IF EXISTS "Admins can manage blocks" ON kyc_user_blocks;
 CREATE POLICY "Admins can manage blocks"
-  ON user_blocks FOR ALL
+  ON kyc_user_blocks FOR ALL
   USING (
     EXISTS (
       SELECT 1 FROM profiles p
@@ -68,8 +70,9 @@ CREATE POLICY "Admins can manage blocks"
   );
 
 -- Users can view their own blocks
+DROP POLICY IF EXISTS "Users can view own blocks" ON kyc_user_blocks;
 CREATE POLICY "Users can view own blocks"
-  ON user_blocks FOR SELECT
+  ON kyc_user_blocks FOR SELECT
   USING (user_id = auth.uid());
 
 -- RPC to check if user is KYC blocked
@@ -144,7 +147,7 @@ BEGIN
 
   -- If blocked, create audit record
   IF v_should_block THEN
-    INSERT INTO user_blocks (user_id, reason, block_type, details, blocked_at)
+    INSERT INTO kyc_user_blocks (user_id, reason, block_type, details, blocked_at)
     VALUES (
       p_user_id,
       'kyc_failure',
@@ -196,7 +199,7 @@ BEGIN
   WHERE user_id = p_user_id;
 
   -- Update block record
-  UPDATE user_blocks SET
+  UPDATE kyc_user_blocks SET
     unblocked_at = now(),
     unblocked_by = p_admin_id,
     unblock_reason = p_reason

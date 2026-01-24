@@ -13,6 +13,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { ProfileStore } from '@core/stores/profile.store';
 import { IdentityLevelService } from '@core/services/verification/identity-level.service';
+import { VerificationService } from '@core/services/verification/verification.service';
 import { EmailVerificationComponent } from '../../../shared/components/email-verification/email-verification.component';
 import { PhoneVerificationComponent } from '../../../shared/components/phone-verification/phone-verification.component';
 import { SelfieCaptureComponent } from '../../../shared/components/selfie-capture/selfie-capture.component';
@@ -339,6 +340,7 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
 export class ProfileVerificationPage implements OnInit, OnDestroy {
   private readonly profileStore = inject(ProfileStore);
   private readonly identityService = inject(IdentityLevelService);
+  private readonly verificationService = inject(VerificationService);
   private readonly route = inject(ActivatedRoute);
 
   readonly profile = this.profileStore.profile;
@@ -352,8 +354,8 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
 
   // Get verification progress data
   readonly verificationProgress = this.identityService.verificationProgress;
-  readonly identityLevel = this.identityService.identityLevel;
   readonly requirements = computed(() => this.verificationProgress()?.requirements);
+  readonly userDocuments = this.verificationService.documents;
 
   // Progress percentage from service
   readonly progressPercentage = computed(() => {
@@ -379,6 +381,8 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
     if (!this.profile()) {
       void this.profileStore.loadProfile();
     }
+
+    void this.verificationService.loadDocuments();
 
     // Load verification progress
     try {
@@ -474,10 +478,11 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
 
   isDniInReview(): boolean {
     // Documento subido pero no verificado
-    const identity = this.identityLevel();
     const verified = this.isDniVerified();
     if (verified) return false;
-    return !!(identity?.document_front_url || identity?.document_back_url);
+    return this.userDocuments().some((doc) =>
+      ['gov_id_front', 'gov_id_back'].includes(doc.kind),
+    );
   }
 
   isLicenseVerified(): boolean {
@@ -486,10 +491,11 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
 
   isLicenseInReview(): boolean {
     // Licencia subida pero no verificada
-    const identity = this.identityLevel();
     const verified = this.isLicenseVerified();
     if (verified) return false;
-    return !!identity?.driver_license_url;
+    return this.userDocuments().some((doc) =>
+      ['driver_license', 'license_front', 'license_back'].includes(doc.kind),
+    );
   }
 
   getProgressLabel(): string {

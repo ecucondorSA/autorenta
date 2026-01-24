@@ -35,6 +35,7 @@ interface AuthorityConcept {
   parenting_pain_point: string;
   financial_analogy: string;
   image_scene_concept: string;
+  image_reference?: string;
 }
 
 interface GenerateContentRequest {
@@ -46,6 +47,7 @@ interface GenerateContentRequest {
   generate_image?: boolean;
   batch_mode?: boolean; // Generate posts for all daily slots
   save_to_db?: boolean;
+  authority_concept_id?: string; // Optional: Override random selection with specific concept ID
 }
 
 interface GeneratedContent {
@@ -185,7 +187,7 @@ serve(async (req) => {
 
   try {
     const request: GenerateContentRequest = await req.json();
-    const { content_type, platform, car_id, theme, language = 'es', generate_image = false, batch_mode = false, save_to_db = false } = request;
+    const { content_type, platform, car_id, theme, language = 'es', generate_image = false, batch_mode = false, save_to_db = false, authority_concept_id } = request;
 
     // Validate required fields
     if (!content_type || !platform) {
@@ -201,7 +203,7 @@ serve(async (req) => {
     // AUTHORITY POSTS - New scroll-stopping psychology system
     // ========================================================================
     if (content_type === 'authority') {
-      const authorityResult = await generateAuthorityPost(supabase, platform, save_to_db);
+      const authorityResult = await generateAuthorityPost(supabase, platform, save_to_db, authority_concept_id);
       return new Response(JSON.stringify(authorityResult), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -217,131 +219,137 @@ serve(async (req) => {
 
     // Process each time slot
     for (const timeStr of targetTimes) {
-        // Get car data
-        let carData: CarData | null = null;
-        if (car_id) {
-            carData = await getCarData(supabase, car_id);
-        } else if (content_type === 'car_spotlight') {
-            carData = await getRandomAvailableCar(supabase);
-        }
+      // Get car data
+      let carData: CarData | null = null;
+      if (car_id) {
+        carData = await getCarData(supabase, car_id);
+      } else if (content_type === 'car_spotlight') {
+        carData = await getRandomAvailableCar(supabase);
+      }
 
-        // Generate text (with A/B testing support)
-        const textContent = await generateTextContent({
+      // Generate text (with A/B testing support)
+      const textContent = await generateTextContent({
+        content_type,
+        platform,
+        carData,
+        theme,
+        language,
+        supabase,
+      });
+
+      // Generate image
+      let imageContent: { url?: string; base64?: string } | undefined;
+      let imageUploadError: string | undefined;
+      if (generate_image) {
+        imageContent = await generateMarketingImage(carData, content_type);
+
+        // Upload image if saving to DB and we have base64
+        if (save_to_db && imageContent?.base64) {
+          const uploadResult = await uploadMarketingImageToStorage({
+            base64: imageContent.base64,
+            bucket: MARKETING_MEDIA_BUCKET,
+            contentType: 'image/png',
+            prefix: 'marketing/images',
+          });
+
+          if (uploadResult?.publicUrl) {
+            imageContent.url = uploadResult.publicUrl;
+            // Optional: Clear base64 to save bandwidth in response if URL is available
+            // imageContent.base64 = undefined;
+          } else {
+            imageUploadError = uploadResult?.error || 'Unknown storage error';
+            console.error('[generate-marketing-content] Image upload failed:', imageUploadError);
+          }
+        }
+      }
+
+      const resultItem: GeneratedContent = {
+        success: true,
+        text: textContent,
+        image: imageContent,
+        suggested_post_time: timeStr,
+      };
+      if (imageUploadError) {
+        resultItem.error = `Image upload failed: ${imageUploadError}`;
+      }
+
+      results.push(resultItem);
+
+      // Save to DB if requested - DUAL PLATFORM (Instagram + Facebook)
+      if (save_to_db) {
+        const mediaUrl = imageContent?.url;
+        const mediaType = imageContent ? 'image' : null;
+
+        // HARDENED: Always insert for BOTH platforms (Instagram + Facebook)
+        const ACTIVE_PLATFORMS: Platform[] = ['instagram', 'facebook'];
+
+        for (const targetPlatform of ACTIVE_PLATFORMS) {
+          // HARDENED 2026-01-23: Both platforms REQUIRE image - skip if no media
+          if (!mediaUrl) {
+            console.warn(`[generate-marketing-content] SKIPPING ${targetPlatform} post - no image generated. Media required.`);
+            continue; // Skip this platform if no image
+          }
+
+          // Get platform-specific scheduled time
+          const platformTimeStr = targetPlatform === platform
+            ? timeStr
+            : getSuggestedPostTime(targetPlatform);
+
+          const queueItem = {
+            platform: targetPlatform,
             content_type,
-            platform,
-            carData,
-            theme,
-            language,
-            supabase,
-        });
-
-        // Generate image
-        let imageContent: { url?: string; base64?: string } | undefined;
-        let imageUploadError: string | undefined;
-        if (generate_image) {
-            imageContent = await generateMarketingImage(carData, content_type);
-
-            // Upload image if saving to DB and we have base64
-            if (save_to_db && imageContent?.base64) {
-                const uploadResult = await uploadMarketingImageToStorage({
-                    base64: imageContent.base64,
-                    bucket: MARKETING_MEDIA_BUCKET,
-                    contentType: 'image/png',
-                    prefix: 'marketing/images',
-                });
-
-                if (uploadResult?.publicUrl) {
-                    imageContent.url = uploadResult.publicUrl;
-                    // Optional: Clear base64 to save bandwidth in response if URL is available
-                    // imageContent.base64 = undefined;
-                } else {
-                    imageUploadError = uploadResult?.error || 'Unknown storage error';
-                    console.error('[generate-marketing-content] Image upload failed:', imageUploadError);
-                }
+            text_content: textContent.caption,
+            media_url: mediaUrl,
+            media_type: mediaType,
+            hashtags: textContent.hashtags,
+            scheduled_for: platformTimeStr,
+            status: 'pending',
+            hook_variant_id: textContent.hook_variant_id || null,
+            metadata: {
+              car_id: carData?.id,
+              theme,
+              language,
+              // SEO 2026 fields
+              alt_text: textContent.alt_text || '',
+              seo_keywords: textContent.seo_keywords || [],
+              call_to_action: textContent.call_to_action || '',
+              // A/B Testing tracking
+              hook_variant_id: textContent.hook_variant_id || null,
+              // Track dual-platform generation
+              dual_platform_batch: true,
+              original_platform: platform,
             }
-        }
+          };
 
-        const resultItem: GeneratedContent = {
-            success: true,
-            text: textContent,
-            image: imageContent,
-            suggested_post_time: timeStr,
-        };
-        if (imageUploadError) {
-            resultItem.error = `Image upload failed: ${imageUploadError}`;
-        }
+          const { error: dbError } = await supabase
+            .from('marketing_content_queue')
+            .insert(queueItem);
 
-        results.push(resultItem);
-
-        // Save to DB if requested - DUAL PLATFORM (Instagram + Facebook)
-        if (save_to_db) {
-            const mediaUrl = imageContent?.url;
-            const mediaType = imageContent ? 'image' : null;
-
-            // HARDENED: Always insert for BOTH platforms (Instagram + Facebook)
-            const ACTIVE_PLATFORMS: Platform[] = ['instagram', 'facebook'];
-
-            for (const targetPlatform of ACTIVE_PLATFORMS) {
-                // Get platform-specific scheduled time
-                const platformTimeStr = targetPlatform === platform
-                    ? timeStr
-                    : getSuggestedPostTime(targetPlatform);
-
-                const queueItem = {
-                    platform: targetPlatform,
-                    content_type,
-                    text_content: textContent.caption,
-                    media_url: mediaUrl,
-                    media_type: mediaType,
-                    hashtags: textContent.hashtags,
-                    scheduled_for: platformTimeStr,
-                    status: 'pending',
-                    hook_variant_id: textContent.hook_variant_id || null,
-                    metadata: {
-                        car_id: carData?.id,
-                        theme,
-                        language,
-                        // SEO 2026 fields
-                        alt_text: textContent.alt_text || '',
-                        seo_keywords: textContent.seo_keywords || [],
-                        call_to_action: textContent.call_to_action || '',
-                        // A/B Testing tracking
-                        hook_variant_id: textContent.hook_variant_id || null,
-                        // Track dual-platform generation
-                        dual_platform_batch: true,
-                        original_platform: platform,
-                    }
-                };
-
-                const { error: dbError } = await supabase
-                    .from('marketing_content_queue')
-                    .insert(queueItem);
-
-                if (dbError) {
-                    console.error(`[generate-marketing-content] DB insert failed for ${targetPlatform}:`, dbError);
-                    if (targetPlatform === platform) {
-                        resultItem.error = `DB Save Failed: ${dbError.message}`;
-                    }
-                } else {
-                    console.log(`[generate-marketing-content] Saved post for ${targetPlatform} at ${platformTimeStr}`);
-                }
+          if (dbError) {
+            console.error(`[generate-marketing-content] DB insert failed for ${targetPlatform}:`, dbError);
+            if (targetPlatform === platform) {
+              resultItem.error = `DB Save Failed: ${dbError.message}`;
             }
+          } else {
+            console.log(`[generate-marketing-content] Saved post for ${targetPlatform} at ${platformTimeStr}`);
+          }
         }
+      }
     }
 
     if (batch_mode) {
-        const batchResponse: BatchGeneratedContent = {
-            success: true,
-            batch_results: results,
-            count: results.length
-        };
-        return new Response(JSON.stringify(batchResponse), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+      const batchResponse: BatchGeneratedContent = {
+        success: true,
+        batch_results: results,
+        count: results.length
+      };
+      return new Response(JSON.stringify(batchResponse), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     } else {
-        return new Response(JSON.stringify(results[0]), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+      return new Response(JSON.stringify(results[0]), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
   } catch (error) {
@@ -635,10 +643,10 @@ FORMATO DE RESPUESTA (JSON):
 
     // Verificar si ya tiene mención de la app
     const hasAppMention = caption.includes('play.google.com') ||
-                          caption.includes('link en bio') ||
-                          caption.includes('Link en bio') ||
-                          callToAction.includes('play.google.com') ||
-                          callToAction.includes('link en bio');
+      caption.includes('link en bio') ||
+      caption.includes('Link en bio') ||
+      callToAction.includes('play.google.com') ||
+      callToAction.includes('link en bio');
 
     if (!hasAppMention) {
       console.log(`[generate-marketing-content] Adding app CTA for ${platform}`);
@@ -826,7 +834,7 @@ async function generateMarketingImage(
     const person = LATAM_PEOPLE_SCENES[Math.floor(Math.random() * LATAM_PEOPLE_SCENES.length)];
     const location = LATAM_LOCATIONS[Math.floor(Math.random() * LATAM_LOCATIONS.length)];
     const style = PHOTO_STYLES[Math.floor(Math.random() * PHOTO_STYLES.length)];
-    
+
     const promptTemplates = MARKETING_IMAGE_PROMPTS[contentType];
     const promptTemplate = promptTemplates[Math.floor(Math.random() * promptTemplates.length)];
 
@@ -850,7 +858,7 @@ async function generateMarketingImage(
 
     // Call Gemini 2.5 Flash Image for image generation
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -939,13 +947,33 @@ async function uploadMarketingImageToStorage(params: {
 async function generateAuthorityPost(
   supabase: ReturnType<typeof createClient>,
   platform: Platform,
-  saveToDb: boolean
+  saveToDb: boolean,
+  conceptId?: string
 ): Promise<GeneratedContent> {
-  console.log('[authority] Starting authority post generation...');
+  console.log(`[authority] Starting authority post generation (Concept ID: ${conceptId || 'Random'})...`);
 
   // 1. GET STRATEGIC CONCEPT FROM DATABASE
-  const { data: conceptData, error: conceptError } = await supabase
-    .rpc('select_authority_concept');
+  let conceptData: AuthorityConcept[] | null = null;
+  let conceptError: any = null;
+
+  if (conceptId) {
+    // Manual selection
+    const { data, error } = await supabase
+      .from('marketing_authority_concepts')
+      // Map 'id' to 'concept_id' to match interface
+      .select('*, concept_id:id')
+      .eq('id', conceptId)
+      .limit(1);
+
+    // Cast to unknown first to avoid type mismatch if Typescript validates strictly against interface
+    conceptData = data as unknown as AuthorityConcept[];
+    conceptError = error;
+  } else {
+    // Random/Algorithm selection via RPC
+    const { data, error } = await supabase.rpc('select_authority_concept');
+    conceptData = data;
+    conceptError = error;
+  }
 
   if (conceptError || !conceptData?.[0]) {
     console.error('[authority] Failed to get concept:', conceptError);
@@ -956,20 +984,28 @@ async function generateAuthorityPost(
   console.log(`[authority] Selected concept: ${concept.term_name}`);
 
   // 2. GENERATE SPLIT-SCREEN IMAGE (parenting pain | auto pain)
-  const imageResult = await generateAuthorityImage(concept);
+  // Optimization: If a master image is already configured for this concept, use it.
+  let mediaUrl: string | undefined = concept.image_reference;
+  let imageResult: { base64?: string } | undefined;
 
-  let mediaUrl: string | undefined;
-  if (imageResult?.base64 && saveToDb) {
-    const uploadResult = await uploadMarketingImageToStorage({
-      base64: imageResult.base64,
-      bucket: MARKETING_MEDIA_BUCKET,
-      contentType: 'image/png',
-      prefix: 'marketing/authority',
-    });
-    if (uploadResult?.publicUrl) {
-      mediaUrl = uploadResult.publicUrl;
-      console.log('[authority] Image uploaded:', mediaUrl);
+  if (!mediaUrl) {
+    console.log(`[authority] No master image found for ${concept.term_name}, generating new one...`);
+    imageResult = await generateAuthorityImage(concept);
+
+    if (imageResult?.base64 && saveToDb) {
+      const uploadResult = await uploadMarketingImageToStorage({
+        base64: imageResult.base64,
+        bucket: MARKETING_MEDIA_BUCKET,
+        contentType: 'image/png',
+        prefix: 'marketing/authority',
+      });
+      if (uploadResult?.publicUrl) {
+        mediaUrl = uploadResult.publicUrl;
+        console.log('[authority] New image uploaded:', mediaUrl);
+      }
     }
+  } else {
+    console.log(`[authority] Using master image for ${concept.term_name}: ${mediaUrl}`);
   }
 
   // 3. GENERATE NARRATIVE TEXT (4-paragraph structure)
@@ -981,6 +1017,12 @@ async function generateAuthorityPost(
     const ACTIVE_PLATFORMS: Platform[] = ['instagram', 'facebook'];
 
     for (const targetPlatform of ACTIVE_PLATFORMS) {
+      // HARDENED 2026-01-23: Require image for both platforms
+      if (!mediaUrl) {
+        console.warn(`[authority] SKIPPING ${targetPlatform} post - no image generated. Media required.`);
+        continue;
+      }
+
       const scheduledFor = getSuggestedPostTime(targetPlatform);
 
       const { error: insertError } = await supabase
@@ -1105,7 +1147,7 @@ A comic-style speech bubble floating above/beside the man containing:
     console.log('[authority] Generating image with prompt:', finalPrompt.substring(0, 100) + '...');
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

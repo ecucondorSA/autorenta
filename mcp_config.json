@@ -64,6 +64,15 @@
         "HEADLESS": "false"
       },
       "description": "Patchright Streaming MCP - Stealth automation for MercadoPago"
+    },
+    "supabase-direct": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://postgres.pisqjmoklivzpwufhscx:Ab.12345@aws-0-sa-east-1.pooler.supabase.com:6543/postgres"
+      ],
+      "description": "Supabase Direct Access (via Postgres MCP) - Browse tables and execute read-only queries"
     }
   }
 }

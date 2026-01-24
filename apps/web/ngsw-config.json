@@ -154,6 +154,16 @@
     "!https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/booking_*",
     "!https://api.mapbox.com/**",
     "!https://events.mapbox.com/**",
+    "!https://connect.facebook.net/**",
+    "!https://www.facebook.com/**",
+    "!https://*.facebook.com/**",
+    "!https://*.facebook.net/**",
+    "!https://graph.facebook.com/**",
+    "!https://accounts.google.com/**",
+    "!https://oauth2.googleapis.com/**",
+    "!https://www.googletagmanager.com/**",
+    "!https://*.google-analytics.com/**",
+    "!https://i.pravatar.cc/**",
     "/auth/**"
   ],
   "navigationRequestStrategy": "freshness"
