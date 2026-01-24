@@ -55,6 +55,24 @@ export interface ClausesAcceptedEvent {
   allClauses: ClausesAccepted;
 }
 
+type BaseClauseId = keyof BaseClausesAccepted;
+type EVClauseId = keyof EVClausesAccepted;
+
+const BASE_CLAUSE_IDS: ReadonlySet<BaseClauseId> = new Set([
+  'culpaGrave',
+  'indemnidad',
+  'retencion',
+  'mora',
+]);
+
+const EV_CLAUSE_IDS: ReadonlySet<EVClauseId> = new Set([
+  'gpsTracking',
+  'geofencing',
+  'batteryManagement',
+  'chargingObligations',
+  'evDamagePolicy',
+]);
+
 /**
  * Component for granular acceptance of contract clauses
  *
@@ -102,15 +120,15 @@ export interface ClausesAcceptedEvent {
               <ion-item slot="header" [lines]="'full'" class="clause-header">
                 <ion-checkbox
                   slot="start"
-                  [checked]="baseClauses()[clause.id as keyof BaseClausesAccepted]"
-                  (ionChange)="toggleBaseClause(clause.id as keyof BaseClausesAccepted, $event)"
+                  [checked]="isBaseClauseAccepted(clause.id)"
+                  (ionChange)="toggleBaseClause(clause.id, $event)"
                   (click)="$event.stopPropagation()"
                 ></ion-checkbox>
                 <ion-icon
                   [name]="clause.icon"
                   slot="start"
                   class="clause-icon"
-                  [color]="baseClauses()[clause.id as keyof BaseClausesAccepted] ? 'success' : 'medium'"
+                  [color]="isBaseClauseAccepted(clause.id) ? 'success' : 'medium'"
                 ></ion-icon>
                 <ion-label>
                   <h2>{{ clause.title }}</h2>
@@ -155,15 +173,15 @@ export interface ClausesAcceptedEvent {
                 <ion-item slot="header" [lines]="'full'" class="clause-header">
                   <ion-checkbox
                     slot="start"
-                    [checked]="evClauses()[clause.id as keyof EVClausesAccepted]"
-                    (ionChange)="toggleEVClause(clause.id as keyof EVClausesAccepted, $event)"
+                    [checked]="isEVClauseAccepted(clause.id)"
+                    (ionChange)="toggleEVClause(clause.id, $event)"
                     (click)="$event.stopPropagation()"
                   ></ion-checkbox>
                   <ion-icon
                     [name]="clause.icon"
                     slot="start"
                     class="clause-icon"
-                    [color]="evClauses()[clause.id as keyof EVClausesAccepted] ? 'success' : 'medium'"
+                    [color]="isEVClauseAccepted(clause.id) ? 'success' : 'medium'"
                   ></ion-icon>
                   <ion-label>
                     <h2>{{ clause.title }}</h2>
@@ -388,7 +406,30 @@ export class ContractClausesAcceptanceComponent {
     });
   }
 
-  toggleBaseClause(clauseId: keyof BaseClausesAccepted, event: CustomEvent): void {
+  private isBaseClauseId(id: string): id is BaseClauseId {
+    return BASE_CLAUSE_IDS.has(id as BaseClauseId);
+  }
+
+  private isEVClauseId(id: string): id is EVClauseId {
+    return EV_CLAUSE_IDS.has(id as EVClauseId);
+  }
+
+  isBaseClauseAccepted(id: string): boolean {
+    if (!this.isBaseClauseId(id)) {
+      return false;
+    }
+    return this.baseClauses()[id];
+  }
+
+  isEVClauseAccepted(id: string): boolean {
+    if (!this.isEVClauseId(id)) {
+      return false;
+    }
+    return this.evClauses()[id];
+  }
+
+  toggleBaseClause(clauseId: string, event: CustomEvent): void {
+    if (!this.isBaseClauseId(clauseId)) return;
     event.stopPropagation();
     const checked = event.detail.checked;
     this.baseClauses.update(current => ({
@@ -397,7 +438,8 @@ export class ContractClausesAcceptanceComponent {
     }));
   }
 
-  toggleEVClause(clauseId: keyof EVClausesAccepted, event: CustomEvent): void {
+  toggleEVClause(clauseId: string, event: CustomEvent): void {
+    if (!this.isEVClauseId(clauseId)) return;
     event.stopPropagation();
     const checked = event.detail.checked;
     this.evClauses.update(current => ({
