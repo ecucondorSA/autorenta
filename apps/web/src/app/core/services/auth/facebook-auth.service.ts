@@ -8,7 +8,7 @@ declare global {
   interface Window {
     FB?: {
       init: (params: { appId: string; cookie: boolean; xfbml: boolean; version: string }) => void;
-      login: (callback: (response: { authResponse?: { accessToken: string } }) => void, params?: { scope: string }) => void;
+      login: (callback: (response: { authResponse?: { accessToken: string } }) => void, params?: { scope?: string; config_id?: string }) => void;
       getLoginStatus: (callback: (response: { status: string; authResponse?: { accessToken: string } }) => void) => void;
       AppEvents: { logPageView: () => void };
     };
@@ -26,6 +26,9 @@ export class FacebookAuthService {
   private initialized = false;
   private sdkReady = false;
   private readonly FB_APP_ID = '4435998730015502';
+  // Facebook Login for Business config_id (created in Meta Developer Console)
+  // This replaces the traditional scope/permissions approach
+  private readonly FB_CONFIG_ID = '1694279408246423';
 
   constructor() {
     // Don't initialize in constructor - wait for explicit call or first login
@@ -77,7 +80,7 @@ export class FacebookAuthService {
       }, 100);
 
       // Also set up fbAsyncInit hook as backup
-      window.fbAsyncInit = function() {
+      window.fbAsyncInit = function () {
         // Call original if exists
         if (originalFbAsyncInit) {
           originalFbAsyncInit();
@@ -128,39 +131,67 @@ export class FacebookAuthService {
    * 2. Get Access Token
    * 3. Exchange for Supabase Session via Edge Function
    */
-   async login(): Promise<void> {
-     try {
-       // Ensure initialized before login
-       if (!this.initialized) {
-         const success = await this.initialize();
-         if (!success) {
-           throw new Error('Facebook Login no está disponible. Puede estar bloqueado por un bloqueador de anuncios o extensión del navegador.');
-         }
-       }
-
-       // Double-check SDK is available (for web)
-       if (isPlatformBrowser(this.platformId) && !this.isFBAvailable()) {
-         throw new Error('El SDK de Facebook no está cargado. Por favor, desactiva tu bloqueador de anuncios e intenta de nuevo.');
-       }
-
-       this.logger.debug('Starting Facebook Login...', 'FacebookAuthService');
-
-       // Facebook valid permissions: https://developers.facebook.com/docs/facebook-login/permissions
-       // Removed 'email' - use 'user_email' instead for user profile data
-       const FACEBOOK_PERMISSIONS = ['public_profile'];
-
-       const result = await FacebookLogin.login({ permissions: FACEBOOK_PERMISSIONS }) as FacebookLoginResponse;
-
-      if (!result.accessToken) {
-        throw new Error('No access token received from Facebook Login');
+  async login(): Promise<void> {
+    try {
+      // Ensure initialized before login
+      if (!this.initialized) {
+        const success = await this.initialize();
+        if (!success) {
+          throw new Error('Facebook Login no está disponible. Puede estar bloqueado por un bloqueador de anuncios o extensión del navegador.');
+        }
       }
 
-      // Extract token - handle both web SDK and native formats
-      const token = result.accessToken.token || (result.accessToken as unknown as { tokenString?: string }).tokenString;
+      // Double-check SDK is available (for web)
+      if (isPlatformBrowser(this.platformId) && !this.isFBAvailable()) {
+        throw new Error('El SDK de Facebook no está cargado. Por favor, desactiva tu bloqueador de anuncios e intenta de nuevo.');
+      }
 
-      if (!token) {
-        this.logger.error('Token structure:', 'FacebookAuthService', result.accessToken);
-        throw new Error('Could not extract token from Facebook response');
+      this.logger.debug('Starting Facebook Login...', 'FacebookAuthService');
+
+      // Facebook Login for Business uses config_id instead of permissions
+      // See: https://developers.facebook.com/docs/facebook-login/facebook-login-for-business/
+      let token: string;
+
+      if (isPlatformBrowser(this.platformId) && window.FB) {
+        // Web: Use native FB SDK with config_id for Business Login
+        this.logger.debug('Using FB SDK with config_id for Business Login', 'FacebookAuthService');
+
+        const fbResponse = await new Promise<{ authResponse?: { accessToken: string } }>((resolve, reject) => {
+          window.FB!.login(
+            (response) => {
+              if (response.authResponse?.accessToken) {
+                resolve(response);
+              } else {
+                reject(new Error('Facebook login was cancelled or failed'));
+              }
+            },
+            {
+              config_id: this.FB_CONFIG_ID,
+            }
+          );
+        });
+
+        if (!fbResponse.authResponse?.accessToken) {
+          throw new Error('No access token received from Facebook Login');
+        }
+
+        token = fbResponse.authResponse.accessToken;
+      } else {
+        // Native (Android/iOS): Use Capacitor plugin with permissions fallback
+        const FACEBOOK_PERMISSIONS = ['public_profile'];
+        const result = await FacebookLogin.login({ permissions: FACEBOOK_PERMISSIONS }) as FacebookLoginResponse;
+
+        if (!result.accessToken) {
+          throw new Error('No access token received from Facebook Login');
+        }
+
+        // Extract token - handle both web SDK and native formats
+        token = result.accessToken.token || (result.accessToken as unknown as { tokenString?: string }).tokenString || '';
+
+        if (!token) {
+          this.logger.error('Token structure:', 'FacebookAuthService', result.accessToken);
+          throw new Error('Could not extract token from Facebook response');
+        }
       }
 
       this.logger.debug(`Facebook Access Token received (${token.substring(0, 20)}...). Signing in with Supabase...`, 'FacebookAuthService');
