@@ -1,3 +1,9 @@
+## [3.34.0](https://github.com/ecucondorSA/autorenta/compare/v3.33.1...v3.34.0) (2026-01-24)
+
+### ✨ Features
+
+* **auth:** use config_id for Facebook Login for Business ([38d65fa](https://github.com/ecucondorSA/autorenta/commit/38d65faac2727706d83a330148dba5872e233eaf))
+
 ## [3.33.1](https://github.com/ecucondorSA/autorenta/compare/v3.33.0...v3.33.1) (2026-01-24)
 
 ### 🐛 Bug Fixes
