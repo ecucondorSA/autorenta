@@ -1,3 +1,9 @@
+## [3.34.1](https://github.com/ecucondorSA/autorenta/compare/v3.34.0...v3.34.1) (2026-01-24)
+
+### 🐛 Bug Fixes
+
+* **contract-clauses:** fix template type errors for CI build ([9a8a1e8](https://github.com/ecucondorSA/autorenta/commit/9a8a1e806431444f6a9e73ba2aa894a6fc9b8a63))
+
 ## [3.34.0](https://github.com/ecucondorSA/autorenta/compare/v3.33.1...v3.34.0) (2026-01-24)
 
 ### ✨ Features
