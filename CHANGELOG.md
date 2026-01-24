@@ -1,3 +1,9 @@
+## [3.33.1](https://github.com/ecucondorSA/autorenta/compare/v3.33.0...v3.33.1) (2026-01-24)
+
+### 🐛 Bug Fixes
+
+* **pwa:** exclude Facebook SDK and Google OAuth from Service Worker interception ([4fc41aa](https://github.com/ecucondorSA/autorenta/commit/4fc41aa09f0135c36e83155cb7bc7c2cbd239b71))
+
 ## [3.33.0](https://github.com/ecucondorSA/autorenta/compare/v3.32.12...v3.33.0) (2026-01-23)
 
 ### ✨ Features
