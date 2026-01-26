@@ -2,35 +2,23 @@
 
 set -e
 
-# Check if utils.sh exists
-if [ ! -f "./utils.sh" ]; then
+# Source the utils script
+if [ -f "./tools/utils.sh" ]; then
+  source "./tools/utils.sh"
+else
   echo "Error: ./tools/utils.sh not found. Please ensure it exists in the repository."
   exit 1
 fi
 
-# Source the utils.sh script
-. ./utils.sh
-
-# Get the command to run from the arguments
-command="$1"
+ACTION=$1
 shift
 
-# Run the command
-case "$command" in
+case "$ACTION" in
   install)
-    install "$@"
-    ;;
-  build)
-    build "$@"
-    ;;
-  test)
-    test "$@"
-    ;;
-  deploy)
-    deploy "$@"
+    install_dependencies "$@"
     ;;
   *)
-    echo "Usage: $0 {install|build|test|deploy}"
+    echo "Usage: ./tools/run.sh install"
     exit 1
     ;;
 esac
