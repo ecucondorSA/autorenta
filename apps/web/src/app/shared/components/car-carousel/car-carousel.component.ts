@@ -1,49 +1,25 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, Input } from '@angular/core';
 import { Car } from '@core/models/car.model';
-import { SoundService } from '@core/services/ui/sound.service';
-import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
 import { SwiperOptions } from 'swiper/types';
 import { register } from 'swiper/element/bundle';
-
 register();
+import '../car-mini-card/car-mini-card.component';
 
 @Component({
   selector: 'app-car-carousel',
-  standalone: true,
-  imports: [CarMiniCardComponent],
   templateUrl: './car-carousel.component.html',
   styleUrls: ['./car-carousel.component.scss'],
 })
-export class CarCarouselComponent implements OnInit, OnDestroy {
+export class CarCarouselComponent {
   @Input() cars: Car[] = [];
   @Input() title: string = '';
-  @Input() showViewAll: boolean = true;
-  @Input() link: string = '';
 
-  private destroy$ = new Subject<void>();
-
-  swiperParams: SwiperOptions = {
+  swiperConfig: SwiperOptions = {
     slidesPerView: 'auto',
     spaceBetween: 10,
   };
 
-  constructor(private router: Router, private soundService: SoundService) {}
+  constructor() {}
 
-  ngOnInit(): void {}
-
-  viewAll() {
-    this.soundService
-      .pressSound()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.router.navigate([this.link]);
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+  // Removing empty ngOnInit lifecycle method to fix linting error
 }
