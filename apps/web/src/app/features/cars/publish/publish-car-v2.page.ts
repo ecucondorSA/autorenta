@@ -1,183 +1,88 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AlertController, ModalController, ToastController } from '@ionic/angular';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { ActionSheetController } from '@ionic/angular';
-import { Geolocation } from '@capacitor/geolocation';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertController, IonicSlides, ModalController, NavController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-
-import { addIcons } from 'ionicons';
-import { cloudUploadOutline, locationOutline, addCircleOutline, closeCircleOutline } from 'ionicons/icons';
+import { Observable, Subscription, combineLatest, map, of, switchMap, take, tap } from 'rxjs';
 
 import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-generator/ai-photo-generator.component';
-import { HoverLiftDirective } from '../../../shared/directives/hover-lift.directive';
-import { CarService } from '../../services/car.service';
+import { CarPublishDetails } from '@core/models/car-publish-details.model';
+import { CarService } from '@core/services/car.service';
+import { CategoryService } from '@core/services/category.service';
+import { UiService } from '@core/services/ui/ui.service';
+import { environment } from 'src/environments/environment';
 import { VisualSelectorComponent } from './components/visual-selector/visual-selector.component';
+import { setPublishedCar } from '@store/car-publish/car-publish.actions';
+import { AsyncPipe } from '@angular/common';
+import { CarPublishState } from '@store/car-publish/car-publish.reducer';
+import { selectCarPublish } from '@store/car-publish/car-publish.selectors';
+import { HoverLiftDirective } from '../../../shared/directives/hover-lift.directive';
+import { ImageUploadComponent } from '../../../shared/components/image-upload/image-upload.component';
+import { MainHeaderComponent } from '../../../shared/components/main-header/main-header.component';
+import { MileagePipe } from '../../../shared/pipes/mileage.pipe';
+import { PhotoSliderComponent } from '../../../shared/components/photo-slider/photo-slider.component';
+import { PlausibleService } from '@core/services/plausible.service';
+import { PricePipe } from '../../../shared/pipes/price.pipe';
+import { routes } from 'src/app/app.routes';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { CarPublishEffects } from '@store/car-publish/car-publish.effects';
+import { carPublishReducer } from '@store/car-publish/car-publish.reducer';
+import { GeolocationService } from '@core/services/geolocation.service';
+import { addIcons } from 'ionicons';
+import { camera, close, cloudUpload, location, warning } from 'ionicons/icons';
+import { IonicModule } from '@ionic/angular/standalone';
+
 
 import { BookingDetailPayment } from '@core/models/booking-detail-payment.model';
-import { AppState } from '../../../../core/store/app.state';
-import { selectCurrentUser } from '../../../../core/store/user/user.selector';
-import * as CarActions from '../../../../core/store/car/car.actions';
-import { Car } from '../../../../core/models/car.model';
-import { Booking } from '../../../../core/models/booking.model';
-import { RiskSnapshot } from '../../../../core/models/risk-snapshot.model';
+import { BookingProcessService } from '@core/services/booking-process.service';
+import { CoreModule } from '@core/core.module';
+import { MapComponent } from '../../../shared/components/map/map.component';
+import { MapModalComponent } from '../../../shared/components/map-modal/map-modal.component';
+import { RouterLink } from '@angular/router';
+import { routes as appRoutes } from 'src/app/app.routes';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-publish-car-v2',
   templateUrl: './publish-car-v2.page.html',
   styleUrls: ['./publish-car-v2.page.scss'],
+  standalone: true,
+  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule, MainHeaderComponent, ImageUploadComponent, HoverLiftDirective, VisualSelectorComponent, PhotoSliderComponent, MileagePipe, PricePipe, AsyncPipe, RouterLink, MapComponent, TranslateModule],
 })
 export class PublishCarV2Page implements OnInit {
-  publishCarForm: FormGroup;
-  currentImage: SafeUrl;
-  user$: Observable<any>; // Replace any with the actual type of the user object
+  // carForm: FormGroup;
+  @ViewChild('slider') slider: IonicSlides;
+  public environment = environment;
+  public routes = routes;
+  public appRoutes = appRoutes;
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
-    private alertController: AlertController,
-    private toastController: ToastController,
-    private modalController: ModalController,
     private carService: CarService,
-    private actionSheetController: ActionSheetController,
-    private sanitizer: DomSanitizer,
-    private translate: TranslateService,
-    private store: Store<AppState>
+    private categoryService: CategoryService,
+    private uiService: UiService,
+    private store: Store<CarPublishState>,
+    private router: Router,
+    private route: ActivatedRoute,
+    private navCtrl: NavController,
+    private modalController: ModalController,
+    private plausibleService: PlausibleService,
+    private bookingProcessService: BookingProcessService,
+    private alertController: AlertController,    
+    private translate: TranslateService
   ) {
     addIcons({
-      cloudUploadOutline,
-      locationOutline,
-      addCircleOutline,
-      closeCircleOutline,
+      close,
+      camera,
+      cloudUpload,
+      location,
+      warning,
     });
   }
 
   ngOnInit() {
-    this.user$ = this.store.select(selectCurrentUser);
-
-    this.publishCarForm = this.fb.group({
-      make: ['', Validators.required],
-      model: ['', Validators.required],
-      year: ['', Validators.required],
-      price: ['', Validators.required],
-      location: ['', Validators.required],
-      description: [''],
-    });
-  }
-
-  async openAiPhotoGenerator() {
-    const modal = await this.modalController.create({
-      component: AiPhotoGeneratorComponent,
-      componentProps: {
-        // any props you want to pass to the component
-      },
-    });
-    return await modal.present();
-  }
-
-  async selectImage() {
-    const actionSheet = await this.actionSheetController.create({
-      header: this.translate.instant('APP.PUBLISH_CAR.SELECT_SOURCE'),
-      buttons: [{
-        text: this.translate.instant('APP.PUBLISH_CAR.LOAD_FROM_LIBRARY'),
-        handler: () => {
-          this.takePicture(CameraSource.Photos);
-        }
-      },
-      {
-        text: this.translate.instant('APP.PUBLISH_CAR.USE_CAMERA'),
-        handler: () => {
-          this.takePicture(CameraSource.Camera);
-        }
-      },
-      {
-        text: this.translate.instant('APP.CANCEL'),
-        role: 'cancel'
-      }
-      ]
-    });
-    await actionSheet.present();
-  }
-
-  async takePicture(source: CameraSource) {
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
-      source: source,
-      correctOrientation: true,
-      resultType: CameraResultType.DataUrl
-    });
-
-    this.currentImage = this.sanitizer.bypassSecurityTrustResourceUrl(image && (image.dataUrl));
-  }
-
-  async getLocation() {
-    try {
-      const coordinates = await Geolocation.getCurrentPosition();
-      console.log('Current position:', coordinates);
-    } catch (error) {
-      console.error('Error getting location:', error);
-      const alert = await this.alertController.create({
-        header: this.translate.instant('ERROR'),
-        message: this.translate.instant('APP.PUBLISH_CAR.LOCATION_ERROR'),
-        buttons: [this.translate.instant('OK')],
-      });
-
-      await alert.present();
-    }
-  }
-
-  async presentToast() {
-    const toast = await this.toastController.create({
-      message: this.translate.instant('APP.PUBLISH_CAR.CAR_PUBLISHED'),
-      duration: 2000,
-      color: 'success',
-    });
-    toast.present();
-  }
-
-  publishCar() {
-    if (this.publishCarForm.valid) {
-      const car: Car = this.publishCarForm.value;
-
-      this.store.dispatch(CarActions.createCar({ car }));
-
-      this.presentToast();
-      this.router.navigate(['/home']);
-    } else {
-      this.showAlert();
-    }
-  }
-
-  async showAlert() {
-    const alert = await this.alertController.create({
-      header: this.translate.instant('ERROR'),
-      message: this.translate.instant('APP.PUBLISH_CAR.FORM_ERROR'),
-      buttons: [this.translate.instant('OK')],
-    });
-
-    await alert.present();
-  }
-
-  async openVisualSelector(field: string) {
-    const modal = await this.modalController.create({
-      component: VisualSelectorComponent,
-      componentProps: {
-        field: field
-      }
-    });
-
-    await modal.present();
-
-    const { data } = await modal.onWillDismiss();
-    if (data) {
-      this.publishCarForm.get(field).setValue(data);
-    }
+   
   }
 }
