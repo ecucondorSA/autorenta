@@ -1,25 +1,40 @@
-import { Component, Input } from '@angular/core';
-import { Car } from '@core/models/car.model';
-import { SwiperOptions } from 'swiper/types';
+import { Component, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { register } from 'swiper/element/bundle';
 register();
-import '../car-mini-card/car-mini-card.component';
+
+import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
 
 @Component({
   selector: 'app-car-carousel',
   templateUrl: './car-carousel.component.html',
   styleUrls: ['./car-carousel.component.scss'],
+  standalone: true,
+  imports: [CarMiniCardComponent],
 })
-export class CarCarouselComponent {
-  @Input() cars: Car[] = [];
-  @Input() title: string = '';
+export class CarCarouselComponent implements AfterViewInit {
+  @Input() cars: any[] = [];
+  @ViewChild('swiperEl', { static: false }) swiperEl!: ElementRef;
 
-  swiperConfig: SwiperOptions = {
-    slidesPerView: 'auto',
+  swiperParams = {
+    slidesPerView: 1.1,
     spaceBetween: 10,
+    breakpoints: {
+      640: {
+        slidesPerView: 2.1,
+        spaceBetween: 20,
+      },
+      1024: {
+        slidesPerView: 3.1,
+        spaceBetween: 30,
+      },
+    },
   };
 
   constructor() {}
 
-  // Removing empty ngOnInit lifecycle method to fix linting error
+  ngAfterViewInit() {
+    // Hack to fix swiper issue with shadow
+    Object.assign(this.swiperEl.nativeElement, this.swiperParams);
+    this.swiperEl.nativeElement.initialize();
+  }
 }
