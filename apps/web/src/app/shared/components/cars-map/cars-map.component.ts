@@ -1461,25 +1461,29 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       } else {
         // Fallback if lookup fails (shouldn't happen)
         const feature = featuresMap.get(carId);
-        if (feature) {
-          const geom = feature.geometry as unknown as { coordinates: [number, number] };
-          const coords = geom.coordinates;
-          // Minimal data from properties
-          const minimalCar: CarMapLocation = {
-            carId: carId,
-            lat: coords[1],
-            lng: coords[0],
-            pricePerDay: feature.properties?.['pricePerDay'],
-            title: feature.properties?.['title'] || '',
-            currency: feature.properties?.['currency'] || 'USD',
-            photoUrl: feature.properties?.['photoUrl'] || '',
-            availabilityStatus: feature.properties?.['availabilityStatus']
-          } as CarMapLocation;
+        if (feature && feature.geometry && 'coordinates' in feature.geometry) {
+          // Safe access to coordinates after type guard
+          const geometry = feature.geometry as { coordinates: unknown };
+          const rawCoords = geometry.coordinates;
+          if (Array.isArray(rawCoords) && rawCoords.length >= 2) {
+            const coords: [number, number] = [Number(rawCoords[0]), Number(rawCoords[1])];
+            // Minimal data from properties
+            const minimalCar: CarMapLocation = {
+              carId: carId,
+              lat: coords[1],
+              lng: coords[0],
+              pricePerDay: feature.properties?.['pricePerDay'],
+              title: feature.properties?.['title'] || '',
+              currency: feature.properties?.['currency'] || 'USD',
+              photoUrl: feature.properties?.['photoUrl'] || '',
+              availabilityStatus: feature.properties?.['availabilityStatus']
+            } as CarMapLocation;
 
-          const markerData = this.createCarMarker(minimalCar);
-          if (markerData) {
-            this.carMarkers.set(carId, markerData);
-            addedCount++;
+            const markerData = this.createCarMarker(minimalCar);
+            if (markerData) {
+              this.carMarkers.set(carId, markerData);
+              addedCount++;
+            }
           }
         }
       }
