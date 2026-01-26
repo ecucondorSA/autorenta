@@ -47,6 +47,16 @@ export class FacebookAuthService {
   }
 
   /**
+   * Detect expected/benign Facebook errors (ad blockers, user cancellation, SDK blocked)
+   */
+  private isExpectedFacebookError(error: unknown): boolean {
+    const message = error instanceof Error ? error.message : String(error ?? '');
+    return /ad blocker|bloqueador|sdk|fb is not defined|not available|cancelled|canceled|blocked|timeout/i.test(
+      message.toLowerCase(),
+    );
+  }
+
+  /**
    * Wait for Facebook SDK to be loaded (web only)
    */
   private waitForFacebookSDK(timeout = 10000): Promise<void> {
@@ -79,7 +89,7 @@ export class FacebookAuthService {
           resolve();
         } else if (Date.now() - startTime > timeout) {
           clearInterval(checkInterval);
-          this.logger.warn(
+          this.logger.info(
             'Facebook SDK failed to load - may be blocked by ad blocker',
             'FacebookAuthService',
           );
@@ -124,11 +134,19 @@ export class FacebookAuthService {
       this.logger.debug('Facebook Login initialized successfully', 'FacebookAuthService');
       return true;
     } catch (error) {
-      this.logger.warn(
-        'Failed to initialize Facebook Login - feature may be blocked by ad blocker',
-        'FacebookAuthService',
-        error,
-      );
+      if (this.isExpectedFacebookError(error)) {
+        this.logger.info(
+          'Failed to initialize Facebook Login - feature may be blocked by ad blocker',
+          'FacebookAuthService',
+          error,
+        );
+      } else {
+        this.logger.warn(
+          'Failed to initialize Facebook Login - feature may be blocked by ad blocker',
+          'FacebookAuthService',
+          error,
+        );
+      }
       this.initialized = false;
       return false;
     }
@@ -245,7 +263,11 @@ export class FacebookAuthService {
 
       this.logger.info('Facebook Login Successful', 'FacebookAuthService');
     } catch (error) {
-      this.logger.error('Facebook Login Failed', 'FacebookAuthService', error);
+      if (this.isExpectedFacebookError(error)) {
+        this.logger.info('Facebook Login Failed (expected)', 'FacebookAuthService', error);
+      } else {
+        this.logger.error('Facebook Login Failed', 'FacebookAuthService', error);
+      }
       throw error;
     }
   }

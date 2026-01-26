@@ -1,5 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { DEFAULT_DOCUMENT_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
+
+const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +38,15 @@ export class DisputeEvidenceService {
   }
 
   async uploadEvidence(disputeId: string, file: File, note?: string): Promise<string> {
+    const validation = validateFile(file, {
+      maxSizeBytes: MAX_UPLOAD_BYTES,
+      allowedMimeTypes: DEFAULT_DOCUMENT_MIME_TYPES,
+    });
+
+    if (!validation.valid) {
+      throw new Error(validation.error || 'Archivo no válido');
+    }
+
     const filePath = `disputes/${disputeId}/${Date.now()}_${file.name}`;
 
     // 1. Subir archivo al Storage

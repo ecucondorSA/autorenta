@@ -282,7 +282,7 @@ export class TikTokEventsService {
       this.logger.debug(`[TikTok Events] ${event} sent successfully`);
     } catch (error) {
       // Fail silently to not break user experience
-      console.error(`[TikTok Events] Error sending ${event}:`, error);
+      this.logger.debug(`[TikTok Events] Error sending ${event}`, 'TikTokEventsService', error);
     }
   }
 }

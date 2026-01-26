@@ -355,9 +355,9 @@ export class InsuranceService {
       throw new Error('Solo se permiten imágenes');
     }
 
-    // Validar tamaño (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      throw new Error('Imagen muy grande. Máximo 5MB');
+    // Validar tamaño (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      throw new Error('Imagen muy grande. Máximo 2MB');
     }
 
     // Obtener extensión del archivo
@@ -617,9 +617,9 @@ export class InsuranceService {
       throw new Error('Solo se permiten archivos PDF o imágenes (JPG, PNG, WebP)');
     }
 
-    // Validar tamaño (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      throw new Error('Archivo muy grande. Máximo 10MB');
+    // Validar tamaño (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      throw new Error('Archivo muy grande. Máximo 2MB');
     }
 
     // Obtener extensión del archivo

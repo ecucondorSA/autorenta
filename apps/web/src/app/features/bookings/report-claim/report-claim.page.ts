@@ -450,9 +450,9 @@ export class ReportClaimPage implements OnInit {
     for (let i = 0; i < filesToProcess; i++) {
       const file = files[i];
 
-      // Validar tamaño (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        await this.showToast('Imagen muy grande. Máximo 5MB por foto.', 'warning');
+      // Validar tamaño (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        await this.showToast('Imagen muy grande. Máximo 2MB por foto.', 'warning');
         continue;
       }
 

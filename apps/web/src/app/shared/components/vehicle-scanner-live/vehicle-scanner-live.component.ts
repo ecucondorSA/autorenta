@@ -1583,7 +1583,15 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
         this.cameraError.set('Error interno: elemento de video no disponible');
       }
     } catch (error) {
-      this.logger.error('Camera access failed', 'VehicleScannerLive', error);
+      const isPermissionError =
+        error instanceof Error &&
+        (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError');
+
+      if (isPermissionError) {
+        this.logger.info('Camera access blocked by user', 'VehicleScannerLive', error);
+      } else {
+        this.logger.error('Camera access failed', 'VehicleScannerLive', error);
+      }
 
       if (error instanceof Error) {
         if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {

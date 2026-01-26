@@ -3,6 +3,7 @@ import { Observable, from, map, catchError, of } from 'rxjs';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
+import { DEFAULT_DOCUMENT_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 
 /**
  * VehicleDocumentsService
@@ -83,6 +84,8 @@ export interface UploadDocumentParams {
   notes?: string;
 }
 
+const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB
+
 @Injectable({
   providedIn: 'root',
 })
@@ -137,6 +140,15 @@ export class VehicleDocumentsService {
    */
   async uploadDocument(params: UploadDocumentParams): Promise<VehicleDocument> {
     const { car_id, kind, file } = params;
+
+    const validation = validateFile(file, {
+      maxSizeBytes: MAX_UPLOAD_BYTES,
+      allowedMimeTypes: DEFAULT_DOCUMENT_MIME_TYPES,
+    });
+
+    if (!validation.valid) {
+      throw new Error(validation.error || 'Archivo no válido');
+    }
 
     // 1. Upload file to storage
     const timestamp = Date.now();

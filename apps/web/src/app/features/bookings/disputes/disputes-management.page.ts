@@ -23,6 +23,7 @@ import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
+import { DEFAULT_DOCUMENT_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 import { Booking } from '../../../core/models';
 
 @Component({
@@ -54,6 +55,7 @@ export class DisputesManagementPage implements OnInit, OnDestroy {
   readonly showEvidenceModal = signal(false);
   readonly evidence = signal<DisputeEvidence[]>([]);
   readonly uploadingEvidence = signal(false);
+  private readonly maxEvidenceBytes = 2 * 1024 * 1024; // 2MB
 
   // Separate signals for form fields (fixes ngModel binding issue)
   readonly newDisputeKind = signal<DisputeKind | ''>('');
@@ -238,6 +240,16 @@ export class DisputesManagementPage implements OnInit, OnDestroy {
 
     try {
       for (const file of this.evidenceFiles()) {
+        const validation = validateFile(file, {
+          maxSizeBytes: this.maxEvidenceBytes,
+          allowedMimeTypes: DEFAULT_DOCUMENT_MIME_TYPES,
+        });
+
+        if (!validation.valid) {
+          this.toastService.error('Error', validation.error || 'Archivo no válido');
+          continue;
+        }
+
         // Upload to storage
         const filePath = `disputes/${disputeId}/${Date.now()}_${file.name}`;
         const { error: uploadError } = await supabase.storage

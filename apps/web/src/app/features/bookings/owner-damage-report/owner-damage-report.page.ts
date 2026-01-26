@@ -160,9 +160,9 @@ export class OwnerDamageReportPage implements OnInit {
         return;
       }
 
-      // Check file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        this.toastService.error('Error', `${file.name} supera el tamaño máximo de 5MB`);
+      // Check file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        this.toastService.error('Error', `${file.name} supera el tamaño máximo de 2MB`);
         return;
       }
 

@@ -172,9 +172,9 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
       return;
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      this.toastService.error('El archivo no puede superar 5MB', '');
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      this.toastService.error('El archivo no puede superar 2MB', '');
       return;
     }
 

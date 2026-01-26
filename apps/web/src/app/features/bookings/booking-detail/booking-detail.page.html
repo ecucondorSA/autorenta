@@ -967,6 +967,8 @@
     (closeModal)="showDisputeForm.set(false)"
     (disputeCreated)="onDisputeCreated()"
   ></app-dispute-form>
+} @error {
+  <div class="sr-only">No se pudo cargar el formulario de disputa.</div>
 }
 
 @defer (when showRefundForm()) {
@@ -976,6 +978,8 @@
     (closeModal)="showRefundForm.set(false)"
     (refundRequested)="onRefundRequested()"
   ></app-refund-request>
+} @error {
+  <div class="sr-only">No se pudo cargar el formulario de reembolso.</div>
 }
 
 @defer (when showReportTrafficFineModal()) {
@@ -985,6 +989,8 @@
     (closeModal)="showReportTrafficFineModal.set(false)"
     (fineReported)="onTrafficFineReported($event)"
   ></app-report-traffic-fine>
+} @error {
+  <div class="sr-only">No se pudo cargar el formulario de multa.</div>
 }
 
 @defer (when showReportOwnerNoShowModal()) {
@@ -994,6 +1000,8 @@
     (closeModal)="showReportOwnerNoShowModal.set(false)"
     (noShowReported)="onOwnerNoShowReported($event)"
   ></app-report-owner-no-show>
+} @error {
+  <div class="sr-only">No se pudo cargar el formulario de no show.</div>
 }
 
 @defer (when showReportRenterNoShowModal()) {
@@ -1003,4 +1011,6 @@
     (closeModal)="showReportRenterNoShowModal.set(false)"
     (noShowReported)="onRenterNoShowReported($event)"
   ></app-report-renter-no-show>
+} @error {
+  <div class="sr-only">No se pudo cargar el formulario de no show.</div>
 }

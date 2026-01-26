@@ -71,7 +71,29 @@ export class ErrorHandlerService {
    */
   private isAuthError(error: unknown): boolean {
     const errorMessage = this.extractErrorMessage(error).toLowerCase();
-    return /unauthorized|401|invalid.*token|expired.*token|jwt|auth/i.test(errorMessage);
+    return /unauthorized|401|invalid.*token|expired.*token|jwt|auth|no autenticado|sesion expirada|sesión expirada/i.test(
+      errorMessage,
+    );
+  }
+
+  /**
+   * ✅ FIX: Detect unauthenticated user flow errors (expected in guest flows)
+   */
+  private isUnauthenticatedError(error: unknown): boolean {
+    const errorMessage = this.extractErrorMessage(error).toLowerCase();
+    return /usuario no autenticado|no autenticado|getuser\(\).*retorn[oó] null|sesion expirada|sesión expirada/i.test(
+      errorMessage,
+    );
+  }
+
+  /**
+   * ✅ FIX: Ignore known benign UI/runtime errors to reduce Sentry noise
+   */
+  private isBenignRuntimeError(error: unknown): boolean {
+    const errorMessage = this.extractErrorMessage(error).toLowerCase();
+    return /style is not done loading|resizeobserver loop limit exceeded|fb is not defined|facebook sdk failed|ad blocker/i.test(
+      errorMessage,
+    );
   }
 
   /**
@@ -109,6 +131,30 @@ export class ErrorHandlerService {
       });
       // Still log for debugging, but don't show toast to user
       this.logError(error, context, 'warning');
+      return;
+    }
+
+    // ✅ FIX: Treat benign runtime errors as expected (avoid Sentry noise)
+    if (this.isBenignRuntimeError(error)) {
+      this.logger.info('Benign runtime error suppressed', 'ErrorHandlerService', {
+        context,
+        route: this.router.url,
+        message: this.extractErrorMessage(error),
+      });
+      return;
+    }
+
+    // ✅ FIX: Treat unauthenticated errors as expected (avoid Sentry noise)
+    if (this.isUnauthenticatedError(error)) {
+      if (!this.isPublicRoute() && showToUser) {
+        this.toast.warning('Sesión requerida', 'Por favor inicia sesión para continuar.');
+      }
+
+      this.logger.info('Unauthenticated access blocked', 'ErrorHandlerService', {
+        context,
+        route: this.router.url,
+        message: this.extractErrorMessage(error),
+      });
       return;
     }
 

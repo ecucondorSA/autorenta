@@ -493,7 +493,7 @@ export class VerificationService implements OnDestroy {
     );
 
     if (!result) {
-      this.logger.error('verifyDocumentOcr failed after retries', {
+      this.logger.info('verifyDocumentOcr failed after retries', {
         documentType,
         side,
         country,

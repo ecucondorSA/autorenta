@@ -13,6 +13,7 @@ import { firstValueFrom } from 'rxjs';
 import { BookingInspection, InspectionPhoto, InspectionStage } from '@core/models/fgo-v1-1.model';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { FileUploadService } from '@core/services/infrastructure/file-upload.service';
 import {
   validateFiles,
   allFilesValid,
@@ -59,6 +60,7 @@ export class InspectionUploaderComponent implements OnInit {
 
   private readonly fgoService = inject(FgoV1_1Service);
   private readonly supabaseService = inject(SupabaseClientService);
+  private readonly fileUploadService = inject(FileUploadService);
 
   // Estado del componente
   readonly photos = signal<InspectionPhoto[]>([]);
@@ -113,7 +115,7 @@ export class InspectionUploaderComponent implements OnInit {
 
       // P0-014: Use centralized file validation
       const validationResults = validateFiles(files, {
-        maxSizeBytes: 10 * 1024 * 1024, // 10MB max
+        maxSizeBytes: 2 * 1024 * 1024, // 2MB max
         allowedMimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
         checkMimeType: true,
       });

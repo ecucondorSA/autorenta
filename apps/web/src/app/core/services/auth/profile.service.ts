@@ -263,8 +263,8 @@ export class ProfileService {
       throw new Error('Formato no permitido. Use JPG, PNG o PDF');
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      throw new Error('El archivo no debe superar 5MB');
+    if (file.size > 2 * 1024 * 1024) {
+      throw new Error('El archivo no debe superar 2MB');
     }
 
     const extension = file.name.split('.').pop() ?? 'jpg';

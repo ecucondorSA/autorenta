@@ -126,7 +126,8 @@ export class LoggerService {
    */
   private getDebugService(): DebugService {
     if (!this.debugService) {
-      this.debugService = inject(DebugService);
+      // Use Injector to avoid calling inject() outside DI context
+      this.debugService = this.injector.get(DebugService);
     }
     return this.debugService;
   }

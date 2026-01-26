@@ -2,6 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { AuthService } from '@core/services/auth/auth.service';
+import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 import { SupportTicket, CreateTicketData } from '../models/support.models';
 
 interface SupportState {
@@ -9,6 +10,14 @@ interface SupportState {
   loading: boolean;
   error: string | null;
 }
+
+const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB
+const SUPPORT_MIME_TYPES = [
+  ...DEFAULT_IMAGE_MIME_TYPES,
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+];
 
 @Injectable({
   providedIn: 'root',
@@ -125,6 +134,15 @@ export class SupportService {
    * Upload attachment to Supabase Storage
    */
   async uploadAttachment(file: File): Promise<string> {
+    const validation = validateFile(file, {
+      maxSizeBytes: MAX_UPLOAD_BYTES,
+      allowedMimeTypes: SUPPORT_MIME_TYPES,
+    });
+
+    if (!validation.valid) {
+      throw new Error(validation.error || 'Archivo no válido');
+    }
+
     const userId = this.authService.getCachedUserIdSync();
     if (!userId) {
       throw new Error('Usuario no autenticado');

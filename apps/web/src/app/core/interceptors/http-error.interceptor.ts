@@ -49,6 +49,21 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
         req.url.includes('/health') ||
         req.url.includes('/metrics');
 
+      // ✅ Silent tracking endpoints: don't log to Sentry to avoid noise
+      const silentEndpoints = [
+        '/analytics',
+        '/metrics',
+        '/health',
+        '/tiktok-events',
+        '/telemetry',
+        '/telemetry-ingest',
+        '/pixel',
+      ];
+      const shouldSilentlyIgnore = silentEndpoints.some((endpoint) => req.url.includes(endpoint));
+      if (shouldSilentlyIgnore) {
+        return throwError(() => error);
+      }
+
       // Determine severity based on status code
       let severity: 'error' | 'warning' | 'critical' = 'error';
       if (error.status >= 500) {
