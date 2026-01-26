@@ -4,6 +4,7 @@ import { callGemini } from '../_shared/gemini.ts';
 import { GitHubClient, type Patch } from '../_shared/github.ts';
 import { parseErrorLog, extractRelevantSnippet } from '../_shared/error-parser.ts';
 import { ALL_STRATEGIES, selectStrategyForError, type FixStrategy } from '../_shared/strategies.ts';
+import { EdgeBrainMemory, type FixAttempt } from '../_shared/memory.ts';
 
 serve(async (req) => {
     if (req.method === 'OPTIONS') {
@@ -31,6 +32,8 @@ serve(async (req) => {
         const GITHUB_OWNER = Deno.env.get('GITHUB_OWNER') || 'ecucondorSA';
         const GITHUB_REPO = Deno.env.get('GITHUB_REPO') || 'autorenta';
         const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY');
+        const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
+        const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
         if (!GITHUB_TOKEN || !GOOGLE_API_KEY) {
             console.error('[Edge Brain] Missing credentials');
@@ -41,6 +44,15 @@ serve(async (req) => {
         }
 
         const github = new GitHubClient(GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO);
+        const memory = new EdgeBrainMemory(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+        const startTime = Date.now();
+        let attemptRecord: Partial<FixAttempt> = {
+            workflow_run_id: runId,
+            base_branch: baseBranch,
+            pr_created: false,
+            safety_check_passed: false
+        };
 
         // 1. Get logs from failed job
         console.log('[Edge Brain] 📥 Fetching job logs...');
@@ -93,8 +105,16 @@ serve(async (req) => {
 
         console.log(`[Edge Brain] ✅ Got file content (${fileContent.split('\n').length} lines)`);
 
-        // 4. Multi-Strategy Attempt
-        const strategies = getStrategiesForError(parsedError.error_type);
+        // Update attempt record with error context
+        attemptRecord = {
+            ...attemptRecord,
+            error_type: parsedError.error_type,
+            error_message: parsedError.error_message,
+            file_path: parsedError.file_path
+        };
+
+        // 4. Multi-Strategy Attempt (with Learning)
+        const strategies = await getStrategiesForError(parsedError.error_type, memory);
         let fixResponse: any = null;
         let usedStrategy: FixStrategy | null = null;
 
@@ -125,6 +145,17 @@ serve(async (req) => {
                 if (fixResponse.patches && fixResponse.patches.length > 0) {
                     usedStrategy = strategy;
                     console.log(`[Edge Brain] ✅ Strategy ${strategy.name} provided ${fixResponse.patches.length} patches`);
+
+                    // Update attempt record with strategy info
+                    attemptRecord = {
+                        ...attemptRecord,
+                        strategy_used: strategy.name,
+                        model_used: strategy.model,
+                        temperature: strategy.temperature,
+                        patches_count: fixResponse.patches.length,
+                        fix_confidence: fixResponse.confidence || null
+                    };
+
                     break;
                 }
             } catch (e) {
@@ -149,6 +180,13 @@ serve(async (req) => {
 
         if (!safetyCheck.valid) {
             console.error(`[Edge Brain] ❌ REJECTED: ${safetyCheck.reason}`);
+
+            // Log rejected attempt
+            attemptRecord.safety_check_passed = false;
+            attemptRecord.safety_rejection_reason = safetyCheck.reason;
+            attemptRecord.execution_time_ms = Date.now() - startTime;
+            await memory.logAttempt(attemptRecord as FixAttempt);
+
             return new Response(JSON.stringify({
                 message: 'Fix rejected: Too aggressive',
                 reason: safetyCheck.reason,
@@ -217,6 +255,18 @@ ${fixResponse.patches.map((p: Patch, i: number) =>
 
                 console.log(`[Edge Brain] ✅ PR Created: ${pr.html_url}`);
 
+                // Log successful attempt
+                attemptRecord.pr_number = pr.number;
+                attemptRecord.pr_url = pr.html_url;
+                attemptRecord.pr_created = true;
+                attemptRecord.safety_check_passed = true;
+                attemptRecord.lines_changed = Math.abs(patchedLines - originalLines);
+                attemptRecord.change_percentage = parseFloat(changePercent);
+                attemptRecord.fix_branch = fixBranch;
+                attemptRecord.execution_time_ms = Date.now() - startTime;
+                attemptRecord.job_id = failedJob.id;
+                await memory.logAttempt(attemptRecord as FixAttempt);
+
                 return new Response(JSON.stringify({
                     message: 'Surgical fix PR created',
                     pr_url: pr.html_url,
@@ -259,11 +309,32 @@ ${fixResponse.patches.map((p: Patch, i: number) =>
 
 /**
  * Get ordered list of strategies to try for a given error type
+ * Uses historical learning data if available
  */
-function getStrategiesForError(errorType: 'lint' | 'compile' | 'test' | 'runtime'): FixStrategy[] {
+async function getStrategiesForError(
+    errorType: 'lint' | 'compile' | 'test' | 'runtime',
+    memory: EdgeBrainMemory
+): Promise<FixStrategy[]> {
+    // Try to get best strategy from historical data
+    const bestStrategyName = await memory.getBestStrategy(errorType);
+
+    if (bestStrategyName) {
+        console.log(`[Edge Brain] 🧠 Learning: Using historically best strategy "${bestStrategyName}" for ${errorType} errors`);
+
+        const bestStrategy = ALL_STRATEGIES.find(s => s.name === bestStrategyName);
+        if (bestStrategy) {
+            // Return best first, then others as fallback
+            return [
+                bestStrategy,
+                ...ALL_STRATEGIES.filter(s => s.name !== bestStrategyName)
+            ];
+        }
+    }
+
+    // Fallback to default heuristic-based selection
+    console.log(`[Edge Brain] 📊 No historical data, using default strategy for ${errorType}`);
     const primary = selectStrategyForError(errorType);
 
-    // Return ordered list: primary first, then others as fallback
     return [
         primary,
         ...ALL_STRATEGIES.filter(s => s.name !== primary.name)
