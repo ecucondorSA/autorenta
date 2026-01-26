@@ -1,94 +1,137 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
-
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
-}
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Security } from '../../../../../core/models/security.model';
+import { Review } from '../../../../../core/models/review.model';
+import { Segment } from '../../../../../core/models/segment.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private securityDataSubject = new BehaviorSubject<Security | null>(null);
+  securityData$ = this.securityDataSubject.asObservable();
+  private apiUrl = environment.apiUrl;
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  constructor(private http: HttpClient) {}
 
-  private realtimeSubscription?: RealtimeChannel;
-
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  getSecurityData(): Observable<Security> {
+    return this.http.get<Security>(`${this.apiUrl}/security`).pipe(
+      tap((data) => {
+        this.securityDataSubject.next(data);
+      })
+    );
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  getReviewList(): Observable<Review[]> {
+    return this.http.get<Review[]>(`${this.apiUrl}/security/reviews`);
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
-    });
+  getSegments(): Observable<Segment[]> {
+    return this.http.get<Segment[]>(`${this.apiUrl}/security/segments`);
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  addReview(review: Review): Observable<Review> {
+    return this.http.post<Review>(`${this.apiUrl}/security/reviews`, review);
+  }
+
+  updateReview(review: Review): Observable<Review> {
+    return this.http.put<Review>(`${this.apiUrl}/security/reviews/${review.id}`, review);
+  }
+
+  deleteReview(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/security/reviews/${id}`);
+  }
+
+  addSegment(segment: Segment): Observable<Segment> {
+    return this.http.post<Segment>(`${this.apiUrl}/security/segments`, segment);
+  }
+
+  updateSegment(segment: Segment): Observable<Segment> {
+    return this.http.put<Segment>(`${this.apiUrl}/security/segments/${segment.id}`, segment);
+  }
+
+  deleteSegment(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/security/segments/${id}`);
+  }
+
+  uploadImage(imageFile: File): Observable<unknown> {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    return this.http.post(`${this.apiUrl}/upload`, formData).pipe(
+      map((response: unknown) => {
+        return response;
+      })
+    );
+  }
+
+  getUploadedImages(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/images`);
+  }
+
+  deleteImage(imageUrl: string): Observable<unknown> {
+    return this.http.delete(`${this.apiUrl}/images?imageUrl=${imageUrl}`).pipe(
+      map((response: unknown) => {
+        return response;
+      })
+    );
+  }
+
+  runSecurityCheck(): Observable<unknown> {
+    return this.http.post(`${this.apiUrl}/security/run-check`, {}).pipe(
+      map((response: unknown) => {
+        return response;
+      })
+    );
+  }
+
+  getSecurityCheckStatus(): Observable<unknown> {
+    return this.http.get(`${this.apiUrl}/security/check-status`).pipe(
+      map((response: unknown) => {
+        return response;
+      })
+    );
+  }
+
+  approveSecurityCheck(): Observable<unknown> {
+    return this.http
+      .post(`${this.apiUrl}/security/approve`, {})
+      .pipe(
+        tap(() => {
+          this.getSecurityData().subscribe({
+            next: (_res) => {
+              this.getSecurityData();
+            },
+            error: (_err) => {
+              console.error('Error during getSecurityData after approval');
+            },
+          });
+        }),
+        map((response: unknown) => {
+          return response;
+        })
+      );
+  }
+
+  rejectSecurityCheck(): Observable<unknown> {
+    return this.http
+      .post(`${this.apiUrl}/security/reject`, {})
+      .pipe(
+        tap(() => {
+          this.getSecurityData().subscribe({
+            next: (_res) => {
+              this.getSecurityData();
+            },
+            error: (_err) => {
+              console.error('Error during getSecurityData after rejection');
+            },
+          });
+        }),
+        map((response: unknown) => {
+          return response;
+        })
+      );
   }
 }
