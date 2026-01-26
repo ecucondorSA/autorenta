@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { Security } from '../../../../../core/models/security.model';
-import { Review } from '../../../../../core/models/review.model';
-import { Segment } from '../../../../../core/models/segment.model';
+import { environment } from '../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,85 +11,89 @@ export class SecurityService {
 
   constructor(private http: HttpClient) {}
 
-  getSecurity(id: number): Observable<Security> {
-    return this.http.get<Security>(`${this.apiUrl}/api/security/${id}`);
+  // User Activity
+  getUserActivity(page: number, pageSize: number): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/activity?page=${page}&pageSize=${pageSize}`;
+    return this.http.get(url);
   }
 
-  updateSecurity(id: number, security: Security): Observable<Security> {
-    return this.http.put<Security>(`${this.apiUrl}/api/security/${id}`, security);
+  // Failed Logins
+  getFailedLogins(page: number, pageSize: number): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/failed-logins?page=${page}&pageSize=${pageSize}`;
+    return this.http.get(url);
   }
 
-  createSecurity(security: Security): Observable<Security> {
-    return this.http.post<Security>(`${this.apiUrl}/api/security`, security);
+  // Get all devices
+  getAllDevices(page: number, pageSize: number): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/devices?page=${page}&pageSize=${pageSize}`;
+    return this.http.get(url);
   }
 
-  deleteSecurity(id: number): Observable<Security> {
-    return this.http.delete<Security>(`${this.apiUrl}/api/security/${id}`);
+  // Get device by id
+  getDeviceById(deviceId: string): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/devices/${deviceId}`;
+    return this.http.get(url);
   }
 
-  getReviewsBySecurityId(id: number): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.apiUrl}/api/security/${id}/reviews`);
+  // Block device
+  blockDevice(deviceId: string): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/devices/${deviceId}/block`;
+    return this.http.post(url, {});
   }
 
-  getSegmentsBySecurityId(id: number): Observable<Segment[]> {
-    return this.http.get<Segment[]>(`${this.apiUrl}/api/security/${id}/segments`);
+  // Unblock device
+  unblockDevice(deviceId: string): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/devices/${deviceId}/unblock`;
+    return this.http.post(url, {});
   }
 
-  addReviewToSecurity(id: number, review: Review): Observable<Review> {
-    return this.http.post<Review>(`${this.apiUrl}/api/security/${id}/reviews`, review);
+  // Get all trusted locations
+  getAllTrustedLocations(page: number, pageSize: number): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/trusted-locations?page=${page}&pageSize=${pageSize}`;
+    return this.http.get(url);
   }
 
-  addSegmentToSecurity(id: number, segment: Segment): Observable<Segment> {
-    return this.http.post<Segment>(`${this.apiUrl}/api/security/${id}/segments`, segment);
+  // Add trusted location
+  addTrustedLocation(locationData: any): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/trusted-locations`;
+    return this.http.post(url, locationData);
   }
 
-  getSecurityStatistics(securityId: number, startDate: string, endDate: string): Observable<any> {
-    const url = `${this.apiUrl}/api/security/${securityId}/statistics?startDate=${startDate}&endDate=${endDate}`;
-    return this.http.get<any>(url);
+  // Delete trusted location
+  deleteTrustedLocation(locationId: string): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/trusted-locations/${locationId}`;
+    return this.http.delete(url);
   }
 
-  getSecurityAnalytics(securityId: number, startDate: string, endDate: string): Observable<any> {
-    const url = `${this.apiUrl}/api/security/${securityId}/analytics?startDate=${startDate}&endDate=${endDate}`;
-    return this.http.get<any>(url);
+  // Get all 2FA methods
+  getAll2FAMethods(): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/two-factor-auth`;
+    return this.http.get(url);
   }
 
-  runSecurityScan(securityId: number): Observable<any> {
-    const url = `${this.apiUrl}/api/security/${securityId}/run-scan`;
-    return this.http.post<any>(url, {});
+  // Add 2FA method
+  add2FAMethod(methodData: any): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/two-factor-auth`;
+    return this.http.post(url, methodData);
   }
 
-  getSecurityScanStatus(securityId: number): Observable<any> {
-    const url = `${this.apiUrl}/api/security/${securityId}/scan-status`;
-    return this.http.get<any>(url);
+  // Delete 2FA method
+  delete2FAMethod(methodId: string): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/two-factor-auth/${methodId}`;
+    return this.http.delete(url);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  uploadSecurityFile(file: File, securityId: number): Observable<any> {
-    const formData = new FormData();
-    formData.append('file', file);
+  // Get backup codes
+  getBackupCodes(): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/backup-codes`;
+    return this.http.get(url);
+  }
 
-    return new Observable((observer) => {
-      fetch(`${this.apiUrl}/api/security/${securityId}/upload`, {
-        method: 'POST',
-        body: formData,
-      })
-        .then((res) => {
-          if (res.status === 200) {
-            observer.next(res);
-          } else {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            res.json().then((err) => {
-              observer.error(err);
-            });
-          }
-          observer.complete();
-        })
-        .catch((err) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          err.json().then((res) => {
-            observer.error(res);
-          });
-        });
-    });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // Generate backup codes
+  generateBackupCodes(): Observable<any> {
+    const url = `${this.apiUrl}/api/v1/backup-codes/generate`;
+    return this.http.post(url, {});
   }
 }
