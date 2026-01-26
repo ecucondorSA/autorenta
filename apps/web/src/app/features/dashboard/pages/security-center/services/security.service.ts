@@ -1,100 +1,59 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Security } from '../../../../../../core/models/security.model';
-import { Observable } from 'rxjs';
+import { environment } from '../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private apiUrl = environment.apiUrl;
+  private securityDataSubject = new BehaviorSubject<Security | null>(null);
+  public securityData$ = this.securityDataSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  getSecurityData(): Observable<Security[]> {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${environment.authToken}`
-    );
-    return this.http.get<Security[]>(`${this.apiUrl}/security`, { headers });
-  }
-
-  getSecurityById(id: string): Observable<Security> {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${environment.authToken}`
-    );
-    return this.http.get<Security>(`${this.apiUrl}/security/${id}`, { headers });
-  }
-
-  createSecurity(securityData: Security): Observable<Security> {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${environment.authToken}`
-    );
-    return this.http.post<Security>(`${this.apiUrl}/security`, securityData, { headers });
-  }
-
-  updateSecurity(id: string, securityData: Security): Observable<Security> {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${environment.authToken}`
-    );
-    return this.http.put<Security>(`${this.apiUrl}/security/${id}`, securityData, { headers });
-  }
-
-  deleteSecurity(id: string): Observable<Security> {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${environment.authToken}`
-    );
-    return this.http.delete<Security>(`${this.apiUrl}/security/${id}`, { headers });
-  }
-
-  runSecurityScan(id: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const headers = new HttpHeaders().set(
-        'Authorization',
-        `Bearer ${environment.authToken}`
-      );
-      fetch(`${this.apiUrl}/security/${id}/run`, {
-        method: 'POST',
-        headers,
-      })
-        .then((res) => {
-          if (res.ok) {
-            resolve(res);
-          } else {
-            reject(res);
-          }
+  getSecurityData(): Observable<Security> {
+    return this.http
+      .get<Security>(`${environment.apiUrl}/security`)
+      .pipe(
+        tap((data) => {
+          this.securityDataSubject.next(data);
         })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+      );
   }
 
-  getSecurityScanResult(id: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const headers = new HttpHeaders().set(
-        'Authorization',
-        `Bearer ${environment.authToken}`
-      );
-      fetch(`${this.apiUrl}/security/${id}/result`, {
-        method: 'GET',
-        headers,
-      })
-        .then((res) => {
-          if (res.ok) {
-            resolve(res);
-          } else {
-            reject(res);
-          }
+  updateSecurityData(data: Security): Observable<Security> {
+    return this.http
+      .put<Security>(`${environment.apiUrl}/security`, data)
+      .pipe(
+        tap((updatedData) => {
+          this.securityDataSubject.next(updatedData);
         })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+      );
+  }
+
+  getBreachData(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/breaches`);
+  }
+
+  getComplianceData(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/compliance`);
+  }
+
+  getVulnerabilityData(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/vulnerabilities`);
+  }
+
+  getThreatData(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/threats`);
+  }
+
+  getIncidentData(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/incidents`);
+  }
+
+  getRiskData(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/risks`);
   }
 }
