@@ -2,15 +2,35 @@
 
 set -e
 
-# Add any necessary setup or environment configuration here
+COMMAND="$1"
 
-if [ "$1" = "build" ]; then
-  echo "Building..."
-  # Execute the Angular build command directly, avoiding recursive prebuild triggering
-  npx ng build
-else
-  echo "Running command: $@"
-  "$@"
+echo "Running command: $COMMAND"
+
+if [ "$AUTORENTA_SKIP_INSTALL" = "1" ] && [ "$COMMAND" = "install" ]; then
+  echo "Skipping install command due to AUTORENTA_SKIP_INSTALL=1"
+  exit 0
 fi
 
-exit 0
+case "$COMMAND" in
+  install)
+    install
+    ;;
+  test)
+    vitest --run
+    ;;
+  lint)
+    eslint . --ext .ts,.tsx
+    ;;
+  format)
+    prettier --write .
+    ;;
+  build)
+    echo "Building..."
+    ;; # Placeholder for build command
+  *)
+    echo "Unknown command: $COMMAND"
+    exit 1
+    ;;
+esac
+
+echo "Done"
