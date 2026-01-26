@@ -1,17 +1,43 @@
 #!/bin/bash
 
-# Source the utils script
-if [ -f "./utils.sh" ]; then
-  source "./utils.sh"
-else
+set -e
+
+# Check if utils.sh exists
+if [ ! -f "./utils.sh" ]; then
   echo "Error: utils.sh not found in the tools directory."
   exit 1
 fi
 
-set -e
+# Source utils.sh
+. ./utils.sh
 
-# Default command is install
-COMMAND=${1:-install}
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+  key="$1"
 
-# Run the command
-run_command "$COMMAND"
+  case $key in
+    install)
+      install_dependencies
+      ;;
+    build)
+      build_project
+      ;;
+    test)
+      test_project
+      ;;
+    lint)
+      lint_project
+      ;;
+    format)
+      format_project
+      ;;
+    deploy)
+      deploy_project
+      ;;
+    *)
+      echo "Unknown command: $key"
+      exit 1
+      ;;
+  esac
+  shift
+done
