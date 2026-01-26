@@ -1,21 +1,20 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { register } from 'swiper/element/bundle';
-import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
-
-register();
+import { Component, Input } from '@angular/core';
+import { Car } from '@shared/interfaces/car.interface';
 
 @Component({
   selector: 'app-car-carousel',
-  standalone: true,
-  imports: [CarMiniCardComponent],
   templateUrl: './car-carousel.component.html',
-  styleUrls: ['./car-carousel.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./car-carousel.component.scss']
 })
-export class CarCarouselComponent implements OnInit {
-  @Input() cars: any[] = [];
+export class CarCarouselComponent {
+  @Input() cars: Car[] | null = null;
 
-  ngOnInit(): void {
-    //
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Input() routerLink: any;
+
+  constructor() { }
+
+  // ngOnInit(): void {
+  // }
+
 }
