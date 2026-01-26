@@ -22,7 +22,7 @@ export async function callGemini(
     systemPrompt: string,
     apiKey: string
 ): Promise<string> {
-    const MODEL_NAME = 'gemini-3-pro-preview';
+    const MODEL_NAME = 'gemini-2.0-flash';
     const hostname = 'generativelanguage.googleapis.com';
     const path = `/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`;
 
