@@ -28,7 +28,7 @@ serve(async (req) => {
 
         // Environment Variables
         const GITHUB_TOKEN = Deno.env.get('GITHUB_TOKEN') || Deno.env.get('GH_TOKEN');
-        const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY');
+        const GOOGLE_API_KEY = Deno.env.get('GEMINI_API_KEY') || Deno.env.get('GOOGLE_API_KEY');
 
         if (!GITHUB_TOKEN || !GOOGLE_API_KEY) {
             throw new Error('Missing GITHUB_TOKEN or GOOGLE_API_KEY config.');
