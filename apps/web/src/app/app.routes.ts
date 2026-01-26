@@ -79,7 +79,6 @@ export const routes: Routes = [
       },
       {
         path: 'publish',
-        canMatch: [AuthGuard],
         loadComponent: () =>
           import('./features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page),
       },

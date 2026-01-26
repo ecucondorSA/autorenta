@@ -1,8 +1,10 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, DestroyRef, inject, computed } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { interval } from 'rxjs';
 import { CarsService } from '@core/services/cars/cars.service';
-import { LocationService } from '@core/services/geo/location.service';
+import { LocationService, type LocationData } from '@core/services/geo/location.service';
 import { Car } from '@core/models';
 import { CarCardComponent } from '@shared/components/car-card/car-card.component';
 import { CarsMapComponent } from '@shared/components/cars-map/cars-map.component';
@@ -89,12 +91,17 @@ export class BrowseCarsPage {
   private carsService = inject(CarsService);
   private locationService = inject(LocationService);
   private router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   readonly store = inject(BrowseStore);
 
   readonly cars = this.store.cars;
   readonly loading = this.store.loading;
   readonly selectedCarId = this.store.activeCarId;
   readonly viewMode = this.store.viewMode;
+  private readonly pollIntervalMs = 30000;
+  private lastLocation: LocationData | null = null;
+  private lastLocationAt = 0;
+  private isFetching = false;
 
   readonly mapLocations = computed<CarMapLocation[]>(() => {
     const list = this.store.cars();
@@ -119,12 +126,21 @@ export class BrowseCarsPage {
 
   constructor() {
     this.loadCars();
+    interval(this.pollIntervalMs)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        void this.loadCars({ silent: true });
+      });
   }
 
-  async loadCars() {
-    this.store.setLoading(true);
+  async loadCars(options: { silent?: boolean } = {}) {
+    if (this.isFetching) return;
+    this.isFetching = true;
+    if (!options.silent) {
+      this.store.setLoading(true);
+    }
     try {
-      const location = await this.locationService.getUserLocation();
+      const location = await this.resolveLocation();
       console.log('[BrowsePage] User Location:', location);
 
       const searchFrom = new Date().toISOString();
@@ -140,7 +156,22 @@ export class BrowseCarsPage {
     } catch (e) {
       console.error('[BrowsePage] Error loading cars:', e);
       this.store.setLoading(false);
+    } finally {
+      this.isFetching = false;
     }
+  }
+
+  private async resolveLocation(): Promise<LocationData | null> {
+    const now = Date.now();
+    if (this.lastLocation && now - this.lastLocationAt < 5 * 60 * 1000) {
+      return this.lastLocation;
+    }
+    const location = await this.locationService.getUserLocation();
+    if (location) {
+      this.lastLocation = location;
+      this.lastLocationAt = now;
+    }
+    return location;
   }
 
   onMarkerClick(carId: string | Event | null) {

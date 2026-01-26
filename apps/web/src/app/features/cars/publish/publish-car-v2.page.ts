@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '@core/services/auth/auth.service';
 import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
@@ -152,6 +152,7 @@ export class PublishCarV2Page implements OnInit {
   private readonly mpService = inject(PublishCarMpOnboardingService);
   private readonly documentsService = inject(VehicleDocumentsService);
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
+  private readonly authService = inject(AuthService);
   private readonly supabase = inject(SupabaseClientService).getClient();
   private readonly destroyRef = inject(DestroyRef);
 
@@ -1370,6 +1371,22 @@ export class PublishCarV2Page implements OnInit {
   }
 
   private async performSubmission(carData: Record<string, unknown>): Promise<void> {
+    const isAuthenticated = this.authService.isAuthenticated();
+
+    if (!isAuthenticated) {
+      this.notificationManager.info(
+        'Inicia sesión para publicar',
+        'Necesitamos que crees una cuenta o inicies sesión para guardar tu vehículo.',
+      );
+
+      // Store current form data in session storage to restore after login if needed
+      // For now, simplify by redirecting to login with a return URL
+      await this.router.navigate(['/auth/login'], {
+        queryParams: { returnUrl: '/cars/publish' },
+      });
+      return;
+    }
+
     let carId: string;
 
     if (this.editMode() && this['carId']) {
@@ -1406,7 +1423,7 @@ export class PublishCarV2Page implements OnInit {
     // Check docs only if active
     if (carData['status'] === 'active' && !this.editMode()) {
       setTimeout(() => {
-        this.checkMissingDocuments(carId).catch(() => {});
+        this.checkMissingDocuments(carId).catch(() => { });
       }, 2000);
     }
 
@@ -1511,12 +1528,12 @@ export class PublishCarV2Page implements OnInit {
           quality: p.quality?.score,
           vehicle: p.vehicle
             ? {
-                brand: p.vehicle.brand ?? '',
-                model: p.vehicle.model ?? '',
-                year: p.vehicle.year,
-                color: p.vehicle.color,
-                confidence: p.vehicle.confidence,
-              }
+              brand: p.vehicle.brand ?? '',
+              model: p.vehicle.model ?? '',
+              year: p.vehicle.year,
+              color: p.vehicle.color,
+              confidence: p.vehicle.confidence,
+            }
             : undefined,
           plates: p.plates ? [{ text: '', confidence: 1, blurred: p.plates.detected }] : undefined,
         },
