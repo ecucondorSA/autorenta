@@ -40,6 +40,9 @@ export class AdminVerificationsPage implements OnInit {
   private readonly filterTypeSignal = signal<VerificationFilterType>('all');
   private readonly filterStatusSignal = signal<VerificationFilterStatus>('PENDING');
   private readonly selectedVerificationSignal = signal<VerificationQueueItem | null>(null);
+  private readonly documentFrontUrlSignal = signal<string | null>(null);
+  private readonly documentBackUrlSignal = signal<string | null>(null);
+  private readonly selfieUrlSignal = signal<string | null>(null);
   private readonly actionNotesSignal = signal<string>('');
   private readonly rejectionReasonSignal = signal<string>('');
   private readonly currentPageSignal = signal<number>(0);
@@ -53,6 +56,9 @@ export class AdminVerificationsPage implements OnInit {
   readonly filterType = computed(() => this.filterTypeSignal());
   readonly filterStatus = computed(() => this.filterStatusSignal());
   readonly selectedVerification = computed(() => this.selectedVerificationSignal());
+  readonly documentFrontUrl = computed(() => this.documentFrontUrlSignal());
+  readonly documentBackUrl = computed(() => this.documentBackUrlSignal());
+  readonly selfieUrl = computed(() => this.selfieUrlSignal());
   readonly actionNotes = computed(() => this.actionNotesSignal());
   readonly rejectionReason = computed(() => this.rejectionReasonSignal());
   readonly currentPage = computed(() => this.currentPageSignal());
@@ -129,12 +135,16 @@ export class AdminVerificationsPage implements OnInit {
     this.selectedVerificationSignal.set(verification);
     this.actionNotesSignal.set('');
     this.rejectionReasonSignal.set('');
+    void this.loadDocumentUrls(verification);
   }
 
   closeModal(): void {
     this.selectedVerificationSignal.set(null);
     this.actionNotesSignal.set('');
     this.rejectionReasonSignal.set('');
+    this.documentFrontUrlSignal.set(null);
+    this.documentBackUrlSignal.set(null);
+    this.selfieUrlSignal.set(null);
   }
 
   updateActionNotes(notes: string): void {
@@ -202,6 +212,28 @@ export class AdminVerificationsPage implements OnInit {
     }
   }
 
+  private async loadDocumentUrls(verification: VerificationQueueItem): Promise<void> {
+    this.documentFrontUrlSignal.set(null);
+    this.documentBackUrlSignal.set(null);
+    this.selfieUrlSignal.set(null);
+
+    const [front, back, selfie] = await Promise.all([
+      verification.document_front_url
+        ? this.adminService.getIdentityDocumentUrl(verification.document_front_url)
+        : Promise.resolve(''),
+      verification.document_back_url
+        ? this.adminService.getIdentityDocumentUrl(verification.document_back_url)
+        : Promise.resolve(''),
+      verification.selfie_url
+        ? this.adminService.getIdentityDocumentUrl(verification.selfie_url)
+        : Promise.resolve(''),
+    ]);
+
+    this.documentFrontUrlSignal.set(front || null);
+    this.documentBackUrlSignal.set(back || null);
+    this.selfieUrlSignal.set(selfie || null);
+  }
+
   async flagSuspicious(verification: VerificationQueueItem): Promise<void> {
     const notes = prompt('Motivo para marcar como sospechoso:');
 
@@ -240,11 +272,6 @@ export class AdminVerificationsPage implements OnInit {
       console.error('Error requesting additional documents:', error);
       alert('Error al solicitar documentos. Por favor, intenta nuevamente.');
     }
-  }
-
-  getDocumentUrl(filePath: string | undefined): string {
-    if (!filePath) return '';
-    return this.adminService.getIdentityDocumentUrl(filePath);
   }
 
   getVerificationLevel(verification: VerificationQueueItem): number {

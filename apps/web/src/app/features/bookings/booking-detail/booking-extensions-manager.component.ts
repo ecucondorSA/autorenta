@@ -81,10 +81,10 @@ import {
                     <div class="flex items-center gap-2 mb-2">
                       <span
                         class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold"
-                        [class]="getStatusClasses(request.status ?? request.request_status ?? 'pending')"
+                        [class]="getStatusClasses(request.status || 'pending')"
                       >
-                        <ion-icon [name]="getStatusIcon(request.status ?? request.request_status ?? 'pending')"></ion-icon>
-                        {{ getStatusLabel(request.status ?? request.request_status ?? 'pending') }}
+                        <ion-icon [name]="getStatusIcon(request.status || 'pending')"></ion-icon>
+                        {{ getStatusLabel(request.status || 'pending') }}
                       </span>
                     </div>
 
@@ -110,7 +110,7 @@ import {
                   </div>
 
                   <!-- Action Buttons (Owner Only) -->
-                  @if (isOwner() && (request.status ?? request.request_status) === 'pending') {
+                  @if (isOwner() && (request.status || 'pending') === 'pending') {
                     <div class="flex flex-col gap-2">
                       <button
                         (click)="approveExtension(request.id)"

@@ -9,7 +9,7 @@ import {
   isDevMode,
   LOCALE_ID,
   PLATFORM_ID,
-  provideZonelessChangeDetection,
+  provideZoneChangeDetection,
 } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
@@ -98,7 +98,7 @@ export const appConfig: ApplicationConfig = {
     { provide: IMAGE_LOADER, useValue: autorentaImageLoader },
     // ✅ Zoneless Change Detection - removes Zone.js (~35KB savings)
     // Works with Angular 20+ and Ionic 8+ (signals-based)
-    provideZonelessChangeDetection(),
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideIonicAngular({ mode: 'md' }),
     provideRouter(
       routes,

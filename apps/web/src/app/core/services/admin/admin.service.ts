@@ -864,9 +864,21 @@ export class AdminService {
    * Get public URL for identity document
    * @param filePath - Path to file (userId/filename)
    */
-  getIdentityDocumentUrl(filePath: string): string {
-    const { data } = this.supabase.storage.from('identity-documents').getPublicUrl(filePath);
-    return data.publicUrl;
+  async getIdentityDocumentUrl(filePath: string): Promise<string> {
+    if (!filePath) return '';
+    if (filePath.startsWith('http')) return filePath;
+
+    const buckets = ['identity-documents', 'documents'] as const;
+    for (const bucket of buckets) {
+      const { data, error } = await this.supabase.storage
+        .from(bucket)
+        .createSignedUrl(filePath, 60 * 15);
+      if (!error && data?.signedUrl) {
+        return data.signedUrl;
+      }
+    }
+
+    return '';
   }
 
   // ============================================

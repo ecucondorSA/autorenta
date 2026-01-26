@@ -39,6 +39,8 @@
 
     <div class="text-xs text-text-muted font-mono">ID: {{ booking()!.id.slice(0, 8) }}</div>
   </nav>
+  <!-- Progress Timeline -->
+  <app-booking-timeline [booking]="booking()!" />
 
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
     <!-- ============================================================================================== -->

@@ -8,14 +8,13 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RewardPoolService } from '@core/services/payments/reward-pool.service';
-import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 
 @Component({
   selector: 'app-points-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, MoneyPipe, DecimalPipe, IconComponent],
+  imports: [CommonModule, RouterLink, MoneyPipe, DecimalPipe],
   templateUrl: './points.page.html',
 })
 export class PointsPage implements OnInit {

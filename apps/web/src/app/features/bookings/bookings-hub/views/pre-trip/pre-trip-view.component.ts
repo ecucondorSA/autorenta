@@ -88,7 +88,7 @@ interface WeatherData {
 
       <main class="px-4 max-w-2xl mx-auto -mt-4 space-y-4">
         <!-- Car info card -->
-        <section class="glass-card-elevated p-4 rounded-2xl" hoverLift>
+        <section class="glass-card-elevated p-4 rounded-2xl" appHoverLift>
           <div class="flex items-center gap-4">
             @if (carImageUrl()) {
               <img
@@ -104,7 +104,7 @@ interface WeatherData {
             <a
               [routerLink]="['/bookings', booking.id]"
               class="p-2 rounded-full bg-surface-secondary hover:bg-surface-tertiary transition-colors"
-              pressScale
+              appPressScale
             >
               <app-icon name="chevron-right" class="w-5 h-5 text-text-secondary" />
             </a>
@@ -114,7 +114,7 @@ interface WeatherData {
         <!-- Two column grid: Map + Checklist -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- Pickup Map -->
-          <section class="glass-card p-4 rounded-xl" hoverLift>
+          <section class="glass-card p-4 rounded-xl" appHoverLift>
             <h3 class="font-medium text-text-primary flex items-center gap-2 mb-3">
               <app-icon name="map-pin" class="w-5 h-5 text-primary-500" />
               Ubicación de Retiro
@@ -138,7 +138,7 @@ interface WeatherData {
                 type="button"
                 (click)="openMaps()"
                 class="absolute bottom-2 right-2 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full text-xs font-medium shadow-lg"
-                pressScale
+                appPressScale
               >
                 Abrir en Maps
               </button>
@@ -150,7 +150,7 @@ interface WeatherData {
           </section>
 
           <!-- Checklist -->
-          <section class="glass-card p-4 rounded-xl" hoverLift>
+          <section class="glass-card p-4 rounded-xl" appHoverLift>
             <h3 class="font-medium text-text-primary flex items-center gap-2 mb-3">
               <app-icon name="check-circle" class="w-5 h-5 text-primary-500" />
               Checklist Pre-Viaje
@@ -165,7 +165,7 @@ interface WeatherData {
                     class="w-full flex items-center gap-3 p-2 rounded-lg transition-colors"
                     [class.bg-success-bg]="item.checked"
                     [class.hover:bg-surface-secondary]="!item.checked"
-                    pressScale
+                    appPressScale
                   >
                     <div
                       class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all"
@@ -201,7 +201,7 @@ interface WeatherData {
         <!-- Bottom row: Instructions + Weather -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- Pickup Instructions -->
-          <section class="glass-card p-4 rounded-xl" hoverLift>
+          <section class="glass-card p-4 rounded-xl" appHoverLift>
             <h3 class="font-medium text-text-primary flex items-center gap-2 mb-3">
               <app-icon name="info" class="w-5 h-5 text-info-500" />
               Instrucciones
@@ -221,7 +221,7 @@ interface WeatherData {
               [routerLink]="['/messages/chat']"
               [queryParams]="{bookingId: booking.id, userId: booking.owner_id}"
               class="mt-3 inline-flex items-center gap-2 text-sm text-primary-500 font-medium"
-              pressScale
+              appPressScale
             >
               <app-icon name="message-circle" class="w-4 h-4" />
               Contactar propietario
@@ -229,7 +229,7 @@ interface WeatherData {
           </section>
 
           <!-- Weather Widget -->
-          <section class="glass-card p-4 rounded-xl" hoverLift>
+          <section class="glass-card p-4 rounded-xl" appHoverLift>
             <h3 class="font-medium text-text-primary flex items-center gap-2 mb-3">
               <span class="text-lg">{{ weather()?.icon ?? '🌤️' }}</span>
               Clima en {{ cityName() }}
@@ -265,7 +265,7 @@ interface WeatherData {
           <a
             [routerLink]="['/bookings', booking.id]"
             class="w-full btn-primary flex items-center justify-center gap-2 py-3 rounded-xl font-medium"
-            pressScale
+            appPressScale
           >
             <app-icon name="file-text" class="w-5 h-5" />
             Ver Detalle Completo

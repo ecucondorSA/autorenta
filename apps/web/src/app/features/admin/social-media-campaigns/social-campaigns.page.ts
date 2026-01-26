@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonSelect, IonSelectOption, IonSpinner, IonText, IonToolbar, IonCheckbox } from '@ionic/angular/standalone';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonSpinner, IonText, IonToolbar, IonCheckbox } from '@ionic/angular/standalone';
 import { injectSupabase } from '../../../core/services/infrastructure/supabase-client.service';
 import { ToastService } from '../../../core/services/ui/toast.service';
 import { environment } from '../../../../environments/environment';
@@ -42,15 +42,12 @@ interface CampaignSchedule {
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    IonIcon,
+    IonCheckbox,
     IonText,
-    IonInput,
     IonItem,
     IonLabel,
-    IonSelect,
-    IonSelectOption,
     IonSpinner,
-    IonCheckbox,
+    IonInput,
   ],
   template: `
     <ion-header>

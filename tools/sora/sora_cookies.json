@@ -1,0 +1,551 @@
+[
+  {
+    "domain": ".chatgpt.com",
+    "name": "oai-did",
+    "value": "",
+    "path": "/",
+    "expires": 13437735448322792,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "chatgpt.com",
+    "name": "oai-hlib",
+    "value": "",
+    "path": "/",
+    "expires": 13437759162195413,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".openai.com",
+    "name": "_ga",
+    "value": "",
+    "path": "/",
+    "expires": 13423146375000000,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "openai.com",
+    "name": "analytics_consent",
+    "value": "",
+    "path": "/",
+    "expires": 13423146374811357,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "openai.com",
+    "name": "country",
+    "value": "",
+    "path": "/",
+    "expires": 13439130373448952,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "openai.com",
+    "name": "marketing_consent",
+    "value": "",
+    "path": "/",
+    "expires": 13423146374816282,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".openai.com",
+    "name": "_ga_8MYC5SEFJ1",
+    "value": "",
+    "path": "/",
+    "expires": 13423146548000000,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".platform.openai.com",
+    "name": "__stripe_mid",
+    "value": "",
+    "path": "/",
+    "expires": 13439494875000000,
+    "secure": true,
+    "httpOnly": false
+  },
+  {
+    "domain": ".pay.openai.com",
+    "name": "__stripe_mid",
+    "value": "",
+    "path": "/",
+    "expires": 13442660986000000,
+    "secure": true,
+    "httpOnly": false
+  },
+  {
+    "domain": ".chatgpt.com",
+    "name": "oai-allow-ne",
+    "value": "",
+    "path": "/",
+    "expires": 13426736014909518,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".chatgpt.com",
+    "name": "oai_consent_analytics",
+    "value": "",
+    "path": "/",
+    "expires": 13426736014909296,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".chatgpt.com",
+    "name": "oai_consent_marketing",
+    "value": "",
+    "path": "/",
+    "expires": 13426736014909436,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "chatgpt.com",
+    "name": "oai-nav-state",
+    "value": "",
+    "path": "/",
+    "expires": 13447748952153076,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".auth.openai.com",
+    "name": "oai-client-auth-info",
+    "value": "",
+    "path": "/",
+    "expires": 13415878393139336,
+    "secure": true,
+    "httpOnly": false
+  },
+  {
+    "domain": ".openai.com",
+    "name": "oai-did",
+    "value": "",
+    "path": "/",
+    "expires": 13444822379340291,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".auth.openai.com",
+    "name": "cf_clearance",
+    "value": "",
+    "path": "/",
+    "expires": 13444822380487230,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".sentinel.openai.com",
+    "name": "cf_clearance",
+    "value": "",
+    "path": "/",
+    "expires": 13444822391325729,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "sora.com",
+    "name": "__Host-authjs.csrf-token",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "sora.chatgpt.com",
+    "name": "__Host-next-auth.csrf-token",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "sora.com",
+    "name": "__Secure-authjs.callback-url",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "sora.chatgpt.com",
+    "name": "__Secure-next-auth.callback-url",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "chatgpt.com",
+    "name": "__cflb",
+    "value": "",
+    "path": "/",
+    "expires": 13413727813315631,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "sora.chatgpt.com",
+    "name": "__cflb",
+    "value": "",
+    "path": "/",
+    "expires": 13413726012528517,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "sora.com",
+    "name": "__cflb",
+    "value": "",
+    "path": "/",
+    "expires": 13413726011713462,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".sora.chatgpt.com",
+    "name": "_cfuvid",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".sora.com",
+    "name": "_cfuvid",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".videos.openai.com",
+    "name": "_cfuvid",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "chatgpt.com",
+    "name": "__Host-next-auth.csrf-token",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "chatgpt.com",
+    "name": "__Secure-next-auth.callback-url",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".chatgpt.com",
+    "name": "_cfuvid",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".realtime.chatgpt.com",
+    "name": "__cf_bm",
+    "value": "",
+    "path": "/",
+    "expires": 13413726571109164,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".ws.chatgpt.com",
+    "name": "__cf_bm",
+    "value": "",
+    "path": "/",
+    "expires": 13413726567897717,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "realtime.chatgpt.com",
+    "name": "__cflb",
+    "value": "",
+    "path": "/",
+    "expires": 13413726571109251,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "ws.chatgpt.com",
+    "name": "__cflb",
+    "value": "",
+    "path": "/",
+    "expires": 13413726567898038,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "chatgpt.com",
+    "name": "_account_is_fedramp",
+    "value": "",
+    "path": "/",
+    "expires": 13421500767868127,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".realtime.chatgpt.com",
+    "name": "_cfuvid",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".ws.chatgpt.com",
+    "name": "_cfuvid",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".chatgpt.com",
+    "name": "_ga",
+    "value": "",
+    "path": "/",
+    "expires": 13429492769000000,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".chatgpt.com",
+    "name": "_puid",
+    "value": "",
+    "path": "/",
+    "expires": 13414329567663038,
+    "secure": true,
+    "httpOnly": false
+  },
+  {
+    "domain": "chatgpt.com",
+    "name": "oai-client-auth-info",
+    "value": "",
+    "path": "/",
+    "expires": 13416316768691273,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "chatgpt.com",
+    "name": "oai-gn",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "chatgpt.com",
+    "name": "oai-hm",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "chatgpt.com",
+    "name": "oai-last-model-config",
+    "value": "",
+    "path": "/",
+    "expires": 13416316767618282,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".openai.com",
+    "name": "__cf_bm",
+    "value": "",
+    "path": "/",
+    "expires": 13413726694793873,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "help.openai.com",
+    "name": "__cflb",
+    "value": "",
+    "path": "/",
+    "expires": 13413726690966234,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "help.openai.com",
+    "name": "__session",
+    "value": "",
+    "path": "/",
+    "expires": 13445260890966069,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".openai.com",
+    "name": "_cfuvid",
+    "value": "",
+    "path": "/",
+    "expires": 0,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "cdn.platform.openai.com",
+    "name": "_dd_s",
+    "value": "",
+    "path": "/",
+    "expires": 13413725791000000,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "chatgpt.com",
+    "name": "_dd_s",
+    "value": "",
+    "path": "/",
+    "expires": 13445260884000000,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".chatgpt.com",
+    "name": "_ga_9SHBSK2D9J",
+    "value": "",
+    "path": "/",
+    "expires": 13429492885000000,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".openai.com",
+    "name": "cf_clearance",
+    "value": "",
+    "path": "/",
+    "expires": 13445260917819399,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".chatgpt.com",
+    "name": "__Secure-next-auth.session-token",
+    "value": "",
+    "path": "/",
+    "expires": 13421501491424264,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".chatgpt.com",
+    "name": "__cf_bm",
+    "value": "",
+    "path": "/",
+    "expires": 13413727290665699,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".sora.chatgpt.com",
+    "name": "__cf_bm",
+    "value": "",
+    "path": "/",
+    "expires": 13413727294191201,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".sora.com",
+    "name": "__cf_bm",
+    "value": "",
+    "path": "/",
+    "expires": 13413727289255233,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".videos.openai.com",
+    "name": "__cf_bm",
+    "value": "",
+    "path": "/",
+    "expires": 13413727295583141,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".chatgpt.com",
+    "name": "oai-sc",
+    "value": "",
+    "path": "/",
+    "expires": 13445261492159416,
+    "secure": true,
+    "httpOnly": false
+  },
+  {
+    "domain": ".chatgpt.com",
+    "name": "cf_clearance",
+    "value": "",
+    "path": "/",
+    "expires": 13445261491474908,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".sora.chatgpt.com",
+    "name": "cf_clearance",
+    "value": "",
+    "path": "/",
+    "expires": 13445261490691944,
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": "openai.com",
+    "name": "_dd_s",
+    "value": "",
+    "path": "/",
+    "expires": 13413726448000000,
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "sora.chatgpt.com",
+    "name": "_dd_s",
+    "value": "",
+    "path": "/",
+    "expires": 13413726447000000,
+    "secure": false,
+    "httpOnly": false
+  }
+]

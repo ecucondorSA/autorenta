@@ -28,16 +28,37 @@ import {
   PhotoWithAI,
   VehicleAutoDetect,
 } from '../../../shared/components/photo-upload-ai/photo-upload-ai.component';
-import {
-  VideoVehicleRecognitionComponent,
-  DetectedVehicle,
-} from '../../../shared/components/video-vehicle-recognition/video-vehicle-recognition.component';
+import { DetectedVehicle } from '../../../shared/components/video-vehicle-recognition/video-vehicle-recognition.component';
 import {
   VehicleScannerLiveComponent,
   VehicleScannerConfirmData,
 } from '../../../shared/components/vehicle-scanner-live/vehicle-scanner-live.component';
 import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
 import { VisualSelectorComponent, VisualOption } from './components/visual-selector/visual-selector.component';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  carSportOutline,
+  cameraOutline,
+  checkmarkCircleOutline,
+  alertCircleOutline,
+  documentTextOutline,
+  cashOutline,
+  flashOutline,
+  locationOutline,
+  imagesOutline,
+  speedometerOutline,
+  colorPaletteOutline,
+  constructOutline,
+  peopleOutline,
+  calendarOutline,
+  scanOutline,
+  sparklesOutline,
+  informationCircleOutline,
+  timeOutline,
+  shieldCheckmarkOutline,
+} from 'ionicons/icons';
+import { HoverLiftDirective } from '../../../shared/directives/hover-lift.directive';
 
 // ✅ NEW: Extracted services
 import { PublishCarFormService } from './services/publish-car-form.service';
@@ -74,9 +95,10 @@ import { PublishCarPhotoService } from './services/publish-car-photo.service';
     HostSupportInfoPanelComponent,
     BottomSheetComponent,
     PhotoUploadAIComponent,
-    VideoVehicleRecognitionComponent,
     VehicleScannerLiveComponent,
-    VisualSelectorComponent
+    VisualSelectorComponent,
+    IonIcon,
+    HoverLiftDirective
   ],
   templateUrl: './publish-car-v2.page.html',
   styleUrls: ['./publish-car-v2.page.scss'],
@@ -89,6 +111,30 @@ import { PublishCarPhotoService } from './services/publish-car-photo.service';
 })
 export class PublishCarV2Page implements OnInit {
   private readonly logger = inject(LoggerService);
+
+  constructor() {
+    addIcons({
+      carSportOutline,
+      cameraOutline,
+      checkmarkCircleOutline,
+      alertCircleOutline,
+      documentTextOutline,
+      cashOutline,
+      flashOutline,
+      locationOutline,
+      imagesOutline,
+      speedometerOutline,
+      colorPaletteOutline,
+      constructOutline,
+      peopleOutline,
+      calendarOutline,
+      scanOutline,
+      sparklesOutline,
+      informationCircleOutline,
+      timeOutline,
+      shieldCheckmarkOutline,
+    });
+  }
   // Core services
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -1357,7 +1403,7 @@ export class PublishCarV2Page implements OnInit {
     // Check docs only if active
     if (carData['status'] === 'active' && !this.editMode()) {
       setTimeout(() => {
-        this.checkMissingDocuments(carId).catch(() => {});
+        this.checkMissingDocuments(carId).catch(() => { });
       }, 2000);
     }
 

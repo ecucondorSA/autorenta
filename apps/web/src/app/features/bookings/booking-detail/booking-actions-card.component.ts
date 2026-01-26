@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Booking } from '@core/models';
-import { DepositStatusBadgeComponent } from '@shared/components/deposit-status-badge/deposit-status-badge.component';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -37,7 +36,7 @@ import {
   selector: 'app-booking-actions-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, IonIcon, DepositStatusBadgeComponent],
+  imports: [CommonModule, RouterLink, IonIcon],
   template: `
     <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden">
       <!-- Primary CTA Section -->
@@ -46,7 +45,7 @@ import {
         @if (showPaymentAction()) {
           <!-- Garantizar Reserva -->
           <a
-            [routerLink]="['/bookings', booking()?.id, 'detail-payment']"
+            [routerLink]="['/bookings', booking().id, 'request']"
             class="block w-full py-4 px-6 rounded-xl bg-neutral-900 text-white font-semibold text-center hover:bg-neutral-800 transition-all"
           >
             Garantizar Reserva
@@ -57,7 +56,7 @@ import {
         } @else if (awaitingRenterCheckIn() && isRenter()) {
           <!-- Renter: Confirmar Recepción (owner ya entregó) -->
           <a
-            [routerLink]="['/bookings', booking()?.id, 'check-in']"
+            [routerLink]="['/bookings', booking().id, 'check-in']"
             class="block w-full py-4 px-6 rounded-xl bg-amber-500 text-white font-semibold text-center hover:bg-amber-600 transition-all"
           >
             Confirmar Recepción
@@ -74,7 +73,7 @@ import {
         } @else if (canPerformCheckOut()) {
           <!-- Finalizar Viaje -->
           <a
-            [routerLink]="['/bookings', booking()?.id, 'check-out']"
+            [routerLink]="['/bookings', booking().id, 'check-out']"
             class="block w-full py-4 px-6 rounded-xl bg-neutral-900 text-white font-semibold text-center hover:bg-neutral-800 transition-all"
           >
             Finalizar Viaje
@@ -85,7 +84,7 @@ import {
         } @else if (canPerformCheckIn()) {
           <!-- Iniciar Check-in -->
           <a
-            [routerLink]="['/bookings', booking()?.id, 'check-in']"
+            [routerLink]="['/bookings', booking().id, 'check-in']"
             class="block w-full py-4 px-6 rounded-xl bg-neutral-900 text-white font-semibold text-center hover:bg-neutral-800 transition-all"
           >
             Iniciar Check-in
@@ -96,7 +95,7 @@ import {
         } @else if (canOwnerCheckIn()) {
           <!-- Owner: Entregar Vehículo -->
           <a
-            [routerLink]="['/bookings', booking()?.id, 'owner-check-in']"
+            [routerLink]="['/bookings', booking().id, 'owner-check-in']"
             class="block w-full py-4 px-6 rounded-xl bg-neutral-900 text-white font-semibold text-center hover:bg-neutral-800 transition-all"
           >
             Entregar Vehículo
@@ -107,7 +106,7 @@ import {
         } @else if (canOwnerCheckOut()) {
           <!-- Owner: Confirmar Devolución -->
           <a
-            [routerLink]="['/bookings', booking()?.id, 'owner-check-out']"
+            [routerLink]="['/bookings', booking().id, 'owner-check-out']"
             class="block w-full py-4 px-6 rounded-xl bg-neutral-900 text-white font-semibold text-center hover:bg-neutral-800 transition-all"
           >
             Confirmar Devolución
@@ -155,14 +154,14 @@ import {
             <span class="text-[10px] text-neutral-500 group-hover:text-neutral-700">Chat</span>
           </button>
           <a
-            [routerLink]="['/bookings', booking()?.id, 'detail-payment']"
+            [routerLink]="['/bookings', booking().id, 'request']"
             class="flex flex-col items-center gap-1.5 py-3 rounded-xl hover:bg-neutral-50 transition-colors group"
           >
             <ion-icon name="receipt-outline" class="text-xl text-neutral-600 group-hover:text-neutral-900"></ion-icon>
             <span class="text-[10px] text-neutral-500 group-hover:text-neutral-700">Pago</span>
           </a>
           <a
-            [routerLink]="['/bookings', booking()?.id, 'contract']"
+            [routerLink]="['/bookings', booking().id, 'contract']"
             class="flex flex-col items-center gap-1.5 py-3 rounded-xl hover:bg-neutral-50 transition-colors group"
           >
             <ion-icon name="document-text-outline" class="text-xl text-neutral-600 group-hover:text-neutral-900"></ion-icon>
@@ -250,7 +249,7 @@ export class BookingActionsCardComponent {
     if (this.isOwner()) {
       this.ownerCancelBooking.emit();
     } else {
-      const bookingId = this.booking()?.id;
+      const bookingId = this.booking().id;
       if (bookingId) {
         this.cancelBooking.emit(bookingId);
       }

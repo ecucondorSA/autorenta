@@ -51,7 +51,6 @@ export class BiometricAuthService {
         console.log('[Biometric] isCredentialsSaved error:', err);
         return { isSaved: false };
       });
-      console.log('[Biometric] credentials:', JSON.stringify(credentialsResult));
 
       const type = biometricResult.biometryType;
       const typeName = this.getTypeName(type);

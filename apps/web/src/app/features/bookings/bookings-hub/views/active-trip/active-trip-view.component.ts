@@ -86,7 +86,7 @@ interface QuickAction {
 
       <main class="px-4 max-w-2xl mx-auto -mt-4 space-y-4">
         <!-- Car info card -->
-        <section class="glass-card-elevated p-4 rounded-2xl" hoverLift>
+        <section class="glass-card-elevated p-4 rounded-2xl" appHoverLift>
           <div class="flex items-center gap-4">
             @if (carImageUrl()) {
               <img
@@ -102,7 +102,7 @@ interface QuickAction {
             <a
               [routerLink]="['/bookings', booking.id, 'active']"
               class="p-2 rounded-full bg-surface-secondary hover:bg-surface-tertiary transition-colors"
-              pressScale
+              appPressScale
             >
               <app-icon name="chevron-right" class="w-5 h-5 text-text-secondary" />
             </a>
@@ -127,7 +127,7 @@ interface QuickAction {
                 <a
                   [href]="'tel:' + ownerPhone()"
                   class="p-3 rounded-full bg-success-bg text-success-text hover:bg-success-100 transition-colors"
-                  pressScale
+                  appPressScale
                   title="Llamar"
                 >
                   <app-icon name="phone" class="w-5 h-5" />
@@ -137,7 +137,7 @@ interface QuickAction {
                 [routerLink]="['/messages/chat']"
                 [queryParams]="{bookingId: booking.id, userId: booking.owner_id}"
                 class="p-3 rounded-full bg-primary-bg text-primary-text hover:bg-primary-100 transition-colors"
-                pressScale
+                appPressScale
                 title="Mensaje"
               >
                 <app-icon name="message-circle" class="w-5 h-5" />
@@ -167,7 +167,7 @@ interface QuickAction {
             <a
               [routerLink]="['/bookings', booking.id, 'check-out']"
               class="mt-3 w-full btn-warning flex items-center justify-center gap-2 py-3 rounded-xl font-medium"
-              pressScale
+              appPressScale
             >
               <app-icon name="log-out" class="w-5 h-5" />
               Iniciar Devolución
@@ -182,7 +182,7 @@ interface QuickAction {
               type="button"
               (click)="action.action()"
               class="flex flex-col items-center gap-2 p-3 glass-card rounded-xl transition-all"
-              pressScale
+              appPressScale
             >
               <div
                 class="w-12 h-12 rounded-full flex items-center justify-center text-xl"
@@ -198,7 +198,7 @@ interface QuickAction {
         <!-- Info Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- Return Location -->
-          <section class="glass-card p-4 rounded-xl" hoverLift>
+          <section class="glass-card p-4 rounded-xl" appHoverLift>
             <h3 class="font-medium text-text-primary flex items-center gap-2 mb-3">
               <app-icon name="map-pin" class="w-5 h-5 text-primary-500" />
               Devolución
@@ -210,7 +210,7 @@ interface QuickAction {
           </section>
 
           <!-- Trip Summary -->
-          <section class="glass-card p-4 rounded-xl" hoverLift>
+          <section class="glass-card p-4 rounded-xl" appHoverLift>
             <h3 class="font-medium text-text-primary flex items-center gap-2 mb-3">
               <app-icon name="calendar" class="w-5 h-5 text-primary-500" />
               Tu Viaje
@@ -231,7 +231,7 @@ interface QuickAction {
           <a
             [routerLink]="['/bookings', booking.id, 'active']"
             class="w-full btn-primary flex items-center justify-center gap-2 py-3 rounded-xl font-medium"
-            pressScale
+            appPressScale
           >
             <app-icon name="navigation" class="w-5 h-5" />
             Panel Completo del Viaje

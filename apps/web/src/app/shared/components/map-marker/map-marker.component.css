@@ -1,5 +1,34 @@
 :host {
   display: block;
-  width: 64px; /* Corresponds to w-16 in Tailwind */
-  height: 64px; /* Corresponds to h-16 in Tailwind */
+  width: auto; 
+  height: auto;
+  pointer-events: auto;
+}
+
+/* Neon Glow Effect */
+.shadow-neon-glow {
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.6), 0 0 30px rgba(57, 255, 20, 0.3) !important;
+}
+
+/* Radioactive Animation */
+@keyframes radioactive-glow {
+  0% { box-shadow: 0 0 5px rgba(57, 255, 20, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(57, 255, 20, 0.8), 0 0 40px rgba(57, 255, 20, 0.4); }
+  100% { box-shadow: 0 0 5px rgba(57, 255, 20, 0.4); }
+}
+
+.isSelected {
+  animation: radioactive-glow 2s infinite ease-in-out;
+}
+
+.bg-brand-primary {
+  background-color: #39FF14 !important; /* Radioactive Neon Green */
+}
+
+.border-brand-primary {
+  border-color: #39FF14 !important;
+}
+
+.text-brand-primary {
+  color: #39FF14 !important;
 }

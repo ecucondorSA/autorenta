@@ -127,7 +127,7 @@ interface StepInfo {
         </section>
 
         <!-- Booking Info Card -->
-        <section class="glass-card p-4 rounded-xl" hoverLift>
+        <section class="glass-card p-4 rounded-xl" appHoverLift>
           <div class="flex items-center gap-4">
             @if (carImageUrl()) {
               <img
@@ -229,8 +229,8 @@ interface StepInfo {
                 [routerLink]="['/messages/chat']"
                 [queryParams]="{bookingId: booking.id, userId: booking.owner_id}"
                 class="glass-card p-4 rounded-xl flex items-center justify-between"
-                hoverLift
-                pressScale
+                appHoverLift
+                appPressScale
               >
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-full bg-primary-bg flex items-center justify-center">
@@ -251,8 +251,8 @@ interface StepInfo {
               type="button"
               (click)="handlePrimaryAction()"
               [disabled]="loading()"
-              class="w-full btn-primary flex items-center justify-center gap-2 py-4 rounded-xl font-medium text-lg disabled:opacity-50"
-              pressScale
+              class="w-full bg-cta-default text-cta-text hover:bg-cta-hover flex items-center justify-center gap-2 py-4 rounded-xl font-medium text-lg disabled:opacity-50 transition-colors shadow-lg shadow-cta-default/30"
+              appPressScale
             >
               @if (loading()) {
                 <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -267,7 +267,7 @@ interface StepInfo {
           <a
             [routerLink]="['/bookings', booking.id]"
             class="w-full flex items-center justify-center gap-2 py-3 text-primary-500 font-medium"
-            pressScale
+            appPressScale
           >
             Ver todos los detalles
           </a>
@@ -280,16 +280,7 @@ interface StepInfo {
       padding-top: env(safe-area-inset-top);
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-      color: white;
-      transition: all 0.2s ease;
-    }
 
-    .btn-primary:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(var(--primary-500-rgb), 0.3);
-    }
 
     .border-3 {
       border-width: 3px;

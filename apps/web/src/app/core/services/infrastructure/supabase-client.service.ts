@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { SecureStorageAdapter } from "@core/services/infrastructure/secure-storage.adapter";
 import { environment } from '../../../../environments/environment';
 
 type SupabaseLock = <T>(name: string, acquireTimeout: number, fn: () => Promise<T>) => Promise<T>;
@@ -149,6 +150,7 @@ function createUnconfiguredBrowserStubClient(message: string): SupabaseClient {
 })
 export class SupabaseClientService {
   private readonly logger = inject(LoggerService);
+  private readonly secureStorage = inject(SecureStorageAdapter);
   private client: SupabaseClient | null = null;
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -192,6 +194,7 @@ export class SupabaseClientService {
 
     this.client = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
+        storage: this.secureStorage,
         persistSession: true,
         autoRefreshToken: true,
         lock: createResilientLock(),

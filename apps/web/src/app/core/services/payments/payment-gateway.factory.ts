@@ -97,7 +97,7 @@ export class PaymentGatewayFactory {
    * @returns true si el provider está soportado
    */
   isBookingProviderAvailable(provider: PaymentProvider): boolean {
-    return ['mercadopago', 'paypal', 'mock'].includes(provider);
+    return ['mercadopago', 'paypal', 'wallet', 'mock'].includes(provider);
   }
 
   /**
@@ -116,7 +116,7 @@ export class PaymentGatewayFactory {
    * @returns Array de providers soportados
    */
   getAvailableBookingProviders(): PaymentProvider[] {
-    return ['mercadopago', 'paypal'];
+    return ['mercadopago', 'paypal', 'wallet'];
   }
 
   /**

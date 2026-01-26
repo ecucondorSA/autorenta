@@ -248,7 +248,7 @@ serve(async (req) => {
   });
 });
 
-const DOCUMENT_BUCKETS = ['verification-docs', 'documents'] as const;
+const DOCUMENT_BUCKETS = ['identity-documents', 'documents', 'verification-docs'] as const;
 const KNOWN_DOC_KINDS = new Set([
   'gov_id_front',
   'gov_id_back',
@@ -313,6 +313,25 @@ async function createSignedUrl(
   }
 
   return null;
+}
+
+function isHttpUrl(value: string): boolean {
+  return /^https?:\/\//i.test(value);
+}
+
+async function ensureSignedUrl(
+  adminClient: ReturnType<typeof createClient>,
+  value: string | null,
+): Promise<string | null> {
+  if (!value) {
+    return null;
+  }
+
+  if (isHttpUrl(value)) {
+    return value;
+  }
+
+  return await createSignedUrl(adminClient, value);
 }
 
 async function buildSignedDocuments(
@@ -537,8 +556,8 @@ async function evaluateLevel3FaceVerification(
   }
 
   // Get document URL for face matching
-  const documentUrl = levelData.document_front_url || levelData.driver_license_url;
-  if (!documentUrl) {
+  const rawDocumentUrl = levelData.document_front_url || levelData.driver_license_url;
+  if (!rawDocumentUrl) {
     console.error('[verify-user-docs] No document photo available for face matching');
     return;
   }
@@ -561,11 +580,19 @@ async function evaluateLevel3FaceVerification(
       headers.Authorization = `Bearer ${DOC_VERIFIER_TOKEN}`;
     }
 
+    const selfieUrl = await ensureSignedUrl(adminClient, levelData.selfie_url);
+    const documentUrl = await ensureSignedUrl(adminClient, rawDocumentUrl);
+
+    if (!selfieUrl || !documentUrl) {
+      console.error('[verify-user-docs] Unable to generate signed URLs for face verification');
+      return;
+    }
+
     const response = await fetch(faceVerifyUrl, {
       method: 'POST',
       headers,
       body: JSON.stringify({
-        video_url: levelData.selfie_url,
+        video_url: selfieUrl,
         document_url: documentUrl,
         user_id: userId,
       }),

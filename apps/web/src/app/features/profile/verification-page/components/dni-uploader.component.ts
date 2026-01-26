@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed, ChangeDetectionStrategy, HostListener } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 
 import { VerificationService } from '@core/services/verification/verification.service';
@@ -40,7 +40,7 @@ const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB (mobile-friendly)
   selector: 'app-dni-uploader',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <!-- Screen Reader Announcements -->
     <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcements">{{ getStatusMessage() }}</div>

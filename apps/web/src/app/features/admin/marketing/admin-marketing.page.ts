@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { ToastService } from '@core/services/ui/toast.service';
 
@@ -48,7 +48,7 @@ type ContentType = 'tip' | 'promo' | 'car_spotlight' | 'testimonial' | 'seasonal
 @Component({
   standalone: true,
   selector: 'app-admin-marketing-page',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin-marketing.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

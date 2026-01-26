@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
  * Payment Provider Types
  * Supported payment providers in AutoRenta
  */
-export type PaymentProvider = 'mercadopago' | 'paypal' | 'mock';
+export type PaymentProvider = 'mercadopago' | 'paypal' | 'wallet' | 'mock';
 
 /**
  * Generic Payment Preference Response

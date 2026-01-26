@@ -1,0 +1,70 @@
+<!-- 
+  MAP-FIRST LAYOUT (Z-Layered Architecture)
+  Layer 0: Map (Full Screen)
+  Layer 10: Controls (Search/Filter)
+  Layer 20: Carousel (Bottom Interaction)
+-->
+<div
+  class="relative w-full h-[100dvh] overflow-hidden bg-black text-white selection:bg-brand-primary selection:text-black">
+
+  <!-- LAYER 0: THE MAP (Base) -->
+  <div class="absolute inset-0 z-0">
+    <app-cars-map [cars]="mapLocations()" [selectedCarId]="selectedCarId()" (markerClick)="onMarkerClick($any($event))"
+      class="w-full h-full block" />
+  </div>
+
+  <!-- LAYER 10: TOP BAR (Controls) -->
+  <header class="absolute top-0 inset-x-0 z-10 p-4 pt-safe-top pointer-events-none">
+    <div
+      class="pointer-events-auto bg-black/80 backdrop-blur-xl border border-white/10 rounded-full px-5 py-3 shadow-premium-lg flex items-center justify-between max-w-4xl mx-auto">
+      <!-- Logo / Brand -->
+      <div class="flex items-center gap-3">
+        <span class="text-brand-primary font-black tracking-tighter text-lg">AutoRentar</span>
+        <div class="h-4 w-px bg-white/20"></div>
+        
+        <!-- Animated Car Count Badge -->
+        @if (mapLocations().length > 0) {
+          <div class="flex items-center gap-1.5 bg-brand-primary/10 border border-brand-primary/20 px-2.5 py-1 rounded-full">
+            <div class="w-2 h-2 bg-brand-primary rounded-full animate-pulse"></div>
+            <span class="text-xs font-bold text-brand-primary tabular-nums">{{ mapLocations().length }}</span>
+            <span class="text-[10px] text-white/50 hidden sm:inline">autos</span>
+          </div>
+        } @else if (loading()) {
+          <div class="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full">
+            <div class="w-2 h-2 bg-white/30 rounded-full animate-pulse"></div>
+            <span class="text-xs text-white/40">Cargando...</span>
+          </div>
+        }
+      </div>
+
+      <!-- Search Trigger -->
+      <button class="flex items-center gap-3 text-sm text-white/80 hover:text-white transition-colors group">
+        <span class="hidden sm:inline">Buenos Aires, 12-15 Ene</span>
+        <div
+          class="bg-brand-primary/10 text-brand-primary p-2 rounded-full group-hover:bg-brand-primary group-hover:text-black transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <!-- LAYER 20: BOTTOM CAROUSEL (Mobile & Desktop Unified) -->
+  <div
+    class="absolute bottom-0 inset-x-0 z-20 pb-safe-bottom pt-20 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none">
+    <app-car-carousel [cars]="mapLocations()" [selectedCarId]="selectedCarId()" [loading]="loading()">
+    </app-car-carousel>
+  </div>
+
+  <!-- BOOKING SHEET (Lazy Loaded) -->
+  @if (store.activeCarMapLocation()) {
+    <app-booking-sheet 
+      [car]="store.activeCarMapLocation()!" 
+      (close)="onMarkerClick(null)"
+      (confirm)="onBookingConfirm()">
+    </app-booking-sheet>
+  }
+</div>

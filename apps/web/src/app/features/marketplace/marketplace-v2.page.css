@@ -7,7 +7,7 @@
    =========================================== */
 :host {
   /* Colors - Brand (Verde Neón - Synced with colors.ts accent.neon) */
-  --color-primary: 0 217 95; /* #00D95F - Verde Neón */
+  --color-primary: 0 217 95; /* #39FF14 - Verde Neón */
   --color-primary-light: 0 197 83; /* #00C553 - Hover */
   --color-primary-dark: 0 176 72; /* #00B048 - Pressed */
 
@@ -790,7 +790,7 @@
   border-radius: 50%;
 }
 
-.badge-status.success::before { background: #00D95F; }
+.badge-status.success::before { background: #39FF14; }
 .badge-status.warning::before { background: #F59E0B; }
 .badge-status.error::before { background: #EF4444; }
 .badge-status.info::before { background: #3B82F6; }
@@ -2395,7 +2395,7 @@
 .pagination-btn {
   @apply flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm
          bg-white border border-gray-200/80 text-gray-800
-         hover:bg-gray-50 hover:border-[#00D95F] hover:text-[#00D95F]
+         hover:bg-gray-50 hover:border-[#39FF14] hover:text-[#39FF14]
          active:scale-[0.98]
          transition-all duration-200;
   min-height: 44px;
@@ -2427,7 +2427,7 @@
 }
 
 .results-counter strong {
-  @apply text-[#00D95F] font-semibold;
+  @apply text-[#39FF14] font-semibold;
 }
 
 /* ===========================================

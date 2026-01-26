@@ -147,6 +147,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
                   type="file"
                   hidden
                   accept="image/*"
+                  [attr.capture]="getCaptureMode()"
                   (change)="onFileSelected($event, 'front')"
                 />
               </div>
@@ -179,6 +180,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
                   type="file"
                   hidden
                   accept="image/*"
+                  [attr.capture]="getCaptureMode()"
                   (change)="onFileSelected($event, 'back')"
                 />
               </div>
@@ -211,6 +213,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
                 type="file"
                 hidden
                 accept="image/*"
+                [attr.capture]="getCaptureMode()"
                 (change)="onFileSelected($event, 'single')"
               />
             </div>
@@ -292,6 +295,12 @@ export class DocumentUploadModalComponent {
 
   get config(): DocumentConfig | null {
     return DOCUMENT_CONFIGS[this.docType] || null;
+  }
+
+  getCaptureMode(): string | null {
+    if (!this.config) return null;
+    if (this.config.id === 'selfie') return 'user';
+    return 'environment';
   }
 
   onBackdropClick(event: Event) {

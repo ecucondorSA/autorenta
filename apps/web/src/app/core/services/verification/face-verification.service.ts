@@ -48,6 +48,9 @@ export class KycBlockedError extends Error {
   }
 }
 
+const IDENTITY_BUCKETS = ['identity-documents', 'documents'] as const;
+type IdentityBucket = (typeof IDENTITY_BUCKETS)[number];
+
 /**
  * Face Verification Status
  */
@@ -86,6 +89,7 @@ export class FaceVerificationService {
   private readonly supabase: SupabaseClient = injectSupabase();
   private readonly DOC_VERIFIER_URL =
     environment.docVerifierUrl || 'https://doc-verifier.autorentar.workers.dev';
+  private readonly identityBuckets = IDENTITY_BUCKETS;
 
   // Reactive state
   readonly status = signal<FaceVerificationStatus>({
@@ -202,9 +206,11 @@ export class FaceVerificationService {
   /**
    * Upload selfie video to storage
    * @param videoFile Video file (MP4/WebM, max 10MB, 3-10 seconds)
-   * @returns Storage URL of uploaded video
+   * @returns Storage path and bucket of uploaded video
    */
-  async uploadSelfieVideo(videoFile: File): Promise<string> {
+  async uploadSelfieVideo(
+    videoFile: File,
+  ): Promise<{ storagePath: string; bucket: IdentityBucket }> {
     this.loading.set(true);
     this['error'].set(null);
 
@@ -239,45 +245,9 @@ export class FaceVerificationService {
       const fileName = `selfie_video_${timestamp}.${extension}`;
       const filePath = `${user['id']}/${fileName}`;
 
-      // Upload to identity-documents bucket (or documents bucket if identity-documents doesn't exist)
-      const bucketName = 'identity-documents'; // Fallback to 'documents' if needed
+      const { bucket } = await this.uploadToIdentityBucket(filePath, videoFile);
 
-      const { error } = await this.supabase.storage.from(bucketName).upload(filePath, videoFile, {
-        cacheControl: '3600',
-        upsert: false,
-      });
-
-      if (error) {
-        // Fallback to documents bucket
-        if (error['message'].includes('not found')) {
-          const { error: fallbackError } = await this.supabase.storage
-            .from('documents')
-            .upload(filePath, videoFile, {
-              cacheControl: '3600',
-              upsert: false,
-            });
-
-          if (fallbackError) {
-            throw fallbackError;
-          }
-
-          // Get public URL
-          const {
-            data: { publicUrl },
-          } = this.supabase.storage.from('documents').getPublicUrl(filePath);
-
-          return publicUrl;
-        }
-
-        throw error;
-      }
-
-      // Get public URL
-      const {
-        data: { publicUrl },
-      } = this.supabase.storage.from(bucketName).getPublicUrl(filePath);
-
-      return publicUrl;
+      return { storagePath: filePath, bucket };
     } catch (err) {
       const message = err instanceof Error ? err['message'] : 'No pudimos subir el video';
       this['error'].set(message);
@@ -289,12 +259,16 @@ export class FaceVerificationService {
 
   /**
    * Verify face by comparing selfie video with ID document photo
-   * @param videoUrl URL of uploaded selfie video
-   * @param documentUrl URL of ID document photo (from Level 2)
+   * @param videoPath Storage path of uploaded selfie video
+   * @param documentUrl URL or storage path of ID document photo (from Level 2)
    * @returns Verification result with face match score
    * @throws KycBlockedError if user is blocked
    */
-  async verifyFace(videoUrl: string, documentUrl: string): Promise<FaceVerificationResult> {
+  async verifyFace(
+    videoPath: string,
+    documentUrl: string,
+    bucketHint?: IdentityBucket,
+  ): Promise<FaceVerificationResult> {
     this.processing.set(true);
     this['error'].set(null);
 
@@ -303,7 +277,8 @@ export class FaceVerificationService {
       const blockStatus = await this.isUserKycBlocked();
       if (blockStatus.blocked) {
         throw new KycBlockedError(
-          blockStatus.reason || 'Tu cuenta está bloqueada para verificación facial. Contacta a soporte.',
+          blockStatus.reason ||
+            'Tu cuenta está bloqueada para verificación facial. Contacta a soporte.',
           blockStatus.attempts,
         );
       }
@@ -316,6 +291,12 @@ export class FaceVerificationService {
         throw new Error('Usuario no autenticado');
       }
 
+      // Build signed URLs for private bucket access
+      const signedVideoUrl = await this.createSignedIdentityUrl(videoPath, bucketHint);
+      const signedDocumentUrl = documentUrl.startsWith('http')
+        ? documentUrl
+        : await this.createSignedIdentityUrl(documentUrl);
+
       // Call Cloudflare Worker for face verification
       const response = await fetch(`${this.DOC_VERIFIER_URL}/verify-face`, {
         method: 'POST',
@@ -323,8 +304,8 @@ export class FaceVerificationService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          video_url: videoUrl,
-          document_url: documentUrl,
+          video_url: signedVideoUrl,
+          document_url: signedDocumentUrl,
           user_id: user['id'],
         }),
       });
@@ -348,20 +329,18 @@ export class FaceVerificationService {
 
       if (!result.success) {
         // Include remaining attempts in error message
-        const attemptsInfo = result.attempts_remaining !== undefined
-          ? ` (${result.attempts_remaining} intentos restantes)`
-          : '';
+        const attemptsInfo =
+          result.attempts_remaining !== undefined
+            ? ` (${result.attempts_remaining} intentos restantes)`
+            : '';
         throw new Error((result['error'] || 'Verificación facial fallida') + attemptsInfo);
       }
 
       // Update user_identity_levels with results
-      await this.updateIdentityLevelWithResults(user['id'], videoUrl, result);
+      await this.updateIdentityLevelWithResults(user['id'], videoPath, result);
 
       // Refresh status (including block status)
-      await Promise.all([
-        this.checkFaceVerificationStatus(),
-        this.isUserKycBlocked(),
-      ]);
+      await Promise.all([this.checkFaceVerificationStatus(), this.isUserKycBlocked()]);
 
       return result;
     } catch (err) {
@@ -402,11 +381,19 @@ export class FaceVerificationService {
    * Validate video file before upload
    */
   private validateVideoFile(file: File): void {
-    // Check file type
-    const validTypes = ['video/mp4', 'video/webm', 'video/quicktime'];
-    if (!validTypes.includes(file.type)) {
+    // Check file type (Very relaxed - accept any video format)
+    const type = file.type.toLowerCase();
+    const isValid =
+      type.startsWith('video/') ||
+      type.includes('matroska') ||
+      type.includes('quicktime') ||
+      type.includes('mp4') ||
+      type.includes('webm');
+
+    if (!isValid) {
+      console.warn('Rejected video type:', type);
       throw new Error(
-        'Formato de video no válido. Por favor usa MP4, WebM o MOV (máx 10MB, 3-10 segundos)',
+        `Formato de video no válido (${type}). Aceptamos cualquier formato de video.`,
       );
     }
 
@@ -428,11 +415,11 @@ export class FaceVerificationService {
    */
   private async updateIdentityLevelWithResults(
     userId: string,
-    videoUrl: string,
+    videoPath: string,
     result: FaceVerificationResult,
   ): Promise<void> {
     const updates: Record<string, unknown> = {
-      selfie_url: videoUrl,
+      selfie_url: videoPath,
       face_match_score: result.face_match_score,
       liveness_score: result.liveness_score ?? null,
       updated_at: new Date().toISOString(),
@@ -482,20 +469,9 @@ export class FaceVerificationService {
         return; // Nothing to delete
       }
 
-      // Extract storage path from URL
-      const url = new URL(levelData.selfie_url);
-      const pathParts = url.pathname.split('/identity-documents/');
-      const storagePath = pathParts.length > 1 ? pathParts[1] : null;
-
+      const storagePath = this.extractStoragePath(levelData.selfie_url);
       if (storagePath) {
-        // Try identity-documents bucket first
-        await this.supabase.storage.from('identity-documents').remove([storagePath]);
-
-        // Fallback to documents bucket
-        const pathPartsDocuments = url.pathname.split('/documents/');
-        if (pathPartsDocuments.length > 1) {
-          await this.supabase.storage.from('documents').remove([pathPartsDocuments[1]]);
-        }
+        await this.removeFromIdentityBuckets(storagePath);
       }
 
       // Clear verification data
@@ -519,6 +495,97 @@ export class FaceVerificationService {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  private async uploadToIdentityBucket(
+    filePath: string,
+    file: File,
+  ): Promise<{ bucket: IdentityBucket }> {
+    let lastError: unknown;
+
+    for (const bucket of this.identityBuckets) {
+      const { error } = await this.supabase.storage.from(bucket).upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+
+      if (!error) {
+        if (bucket !== this.identityBuckets[0]) {
+          console.warn(`[FaceVerificationService] Falling back to bucket ${bucket}`);
+        }
+        return { bucket };
+      }
+
+      lastError = error;
+
+      if (!this.isMissingBucketError(error)) {
+        break;
+      }
+    }
+
+    throw lastError ?? new Error('No pudimos subir el video');
+  }
+
+  private async createSignedIdentityUrl(
+    storagePath: string,
+    bucketHint?: IdentityBucket,
+    expiresInSeconds: number = 60 * 15,
+  ): Promise<string> {
+    const buckets = bucketHint
+      ? [bucketHint, ...this.identityBuckets.filter((b) => b !== bucketHint)]
+      : [...this.identityBuckets];
+
+    let lastError: unknown;
+    for (const bucket of buckets) {
+      const { data, error } = await this.supabase.storage
+        .from(bucket)
+        .createSignedUrl(storagePath, expiresInSeconds);
+
+      if (data?.signedUrl && !error) {
+        return data.signedUrl;
+      }
+
+      lastError = error;
+      if (!this.isMissingBucketError(error)) {
+        break;
+      }
+    }
+
+    throw lastError ?? new Error('No pudimos generar URL firmada');
+  }
+
+  private async removeFromIdentityBuckets(storagePath: string): Promise<void> {
+    for (const bucket of this.identityBuckets) {
+      const { error } = await this.supabase.storage.from(bucket).remove([storagePath]);
+      if (!error) {
+        return;
+      }
+    }
+  }
+
+  private extractStoragePath(value: string): string | null {
+    if (!value) return null;
+
+    try {
+      const url = new URL(value);
+      const identityIndex = url.pathname.indexOf('/identity-documents/');
+      if (identityIndex >= 0) {
+        return url.pathname.slice(identityIndex + '/identity-documents/'.length);
+      }
+      const documentsIndex = url.pathname.indexOf('/documents/');
+      if (documentsIndex >= 0) {
+        return url.pathname.slice(documentsIndex + '/documents/'.length);
+      }
+      return null;
+    } catch {
+      return value;
+    }
+  }
+
+  private isMissingBucketError(error: unknown): boolean {
+    const err = error as { message?: string; status?: number; error?: string };
+    const message = `${err?.message ?? ''} ${err?.error ?? ''}`.toLowerCase();
+    return (message.includes('bucket') && message.includes('not found')) || err?.status === 404;
   }
 
   /**

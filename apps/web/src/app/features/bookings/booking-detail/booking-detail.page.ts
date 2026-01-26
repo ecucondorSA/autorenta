@@ -12,6 +12,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Booking, BookingExtensionRequest, BookingStatus, TrafficInfraction } from '@core/models';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { CLAIM_STATUS_LABELS, InsuranceClaim } from '@core/models/insurance.model';
+import { BookingTimelineComponent } from "./booking-timeline.component";
 import { AuthService } from '@core/services/auth/auth.service';
 import {
   BookingConfirmationService,
@@ -79,21 +80,17 @@ import { AiChecklistPanelComponent } from '../../../shared/components/ai-checkli
 import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
 import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
-import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
 import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
 import { BookingInsuranceSummaryComponent } from '../../../shared/components/booking-insurance-summary/booking-insurance-summary.component';
 import { BookingOpsTimelineComponent } from '../../../shared/components/booking-ops-timeline/booking-ops-timeline.component';
 import { BookingPricingBreakdownComponent } from '../../../shared/components/booking-pricing-breakdown/booking-pricing-breakdown.component';
 import { BookingTrackingComponent } from '../../../shared/components/booking-tracking/booking-tracking.component';
 import { DamageComparisonComponent } from '../../../shared/components/damage-comparison/damage-comparison.component';
-import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 import { DisputeFormComponent } from '../../../shared/components/dispute-form/dispute-form.component';
 import { DisputesListComponent } from '../../../shared/components/disputes-list/disputes-list.component';
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
-import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
 import { RefundRequestComponent } from '../../../shared/components/refund-request/refund-request.component';
 import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
-import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
 import { ReportOwnerNoShowComponent } from '../../../shared/components/report-owner-no-show/report-owner-no-show.component';
 import { ReportRenterNoShowComponent } from '../../../shared/components/report-renter-no-show/report-renter-no-show.component';
 import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component';
@@ -160,23 +157,19 @@ const DISPUTE_STATUSES = new Set<BookingStatus>([
   selector: 'app-booking-detail',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
+  imports: [BookingTimelineComponent, 
     CommonModule,
     RouterLink,
     IonIcon,
-    OwnerConfirmationComponent,
-    RenterConfirmationComponent,
     BookingChatComponent,
     TranslateModule,
     BookingStatusComponent,
     ReviewManagementComponent,
-    DepositStatusBadgeComponent,
     DisputeFormComponent,
     DisputesListComponent,
     RefundRequestComponent,
     BookingContractComponent,
     RefundStatusComponent,
-    BookingConfirmationTimelineComponent,
     BookingOpsTimelineComponent,
     BookingTrackingComponent,
     BookingPricingBreakdownComponent,

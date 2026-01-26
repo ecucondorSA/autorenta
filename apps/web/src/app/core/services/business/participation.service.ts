@@ -78,7 +78,7 @@ export class ParticipationService {
       id: 'pool-2026-01',
       period: '2026-01',
       total_revenue_usd: 150000,
-      platform_fee_percentage: 25,
+      platform_fee_percentage: 15,
       platform_revenue_usd: 37500,
       distributable_revenue_usd: 112500,
       total_network_points: 350000,

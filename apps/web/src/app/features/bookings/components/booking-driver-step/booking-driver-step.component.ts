@@ -11,7 +11,7 @@ import {
 
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
+import { BookingWizardData } from '@core/models/booking-wizard.model';
 
 @Component({
   selector: 'app-booking-driver-step',

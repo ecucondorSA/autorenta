@@ -5,6 +5,7 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import type { Database } from '@core/types/database.types';
+import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 
 export interface DetailedVerificationStatus {
   status: 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO';
@@ -33,6 +34,9 @@ const VALID_DOC_TYPES = [
 ] as const;
 
 type ValidDocType = (typeof VALID_DOC_TYPES)[number];
+
+const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB (mobile-friendly)
+const IDENTITY_BUCKETS = ['identity-documents', 'documents'] as const;
 
 /**
  * Valida que el tipo de documento sea uno de los permitidos.
@@ -170,6 +174,15 @@ export class VerificationService implements OnDestroy {
     // SECURITY FIX #1: Validar docType contra whitelist antes de usar
     validateDocType(docType);
 
+    const validation = validateFile(file, {
+      maxSizeBytes: MAX_UPLOAD_BYTES,
+      allowedMimeTypes: DEFAULT_IMAGE_MIME_TYPES,
+    });
+
+    if (!validation.valid) {
+      throw new Error(validation.error || 'Archivo no válido');
+    }
+
     const {
       data: { user },
     } = await this.supabase.auth.getUser();
@@ -178,12 +191,8 @@ export class VerificationService implements OnDestroy {
     const fileExt = file.name.split('.').pop();
     const filePath = `${user.id}/${docType}_${Date.now()}.${fileExt}`;
 
-    // Subir al bucket 'verification-docs' (asumimos que existe y es privado)
-    const { error: uploadError } = await this.supabase.storage
-      .from('verification-docs')
-      .upload(filePath, file);
-
-    if (uploadError) throw uploadError;
+    // Upload to identity bucket with fallback for legacy environments
+    const { bucket } = await this.uploadToIdentityBucket(filePath, file);
 
     // Create or update user_documents record using RPC
     // (workaround: PostgREST no expone la tabla directamente)
@@ -200,7 +209,7 @@ export class VerificationService implements OnDestroy {
 
       // Intentar eliminar el archivo subido para mantener consistencia
       try {
-        await this.supabase.storage.from('verification-docs').remove([filePath]);
+        await this.supabase.storage.from(bucket).remove([filePath]);
         this.logger.debug('Rollback successful: file removed from storage');
       } catch (rollbackError) {
         // Log pero no fallar - el archivo huérfano se puede limpiar después
@@ -373,6 +382,41 @@ export class VerificationService implements OnDestroy {
   }
 
   /**
+   * Uploads to identity bucket with fallback to legacy bucket.
+   */
+  private async uploadToIdentityBucket(
+    filePath: string,
+    file: File,
+  ): Promise<{ bucket: (typeof IDENTITY_BUCKETS)[number]; path: string }> {
+    let lastError: unknown;
+
+    for (const bucket of IDENTITY_BUCKETS) {
+      const { error } = await this.supabase.storage.from(bucket).upload(filePath, file);
+      if (!error) {
+        if (bucket !== IDENTITY_BUCKETS[0]) {
+          this.logger.warn(`[VerificationService] Falling back to bucket ${bucket}`);
+        }
+        return { bucket, path: filePath };
+      }
+
+      lastError = error;
+
+      // Only fallback when bucket is missing
+      if (!this.isMissingBucketError(error)) {
+        break;
+      }
+    }
+
+    throw lastError ?? new Error('Error al subir el documento');
+  }
+
+  private isMissingBucketError(error: unknown): boolean {
+    const err = error as { message?: string; status?: number; error?: string };
+    const message = `${err?.message ?? ''} ${err?.error ?? ''}`.toLowerCase();
+    return (message.includes('bucket') && message.includes('not found')) || err?.status === 404;
+  }
+
+  /**
    * Verifica un documento usando OCR (Google Cloud Vision).
    * Llama a la edge function verify-document para procesar la imagen.
    *
@@ -418,7 +462,31 @@ export class VerificationService implements OnDestroy {
           },
         });
 
-        if (error) throw error;
+        if (error) {
+          console.error('[VerifyDocument] Edge Function Error:', error);
+
+          // Read response body if available
+          if (error instanceof Error && 'context' in error) {
+            const context = (error as { context: unknown }).context;
+            console.error('[VerifyDocument] Error Context:', context);
+
+            if (context instanceof Response && !context.bodyUsed) {
+              try {
+                const responseText = await context.clone().text();
+                console.error('[VerifyDocument] Response Body:', responseText);
+                try {
+                  const jsonBody = JSON.parse(responseText);
+                  console.error('[VerifyDocument] Parsed Error:', jsonBody);
+                } catch {
+                  // Not JSON, already logged as text
+                }
+              } catch (e) {
+                console.error('[VerifyDocument] Could not read response body:', e);
+              }
+            }
+          }
+          throw error;
+        }
         return data;
       },
       { maxAttempts: 3, baseDelayMs: 200, operationName: 'verifyDocumentOcr' },
@@ -462,6 +530,15 @@ export class VerificationService implements OnDestroy {
       warnings: string[];
     } | null;
   }> {
+    const validation = validateFile(file, {
+      maxSizeBytes: MAX_UPLOAD_BYTES,
+      allowedMimeTypes: DEFAULT_IMAGE_MIME_TYPES,
+    });
+
+    if (!validation.valid) {
+      throw new Error(validation.error || 'Archivo no válido');
+    }
+
     // Determinar tipo de documento y lado
     const documentType = docType.includes('license') ? 'license' : 'dni';
     const side = docType.includes('back') ? 'back' : 'front';
@@ -469,12 +546,12 @@ export class VerificationService implements OnDestroy {
     // 1. Convertir archivo a base64 para OCR (antes de subir para mejor UX)
     const base64 = await this.fileToBase64(file);
 
-    // 2. Subir al storage (en paralelo con OCR)
-    const uploadPromise = this.uploadDocument(file, docType);
+    // 2. Subir al storage (persistir primero para que verify-document pueda actualizar user_documents)
+    const storagePath = await this.uploadDocument(file, docType);
 
     // 3. Llamar a verify-document para OCR con base64
     let ocrResult = null;
-    
+
     // Only run OCR for supported countries to avoid backend errors
     if (['AR', 'EC'].includes(country)) {
       try {
@@ -491,9 +568,6 @@ export class VerificationService implements OnDestroy {
     } else {
       this.logger.info(`Skipping OCR for unsupported country: ${country}`);
     }
-
-    // 4. Esperar a que termine el upload
-    const storagePath = await uploadPromise;
 
     return { storagePath, ocrResult };
   }

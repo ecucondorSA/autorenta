@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { VerificationService } from '@core/services/verification/verification.service';
 import { DocumentTypeConfig, getDocumentsByCategory } from '@core/config/document-types.config';
 import { ProfileStore } from '@core/stores/profile.store';
@@ -106,7 +105,7 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
   selector: 'app-verification',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [CommonModule, RouterLink],
   template: `
     <div class="verification-page bg-surface-base min-h-screen transition-colors duration-300">
       <section

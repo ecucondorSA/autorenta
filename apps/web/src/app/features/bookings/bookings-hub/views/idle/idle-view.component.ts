@@ -51,7 +51,7 @@ import { MyBookingsPage } from '../../../my-bookings/my-bookings.page';
         <!-- Hero CTA Card -->
         <section
           class="glass-card-elevated p-6 rounded-2xl bg-gradient-to-br from-primary-500/10 to-primary-600/5"
-          hoverLift
+          appHoverLift
         >
           <div class="flex items-center gap-4">
             <div class="text-4xl">🚗</div>
@@ -67,7 +67,7 @@ import { MyBookingsPage } from '../../../my-bookings/my-bookings.page';
           <a
             routerLink="/marketplace"
             class="mt-4 w-full btn-primary flex items-center justify-center gap-2 py-3 rounded-xl font-medium"
-            pressScale
+            appPressScale
           >
             <app-icon name="search" class="w-5 h-5" />
             <span>Buscar Autos</span>
@@ -104,7 +104,7 @@ import { MyBookingsPage } from '../../../my-bookings/my-bookings.page';
             type="button"
             (click)="toggleHistory()"
             class="w-full flex items-center justify-between p-4 glass-card rounded-xl"
-            pressScale
+            appPressScale
           >
             <span class="font-medium text-text-primary flex items-center gap-2">
               <app-icon name="history" class="w-5 h-5 text-text-secondary" />

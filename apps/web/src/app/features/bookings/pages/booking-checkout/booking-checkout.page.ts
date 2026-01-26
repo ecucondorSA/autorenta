@@ -13,6 +13,7 @@ import { PaymentProvider } from '@core/interfaces/payment-gateway.interface';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { DriverProfileService } from '@core/services/auth/driver-profile.service';
 import { PaymentGatewayFactory } from '@core/services/payments/payment-gateway.factory';
+import { WalletService } from '@core/services/payments/wallet.service';
 import { normalizeRecordToUsd } from '@core/utils/currency.utils';
 // UI 2026 Directives
 import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
@@ -63,6 +64,7 @@ export class BookingCheckoutPage implements OnInit {
   private readonly router = inject(Router);
   private readonly gatewayFactory = inject(PaymentGatewayFactory);
   private readonly bookingsService = inject(BookingsService);
+  readonly walletService = inject(WalletService);
   readonly driverProfileService = inject(DriverProfileService);
 
   // Expose Math for template
@@ -159,6 +161,22 @@ export class BookingCheckoutPage implements OnInit {
     return this.selectedProvider() === 'paypal';
   });
 
+  /**
+   * ¿El proveedor seleccionado es Wallet?
+   */
+  readonly isWallet = computed(() => {
+    return this.selectedProvider() === 'wallet';
+  });
+
+  /**
+   * ¿Tiene suficiente saldo en la wallet?
+   */
+  readonly hasSufficientBalance = computed(() => {
+    // Solo chequeamos si es wallet
+    if (!this.isWallet()) return true;
+    return this.walletService.availableBalance() >= this.amountInProviderCurrency();
+  });
+
   // ==================== DRIVER PROFILE COMPUTED ====================
 
   /**
@@ -214,8 +232,12 @@ export class BookingCheckoutPage implements OnInit {
     this.bookingId.set(id);
 
     try {
-      // Cargar booking y perfil de conductor en paralelo
-      await Promise.all([this.loadBooking(), this.driverProfileService.loadProfile()]);
+      // Cargar booking, perfil de conductor y balance de wallet en paralelo
+      await Promise.all([
+        this.loadBooking(),
+        this.driverProfileService.loadProfile(),
+        this.walletService.fetchBalance()
+      ]);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error cargando el booking');
     } finally {
@@ -254,6 +276,13 @@ export class BookingCheckoutPage implements OnInit {
     this.selectedProvider.set(event.provider);
     this.amountInProviderCurrency.set(event.amountInProviderCurrency);
     this.providerCurrency.set(event.providerCurrency);
+
+    // If wallet is selected, ensure we have the latest balance
+    if (event.provider === 'wallet') {
+      this.walletService.fetchBalance().catch(err =>
+        this.logger.warn('Error refreshing wallet balance on selection', err)
+      );
+    }
 
     // Limpiar preferencia previa de MercadoPago
     this.mercadoPagoPreferenceId.set('');
@@ -315,6 +344,44 @@ export class BookingCheckoutPage implements OnInit {
     console.error('PayPal payment error:', error);
     this.error.set(`Error procesando pago con PayPal: ${error.message}`);
     this.isProcessingPayment.set(false);
+  }
+
+  /**
+   * Maneja el pago con Wallet (AutoRenta Credits)
+   */
+  async handleWalletPayment(): Promise<void> {
+    if (!this.isPaymentButtonEnabled()) return;
+    if (!this.hasSufficientBalance()) {
+      this.error.set('No tienes suficiente saldo disponible en tu wallet.');
+      return;
+    }
+
+    this.isProcessingPayment.set(true);
+    this.error.set('');
+
+    try {
+      // 1. Lock funds
+      await this.walletService.lockFunds(
+        this.bookingId(),
+        this.amountInProviderCurrency(),
+        `Pago de reserva #${this.bookingId()}`
+      ).toPromise();
+
+      // 2. Redirect to confirmation (like PayPal)
+      // Since it's instant, we can simulate a "transaction" ID or use the booking ID
+      this.router.navigate(['/bookings', this.bookingId(), 'confirmation'], {
+        queryParams: {
+          provider: 'wallet',
+          status: 'approved'
+        },
+      });
+
+    } catch (err) {
+      this.error.set(
+        err instanceof Error ? err.message : 'Error procesando el pago con Wallet'
+      );
+      this.isProcessingPayment.set(false);
+    }
   }
 
   /**

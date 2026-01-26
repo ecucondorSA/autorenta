@@ -1,0 +1,200 @@
+01-24 22:36:11.149   673 18646 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:11.150   673 18646 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:11.150   673 18646 I resolv  : doQuery: rcode=0, ancount=0, return value=-111
+01-24 22:36:11.180 18589 18589 E ion     : ioctl c0044901 failed with code -1: Invalid argument
+01-24 22:36:11.181 18589 18589 I DMABUFHEAPS: Using : Legacy ion heaps
+01-24 22:36:11.181 25703 17928 I stagram.androi: Explicit concurrent copying GC freed 1754KB AllocSpace bytes, 36(720KB) LOS objects, 5% free, 145MB/153MB, paused 989us,454us total 1.678s
+01-24 22:36:11.353 18189 18189 W Capacitor/Console: File: https://localhost/ - Line 0 - Msg: The resource https://localhost/assets/fonts/plus-jakarta-sans/plus-jakarta-sans-variable.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+01-24 22:36:11.354 18189 18189 W Capacitor/Console: File: https://localhost/ - Line 0 - Msg: The resource https://localhost/assets/fonts/clash-display/clash-display-variable.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+01-24 22:36:11.356 18189 18189 W Capacitor/Console: File: https://localhost/ - Line 0 - Msg: The resource https://localhost/assets/fonts/inter-var.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+01-24 22:36:11.468   698   808 I libPerfCtl: xgfGetFPS pid:1768 fps:-1
+01-24 22:36:11.469   698   808 I libPerfCtl: xgfGetFPS pid:2071 fps:-1
+01-24 22:36:11.469   698   808 I libPerfCtl: xgfGetFPS pid:18189 fps:-1
+01-24 22:36:11.682   693   693 I android.hardware.thermal@2.0-service.mtk: fill_temperatures filterType1 name: SKIN type: SKIN throttlingStatus: NONE value: 38 ret_temps size 0
+01-24 22:36:11.864   689 13493 W C2BqBuffer: last successful dequeue was 5829529898 us ago, 271539 consecutive failures
+01-24 22:36:12.469   698   808 I libPerfCtl: xgfGetFPS pid:1768 fps:-1
+01-24 22:36:12.469   698   808 I libPerfCtl: xgfGetFPS pid:2071 fps:-1
+01-24 22:36:12.469   698   808 I libPerfCtl: xgfGetFPS pid:18189 fps:-1
+01-24 22:36:12.501  1471  1471 I MWN     : onSignalStrengthsChanged...
+01-24 22:36:12.503  1471  1471 I MWN     : network type = 1
+01-24 22:36:12.503  1471  1471 I MWN     : Write 0 to node. type=Wi-Fi mSimExist=true mFlightMode=false
+01-24 22:36:12.504  1471  1471 I MWN     : write the value:0 to node successfully.
+01-24 22:36:12.506  2049  2049 I TranPhoneSwitcher: mDefaultsign:3subid :2
+01-24 22:36:12.545  1768  1972 I NetworkController.MobileSignalController(2): isImsOverWfc = false, mDisableWfc = false, mHideWfcInCsCall = false, isImsOverVoice = false, isLteNetWork = true, mCurrentState.imsRegState=1, isNrNetWork = false, isVoNrEnabledByUser = true, isEnableSettingVo5G = false, showVo5gForVonr = false, showVo4gForVolte = false, mCurrentState.imsRegState=1
+01-24 22:36:12.683   693   693 I android.hardware.thermal@2.0-service.mtk: fill_temperatures filterType1 name: SKIN type: SKIN throttlingStatus: NONE value: 38 ret_temps size 0
+01-24 22:36:12.889  2776  2834 E pnpmgr  : do_monitor check blkio cgroup policy failed
+01-24 22:36:12.886  2776  2776 W pnpmgr  : type=1400 audit(0.0:209718): avc: denied { read } for name="blkio" dev="tmpfs" ino=8563 scontext=u:r:pnpmgr:s0 tcontext=u:object_r:device:s0 tclass=dir permissive=0
+01-24 22:36:12.891  1471  1502 W ProcessStats: Tracking association SourceState{fe78be4 system/1000 BTopFgs #708629} whose proc state 2 is better than process ProcessState{88e384d com.transsion.mol/1000 pkg=com.transsion.mol} proc state 3 (49 skipped)
+01-24 22:36:12.925  1716  1716 I WifiHAL : Get link layer stats
+01-24 22:36:12.925  1716  1716 I WifiHAL : GetLinkStatsCommand::create
+01-24 22:36:12.926  1716  1716 I android.hardware.wifi@1.0-service-lazy: WifiCommand::requestResponse err=-14
+01-24 22:36:12.926  1716  1716 I WifiHAL : wifi_get_link_stats: result=-1
+01-24 22:36:12.927  1471  1633 E WifiVendorHal: getWifiLinkLayerStats_1_5_Internal(l.1191) failed {.code = ERROR_UNKNOWN, .description = unknown}
+01-24 22:36:13.265  2049  2049 I OtherSimPSListener: mOthersign:3subid :17
+01-24 22:36:13.308  1768  1972 I NetworkController.MobileSignalController(17): isImsOverWfc = false, mDisableWfc = false, mHideWfcInCsCall = false, isImsOverVoice = false, isLteNetWork = true, mCurrentState.imsRegState=1, isNrNetWork = false, isVoNrEnabledByUser = true, isEnableSettingVo5G = false, showVo5gForVonr = false, showVo4gForVolte = false, mCurrentState.imsRegState=1
+01-24 22:36:13.466   711   711 I BufferQueueProducer: [StatusBar#0](this:0xb400007dbda3b418,id:-1,api:0,p:-1,c:711) queueBuffer: fps=0.20 dur=5004.79 max=5004.79 min=5004.79
+01-24 22:36:13.469   698   808 I libPerfCtl: xgfGetFPS pid:1768 fps:-1
+01-24 22:36:13.469   698   808 I libPerfCtl: xgfGetFPS pid:2071 fps:-1
+01-24 22:36:13.469   698   808 I libPerfCtl: xgfGetFPS pid:18189 fps:-1
+01-24 22:36:13.474   687   872 I hwcomposer: [HWCDisplay] [Display_0 (type:1)] fps:5.002861,dur:3997.71,max:3675.38,min:13.37  
+01-24 22:36:13.679 25703 26106 E msys    : E[C 1]MCCLogErrorWithTraceOrQPL(280)=>131/1228/3561/-1
+01-24 22:36:13.679 25703 30250 E msys    : E[C 1]MCCLogErrorWithTraceOrQPL(280)=>294/1548/3493/1
+01-24 22:36:13.680 25703 26106 E msys    : E[C mem_periodic_task_manager]_MCCLogLegacy(125)=>[MCC] execute_callback/message_persistence_store_periodic_messages_backup/1
+01-24 22:36:13.680 25703 30250 E msys    : E[D WA]_WPTPersistenceStore(55)=>could not store periodic tasks to local storage: Error Domain=MCCPeriodicTasksPersistenceProviderImpl Code=-20020
+01-24 22:36:13.684   693   693 I android.hardware.thermal@2.0-service.mtk: fill_temperatures filterType1 name: SKIN type: SKIN throttlingStatus: NONE value: 38 ret_temps size 0
+01-24 22:36:13.983 25703 11661 W soft_error.cpp: [pando::graphql::PandoGraphQLRequestHybrid::assertValid] : Using a PandoGraphQLRequest after it has been consumed. Query name is IGDirectGetPresenceQuery
+01-24 22:36:14.291   511 18153 I keystore2: keystore2::watchdog: Watchdog thread idle -> terminating. Have a great day.
+01-24 22:36:14.470   698   808 I libPerfCtl: xgfGetFPS pid:1768 fps:-1
+01-24 22:36:14.470   698   808 I libPerfCtl: xgfGetFPS pid:2071 fps:-1
+01-24 22:36:14.470   698   808 I libPerfCtl: xgfGetFPS pid:18189 fps:-1
+01-24 22:36:14.687   693   693 I android.hardware.thermal@2.0-service.mtk: fill_temperatures filterType1 name: SKIN type: SKIN throttlingStatus: NONE value: 38 ret_temps size 0
+01-24 22:36:14.812   943  1398 I   943  1398 [fsfp-tee-v1.4.0.9r36] : (3900) 'sf_get_device_state' state:0008
+01-24 22:36:14.812   943  1398 I   943  1398 [fsfp-hal-v1.4.0.9r36] : (1149) 'healthMonitoringThread' state:0008
+01-24 22:36:14.826   943  1398 I   943  1398 [fsfp-ic] : (4340) 'ic_check_otd' err = 0, int_msk: 0x00-0x08, otd_stat: 0x03-0x05, time: 5ms
+01-24 22:36:15.363   698   820 I mtkpower@impl: [powerd_req] TIMER_MSG_PERF_LOCK_TIMEOUT hdl:373277
+01-24 22:36:15.363   698   820 I libPowerHal: [perfLockRel] hdl:373277, idx:-1
+01-24 22:36:15.470   698   808 I libPerfCtl: xgfGetFPS pid:1768 fps:-1
+01-24 22:36:15.470   698   808 I libPerfCtl: xgfGetFPS pid:18189 fps:-1
+01-24 22:36:15.611  1160  1171 I [BIP]   :  [BIP NL] event newaddr match dev 0
+01-24 22:36:15.611  1160  1171 I [BIP]   :  [BIP NL] IPv6: *:*:*:*:*:*:*:*
+01-24 22:36:15.611  1160  1171 I [BIP]   :  [BIP NL] addr state is 3, ipv4=*.*.*.*, ipv6=*:*:*:*:*:*:*:*
+01-24 22:36:15.611  1160  1171 I [BIP]   :  [BIP NL] event newaddr match dev 0
+01-24 22:36:15.611  1160  1171 I [BIP]   :  [BIP NL] IPv6: *:*:*:*:*:*:*:*
+01-24 22:36:15.611  1160  1171 I [BIP]   :  [BIP NL] addr state is 3, ipv4=*.*.*.*, ipv6=*:*:*:*:*:*:*:*
+01-24 22:36:15.611  1160  1171 I [BIP]   :  [BIP NL] event newaddr match dev 0
+01-24 22:36:15.611  1160  1171 I [BIP]   :  [BIP NL] IPv6: *:*:*:*:*:*:*:*
+01-24 22:36:15.611  1160  1171 I [BIP]   :  [BIP NL] addr state is 3, ipv4=*.*.*.*, ipv6=*:*:*:*:*:*:*:*
+01-24 22:36:15.611  1160  1171 I [BIP]   :  [BIP NL] event newaddr match dev 0
+01-24 22:36:15.611  1160  1171 I [BIP]   :  [BIP NL] IPv6: *:*:*:*:*:*:*:*
+01-24 22:36:15.611  1160  1171 I [BIP]   :  [BIP NL] addr state is 3, ipv4=*.*.*.*, ipv6=*:*:*:*:*:*:*:*
+01-24 22:36:15.614  1990  2188 W AlarmManager: Unrecognized alarm listener com.android.networkstack.android.net.ip.IpClientLinkObserver$Dhcp6PdPreferredPrefixAlarmListener@e2e298c
+01-24 22:36:15.618  1990  2188 W AlarmManager: Unrecognized alarm listener com.android.networkstack.android.net.ip.IpClientLinkObserver$Dhcp6PdPreferredPrefixAlarmListener@e2e298c
+01-24 22:36:15.688   693   693 I android.hardware.thermal@2.0-service.mtk: fill_temperatures filterType1 name: SKIN type: SKIN throttlingStatus: NONE value: 37 ret_temps size 0
+01-24 22:36:15.945  1716  1716 I WifiHAL : Get link layer stats
+01-24 22:36:15.945  1716  1716 I WifiHAL : GetLinkStatsCommand::create
+01-24 22:36:15.946  1716  1716 I android.hardware.wifi@1.0-service-lazy: WifiCommand::requestResponse err=-14
+01-24 22:36:15.946  1716  1716 I WifiHAL : wifi_get_link_stats: result=-1
+01-24 22:36:15.947  1471  1633 E WifiVendorHal: getWifiLinkLayerStats_1_5_Internal(l.1191) failed {.code = ERROR_UNKNOWN, .description = unknown}
+01-24 22:36:16.053 18189 18189 W Capacitor/Console: File: https://localhost/ - Line 0 - Msg: The resource https://localhost/assets/fonts/plus-jakarta-sans/plus-jakarta-sans-variable.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+01-24 22:36:16.053 18189 18189 W Capacitor/Console: File: https://localhost/ - Line 0 - Msg: The resource https://localhost/assets/fonts/clash-display/clash-display-variable.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+01-24 22:36:16.054 18189 18189 W Capacitor/Console: File: https://localhost/ - Line 0 - Msg: The resource https://localhost/assets/fonts/inter-var.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+01-24 22:36:16.064   689 16977 W C2BqBuffer: last successful dequeue was 5833315999 us ago, 271807 consecutive failures
+01-24 22:36:16.119 17331 17499 W DGW     : W[operator():212] StreamGroupRetriableNetworkLayer[rpsignaling] unable to connect after 5 seconds
+01-24 22:36:16.322 17331 17517 I DGW     : I[notifyStreamGroupError:1768] StreamGroupTransport[rpsignaling] notify StreamGroup error: StreamGroupNetworkRequest request cancelled: max retries reached; last err (TransientError domain: MNSHTTPClient code: 3 detail: Host session was closed, num pending transactions: 1)
+01-24 22:36:16.326 17331 17517 W DGW     : W[setEnabled:198] StreamGroupPinger[rpsignaling]: setEnabled: 0
+01-24 22:36:16.330   673 18651 I resolv  : GetAddrInfoHandler::run: {113 113 113 983153 10235 0}
+01-24 22:36:16.332   673 18652 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+01-24 22:36:16.332   673 18655 I resolv  : res_nmkquery: (QUERY, IN, A)
+01-24 22:36:16.333   673 18652 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.334   673 18652 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.335   673 18652 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.335   673 18655 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.336   673 18652 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.336   673 18652 I resolv  : doQuery: rcode=0, ancount=0, return value=-111
+01-24 22:36:16.336   673 18655 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.336   673 18655 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.337   673 18655 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.337   673 18655 I resolv  : doQuery: rcode=0, ancount=0, return value=-111
+01-24 22:36:16.340   673 18657 I resolv  : res_nmkquery: (QUERY, IN, A)
+01-24 22:36:16.340   673 18656 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+01-24 22:36:16.341   673 18656 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.342   673 18656 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.343   673 18656 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.343   673 18657 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.344   673 18656 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.344   673 18656 I resolv  : doQuery: rcode=0, ancount=0, return value=-111
+01-24 22:36:16.344   673 18657 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.345   673 18657 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.345   673 18657 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.346   673 18657 I resolv  : doQuery: rcode=0, ancount=0, return value=-111
+01-24 22:36:16.352   673 18666 I resolv  : GetAddrInfoHandler::run: {113 113 113 983153 10235 0}
+01-24 22:36:16.353   673 18667 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+01-24 22:36:16.353   673 18667 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.354   673 18667 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.354   673 18667 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.354   673 18667 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.354   673 18667 I resolv  : doQuery: rcode=0, ancount=0, return value=-111
+01-24 22:36:16.355   673 18668 I resolv  : res_nmkquery: (QUERY, IN, A)
+01-24 22:36:16.359   673 18668 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.360   673 18668 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.361   673 18668 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.362   673 18668 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.362   673 18668 I resolv  : doQuery: rcode=0, ancount=0, return value=-111
+01-24 22:36:16.363   673 18669 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+01-24 22:36:16.363   673 18670 I resolv  : res_nmkquery: (QUERY, IN, A)
+01-24 22:36:16.364   673 18669 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.364   673 18669 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.365   673 18669 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.366   673 18669 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.366   673 18669 I resolv  : doQuery: rcode=0, ancount=0, return value=-111
+01-24 22:36:16.367   673 18670 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.368   673 18670 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.368   673 18670 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.369   673 18670 I resolv  : res_nsend: used send_dg 0 terrno: 1
+01-24 22:36:16.369   673 18670 I resolv  : doQuery: rcode=0, ancount=0, return value=-111
+01-24 22:36:16.470   698   808 I libPerfCtl: xgfGetFPS pid:1768 fps:-1
+01-24 22:36:16.470   698   808 I libPerfCtl: xgfGetFPS pid:18189 fps:-1
+01-24 22:36:16.628  2775  2780 D IOManager: wl = 85,mmc_q = 0,rt_time = 15754,wt_time = 349,pid = 27322,data = 29933568
+01-24 22:36:16.635   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.635   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.638 17331 17399 D CompatibilityChangeReporter: Compat change id reported: 150939131; UID 10235; state: ENABLED
+01-24 22:36:16.657   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.658   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.677   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.680   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.687   693   693 I android.hardware.thermal@2.0-service.mtk: fill_temperatures filterType1 name: SKIN type: SKIN throttlingStatus: NONE value: 37 ret_temps size 0
+01-24 22:36:16.698   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.700   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.719   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.722   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.740   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.743   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.760   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.764   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.781   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.784   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.802   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.805   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.823   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.826   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.843   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.847   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.864   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.864   689 13493 W C2BqBuffer: last successful dequeue was 5834529965 us ago, 271775 consecutive failures
+01-24 22:36:16.868   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.886   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.889   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.906   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.910   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.927   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.931   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.948   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.952   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.969   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.973   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.990   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:16.993   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.011   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.014   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.031   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.035   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.052   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.056   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.073   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.077   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.094   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.098   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.115   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.119   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.136   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.140   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.157   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.161   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.178   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.182   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.199   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.203   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.220   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.224   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.240   689 13493 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread
+01-24 22:36:17.244   689 16977 D C2MtkBufferManager: over 5000ms not request from VCodec but callback hooked, slow BM Cc fetch thread

@@ -51,7 +51,8 @@ export type EVDamageType =
   | 'hv_cable_damage';
 
 // Combined damage type
-export type DamageType = BaseDamageType | EVDamageType;
+// Combined damage type
+export type VehicleDamageType = BaseDamageType | EVDamageType;
 
 // EV-specific data for claims and damages
 export interface EVSpecificData {
@@ -224,7 +225,7 @@ export interface InsuranceClaim {
  * Daño Detectado en Inspección
  */
 export interface VehicleDamage {
-  type: DamageType;
+  type: VehicleDamageType;
   location: string; // ej: "puerta delantera izquierda"
   severity: 'minor' | 'moderate' | 'severe' | 'critical';
   photo_url?: string;
@@ -435,7 +436,7 @@ export const CLAIM_TYPE_DEFAULT_SEVERITY: Record<ClaimType, 'minor' | 'moderate'
 /**
  * Helpers para tipos de daño
  */
-export const DAMAGE_TYPE_LABELS: Record<DamageType, string> = {
+export const DAMAGE_TYPE_LABELS: Record<VehicleDamageType, string> = {
   // Base types
   scratch: 'Rayón',
   dent: 'Abolladura',
@@ -455,7 +456,7 @@ export const DAMAGE_TYPE_LABELS: Record<DamageType, string> = {
 /**
  * Indica si un tipo de daño requiere inspección EV especializada
  */
-export const DAMAGE_TYPE_REQUIRES_EV_INSPECTION: Record<DamageType, boolean> = {
+export const DAMAGE_TYPE_REQUIRES_EV_INSPECTION: Record<VehicleDamageType, boolean> = {
   scratch: false,
   dent: false,
   crack: false,
@@ -493,7 +494,7 @@ export function isEVClaimType(type: ClaimType): type is EVClaimType {
 /**
  * Verifica si un tipo de daño es específico de EV
  */
-export function isEVDamageType(type: DamageType): type is EVDamageType {
+export function isEVDamageType(type: VehicleDamageType): type is EVDamageType {
   return EV_DAMAGE_TYPES.includes(type as EVDamageType);
 }
 
@@ -508,7 +509,7 @@ export function getClaimTypesForVehicle(isEV: boolean): ClaimType[] {
 /**
  * Obtiene los tipos de daño aplicables según si es EV o no
  */
-export function getDamageTypesForVehicle(isEV: boolean): DamageType[] {
+export function getDamageTypesForVehicle(isEV: boolean): VehicleDamageType[] {
   const baseTypes: BaseDamageType[] = ['scratch', 'dent', 'crack', 'missing_part', 'other'];
   return isEV ? [...baseTypes, ...EV_DAMAGE_TYPES] : baseTypes;
 }

@@ -2,6 +2,21 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from '@core/guards/auth.guard';
 import { VerificationGuard } from '@core/guards/verification.guard';
 
+/**
+ * BOOKINGS ROUTES CONFIGURATION
+ * 
+ * Architecture Note (2026-01-24):
+ * This module is undergoing structural refactoring.
+ * 
+ * - Main Renter Entry: '' -> BookingsHubPage (Smart Container)
+ * - Main Owner Entry: 'owner' -> OwnerBookingsPage
+ * - Detail View: ':id' -> BookingDetailPage (Shared "God Component" - pending refactor)
+ * 
+ * Planned Structure:
+ * - /renter/* -> Renter specific flows
+ * - /owner/* -> Owner specific flows
+ * - /shared/* -> Shared views
+ */
 export const BOOKINGS_ROUTES: Routes = [
   {
     path: '',
@@ -11,12 +26,6 @@ export const BOOKINGS_ROUTES: Routes = [
     // Legacy route for direct access to my-bookings list
     path: 'list',
     loadComponent: () => import('./my-bookings/my-bookings.page').then((m) => m.MyBookingsPage),
-  },
-  {
-    path: 'wizard',
-    canMatch: [AuthGuard],
-    loadComponent: () =>
-      import('./pages/booking-wizard/booking-wizard.page').then((m) => m.BookingWizardPage),
   },
   {
     path: 'owner',
@@ -44,17 +53,17 @@ export const BOOKINGS_ROUTES: Routes = [
     canMatch: [AuthGuard],
   },
   {
-    path: 'detail-payment',
+    path: 'request',
     loadComponent: () =>
-      import('./booking-detail-payment/booking-detail-payment.page').then(
+      import('./booking-request/booking-request.page').then(
         (m) => m.BookingRequestPage,
       ),
     canMatch: [AuthGuard, VerificationGuard],
   },
   {
-    path: ':bookingId/detail-payment',
+    path: ':bookingId/request',
     loadComponent: () =>
-      import('./booking-detail-payment/booking-detail-payment.page').then(
+      import('./booking-request/booking-request.page').then(
         (m) => m.BookingRequestPage,
       ),
     canMatch: [AuthGuard, VerificationGuard],
@@ -139,9 +148,9 @@ export const BOOKINGS_ROUTES: Routes = [
     canMatch: [AuthGuard, VerificationGuard],
   },
   {
-    // Redirect legacy /payment route to /detail-payment (component with full guarantee info)
+    // Redirect legacy /payment route to /request (component with full guarantee info)
     path: ':bookingId/payment',
-    redirectTo: ':bookingId/detail-payment',
+    redirectTo: ':bookingId/request',
     pathMatch: 'full',
   },
   {

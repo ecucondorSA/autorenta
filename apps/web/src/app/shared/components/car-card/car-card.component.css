@@ -1,32 +1,10 @@
 :host {
   display: block;
   width: 100%;
-  min-width: 0; /* Permite que flexbox/grid contraiga el elemento */
+  min-width: 0;
+  contain: layout style;
 }
 
-.cq-card {
-  container-type: inline-size;
-  container-name: car-card;
-}
-
-.car-specs-condensed,
-.location-condensed {
-  display: none;
-}
-
-/* Fallback para navegadores sin container queries */
-@supports not (container-type: inline-size) {
-  .car-specs {
-    display: none;
-  }
-
-  .car-specs-condensed,
-  .location-condensed {
-    display: flex;
-  }
-}
-
-/* Efectos de hover premium */
 .card-premium {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid var(--border-muted);
@@ -34,109 +12,46 @@
 
 .card-premium:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  border-color: var(--warning-light); /* warning-light */
+  box-shadow: 0 8px 24px rgba(57, 255, 20, 0.2);
+  border-color: #39FF14; 
 }
 
-/* Estado seleccionado - Visual feedback premium */
+/* Radioactive Selected State */
 .card-premium.selected {
-  border-color: var(--cta-default); /* cta-default (azul pastel) */
+  border-color: #39FF14;
   border-width: 2px;
   transform: scale(1.02) translateY(-2px);
-  box-shadow:
-    0 0 0 3px rgba(167, 216, 244, 0.15),
-    /* cta-default glow */ 0 0 0 6px rgba(196, 168, 130, 0.08),
-    /* warning-light glow */ 0 12px 32px rgba(167, 216, 244, 0.2); /* cta-default shadow */
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
   z-index: 10;
   position: relative;
 }
 
-/* Mantener el estado seleccionado en hover */
-.card-premium.selected:hover {
-  transform: scale(1.02) translateY(-2px);
-  box-shadow:
-    0 0 0 3px rgba(167, 216, 244, 0.2),
-    /* cta-default glow */ 0 0 0 6px rgba(196, 168, 130, 0.12),
-    /* warning-light glow */ 0 14px 36px rgba(167, 216, 244, 0.25); /* cta-default shadow */
+/* Neon Green Buttons */
+.btn-primary, .bg-cta-default {
+  background-color: #39FF14 !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 14px rgba(57, 255, 20, 0.4) !important;
+  transition: all 0.3s ease;
 }
 
-/* Tech Brutalism & Neon Shadow Utilities */
-.shadow-neon-glow-sm {
-  box-shadow: 0 0 10px rgba(0, 217, 95, 0.3);
+.btn-primary:hover, .bg-cta-default:hover {
+  background-color: #00FF41 !important;
+  box-shadow: 0 6px 20px rgba(57, 255, 20, 0.6) !important;
+  transform: scale(1.05);
 }
 
-.shadow-hard-sm {
-  box-shadow: 2px 2px 0px 0px #000000;
+/* Radioactive Price Badge */
+.price-badge {
+  background: #39FF14 !important;
+  color: #000000 !important;
+  font-weight: 900;
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
 }
 
-.dark .shadow-hard-sm {
-  box-shadow: 2px 2px 0px 0px rgba(0, 217, 95, 0.2);
-}
-
-/* Animación sutil para el fallback sin foto */
-.card-premium:hover .absolute.inset-0:has(svg) {
-  background: rgba(167, 216, 244, 0.14); /* cta-default tint sin gradiente */
-}
-
-/* Mejora la transición del badge de distancia */
-.card-premium .text-cta-default {
-  transition: color 0.2s ease;
-}
-
-.card-premium:hover .text-cta-default {
-  color: var(--cta-hover); /* cta-hover (azul pastel más oscuro) */
-}
-
-@container car-card (max-width: 640px) {
-  .car-specs {
-    display: none;
-  }
-
-  .car-specs-condensed {
-    display: flex;
-  }
-
-  .location-detailed {
-    display: none;
-  }
-
-  .location-condensed {
-    display: flex;
-  }
-
-  .car-features {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    -webkit-overflow-scrolling: touch;
-    gap: 0.75rem;
-    padding-bottom: 0.35rem;
-  }
-
-  .car-features > * {
-    scroll-snap-align: start;
-  }
-
-  .car-features::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  .car-features::-webkit-scrollbar-thumb {
-    background-color: rgba(17, 17, 17, 0.2);
-    border-radius: 999px;
-  }
-
-  .car-features::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-
-  .price-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .price-actions .btn-primary,
-  .price-actions .bg-gradient-to-r {
-    width: 100%;
-  }
-}
+/* Neon Glow Utilities */
+.text-neon-green { color: #39FF14 !important; }
+.bg-neon-green { background-color: #39FF14 !important; }
+.shadow-radioactive { box-shadow: 0 0 15px rgba(57, 255, 20, 0.6) !important; }

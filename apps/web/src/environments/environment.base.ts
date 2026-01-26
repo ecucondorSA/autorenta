@@ -17,10 +17,20 @@ interface TikTokConfig {
   clientId?: string;
 }
 
+
 interface GoogleOneTapConfig {
   clientId?: string;
   autoSelect?: boolean;
   cancelOnTapOutside?: boolean;
+}
+
+interface SocialMediaConfig {
+  facebook: string;
+  instagram: string;
+  twitter?: string;
+  linkedin: string;
+  tiktok: string;
+  youtube: string;
 }
 
 /**
@@ -70,6 +80,7 @@ interface EnvDefaults {
   googleGeolocationApiKey?: string;
   tiktok?: TikTokConfig;
   googleOneTap?: GoogleOneTapConfig;
+  socialMedia?: SocialMediaConfig;
   // GCP Video Damage Detection
   videoIngestionUrl?: string;
   gcpProjectId?: string;
@@ -189,6 +200,29 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
     clientId: resolve('NG_APP_GOOGLE_ONE_TAP_CLIENT_ID', defaults.googleOneTap?.clientId),
     autoSelect: defaults.googleOneTap?.autoSelect ?? true,
     cancelOnTapOutside: defaults.googleOneTap?.cancelOnTapOutside ?? true,
+  },
+  socialMedia: {
+    facebook: resolve(
+      'NG_APP_SOCIAL_FACEBOOK',
+      defaults.socialMedia?.facebook ?? 'https://www.facebook.com/profile.php?id=61586558399370',
+    ),
+    instagram: resolve(
+      'NG_APP_SOCIAL_INSTAGRAM',
+      defaults.socialMedia?.instagram ?? 'https://instagram.com/Auto.Rentar',
+    ),
+    twitter: resolve('NG_APP_SOCIAL_TWITTER', defaults.socialMedia?.twitter ?? 'https://twitter.com/autorentar'),
+    linkedin: resolve(
+      'NG_APP_SOCIAL_LINKEDIN',
+      defaults.socialMedia?.linkedin ?? 'https://linkedin.com/company/autorentar',
+    ),
+    tiktok: resolve(
+      'NG_APP_SOCIAL_TIKTOK',
+      defaults.socialMedia?.tiktok ?? 'https://tiktok.com/@autorentar',
+    ),
+    youtube: resolve(
+      'NG_APP_SOCIAL_YOUTUBE',
+      defaults.socialMedia?.youtube ?? 'https://youtube.com/@autorentar',
+    ),
   },
   // GCP Video Damage Detection
   videoIngestionUrl: resolve('NG_APP_VIDEO_INGESTION_URL', defaults.videoIngestionUrl ?? ''),
