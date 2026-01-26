@@ -1,94 +1,269 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
-
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
-}
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { environment } from 'src/environments/environment';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { SegmentModel } from '../../../core/models/segment.model';
+import { SecurityModel } from '../../../core/models/security.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private apiUrl = environment.apiUrl;
+  private securityDataSubject = new BehaviorSubject<SecurityModel | null>(null);
+  public securityData$ = this.securityDataSubject.asObservable();
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  constructor(private http: HttpClient) {}
 
-  private realtimeSubscription?: RealtimeChannel;
-
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  getSecurityData(): Observable<SecurityModel> {
+    return this.http.get<SecurityModel>(`${this.apiUrl}/security`).pipe(
+      tap((data) => {
+        this.securityDataSubject.next(data);
+      })
+    );
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  getSegmentData(segmentId: string): Observable<SegmentModel> {
+    return this.http.get<SegmentModel>(`${this.apiUrl}/security/segment/${segmentId}`);
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
-    });
+  updateSegment(segmentId: string, segment: SegmentModel): Observable<SegmentModel> {
+    return this.http.put<SegmentModel>(`${this.apiUrl}/security/segment/${segmentId}`, segment);
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  createSegment(segment: SegmentModel): Observable<SegmentModel> {
+    return this.http.post<SegmentModel>(`${this.apiUrl}/security/segment`, segment);
+  }
+
+  deleteSegment(segmentId: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/security/segment/${segmentId}`);
+  }
+
+  getAnonymizationSettings(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/anonymization`);
+  }
+
+  updateAnonymizationSettings(settings: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/security/anonymization`, settings);
+  }
+
+  getBreachSimulation(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/breach-simulation`);
+  }
+
+  runBreachSimulation(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/security/breach-simulation`, {});
+  }
+
+  getSystemLogs(page: number, pageSize: number): Observable<any> {
+    return this.http
+      .get<any>(`${this.apiUrl}/security/system-logs?page=${page}&pageSize=${pageSize}`)
+      .pipe(
+        map((res: any) => {
+          return {
+            data: res.data,
+            total: res.total,
+          };
+        })
+      );
+  }
+
+  clearSystemLogs(): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/security/system-logs`);
+  }
+
+  getSecurityOverview(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/overview`);
+  }
+
+  getSecurityControls(): Observable<any> {
+    // TODO: Specify a different type than any
+    return this.http.get<any>(`${this.apiUrl}/security/controls`);
+  }
+
+  updateSecurityControls(controls: any): Observable<any> {
+    // TODO: Specify a different type than any
+    return this.http.put<any>(`${this.apiUrl}/security/controls`, controls);
+  }
+
+  runSecurityScan(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/security/scan`, {});
+  }
+
+  getSecurityScanResults(page: number, pageSize: number): Observable<any> {
+    return this.http
+      .get<any>(`${this.apiUrl}/security/scan-results?page=${page}&pageSize=${pageSize}`)
+      .pipe(
+        map((res: any) => {
+          return {
+            data: res.data,
+            total: res.total,
+          };
+        })
+      );
+  }
+
+  getVulnerabilityData(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/vulnerabilities`);
+  }
+
+  resolveVulnerability(vulnerabilityId: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/security/vulnerabilities/${vulnerabilityId}/resolve`, {});
+  }
+
+  getDlpIncidents(page: number, pageSize: number): Observable<any> {
+    return this.http
+      .get<any>(`${this.apiUrl}/security/dlp-incidents?page=${page}&pageSize=${pageSize}`)
+      .pipe(
+        map((res: any) => {
+          return {
+            data: res.data,
+            total: res.total,
+          };
+        })
+      );
+  }
+
+  getPrivacySettings(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/privacy`);
+  }
+
+  updatePrivacySettings(settings: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/security/privacy`, settings);
+  }
+
+  getComplianceReports(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/compliance`);
+  }
+
+  generateComplianceReport(reportType: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/security/compliance/${reportType}`, {});
+  }
+
+  getThreatIntelligence(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/threat-intelligence`);
+  }
+
+  getThreatActors(page: number, pageSize: number): Observable<any> {
+    return this.http
+      .get<any>(`${this.apiUrl}/security/threat-actors?page=${page}&pageSize=${pageSize}`)
+      .pipe(
+        map((res: any) => {
+          return {
+            data: res.data,
+            total: res.total,
+          };
+        })
+      );
+  }
+
+  getAttackSurface(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/attack-surface`);
+  }
+
+  getVulnerabilityAssessments(page: number, pageSize: number): Observable<any> {
+    return this.http
+      .get<any>(`${this.apiUrl}/security/vulnerability-assessments?page=${page}&pageSize=${pageSize}`)
+      .pipe(
+        map((res: any) => {
+          return {
+            data: res.data,
+            total: res.total,
+          };
+        })
+      );
+  }
+
+  runVulnerabilityAssessment(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/security/vulnerability-assessments`, {});
+  }
+
+  getIncidentResponsePlans(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/incident-response-plans`);
+  }
+
+  createIncidentResponsePlan(plan: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/security/incident-response-plans`, plan);
+  }
+
+  updateIncidentResponsePlan(planId: string, plan: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/security/incident-response-plans/${planId}`, plan);
+  }
+
+  deleteIncidentResponsePlan(planId: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/security/incident-response-plans/${planId}`);
+  }
+
+  getSecurityTrainingPrograms(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/training-programs`);
+  }
+
+  assignSecurityTraining(programId: string, userId: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/security/training-programs/${programId}/assign/${userId}`, {});
+  }
+
+  getSecurityAudits(page: number, pageSize: number): Observable<any> {
+    return this.http
+      .get<any>(`${this.apiUrl}/security/audits?page=${page}&pageSize=${pageSize}`)
+      .pipe(
+        map((res: any) => {
+          return {
+            data: res.data,
+            total: res.total,
+          };
+        })
+      );
+  }
+
+  runSecurityAudit(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/security/audits`, {});
+  }
+
+  getCloudSecurityPosture(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/cloud-security-posture`);
+  }
+
+  getContainerSecurity(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/container-security`);
+  }
+
+  getNetworkSecurity(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/network-security`);
+  }
+
+  getEndpointSecurity(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/endpoint-security`);
+  }
+
+  getDataLossPrevention(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/data-loss-prevention`);
+  }
+
+  getIdentityAndAccessManagement(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/identity-and-access-management`);
+  }
+
+  getSecurityInformationAndEventManagement(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/siem`);
+  }
+
+  getThreatDetectionAndResponse(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/threat-detection-and-response`);
+  }
+
+  getVulnerabilityManagement(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/vulnerability-management`);
+  }
+
+  getSecurityOrchestrationAutomationAndResponse(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/soar`);
+  }
+
+  getSecurityAnalytics(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/analytics`);
+  }
+
+  getSecurityIntelligence(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/intelligence`);
   }
 }
