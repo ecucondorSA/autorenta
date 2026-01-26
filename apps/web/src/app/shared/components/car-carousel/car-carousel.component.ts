@@ -1,26 +1,41 @@
-import { Component, Input, AfterViewInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Car } from '@core/models/car.model';
+import Swiper from 'swiper';
 import { register } from 'swiper/element/bundle';
+import { environment } from 'src/environments/environment';
+import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
 register();
 
-import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
-
 @Component({
-  selector: 'ar-car-carousel',
+  selector: 'app-car-carousel',
   templateUrl: './car-carousel.component.html',
-  styleUrls: ['./car-carousel.component.less']
+  styleUrls: ['./car-carousel.component.scss']
 })
-export class CarCarouselComponent implements AfterViewInit {
+export class CarCarouselComponent {
+  @Input() cars: Car[] = [];
+  imageCdn = environment.imageCdn;
 
-  @Input() cars: any[] = [];
-  @Input() title: string = '';
-  @Input() subtitle: string = '';
-
-  swiperParams = {
+  swiperParams: any = {
     slidesPerView: 'auto',
-    spaceBetween: 16,
+    spaceBetween: 10,
+    freeMode: true,
+    modules: [ ],
   };
 
-  ngAfterViewInit(): void {
-  }
+  constructor() {}
 
+  ngAfterViewInit(): void {
+    const swiperEl = document.querySelector('swiper-container') as any;
+
+    const swiperParams = {
+      slidesPerView: 'auto',
+      spaceBetween: 10,
+      freeMode: true,
+      modules: [ ],
+    };
+
+    Object.assign(swiperEl, swiperParams);
+
+    swiperEl.initialize();
+  }
 }
