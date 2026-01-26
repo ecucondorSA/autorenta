@@ -1,94 +1,375 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
-
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
-}
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Security } from '../../../../core/models/security.model';
+import { Segment } from '../../../../core/models/segment.model';
+import { Province } from '../../../../core/models/province.model';
+import { Review } from '../../../../core/models/review.model';
+import { City } from '../../../../core/models/city.model';
+import { District } from '../../../../core/models/district.model';
+import { Neighborhood } from '../../../../core/models/neighborhood.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private apiUrl = environment.apiUrl;
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  constructor(private http: HttpClient) {}
 
-  private realtimeSubscription?: RealtimeChannel;
-
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  getSecurity(): Observable<Security[]> {
+    return this.http.get<Security[]>(`${this.apiUrl}/securities`);
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  getSecurityById(id: number): Observable<Security> {
+    return this.http.get<Security>(`${this.apiUrl}/securities/${id}`);
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
-    });
+  createSecurity(security: Security): Observable<Security> {
+    return this.http.post<Security>(`${this.apiUrl}/securities`, security);
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  updateSecurity(id: number, security: Security): Observable<Security> {
+    return this.http.put<Security>(`${this.apiUrl}/securities/${id}`, security);
+  }
+
+  deleteSecurity(id: number): Observable<Security> {
+    return this.http.delete<Security>(`${this.apiUrl}/securities/${id}`);
+  }
+
+  //SEGMENTS
+  getSegments(): Observable<Segment[]> {
+    return this.http.get<Segment[]>(`${this.apiUrl}/segments`);
+  }
+
+  getSegmentById(id: number): Observable<Segment> {
+    return this.http.get<Segment>(`${this.apiUrl}/segments/${id}`);
+  }
+
+  createSegment(segment: Segment): Observable<Segment> {
+    return this.http.post<Segment>(`${this.apiUrl}/segments`, segment);
+  }
+
+  updateSegment(id: number, segment: Segment): Observable<Segment> {
+    return this.http.put<Segment>(`${this.apiUrl}/segments/${id}`, segment);
+  }
+
+  deleteSegment(id: number): Observable<Segment> {
+    return this.http.delete<Segment>(`${this.apiUrl}/segments/${id}`);
+  }
+
+  //PROVINCES
+  getProvinces(): Observable<Province[]> {
+    return this.http.get<Province[]>(`${this.apiUrl}/provinces`);
+  }
+
+  getProvinceById(id: number): Observable<Province> {
+    return this.http.get<Province>(`${this.apiUrl}/provinces/${id}`);
+  }
+
+  //REVIEWS
+  getReviews(): Observable<Review[]> {
+    return this.http.get<Review[]>(`${this.apiUrl}/reviews`);
+  }
+
+  getReviewById(id: number): Observable<Review> {
+    return this.http.get<Review>(`${this.apiUrl}/reviews/${id}`);
+  }
+
+  //CITIES
+  getCities(): Observable<City[]> {
+    return this.http.get<City[]>(`${this.apiUrl}/cities`);
+  }
+
+  getCityById(id: number): Observable<City> {
+    return this.http.get<City>(`${this.apiUrl}/cities/${id}`);
+  }
+
+  //DISTRICTS
+  getDistricts(): Observable<District[]> {
+    return this.http.get<District[]>(`${this.apiUrl}/districts`);
+  }
+
+  getDistrictById(id: number): Observable<District> {
+    return this.http.get<District>(`${this.apiUrl}/districts/${id}`);
+  }
+
+  //NEIGHBORHOODS
+  getNeighborhoods(): Observable<Neighborhood[]> {
+    return this.http.get<Neighborhood[]>(`${this.apiUrl}/neighborhoods`);
+  }
+
+  getNeighborhoodById(id: number): Observable<Neighborhood> {
+    return this.http.get<Neighborhood>(`${this.apiUrl}/neighborhoods/${id}`);
+  }
+
+  uploadFile(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(`${this.apiUrl}/upload`, formData);
+  }
+
+  bulkCreate(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'multipart/form-data');
+
+    return this.http.post(`${this.apiUrl}/bulk-create`, formData, { headers });
+  }
+
+  getFiles(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/files`);
+  }
+
+  processFile(fileName: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/process-file`, { fileName });
+  }
+
+  downloadFile(fileName: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/download/${fileName}`, { responseType: 'blob' });
+  }
+
+  getLogs(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/logs`);
+  }
+
+  retryProcess(fileName: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/retry-process`, { fileName });
+  }
+
+  clearData(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/clear-data`, {});
+  }
+
+  getSecurityByFilters(
+    page: number,
+    limit: number,
+    sort: string,
+    order: string,
+    province?: string,
+    city?: string,
+    district?: string,
+    neighborhood?: string,
+    segment?: string,
+    minPrice?: number,
+    maxPrice?: number,
+    minYear?: number,
+    maxYear?: number,
+    isNew?: boolean,
+    hasFinancing?: boolean,
+    keywords?: string
+  ): Observable<any> {
+    let url = `${this.apiUrl}/securities/filter?page=${page}&limit=${limit}&sort=${sort}&order=${order}`;
+
+    if (province) {
+      url += `&province=${province}`;
+    }
+    if (city) {
+      url += `&city=${city}`;
+    }
+    if (district) {
+      url += `&district=${district}`;
+    }
+    if (neighborhood) {
+      url += `&neighborhood=${neighborhood}`;
+    }
+    if (segment) {
+      url += `&segment=${segment}`;
+    }
+    if (minPrice) {
+      url += `&minPrice=${minPrice}`;
+    }
+    if (maxPrice) {
+      url += `&maxPrice=${maxPrice}`;
+    }
+    if (minYear) {
+      url += `&minYear=${minYear}`;
+    }
+    if (maxYear) {
+      url += `&maxYear=${maxYear}`;
+    }
+    if (isNew !== undefined) {
+      url += `&isNew=${isNew}`;
+    }
+    if (hasFinancing !== undefined) {
+      url += `&hasFinancing=${hasFinancing}`;
+    }
+    if (keywords) {
+      url += `&keywords=${keywords}`;
+    }
+
+    return this.http.get(url);
+  }
+
+  getMapData(
+    province?: string,
+    city?: string,
+    district?: string,
+    neighborhood?: string,
+    segment?: string,
+    minPrice?: number,
+    maxPrice?: number,
+    minYear?: number,
+    maxYear?: number,
+    isNew?: boolean,
+    hasFinancing?: boolean,
+    keywords?: string
+  ): Observable<any> {
+    let url = `${this.apiUrl}/securities/map-data?`;
+
+    if (province) {
+      url += `province=${province}&`;
+    }
+    if (city) {
+      url += `city=${city}&`;
+    }
+    if (district) {
+      url += `district=${district}&`;
+    }
+    if (neighborhood) {
+      url += `neighborhood=${neighborhood}&`;
+    }
+    if (segment) {
+      url += `segment=${segment}&`;
+    }
+    if (minPrice) {
+      url += `minPrice=${minPrice}&`;
+    }
+    if (maxPrice) {
+      url += `maxPrice=${maxPrice}&`;
+    }
+    if (minYear) {
+      url += `minYear=${minYear}&`;
+    }
+    if (maxYear) {
+      url += `maxYear=${maxYear}&`;
+    }
+    if (isNew !== undefined) {
+      url += `isNew=${isNew}&`;
+    }
+    if (hasFinancing !== undefined) {
+      url += `hasFinancing=${hasFinancing}&`;
+    }
+    if (keywords) {
+      url += `keywords=${keywords}&`;
+    }
+
+    return this.http.get(url);
+  }
+
+  getStats(
+    province?: string,
+    city?: string,
+    district?: string,
+    neighborhood?: string,
+    segment?: string,
+    minPrice?: number,
+    maxPrice?: number,
+    minYear?: number,
+    maxYear?: number,
+    isNew?: boolean,
+    hasFinancing?: boolean,
+    keywords?: string
+  ): Observable<any> {
+    let url = `${this.apiUrl}/securities/stats?`;
+
+    if (province) {
+      url += `province=${province}&`;
+    }
+    if (city) {
+      url += `city=${city}&`;
+    }
+    if (district) {
+      url += `district=${district}&`;
+    }
+    if (neighborhood) {
+      url += `neighborhood=${neighborhood}&`;
+    }
+    if (segment) {
+      url += `segment=${segment}&`;
+    }
+    if (minPrice) {
+      url += `minPrice=${minPrice}&`;
+    }
+    if (maxPrice) {
+      url += `maxPrice=${maxPrice}&`;
+    }
+    if (minYear) {
+      url += `minYear=${minYear}&`;
+    }
+    if (maxYear) {
+      url += `maxYear=${maxYear}&`;
+    }
+    if (isNew !== undefined) {
+      url += `isNew=${isNew}&`;
+    }
+    if (hasFinancing !== undefined) {
+      url += `hasFinancing=${hasFinancing}&`;
+    }
+    if (keywords) {
+      url += `keywords=${keywords}&`;
+    }
+
+    return this.http.get(url);
+  }
+
+  getFilters(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/filters`);
+  }
+
+  getFilterValues(
+    province?: string,
+    city?: string,
+    district?: string,
+    neighborhood?: string,
+    segment?: string
+  ): Observable<any> {
+    let url = `${this.apiUrl}/filter-values?`;
+
+    if (province) {
+      url += `province=${province}&`;
+    }
+    if (city) {
+      url += `city=${city}&`;
+    }
+    if (district) {
+      url += `district=${district}&`;
+    }
+    if (neighborhood) {
+      url += `neighborhood=${neighborhood}&`;
+    }
+    if (segment) {
+      url += `segment=${segment}&`;
+    }
+
+    return this.http.get(url);
+  }
+
+  getSimilarSecurities(securityId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/securities/${securityId}/similar`);
+  }
+
+  getSecurityAnalytics(securityId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/securities/${securityId}/analytics`);
+  }
+
+  createSecurityAnalytics(securityId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/securities/${securityId}/analytics`, {});
+  }
+
+  updateSecurityAnalytics(securityId: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/securities/${securityId}/analytics`, data);
+  }
+
+  deleteSecurityAnalytics(securityId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/securities/${securityId}/analytics`);
+  }
+
+  getSecurityAnalyticsById(securityId: number, analyticsId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/securities/${securityId}/analytics/${analyticsId}`);
   }
 }
