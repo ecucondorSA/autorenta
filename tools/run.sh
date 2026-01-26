@@ -2,13 +2,16 @@
 
 set -e
 
-COMMAND="$1"
-shift
+COMMAND=$1
 
-echo ". ${COMMAND}: Running command: ${COMMAND} $@"
+echo "Running command: $COMMAND"
 
-if [ "${COMMAND}" = "install" ]; then
-  pnpm install
+if [ "$COMMAND" = "install" ]; then
+  if [ -z "${AUTORENTA_SKIP_INSTALL}" ]; then
+    install
+  else
+    echo "Skipping install command due to AUTORENTA_SKIP_INSTALL being set."
+  fi
 else
-  ${COMMAND} $@
+  $COMMAND
 fi
