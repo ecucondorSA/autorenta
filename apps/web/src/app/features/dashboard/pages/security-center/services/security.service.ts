@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Security } from '../../../../../../core/models/security.model';
 import { Observable } from 'rxjs';
-import { Security } from '../../../../../core/models/security.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,98 +12,80 @@ export class SecurityService {
 
   constructor(private http: HttpClient) {}
 
-  getSecurityData(): Observable<Security> {
-    return this.http.get<Security>(`${this.apiUrl}/security`);
+  getSecurityData(): Observable<Security[]> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${environment.authToken}`
+    );
+    return this.http.get<Security[]>(`${this.apiUrl}/security`, { headers });
   }
 
-  updateFirewall(data: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/security/firewall`, data);
+  getSecurityById(id: string): Observable<Security> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${environment.authToken}`
+    );
+    return this.http.get<Security>(`${this.apiUrl}/security/${id}`, { headers });
   }
 
-  getFirewallStatus(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/security/firewall`);
+  createSecurity(securityData: Security): Observable<Security> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${environment.authToken}`
+    );
+    return this.http.post<Security>(`${this.apiUrl}/security`, securityData, { headers });
   }
 
-  updateAntivirus(data: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/security/antivirus`, data);
+  updateSecurity(id: string, securityData: Security): Observable<Security> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${environment.authToken}`
+    );
+    return this.http.put<Security>(`${this.apiUrl}/security/${id}`, securityData, { headers });
   }
 
-  getAntivirusStatus(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/security/antivirus`);
+  deleteSecurity(id: string): Observable<any> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${environment.authToken}`
+    );
+    return this.http.delete<any>(`${this.apiUrl}/security/${id}`, { headers });
   }
 
-  updatePassword(data: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/security/password`, data);
+  runSecurityCheck(id: string): Observable<any> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${environment.authToken}`
+    );
+    return this.http.post<any>(`${this.apiUrl}/security/${id}/run-check`, {}, { headers });
   }
 
-  getPasswordStatus(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/security/password`);
+  // Mocked Endpoints
+  getAllMocked(): Observable<any> {
+    return this.http.get<any>('assets/mocks/security.mock.json');
   }
 
-  updateVPN(data: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/security/vpn`, data);
+  getMockedSecurityById(id: string): Observable<any> {
+    return this.http.get<any>(`assets/mocks/security.mock.json`);
   }
 
-  getVPNStatus(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/security/vpn`);
-  }
-
-  updateDataEncryption(data: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/security/data-encryption`, data);
-  }
-
-  getDataEncryptionStatus(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/security/data-encryption`);
-  }
-
-  runDiagnostics(): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/security/diagnostics`, {});
-  }
-
-  getDiagnosticsStatus(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/security/diagnostics`);
-  }
-
-  generateReport(): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/security/report`, {});
-  }
-
-  getReportStatus(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/security/report`);
-  }
-
-  // Example error handling (can be applied to other methods)
-  exampleRequest(): Observable<any> {
+  startMockedSecurityCheck(id: string, res: any, err: any): Observable<any> {
     return new Observable((observer) => {
-      fetch(`${this.apiUrl}/some-endpoint`)
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-          }
-          return res.json();
-        })
-        .then((data) => {
-          observer.next(data);
-          observer.complete();
-        })
-        .catch((err) => {
-          observer.error(err);
-        });
+      observer.next({
+        id: id,
+        status: 'running',
+      });
+      observer.complete();
     });
   }
 
-  // Example error handling with async/await
-  async exampleAsyncRequest(): Promise<any> {
-    try {
-      const res = await fetch(`${this.apiUrl}/some-endpoint`);
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-      return await res.json();
-    } catch (err) {
-      // Handle error appropriately
-      console.error(err);
-      throw err; // Re-throw to propagate the error
-    }
+  stopMockedSecurityCheck(id: string, res: any, err: any): Observable<any> {
+    return new Observable((observer) => {
+      observer.next({
+        id: id,
+        status: 'stopped',
+      });
+      observer.complete();
+    });
   }
 }
