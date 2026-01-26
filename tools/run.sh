@@ -2,51 +2,84 @@
 
 set -e
 
-script="$(basename "$0")"
+# Default command if none is provided
+COMMAND="start"
 
-cyan() {
-  echo -e "\033[1;36m$1\033[0m"
+if [ -n "$1" ]; then
+  COMMAND="$1"
+fi
+
+# Load environment variables from .env files
+if [ -f ".env.local" ]; then
+  export $(grep -v '^#' .env.local | xargs -0) # Load .env.local, ignoring comments
+fi
+if [ -f ".env" ]; then
+  export $(grep -v '^#' .env | xargs -0) # Load .env, ignoring comments
+fi
+
+# Function to execute commands within each package
+run_in_each_package() {
+  local script_name="$1"
+  local package
+  for package in packages/* apps/*;
+  do
+    if [ -d "$package" ]; then
+      echo "Running ${script_name} in $package"
+      pushd "$package" > /dev/null
+      if [ -f package.json ]; then
+        if grep -q "scripts" package.json > /dev/null; then
+          if jq -e ".scripts.${script_name}" package.json > /dev/null 2>&1; then
+            pnpm run "${script_name}"
+          else
+            echo "Skipping ${script_name} in $package: script not found in package.json"
+          fi
+        else
+          echo "Skipping ${script_name} in $package: no scripts defined in package.json"
+        fi
+      else
+        echo "Skipping ${script_name} in $package: no package.json found"
+      fi
+      popd > /dev/null
+    fi
+  done
 }
 
-info() {
-  cyan "[${script}] $*"
-}
-
-# Default to production if NODE_ENV is not set
-NODE_ENV=${NODE_ENV:-production}
-
-case "$script" in
-  build)
-    info "Building..."
-    pnpm -r --filter=!./apps/api run build
-    ;; # Changed pnpm build to pnpm -r --filter=!./apps/api run build
-  deploy)
-    info "Deploying..."
-    pnpm -r run deploy
+case "${COMMAND}" in
+  "install")
+    # Only run install if AUTORENTA_SKIP_INSTALL is not set
+    if [ -z "${AUTORENTA_SKIP_INSTALL}" ]; then
+      echo "Running install in all packages"
+      run_in_each_package "install"
+    else
+      echo "Skipping install due to AUTORENTA_SKIP_INSTALL"
+    fi
     ;;
-  dev)
-    info "Starting development environment..."
-    pnpm -r run dev
+  "build")
+    echo "Running build in all packages"
+    run_in_each_package "build"
     ;;
-  format)
-    info "Formatting code..."
-    pnpm -r run format
+  "test")
+    echo "Running test in all packages"
+    run_in_each_package "test"
     ;;
-  lint)
-    info "Linting code..."
-    pnpm -r run lint
+  "lint")
+    echo "Running lint in all packages"
+    run_in_each_package "lint"
     ;;
-  test)
-    info "Running tests..."
-    pnpm -r run test
+  "format")
+    echo "Running format in all packages"
+    run_in_each_package "format"
     ;;
-  install)
-    info "Installing dependencies..."
-    pnpm install
+  "start")
+    echo "Running start in apps/web"
+    pushd "apps/web" > /dev/null
+    pnpm run start
+    popd > /dev/null
     ;;
-  *)
-    echo "Usage: $script [build|deploy|dev|format|lint|test|install]"
+  *) # Default case
+    echo "Unknown command: ${COMMAND}"
     exit 1
     ;;
+esac
 
-esacn
+echo "Done."
