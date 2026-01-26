@@ -1,49 +1,36 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
-import { Car } from '@core/models/car.model';
-import { SoundService } from '@core/services/ui/sound.service';
+import { Component, Input } from '@angular/core';
+import Swiper from 'swiper/element/bundle';
 import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
-import { SwiperOptions } from 'swiper/types';
-import { register } from 'swiper/element/bundle';
-
-register();
 
 @Component({
-  selector: 'app-car-carousel',
+  selector: 'ar-car-carousel',
   standalone: true,
   imports: [CarMiniCardComponent],
   templateUrl: './car-carousel.component.html',
-  styleUrls: ['./car-carousel.component.scss'],
+  styleUrl: './car-carousel.component.scss'
 })
-export class CarCarouselComponent implements OnInit, OnDestroy {
-  @Input() cars: Car[] = [];
-  @Input() title: string = '';
-  @Input() showViewAll: boolean = true;
-  @Input() link: string = '';
+export class CarCarouselComponent {
+  @Input() cars: any[] = [];
 
-  private destroy$ = new Subject<void>();
+  swiperEl: any
 
-  swiperParams: SwiperOptions = {
-    slidesPerView: 'auto',
-    spaceBetween: 10,
-  };
+  ngAfterViewInit() {
+    this.swiperEl = document.querySelector('swiper-container')
+    const swiperParams = {
+      slidesPerView: 'auto',
+      spaceBetween: 8,
+      injectStyles: [`
+        .swiper-slide {
+          width: auto !important;
+        }
+      `]
+    };
 
-  constructor(private router: Router, private soundService: SoundService) {}
+    Object.assign(this.swiperEl, swiperParams);
 
-  ngOnInit(): void {}
-
-  viewAll() {
-    this.soundService
-      .pressSound()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.router.navigate([this.link]);
-      });
+    this.swiperEl.initialize();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+  // Removing the empty lifecycle method
+  // ngOnInit() {}
 }
