@@ -1,85 +1,90 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiService } from '@core/services/api/api.service';
+import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
+import { MissionsService } from '../../services/missions.service';
+import { Mission } from '../../models/mission';
+import { AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { selectAuthUser } from '../../../../auth/store/auth.selectors';
+import { User } from '../../../../auth/models/user';
+import { AutoRentaService } from '@core/services/auto-renta.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-mission-detail',
   templateUrl: './mission-detail.page.html',
   styleUrls: ['./mission-detail.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MissionDetailPage implements OnInit {
-  missionId: string | null = null;
-  mission: any;
+  missionId$: Observable<string> = this.route.params.pipe(map((params) => params['id']));
+  mission$: Observable<Mission> = this.missionId$.pipe(switchMap((id) => this.missionsService.getMission(id)));
+  user$: Observable<User | null> = this.store.select(selectAuthUser);
+  vm$: Observable<any>;
 
-  constructor(private route: ActivatedRoute, private apiService: ApiService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private missionsService: MissionsService,
+    private store: Store,
+    private autoRentaService: AutoRentaService,
+    private snackBar: MatSnackBar
+  ) {}
 
-  ngOnInit() {
-    this.missionId = this.route.snapshot.paramMap.get('id');
-    if (this.missionId) {
-      this.loadMissionDetails(this.missionId);
-    }
+  ngOnInit(): void {
+    this.vm$ = combineLatest([this.mission$, this.user$]).pipe(
+      map(([mission, user]) => ({
+        mission,
+        user,
+      }))
+    );
   }
 
-  async loadMissionDetails(missionId: string) {
-    try {
-      this.mission = await this.apiService.get(`/missions/${missionId}`);
-    } catch (error) {
-      console.error('Failed to load mission details:', error);
-    }
+  onRent(mission: Mission) {
+    if (!mission?.car?.id) return;
+
+    this.autoRentaService.rentCar(mission.car.id).subscribe({
+      next: (/*res: any*/) => {
+        this.snackBar.open(`You have rented ${mission.car.model} successfully!`, 'OK', {
+          duration: 3000,
+        });
+      },
+      error: (/*err: any*/) => {
+        this.snackBar.open(`Ups, something went wrong!`, 'OK', {
+          duration: 3000,
+        });
+      },
+    });
   }
 
-  async completeMission() {
-    if (!this.missionId) return;
-    try {
-      await this.apiService.post(`/missions/${this.missionId}/complete`, {});
-      // Handle successful completion (e.g., show a success message, redirect)
-      console.log('Mission completed successfully!');
-    } catch (error) {
-      console.error('Failed to complete mission:', error);
-    }
+  onReturn(mission: Mission) {
+    if (!mission?.car?.id) return;
+
+    this.autoRentaService.returnCar(mission.car.id).subscribe({
+      next: (/*_res: any*/) => {
+        this.snackBar.open(`You have returned ${mission.car.model} successfully!`, 'OK', {
+          duration: 3000,
+        });
+      },
+      error: (/*_err: any*/) => {
+        this.snackBar.open(`Ups, something went wrong!`, 'OK', {
+          duration: 3000,
+        });
+      },
+    });
   }
 
-  async failMission() {
-    if (!this.missionId) return;
-    try {
-      await this.apiService.post(`/missions/${this.missionId}/fail`, {});
-      // Handle mission failure (e.g., show a failure message, redirect)
-      console.log('Mission failed.');
-    } catch (error) {
-      console.error('Failed to fail mission:', error);
-    }
+  onContactSupport(mission: Mission) {
+    console.log('Contacting support for mission:', mission);
+    // Implement your contact support logic here
   }
 
-  handleImageError(event: any) {
-    event.target.src = 'assets/img/fallback-image.png';
+  getMapUrl(mission: Mission): string {
+    const latitude = mission?.location?.latitude || 0;
+    const longitude = mission?.location?.longitude || 0;
+    return `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
   }
 
-  async submitEvidence(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append('evidence', file);
-
-    try {
-      const response: any = await this.apiService.post(
-        `/missions/${this.missionId}/submit-evidence`,
-        formData
-      );
-      console.log('Evidence submitted:', response);
-    } catch (_err: any) {
-      console.error('Failed to submit evidence:', _err);
-    }
-  }
-
-  async getMissionResult() {
-    try {
-      const response: any = await this.apiService.get(
-        `/missions/${this.missionId}/result`
-      );
-      console.log('Mission result:', response);
-    } catch (_err: any) {
-      console.error('Failed to get mission result:', _err);
-    }
+  openMap(mission: Mission) {
+    window.open(this.getMapUrl(mission), '_blank');
   }
 }
