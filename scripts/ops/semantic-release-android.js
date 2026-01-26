@@ -22,7 +22,7 @@ if (!VERSION) {
 
 const BUILD_GRADLE_PATH = path.join(
   __dirname,
-  '../apps/web/android/app/build.gradle'
+  '../../apps/web/android/app/build.gradle'
 );
 
 console.log(`\n📱 Updating Android Version Code...`);
