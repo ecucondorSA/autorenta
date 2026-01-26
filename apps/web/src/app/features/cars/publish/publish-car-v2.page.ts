@@ -19,25 +19,6 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
 import { PricingService } from '@core/services/payments/pricing.service';
 import { VehicleDocumentsService } from '@core/services/verification/vehicle-documents.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-generator/ai-photo-generator.component';
-import { BottomSheetComponent } from '../../../shared/components/bottom-sheet/bottom-sheet.component';
-import { FipeAutocompleteComponent } from '../../../shared/components/fipe-autocomplete/fipe-autocomplete.component';
-import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
-import {
-  PhotoUploadAIComponent,
-  PhotoWithAI,
-  VehicleAutoDetect,
-} from '../../../shared/components/photo-upload-ai/photo-upload-ai.component';
-import { DetectedVehicle } from '../../../shared/components/video-vehicle-recognition/video-vehicle-recognition.component';
-import {
-  VehicleScannerLiveComponent,
-  VehicleScannerConfirmData,
-} from '../../../shared/components/vehicle-scanner-live/vehicle-scanner-live.component';
-import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
-import {
-  VisualSelectorComponent,
-  VisualOption,
-} from './components/visual-selector/visual-selector.component';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -61,7 +42,26 @@ import {
   timeOutline,
   shieldCheckmarkOutline,
 } from 'ionicons/icons';
+import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-generator/ai-photo-generator.component';
+import { BottomSheetComponent } from '../../../shared/components/bottom-sheet/bottom-sheet.component';
+import { FipeAutocompleteComponent } from '../../../shared/components/fipe-autocomplete/fipe-autocomplete.component';
+import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
+import {
+  PhotoUploadAIComponent,
+  PhotoWithAI,
+  VehicleAutoDetect,
+} from '../../../shared/components/photo-upload-ai/photo-upload-ai.component';
+import { DetectedVehicle } from '../../../shared/components/video-vehicle-recognition/video-vehicle-recognition.component';
+import {
+  VehicleScannerLiveComponent,
+  VehicleScannerConfirmData,
+} from '../../../shared/components/vehicle-scanner-live/vehicle-scanner-live.component';
+import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
 import { HoverLiftDirective } from '../../../shared/directives/hover-lift.directive';
+import {
+  VisualSelectorComponent,
+  VisualOption,
+} from './components/visual-selector/visual-selector.component';
 
 // ✅ NEW: Extracted services
 import { PublishCarFormService } from './services/publish-car-form.service';

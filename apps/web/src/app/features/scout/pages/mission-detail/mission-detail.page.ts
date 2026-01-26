@@ -108,8 +108,9 @@ export class MissionDetailPage implements OnInit {
     }
   }
 
-  async onFileSelected(event: any) {
-    const file = event.target.files[0];
+  async onFileSelected(event: Event) {
+    const target = event.target as HTMLInputElement | null;
+    const file = target?.files?.[0];
     if (!file || !this.mission()) return;
 
     this.isUploading.set(true);
@@ -122,8 +123,9 @@ export class MissionDetailPage implements OnInit {
       
       alert('✅ Foto enviada correctamente. La IA está verificando la patente. Te avisaremos si la recompensa es aprobada.');
       this.router.navigate(['/scout']);
-    } catch (error: any) {
-      alert('Error al subir la foto: ' + error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      alert('Error al subir la foto: ' + message);
     } finally {
       this.isUploading.set(false);
     }

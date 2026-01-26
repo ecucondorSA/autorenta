@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { RealtimeChannel } from '@supabase/supabase-js';
 
@@ -60,7 +60,7 @@ export class SecurityService {
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
+        (payload) => {
           const newAlert = payload.new as SecurityAlert;
           this.activeAlerts.update((current) => [newAlert, ...current]);
           // TODO: Trigger sound/toast
@@ -69,7 +69,7 @@ export class SecurityService {
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
+        (payload) => {
           // Alerta crítica: Scout encontró el auto
           console.log('BOUNTY CLAIMED!', payload.new);
         },

@@ -130,6 +130,7 @@ export class GitHubClient {
 
     /**
      * Validate that patches would reduce file size within acceptable limits
+     * ENHANCED: Added absolute limits and stricter percentage thresholds
      */
     validatePatchSafety(originalContent: string, patches: Patch[]): { valid: boolean; reason?: string } {
         const originalLines = originalContent.split('\n').length;
@@ -138,10 +139,20 @@ export class GitHubClient {
         const deletions = patches.filter(p => p.operation === 'delete').length;
         const deletionPercentage = (deletions / originalLines) * 100;
 
-        if (deletionPercentage > 10) {
+        // ENHANCED: Absolute limit - never delete more than 50 lines regardless of file size
+        const MAX_ABSOLUTE_DELETIONS = 50;
+        if (deletions > MAX_ABSOLUTE_DELETIONS) {
             return {
                 valid: false,
-                reason: `Would delete ${deletionPercentage.toFixed(1)}% of lines (${deletions}/${originalLines}). Threshold: 10%`
+                reason: `Would delete ${deletions} lines. Absolute max: ${MAX_ABSOLUTE_DELETIONS} lines`
+            };
+        }
+
+        // ENHANCED: Stricter percentage - 5% instead of 10%
+        if (deletionPercentage > 5) {
+            return {
+                valid: false,
+                reason: `Would delete ${deletionPercentage.toFixed(1)}% of lines (${deletions}/${originalLines}). Threshold: 5%`
             };
         }
 
@@ -149,14 +160,90 @@ export class GitHubClient {
         const insertions = patches.filter(p => p.operation === 'insert_after').length;
         const insertionPercentage = (insertions / originalLines) * 100;
 
-        if (insertionPercentage > 50) {
+        // ENHANCED: Stricter insertion limit
+        if (insertionPercentage > 20) {
             return {
                 valid: false,
-                reason: `Would insert ${insertionPercentage.toFixed(1)}% new lines (${insertions} into ${originalLines}). Threshold: 50%`
+                reason: `Would insert ${insertionPercentage.toFixed(1)}% new lines (${insertions} into ${originalLines}). Threshold: 20%`
+            };
+        }
+
+        // ENHANCED: Total change limit
+        const totalChanges = deletions + insertions + patches.filter(p => p.operation === 'replace').length;
+        if (totalChanges > 100) {
+            return {
+                valid: false,
+                reason: `Too many changes (${totalChanges}). Max allowed: 100 operations per PR`
             };
         }
 
         return { valid: true };
+    }
+
+    /**
+     * Check if there's already an open PR for the same file
+     * DEDUPLICATION: Prevents creating duplicate PRs
+     */
+    async hasOpenPRForFile(filePath: string): Promise<{ hasOpenPR: boolean; existingPR?: { number: number; url: string } }> {
+        try {
+            const resp = await fetch(
+                `${this.baseUrl}/repos/${this.owner}/${this.repo}/pulls?state=open&per_page=100`,
+                { headers: this.headers }
+            );
+            const prs = await resp.json();
+
+            if (!Array.isArray(prs)) return { hasOpenPR: false };
+
+            // Check if any open PR modifies the same file
+            for (const pr of prs) {
+                // Check PR title for file path or Edge Brain marker
+                if (pr.title?.includes('🚑') || pr.title?.includes('Edge Brain') || pr.title?.includes('Tier')) {
+                    // Get files changed in this PR
+                    const filesResp = await fetch(
+                        `${this.baseUrl}/repos/${this.owner}/${this.repo}/pulls/${pr.number}/files`,
+                        { headers: this.headers }
+                    );
+                    const files = await filesResp.json();
+
+                    if (Array.isArray(files) && files.some((f: any) => f.filename === filePath)) {
+                        return {
+                            hasOpenPR: true,
+                            existingPR: { number: pr.number, url: pr.html_url }
+                        };
+                    }
+                }
+            }
+
+            return { hasOpenPR: false };
+        } catch (e) {
+            console.error('[GitHubClient] Error checking open PRs:', e);
+            return { hasOpenPR: false }; // Fail open to allow PR creation
+        }
+    }
+
+    /**
+     * Count open Edge Brain PRs
+     * RATE LIMITING: Used to enforce PR limits
+     */
+    async countOpenEdgeBrainPRs(): Promise<number> {
+        try {
+            const resp = await fetch(
+                `${this.baseUrl}/repos/${this.owner}/${this.repo}/pulls?state=open&per_page=100`,
+                { headers: this.headers }
+            );
+            const prs = await resp.json();
+
+            if (!Array.isArray(prs)) return 0;
+
+            return prs.filter((pr: any) =>
+                pr.title?.includes('🚑') ||
+                pr.title?.includes('Edge Brain') ||
+                pr.title?.includes('Tier')
+            ).length;
+        } catch (e) {
+            console.error('[GitHubClient] Error counting PRs:', e);
+            return 0;
+        }
     }
 
     async updateFile(path: string, content: string, message: string, sha: string, branch: string) {

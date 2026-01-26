@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CarsService } from '@core/services/cars/cars.service';
@@ -153,7 +153,9 @@ export class BrowseCarsPage {
     const id =
       typeof carId === 'string'
         ? carId
-        : ((carId as any)?.detail?.carId ?? (carId as any)?.carId ?? String(carId));
+        : (carId as { detail?: { carId?: string }; carId?: string })?.detail?.carId ??
+          (carId as { detail?: { carId?: string }; carId?: string })?.carId ??
+          String(carId);
     console.log('[BrowsePage] Marker Click:', id);
     this.store.setActiveCar(id, 'map');
     const element = document.getElementById('car-' + id);

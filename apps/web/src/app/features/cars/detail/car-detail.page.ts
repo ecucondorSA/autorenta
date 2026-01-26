@@ -38,16 +38,14 @@ import { WaitlistService } from '@core/services/bookings/waitlist.service';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 
 // Models
-import type { Booking } from '@core/models';
 import { BookingPaymentMethod } from '@core/models/wallet.model';
-import { RiskCalculation } from '@core/services/verification/risk-calculator.service';
 import type { DateRange } from '@core/models/marketplace.model';
+import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
+import { RiskCalculation } from '@core/services/verification/risk-calculator.service';
 // UI 2026 Directives
 import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
 import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
 import { Car, CarPhoto, CarStats, Review } from '../../../core/models';
-import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
-import { RiskSnapshot } from '@core/models/booking-detail-payment.model';
 
 // Components
 import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';

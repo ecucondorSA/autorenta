@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter, HostListener, ElementRef, inject } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
 

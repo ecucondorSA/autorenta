@@ -23,9 +23,9 @@ Closes #<!-- número de issue -->
 ## ✅ Checklist Pre-Submit
 
 ### Validación Local
-- [ ] **Tests pasan localmente**: `npm run test` ejecutado y todos los tests pasan
-- [ ] **Lint sin errores**: `npm run lint` ejecutado sin errores o warnings
-- [ ] **Build exitoso**: `npm run build` completa sin errores
+- [ ] **Tests pasan localmente**: `pnpm test:unit` ejecutado y todos los tests pasan
+- [ ] **Lint sin errores**: `pnpm lint` ejecutado sin errores o warnings
+- [ ] **Build exitoso**: `pnpm build:web` completa sin errores
 - [ ] **TypeScript válido**: No hay errores de tipos
 
 ### Code Quality
@@ -44,6 +44,13 @@ Closes #<!-- número de issue -->
 - [ ] **Screenshots incluidos**: Si es UI/feature, screenshots o GIFs agregados
 - [ ] **SQLs documentados**: Si hay migrations, SQLs incluidos y explicados
 - [ ] **Docs actualizadas**: Documentación actualizada si es necesario
+
+<!-- required-checks-start -->
+### ✅ Requisitos Mínimos (obligatorio)
+- [ ] **Título corto y claro** (<= 120 caracteres)
+- [ ] **Descripción del problema y solución** (2-4 líneas)
+- [ ] **Checklist mínimo completo**
+<!-- required-checks-end -->
 
 ### Seguridad & Auditoría
 - [ ] **Sin secrets**: No hay secrets, tokens o credenciales en el código
@@ -70,13 +77,13 @@ Closes #<!-- número de issue -->
 ### Tests Locales
 ```bash
 # Ejecutar tests
-npm run test
+pnpm test:unit
 
 # Ejecutar lint
-npm run lint
+pnpm lint
 
 # Build
-npm run build
+pnpm build:web
 ```
 
 ### Tests en CI

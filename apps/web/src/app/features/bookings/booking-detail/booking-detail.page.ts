@@ -12,7 +12,6 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Booking, BookingExtensionRequest, BookingStatus, TrafficInfraction } from '@core/models';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { CLAIM_STATUS_LABELS, InsuranceClaim } from '@core/models/insurance.model';
-import { BookingTimelineComponent } from './booking-timeline.component';
 import { AuthService } from '@core/services/auth/auth.service';
 import {
   BookingConfirmationService,
@@ -104,6 +103,7 @@ import {
   BookingFlowCardComponent,
   FlowActionEvent,
 } from '../../../shared/components/booking-flow-card/booking-flow-card.component';
+import { BookingTimelineComponent } from './booking-timeline.component';
 import { BookingActionsCardComponent } from './booking-actions-card.component';
 import { BookingCheckInInfoCardComponent } from './booking-check-in-info-card.component';
 import { BookingExtensionsManagerComponent } from './booking-extensions-manager.component';

@@ -18,7 +18,7 @@ export class BrowseStore {
       price_per_day: 100,
       currency: 'USD',
       status: 'active',
-    } as any,
+    } as Car,
   ]);
   readonly loading = signal<boolean>(true);
   readonly viewMode = signal<BrowseViewMode>('map');
@@ -68,7 +68,7 @@ export class BrowseStore {
       price_per_day: 100,
       currency: 'USD',
       status: 'active',
-    } as any;
+    } as Car;
     this.cars.set([testCar, ...cars]);
     this.loading.set(false);
   }

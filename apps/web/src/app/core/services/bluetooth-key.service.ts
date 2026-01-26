@@ -120,9 +120,10 @@ export class BluetoothKeyService {
 
       // Read initial battery if available
       this.readBatteryLevel();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Bluetooth connection failed', err);
-      this.error.set(err.message || 'Connection failed');
+      const message = err instanceof Error ? err.message : String(err);
+      this.error.set(message || 'Connection failed');
       this.connectionState.set('error');
     }
   }
@@ -152,8 +153,9 @@ export class BluetoothKeyService {
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       this.lockState.set(newState);
-    } catch (err: any) {
-      this.error.set('Failed to toggle lock: ' + err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      this.error.set('Failed to toggle lock: ' + message);
       this.lockState.set(currentState); // Revert
     }
   }

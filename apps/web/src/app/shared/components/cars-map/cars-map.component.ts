@@ -26,6 +26,7 @@ import type { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { MapboxDirectionsService } from '@core/services/geo/mapbox-directions.service';
 import { MapboxPreloaderService } from '@core/services/geo/mapbox-preloader.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { SoundService } from '@core/services/ui/sound.service';
 import { environment } from '@environment';
 import { EnhancedMapTooltipComponent } from '../enhanced-map-tooltip/enhanced-map-tooltip.component';
 import type { BookingFormData } from '../map-booking-panel/map-booking-panel.component';
@@ -36,7 +37,6 @@ import {
   type MapLayer,
 } from '../map-layers-control/map-layers-control.component';
 import { MapMarkerComponent } from '../map-marker/map-marker.component';
-import { SoundService } from '@core/services/ui/sound.service';
 
 type MapboxGL = typeof import('mapbox-gl').default;
 type MapboxMap = import('mapbox-gl').Map;
@@ -1466,7 +1466,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         // Fallback if lookup fails (shouldn't happen)
         const feature = featuresMap.get(carId);
         if (feature) {
-          const geom = feature.geometry as any;
+          const geom = feature.geometry as { coordinates: [number, number] };
           const coords = geom.coordinates;
           // Minimal data from properties
           const minimalCar: CarMapLocation = {
@@ -1478,7 +1478,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
             currency: feature.properties?.['currency'] || 'USD',
             photoUrl: feature.properties?.['photoUrl'] || '',
             availabilityStatus: feature.properties?.['availabilityStatus']
-          } as any;
+          } as CarMapLocation;
 
           const markerData = this.createCarMarker(minimalCar);
           if (markerData) {

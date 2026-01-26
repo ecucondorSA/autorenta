@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 
 export type SoundType = 'click' | 'tick' | 'swoosh' | 'success' | 'pop';
 
+type WebkitAudioContextWindow = Window & { webkitAudioContext?: typeof AudioContext };
+
 @Injectable({
   providedIn: 'root',
 })
@@ -16,9 +18,10 @@ export class SoundService {
 
   private initAudio() {
     try {
-      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioContext) {
-        this.audioCtx = new AudioContext();
+      const AudioContextCtor =
+        window.AudioContext || (window as WebkitAudioContextWindow).webkitAudioContext;
+      if (AudioContextCtor) {
+        this.audioCtx = new AudioContextCtor();
         this.masterGain = this.audioCtx.createGain();
         this.masterGain.gain.value = 0.3; // System volume
         this.masterGain.connect(this.audioCtx.destination);

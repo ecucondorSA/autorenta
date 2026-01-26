@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { Car } from '../../../../core/models';
 import { BookingWizardData } from '@core/models/booking-wizard.model';
+import { Car } from '../../../../core/models';
 
 @Component({
   selector: 'app-booking-payment-step',

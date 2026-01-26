@@ -2,13 +2,19 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    include: ['functions/**/*.test.ts', 'functions/**/*.spec.ts'],
-    exclude: ['**/node_modules/**', '**/dist/**', '**/coverage/**', '**/apps/web/**'],
+    include: [
+      'functions/**/*.test.ts',
+      'functions/**/*.spec.ts',
+      'apps/web/src/app/shared/utils/**/*.test.ts',
+      'apps/web/src/app/core/utils/**/*.test.ts',
+    ],
+    exclude: ['**/node_modules/**', '**/dist/**', '**/coverage/**'],
     environment: 'node',
     globals: true,
     clearMocks: true,
     mockReset: true,
     restoreMocks: true,
+    passWithNoTests: true,
     watchExclude: ['**/node_modules/**', '**/dist/**', '**/coverage/**'],
   },
   coverage: {

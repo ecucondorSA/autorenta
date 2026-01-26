@@ -1,9 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy, signal, Input, inject, computed } from '@angular/core';
-import { IconComponent } from '@app/shared/components/icon/icon.component';
+import { Component, ChangeDetectionStrategy, Input, inject, computed } from '@angular/core';
 import { BluetoothKeyService } from '@app/core/services/bluetooth-key.service';
-
-type KeyState = 'locked' | 'unlocking' | 'unlocked' | 'locking';
 
 @Component({
   selector: 'app-digital-key',

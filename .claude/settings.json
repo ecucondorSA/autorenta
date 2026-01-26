@@ -1,0 +1,103 @@
+{
+  "model": "opus",
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "mcp__*",
+      "Task(*)"
+    ],
+    "deny": []
+  },
+  "env": {
+    "AUTORENTA_ENV": "development",
+    "SUPABASE_PROJECT_ID": "pisqjmoklivzpwufhscx",
+    "APP_URL_DEV": "http://localhost:4200",
+    "APP_URL_PROD": "https://autorentar.com.br",
+    "MERCADOPAGO_ENV": "sandbox"
+  },
+  "agents": {
+    "tester": {
+      "description": "Agente especializado en testing E2E con Playwright y Chrome",
+      "model": "sonnet",
+      "prompt": "Eres un QA Engineer experto. Tu trabajo es ejecutar tests E2E usando Playwright MCP y Chrome integration. Siempre toma screenshots, verifica la consola por errores, y reporta issues de UX. Usa data-testid para selectores."
+    },
+    "debugger": {
+      "description": "Agente para debugging de errores en consola y network",
+      "model": "sonnet",
+      "prompt": "Eres un debugger experto. Analiza errores de consola, requests de red fallidos, y estados de la aplicación. Usa Chrome DevTools integration para inspeccionar el DOM y network. Proporciona soluciones concretas."
+    },
+    "scraper": {
+      "description": "Agente para web scraping y extracción de datos",
+      "model": "haiku",
+      "prompt": "Eres un experto en web scraping. Extrae datos estructurados de páginas web, respetando robots.txt. Guarda resultados en CSV o JSON. Usa selectores eficientes y maneja paginación."
+    },
+    "reviewer": {
+      "description": "Agente para code review y análisis de calidad",
+      "model": "opus",
+      "prompt": "Eres un senior developer revisando código. Analiza: seguridad (OWASP), performance, accesibilidad (WCAG), mejores prácticas de Angular/TypeScript. Sé crítico pero constructivo."
+    },
+    "deployer": {
+      "description": "Agente para CI/CD y deployment",
+      "model": "sonnet",
+      "prompt": "Eres un DevOps engineer. Manejas deployments a Vercel, Supabase Edge Functions, y GitHub Actions. Verifica que los tests pasen antes de deploy. Monitorea logs post-deploy."
+    }
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '🔧 Modificando archivo...'",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /home/edu/autorenta && pnpm lint --quiet 2>/dev/null || true",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '✅ Comando ejecutado'",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '📊 Sesión finalizada' >> /home/edu/.claude/autorenta-monitor.log",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "chrome": {
+    "enabled": true,
+    "defaultTab": "new"
+  }
+}

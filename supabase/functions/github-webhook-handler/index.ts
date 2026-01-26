@@ -54,6 +54,41 @@ serve(async (req) => {
             safety_check_passed: false
         };
 
+        // ============================================================
+        // RATE LIMITING CHECK (NEW)
+        // ============================================================
+        console.log('[Edge Brain] 🚦 Checking rate limits...');
+        const rateLimit = await memory.canCreatePR();
+        if (!rateLimit.allowed) {
+            console.warn(`[Edge Brain] ⏳ Rate limited: ${rateLimit.reason}`);
+            return new Response(JSON.stringify({
+                message: 'Rate limited',
+                reason: rateLimit.reason,
+                retry_after_minutes: rateLimit.waitMinutes
+            }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                status: 429,
+            });
+        }
+
+        // ============================================================
+        // CHECK OPEN PR COUNT (NEW)
+        // ============================================================
+        const MAX_OPEN_PRS = 10;
+        const openPRCount = await github.countOpenEdgeBrainPRs();
+        if (openPRCount >= MAX_OPEN_PRS) {
+            console.warn(`[Edge Brain] 🛑 Too many open PRs: ${openPRCount}/${MAX_OPEN_PRS}`);
+            return new Response(JSON.stringify({
+                message: 'Too many open PRs',
+                open_prs: openPRCount,
+                max_allowed: MAX_OPEN_PRS,
+                action: 'Please review and merge/close existing PRs first'
+            }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                status: 429,
+            });
+        }
+
         // 1. Get logs from failed job
         console.log('[Edge Brain] 📥 Fetching job logs...');
         const jobsData = await github.listJobs(runId);
@@ -84,6 +119,41 @@ serve(async (req) => {
             return new Response(JSON.stringify({
                 message: 'Could not identify target file',
                 logs_snippet: relevantSnippet.slice(0, 500)
+            }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+        }
+
+        // ============================================================
+        // FILE COOLDOWN CHECK (NEW)
+        // ============================================================
+        console.log(`[Edge Brain] ⏱️ Checking cooldown for ${parsedError.file_path}...`);
+        const cooldown = await memory.hasFileCooldown(parsedError.file_path);
+        if (cooldown.onCooldown) {
+            console.warn(`[Edge Brain] ⏳ File on cooldown: ${cooldown.minutesRemaining} minutes remaining`);
+            return new Response(JSON.stringify({
+                message: 'File on cooldown',
+                file: parsedError.file_path,
+                minutes_remaining: cooldown.minutesRemaining,
+                reason: 'A PR was recently created for this file. Wait before creating another.'
+            }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                status: 429,
+            });
+        }
+
+        // ============================================================
+        // PR DEDUPLICATION CHECK (NEW)
+        // ============================================================
+        console.log(`[Edge Brain] 🔍 Checking for existing PR for ${parsedError.file_path}...`);
+        const existingPR = await github.hasOpenPRForFile(parsedError.file_path);
+        if (existingPR.hasOpenPR) {
+            console.warn(`[Edge Brain] 📋 PR already exists: #${existingPR.existingPR?.number}`);
+            return new Response(JSON.stringify({
+                message: 'PR already exists for this file',
+                file: parsedError.file_path,
+                existing_pr: existingPR.existingPR,
+                action: 'Review the existing PR instead of creating a duplicate'
             }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             });
@@ -246,8 +316,13 @@ ${fixResponse.patches.map((p: Patch, i: number) =>
 **Confidence:** ${fixResponse.confidence ? `${(fixResponse.confidence * 100).toFixed(0)}%` : 'N/A'}
 `;
 
+                // ENHANCED: Shorter, cleaner PR titles
+                const shortFileName = parsedError.file_path.split('/').pop() || 'file';
+                const shortAnalysis = (fixResponse.analysis || parsedError.error_type).slice(0, 50);
+                const prTitle = `fix(${parsedError.error_type}): ${shortFileName} - ${shortAnalysis}`;
+
                 const pr = await github.createPR(
-                    `🚑 Fix (Tier 7): ${fixResponse.analysis || parsedError.error_message.slice(0, 100)}`,
+                    prTitle,
                     prBody,
                     fixBranch,
                     baseBranch

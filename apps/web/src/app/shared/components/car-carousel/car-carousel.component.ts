@@ -1,9 +1,9 @@
 import { Component, Input, ElementRef, ViewChild, ChangeDetectionStrategy, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
+import { SoundService } from '@core/services/ui/sound.service';
 import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
 import { BrowseStore } from '../../../features/cars/browse/browse.store';
-import { SoundService } from '@core/services/ui/sound.service';
 
 @Component({
   selector: 'app-car-carousel',
@@ -57,7 +57,7 @@ export class CarCarouselComponent {
 
   private store = inject(BrowseStore);
   private sound = inject(SoundService);
-  private scrollTimeout: any;
+  private scrollTimeout: ReturnType<typeof setTimeout> | null = null;
   private isProgrammaticScroll = false;
 
   // Keyboard Navigation
@@ -129,7 +129,9 @@ export class CarCarouselComponent {
   onScroll() {
     if (this.isProgrammaticScroll) return;
 
-    clearTimeout(this.scrollTimeout);
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout);
+    }
     this.scrollTimeout = setTimeout(() => {
       this.detectActiveCard();
     }, 150);
