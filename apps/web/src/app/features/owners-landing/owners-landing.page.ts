@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CarsService } from '@core/services/cars/cars.service';
 import { PricingService } from '@core/services/payments/pricing.service';
@@ -95,8 +95,9 @@ export class OwnersLandingPage implements OnInit {
         this.calculatePotential();
     }
 
-    onYearSelected(event: any) {
-        const year = parseInt(event.target.value);
+    onYearSelected(event: Event) {
+        const target = event.target as HTMLSelectElement;
+        const year = parseInt(target.value);
         this.selectedYear.set(year || null);
         this.calculatePotential();
     }

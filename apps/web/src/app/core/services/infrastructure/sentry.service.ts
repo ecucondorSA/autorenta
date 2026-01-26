@@ -1,6 +1,6 @@
 import { ErrorHandler, Injectable } from '@angular/core';
 import { environment } from '@environment';
-import { getLocalStorage, isBrowser, runAfterHydration } from '@core/utils/platform.utils';
+import { isBrowser, runAfterHydration } from '@core/utils/platform.utils';
 
 /**
  * Sentry module type for lazy loading
@@ -213,13 +213,15 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
     release: `autorenta-web@${environment.production ? 'production' : 'development'}`,
 
     // Configure what data to send
-    beforeSend(event: any, hint: any) {
-      // Don't send errors in development unless explicitly testing
-      const storage = getLocalStorage();
-      const testMode = storage ? storage.getItem('sentry-test-mode') : null;
-      if (!environment.production && !testMode) {
-        return null;
-      }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    beforeSend(event: any, _hint: any) {
+      // TESTING MODE: Send ALL errors to Sentry (including development)
+      // TODO: Revert this after testing is complete
+      // const storage = getLocalStorage();
+      // const testMode = storage ? storage.getItem('sentry-test-mode') : null;
+      // if (!environment.production && !testMode) {
+      //   return null;
+      // }
 
       // Sanitize sensitive data
       if (event.request) {
@@ -261,6 +263,7 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
     },
 
     // Configure breadcrumbs
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     beforeBreadcrumb(breadcrumb: any): any | null {
       // Don't log sensitive URLs in breadcrumbs
       if (breadcrumb.category === 'fetch' || breadcrumb.category === 'xhr') {

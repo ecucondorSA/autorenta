@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, ViewChild, ChangeDetectionStrategy, effect, inject } from '@angular/core';
+import { Component, Input, ElementRef, ViewChild, ChangeDetectionStrategy, effect, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { SoundService } from '@core/services/ui/sound.service';

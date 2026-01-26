@@ -646,10 +646,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     // Check if style is ready for adding sources/layers
     // Note: isStyleLoaded() can return false with Mapbox Standard (imported style)
-    // even when the map is functionally ready, so we also check for the style object
-    const style = this.map.getStyle();
-    const hasStyle = style && style.layers && style.layers.length > 0;
-
+    // even when the map is functionally ready
     if (!this.map.isStyleLoaded()) {
       this.map.once('style.load', () => this.setupClustering());
       return;
@@ -1465,7 +1462,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         // Fallback if lookup fails (shouldn't happen)
         const feature = featuresMap.get(carId);
         if (feature) {
-          const geom = feature.geometry as { coordinates: [number, number] };
+          const geom = feature.geometry as unknown as { coordinates: [number, number] };
           const coords = geom.coordinates;
           // Minimal data from properties
           const minimalCar: CarMapLocation = {

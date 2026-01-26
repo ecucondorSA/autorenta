@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
@@ -419,10 +420,10 @@ export class PublishCarV2Page implements OnInit {
       if (qParams['brand_id'] || qParams['model_id'] || qParams['year']) {
         this.logger.debug('[PublishCarV2] Found query params from landing:', qParams);
 
-        const patchData: any = {};
-        if (qParams['brand_id']) patchData.brand_id = qParams['brand_id'];
-        if (qParams['model_id']) patchData.model_id = qParams['model_id'];
-        if (qParams['year']) patchData.year = parseInt(qParams['year']);
+        const patchData: Record<string, string | number> = {};
+        if (qParams['brand_id']) patchData['brand_id'] = qParams['brand_id'];
+        if (qParams['model_id']) patchData['model_id'] = qParams['model_id'];
+        if (qParams['year']) patchData['year'] = parseInt(qParams['year']);
 
         this.publishForm.patchValue(patchData);
 

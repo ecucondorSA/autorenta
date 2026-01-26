@@ -44,8 +44,8 @@ if (existsSync(localEnvFile)) {
 const hasConfigFlag = process.argv.some(arg => arg.startsWith('--configuration'));
 const config = hasConfigFlag ? [] : ['--configuration', 'development'];
 
-const args = ['ng', 'serve', ...config, '--proxy-config', 'proxy.conf.json', ...process.argv.slice(2)];
-const child = spawn('npx', args, {
+const args = ['exec', 'ng', 'serve', ...config, '--proxy-config', 'proxy.conf.json', ...process.argv.slice(2)];
+const child = spawn('pnpm', args, {
   stdio: 'inherit',
   env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=4096' },
   cwd: root,
