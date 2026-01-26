@@ -1,26 +1,12 @@
-import { Component, Input, AfterViewInit } from '@angular/core';
-import { register } from 'swiper/element/bundle';
-register();
-
+import { Component, Input } from '@angular/core';
 import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
 
 @Component({
   selector: 'ar-car-carousel',
   templateUrl: './car-carousel.component.html',
-  styleUrls: ['./car-carousel.component.less']
+  styleUrls: ['./car-carousel.component.scss']
 })
-export class CarCarouselComponent implements AfterViewInit {
-
-  @Input() cars: any[] = [];
-  @Input() title: string = '';
-  @Input() subtitle: string = '';
-
-  swiperParams = {
-    slidesPerView: 'auto',
-    spaceBetween: 16,
-  };
-
-  ngAfterViewInit(): void {
-  }
+export class CarCarouselComponent {
+  @Input() cars: any;
 
 }
