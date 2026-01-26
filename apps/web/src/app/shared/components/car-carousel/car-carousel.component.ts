@@ -1,21 +1,14 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { register } from 'swiper/element/bundle';
-import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
-
-register();
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-car-carousel',
-  standalone: true,
-  imports: [CarMiniCardComponent],
+  selector: 'ar-car-carousel',
   templateUrl: './car-carousel.component.html',
-  styleUrls: ['./car-carousel.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./car-carousel.component.scss']
 })
-export class CarCarouselComponent implements OnInit {
+export class CarCarouselComponent {
   @Input() cars: any[] = [];
 
-  ngOnInit(): void {
-    //
-  }
+  // Removing the empty ngOnInit lifecycle method
+  // ngOnInit(): void {
+  // }
 }
