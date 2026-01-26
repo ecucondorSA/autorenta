@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, combineLatest, map, switchMap, take } from 'rxjs';
-import { Mission } from '../../../../../core/models/mission';
-import { MissionsService } from '../../../../../core/services/missions/missions.service';
-import { UserService } from '../../../../../core/services/user/user.service';
-import { MatDialog } from '@angular/material/dialog';
-import { DeleteMissionDialogComponent } from '../../components/delete-mission-dialog/delete-mission-dialog.component';
-import { Store } from '@ngrx/store';
-import { selectAuthUser } from '../../../../../core/store/auth/auth.selectors';
-import { User } from '../../../../../core/models/user';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable, combineLatest, map, of, switchMap, take, tap } from 'rxjs';
+
+import { MissionsService } from '@core/services/missions/missions.service';
+import { UserService } from '@core/services/user/user.service';
+import { Mission } from '@shared/models/mission';
+import { User } from '@shared/models/user';
+import { Marker } from '@shared/models/marker';
+import { MarkersService } from '@core/services/markers/markers.service';
+import { FormControl } from '@angular/forms';
+import { ToastService } from '@shared/services/toast.service';
 import { TranslocoService } from '@ngneat/transloco';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-mission-detail',
@@ -19,141 +20,111 @@ import { TranslocoService } from '@ngneat/transloco';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MissionDetailPage implements OnInit {
-  mission$: Observable<Mission | undefined>;
-  isOwner$: Observable<boolean>;
-  missionId: string;
-  user$ = this.store.select(selectAuthUser);
+  missionId: string = this.route.snapshot.params['id'];
+  mission$: Observable<Mission | undefined> = this.missionsService.getMission(this.missionId);
+  markers$: Observable<Marker[]> = this.markersService.getMissionMarkers(this.missionId);
+  user$: Observable<User | null> = this.userService.currentUser$;
+  isMissionCreator$: Observable<boolean> = combineLatest([this.mission$, this.user$]).pipe(
+    map(([mission, user]) => mission?.creator === user?.uid)
+  );
+  isMissionMember$: Observable<boolean> = combineLatest([this.mission$, this.user$]).pipe(
+    map(([mission, user]) => mission?.members?.includes(user?.uid ?? '') ?? false)
+  );
+  canEditMission$: Observable<boolean> = combineLatest([this.isMissionCreator$, this.isMissionMember$]).pipe(
+    map(([isCreator, isMember]) => isCreator || isMember)
+  );
+  missionNameControl: FormControl = new FormControl();
+  isSavingName: boolean = false;
+  mapTileUrl = environment.mapTileUrl;
 
   constructor(
     private route: ActivatedRoute,
     private missionsService: MissionsService,
+    private markersService: MarkersService,
     private userService: UserService,
     private router: Router,
-    private dialog: MatDialog,
-    private store: Store,
-    private snackBar: MatSnackBar,
+    private toastService: ToastService,
     private translocoService: TranslocoService
   ) {}
 
-  ngOnInit(): void {
-    this.mission$ = this.route.params.pipe(
-      switchMap((params) => {
-        this.missionId = params['id'];
-        return this.missionsService.getMission(params['id']);
-      })
-    );
-
-    this.isOwner$ = combineLatest([this.mission$, this.user$]).pipe(
-      map(([mission, user]) => {
-        if (!mission || !user) {
-          return false;
-        }
-        return mission.owner === user.uid;
-      })
-    );
+  ngOnInit() {
+    this.mission$
+      .pipe(
+        take(1),
+        tap((mission) => {
+          this.missionNameControl.setValue(mission?.name);
+        })
+      )
+      .subscribe();
   }
 
-  async takeMission(mission: Mission) {
-    const user = await this.userService.getUser();
+  async joinMission() {
+    this.user$
+      .pipe(
+        take(1),
+        switchMap((user) => {
+          if (!user) {
+            this.toastService.error(this.translocoService.translate('missionDetail.toasts.notLoggedIn'));
+            return of(null);
+          }
+          return this.missionsService.joinMission(this.missionId, user.uid);
+        })
+      )
+      .subscribe();
+  }
 
-    if (!user) {
-      return;
-    }
+  async leaveMission() {
+    this.user$
+      .pipe(
+        take(1),
+        switchMap((user) => {
+          if (!user) {
+            this.toastService.error(this.translocoService.translate('missionDetail.toasts.notLoggedIn'));
+            return of(null);
+          }
+          return this.missionsService.leaveMission(this.missionId, user.uid);
+        })
+      )
+      .subscribe();
+  }
 
-    if (mission.takenBy) {
-      return;
-    }
-
+  async deleteMission() {
     this.missionsService
-      .takeMission(mission.id, user.uid)
+      .deleteMission(this.missionId)
       .then(() => {
-        this.snackBar.open(
-          this.translocoService.translate('mission_detail.mission_taken'),
-          'OK',
-          {
-            duration: 3000,
-          }
-        );
-      })
-      .catch((error) => {
-        console.error('Error taking mission:', error);
-        this.snackBar.open(
-          this.translocoService.translate('mission_detail.mission_taken_error'),
-          'OK',
-          {
-            duration: 3000,
-          }
-        );
-      });
-  }
-
-  openDeleteMissionDialog(mission: Mission) {
-    const dialogRef = this.dialog.open(DeleteMissionDialogComponent, {
-      width: '250px',
-      data: { missionId: mission.id },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.router.navigate(['/scout']);
-      }
-    });
-  }
-
-  async completeMission(mission: Mission) {
-    if (!mission.takenBy) {
-      return;
-    }
-
-    this.missionsService
-      .completeMission(mission.id)
-      .then(() => {
-        this.snackBar.open(
-          this.translocoService.translate('mission_detail.mission_completed'),
-          'OK',
-          {
-            duration: 3000,
-          }
-        );
         this.router.navigate(['/scout']);
       })
-      .catch((error) => {
-        console.error('Error completing mission:', error);
-        this.snackBar.open(
-          this.translocoService.translate('mission_detail.mission_completed_error'),
-          'OK',
-          {
-            duration: 3000,
-          }
-        );
+      .catch((_err: unknown) => {
+        this.toastService.error(this.translocoService.translate('missionDetail.toasts.deleteError'));
       });
   }
 
-  async abandonMission(mission: Mission) {
-    if (!mission.takenBy) {
-      return;
-    }
-
+  async saveMissionName() {
+    if (this.missionNameControl.invalid) return;
+    this.isSavingName = true;
     this.missionsService
-      .abandonMission(mission.id)
-      .then(() => {
-        this.snackBar.open(
-          this.translocoService.translate('mission_detail.mission_abandoned'),
-          'OK',
-          {
-            duration: 3000,
-          }
-        );
+      .updateMission(this.missionId, { name: this.missionNameControl.value })
+      .catch((_res: unknown) => {
+        this.toastService.error(this.translocoService.translate('missionDetail.toasts.saveNameError'));
       })
-      .catch((error) => {
-        console.error('Error abandoning mission:', error);
-        this.snackBar.open(
-          this.translocoService.translate('mission_detail.mission_abandoned_error'),
-          'OK',
-          {
-            duration: 3000,
-          }
-        );
+      .finally(() => {
+        this.isSavingName = false;
       });
+  }
+
+  markerClick(marker: Marker) {
+    this.router.navigate(['/scout/marker', marker.id]);
+  }
+
+  trackMarkers(index: number, marker: Marker): string {
+    return marker.id;
+  }
+
+  async addMarker(event: any) {
+    const position = {
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+    };
+    this.router.navigate(['/scout/marker/create'], { queryParams: position });
   }
 }
