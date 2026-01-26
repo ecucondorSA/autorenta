@@ -1,9 +1,7 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { Security } from '../../../../../core/models/security.model';
-import { Segment } from '../../../../../core/models/segment.model';
+import { environment } from '../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -13,75 +11,110 @@ export class SecurityService {
 
   constructor(private http: HttpClient) {}
 
-  getSecurities(): Observable<Security[]> {
-    return this.http.get<Security[]>(`${this.apiUrl}/securities`);
+  getSecurityData(): Observable<any> {
+    const url = `${this.apiUrl}/security`;
+    return this.http.get(url);
   }
 
-  getSecurity(id: string): Observable<Security> {
-    return this.http.get<Security>(`${this.apiUrl}/securities/${id}`);
+  // Vulnerability Scanning
+  startVulnerabilityScan(target: string): Observable<any> {
+    const url = `${this.apiUrl}/security/scan`;
+    const body = { target };
+    return this.http.post(url, body);
   }
 
-  addSecurity(security: Security): Observable<Security> {
-    return this.http.post<Security>(`${this.apiUrl}/securities`, security);
+  getVulnerabilityScanStatus(scanId: string): Observable<any> {
+    const url = `${this.apiUrl}/security/scan/${scanId}/status`;
+    return this.http.get(url);
   }
 
-  updateSecurity(id: string, security: Security): Observable<Security> {
-    return this.http.put<Security>(`${this.apiUrl}/securities/${id}`, security);
+  // Intrusion Detection
+  getIntrusionDetectionLogs(): Observable<any> {
+    const url = `${this.apiUrl}/security/intrusion-logs`;
+    return this.http.get(url);
   }
 
-  deleteSecurity(id: string): Observable<Security> {
-    return this.http.delete<Security>(`${this.apiUrl}/securities/${id}`);
+  // Security Policies
+  getSecurityPolicies(): Observable<any[]> {
+    const url = `${this.apiUrl}/security/policies`;
+    return this.http.get<any[]>(url);
   }
 
-  getSegments(): Observable<Segment[]> {
-    return this.http.get<Segment[]>(`${this.apiUrl}/segments`);
+  updateSecurityPolicy(policyId: string, updates: any): Observable<any> {
+    const url = `${this.apiUrl}/security/policies/${policyId}`;
+    return this.http.put(url, updates);
   }
 
-  getSegment(id: string): Observable<Segment> {
-    return this.http.get<Segment>(`${this.apiUrl}/segments/${id}`);
+  // Authentication and Authorization
+  login(credentials: any): Observable<any> {
+    const url = `${this.apiUrl}/auth/login`;
+    return this.http.post(url, credentials);
   }
 
-  addSegment(segment: Segment): Observable<Segment> {
-    return this.http.post<Segment>(`${this.apiUrl}/segments`, segment);
+  logout(): Observable<any> {
+    const url = `${this.apiUrl}/auth/logout`;
+    return this.http.post(url, {});
   }
 
-  updateSegment(id: string, segment: Segment): Observable<Segment> {
-    return this.http.put<Segment>(`${this.apiUrl}/segments/${id}`, segment);
+  // Data Encryption
+  encryptData(data: string): Observable<any> {
+    const url = `${this.apiUrl}/security/encrypt`;
+    const body = { data };
+    return this.http.post(url, body);
   }
 
-  deleteSegment(id: string): Observable<Segment> {
-    return this.http.delete<Segment>(`${this.apiUrl}/segments/${id}`);
+  decryptData(encryptedData: string): Observable<any> {
+    const url = `${this.apiUrl}/security/decrypt`;
+    const body = { encryptedData };
+    return this.http.post(url, body);
   }
 
-  runSecurity(securityId: string, payload: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/securities/${securityId}/run`, payload);
+  // Error Handling Example (adjust types as needed based on actual response)
+  exampleRequest(): Observable<any> {
+    return new Observable((observer) => {
+      this.http.get<any>('/api/example').subscribe(
+        (data) => {
+          observer.next(data);
+          observer.complete();
+        },
+        (_err) => {
+          observer.error('An error occurred');
+        }
+      );
+    });
   }
 
-  runSegment(segmentId: string, payload: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/segments/${segmentId}/run`, payload);
+  // Example of a method that returns a specific type
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/users`);
   }
 
-  getSecurityResults(securityId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/securities/${securityId}/results`);
+  createUser(user: User): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/users`, user);
   }
 
-  getSegmentResults(segmentId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/segments/${segmentId}/results`);
+  updateUser(id: string, user: User): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/users/${id}`, user);
   }
 
-  approveSecurityResult(securityId: string, resultId: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/securities/${securityId}/results/${resultId}/approve`, {});
+  deleteUser(id: string): Observable<void> {
+    return new Observable((observer) => {
+      this.http.delete<void>(`${this.apiUrl}/users/${id}`).subscribe(
+        () => {
+          observer.next();
+          observer.complete();
+        },
+        (_err) => {
+          observer.error('Failed to delete user.');
+        }
+      );
+    });
   }
+}
 
-  rejectSecurityResult(securityId: string, resultId: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/securities/${securityId}/results/${resultId}/reject`, {});
-  }
-
-  approveSegmentResult(segmentId: string, resultId: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/segments/${segmentId}/results/${resultId}/approve`, {});
-  }
-
-  rejectSegmentResult(segmentId: string, resultId: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/segments/${segmentId}/results/${resultId}/reject`, {});
-  }
+// Example User interface (adjust properties to match your actual User object)
+interface User {
+  id?: string;
+  name: string;
+  email: string;
 }
