@@ -51,6 +51,27 @@ export class GitHubClient {
         return await resp.text();
     }
 
+    async getContent(path: string, ref?: string) {
+        const url = `${this.baseUrl}/repos/${this.owner}/${this.repo}/contents/${path}${ref ? `?ref=${ref}` : ''}`;
+        const resp = await fetch(url, { headers: this.headers });
+        if (!resp.ok) return null;
+        return resp.json();
+    }
+
+    async updateFile(path: string, content: string, message: string, sha: string, branch: string) {
+        const resp = await fetch(`${this.baseUrl}/repos/${this.owner}/${this.repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: this.headers,
+            body: JSON.stringify({
+                message,
+                content: btoa(content), // Base64 encode
+                sha,
+                branch
+            })
+        });
+        return resp.json();
+    }
+
     async createBranch(baseBranch: string, newBranch: string) {
         // 1. Get SHA of base branch
         const baseResp = await fetch(`${this.baseUrl}/repos/${this.owner}/${this.repo}/git/ref/heads/${baseBranch}`, {
