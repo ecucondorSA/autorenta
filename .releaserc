@@ -85,7 +85,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "node scripts/semantic-release-android.js ${nextRelease.version}"
+        "prepareCmd": "node scripts/ops/semantic-release-android.js ${nextRelease.version}"
       }
     ],
     [
