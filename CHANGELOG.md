@@ -1,3 +1,21 @@
+## [3.35.0](https://github.com/ecucondorSA/autorenta/compare/v3.34.1...v3.35.0) (2026-01-26)
+
+### ✨ Features
+
+* **ai:** add db-guardian agent for safe migration fixes ([0e62bfe](https://github.com/ecucondorSA/autorenta/commit/0e62bfe94d1cc5beb5bb6ca8318fd7d989fdd05b))
+* **ai:** add Tier 6 Centralized Edge Brain for CI self-healing ([ad10884](https://github.com/ecucondorSA/autorenta/commit/ad108844b1ea0d6b8c402a2e06c1254df70e7360))
+* **ai:** upgrade to Tier 5 with conversational healer, speculator agent and shared gemini client ([54ede2f](https://github.com/ecucondorSA/autorenta/commit/54ede2f555aa84690677304687e313aec24e97a5))
+* **core:** implement Gemini client with Sentry integration and self-healing workflow ([e296312](https://github.com/ecucondorSA/autorenta/commit/e29631279f005f07a84edc7d252abb4a65fe23e9))
+
+### 🐛 Bug Fixes
+
+* **ai:** use GEMINI_API_KEY for github-webhook-handler ([bb0c62d](https://github.com/ecucondorSA/autorenta/commit/bb0c62d91486e30c285ab77bb1abe22059bc5152))
+* **ci:** correct orphan lint script path and refine secret detection logic ([e826dc5](https://github.com/ecucondorSA/autorenta/commit/e826dc5be5f2864000aa0ede2eeb4596e87e96f8))
+* **ci:** fix relative path in semantic-release-android.js ([d90f27a](https://github.com/ecucondorSA/autorenta/commit/d90f27a3ffa1e279589f3282d3e56f7e7f1d6da7))
+* **ci:** update semantic-release-android.js path in .releaserc ([a850ca3](https://github.com/ecucondorSA/autorenta/commit/a850ca39a26639ba4bc9c8991733a35dd042db8d))
+* **core:** resolve critical booking blockers and repair CI pipeline ([7f9417b](https://github.com/ecucondorSA/autorenta/commit/7f9417bf0ea32f12699a9626ddff1befc8e72e59))
+* **sentry:** resolve P0 and P1 errors from audit ([335be55](https://github.com/ecucondorSA/autorenta/commit/335be554b84aaa310abe2a05c20f7e89f9f88c59))
+
 ## [3.34.1](https://github.com/ecucondorSA/autorenta/compare/v3.34.0...v3.34.1) (2026-01-24)
 
 ### 🐛 Bug Fixes
