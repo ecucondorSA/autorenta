@@ -2,24 +2,35 @@
 
 set -e
 
-COMMAND="$1"
-shift
-ARGS="$@"
+COMMAND=$1
 
-# Check if AUTORENTA_SKIP_INSTALL is set and the command is 'install'
-if [ "$AUTORENTA_SKIP_INSTALL" = "1" ] && [ "$COMMAND" = "install" ]; then
-  echo ". install: Skipping install due to AUTORENTA_SKIP_INSTALL=1"
-  exit 0
+# Exit if no command was specified
+if [ -z "$COMMAND" ]; then
+  echo "No command specified. Usage: ./tools/run.sh <command>"
+  exit 1
 fi
 
 echo ". install: Running command: $COMMAND"
 
-# Execute the command with arguments
-$COMMAND $ARGS
+case $COMMAND in
+  install)
+    if [ "$AUTORENTA_SKIP_INSTALL" = "1" ]; then
+      echo ". install: Skipping install due to AUTORENTA_SKIP_INSTALL=1"
+    else
+      pnpm install
+    fi
+    ;;
+  prepare)
+    husky
+    ;;
+  build)
+    cd apps/web
+    pnpm build
+    ;;
+  *)
+    echo "Unknown command: $COMMAND"
+    exit 1
+    ;;
+esac
 
-if [ $? -ne 0 ]; then
-  echo ". install: Failed"
-  exit 1
-else
-  echo ". install: Done"
-fi
+echo ". install: Done"
