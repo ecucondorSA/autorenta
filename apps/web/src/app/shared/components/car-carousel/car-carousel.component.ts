@@ -1,15 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-car-carousel',
+  selector: 'ar-car-carousel',
   templateUrl: './car-carousel.component.html',
   styleUrls: ['./car-carousel.component.scss']
 })
-export class CarCarouselComponent implements OnInit {
-  @Input() cars: any[];
+export class CarCarouselComponent {
+  @Input() cars: any[]; // Changed any to any[] as it's an array
 
-  ngOnInit(): void {
-    // Initialization logic here, if needed.
-    // If no initialization is needed, you can remove the ngOnInit method.
+  ngOnInit() {
+    // You can add initialization logic here if needed
+    // For example, you might want to fetch data or perform other setup tasks
+    console.log('CarCarouselComponent initialized');
   }
 }
