@@ -10,11 +10,11 @@ export class SecurityService {
 
   constructor(private http: HttpClient) {}
 
-  getSecurityData(): any {
-    return this.http.get(`${this.apiUrl}/security`);
+  getSecurityQuestions() {
+    return this.http.get<unknown>(`${this.apiUrl}/security-questions`);
   }
 
-  getBreachData(): any {
-    return this.http.get(`${this.apiUrl}/breaches`);
+  verifySecurityQuestions(data: any) {
+    return this.http.post<unknown>(`${this.apiUrl}/security-questions/verify`, data);
   }
 }
