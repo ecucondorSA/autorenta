@@ -1,18 +1,25 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
-source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
+# Source utils
+if [ -f "./tools/utils.sh" ]; then
+  source ./tools/utils.sh
+else
+  echo "Error: ./tools/utils.sh not found"
+  exit 1
+fi
 
-ACTION=$1
+# Run the command
+COMMAND=$1
 shift
 
-case "${ACTION}" in
+case $COMMAND in
   install)
-    install_dependencies
+    install_dependencies "$@"
     ;;
   *)
-    echo "Unknown action: ${ACTION}"
+    echo "Unknown command: $COMMAND"
     exit 1
     ;;
 esac
