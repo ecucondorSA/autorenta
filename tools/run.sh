@@ -1,12 +1,17 @@
 #!/bin/bash
 
-# Fail on error
 set -e
 
-# Skip install if AUTORENTA_SKIP_INSTALL is set to 1
-if [ "${AUTORENTA_SKIP_INSTALL}" != "1" ]; then
-  install
+# Skip validation in CI environments
+if [ -z "$CI" ]; then
+  ./scripts/validate-pr.sh
 fi
 
-# Run the rest of the script
-./scripts/validate-pr.sh
+if [ "$1" = "install" ]; then
+  echo "Running install script..."
+  pnpm install
+  echo "Install script completed."
+else
+  echo "Running command: pnpm "$@
+  pnpm "$@"
+fi
