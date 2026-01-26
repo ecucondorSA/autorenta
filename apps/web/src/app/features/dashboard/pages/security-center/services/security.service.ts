@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Segment } from '../../../../../../core/models/segment.model';
-import { Security } from '../../../../../../core/models/security.model';
+import { Security } from '../../../../../core/models/security.model';
+import { Segment } from '../../../../../core/models/segment.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +21,7 @@ export class SecurityService {
     return this.http.get<Security>(`${this.apiUrl}/securities/${id}`);
   }
 
-  createSecurity(security: Security): Observable<Security> {
+  addSecurity(security: Security): Observable<Security> {
     return this.http.post<Security>(`${this.apiUrl}/securities`, security);
   }
 
@@ -41,7 +41,7 @@ export class SecurityService {
     return this.http.get<Segment>(`${this.apiUrl}/segments/${id}`);
   }
 
-  createSegment(segment: Segment): Observable<Segment> {
+  addSegment(segment: Segment): Observable<Segment> {
     return this.http.post<Segment>(`${this.apiUrl}/segments`, segment);
   }
 
@@ -53,75 +53,35 @@ export class SecurityService {
     return this.http.delete<Segment>(`${this.apiUrl}/segments/${id}`);
   }
 
-  getSecurityForSegment(segmentId: string): Observable<Security[]> {
-    return this.http.get<Security[]>(`${this.apiUrl}/segments/${segmentId}/securities`);
+  runSecurity(securityId: string, payload: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/securities/${securityId}/run`, payload);
   }
 
-  addSecurityToSegment(segmentId: string, securityId: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/segments/${segmentId}/securities/${securityId}`, {});
+  runSegment(segmentId: string, payload: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/segments/${segmentId}/run`, payload);
   }
 
-  removeSecurityFromSegment(segmentId: string, securityId: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/segments/${segmentId}/securities/${securityId}`);
+  getSecurityResults(securityId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/securities/${securityId}/results`);
   }
 
-  generateRandomString(length: number) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
+  getSegmentResults(segmentId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/segments/${segmentId}/results`);
   }
 
-  bulkCreateSecurities(amount: number): Observable<any> {
-    return new Observable((observer) => {
-      for (let i = 0; i < amount; i++) {
-        const security: Security = {
-          id: this.generateRandomString(20),
-          name: this.generateRandomString(10),
-          description: this.generateRandomString(50),
-          segment: null,
-        };
-
-        this.createSecurity(security).subscribe(
-          (res) => {
-            console.log('Security created');
-          },
-          (err) => {
-            console.error('Error creating security');
-          }
-        );
-      }
-      observer.next('Completed');
-      observer.complete();
-    });
+  approveSecurityResult(securityId: string, resultId: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/securities/${securityId}/results/${resultId}/approve`, {});
   }
 
-  bulkCreateSegments(amount: number): Observable<any> {
-    return new Observable((observer) => {
-      for (let i = 0; i < amount; i++) {
-        const segment: Segment = {
-          id: this.generateRandomString(20),
-          name: this.generateRandomString(10),
-          description: this.generateRandomString(50),
-          securities: [],
-        };
+  rejectSecurityResult(securityId: string, resultId: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/securities/${securityId}/results/${resultId}/reject`, {});
+  }
 
-        this.createSegment(segment).subscribe(
-          (res) => {
-            console.log('Segment created');
-          },
-          (err) => {
-            console.error('Error creating segment');
-          }
-        );
-      }
-      observer.next('Completed');
-      observer.complete();
-    });
+  approveSegmentResult(segmentId: string, resultId: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/segments/${segmentId}/results/${resultId}/approve`, {});
+  }
+
+  rejectSegmentResult(segmentId: string, resultId: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/segments/${segmentId}/results/${resultId}/reject`, {});
   }
 }
