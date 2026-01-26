@@ -8,8 +8,8 @@ import { Car } from '@core/models/car.model';
 })
 export class CarCarouselComponent {
   @Input() cars: Car[] | null = null;
-  @Input() title: string = '';
 
   constructor() { }
 
+  // Removing empty ngOnInit
 }
