@@ -1,17 +1,28 @@
 #!/bin/bash
 
-# Source the utils script
-if [ -f "./utils.sh" ]; then
-  source "./utils.sh"
-else
-  echo "Error: utils.sh not found in the tools directory."
+set -e
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT_DIR="$(dirname "${SCRIPT_DIR}")"
+
+cd "${ROOT_DIR}"
+
+# Check if utils.sh exists
+if [ ! -f "${SCRIPT_DIR}/utils.sh" ]; then
+  echo "Error: utils.sh not found in the tools directory." >&2
   exit 1
 fi
 
-set -e
+source "${SCRIPT_DIR}/utils.sh"
 
-# Default command is install
-COMMAND=${1:-install}
+COMMAND=$1
 
-# Run the command
-run_command "$COMMAND"
+case "${COMMAND}" in
+  install)
+    install_dependencies
+    ;;
+  *)
+    echo "Usage: ./tools/run.sh [install]"
+    exit 1
+    ;;
+esac
