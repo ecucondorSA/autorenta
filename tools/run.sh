@@ -2,42 +2,40 @@
 
 set -e
 
-# Check if utils.sh exists
-if [ ! -f "./utils.sh" ]; then
-  echo "Error: utils.sh not found in the tools directory."
-  exit 1
-fi
+# Source the utils.sh script
+source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
 
-# Source utils.sh
-. ./utils.sh
+COMMAND="$1"
+shift
 
-# Parse command line arguments
-while [[ $# -gt 0 ]]; do
-  key="$1"
+case "${COMMAND}" in
+  install)
+    # Skip install if AUTORENTA_SKIP_INSTALL is set
+    if [ -n "${AUTORENTA_SKIP_INSTALL}" ]; then
+      echo "Skipping install"
+      exit 0
+    fi
 
-  case $key in
-    install)
-      install_dependencies
-      ;;
-    build)
-      build_project
-      ;;
-    test)
-      test_project
-      ;;
-    lint)
-      lint_project
-      ;;
-    format)
-      format_project
-      ;;
-    deploy)
-      deploy_project
-      ;;
-    *)
-      echo "Unknown command: $key"
-      exit 1
-      ;;
-  esac
-  shift
-done
+    install_dependencies
+    ;;
+  format)
+    format_code
+    ;;
+  lint)
+    lint_code
+    ;;
+  build)
+    build_project "$@"
+    ;;
+  test)
+    test_project "$@"
+    ;;
+  e2e)
+    e2e_tests "$@"
+    ;;
+  *) # Default case
+    echo "Usage: $0 {install|format|lint|build|test|e2e} [options]"
+    exit 1
+    ;;
+
+esac
