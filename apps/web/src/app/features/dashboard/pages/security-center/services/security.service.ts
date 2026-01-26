@@ -1,94 +1,98 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
-
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
-}
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Security } from '../../../../../core/models/security.model';
+import { Review } from '../../../../../core/models/review.model';
+import { Segment } from '../../../../../core/models/segment.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private apiUrl = environment.apiUrl;
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  constructor(private http: HttpClient) {}
 
-  private realtimeSubscription?: RealtimeChannel;
-
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  getSecurity(id: number): Observable<Security> {
+    return this.http.get<Security>(`${this.apiUrl}/api/security/${id}`);
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  updateSecurity(id: number, security: Security): Observable<Security> {
+    return this.http.put<Security>(`${this.apiUrl}/api/security/${id}`, security);
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
-    });
+  createSecurity(security: Security): Observable<Security> {
+    return this.http.post<Security>(`${this.apiUrl}/api/security`, security);
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
+  deleteSecurity(id: number): Observable<Security> {
+    return this.http.delete<Security>(`${this.apiUrl}/api/security/${id}`);
+  }
+
+  getReviewsBySecurityId(id: number): Observable<Review[]> {
+    return this.http.get<Review[]>(`${this.apiUrl}/api/security/${id}/reviews`);
+  }
+
+  getSegmentsBySecurityId(id: number): Observable<Segment[]> {
+    return this.http.get<Segment[]>(`${this.apiUrl}/api/security/${id}/segments`);
+  }
+
+  addReviewToSecurity(id: number, review: Review): Observable<Review> {
+    return this.http.post<Review>(`${this.apiUrl}/api/security/${id}/reviews`, review);
+  }
+
+  addSegmentToSecurity(id: number, segment: Segment): Observable<Segment> {
+    return this.http.post<Segment>(`${this.apiUrl}/api/security/${id}/segments`, segment);
+  }
+
+  getSecurityStatistics(securityId: number, startDate: string, endDate: string): Observable<any> {
+    const url = `${this.apiUrl}/api/security/${securityId}/statistics?startDate=${startDate}&endDate=${endDate}`;
+    return this.http.get<any>(url);
+  }
+
+  getSecurityAnalytics(securityId: number, startDate: string, endDate: string): Observable<any> {
+    const url = `${this.apiUrl}/api/security/${securityId}/analytics?startDate=${startDate}&endDate=${endDate}`;
+    return this.http.get<any>(url);
+  }
+
+  runSecurityScan(securityId: number): Observable<any> {
+    const url = `${this.apiUrl}/api/security/${securityId}/run-scan`;
+    return this.http.post<any>(url, {});
+  }
+
+  getSecurityScanStatus(securityId: number): Observable<any> {
+    const url = `${this.apiUrl}/api/security/${securityId}/scan-status`;
+    return this.http.get<any>(url);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  uploadSecurityFile(file: File, securityId: number): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return new Observable((observer) => {
+      fetch(`${this.apiUrl}/api/security/${securityId}/upload`, {
+        method: 'POST',
+        body: formData,
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            observer.next(res);
+          } else {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            res.json().then((err) => {
+              observer.error(err);
+            });
+          }
+          observer.complete();
+        })
+        .catch((err) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          err.json().then((res) => {
+            observer.error(res);
+          });
+        });
     });
   }
 }
