@@ -1,94 +1,72 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
+interface SecurityData {
+  /* define interface properties here */
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  // private environment = inject(EnvironmentService);
+  // private carService = inject(CarService);
+  // private toastService = inject(ToastService);
+  // private photoService = inject(PhotoService);
+  // private domSanitizer = inject(DomSanitizer);
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  private _securityData = new BehaviorSubject<SecurityData | null>(null);
+  securityData$ = this._securityData.asObservable();
+  private apiUrl = '/api/security';
+  constructor(private http: HttpClient) {}
 
-  private realtimeSubscription?: RealtimeChannel;
+  // Mock data for demonstration
+  private mockSecurityData: SecurityData = {
+    /* assign mock data here */
+  };
 
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  getSecurityData(): Observable<SecurityData> {
+    // return this.http.get<SecurityData>(`${this.environment.apiURL}${this.apiUrl}`).pipe(
+    return this.http.get<SecurityData>(`${this.apiUrl}`).pipe(
+      tap((data) => {
+        this._securityData.next(data);
+      })
+    );
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  getMockSecurityData(): Observable<SecurityData> {
+    return new Observable<SecurityData>((observer) => {
+      observer.next(this.mockSecurityData);
+      observer.complete();
+    }).pipe(
+      tap((data) => {
+        this._securityData.next(data);
+      })
+    );
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
-    });
+  // Example of a method that might use DomSanitizer to sanitize URLs
+  // getSafeUrl(unsafeUrl: string): SafeUrl {
+  //   return this.domSanitizer.bypassSecurityTrustUrl(unsafeUrl);
+  // }
+
+  // Example usage of other services (commented out to resolve unused variable warnings)
+  // performSecurityCheck(): void {
+  //   this.carService.getAllCars().subscribe(cars => {
+  //     if (cars.length === 0) {
+  //       this.toastService.showError('No cars found!');
+  //     }
+  //   });
+  // }
+
+  uploadFile(file: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post('/api/upload', formData);
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  analyzeImage(imageUrl: string): Observable<any> {
+    return this.http.post('/api/analyze', { imageUrl });
   }
 }
