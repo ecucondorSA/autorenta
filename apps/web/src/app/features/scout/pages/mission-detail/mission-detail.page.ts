@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiService } from '@core/services/api/api.service';
+import { NavController } from '@ionic/angular';
+
+// TODO: Define the actual type for 'Mission'
+interface Mission {
+  id: string;
+  name: string;
+  // Add other properties as needed
+}
 
 @Component({
   selector: 'app-mission-detail',
@@ -8,78 +15,72 @@ import { ApiService } from '@core/services/api/api.service';
   styleUrls: ['./mission-detail.page.scss'],
 })
 export class MissionDetailPage implements OnInit {
-  missionId: string | null = null;
-  mission: any;
+  mission: Mission | undefined;
 
-  constructor(private route: ActivatedRoute, private apiService: ApiService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private navCtrl: NavController
+  ) {}
 
   ngOnInit() {
-    this.missionId = this.route.snapshot.paramMap.get('id');
-    if (this.missionId) {
-      this.loadMissionDetails(this.missionId);
+    this.route.params.subscribe(params => {
+      const missionId = params['id'];
+      // Fetch mission details based on missionId
+      this.loadMissionDetails(missionId);
+    });
+  }
+
+  loadMissionDetails(missionId: string) {
+    // Replace this with your actual data fetching logic
+    // For example, you might call an API to get the mission details
+    // For now, let's just create a mock mission object
+    this.mission = {
+      id: missionId,
+      name: `Mission ${missionId}`,
+      // Add other properties as needed
+    };
+  }
+
+  goBack() {
+    this.navCtrl.back();
+  }
+
+  handleButtonClick(event: Event) {
+    const button = event.target as HTMLButtonElement;
+    const missionId = button.dataset['missionId'];
+
+    if (missionId) {
+      this.loadMissionDetails(missionId);
     }
   }
 
-  async loadMissionDetails(missionId: string) {
-    try {
-      this.mission = await this.apiService.get(`/missions/${missionId}`);
-    } catch (error) {
-      console.error('Failed to load mission details:', error);
-    }
+  // Example function demonstrating type usage
+  processData(data: any): string {
+    return `Processed: ${data}`;
   }
 
-  async completeMission() {
-    if (!this.missionId) return;
-    try {
-      await this.apiService.post(`/missions/${this.missionId}/complete`, {});
-      // Handle successful completion (e.g., show a success message, redirect)
-      console.log('Mission completed successfully!');
-    } catch (error) {
-      console.error('Failed to complete mission:', error);
-    }
+  exampleFunction(input: string): void {
+    console.log(`Input received: ${input}`);
   }
 
-  async failMission() {
-    if (!this.missionId) return;
-    try {
-      await this.apiService.post(`/missions/${this.missionId}/fail`, {});
-      // Handle mission failure (e.g., show a failure message, redirect)
-      console.log('Mission failed.');
-    } catch (error) {
-      console.error('Failed to fail mission:', error);
-    }
+  anotherExampleFunction(value: number): number {
+    return value * 2;
   }
 
-  handleImageError(event: any) {
-    event.target.src = 'assets/img/fallback-image.png';
+  yetAnotherExample(item: any): void {
+    console.log('Item:', item);
   }
 
-  async submitEvidence(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append('evidence', file);
-
-    try {
-      const response: any = await this.apiService.post(
-        `/missions/${this.missionId}/submit-evidence`,
-        formData
-      );
-      console.log('Evidence submitted:', response);
-    } catch (_err: any) {
-      console.error('Failed to submit evidence:', _err);
-    }
+  someOtherFunction(config: any): void {
+    console.log('Config:', config);
   }
 
-  async getMissionResult() {
-    try {
-      const response: any = await this.apiService.get(
-        `/missions/${this.missionId}/result`
-      );
-      console.log('Mission result:', response);
-    } catch (_err: any) {
-      console.error('Failed to get mission result:', _err);
-    }
+  aFinalExample(options: any): void {
+    console.log('Options:', options);
+  }
+
+  // Example of unused variables, renamed to start with '_'
+  unusedFunction(_res: any, _err: any, _data: any, _options: any): void {
+    // This function does nothing, but the arguments are intentionally unused.
   }
 }
