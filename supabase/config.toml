@@ -51,3 +51,8 @@ verify_jwt = false
 [functions.tiktok-events]
 # TikTok Events API - public for analytics tracking (anonymous users too)
 verify_jwt = false
+
+[functions.github-webhook-handler]
+# GitHub webhook handler - public for receiving GitHub Actions events
+# Security: Validates webhook signature via X-Hub-Signature-256 header
+verify_jwt = false
