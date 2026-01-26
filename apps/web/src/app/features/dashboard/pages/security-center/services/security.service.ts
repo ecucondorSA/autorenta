@@ -1,15 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
+  private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
   getSecurityIncidents(): Observable<any> {
     return this.http.get(`${this.apiUrl}/security-incidents`);
@@ -31,43 +32,41 @@ export class SecurityService {
     return this.http.delete(`${this.apiUrl}/security-incidents/${id}`);
   }
 
-  getSecurityRecommendations(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/security-recommendations`);
+  getSecurityAlerts(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security-alerts`);
   }
 
-  getSecurityRecommendation(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/security-recommendations/${id}`);
+  getSecurityAlert(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security-alerts/${id}`);
   }
 
-  createSecurityRecommendation(recommendation: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/security-recommendations`, recommendation);
+  createSecurityAlert(alert: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security-alerts`, alert);
   }
 
-  updateSecurityRecommendation(id: string, recommendation: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/security-recommendations/${id}`, recommendation);
+  updateSecurityAlert(id: string, alert: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/security-alerts/${id}`, alert);
   }
 
-  deleteSecurityRecommendation(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/security-recommendations/${id}`);
+  deleteSecurityAlert(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/security-alerts/${id}`);
   }
 
-  // TODO: Define specific type for the return value and parameters
-  runSecurityScan(scanParams: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/security-scan`, scanParams);
+  // Consider defining interfaces or types for the responses from the API
+  // to replace 'any' with specific types.
+  getSystemLogs(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/system-logs`);
   }
 
-  // TODO: Define specific type for the return value and parameters
-  getScanResults(scanId: any): Observable<any> {
-    return this.http.get(`${this.apiUrl}/security-scan/${scanId}`);
+  // Consider defining interfaces or types for the responses from the API
+  // to replace 'any' with specific types.
+  analyzeSecurityData(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security-analysis`, data);
   }
 
-  // TODO: Define specific type for the return value and parameters
-  generateReport(reportParams: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/security-report`, reportParams);
-  }
-
-  // TODO: Define specific type for the return value
-  getReport(reportId: any): Observable<any> {
-    return this.http.get(`${this.apiUrl}/security-report/${reportId}`);
+  // Consider defining interfaces or types for the responses from the API
+  // to replace 'any' with specific types.
+  generateSecurityReport(filters: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security-reports`, filters);
   }
 }
