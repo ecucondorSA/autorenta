@@ -1,94 +1,178 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
 
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
+interface ApiResponse<T> {
+  data: T | null;
+  error: string | null;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private apiUrl = environment.apiUrl;
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  constructor(private http: HttpClient) {}
 
-  private realtimeSubscription?: RealtimeChannel;
-
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  getSecurityQuestions(): Observable<ApiResponse<string[]>> {
+    return this.http.get<ApiResponse<string[]>>(`${this.apiUrl}/security/questions`);
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  verifySecurityQuestions(payload: { questionId: string; answer: string }[]): Observable<ApiResponse<boolean>> {
+    return this.http.post<ApiResponse<boolean>>(`${this.apiUrl}/security/verify-questions`, payload);
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
-    });
+  enable2FA(): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/2fa/enable`, {});
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  disable2FA(): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/2fa/disable`, {});
+  }
+
+  generateRecoveryCodes(): Observable<ApiResponse<string[]>> {
+    return this.http.post<ApiResponse<string[]>>(`${this.apiUrl}/auth/2fa/generate-recovery-codes`, {});
+  }
+
+  verifyRecoveryCode(code: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/2fa/verify-recovery-code`, { code });
+  }
+
+  get2FASettings(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/auth/2fa/settings`);
+  }
+
+  backupCodes(): Observable<ApiResponse<string[]>> {
+    return this.http.get<ApiResponse<string[]>>(`${this.apiUrl}/auth/2fa/backup-codes`);
+  }
+
+  // Password reset
+  requestPasswordReset(email: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/password/reset/request`, { email });
+  }
+
+  verifyPasswordResetToken(token: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/password/reset/verify-token`, { token });
+  }
+
+  resetPassword(payload: { token: string; newPassword: string }): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/password/reset`, payload);
+  }
+
+  // Change password
+  changePassword(payload: { currentPassword: string; newPassword: string }): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/password/change`, payload);
+  }
+
+  // Email verification
+  requestEmailVerification(): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/email/verification/request`, {});
+  }
+
+  verifyEmail(token: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/email/verification/verify`, { token });
+  }
+
+  // Account deletion
+  requestAccountDeletion(): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/account/deletion/request`, {});
+  }
+
+  verifyAccountDeletion(token: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/account/deletion/verify`, { token });
+  }
+
+  // Account recovery
+  recoverAccount(email: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/account/recovery/request`, { email });
+  }
+
+  verifyAccountRecovery(token: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/account/recovery/verify`, { token });
+  }
+
+  // Social login
+  socialLogin(provider: string): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/auth/social/${provider}`);
+  }
+
+  // Logout
+  logout(): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/logout`, {});
+  }
+
+  // Refresh token
+  refreshToken(): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/auth/refresh`, {});
+  }
+
+  // User profile
+  getProfile(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/user/profile`);
+  }
+
+  updateProfile(payload: any): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(`${this.apiUrl}/user/profile`, payload);
+  }
+
+  // User settings
+  getSettings(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/user/settings`);
+  }
+
+  updateSettings(payload: any): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(`${this.apiUrl}/user/settings`, payload);
+  }
+
+  // Notifications
+  getNotifications(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/user/notifications`);
+  }
+
+  markNotificationAsRead(notificationId: string): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(`${this.apiUrl}/user/notifications/${notificationId}/read`, {});
+  }
+
+  // Payments
+  getPaymentMethods(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/user/payments/methods`);
+  }
+
+  addPaymentMethod(payload: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/user/payments/methods`, payload);
+  }
+
+  deletePaymentMethod(paymentMethodId: string): Observable<ApiResponse<any>> {
+    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/user/payments/methods/${paymentMethodId}`);
+  }
+
+  // Bookings
+  getBookings(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/user/bookings`);
+  }
+
+  cancelBooking(bookingId: string): Observable<ApiResponse<any>> {
+    return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/user/bookings/${bookingId}`);
+  }
+
+  // Support
+  createSupportTicket(payload: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/support/tickets`, payload);
+  }
+
+  getSupportTickets(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/support/tickets`);
+  }
+
+  // Admin
+  getAdminDashboard(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/admin/dashboard`);
+  }
+
+  // Example of using generics
+  getSomething<T>(): Observable<ApiResponse<T>> {
+    return this.http.get<ApiResponse<T>>(`${this.apiUrl}/something`);
   }
 }
