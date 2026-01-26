@@ -1,28 +1,29 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import SwiperCore, { SwiperOptions, Navigation, Pagination, Scrollbar, A11y } from 'swiper';
-import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
-
-SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
-  selector: 'app-car-carousel',
+  selector: 'ar-car-carousel',
   templateUrl: './car-carousel.component.html',
-  styleUrls: ['./car-carousel.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  standalone: true,
-  imports: [CarMiniCardComponent],
+  styleUrls: ['./car-carousel.component.scss']
 })
-export class CarCarouselComponent implements OnInit {
-  @Input() cars: any[] = [];
-  config: SwiperOptions = {
-    slidesPerView: 3,
-    spaceBetween: 20,
-    navigation: true,
-    pagination: { clickable: true },
-    scrollbar: { draggable: true },
-  };
+export class CarCarouselComponent implements OnChanges {
+  @Input() images: string[] = [];
+  public carImageBaseUrl = environment.apiBaseUrl + '/cars';
+  public sliderImages: any[] = [];
 
-  constructor() {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['images'] && changes['images'].currentValue) {
+      this.sliderImages = this.images.map((image) => {
+        return {
+          image: `${this.carImageBaseUrl}/${image}`,
+          thumbImage: `${this.carImageBaseUrl}/${image}`,
+          alt: 'car image',
+          title: 'car image'
+        };
+      });
+    }
+  }
 
-  ngOnInit(): void {}
+  constructor() { }
+
 }
