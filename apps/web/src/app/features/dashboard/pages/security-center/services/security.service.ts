@@ -1,6 +1,5 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -11,124 +10,94 @@ export class SecurityService {
 
   constructor(private http: HttpClient) {}
 
-  getHeaders() {
-    const token = localStorage.getItem('authToken');
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      }),
-    };
+  getSecurityQuestions() {
+    return this.http.get<any>(`${this.apiUrl}/security-questions`);
   }
 
-  // Get All Connected Devices
-  getAllConnectedDevices(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/security/devices`, this.getHeaders());
+  verifySecurityQuestions(userId: string, answers: { questionId: string; answer: string }[]) {
+    return this.http.post<any>(`${this.apiUrl}/security-questions/verify`, {
+      userId,
+      answers,
+    });
   }
 
-  // Get Connected Device By Id
-  getConnectedDeviceById(deviceId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/security/devices/${deviceId}`, this.getHeaders());
+  resetPassword(resetToken: string, newPasswordPlain: string) {
+    return this.http.post<any>(`${this.apiUrl}/auth/reset-password`, {
+      resetToken,
+      newPasswordPlain,
+    });
   }
 
-  // Add Connected Device
-  addConnectedDevice(deviceData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/security/devices`, deviceData, this.getHeaders());
+  validateResetToken(resetToken: string) {
+    return this.http.post<any>(`${this.apiUrl}/auth/validate-reset-token`, {
+      resetToken,
+    });
   }
 
-  // Update Connected Device
-  updateConnectedDevice(deviceId: string, deviceData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/security/devices/${deviceId}`, deviceData, this.getHeaders());
+  updateSecurityQuestions(userId: string, answers: { questionId: string; answer: string }[]) {
+    return this.http.put<any>(`${this.apiUrl}/security-questions`, {
+      userId,
+      answers,
+    });
   }
 
-  // Delete Connected Device
-  deleteConnectedDevice(deviceId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/security/devices/${deviceId}`, this.getHeaders());
+  initiatePasswordReset(email: string) {
+    return this.http.post<any>(`${this.apiUrl}/auth/initiate-password-reset`, { email });
   }
 
-  // Get All Security Logs
-  getAllSecurityLogs(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/security/logs`, this.getHeaders());
-  }
-
-    // Get Security Log by Id
-  getSecurityLogById(logId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/security/logs/${logId}`, this.getHeaders());
-  }
-
-  // Add Security Log
-  addSecurityLog(logData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/security/logs`, logData, this.getHeaders());
-  }
-
-  // Update Security Log
-  updateSecurityLog(logId: string, logData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/security/logs/${logId}`, logData, this.getHeaders());
-  }
-
-  // Delete Security Log
-  deleteSecurityLog(logId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/security/logs/${logId}`, this.getHeaders());
-  }
-
-  // Get All Security Threats
-  getAllSecurityThreats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/security/threats`, this.getHeaders());
-  }
-
-  // Get Security Threat by Id
-  getSecurityThreatById(threatId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/security/threats/${threatId}`, this.getHeaders());
-  }
-
-  // Add Security Threat
-  addSecurityThreat(threatData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/security/threats`, threatData, this.getHeaders());
-  }
-
-  // Update Security Threat
-  updateSecurityThreat(threatId: string, threatData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/security/threats/${threatId}`, threatData, this.getHeaders());
-  }
-
-  // Delete Security Threat
-  deleteSecurityThreat(threatId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/security/threats/${threatId}`, this.getHeaders());
-  }
-
-  // Simulate Security Scan
-  simulateSecurityScan(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/security/scan/simulate`, {}, this.getHeaders()).pipe(
-      (res: any) => {
-        return res;
-      },
-      (err: any) => {
-        return err;
-      }
-    );
-  }
-
-  // Get Security Scan Results
-  getSecurityScanResults(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/security/scan/results`, this.getHeaders());
-  }
-
-  // Trigger Security Mitigation
-  triggerSecurityMitigation(): Observable<any> {
-    return this.http
-      .post(`${this.apiUrl}/security/mitigation/trigger`, {}, this.getHeaders())
-      .pipe(
+  // Example of a get request
+  getUsers() {
+    return new Promise((resolve, reject) => {
+      this.http.get<any>(`${this.apiUrl}/users`).subscribe(
         (res: any) => {
-          return res;
+          resolve(res);
         },
         (err: any) => {
-          return err;
+          reject(err);
         }
       );
+    });
   }
 
-  // Get Security Mitigation Status
-  getSecurityMitigationStatus(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/security/mitigation/status`, this.getHeaders());
+  // Example of a post request
+  createUser(user: any) {
+    return new Promise((resolve, reject) => {
+      this.http.post<any>(`${this.apiUrl}/users`, user).subscribe(
+        (res: any) => {
+          resolve(res);
+        },
+        (err: any) => {
+          reject(err);
+        }
+      );
+    });
+  }
+
+  // Example of a put request
+  updateUser(user: any) {
+    return new Promise((resolve, reject) => {
+      this.http.put<any>(`${this.apiUrl}/users/${user.id}`, user).subscribe(
+        (res: any) => {
+          resolve(res);
+        },
+        (err: any) => {
+          reject(err);
+        }
+      );
+    });
+  }
+
+  // Example of a delete request
+  deleteUser(id: string) {
+    return new Promise((resolve, reject) => {
+      this.http.delete<any>(`${this.apiUrl}/users/${id}`).subscribe(
+        (res: any) => {
+          resolve(res);
+        },
+        (err: any) => {
+          reject(err);
+        }
+      );
+    });
   }
 }
