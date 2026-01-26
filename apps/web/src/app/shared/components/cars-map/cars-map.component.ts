@@ -1,331 +1,142 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { BehaviorSubject, debounceTime, distinctUntilChanged, fromEvent, map, Observable, Subscription, switchMap } from 'rxjs';
-import { Car } from '@shared/models/car';
-import { environment } from '../../../../environments/environment';
-import { Cluster } from 'ol/source/Cluster';
-import { Vector as VectorSource } from 'ol/source';
-import { Style, Fill, Stroke, Circle, Text } from 'ol/style';
-import { Feature } from 'ol';
-import { Point } from 'ol/geom';
-import { Vector as VectorLayer } from 'ol/layer';
-import { transform } from 'ol/proj';
-import Map from 'ol/Map';
-import View from 'ol/View';
-import Overlay from 'ol/Overlay';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
 import { SoundService } from '@core/services/ui/sound.service';
+import { environment } from '../../../../environments/environment';
 
-import { EnhancedMapTooltipComponent } from '../enhanced-map-tooltip/enhanced-map-tooltip.component';
-
+import * as L from 'leaflet';
+import 'leaflet.markercluster';
+import { Router, RouterModule } from '@angular/router';
+import { MapService } from '@shared/services/map.service';
+import { Car } from '@shared/models/car.model';
 
 @Component({
   selector: 'app-cars-map',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './cars-map.component.html',
-  styleUrls: ['./cars-map.component.scss']
+  styleUrls: ['./cars-map.component.scss'],
 })
-export class CarsMapComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() cars: Car[] | null = [];
+  @Input() showDistance = false;
+  @Input() showRouteButton = false;
+  @Input() showCarDetailsButton = true;
+  @Input() mapHeight = '400px';
+  @Input() mapWidth = '100%';
+  @Input() center: L.LatLngExpression = [46.8182, 8.2275];
+  @Input() zoom = 8;
 
-  @ViewChild('mapContainer') mapContainer!: ElementRef;
-  @ViewChild('popup') popupElement!: ElementRef;
-  @Input() cars: Car[] | null = null;
-  @Input() selectedCarId: string | null = null;
-  @Output() selectedCarChange = new EventEmitter<string>();
-  @Output() mapReady = new EventEmitter<void>();
-  @Output() carsInViewport = new EventEmitter<Car[]>();
-  @Output() mapMoved = new EventEmitter<void>();
-
-  map!: Map;
-  vectorSource!: VectorSource;
-  clusterSource!: Cluster;
-  clusterLayer!: VectorLayer;
-  popup!: Overlay;
-  tooltipComponent!: EnhancedMapTooltipComponent;
-  currentZoom: number = 12;
-  currentCenter: [number, number] = [-8479414.503751166, 1351744.4444433424]; // Default to a reasonable location
-  mapInitialized = false;
-  carsSubject = new BehaviorSubject<Car[]>([]);
-  cars$ = this.carsSubject.asObservable();
-  private carsSubscription: Subscription | undefined;
-  private searchSubscription: Subscription | undefined;
-  private mapMoveSubscription: Subscription | undefined;
-  private readonly apiKey = environment.hereApiKey;
-  private readonly geocodingApiUrl = 'https://geocode.search.hereapi.com/v1/geocode';
-
-  // Define color variables
-  colorAvailable = '#34A853';
-  colorSoon = '#FBBC05';
-  colorInUse = '#4285F4';
-  colorUnavailable = '#EA4335';
+  private map: any;
+  private markers = L.markerClusterGroup();
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    private soundService: SoundService
-  ) { }
+    private readonly soundService: SoundService,
+    private readonly router: Router,
+    private readonly mapService: MapService
+  ) {}
 
-  ngAfterViewInit(): void {
-    this.initializeMap();
-    this.mapReady.emit();
-
-    // Subscribe to map move events
-    this.mapMoveSubscription = fromEvent(this.map, 'moveend')
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        map(() => {
-          return this.getCarsInViewport();
-        })
-      ).subscribe((carsInView: Car[]) => {
-        this.carsInViewport.emit(carsInView);
-        this.mapMoved.emit();
-      });
-
-    // Subscribe to search input changes
-    const searchInput = document.getElementById('location-search');
-    if (searchInput) {
-      this.searchSubscription = fromEvent(searchInput, 'input')
-        .pipe(
-          debounceTime(300),
-          map((event: Event) => (event.target as HTMLInputElement).value),
-          distinctUntilChanged(),
-          switchMap(searchTerm => this.geocodeLocation(searchTerm))
-        )
-        .subscribe(coordinates => {
-          if (coordinates) {
-            this.flyTo(coordinates, 14);
-          }
-        });
-    }
+  ngOnInit(): void {
+    this.mapService.mapDefaults.next({
+      center: this.center,
+      zoom: this.zoom,
+    });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['cars'] && this.cars && this.mapInitialized) {
-      this.carsSubject.next(this.cars);
-      this.updateMapFeatures(this.cars);
+  ngAfterViewInit(): void {
+    this.initMap();
+
+    this.mapService.mapDefaults.pipe(takeUntil(this.destroy$)).subscribe((defaults) => {
+      this.map.setView(defaults.center, defaults.zoom);
+    });
+
+    if (this.cars) {
+      this.addMarkers(this.cars);
     }
 
-    if (changes['selectedCarId'] && this.selectedCarId && this.mapInitialized) {
-      this.selectCarOnMap(this.selectedCarId);
-    }
+    this.map.on('click', (e: any) => {
+      if (environment.debug) {
+        const lat = Math.round(e.latlng.lat * 100000) / 100000;
+        const lng = Math.round(e.latlng.lng * 100000) / 100000;
+        console.log('You clicked the map at latitude: ' + lat + ' and longitude: ' + lng);
+      }
+    });
   }
 
   ngOnDestroy(): void {
-    if (this.carsSubscription) {
-      this.carsSubscription.unsubscribe();
-    }
-    if (this.searchSubscription) {
-      this.searchSubscription.unsubscribe();
-    }
-    if (this.mapMoveSubscription) {
-      this.mapMoveSubscription.unsubscribe();
-    }
-
-    this.map.dispose();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  initializeMap(): void {
-    this.vectorSource = new VectorSource({ features: [] });
-
-    this.clusterSource = new Cluster({
-      distance: 40,
-      source: this.vectorSource,
+  private initMap(): void {
+    this.map = L.map('map', {
+      center: this.center,
+      zoom: this.zoom,
     });
 
-    this.clusterLayer = new VectorLayer({
-      source: this.clusterSource,
-      style: (feature) => {
-        const size = feature.get('features').length;
-        let style = this.clusterStyles[size];
-        if (!style) {
-          style = new Style({
-            image: new Circle({
-              radius: 12,
-              stroke: new Stroke({
-                color: '#fff',
-              }),
-              fill: new Fill({
-                color: '#3399CC',
-              }),
-            }),
-            text: new Text({
-              text: size.toString(),
-              fill: new Fill({
-                color: '#fff',
-              }),
-            }),
-          });
-          this.clusterStyles[size] = style;
-        }
-        return style;
-      },
+    const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      minZoom: 3,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     });
 
-    this.popup = new Overlay({
-      element: this.popupElement.nativeElement,
-      autoPan: {},
-    });
+    tiles.addTo(this.map);
+  }
 
-    this.map = new Map({
-      target: this.mapContainer.nativeElement,
-      layers: [
-        new ol.maps.OpenStreetMap(),
-        this.clusterLayer,
-      ],
-      view: new View({
-        center: this.currentCenter,
-        zoom: this.currentZoom,
-      }),
-      overlays: [this.popup],
-    });
+  addMarkers(cars: Car[]): void {
+    this.markers.clearLayers();
 
-    this.map.on('singleclick', (evt) => {
-      const feature = this.map.forEachFeatureAtPixel(evt.pixel,
-        (feature) => {
-          return feature;
+    cars.forEach((car) => {
+      if (car.location?.lat && car.location?.lng) {
+        const icon = L.icon({
+          iconUrl: 'assets/images/svg/marker.svg',
+          iconSize: [24, 36],
+          iconAnchor: [12, 36],
+          popupAnchor: [0, -36],
         });
 
-      if (feature) {
-        let clickedFeatures = feature.get('features');
+        const marker = L.marker([car.location.lat, car.location.lng], { icon });
 
-        if (!clickedFeatures && feature.getGeometry().getType() === 'Point') {
-          // Handle the case where a single car (non-clustered) is clicked
-          clickedFeatures = [feature];
-        }
+        marker.bindPopup(
+          `<div style="text-align: center;"><img src="${car.images[0].url}" alt="${car.model}" width="200px" /><br><b>${car.brand} ${car.model}</b><br><a href="/cars/${car.id}">Details</a></div>`
+        );
 
-        if (clickedFeatures && clickedFeatures.length > 0) {
-          if (clickedFeatures.length === 1) {
-            // If it's a single car, navigate to its detail page
-            const car = clickedFeatures[0].getProperties().car;
-            this.onCarSelected(car.id);
-          } else {
-            // If it's a cluster, zoom in to separate the cars
-            const extent = feature.getGeometry().getExtent();
-            this.map.getView().fit(extent, { duration: 1000, padding: [50, 50, 50, 50] });
-          }
-        }
+        this.markers.addLayer(marker);
       }
     });
 
-    this.map.on('pointermove', (evt) => {
-      if (evt.dragging) {
-        return;
-      }
-      const pixel = this.map.getEventPixel(evt.originalEvent);
-      const hit = this.map.hasFeatureAtPixel(pixel);
-      (this.map.getTarget() as HTMLElement).style.cursor = hit ? 'pointer' : '';
-    });
-
-    this.carsSubscription = this.cars$.subscribe(cars => {
-      if (cars) {
-        this.updateMapFeatures(cars);
-      }
-    });
-
-    this.mapInitialized = true;
+    this.map.addLayer(this.markers);
   }
 
-  updateMapFeatures(cars: Car[]): void {
-    if (!cars || cars.length === 0) {
-      this.vectorSource.clear();
-      return;
-    }
-
-    const features = cars.map(car => {
-      const coordinates = transform([car.location.lng, car.location.lat], 'EPSG:4326', 'EPSG:3857');
-      const feature = new Feature({
-        geometry: new Point(coordinates),
-        car: car // Store the car object in the feature
-      });
-      feature.setId(car.id);
-      return feature;
-    });
-
-    this.vectorSource.clear();
-    this.vectorSource.addFeatures(features);
-
-    if (this.selectedCarId) {
-      this.selectCarOnMap(this.selectedCarId);
+  flyTo(car: Car): void {
+    if (car.location?.lat && car.location?.lng) {
+      this.map.flyTo([car.location.lat, car.location.lng], 12);
     }
   }
 
-  selectCarOnMap(carId: string): void {
-    // Deselect previously selected car
-    this.vectorSource.getFeatures().forEach(feature => {
-      if (feature.get('selected')) {
-        feature.set('selected', false);
-      }
-    });
-
-    const feature = this.vectorSource.getFeatureById(carId);
-    if (feature) {
-      feature.set('selected', true);
-
-      // Fly to the selected car
-      const coordinates = feature.getGeometry().getCoordinates();
-      this.flyTo(coordinates, 16);
+  calculateRoute(car: Car): void {
+    this.soundService.playClick();
+    if (car.location?.lat && car.location?.lng) {
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${car.location.lat},${car.location.lng}`, '_blank');
     }
   }
 
-  flyTo(location: [number, number], zoom: number = 14): void {
-    const view = this.map.getView();
-    view.animate({
-      center: location,
-      duration: 2000,
-    });
-    view.animate({
-      zoom: zoom,
-      duration: 2000, // Animation duration in milliseconds
-    });
-    this.currentZoom = zoom;
-    this.currentCenter = location;
+  openCarDetails(car: Car): void {
+    this.soundService.playClick();
+    this.router.navigate(['/cars', car.id]);
   }
 
-  onCarSelected(carId: string): void {
-    this.selectedCarChange.emit(carId);
-    this.router.navigate(['/scout/mission-detail', carId]);
-    this.soundService.playClickSound();
+  centerView(): void {
+    this.map.setView(this.center, this.zoom);
   }
 
-  geocodeLocation(searchTerm: string): Observable<[number, number] | null> {
-    if (!searchTerm) {
-      return new Observable(observer => {
-        observer.next(null);
-        observer.complete();
-      });
-    }
-
-    const url = `${this.geocodingApiUrl}?q=${encodeURIComponent(searchTerm)}&apiKey=${this.apiKey}`;
-    return this.http.get<any>(url).pipe(
-      map(data => {
-        if (data.items && data.items.length > 0) {
-          const location = data.items[0].position;
-          const coordinates: [number, number] = transform([location.lng, location.lat], 'EPSG:4326', 'EPSG:3857');
-          return coordinates;
-        } else {
-          return null;
-        }
-      })
-    );
+  setCenter(lat: number, lng: number): void {
+    this.center = [lat, lng];
+    this.map.setView(this.center, this.zoom);
   }
 
-  getCarsInViewport(): Car[] {
-    const extent = this.map.getView().calculateExtent(this.map.getSize());
-    const carsInView: Car[] = [];
-
-    this.vectorSource.getFeatures().forEach(feature => {
-      const car = feature.getProperties().car as Car;
-      if (car) {
-        const coordinates = transform([car.location.lng, car.location.lat], 'EPSG:4326', 'EPSG:3857');
-        const point = new Point(coordinates);
-        if (ol.extent.containsCoordinate(extent, point.getCoordinates())) {
-          carsInView.push(car);
-        }
-      }
-    });
-
-    return carsInView;
+  onMapReady(map: any) {
+    this.map = map;
   }
-
-  clusterStyles: { [key: number]: Style } = {};
 }
