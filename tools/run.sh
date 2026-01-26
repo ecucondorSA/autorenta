@@ -1,12 +1,13 @@
 #!/bin/bash
 
-# Source the utils script
-if [ -f "./utils.sh" ]; then
-  source "./utils.sh"
-else
-  echo "Error: utils.sh not found in the tools directory."
+# Check if utils.sh exists
+if [ ! -f "./tools/utils.sh" ]; then
+  echo "Error: ./tools/utils.sh not found. Please ensure it exists in the repository."
   exit 1
 fi
+
+# Source the utils script
+. ./tools/utils.sh
 
 set -e
 
