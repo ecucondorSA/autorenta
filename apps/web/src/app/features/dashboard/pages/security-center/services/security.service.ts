@@ -1,94 +1,110 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
-
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
-}
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  constructor(private http: HttpClient) {}
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
-
-  private realtimeSubscription?: RealtimeChannel;
-
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  getSecurityQuestions(): Observable<any> {
+    return this.http.get('/api/security/questions');
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  verifySecurityQuestions(answers: any): Observable<any> {
+    return this.http.post('/api/security/verify', answers);
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
-    });
+  updateSecurityQuestions(answers: any): Observable<any> {
+    return this.http.put('/api/security/questions', answers);
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  enableTwoFactorAuth(): Observable<any> {
+    return this.http.post('/api/two-factor/enable', {});
   }
+
+  disableTwoFactorAuth(): Observable<any> {
+    return this.http.post('/api/two-factor/disable', {});
+  }
+
+  getTwoFactorAuthStatus(): Observable<any> {
+    return this.http.get('/api/two-factor/status');
+  }
+
+  generateRecoveryCodes(): Observable<any> {
+    return this.http.post('/api/two-factor/recovery-codes', {});
+  }
+
+  verifyRecoveryCode(code: string): Observable<any> {
+    return this.http.post('/api/two-factor/recovery-codes/verify', { code });
+  }
+
+  getSecurityOverview(): Observable<any> {
+    return this.http.get('/api/security/overview');
+  }
+
+  getAccountActivity(): Observable<any> {
+    return this.http.get('/api/security/activity');
+  }
+
+  // Example of a method that returns a specific type
+  getSecuritySettings(): Observable<SecuritySettings> {
+    return this.http.get<SecuritySettings>('/api/security/settings');
+  }
+
+  // Example of a method that takes a specific type
+  updateSecuritySettings(settings: SecuritySettings): Observable<any> {
+    return this.http.put('/api/security/settings', settings);
+  }
+
+  // Example of a method that returns a specific type
+  getIpAddressInfo(ipAddress: string): Observable<IpAddressInfo> {
+    return this.http.get<IpAddressInfo>(`/api/ip-address-info/${ipAddress}`);
+  }
+
+  // Example of a method that returns a specific type
+  getDeviceDetails(deviceId: string): Observable<DeviceDetails> {
+    return this.http.get<DeviceDetails>(`/api/device-details/${deviceId}`);
+  }
+
+  // Example of a method that returns a specific type
+  getBreachedPasswords(password: string): Observable<BreachedPasswords> {
+    return this.http.post<BreachedPasswords>('/api/breached-passwords', { password });
+  }
+
+  // Example of a method that returns a specific type
+  getCompromisedAccounts(): Observable<CompromisedAccounts> {
+    return this.http.get<CompromisedAccounts>('/api/compromised-accounts');
+  }
+
+  // Example of a method that returns a specific type
+  getVulnerabilityAssessment(): Observable<VulnerabilityAssessment> {
+    return this.http.get<VulnerabilityAssessment>('/api/vulnerability-assessment');
+  }
+}
+
+// Define interfaces for the data types
+interface SecuritySettings {
+  // Define properties here
+}
+
+interface IpAddressInfo {
+  // Define properties here
+}
+
+interface DeviceDetails {
+  // Define properties here
+}
+
+interface BreachedPasswords {
+  // Define properties here
+}
+
+interface CompromisedAccounts {
+  // Define properties here
+}
+
+interface VulnerabilityAssessment {
+  // Define properties here
 }
