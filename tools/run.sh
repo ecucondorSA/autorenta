@@ -8,7 +8,7 @@
 #
 # Usage:
 #   ./tools/run.sh [command] [options]
-#   npm run [command]  # Via package.json shortcuts
+#   pnpm run [command]  # Via package.json shortcuts
 #
 # Examples:
 #   ./tools/run.sh dev              # Start development environment
@@ -124,7 +124,7 @@ cmd_dev() {
     (
         cd "$WEB_DIR"
         log "Starting Angular dev server on http://localhost:4200"
-        npm run start
+        pnpm run start
     ) &
     WEB_PID=$!
     echo $WEB_PID > /tmp/autorenta-web.pid
@@ -134,7 +134,7 @@ cmd_dev() {
         (
             cd "$WORKER_DIR"
             log "Starting payment webhook on http://localhost:8787"
-            npm run dev
+            pnpm run dev
         ) &
         WORKER_PID=$!
         echo $WORKER_PID > /tmp/autorenta-worker.pid
@@ -147,7 +147,7 @@ cmd_dev() {
         (
             cd "$AI_WORKER_DIR"
             log "Starting AI image worker (Gemini) on http://localhost:8788"
-            npm run dev
+            pnpm run dev
         ) &
         AI_WORKER_PID=$!
         echo $AI_WORKER_PID > /tmp/autorenta-ai-worker.pid
@@ -168,21 +168,21 @@ cmd_dev() {
 cmd_dev_web() {
     header "🌐 Starting Web App Only"
     cd "$WEB_DIR"
-    npm run start
+    pnpm run start
 }
 
 cmd_dev_worker() {
     header "⚙️  Starting Worker Only"
     require_dir "Payment webhook worker" "$WORKER_DIR"
     cd "$WORKER_DIR"
-    npm run dev
+    pnpm run dev
 }
 
 cmd_dev_ai_worker() {
     header "🧠 Starting AI Image Worker (Gemini) Only"
     require_dir "AI worker" "$AI_WORKER_DIR"
     cd "$AI_WORKER_DIR"
-    npm run dev
+    pnpm run dev
 }
 
 cmd_dev_stop() {
@@ -216,19 +216,19 @@ cmd_dev_stop() {
 cmd_test() {
     header "🧪 Running All Tests"
     cd "$WEB_DIR"
-    npm run test -- --watch=false --browsers=ChromeHeadless
+    pnpm run test -- --watch=false --browsers=ChromeHeadless
 }
 
 cmd_test_quick() {
     header "🧪 Running Quick Tests (No Coverage)"
     cd "$WEB_DIR"
-    npm run test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage=false
+    pnpm run test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage=false
 }
 
 cmd_test_coverage() {
     header "🧪 Running Tests with Coverage"
     cd "$WEB_DIR"
-    npm run test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage=true
+    pnpm run test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage=true
     success "Coverage report: apps/web/coverage/index.html"
 }
 
@@ -247,7 +247,7 @@ cmd_test_e2e() {
             (
                 cd "$WEB_DIR"
                 # start script already redirects output to app_start.log
-                npm run start
+                pnpm run start
             ) &
             echo $! > "$WEB_E2E_PID_FILE"
             STARTED_WEB_FOR_E2E=1
@@ -280,14 +280,14 @@ cmd_test_e2e() {
     if [ ! -d "$E2E_DIR/node_modules" ]; then
         log "Installing E2E dependencies..."
         cd "$E2E_DIR"
-        npm install
+        pnpm install
     fi
 
     # Install Patchright Chromium on first run (idempotent)
     if [ ! -d "$HOME/.cache/ms-playwright" ] && [ ! -d "$HOME/.cache/patchright" ]; then
         log "Installing Patchright Chromium..."
         cd "$E2E_DIR"
-        npm run setup
+        pnpm run setup
     fi
 
     cd "$E2E_DIR"
@@ -296,9 +296,9 @@ cmd_test_e2e() {
     # target subsets like "cars-list/" without failing early in the login suite.
     local E2E_EXIT_CODE=0
     if [ -n "${E2E_FILTER:-}" ]; then
-        npm run test:marketplace || E2E_EXIT_CODE=$?
+        pnpm run test:marketplace || E2E_EXIT_CODE=$?
     else
-        npm run test || E2E_EXIT_CODE=$?
+        pnpm run test || E2E_EXIT_CODE=$?
     fi
 
     # Cleanup auto-started web server
@@ -314,7 +314,7 @@ cmd_test_e2e() {
 cmd_test_e2e_ui() {
     header "🎭 Running E2E Tests (UI Mode)"
     warn "UI mode is not supported for Patchright TSX suites."
-    info "Run headed mode instead: cd apps/web/e2e && HEADLESS=false npm run test"
+    info "Run headed mode instead: cd apps/web/e2e && HEADLESS=false pnpm run test"
 }
 
 ###############################################################################
@@ -343,14 +343,14 @@ cmd_build() {
 cmd_build_web() {
     log "Building web app..."
     cd "$WEB_DIR"
-    npm run build
+    pnpm run build
     success "Web build completed"
 }
 
 cmd_build_worker() {
     log "Building payment worker..."
     cd "$WORKER_DIR"
-    npm run build
+    pnpm run build
     success "Worker build completed"
 }
 
@@ -382,10 +382,10 @@ cmd_deploy() {
 
 cmd_deploy_web() {
     header "📦 Deploying Web to Cloudflare Pages"
-    check_command wrangler "npm install -g wrangler"
+    check_command wrangler "pnpm install -g wrangler"
 
     cd "$WEB_DIR"
-    npm run build
+    pnpm run build
 
     CLOUDFLARE_ACCOUNT_ID=5b448192fe4b369642b68ad8f53a7603 \
         npx wrangler pages deploy dist/web/browser \
@@ -397,11 +397,11 @@ cmd_deploy_web() {
 
 cmd_deploy_worker() {
     header "📦 Deploying Payment Webhook Worker"
-    check_command wrangler "npm install -g wrangler"
+    check_command wrangler "pnpm install -g wrangler"
 
     require_dir "Payment webhook worker" "$WORKER_DIR"
     cd "$WORKER_DIR"
-    npm run build
+    pnpm run build
     wrangler deploy
 
     success "Payment Webhook Worker deployed"
@@ -409,7 +409,7 @@ cmd_deploy_worker() {
 
 cmd_deploy_worker_doc_verifier() {
     header "📦 Deploying Doc Verifier Worker"
-    check_command wrangler "npm install -g wrangler"
+    check_command wrangler "pnpm install -g wrangler"
 
     require_dir "Doc verifier worker" "$DOC_VERIFIER_WORKER_DIR"
     cd "$DOC_VERIFIER_WORKER_DIR"
@@ -420,7 +420,7 @@ cmd_deploy_worker_doc_verifier() {
 
 cmd_deploy_worker_ai_car_generator() {
     header "📦 Deploying AI Car Generator Worker"
-    check_command wrangler "npm install -g wrangler"
+    check_command wrangler "pnpm install -g wrangler"
 
     require_dir "AI car generator worker" "$AI_WORKER_DIR"
     cd "$AI_WORKER_DIR"
@@ -437,15 +437,15 @@ cmd_ci() {
     header "🚀 CI/CD Pipeline"
 
     log "Guardrails: duplicate & drift checks"
-    (cd "$PROJECT_ROOT" && npm run guardrails) || error "Guardrails failed"
+    (cd "$PROJECT_ROOT" && pnpm run guardrails) || error "Guardrails failed"
 
     log "Phase 1/3: Linting & Testing (parallel)"
 
     # Run lint and test in parallel
-    (cd "$WEB_DIR" && npm run lint) &
+    (cd "$WEB_DIR" && pnpm run lint) &
     LINT_PID=$!
 
-    (cd "$WEB_DIR" && npm run test -- --watch=false --browsers=ChromeHeadless) &
+    (cd "$WEB_DIR" && pnpm run test -- --watch=false --browsers=ChromeHeadless) &
     TEST_PID=$!
 
     wait $LINT_PID
@@ -471,23 +471,23 @@ cmd_ci() {
 
 cmd_lint() {
     header "🔍 Running Linter"
-    (cd "$PROJECT_ROOT" && npm run guardrails)
+    (cd "$PROJECT_ROOT" && pnpm run guardrails)
     cd "$WEB_DIR"
-    npm run lint
+    pnpm run lint
 }
 
 cmd_lint_fix() {
     header "🔧 Auto-fixing Lint Issues"
     cd "$WEB_DIR"
-    npm run format
-    npm run lint -- --fix
+    pnpm run format
+    pnpm run lint -- --fix
     success "Lint issues fixed"
 }
 
 cmd_format() {
     header "✨ Formatting Code"
     cd "$WEB_DIR"
-    npm run format
+    pnpm run format
     success "Code formatted"
 }
 
@@ -644,7 +644,7 @@ ${BLUE}╚═══════════════════════�
 
 ${YELLOW}Usage:${NC}
   ./tools/run.sh [command] [options]
-  npm run [command]
+  pnpm run [command]
 
 ${YELLOW}Development:${NC}
   ${CYAN}dev${NC}              Start full dev environment (web + worker)
