@@ -2,28 +2,30 @@
 
 set -e
 
-source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
+source ./tools/utils.sh
 
-AUTORENTA_SKIP_INSTALL=${AUTORENTA_SKIP_INSTALL:-''}
+AUTORENTA_SKIP_INSTALL=${AUTORENTA_SKIP_INSTALL:-}
 
-# Check if the command is 'install'
 if [ "$1" = "install" ]; then
-  # Check if AUTORENTA_SKIP_INSTALL is set to '1'
-  if [ "$AUTORENTA_SKIP_INSTALL" = "1" ]; then
-    echo "Skipping install due to AUTORENTA_SKIP_INSTALL=1"
-    exit 0
+  if [ -z "$AUTORENTA_SKIP_INSTALL" ]; then
+    echo "Installing dependencies..."
+    pnpm install
+  else
+    echo "Skipping dependency installation..."
   fi
-fi
-
-# Execute the command
-command="$@"
-
-echo ". $command"
-
-# Run the command
-if ! eval "$command"; then
-  echo ". $command: Failed"
+elif [ "$1" = "build" ]; then
+  echo "Building..."
+  pnpm build
+elif [ "$1" = "test" ]; then
+  echo "Testing..."
+  pnpm test
+elif [ "$1" = "lint" ]; then
+  echo "Linting..."
+  pnpm lint
+elif [ "$1" = "format" ]; then
+  echo "Formatting..."
+  pnpm format
+else
+  echo "Usage: ./tools/run.sh [install|build|test|lint|format]"
   exit 1
 fi
-
-echo ". $command: Done"
