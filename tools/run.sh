@@ -3,34 +3,23 @@
 set -e
 
 COMMAND="$1"
+shift
+ARGS="$@"
 
-echo "Running command: $COMMAND"
-
+# Check if AUTORENTA_SKIP_INSTALL is set and the command is 'install'
 if [ "$AUTORENTA_SKIP_INSTALL" = "1" ] && [ "$COMMAND" = "install" ]; then
-  echo "Skipping install command due to AUTORENTA_SKIP_INSTALL=1"
+  echo ". install: Skipping install due to AUTORENTA_SKIP_INSTALL=1"
   exit 0
 fi
 
-case "$COMMAND" in
-  install)
-    install
-    ;;
-  test)
-    vitest --run
-    ;;
-  lint)
-    eslint . --ext .ts,.tsx
-    ;;
-  format)
-    prettier --write .
-    ;;
-  build)
-    echo "Building..."
-    ;; # Placeholder for build command
-  *)
-    echo "Unknown command: $COMMAND"
-    exit 1
-    ;;
-esac
+echo ". install: Running command: $COMMAND"
 
-echo "Done"
+# Execute the command with arguments
+$COMMAND $ARGS
+
+if [ $? -ne 0 ]; then
+  echo ". install: Failed"
+  exit 1
+else
+  echo ". install: Done"
+fi
