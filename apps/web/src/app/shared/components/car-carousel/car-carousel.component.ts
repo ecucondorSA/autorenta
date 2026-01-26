@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import Swiper from 'swiper';
-import { SwiperOptions } from 'swiper/types';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { register } from 'swiper/element/bundle';
 import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
+
+register();
 
 @Component({
   selector: 'app-car-carousel',
@@ -9,19 +10,12 @@ import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
   imports: [CarMiniCardComponent],
   templateUrl: './car-carousel.component.html',
   styleUrls: ['./car-carousel.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CarCarouselComponent implements OnInit {
-  @Input() carIds: string[] = [];
-
-  swiperConfig: SwiperOptions = {
-    slidesPerView: 1.2,
-    spaceBetween: 10,
-  };
+  @Input() cars: any[] = [];
 
   ngOnInit(): void {
-    // Initialize Swiper after the view is initialized
-    setTimeout(() => {
-      new Swiper('.swiper-container', this.swiperConfig);
-    });
+    //
   }
 }
