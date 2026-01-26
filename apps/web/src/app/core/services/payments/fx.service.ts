@@ -205,8 +205,8 @@ export class FxService {
     try {
       return await this.exchangeRateService.getBinanceRate('USDARS');
     } catch (error) {
-      this.logger.error('Error obteniendo tasa Binance', error);
-      throw new Error('No se pudo obtener tasa de Binance');
+      this.logger.error('Error obteniendo tasa de mercado', error);
+      throw new Error('No se pudo obtener la tasa de mercado oficial');
     }
   }
 }

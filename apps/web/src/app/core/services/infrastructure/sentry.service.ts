@@ -102,14 +102,35 @@ export async function initSentry(): Promise<void> {
     environment: environment.sentryEnvironment,
 
     // Performance Monitoring
-    tracesSampleRate: 1.0, // Tracing must be enabled for agent monitoring to work
+    tracesSampleRate: environment.sentryTracesSampleRate ?? (environment.production ? 0.1 : 1.0),
     sendDefaultPii: true, // Add data like inputs and responses to/from LLMs and tools
     tracePropagationTargets: ['localhost', environment.appUrl, environment.supabaseUrl],
 
     // Integrations
     integrations: [
       // Browser tracing for performance monitoring
-      Sentry.browserTracingIntegration(),
+      Sentry.browserTracingIntegration({
+        // Track HTTP requests
+        traceFetch: true,
+        traceXHR: true,
+
+        // Track navigation and page loads
+        enableLongTask: true,
+        enableInp: true,
+      }),
+
+      // Track Core Web Vitals
+      Sentry.browserProfilingIntegration(),
+
+      // Capture console errors
+      Sentry.captureConsoleIntegration({
+        levels: ['error', 'assert'],
+      }),
+
+      // Track HTTP errors
+      Sentry.httpClientIntegration({
+        failedRequestStatusCodes: [[400, 599]],
+      }),
 
       // Replay sessions for debugging
       Sentry.replayIntegration({
@@ -125,52 +146,108 @@ export async function initSentry(): Promise<void> {
     // Release tracking
     release: `autorenta-web@${environment.production ? 'production' : 'development'}`,
 
-    // Filter sensitive data
-    // beforeSend(event: any, _hint: any) { // Cambiado a any
-    //   // Remove sensitive query parameters
-    //   if (event.request?.url) {
-    //     try {
-    //       const url = new URL(event.request.url);
-    //       const sensitiveParams = ['token', 'key', 'password', 'secret', 'apikey'];
+    // Configure what data to send
+    beforeSend(event: any, hint: any) {
+      // Don't send errors in development unless explicitly testing
+      const testMode =
+        typeof localStorage !== 'undefined' ? localStorage.getItem('sentry-test-mode') : null;
+      if (!environment.production && !testMode) {
+        return null;
+      }
 
-    //       sensitiveParams.forEach((param) => {
-    //         if (url.searchParams.has(param)) {
-    //           url.searchParams.set(param, '[REDACTED]');
-    //         }
-    //       });
+      // Sanitize sensitive data
+      if (event.request) {
+        delete event.request.cookies;
 
-    //       event.request.url = url.toString();
-    //     } catch {
-    //       // Invalid URL, ignore
-    //     }
-    //   }
+        if (event.request.headers) {
+          const sensitiveHeaders = ['authorization', 'cookie', 'x-api-key', 'proxy-authorization'];
+          sensitiveHeaders.forEach((header) => {
+            if (event.request?.headers?.[header]) {
+              event.request.headers[header] = '[REDACTED]';
+            }
+          });
+        }
 
-    //   // Remove sensitive headers
-    //   if (event.request?.headers) {
-    //     const sensitiveHeaders = ['authorization', 'cookie', 'x-api-key'];
-    //     sensitiveHeaders.forEach((header) => {
-    //       if (event.request?.headers?.[header]) {
-    //         event.request.headers[header] = '[REDACTED]';
-    //       }
-    //     });
-    //   }
+        // Sanitize URL params
+        if (event.request.url) {
+          try {
+            const url = new URL(event.request.url);
+            const sensitiveParams = ['token', 'key', 'password', 'secret', 'apikey', 'access_token'];
+            let changed = false;
 
-    //   return event;
-    // },
+            sensitiveParams.forEach((param) => {
+              if (url.searchParams.has(param)) {
+                url.searchParams.set(param, '[REDACTED]');
+                changed = true;
+              }
+            });
+
+            if (changed) {
+              event.request.url = url.toString();
+            }
+          } catch {
+            // Invalid URL, ignore
+          }
+        }
+      }
+
+      return event;
+    },
+
+    // Configure breadcrumbs
+    beforeBreadcrumb(breadcrumb: any): any | null {
+      // Don't log sensitive URLs in breadcrumbs
+      if (breadcrumb.category === 'fetch' || breadcrumb.category === 'xhr') {
+        const url = breadcrumb.data?.['url'];
+        if (url && (url.includes('token') || url.includes('auth') || url.includes('key'))) {
+          breadcrumb.data['url'] = '[REDACTED]';
+        }
+      }
+
+      // Don't log console breadcrumbs in development (too noisy)
+      if (!environment.production && breadcrumb.category === 'console') {
+        return null;
+      }
+
+      return breadcrumb;
+    },
 
     // Ignore specific errors
     ignoreErrors: [
       // Browser extensions
       'ResizeObserver loop limit exceeded',
       'Non-Error promise rejection captured',
+      'top.GLOBALS',
+      'chrome-extension://',
+      'moz-extension://',
 
-      // Network errors (handled separately)
+      // Network errors (captured by httpClientIntegration but often noisy if transient)
       'NetworkError',
       'Failed to fetch',
+      'Network request failed',
 
-      // Third-party errors
-      'ChunkLoadError',
+      // Angular issues
+      'NG0', // Hydration warnings
     ],
+
+    // Ignore specific URLs
+    denyUrls: [
+      // Browser extensions
+      /extensions\//i,
+      /^chrome:\/\//i,
+      /^moz-extension:\/\//i,
+    ],
+
+    // Set initial scope
+    initialScope: {
+      tags: {
+        app: 'autorenta-web',
+        version: environment.production ? 'production' : 'development',
+      },
+    },
+
+    // Enable debug mode in development
+    debug: !environment.production,
   };
 
   // Por ahora, solo inicializamos la parte web debido a conflictos de tipos con Sentry Capacitor

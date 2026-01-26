@@ -413,6 +413,42 @@ export class PublishCarV2Page implements OnInit {
     } else {
       // Auto-fill from last car
       await this.formService.autoFillFromLastCar();
+
+      // ✅ NEW: Override with query parameters from landing page
+      const qParams = this.route.snapshot.queryParams;
+      if (qParams['brand_id'] || qParams['model_id'] || qParams['year']) {
+        this.logger.debug('[PublishCarV2] Found query params from landing:', qParams);
+
+        const patchData: any = {};
+        if (qParams['brand_id']) patchData.brand_id = qParams['brand_id'];
+        if (qParams['model_id']) patchData.model_id = qParams['model_id'];
+        if (qParams['year']) patchData.year = parseInt(qParams['year']);
+
+        this.publishForm.patchValue(patchData);
+
+        // Load models for the brand if specified
+        if (qParams['brand_id']) {
+          this.formService.filterModelsByBrand(qParams['brand_id']);
+
+          // ✅ Sync FIPE signals if possible
+          const brand = this.formService.brands().find(b => b.id === qParams['brand_id']);
+          if (brand) {
+            this.selectedFIPEBrand.set({ code: '', name: brand.name });
+            this.publishForm.patchValue({ brand_text_backup: brand.name });
+          }
+
+          if (qParams['model_id']) {
+            const model = this.formService.models().find(m => m.id === qParams['model_id']);
+            if (model) {
+              this.selectedFIPEModel.set({ code: '', name: model.name });
+              this.publishForm.patchValue({ model_text_backup: model.name });
+
+              // Trigger value fetch
+              setTimeout(() => this.fetchFIPEValue(), 500);
+            }
+          }
+        }
+      }
     }
   }
 

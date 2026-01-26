@@ -650,9 +650,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const style = this.map.getStyle();
     const hasStyle = style && style.layers && style.layers.length > 0;
 
-    if (!this.map.isStyleLoaded() && !hasStyle) {
-      // Use 'idle' event as fallback - more reliable than 'style.load' for imported styles
-      this.map.once('idle', () => this.setupClustering());
+    if (!this.map.isStyleLoaded()) {
+      this.map.once('style.load', () => this.setupClustering());
       return;
     }
 

@@ -187,6 +187,11 @@ export const routes: Routes = [
           import('./features/admin/accounting/accounting.routes').then((m) => m.ACCOUNTING_ROUTES),
       },
       {
+        path: 'ganar',
+        loadComponent: () =>
+          import('./features/owners-landing/owners-landing.page').then((m) => m.OwnersLandingPage),
+      },
+      {
         path: 'claims',
         loadComponent: () =>
           import('./features/admin/claims/admin-claims.page').then((m) => m.AdminClaimsPage),

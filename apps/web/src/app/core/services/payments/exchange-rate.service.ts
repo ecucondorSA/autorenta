@@ -51,7 +51,7 @@ export class ExchangeRateService {
     const rates = this.lastRates();
 
     if (!rates) {
-      throw new Error('No se pudo obtener tasa de Binance');
+      throw new Error('No se pudo obtener la tasa oficial');
     }
 
     return rates.binance;
@@ -66,7 +66,7 @@ export class ExchangeRateService {
     const rates = this.lastRates();
 
     if (!rates) {
-      throw new Error('No se pudo obtener tasa de cambio');
+      throw new Error('No se pudo obtener el tipo de cambio');
     }
 
     return rates.platform;
@@ -126,8 +126,8 @@ export class ExchangeRateService {
         `✅ Binance USDT/ARS EN TIEMPO REAL: ${binanceRate.toFixed(2)} | Con margen 10% (garantías): ${platformRate.toFixed(2)} ARS/USD`,
       );
     } catch (error) {
-      console.error('Error obteniendo tasa de Binance:', error);
-      throw new Error('No se pudo obtener tasa de cambio de Binance');
+      console.error('Error obteniendo tasa de mercado:', error);
+      throw new Error('No se pudo obtener el tipo de cambio oficial');
     }
   }
 

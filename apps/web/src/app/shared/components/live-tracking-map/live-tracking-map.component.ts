@@ -308,12 +308,18 @@ export class LiveTrackingMapComponent implements OnInit, OnChanges, OnDestroy {
         attributionControl: true,
       });
 
-      this.map.on('load', () => {
+      const onStyleReady = () => {
         this.loading.set(false);
         this.updateMarkers();
         this.updateDestinationMarker();
         this.fitMapBounds();
-      });
+      };
+
+      if (this.map.isStyleLoaded()) {
+        onStyleReady();
+      } else {
+        this.map.once('style.load', onStyleReady);
+      }
 
       this.map.on('error', (e) => {
         console.error('[LiveTrackingMap] Map error:', e);

@@ -1,0 +1,132 @@
+<div
+    class="landing-page min-h-screen bg-surface-base flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl w-full space-y-12">
+        <!-- Header/Hero -->
+        <header class="text-center space-y-4">
+            <div
+                class="inline-flex items-center gap-2 px-4 py-2 bg-cta-default/10 rounded-full border border-cta-default/20 text-cta-default font-bold text-xs uppercase tracking-widest animate-fade-in">
+                <ion-icon name="sparkles-outline"></ion-icon>
+                Tu auto, tu negocio digital
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-black text-text-primary tracking-tight leading-tight">
+                Ganá hasta <span class="text-cta-default">USD 500+</span> por mes <br class="hidden sm:block"> con tu
+                segundo auto.
+            </h1>
+            <p class="text-lg sm:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
+                Calculá tu ganancia estimada en un minuto. Sin burocracia, <br class="hidden sm:block"> con respaldo
+                total y tecnología de punta.
+            </p>
+        </header>
+
+        <!-- Main Capture Card -->
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div
+                class="lg:col-span-7 bg-surface-raised rounded-3xl p-6 sm:p-10 shadow-2xl border border-border-default/80 backdrop-blur-xl relative overflow-hidden group">
+                <div
+                    class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-cta-default/5 rounded-full blur-3xl group-hover:bg-cta-default/10 transition-colors duration-700">
+                </div>
+
+                <h2 class="text-sm font-bold text-text-muted uppercase tracking-widest mb-8 flex items-center gap-2">
+                    <ion-icon name="car-sport-outline" class="text-cta-default text-lg"></ion-icon>
+                    Datos de tu vehículo
+                </h2>
+
+                <div class="space-y-6">
+                    <!-- Brand -->
+                    <div>
+                        <label class="block text-xs font-bold text-text-muted uppercase mb-2">Marca</label>
+                        <app-fipe-autocomplete [placeholder]="'Ej: Toyota, Ford, BMW...'" [options]="brands()"
+                            [isLoading]="isLoadingBrands()" [selectedValue]="selectedBrand()"
+                            (optionSelected)="onBrandSelected($event)"></app-fipe-autocomplete>
+                    </div>
+
+                    <!-- Model -->
+                    <div [class.opacity-50]="!selectedBrand()">
+                        <label class="block text-xs font-bold text-text-muted uppercase mb-2">Modelo</label>
+                        <app-fipe-autocomplete
+                            [placeholder]="selectedBrand() ? 'Ej: Corolla, Focus...' : 'Primero selecciona una marca'"
+                            [options]="models()" [isLoading]="isLoadingModels()" [disabled]="!selectedBrand()"
+                            [selectedValue]="selectedModel()"
+                            (optionSelected)="onModelSelected($event)"></app-fipe-autocomplete>
+                    </div>
+
+                    <!-- Year -->
+                    <div [class.opacity-50]="!selectedModel()">
+                        <label class="block text-xs font-bold text-text-muted uppercase mb-2">Año</label>
+                        <select (change)="onYearSelected($event)" [disabled]="!selectedModel()"
+                            class="w-full bg-surface-base border border-border-default rounded-xl px-4 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-cta-default transition-all appearance-none cursor-pointer">
+                            <option value="">Seleccionar año...</option>
+                            @for (year of years; track year) {
+                            <option [value]="year">{{ year }}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Sidebar -->
+            <aside class="lg:col-span-5 h-full">
+                <div
+                    class="bg-cta-default rounded-3xl p-8 text-cta-text flex flex-col justify-between h-full shadow-xl relative overflow-hidden">
+                    <div class="absolute bottom-0 right-0 -mb-10 -mr-10 w-48 h-48 bg-white/10 rounded-full blur-3xl">
+                    </div>
+
+                    <div class="relative z-10">
+                        <h3 class="text-sm font-black uppercase tracking-widest opacity-80 mb-2">Ganancia Mensual
+                            Estimada</h3>
+
+                        @if (isCalculating()) {
+                        <div class="animate-pulse space-y-2 py-4">
+                            <div class="h-12 w-32 bg-white/20 rounded-xl"></div>
+                            <div class="h-4 w-48 bg-white/10 rounded-lg"></div>
+                        </div>
+                        } @else if (estimatedEarnings()) {
+                        <div class="space-y-1 py-4">
+                            <div class="text-6xl font-black flex items-baseline gap-2">
+                                <span class="text-2xl opacity-60">USD</span>
+                                {{ estimatedEarnings() | number:'1.0-0' }}
+                            </div>
+                            <p class="text-sm font-medium opacity-80 flex items-center gap-1">
+                                <ion-icon name="flash-outline"></ion-icon>
+                                Estimado para 15 días de alquiler
+                            </p>
+                        </div>
+                        } @else {
+                        <div class="py-8 text-center text-white/50 border-2 border-dashed border-white/20 rounded-2xl">
+                            <p class="text-sm italic">Completa los datos para ver cuánto genera tu auto.</p>
+                        </div>
+                        }
+                    </div>
+
+                    <div class="mt-8 relative z-10">
+                        <button (click)="startPublishing()" [disabled]="!estimatedEarnings()"
+                            class="w-full py-4 bg-white text-cta-default rounded-2xl font-black text-lg shadow-2xl hover:bg-surface-base active:scale-95 transition-all disabled:opacity-50 disabled:active:scale-100 flex items-center justify-center gap-3 group">
+                            Empezar a ganar
+                            <ion-icon name="trending-up-outline"
+                                class="group-hover:translate-x-1 transition-transform"></ion-icon>
+                        </button>
+                        <p class="text-[10px] text-center mt-4 opacity-60 font-medium">
+                            * El monto es una estimación basada en el valor de mercado actual.
+                        </p>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Trust Row -->
+        <footer class="flex flex-wrap justify-center gap-8 border-t border-border-default/30 pt-12">
+            <div class="flex items-center gap-3 text-text-muted">
+                <ion-icon name="shield-checkmark-outline" class="text-2xl opacity-40"></ion-icon>
+                <span class="text-xs font-bold uppercase tracking-widest">Seguro SSN Incluido</span>
+            </div>
+            <div class="flex items-center gap-3 text-text-muted">
+                <ion-icon name="people-outline" class="text-2xl opacity-40"></ion-icon>
+                <span class="text-xs font-bold uppercase tracking-widest">Conductores Verificados</span>
+            </div>
+            <div class="flex items-center gap-3 text-text-muted">
+                <ion-icon name="cash-outline" class="text-2xl opacity-40"></ion-icon>
+                <span class="text-xs font-bold uppercase tracking-widest">Cobro por MercadoPago</span>
+            </div>
+        </footer>
+    </div>
+</div>

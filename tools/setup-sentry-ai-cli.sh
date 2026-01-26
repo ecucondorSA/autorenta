@@ -5,9 +5,16 @@
 
 set -e
 
+# Intentar leer token desde .env.local si no está en el ambiente
+if [ -z "$SENTRY_AUTH_TOKEN" ] || [ "$SENTRY_AUTH_TOKEN" == "YOUR_AUTH_TOKEN_HERE" ]; then
+    if [ -f "apps/web/.env.local" ]; then
+        SENTRY_AUTH_TOKEN=$(grep NG_APP_SENTRY_AUTH_TOKEN apps/web/.env.local | cut -d '=' -f2)
+    fi
+fi
+
 SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN:-YOUR_AUTH_TOKEN_HERE}"
-SENTRY_ORG="ecu-iu"  # Ajusta si es diferente
-SENTRY_PROJECT="autorenta-web"  # Ajusta si es diferente
+SENTRY_ORG="ecu-iu"
+SENTRY_PROJECT="autorenta-web"
 
 export SENTRY_AUTH_TOKEN
 
