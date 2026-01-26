@@ -1,106 +1,17 @@
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import https from 'https';
+import { callGemini, GOOGLE_API_KEY, MOCK_GEMINI, MODEL_NAME } from './gemini-client';
 
-// Configuración
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-// Usamos el modelo solicitado. Si en el futuro cambia el nombre público, se ajusta aquí.
-const MODEL_NAME = 'gemini-3-pro-preview'; 
+interface HealerResponse {
+  fixedContent: string;
+  explanation: string;
+  confidenceScore: number;
+}
 
-if (!GOOGLE_API_KEY) {
+if (!GOOGLE_API_KEY && !MOCK_GEMINI) {
   console.error('❌ Error: GOOGLE_API_KEY is not set in environment variables.');
   process.exit(1);
-}
-
-// Interfaces para Google AI API
-interface GeminiPart {
-  text: string;
-}
-
-interface GeminiContent {
-  role: string;
-  parts: GeminiPart[];
-}
-
-interface GeminiRequest {
-  contents: GeminiContent[];
-  generationConfig?: {
-    temperature?: number;
-    maxOutputTokens?: number;
-  };
-  systemInstruction?: {
-      parts: GeminiPart[];
-  };
-}
-
-// Función para llamar a Google Gemini API
-async function callGemini(prompt: string, context: string): Promise<string> {
-  // Construcción del endpoint
-  const hostname = 'generativelanguage.googleapis.com';
-  const path = `/v1beta/models/${MODEL_NAME}:generateContent?key=${GOOGLE_API_KEY}`;
-
-  const data: GeminiRequest = {
-    systemInstruction: {
-        parts: [{
-            text: `You are an automated CI Repair Agent. Your goal is to fix code errors.
-            RULES:
-            1. Return ONLY the full content of the fixed file.
-            2. Do NOT wrap code in markdown blocks (no \`\`\`).
-            3. Do NOT add comments explaining what you did.
-            4. Maintain existing coding style.
-            5. Fix only the error specified.`
-        }]
-    },
-    contents: [
-      {
-        role: 'user',
-        parts: [{ text: `CONTEXT (File Content):\n${context}\n\nERROR LOG:\n${prompt}\n\nPlease provide the corrected file content.` }]
-      }
-    ],
-    generationConfig: {
-      temperature: 0.1,
-      maxOutputTokens: 8192 // Gemini soporta outputs largos
-    }
-  };
-
-  return new Promise((resolve, reject) => {
-    const req = https.request({
-      hostname,
-      path,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }, (res) => {
-      let body = '';
-      res.on('data', (chunk) => body += chunk);
-      res.on('end', () => {
-        try {
-          const response = JSON.parse(body);
-          
-          if (response.error) {
-            reject(new Error(`Gemini API Error: ${response.error.message}`));
-            return;
-          }
-
-          if (!response.candidates || response.candidates.length === 0) {
-            reject(new Error('Gemini returned no candidates.'));
-            return;
-          }
-
-          const text = response.candidates[0].content.parts[0].text;
-          resolve(text.trim());
-        } catch (e) {
-          reject(e);
-        }
-      });
-    });
-
-    req.on('error', (e) => reject(e));
-    req.write(JSON.stringify(data));
-    req.end();
-  });
 }
 
 // Función principal (Main Loop)
@@ -118,7 +29,7 @@ async function heal() {
   try {
     // 1. Ejecutar comando para capturar el error
     console.log('🔍 Reproducing failure...');
-    execSync(commandToFix, { stdio: 'pipe' }); 
+    execSync(commandToFix, { stdio: 'pipe' });
     console.log('✅ Command passed unexpectedly. Nothing to heal.');
     process.exit(0);
 
@@ -128,7 +39,7 @@ async function heal() {
 
     // 2. Analizar el log para encontrar el archivo culpable
     const fileMatch = output.match(/([a-zA-Z0-9_\-\/]+\.(ts|js|html|css|scss)):\d+/);
-    
+
     if (!fileMatch) {
       console.error('⚠️ Could not identify a specific file in the error log.');
       process.exit(1);
@@ -144,15 +55,43 @@ async function heal() {
     const fileContent = fs.readFileSync(filePath, 'utf-8');
 
     // 3. Consultar a Gemini
-    console.log('🧠 Asking Gemini for a fix...');
+    console.log('🧠 Asking Gemini for a fix and explanation...');
     try {
-      const fixedContent = await callGemini(output, fileContent);
-      
-      // Limpieza de Markdown si Gemini lo incluye
-      const cleanContent = fixedContent.replace(/^```[a-z]*\n/, '').replace(/```$/, '');
+      const systemPrompt = `You are an expert Senior Software Engineer acting as a 'Conversational CI Healer'.
+            
+            YOUR GOAL:
+            Fix the code error provided in the ERROR LOG based on the CONTEXT.
+
+            RESPONSE FORMAT:
+            You must return a valid JSON object with the following structure:
+            {
+              "fixedContent": "The entire file content with the fix applied. Do NOT use markdown code blocks.",
+              "explanation": "Una explicación breve, útil y humana de qué salió mal y cómo lo arreglaste (EN ESPAÑOL). Sé educativo pero conciso. Ejemplo: 'Noté que olvidaste manejar el caso null en getUser(), así que agregué un operador de encadenamiento opcional.'",
+              "confidenceScore": 0.95 (number between 0 and 1)
+            }
+
+            RULES:
+            1. The 'fixedContent' must be the FULL file content, ready to be written to disk.
+            2. The 'explanation' must be friendly and conversational (IN SPANISH).
+            3. Do NOT wrap the JSON in markdown blocks (no \`\`\`json).
+            4. Maintain existing coding style.`;
+
+      const mockResponse: HealerResponse = {
+        fixedContent: fileContent.replace('taxRate', 'tax'), // Simple mock logic for verification
+        explanation: "Noté que intentabas usar 'taxRate' que no estaba definido. Asumí que te referías a 'tax' basándome en los argumentos, ¡así que lo corregí por ti!",
+        confidenceScore: 0.99
+      };
+
+      const response = await callGemini<HealerResponse>(output, fileContent, systemPrompt, mockResponse);
+
+      const { fixedContent, explanation, confidenceScore } = response;
+
+      console.log('\n💬 \x1b[36mAI Explanation:\x1b[0m'); // Cyan color for header
+      console.log(`\x1b[33m"${explanation}"\x1b[0m`); // Yellow for the text
+      console.log(`📊 Confidence: ${(confidenceScore * 100).toFixed(1)}%\n`);
 
       // 4. Aplicar el fix
-      fs.writeFileSync(filePath, cleanContent);
+      fs.writeFileSync(filePath, fixedContent);
       console.log(`✨ Applied fix to ${filePath}`);
 
       // 5. Verificar

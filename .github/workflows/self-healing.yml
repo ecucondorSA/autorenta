@@ -2,7 +2,7 @@ name: 🚑 Project Lazarus (Self-Healing)
 
 on:
   workflow_run:
-    workflows: ["CI", "PR Validation"]
+    workflows: ["CI", "PR Validation", "Playwright E2E Tests", "E2E Report", "Database Audit on PR"]
     types:
       - completed
 
