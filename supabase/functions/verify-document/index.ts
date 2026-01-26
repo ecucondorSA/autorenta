@@ -15,6 +15,7 @@ import { getCorsHeaders } from '../_shared/cors.ts';
 import { callVisionApi, OcrResult } from '../_shared/vision-api.ts';
 import { validateArgentinaDocument, DocumentValidationResult as ArgentinaResult } from '../_shared/validators/argentina.ts';
 import { validateEcuadorDocument, DocumentValidationResult as EcuadorResult } from '../_shared/validators/ecuador.ts';
+import { initSentry, captureError } from '../_shared/sentry.ts';
 
 // Types
 type DocumentType = 'dni' | 'license';

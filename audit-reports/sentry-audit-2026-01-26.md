@@ -259,14 +259,14 @@ Environment camera failed, trying any camera...
 
 ## Acciones Recomendadas
 
-### Inmediatas (Hoy)
-1. [ ] **P0-1:** Corregir trigger de `owner_id` en bookings
-2. [ ] **P0-2:** Agregar policy RLS faltante en `owner_usage_limits`
-3. [ ] **P1-4:** Fix null check en `onMarkerClick`
+### Inmediatas (Hoy) - COMPLETADAS
+1. [x] **P0-1:** Corregir trigger de `owner_id` en bookings ✅ Migración 20260126210000 aplicada
+2. [x] **P0-2:** Agregar policy RLS faltante en `owner_usage_limits` ✅ Migración 20260126130000 aplicada
+3. [x] **P1-4:** Fix null check en `onMarkerClick` ✅ Ya arreglado en browse-cars.page.ts:184-189
 
-### Esta Semana
-4. [ ] **P0-3:** Revisar Edge Function `tiktok-events`
-5. [ ] **P1-5:** Investigar fallos de OCR verification
+### Esta Semana - EN PROGRESO
+4. [x] **P0-3:** Edge Function `tiktok-events` ✅ Secrets configurados, función operativa
+5. [x] **P1-5:** Fix OCR verification ✅ Agregado import de sentry.ts faltante en verify-document
 6. [ ] **P1-8:** Optimizar performance en `/cars/list`
 
 ### Backlog
@@ -297,6 +297,20 @@ alerts:
     threshold: 1
     window: 15m
 ```
+
+---
+
+---
+
+## Fixes Aplicados (2026-01-26)
+
+| Issue | Fix | Archivo/Migración |
+|-------|-----|-------------------|
+| P0-1 owner_id trigger | Columna owner_id agregada a bookings + trigger auto-populate | `20260126210000_fix_bookings_missing_columns.sql` |
+| P0-2 RLS owner_usage_limits | Policy "Allow system insert on booking" creada | `20260126130000_fix_critical_sentry_errors.sql` |
+| P0-3 tiktok-events FATAL | Verificado: secrets configurados, función operativa | Secrets en Supabase |
+| P1-4 null check onMarkerClick | Ya corregido: uso de optional chaining `?.detail?.carId ??` | `browse-cars.page.ts:184-189` |
+| P1-5 OCR verification fails | Import de sentry.ts faltante agregado | `supabase/functions/verify-document/index.ts` |
 
 ---
 

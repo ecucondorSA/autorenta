@@ -286,7 +286,10 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
       this.recordedChunks = [];
       this.mediaRecorder = new MediaRecorder(this.stream!, {
         mimeType: 'video/webm;codecs=vp9',
-        videoBitsPerSecond: 2500000,
+        // Fix Sentry #610: Reducir bitrate para archivos más pequeños
+        // 750 kbps = calidad suficiente para inspecciones de vehículos
+        // Reduce tamaño de archivo en ~70% (3min: 56MB → 17MB)
+        videoBitsPerSecond: 750000, // 750 kbps (antes: 2.5 Mbps)
       });
 
       this.mediaRecorder.ondataavailable = (event) => {
@@ -319,6 +322,18 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
 
   private async processRecording() {
     const blob = new Blob(this.recordedChunks, { type: 'video/webm' });
+
+    // Fix Sentry #610: Validar tamaño ANTES de crear el File
+    const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB (límite de Supabase Storage)
+    if (blob.size > MAX_VIDEO_SIZE) {
+      const videoSizeMB = (blob.size / 1024 / 1024).toFixed(1);
+      this.recorderError.emit(
+        `El video (${videoSizeMB}MB) supera el límite de 50MB. ` +
+        `Por favor, grabe un video más corto.`
+      );
+      return;
+    }
+
     const file = new File([blob], `inspection_${Date.now()}.webm`, { type: 'video/webm' });
 
     if (this.recordingDuration() < 90) {

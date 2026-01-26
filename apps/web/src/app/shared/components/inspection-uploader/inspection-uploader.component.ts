@@ -113,10 +113,10 @@ export class InspectionUploaderComponent implements OnInit {
     try {
       const files = Array.from(input.files);
 
-      // P0-014: Use centralized file validation
+      // P0-014: Use centralized file validation (basic checks only)
       const validationResults = validateFiles(files, {
-        maxSizeBytes: 2 * 1024 * 1024, // 2MB max
-        allowedMimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
+        maxSizeBytes: 50 * 1024 * 1024, // 50MB max (before compression)
+        allowedMimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'],
         checkMimeType: true,
       });
 
@@ -133,9 +133,9 @@ export class InspectionUploaderComponent implements OnInit {
         return;
       }
 
-      // Subir fotos a Supabase Storage
+      // Subir fotos a Supabase Storage con compresión automática
       for (const file of files) {
-        const photo = await this.uploadPhoto(file);
+        const photo = await this.uploadPhotoWithCompression(file);
         if (photo) {
           this.photos.update((p) => [...p, photo]);
           logFileUpload(file.name, true);
@@ -153,7 +153,50 @@ export class InspectionUploaderComponent implements OnInit {
   }
 
   /**
-   * Sube una foto a Supabase Storage
+   * Sube una foto con compresión automática (Fix Sentry #610)
+   *
+   * Beneficios:
+   * - Reduce tamaño de fotos en 70-90%
+   * - Acepta fotos de alta resolución sin rechazarlas
+   * - Mejor UX (usuarios no comprimen manualmente)
+   */
+  private async uploadPhotoWithCompression(file: File): Promise<InspectionPhoto | null> {
+    try {
+      const supabase = this.supabaseService.getClient();
+      const userId = (await supabase.auth.getUser()).data.user?.id;
+
+      if (!userId) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      // Usar FileUploadService con compresión automática
+      const result = await this.fileUploadService.uploadFile(file, {
+        storagePath: `${userId}/inspections`,
+        bucket: 'car-images',
+        maxSizeBytes: 50 * 1024 * 1024, // 50MB antes de compresión
+        compressImages: true,
+        targetSizeMB: 1, // Comprimir a ~1MB
+        maxImageDimension: 1920,
+        allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'],
+      });
+
+      if (!result.success || !result.url) {
+        this.error.set(result.error || 'Error al subir foto');
+        return null;
+      }
+
+      return {
+        url: result.url,
+        type: 'exterior',
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Sube una foto a Supabase Storage (método legacy - mantenido por compatibilidad)
+   * @deprecated Use uploadPhotoWithCompression instead
    */
   private async uploadPhoto(file: File): Promise<InspectionPhoto | null> {
     try {
