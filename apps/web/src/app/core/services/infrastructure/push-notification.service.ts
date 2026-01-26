@@ -194,7 +194,10 @@ export class PushNotificationService {
    * @param token The token string (endpoint for web, FCM token for native)
    * @param platform The platform type ('web' | 'fcm' | 'apns')
    */
-  private async saveTokenToDatabase(token: string, platform: 'web' | 'fcm' | 'apns'): Promise<void> {
+  private async saveTokenToDatabase(
+    token: string,
+    platform: 'web' | 'fcm' | 'apns',
+  ): Promise<void> {
     // Ensure we have a user
     const user = await this.authService.getCurrentUser();
     if (!user) return;

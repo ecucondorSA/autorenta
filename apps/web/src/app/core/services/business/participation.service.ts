@@ -36,7 +36,7 @@ export class ParticipationService {
       points_usage_bonus: 30,
       total_points: 460,
       pool_share_percentage: 0.0015, // 0.15%
-      earnings_usd: 450.50,
+      earnings_usd: 450.5,
       currency: 'USD',
       status: 'open',
     };
@@ -64,7 +64,7 @@ export class ParticipationService {
       target_balance_cents: 18000000,
       status: 'healthy',
       last_calculated_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     };
 
     return of(mapFgoStatus(mockFgoView)).pipe(delay(600));
@@ -83,7 +83,7 @@ export class ParticipationService {
       distributable_revenue_usd: 112500,
       total_network_points: 350000,
       total_participants_count: 450,
-      status: 'collecting'
+      status: 'collecting',
     };
     return of(mockPool).pipe(delay(700));
   }

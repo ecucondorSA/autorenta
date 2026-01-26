@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Booking } from '@core/models';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -68,7 +62,9 @@ import {
           <!-- Owner: Esperando que renter confirme recepción -->
           <div class="py-4 px-6 rounded-xl bg-emerald-50 border border-emerald-200 text-center">
             <p class="text-sm font-medium text-emerald-700">Vehículo entregado</p>
-            <p class="text-xs text-emerald-600 mt-1">Esperando que el viajero confirme la recepción</p>
+            <p class="text-xs text-emerald-600 mt-1">
+              Esperando que el viajero confirme la recepción
+            </p>
           </div>
         } @else if (canPerformCheckOut()) {
           <!-- Finalizar Viaje -->
@@ -100,9 +96,7 @@ import {
           >
             Entregar Vehículo
           </a>
-          <p class="text-xs text-neutral-500 text-center mt-2">
-            Realizar inspección de entrega
-          </p>
+          <p class="text-xs text-neutral-500 text-center mt-2">Realizar inspección de entrega</p>
         } @else if (canOwnerCheckOut()) {
           <!-- Owner: Confirmar Devolución -->
           <a
@@ -111,9 +105,7 @@ import {
           >
             Confirmar Devolución
           </a>
-          <p class="text-xs text-neutral-500 text-center mt-2">
-            Inspeccionar estado del vehículo
-          </p>
+          <p class="text-xs text-neutral-500 text-center mt-2">Inspeccionar estado del vehículo</p>
         } @else if (canApproveBooking()) {
           <!-- Approve/Reject -->
           <div class="space-y-2">
@@ -150,21 +142,30 @@ import {
             (click)="chatOpen.emit()"
             class="flex flex-col items-center gap-1.5 py-3 rounded-xl hover:bg-neutral-50 transition-colors group"
           >
-            <ion-icon name="chatbubble-ellipses-outline" class="text-xl text-neutral-600 group-hover:text-neutral-900"></ion-icon>
+            <ion-icon
+              name="chatbubble-ellipses-outline"
+              class="text-xl text-neutral-600 group-hover:text-neutral-900"
+            ></ion-icon>
             <span class="text-[10px] text-neutral-500 group-hover:text-neutral-700">Chat</span>
           </button>
           <a
             [routerLink]="['/bookings', booking().id, 'request']"
             class="flex flex-col items-center gap-1.5 py-3 rounded-xl hover:bg-neutral-50 transition-colors group"
           >
-            <ion-icon name="receipt-outline" class="text-xl text-neutral-600 group-hover:text-neutral-900"></ion-icon>
+            <ion-icon
+              name="receipt-outline"
+              class="text-xl text-neutral-600 group-hover:text-neutral-900"
+            ></ion-icon>
             <span class="text-[10px] text-neutral-500 group-hover:text-neutral-700">Pago</span>
           </a>
           <a
             [routerLink]="['/bookings', booking().id, 'contract']"
             class="flex flex-col items-center gap-1.5 py-3 rounded-xl hover:bg-neutral-50 transition-colors group"
           >
-            <ion-icon name="document-text-outline" class="text-xl text-neutral-600 group-hover:text-neutral-900"></ion-icon>
+            <ion-icon
+              name="document-text-outline"
+              class="text-xl text-neutral-600 group-hover:text-neutral-900"
+            ></ion-icon>
             <span class="text-[10px] text-neutral-500 group-hover:text-neutral-700">Contrato</span>
           </a>
           @if (showCancelButton()) {
@@ -172,7 +173,10 @@ import {
               (click)="handleCancel()"
               class="flex flex-col items-center gap-1.5 py-3 rounded-xl hover:bg-red-50 transition-colors group"
             >
-              <ion-icon name="close-circle-outline" class="text-xl text-neutral-400 group-hover:text-red-500"></ion-icon>
+              <ion-icon
+                name="close-circle-outline"
+                class="text-xl text-neutral-400 group-hover:text-red-500"
+              ></ion-icon>
               <span class="text-[10px] text-neutral-400 group-hover:text-red-500">Cancelar</span>
             </button>
           } @else {
@@ -180,7 +184,10 @@ import {
               href="mailto:soporte@autorentar.com"
               class="flex flex-col items-center gap-1.5 py-3 rounded-xl hover:bg-neutral-50 transition-colors group"
             >
-              <ion-icon name="help-circle-outline" class="text-xl text-neutral-600 group-hover:text-neutral-900"></ion-icon>
+              <ion-icon
+                name="help-circle-outline"
+                class="text-xl text-neutral-600 group-hover:text-neutral-900"
+              ></ion-icon>
               <span class="text-[10px] text-neutral-500 group-hover:text-neutral-700">Ayuda</span>
             </a>
           }
@@ -229,9 +236,7 @@ export class BookingActionsCardComponent {
   // Computed helpers
   readonly showPaymentAction = computed(() => {
     const booking = this.booking();
-    return (
-      (this.needsPayment() || booking?.status === 'pending_payment') && this.isRenter()
-    );
+    return (this.needsPayment() || booking?.status === 'pending_payment') && this.isRenter();
   });
 
   readonly showWaitingContribution = computed(() => {
@@ -240,9 +245,7 @@ export class BookingActionsCardComponent {
 
   readonly showCancelButton = computed(() => {
     const booking = this.booking();
-    return (
-      this.canOwnerCancel() || (this.isRenter() && booking?.status === 'pending')
-    );
+    return this.canOwnerCancel() || (this.isRenter() && booking?.status === 'pending');
   });
 
   handleCancel(): void {

@@ -236,7 +236,7 @@ export class BookingCheckoutPage implements OnInit {
       await Promise.all([
         this.loadBooking(),
         this.driverProfileService.loadProfile(),
-        this.walletService.fetchBalance()
+        this.walletService.fetchBalance(),
       ]);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error cargando el booking');
@@ -279,9 +279,9 @@ export class BookingCheckoutPage implements OnInit {
 
     // If wallet is selected, ensure we have the latest balance
     if (event.provider === 'wallet') {
-      this.walletService.fetchBalance().catch(err =>
-        this.logger.warn('Error refreshing wallet balance on selection', err)
-      );
+      this.walletService
+        .fetchBalance()
+        .catch((err) => this.logger.warn('Error refreshing wallet balance on selection', err));
     }
 
     // Limpiar preferencia previa de MercadoPago
@@ -361,25 +361,24 @@ export class BookingCheckoutPage implements OnInit {
 
     try {
       // 1. Lock funds
-      await this.walletService.lockFunds(
-        this.bookingId(),
-        this.amountInProviderCurrency(),
-        `Pago de reserva #${this.bookingId()}`
-      ).toPromise();
+      await this.walletService
+        .lockFunds(
+          this.bookingId(),
+          this.amountInProviderCurrency(),
+          `Pago de reserva #${this.bookingId()}`,
+        )
+        .toPromise();
 
       // 2. Redirect to confirmation (like PayPal)
       // Since it's instant, we can simulate a "transaction" ID or use the booking ID
       this.router.navigate(['/bookings', this.bookingId(), 'confirmation'], {
         queryParams: {
           provider: 'wallet',
-          status: 'approved'
+          status: 'approved',
         },
       });
-
     } catch (err) {
-      this.error.set(
-        err instanceof Error ? err.message : 'Error procesando el pago con Wallet'
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error procesando el pago con Wallet');
       this.isProcessingPayment.set(false);
     }
   }
@@ -409,9 +408,14 @@ export class BookingCheckoutPage implements OnInit {
       const cents = Number(booking['total_cents']);
       const currency = String(booking['currency'] || 'USD');
       const fxRate = (booking['fx_snapshot'] ?? booking['fx_rate']) as number | null;
-      return normalizeRecordToUsd({ total_price: cents / 100, currency, fx_snapshot: fxRate }, 'total_price');
+      return normalizeRecordToUsd(
+        { total_price: cents / 100, currency, fx_snapshot: fxRate },
+        'total_price',
+      );
     }
-    return normalizeRecordToUsd(booking, 'total_price') || normalizeRecordToUsd(booking, 'total_amount');
+    return (
+      normalizeRecordToUsd(booking, 'total_price') || normalizeRecordToUsd(booking, 'total_amount')
+    );
   }
 
   /**

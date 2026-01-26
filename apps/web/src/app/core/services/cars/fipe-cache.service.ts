@@ -61,11 +61,7 @@ export class FipeCacheService {
    * Lookup FIPE value with caching
    * Returns cached value if available, otherwise fetches from API
    */
-  async lookup(
-    brand: string,
-    model: string,
-    year: number
-  ): Promise<FipeValueResult | null> {
+  async lookup(brand: string, model: string, year: number): Promise<FipeValueResult | null> {
     // Check cache first
     const cached = this.get(brand, model, year);
     if (cached) {
@@ -91,12 +87,7 @@ export class FipeCacheService {
   /**
    * Store value in cache with LRU eviction
    */
-  private set(
-    brand: string,
-    model: string,
-    year: number,
-    result: FipeValueResult
-  ): void {
+  private set(brand: string, model: string, year: number, result: FipeValueResult): void {
     const key = this.generateKey(brand, model, year);
 
     // Enforce max entries (LRU - delete oldest)

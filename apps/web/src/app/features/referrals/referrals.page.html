@@ -31,7 +31,8 @@
               [value]="shareableLink() || ''"
               readonly
               class="flex-1 px-4 py-2 rounded-lg bg-surface-secondary text-sm"
-            aria-label="Campo de entrada" />
+              aria-label="Campo de entrada"
+            />
             <button (click)="copyLink()" class="btn-secondary">
               {{ copiedLink() ? 'Copiado!' : 'Copiar link' }}
             </button>

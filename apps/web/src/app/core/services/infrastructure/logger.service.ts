@@ -557,7 +557,7 @@ export class ChildLogger {
   constructor(
     private parent: LoggerService,
     private context: string,
-  ) { }
+  ) {}
 
   debug(message: string, ...args: unknown[]): void {
     this.parent.debug(message, this.context, ...args);

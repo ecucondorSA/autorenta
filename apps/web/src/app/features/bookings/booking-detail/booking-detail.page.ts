@@ -12,7 +12,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Booking, BookingExtensionRequest, BookingStatus, TrafficInfraction } from '@core/models';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { CLAIM_STATUS_LABELS, InsuranceClaim } from '@core/models/insurance.model';
-import { BookingTimelineComponent } from "./booking-timeline.component";
+import { BookingTimelineComponent } from './booking-timeline.component';
 import { AuthService } from '@core/services/auth/auth.service';
 import {
   BookingConfirmationService,
@@ -32,7 +32,11 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { ContractPdfData, InspectionPdfData, PdfWorkerService } from '@core/services/infrastructure/pdf-worker.service';
+import {
+  ContractPdfData,
+  InspectionPdfData,
+  PdfWorkerService,
+} from '@core/services/infrastructure/pdf-worker.service';
 import { TrafficInfractionsService } from '@core/services/infrastructure/traffic-infractions.service'; // NEW
 import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
 import { PaymentsService } from '@core/services/payments/payments.service';
@@ -96,7 +100,10 @@ import { ReportRenterNoShowComponent } from '../../../shared/components/report-r
 import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component';
 import { SettlementSimulatorComponent } from '../../../shared/components/settlement-simulator/settlement-simulator.component';
 import { SidePanelComponent } from '../../../shared/components/side-panel/side-panel.component';
-import { BookingFlowCardComponent, FlowActionEvent } from '../../../shared/components/booking-flow-card/booking-flow-card.component';
+import {
+  BookingFlowCardComponent,
+  FlowActionEvent,
+} from '../../../shared/components/booking-flow-card/booking-flow-card.component';
 import { BookingActionsCardComponent } from './booking-actions-card.component';
 import { BookingCheckInInfoCardComponent } from './booking-check-in-info-card.component';
 import { BookingExtensionsManagerComponent } from './booking-extensions-manager.component';
@@ -157,7 +164,8 @@ const DISPUTE_STATUSES = new Set<BookingStatus>([
   selector: 'app-booking-detail',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [BookingTimelineComponent, 
+  imports: [
+    BookingTimelineComponent,
     CommonModule,
     RouterLink,
     IonIcon,
@@ -753,11 +761,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   readonly awaitingRenterCheckIn = computed(() => {
     const booking = this.booking();
     if (!booking) return false;
-    return (
-      booking.status === 'confirmed' &&
-      this.hasOwnerCheckIn() &&
-      !this.hasRenterCheckIn()
-    );
+    return booking.status === 'confirmed' && this.hasOwnerCheckIn() && !this.hasRenterCheckIn();
   });
 
   readonly hasClaim = computed(() => {
@@ -2265,7 +2269,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   // ============================================================================
   downloadingContract = signal(false);
 
-  async downloadContract(contractComponent?: { setDownloading: (v: boolean) => void }): Promise<void> {
+  async downloadContract(contractComponent?: {
+    setDownloading: (v: boolean) => void;
+  }): Promise<void> {
     const booking = this.booking();
     if (!booking || this.downloadingContract()) return;
 
@@ -2283,7 +2289,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         deposit_amount_cents: Math.round(booking.breakdown?.deposit_cents ?? 0),
         insurance_cents: booking.breakdown?.insurance_cents ?? 0,
         fees_cents: booking.breakdown?.fees_cents ?? 0,
-        total_amount_cents: booking.breakdown?.total_cents ?? Math.round((booking.total_amount ?? 0) * 100),
+        total_amount_cents:
+          booking.breakdown?.total_cents ?? Math.round((booking.total_amount ?? 0) * 100),
         currency: (booking.currency as 'USD' | 'ARS' | 'BRL') || 'USD',
         car: {
           title: `${booking.car_brand} ${booking.car_model}`,
@@ -2332,7 +2339,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
     // Find the appropriate inspection
     const stage = type === 'delivery' ? 'check_in' : 'check_out';
-    const inspection = this.inspections().find(i => i.stage === stage || i.stage === 'renter_check_in');
+    const inspection = this.inspections().find(
+      (i) => i.stage === stage || i.stage === 'renter_check_in',
+    );
 
     if (!inspection) {
       alert(`No hay acta de ${type === 'delivery' ? 'entrega' : 'devolución'} disponible`);
@@ -2352,7 +2361,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         inspection_id: inspection.id,
         booking_id: booking.id,
         type,
-        inspection_date: inspection.signedAt?.toISOString() ?? inspection.createdAt?.toISOString() ?? new Date().toISOString(),
+        inspection_date:
+          inspection.signedAt?.toISOString() ??
+          inspection.createdAt?.toISOString() ??
+          new Date().toISOString(),
         inspector_name: 'AutoRenta',
         comodatario_name: booking.renter_name ?? '',
         comodante_name: this.carOwnerName(),

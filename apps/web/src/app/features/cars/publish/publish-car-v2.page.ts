@@ -34,7 +34,10 @@ import {
   VehicleScannerConfirmData,
 } from '../../../shared/components/vehicle-scanner-live/vehicle-scanner-live.component';
 import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
-import { VisualSelectorComponent, VisualOption } from './components/visual-selector/visual-selector.component';
+import {
+  VisualSelectorComponent,
+  VisualOption,
+} from './components/visual-selector/visual-selector.component';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -98,7 +101,7 @@ import { PublishCarPhotoService } from './services/publish-car-photo.service';
     VehicleScannerLiveComponent,
     VisualSelectorComponent,
     IonIcon,
-    HoverLiftDirective
+    HoverLiftDirective,
   ],
   templateUrl: './publish-car-v2.page.html',
   styleUrls: ['./publish-car-v2.page.scss'],
@@ -170,20 +173,20 @@ export class PublishCarV2Page implements OnInit {
   // Visual Selector Options
   readonly transmissionOptions: VisualOption[] = [
     { value: 'manual', label: 'Manual', icon: 'manual' },
-    { value: 'automatic', label: 'Automática', icon: 'automatic' }
+    { value: 'automatic', label: 'Automática', icon: 'automatic' },
   ];
 
   readonly fuelOptions: VisualOption[] = [
     { value: 'nafta', label: 'Nafta', icon: 'nafta' },
     { value: 'gasoil', label: 'Diesel', icon: 'gasoil' },
     { value: 'hibrido', label: 'Híbrido', icon: 'hybrid' },
-    { value: 'electrico', label: 'Eléctrico', icon: 'electric' }
+    { value: 'electrico', label: 'Eléctrico', icon: 'electric' },
   ];
 
   readonly mileageOptions: VisualOption[] = [
     { value: 200, label: '200 km', subLabel: 'Por día', icon: 'low' },
     { value: 400, label: '400 km', subLabel: 'Por día', icon: 'mid' },
-    { value: 0, label: 'Ilimitado', subLabel: 'Sin cargo extra', icon: 'unlimited' }
+    { value: 0, label: 'Ilimitado', subLabel: 'Sin cargo extra', icon: 'unlimited' },
   ];
 
   // Expose service state to template
@@ -1403,7 +1406,7 @@ export class PublishCarV2Page implements OnInit {
     // Check docs only if active
     if (carData['status'] === 'active' && !this.editMode()) {
       setTimeout(() => {
-        this.checkMissingDocuments(carId).catch(() => { });
+        this.checkMissingDocuments(carId).catch(() => {});
       }, 2000);
     }
 
@@ -1481,13 +1484,14 @@ export class PublishCarV2Page implements OnInit {
     this.logger.debug('[PublishCarV2] AI Photos changed:', photos.length);
 
     // Extract valid photos (those that passed validation or are uploading)
-    const validPhotos = photos.filter(
-      (p) => p.status === 'valid' || p.status === 'pending',
-    );
+    const validPhotos = photos.filter((p) => p.status === 'valid' || p.status === 'pending');
 
     // Sync with photo service - convert PhotoWithAI to files for upload
     // Map PhotoPosition to VehiclePosition (filter out incompatible positions like 'cover')
-    const positionMap: Record<string, 'front' | 'rear' | 'left' | 'right' | 'interior' | 'dashboard' | 'trunk' | undefined> = {
+    const positionMap: Record<
+      string,
+      'front' | 'rear' | 'left' | 'right' | 'interior' | 'dashboard' | 'trunk' | undefined
+    > = {
       cover: undefined,
       front: 'front',
       rear: 'rear',
@@ -1506,7 +1510,13 @@ export class PublishCarV2Page implements OnInit {
         aiValidation: {
           quality: p.quality?.score,
           vehicle: p.vehicle
-            ? { brand: p.vehicle.brand ?? '', model: p.vehicle.model ?? '', year: p.vehicle.year, color: p.vehicle.color, confidence: p.vehicle.confidence }
+            ? {
+                brand: p.vehicle.brand ?? '',
+                model: p.vehicle.model ?? '',
+                year: p.vehicle.year,
+                color: p.vehicle.color,
+                confidence: p.vehicle.confidence,
+              }
             : undefined,
           plates: p.plates ? [{ text: '', confidence: 1, blurred: p.plates.detected }] : undefined,
         },
@@ -1566,9 +1576,7 @@ export class PublishCarV2Page implements OnInit {
 
     // Try to find matching FIPE brand
     const brands = this.fipeBrands();
-    const matchingBrand = brands.find(
-      (b) => b.name.toLowerCase() === vehicle.brand.toLowerCase(),
-    );
+    const matchingBrand = brands.find((b) => b.name.toLowerCase() === vehicle.brand.toLowerCase());
 
     if (matchingBrand) {
       // Select the brand (this will load models)

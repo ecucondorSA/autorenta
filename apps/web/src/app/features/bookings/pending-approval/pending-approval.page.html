@@ -76,7 +76,9 @@
             <button
               class="btn-analyze"
               (click)="openAnalysisPanel(booking)"
-              [disabled]="processingBookingId() !== null || rejectingBookingId() === booking.booking_id"
+              [disabled]="
+                processingBookingId() !== null || rejectingBookingId() === booking.booking_id
+              "
             >
               <app-icon name="user-check" [size]="18" />
               Analizar Perfil
@@ -84,7 +86,9 @@
             <button
               class="btn-approve"
               (click)="onApprove(booking.booking_id)"
-              [disabled]="processingBookingId() !== null || rejectingBookingId() === booking.booking_id"
+              [disabled]="
+                processingBookingId() !== null || rejectingBookingId() === booking.booking_id
+              "
             >
               @if (processingBookingId() !== booking.booking_id) {
                 <span>✅ Aprobar</span>
@@ -119,7 +123,10 @@
 
               <div class="reason-options">
                 @for (reason of rejectionReasons; track reason.value) {
-                  <label class="reason-option" [class.selected]="rejectionReason() === reason.value">
+                  <label
+                    class="reason-option"
+                    [class.selected]="rejectionReason() === reason.value"
+                  >
                     <input
                       type="radio"
                       name="rejection-reason-{{ booking.booking_id }}"
@@ -144,9 +151,7 @@
               }
 
               <div class="reject-form-actions">
-                <button class="btn-cancel-reject" (click)="onCancelReject()">
-                  Cancelar
-                </button>
+                <button class="btn-cancel-reject" (click)="onCancelReject()">Cancelar</button>
                 <button
                   class="btn-confirm-reject"
                   (click)="onConfirmReject()"
@@ -208,4 +213,3 @@
     </div>
   </div>
 }
-

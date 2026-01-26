@@ -62,12 +62,7 @@ interface BookingInputData {
   selector: 'app-booking-request',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterLink,
-    CardHoldPanelComponent,
-  ],
+  imports: [CommonModule, FormsModule, RouterLink, CardHoldPanelComponent],
   templateUrl: './booking-request.page.html',
   styleUrls: ['./booking-request.page.css'],
 })
@@ -155,10 +150,12 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     const input = this.bookingInput();
     const car = this.car();
     if (!input?.pickupLat || !car?.location_lat) return 0;
-    return this.distanceCalculator.calculateDistanceBetweenLocations(
-      { lat: input.pickupLat, lng: input.pickupLng! },
-      { lat: car.location_lat, lng: car.location_lng! }
-    ) || 0;
+    return (
+      this.distanceCalculator.calculateDistanceBetweenLocations(
+        { lat: input.pickupLat, lng: input.pickupLng! },
+        { lat: car.location_lat, lng: car.location_lng! },
+      ) || 0
+    );
   });
 
   readonly deliveryMetadata = computed(() => {
@@ -544,7 +541,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         this.walletLockId.set(lockWithExpiration as string);
         this.fxRateLocked.set(true);
         this.stopPolling();
-        await this.walletService.fetchBalance(true).catch(() => { });
+        await this.walletService.fetchBalance(true).catch(() => {});
         return lockWithExpiration as string;
       }
 
@@ -563,7 +560,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       this.walletLockId.set(lockId as string);
       this.fxRateLocked.set(true);
       this.stopPolling();
-      await this.walletService.fetchBalance(true).catch(() => { });
+      await this.walletService.fetchBalance(true).catch(() => {});
       return lockId as string;
     } finally {
       this.lockingWallet.set(false);
@@ -584,7 +581,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     // P0-013: Check email verification before booking
     const emailStatus = await this.emailVerificationService.checkStatus();
     if (!emailStatus.isVerified) {
-      this.error.set('Por favor verifica tu email antes de reservar. Revisa tu bandeja de entrada.');
+      this.error.set(
+        'Por favor verifica tu email antes de reservar. Revisa tu bandeja de entrada.',
+      );
       return;
     }
 
@@ -622,13 +621,13 @@ export class BookingRequestPage implements OnInit, OnDestroy {
           {
             pickupLat: input.pickupLat ?? car.location_lat ?? 0,
             pickupLng: input.pickupLng ?? car.location_lng ?? 0,
-            dropoffLat: (input.dropoffLat || input.pickupLat) ?? (car.location_lat ?? 0),
-            dropoffLng: (input.dropoffLng || input.pickupLng) ?? (car.location_lng ?? 0),
+            dropoffLat: (input.dropoffLat || input.pickupLat) ?? car.location_lat ?? 0,
+            dropoffLng: (input.dropoffLng || input.pickupLng) ?? car.location_lng ?? 0,
             deliveryRequired: this.distanceKm() > 0.5,
             distanceKm: this.distanceKm(),
             deliveryFeeCents: this.deliveryMetadata().deliveryFeeCents,
             distanceTier: this.deliveryMetadata().tier,
-          }
+          },
         );
 
         if (!result.success || !result.booking) {

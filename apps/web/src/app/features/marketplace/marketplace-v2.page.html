@@ -82,7 +82,9 @@
   </header>
 
   <!-- Minimal Content Overlay - Bottom Left -->
-  <div class="absolute bottom-0 left-0 right-0 z-40 p-6 pb-[100px] sm:p-10 sm:pb-10 lg:p-16 pointer-events-none">
+  <div
+    class="absolute bottom-0 left-0 right-0 z-40 p-6 pb-[100px] sm:p-10 sm:pb-10 lg:p-16 pointer-events-none"
+  >
     <div class="max-w-md pointer-events-auto">
       <!-- Headline -->
       <h1
@@ -98,7 +100,7 @@
       <!-- Subtext -->
       <p
         class="animate-fade-in-up delay-100 text-white/80 text-lg sm:text-xl font-friendly mb-8 max-w-lg leading-relaxed font-medium drop-shadow-md"
-        style="hyphens: none; -webkit-hyphens: none;"
+        style="hyphens: none; -webkit-hyphens: none"
       >
         ¿Por qué ir lejos? Hay autos increíbles estacionados muy cerca tuyo...
       </p>
@@ -131,7 +133,9 @@
           />
           <span class="font-medium">100% Asegurado</span>
         </span>
-        <span class="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full">
+        <span
+          class="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full"
+        >
           <svg class="w-4 h-4 text-[#39FF14]" fill="currentColor" viewBox="0 0 24 24">
             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -219,7 +223,10 @@
                   [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
                   [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
                   class="w-full h-full object-cover"
-                  [loading]="i < 2 ? 'eager' : 'lazy'" width="400" height="300" />
+                  [loading]="i < 2 ? 'eager' : 'lazy'"
+                  width="400"
+                  height="300"
+                />
 
                 <!-- Gradient Overlay -->
                 <div
@@ -287,7 +294,9 @@
               </div>
 
               <!-- Content Section: 45% Height (min-height ensures button is always visible) -->
-              <div class="flex-1 h-full p-5 flex flex-col justify-between bg-surface-raised min-h-[200px] overflow-hidden">
+              <div
+                class="flex-1 h-full p-5 flex flex-col justify-between bg-surface-raised min-h-[200px] overflow-hidden"
+              >
                 <div>
                   <!-- Title & Rating -->
                   <div class="flex justify-between items-start mb-2">
@@ -394,7 +403,10 @@
                     [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     [loading]="i < 4 ? 'eager' : 'lazy'"
-                    [style.view-transition-name]="'car-image-' + car.id" width="400" height="300" />
+                    [style.view-transition-name]="'car-image-' + car.id"
+                    width="400"
+                    height="300"
+                  />
                   <!-- Overlay Gradient -->
                   <div
                     class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -549,7 +561,10 @@
                 <img
                   src="/assets/images/ui/empty-search-street.webp"
                   alt="Calle vacía"
-                  class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500" width="192" height="192" />
+                  class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500"
+                  width="192"
+                  height="192"
+                />
               </div>
               <h3 class="font-display text-2xl font-bold text-text-primary mb-3 font-satoshi">
                 No encontramos autos por aquí
@@ -1030,7 +1045,10 @@
               <img
                 src="/assets/images/martin-testimonial.jpg"
                 alt="Martín, anfitrión de Autorentar"
-                class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-cta-default" width="96" height="96" />
+                class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-cta-default"
+                width="96"
+                height="96"
+              />
             </div>
             <div class="flex-1 text-center md:text-left">
               <p class="text-text-secondary italic text-base leading-relaxed">
@@ -1125,15 +1143,24 @@
             <img
               src="https://i.pravatar.cc/100?img=33"
               alt="Usuario 1"
-              class="border-surface-base" width="48" height="48" />
+              class="border-surface-base"
+              width="48"
+              height="48"
+            />
             <img
               src="https://i.pravatar.cc/100?img=47"
               alt="Usuario 2"
-              class="border-surface-base" width="48" height="48" />
+              class="border-surface-base"
+              width="48"
+              height="48"
+            />
             <img
               src="https://i.pravatar.cc/100?img=12"
               alt="Usuario 3"
-              class="border-surface-base" width="32" height="32" />
+              class="border-surface-base"
+              width="32"
+              height="32"
+            />
             <div
               class="w-8 h-8 rounded-full bg-surface-raised border-2 border-surface-base flex items-center justify-center text-[10px] font-bold text-text-secondary z-20 -ml-2.5"
             >
@@ -1166,7 +1193,9 @@
               </svg>
             </div>
             <div>
-              <span class="text-text-primary font-medium font-luxury block mb-0.5">Acreditación en 24hs</span>
+              <span class="text-text-primary font-medium font-luxury block mb-0.5"
+                >Acreditación en 24hs</span
+              >
               <p class="text-text-secondary text-sm leading-relaxed">
                 Recibís tu saldo al día siguiente, sin excusas ni demoras
               </p>
@@ -1191,7 +1220,9 @@
               </svg>
             </div>
             <div>
-              <span class="text-text-primary font-medium font-luxury block mb-0.5">Tu auto protegido</span>
+              <span class="text-text-primary font-medium font-luxury block mb-0.5"
+                >Tu auto protegido</span
+              >
               <p class="text-text-secondary text-sm leading-relaxed">
                 Conectamos propietarios con aseguradoras verificadas. Tu auto debe tener seguro
                 propio.
@@ -1423,7 +1454,10 @@
               <img
                 [src]="testimonial.avatar"
                 [alt]="testimonial.name"
-                class="w-12 h-12 rounded-full object-cover bg-surface-secondary" width="48" height="48" />
+                class="w-12 h-12 rounded-full object-cover bg-surface-secondary"
+                width="48"
+                height="48"
+              />
               <div class="absolute -bottom-1 -right-1 bg-cta-default text-white rounded-full p-0.5">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -1459,7 +1493,9 @@
 <section class="py-20 bg-gradient-to-b from-white to-gray-50">
   <div class="max-w-6xl mx-auto px-6">
     <div class="text-center mb-12">
-      <span class="inline-block px-4 py-1.5 rounded-full bg-[#39FF14]/10 text-[#39FF14] font-semibold text-sm mb-4">
+      <span
+        class="inline-block px-4 py-1.5 rounded-full bg-[#39FF14]/10 text-[#39FF14] font-semibold text-sm mb-4"
+      >
         Fácil y rápido
       </span>
       <h2 class="text-3xl md:text-4xl font-black font-friendly text-text-primary tracking-tight">
@@ -1480,17 +1516,29 @@
     <!-- Pasos en texto -->
     <div class="grid md:grid-cols-3 gap-8 text-center">
       <div class="p-6">
-        <div class="w-12 h-12 bg-[#39FF14] text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">1</div>
+        <div
+          class="w-12 h-12 bg-[#39FF14] text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4"
+        >
+          1
+        </div>
         <h3 class="font-bold text-lg mb-2">Busca tu auto</h3>
         <p class="text-gray-600 text-sm">Filtra por ubicación, fechas y tipo de vehículo</p>
       </div>
       <div class="p-6">
-        <div class="w-12 h-12 bg-[#39FF14] text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">2</div>
+        <div
+          class="w-12 h-12 bg-[#39FF14] text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4"
+        >
+          2
+        </div>
         <h3 class="font-bold text-lg mb-2">Reserva online</h3>
         <p class="text-gray-600 text-sm">Pago seguro con confirmación instantánea</p>
       </div>
       <div class="p-6">
-        <div class="w-12 h-12 bg-[#39FF14] text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">3</div>
+        <div
+          class="w-12 h-12 bg-[#39FF14] text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4"
+        >
+          3
+        </div>
         <h3 class="font-bold text-lg mb-2">Recoge y conduce</h3>
         <p class="text-gray-600 text-sm">Coordina con el anfitrión y disfruta tu viaje</p>
       </div>
@@ -1513,28 +1561,43 @@
       </div>
       <!-- Contenido -->
       <div class="text-center lg:text-left order-1 lg:order-2">
-        <span class="inline-block px-4 py-1.5 rounded-full bg-[#39FF14]/10 text-[#39FF14] font-semibold text-sm mb-4">
+        <span
+          class="inline-block px-4 py-1.5 rounded-full bg-[#39FF14]/10 text-[#39FF14] font-semibold text-sm mb-4"
+        >
           Próximamente
         </span>
-        <h2 class="text-3xl md:text-4xl font-black font-friendly text-text-primary tracking-tight mb-4">
+        <h2
+          class="text-3xl md:text-4xl font-black font-friendly text-text-primary tracking-tight mb-4"
+        >
           Tu próximo viaje, en tu bolsillo
         </h2>
         <p class="text-gray-600 text-lg mb-8">
-          Busca, reserva y gestiona tus alquileres desde cualquier lugar. Notificaciones en tiempo real.
+          Busca, reserva y gestiona tus alquileres desde cualquier lugar. Notificaciones en tiempo
+          real.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-          <a href="#" class="inline-flex items-center justify-center gap-2 bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors">
+          <a
+            href="#"
+            class="inline-flex items-center justify-center gap-2 bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors"
+          >
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              <path
+                d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"
+              />
             </svg>
             <div class="text-left">
               <div class="text-xs opacity-70">Descargar en</div>
               <div class="text-sm font-semibold">App Store</div>
             </div>
           </a>
-          <a href="#" class="inline-flex items-center justify-center gap-2 bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors">
+          <a
+            href="#"
+            class="inline-flex items-center justify-center gap-2 bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors"
+          >
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+              <path
+                d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"
+              />
             </svg>
             <div class="text-left">
               <div class="text-xs opacity-70">Disponible en</div>

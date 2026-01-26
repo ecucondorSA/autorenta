@@ -5,11 +5,11 @@ import { Preferences } from '@capacitor/preferences';
 /**
  * Adaptador de almacenamiento seguro para Supabase Auth.
  * Usa el Keystore nativo en iOS/Android y localStorage en Web.
- * 
+ *
  * Implementa la interfaz SupportedStorage de Supabase.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SecureStorageAdapter {
   private isNative = Capacitor.isNativePlatform();

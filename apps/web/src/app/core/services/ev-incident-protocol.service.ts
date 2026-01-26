@@ -54,18 +54,18 @@ export class EVIncidentProtocolService {
   readonly progress = computed(() => {
     const sections = this.sections();
     if (sections.length === 0) return 0;
-    const completed = sections.filter(s => s.status === 'completed').length;
+    const completed = sections.filter((s) => s.status === 'completed').length;
     return Math.round((completed / sections.length) * 100);
   });
 
   readonly isComplete = computed(() => {
     const sections = this.sections();
-    return sections.length > 0 && sections.every(s => s.status === 'completed');
+    return sections.length > 0 && sections.every((s) => s.status === 'completed');
   });
 
   readonly hasHighRisk = computed(() => {
     const sections = this.sections();
-    return sections.some(s => s.risk_level === 'red');
+    return sections.some((s) => s.risk_level === 'red');
   });
 
   /**
@@ -177,7 +177,7 @@ export class EVIncidentProtocolService {
 
       // Update local state
       const sections = this.sections();
-      const sectionIndex = sections.findIndex(s => s.id === sectionId);
+      const sectionIndex = sections.findIndex((s) => s.id === sectionId);
       if (sectionIndex >= 0) {
         const newSections = [...sections];
         newSections[sectionIndex] = updatedSection;
@@ -197,11 +197,7 @@ export class EVIncidentProtocolService {
   /**
    * Upload a photo for a section
    */
-  async uploadSectionPhoto(
-    sectionId: string,
-    file: File,
-    caption?: string,
-  ): Promise<string> {
+  async uploadSectionPhoto(sectionId: string, file: File, caption?: string): Promise<string> {
     this.saving.set(true);
     this.error.set(null);
 
@@ -244,16 +240,16 @@ export class EVIncidentProtocolService {
       const photoUrl = urlData.publicUrl;
 
       // Save photo record
-      const { data: { user } } = await this.supabase.auth.getUser();
-      const { error: insertError } = await this.supabase
-        .from('ev_protocol_photos')
-        .insert({
-          protocol_id: protocol.id,
-          section_id: sectionId,
-          photo_url: photoUrl,
-          caption,
-          uploaded_by: user?.id,
-        });
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+      const { error: insertError } = await this.supabase.from('ev_protocol_photos').insert({
+        protocol_id: protocol.id,
+        section_id: sectionId,
+        photo_url: photoUrl,
+        caption,
+        uploaded_by: user?.id,
+      });
 
       if (insertError) {
         console.error('Error saving photo record:', insertError);
@@ -261,7 +257,7 @@ export class EVIncidentProtocolService {
 
       // Update local section state
       const sections = this.sections();
-      const sectionIndex = sections.findIndex(s => s.id === sectionId);
+      const sectionIndex = sections.findIndex((s) => s.id === sectionId);
       if (sectionIndex >= 0) {
         const newSections = [...sections];
         const section = { ...newSections[sectionIndex] };
@@ -306,7 +302,7 @@ export class EVIncidentProtocolService {
 
       // Update local state
       const sections = this.sections();
-      const sectionIndex = sections.findIndex(s => s.id === sectionId);
+      const sectionIndex = sections.findIndex((s) => s.id === sectionId);
       if (sectionIndex >= 0) {
         const newSections = [...sections];
         newSections[sectionIndex] = updatedSection;
@@ -375,9 +371,9 @@ export class EVIncidentProtocolService {
       overall_risk: overallRisk,
       battery_safe: batterySafe,
       recommended_action: recommendedAction,
-      red_sections: sections.filter(s => s.risk_level === 'red').length,
-      yellow_sections: sections.filter(s => s.risk_level === 'yellow').length,
-      green_sections: sections.filter(s => s.risk_level === 'green').length,
+      red_sections: sections.filter((s) => s.risk_level === 'red').length,
+      yellow_sections: sections.filter((s) => s.risk_level === 'yellow').length,
+      green_sections: sections.filter((s) => s.risk_level === 'green').length,
       calculated_at: new Date().toISOString(),
     };
 
@@ -410,7 +406,9 @@ export class EVIncidentProtocolService {
       this.riskAssessment.set(assessment);
 
       // Update protocol completed state
-      this.currentProtocol.update(p => p ? { ...p, completed_at: new Date().toISOString() } : null);
+      this.currentProtocol.update((p) =>
+        p ? { ...p, completed_at: new Date().toISOString() } : null,
+      );
 
       return assessment;
     } catch (err) {

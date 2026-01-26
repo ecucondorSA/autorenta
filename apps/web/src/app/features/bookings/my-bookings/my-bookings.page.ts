@@ -322,7 +322,7 @@ export class MyBookingsPage implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly bookingRealtimeService: BookingRealtimeService,
     private readonly authService: AuthService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     void this.loadBookings();

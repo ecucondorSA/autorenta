@@ -18,7 +18,11 @@ export class DigitalKeyComponent {
 
   // Computed from Service
   isUnlocked = computed(() => this.bluetoothService.lockState() === 'unlocked');
-  isLoading = computed(() => this.bluetoothService.lockState() === 'unlocking' || this.bluetoothService.lockState() === 'locking');
+  isLoading = computed(
+    () =>
+      this.bluetoothService.lockState() === 'unlocking' ||
+      this.bluetoothService.lockState() === 'locking',
+  );
   connectionState = this.bluetoothService.connectionState;
 
   // Inputs

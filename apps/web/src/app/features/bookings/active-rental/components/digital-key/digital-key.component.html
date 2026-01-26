@@ -5,29 +5,56 @@
   <!-- Key Visual -->
   <div class="relative w-32 h-32 mb-4">
     <!-- Outer ring -->
-    <div class="absolute inset-0 rounded-full border-4 transition-colors duration-500" [class.border-red-400]="isLocked"
-      [class.border-green-400]="isUnlocked()" [class.border-amber-400]="isLoading()"
-      [class.animate-pulse]="isLoading()"></div>
+    <div
+      class="absolute inset-0 rounded-full border-4 transition-colors duration-500"
+      [class.border-red-400]="isLocked"
+      [class.border-green-400]="isUnlocked()"
+      [class.border-amber-400]="isLoading()"
+      [class.animate-pulse]="isLoading()"
+    ></div>
 
     <!-- Inner circle -->
-    <div class="absolute inset-3 rounded-full flex items-center justify-center transition-colors duration-500"
-      [class.bg-red-100]="isLocked" [class.bg-green-100]="isUnlocked()" [class.bg-amber-100]="isLoading()">
+    <div
+      class="absolute inset-3 rounded-full flex items-center justify-center transition-colors duration-500"
+      [class.bg-red-100]="isLocked"
+      [class.bg-green-100]="isUnlocked()"
+      [class.bg-amber-100]="isLoading()"
+    >
       <!-- Lock icon -->
       @if (isLocked || isLoading()) {
-      <svg class="w-12 h-12 transition-colors duration-500" [class.text-red-600]="isLocked"
-        [class.text-amber-600]="isLoading()" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-      </svg>
+        <svg
+          class="w-12 h-12 transition-colors duration-500"
+          [class.text-red-600]="isLocked"
+          [class.text-amber-600]="isLoading()"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+          />
+        </svg>
       }
 
       <!-- Unlock icon -->
       @if (isUnlocked()) {
-      <svg class="w-12 h-12 transition-colors duration-500" [class.text-green-600]="isUnlocked()" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
-      </svg>
+        <svg
+          class="w-12 h-12 transition-colors duration-500"
+          [class.text-green-600]="isUnlocked()"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"
+          />
+        </svg>
       }
     </div>
   </div>
@@ -36,51 +63,81 @@
   <div class="flex flex-col items-center">
     <!-- New: Connection Status Indicator -->
     <div class="flex items-center gap-2 mb-2">
-      <div class="w-2 h-2 rounded-full" [class.bg-green-500]="connectionState() === 'connected'"
+      <div
+        class="w-2 h-2 rounded-full"
+        [class.bg-green-500]="connectionState() === 'connected'"
         [class.bg-amber-500]="connectionState() === 'connecting'"
-        [class.bg-red-500]="connectionState() === 'disconnected' || connectionState() === 'error'">
-      </div>
+        [class.bg-red-500]="connectionState() === 'disconnected' || connectionState() === 'error'"
+      ></div>
       <span class="text-xs font-medium text-text-secondary">
         @switch (connectionState()) {
-        @case ('connected') { Conectado }
-        @case ('connecting') { Conectando... }
-        @case ('disconnected') { No conectado }
-        @case ('error') { Error de conexión }
+          @case ('connected') {
+            Conectado
+          }
+          @case ('connecting') {
+            Conectando...
+          }
+          @case ('disconnected') {
+            No conectado
+          }
+          @case ('error') {
+            Error de conexión
+          }
         }
       </span>
     </div>
 
-    <p class="text-sm font-medium mb-4 transition-colors duration-300" [class.text-red-600]="isLocked"
-      [class.text-green-600]="isUnlocked()" [class.text-amber-600]="isLoading()">
+    <p
+      class="text-sm font-medium mb-4 transition-colors duration-300"
+      [class.text-red-600]="isLocked"
+      [class.text-green-600]="isUnlocked()"
+      [class.text-amber-600]="isLoading()"
+    >
       @if (connectionState() !== 'connected') {
-      Conecta para usar
+        Conecta para usar
       } @else {
-      @if (isLocked) { Vehículo bloqueado }
-      @else if (isUnlocked()) { Vehículo desbloqueado }
+        @if (isLocked) {
+          Vehículo bloqueado
+        } @else if (isUnlocked()) {
+          Vehículo desbloqueado
+        }
       }
     </p>
   </div>
 
   <!-- Action button -->
-  <button (click)="toggleLock()" [disabled]="isLoading()"
+  <button
+    (click)="toggleLock()"
+    [disabled]="isLoading()"
     class="w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
     [class.bg-primary-600]="connectionState() !== 'connected'"
     [class.bg-green-500]="connectionState() === 'connected' && isLocked"
     [class.hover:bg-green-600]="connectionState() === 'connected' && isLocked"
     [class.bg-red-500]="connectionState() === 'connected' && isUnlocked()"
-    [class.hover:bg-red-600]="connectionState() === 'connected' && isUnlocked()" [class.text-white]="true">
+    [class.hover:bg-red-600]="connectionState() === 'connected' && isUnlocked()"
+    [class.text-white]="true"
+  >
     @if (isLoading() || connectionState() === 'connecting') {
-    <span class="flex items-center justify-center gap-2">
-      <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-        </path>
-      </svg>
-      {{ connectionState() === 'connecting' ? 'Conectando...' : buttonLabel }}
-    </span>
+      <span class="flex items-center justify-center gap-2">
+        <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        {{ connectionState() === 'connecting' ? 'Conectando...' : buttonLabel }}
+      </span>
     } @else {
-    {{ connectionState() !== 'connected' ? 'Conectar Bluetooth' : buttonLabel }}
+      {{ connectionState() !== 'connected' ? 'Conectar Bluetooth' : buttonLabel }}
     }
   </button>
 </div>

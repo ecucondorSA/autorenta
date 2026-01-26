@@ -576,8 +576,7 @@ export const routes: Routes = [
   },
   {
     path: 'safety',
-    loadComponent: () =>
-      import('./features/static/safety/safety.page').then((m) => m.SafetyPage),
+    loadComponent: () => import('./features/static/safety/safety.page').then((m) => m.SafetyPage),
   },
   {
     path: 'cancellation',
@@ -613,8 +612,7 @@ export const routes: Routes = [
   },
   {
     path: 'about',
-    loadComponent: () =>
-      import('./features/static/about/about.page').then((m) => m.AboutPage),
+    loadComponent: () => import('./features/static/about/about.page').then((m) => m.AboutPage),
   },
   {
     path: 'careers',
@@ -647,11 +645,13 @@ export const routes: Routes = [
   // ============================================================================
   {
     path: 'alquiler-autos/:city',
-    loadComponent: () => import('./features/seo/landing/seo-landing.page').then(m => m.SeoLandingPage),
+    loadComponent: () =>
+      import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPage),
   },
   {
     path: 'rentar/:brand',
-    loadComponent: () => import('./features/seo/landing/seo-landing.page').then(m => m.SeoLandingPage),
+    loadComponent: () =>
+      import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPage),
   },
 
   { path: '**', redirectTo: '' },

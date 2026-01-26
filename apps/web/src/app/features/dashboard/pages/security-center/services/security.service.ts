@@ -19,7 +19,7 @@ export interface SecurityAlert {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SecurityService {
   private supabase = injectSupabase();
@@ -57,30 +57,38 @@ export class SecurityService {
   private subscribeToRealtime(carId: string) {
     this.realtimeSubscription = this.supabase
       .channel(`security-${carId}`)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'security_alerts' }, (payload: any) => {
-        const newAlert = payload.new as SecurityAlert;
-        this.activeAlerts.update(current => [newAlert, ...current]);
-        // TODO: Trigger sound/toast
-      })
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'bounty_claims' }, (payload: any) => {
-        // Alerta crítica: Scout encontró el auto
-        console.log('BOUNTY CLAIMED!', payload.new);
-      })
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
+        (payload: any) => {
+          const newAlert = payload.new as SecurityAlert;
+          this.activeAlerts.update((current) => [newAlert, ...current]);
+          // TODO: Trigger sound/toast
+        },
+      )
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
+        (payload: any) => {
+          // Alerta crítica: Scout encontró el auto
+          console.log('BOUNTY CLAIMED!', payload.new);
+        },
+      )
       .subscribe();
   }
 
   // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number, lng: number }) {
+  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
     return await this.supabase.from('bounties').insert({
       car_id: carId,
       target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE'
+      status: 'ACTIVE',
     });
   }
 
   async generateDossier(claimId: string) {
     return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId }
+      body: { claim_id: claimId },
     });
   }
 }

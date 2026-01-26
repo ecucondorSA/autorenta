@@ -44,7 +44,7 @@ export class BookingContextService {
     }
 
     // 1. Check for active trip (in_progress status)
-    const activeTrip = bookings.find(b => b.status === 'in_progress');
+    const activeTrip = bookings.find((b) => b.status === 'in_progress');
     if (activeTrip) {
       return { mode: 'active-trip', booking: activeTrip };
     }
@@ -80,7 +80,7 @@ export class BookingContextService {
    */
   private findPendingAction(bookings: Booking[]): BookingContext | null {
     // Check for pending_review (needs return confirmation)
-    const pendingReview = bookings.find(b => b.status === 'pending_review');
+    const pendingReview = bookings.find((b) => b.status === 'pending_review');
     if (pendingReview) {
       return {
         mode: 'pending-action',
@@ -90,9 +90,10 @@ export class BookingContextService {
     }
 
     // Check for in_progress with completion_status requiring renter action
-    const needsReturnConfirm = bookings.find(b =>
-      b.status === 'in_progress' &&
-      (b.completion_status === 'pending_renter' || b.completion_status === 'pending_both')
+    const needsReturnConfirm = bookings.find(
+      (b) =>
+        b.status === 'in_progress' &&
+        (b.completion_status === 'pending_renter' || b.completion_status === 'pending_both'),
     );
     if (needsReturnConfirm) {
       return {
@@ -103,7 +104,7 @@ export class BookingContextService {
     }
 
     // Check for pending payment (not expired)
-    const pendingPayment = bookings.find(b => {
+    const pendingPayment = bookings.find((b) => {
       const isPending = b.status === 'pending' || b.status === 'pending_payment';
       return isPending && !this.isExpired(b);
     });

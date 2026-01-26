@@ -137,12 +137,7 @@ export function canPerformCheckOut(booking: Booking): {
   reason?: string;
 } {
   // Estados donde el viaje podría estar activo (check-in hecho pero no check-out)
-  const activeStates: BookingStatus[] = [
-    'in_progress',
-    'confirmed',
-    'pending_review',
-    'completed',
-  ];
+  const activeStates: BookingStatus[] = ['in_progress', 'confirmed', 'pending_review', 'completed'];
 
   if (!activeStates.includes(booking.status)) {
     return {

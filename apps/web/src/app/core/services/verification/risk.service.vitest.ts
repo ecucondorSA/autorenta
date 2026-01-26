@@ -28,10 +28,7 @@ describe('RiskService', () => {
     };
 
     TestBed.configureTestingModule({
-      providers: [
-        RiskService,
-        { provide: RiskCalculatorService, useValue: mockRiskCalculator },
-      ],
+      providers: [RiskService, { provide: RiskCalculatorService, useValue: mockRiskCalculator }],
     });
 
     service = TestBed.inject(RiskService);
@@ -124,18 +121,8 @@ describe('RiskService', () => {
       });
 
       expect(mockRiskCalculator.calculateRisk).toHaveBeenCalledTimes(2);
-      expect(mockRiskCalculator.calculateRisk).toHaveBeenCalledWith(
-        12000,
-        1000,
-        true,
-        '100',
-      );
-      expect(mockRiskCalculator.calculateRisk).toHaveBeenCalledWith(
-        12000,
-        1000,
-        false,
-        '100',
-      );
+      expect(mockRiskCalculator.calculateRisk).toHaveBeenCalledWith(12000, 1000, true, '100');
+      expect(mockRiskCalculator.calculateRisk).toHaveBeenCalledWith(12000, 1000, false, '100');
     });
   });
 
@@ -236,9 +223,7 @@ describe('RiskService', () => {
         }),
       });
 
-      const result = await firstValueFrom(
-        service.getRiskSnapshotByBookingId('booking-789'),
-      );
+      const result = await firstValueFrom(service.getRiskSnapshotByBookingId('booking-789'));
 
       expect(result.snapshot).not.toBeNull();
       expect(result.snapshot?.deductibleUsd).toBe(500);
@@ -257,9 +242,7 @@ describe('RiskService', () => {
         }),
       });
 
-      const result = await firstValueFrom(
-        service.getRiskSnapshotByBookingId('non-existent'),
-      );
+      const result = await firstValueFrom(service.getRiskSnapshotByBookingId('non-existent'));
 
       expect(result.snapshot).toBeNull();
     });

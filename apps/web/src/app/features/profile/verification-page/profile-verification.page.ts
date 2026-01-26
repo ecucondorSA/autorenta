@@ -36,15 +36,26 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
   template: `
     <div class="min-h-screen bg-surface-base pb-20">
       <!-- Minimal Header -->
-      <nav class="fixed top-0 left-0 w-full z-[60] bg-surface-base border-b border-border-subtle h-16">
+      <nav
+        class="fixed top-0 left-0 w-full z-[60] bg-surface-base border-b border-border-subtle h-16"
+      >
         <div class="max-w-2xl mx-auto px-4 h-full flex items-center justify-between">
-          <a routerLink="/profile" class="p-2 -ml-2 rounded-full hover:bg-surface-hover text-text-secondary hover:text-text-primary transition-colors">
+          <a
+            routerLink="/profile"
+            class="p-2 -ml-2 rounded-full hover:bg-surface-hover text-text-secondary hover:text-text-primary transition-colors"
+          >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
           </a>
           <span class="text-sm font-semibold text-text-primary">Verificación de Cuenta</span>
-          <div class="w-9"></div> <!-- Spacer for balance -->
+          <div class="w-9"></div>
+          <!-- Spacer for balance -->
         </div>
       </nav>
 
@@ -53,75 +64,120 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
         <div class="flex items-center justify-between mb-8">
           <div class="flex flex-col">
             <h1 class="text-xl font-bold text-text-primary">
-              @if (isLevelComplete(2)) { Prueba de Vida }
-              @else if (isLevelComplete(1)) { Documentos }
-              @else { Contacto }
+              @if (isLevelComplete(2)) {
+                Prueba de Vida
+              } @else if (isLevelComplete(1)) {
+                Documentos
+              } @else {
+                Contacto
+              }
             </h1>
             <p class="text-xs text-text-secondary">Paso {{ completedSteps() + 1 }} de 3</p>
           </div>
           <div class="w-12 h-12 relative flex items-center justify-center">
-             <svg class="w-full h-full -rotate-90 text-surface-raised" viewBox="0 0 36 36">
-                <!-- Background Circle -->
-                <path class="text-border-default" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3" />
-                <!-- Progress Circle -->
-                <path class="text-cta-default transition-all duration-1000 ease-out" 
-                  [attr.stroke-dasharray]="progressPercentage() + ', 100'" 
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" 
-                  fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-             </svg>
-             <span class="absolute text-[10px] font-bold text-text-primary">{{ progressPercentage() }}%</span>
+            <svg class="w-full h-full -rotate-90 text-surface-raised" viewBox="0 0 36 36">
+              <!-- Background Circle -->
+              <path
+                class="text-border-default"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+              />
+              <!-- Progress Circle -->
+              <path
+                class="text-cta-default transition-all duration-1000 ease-out"
+                [attr.stroke-dasharray]="progressPercentage() + ', 100'"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+              />
+            </svg>
+            <span class="absolute text-[10px] font-bold text-text-primary"
+              >{{ progressPercentage() }}%</span
+            >
           </div>
         </div>
 
         <!-- STEP 1: Contact (Edit Mode or Hidden) -->
         @if (!isLevelComplete(1) || expandedSections().has(1)) {
           <div class="animate-fade-in">
-             <app-email-verification></app-email-verification>
-             <div class="mt-4"></div>
-             <app-phone-verification></app-phone-verification>
+            <app-email-verification></app-email-verification>
+            <div class="mt-4"></div>
+            <app-phone-verification></app-phone-verification>
           </div>
         }
 
         <!-- STEP 2: Documents (Focus Mode) -->
         @if (canAccessLevel(2) && !isLevelComplete(2)) {
-           <div class="animate-fade-in space-y-6">
-              @if (!isDniVerified()) {
-                 <div>
-                   <h2 class="text-lg font-semibold text-text-primary mb-1">Documento de Identidad</h2>
-                   <p class="text-sm text-text-secondary mb-4">Sube una foto clara de tu DNI.</p>
-                   <app-dni-uploader></app-dni-uploader>
-                 </div>
-              } @else {
-                 <div>
-                   <h2 class="text-lg font-semibold text-text-primary mb-1">Licencia de Conducir</h2>
-                   <p class="text-sm text-text-secondary mb-4">Requerido para poder conducir.</p>
-                   <app-license-uploader [hideCountrySelector]="false" (verificationCompleted)="onLicenseVerificationComplete()"></app-license-uploader>
-                 </div>
-              }
-           </div>
+          <div class="animate-fade-in space-y-6">
+            @if (!isDniVerified()) {
+              <div>
+                <h2 class="text-lg font-semibold text-text-primary mb-1">Documento de Identidad</h2>
+                <p class="text-sm text-text-secondary mb-4">Sube una foto clara de tu DNI.</p>
+                <app-dni-uploader></app-dni-uploader>
+              </div>
+            } @else {
+              <div>
+                <h2 class="text-lg font-semibold text-text-primary mb-1">Licencia de Conducir</h2>
+                <p class="text-sm text-text-secondary mb-4">Requerido para poder conducir.</p>
+                <app-license-uploader
+                  [hideCountrySelector]="false"
+                  (verificationCompleted)="onLicenseVerificationComplete()"
+                ></app-license-uploader>
+              </div>
+            }
+          </div>
         }
 
         <!-- STEP 3: Selfie (Focus Mode) -->
         @if (canAccessLevel(3) && !isLevelComplete(3)) {
-           <div class="animate-fade-in">
-              <h2 class="text-lg font-semibold text-text-primary mb-1">Prueba de Vida</h2>
-              <p class="text-sm text-text-secondary mb-4">Validaremos que eres tú en tiempo real.</p>
-              <app-selfie-capture></app-selfie-capture>
-           </div>
+          <div class="animate-fade-in">
+            <h2 class="text-lg font-semibold text-text-primary mb-1">Prueba de Vida</h2>
+            <p class="text-sm text-text-secondary mb-4">Validaremos que eres tú en tiempo real.</p>
+            <app-selfie-capture></app-selfie-capture>
+          </div>
         }
 
         <!-- Success State -->
         @if (progressPercentage() === 100) {
-          <div class="fixed inset-0 z-[60] bg-surface-base flex flex-col items-center justify-center p-6 animate-scale-up">
-            <div class="w-24 h-24 rounded-full bg-success-100 flex items-center justify-center text-success-600 mb-6 shadow-lg animate-bounce">
-              <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <div
+            class="fixed inset-0 z-[60] bg-surface-base flex flex-col items-center justify-center p-6 animate-scale-up"
+          >
+            <div
+              class="w-24 h-24 rounded-full bg-success-100 flex items-center justify-center text-success-600 mb-6 shadow-lg animate-bounce"
+            >
+              <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
             </div>
-            <h2 class="text-3xl font-bold text-text-primary mb-2 text-center">¡Estás Verificado!</h2>
-            <p class="text-text-secondary text-center max-w-xs mb-10">Ya puedes disfrutar de la experiencia completa de AutoRenta.</p>
-            
-            <a routerLink="/cars" class="w-full max-w-sm py-4 bg-cta-default text-white font-bold rounded-2xl shadow-xl hover:bg-cta-hover transition-transform active:scale-95 text-center flex items-center justify-center gap-2">
+            <h2 class="text-3xl font-bold text-text-primary mb-2 text-center">
+              ¡Estás Verificado!
+            </h2>
+            <p class="text-text-secondary text-center max-w-xs mb-10">
+              Ya puedes disfrutar de la experiencia completa de AutoRenta.
+            </p>
+
+            <a
+              routerLink="/cars"
+              class="w-full max-w-sm py-4 bg-cta-default text-white font-bold rounded-2xl shadow-xl hover:bg-cta-hover transition-transform active:scale-95 text-center flex items-center justify-center gap-2"
+            >
               Explorar Autos
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
             </a>
           </div>
         }
@@ -303,9 +359,7 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
     // Documento subido pero no verificado
     const verified = this.isDniVerified();
     if (verified) return false;
-    return this.userDocuments().some((doc) =>
-      ['gov_id_front', 'gov_id_back'].includes(doc.kind),
-    );
+    return this.userDocuments().some((doc) => ['gov_id_front', 'gov_id_back'].includes(doc.kind));
   }
 
   isLicenseVerified(): boolean {

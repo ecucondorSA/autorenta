@@ -77,9 +77,7 @@ import {
         @if (!loading() && hasFines()) {
           <div class="space-y-3">
             @for (fine of trafficFines(); track fine.id) {
-              <div
-                class="p-4 rounded-xl border border-border-default bg-surface-secondary"
-              >
+              <div class="p-4 rounded-xl border border-border-default bg-surface-secondary">
                 <div class="flex items-start justify-between gap-4">
                   <div class="flex-1">
                     <!-- Status Badge -->
@@ -147,7 +145,9 @@ import {
 
                     @if (fine.dispute_reason) {
                       <div class="mt-3 p-2 bg-warning-50 border border-warning-200 rounded-lg">
-                        <p class="text-xs font-semibold text-warning-700 mb-1">Motivo de disputa:</p>
+                        <p class="text-xs font-semibold text-warning-700 mb-1">
+                          Motivo de disputa:
+                        </p>
                         <p class="text-xs text-warning-600">{{ fine.dispute_reason }}</p>
                       </div>
                     }

@@ -11,15 +11,15 @@ export type FlowStep = 1 | 2 | 3 | 4 | 5 | 6;
  * Estado canónico del flujo bilateral
  */
 export type BilateralFlowState =
-  | 'CONFIRMED'        // Reserva confirmada, esperando inicio
-  | 'DELIVERED'        // Vehículo entregado, viaje iniciado
-  | 'IN_PROGRESS'      // Viaje en curso
-  | 'RETURNED'         // Vehículo devuelto, esperando inspección del owner
-  | 'PENDING_OWNER'    // Owner debe confirmar recepción
-  | 'PENDING_RENTER'   // Renter debe confirmar liberación de pago
-  | 'DAMAGE_REVIEW'    // Daños reportados, renter debe responder
-  | 'DISPUTED'         // En disputa activa
-  | 'COMPLETED';       // Completado, fondos liberados
+  | 'CONFIRMED' // Reserva confirmada, esperando inicio
+  | 'DELIVERED' // Vehículo entregado, viaje iniciado
+  | 'IN_PROGRESS' // Viaje en curso
+  | 'RETURNED' // Vehículo devuelto, esperando inspección del owner
+  | 'PENDING_OWNER' // Owner debe confirmar recepción
+  | 'PENDING_RENTER' // Renter debe confirmar liberación de pago
+  | 'DAMAGE_REVIEW' // Daños reportados, renter debe responder
+  | 'DISPUTED' // En disputa activa
+  | 'COMPLETED'; // Completado, fondos liberados
 
 /**
  * Información completa del paso actual del flujo
@@ -60,17 +60,28 @@ export interface FlowStepInfo {
 /**
  * Configuración de labels por estado
  */
-const STATE_CONFIG: Record<BilateralFlowState, {
-  step: FlowStep;
-  ownerTitle: string;
-  renterTitle: string;
-  ownerDesc: string;
-  renterDesc: string;
-  actor: 'owner' | 'renter' | 'none';
-  ownerAction: { label: string; route?: string; actionType?: 'navigate' | 'confirm' | 'resolve' } | null;
-  renterAction: { label: string; route?: string; actionType?: 'navigate' | 'confirm' | 'resolve' } | null;
-  nextPreview: string;
-}> = {
+const STATE_CONFIG: Record<
+  BilateralFlowState,
+  {
+    step: FlowStep;
+    ownerTitle: string;
+    renterTitle: string;
+    ownerDesc: string;
+    renterDesc: string;
+    actor: 'owner' | 'renter' | 'none';
+    ownerAction: {
+      label: string;
+      route?: string;
+      actionType?: 'navigate' | 'confirm' | 'resolve';
+    } | null;
+    renterAction: {
+      label: string;
+      route?: string;
+      actionType?: 'navigate' | 'confirm' | 'resolve';
+    } | null;
+    nextPreview: string;
+  }
+> = {
   CONFIRMED: {
     step: 1,
     ownerTitle: 'Reserva confirmada',
@@ -195,8 +206,7 @@ export class BookingBilateralStateService {
     const config = STATE_CONFIG[state];
 
     const isYourTurn =
-      (config.actor === 'owner' && isOwner) ||
-      (config.actor === 'renter' && !isOwner);
+      (config.actor === 'owner' && isOwner) || (config.actor === 'renter' && !isOwner);
 
     const action = isOwner ? config.ownerAction : config.renterAction;
 

@@ -67,11 +67,11 @@ export class AdminMarketingPage implements OnInit {
 
   // Stats
   protected readonly pendingCount = computed(
-    () => this.queueItems().filter((i) => i.status === 'pending').length
+    () => this.queueItems().filter((i) => i.status === 'pending').length,
   );
   protected readonly publishedCount = computed(() => this.publishedPosts().length);
   protected readonly failedCount = computed(
-    () => this.queueItems().filter((i) => i.status === 'failed').length
+    () => this.queueItems().filter((i) => i.status === 'failed').length,
   );
 
   // Generate form
@@ -185,7 +185,9 @@ export class AdminMarketingPage implements OnInit {
       // Include image URL and video info if generated
       const content = {
         ...result.text,
-        image_url: result.image?.url || (result.image?.base64 ? `data:image/png;base64,${result.image.base64}` : undefined),
+        image_url:
+          result.image?.url ||
+          (result.image?.base64 ? `data:image/png;base64,${result.image.base64}` : undefined),
         video_url: result.video?.url,
         video_status: result.video?.status,
         video_error: result.video?.error,
@@ -225,7 +227,10 @@ export class AdminMarketingPage implements OnInit {
       if (content.video_status === 'generating') {
         this.toast.error('Espera', 'El video aún se está generando. Intenta en unos minutos.');
       } else {
-        this.toast.error('Error', 'TikTok requiere video. Por favor genera el contenido nuevamente.');
+        this.toast.error(
+          'Error',
+          'TikTok requiere video. Por favor genera el contenido nuevamente.',
+        );
       }
       return;
     }
@@ -472,7 +477,10 @@ export class AdminMarketingPage implements OnInit {
       if (response.error) throw response.error;
 
       const result = response.data;
-      this.toast.success('Scheduler', `${result.published || 0} publicados, ${result.failed || 0} fallidos`);
+      this.toast.success(
+        'Scheduler',
+        `${result.published || 0} publicados, ${result.failed || 0} fallidos`,
+      );
       await this.loadData();
     } catch (error) {
       console.error('Error running scheduler:', error);
@@ -481,7 +489,10 @@ export class AdminMarketingPage implements OnInit {
   }
 
   // Form update helpers (arrow functions not allowed in AOT templates)
-  updateGenerateFormField(field: 'platform' | 'content_type' | 'theme' | 'generate_image', value: unknown): void {
+  updateGenerateFormField(
+    field: 'platform' | 'content_type' | 'theme' | 'generate_image',
+    value: unknown,
+  ): void {
     this.generateForm.update((f) => ({ ...f, [field]: value }));
   }
 

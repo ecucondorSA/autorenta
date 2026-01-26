@@ -37,7 +37,7 @@
             <span class="detail-value code">{{ paymentReferenceId() }}</span>
           </div>
         }
-          @if (booking()) {
+        @if (booking()) {
           <div class="detail-row">
             <span class="detail-label">Monto Total</span>
             <span class="detail-value amount">
@@ -99,7 +99,9 @@
         </button>
         <button class="btn-secondary" (click)="downloadReceipt()" [disabled]="downloadingReceipt()">
           @if (downloadingReceipt()) {
-            <div class="btn-icon w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+            <div
+              class="btn-icon w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"
+            ></div>
             <span>Generando PDF...</span>
           } @else {
             <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">

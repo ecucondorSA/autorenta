@@ -18,8 +18,10 @@
   <!-- Role indicator -->
   @if (booking()) {
     <div class="flex items-center gap-2 mb-4">
-      <span class="text-xs px-2 py-1 rounded-full"
-            [class]="isOwner() ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'">
+      <span
+        class="text-xs px-2 py-1 rounded-full"
+        [class]="isOwner() ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'"
+      >
         {{ isOwner() ? 'Eres el Anfitrión' : 'Eres el Locatario' }}
       </span>
     </div>
@@ -45,7 +47,9 @@
 
   <!-- Inline Create Dispute Form -->
   @if (showCreateForm()) {
-    <div class="create-dispute-form bg-surface-raised border-2 border-cta-default rounded-xl p-4 mb-6 animate-in slide-in-from-top">
+    <div
+      class="create-dispute-form bg-surface-raised border-2 border-cta-default rounded-xl p-4 mb-6 animate-in slide-in-from-top"
+    >
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-semibold">Nueva Disputa</h3>
         <button (click)="closeCreateForm()" class="p-2 rounded-full hover:bg-surface-hover">
@@ -55,13 +59,16 @@
 
       <form (ngSubmit)="createDispute()" class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-text-secondary mb-2">Tipo de Disputa *</label>
+          <label class="block text-sm font-medium text-text-secondary mb-2"
+            >Tipo de Disputa *</label
+          >
           <select
             [ngModel]="newDisputeKind()"
             (ngModelChange)="newDisputeKind.set($event)"
             [ngModelOptions]="{ standalone: true }"
             class="w-full px-4 py-3 rounded-xl border border-border-default bg-surface-base"
-            required>
+            required
+          >
             <option value="">Seleccionar...</option>
             <option value="damage">Daños al vehículo</option>
             <option value="no_show">No se presentó</option>
@@ -79,17 +86,21 @@
             rows="4"
             class="w-full px-4 py-3 rounded-xl border border-border-default bg-surface-base resize-none"
             placeholder="Describe el problema en detalle..."
-            required></textarea>
+            required
+          ></textarea>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-text-secondary mb-2">Evidencias (opcional)</label>
+          <label class="block text-sm font-medium text-text-secondary mb-2"
+            >Evidencias (opcional)</label
+          >
           <input
             type="file"
             multiple
             accept="image/*,.pdf"
             (change)="onEvidenceFilesSelected($event)"
-            class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-cta-default file:text-cta-text" />
+            class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-cta-default file:text-cta-text"
+          />
           @if (evidenceFiles().length > 0) {
             <p class="text-xs text-text-secondary mt-2">
               {{ evidenceFiles().length }} archivo(s) seleccionado(s)
@@ -101,13 +112,15 @@
           <button
             type="button"
             (click)="closeCreateForm()"
-            class="flex-1 py-3 rounded-xl border border-border-default font-semibold hover:bg-surface-hover">
+            class="flex-1 py-3 rounded-xl border border-border-default font-semibold hover:bg-surface-hover"
+          >
             Cancelar
           </button>
           <button
             type="submit"
             [disabled]="loading() || !newDisputeKind() || !newDisputeDescription()"
-            class="flex-1 py-3 rounded-xl bg-cta-default text-cta-text font-bold disabled:opacity-50">
+            class="flex-1 py-3 rounded-xl bg-cta-default text-cta-text font-bold disabled:opacity-50"
+          >
             @if (loading()) {
               <ion-spinner name="crescent" class="w-5 h-5"></ion-spinner>
             } @else {
@@ -138,7 +151,9 @@
           Crear Disputa
         </ion-button>
       } @else {
-        <p class="text-xs text-text-muted">No puedes crear disputas en el estado actual de la reserva</p>
+        <p class="text-xs text-text-muted">
+          No puedes crear disputas en el estado actual de la reserva
+        </p>
       }
     </div>
   }
@@ -182,7 +197,6 @@
     </div>
   }
 
-
   <!-- Evidence Modal -->
   @if (showEvidenceModal()) {
     <div
@@ -210,7 +224,10 @@
                         <img
                           [src]="item.path"
                           [alt]="item.note || 'Evidencia'"
-                          class="w-full h-full object-cover rounded" width="400" height="192" />
+                          class="w-full h-full object-cover rounded"
+                          width="400"
+                          height="192"
+                        />
                       }
                       @if (!isImage(item.path)) {
                         <div

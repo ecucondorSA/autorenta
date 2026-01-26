@@ -40,20 +40,19 @@ interface WeatherData {
 @Component({
   standalone: true,
   selector: 'app-pre-trip-view',
-  imports: [
-    CommonModule,
-    RouterLink,
-    IconComponent,
-    HoverLiftDirective,
-    PressScaleDirective,
-  ],
+  imports: [CommonModule, RouterLink, IconComponent, HoverLiftDirective, PressScaleDirective],
   template: `
     <div class="min-h-screen bg-surface-primary pb-24">
       <!-- Countdown Hero -->
-      <section class="countdown-hero bg-gradient-to-br from-emerald-500 to-emerald-600 px-4 pt-safe pb-8">
+      <section
+        class="countdown-hero bg-gradient-to-br from-emerald-500 to-emerald-600 px-4 pt-safe pb-8"
+      >
         <div class="max-w-2xl mx-auto">
           <!-- Back link -->
-          <a routerLink="/bookings" class="inline-flex items-center gap-1 text-white/80 text-sm mb-4">
+          <a
+            routerLink="/bookings"
+            class="inline-flex items-center gap-1 text-white/80 text-sm mb-4"
+          >
             <app-icon name="chevron-left" class="w-4 h-4" />
             <span>Mis Viajes</span>
           </a>
@@ -65,9 +64,11 @@ interface WeatherData {
             <div class="flex justify-center items-center gap-2 sm:gap-3">
               @for (unit of timerUnits(); track unit.label) {
                 <div class="timer-unit">
-                  <div class="timer-digit glass-lite backdrop-blur-md bg-white/20 rounded-xl px-3 py-2 sm:px-4 sm:py-3">
+                  <div
+                    class="timer-digit glass-lite backdrop-blur-md bg-white/20 rounded-xl px-3 py-2 sm:px-4 sm:py-3"
+                  >
                     <span class="text-3xl sm:text-4xl font-bold text-white font-mono tabular-nums">
-                      {{ unit.value | number:'2.0-0' }}
+                      {{ unit.value | number: '2.0-0' }}
                     </span>
                   </div>
                   <span class="text-white/70 text-xs mt-1 block">{{ unit.label }}</span>
@@ -129,7 +130,9 @@ interface WeatherData {
                   loading="lazy"
                 />
               } @else {
-                <div class="w-full h-32 bg-surface-secondary rounded-lg flex items-center justify-center">
+                <div
+                  class="w-full h-32 bg-surface-secondary rounded-lg flex items-center justify-center"
+                >
                   <app-icon name="map" class="w-8 h-8 text-text-tertiary" />
                 </div>
               }
@@ -219,7 +222,7 @@ interface WeatherData {
 
             <a
               [routerLink]="['/messages/chat']"
-              [queryParams]="{bookingId: booking.id, userId: booking.owner_id}"
+              [queryParams]="{ bookingId: booking.id, userId: booking.owner_id }"
               class="mt-3 inline-flex items-center gap-2 text-sm text-primary-500 font-medium"
               appPressScale
             >
@@ -238,9 +241,7 @@ interface WeatherData {
             @if (weather()) {
               <div class="flex items-center justify-between">
                 <div>
-                  <p class="text-3xl font-bold text-text-primary">
-                    {{ weather()!.temperature }}°C
-                  </p>
+                  <p class="text-3xl font-bold text-text-primary">{{ weather()!.temperature }}°C</p>
                   <p class="text-sm text-text-secondary capitalize">
                     {{ weather()!.description }}
                   </p>
@@ -249,13 +250,13 @@ interface WeatherData {
               </div>
             } @else if (loadingWeather()) {
               <div class="flex items-center gap-2">
-                <div class="w-5 h-5 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+                <div
+                  class="w-5 h-5 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"
+                ></div>
                 <span class="text-sm text-text-secondary">Cargando clima...</span>
               </div>
             } @else {
-              <p class="text-sm text-text-tertiary">
-                Clima no disponible
-              </p>
+              <p class="text-sm text-text-tertiary">Clima no disponible</p>
             }
           </section>
         </div>
@@ -274,48 +275,50 @@ interface WeatherData {
       </main>
     </div>
   `,
-  styles: [`
-    .countdown-hero {
-      padding-top: max(env(safe-area-inset-top), 1rem);
-    }
-
-    .pt-safe {
-      padding-top: env(safe-area-inset-top);
-    }
-
-    .timer-unit {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .timer-digit {
-      min-width: 56px;
-      text-align: center;
-    }
-
-    @media (min-width: 640px) {
-      .timer-digit {
-        min-width: 72px;
+  styles: [
+    `
+      .countdown-hero {
+        padding-top: max(env(safe-area-inset-top), 1rem);
       }
-    }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-      color: white;
-      transition: all 0.2s ease;
-    }
+      .pt-safe {
+        padding-top: env(safe-area-inset-top);
+      }
 
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(var(--primary-500-rgb), 0.3);
-    }
+      .timer-unit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-    .glass-lite {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(8px);
-    }
-  `],
+      .timer-digit {
+        min-width: 56px;
+        text-align: center;
+      }
+
+      @media (min-width: 640px) {
+        .timer-digit {
+          min-width: 72px;
+        }
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+        color: white;
+        transition: all 0.2s ease;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(var(--primary-500-rgb), 0.3);
+      }
+
+      .glass-lite {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(8px);
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreTripViewComponent implements OnInit, OnDestroy {
@@ -405,9 +408,7 @@ export class PreTripViewComponent implements OnInit, OnDestroy {
     const formatDate = (d: Date) =>
       d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
 
-    return end
-      ? `${formatDate(start)} - ${formatDate(end)}`
-      : formatDate(start);
+    return end ? `${formatDate(start)} - ${formatDate(end)}` : formatDate(start);
   });
 
   readonly pickupLocation = computed(() => {
@@ -427,14 +428,15 @@ export class PreTripViewComponent implements OnInit, OnDestroy {
     if (!car_city && !car_province) return null;
 
     const location = encodeURIComponent(`${car_city ?? ''}, ${car_province ?? ''}, Argentina`);
-    const apiKey = (window as Window & { __GOOGLE_MAPS_API_KEY__?: string }).__GOOGLE_MAPS_API_KEY__ ?? '';
+    const apiKey =
+      (window as Window & { __GOOGLE_MAPS_API_KEY__?: string }).__GOOGLE_MAPS_API_KEY__ ?? '';
 
     // Google Static Maps API
     return `https://maps.googleapis.com/maps/api/staticmap?center=${location}&zoom=14&size=400x200&scale=2&maptype=roadmap&markers=color:red%7C${location}&key=${apiKey}`;
   });
 
-  readonly checklistProgress = computed(() =>
-    this.checklist().filter(item => item.checked).length
+  readonly checklistProgress = computed(
+    () => this.checklist().filter((item) => item.checked).length,
   );
 
   ngOnInit(): void {
@@ -477,10 +479,8 @@ export class PreTripViewComponent implements OnInit, OnDestroy {
   }
 
   toggleChecklistItem(itemId: string): void {
-    this.checklist.update(items =>
-      items.map(item =>
-        item.id === itemId ? { ...item, checked: !item.checked } : item
-      )
+    this.checklist.update((items) =>
+      items.map((item) => (item.id === itemId ? { ...item, checked: !item.checked } : item)),
     );
     this.saveChecklistState();
   }
@@ -491,11 +491,11 @@ export class PreTripViewComponent implements OnInit, OnDestroy {
       const saved = localStorage.getItem(key);
       if (saved) {
         const checkedIds = JSON.parse(saved) as string[];
-        this.checklist.update(items =>
-          items.map(item => ({
+        this.checklist.update((items) =>
+          items.map((item) => ({
             ...item,
             checked: checkedIds.includes(item.id),
-          }))
+          })),
         );
       }
     } catch {
@@ -507,8 +507,8 @@ export class PreTripViewComponent implements OnInit, OnDestroy {
     try {
       const key = `pretrip-checklist-${this.booking.id}`;
       const checkedIds = this.checklist()
-        .filter(item => item.checked)
-        .map(item => item.id);
+        .filter((item) => item.checked)
+        .map((item) => item.id);
       localStorage.setItem(key, JSON.stringify(checkedIds));
     } catch {
       // Ignore localStorage errors

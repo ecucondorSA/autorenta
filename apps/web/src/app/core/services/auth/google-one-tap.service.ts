@@ -11,7 +11,15 @@ import { environment } from '@environment';
  */
 interface GoogleCredentialResponse {
   credential: string;
-  select_by: 'auto' | 'user' | 'user_1tap' | 'user_2tap' | 'btn' | 'btn_confirm' | 'btn_add_session' | 'btn_confirm_add_session';
+  select_by:
+    | 'auto'
+    | 'user'
+    | 'user_1tap'
+    | 'user_2tap'
+    | 'btn'
+    | 'btn_confirm'
+    | 'btn_add_session'
+    | 'btn_confirm_add_session';
   clientId: string;
 }
 
@@ -19,7 +27,15 @@ interface GooglePromptMomentNotification {
   isDisplayMoment(): boolean;
   isDisplayed(): boolean;
   isNotDisplayed(): boolean;
-  getNotDisplayedReason(): 'browser_not_supported' | 'invalid_client' | 'missing_client_id' | 'opt_out_or_no_session' | 'secure_http_required' | 'suppressed_by_user' | 'unregistered_origin' | 'unknown_reason';
+  getNotDisplayedReason():
+    | 'browser_not_supported'
+    | 'invalid_client'
+    | 'missing_client_id'
+    | 'opt_out_or_no_session'
+    | 'secure_http_required'
+    | 'suppressed_by_user'
+    | 'unregistered_origin'
+    | 'unknown_reason';
   isSkippedMoment(): boolean;
   getSkippedReason(): 'auto_cancel' | 'user_cancel' | 'tap_outside' | 'issuing_failed';
   isDismissedMoment(): boolean;
@@ -50,8 +66,14 @@ interface Google {
       prompt: (callback?: (notification: GooglePromptMomentNotification) => void) => void;
       cancel: () => void;
       disableAutoSelect: () => void;
-      storeCredential: (credential: { id: string; password: string }, callback?: () => void) => void;
-      revoke: (hint: string, callback?: (response: { successful: boolean; error?: string }) => void) => void;
+      storeCredential: (
+        credential: { id: string; password: string },
+        callback?: () => void,
+      ) => void;
+      revoke: (
+        hint: string,
+        callback?: (response: { successful: boolean; error?: string }) => void,
+      ) => void;
     };
   };
 }
@@ -62,7 +84,14 @@ declare global {
   }
 }
 
-export type OneTapState = 'idle' | 'initializing' | 'ready' | 'showing' | 'success' | 'error' | 'cancelled';
+export type OneTapState =
+  | 'idle'
+  | 'initializing'
+  | 'ready'
+  | 'showing'
+  | 'success'
+  | 'error'
+  | 'cancelled';
 
 @Injectable({
   providedIn: 'root',
@@ -132,7 +161,11 @@ export class GoogleOneTapService {
     } catch (err) {
       this.state.set('error');
       this.error.set(err instanceof Error ? err.message : 'Error initializing One-Tap');
-      this.logger.error('One-Tap: Initialization failed', 'GoogleOneTap', err instanceof Error ? err : new Error(String(err)));
+      this.logger.error(
+        'One-Tap: Initialization failed',
+        'GoogleOneTap',
+        err instanceof Error ? err : new Error(String(err)),
+      );
       return false;
     }
   }
@@ -253,14 +286,19 @@ export class GoogleOneTapService {
         });
 
         // Navegar a la página principal o returnUrl
-        const returnUrl = new URLSearchParams(window.location.search).get('returnUrl') || '/cars/list';
+        const returnUrl =
+          new URLSearchParams(window.location.search).get('returnUrl') || '/cars/list';
         await this.router.navigateByUrl(returnUrl);
       }
     } catch (err) {
       this.state.set('error');
       const errorMessage = err instanceof Error ? err.message : 'Error processing credential';
       this.error.set(errorMessage);
-      this.logger.error('One-Tap: Credential processing failed', 'GoogleOneTap', err instanceof Error ? err : new Error(String(err)));
+      this.logger.error(
+        'One-Tap: Credential processing failed',
+        'GoogleOneTap',
+        err instanceof Error ? err : new Error(String(err)),
+      );
     }
   }
 

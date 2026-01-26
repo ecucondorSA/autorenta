@@ -40,9 +40,7 @@ import { MoneyPipe } from '@shared/pipes/money.pipe';
 // Models
 import type { Booking } from '@core/models';
 import { BookingPaymentMethod } from '@core/models/wallet.model';
-import {
-  RiskCalculation,
-} from '@core/services/verification/risk-calculator.service';
+import { RiskCalculation } from '@core/services/verification/risk-calculator.service';
 import type { DateRange } from '@core/models/marketplace.model';
 // UI 2026 Directives
 import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
@@ -638,7 +636,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       holdEstimatedUsd,
       holdEstimatedArs,
       creditSecurityUsd: holdEstimatedUsd, // Standard equivalence
-      creditSecurityArs: holdEstimatedArs
+      creditSecurityArs: holdEstimatedArs,
     };
   });
 
@@ -651,9 +649,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
     return Math.round(holdUsd * 100) / 100;
   });
 
-  readonly walletCreditUsd = computed(
-    () => this.guaranteeEstimate()?.creditSecurityUsd ?? null,
-  );
+  readonly walletCreditUsd = computed(() => this.guaranteeEstimate()?.creditSecurityUsd ?? null);
 
   readonly walletCreditArs = computed(() => {
     const estimate = this.guaranteeEstimate();
@@ -1163,7 +1159,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       const errorMessage = (error as { message?: string })?.message;
       if (errorMessage === 'OVERLAP') {
         this.bookingError.set(
-          'Las fechas seleccionadas no están disponibles. Por favor elegí otras fechas.'
+          'Las fechas seleccionadas no están disponibles. Por favor elegí otras fechas.',
         );
         // Re-open date picker so user can select new dates
         this.openDatePicker();

@@ -251,7 +251,9 @@ export class SDUIService {
       },
     };
 
-    return defaults[pageId] || { id: `default-${pageId}`, name: pageId, version: 1, components: [] };
+    return (
+      defaults[pageId] || { id: `default-${pageId}`, name: pageId, version: 1, components: [] }
+    );
   }
 
   /**
@@ -260,7 +262,7 @@ export class SDUIService {
   async trackComponentEvent(
     componentId: string,
     eventType: 'view' | 'click' | 'interaction',
-    metadata?: Record<string, unknown>
+    metadata?: Record<string, unknown>,
   ): Promise<void> {
     try {
       await this.supabase.from('sdui_analytics').insert({

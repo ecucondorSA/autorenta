@@ -8,9 +8,27 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
  * Detects scratches, dents, rust, wear patterns, and generates a condition score.
  */
 
-export type VehicleArea = 'front' | 'rear' | 'left' | 'right' | 'roof' | 'interior' | 'dashboard' | 'seats' | 'trunk';
+export type VehicleArea =
+  | 'front'
+  | 'rear'
+  | 'left'
+  | 'right'
+  | 'roof'
+  | 'interior'
+  | 'dashboard'
+  | 'seats'
+  | 'trunk';
 export type IssueSeverity = 'minor' | 'moderate' | 'severe';
-export type IssueType = 'scratch' | 'dent' | 'rust' | 'paint_fade' | 'crack' | 'stain' | 'tear' | 'wear' | 'missing_part';
+export type IssueType =
+  | 'scratch'
+  | 'dent'
+  | 'rust'
+  | 'paint_fade'
+  | 'crack'
+  | 'stain'
+  | 'tear'
+  | 'wear'
+  | 'missing_part';
 export type ConditionGrade = 'excellent' | 'good' | 'fair' | 'poor';
 
 export interface CosmeticIssue {
@@ -57,12 +75,10 @@ export class CosmeticConditionService {
     if (results.size === 0) return 0;
 
     const scores = Array.from(results.values())
-      .filter(r => r.success)
-      .map(r => r.condition_score);
+      .filter((r) => r.success)
+      .map((r) => r.condition_score);
 
-    return scores.length > 0
-      ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
-      : 0;
+    return scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
   });
 
   readonly overallGrade = computed<ConditionGrade>(() => {
@@ -78,7 +94,7 @@ export class CosmeticConditionService {
     const issues: Array<CosmeticIssue & { area: VehicleArea }> = [];
 
     results.forEach((result, area) => {
-      result.issues.forEach(issue => {
+      result.issues.forEach((issue) => {
         issues.push({ ...issue, area });
       });
     });
@@ -86,9 +102,7 @@ export class CosmeticConditionService {
     return issues;
   });
 
-  readonly criticalIssues = computed(() =>
-    this.allIssues().filter(i => i.severity === 'severe')
-  );
+  readonly criticalIssues = computed(() => this.allIssues().filter((i) => i.severity === 'severe'));
 
   /**
    * Analyze a single area of the vehicle
@@ -108,7 +122,7 @@ export class CosmeticConditionService {
             area,
             is_interior: isInterior,
           },
-        }
+        },
       );
 
       if (error) throw error;
@@ -116,7 +130,7 @@ export class CosmeticConditionService {
       const result = data!;
 
       // Update results map
-      this.analysisResults.update(map => {
+      this.analysisResults.update((map) => {
         const newMap = new Map(map);
         newMap.set(area, result);
         return newMap;
@@ -136,7 +150,7 @@ export class CosmeticConditionService {
    * Analyze multiple areas in parallel
    */
   async analyzeMultipleAreas(
-    areas: Array<{ imageUrl: string; area: VehicleArea }>
+    areas: Array<{ imageUrl: string; area: VehicleArea }>,
   ): Promise<Map<VehicleArea, ConditionAnalysisResult>> {
     this.isAnalyzing.set(true);
     this.error.set(null);
@@ -158,7 +172,7 @@ export class CosmeticConditionService {
               error: 'Error al analizar área',
             };
           }
-        })
+        }),
       );
 
       const resultsMap = new Map<VehicleArea, ConditionAnalysisResult>();
@@ -188,7 +202,7 @@ export class CosmeticConditionService {
     let minTotal = 0;
     let maxTotal = 0;
 
-    this.allIssues().forEach(issue => {
+    this.allIssues().forEach((issue) => {
       if (issue.repair_cost_range) {
         const match = issue.repair_cost_range.match(/\$(\d+)-(\d+)/);
         if (match) {

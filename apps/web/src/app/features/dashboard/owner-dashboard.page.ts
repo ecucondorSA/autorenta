@@ -149,32 +149,34 @@ export class OwnerDashboardPage implements OnInit, OnDestroy {
 
   private loadParticipationData() {
     // Load Participation Period (Points)
-    this.participationService.getCurrentPeriod('current-owner-id') // TODO: Get real ID
+    this.participationService
+      .getCurrentPeriod('current-owner-id') // TODO: Get real ID
       .pipe(takeUntil(this.destroy$))
-      .subscribe(period => this.participationPeriod.set(period));
+      .subscribe((period) => this.participationPeriod.set(period));
 
     // Load FGO Status (Protection)
-    this.participationService.getFgoStatus()
+    this.participationService
+      .getFgoStatus()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(status => this.fgoStatus.set(status));
+      .subscribe((status) => this.fgoStatus.set(status));
   }
 
-/**
- * Refresh dashboard data manually
- * Clears cache and fetches fresh data
- */
-refreshDashboard(): void {
-  this.dashboardService.clearCache();
-  this.loadDashboardData(true);
-}
+  /**
+   * Refresh dashboard data manually
+   * Clears cache and fetches fresh data
+   */
+  refreshDashboard(): void {
+    this.dashboardService.clearCache();
+    this.loadDashboardData(true);
+  }
 
-toggleCalendar(): void {
-  this.showCalendar.set(!this.showCalendar());
-}
+  toggleCalendar(): void {
+    this.showCalendar.set(!this.showCalendar());
+  }
 
-ngOnDestroy(): void {
-  // P0-006 FIX: Clean up subscriptions
-  this.destroy$.next();
-  this.destroy$.complete();
-}
+  ngOnDestroy(): void {
+    // P0-006 FIX: Clean up subscriptions
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

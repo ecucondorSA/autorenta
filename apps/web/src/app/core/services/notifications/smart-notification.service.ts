@@ -412,7 +412,7 @@ export class SmartNotificationService {
       scheduledFor?: Date;
       channels?: NotificationChannel[];
       idempotencyKey?: string;
-    } = {}
+    } = {},
   ): Promise<string | null> {
     const user = await this.authService.getCurrentUser();
     if (!user) return null;
@@ -503,7 +503,7 @@ export class SmartNotificationService {
               payload.new as NotificationHistoryEntry,
               ...notifications.slice(0, 19),
             ]);
-          }
+          },
         )
         .subscribe();
     });

@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { SecureStorageAdapter } from "@core/services/infrastructure/secure-storage.adapter";
+import { SecureStorageAdapter } from '@core/services/infrastructure/secure-storage.adapter';
 import { environment } from '../../../../environments/environment';
 
 type SupabaseLock = <T>(name: string, acquireTimeout: number, fn: () => Promise<T>) => Promise<T>;
@@ -181,7 +181,9 @@ export class SupabaseClientService {
         typeof (globalThis as Record<string, unknown>)['__karma__'] !== 'undefined';
 
       if (isTestEnv) {
-        this.logger.debug('[SupabaseClientService] Test environment detected - using SSR stub client');
+        this.logger.debug(
+          '[SupabaseClientService] Test environment detected - using SSR stub client',
+        );
         // Use SSR stub client in tests - returns empty results instead of throwing
         this.client = createSSRStubClient();
         return;

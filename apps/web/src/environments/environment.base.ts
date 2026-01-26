@@ -206,7 +206,7 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   socialMedia: {
     facebook: resolve(
       'NG_APP_SOCIAL_FACEBOOK',
-      defaults.socialMedia?.facebook ?? 'https://www.facebook.com/profile.php?id=61586558399370&ref=pl_edit_xav_ig_profile_page_web#',
+      defaults.socialMedia?.facebook ?? 'https://www.facebook.com/people/Autorentar/61586558399370/',
     ),
     instagram: resolve(
       'NG_APP_SOCIAL_INSTAGRAM',
@@ -219,7 +219,7 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
     ),
     tiktok: resolve(
       'NG_APP_SOCIAL_TIKTOK',
-      defaults.socialMedia?.tiktok ?? 'https://tiktok.com/@autorentar',
+      defaults.socialMedia?.tiktok ?? 'https://tiktok.com/@auto.rentar',
     ),
     youtube: resolve(
       'NG_APP_SOCIAL_YOUTUBE',

@@ -75,7 +75,7 @@ export class VehicleDocumentService {
     try {
       const { data, error } = await this.supabase.functions.invoke<DocumentVerificationResult>(
         'verify-vehicle-document',
-        { body: request }
+        { body: request },
       );
 
       if (error) throw error;
@@ -95,7 +95,10 @@ export class VehicleDocumentService {
   /**
    * Verify vehicle registration card
    */
-  async verifyRegistration(imageUrl: string, vehicleData?: VerifyDocumentRequest['vehicle_data']): Promise<DocumentVerificationResult> {
+  async verifyRegistration(
+    imageUrl: string,
+    vehicleData?: VerifyDocumentRequest['vehicle_data'],
+  ): Promise<DocumentVerificationResult> {
     return this.verifyDocument({
       image_url: imageUrl,
       document_type: 'registration',
@@ -106,7 +109,10 @@ export class VehicleDocumentService {
   /**
    * Verify insurance policy
    */
-  async verifyInsurance(imageUrl: string, vehicleData?: VerifyDocumentRequest['vehicle_data']): Promise<DocumentVerificationResult> {
+  async verifyInsurance(
+    imageUrl: string,
+    vehicleData?: VerifyDocumentRequest['vehicle_data'],
+  ): Promise<DocumentVerificationResult> {
     return this.verifyDocument({
       image_url: imageUrl,
       document_type: 'insurance',
@@ -117,7 +123,10 @@ export class VehicleDocumentService {
   /**
    * Verify technical inspection certificate
    */
-  async verifyInspection(imageUrl: string, vehicleData?: VerifyDocumentRequest['vehicle_data']): Promise<DocumentVerificationResult> {
+  async verifyInspection(
+    imageUrl: string,
+    vehicleData?: VerifyDocumentRequest['vehicle_data'],
+  ): Promise<DocumentVerificationResult> {
     return this.verifyDocument({
       image_url: imageUrl,
       document_type: 'inspection',

@@ -11,7 +11,16 @@ export interface VehicleRecognition {
   model: string;
   year_range: [number, number];
   color: string;
-  body_type: 'sedan' | 'suv' | 'hatchback' | 'pickup' | 'van' | 'coupe' | 'convertible' | 'wagon' | 'unknown';
+  body_type:
+    | 'sedan'
+    | 'suv'
+    | 'hatchback'
+    | 'pickup'
+    | 'van'
+    | 'coupe'
+    | 'convertible'
+    | 'wagon'
+    | 'unknown';
   confidence: number;
 }
 
@@ -60,10 +69,30 @@ export const BODY_TYPE_LABELS: Record<VehicleRecognition['body_type'], string> =
 
 // Common brands in LATAM for autocomplete
 export const COMMON_BRANDS = [
-  'Toyota', 'Volkswagen', 'Ford', 'Chevrolet', 'Fiat', 'Renault',
-  'Honda', 'Hyundai', 'Kia', 'Nissan', 'Peugeot', 'Citroën',
-  'Mazda', 'Mitsubishi', 'Jeep', 'Suzuki', 'Mercedes-Benz', 'BMW',
-  'Audi', 'Volvo', 'Subaru', 'Dodge', 'RAM', 'Chrysler',
+  'Toyota',
+  'Volkswagen',
+  'Ford',
+  'Chevrolet',
+  'Fiat',
+  'Renault',
+  'Honda',
+  'Hyundai',
+  'Kia',
+  'Nissan',
+  'Peugeot',
+  'Citroën',
+  'Mazda',
+  'Mitsubishi',
+  'Jeep',
+  'Suzuki',
+  'Mercedes-Benz',
+  'BMW',
+  'Audi',
+  'Volvo',
+  'Subaru',
+  'Dodge',
+  'RAM',
+  'Chrysler',
 ];
 
 // ============================================================================
@@ -113,7 +142,7 @@ export class VehicleRecognitionService {
         this.EDGE_FUNCTION_URL,
         {
           body: { image_url: imageUrl },
-        }
+        },
       );
 
       if (error) {
@@ -128,7 +157,7 @@ export class VehicleRecognitionService {
       this.lastResult.set(data);
       this.logger.info(
         `Recognized: ${data.vehicle.brand} ${data.vehicle.model} (${data.vehicle.confidence}%)`,
-        'VehicleRecognition'
+        'VehicleRecognition',
       );
 
       return data;
@@ -169,7 +198,7 @@ export class VehicleRecognitionService {
         this.EDGE_FUNCTION_URL,
         {
           body: { image_base64: base64Data },
-        }
+        },
       );
 
       if (error) {
@@ -209,7 +238,7 @@ export class VehicleRecognitionService {
    */
   async validateVehicle(
     imageUrl: string,
-    expected: ExpectedVehicle
+    expected: ExpectedVehicle,
   ): Promise<{
     matches: boolean;
     discrepancies: string[];
@@ -221,7 +250,7 @@ export class VehicleRecognitionService {
     try {
       this.logger.info(
         `Validating vehicle: expected ${expected.brand} ${expected.model}`,
-        'VehicleRecognition'
+        'VehicleRecognition',
       );
 
       const { data, error } = await this.supabaseClient.functions.invoke<VehicleRecognitionResult>(
@@ -231,7 +260,7 @@ export class VehicleRecognitionService {
             image_url: imageUrl,
             validate_against: expected,
           },
-        }
+        },
       );
 
       if (error) {
@@ -371,8 +400,6 @@ export class VehicleRecognitionService {
     const term = searchTerm.toLowerCase().trim();
     if (!term) return COMMON_BRANDS.slice(0, 10);
 
-    return COMMON_BRANDS.filter(brand =>
-      brand.toLowerCase().includes(term)
-    );
+    return COMMON_BRANDS.filter((brand) => brand.toLowerCase().includes(term));
   }
 }

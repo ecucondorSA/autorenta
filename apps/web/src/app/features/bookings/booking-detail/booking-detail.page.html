@@ -1,716 +1,937 @@
 <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 font-sans text-text-primary">
   <!-- Loading State -->
   @if (loading()) {
-  <div class="flex flex-col items-center justify-center py-20 space-y-4">
-    <div
-      class="w-12 h-12 border-4 border-surface-secondary border-t-cta-default rounded-full animate-spin">
+    <div class="flex flex-col items-center justify-center py-20 space-y-4">
+      <div
+        class="w-12 h-12 border-4 border-surface-secondary border-t-cta-default rounded-full animate-spin"
+      ></div>
+      <p class="text-text-secondary font-medium animate-pulse">
+        Cargando detalles de la reserva...
+      </p>
     </div>
-    <p class="text-text-secondary font-medium animate-pulse">
-      Cargando detalles de la reserva...
-    </p>
-  </div>
   }
 
   <!-- Error State -->
   @if (error() && !loading()) {
-  <app-error-state title="No pudimos cargar la reserva"
-    [message]="error() ?? 'Ocurrió un error inesperado al conectar con el servidor.'"
-    variant="banner">
-    <button [routerLink]="backLink()"
-      class="mt-4 px-6 py-2.5 bg-surface-inverse text-text-inverse rounded-xl hover:bg-surface-inverse/90 transition-colors font-medium text-sm flex items-center gap-2 mx-auto">
-      <ion-icon name="arrow-back-outline"></ion-icon>
-      {{ backLabel() }}
-    </button>
-  </app-error-state>
+    <app-error-state
+      title="No pudimos cargar la reserva"
+      [message]="error() ?? 'Ocurrió un error inesperado al conectar con el servidor.'"
+      variant="banner"
+    >
+      <button
+        [routerLink]="backLink()"
+        class="mt-4 px-6 py-2.5 bg-surface-inverse text-text-inverse rounded-xl hover:bg-surface-inverse/90 transition-colors font-medium text-sm flex items-center gap-2 mx-auto"
+      >
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        {{ backLabel() }}
+      </button>
+    </app-error-state>
   }
 
   <!-- Main Content -->
   @if (booking() && !loading()) {
-  <!-- Breadcrumb / Back Navigation -->
-  <nav class="mb-6 flex items-center justify-between">
-    <button [routerLink]="backLink()"
-      class="group inline-flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors">
-      <div
-        class="w-8 h-8 rounded-full bg-surface-secondary flex items-center justify-center group-hover:bg-surface-hover transition-colors">
-        <ion-icon name="arrow-back" class="text-lg"></ion-icon>
-      </div>
-      <span>{{ backLabel() }}</span>
-    </button>
-
-    <div class="text-xs text-text-muted font-mono">ID: {{ booking()!.id.slice(0, 8) }}</div>
-  </nav>
-  <!-- Progress Timeline -->
-  <app-booking-timeline [booking]="booking()!" />
-
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-    <!-- ============================================================================================== -->
-    <!-- LEFT COLUMN (CONTEXT & HISTORY) - Span 8 -->
-    <!-- ============================================================================================== -->
-    <div class="lg:col-span-8 space-y-6">
-      <!-- 1. HERO CARD: Minimalista con jerarquía clara -->
-      <section
-        appHoverLift
-        [liftAmount]="6"
-        class="glass-card-elevated rounded-2xl overflow-hidden"
-        appStaggerEnter
-        [staggerIndex]="0">
-        <div class="flex flex-col sm:flex-row">
-          <!-- Image Section (40%) -->
-          <div class="relative sm:w-2/5 h-56 sm:h-auto bg-surface-secondary">
-            @if (booking()?.car_image) {
-            <img [src]="booking()!.car_image" [alt]="booking()?.car_title"
-              class="w-full h-full object-cover" width="400" height="20" />
-            } @else {
-            <div class="w-full h-full flex items-center justify-center text-text-muted">
-              <ion-icon name="car-sport-outline" class="text-6xl"></ion-icon>
-            </div>
-            }
-          </div>
-
-          <!-- Info Section (60%) -->
-          <div class="flex-1 p-6 sm:p-8 flex flex-col justify-between">
-            <!-- Status Badge Prominente -->
-            <div class="mb-4">
-              <app-booking-status
-                [booking]="booking()!"
-                [deliveryCountdown]="deliveryTimeRemaining()"
-                [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
-                [hasRenterCheckIn]="hasRenterCheckIn()"
-                [isOwner]="isOwner()">
-              </app-booking-status>
-            </div>
-
-            <!-- Título del Vehículo -->
-            <div class="mb-6">
-              <h1 class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight mb-1">
-                {{ booking()?.car_brand }} {{ booking()?.car_model }}
-              </h1>
-              <p class="text-text-secondary text-sm">
-                {{ booking()?.car_year }} · {{ booking()!.days_count }} {{ booking()!.days_count === 1 ? 'día' : 'días' }} con {{ carOwnerName() }}
-              </p>
-            </div>
-
-            <!-- Precio Hero + Fechas -->
-            <div class="flex items-end justify-between gap-4 pt-4 border-t border-neutral-100">
-              <!-- Precio Grande -->
-              <div>
-                <p class="text-3xl sm:text-4xl font-bold text-text-primary tracking-tight">
-                  {{ booking()!.total_amount | currency: booking()!.currency : 'symbol' : '1.0-0' }}
-                </p>
-                <p class="text-xs text-text-muted mt-1">Total de la reserva</p>
-              </div>
-
-              <!-- Fechas Compactas -->
-              <div class="text-right">
-                <p class="text-sm font-medium text-neutral-700">
-                  {{ booking()!.start_at | date: 'd MMM' }}
-                  <span class="text-text-muted mx-1">→</span>
-                  {{ booking()!.end_at | date: 'd MMM' }}
-                </p>
-                @if (deliveryTimeRemaining()) {
-                <p class="text-xs text-amber-600 font-medium mt-1 flex items-center justify-end gap-1">
-                  <ion-icon name="time-outline" class="text-sm"></ion-icon>
-                  {{ deliveryTimeRemaining() }}
-                </p>
-                }
-              </div>
-            </div>
-          </div>
+    <!-- Breadcrumb / Back Navigation -->
+    <nav class="mb-6 flex items-center justify-between">
+      <button
+        [routerLink]="backLink()"
+        class="group inline-flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
+      >
+        <div
+          class="w-8 h-8 rounded-full bg-surface-secondary flex items-center justify-center group-hover:bg-surface-hover transition-colors"
+        >
+          <ion-icon name="arrow-back" class="text-lg"></ion-icon>
         </div>
-      </section>
+        <span>{{ backLabel() }}</span>
+      </button>
 
-      <!-- 2. TIMELINE VERTICAL CONTEXTUAL -->
-      <section
-        appHoverLift
-        class="glass-card rounded-2xl p-6"
-        appStaggerEnter
-        [staggerIndex]="1">
-        <h3 class="text-sm font-bold text-text-primary mb-4">Progreso de la Reserva</h3>
+      <div class="text-xs text-text-muted font-mono">ID: {{ booking()!.id.slice(0, 8) }}</div>
+    </nav>
+    <!-- Progress Timeline -->
+    <app-booking-timeline [booking]="booking()!" />
 
-        <div class="relative">
-          <!-- Vertical Line with gradient -->
-          <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-success-500 via-cta-default to-surface-secondary"></div>
-
-          <!-- Timeline Items -->
-          <div class="space-y-4">
-
-            <!-- 1. Solicitud -->
-            <div class="relative flex items-start gap-4">
-              <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-              </div>
-              <div class="flex-1 pb-4">
-                <p class="text-sm font-medium text-text-primary">Solicitud enviada</p>
-                <p class="text-xs text-text-secondary">{{ booking()?.created_at | date: 'd MMM, HH:mm' }}</p>
-              </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- ============================================================================================== -->
+      <!-- LEFT COLUMN (CONTEXT & HISTORY) - Span 8 -->
+      <!-- ============================================================================================== -->
+      <div class="lg:col-span-8 space-y-6">
+        <!-- 1. HERO CARD: Minimalista con jerarquía clara -->
+        <section
+          appHoverLift
+          [liftAmount]="6"
+          class="glass-card-elevated rounded-2xl overflow-hidden"
+          appStaggerEnter
+          [staggerIndex]="0"
+        >
+          <div class="flex flex-col sm:flex-row">
+            <!-- Image Section (40%) -->
+            <div class="relative sm:w-2/5 h-56 sm:h-auto bg-surface-secondary">
+              @if (booking()?.car_image) {
+                <img
+                  [src]="booking()!.car_image"
+                  [alt]="booking()?.car_title"
+                  class="w-full h-full object-cover"
+                  width="400"
+                  height="20"
+                />
+              } @else {
+                <div class="w-full h-full flex items-center justify-center text-text-muted">
+                  <ion-icon name="car-sport-outline" class="text-6xl"></ion-icon>
+                </div>
+              }
             </div>
 
-            <!-- 2. Garantía/Pago -->
-            @if (booking()?.status === 'pending' || booking()?.status === 'pending_payment') {
-              <!-- CURRENT: Esperando pago -->
-              <div class="relative flex items-start gap-4">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-amber-500 text-white flex-shrink-0 ring-4 ring-amber-100">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                  </svg>
-                </div>
-                <div class="flex-1 pb-4 bg-amber-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-amber-200">
-                  <p class="text-sm font-semibold text-amber-800">Esperando garantía</p>
-                  <p class="text-xs text-amber-700 mt-1">Debes completar el pago para que el propietario pueda aprobar</p>
-                </div>
+            <!-- Info Section (60%) -->
+            <div class="flex-1 p-6 sm:p-8 flex flex-col justify-between">
+              <!-- Status Badge Prominente -->
+              <div class="mb-4">
+                <app-booking-status
+                  [booking]="booking()!"
+                  [deliveryCountdown]="deliveryTimeRemaining()"
+                  [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
+                  [hasRenterCheckIn]="hasRenterCheckIn()"
+                  [isOwner]="isOwner()"
+                >
+                </app-booking-status>
               </div>
-              <!-- FUTURE: Aprobación -->
-              <div class="relative flex items-start gap-4 opacity-50">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-surface-secondary text-text-muted flex-shrink-0">
-                  <span class="text-xs font-bold">3</span>
-                </div>
-                <div class="flex-1 pb-4">
-                  <p class="text-sm font-medium text-text-muted">Aprobación del propietario</p>
-                  <p class="text-xs text-text-muted">Pendiente</p>
-                </div>
-              </div>
-            } @else {
-              <!-- COMPLETED: Garantía pagada -->
-              <div class="relative flex items-start gap-4">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                  </svg>
-                </div>
-                <div class="flex-1 pb-4">
-                  <p class="text-sm font-medium text-text-primary">Garantía confirmada</p>
-                  <p class="text-xs text-text-secondary">Pago procesado</p>
-                </div>
-              </div>
-            }
 
-            <!-- 3. Aprobación (solo si ya pasó garantía) -->
-            @if (booking()?.status !== 'pending' && booking()?.status !== 'pending_payment') {
-              @if (booking()?.status === 'confirmed' || booking()?.status === 'in_progress' || booking()?.status === 'completed') {
-                <!-- COMPLETED: Aprobado -->
+              <!-- Título del Vehículo -->
+              <div class="mb-6">
+                <h1 class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight mb-1">
+                  {{ booking()?.car_brand }} {{ booking()?.car_model }}
+                </h1>
+                <p class="text-text-secondary text-sm">
+                  {{ booking()?.car_year }} · {{ booking()!.days_count }}
+                  {{ booking()!.days_count === 1 ? 'día' : 'días' }} con {{ carOwnerName() }}
+                </p>
+              </div>
+
+              <!-- Precio Hero + Fechas -->
+              <div class="flex items-end justify-between gap-4 pt-4 border-t border-neutral-100">
+                <!-- Precio Grande -->
+                <div>
+                  <p class="text-3xl sm:text-4xl font-bold text-text-primary tracking-tight">
+                    {{
+                      booking()!.total_amount | currency: booking()!.currency : 'symbol' : '1.0-0'
+                    }}
+                  </p>
+                  <p class="text-xs text-text-muted mt-1">Total de la reserva</p>
+                </div>
+
+                <!-- Fechas Compactas -->
+                <div class="text-right">
+                  <p class="text-sm font-medium text-neutral-700">
+                    {{ booking()!.start_at | date: 'd MMM' }}
+                    <span class="text-text-muted mx-1">→</span>
+                    {{ booking()!.end_at | date: 'd MMM' }}
+                  </p>
+                  @if (deliveryTimeRemaining()) {
+                    <p
+                      class="text-xs text-amber-600 font-medium mt-1 flex items-center justify-end gap-1"
+                    >
+                      <ion-icon name="time-outline" class="text-sm"></ion-icon>
+                      {{ deliveryTimeRemaining() }}
+                    </p>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. TIMELINE VERTICAL CONTEXTUAL -->
+        <section appHoverLift class="glass-card rounded-2xl p-6" appStaggerEnter [staggerIndex]="1">
+          <h3 class="text-sm font-bold text-text-primary mb-4">Progreso de la Reserva</h3>
+
+          <div class="relative">
+            <!-- Vertical Line with gradient -->
+            <div
+              class="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-success-500 via-cta-default to-surface-secondary"
+            ></div>
+
+            <!-- Timeline Items -->
+            <div class="space-y-4">
+              <!-- 1. Solicitud -->
+              <div class="relative flex items-start gap-4">
+                <div
+                  class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <div class="flex-1 pb-4">
+                  <p class="text-sm font-medium text-text-primary">Solicitud enviada</p>
+                  <p class="text-xs text-text-secondary">
+                    {{ booking()?.created_at | date: 'd MMM, HH:mm' }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- 2. Garantía/Pago -->
+              @if (booking()?.status === 'pending' || booking()?.status === 'pending_payment') {
+                <!-- CURRENT: Esperando pago -->
                 <div class="relative flex items-start gap-4">
-                  <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
+                  <div
+                    class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-amber-500 text-white flex-shrink-0 ring-4 ring-amber-100"
+                  >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="flex-1 pb-4 bg-amber-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-amber-200"
+                  >
+                    <p class="text-sm font-semibold text-amber-800">Esperando garantía</p>
+                    <p class="text-xs text-amber-700 mt-1">
+                      Debes completar el pago para que el propietario pueda aprobar
+                    </p>
+                  </div>
+                </div>
+                <!-- FUTURE: Aprobación -->
+                <div class="relative flex items-start gap-4 opacity-50">
+                  <div
+                    class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-surface-secondary text-text-muted flex-shrink-0"
+                  >
+                    <span class="text-xs font-bold">3</span>
+                  </div>
+                  <div class="flex-1 pb-4">
+                    <p class="text-sm font-medium text-text-muted">Aprobación del propietario</p>
+                    <p class="text-xs text-text-muted">Pendiente</p>
+                  </div>
+                </div>
+              } @else {
+                <!-- COMPLETED: Garantía pagada -->
+                <div class="relative flex items-start gap-4">
+                  <div
+                    class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   </div>
                   <div class="flex-1 pb-4">
-                    <p class="text-sm font-medium text-text-primary">Reserva aprobada</p>
-                    <p class="text-xs text-text-secondary">Por {{ carOwnerName() }}</p>
+                    <p class="text-sm font-medium text-text-primary">Garantía confirmada</p>
+                    <p class="text-xs text-text-secondary">Pago procesado</p>
                   </div>
                 </div>
               }
-            }
 
-            <!-- 4. Check-in -->
-            @if (hasRenterCheckIn()) {
-              <!-- COMPLETED: Check-in bilateral completado -->
-              <div class="relative flex items-start gap-4">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                  </svg>
-                </div>
-                <div class="flex-1 pb-4">
-                  <p class="text-sm font-medium text-text-primary">Check-in completado</p>
-                  <p class="text-xs text-text-secondary">Vehículo entregado y recepción confirmada</p>
-                </div>
-              </div>
-            } @else if (awaitingRenterCheckIn()) {
-              <!-- Owner YA entregó, renter debe confirmar -->
-              <!-- COMPLETED: Vehículo entregado por owner -->
-              <div class="relative flex items-start gap-4">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                  </svg>
-                </div>
-                <div class="flex-1 pb-4">
-                  <p class="text-sm font-medium text-text-primary">Vehículo entregado</p>
-                  <p class="text-xs text-text-secondary">El propietario completó la entrega</p>
-                </div>
-              </div>
-              <!-- CURRENT: Renter debe confirmar recepción -->
-              <div class="relative flex items-start gap-4">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-amber-500 text-white flex-shrink-0 ring-4 ring-amber-100">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"/>
-                  </svg>
-                </div>
-                <div class="flex-1 pb-4 bg-amber-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-amber-200">
-                  <p class="text-sm font-semibold text-amber-800">Confirmar recepción</p>
-                  <p class="text-xs text-amber-700 mt-1">Debes confirmar que recibiste el vehículo</p>
-                  @if (isRenter()) {
-                    <a [routerLink]="['/bookings', booking()?.id, 'check-in']"
-                       class="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-amber-800 hover:text-amber-900 underline">
-                      Confirmar ahora →
-                    </a>
-                  }
-                </div>
-              </div>
-            } @else if (booking()?.status === 'confirmed') {
-              <!-- CURRENT: Esperando check-in del owner -->
-              <div class="relative flex items-start gap-4">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white flex-shrink-0 ring-4 ring-blue-100">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                  </svg>
-                </div>
-                <div class="flex-1 pb-4 bg-blue-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-blue-200">
-                  <p class="text-sm font-semibold text-blue-800">Check-in programado</p>
-                  <p class="text-xs text-blue-700 mt-1">{{ booking()?.start_at | date: 'EEEE d MMM, HH:mm' }}</p>
-                  <p class="text-xs text-blue-600 mt-2">Próximo paso: Recoger el vehículo</p>
-                </div>
-              </div>
-            }
+              <!-- 3. Aprobación (solo si ya pasó garantía) -->
+              @if (booking()?.status !== 'pending' && booking()?.status !== 'pending_payment') {
+                @if (
+                  booking()?.status === 'confirmed' ||
+                  booking()?.status === 'in_progress' ||
+                  booking()?.status === 'completed'
+                ) {
+                  <!-- COMPLETED: Aprobado -->
+                  <div class="relative flex items-start gap-4">
+                    <div
+                      class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                    <div class="flex-1 pb-4">
+                      <p class="text-sm font-medium text-text-primary">Reserva aprobada</p>
+                      <p class="text-xs text-text-secondary">Por {{ carOwnerName() }}</p>
+                    </div>
+                  </div>
+                }
+              }
 
-            <!-- 5. Viaje en curso -->
-            @if (hasRenterCheckIn() && !hasCheckOut() && booking()?.status !== 'completed') {
-              <!-- CURRENT: En viaje (check-in bilateral completado) -->
-              <div class="relative flex items-start gap-4">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white flex-shrink-0 ring-4 ring-blue-100">
-                  <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                  </svg>
+              <!-- 4. Check-in -->
+              @if (hasRenterCheckIn()) {
+                <!-- COMPLETED: Check-in bilateral completado -->
+                <div class="relative flex items-start gap-4">
+                  <div
+                    class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <div class="flex-1 pb-4">
+                    <p class="text-sm font-medium text-text-primary">Check-in completado</p>
+                    <p class="text-xs text-text-secondary">
+                      Vehículo entregado y recepción confirmada
+                    </p>
+                  </div>
                 </div>
-                <div class="flex-1 pb-4 bg-blue-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-blue-200">
-                  <p class="text-sm font-semibold text-blue-800">Viaje en curso</p>
-                  <p class="text-xs text-blue-700 mt-1">Devolución: {{ booking()?.end_at | date: 'EEEE d MMM, HH:mm' }}</p>
-                  @if (deliveryTimeRemaining()) {
-                    <p class="text-xs text-blue-600 mt-2 font-medium">⏱️ {{ deliveryTimeRemaining() }} restantes</p>
-                  }
+              } @else if (awaitingRenterCheckIn()) {
+                <!-- Owner YA entregó, renter debe confirmar -->
+                <!-- COMPLETED: Vehículo entregado por owner -->
+                <div class="relative flex items-start gap-4">
+                  <div
+                    class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <div class="flex-1 pb-4">
+                    <p class="text-sm font-medium text-text-primary">Vehículo entregado</p>
+                    <p class="text-xs text-text-secondary">El propietario completó la entrega</p>
+                  </div>
+                </div>
+                <!-- CURRENT: Renter debe confirmar recepción -->
+                <div class="relative flex items-start gap-4">
+                  <div
+                    class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-amber-500 text-white flex-shrink-0 ring-4 ring-amber-100"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="flex-1 pb-4 bg-amber-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-amber-200"
+                  >
+                    <p class="text-sm font-semibold text-amber-800">Confirmar recepción</p>
+                    <p class="text-xs text-amber-700 mt-1">
+                      Debes confirmar que recibiste el vehículo
+                    </p>
+                    @if (isRenter()) {
+                      <a
+                        [routerLink]="['/bookings', booking()?.id, 'check-in']"
+                        class="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-amber-800 hover:text-amber-900 underline"
+                      >
+                        Confirmar ahora →
+                      </a>
+                    }
+                  </div>
+                </div>
+              } @else if (booking()?.status === 'confirmed') {
+                <!-- CURRENT: Esperando check-in del owner -->
+                <div class="relative flex items-start gap-4">
+                  <div
+                    class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white flex-shrink-0 ring-4 ring-blue-100"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="flex-1 pb-4 bg-blue-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-blue-200"
+                  >
+                    <p class="text-sm font-semibold text-blue-800">Check-in programado</p>
+                    <p class="text-xs text-blue-700 mt-1">
+                      {{ booking()?.start_at | date: 'EEEE d MMM, HH:mm' }}
+                    </p>
+                    <p class="text-xs text-blue-600 mt-2">Próximo paso: Recoger el vehículo</p>
+                  </div>
+                </div>
+              }
+
+              <!-- 5. Viaje en curso -->
+              @if (hasRenterCheckIn() && !hasCheckOut() && booking()?.status !== 'completed') {
+                <!-- CURRENT: En viaje (check-in bilateral completado) -->
+                <div class="relative flex items-start gap-4">
+                  <div
+                    class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white flex-shrink-0 ring-4 ring-blue-100"
+                  >
+                    <svg
+                      class="w-4 h-4 animate-pulse"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="flex-1 pb-4 bg-blue-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-blue-200"
+                  >
+                    <p class="text-sm font-semibold text-blue-800">Viaje en curso</p>
+                    <p class="text-xs text-blue-700 mt-1">
+                      Devolución: {{ booking()?.end_at | date: 'EEEE d MMM, HH:mm' }}
+                    </p>
+                    @if (deliveryTimeRemaining()) {
+                      <p class="text-xs text-blue-600 mt-2 font-medium">
+                        ⏱️ {{ deliveryTimeRemaining() }} restantes
+                      </p>
+                    }
+                  </div>
+                </div>
+                <!-- FUTURE: Check-out -->
+                <div class="relative flex items-start gap-4 opacity-50">
+                  <div
+                    class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-surface-secondary text-text-muted flex-shrink-0"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                      />
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-text-muted">Check-out e inspección</p>
+                    <p class="text-xs text-text-muted">Devolver vehículo</p>
+                  </div>
+                </div>
+              } @else if (booking()?.status === 'completed') {
+                <!-- COMPLETED: Viaje y check-out -->
+                <div class="relative flex items-start gap-4">
+                  <div
+                    class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <div class="flex-1 pb-4">
+                    <p class="text-sm font-medium text-text-primary">Viaje finalizado</p>
+                    <p class="text-xs text-text-secondary">
+                      {{ booking()?.end_at | date: 'd MMM, HH:mm' }}
+                    </p>
+                  </div>
+                </div>
+                <div class="relative flex items-start gap-4">
+                  <div
+                    class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="flex-1 bg-emerald-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-emerald-200"
+                  >
+                    <p class="text-sm font-semibold text-emerald-800">Reserva completada</p>
+                    <p class="text-xs text-emerald-700 mt-1">
+                      Todo en orden. ¡Gracias por usar AutoRenta!
+                    </p>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Flow Alert (if any) -->
+          @if (flowAlert()) {
+            <div
+              class="mt-4 p-3 rounded-xl {{
+                flowAlert()!.tone === 'danger'
+                  ? 'bg-red-50 border border-red-200'
+                  : 'bg-blue-50 border border-blue-200'
+              }}"
+            >
+              <div class="flex items-start gap-2">
+                <svg
+                  class="w-4 h-4 {{
+                    flowAlert()!.tone === 'danger' ? 'text-red-500' : 'text-blue-500'
+                  }} flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <div class="flex-1">
+                  <p
+                    class="text-xs font-medium {{
+                      flowAlert()!.tone === 'danger' ? 'text-red-700' : 'text-blue-700'
+                    }}"
+                  >
+                    {{ flowAlert()!.title }}
+                  </p>
+                  <p
+                    class="text-xs {{
+                      flowAlert()!.tone === 'danger' ? 'text-red-600' : 'text-blue-600'
+                    }}"
+                  >
+                    {{ flowAlert()!.message }}
+                  </p>
                 </div>
               </div>
-              <!-- FUTURE: Check-out -->
-              <div class="relative flex items-start gap-4 opacity-50">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-surface-secondary text-text-muted flex-shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                  </svg>
+            </div>
+          }
+        </section>
+
+        <!-- 2.5 BOOKING FLOW CARD - Estado unificado del flujo bilateral -->
+        @if (booking()?.status !== 'pending' && booking()?.status !== 'pending_payment') {
+          <app-booking-flow-card
+            [booking]="booking()!"
+            [currentUserId]="currentUserId()"
+            (actionRequested)="handleFlowAction($event)"
+          />
+        }
+
+        <!-- 3. CHECK-IN CRITICAL INFO CARD (Extracted Component) -->
+        <app-booking-check-in-info-card
+          [booking]="booking()!"
+          [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
+          [isOwner]="isOwner()"
+        />
+
+        <!-- 3.5 Download Inspection PDFs (if inspections exist) -->
+        @if (hasOwnerCheckIn() || hasCheckOut()) {
+          <section appHoverLift class="glass-card rounded-2xl p-4">
+            <h3 class="text-sm font-bold text-text-primary mb-3 flex items-center gap-2">
+              <ion-icon name="document-text-outline" class="text-info-500"></ion-icon>
+              Actas de Inspección
+            </h3>
+            <div class="flex flex-wrap gap-3">
+              @if (hasOwnerCheckIn()) {
+                <button
+                  (click)="downloadInspection('delivery')"
+                  [disabled]="downloadingInspection()"
+                  class="flex items-center gap-2 px-4 py-2 bg-surface-secondary hover:bg-surface-hover rounded-lg text-sm font-medium text-text-primary transition-colors disabled:opacity-50"
+                >
+                  @if (downloadingInspection()) {
+                    <div
+                      class="w-4 h-4 border-2 border-text-muted border-t-transparent rounded-full animate-spin"
+                    ></div>
+                  } @else {
+                    <ion-icon name="document-text-outline"></ion-icon>
+                  }
+                  <span>Acta de Entrega</span>
+                </button>
+              }
+              @if (hasCheckOut()) {
+                <button
+                  (click)="downloadInspection('return')"
+                  [disabled]="downloadingInspection()"
+                  class="flex items-center gap-2 px-4 py-2 bg-surface-secondary hover:bg-surface-hover rounded-lg text-sm font-medium text-text-primary transition-colors disabled:opacity-50"
+                >
+                  @if (downloadingInspection()) {
+                    <div
+                      class="w-4 h-4 border-2 border-text-muted border-t-transparent rounded-full animate-spin"
+                    ></div>
+                  } @else {
+                    <ion-icon name="document-text-outline"></ion-icon>
+                  }
+                  <span>Acta de Devolución</span>
+                </button>
+              }
+            </div>
+          </section>
+        }
+
+        <!-- 4. LOGISTICS CARD (Delivery/Dropoff info) -->
+        @if (booking()?.delivery_required || booking()?.dropoff_location_lat) {
+          <section appHoverLift class="glass-card rounded-2xl overflow-hidden p-0">
+            <div
+              class="px-5 py-3 border-b border-border-default bg-surface-secondary/50 flex justify-between items-center"
+            >
+              <h3 class="text-sm font-bold text-text-primary flex items-center gap-2">
+                <ion-icon name="swap-horizontal-outline" class="text-info-500"></ion-icon>
+                Devolución
+              </h3>
+              @if (booking()?.delivery_fee_cents) {
+                <span
+                  class="text-[10px] font-bold bg-success-50 text-success-700 px-2 py-0.5 rounded-full border border-success-200"
+                >
+                  Delivery Incluido
+                </span>
+              }
+            </div>
+
+            <div class="p-5">
+              <div class="flex items-start gap-4">
+                <div
+                  class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center shrink-0"
+                >
+                  <ion-icon name="flag" class="text-text-secondary"></ion-icon>
                 </div>
                 <div class="flex-1">
-                  <p class="text-sm font-medium text-text-muted">Check-out e inspección</p>
-                  <p class="text-xs text-text-muted">Devolver vehículo</p>
+                  <p class="text-[10px] uppercase font-bold text-text-muted tracking-wider mb-1">
+                    Punto de Devolución
+                  </p>
+                  <p class="text-sm font-medium text-text-primary mb-1">
+                    @if (booking()?.dropoff_location_lat) {
+                      {{ booking()!.dropoff_location_lat?.toFixed(6) }},
+                      {{ booking()!.dropoff_location_lng?.toFixed(6) }}
+                    } @else {
+                      Mismo punto de retiro
+                    }
+                  </p>
+                  <p class="text-xs text-text-secondary">
+                    {{ booking()!.end_at | date: 'EEEE d MMMM, HH:mm' }} hs
+                  </p>
                 </div>
               </div>
-            } @else if (booking()?.status === 'completed') {
-              <!-- COMPLETED: Viaje y check-out -->
-              <div class="relative flex items-start gap-4">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                  </svg>
-                </div>
-                <div class="flex-1 pb-4">
-                  <p class="text-sm font-medium text-text-primary">Viaje finalizado</p>
-                  <p class="text-xs text-text-secondary">{{ booking()?.end_at | date: 'd MMM, HH:mm' }}</p>
-                </div>
-              </div>
-              <div class="relative flex items-start gap-4">
-                <div class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                  </svg>
-                </div>
-                <div class="flex-1 bg-emerald-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-emerald-200">
-                  <p class="text-sm font-semibold text-emerald-800">Reserva completada</p>
-                  <p class="text-xs text-emerald-700 mt-1">Todo en orden. ¡Gracias por usar AutoRenta!</p>
-                </div>
-              </div>
-            }
-
-          </div>
-        </div>
-
-        <!-- Flow Alert (if any) -->
-        @if (flowAlert()) {
-        <div class="mt-4 p-3 rounded-xl {{ flowAlert()!.tone === 'danger' ? 'bg-red-50 border border-red-200' : 'bg-blue-50 border border-blue-200' }}">
-          <div class="flex items-start gap-2">
-            <svg class="w-4 h-4 {{ flowAlert()!.tone === 'danger' ? 'text-red-500' : 'text-blue-500' }} flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <div class="flex-1">
-              <p class="text-xs font-medium {{ flowAlert()!.tone === 'danger' ? 'text-red-700' : 'text-blue-700' }}">{{ flowAlert()!.title }}</p>
-              <p class="text-xs {{ flowAlert()!.tone === 'danger' ? 'text-red-600' : 'text-blue-600' }}">{{ flowAlert()!.message }}</p>
             </div>
-          </div>
-        </div>
+          </section>
         }
-      </section>
 
-      <!-- 2.5 BOOKING FLOW CARD - Estado unificado del flujo bilateral -->
-      @if (booking()?.status !== 'pending' && booking()?.status !== 'pending_payment') {
-        <app-booking-flow-card
-          [booking]="booking()!"
-          [currentUserId]="currentUserId()"
-          (actionRequested)="handleFlowAction($event)"
-        />
-      }
-
-      <!-- 3. CHECK-IN CRITICAL INFO CARD (Extracted Component) -->
-      <app-booking-check-in-info-card
-        [booking]="booking()!"
-        [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
-        [isOwner]="isOwner()"
-      />
-
-      <!-- 3.5 Download Inspection PDFs (if inspections exist) -->
-      @if (hasOwnerCheckIn() || hasCheckOut()) {
-      <section appHoverLift class="glass-card rounded-2xl p-4">
-        <h3 class="text-sm font-bold text-text-primary mb-3 flex items-center gap-2">
-          <ion-icon name="document-text-outline" class="text-info-500"></ion-icon>
-          Actas de Inspección
-        </h3>
-        <div class="flex flex-wrap gap-3">
-          @if (hasOwnerCheckIn()) {
-          <button
-            (click)="downloadInspection('delivery')"
-            [disabled]="downloadingInspection()"
-            class="flex items-center gap-2 px-4 py-2 bg-surface-secondary hover:bg-surface-hover rounded-lg text-sm font-medium text-text-primary transition-colors disabled:opacity-50">
-            @if (downloadingInspection()) {
-              <div class="w-4 h-4 border-2 border-text-muted border-t-transparent rounded-full animate-spin"></div>
-            } @else {
-              <ion-icon name="document-text-outline"></ion-icon>
+        <!-- 4. Pricing & Insurance Breakdown -->
+        @if (pricingView() || insuranceView()) {
+          <section class="grid grid-cols-1 md:grid-cols-2 gap-6" appStaggerEnter [staggerIndex]="2">
+            @if (pricingView()) {
+              <div appHoverLift class="glass-card rounded-2xl p-6">
+                <div class="flex items-center gap-3 mb-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary"
+                  >
+                    <ion-icon name="receipt-outline" class="text-xl"></ion-icon>
+                  </div>
+                  <h3 class="font-bold text-text-primary">Desglose de Precio</h3>
+                </div>
+                <app-booking-pricing-breakdown
+                  [data]="pricingView()!"
+                ></app-booking-pricing-breakdown>
+              </div>
             }
-            <span>Acta de Entrega</span>
-          </button>
-          }
-          @if (hasCheckOut()) {
-          <button
-            (click)="downloadInspection('return')"
-            [disabled]="downloadingInspection()"
-            class="flex items-center gap-2 px-4 py-2 bg-surface-secondary hover:bg-surface-hover rounded-lg text-sm font-medium text-text-primary transition-colors disabled:opacity-50">
-            @if (downloadingInspection()) {
-              <div class="w-4 h-4 border-2 border-text-muted border-t-transparent rounded-full animate-spin"></div>
-            } @else {
-              <ion-icon name="document-text-outline"></ion-icon>
+
+            @if (insuranceView()) {
+              <div appHoverLift class="glass-card rounded-2xl p-6">
+                <div class="flex items-center gap-3 mb-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center text-success-600"
+                  >
+                    <ion-icon name="shield-checkmark-outline" class="text-xl"></ion-icon>
+                  </div>
+                  <h3 class="font-bold text-text-primary">Cobertura y Garantía</h3>
+                </div>
+                <app-booking-insurance-summary
+                  [data]="insuranceView()!"
+                ></app-booking-insurance-summary>
+              </div>
             }
-            <span>Acta de Devolución</span>
-          </button>
-          }
-        </div>
-      </section>
-      }
+          </section>
+        }
 
-      <!-- 4. LOGISTICS CARD (Delivery/Dropoff info) -->
-      @if (booking()?.delivery_required || booking()?.dropoff_location_lat) {
-      <section appHoverLift class="glass-card rounded-2xl overflow-hidden p-0">
-        <div
-          class="px-5 py-3 border-b border-border-default bg-surface-secondary/50 flex justify-between items-center">
-          <h3 class="text-sm font-bold text-text-primary flex items-center gap-2">
-            <ion-icon name="swap-horizontal-outline" class="text-info-500"></ion-icon>
-            Devolución
-          </h3>
-          @if (booking()?.delivery_fee_cents) {
-          <span
-            class="text-[10px] font-bold bg-success-50 text-success-700 px-2 py-0.5 rounded-full border border-success-200">
-            Delivery Incluido
-          </span>
-          }
-        </div>
+        <!-- 5. Tracking (if active) -->
+        @if (tracking()) {
+          <section
+            appHoverLift
+            class="glass-card rounded-2xl p-6"
+            appStaggerEnter
+            [staggerIndex]="3"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <div
+                class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary"
+              >
+                <ion-icon name="map-outline" class="text-xl"></ion-icon>
+              </div>
+              <h3 class="font-bold text-text-primary">Tracking GPS</h3>
+            </div>
+            <app-booking-tracking [session]="tracking()"></app-booking-tracking>
+          </section>
+        }
 
-        <div class="p-5">
-          <div class="flex items-start gap-4">
-            <div
-              class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center shrink-0">
-              <ion-icon name="flag" class="text-text-secondary"></ion-icon>
+        <!-- 6. Operations Timeline -->
+        @if (confirmation() || cancellation()) {
+          <section appHoverLift class="glass-card rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div
+                class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary"
+              >
+                <ion-icon name="time-outline" class="text-xl"></ion-icon>
+              </div>
+              <h3 class="font-bold text-text-primary">Historial de Operaciones</h3>
+            </div>
+            <app-booking-ops-timeline
+              [data]="{
+                payment_date: payment()?.paid_at ?? null,
+                payment_note: null,
+                pickup_confirmed_at: confirmation()?.pickup_confirmed_at ?? null,
+                dropoff_confirmed_at: confirmation()?.dropoff_confirmed_at ?? null,
+                owner_confirmed_at: confirmation()?.owner_confirmed_at ?? null,
+                renter_confirmed_at: confirmation()?.renter_confirmed_at ?? null,
+                returned_at: booking()?.returned_at ?? null,
+                funds_released_at: confirmation()?.funds_released_at ?? null,
+                cancelled_at: cancellation()?.cancelled_at ?? null,
+                cancellation_reason: cancellation()?.cancellation_reason ?? null,
+                cancellation_fee_cents: cancellation()?.cancellation_fee_cents ?? null,
+                cancelled_by_role: cancellation()?.cancelled_by_role ?? null,
+              }"
+            ></app-booking-ops-timeline>
+          </section>
+        }
+
+        <!-- 7. Documentation (Compact Grid) -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6" appStaggerEnter [staggerIndex]="4">
+          <!-- Contract Card -->
+          <div appHoverLift class="glass-card rounded-2xl p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4">
+              <div
+                class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary"
+              >
+                <ion-icon name="document-text-outline" class="text-xl"></ion-icon>
+              </div>
+              <h3 class="font-bold text-text-primary">Contrato Digital</h3>
             </div>
             <div class="flex-1">
-              <p class="text-[10px] uppercase font-bold text-text-muted tracking-wider mb-1">
-                Punto de Devolución
-              </p>
-              <p class="text-sm font-medium text-text-primary mb-1">
-                @if (booking()?.dropoff_location_lat) {
-                {{ booking()!.dropoff_location_lat?.toFixed(6) }},
-                {{ booking()!.dropoff_location_lng?.toFixed(6) }}
-                } @else {
-                Mismo punto de retiro
-                }
-              </p>
-              <p class="text-xs text-text-secondary">
-                {{ booking()!.end_at | date: 'EEEE d MMMM, HH:mm' }} hs
-              </p>
+              <app-booking-contract
+                #contractComponent
+                [bookingId]="booking()!.id"
+                (downloadRequested)="downloadContract(contractComponent)"
+              ></app-booking-contract>
             </div>
           </div>
-        </div>
-      </section>
-      }
 
-      <!-- 4. Pricing & Insurance Breakdown -->
-      @if (pricingView() || insuranceView()) {
-      <section class="grid grid-cols-1 md:grid-cols-2 gap-6" appStaggerEnter [staggerIndex]="2">
-        @if (pricingView()) {
-        <div appHoverLift class="glass-card rounded-2xl p-6">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
-              <ion-icon name="receipt-outline" class="text-xl"></ion-icon>
-            </div>
-            <h3 class="font-bold text-text-primary">Desglose de Precio</h3>
-          </div>
-          <app-booking-pricing-breakdown [data]="pricingView()!"></app-booking-pricing-breakdown>
-        </div>
-        }
-
-        @if (insuranceView()) {
-        <div appHoverLift class="glass-card rounded-2xl p-6">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center text-success-600">
-              <ion-icon name="shield-checkmark-outline" class="text-xl"></ion-icon>
-            </div>
-            <h3 class="font-bold text-text-primary">Cobertura y Garantía</h3>
-          </div>
-          <app-booking-insurance-summary [data]="insuranceView()!"></app-booking-insurance-summary>
-        </div>
-        }
-      </section>
-      }
-
-      <!-- 5. Tracking (if active) -->
-      @if (tracking()) {
-      <section appHoverLift class="glass-card rounded-2xl p-6" appStaggerEnter [staggerIndex]="3">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
-            <ion-icon name="map-outline" class="text-xl"></ion-icon>
-          </div>
-          <h3 class="font-bold text-text-primary">Tracking GPS</h3>
-        </div>
-        <app-booking-tracking [session]="tracking()"></app-booking-tracking>
-      </section>
-      }
-
-      <!-- 6. Operations Timeline -->
-      @if (confirmation() || cancellation()) {
-      <section appHoverLift class="glass-card rounded-2xl p-6">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
-            <ion-icon name="time-outline" class="text-xl"></ion-icon>
-          </div>
-          <h3 class="font-bold text-text-primary">Historial de Operaciones</h3>
-        </div>
-        <app-booking-ops-timeline [data]="{
-          payment_date: payment()?.paid_at ?? null,
-          payment_note: null,
-          pickup_confirmed_at: confirmation()?.pickup_confirmed_at ?? null,
-          dropoff_confirmed_at: confirmation()?.dropoff_confirmed_at ?? null,
-          owner_confirmed_at: confirmation()?.owner_confirmed_at ?? null,
-          renter_confirmed_at: confirmation()?.renter_confirmed_at ?? null,
-          returned_at: booking()?.returned_at ?? null,
-          funds_released_at: confirmation()?.funds_released_at ?? null,
-          cancelled_at: cancellation()?.cancelled_at ?? null,
-          cancellation_reason: cancellation()?.cancellation_reason ?? null,
-          cancellation_fee_cents: cancellation()?.cancellation_fee_cents ?? null,
-          cancelled_by_role: cancellation()?.cancelled_by_role ?? null
-        }"></app-booking-ops-timeline>
-      </section>
-      }
-
-      <!-- 7. Documentation (Compact Grid) -->
-      <section class="grid grid-cols-1 md:grid-cols-2 gap-6" appStaggerEnter [staggerIndex]="4">
-        <!-- Contract Card -->
-        <div appHoverLift class="glass-card rounded-2xl p-6 flex flex-col h-full">
-          <div class="flex items-center gap-3 mb-4">
-            <div
-              class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
-              <ion-icon name="document-text-outline" class="text-xl"></ion-icon>
-            </div>
-            <h3 class="font-bold text-text-primary">Contrato Digital</h3>
-          </div>
-          <div class="flex-1">
-            <app-booking-contract
-              #contractComponent
-              [bookingId]="booking()!.id"
-              (downloadRequested)="downloadContract(contractComponent)"
-            ></app-booking-contract>
-          </div>
-        </div>
-
-        <!-- Refund Status / Insurance -->
-        <div appHoverLift class="glass-card rounded-2xl p-6 flex flex-col h-full">
-          <div class="flex items-center gap-3 mb-4">
-            <div
-              class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary">
-              <ion-icon name="shield-checkmark-outline" class="text-xl"></ion-icon>
-            </div>
-            <h3 class="font-bold text-text-primary">Estado de Garantía</h3>
-          </div>
-          <div class="flex-1">
-            <app-refund-status [bookingId]="booking()!.id"></app-refund-status>
-          </div>
-        </div>
-      </section>
-
-      <!-- 4. Extensions Manager (Extracted Component) -->
-      <app-booking-extensions-manager
-        [booking]="booking()!"
-        [isOwner]="isOwner()"
-        [isRenter]="isRenter()"
-        (bookingUpdated)="booking.set($event)"
-      />
-
-      <!-- 5. Traffic Fines Manager (Extracted Component) -->
-      <app-booking-traffic-fines-manager
-        [booking]="booking()!"
-        [isOwner]="isOwner()"
-        [isRenter]="isRenter()"
-        (reportFineClicked)="showReportTrafficFineModal.set(true)"
-        (finesUpdated)="trafficFines.set($event)"
-      />
-
-      <!-- 6. Damage & Disputes (Conditional) -->
-      @if (hasClaim() || canReportClaim() || isOwner()) {
-      <section class="space-y-6">
-        <div class="flex items-center justify-between px-1">
-          <h2 class="text-lg font-bold text-text-primary">Gestión de Incidentes</h2>
-        </div>
-
-        <!-- Damage Comparison (if inspections exist) -->
-        @if (hasOwnerCheckIn() && hasCheckOut()) {
-        <div appHoverLift class="glass-card rounded-2xl p-6">
-          <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
-            <ion-icon name="git-compare-outline" class="text-info-600"></ion-icon>
-            Comparativa de Daños
-          </h3>
-          <app-damage-comparison [bookingId]="booking()!.id"></app-damage-comparison>
-        </div>
-        }
-
-        <!-- Claims List -->
-        @if (hasClaim()) {
-        <div appHoverLift class="glass-card rounded-2xl p-6">
-          <h3 class="font-bold text-text-primary mb-4 text-error-600 flex items-center gap-2">
-            <ion-icon name="warning-outline"></ion-icon>
-            Siniestros Reportados
-          </h3>
-          <!-- Simple list of existing claims -->
-          @for (claim of bookingClaims(); track claim.id) {
-          <div
-            class="p-4 rounded-xl bg-surface-secondary border border-border-default mb-3 last:mb-0">
-            <div class="flex justify-between items-start">
-              <div>
-                <span
-                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-raised border border-border-default text-text-primary mb-2">
-                  {{ getClaimStatusLabel(claim.status) }}
-                </span>
-                <p class="font-medium text-text-primary">{{ claim.description }}</p>
-                <p class="text-sm text-text-secondary mt-1">
-                  Reportado el {{ claim.created_at | date: 'mediumDate' }}
-                </p>
+          <!-- Refund Status / Insurance -->
+          <div appHoverLift class="glass-card rounded-2xl p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-4">
+              <div
+                class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary"
+              >
+                <ion-icon name="shield-checkmark-outline" class="text-xl"></ion-icon>
               </div>
-              <ion-icon name="chevron-forward" class="text-text-muted"></ion-icon>
+              <h3 class="font-bold text-text-primary">Estado de Garantía</h3>
+            </div>
+            <div class="flex-1">
+              <app-refund-status [bookingId]="booking()!.id"></app-refund-status>
             </div>
           </div>
-          }
-        </div>
-        }
+        </section>
 
-        <!-- Action Buttons for Reporting -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          @if (canReportDamage()) {
-          <a [routerLink]="['/bookings', booking()!.id, 'owner-damage-report']"
-            class="flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-dashed border-border-muted hover:border-error-400 hover:bg-error-50 text-text-secondary hover:text-error-700 transition-all group cursor-pointer">
-            <ion-icon name="alert-circle-outline"
-              class="text-2xl group-hover:scale-110 transition-transform"></ion-icon>
-            <span class="font-semibold">Reportar Daños</span>
-          </a>
-          }
-
-          @if (canReportClaim()) {
-          <a [routerLink]="['/bookings', booking()!.id, 'report-claim']"
-            class="flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-dashed border-border-muted hover:border-error-400 hover:bg-error-50 text-text-secondary hover:text-error-700 transition-all group cursor-pointer">
-            <ion-icon name="car-sport-outline"
-              class="text-2xl group-hover:scale-110 transition-transform"></ion-icon>
-            <span class="font-semibold">Reportar Siniestro</span>
-          </a>
-          }
-        </div>
-
-        <!-- Disputes List -->
-        <div appHoverLift class="glass-card rounded-2xl p-6">
-          <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
-            <ion-icon name="flag-outline" class="text-warning-600"></ion-icon>
-            Disputas
-          </h3>
-          <app-disputes-list
-            [bookingId]="booking()!.id"
-            [showCreateButton]="canCreateDispute()"
-            (createDispute)="showDisputeForm.set(true)">
-          </app-disputes-list>
-        </div>
-
-        <!-- Settlement Simulator (Owner Only) -->
-        @if (isOwner() && (booking()?.status === 'completed' || isReturnPhase())) {
-        <div appHoverLift class="glass-card rounded-2xl p-6">
-          <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
-            <ion-icon name="calculator-outline" class="text-info-600"></ion-icon>
-            Simulador de Liquidación
-          </h3>
-          <app-settlement-simulator [bookingId]="booking()!.id"></app-settlement-simulator>
-        </div>
-        }
-      </section>
-      }
-    </div>
-
-    <!-- ============================================================================================== -->
-    <!-- RIGHT COLUMN (ACTIONS & PAYMENTS) - Span 4 -->
-    <!-- ============================================================================================== -->
-    <div class="lg:col-span-4 space-y-6">
-      <!-- 1. STICKY ACTION CARD -->
-      <div class="sticky top-6 z-10 space-y-6">
-        <!-- Primary Action Card (Extracted Component) -->
-        <app-booking-actions-card
+        <!-- 4. Extensions Manager (Extracted Component) -->
+        <app-booking-extensions-manager
           [booking]="booking()!"
           [isOwner]="isOwner()"
           [isRenter]="isRenter()"
-          [needsPayment]="needsPayment()"
-          [canApproveBooking]="canApproveBooking()"
-          [canPerformCheckIn]="canPerformCheckIn()"
-          [canPerformCheckOut]="canPerformCheckOut()"
-          [canOwnerCheckIn]="canOwnerCheckIn()"
-          [canOwnerCheckOut]="canOwnerCheckOut()"
-          [canOwnerCancel]="canOwnerCancel()"
-          [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
-          (chatOpen)="openChatPanel()"
-          (cancelBooking)="cancelBooking($event)"
-          (ownerCancelBooking)="ownerCancelBooking()"
-          (approveBooking)="approveBooking()"
-          (rejectBooking)="rejectBooking()"
+          (bookingUpdated)="booking.set($event)"
         />
 
-        <!-- 2. AI Tools Panel - Glassmorphism -->
-        <div class="glass-panel rounded-2xl overflow-hidden p-0">
-          <div class="p-4 border-b border-white/20 bg-gradient-to-r from-info-500/10 to-cta-default/10">
-            <h3 class="font-bold text-info-900 flex items-center gap-2">
-              <ion-icon name="sparkles" class="text-info-500 animate-pulse"></ion-icon>
-              Asistente IA
-            </h3>
-          </div>
+        <!-- 5. Traffic Fines Manager (Extracted Component) -->
+        <app-booking-traffic-fines-manager
+          [booking]="booking()!"
+          [isOwner]="isOwner()"
+          [isRenter]="isRenter()"
+          (reportFineClicked)="showReportTrafficFineModal.set(true)"
+          (finesUpdated)="trafficFines.set($event)"
+        />
 
-          <app-ai-legal-panel [booking]="booking()!" [isExpanded]="expandedAiPanel() === 'legal'"
-            (togglePanel)="toggleAiPanel('legal')" />
+        <!-- 6. Damage & Disputes (Conditional) -->
+        @if (hasClaim() || canReportClaim() || isOwner()) {
+          <section class="space-y-6">
+            <div class="flex items-center justify-between px-1">
+              <h2 class="text-lg font-bold text-text-primary">Gestión de Incidentes</h2>
+            </div>
 
-          @if (showTripPlanner()) {
-          <app-ai-trip-panel [booking]="booking()!" [isExpanded]="expandedAiPanel() === 'trip'"
-            (togglePanel)="toggleAiPanel('trip')" />
-          }
+            <!-- Damage Comparison (if inspections exist) -->
+            @if (hasOwnerCheckIn() && hasCheckOut()) {
+              <div appHoverLift class="glass-card rounded-2xl p-6">
+                <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
+                  <ion-icon name="git-compare-outline" class="text-info-600"></ion-icon>
+                  Comparativa de Daños
+                </h3>
+                <app-damage-comparison [bookingId]="booking()!.id"></app-damage-comparison>
+              </div>
+            }
 
-          @if (showChecklistPanel()) {
-          <app-ai-checklist-panel [booking]="booking()!"
-            [inspectionType]="checklistInspectionType()"
-            [isExpanded]="expandedAiPanel() === 'checklist'"
-            (togglePanel)="toggleAiPanel('checklist')" />
-          }
-        </div>
+            <!-- Claims List -->
+            @if (hasClaim()) {
+              <div appHoverLift class="glass-card rounded-2xl p-6">
+                <h3 class="font-bold text-text-primary mb-4 text-error-600 flex items-center gap-2">
+                  <ion-icon name="warning-outline"></ion-icon>
+                  Siniestros Reportados
+                </h3>
+                <!-- Simple list of existing claims -->
+                @for (claim of bookingClaims(); track claim.id) {
+                  <div
+                    class="p-4 rounded-xl bg-surface-secondary border border-border-default mb-3 last:mb-0"
+                  >
+                    <div class="flex justify-between items-start">
+                      <div>
+                        <span
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-raised border border-border-default text-text-primary mb-2"
+                        >
+                          {{ getClaimStatusLabel(claim.status) }}
+                        </span>
+                        <p class="font-medium text-text-primary">{{ claim.description }}</p>
+                        <p class="text-sm text-text-secondary mt-1">
+                          Reportado el {{ claim.created_at | date: 'mediumDate' }}
+                        </p>
+                      </div>
+                      <ion-icon name="chevron-forward" class="text-text-muted"></ion-icon>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
 
-        <!-- 3. Reviews (If Completed) -->
-        @if (booking()?.status === 'completed') {
-        <app-review-management [booking]="booking()!"></app-review-management>
+            <!-- Action Buttons for Reporting -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              @if (canReportDamage()) {
+                <a
+                  [routerLink]="['/bookings', booking()!.id, 'owner-damage-report']"
+                  class="flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-dashed border-border-muted hover:border-error-400 hover:bg-error-50 text-text-secondary hover:text-error-700 transition-all group cursor-pointer"
+                >
+                  <ion-icon
+                    name="alert-circle-outline"
+                    class="text-2xl group-hover:scale-110 transition-transform"
+                  ></ion-icon>
+                  <span class="font-semibold">Reportar Daños</span>
+                </a>
+              }
+
+              @if (canReportClaim()) {
+                <a
+                  [routerLink]="['/bookings', booking()!.id, 'report-claim']"
+                  class="flex items-center justify-center gap-2 p-4 rounded-2xl border-2 border-dashed border-border-muted hover:border-error-400 hover:bg-error-50 text-text-secondary hover:text-error-700 transition-all group cursor-pointer"
+                >
+                  <ion-icon
+                    name="car-sport-outline"
+                    class="text-2xl group-hover:scale-110 transition-transform"
+                  ></ion-icon>
+                  <span class="font-semibold">Reportar Siniestro</span>
+                </a>
+              }
+            </div>
+
+            <!-- Disputes List -->
+            <div appHoverLift class="glass-card rounded-2xl p-6">
+              <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
+                <ion-icon name="flag-outline" class="text-warning-600"></ion-icon>
+                Disputas
+              </h3>
+              <app-disputes-list
+                [bookingId]="booking()!.id"
+                [showCreateButton]="canCreateDispute()"
+                (createDispute)="showDisputeForm.set(true)"
+              >
+              </app-disputes-list>
+            </div>
+
+            <!-- Settlement Simulator (Owner Only) -->
+            @if (isOwner() && (booking()?.status === 'completed' || isReturnPhase())) {
+              <div appHoverLift class="glass-card rounded-2xl p-6">
+                <h3 class="font-bold text-text-primary mb-4 flex items-center gap-2">
+                  <ion-icon name="calculator-outline" class="text-info-600"></ion-icon>
+                  Simulador de Liquidación
+                </h3>
+                <app-settlement-simulator [bookingId]="booking()!.id"></app-settlement-simulator>
+              </div>
+            }
+          </section>
         }
       </div>
+
+      <!-- ============================================================================================== -->
+      <!-- RIGHT COLUMN (ACTIONS & PAYMENTS) - Span 4 -->
+      <!-- ============================================================================================== -->
+      <div class="lg:col-span-4 space-y-6">
+        <!-- 1. STICKY ACTION CARD -->
+        <div class="sticky top-6 z-10 space-y-6">
+          <!-- Primary Action Card (Extracted Component) -->
+          <app-booking-actions-card
+            [booking]="booking()!"
+            [isOwner]="isOwner()"
+            [isRenter]="isRenter()"
+            [needsPayment]="needsPayment()"
+            [canApproveBooking]="canApproveBooking()"
+            [canPerformCheckIn]="canPerformCheckIn()"
+            [canPerformCheckOut]="canPerformCheckOut()"
+            [canOwnerCheckIn]="canOwnerCheckIn()"
+            [canOwnerCheckOut]="canOwnerCheckOut()"
+            [canOwnerCancel]="canOwnerCancel()"
+            [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
+            (chatOpen)="openChatPanel()"
+            (cancelBooking)="cancelBooking($event)"
+            (ownerCancelBooking)="ownerCancelBooking()"
+            (approveBooking)="approveBooking()"
+            (rejectBooking)="rejectBooking()"
+          />
+
+          <!-- 2. AI Tools Panel - Glassmorphism -->
+          <div class="glass-panel rounded-2xl overflow-hidden p-0">
+            <div
+              class="p-4 border-b border-white/20 bg-gradient-to-r from-info-500/10 to-cta-default/10"
+            >
+              <h3 class="font-bold text-info-900 flex items-center gap-2">
+                <ion-icon name="sparkles" class="text-info-500 animate-pulse"></ion-icon>
+                Asistente IA
+              </h3>
+            </div>
+
+            <app-ai-legal-panel
+              [booking]="booking()!"
+              [isExpanded]="expandedAiPanel() === 'legal'"
+              (togglePanel)="toggleAiPanel('legal')"
+            />
+
+            @if (showTripPlanner()) {
+              <app-ai-trip-panel
+                [booking]="booking()!"
+                [isExpanded]="expandedAiPanel() === 'trip'"
+                (togglePanel)="toggleAiPanel('trip')"
+              />
+            }
+
+            @if (showChecklistPanel()) {
+              <app-ai-checklist-panel
+                [booking]="booking()!"
+                [inspectionType]="checklistInspectionType()"
+                [isExpanded]="expandedAiPanel() === 'checklist'"
+                (togglePanel)="toggleAiPanel('checklist')"
+              />
+            }
+          </div>
+
+          <!-- 3. Reviews (If Completed) -->
+          @if (booking()?.status === 'completed') {
+            <app-review-management [booking]="booking()!"></app-review-management>
+          }
+        </div>
+      </div>
     </div>
-  </div>
   }
 </div>
 
@@ -720,45 +941,66 @@
 
 <!-- Chat Side Panel -->
 @if (booking()) {
-<app-side-panel [isOpen]="chatPanelOpen()"
-  [title]="'Chat con ' + (isOwner() ? 'Viajero' : 'Anfitrión')" width="min(450px, 100vw)"
-  (closed)="closeChatPanel()">
-  @if (carOwnerId()) {
-  <app-booking-chat [bookingId]="booking()!.id"
-    [recipientId]="isOwner() ? booking()!.renter_id : carOwnerId()!"
-    [recipientName]="isOwner() ? booking()!.renter_name || 'Viajero' : carOwnerName()"
-    [booking]="booking()" class="h-full"></app-booking-chat>
-  }
-</app-side-panel>
+  <app-side-panel
+    [isOpen]="chatPanelOpen()"
+    [title]="'Chat con ' + (isOwner() ? 'Viajero' : 'Anfitrión')"
+    width="min(450px, 100vw)"
+    (closed)="closeChatPanel()"
+  >
+    @if (carOwnerId()) {
+      <app-booking-chat
+        [bookingId]="booking()!.id"
+        [recipientId]="isOwner() ? booking()!.renter_id : carOwnerId()!"
+        [recipientName]="isOwner() ? booking()!.renter_name || 'Viajero' : carOwnerName()"
+        [booking]="booking()"
+        class="h-full"
+      ></app-booking-chat>
+    }
+  </app-side-panel>
 }
 
 <!-- Feature Modals -->
 @defer (when showDisputeForm()) {
-<app-dispute-form [isOpen]="showDisputeForm()" [bookingId]="booking()!.id"
-  (closeModal)="showDisputeForm.set(false)"
-  (disputeCreated)="onDisputeCreated()"></app-dispute-form>
+  <app-dispute-form
+    [isOpen]="showDisputeForm()"
+    [bookingId]="booking()!.id"
+    (closeModal)="showDisputeForm.set(false)"
+    (disputeCreated)="onDisputeCreated()"
+  ></app-dispute-form>
 }
 
 @defer (when showRefundForm()) {
-<app-refund-request [isOpen]="showRefundForm()" [bookingId]="booking()!.id"
-  (closeModal)="showRefundForm.set(false)"
-  (refundRequested)="onRefundRequested()"></app-refund-request>
+  <app-refund-request
+    [isOpen]="showRefundForm()"
+    [bookingId]="booking()!.id"
+    (closeModal)="showRefundForm.set(false)"
+    (refundRequested)="onRefundRequested()"
+  ></app-refund-request>
 }
 
 @defer (when showReportTrafficFineModal()) {
-<app-report-traffic-fine [isOpen]="showReportTrafficFineModal()" [booking]="booking()!"
-  (closeModal)="showReportTrafficFineModal.set(false)"
-  (fineReported)="onTrafficFineReported($event)"></app-report-traffic-fine>
+  <app-report-traffic-fine
+    [isOpen]="showReportTrafficFineModal()"
+    [booking]="booking()!"
+    (closeModal)="showReportTrafficFineModal.set(false)"
+    (fineReported)="onTrafficFineReported($event)"
+  ></app-report-traffic-fine>
 }
 
 @defer (when showReportOwnerNoShowModal()) {
-<app-report-owner-no-show [isOpen]="showReportOwnerNoShowModal()" [booking]="booking()!"
-  (closeModal)="showReportOwnerNoShowModal.set(false)"
-  (noShowReported)="onOwnerNoShowReported($event)"></app-report-owner-no-show>
+  <app-report-owner-no-show
+    [isOpen]="showReportOwnerNoShowModal()"
+    [booking]="booking()!"
+    (closeModal)="showReportOwnerNoShowModal.set(false)"
+    (noShowReported)="onOwnerNoShowReported($event)"
+  ></app-report-owner-no-show>
 }
 
 @defer (when showReportRenterNoShowModal()) {
-<app-report-renter-no-show [isOpen]="showReportRenterNoShowModal()" [booking]="booking()!"
-  (closeModal)="showReportRenterNoShowModal.set(false)"
-  (noShowReported)="onRenterNoShowReported($event)"></app-report-renter-no-show>
+  <app-report-renter-no-show
+    [isOpen]="showReportRenterNoShowModal()"
+    [booking]="booking()!"
+    (closeModal)="showReportRenterNoShowModal.set(false)"
+    (noShowReported)="onRenterNoShowReported($event)"
+  ></app-report-renter-no-show>
 }

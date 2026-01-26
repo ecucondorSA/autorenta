@@ -47,7 +47,9 @@ export class BiometricAuthService {
       const biometricResult = await NativeBiometric.isAvailable();
       console.log('[Biometric] isAvailable:', JSON.stringify(biometricResult));
 
-      const credentialsResult = await NativeBiometric.isCredentialsSaved({ server: CREDENTIAL_SERVER }).catch((err: unknown) => {
+      const credentialsResult = await NativeBiometric.isCredentialsSaved({
+        server: CREDENTIAL_SERVER,
+      }).catch((err: unknown) => {
         console.log('[Biometric] isCredentialsSaved error:', err);
         return { isSaved: false };
       });
@@ -62,7 +64,14 @@ export class BiometricAuthService {
       this.hasStoredCredentials.set(hasCredentials);
       this.isReady.set(biometricResult.isAvailable && hasCredentials);
 
-      console.log('[Biometric] READY:', this.isReady(), 'available:', biometricResult.isAvailable, 'hasCreds:', hasCredentials);
+      console.log(
+        '[Biometric] READY:',
+        this.isReady(),
+        'available:',
+        biometricResult.isAvailable,
+        'hasCreds:',
+        hasCredentials,
+      );
 
       return {
         available: biometricResult.isAvailable,

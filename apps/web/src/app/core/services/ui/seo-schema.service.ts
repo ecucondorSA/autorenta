@@ -1,5 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { environment } from '@environment';
 import type { FAQItem } from '@core/models';
 
 /**
@@ -42,9 +43,12 @@ export class SeoSchemaService {
         areaServed: 'AR',
       },
       sameAs: [
-        'https://www.instagram.com/autorentar',
-        'https://www.facebook.com/autorentar',
-        'https://twitter.com/autorentar',
+        environment.socialMedia.instagram,
+        environment.socialMedia.facebook,
+        environment.socialMedia.twitter,
+        environment.socialMedia.linkedin,
+        environment.socialMedia.tiktok,
+        environment.socialMedia.youtube,
       ],
       address: {
         '@type': 'PostalAddress',
@@ -189,14 +193,14 @@ export class SeoSchemaService {
       },
       ...(car.ratingValue &&
         car.reviewCount && {
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: car.ratingValue,
-            reviewCount: car.reviewCount,
-            bestRating: 5,
-            worstRating: 1,
-          },
-        }),
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: car.ratingValue,
+          reviewCount: car.reviewCount,
+          bestRating: 5,
+          worstRating: 1,
+        },
+      }),
     };
 
     this.addSchema('product', schema);

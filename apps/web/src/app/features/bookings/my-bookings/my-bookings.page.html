@@ -5,7 +5,8 @@
       <div>
         <div class="flex items-center gap-2 mb-1">
           <span
-            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cta-default/10 text-cta-default">
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cta-default/10 text-cta-default"
+          >
             Mis reservas
           </span>
           <span class="text-text-secondary/40">•</span>
@@ -18,8 +19,11 @@
           Seguimiento claro de cada reserva, con estados y acciones visibles en un solo lugar.
         </p>
       </div>
-      <a routerLink="/cars" appPressScale
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cta-default text-cta-text font-semibold text-sm hover:bg-cta-hover transition-colors">
+      <a
+        routerLink="/cars"
+        appPressScale
+        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cta-default text-cta-text font-semibold text-sm hover:bg-cta-hover transition-colors"
+      >
         <app-icon name="car-outline" [size]="18"></app-icon>
         <span>Buscar autos</span>
       </a>
@@ -30,19 +34,28 @@
   <div class="container-page px-4 sm:px-6 mb-6">
     <div class="flex flex-wrap sm:flex-nowrap gap-2 sm:overflow-x-auto pb-2 scrollbar-hide">
       @for (filter of statusFilters; track filter) {
-      <button (click)="setStatusFilter(filter)" appPressScale
-        class="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors border"
-        [class]="statusFilter() === filter
-            ? 'bg-cta-default text-cta-text border-cta-default shadow-sm'
-            : 'bg-surface-raised text-text-secondary border-border-default hover:bg-surface-secondary hover:text-text-primary'">
-        <span>{{ getFilterLabel(filter) }}</span>
-        <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold"
-          [class]="statusFilter() === filter
-              ? 'bg-white/20 text-cta-text'
-              : 'bg-surface-secondary text-text-secondary'">
-          {{ statusCounts()[filter] }}
-        </span>
-      </button>
+        <button
+          (click)="setStatusFilter(filter)"
+          appPressScale
+          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors border"
+          [class]="
+            statusFilter() === filter
+              ? 'bg-cta-default text-cta-text border-cta-default shadow-sm'
+              : 'bg-surface-raised text-text-secondary border-border-default hover:bg-surface-secondary hover:text-text-primary'
+          "
+        >
+          <span>{{ getFilterLabel(filter) }}</span>
+          <span
+            class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold"
+            [class]="
+              statusFilter() === filter
+                ? 'bg-white/20 text-cta-text'
+                : 'bg-surface-secondary text-text-secondary'
+            "
+          >
+            {{ statusCounts()[filter] }}
+          </span>
+        </button>
       }
     </div>
   </div>
@@ -50,206 +63,302 @@
   <div class="container-page px-4 sm:px-6 space-y-6">
     <!-- Loading state (Skeletons) -->
     @if (loading() && !error()) {
-    <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
-      @for (_ of [1, 2, 3]; track _) {
-      <div class="h-24 rounded-2xl glass bg-gradient-to-r from-surface-secondary/50 to-surface-secondary/20"></div>
-      }
-    </div>
-    <div class="space-y-4">
-      @for (_ of [1, 2]; track _) {
-      <div class="rounded-2xl glass-card overflow-hidden">
-        <div class="h-16 bg-gradient-to-r from-surface-secondary/50 to-surface-secondary/20"></div>
-        <div class="p-3 space-y-3">
-          @for (__ of [1, 2]; track __) {
-          <div class="h-24 rounded-xl bg-gradient-to-r from-surface-raised/50 to-surface-raised/20"></div>
-          }
-        </div>
+      <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
+        @for (_ of [1, 2, 3]; track _) {
+          <div
+            class="h-24 rounded-2xl glass bg-gradient-to-r from-surface-secondary/50 to-surface-secondary/20"
+          ></div>
+        }
       </div>
-      }
-    </div>
+      <div class="space-y-4">
+        @for (_ of [1, 2]; track _) {
+          <div class="rounded-2xl glass-card overflow-hidden">
+            <div
+              class="h-16 bg-gradient-to-r from-surface-secondary/50 to-surface-secondary/20"
+            ></div>
+            <div class="p-3 space-y-3">
+              @for (__ of [1, 2]; track __) {
+                <div
+                  class="h-24 rounded-xl bg-gradient-to-r from-surface-raised/50 to-surface-raised/20"
+                ></div>
+              }
+            </div>
+          </div>
+        }
+      </div>
     }
 
     <!-- Error message -->
     @if (error()) {
-    <div class="info-card-warm">
-      <p class="font-semibold text-text-primary">Error al cargar reservas</p>
-      <p class="mt-1 text-text-secondary">{{ error() }}</p>
-      <button (click)="loadBookings()"
-        class="mt-3 px-3 py-2 bg-warning-light text-cta-text rounded-xl text-xs font-semibold hover:bg-cta-default transition-base">
-        Reintentar
-      </button>
-    </div>
+      <div class="info-card-warm">
+        <p class="font-semibold text-text-primary">Error al cargar reservas</p>
+        <p class="mt-1 text-text-secondary">{{ error() }}</p>
+        <button
+          (click)="loadBookings()"
+          class="mt-3 px-3 py-2 bg-warning-light text-cta-text rounded-xl text-xs font-semibold hover:bg-cta-default transition-base"
+        >
+          Reintentar
+        </button>
+      </div>
     }
 
     <!-- Empty state -->
     @if (!loading() && !error() && bookings().length === 0) {
-    <div class="text-center py-16">
-      <img src="/assets/images/empty-states/empty-bookings.svg" alt="No hay reservas" class="w-48 h-48 mx-auto mb-6"
-        width="192" height="192" />
-      <h3 class="text-xl font-semibold text-text-primary mb-2 font-satoshi">
-        No tenés reservas todavía
-      </h3>
-      <p class="text-text-secondary mb-6">Explorá autos disponibles y hacé tu primera reserva</p>
-      <a routerLink="/cars"
-        class="inline-flex items-center gap-2 px-6 py-3 bg-cta-default hover:bg-cta-hover text-cta-text rounded-xl font-semibold transition-colors">
-        <app-icon name="car-outline" [size]="20"></app-icon>
-        <span class="pr-0.5 font-friendly">Explorar Autos</span>
-      </a>
-    </div>
+      <div class="text-center py-16">
+        <img
+          src="/assets/images/empty-states/empty-bookings.svg"
+          alt="No hay reservas"
+          class="w-48 h-48 mx-auto mb-6"
+          width="192"
+          height="192"
+        />
+        <h3 class="text-xl font-semibold text-text-primary mb-2 font-satoshi">
+          No tenés reservas todavía
+        </h3>
+        <p class="text-text-secondary mb-6">Explorá autos disponibles y hacé tu primera reserva</p>
+        <a
+          routerLink="/cars"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-cta-default hover:bg-cta-hover text-cta-text rounded-xl font-semibold transition-colors"
+        >
+          <app-icon name="car-outline" [size]="20"></app-icon>
+          <span class="pr-0.5 font-friendly">Explorar Autos</span>
+        </a>
+      </div>
     }
 
     <!-- Main Content (when bookings exist) -->
     @if (!loading() && !error() && bookings().length > 0) {
-    <!-- ===== DASHBOARD SUMMARY (Bento Grid) ===== -->
-    <div class="summary-grid grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-      <!-- Action Required Card -->
-      <button (click)="dashboardStats().actionRequired > 0 && focusSection('action-required')"
-        [disabled]="dashboardStats().actionRequired === 0"
-        class="summary-card glass-lite col-span-2 sm:col-span-1 relative glass-card-elevated p-4 rounded-2xl text-left"
-        [class.opacity-50]="dashboardStats().actionRequired === 0"
-        [class.cursor-not-allowed]="dashboardStats().actionRequired === 0"
-        [class]="dashboardStats().actionRequired > 0 ? 'ring-2 ring-warning-500/30 bg-warning-bg/30' : ''">
-        <div class="text-2xl mb-2">⚠️</div>
-        <p class="text-balance-lg font-bold text-text-primary">{{ dashboardStats().actionRequired }}</p>
-        <p class="text-xs text-text-secondary mt-1">
-          <span class="hidden sm:inline">Requieren acción</span>
-          <span class="sm:hidden">Acción</span>
-        </p>
-        @if (dashboardStats().actionRequired > 0) {
-        <!-- FIX: Removed animate-ping to prevent CLS/layout shift issues -->
-        <span
-          class="absolute top-3 right-3 h-3 w-3 rounded-full bg-warning-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]"></span>
-        }
-      </button>
-
-      <!-- Active Card -->
-      <button (click)="dashboardStats().active > 0 && focusSection('active')" [disabled]="dashboardStats().active === 0"
-        class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left"
-        [class.opacity-50]="dashboardStats().active === 0" [class.cursor-not-allowed]="dashboardStats().active === 0"
-        [class]="dashboardStats().active > 0 ? 'ring-2 ring-success-500/30 bg-success-bg/30' : ''">
-        <div class="w-8 h-8 rounded-full bg-success-bg flex items-center justify-center mb-2">
-          <svg class="w-5 h-5 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </div>
-        <p class="text-balance-lg font-bold text-text-primary">{{ dashboardStats().active }}</p>
-        <p class="text-xs text-text-secondary mt-1">
-          <span class="hidden sm:inline">Activas hoy</span>
-          <span class="sm:hidden">Activas</span>
-        </p>
-      </button>
-
-      <!-- History Card -->
-      <button (click)="dashboardStats().history > 0 && focusSection('history')"
-        [disabled]="dashboardStats().history === 0"
-        class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left"
-        [class.opacity-50]="dashboardStats().history === 0" [class.cursor-not-allowed]="dashboardStats().history === 0">
-        <div class="w-8 h-8 rounded-full bg-surface-secondary flex items-center justify-center mb-2">
-          <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke-width="1.75" />
-            <rect x="8" y="2" width="8" height="4" rx="1" stroke-width="1.75" />
-            <path d="M8 10h8M8 14h8M8 18h5" stroke-width="1.5" stroke-linecap="round" />
-          </svg>
-        </div>
-        <p class="text-balance-lg font-bold text-text-primary">{{ dashboardStats().history }}</p>
-        <p class="text-xs text-text-secondary mt-1">Historial</p>
-      </button>
-    </div>
-    <!-- ===== COLLAPSIBLE SECTIONS ===== -->
-    <div class="space-y-4">
-      @for (section of bookingsBySection(); track section.id; let i = $index) {
-      <!-- Section (only show if has bookings) -->
-      @if (section.count > 0) {
-      <!-- FIX: Removed appStaggerEnter to prevent continuous CLS/layout shifts -->
-      <div class="glass-lite glass-card rounded-2xl overflow-hidden">
-        <!-- Section Header (clickable) -->
-        <button (click)="toggleSection(section.id)"
-          class="w-full flex items-center justify-between p-4 text-left transition-colors hover:bg-surface-secondary/30"
-          [class]="section.id === 'action-required' ? 'bg-warning-bg/20' : section.id === 'active' ? 'bg-success-bg/20' : 'bg-surface-secondary/10'">
-          <div class="flex items-center gap-3">
-            <span class="text-xl">{{ section.icon }}</span>
-            <div>
-              <h3 class="section-title text-base font-semibold text-text-primary font-satoshi">
-                {{ section.title }}
-              </h3>
-              <p class="text-xs text-text-secondary">
-                {{ section.count }} {{ section.count === 1 ? 'reserva' : 'reservas' }}
-              </p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            @if (section.id === 'action-required' && section.count > 0) {
-            <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-warning-500 text-white">
-              Acción
-            </span>
-            }
-            <svg class="w-5 h-5 text-text-secondary" [class.rotate-180]="section.expanded" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
+      <!-- ===== DASHBOARD SUMMARY (Bento Grid) ===== -->
+      <div class="summary-grid grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+        <!-- Action Required Card -->
+        <button
+          (click)="dashboardStats().actionRequired > 0 && focusSection('action-required')"
+          [disabled]="dashboardStats().actionRequired === 0"
+          class="summary-card glass-lite col-span-2 sm:col-span-1 relative glass-card-elevated p-4 rounded-2xl text-left"
+          [class.opacity-50]="dashboardStats().actionRequired === 0"
+          [class.cursor-not-allowed]="dashboardStats().actionRequired === 0"
+          [class]="
+            dashboardStats().actionRequired > 0 ? 'ring-2 ring-warning-500/30 bg-warning-bg/30' : ''
+          "
+        >
+          <div class="text-2xl mb-2">⚠️</div>
+          <p class="text-balance-lg font-bold text-text-primary">
+            {{ dashboardStats().actionRequired }}
+          </p>
+          <p class="text-xs text-text-secondary mt-1">
+            <span class="hidden sm:inline">Requieren acción</span>
+            <span class="sm:hidden">Acción</span>
+          </p>
+          @if (dashboardStats().actionRequired > 0) {
+            <!-- FIX: Removed animate-ping to prevent CLS/layout shift issues -->
+            <span
+              class="absolute top-3 right-3 h-3 w-3 rounded-full bg-warning-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]"
+            ></span>
+          }
         </button>
 
-        <!-- Section Content (simple show/hide - no animation to prevent CLS) -->
-        @if (section.expanded) {
-        <div class="p-3 pt-0 space-y-3">
-          <!-- Use Virtual Scrolling for History section with many items -->
-          @if (section.id === 'history' && section.count > 10) {
-          <cdk-virtual-scroll-viewport itemSize="100" class="h-[400px]">
-            <div class="space-y-3">
-              <ng-container *cdkVirtualFor="let booking of section.bookings">
-                <ng-container *ngTemplateOutlet="bookingCard; context: { $implicit: booking }"></ng-container>
-              </ng-container>
-            </div>
-          </cdk-virtual-scroll-viewport>
-          } @else {
-          <div class="space-y-3">
-            @for (booking of section.bookings; track booking.id) {
-            <ng-container *ngTemplateOutlet="bookingCard; context: { $implicit: booking }"></ng-container>
-            }
+        <!-- Active Card -->
+        <button
+          (click)="dashboardStats().active > 0 && focusSection('active')"
+          [disabled]="dashboardStats().active === 0"
+          class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left"
+          [class.opacity-50]="dashboardStats().active === 0"
+          [class.cursor-not-allowed]="dashboardStats().active === 0"
+          [class]="dashboardStats().active > 0 ? 'ring-2 ring-success-500/30 bg-success-bg/30' : ''"
+        >
+          <div class="w-8 h-8 rounded-full bg-success-bg flex items-center justify-center mb-2">
+            <svg
+              class="w-5 h-5 text-success-strong"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M20 6L9 17l-5-5"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </div>
+          <p class="text-balance-lg font-bold text-text-primary">{{ dashboardStats().active }}</p>
+          <p class="text-xs text-text-secondary mt-1">
+            <span class="hidden sm:inline">Activas hoy</span>
+            <span class="sm:hidden">Activas</span>
+          </p>
+        </button>
+
+        <!-- History Card -->
+        <button
+          (click)="dashboardStats().history > 0 && focusSection('history')"
+          [disabled]="dashboardStats().history === 0"
+          class="summary-card glass-lite glass-card-elevated p-4 rounded-2xl text-left"
+          [class.opacity-50]="dashboardStats().history === 0"
+          [class.cursor-not-allowed]="dashboardStats().history === 0"
+        >
+          <div
+            class="w-8 h-8 rounded-full bg-surface-secondary flex items-center justify-center mb-2"
+          >
+            <svg
+              class="w-5 h-5 text-text-secondary"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+                stroke-width="1.75"
+              />
+              <rect x="8" y="2" width="8" height="4" rx="1" stroke-width="1.75" />
+              <path d="M8 10h8M8 14h8M8 18h5" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </div>
+          <p class="text-balance-lg font-bold text-text-primary">{{ dashboardStats().history }}</p>
+          <p class="text-xs text-text-secondary mt-1">Historial</p>
+        </button>
+      </div>
+      <!-- ===== COLLAPSIBLE SECTIONS ===== -->
+      <div class="space-y-4">
+        @for (section of bookingsBySection(); track section.id; let i = $index) {
+          <!-- Section (only show if has bookings) -->
+          @if (section.count > 0) {
+            <!-- FIX: Removed appStaggerEnter to prevent continuous CLS/layout shifts -->
+            <div class="glass-lite glass-card rounded-2xl overflow-hidden">
+              <!-- Section Header (clickable) -->
+              <button
+                (click)="toggleSection(section.id)"
+                class="w-full flex items-center justify-between p-4 text-left transition-colors hover:bg-surface-secondary/30"
+                [class]="
+                  section.id === 'action-required'
+                    ? 'bg-warning-bg/20'
+                    : section.id === 'active'
+                      ? 'bg-success-bg/20'
+                      : 'bg-surface-secondary/10'
+                "
+              >
+                <div class="flex items-center gap-3">
+                  <span class="text-xl">{{ section.icon }}</span>
+                  <div>
+                    <h3
+                      class="section-title text-base font-semibold text-text-primary font-satoshi"
+                    >
+                      {{ section.title }}
+                    </h3>
+                    <p class="text-xs text-text-secondary">
+                      {{ section.count }} {{ section.count === 1 ? 'reserva' : 'reservas' }}
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  @if (section.id === 'action-required' && section.count > 0) {
+                    <span
+                      class="px-2 py-0.5 rounded-full text-xs font-medium bg-warning-500 text-white"
+                    >
+                      Acción
+                    </span>
+                  }
+                  <svg
+                    class="w-5 h-5 text-text-secondary"
+                    [class.rotate-180]="section.expanded"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </button>
+
+              <!-- Section Content (simple show/hide - no animation to prevent CLS) -->
+              @if (section.expanded) {
+                <div class="p-3 pt-0 space-y-3">
+                  <!-- Use Virtual Scrolling for History section with many items -->
+                  @if (section.id === 'history' && section.count > 10) {
+                    <cdk-virtual-scroll-viewport itemSize="100" class="h-[400px]">
+                      <div class="space-y-3">
+                        <ng-container *cdkVirtualFor="let booking of section.bookings">
+                          <ng-container
+                            *ngTemplateOutlet="bookingCard; context: { $implicit: booking }"
+                          ></ng-container>
+                        </ng-container>
+                      </div>
+                    </cdk-virtual-scroll-viewport>
+                  } @else {
+                    <div class="space-y-3">
+                      @for (booking of section.bookings; track booking.id) {
+                        <ng-container
+                          *ngTemplateOutlet="bookingCard; context: { $implicit: booking }"
+                        ></ng-container>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </div>
           }
-        </div>
         }
       </div>
+      <!-- Show All Button (when using filters) -->
+      @if (statusFilter() !== 'all') {
+        <div class="text-center pt-4">
+          <button
+            (click)="setStatusFilter('all'); expandAllSections()"
+            appPressScale
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-surface-secondary text-text-primary font-medium text-sm hover:bg-surface-raised transition-colors"
+          >
+            Ver todas las reservas ({{ dashboardStats().total }})
+          </button>
+        </div>
       }
-      }
-    </div>
-    <!-- Show All Button (when using filters) -->
-    @if (statusFilter() !== 'all') {
-    <div class="text-center pt-4">
-      <button (click)="setStatusFilter('all'); expandAllSections()" appPressScale
-        class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-surface-secondary text-text-primary font-medium text-sm hover:bg-surface-raised transition-colors">
-        Ver todas las reservas ({{ dashboardStats().total }})
-      </button>
-    </div>
-    }
     }
   </div>
 </section>
 
 <!-- ===== BOOKING CARD TEMPLATE (COMPACT) ===== -->
 <ng-template #bookingCard let-booking>
-  <article class="glass-card rounded-xl overflow-hidden border-l-4 hover:shadow-md transition-shadow"
-    [ngClass]="statusBorderClass(booking)" data-testid="booking-card">
+  <article
+    class="glass-card rounded-xl overflow-hidden border-l-4 hover:shadow-md transition-shadow"
+    [ngClass]="statusBorderClass(booking)"
+    data-testid="booking-card"
+  >
     <a [routerLink]="['/bookings', booking.id]" class="flex gap-3 p-3">
       <!-- Thumbnail -->
-      <div class="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-surface-secondary">
+      <div
+        class="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-surface-secondary"
+      >
         @if (booking.main_photo_url) {
-        <img [src]="booking.main_photo_url" [alt]="booking.car_title" loading="lazy" class="w-full h-full object-cover"
-          width="96" height="96" />
+          <img
+            [src]="booking.main_photo_url"
+            [alt]="booking.car_title"
+            loading="lazy"
+            class="w-full h-full object-cover"
+            width="96"
+            height="96"
+          />
         } @else {
-        <div class="w-full h-full flex items-center justify-center">
-          <svg class="w-8 h-8 text-text-secondary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round" />
-            <circle cx="7.5" cy="17" r="1.5" stroke-width="1.5" />
-            <circle cx="16.5" cy="17" r="1.5" stroke-width="1.5" />
-          </svg>
-        </div>
+          <div class="w-full h-full flex items-center justify-center">
+            <svg
+              class="w-8 h-8 text-text-secondary/40"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round" />
+              <circle cx="7.5" cy="17" r="1.5" stroke-width="1.5" />
+              <circle cx="16.5" cy="17" r="1.5" stroke-width="1.5" />
+            </svg>
+          </div>
         }
         <!-- Status Icon Overlay -->
-        <div class="absolute bottom-1 right-1 w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-sm"
-          [ngClass]="statusIconBgClass(booking)">
+        <div
+          class="absolute bottom-1 right-1 w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-sm"
+          [ngClass]="statusIconBgClass(booking)"
+        >
           {{ statusIcon(booking) }}
         </div>
       </div>
@@ -264,14 +373,16 @@
             </h3>
             <p class="text-xs text-text-secondary mt-0.5">{{ rangeLabel(booking) }}</p>
             @if (booking.car_city || booking.car_province) {
-            <p class="text-xs text-text-secondary/70 truncate">
-              {{ booking.car_city || '' }}{{ booking.car_city && booking.car_province ? ', ' : '' }}{{
-              booking.car_province || '' }}
-            </p>
+              <p class="text-xs text-text-secondary/70 truncate">
+                {{ booking.car_city || '' }}{{ booking.car_city && booking.car_province ? ', ' : ''
+                }}{{ booking.car_province || '' }}
+              </p>
             }
           </div>
-          <span class="flex-shrink-0 px-2 py-0.5 rounded-full text-xs font-medium"
-            [ngClass]="statusBadgeCompactClass(booking)">
+          <span
+            class="flex-shrink-0 px-2 py-0.5 rounded-full text-xs font-medium"
+            [ngClass]="statusBadgeCompactClass(booking)"
+          >
             {{ statusLabelShort(booking) }}
           </span>
         </div>
@@ -282,24 +393,24 @@
             {{ booking.total_amount | money }}
           </p>
           @if (isPendingApproval(booking)) {
-          <span class="text-xs text-warning-strong font-medium">Esperando respuesta →</span>
+            <span class="text-xs text-warning-strong font-medium">Esperando respuesta →</span>
           }
           @if (canCompletePay(booking)) {
-          <span class="text-xs text-warning-strong font-medium">Pago pendiente →</span>
+            <span class="text-xs text-warning-strong font-medium">Pago pendiente →</span>
           }
           @if (isPendingReview(booking)) {
-          <span class="text-xs text-info-strong font-medium">Confirmar devolución →</span>
+            <span class="text-xs text-info-strong font-medium">Confirmar devolución →</span>
           }
           @if (getEffectiveStatus(booking) === 'expired') {
-          <span class="text-xs text-error-strong font-medium">Vencida</span>
+            <span class="text-xs text-error-strong font-medium">Vencida</span>
           }
           @if (
-          !canCompletePay(booking) &&
-          !isPendingApproval(booking) &&
-          !isPendingReview(booking) &&
-          getEffectiveStatus(booking) !== 'expired'
+            !canCompletePay(booking) &&
+            !isPendingApproval(booking) &&
+            !isPendingReview(booking) &&
+            getEffectiveStatus(booking) !== 'expired'
           ) {
-          <span class="text-xs text-text-secondary">Ver detalle →</span>
+            <span class="text-xs text-text-secondary">Ver detalle →</span>
           }
         </div>
       </div>
@@ -307,24 +418,30 @@
 
     <!-- Quick Pay Button (only for pending that can still be paid - non-wallet) -->
     @if (canCompletePay(booking)) {
-    <div class="px-3 pb-3">
-      <button [routerLink]="['/bookings/request']" [queryParams]="{ bookingId: booking.id }"
-        (click)="$event.stopPropagation()" appPressScale
-        class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-cta-default text-cta-text text-sm font-semibold hover:bg-cta-hover transition-colors">
-        <app-icon name="credit-card" [size]="14" /> Completar Pago
-      </button>
-    </div>
+      <div class="px-3 pb-3">
+        <button
+          [routerLink]="['/bookings/request']"
+          [queryParams]="{ bookingId: booking.id }"
+          (click)="$event.stopPropagation()"
+          appPressScale
+          class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-cta-default text-cta-text text-sm font-semibold hover:bg-cta-hover transition-colors"
+        >
+          <app-icon name="credit-card" [size]="14" /> Completar Pago
+        </button>
+      </div>
     }
 
     <!-- P2P Status Indicator (wallet bookings pending approval) -->
     @if (isPendingApproval(booking)) {
-    <div class="px-3 pb-3">
-      <div class="flex items-center gap-2 text-xs text-warning-strong bg-warning-bg/30 rounded-lg px-3 py-2">
-        <!-- FIX: Removed animate-pulse to prevent CLS issues -->
-        <span class="w-2 h-2 rounded-full bg-warning-500"></span>
-        <span>El propietario está revisando tu solicitud</span>
+      <div class="px-3 pb-3">
+        <div
+          class="flex items-center gap-2 text-xs text-warning-strong bg-warning-bg/30 rounded-lg px-3 py-2"
+        >
+          <!-- FIX: Removed animate-pulse to prevent CLS issues -->
+          <span class="w-2 h-2 rounded-full bg-warning-500"></span>
+          <span>El propietario está revisando tu solicitud</span>
+        </div>
       </div>
-    </div>
     }
   </article>
 </ng-template>

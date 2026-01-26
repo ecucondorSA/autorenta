@@ -73,9 +73,7 @@ import {
         @if (!loading() && hasPendingRequests()) {
           <div class="space-y-3">
             @for (request of pendingRequests(); track request.id) {
-              <div
-                class="p-4 rounded-xl border border-border-default bg-surface-secondary"
-              >
+              <div class="p-4 rounded-xl border border-border-default bg-surface-secondary">
                 <div class="flex items-start justify-between gap-4">
                   <div class="flex-1">
                     <div class="flex items-center gap-2 mb-2">
@@ -91,21 +89,24 @@ import {
                     <p class="text-sm text-text-primary font-medium mb-1">
                       Nueva fecha de fin:
                       <span class="font-bold">{{
-                        (request.requested_end_at ?? request.new_end_at) | date: 'EEEE d MMMM, HH:mm'
+                        request.requested_end_at ?? request.new_end_at | date: 'EEEE d MMMM, HH:mm'
                       }}</span>
                     </p>
 
                     <p class="text-xs text-text-secondary">
                       Costo adicional estimado:
                       <span class="font-semibold text-text-primary">
-                        {{ (request.additional_cost_cents ?? request.additional_amount_cents ?? request.estimated_cost_amount ?? 0) / 100 | currency: 'USD' : 'symbol' : '1.0-0' }}
+                        {{
+                          (request.additional_cost_cents ??
+                            request.additional_amount_cents ??
+                            request.estimated_cost_amount ??
+                            0) / 100 | currency: 'USD' : 'symbol' : '1.0-0'
+                        }}
                       </span>
                     </p>
 
                     @if (request.reason) {
-                      <p class="text-xs text-text-muted mt-2 italic">
-                        "{{ request.reason }}"
-                      </p>
+                      <p class="text-xs text-text-muted mt-2 italic">"{{ request.reason }}"</p>
                     }
                   </div>
 
@@ -222,7 +223,7 @@ export class BookingExtensionsManagerComponent implements OnInit {
 
     if (
       !confirm(
-        `¿Confirmas solicitar extender la reserva hasta el ${newEndDate.toLocaleDateString()}? El anfitrión deberá aprobarla.`
+        `¿Confirmas solicitar extender la reserva hasta el ${newEndDate.toLocaleDateString()}? El anfitrión deberá aprobarla.`,
       )
     ) {
       return;
@@ -233,7 +234,7 @@ export class BookingExtensionsManagerComponent implements OnInit {
       const result = await this.bookingsService.requestExtension(booking.id, newEndDate);
       if (result.success) {
         alert(
-          `Solicitud de extensión enviada exitosamente por un costo estimado de ${result.additionalCost}. Esperando aprobación del anfitrión.`
+          `Solicitud de extensión enviada exitosamente por un costo estimado de ${result.additionalCost}. Esperando aprobación del anfitrión.`,
         );
         await this.loadPendingRequests();
 

@@ -451,15 +451,14 @@
                 <!-- Document Front -->
                 <div>
                   <p class="text-sm text-text-secondary mb-2">Frente del Documento</p>
-                  <a
-                    [href]="documentFrontUrl()"
-                    target="_blank"
-                    class="block"
-                  >
+                  <a [href]="documentFrontUrl()" target="_blank" class="block">
                     <img
                       [src]="documentFrontUrl()"
                       alt="Frente del documento"
-                      class="w-full h-48 object-cover rounded-lg border border-border-muted hover:opacity-75 transition-opacity cursor-pointer" width="400" height="192" />
+                      class="w-full h-48 object-cover rounded-lg border border-border-muted hover:opacity-75 transition-opacity cursor-pointer"
+                      width="400"
+                      height="192"
+                    />
                   </a>
                 </div>
 
@@ -467,15 +466,14 @@
                 @if (selectedVerification()!.document_back_url) {
                   <div>
                     <p class="text-sm text-text-secondary mb-2">Dorso del Documento</p>
-                    <a
-                      [href]="documentBackUrl()"
-                      target="_blank"
-                      class="block"
-                    >
+                    <a [href]="documentBackUrl()" target="_blank" class="block">
                       <img
                         [src]="documentBackUrl()"
                         alt="Dorso del documento"
-                        class="w-full h-48 object-cover rounded-lg border border-border-muted hover:opacity-75 transition-opacity cursor-pointer" width="400" height="192" />
+                        class="w-full h-48 object-cover rounded-lg border border-border-muted hover:opacity-75 transition-opacity cursor-pointer"
+                        width="400"
+                        height="192"
+                      />
                     </a>
                   </div>
                 }
@@ -549,15 +547,14 @@
                 Selfie con Documento (Nivel 3)
               </h4>
               <div class="max-w-md">
-                <a
-                  [href]="selfieUrl()"
-                  target="_blank"
-                  class="block"
-                >
+                <a [href]="selfieUrl()" target="_blank" class="block">
                   <img
                     [src]="selfieUrl()"
                     alt="Selfie"
-                    class="w-full h-64 object-cover rounded-lg border border-border-muted hover:opacity-75 transition-opacity cursor-pointer" width="400" height="256" />
+                    class="w-full h-64 object-cover rounded-lg border border-border-muted hover:opacity-75 transition-opacity cursor-pointer"
+                    width="400"
+                    height="256"
+                  />
                 </a>
               </div>
 

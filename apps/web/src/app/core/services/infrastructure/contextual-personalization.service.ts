@@ -136,9 +136,12 @@ export class ContextualPersonalizationService implements OnDestroy {
     await this.loadWeather();
 
     // Actualizar contexto cada 5 minutos
-    this.updateInterval = setInterval(() => {
-      this.updateContext();
-    }, 5 * 60 * 1000);
+    this.updateInterval = setInterval(
+      () => {
+        this.updateContext();
+      },
+      5 * 60 * 1000,
+    );
 
     // Aplicar tema si hay evento activo
     this.applyEventThemeIfActive();
@@ -239,29 +242,15 @@ export class ContextualPersonalizationService implements OnDestroy {
   /**
    * Obtiene mensaje contextual para una acción
    */
-  getContextualMessage(
-    action: 'search' | 'booking' | 'welcome' | 'checkout' | 'review'
-  ): string {
+  getContextualMessage(action: 'search' | 'booking' | 'welcome' | 'checkout' | 'review'): string {
     const ctx = this.context();
 
     const messages: Record<string, Record<string, string[]>> = {
       search: {
-        morning: [
-          '¡Buenos días! ¿A dónde vamos hoy?',
-          'Empieza el día con el auto perfecto',
-        ],
-        afternoon: [
-          'Encuentra tu auto ideal para esta tarde',
-          '¿Planificando un viaje?',
-        ],
-        evening: [
-          'Reserva ahora para mañana temprano',
-          'Los mejores autos te esperan',
-        ],
-        night: [
-          'Planifica tu próximo viaje',
-          'Reserva ahora, viaja cuando quieras',
-        ],
+        morning: ['¡Buenos días! ¿A dónde vamos hoy?', 'Empieza el día con el auto perfecto'],
+        afternoon: ['Encuentra tu auto ideal para esta tarde', '¿Planificando un viaje?'],
+        evening: ['Reserva ahora para mañana temprano', 'Los mejores autos te esperan'],
+        night: ['Planifica tu próximo viaje', 'Reserva ahora, viaja cuando quieras'],
       },
       booking: {
         morning: ['¡Excelente elección para empezar el día!'],
@@ -276,16 +265,10 @@ export class ContextualPersonalizationService implements OnDestroy {
         night: ['¡Hola! Gracias por visitarnos.'],
       },
       checkout: {
-        default: [
-          '¡Ya casi está! Completa tu reserva.',
-          'Último paso para tu aventura.',
-        ],
+        default: ['¡Ya casi está! Completa tu reserva.', 'Último paso para tu aventura.'],
       },
       review: {
-        default: [
-          '¿Cómo fue tu experiencia?',
-          'Tu opinión nos ayuda a mejorar.',
-        ],
+        default: ['¿Cómo fue tu experiencia?', 'Tu opinión nos ayuda a mejorar.'],
       },
     };
 
@@ -357,9 +340,7 @@ export class ContextualPersonalizationService implements OnDestroy {
 
     // Prioridad: holiday > promo > seasonal > local
     const priority = ['holiday', 'promo', 'seasonal', 'local'];
-    const sorted = [...events].sort(
-      (a, b) => priority.indexOf(a.type) - priority.indexOf(b.type)
-    );
+    const sorted = [...events].sort((a, b) => priority.indexOf(a.type) - priority.indexOf(b.type));
 
     return sorted[0];
   }

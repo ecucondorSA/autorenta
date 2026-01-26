@@ -4,14 +4,14 @@ import { VerificationGuard } from '@core/guards/verification.guard';
 
 /**
  * BOOKINGS ROUTES CONFIGURATION
- * 
+ *
  * Architecture Note (2026-01-24):
  * This module is undergoing structural refactoring.
- * 
+ *
  * - Main Renter Entry: '' -> BookingsHubPage (Smart Container)
  * - Main Owner Entry: 'owner' -> OwnerBookingsPage
  * - Detail View: ':id' -> BookingDetailPage (Shared "God Component" - pending refactor)
- * 
+ *
  * Planned Structure:
  * - /renter/* -> Renter specific flows
  * - /owner/* -> Owner specific flows
@@ -55,17 +55,13 @@ export const BOOKINGS_ROUTES: Routes = [
   {
     path: 'request',
     loadComponent: () =>
-      import('./booking-request/booking-request.page').then(
-        (m) => m.BookingRequestPage,
-      ),
+      import('./booking-request/booking-request.page').then((m) => m.BookingRequestPage),
     canMatch: [AuthGuard, VerificationGuard],
   },
   {
     path: ':bookingId/request',
     loadComponent: () =>
-      import('./booking-request/booking-request.page').then(
-        (m) => m.BookingRequestPage,
-      ),
+      import('./booking-request/booking-request.page').then((m) => m.BookingRequestPage),
     canMatch: [AuthGuard, VerificationGuard],
   },
   {

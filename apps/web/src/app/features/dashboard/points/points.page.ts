@@ -1,11 +1,5 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
-import {
-  Component,
-  computed,
-  inject,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, computed, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RewardPoolService } from '@core/services/payments/reward-pool.service';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';

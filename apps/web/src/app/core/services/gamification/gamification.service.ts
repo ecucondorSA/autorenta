@@ -113,23 +113,74 @@ export class GamificationService {
 
   // Badges disponibles
   private readonly availableBadges: GamificationBadge[] = [
-    { id: 'first_trip', name: 'Primer Viaje', description: 'Completaste tu primer alquiler', icon: '🚗', isUnlocked: false },
-    { id: 'verified', name: 'Verificado', description: 'Completaste todas las verificaciones', icon: '✓', isUnlocked: false },
-    { id: 'reviewer', name: 'Crítico', description: 'Dejaste 5 reviews', icon: '📝', isUnlocked: false },
-    { id: 'superhost', name: 'Superhost', description: 'Rating promedio mayor a 4.8', icon: '🌟', isUnlocked: false },
-    { id: 'referrer', name: 'Embajador', description: 'Referiste 3 amigos', icon: '👥', isUnlocked: false },
-    { id: 'explorer', name: 'Explorador', description: 'Alquilaste en 3 ciudades distintas', icon: '🗺️', isUnlocked: false },
-    { id: 'loyal', name: 'Fiel', description: '10 alquileres completados', icon: '💎', isUnlocked: false },
-    { id: 'early_adopter', name: 'Early Adopter', description: 'Te uniste en el primer año', icon: '🚀', isUnlocked: false },
+    {
+      id: 'first_trip',
+      name: 'Primer Viaje',
+      description: 'Completaste tu primer alquiler',
+      icon: '🚗',
+      isUnlocked: false,
+    },
+    {
+      id: 'verified',
+      name: 'Verificado',
+      description: 'Completaste todas las verificaciones',
+      icon: '✓',
+      isUnlocked: false,
+    },
+    {
+      id: 'reviewer',
+      name: 'Crítico',
+      description: 'Dejaste 5 reviews',
+      icon: '📝',
+      isUnlocked: false,
+    },
+    {
+      id: 'superhost',
+      name: 'Superhost',
+      description: 'Rating promedio mayor a 4.8',
+      icon: '🌟',
+      isUnlocked: false,
+    },
+    {
+      id: 'referrer',
+      name: 'Embajador',
+      description: 'Referiste 3 amigos',
+      icon: '👥',
+      isUnlocked: false,
+    },
+    {
+      id: 'explorer',
+      name: 'Explorador',
+      description: 'Alquilaste en 3 ciudades distintas',
+      icon: '🗺️',
+      isUnlocked: false,
+    },
+    {
+      id: 'loyal',
+      name: 'Fiel',
+      description: '10 alquileres completados',
+      icon: '💎',
+      isUnlocked: false,
+    },
+    {
+      id: 'early_adopter',
+      name: 'Early Adopter',
+      description: 'Te uniste en el primer año',
+      icon: '🚀',
+      isUnlocked: false,
+    },
   ];
 
   // Signals para estado actual (mock data por ahora)
   private readonly _currentXP = signal(340);
-  private readonly _badges = signal<GamificationBadge[]>(this.availableBadges.map((b, i) => ({
-    ...b,
-    isUnlocked: i < 3, // Primeros 3 desbloqueados para demo
-    unlockedAt: i < 3 ? new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000) : undefined,
-  })));
+  private readonly _badges = signal<GamificationBadge[]>(
+    this.availableBadges.map((b, i) => ({
+      ...b,
+      isUnlocked: i < 3, // Primeros 3 desbloqueados para demo
+      unlockedAt:
+        i < 3 ? new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000) : undefined,
+    })),
+  );
   private readonly _tripsCompleted = signal(8);
   private readonly _reviewsGiven = signal(5);
   private readonly _reviewsReceived = signal(12);
@@ -189,12 +240,12 @@ export class GamificationService {
   // Computed values
   readonly currentLevel = computed(() => {
     const xp = this._currentXP();
-    return this.levels.find(l => xp >= l.minXP && xp <= l.maxXP) || this.levels[0];
+    return this.levels.find((l) => xp >= l.minXP && xp <= l.maxXP) || this.levels[0];
   });
 
   readonly nextLevel = computed(() => {
     const current = this.currentLevel();
-    const nextIndex = this.levels.findIndex(l => l.id === current.id) + 1;
+    const nextIndex = this.levels.findIndex((l) => l.id === current.id) + 1;
     return nextIndex < this.levels.length ? this.levels[nextIndex] : null;
   });
 
@@ -220,7 +271,7 @@ export class GamificationService {
     xpToNextLevel: this.xpToNextLevel(),
     xpProgress: this.xpProgress(),
     badges: this._badges(),
-    unlockedBadgesCount: this._badges().filter(b => b.isUnlocked).length,
+    unlockedBadgesCount: this._badges().filter((b) => b.isUnlocked).length,
     tripsCompleted: this._tripsCompleted(),
     reviewsGiven: this._reviewsGiven(),
     reviewsReceived: this._reviewsReceived(),
@@ -237,15 +288,15 @@ export class GamificationService {
 
   // Methods to add XP (for future use)
   addXP(amount: number, reason: string): void {
-    this._currentXP.update(xp => xp + amount);
+    this._currentXP.update((xp) => xp + amount);
     console.log(`+${amount} XP: ${reason}`);
   }
 
   unlockBadge(badgeId: string): void {
-    this._badges.update(badges =>
-      badges.map(b =>
-        b.id === badgeId ? { ...b, isUnlocked: true, unlockedAt: new Date() } : b
-      )
+    this._badges.update((badges) =>
+      badges.map((b) =>
+        b.id === badgeId ? { ...b, isUnlocked: true, unlockedAt: new Date() } : b,
+      ),
     );
   }
 }

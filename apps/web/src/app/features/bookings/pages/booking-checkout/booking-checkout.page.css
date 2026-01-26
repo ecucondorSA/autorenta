@@ -9,8 +9,12 @@
    Spinner Animation
    ───────────────────────────────────────────────────────────────────────── */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-spin {
@@ -23,9 +27,9 @@
 .payment-gradient {
   background: linear-gradient(
     135deg,
-    var(--cta-default, #A7D8F4) 0%,
-    var(--cta-pressed, #8FC9ED) 50%,
-    var(--neon-green, #39FF14) 100%
+    var(--cta-default, #a7d8f4) 0%,
+    var(--cta-pressed, #8fc9ed) 50%,
+    var(--neon-green, #39ff14) 100%
   );
 }
 
@@ -34,7 +38,9 @@
    ───────────────────────────────────────────────────────────────────────── */
 .btn-mercadopago {
   background-color: #009ee3;
-  transition: background-color 200ms ease-out, box-shadow 200ms ease-out;
+  transition:
+    background-color 200ms ease-out,
+    box-shadow 200ms ease-out;
 }
 
 .btn-mercadopago:hover:not(:disabled) {

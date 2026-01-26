@@ -184,21 +184,32 @@ import { MetaService } from '@core/services/ui/meta.service';
                   <div class="overall-progress mb-4">
                     <ion-progress-bar
                       [value]="driverScore() / 100"
-                      [color]="driverScore() >= 80 ? 'success' : driverScore() >= 60 ? 'warning' : 'danger'"
+                      [color]="
+                        driverScore() >= 80 ? 'success' : driverScore() >= 60 ? 'warning' : 'danger'
+                      "
                     ></ion-progress-bar>
                   </div>
                   <div class="score-breakdown">
                     <div class="score-category">
                       <span class="category-label">Velocidad: {{ getSpeedScore() }}%</span>
-                      <ion-progress-bar [value]="getSpeedScore() / 100" color="primary"></ion-progress-bar>
+                      <ion-progress-bar
+                        [value]="getSpeedScore() / 100"
+                        color="primary"
+                      ></ion-progress-bar>
                     </div>
                     <div class="score-category">
                       <span class="category-label">Frenado: {{ getBrakingScore() }}%</span>
-                      <ion-progress-bar [value]="getBrakingScore() / 100" color="success"></ion-progress-bar>
+                      <ion-progress-bar
+                        [value]="getBrakingScore() / 100"
+                        color="success"
+                      ></ion-progress-bar>
                     </div>
                     <div class="score-category">
                       <span class="category-label">Aceleración: {{ getAccelerationScore() }}%</span>
-                      <ion-progress-bar [value]="getAccelerationScore() / 100" color="warning"></ion-progress-bar>
+                      <ion-progress-bar
+                        [value]="getAccelerationScore() / 100"
+                        color="warning"
+                      ></ion-progress-bar>
                     </div>
                   </div>
                 </div>

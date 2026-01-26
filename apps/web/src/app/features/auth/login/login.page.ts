@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -14,25 +22,21 @@ import { HdriBackgroundComponent } from '../../../shared/components/hdri-backgro
 @Component({
   standalone: true,
   selector: 'app-login-page',
-  imports: [
-
-    RouterLink,
-    ReactiveFormsModule,
-    TranslateModule,
-    HdriBackgroundComponent,
-  ],
+  imports: [RouterLink, ReactiveFormsModule, TranslateModule, HdriBackgroundComponent],
   templateUrl: './login.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block w-full h-full',
   },
-  styles: [`
-    :host {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    `,
+  ],
 })
 export class LoginPage implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
@@ -278,7 +282,9 @@ export class LoginPage implements OnInit, OnDestroy {
       });
 
       this.error.set(
-        err instanceof Error ? err.message : 'No pudimos conectar con Facebook. Intentá nuevamente.',
+        err instanceof Error
+          ? err.message
+          : 'No pudimos conectar con Facebook. Intentá nuevamente.',
       );
     } finally {
       this.loading.set(false);
@@ -319,9 +325,7 @@ export class LoginPage implements OnInit, OnDestroy {
         error_message: err instanceof Error ? err.message : 'unknown',
       });
 
-      this.error.set(
-        err instanceof Error ? err.message : 'Error al autenticar con passkey',
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error al autenticar con passkey');
     } finally {
       this.loading.set(false);
     }
@@ -346,7 +350,7 @@ export class LoginPage implements OnInit, OnDestroy {
         // Guardar credenciales
         const saved = await this.biometric.saveCredentials(
           this.pendingCredentials.email,
-          this.pendingCredentials.password
+          this.pendingCredentials.password,
         );
 
         if (saved) {
@@ -428,9 +432,7 @@ export class LoginPage implements OnInit, OnDestroy {
         error_message: err instanceof Error ? err.message : 'unknown',
       });
 
-      this.error.set(
-        err instanceof Error ? err.message : 'Error de autenticación biométrica',
-      );
+      this.error.set(err instanceof Error ? err.message : 'Error de autenticación biométrica');
       this.showForm.set(true);
     } finally {
       this.biometricLoading.set(false);

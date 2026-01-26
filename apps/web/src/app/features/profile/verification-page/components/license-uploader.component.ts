@@ -1,4 +1,13 @@
-import { Component, inject, signal, input, output, computed, ChangeDetectionStrategy, HostListener } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  input,
+  output,
+  computed,
+  ChangeDetectionStrategy,
+  HostListener,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -47,64 +56,110 @@ import { ToastService } from '@core/services/ui/toast.service';
   imports: [CommonModule, FormsModule],
   template: `
     <!-- Screen Reader Announcements -->
-     <div aria-live="polite" aria-atomic="true" class="sr-only" id="license-status-announcements">{{ getStatusMessage() }}</div>
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="license-status-announcements">
+      {{ getStatusMessage() }}
+    </div>
 
-     <div class="max-w-md mx-auto">
+    <div class="max-w-md mx-auto">
       @if (uploadError()) {
-        <div class="mb-4 rounded-xl border border-error-border bg-error-bg/60 px-4 py-3 text-sm text-error-strong animate-shake" role="alert" aria-live="polite">
+        <div
+          class="mb-4 rounded-xl border border-error-border bg-error-bg/60 px-4 py-3 text-sm text-error-strong animate-shake"
+          role="alert"
+          aria-live="polite"
+        >
           {{ uploadError() }}
         </div>
       }
 
       <!-- Country Selector (Only shown in front step) -->
       @if (!hideCountrySelector() && step() === 'front') {
-         <div class="flex items-center justify-center mb-6">
-           <div class="relative group">
-             <select
-               [ngModel]="selectedCountry()"
-               (ngModelChange)="selectCountry($event)"
-               class="appearance-none bg-surface-raised pl-4 pr-10 py-2 rounded-full text-sm font-semibold text-text-primary shadow-sm border border-border-default focus:ring-2 focus:ring-cta-default focus:outline-none cursor-pointer hover:border-cta-default transition-all"
-               aria-label="Seleccionar país"
-             >
-               @for (country of countries; track country.code) {
-                 <option [value]="country.code">
-                   {{ country.flag }} {{ country.name }}
-                 </option>
-               }
-             </select>
-             <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-             </div>
-           </div>
+        <div class="flex items-center justify-center mb-6">
+          <div class="relative group">
+            <select
+              [ngModel]="selectedCountry()"
+              (ngModelChange)="selectCountry($event)"
+              class="appearance-none bg-surface-raised pl-4 pr-10 py-2 rounded-full text-sm font-semibold text-text-primary shadow-sm border border-border-default focus:ring-2 focus:ring-cta-default focus:outline-none cursor-pointer hover:border-cta-default transition-all"
+              aria-label="Seleccionar país"
+            >
+              @for (country of countries; track country.code) {
+                <option [value]="country.code">{{ country.flag }} {{ country.name }}</option>
+              }
+            </select>
+            <div
+              class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
       }
 
       <!-- STEP Content -->
-      <div class="bg-surface-base rounded-3xl overflow-hidden min-h-[400px] flex flex-col relative transition-all duration-500">
-        
+      <div
+        class="bg-surface-base rounded-3xl overflow-hidden min-h-[400px] flex flex-col relative transition-all duration-500"
+      >
         <!-- STEP: FRONT -->
         @if (step() === 'front') {
-          <div class="flex-1 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
-            <div class="relative w-64 h-40 mb-8 rounded-2xl bg-surface-secondary border-2 border-dashed border-border-default flex items-center justify-center overflow-hidden group hover:border-cta-default transition-colors">
+          <div
+            class="flex-1 flex flex-col items-center justify-center p-6 text-center animate-fade-in"
+          >
+            <div
+              class="relative w-64 h-40 mb-8 rounded-2xl bg-surface-secondary border-2 border-dashed border-border-default flex items-center justify-center overflow-hidden group hover:border-cta-default transition-colors"
+            >
               <!-- Illustration -->
               @if (frontPreview()) {
-                 <img [src]="frontPreview()" class="w-full h-full object-cover" alt="Licencia frente preview" />
-                 @if (uploadingFront()) {
-                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-sm">
-                      <div class="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    </div>
-                 }
+                <img
+                  [src]="frontPreview()"
+                  class="w-full h-full object-cover"
+                  alt="Licencia frente preview"
+                />
+                @if (uploadingFront()) {
+                  <div
+                    class="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-sm"
+                  >
+                    <div
+                      class="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin"
+                    ></div>
+                  </div>
+                }
               } @else {
-                 <div class="text-cta-default opacity-80 group-hover:scale-110 transition-transform duration-300">
-                    <svg class="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <rect x="3" y="4" width="18" height="16" rx="2" stroke-width="1.5"/>
-                      <circle cx="8.5" cy="10.5" r="2.5" stroke-width="1.5"/>
-                      <line x1="13" y1="9" x2="17" y2="9" stroke-width="1.5" stroke-linecap="round"/>
-                      <line x1="13" y1="13" x2="17" y2="13" stroke-width="1.5" stroke-linecap="round"/>
-                      <line x1="6" y1="16" x2="18" y2="16" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                 </div>
-                 <div class="absolute bottom-3 text-[10px] text-text-muted font-medium uppercase tracking-wider">Frente</div>
+                <div
+                  class="text-cta-default opacity-80 group-hover:scale-110 transition-transform duration-300"
+                >
+                  <svg class="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <rect x="3" y="4" width="18" height="16" rx="2" stroke-width="1.5" />
+                    <circle cx="8.5" cy="10.5" r="2.5" stroke-width="1.5" />
+                    <line x1="13" y1="9" x2="17" y2="9" stroke-width="1.5" stroke-linecap="round" />
+                    <line
+                      x1="13"
+                      y1="13"
+                      x2="17"
+                      y2="13"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                    />
+                    <line
+                      x1="6"
+                      y1="16"
+                      x2="18"
+                      y2="16"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="absolute bottom-3 text-[10px] text-text-muted font-medium uppercase tracking-wider"
+                >
+                  Frente
+                </div>
               }
             </div>
 
@@ -113,9 +168,32 @@ import { ToastService } from '@core/services/ui/toast.service';
               Asegúrate que los datos sean legibles y no haya reflejos fuertes.
             </p>
 
-            <input #frontInput type="file" accept="image/*" capture="environment" class="hidden" (change)="onFileSelected($event, 'license_front')" />
-            <button (click)="frontInput.click()" class="w-full max-w-xs py-4 bg-cta-default hover:bg-cta-hover text-white font-bold rounded-2xl shadow-lg shadow-cta-default/20 active:scale-95 transition-all text-lg flex items-center justify-center gap-2">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <input
+              #frontInput
+              type="file"
+              accept="image/*"
+              capture="environment"
+              class="hidden"
+              (change)="onFileSelected($event, 'license_front')"
+            />
+            <button
+              (click)="frontInput.click()"
+              class="w-full max-w-xs py-4 bg-cta-default hover:bg-cta-hover text-white font-bold rounded-2xl shadow-lg shadow-cta-default/20 active:scale-95 transition-all text-lg flex items-center justify-center gap-2"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
               Tomar Foto
             </button>
           </div>
@@ -123,33 +201,59 @@ import { ToastService } from '@core/services/ui/toast.service';
 
         <!-- STEP: BACK -->
         @else if (step() === 'back') {
-          <div class="flex-1 flex flex-col items-center justify-center p-6 text-center animate-slide-in-right">
-             <!-- Status Header -->
-             <div class="absolute top-4 left-0 right-0 flex justify-center">
-                <div class="bg-success-100 text-success-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm">
-                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                  Frente completado
-                </div>
-             </div>
+          <div
+            class="flex-1 flex flex-col items-center justify-center p-6 text-center animate-slide-in-right"
+          >
+            <!-- Status Header -->
+            <div class="absolute top-4 left-0 right-0 flex justify-center">
+              <div
+                class="bg-success-100 text-success-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm"
+              >
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Frente completado
+              </div>
+            </div>
 
-            <div class="relative w-64 h-40 mb-8 rounded-2xl bg-surface-secondary border-2 border-dashed border-border-default flex items-center justify-center overflow-hidden group hover:border-cta-default transition-colors mt-8">
+            <div
+              class="relative w-64 h-40 mb-8 rounded-2xl bg-surface-secondary border-2 border-dashed border-border-default flex items-center justify-center overflow-hidden group hover:border-cta-default transition-colors mt-8"
+            >
               <!-- Illustration -->
               @if (backPreview()) {
-                 <img [src]="backPreview()" class="w-full h-full object-cover" alt="Licencia dorso preview" />
-                 @if (uploadingBack()) {
-                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-sm">
-                      <div class="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    </div>
-                 }
+                <img
+                  [src]="backPreview()"
+                  class="w-full h-full object-cover"
+                  alt="Licencia dorso preview"
+                />
+                @if (uploadingBack()) {
+                  <div
+                    class="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-sm"
+                  >
+                    <div
+                      class="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin"
+                    ></div>
+                  </div>
+                }
               } @else {
-                 <div class="text-cta-default opacity-80 group-hover:scale-110 transition-transform duration-300">
-                    <!-- Barcode/QR icon -->
-                    <svg class="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <rect x="3" y="4" width="18" height="16" rx="2" stroke-width="1.5"/>
-                      <path d="M7 8h10M7 12h10M7 16h6" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                 </div>
-                 <div class="absolute bottom-3 text-[10px] text-text-muted font-medium uppercase tracking-wider">Dorso</div>
+                <div
+                  class="text-cta-default opacity-80 group-hover:scale-110 transition-transform duration-300"
+                >
+                  <!-- Barcode/QR icon -->
+                  <svg class="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <rect x="3" y="4" width="18" height="16" rx="2" stroke-width="1.5" />
+                    <path d="M7 8h10M7 12h10M7 16h6" stroke-width="1.5" stroke-linecap="round" />
+                  </svg>
+                </div>
+                <div
+                  class="absolute bottom-3 text-[10px] text-text-muted font-medium uppercase tracking-wider"
+                >
+                  Dorso
+                </div>
               }
             </div>
 
@@ -158,9 +262,32 @@ import { ToastService } from '@core/services/ui/toast.service';
               Gira tu licencia y fotografía el código de barras o QR.
             </p>
 
-            <input #backInput type="file" accept="image/*" capture="environment" class="hidden" (change)="onFileSelected($event, 'license_back')" />
-            <button (click)="backInput.click()" class="w-full max-w-xs py-4 bg-cta-default hover:bg-cta-hover text-white font-bold rounded-2xl shadow-lg shadow-cta-default/20 active:scale-95 transition-all text-lg flex items-center justify-center gap-2">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <input
+              #backInput
+              type="file"
+              accept="image/*"
+              capture="environment"
+              class="hidden"
+              (change)="onFileSelected($event, 'license_back')"
+            />
+            <button
+              (click)="backInput.click()"
+              class="w-full max-w-xs py-4 bg-cta-default hover:bg-cta-hover text-white font-bold rounded-2xl shadow-lg shadow-cta-default/20 active:scale-95 transition-all text-lg flex items-center justify-center gap-2"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
               Escanear Dorso
             </button>
           </div>
@@ -168,25 +295,41 @@ import { ToastService } from '@core/services/ui/toast.service';
 
         <!-- STEP: COMPLETE (Summary) -->
         @else if (step() === 'complete') {
-          <div class="flex-1 flex flex-col items-center justify-center p-6 text-center animate-scale-up">
-            <div class="w-20 h-20 rounded-full bg-success-100 flex items-center justify-center text-success-600 mb-6 shadow-sm">
-              <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <div
+            class="flex-1 flex flex-col items-center justify-center p-6 text-center animate-scale-up"
+          >
+            <div
+              class="w-20 h-20 rounded-full bg-success-100 flex items-center justify-center text-success-600 mb-6 shadow-sm"
+            >
+              <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
             </div>
-            
+
             <h3 class="text-2xl font-bold text-text-primary mb-2">¡Perfecto!</h3>
             <p class="text-text-secondary mb-6">Hemos verificado tu licencia exitosamente.</p>
 
             <!-- Extracted Data Card -->
-            <div class="w-full bg-surface-raised rounded-2xl p-4 border border-border-default mb-6 text-left">
+            <div
+              class="w-full bg-surface-raised rounded-2xl p-4 border border-border-default mb-6 text-left"
+            >
               <div class="flex justify-between items-center mb-3">
-                 <span class="text-xs font-bold text-text-muted uppercase">Datos Verificados</span>
-                 <span class="bg-success-100 text-success-700 text-[10px] font-bold px-2 py-0.5 rounded">IA APPROVAL</span>
+                <span class="text-xs font-bold text-text-muted uppercase">Datos Verificados</span>
+                <span
+                  class="bg-success-100 text-success-700 text-[10px] font-bold px-2 py-0.5 rounded"
+                  >IA APPROVAL</span
+                >
               </div>
               @for (field of extractedFields(); track field.key) {
-                 <div class="flex justify-between py-1 border-b border-border-subtle last:border-0">
-                    <span class="text-sm text-text-secondary">{{ field.label }}</span>
-                    <span class="text-sm font-semibold text-text-primary">{{ field.value }}</span>
-                 </div>
+                <div class="flex justify-between py-1 border-b border-border-subtle last:border-0">
+                  <span class="text-sm text-text-secondary">{{ field.label }}</span>
+                  <span class="text-sm font-semibold text-text-primary">{{ field.value }}</span>
+                </div>
               }
             </div>
 
@@ -194,37 +337,74 @@ import { ToastService } from '@core/services/ui/toast.service';
           </div>
         }
       </div>
-     </div>
+    </div>
   `,
-  styles: [`
-    :host { display: block; }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @keyframes slideInRight {
-      from { opacity: 0; transform: translateX(20px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    
-    @keyframes scaleUp {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-4px); }
-      75% { transform: translateX(4px); }
-    }
-    
-    .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
-    .animate-slide-in-right { animation: slideInRight 0.4s ease-out forwards; }
-    .animate-scale-up { animation: scaleUp 0.4s ease-out forwards; }
-    .animate-shake { animation: shake 0.3s ease-in-out; }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes scaleUp {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-4px);
+        }
+        75% {
+          transform: translateX(4px);
+        }
+      }
+
+      .animate-fade-in {
+        animation: fadeIn 0.4s ease-out forwards;
+      }
+      .animate-slide-in-right {
+        animation: slideInRight 0.4s ease-out forwards;
+      }
+      .animate-scale-up {
+        animation: scaleUp 0.4s ease-out forwards;
+      }
+      .animate-shake {
+        animation: shake 0.3s ease-in-out;
+      }
+    `,
+  ],
 })
 export class LicenseUploaderComponent {
   private verificationService = inject(VerificationService);
@@ -348,7 +528,7 @@ export class LicenseUploaderComponent {
   }
 
   getSelectedCountryFlag(): string {
-    return this.countries.find(c => c.code === this.selectedCountry())?.flag || '🌍';
+    return this.countries.find((c) => c.code === this.selectedCountry())?.flag || '🌍';
   }
 
   // Paste Support
@@ -647,8 +827,10 @@ export class LicenseUploaderComponent {
           const frontConf = result.ocrResult.ocr_confidence || 0;
           const backConf = this.backOcrResult()?.confidence || 0;
 
-          if ((result.ocrResult.success || frontConf >= 70) &&
-            (this.backOcrResult()?.success || backConf >= 70)) {
+          if (
+            (result.ocrResult.success || frontConf >= 70) &&
+            (this.backOcrResult()?.success || backConf >= 70)
+          ) {
             setTimeout(() => this.verificationCompleted.emit(), 1000);
           }
         }
@@ -670,8 +852,10 @@ export class LicenseUploaderComponent {
           const frontConf = this.frontOcrResult()?.confidence || 0;
           const backConf = result.ocrResult.ocr_confidence || 0;
 
-          if ((this.frontOcrResult()?.success || frontConf >= 70) &&
-            (result.ocrResult.success || backConf >= 70)) {
+          if (
+            (this.frontOcrResult()?.success || frontConf >= 70) &&
+            (result.ocrResult.success || backConf >= 70)
+          ) {
             this.step.set('complete');
             // Delay slightly for UX
             setTimeout(() => this.verificationCompleted.emit(), 1500);

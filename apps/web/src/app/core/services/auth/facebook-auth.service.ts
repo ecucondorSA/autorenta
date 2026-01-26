@@ -8,8 +8,13 @@ declare global {
   interface Window {
     FB?: {
       init: (params: { appId: string; cookie: boolean; xfbml: boolean; version: string }) => void;
-      login: (callback: (response: { authResponse?: { accessToken: string } }) => void, params?: { scope?: string; config_id?: string }) => void;
-      getLoginStatus: (callback: (response: { status: string; authResponse?: { accessToken: string } }) => void) => void;
+      login: (
+        callback: (response: { authResponse?: { accessToken: string } }) => void,
+        params?: { scope?: string; config_id?: string },
+      ) => void;
+      getLoginStatus: (
+        callback: (response: { status: string; authResponse?: { accessToken: string } }) => void,
+      ) => void;
       AppEvents: { logPageView: () => void };
     };
     fbAsyncInit?: () => void;
@@ -74,8 +79,15 @@ export class FacebookAuthService {
           resolve();
         } else if (Date.now() - startTime > timeout) {
           clearInterval(checkInterval);
-          this.logger.warn('Facebook SDK failed to load - may be blocked by ad blocker', 'FacebookAuthService');
-          reject(new Error('Facebook SDK failed to load. This may be due to an ad blocker or network issue.'));
+          this.logger.warn(
+            'Facebook SDK failed to load - may be blocked by ad blocker',
+            'FacebookAuthService',
+          );
+          reject(
+            new Error(
+              'Facebook SDK failed to load. This may be due to an ad blocker or network issue.',
+            ),
+          );
         }
       }, 100);
 
@@ -112,7 +124,11 @@ export class FacebookAuthService {
       this.logger.debug('Facebook Login initialized successfully', 'FacebookAuthService');
       return true;
     } catch (error) {
-      this.logger.warn('Failed to initialize Facebook Login - feature may be blocked by ad blocker', 'FacebookAuthService', error);
+      this.logger.warn(
+        'Failed to initialize Facebook Login - feature may be blocked by ad blocker',
+        'FacebookAuthService',
+        error,
+      );
       this.initialized = false;
       return false;
     }
@@ -137,13 +153,17 @@ export class FacebookAuthService {
       if (!this.initialized) {
         const success = await this.initialize();
         if (!success) {
-          throw new Error('Facebook Login no está disponible. Puede estar bloqueado por un bloqueador de anuncios o extensión del navegador.');
+          throw new Error(
+            'Facebook Login no está disponible. Puede estar bloqueado por un bloqueador de anuncios o extensión del navegador.',
+          );
         }
       }
 
       // Double-check SDK is available (for web)
       if (isPlatformBrowser(this.platformId) && !this.isFBAvailable()) {
-        throw new Error('El SDK de Facebook no está cargado. Por favor, desactiva tu bloqueador de anuncios e intenta de nuevo.');
+        throw new Error(
+          'El SDK de Facebook no está cargado. Por favor, desactiva tu bloqueador de anuncios e intenta de nuevo.',
+        );
       }
 
       this.logger.debug('Starting Facebook Login...', 'FacebookAuthService');
@@ -156,20 +176,22 @@ export class FacebookAuthService {
         // Web: Use native FB SDK with config_id for Business Login
         this.logger.debug('Using FB SDK with config_id for Business Login', 'FacebookAuthService');
 
-        const fbResponse = await new Promise<{ authResponse?: { accessToken: string } }>((resolve, reject) => {
-          window.FB!.login(
-            (response) => {
-              if (response.authResponse?.accessToken) {
-                resolve(response);
-              } else {
-                reject(new Error('Facebook login was cancelled or failed'));
-              }
-            },
-            {
-              config_id: this.FB_CONFIG_ID,
-            }
-          );
-        });
+        const fbResponse = await new Promise<{ authResponse?: { accessToken: string } }>(
+          (resolve, reject) => {
+            window.FB!.login(
+              (response) => {
+                if (response.authResponse?.accessToken) {
+                  resolve(response);
+                } else {
+                  reject(new Error('Facebook login was cancelled or failed'));
+                }
+              },
+              {
+                config_id: this.FB_CONFIG_ID,
+              },
+            );
+          },
+        );
 
         if (!fbResponse.authResponse?.accessToken) {
           throw new Error('No access token received from Facebook Login');
@@ -179,14 +201,19 @@ export class FacebookAuthService {
       } else {
         // Native (Android/iOS): Use Capacitor plugin with permissions fallback
         const FACEBOOK_PERMISSIONS = ['public_profile'];
-        const result = await FacebookLogin.login({ permissions: FACEBOOK_PERMISSIONS }) as FacebookLoginResponse;
+        const result = (await FacebookLogin.login({
+          permissions: FACEBOOK_PERMISSIONS,
+        })) as FacebookLoginResponse;
 
         if (!result.accessToken) {
           throw new Error('No access token received from Facebook Login');
         }
 
         // Extract token - handle both web SDK and native formats
-        token = result.accessToken.token || (result.accessToken as unknown as { tokenString?: string }).tokenString || '';
+        token =
+          result.accessToken.token ||
+          (result.accessToken as unknown as { tokenString?: string }).tokenString ||
+          '';
 
         if (!token) {
           this.logger.error('Token structure:', 'FacebookAuthService', result.accessToken);
@@ -194,7 +221,10 @@ export class FacebookAuthService {
         }
       }
 
-      this.logger.debug(`Facebook Access Token received (${token.substring(0, 20)}...). Signing in with Supabase...`, 'FacebookAuthService');
+      this.logger.debug(
+        `Facebook Access Token received (${token.substring(0, 20)}...). Signing in with Supabase...`,
+        'FacebookAuthService',
+      );
 
       // Use Supabase's native signInWithIdToken for Facebook
       // Facebook access tokens are accepted as idToken by Supabase
@@ -214,7 +244,6 @@ export class FacebookAuthService {
       this.logger.debug('Session created successfully', 'FacebookAuthService');
 
       this.logger.info('Facebook Login Successful', 'FacebookAuthService');
-
     } catch (error) {
       this.logger.error('Facebook Login Failed', 'FacebookAuthService', error);
       throw error;

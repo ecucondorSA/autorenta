@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  inject,
-  computed,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject, computed, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { IconComponent } from '@shared/components/icon/icon.component';
 import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
@@ -39,19 +32,16 @@ interface StepInfo {
 @Component({
   standalone: true,
   selector: 'app-pending-action-view',
-  imports: [
-    CommonModule,
-    RouterLink,
-    IconComponent,
-    HoverLiftDirective,
-    PressScaleDirective,
-  ],
+  imports: [CommonModule, RouterLink, IconComponent, HoverLiftDirective, PressScaleDirective],
   template: `
     <div class="min-h-screen bg-surface-primary pb-24">
       <!-- Header -->
       <header class="glass-navbar sticky top-0 z-10 px-4 py-4 pt-safe">
         <div class="max-w-2xl mx-auto flex items-center gap-3">
-          <a routerLink="/bookings" class="p-2 -ml-2 rounded-full hover:bg-surface-secondary transition-colors">
+          <a
+            routerLink="/bookings"
+            class="p-2 -ml-2 rounded-full hover:bg-surface-secondary transition-colors"
+          >
             <app-icon name="chevron-left" class="w-5 h-5 text-text-secondary" />
           </a>
           <h1 class="text-lg font-semibold text-text-primary">
@@ -62,10 +52,7 @@ interface StepInfo {
 
       <main class="px-4 max-w-2xl mx-auto space-y-6 pt-4">
         <!-- Alert Banner -->
-        <section
-          class="p-4 rounded-xl"
-          [class]="alertBannerClass()"
-        >
+        <section class="p-4 rounded-xl" [class]="alertBannerClass()">
           <div class="flex items-start gap-3">
             <span class="text-2xl">{{ alertIcon() }}</span>
             <div class="flex-1">
@@ -188,7 +175,7 @@ interface StepInfo {
                 <div class="flex items-center justify-between mb-2">
                   <span class="text-text-secondary">Total a pagar</span>
                   <span class="text-xl font-bold text-text-primary">
-                    {{ booking.total_amount | currency:'ARS':'symbol':'1.0-0' }}
+                    {{ booking.total_amount | currency: 'ARS' : 'symbol' : '1.0-0' }}
                   </span>
                 </div>
                 <p class="text-xs text-text-tertiary">
@@ -203,7 +190,8 @@ interface StepInfo {
                   <div>
                     <p class="text-sm text-info-text font-medium">Pago seguro</p>
                     <p class="text-xs text-info-text/80 mt-1">
-                      Tu pago está protegido por MercadoPago. Los fondos se retienen hasta confirmar la entrega.
+                      Tu pago está protegido por MercadoPago. Los fondos se retienen hasta confirmar
+                      la entrega.
                     </p>
                   </div>
                 </div>
@@ -215,8 +203,12 @@ interface StepInfo {
             <section class="space-y-4">
               <!-- Waiting indicator -->
               <div class="glass-card p-6 rounded-xl text-center">
-                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-warning-bg flex items-center justify-center">
-                  <div class="w-8 h-8 border-3 border-warning-500 border-t-transparent rounded-full animate-spin"></div>
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-full bg-warning-bg flex items-center justify-center"
+                >
+                  <div
+                    class="w-8 h-8 border-3 border-warning-500 border-t-transparent rounded-full animate-spin"
+                  ></div>
                 </div>
                 <h3 class="font-medium text-text-primary">Esperando al Propietario</h3>
                 <p class="text-sm text-text-secondary mt-2">
@@ -227,13 +219,15 @@ interface StepInfo {
               <!-- Contact owner -->
               <a
                 [routerLink]="['/messages/chat']"
-                [queryParams]="{bookingId: booking.id, userId: booking.owner_id}"
+                [queryParams]="{ bookingId: booking.id, userId: booking.owner_id }"
                 class="glass-card p-4 rounded-xl flex items-center justify-between"
                 appHoverLift
                 appPressScale
               >
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-primary-bg flex items-center justify-center">
+                  <div
+                    class="w-10 h-10 rounded-full bg-primary-bg flex items-center justify-center"
+                  >
                     <app-icon name="message-circle" class="w-5 h-5 text-primary-500" />
                   </div>
                   <span class="font-medium text-text-primary">Contactar propietario</span>
@@ -255,7 +249,9 @@ interface StepInfo {
               appPressScale
             >
               @if (loading()) {
-                <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div
+                  class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+                ></div>
               } @else {
                 <app-icon [name]="ctaIcon()" class="w-5 h-5" />
               }
@@ -275,17 +271,17 @@ interface StepInfo {
       </main>
     </div>
   `,
-  styles: [`
-    .pt-safe {
-      padding-top: env(safe-area-inset-top);
-    }
+  styles: [
+    `
+      .pt-safe {
+        padding-top: env(safe-area-inset-top);
+      }
 
-
-
-    .border-3 {
-      border-width: 3px;
-    }
-  `],
+      .border-3 {
+        border-width: 3px;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PendingActionViewComponent {
@@ -322,9 +318,7 @@ export class PendingActionViewComponent {
     const formatDate = (d: Date) =>
       d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
 
-    return end
-      ? `${formatDate(start)} - ${formatDate(end)}`
-      : formatDate(start);
+    return end ? `${formatDate(start)} - ${formatDate(end)}` : formatDate(start);
   });
 
   readonly headerTitle = computed(() => {
@@ -417,7 +411,7 @@ export class PendingActionViewComponent {
   });
 
   readonly currentStepDescription = computed(() => {
-    const currentStep = this.steps().find(s => s.status === 'current');
+    const currentStep = this.steps().find((s) => s.status === 'current');
     return currentStep?.description ?? '';
   });
 
@@ -475,22 +469,19 @@ export class PendingActionViewComponent {
           'Devolución confirmada',
           result.funds_released
             ? 'Los fondos han sido liberados.'
-            : 'Esperando confirmación del propietario.'
+            : 'Esperando confirmación del propietario.',
         );
         // Reload bookings to update UI
         await this.store.loadMyBookings({ force: true });
         this.router.navigate(['/bookings']);
       } else {
-        this.toastService.error(
-          'Error',
-          result.message ?? 'No se pudo confirmar la devolución'
-        );
+        this.toastService.error('Error', result.message ?? 'No se pudo confirmar la devolución');
       }
     } catch (error) {
       const err = error as { message?: string };
       this.toastService.error(
         'Error',
-        err.message ?? 'Ocurrió un error al confirmar la devolución'
+        err.message ?? 'Ocurrió un error al confirmar la devolución',
       );
     } finally {
       this.loading.set(false);

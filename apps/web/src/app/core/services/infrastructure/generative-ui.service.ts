@@ -126,7 +126,7 @@ export class GenerativeUIService {
    */
   async generateCTA(
     action: 'booking' | 'search' | 'signup' | 'review' | 'share',
-    context?: UserContext
+    context?: UserContext,
   ): Promise<GeneratedContent> {
     const cacheKey = `cta-${action}-${context?.timeOfDay || 'default'}-${context?.isNewUser ? 'new' : 'returning'}`;
 
@@ -173,7 +173,7 @@ export class GenerativeUIService {
    */
   async generateSectionTitle(
     section: 'popular' | 'recommended' | 'nearby' | 'similar' | 'recent',
-    context?: UserContext
+    context?: UserContext,
   ): Promise<GeneratedContent> {
     const timeVariant = context?.timeOfDay || 'default';
     const cacheKey = `title-${section}-${timeVariant}-${context?.country || 'default'}`;
@@ -201,7 +201,8 @@ export class GenerativeUIService {
    */
   async generateWelcomeMessage(context?: UserContext): Promise<GeneratedContent> {
     const hour = new Date().getHours();
-    const timeOfDay = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : hour < 21 ? 'evening' : 'night';
+    const timeOfDay =
+      hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : hour < 21 ? 'evening' : 'night';
 
     const cacheKey = `welcome-${timeOfDay}-${context?.isNewUser ? 'new' : 'returning'}`;
 
@@ -304,7 +305,10 @@ export class GenerativeUIService {
       pickup: `${car.brand} ${car.model} ${car.year} - Pickup robusta con gran capacidad de carga. Versátil para trabajo y aventura.`,
       luxury: `${car.brand} ${car.model} ${car.year} - Experiencia premium con acabados de lujo y tecnología de punta.`,
     };
-    return descriptions[car.type] || `${car.brand} ${car.model} ${car.year} - Un vehículo confiable para tus viajes.`;
+    return (
+      descriptions[car.type] ||
+      `${car.brand} ${car.model} ${car.year} - Un vehículo confiable para tus viajes.`
+    );
   }
 
   private getFallbackCTA(action: string): string {
@@ -335,7 +339,11 @@ export class GenerativeUIService {
   private getTitleVariants(section: string, context?: UserContext): string[] {
     const variants: Record<string, string[]> = {
       popular: ['Autos más populares', 'Los favoritos de la comunidad', 'Tendencias de la semana'],
-      recommended: ['Recomendados para ti', 'Seleccionados especialmente', 'Basados en tus preferencias'],
+      recommended: [
+        'Recomendados para ti',
+        'Seleccionados especialmente',
+        'Basados en tus preferencias',
+      ],
       nearby: ['Cerca de ti', 'En tu zona', 'Disponibles ahora'],
       similar: ['Autos similares', 'También te puede interesar', 'Opciones relacionadas'],
       recent: ['Vistos recientemente', 'Continúa explorando', 'Tu historial'],

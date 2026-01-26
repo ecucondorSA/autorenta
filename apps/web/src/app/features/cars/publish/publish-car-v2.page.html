@@ -1,15 +1,14 @@
 <div
-  class="publish-page min-h-screen bg-surface-base py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 text-text-primary font-sans antialiased leading-relaxed overflow-x-hidden">
+  class="publish-page min-h-screen bg-surface-base py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 text-text-primary font-sans antialiased leading-relaxed overflow-x-hidden"
+>
   <div class="publish-shell max-w-5xl mx-auto">
     <!-- 1. Header Minimalista e Inspirador -->
-    <header class="publish-header mb-10 text-center sm:text-left sm:flex sm:items-end sm:justify-between">
+    <header
+      class="publish-header mb-10 text-center sm:text-left sm:flex sm:items-end sm:justify-between"
+    >
       <div>
         <h1 class="h1 mb-2 tracking-tight">
-          {{
-          editMode()
-          ? 'Tu publicación'
-          : 'Publicá tu auto'
-          }}
+          {{ editMode() ? 'Tu publicación' : 'Publicá tu auto' }}
         </h1>
         <p class="text-base sm:text-lg text-text-secondary font-medium max-w-2xl">
           Listo en minutos. Gestionamos reservas y cobros.
@@ -18,9 +17,12 @@
       <!-- Indicador de Progreso Sutil -->
       <div class="hidden sm:block text-right">
         <div
-          class="inline-flex items-center gap-2 bg-surface-raised px-4 py-2 rounded-full shadow-sm border border-border-default/80">
+          class="inline-flex items-center gap-2 bg-surface-raised px-4 py-2 rounded-full shadow-sm border border-border-default/80"
+        >
           <span class="relative flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cta-default opacity-40"></span>
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cta-default opacity-40"
+            ></span>
             <span class="relative inline-flex rounded-full h-3 w-3 bg-cta-default"></span>
           </span>
           <span class="text-sm font-semibold text-text-secondary">
@@ -31,19 +33,31 @@
     </header>
 
     <!-- ✅ NEW: Scroll Progress Bar -->
-    <div class="fixed top-0 left-0 h-1 bg-cta-default z-50 progress-bar" style="animation-timeline: scroll(y)"></div>
+    <div
+      class="fixed top-0 left-0 h-1 bg-cta-default z-50 progress-bar"
+      style="animation-timeline: scroll(y)"
+    ></div>
 
     <div class="publish-container grid gap-5 lg:gap-8 lg:grid-cols-12 items-start">
       <!-- COLUMNA PRINCIPAL (Formulario) -->
       <div class="lg:col-span-8 space-y-8">
-        <form [formGroup]="publishForm" (ngSubmit)="onSubmit()" class="publish-form space-y-8"
-          data-testid="publish-form">
+        <form
+          [formGroup]="publishForm"
+          (ngSubmit)="onSubmit()"
+          class="publish-form space-y-8"
+          data-testid="publish-form"
+        >
           <!-- SECCIÓN 1: IDENTIDAD DEL VEHÍCULO (El "Qué") -->
-          <section class="publish-section glass-card rounded-2xl p-5 sm:p-8 transition-all duration-300" appHoverLift
-            [liftAmount]="2">
+          <section
+            class="publish-section glass-card rounded-2xl p-5 sm:p-8 transition-all duration-300"
+            appHoverLift
+            [liftAmount]="2"
+          >
             <div class="">
               <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-xl bg-cta-default/15 flex items-center justify-center text-text-primary">
+                <div
+                  class="w-10 h-10 rounded-xl bg-cta-default/15 flex items-center justify-center text-text-primary"
+                >
                   <ion-icon name="car-sport-outline" class="text-xl text-cta-default"></ion-icon>
                 </div>
                 <h2 class="h4">¿Qué vehículo vas a publicar?</h2>
@@ -51,91 +65,126 @@
 
               <!-- Vehicle Scanner Option -->
               @if (!showVideoScanner()) {
-              <button type="button" (click)="showVideoScanner.set(true)"
-                class="scanner-button w-full mb-6 flex items-center justify-between gap-3 px-4 py-4 border border-border-default/80 rounded-xl text-text-primary font-semibold hover:border-cta-default/50 hover:bg-surface-secondary/50 transition-all group bg-surface-base/40 backdrop-blur-sm">
-                <div
-                  class="w-10 h-10 rounded-full bg-cta-default/10 flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <ion-icon name="scan-outline" class="text-xl text-cta-default"></ion-icon>
-                </div>
-                <div class="text-left">
-                  <span class="block text-base">Escanear vehículo</span>
-                  <span class="block text-xs text-text-secondary font-normal">Completa marca y modelo</span>
-                </div>
-                <span class="hidden sm:inline text-xs text-text-muted font-medium">Opcional</span>
-              </button>
+                <button
+                  type="button"
+                  (click)="showVideoScanner.set(true)"
+                  class="scanner-button w-full mb-6 flex items-center justify-between gap-3 px-4 py-4 border border-border-default/80 rounded-xl text-text-primary font-semibold hover:border-cta-default/50 hover:bg-surface-secondary/50 transition-all group bg-surface-base/40 backdrop-blur-sm"
+                >
+                  <div
+                    class="w-10 h-10 rounded-full bg-cta-default/10 flex items-center justify-center group-hover:scale-105 transition-transform"
+                  >
+                    <ion-icon name="scan-outline" class="text-xl text-cta-default"></ion-icon>
+                  </div>
+                  <div class="text-left">
+                    <span class="block text-base">Escanear vehículo</span>
+                    <span class="block text-xs text-text-secondary font-normal"
+                      >Completa marca y modelo</span
+                    >
+                  </div>
+                  <span class="hidden sm:inline text-xs text-text-muted font-medium">Opcional</span>
+                </button>
               }
 
               <!-- Vehicle Scanner Live Component (Real-time detection) -->
               @if (showVideoScanner()) {
-              <app-vehicle-scanner-live (vehicleConfirmed)="onVehicleScannerConfirmed($event)"
-                (cancelled)="onVideoScannerCancelled()" />
+                <app-vehicle-scanner-live
+                  (vehicleConfirmed)="onVehicleScannerConfirmed($event)"
+                  (cancelled)="onVideoScannerCancelled()"
+                />
               }
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Marca -->
                 <div class="md:col-span-2 relative z-20">
                   <label class="label-text mb-2">Marca</label>
-                  <app-fipe-autocomplete [placeholder]="'Ej: Toyota, Ford, BMW...'" [options]="fipeBrands()"
-                    [isLoading]="isLoadingFIPEBrands()" [selectedValue]="selectedFIPEBrand()" [minChars]="2"
-                    [showBrandLogos]="true" (optionSelected)="onFIPEBrandSelected($event)"></app-fipe-autocomplete>
+                  <app-fipe-autocomplete
+                    [placeholder]="'Ej: Toyota, Ford, BMW...'"
+                    [options]="fipeBrands()"
+                    [isLoading]="isLoadingFIPEBrands()"
+                    [selectedValue]="selectedFIPEBrand()"
+                    [minChars]="2"
+                    [showBrandLogos]="true"
+                    (optionSelected)="onFIPEBrandSelected($event)"
+                  ></app-fipe-autocomplete>
                   @if (
-                  publishForm.get('brand_text_backup')?.invalid &&
-                  (publishForm.get('brand_text_backup')?.dirty ||
-                  publishForm.get('brand_text_backup')?.touched)
+                    publishForm.get('brand_text_backup')?.invalid &&
+                    (publishForm.get('brand_text_backup')?.dirty ||
+                      publishForm.get('brand_text_backup')?.touched)
                   ) {
-                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Seleccioná una marca
-                  </p>
+                    <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      Seleccioná una marca
+                    </p>
                   }
                 </div>
 
                 <!-- Año -->
                 <div class="relative z-10">
                   <label class="label-text mb-2">Año</label>
-                  <select formControlName="year" (change)="onYearChange()" [disabled]="!selectedFIPEBrand()"
-                    class="input-modern py-3.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                  <select
+                    formControlName="year"
+                    (change)="onYearChange()"
+                    [disabled]="!selectedFIPEBrand()"
+                    class="input-modern py-3.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
                     <option [ngValue]="null" disabled>Año...</option>
                     @for (year of yearOptions; track year) {
-                    <option [ngValue]="year">{{ year }}</option>
+                      <option [ngValue]="year">{{ year }}</option>
                     }
                   </select>
                   @if (
-                  publishForm.get('year')?.invalid &&
-                  (publishForm.get('year')?.dirty || publishForm.get('year')?.touched)
+                    publishForm.get('year')?.invalid &&
+                    (publishForm.get('year')?.dirty || publishForm.get('year')?.touched)
                   ) {
-                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Seleccioná un año
-                  </p>
+                    <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      Seleccioná un año
+                    </p>
                   }
                 </div>
 
                 <!-- Modelo -->
                 <div class="relative z-10">
                   <label class="label-text mb-2">Modelo</label>
-                  <app-fipe-autocomplete [placeholder]="'Ej: Corolla, Focus...'" [options]="fipeModels()"
-                    [isLoading]="isLoadingFIPEModels()" [selectedValue]="selectedFIPEModel()"
-                    [disabled]="!selectedFIPEBrand() || !publishForm.get('year')?.value" [minChars]="2"
-                    (optionSelected)="onFIPEModelSelected($event)"></app-fipe-autocomplete>
+                  <app-fipe-autocomplete
+                    [placeholder]="'Ej: Corolla, Focus...'"
+                    [options]="fipeModels()"
+                    [isLoading]="isLoadingFIPEModels()"
+                    [selectedValue]="selectedFIPEModel()"
+                    [disabled]="!selectedFIPEBrand() || !publishForm.get('year')?.value"
+                    [minChars]="2"
+                    (optionSelected)="onFIPEModelSelected($event)"
+                  ></app-fipe-autocomplete>
                   @if (
-                  publishForm.get('model_text_backup')?.invalid &&
-                  (publishForm.get('model_text_backup')?.dirty ||
-                  publishForm.get('model_text_backup')?.touched)
+                    publishForm.get('model_text_backup')?.invalid &&
+                    (publishForm.get('model_text_backup')?.dirty ||
+                      publishForm.get('model_text_backup')?.touched)
                   ) {
-                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Seleccioná un modelo
-                  </p>
+                    <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      Seleccioná un modelo
+                    </p>
                   }
                 </div>
               </div>
@@ -143,154 +192,220 @@
 
             <!-- Barra "Smart" de estimación -->
             @if (valueAutoCalculated()) {
-            <div class="bg-emerald-50/50 px-4 sm:px-8 py-4 border-t border-emerald-100 flex items-center gap-3">
-              <span class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-                <ion-icon name="checkmark-circle-outline" class="text-xl"></ion-icon>
-              </span>
-              <div>
-                <p class="text-sm font-bold text-emerald-900">Vehículo reconocido</p>
-                <p class="text-xs text-emerald-700">
-                  Valor de mercado aprox: USD {{ publishForm.get('value_usd')?.value | number }}
-                </p>
+              <div
+                class="bg-emerald-50/50 px-4 sm:px-8 py-4 border-t border-emerald-100 flex items-center gap-3"
+              >
+                <span
+                  class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600"
+                >
+                  <ion-icon name="checkmark-circle-outline" class="text-xl"></ion-icon>
+                </span>
+                <div>
+                  <p class="text-sm font-bold text-emerald-900">Vehículo reconocido</p>
+                  <p class="text-xs text-emerald-700">
+                    Valor de mercado aprox: USD {{ publishForm.get('value_usd')?.value | number }}
+                  </p>
+                </div>
               </div>
-            </div>
             }
           </section>
 
           <!-- SECCIÓN 2: FOTOS (El "Wow" Visual) -->
-          <section class="publish-section glass-card rounded-2xl p-5 sm:p-8 transition-all duration-300" appHoverLift
-            [liftAmount]="2">
+          <section
+            class="publish-section glass-card rounded-2xl p-5 sm:p-8 transition-all duration-300"
+            appHoverLift
+            [liftAmount]="2"
+          >
             <!-- Photo Upload con validación integrada -->
-            <app-photo-upload-ai [maxPhotos]="10" [enableVehicleDetection]="true" [enablePlateBlur]="true"
-              [enableQualityValidation]="true" [requiredPositions]="['front', 'rear', 'left', 'interior']"
-              (photosChange)="onAIPhotosChange($event)" (vehicleDetected)="onVehicleAutoDetected($event)"
-              (requestAiGeneration)="showAIPhotosModal.set(true)" />
+            <app-photo-upload-ai
+              [maxPhotos]="10"
+              [enableVehicleDetection]="true"
+              [enablePlateBlur]="true"
+              [enableQualityValidation]="true"
+              [requiredPositions]="['front', 'rear', 'left', 'interior']"
+              (photosChange)="onAIPhotosChange($event)"
+              (vehicleDetected)="onVehicleAutoDetected($event)"
+              (requestAiGeneration)="showAIPhotosModal.set(true)"
+            />
 
             <!-- Botón para generar fotos (si no hay fotos) -->
             @if (uploadedPhotos().length === 0 && selectedFIPEModel()) {
-            <div class="mt-6 pt-6 border-t border-border-default/50">
-              <button type="button" (click)="showAIPhotosModal.set(true)"
-                class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-cta-default text-cta-text rounded-xl font-bold hover:bg-cta-hover transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                <ion-icon name="images-outline" class="text-xl"></ion-icon>
-                <span>Generar fotos de referencia</span>
-              </button>
-              <p class="text-xs text-text-muted text-center mt-2">
-                Si no tenés fotos, creamos una base visual de tu {{ getCurrentBrand() }} {{ getCurrentModel() }}.
-              </p>
-            </div>
+              <div class="mt-6 pt-6 border-t border-border-default/50">
+                <button
+                  type="button"
+                  (click)="showAIPhotosModal.set(true)"
+                  class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-cta-default text-cta-text rounded-xl font-bold hover:bg-cta-hover transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                >
+                  <ion-icon name="images-outline" class="text-xl"></ion-icon>
+                  <span>Generar fotos de referencia</span>
+                </button>
+                <p class="text-xs text-text-muted text-center mt-2">
+                  Si no tenés fotos, creamos una base visual de tu {{ getCurrentBrand() }}
+                  {{ getCurrentModel() }}.
+                </p>
+              </div>
             }
 
             <!-- Mobile tips -->
-            <button type="button" class="text-xs text-cta-default font-bold sm:hidden mt-4"
-              (click)="showMobileTips.set(true)">
+            <button
+              type="button"
+              class="text-xs text-cta-default font-bold sm:hidden mt-4"
+              (click)="showMobileTips.set(true)"
+            >
               Ver consejos para mejores fotos
             </button>
           </section>
 
           <!-- SECCIÓN 3: DETALLES TÉCNICOS (Colapsados visualmente en grid) -->
           <section
-            class="publish-section bg-surface-raised rounded-2xl shadow-sm border border-border-default/80 p-5 sm:p-8">
+            class="publish-section bg-surface-raised rounded-2xl shadow-sm border border-border-default/80 p-5 sm:p-8"
+          >
             <h2 class="h5 mb-6">Detalles básicos</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label class="label-text">Kilometraje (km)</label>
-                <input type="number" formControlName="mileage" class="input-modern" placeholder="Ej: 45000"
-                  inputmode="numeric" enterkeyhint="next" aria-label="Ej: 45000" />
+                <input
+                  type="number"
+                  formControlName="mileage"
+                  class="input-modern"
+                  placeholder="Ej: 45000"
+                  inputmode="numeric"
+                  enterkeyhint="next"
+                  aria-label="Ej: 45000"
+                />
                 @if (
-                publishForm.get('mileage')?.invalid &&
-                (publishForm.get('mileage')?.dirty || publishForm.get('mileage')?.touched)
+                  publishForm.get('mileage')?.invalid &&
+                  (publishForm.get('mileage')?.dirty || publishForm.get('mileage')?.touched)
                 ) {
-                <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Ingresá el kilometraje (mínimo 0).
-                </p>
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Ingresá el kilometraje (mínimo 0).
+                  </p>
                 }
               </div>
               <div>
                 <label class="label-text">Transmisión</label>
-                <app-visual-selector formControlName="transmission" [options]="transmissionOptions"
-                  [cols]="2"></app-visual-selector>
+                <app-visual-selector
+                  formControlName="transmission"
+                  [options]="transmissionOptions"
+                  [cols]="2"
+                ></app-visual-selector>
                 @if (
-                publishForm.get('transmission')?.invalid &&
-                (publishForm.get('transmission')?.dirty ||
-                publishForm.get('transmission')?.touched)
+                  publishForm.get('transmission')?.invalid &&
+                  (publishForm.get('transmission')?.dirty ||
+                    publishForm.get('transmission')?.touched)
                 ) {
-                <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Seleccioná la transmisión.
-                </p>
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Seleccioná la transmisión.
+                  </p>
                 }
               </div>
               <div>
                 <label class="label-text">Combustible</label>
-                <app-visual-selector formControlName="fuel" [options]="fuelOptions" [cols]="2"></app-visual-selector>
+                <app-visual-selector
+                  formControlName="fuel"
+                  [options]="fuelOptions"
+                  [cols]="2"
+                ></app-visual-selector>
                 @if (
-                publishForm.get('fuel')?.invalid &&
-                (publishForm.get('fuel')?.dirty || publishForm.get('fuel')?.touched)
+                  publishForm.get('fuel')?.invalid &&
+                  (publishForm.get('fuel')?.dirty || publishForm.get('fuel')?.touched)
                 ) {
-                <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Seleccioná el tipo de combustible.
-                </p>
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Seleccioná el tipo de combustible.
+                  </p>
                 }
               </div>
               <div>
                 <label class="label-text">Color</label>
-                <input type="text" formControlName="color" class="input-modern" placeholder="Ej: Blanco Perla"
-                  enterkeyhint="next" aria-label="Ej: Blanco Perla" />
+                <input
+                  type="text"
+                  formControlName="color"
+                  class="input-modern"
+                  placeholder="Ej: Blanco Perla"
+                  enterkeyhint="next"
+                  aria-label="Ej: Blanco Perla"
+                />
                 @if (
-                publishForm.get('color')?.invalid &&
-                (publishForm.get('color')?.dirty || publishForm.get('color')?.touched)
+                  publishForm.get('color')?.invalid &&
+                  (publishForm.get('color')?.dirty || publishForm.get('color')?.touched)
                 ) {
-                <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Ingresá el color del auto.
-                </p>
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Ingresá el color del auto.
+                  </p>
                 }
               </div>
             </div>
 
             <div class="mt-6">
               <label class="label-text">Descripción</label>
-              <textarea formControlName="description" rows="3" class="input-modern w-full resize-none"
-                placeholder="Describí lo más importante: consumo, comodidad, baúl, equipamiento y estado general."></textarea>
+              <textarea
+                formControlName="description"
+                rows="3"
+                class="input-modern w-full resize-none"
+                placeholder="Describí lo más importante: consumo, comodidad, baúl, equipamiento y estado general."
+              ></textarea>
               <div class="flex justify-between mt-1">
                 <p class="text-xs text-slate-500">Mínimo 40 caracteres.</p>
                 @if (
-                publishForm.get('description')?.hasError('required') &&
-                (publishForm.get('description')?.dirty || publishForm.get('description')?.touched)
+                  publishForm.get('description')?.hasError('required') &&
+                  (publishForm.get('description')?.dirty || publishForm.get('description')?.touched)
                 ) {
-                <p class="text-xs text-rose-500">La descripción es obligatoria.</p>
+                  <p class="text-xs text-rose-500">La descripción es obligatoria.</p>
                 } @else if (
-                publishForm.get('description')?.hasError('minlength') &&
-                (publishForm.get('description')?.dirty || publishForm.get('description')?.touched)
+                  publishForm.get('description')?.hasError('minlength') &&
+                  (publishForm.get('description')?.dirty || publishForm.get('description')?.touched)
                 ) {
-                <p class="text-xs text-rose-500">
-                  Faltan al menos
-                  {{ 40 - (publishForm.get('description')?.value?.length || 0) }} caracteres.
-                </p>
+                  <p class="text-xs text-rose-500">
+                    Faltan al menos
+                    {{ 40 - (publishForm.get('description')?.value?.length || 0) }} caracteres.
+                  </p>
                 }
               </div>
             </div>
           </section>
 
           <!-- SECCIÓN 3.5: REGLAS DE ALQUILER -->
-          <section class="publish-section glass-card rounded-2xl p-5 sm:p-8 transition-all duration-300" appHoverLift
-            [liftAmount]="2">
+          <section
+            class="publish-section glass-card rounded-2xl p-5 sm:p-8 transition-all duration-300"
+            appHoverLift
+            [liftAmount]="2"
+          >
             <div class="flex items-center gap-3 mb-6">
-              <div class="w-10 h-10 rounded-xl bg-cta-default/15 flex items-center justify-center text-text-primary">
+              <div
+                class="w-10 h-10 rounded-xl bg-cta-default/15 flex items-center justify-center text-text-primary"
+              >
                 <ion-icon name="document-text-outline" class="text-2xl text-cta-default"></ion-icon>
               </div>
               <h2 class="h4">Reglas de uso</h2>
@@ -301,19 +416,30 @@
               <div class="md:col-span-2">
                 <label class="label-text">Límite de Kilometraje (por día)</label>
                 <div class="mb-3">
-                  <app-visual-selector formControlName="mileage_limit" [options]="mileageOptions" [cols]="3"
-                    [responsive]="true"></app-visual-selector>
+                  <app-visual-selector
+                    formControlName="mileage_limit"
+                    [options]="mileageOptions"
+                    [cols]="3"
+                    [responsive]="true"
+                  ></app-visual-selector>
                 </div>
                 <!-- Extra KM Price (Conditional) -->
                 @if (publishForm.get('mileage_limit')?.value !== 0) {
-                <div class="mt-2">
-                  <label class="text-xs text-slate-500 mb-1 block">Precio por km extra (USD)</label>
-                  <div class="relative w-32">
-                    <span class="absolute left-3 top-2.5 text-slate-500 text-sm">$</span>
-                    <input type="number" formControlName="extra_km_price" class="input-modern pl-6 py-2"
-                      placeholder="0.50" aria-label="0.50" />
+                  <div class="mt-2">
+                    <label class="text-xs text-slate-500 mb-1 block"
+                      >Precio por km extra (USD)</label
+                    >
+                    <div class="relative w-32">
+                      <span class="absolute left-3 top-2.5 text-slate-500 text-sm">$</span>
+                      <input
+                        type="number"
+                        formControlName="extra_km_price"
+                        class="input-modern pl-6 py-2"
+                        placeholder="0.50"
+                        aria-label="0.50"
+                      />
+                    </div>
                   </div>
-                </div>
                 }
               </div>
 
@@ -345,37 +471,54 @@
               <div class="md:col-span-2 pt-4 border-t border-slate-100">
                 <label class="flex items-center cursor-pointer justify-between">
                   <div>
-                    <span class="block text-sm font-semibold text-slate-700">Permitir 2do Conductor</span>
-                    <span class="block text-xs text-slate-500">Aumenta tus reservas permitiendo conductores adicionales
-                      verificados.</span>
+                    <span class="block text-sm font-semibold text-slate-700"
+                      >Permitir 2do Conductor</span
+                    >
+                    <span class="block text-xs text-slate-500"
+                      >Aumenta tus reservas permitiendo conductores adicionales verificados.</span
+                    >
                   </div>
                   <div class="relative">
-                    <input type="checkbox" formControlName="allow_second_driver" class="sr-only peer" />
+                    <input
+                      type="checkbox"
+                      formControlName="allow_second_driver"
+                      class="sr-only peer"
+                    />
                     <div
-                      class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cta-default">
-                    </div>
+                      class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cta-default"
+                    ></div>
                   </div>
                 </label>
 
                 @if (publishForm.get('allow_second_driver')?.value) {
-                <div class="mt-3 flex items-center gap-3">
-                  <span class="text-sm text-slate-600">Costo adicional por día (USD):</span>
-                  <div class="relative w-24">
-                    <span class="absolute left-3 top-2.5 text-slate-500 text-sm">$</span>
-                    <input type="number" formControlName="second_driver_cost" class="input-modern pl-6 py-2"
-                      placeholder="5" aria-label="5" />
+                  <div class="mt-3 flex items-center gap-3">
+                    <span class="text-sm text-slate-600">Costo adicional por día (USD):</span>
+                    <div class="relative w-24">
+                      <span class="absolute left-3 top-2.5 text-slate-500 text-sm">$</span>
+                      <input
+                        type="number"
+                        formControlName="second_driver_cost"
+                        class="input-modern pl-6 py-2"
+                        placeholder="5"
+                        aria-label="5"
+                      />
+                    </div>
                   </div>
-                </div>
                 }
               </div>
             </div>
           </section>
 
           <!-- SECCIÓN 4: PRECIO Y GANANCIA (El "Why") -->
-          <section class="publish-section glass-card rounded-2xl p-5 sm:p-8 transition-all duration-300" appHoverLift
-            [liftAmount]="2">
+          <section
+            class="publish-section glass-card rounded-2xl p-5 sm:p-8 transition-all duration-300"
+            appHoverLift
+            [liftAmount]="2"
+          >
             <div class="flex items-center gap-3 mb-6">
-              <div class="w-10 h-10 rounded-xl bg-cta-default/10 flex items-center justify-center text-cta-default">
+              <div
+                class="w-10 h-10 rounded-xl bg-cta-default/10 flex items-center justify-center text-cta-default"
+              >
                 <ion-icon name="cash-outline" class="text-2xl"></ion-icon>
               </div>
               <div>
@@ -385,46 +528,69 @@
 
             <!-- Selector de Estrategia -->
             <div class="bg-slate-50 p-1.5 rounded-xl flex gap-2 mb-6">
-              <button type="button" (click)="setPricingStrategy('dynamic')"
+              <button
+                type="button"
+                (click)="setPricingStrategy('dynamic')"
                 class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-1.5"
-                [class.bg-white]="isDynamicPricingSignal()" [class.shadow-sm]="isDynamicPricingSignal()"
-                [class.text-cta-default]="isDynamicPricingSignal()" [class.text-slate-500]="!isDynamicPricingSignal()">
-                <ion-icon name="flash-outline" class="text-base"></ion-icon>Precio Dinámico (Recomendado)
+                [class.bg-white]="isDynamicPricingSignal()"
+                [class.shadow-sm]="isDynamicPricingSignal()"
+                [class.text-cta-default]="isDynamicPricingSignal()"
+                [class.text-slate-500]="!isDynamicPricingSignal()"
+              >
+                <ion-icon name="flash-outline" class="text-base"></ion-icon>Precio Dinámico
+                (Recomendado)
               </button>
-              <button type="button" (click)="setPricingStrategy('custom')"
+              <button
+                type="button"
+                (click)="setPricingStrategy('custom')"
                 class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
-                [class.bg-white]="!isDynamicPricingSignal()" [class.shadow-sm]="!isDynamicPricingSignal()"
-                [class.text-slate-900]="!isDynamicPricingSignal()" [class.text-slate-500]="isDynamicPricingSignal()">
+                [class.bg-white]="!isDynamicPricingSignal()"
+                [class.shadow-sm]="!isDynamicPricingSignal()"
+                [class.text-slate-900]="!isDynamicPricingSignal()"
+                [class.text-slate-500]="isDynamicPricingSignal()"
+              >
                 Precio Fijo
               </button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
-                <label class="label-text">Precio por día ({{ publishForm.get('currency')?.value }})</label>
+                <label class="label-text"
+                  >Precio por día ({{ publishForm.get('currency')?.value }})</label
+                >
                 <div class="relative">
-                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">$</span>
-                  <input type="number" formControlName="price_per_day"
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold"
+                    >$</span
+                  >
+                  <input
+                    type="number"
+                    formControlName="price_per_day"
                     class="input-modern pl-8 text-2xl font-bold text-slate-900 h-14"
-                    [readonly]="isDynamicPricingSignal()" aria-label="Price per day" />
+                    [readonly]="isDynamicPricingSignal()"
+                    aria-label="Price per day"
+                  />
                 </div>
                 @if (
-                publishForm.get('price_per_day')?.invalid &&
-                (publishForm.get('price_per_day')?.dirty ||
-                publishForm.get('price_per_day')?.touched)
+                  publishForm.get('price_per_day')?.invalid &&
+                  (publishForm.get('price_per_day')?.dirty ||
+                    publishForm.get('price_per_day')?.touched)
                 ) {
-                <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Ingresá un precio por día válido (mínimo $1).
-                </p>
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Ingresá un precio por día válido (mínimo $1).
+                  </p>
                 }
                 @if (isDynamicPricingSignal()) {
-                <p class="text-xs text-cta-default mt-2 font-medium">
-                  Ajustado automáticamente según demanda
-                </p>
+                  <p class="text-xs text-cta-default mt-2 font-medium">
+                    Ajustado automáticamente según demanda
+                  </p>
                 }
               </div>
 
@@ -434,8 +600,8 @@
                 </p>
                 <div class="text-3xl font-black text-cta-default">
                   {{
-                  (publishForm.get('price_per_day')?.value || 0) * 10
-                  | currency: publishForm.get('currency')?.value : 'symbol' : '1.0-0'
+                    (publishForm.get('price_per_day')?.value || 0) * 10
+                      | currency: publishForm.get('currency')?.value : 'symbol' : '1.0-0'
                   }}
                 </div>
                 <p class="text-xs text-text-muted mt-1">Calculado con 10 días de alquiler/mes</p>
@@ -445,18 +611,26 @@
             <!-- Configuraciones avanzadas (Depósito, Seguros) colapsadas o simplificadas -->
             <div class="mt-8 pt-6 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <label
-                class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
-                <input type="checkbox" formControlName="deposit_required"
-                  class="w-5 h-5 text-cta-default rounded border-slate-300 focus:ring-cta-default" />
+                class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition"
+              >
+                <input
+                  type="checkbox"
+                  formControlName="deposit_required"
+                  class="w-5 h-5 text-cta-default rounded border-slate-300 focus:ring-cta-default"
+                />
                 <div class="ml-3">
                   <span class="block text-sm font-semibold text-slate-700">Solicitar Depósito</span>
                   <span class="block text-xs text-slate-500">Garantía para el anfitrión</span>
                 </div>
               </label>
               <label
-                class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
-                <input type="checkbox" formControlName="auto_approval"
-                  class="w-5 h-5 text-cta-default rounded border-slate-300 focus:ring-cta-default" />
+                class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition"
+              >
+                <input
+                  type="checkbox"
+                  formControlName="auto_approval"
+                  class="w-5 h-5 text-cta-default rounded border-slate-300 focus:ring-cta-default"
+                />
                 <div class="ml-3">
                   <span class="block text-sm font-semibold text-slate-700">Reserva Inmediata</span>
                   <span class="block text-xs text-slate-500">Acepta reservas automáticamente</span>
@@ -466,60 +640,81 @@
 
             <!-- Instant Booking (Reserva al Instante) -->
             <div
-              class="mt-6 p-5 border border-emerald-200 bg-gradient-to-br from-emerald-50/50 to-teal-50/30 rounded-2xl">
+              class="mt-6 p-5 border border-emerald-200 bg-gradient-to-br from-emerald-50/50 to-teal-50/30 rounded-2xl"
+            >
               <div class="flex items-start gap-4">
                 <div
-                  class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
+                  class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg"
+                >
                   <ion-icon name="flash-outline" class="text-2xl text-white"></ion-icon>
                 </div>
                 <div class="flex-1">
                   <div class="flex items-center gap-3 mb-2">
                     <h3 class="text-lg font-bold text-slate-800">Reserva al Instante</h3>
                     <span
-                      class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-wider rounded-full">BETA</span>
+                      class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-wider rounded-full"
+                      >BETA</span
+                    >
                   </div>
                   <p class="text-sm text-slate-600 mb-4">
-                    Permite que renters verificados y con buen historial reserven tu auto sin necesidad de aprobación
-                    manual.
-                    Las reservas van directamente a pago.
+                    Permite que renters verificados y con buen historial reserven tu auto sin
+                    necesidad de aprobación manual. Las reservas van directamente a pago.
                   </p>
 
                   <label class="flex items-center cursor-pointer group mb-4">
-                    <input type="checkbox" formControlName="instant_booking_enabled"
-                      class="w-5 h-5 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500" />
-                    <span class="ml-3 text-sm font-semibold text-slate-700 group-hover:text-emerald-600 transition">
+                    <input
+                      type="checkbox"
+                      formControlName="instant_booking_enabled"
+                      class="w-5 h-5 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500"
+                    />
+                    <span
+                      class="ml-3 text-sm font-semibold text-slate-700 group-hover:text-emerald-600 transition"
+                    >
                       Habilitar Reserva al Instante
                     </span>
                   </label>
 
                   @if (publishForm.get('instant_booking_enabled')?.value) {
-                  <div class="space-y-4 pt-4 border-t border-emerald-200/50">
-                    <!-- Puntaje mínimo -->
-                    <div>
-                      <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Puntaje de confianza mínimo: <span class="font-bold text-emerald-600">{{
-                          publishForm.get('instant_booking_min_score')?.value }}</span>
-                      </label>
-                      <input type="range" formControlName="instant_booking_min_score" min="0" max="100" step="5"
-                        class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-500" />
-                      <div class="flex justify-between text-xs text-slate-500 mt-1">
-                        <span>Cualquiera (0)</span>
-                        <span>Muy alto (100)</span>
+                    <div class="space-y-4 pt-4 border-t border-emerald-200/50">
+                      <!-- Puntaje mínimo -->
+                      <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                          Puntaje de confianza mínimo:
+                          <span class="font-bold text-emerald-600">{{
+                            publishForm.get('instant_booking_min_score')?.value
+                          }}</span>
+                        </label>
+                        <input
+                          type="range"
+                          formControlName="instant_booking_min_score"
+                          min="0"
+                          max="100"
+                          step="5"
+                          class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                        />
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                          <span>Cualquiera (0)</span>
+                          <span>Muy alto (100)</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">
+                          Renters con menor puntaje deberán esperar tu aprobación manual.
+                        </p>
                       </div>
-                      <p class="text-xs text-slate-500 mt-2">
-                        Renters con menor puntaje deberán esperar tu aprobación manual.
-                      </p>
-                    </div>
 
-                    <!-- Requerir verificación -->
-                    <label class="flex items-center cursor-pointer group">
-                      <input type="checkbox" formControlName="instant_booking_require_verified"
-                        class="w-4 h-4 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500" />
-                      <span class="ml-2 text-sm text-slate-600 group-hover:text-slate-800 transition">
-                        Requerir identidad y licencia verificadas
-                      </span>
-                    </label>
-                  </div>
+                      <!-- Requerir verificación -->
+                      <label class="flex items-center cursor-pointer group">
+                        <input
+                          type="checkbox"
+                          formControlName="instant_booking_require_verified"
+                          class="w-4 h-4 text-emerald-500 rounded border-slate-300 focus:ring-emerald-500"
+                        />
+                        <span
+                          class="ml-2 text-sm text-slate-600 group-hover:text-slate-800 transition"
+                        >
+                          Requerir identidad y licencia verificadas
+                        </span>
+                      </label>
+                    </div>
                   }
                 </div>
               </div>
@@ -527,80 +722,122 @@
           </section>
 
           <!-- SECCIÓN 5: UBICACIÓN -->
-          <section class="publish-section glass-card rounded-2xl p-5 sm:p-8 transition-all duration-300 mb-24 sm:mb-0"
-            appHoverLift>
+          <section
+            class="publish-section glass-card rounded-2xl p-5 sm:p-8 transition-all duration-300 mb-24 sm:mb-0"
+            appHoverLift
+          >
             <div class="flex items-center justify-between mb-6">
               <h2 class="h4">Ubicación del auto</h2>
-              <button type="button" (click)="useCurrentLocation()" [disabled]="gettingLocation()"
-                class="text-cta-default text-sm font-bold hover:underline flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-wait">
+              <button
+                type="button"
+                (click)="useCurrentLocation()"
+                [disabled]="gettingLocation()"
+                class="text-cta-default text-sm font-bold hover:underline flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-wait"
+              >
                 @switch (locationState()) {
-                @case ('acquiring') {
-                <div class="w-4 h-4 border-2 border-cta-default border-t-transparent rounded-full animate-spin"></div>
-                <span>Buscando ubicación...</span>
-                }
-                @case ('geocoding') {
-                <div class="w-4 h-4 border-2 border-cta-default border-t-transparent rounded-full animate-spin"></div>
-                <span>Obteniendo dirección...</span>
-                }
-                @default {
-                <ion-icon name="location-outline" class="text-base"></ion-icon>
-                <span>Usar mi ubicación actual</span>
-                }
+                  @case ('acquiring') {
+                    <div
+                      class="w-4 h-4 border-2 border-cta-default border-t-transparent rounded-full animate-spin"
+                    ></div>
+                    <span>Buscando ubicación...</span>
+                  }
+                  @case ('geocoding') {
+                    <div
+                      class="w-4 h-4 border-2 border-cta-default border-t-transparent rounded-full animate-spin"
+                    ></div>
+                    <span>Obteniendo dirección...</span>
+                  }
+                  @default {
+                    <ion-icon name="location-outline" class="text-base"></ion-icon>
+                    <span>Usar mi ubicación actual</span>
+                  }
                 }
               </button>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
               <div class="col-span-2">
-                <input type="text" formControlName="location_street" placeholder="Dirección / Calle"
-                  class="input-modern" data-testid="location-street-input" enterkeyhint="next"
-                  aria-label="Dirección / Calle" />
+                <input
+                  type="text"
+                  formControlName="location_street"
+                  placeholder="Dirección / Calle"
+                  class="input-modern"
+                  data-testid="location-street-input"
+                  enterkeyhint="next"
+                  aria-label="Dirección / Calle"
+                />
                 @if (
-                publishForm.get('location_street')?.invalid &&
-                (publishForm.get('location_street')?.dirty ||
-                publishForm.get('location_street')?.touched)
+                  publishForm.get('location_street')?.invalid &&
+                  (publishForm.get('location_street')?.dirty ||
+                    publishForm.get('location_street')?.touched)
                 ) {
-                <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Ingresá la dirección.
-                </p>
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Ingresá la dirección.
+                  </p>
                 }
               </div>
               <div>
-                <input type="text" formControlName="location_city" placeholder="Ciudad" class="input-modern"
-                  data-testid="location-city-input" enterkeyhint="next" aria-label="Ciudad" />
+                <input
+                  type="text"
+                  formControlName="location_city"
+                  placeholder="Ciudad"
+                  class="input-modern"
+                  data-testid="location-city-input"
+                  enterkeyhint="next"
+                  aria-label="Ciudad"
+                />
                 @if (
-                publishForm.get('location_city')?.invalid &&
-                (publishForm.get('location_city')?.dirty ||
-                publishForm.get('location_city')?.touched)
+                  publishForm.get('location_city')?.invalid &&
+                  (publishForm.get('location_city')?.dirty ||
+                    publishForm.get('location_city')?.touched)
                 ) {
-                <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Ingresá la ciudad.
-                </p>
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Ingresá la ciudad.
+                  </p>
                 }
               </div>
               <div>
-                <input type="text" formControlName="location_state" placeholder="Provincia" class="input-modern"
-                  data-testid="location-state-input" enterkeyhint="done" aria-label="Provincia" />
+                <input
+                  type="text"
+                  formControlName="location_state"
+                  placeholder="Provincia"
+                  class="input-modern"
+                  data-testid="location-state-input"
+                  enterkeyhint="done"
+                  aria-label="Provincia"
+                />
                 @if (
-                publishForm.get('location_state')?.invalid &&
-                (publishForm.get('location_state')?.dirty ||
-                publishForm.get('location_state')?.touched)
+                  publishForm.get('location_state')?.invalid &&
+                  (publishForm.get('location_state')?.dirty ||
+                    publishForm.get('location_state')?.touched)
                 ) {
-                <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Ingresá la provincia.
-                </p>
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Ingresá la provincia.
+                  </p>
                 }
               </div>
               <div class="col-span-2 text-xs text-slate-500">
@@ -611,28 +848,43 @@
 
           <!-- BOTONES DE ACCIÓN FLOTANTES O FINALES -->
           <div
-            class="fixed bottom-0 left-0 right-0 p-4 bg-surface-raised border-t border-border-default sm:static sm:bg-transparent sm:border-0 sm:p-0 z-50 sm:z-auto safe-area-pb">
-            <div class="max-w-5xl mx-auto lg:max-w-none flex flex-row-reverse sm:flex-row items-center gap-3 sm:gap-4">
-              <button type="submit" [disabled]="isSubmitting() || !canSubmit()"
+            class="fixed bottom-0 left-0 right-0 p-4 bg-surface-raised border-t border-border-default sm:static sm:bg-transparent sm:border-0 sm:p-0 z-50 sm:z-auto safe-area-pb"
+          >
+            <div
+              class="max-w-5xl mx-auto lg:max-w-none flex flex-row-reverse sm:flex-row items-center gap-3 sm:gap-4"
+            >
+              <button
+                type="submit"
+                [disabled]="isSubmitting() || !canSubmit()"
                 class="flex-1 sm:flex-none sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 bg-cta-default hover:bg-cta-hover active:bg-cta-pressed text-cta-text rounded-xl font-bold text-base sm:text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
-                data-testid="publish-submit">
+                data-testid="publish-submit"
+              >
                 @if (isSubmitting()) {
-                <span class="animate-spin h-5 w-5 border-2 border-white/30 border-t-white rounded-full"></span>
+                  <span
+                    class="animate-spin h-5 w-5 border-2 border-white/30 border-t-white rounded-full"
+                  ></span>
                 }
                 {{ editMode() ? 'Guardar' : 'Publicar' }}
               </button>
 
               <!-- Save Draft Button -->
               @if (!editMode() && canSaveDraft() && !canSubmit()) {
-              <button type="button" (click)="saveDraft()" [disabled]="isSubmitting()"
-                class="flex-1 sm:flex-none sm:w-auto px-4 py-3.5 sm:px-6 sm:py-4 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-xl font-bold text-sm sm:text-lg transition-all flex items-center justify-center gap-2">
-                <span class="hidden sm:inline">Guardar Borrador</span>
-                <span class="sm:hidden">Borrador</span>
-              </button>
+                <button
+                  type="button"
+                  (click)="saveDraft()"
+                  [disabled]="isSubmitting()"
+                  class="flex-1 sm:flex-none sm:w-auto px-4 py-3.5 sm:px-6 sm:py-4 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-xl font-bold text-sm sm:text-lg transition-all flex items-center justify-center gap-2"
+                >
+                  <span class="hidden sm:inline">Guardar Borrador</span>
+                  <span class="sm:hidden">Borrador</span>
+                </button>
               }
 
-              <button type="button" (click)="goBack()"
-                class="hidden sm:block text-slate-500 font-medium hover:text-slate-800 transition">
+              <button
+                type="button"
+                (click)="goBack()"
+                class="hidden sm:block text-slate-500 font-medium hover:text-slate-800 transition"
+              >
                 Cancelar
               </button>
             </div>
@@ -643,8 +895,12 @@
       <!-- COLUMNA LATERAL (Trust & Preview) -->
       <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
         <!-- Tarjeta de Confianza -->
-        <div class="bg-cta-default rounded-3xl p-6 text-cta-text shadow-xl relative overflow-hidden">
-          <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+        <div
+          class="bg-cta-default rounded-3xl p-6 text-cta-text shadow-xl relative overflow-hidden"
+        >
+          <div
+            class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"
+          ></div>
           <h3 class="h5 mb-4 relative z-10 text-cta-text">Tu seguridad es primero</h3>
           <ul class="space-y-3 text-sm text-black/80 relative z-10">
             <li class="flex gap-2">
@@ -672,13 +928,18 @@
           </h4>
           <div class="aspect-[4/3] bg-slate-100 rounded-xl mb-4 overflow-hidden relative">
             @if (uploadedPhotos().length > 0) {
-            <img [src]="uploadedPhotos()[0].preview" class="w-full h-full object-cover" alt="Vista previa del vehículo"
-              width="400" height="300" />
+              <img
+                [src]="uploadedPhotos()[0].preview"
+                class="w-full h-full object-cover"
+                alt="Vista previa del vehículo"
+                width="400"
+                height="300"
+              />
             }
             @if (uploadedPhotos().length === 0) {
-            <div class="flex items-center justify-center h-full text-slate-500">
-              <ion-icon name="image-outline" class="text-6xl text-slate-300"></ion-icon>
-            </div>
+              <div class="flex items-center justify-center h-full text-slate-500">
+                <ion-icon name="image-outline" class="text-6xl text-slate-300"></ion-icon>
+              </div>
             }
           </div>
           <div>
@@ -690,8 +951,9 @@
               {{ publishForm.get('location_city')?.value || 'Ubicación' }}
             </p>
             <div class="mt-3 flex items-baseline gap-1">
-              <span class="text-lg font-bold text-cta-default">${{ publishForm.get('price_per_day')?.value || 0
-                }}</span>
+              <span class="text-lg font-bold text-cta-default"
+                >${{ publishForm.get('price_per_day')?.value || 0 }}</span
+              >
               <span class="text-xs text-slate-500">/ día</span>
             </div>
           </div>
@@ -701,40 +963,61 @@
 
     <!-- Modals (Sin cambios estructurales profundos, solo wrappers) -->
     @if (showStockPhotosModal()) {
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div class="bg-surface-raised rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <app-stock-photos-selector [brand]="getCurrentBrand()" [model]="getCurrentModel()" [year]="getCurrentYear()"
-          (photosSelected)="onStockPhotosSelected($event)"></app-stock-photos-selector>
-        <div class="p-4 border-t border-border-default/80 text-right">
-          <button (click)="showStockPhotosModal.set(false)"
-            class="text-text-muted font-semibold hover:text-text-primary">
-            Cerrar
-          </button>
+      <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      >
+        <div class="bg-surface-raised rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+          <app-stock-photos-selector
+            [brand]="getCurrentBrand()"
+            [model]="getCurrentModel()"
+            [year]="getCurrentYear()"
+            (photosSelected)="onStockPhotosSelected($event)"
+          ></app-stock-photos-selector>
+          <div class="p-4 border-t border-border-default/80 text-right">
+            <button
+              (click)="showStockPhotosModal.set(false)"
+              class="text-text-muted font-semibold hover:text-text-primary"
+            >
+              Cerrar
+            </button>
+          </div>
         </div>
       </div>
-    </div>
     }
 
     @if (showAIPhotosModal()) {
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div class="bg-surface-raised rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <app-ai-photo-generator [brand]="getCurrentBrand()" [model]="getCurrentModel()" [year]="getCurrentYear()"
-          (photosGenerated)="onAIPhotosGenerated($event)"></app-ai-photo-generator>
-        <div class="p-4 border-t border-border-default/80 text-right">
-          <button (click)="showAIPhotosModal.set(false)" class="text-text-muted font-semibold hover:text-text-primary">
-            Cerrar
-          </button>
+      <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      >
+        <div class="bg-surface-raised rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+          <app-ai-photo-generator
+            [brand]="getCurrentBrand()"
+            [model]="getCurrentModel()"
+            [year]="getCurrentYear()"
+            (photosGenerated)="onAIPhotosGenerated($event)"
+          ></app-ai-photo-generator>
+          <div class="p-4 border-t border-border-default/80 text-right">
+            <button
+              (click)="showAIPhotosModal.set(false)"
+              class="text-text-muted font-semibold hover:text-text-primary"
+            >
+              Cerrar
+            </button>
+          </div>
         </div>
       </div>
-    </div>
     }
 
-    <app-bottom-sheet [isOpen]="showMobileTips()" title="Consejos para Anfitriones"
-      (closed)="showMobileTips.set(false)">
+    <app-bottom-sheet
+      [isOpen]="showMobileTips()"
+      title="Consejos para Anfitriones"
+      (closed)="showMobileTips.set(false)"
+    >
       <div class="space-y-4 text-text-secondary">
         <div class="flex gap-3">
           <div
-            class="flex-shrink-0 w-8 h-8 bg-cta-default/10 rounded-full flex items-center justify-center text-cta-default">
+            class="flex-shrink-0 w-8 h-8 bg-cta-default/10 rounded-full flex items-center justify-center text-cta-default"
+          >
             📸
           </div>
           <div>
@@ -746,7 +1029,8 @@
         </div>
         <div class="flex gap-3">
           <div
-            class="flex-shrink-0 w-8 h-8 bg-cta-default/10 rounded-full flex items-center justify-center text-cta-default">
+            class="flex-shrink-0 w-8 h-8 bg-cta-default/10 rounded-full flex items-center justify-center text-cta-default"
+          >
             🧼
           </div>
           <div>
@@ -756,7 +1040,8 @@
         </div>
         <div class="flex gap-3">
           <div
-            class="flex-shrink-0 w-8 h-8 bg-cta-default/10 rounded-full flex items-center justify-center text-cta-default">
+            class="flex-shrink-0 w-8 h-8 bg-cta-default/10 rounded-full flex items-center justify-center text-cta-default"
+          >
             ⚡
           </div>
           <div>
