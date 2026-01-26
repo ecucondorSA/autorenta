@@ -13,7 +13,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { initSentry, captureError } from '../_shared/sentry.ts';
-import { initSentry, captureError } from '../_shared/sentry.ts';
 
 const TIKTOK_PIXEL_ID = 'D4AHBBBC77U2U4VHPCO0';
 const TIKTOK_API_VERSION = 'v1.3';

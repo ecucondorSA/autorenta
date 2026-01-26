@@ -493,8 +493,16 @@ export class VerificationService implements OnDestroy {
     );
 
     if (!result) {
-      this.logger.error('verifyDocumentOcr failed after retries');
-      throw new Error('Verificación OCR fallida después de múltiples intentos');
+      this.logger.error('verifyDocumentOcr failed after retries', {
+        documentType,
+        side,
+        country,
+        imageSize: imageBase64.length,
+      });
+      throw new Error(
+        'Verificación OCR fallida después de múltiples intentos. ' +
+        'Por favor, asegurate de que la imagen sea clara y esté bien iluminada.'
+      );
     }
 
     return result;

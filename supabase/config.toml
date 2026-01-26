@@ -47,3 +47,7 @@ verify_jwt = false
 [functions.passkeys-authentication-verify]
 # Passkey authentication verification - public (creates session)
 verify_jwt = false
+
+[functions.tiktok-events]
+# TikTok Events API - public for analytics tracking (anonymous users too)
+verify_jwt = false
