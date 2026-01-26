@@ -1,195 +1,177 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface SecurityData {
-  /* Define the structure of your security data here */
-}
+import { environment } from '../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private apiUrl = '/api/security'; // Replace with your actual API endpoint
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
-  getSecurityData(): Observable<SecurityData> {
-    return this.http.get<SecurityData>(`${this.apiUrl}/data`);
+  getSecurityAlerts(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/alerts`);
   }
 
-  // Example method to fetch alerts
-  getAlerts(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/alerts`);
+  getSecurityRecommendations(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/recommendations`);
   }
 
-  // Example method to acknowledge an alert
-  acknowledgeAlert(alertId: string): Observable<any> { // Replace any with a specific type/interface
-    return this.http.post<any>(`${this.apiUrl}/alerts/${alertId}/acknowledge`, {});
+  updateSecuritySetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/security/settings/${settingId}`, { value });
   }
 
-  // Example method to resolve an alert
-  resolveAlert(alertId: string): Observable<any> { // Replace any with a specific type/interface
-    return this.http.post<any>(`${this.apiUrl}/alerts/${alertId}/resolve`, {});
+  getSecuritySetting(settingId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/settings/${settingId}`);
   }
 
-    // Example method to fetch logs
-  getLogs(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/logs`);
+  getAllSecuritySettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/settings`);
   }
 
-  // Example method to fetch user activity
-  getUserActivity(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/user-activity`);
+  // New methods to fetch and update MFA settings
+  getMFASettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/mfa/settings`);
   }
 
-  // Example method to fetch threat intelligence
-  getThreatIntelligence(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/threat-intelligence`);
+  updateMFASetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/mfa/settings/${settingId}`, { value });
   }
 
-  // Example method to update security settings
-  updateSecuritySettings(settings: any): Observable<any> { // Replace any with a specific type/interface
-    return this.http.put<any>(`${this.apiUrl}/settings`, settings);
+  // Methods to fetch and update Privacy settings
+  getPrivacySettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/privacy/settings`);
   }
 
-  // Example method to fetch security reports
-  getSecurityReports(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/reports`);
+  updatePrivacySetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/privacy/settings/${settingId}`, { value });
   }
 
-  // Example method to trigger a security scan
-  triggerSecurityScan(): Observable<any> { // Replace any with a specific type/interface
-    return this.http.post<any>(`${this.apiUrl}/scan`, {});
+  // Methods to fetch and update Data Sharing settings
+  getDataSharingSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/data-sharing/settings`);
   }
 
-  // Example method to fetch vulnerability data
-  getVulnerabilityData(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/vulnerabilities`);
+  updateDataSharingSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/data-sharing/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch compliance data
-  getComplianceData(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/compliance`);
+  // Methods to fetch and update Communication Preferences settings
+  getCommunicationPreferencesSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/communication-preferences/settings`);
   }
 
-  // Example method to fetch incident response plans
-  getIncidentResponsePlans(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/incident-response-plans`);
+  updateCommunicationPreferencesSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/communication-preferences/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch security policies
-  getSecurityPolicies(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-policies`);
+  // Methods to fetch and update Payment settings
+  getPaymentSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/payment/settings`);
   }
 
-  // Example method to fetch security awareness training materials
-  getSecurityAwarenessTrainingMaterials(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-awareness-training-materials`);
+  updatePaymentSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/payment/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch security news and updates
-  getSecurityNewsAndUpdates(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-news-and-updates`);
+  // Methods to fetch and update Legal settings
+  getLegalSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/legal/settings`);
   }
 
-  // Example method to fetch security tools and resources
-  getSecurityToolsAndResources(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-tools-and-resources`);
+  updateLegalSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/legal/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch security best practices
-  getSecurityBestPractices(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-best-practices`);
+  // Methods to fetch and update Terms of Service settings
+  getTermsOfServiceSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/terms-of-service/settings`);
   }
 
-  // Example method to fetch security certifications
-  getSecurityCertifications(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-certifications`);
+  updateTermsOfServiceSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/terms-of-service/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch security frameworks
-  getSecurityFrameworks(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-frameworks`);
+  // Methods to fetch and update Cookie settings
+  getCookieSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/cookie/settings`);
   }
 
-  // Example method to fetch security standards
-  getSecurityStandards(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-standards`);
+  updateCookieSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/cookie/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch security regulations
-  getSecurityRegulations(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-regulations`);
+  // Methods to fetch and update Session settings
+  getSessionSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/session/settings`);
   }
 
-  // Example method to fetch security compliance requirements
-  getSecurityComplianceRequirements(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-compliance-requirements`);
+  updateSessionSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/session/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch security audit reports
-  getSecurityAuditReports(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-audit-reports`);
+  // Methods to fetch and update Connected Apps settings
+  getConnectedAppsSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/connected-apps/settings`);
   }
 
-  // Example method to fetch security risk assessments
-  getSecurityRiskAssessments(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-risk-assessments`);
+  updateConnectedAppsSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/connected-apps/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch security incident reports
-  getSecurityIncidentReports(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-incident-reports`);
+  // Methods to fetch and update Authorized Devices settings
+  getAuthorizedDevicesSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/authorized-devices/settings`);
   }
 
-  // Example method to fetch security vulnerability reports
-  getSecurityVulnerabilityReports(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-vulnerability-reports`);
+  updateAuthorizedDevicesSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/authorized-devices/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch security penetration testing reports
-  getSecurityPenetrationTestingReports(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-penetration-testing-reports`);
+  // Methods to fetch and update Account Activity settings
+  getAccountActivitySettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/account-activity/settings`);
   }
 
-  // Example method to fetch security code review reports
-  getSecurityCodeReviewReports(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-code-review-reports`);
+  updateAccountActivitySetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/account-activity/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch security architecture diagrams
-  getSecurityArchitectureDiagrams(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-architecture-diagrams`);
+  // Methods to fetch and update App Integrations settings
+  getAppIntegrationsSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/app-integrations/settings`);
   }
 
-  // Example method to fetch security data flow diagrams
-  getSecurityDataFlowDiagrams(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-data-flow-diagrams`);
+  updateAppIntegrationsSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/app-integrations/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch security network diagrams
-  getSecurityNetworkDiagrams(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-network-diagrams`);
+  // Methods to fetch and update Third-Party Services settings
+  getThirdPartyServicesSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/third-party-services/settings`);
   }
 
-  // Example method to fetch security system diagrams
-  getSecuritySystemDiagrams(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-system-diagrams`);
+  updateThirdPartyServicesSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/third-party-services/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch security infrastructure diagrams
-  getSecurityInfrastructureDiagrams(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-infrastructure-diagrams`);
+  // Methods to fetch and update Export Data settings
+  getExportDataSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/export-data/settings`);
   }
 
-  // Example method to fetch security application diagrams
-  getSecurityApplicationDiagrams(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-application-diagrams`);
+  updateExportDataSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/export-data/settings/${settingId}`, { value });
   }
 
-  // Example method to fetch security database diagrams
-  getSecurityDatabaseDiagrams(): Observable<any[]> { // Replace any with a specific type/interface
-    return this.http.get<any[]>(`${this.apiUrl}/security-database-diagrams`);
+  // Methods to fetch and update Delete Account settings
+  getDeleteAccountSettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/delete-account/settings`);
+  }
+
+  updateDeleteAccountSetting(settingId: string, value: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/delete-account/settings/${settingId}`, { value });
   }
 }
