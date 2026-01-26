@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, combineLatest, map, switchMap, take } from 'rxjs';
-import { Mission } from '../../../../../core/models/mission';
-import { MissionsService } from '../../../../../core/services/missions/missions.service';
-import { UserService } from '../../../../../core/services/user/user.service';
-import { MatDialog } from '@angular/material/dialog';
-import { DeleteMissionDialogComponent } from '../../components/delete-mission-dialog/delete-mission-dialog.component';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectAuthUser } from '../../../../../core/store/auth/auth.selectors';
-import { User } from '../../../../../core/models/user';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
+import { Mission } from '../../../../../core/models/mission';
+import { loadMission } from '../../../../../core/store/mission/mission.actions';
+import { selectCurrentMission } from '../../../../../core/store/mission/mission.selectors';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslocoService } from '@ngneat/transloco';
 
@@ -16,144 +15,65 @@ import { TranslocoService } from '@ngneat/transloco';
   selector: 'app-mission-detail',
   templateUrl: './mission-detail.page.html',
   styleUrls: ['./mission-detail.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MissionDetailPage implements OnInit {
   mission$: Observable<Mission | undefined>;
-  isOwner$: Observable<boolean>;
-  missionId: string;
-  user$ = this.store.select(selectAuthUser);
 
   constructor(
     private route: ActivatedRoute,
-    private missionsService: MissionsService,
-    private userService: UserService,
-    private router: Router,
-    private dialog: MatDialog,
     private store: Store,
+    private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private translocoService: TranslocoService
   ) {}
 
-  ngOnInit(): void {
-    this.mission$ = this.route.params.pipe(
+  ngOnInit() {
+    this.mission$ = this.route.paramMap.pipe(
       switchMap((params) => {
-        this.missionId = params['id'];
-        return this.missionsService.getMission(params['id']);
-      })
-    );
-
-    this.isOwner$ = combineLatest([this.mission$, this.user$]).pipe(
-      map(([mission, user]) => {
-        if (!mission || !user) {
-          return false;
+        const missionId = params.get('missionId');
+        if (missionId) {
+          this.store.dispatch(loadMission({ missionId }));
         }
-        return mission.owner === user.uid;
+        return this.store.select(selectCurrentMission);
       })
     );
   }
 
-  async takeMission(mission: Mission) {
-    const user = await this.userService.getUser();
-
-    if (!user) {
-      return;
-    }
-
-    if (mission.takenBy) {
-      return;
-    }
-
-    this.missionsService
-      .takeMission(mission.id, user.uid)
-      .then(() => {
-        this.snackBar.open(
-          this.translocoService.translate('mission_detail.mission_taken'),
-          'OK',
-          {
-            duration: 3000,
-          }
-        );
-      })
-      .catch((error) => {
-        console.error('Error taking mission:', error);
-        this.snackBar.open(
-          this.translocoService.translate('mission_detail.mission_taken_error'),
-          'OK',
-          {
-            duration: 3000,
-          }
-        );
-      });
+  openDialog() {
+    this.dialog.open(MissionDialog);
   }
 
-  openDeleteMissionDialog(mission: Mission) {
-    const dialogRef = this.dialog.open(DeleteMissionDialogComponent, {
-      width: '250px',
-      data: { missionId: mission.id },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.router.navigate(['/scout']);
-      }
+  showSnackbar() {
+    this.snackBar.open(this.translocoService.translate('missionDetail.snackbarMessage'), 'OK', {
+      duration: 3000,
     });
   }
 
-  async completeMission(mission: Mission) {
-    if (!mission.takenBy) {
-      return;
-    }
+  handleError = (_res: any, err: any) => {
+    // TODO: Implement error handling
+    console.error(err);
+  };
+}
 
-    this.missionsService
-      .completeMission(mission.id)
-      .then(() => {
-        this.snackBar.open(
-          this.translocoService.translate('mission_detail.mission_completed'),
-          'OK',
-          {
-            duration: 3000,
-          }
-        );
-        this.router.navigate(['/scout']);
-      })
-      .catch((error) => {
-        console.error('Error completing mission:', error);
-        this.snackBar.open(
-          this.translocoService.translate('mission_detail.mission_completed_error'),
-          'OK',
-          {
-            duration: 3000,
-          }
-        );
-      });
-  }
+import { Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-  async abandonMission(mission: Mission) {
-    if (!mission.takenBy) {
-      return;
-    }
+@Component({
+  selector: 'mission-dialog',
+  template: `<h1 mat-dialog-title>Confirm Mission Completion</h1>
+<div mat-dialog-content>Are you sure you want to mark this mission as complete?</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Ok</button>
+</div>`,
+})
+export class MissionDialog {
+  constructor(
+    public dialogRef: MatDialogRef<MissionDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
-    this.missionsService
-      .abandonMission(mission.id)
-      .then(() => {
-        this.snackBar.open(
-          this.translocoService.translate('mission_detail.mission_abandoned'),
-          'OK',
-          {
-            duration: 3000,
-          }
-        );
-      })
-      .catch((error) => {
-        console.error('Error abandoning mission:', error);
-        this.snackBar.open(
-          this.translocoService.translate('mission_detail.mission_abandoned_error'),
-          'OK',
-          {
-            duration: 3000,
-          }
-        );
-      });
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 }
