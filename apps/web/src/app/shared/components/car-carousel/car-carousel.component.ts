@@ -8,17 +8,20 @@ import { Car } from '@shared/interfaces/car.interface';
 })
 export class CarCarouselComponent {
   @Input() cars: Car[] | null = null;
-  @Input() title: string = '';
-  @Input() slidesPerView: number = 1;
-  @Input() spaceBetween: number = 16;
 
-  // Removing the empty ngOnInit method to resolve the linting error
+  // constructor() { }
+
   // ngOnInit(): void {
   // }
 
-  public swiperConfig: any = {
-    loop: false,
-    spaceBetween: this.spaceBetween,
-    slidesPerView: this.slidesPerView,
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  slideConfig = {
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    dots: true,
+    infinite: true,
+    autoplay: true,
+    autoplaySpeed: 3000
+  };
+
 }
