@@ -7,3 +7,6 @@ set -e
 if [ "${AUTORENTA_SKIP_INSTALL}" != "1" ]; then
   install
 fi
+
+# Run the rest of the script
+./scripts/validate-pr.sh
