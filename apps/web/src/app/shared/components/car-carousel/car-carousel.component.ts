@@ -1,49 +1,43 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
-import { Car } from '@core/models/car.model';
-import { SoundService } from '@core/services/ui/sound.service';
-import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
-import { SwiperOptions } from 'swiper/types';
+import { Component, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { register } from 'swiper/element/bundle';
-
 register();
+
+import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
 
 @Component({
   selector: 'app-car-carousel',
-  standalone: true,
-  imports: [CarMiniCardComponent],
   templateUrl: './car-carousel.component.html',
   styleUrls: ['./car-carousel.component.scss'],
+  standalone: true,
+  imports: [CarMiniCardComponent],
 })
-export class CarCarouselComponent implements OnInit, OnDestroy {
-  @Input() cars: Car[] = [];
-  @Input() title: string = '';
-  @Input() showViewAll: boolean = true;
-  @Input() link: string = '';
+export class CarCarouselComponent implements AfterViewInit {
+  @Input() cars: any[] = [];
+  @ViewChild('swiperEl') swiperEl: ElementRef | undefined;
 
-  private destroy$ = new Subject<void>();
-
-  swiperParams: SwiperOptions = {
-    slidesPerView: 'auto',
-    spaceBetween: 10,
-  };
-
-  constructor(private router: Router, private soundService: SoundService) {}
-
-  ngOnInit(): void {}
-
-  viewAll() {
-    this.soundService
-      .pressSound()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.router.navigate([this.link]);
+  ngAfterViewInit(): void {
+    // Optional: You can configure Swiper parameters here if needed
+    if (this.swiperEl) {
+      Object.assign(this.swiperEl.nativeElement, {
+        slidesPerView: 1.2,
+        spaceBetween: 10,
+        breakpoints: {
+          640: {
+            slidesPerView: 2.2,
+            spaceBetween: 10,
+          },
+          768: {
+            slidesPerView: 3.2,
+            spaceBetween: 20,
+          },
+          1024: {
+            slidesPerView: 4.2,
+            spaceBetween: 30,
+          },
+        },
       });
-  }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+      this.swiperEl.nativeElement.initialize();
+    }
   }
 }
