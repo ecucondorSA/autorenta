@@ -1,3 +1,10 @@
+## [3.36.0](https://github.com/ecucondorSA/autorenta/compare/v3.35.0...v3.36.0) (2026-01-26)
+
+### ✨ Features
+
+* **ai:** enable auto-PR creation in Tier 6 Edge Brain ([2603fa5](https://github.com/ecucondorSA/autorenta/commit/2603fa57353ead527300bc4bec33558593303a29))
+* **ai:** enable real auto-PR creation logic ([8aa14fb](https://github.com/ecucondorSA/autorenta/commit/8aa14fba4d70100842ca5fd0531567e1d26b953d))
+
 ## [3.35.0](https://github.com/ecucondorSA/autorenta/compare/v3.34.1...v3.35.0) (2026-01-26)
 
 ### ✨ Features
