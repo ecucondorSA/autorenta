@@ -74,10 +74,10 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
             <h3
               class="font-bold text-xl bg-gradient-to-r from-yellow-200 via-amber-200 to-yellow-200 bg-clip-text text-transparent"
             >
-              Invita y Gana
+              Invita y Gana $25
             </h3>
             <p class="text-xs text-gray-400 mt-1">
-              Compartí tu código con amigos y ganá recompensas
+              Tu amigo recibe $10 de bienvenida + $20 al publicar su auto
             </p>
           </div>
 

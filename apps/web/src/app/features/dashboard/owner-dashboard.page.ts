@@ -28,6 +28,7 @@ import { PayoutsHistoryComponent } from './components/payouts-history/payouts-hi
 import { PayoutsWidgetComponent } from './widgets/payouts.component';
 import { StatisticsWidgetComponent } from './widgets/statistics.component';
 import { NetworkParticipationWidgetComponent } from './widgets/network-participation.component';
+import { ReferralBannerComponent } from '@shared/components/referral-banner/referral-banner.component';
 
 @Component({
   standalone: true,
@@ -46,6 +47,7 @@ import { NetworkParticipationWidgetComponent } from './widgets/network-participa
     PayoutsWidgetComponent,
     StatisticsWidgetComponent,
     NetworkParticipationWidgetComponent,
+    ReferralBannerComponent,
     HoverLiftDirective,
     PressScaleDirective,
     StaggerEnterDirective,

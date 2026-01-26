@@ -206,9 +206,57 @@ export class AuthService implements OnDestroy {
           this.logger.debug('Session ended (possibly expired)', 'AuthService');
         }
 
+        // ✅ Apply pending referral code after successful sign-in
+        if (event === 'SIGNED_IN' && session?.user) {
+          void this.applyPendingReferralCode(session.user.id);
+        }
+
         this.state.set({ session: session ?? null, loading: false });
       },
     );
+  }
+
+  /**
+   * Apply referral code stored in sessionStorage after registration
+   * This is called automatically when a user signs in for the first time
+   */
+  private async applyPendingReferralCode(userId: string): Promise<void> {
+    const REFERRAL_CODE_KEY = 'referral_code';
+
+    try {
+      const code = sessionStorage.getItem(REFERRAL_CODE_KEY);
+      if (!code) return;
+
+      this.logger.debug('Applying pending referral code', 'AuthService', { code });
+
+      // Clear immediately to prevent duplicate applications
+      sessionStorage.removeItem(REFERRAL_CODE_KEY);
+
+      // Apply the referral code via RPC
+      const { error } = await this.supabase.rpc('apply_referral_code', {
+        p_referred_user_id: userId,
+        p_code: code.toUpperCase(),
+        p_source: 'web_auto',
+      });
+
+      if (error) {
+        // Common expected errors - don't log as errors
+        if (error.message?.includes('already referred')) {
+          this.logger.debug('User already referred, skipping', 'AuthService');
+          return;
+        }
+        if (error.message?.includes('Invalid or expired')) {
+          this.logger.debug('Referral code invalid or expired', 'AuthService', { code });
+          return;
+        }
+        this.logger.warn('Failed to apply referral code', 'AuthService', error);
+        return;
+      }
+
+      this.logger.info('Referral code applied successfully', 'AuthService', { code });
+    } catch (err) {
+      this.logger.warn('Error applying referral code', 'AuthService', err);
+    }
   }
 
   async signUp(email: string, password: string, fullName: string, phone?: string): Promise<void> {
