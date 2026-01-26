@@ -1,27 +1,55 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
-# Check if AUTORENTA_SKIP_INSTALL is set to 1
-if [ "$AUTORENTA_SKIP_INSTALL" = "1" ]; then
-  echo "AUTORENTA_SKIP_INSTALL is set, skipping install step"
-  exit 0
-fi
+# shellcheck disable=SC2034
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly PROJECT_ROOT="$(dirname "${SCRIPT_DIR}")"
 
-COMMAND="$1"
-shift
+# shellcheck disable=SC2034
+readonly AUTORENTA_REPO_ROOT="${PROJECT_ROOT}"
 
-echo ". ${COMMAND}: Running command: ${COMMAND}"
+readonly CMD="${1}"
+readonly ARGS="${@:2}"
 
-case "${COMMAND}" in
+log() {
+  echo ". ${CMD}: ${1}"
+}
+
+error() {
+  echo ". ${CMD}: ERROR: ${1}" >&2
+}
+
+run_command() {
+  log "Running command: $@"
+  "$@"
+}
+
+case "${CMD}" in
   install)
-    # The install command should have at least two arguments: source and destination.
-    # If no arguments are provided, it will fail.
-    # Add your install logic here if needed.
-    install "$@"
+    log "Running install step"
+    if [[ -n "${AUTORENTA_SKIP_INSTALL}" ]]; then
+      log "AUTORENTA_SKIP_INSTALL is set, skipping install step"
+    else
+      run_command pnpm install "${ARGS[@]}"
+    fi
     ;;
+
+  prepare)
+    log "Running prepare step"
+    run_command husky
+    ;;
+
+  build)
+    log "Running build step"
+    run_command pnpm -r build
+    ;;
+
   *)
-    echo "Unknown command: ${COMMAND}"
+    echo "Unknown command: ${CMD}"
     exit 1
     ;;
+
 esac
+
+log "Done"
