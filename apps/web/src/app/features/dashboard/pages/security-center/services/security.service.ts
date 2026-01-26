@@ -1,94 +1,73 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
-
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
-}
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private apiUrl = environment.apiUrl;
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  constructor(private http: HttpClient) {}
 
-  private realtimeSubscription?: RealtimeChannel;
-
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  getSecurityIncidents(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security-incidents`);
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  getSecurityIncident(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security-incidents/${id}`);
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
-    });
+  createSecurityIncident(incident: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security-incidents`, incident);
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  updateSecurityIncident(id: string, incident: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/security-incidents/${id}`, incident);
+  }
+
+  deleteSecurityIncident(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/security-incidents/${id}`);
+  }
+
+  getSecurityRecommendations(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security-recommendations`);
+  }
+
+  getSecurityRecommendation(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security-recommendations/${id}`);
+  }
+
+  createSecurityRecommendation(recommendation: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security-recommendations`, recommendation);
+  }
+
+  updateSecurityRecommendation(id: string, recommendation: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/security-recommendations/${id}`, recommendation);
+  }
+
+  deleteSecurityRecommendation(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/security-recommendations/${id}`);
+  }
+
+  // TODO: Define specific type for the return value and parameters
+  runSecurityScan(scanParams: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security-scan`, scanParams);
+  }
+
+  // TODO: Define specific type for the return value and parameters
+  getScanResults(scanId: any): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security-scan/${scanId}`);
+  }
+
+  // TODO: Define specific type for the return value and parameters
+  generateReport(reportParams: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security-report`, reportParams);
+  }
+
+  // TODO: Define specific type for the return value
+  getReport(reportId: any): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security-report/${reportId}`);
   }
 }
