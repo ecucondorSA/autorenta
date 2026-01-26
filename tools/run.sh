@@ -1,18 +1,36 @@
 #!/bin/bash
 
+set -e
+
 # Check if utils.sh exists
-if [ ! -f "./tools/utils.sh" ]; then
+if [ ! -f "./utils.sh" ]; then
   echo "Error: ./tools/utils.sh not found. Please ensure it exists in the repository."
   exit 1
 fi
 
-# Source the utils script
-. ./tools/utils.sh
+# Source the utils.sh script
+. ./utils.sh
 
-set -e
-
-# Default command is install
-COMMAND=${1:-install}
+# Get the command to run from the arguments
+command="$1"
+shift
 
 # Run the command
-run_command "$COMMAND"
+case "$command" in
+  install)
+    install "$@"
+    ;;
+  build)
+    build "$@"
+    ;;
+  test)
+    test "$@"
+    ;;
+  deploy)
+    deploy "$@"
+    ;;
+  *)
+    echo "Usage: $0 {install|build|test|deploy}"
+    exit 1
+    ;;
+esac
