@@ -1,115 +1,92 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, catchError, throwError } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Security } from '../../../../../../core/models/security.model';
-import { Segment } from '../../../../../../core/models/segment.model';
+import { SegmentModel } from '../../../../../core/models/segment.model';
+import { SecurityModel } from '../../../../../core/models/security.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
   private apiUrl = environment.apiUrl;
-  private headers = new HttpHeaders().set(
-    'Content-Type',
-    'application/json; charset=UTF-8'
-  );
-
-  private securityDataSubject = new BehaviorSubject<Security | null>(null);
-  securityData$ = this.securityDataSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  getSecurityData(): Observable<Security> {
-    return this.http.get<Security>(`${this.apiUrl}/security`, { headers: this.headers }).pipe(
-      tap((data) => {
-        this.securityDataSubject.next(data);
-      }),
-      catchError((error) => {
-        console.error('Error fetching security data:', error);
-        return throwError(() => error);
-      })
-    );
+  getSecurityData(): Observable<SecurityModel[]> {
+    return this.http.get<SecurityModel[]>(`${this.apiUrl}/security`);
   }
 
-  updateSegment(segmentId: number, updatedSegment: Segment): Observable<Segment> {
-    const url = `${this.apiUrl}/security/segments/${segmentId}`;
-    return this.http.put<Segment>(url, updatedSegment, { headers: this.headers }).pipe(
-      tap((updatedSegment) => {
-        // Update the segment in the local security data
-        const currentSecurityData = this.securityDataSubject.value;
-        if (currentSecurityData && currentSecurityData.segments) {
-          const segmentIndex = currentSecurityData.segments.findIndex((s) => s.id === segmentId);
-          if (segmentIndex > -1) {
-            currentSecurityData.segments[segmentIndex] = updatedSegment;
-            this.securityDataSubject.next(currentSecurityData);
-          }
-        }
-      }),
-      catchError((error) => {
-        console.error('Error updating segment:', error);
-        return throwError(() => error);
-      })
-    );
+  getSegmentData(): Observable<SegmentModel[]> {
+    return this.http.get<SegmentModel[]>(`${this.apiUrl}/segment`);
   }
 
-  createSegment(newSegment: Segment): Observable<Segment> {
-    const url = `${this.apiUrl}/security/segments`;
-    return this.http.post<Segment>(url, newSegment, { headers: this.headers }).pipe(
-      tap((createdSegment) => {
-        // Add the new segment to the local security data
-        const currentSecurityData = this.securityDataSubject.value;
-        if (currentSecurityData && currentSecurityData.segments) {
-          currentSecurityData.segments.push(createdSegment);
-          this.securityDataSubject.next(currentSecurityData);
-        }
-      }),
-      catchError((error) => {
-        console.error('Error creating segment:', error);
-        return throwError(() => error);
-      })
-    );
+  addSecurity(securityData: SecurityModel): Observable<SecurityModel> {
+    return this.http.post<SecurityModel>(`${this.apiUrl}/security`, securityData);
   }
 
-  deleteSegment(segmentId: number): Observable<any> {
-    const url = `${this.apiUrl}/security/segments/${segmentId}`;
-    return this.http.delete(url, { headers: this.headers }).pipe(
-      tap(() => {
-        // Remove the segment from the local security data
-        const currentSecurityData = this.securityDataSubject.value;
-        if (currentSecurityData && currentSecurityData.segments) {
-          currentSecurityData.segments = currentSecurityData.segments.filter((s) => s.id !== segmentId);
-          this.securityDataSubject.next(currentSecurityData);
-        }
-      }),
-      catchError((error) => {
-        console.error('Error deleting segment:', error);
-        return throwError(() => error);
-      })
-    );
+  updateSecurity(id: string, securityData: SecurityModel): Observable<SecurityModel> {
+    return this.http.put<SecurityModel>(`${this.apiUrl}/security/${id}`, securityData);
   }
 
-  runScan(): Observable<any> {
-    const url = `${this.apiUrl}/security/scan`;
-    return this.http.post(url, null, { headers: this.headers }).pipe(
-      tap((_res) => {
-        this.getSecurityData().subscribe();
-      }),
-      catchError((_err) => {
-        return throwError(() => _err);
-      })
-    );
+  deleteSecurity(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/security/${id}`);
   }
 
-  stopScan(): Observable<any> {
-    const url = `${this.apiUrl}/security/stop-scan`;
-    return this.http.post(url, null, { headers: this.headers }).pipe(
-      tap((_res) => {
-        this.getSecurityData().subscribe();
-      }),
-      catchError((_err) => {
-        return throwError(() => _err);
-      })
-    );
+  getSecurityById(id: string): Observable<SecurityModel> {
+    return this.http.get<SecurityModel>(`${this.apiUrl}/security/${id}`);
+  }
+
+  // segment
+
+  addSegment(segmentData: SegmentModel): Observable<SegmentModel> {
+    return this.http.post<SegmentModel>(`${this.apiUrl}/segment`, segmentData);
+  }
+
+  updateSegment(id: string, segmentData: SegmentModel): Observable<SegmentModel> {
+    return this.http.put<SegmentModel>(`${this.apiUrl}/segment/${id}`, segmentData);
+  }
+
+  deleteSegment(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/segment/${id}`);
+  }
+
+  getSegmentById(id: string): Observable<SegmentModel> {
+    return this.http.get<SegmentModel>(`${this.apiUrl}/segment/${id}`);
+  }
+
+  // MOCKED
+  mockedAddSecurity(req: any, res: any, err: any) {
+    console.log('addSecurity', req, res, err);
+    try {
+      req.respondWith({
+        status: 201,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: 'Security added successfully',
+        }),
+      });
+    } catch (error) {
+      console.error('Error in mockedAddSecurity:', error);
+    }
+  }
+
+  mockedUpdateSecurity(req: any, res: any, err: any) {
+    console.log('updateSecurity', req, res, err);
+    try {
+      req.respondWith({
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: 'Security updated successfully',
+        }),
+      });
+    } catch (error) {
+      console.error('Error in mockedUpdateSecurity:', error);
+    }
   }
 }
