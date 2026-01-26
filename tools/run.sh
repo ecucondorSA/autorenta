@@ -1,47 +1,18 @@
-#!/usr/bin/env bash
-set -eo pipefail
+#!/bin/bash
 
-# shellcheck source=./tools/utils.sh
-. "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
+set -e
 
-readonly command="$1"
+source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
 
-# Run command
-info "Running '$command' command..."
+ACTION=$1
+shift
 
-case "${command}" in
-  build)
-    info "Building..."
-
-    # Build web app
-    info "Building web app..."
-    NG_BUILD_MAX_PARALLEL=2 npx ng build
-
-    # Build payment worker
-    info "Building payment worker..."
-    cd apps/payment-worker
-    npm install
-    npm run build
-    cd ../..
-    ;; # End build)
-
-  deploy)
-    info "Deploying..."
-
-    # Deploy web app
-    info "Deploying web app..."
-    firebase deploy --only hosting
-
-    # Deploy payment worker
-    info "Deploying payment worker..."
-    wrangler deploy apps/payment-worker/dist/worker.js
-    ;; # End deploy)
-
+case "${ACTION}" in
+  install)
+    install_dependencies
+    ;;
   *)
-    error "Unknown command: ${command}"
+    echo "Unknown action: ${ACTION}"
     exit 1
     ;;
-
 esac
-
-info "Done."
