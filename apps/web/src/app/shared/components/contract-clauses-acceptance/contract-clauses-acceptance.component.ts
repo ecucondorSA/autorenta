@@ -7,10 +7,8 @@ import {
   effect,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonList,
   IonItem,
   IonLabel,
   IonCheckbox,
@@ -86,9 +84,7 @@ const EV_CLAUSE_IDS: ReadonlySet<EVClauseId> = new Set([
   selector: 'app-contract-clauses-acceptance',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
-    IonList,
     IonItem,
     IonLabel,
     IonCheckbox,

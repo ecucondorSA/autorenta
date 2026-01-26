@@ -61,6 +61,7 @@ export interface Car {
   color: string;
   features: Record<string, boolean>; // {ac: true, abs: true, airbag: true}
   status: CarStatus;
+  availability_status?: 'available' | 'in_use' | 'soon_available' | 'unavailable';
   price_per_day: number;
   currency: string;
   value_usd?: number; // ✅ NUEVO: Valor real del vehículo en USD (para cálculos de riesgo/seguro)

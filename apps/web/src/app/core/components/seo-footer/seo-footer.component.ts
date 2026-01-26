@@ -36,9 +36,7 @@ interface SeoTab {
     <section class="border-t border-gray-200 bg-gradient-to-b from-gray-50 to-white py-12">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <!-- Section Title -->
-        <h2 class="mb-2 text-xl font-bold text-gray-900">
-          Explora opciones de alquiler de autos
-        </h2>
+        <h2 class="mb-2 text-xl font-bold text-gray-900">Explora opciones de alquiler de autos</h2>
         <p class="mb-6 text-sm text-gray-600">
           Encuentra el auto perfecto en más de 50 destinos de Argentina y Latinoamérica
         </p>
@@ -46,11 +44,7 @@ interface SeoTab {
         <!-- Tabs Navigation -->
         <div class="mb-6 flex flex-wrap gap-1 border-b border-gray-200">
           @for (tab of tabs; track tab.key) {
-            <button
-              type="button"
-              (click)="selectTab(tab.key)"
-              [class]="getTabClass(tab.key)"
-            >
+            <button type="button" (click)="selectTab(tab.key)" [class]="getTabClass(tab.key)">
               {{ tab.label }}
               <span class="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">
                 {{ getTabCount(tab.key) }}
@@ -62,11 +56,7 @@ interface SeoTab {
         <!-- Alphabetical Index (only for cities) -->
         @if (activeTab() === 'cities') {
           <div class="mb-4 flex flex-wrap gap-1">
-            <button
-              type="button"
-              (click)="setLetterFilter(null)"
-              [class]="getLetterClass(null)"
-            >
+            <button type="button" (click)="setLetterFilter(null)" [class]="getLetterClass(null)">
               Todas
             </button>
             @for (letter of alphabet; track letter) {
@@ -83,7 +73,9 @@ interface SeoTab {
         }
 
         <!-- Links Grid -->
-        <div class="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+        <div
+          class="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+        >
           @for (link of visibleLinks(); track link.slug) {
             <a
               [routerLink]="[currentTab().routePrefix, link.slug]"
@@ -115,19 +107,31 @@ interface SeoTab {
             @if (showAll()) {
               <span>Mostrar menos</span>
               <svg class="h-4 w-4 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             } @else {
               <span>Mostrar {{ remainingCount() }} más</span>
               <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             }
           </button>
         }
 
         <!-- Stats Bar -->
-        <div class="mt-8 flex flex-wrap items-center justify-center gap-6 border-t border-gray-100 pt-6 text-center text-sm text-gray-500">
+        <div
+          class="mt-8 flex flex-wrap items-center justify-center gap-6 border-t border-gray-100 pt-6 text-center text-sm text-gray-500"
+        >
           <div>
             <span class="font-semibold text-gray-900">{{ totalLinks }}</span> destinos disponibles
           </div>
@@ -140,7 +144,7 @@ interface SeoTab {
         </div>
       </div>
     </section>
-  `
+  `,
 })
 export class SeoFooterComponent {
   readonly INITIAL_VISIBLE = 18;
@@ -178,7 +182,11 @@ export class SeoFooterComponent {
     { name: 'Neuquén', slug: 'neuquen', description: 'Neuquén' },
     { name: 'Formosa', slug: 'formosa', description: 'Formosa' },
     { name: 'San Luis', slug: 'san-luis', description: 'San Luis' },
-    { name: 'Santiago del Estero', slug: 'santiago-del-estero', description: 'Santiago del Estero' },
+    {
+      name: 'Santiago del Estero',
+      slug: 'santiago-del-estero',
+      description: 'Santiago del Estero',
+    },
     { name: 'La Rioja', slug: 'la-rioja', description: 'La Rioja' },
     { name: 'Catamarca', slug: 'catamarca', description: 'Catamarca' },
     { name: 'Rawson', slug: 'rawson', description: 'Chubut' },
@@ -225,34 +233,126 @@ export class SeoFooterComponent {
   readonly airports: SeoLink[] = [
     // Argentina
     { name: 'Aeropuerto Ezeiza (EZE)', slug: 'ezeiza', description: 'Buenos Aires Internacional' },
-    { name: 'Aeroparque Jorge Newbery (AEP)', slug: 'aeroparque', description: 'Buenos Aires Doméstico' },
-    { name: 'Aeropuerto Córdoba (COR)', slug: 'cordoba-aeropuerto', description: 'Ingeniero Taravella' },
+    {
+      name: 'Aeroparque Jorge Newbery (AEP)',
+      slug: 'aeroparque',
+      description: 'Buenos Aires Doméstico',
+    },
+    {
+      name: 'Aeropuerto Córdoba (COR)',
+      slug: 'cordoba-aeropuerto',
+      description: 'Ingeniero Taravella',
+    },
     { name: 'Aeropuerto Mendoza (MDZ)', slug: 'mendoza-aeropuerto', description: 'El Plumerillo' },
-    { name: 'Aeropuerto Bariloche (BRC)', slug: 'bariloche-aeropuerto', description: 'Teniente Candelaria' },
-    { name: 'Aeropuerto Salta (SLA)', slug: 'salta-aeropuerto', description: 'Martín Miguel de Güemes' },
-    { name: 'Aeropuerto Iguazú (IGR)', slug: 'iguazu-aeropuerto', description: 'Cataratas del Iguazú' },
-    { name: 'Aeropuerto Ushuaia (USH)', slug: 'ushuaia-aeropuerto', description: 'Malvinas Argentinas' },
-    { name: 'Aeropuerto Tucumán (TUC)', slug: 'tucuman-aeropuerto', description: 'Teniente Benjamín Matienzo' },
+    {
+      name: 'Aeropuerto Bariloche (BRC)',
+      slug: 'bariloche-aeropuerto',
+      description: 'Teniente Candelaria',
+    },
+    {
+      name: 'Aeropuerto Salta (SLA)',
+      slug: 'salta-aeropuerto',
+      description: 'Martín Miguel de Güemes',
+    },
+    {
+      name: 'Aeropuerto Iguazú (IGR)',
+      slug: 'iguazu-aeropuerto',
+      description: 'Cataratas del Iguazú',
+    },
+    {
+      name: 'Aeropuerto Ushuaia (USH)',
+      slug: 'ushuaia-aeropuerto',
+      description: 'Malvinas Argentinas',
+    },
+    {
+      name: 'Aeropuerto Tucumán (TUC)',
+      slug: 'tucuman-aeropuerto',
+      description: 'Teniente Benjamín Matienzo',
+    },
     { name: 'Aeropuerto Rosario (ROS)', slug: 'rosario-aeropuerto', description: 'Islas Malvinas' },
-    { name: 'Aeropuerto Neuquén (NQN)', slug: 'neuquen-aeropuerto', description: 'Presidente Perón' },
-    { name: 'Aeropuerto El Calafate (FTE)', slug: 'calafate-aeropuerto', description: 'Comandante Armando Tola' },
-    { name: 'Aeropuerto Jujuy (JUJ)', slug: 'jujuy-aeropuerto', description: 'Gobernador Horacio Guzmán' },
-    { name: 'Aeropuerto Mar del Plata (MDQ)', slug: 'mardelplata-aeropuerto', description: 'Astor Piazzolla' },
-    { name: 'Aeropuerto Puerto Madryn (PMY)', slug: 'madryn-aeropuerto', description: 'El Tehuelche' },
+    {
+      name: 'Aeropuerto Neuquén (NQN)',
+      slug: 'neuquen-aeropuerto',
+      description: 'Presidente Perón',
+    },
+    {
+      name: 'Aeropuerto El Calafate (FTE)',
+      slug: 'calafate-aeropuerto',
+      description: 'Comandante Armando Tola',
+    },
+    {
+      name: 'Aeropuerto Jujuy (JUJ)',
+      slug: 'jujuy-aeropuerto',
+      description: 'Gobernador Horacio Guzmán',
+    },
+    {
+      name: 'Aeropuerto Mar del Plata (MDQ)',
+      slug: 'mardelplata-aeropuerto',
+      description: 'Astor Piazzolla',
+    },
+    {
+      name: 'Aeropuerto Puerto Madryn (PMY)',
+      slug: 'madryn-aeropuerto',
+      description: 'El Tehuelche',
+    },
     { name: 'Aeropuerto Trelew (REL)', slug: 'trelew-aeropuerto', description: 'Almirante Zar' },
-    { name: 'Aeropuerto Comodoro Rivadavia (CRD)', slug: 'comodoro-aeropuerto', description: 'General Mosconi' },
-    { name: 'Aeropuerto Río Gallegos (RGL)', slug: 'riogallegos-aeropuerto', description: 'Piloto Civil Norberto Fernández' },
-    { name: 'Aeropuerto San Juan (UAQ)', slug: 'sanjuan-aeropuerto', description: 'Domingo Faustino Sarmiento' },
-    { name: 'Aeropuerto Posadas (PSS)', slug: 'posadas-aeropuerto', description: 'Libertador General José de San Martín' },
+    {
+      name: 'Aeropuerto Comodoro Rivadavia (CRD)',
+      slug: 'comodoro-aeropuerto',
+      description: 'General Mosconi',
+    },
+    {
+      name: 'Aeropuerto Río Gallegos (RGL)',
+      slug: 'riogallegos-aeropuerto',
+      description: 'Piloto Civil Norberto Fernández',
+    },
+    {
+      name: 'Aeropuerto San Juan (UAQ)',
+      slug: 'sanjuan-aeropuerto',
+      description: 'Domingo Faustino Sarmiento',
+    },
+    {
+      name: 'Aeropuerto Posadas (PSS)',
+      slug: 'posadas-aeropuerto',
+      description: 'Libertador General José de San Martín',
+    },
     // Internacional
-    { name: 'Aeropuerto Carrasco (MVD)', slug: 'montevideo-aeropuerto', description: 'Montevideo, Uruguay' },
-    { name: 'Aeropuerto Santiago (SCL)', slug: 'santiago-aeropuerto', description: 'Arturo Merino Benítez, Chile' },
-    { name: 'Aeropuerto Cancún (CUN)', slug: 'cancun-aeropuerto', description: 'Internacional de Cancún, México' },
-    { name: 'Aeropuerto CDMX (MEX)', slug: 'cdmx-aeropuerto', description: 'Benito Juárez, México' },
-    { name: 'Aeropuerto Guarulhos (GRU)', slug: 'saopaulo-aeropuerto', description: 'São Paulo, Brasil' },
-    { name: 'Aeropuerto Galeão (GIG)', slug: 'rio-aeropuerto', description: 'Río de Janeiro, Brasil' },
+    {
+      name: 'Aeropuerto Carrasco (MVD)',
+      slug: 'montevideo-aeropuerto',
+      description: 'Montevideo, Uruguay',
+    },
+    {
+      name: 'Aeropuerto Santiago (SCL)',
+      slug: 'santiago-aeropuerto',
+      description: 'Arturo Merino Benítez, Chile',
+    },
+    {
+      name: 'Aeropuerto Cancún (CUN)',
+      slug: 'cancun-aeropuerto',
+      description: 'Internacional de Cancún, México',
+    },
+    {
+      name: 'Aeropuerto CDMX (MEX)',
+      slug: 'cdmx-aeropuerto',
+      description: 'Benito Juárez, México',
+    },
+    {
+      name: 'Aeropuerto Guarulhos (GRU)',
+      slug: 'saopaulo-aeropuerto',
+      description: 'São Paulo, Brasil',
+    },
+    {
+      name: 'Aeropuerto Galeão (GIG)',
+      slug: 'rio-aeropuerto',
+      description: 'Río de Janeiro, Brasil',
+    },
     { name: 'Aeropuerto Lima (LIM)', slug: 'lima-aeropuerto', description: 'Jorge Chávez, Perú' },
-    { name: 'Aeropuerto Bogotá (BOG)', slug: 'bogota-aeropuerto', description: 'El Dorado, Colombia' },
+    {
+      name: 'Aeropuerto Bogotá (BOG)',
+      slug: 'bogota-aeropuerto',
+      description: 'El Dorado, Colombia',
+    },
   ];
 
   // ==========================================
@@ -311,28 +411,84 @@ export class SeoFooterComponent {
   // ==========================================
   readonly popularSearches: SeoLink[] = [
     { name: 'Alquiler de autos baratos', slug: 'autos-baratos', description: 'Mejores precios' },
-    { name: 'Alquiler de autos sin tarjeta de crédito', slug: 'sin-tarjeta', description: 'Pago en efectivo' },
+    {
+      name: 'Alquiler de autos sin tarjeta de crédito',
+      slug: 'sin-tarjeta',
+      description: 'Pago en efectivo',
+    },
     { name: 'Alquiler de autos por día', slug: 'por-dia', description: 'Flexibilidad total' },
     { name: 'Alquiler de autos mensual', slug: 'mensual', description: 'Descuentos por mes' },
     { name: 'Alquiler de autos con chofer', slug: 'con-chofer', description: 'Servicio premium' },
-    { name: 'Alquiler de autos para empresas', slug: 'empresas', description: 'Flotas corporativas' },
-    { name: 'Alquiler de camionetas 4x4', slug: 'camionetas-4x4', description: 'Aventura off-road' },
+    {
+      name: 'Alquiler de autos para empresas',
+      slug: 'empresas',
+      description: 'Flotas corporativas',
+    },
+    {
+      name: 'Alquiler de camionetas 4x4',
+      slug: 'camionetas-4x4',
+      description: 'Aventura off-road',
+    },
     { name: 'Alquiler de autos para turismo', slug: 'turismo', description: 'Explora Argentina' },
-    { name: 'Alquiler de autos fin de semana', slug: 'fin-de-semana', description: 'Escapadas cortas' },
-    { name: 'Alquiler de autos último minuto', slug: 'ultimo-minuto', description: 'Ofertas inmediatas' },
-    { name: 'Alquiler de autos con seguro incluido', slug: 'con-seguro', description: 'Cobertura total' },
-    { name: 'Alquiler de autos de lujo para eventos', slug: 'eventos-lujo', description: 'Ocasiones especiales' },
-    { name: 'Alquiler de autos para viajes en familia', slug: 'familia', description: 'Espacio para todos' },
-    { name: 'Alquiler de autos cerca de mí', slug: 'cerca-de-mi', description: 'Ubicaciones cercanas' },
-    { name: 'Alquiler de autos ida y vuelta', slug: 'ida-vuelta', description: 'Devolución flexible' },
-    { name: 'Comparar precios de alquiler de autos', slug: 'comparar-precios', description: 'Encuentra el mejor' },
-    { name: 'Alquiler de autos con kilometraje libre', slug: 'kilometraje-libre', description: 'Sin límites' },
-    { name: 'Alquiler de autos para viajes de negocios', slug: 'negocios', description: 'Profesional' },
+    {
+      name: 'Alquiler de autos fin de semana',
+      slug: 'fin-de-semana',
+      description: 'Escapadas cortas',
+    },
+    {
+      name: 'Alquiler de autos último minuto',
+      slug: 'ultimo-minuto',
+      description: 'Ofertas inmediatas',
+    },
+    {
+      name: 'Alquiler de autos con seguro incluido',
+      slug: 'con-seguro',
+      description: 'Cobertura total',
+    },
+    {
+      name: 'Alquiler de autos de lujo para eventos',
+      slug: 'eventos-lujo',
+      description: 'Ocasiones especiales',
+    },
+    {
+      name: 'Alquiler de autos para viajes en familia',
+      slug: 'familia',
+      description: 'Espacio para todos',
+    },
+    {
+      name: 'Alquiler de autos cerca de mí',
+      slug: 'cerca-de-mi',
+      description: 'Ubicaciones cercanas',
+    },
+    {
+      name: 'Alquiler de autos ida y vuelta',
+      slug: 'ida-vuelta',
+      description: 'Devolución flexible',
+    },
+    {
+      name: 'Comparar precios de alquiler de autos',
+      slug: 'comparar-precios',
+      description: 'Encuentra el mejor',
+    },
+    {
+      name: 'Alquiler de autos con kilometraje libre',
+      slug: 'kilometraje-libre',
+      description: 'Sin límites',
+    },
+    {
+      name: 'Alquiler de autos para viajes de negocios',
+      slug: 'negocios',
+      description: 'Profesional',
+    },
   ];
 
   // Total links counter
-  readonly totalLinks = this.cities.length + this.airports.length + this.brands.length +
-                        this.categories.length + this.popularSearches.length;
+  readonly totalLinks =
+    this.cities.length +
+    this.airports.length +
+    this.brands.length +
+    this.categories.length +
+    this.popularSearches.length;
 
   // State
   readonly activeTab = signal<TabKey>('cities');
@@ -340,25 +496,36 @@ export class SeoFooterComponent {
   readonly letterFilter = signal<string | null>(null);
 
   // Computed
-  readonly currentTab = computed(() =>
-    this.tabs.find(t => t.key === this.activeTab()) || this.tabs[0]
+  readonly currentTab = computed(
+    () => this.tabs.find((t) => t.key === this.activeTab()) || this.tabs[0],
   );
 
   readonly currentLinks = computed(() => {
     let links: SeoLink[];
     switch (this.activeTab()) {
-      case 'cities': links = this.cities; break;
-      case 'brands': links = this.brands; break;
-      case 'categories': links = this.categories; break;
-      case 'airports': links = this.airports; break;
-      case 'popular': links = this.popularSearches; break;
-      default: links = this.cities;
+      case 'cities':
+        links = this.cities;
+        break;
+      case 'brands':
+        links = this.brands;
+        break;
+      case 'categories':
+        links = this.categories;
+        break;
+      case 'airports':
+        links = this.airports;
+        break;
+      case 'popular':
+        links = this.popularSearches;
+        break;
+      default:
+        links = this.cities;
     }
 
     // Apply letter filter for cities
     const letter = this.letterFilter();
     if (this.activeTab() === 'cities' && letter) {
-      return links.filter(l => l.name.toUpperCase().startsWith(letter));
+      return links.filter((l) => l.name.toUpperCase().startsWith(letter));
     }
 
     return links;
@@ -369,27 +536,29 @@ export class SeoFooterComponent {
     return this.showAll() ? links : links.slice(0, this.INITIAL_VISIBLE);
   });
 
-  readonly hasMoreLinks = computed(() =>
-    this.currentLinks().length > this.INITIAL_VISIBLE
-  );
+  readonly hasMoreLinks = computed(() => this.currentLinks().length > this.INITIAL_VISIBLE);
 
-  readonly remainingCount = computed(() =>
-    this.currentLinks().length - this.INITIAL_VISIBLE
-  );
+  readonly remainingCount = computed(() => this.currentLinks().length - this.INITIAL_VISIBLE);
 
   getTabCount(key: TabKey): number {
     switch (key) {
-      case 'cities': return this.cities.length;
-      case 'brands': return this.brands.length;
-      case 'categories': return this.categories.length;
-      case 'airports': return this.airports.length;
-      case 'popular': return this.popularSearches.length;
-      default: return 0;
+      case 'cities':
+        return this.cities.length;
+      case 'brands':
+        return this.brands.length;
+      case 'categories':
+        return this.categories.length;
+      case 'airports':
+        return this.airports.length;
+      case 'popular':
+        return this.popularSearches.length;
+      default:
+        return 0;
     }
   }
 
   hasLetterLinks(letter: string): boolean {
-    return this.cities.some(c => c.name.toUpperCase().startsWith(letter));
+    return this.cities.some((c) => c.name.toUpperCase().startsWith(letter));
   }
 
   selectTab(key: TabKey): void {
@@ -404,11 +573,12 @@ export class SeoFooterComponent {
   }
 
   toggleShowAll(): void {
-    this.showAll.update(v => !v);
+    this.showAll.update((v) => !v);
   }
 
   getTabClass(key: TabKey): string {
-    const base = 'px-3 py-2.5 text-sm font-medium transition-colors whitespace-nowrap rounded-t-lg flex items-center';
+    const base =
+      'px-3 py-2.5 text-sm font-medium transition-colors whitespace-nowrap rounded-t-lg flex items-center';
     const active = 'bg-white border-t border-l border-r border-gray-200 text-green-600 -mb-px';
     const inactive = 'text-gray-600 hover:text-gray-900 hover:bg-gray-100';
     return `${base} ${this.activeTab() === key ? active : inactive}`;
@@ -417,7 +587,8 @@ export class SeoFooterComponent {
   getLetterClass(letter: string | null): string {
     const base = 'min-w-[32px] h-8 text-xs font-medium rounded transition-colors';
     const active = 'bg-green-600 text-white';
-    const inactive = 'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed';
+    const inactive =
+      'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed';
     return `${base} ${this.letterFilter() === letter ? active : inactive}`;
   }
 }

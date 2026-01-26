@@ -40,31 +40,25 @@ import { MoneyPipe } from '@shared/pipes/money.pipe';
 // Models
 import type { Booking } from '@core/models';
 import { BookingPaymentMethod } from '@core/models/wallet.model';
-import {
-  RiskCalculation,
-} from '@core/services/verification/risk-calculator.service';
+import { RiskCalculation } from '@core/services/verification/risk-calculator.service';
 import type { DateRange } from '@core/models/marketplace.model';
 // UI 2026 Directives
 import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
 import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
-import { BookingFranchiseService } from '../../bookings/checkout/support/booking-franchise.service';
-import { CheckoutRiskCalculator } from '../../bookings/checkout/support/risk-calculator';
-import type { FranchiseInfo } from '../../bookings/checkout/support/booking-franchise.service';
-import type { GuaranteeBreakdown } from '../../bookings/checkout/support/risk-calculator';
 import { Car, CarPhoto, CarStats, Review } from '../../../core/models';
+import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
+import { RiskSnapshot } from '@core/models/booking-detail-payment.model';
 
 // Components
 import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
-import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
-import { AiReputationCardComponent } from '../../../shared/components/ai-reputation-card/ai-reputation-card.component';
 import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
+import { AiReputationCardComponent } from '../../../shared/components/ai-reputation-card/ai-reputation-card.component';
 import { CarInquiryChatComponent } from '../../../shared/components/car-inquiry-chat/car-inquiry-chat.component';
-import { CarReviewsSectionComponent } from '../../../shared/components/car-reviews-section/car-reviews-section.component';
+
 import { DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { type PaymentMethod } from '../../../shared/components/payment-method-buttons/payment-method-buttons.component';
-import { AvailabilityMiniCalendarComponent } from '../../../shared/components/availability-mini-calendar/availability-mini-calendar.component';
-import { RiskCalculatorViewerComponent } from '../../../shared/components/risk-calculator-viewer/risk-calculator-viewer.component';
+
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import { ReviewSummaryComponent } from '../../../shared/components/review-summary/review-summary.component';
 import { BookingLocationData } from '../../bookings/components/booking-location-form/booking-location-form.component';
@@ -85,9 +79,10 @@ export interface BreadcrumbItem {
 
 interface GuaranteeEstimate {
   fxRate: number;
-  franchise: FranchiseInfo;
-  card: GuaranteeBreakdown;
-  wallet: GuaranteeBreakdown;
+  holdEstimatedUsd: number;
+  holdEstimatedArs: number;
+  creditSecurityUsd: number;
+  creditSecurityArs: number;
 }
 
 interface CarDetailState {
@@ -105,18 +100,15 @@ interface CarDetailState {
     CommonModule,
     RouterLink,
     DateRangePickerComponent,
-    CarReviewsSectionComponent,
+
     TranslateModule,
     MoneyPipe,
     StickyCtaMobileComponent,
     IconComponent,
-    RiskCalculatorViewerComponent,
-    AiLegalPanelComponent,
-    AiTripPanelComponent,
     AiChecklistPanelComponent,
+    AiTripPanelComponent,
     AiReputationCardComponent,
     CarInquiryChatComponent,
-    AvailabilityMiniCalendarComponent,
     ReviewSummaryComponent,
     // UI 2026 Directives
     HoverLiftDirective,
@@ -153,8 +145,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly waitlistService = inject(WaitlistService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly tiktokEvents = inject(TikTokEventsService);
-  private readonly bookingFranchiseService = inject(BookingFranchiseService);
-  private readonly checkoutRiskCalculator = inject(CheckoutRiskCalculator);
+  private readonly subscriptionService = inject(SubscriptionService);
   private readonly usdFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -626,58 +617,44 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
    * Vista previa de garantía usando la misma lógica del checkout
    */
   readonly guaranteeEstimate = computed<GuaranteeEstimate | null>(() => {
-    const pricePerDay = this.displayPrice();
-    if (!pricePerDay || pricePerDay <= 0) return null;
-
-    const fxRate = this.currentFxRate();
-    if (!fxRate || !Number.isFinite(fxRate) || fxRate <= 0) return null;
-
+    // Note: We cannot fully calculate proper risk here without async calls to subscription service
+    // So we provide a safe estimation based on standard rules (non-subscribed user)
+    // Real calculation happens in booking-request page
     const car = this.car();
-    const currency = (car?.currency || 'USD').toUpperCase();
-    const nightlyRateUsd = currency === 'USD' ? pricePerDay : pricePerDay / fxRate;
-    const carValueUsd = car?.value_usd;
-    const franchise =
-      Number.isFinite(carValueUsd) && (carValueUsd ?? 0) > 0
-        ? this.bookingFranchiseService.getFranchiseForCarValueUsd(carValueUsd as number)
-        : this.bookingFranchiseService.getFranchiseForNightlyRateUsd(nightlyRateUsd);
-    const booking = { currency: currency === 'ARS' ? 'ARS' : 'USD' } as Booking;
-    const walletSplit = { wallet: 0, card: 0 };
+    const fxRate = this.currentFxRate();
 
-    const card = this.checkoutRiskCalculator.calculateGuarantee({
-      booking,
-      franchise,
-      fxSnapshot: fxRate,
-      paymentMethod: 'credit_card',
-      walletSplit,
-    });
-    const wallet = this.checkoutRiskCalculator.calculateGuarantee({
-      booking,
-      franchise,
-      fxSnapshot: fxRate,
-      paymentMethod: 'wallet',
-      walletSplit,
-    });
+    if (!car || !fxRate || fxRate <= 0) return null;
 
-    return { fxRate, franchise, card, wallet };
+    // Standard Rule: ~5% of vehicle value or default $600 USD
+    // This is just for display estimation
+    const vehicleValueUsd = car.value_usd || 12000;
+    const holdEstimatedUsd = Math.round(vehicleValueUsd * 0.05);
+    const holdEstimatedArs = holdEstimatedUsd * fxRate;
+
+    return {
+      fxRate,
+      holdEstimatedUsd,
+      holdEstimatedArs,
+      creditSecurityUsd: holdEstimatedUsd, // Standard equivalence
+      creditSecurityArs: holdEstimatedArs,
+    };
   });
 
-  readonly cardHoldArs = computed(() => this.guaranteeEstimate()?.card.holdArs ?? null);
+  readonly cardHoldArs = computed(() => this.guaranteeEstimate()?.holdEstimatedArs ?? null);
 
   readonly cardHoldUsd = computed(() => {
     const estimate = this.guaranteeEstimate();
     if (!estimate) return null;
-    const holdUsd = estimate.card.holdArs / estimate.fxRate;
+    const holdUsd = estimate.holdEstimatedUsd;
     return Math.round(holdUsd * 100) / 100;
   });
 
-  readonly walletCreditUsd = computed(
-    () => this.guaranteeEstimate()?.wallet.creditSecurityUsd ?? null,
-  );
+  readonly walletCreditUsd = computed(() => this.guaranteeEstimate()?.creditSecurityUsd ?? null);
 
   readonly walletCreditArs = computed(() => {
     const estimate = this.guaranteeEstimate();
     if (!estimate) return null;
-    return Math.round(estimate.wallet.creditSecurityArs);
+    return Math.round(estimate.creditSecurityArs);
   });
 
   readonly guaranteeFxRate = computed(() => this.guaranteeEstimate()?.fxRate ?? null);
@@ -1182,7 +1159,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       const errorMessage = (error as { message?: string })?.message;
       if (errorMessage === 'OVERLAP') {
         this.bookingError.set(
-          'Las fechas seleccionadas no están disponibles. Por favor elegí otras fechas.'
+          'Las fechas seleccionadas no están disponibles. Por favor elegí otras fechas.',
         );
         // Re-open date picker so user can select new dates
         this.openDatePicker();

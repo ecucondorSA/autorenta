@@ -60,11 +60,7 @@ export function normalizeRecordToUsd(
 
   // Buscar FX rate en campos comunes
   const fxRate =
-    record['fx_snapshot'] ??
-    record['fx_rate'] ??
-    record['fxSnapshot'] ??
-    record['fxRate'] ??
-    null;
+    record['fx_snapshot'] ?? record['fx_rate'] ?? record['fxSnapshot'] ?? record['fxRate'] ?? null;
 
   return normalizeToUsd(amount, currency, fxRate as number | null);
 }

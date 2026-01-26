@@ -148,26 +148,42 @@ import { PasskeysService } from '@core/services/auth/passkeys.service';
           <div class="card-premium p-6 mb-6">
             <div class="flex items-center gap-3 mb-4">
               <div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
-                <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
+                <svg
+                  class="w-5 h-5 text-purple-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"
+                  />
                 </svg>
               </div>
               <div>
                 <h2 class="text-lg font-semibold text-text-primary">Huella o Face ID</h2>
-                <p class="text-xs text-text-secondary">Inicia sesión sin contraseña usando biometría</p>
+                <p class="text-xs text-text-secondary">
+                  Inicia sesión sin contraseña usando biometría
+                </p>
               </div>
             </div>
 
             <!-- Success Message -->
             @if (passkeySuccess()) {
-              <div class="mb-4 p-3 rounded-lg bg-success-light/10 border border-success-light/40 text-sm text-success-text">
+              <div
+                class="mb-4 p-3 rounded-lg bg-success-light/10 border border-success-light/40 text-sm text-success-text"
+              >
                 ✅ {{ passkeySuccess() }}
               </div>
             }
 
             <!-- Error Message -->
             @if (passkeysError()) {
-              <div class="mb-4 p-3 rounded-lg bg-error-bg border border-error-border text-sm text-error-text">
+              <div
+                class="mb-4 p-3 rounded-lg bg-error-bg border border-error-border text-sm text-error-text"
+              >
                 {{ passkeysError() }}
               </div>
             }
@@ -178,16 +194,32 @@ import { PasskeysService } from '@core/services/auth/passkeys.service';
             } @else if (passkeys().length > 0) {
               <div class="space-y-3 mb-4">
                 @for (passkey of passkeys(); track passkey.id) {
-                  <div class="flex items-center justify-between p-3 rounded-lg bg-surface-raised border border-border-default">
+                  <div
+                    class="flex items-center justify-between p-3 rounded-lg bg-surface-raised border border-border-default"
+                  >
                     <div class="flex items-center gap-3">
-                      <div class="w-8 h-8 rounded-full bg-cta-default/10 flex items-center justify-center">
-                        <svg class="w-4 h-4 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      <div
+                        class="w-8 h-8 rounded-full bg-cta-default/10 flex items-center justify-center"
+                      >
+                        <svg
+                          class="w-4 h-4 text-cta-default"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                          />
                         </svg>
                       </div>
                       <div>
                         <p class="text-sm font-medium text-text-primary">{{ passkey.name }}</p>
-                        <p class="text-xs text-text-secondary">Registrada el {{ formatDate(passkey.createdAt) }}</p>
+                        <p class="text-xs text-text-secondary">
+                          Registrada el {{ formatDate(passkey.createdAt) }}
+                        </p>
                       </div>
                     </div>
                     <button
@@ -196,7 +228,12 @@ import { PasskeysService } from '@core/services/auth/passkeys.service';
                       title="Eliminar passkey"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -218,7 +255,12 @@ import { PasskeysService } from '@core/services/auth/passkeys.service';
                 <span>Registrando...</span>
               } @else {
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m8-8H4"
+                  />
                 </svg>
                 <span>Agregar huella o Face ID</span>
               }

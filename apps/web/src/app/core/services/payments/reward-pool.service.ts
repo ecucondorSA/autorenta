@@ -34,7 +34,9 @@ export class RewardPoolService {
   readonly poolStatus = signal<RewardPoolStatus | null>(null);
 
   // Computed values
-  readonly currentMonthPoints = computed(() => this.summary()?.currentMonth?.points?.total_points ?? 0);
+  readonly currentMonthPoints = computed(
+    () => this.summary()?.currentMonth?.points?.total_points ?? 0,
+  );
   readonly estimatedEarnings = computed(() => this.summary()?.currentMonth?.estimatedEarnings ?? 0);
   readonly lastMonthEarnings = computed(() => this.summary()?.lastMonth?.earnings ?? 0);
   readonly totalEarnedAllTime = computed(() => this.summary()?.totalEarnedAllTime ?? 0);
@@ -111,10 +113,7 @@ export class RewardPoolService {
 
       if (totalError) throw totalError;
 
-      const totalEarned = (totalData || []).reduce(
-        (sum, r) => sum + (r.amount_cents || 0),
-        0
-      );
+      const totalEarned = (totalData || []).reduce((sum, r) => sum + (r.amount_cents || 0), 0);
 
       // Build summary
       const emptyPoints: OwnerPointsBreakdown = {

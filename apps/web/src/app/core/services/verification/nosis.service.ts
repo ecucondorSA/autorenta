@@ -184,8 +184,7 @@ export class NosisService implements OnDestroy {
       this.creditReport.set(data as CreditReport | null);
       return data as CreditReport | null;
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Error al cargar reporte de crédito';
+      const message = err instanceof Error ? err.message : 'Error al cargar reporte de crédito';
       this.error.set(message);
       throw err;
     } finally {
@@ -254,9 +253,7 @@ export class NosisService implements OnDestroy {
       if (row.expires_at) {
         const expiresAt = new Date(row.expires_at);
         const now = new Date();
-        daysUntilExpiry = Math.ceil(
-          (expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
-        );
+        daysUntilExpiry = Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
       }
 
       // Build issues list
@@ -339,8 +336,7 @@ export class NosisService implements OnDestroy {
       this.eligibility.set(eligibility);
       return eligibility;
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Error al verificar elegibilidad';
+      const message = err instanceof Error ? err.message : 'Error al verificar elegibilidad';
       this.error.set(message);
       throw err;
     } finally {
@@ -352,11 +348,7 @@ export class NosisService implements OnDestroy {
    * Refresh all credit data
    */
   async refresh(): Promise<void> {
-    await Promise.all([
-      this.loadCreditReport(),
-      this.loadCreditSummary(),
-      this.checkEligibility(),
-    ]);
+    await Promise.all([this.loadCreditReport(), this.loadCreditSummary(), this.checkEligibility()]);
   }
 
   /**

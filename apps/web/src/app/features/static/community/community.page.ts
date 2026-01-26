@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { environment } from '@environment';
+
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-community',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton],
+  imports: [CommonModule, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton],
   template: `
     <ion-header>
       <ion-toolbar>
@@ -56,7 +57,7 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar 
           <div class="cta-section">
             <h3>¿Quieres ser parte activa?</h3>
             <p>Únete a nuestras redes sociales para enterarte de todo</p>
-            <a href="https://instagram.com/autorenta" target="_blank" rel="noopener" class="cta-button">
+            <a [href]="instagramUrl" target="_blank" rel="noopener" class="cta-button">
               Seguir en Instagram
             </a>
           </div>
@@ -66,4 +67,6 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar 
   `,
   styleUrls: ['./static-shared.css'],
 })
-export class CommunityPage { }
+export class CommunityPage {
+  protected readonly instagramUrl = environment.socialMedia.instagram;
+}

@@ -35,7 +35,13 @@ export interface FipeMarketValue {
 /**
  * Scanner state
  */
-export type ScannerState = 'idle' | 'initializing' | 'scanning' | 'detected' | 'confirmed' | 'error';
+export type ScannerState =
+  | 'idle'
+  | 'initializing'
+  | 'scanning'
+  | 'detected'
+  | 'confirmed'
+  | 'error';
 
 // ============================================================================
 // SERVICE
@@ -204,7 +210,7 @@ export class VehicleScannerService {
 
     this.logger.info(
       `Confirmed: ${detection.brand} ${detection.model} @ ${detection.confidence}%`,
-      'VehicleScanner'
+      'VehicleScanner',
     );
 
     this.scannerState.set('confirmed');
@@ -311,7 +317,7 @@ export class VehicleScannerService {
     // Debug logging
     this.logger.debug(
       `Recognition result: success=${result.success}, confidence=${result.vehicle?.confidence}, brand=${result.vehicle?.brand}`,
-      'VehicleScanner'
+      'VehicleScanner',
     );
 
     if (!result.success || result.vehicle.confidence < this.MIN_CONFIDENCE) {
@@ -401,7 +407,7 @@ export class VehicleScannerService {
     try {
       this.logger.info(
         `Looking up FIPE (Exact): ${detection.brand} ${detection.model} ${detection.year}`,
-        'VehicleScanner'
+        'VehicleScanner',
       );
 
       // 1. First Attempt: Exact Match
@@ -411,7 +417,10 @@ export class VehicleScannerService {
       if (!result?.success || !result.data) {
         const sanitizedModel = this.sanitizeModelName(detection.model);
         if (sanitizedModel !== detection.model) {
-          this.logger.info(`Retrying FIPE with sanitized model: ${sanitizedModel}`, 'VehicleScanner');
+          this.logger.info(
+            `Retrying FIPE with sanitized model: ${sanitizedModel}`,
+            'VehicleScanner',
+          );
           result = await this.fipeCache.lookup(detection.brand, sanitizedModel, detection.year);
         }
       }
@@ -428,7 +437,10 @@ export class VehicleScannerService {
         this.setMarketValue(marketVal);
       } else {
         // 3. Final Fallback: Estimate based on Body Type & Year
-        this.logger.warn('FIPE lookup failed, using AutoRenta Estimation Fallback', 'VehicleScanner');
+        this.logger.warn(
+          'FIPE lookup failed, using AutoRenta Estimation Fallback',
+          'VehicleScanner',
+        );
         const fallbackValue = this.calculateFallbackPrice(detection);
         this.setMarketValue(fallbackValue);
       }
@@ -451,7 +463,7 @@ export class VehicleScannerService {
 
     this.logger.info(
       `Price set: USD ${marketVal.value_usd} - Suggested: $${dailyPrice}/day (${marketVal.reference_month})`,
-      'VehicleScanner'
+      'VehicleScanner',
     );
   }
 
@@ -472,7 +484,7 @@ export class VehicleScannerService {
   private calculateFallbackPrice(detection: VehicleScanResult): FipeMarketValue {
     const currentYear = new Date().getFullYear();
     const age = Math.max(0, currentYear - detection.year);
-    
+
     // Base prices (USD) for a new car (0 years old) by body type
     const basePrices: Record<string, number> = {
       suv: 35000,
@@ -483,11 +495,11 @@ export class VehicleScannerService {
       convertible: 50000,
       van: 30000,
       wagon: 28000,
-      unknown: 20000
+      unknown: 20000,
     };
 
     const startPrice = basePrices[detection.bodyType.toLowerCase()] || basePrices['unknown'];
-    
+
     // Depreciation curve (approx 10% first year, then 5% per year)
     // Using a simplified exponential decay: Value = Start * (0.85 ^ age) roughly
     // Adjusted to not go below $1,000 for rental viability (was 5000)
@@ -498,7 +510,7 @@ export class VehicleScannerService {
       value_brl: estimatedUsd * 5, // Approx exchange rate
       value_ars: estimatedUsd * 1000, // Approx exchange rate
       fipe_code: 'EST-AUTO',
-      reference_month: 'Estimado AutoRenta'
+      reference_month: 'Estimado AutoRenta',
     };
   }
 }

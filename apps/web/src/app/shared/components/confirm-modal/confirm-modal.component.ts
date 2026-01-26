@@ -221,7 +221,7 @@ export class ConfirmModalComponent {
       case 'warning':
         return 'bg-amber-500 hover:bg-amber-600 text-black';
       default:
-        return 'bg-[#00D95F] hover:bg-[#00C553] text-black';
+        return 'bg-[#39FF14] hover:bg-[#00C553] text-black';
     }
   }
 }

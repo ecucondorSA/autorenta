@@ -36,270 +36,149 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
   template: `
     <div class="min-h-screen bg-surface-base pb-20">
       <!-- Minimal Header -->
-      <nav class="sticky top-0 z-20 bg-surface-base/80 backdrop-blur-md border-b border-border-subtle">
-        <div class="max-w-2xl mx-auto px-4 h-16 flex items-center justify-between">
-          <a routerLink="/profile" class="p-2 -ml-2 rounded-full hover:bg-surface-hover text-text-secondary hover:text-text-primary transition-colors">
+      <nav
+        class="fixed top-0 left-0 w-full z-[60] bg-surface-base border-b border-border-subtle h-16"
+      >
+        <div class="max-w-2xl mx-auto px-4 h-full flex items-center justify-between">
+          <a
+            routerLink="/profile"
+            class="p-2 -ml-2 rounded-full hover:bg-surface-hover text-text-secondary hover:text-text-primary transition-colors"
+          >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
           </a>
           <span class="text-sm font-semibold text-text-primary">Verificación de Cuenta</span>
-          <div class="w-9"></div> <!-- Spacer for balance -->
+          <div class="w-9"></div>
+          <!-- Spacer for balance -->
         </div>
       </nav>
 
-      <main class="max-w-2xl mx-auto px-4 pt-8">
-        <!-- Hero Section -->
-        <div class="mb-10 text-center">
-          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-cta-default/10 text-cta-default mb-4 relative">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      <main class="max-w-md mx-auto px-4 pt-24 pb-20">
+        <!-- Progress Header (Compact) -->
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex flex-col">
+            <h1 class="text-xl font-bold text-text-primary">
+              @if (isLevelComplete(2)) {
+                Prueba de Vida
+              } @else if (isLevelComplete(1)) {
+                Documentos
+              } @else {
+                Contacto
+              }
+            </h1>
+            <p class="text-xs text-text-secondary">Paso {{ completedSteps() + 1 }} de 3</p>
+          </div>
+          <div class="w-12 h-12 relative flex items-center justify-center">
+            <svg class="w-full h-full -rotate-90 text-surface-raised" viewBox="0 0 36 36">
+              <!-- Background Circle -->
+              <path
+                class="text-border-default"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+              />
+              <!-- Progress Circle -->
+              <path
+                class="text-cta-default transition-all duration-1000 ease-out"
+                [attr.stroke-dasharray]="progressPercentage() + ', 100'"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+              />
             </svg>
-            @if (progressPercentage() === 100) {
-              <div class="absolute -right-1 -bottom-1 bg-success-500 text-white rounded-full p-1 border-2 border-surface-base">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+            <span class="absolute text-[10px] font-bold text-text-primary"
+              >{{ progressPercentage() }}%</span
+            >
+          </div>
+        </div>
+
+        <!-- STEP 1: Contact (Edit Mode or Hidden) -->
+        @if (!isLevelComplete(1) || expandedSections().has(1)) {
+          <div class="animate-fade-in">
+            <app-email-verification></app-email-verification>
+            <div class="mt-4"></div>
+            <app-phone-verification></app-phone-verification>
+          </div>
+        }
+
+        <!-- STEP 2: Documents (Focus Mode) -->
+        @if (canAccessLevel(2) && !isLevelComplete(2)) {
+          <div class="animate-fade-in space-y-6">
+            @if (!isDniVerified()) {
+              <div>
+                <h2 class="text-lg font-semibold text-text-primary mb-1">Documento de Identidad</h2>
+                <p class="text-sm text-text-secondary mb-4">Sube una foto clara de tu DNI.</p>
+                <app-dni-uploader></app-dni-uploader>
+              </div>
+            } @else {
+              <div>
+                <h2 class="text-lg font-semibold text-text-primary mb-1">Licencia de Conducir</h2>
+                <p class="text-sm text-text-secondary mb-4">Requerido para poder conducir.</p>
+                <app-license-uploader
+                  [hideCountrySelector]="false"
+                  (verificationCompleted)="onLicenseVerificationComplete()"
+                ></app-license-uploader>
               </div>
             }
           </div>
-          <h1 class="text-2xl font-bold text-text-primary mb-2">Construyamos confianza</h1>
-          <p class="text-text-secondary max-w-sm mx-auto">
-            Completa estos 3 pasos para verificar tu identidad y acceder a todas las funciones.
-          </p>
-        </div>
+        }
 
-        <!-- Vertical Stepper -->
-        <div class="relative space-y-0">
-          <!-- Vertical Line -->
-          <div class="absolute left-[19px] top-8 bottom-8 w-px bg-border-subtle -z-10"></div>
-
-          <!-- STEP 1: Contact -->
-          <div class="relative pb-6 group">
-            <div class="flex gap-4">
-              <!-- Indicator -->
-              <div class="flex-shrink-0 mt-1">
-                <div class="w-10 h-10 rounded-full border-2 border-surface-base flex items-center justify-center transition-all duration-300 shadow-sm"
-                  [class]="getStepCircleClass(1)">
-                  @if (isLevelComplete(1)) {
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                  } @else {
-                    <span class="text-sm font-bold">1</span>
-                  }
-                </div>
-              </div>
-
-              <!-- Content Card -->
-              <div class="flex-1 transition-all duration-300">
-                <div 
-                  class="rounded-2xl overflow-hidden transition-all duration-300"
-                  [class.bg-surface-raised]="expandedSections().has(1)"
-                  [class.border]="expandedSections().has(1)"
-                  [class.border-border-subtle]="expandedSections().has(1)"
-                  [class.shadow-sm]="expandedSections().has(1)"
-                >
-                  <button (click)="toggleSection(1)" class="w-full px-4 py-3 flex items-center justify-between text-left group-hover:bg-surface-hover/30 rounded-xl transition-colors">
-                    <div>
-                      <h3 class="font-semibold text-text-primary text-base">Datos de Contacto</h3>
-                      @if (!expandedSections().has(1)) {
-                        <p class="text-xs text-text-secondary mt-0.5">Email y teléfono celular</p>
-                      }
-                    </div>
-                    @if (isLevelComplete(1)) {
-                      <div class="w-6 h-6 rounded-full bg-success-50 text-success-600 flex items-center justify-center">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                      </div>
-                    } @else {
-                      <svg class="w-5 h-5 text-text-muted transition-transform duration-300" [class.rotate-180]="expandedSections().has(1)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    }
-                  </button>
-
-                  <div class="transition-all duration-300 ease-out overflow-hidden"
-                    [class]="expandedSections().has(1) ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'">
-                    <div class="px-4 pb-6 pt-2 space-y-4">
-                      <app-email-verification></app-email-verification>
-                      <app-phone-verification></app-phone-verification>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <!-- STEP 3: Selfie (Focus Mode) -->
+        @if (canAccessLevel(3) && !isLevelComplete(3)) {
+          <div class="animate-fade-in">
+            <h2 class="text-lg font-semibold text-text-primary mb-1">Prueba de Vida</h2>
+            <p class="text-sm text-text-secondary mb-4">Validaremos que eres tú en tiempo real.</p>
+            <app-selfie-capture></app-selfie-capture>
           </div>
+        }
 
-          <!-- STEP 2: Documents -->
-          <div class="relative pb-6 group" [class.opacity-50]="!canAccessLevel(2)">
-            <div class="flex gap-4">
-              <!-- Indicator -->
-              <div class="flex-shrink-0 mt-1">
-                <div class="w-10 h-10 rounded-full border-2 border-surface-base flex items-center justify-center transition-colors duration-300 shadow-sm"
-                  [class]="getStepCircleClass(2)">
-                  @if (isLevelComplete(2)) {
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                  } @else if (!canAccessLevel(2)) {
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                  } @else {
-                    <span class="text-sm font-bold">2</span>
-                  }
-                </div>
-              </div>
-
-              <!-- Content Card -->
-              <div class="flex-1 transition-all duration-300">
-                <div 
-                  class="rounded-2xl overflow-hidden transition-all duration-300"
-                  [class.bg-surface-raised]="expandedSections().has(2) && canAccessLevel(2)"
-                  [class.border]="expandedSections().has(2) && canAccessLevel(2)"
-                  [class.border-border-subtle]="expandedSections().has(2) && canAccessLevel(2)"
-                  [class.shadow-sm]="expandedSections().has(2) && canAccessLevel(2)"
-                >
-                  <button (click)="canAccessLevel(2) && toggleSection(2)" 
-                    [disabled]="!canAccessLevel(2)"
-                    class="w-full px-4 py-3 flex items-center justify-between text-left group-hover:bg-surface-hover/30 rounded-xl transition-colors disabled:cursor-not-allowed">
-                    <div>
-                      <h3 class="font-semibold text-text-primary text-base">Documentos Oficiales</h3>
-                      @if (!expandedSections().has(2)) {
-                        <p class="text-xs text-text-secondary mt-0.5">DNI y Licencia de Conducir</p>
-                      }
-                    </div>
-                    @if (isLevelComplete(2)) {
-                      <div class="w-6 h-6 rounded-full bg-success-50 text-success-600 flex items-center justify-center">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                      </div>
-                    } @else if (canAccessLevel(2)) {
-                      <svg class="w-5 h-5 text-text-muted transition-transform duration-300" [class.rotate-180]="expandedSections().has(2)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    }
-                  </button>
-
-                  <div class="transition-all duration-300 ease-out overflow-hidden"
-                    [class]="expandedSections().has(2) && canAccessLevel(2) ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'">
-                    <div class="px-4 pb-6 pt-2 space-y-8">
-                      
-                      <!-- DNI Block -->
-                      <div class="space-y-3">
-                        <div class="flex items-center justify-between gap-2">
-                          <h4 class="text-xs font-bold text-text-muted uppercase tracking-wider truncate">Documento de Identidad</h4>
-                          @if (isDniVerified()) {
-                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full" style="background-color: #22c55e; color: white;">
-                              ✓ VERIFICADO
-                            </span>
-                          } @else if (isDniInReview()) {
-                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full" style="background-color: #eab308; color: black;">
-                              ⏳ EN REVISIÓN
-                            </span>
-                          } @else {
-                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full" style="background-color: #ef4444; color: white;">
-                              ⚠ PENDIENTE
-                            </span>
-                          }
-                        </div>
-                        @if (!isDniVerified()) {
-                          <app-dni-uploader></app-dni-uploader>
-                        }
-                      </div>
-
-                      <div class="h-px bg-border-subtle w-full"></div>
-
-                      <!-- License Block -->
-                      <div class="space-y-3">
-                        <div class="flex items-center justify-between gap-2">
-                          <h4 class="text-xs font-bold text-text-muted uppercase tracking-wider truncate">Licencia de Conducir</h4>
-                          @if (isLicenseVerified()) {
-                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full" style="background-color: #22c55e; color: white;">
-                              ✓ VERIFICADO
-                            </span>
-                          } @else if (isLicenseInReview()) {
-                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full" style="background-color: #eab308; color: black;">
-                              ⏳ EN REVISIÓN
-                            </span>
-                          } @else {
-                            <span class="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full" style="background-color: #ef4444; color: white;">
-                              ⚠ PENDIENTE
-                            </span>
-                          }
-                        </div>
-                        @if (!isLicenseVerified()) {
-                          <app-license-uploader [hideCountrySelector]="false"></app-license-uploader>
-                        }
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- STEP 3: Identity -->
-          <div class="relative pb-6 group" [class.opacity-50]="!canAccessLevel(3)">
-            <div class="flex gap-4">
-              <!-- Indicator -->
-              <div class="flex-shrink-0 mt-1">
-                <div class="w-10 h-10 rounded-full border-2 border-surface-base flex items-center justify-center transition-colors duration-300 shadow-sm"
-                  [class]="getStepCircleClass(3)">
-                  @if (isLevelComplete(3)) {
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                  } @else if (!canAccessLevel(3)) {
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                  } @else {
-                    <span class="text-sm font-bold">3</span>
-                  }
-                </div>
-              </div>
-
-              <!-- Content Card -->
-              <div class="flex-1 transition-all duration-300">
-                <div 
-                  class="rounded-2xl overflow-hidden transition-all duration-300"
-                  [class.bg-surface-raised]="expandedSections().has(3) && canAccessLevel(3)"
-                  [class.border]="expandedSections().has(3) && canAccessLevel(3)"
-                  [class.border-border-subtle]="expandedSections().has(3) && canAccessLevel(3)"
-                  [class.shadow-sm]="expandedSections().has(3) && canAccessLevel(3)"
-                >
-                  <button (click)="canAccessLevel(3) && toggleSection(3)" 
-                    [disabled]="!canAccessLevel(3)"
-                    class="w-full px-4 py-3 flex items-center justify-between text-left group-hover:bg-surface-hover/30 rounded-xl transition-colors disabled:cursor-not-allowed">
-                    <div>
-                      <h3 class="font-semibold text-text-primary text-base">Prueba de Vida</h3>
-                      @if (!expandedSections().has(3)) {
-                        <p class="text-xs text-text-secondary mt-0.5">Video selfie para validar identidad</p>
-                      }
-                    </div>
-                    @if (isLevelComplete(3)) {
-                      <div class="w-6 h-6 rounded-full bg-success-50 text-success-600 flex items-center justify-center">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                      </div>
-                    } @else if (canAccessLevel(3)) {
-                      <svg class="w-5 h-5 text-text-muted transition-transform duration-300" [class.rotate-180]="expandedSections().has(3)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    }
-                  </button>
-
-                  <div class="transition-all duration-300 ease-out overflow-hidden"
-                    [class]="expandedSections().has(3) && canAccessLevel(3) ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'">
-                    <div class="px-4 pb-6 pt-2">
-                      <app-selfie-capture></app-selfie-capture>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Success Message -->
+        <!-- Success State -->
         @if (progressPercentage() === 100) {
-          <div class="fixed bottom-0 left-0 right-0 p-4 bg-surface-base border-t border-border-subtle z-30 animate-slide-up">
-            <div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center text-success-600">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                </div>
-                <div>
-                  <p class="font-semibold text-text-primary">¡Verificación Completa!</p>
-                  <p class="text-xs text-text-secondary">Ya puedes alquilar y publicar autos.</p>
-                </div>
-              </div>
-              <a routerLink="/cars" class="px-6 py-2.5 bg-cta-default text-white font-medium rounded-xl hover:bg-cta-hover transition-colors shadow-lg">
-                Comenzar
-              </a>
+          <div
+            class="fixed inset-0 z-[60] bg-surface-base flex flex-col items-center justify-center p-6 animate-scale-up"
+          >
+            <div
+              class="w-24 h-24 rounded-full bg-success-100 flex items-center justify-center text-success-600 mb-6 shadow-lg animate-bounce"
+            >
+              <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
             </div>
+            <h2 class="text-3xl font-bold text-text-primary mb-2 text-center">
+              ¡Estás Verificado!
+            </h2>
+            <p class="text-text-secondary text-center max-w-xs mb-10">
+              Ya puedes disfrutar de la experiencia completa de AutoRenta.
+            </p>
+
+            <a
+              routerLink="/cars"
+              class="w-full max-w-sm py-4 bg-cta-default text-white font-bold rounded-2xl shadow-xl hover:bg-cta-hover transition-transform active:scale-95 text-center flex items-center justify-center gap-2"
+            >
+              Explorar Autos
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </a>
           </div>
         }
       </main>
@@ -480,9 +359,7 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
     // Documento subido pero no verificado
     const verified = this.isDniVerified();
     if (verified) return false;
-    return this.userDocuments().some((doc) =>
-      ['gov_id_front', 'gov_id_back'].includes(doc.kind),
-    );
+    return this.userDocuments().some((doc) => ['gov_id_front', 'gov_id_back'].includes(doc.kind));
   }
 
   isLicenseVerified(): boolean {
@@ -584,5 +461,17 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
     )
       return true;
     return false;
+  }
+  onLicenseVerificationComplete(): void {
+    // Auto-advance to next step (Level 3 - Selfie)
+    // We add a small delay to allow the store to update via realtime/optimistic updates
+    setTimeout(() => {
+      if (this.canAccessLevel(3)) {
+        const sections = new Set(this.expandedSections());
+        sections.add(3); // Open Selfie
+        sections.delete(2); // Close Documents (optional, reduces clutter)
+        this.expandedSections.set(sections);
+      }
+    }, 1500);
   }
 }

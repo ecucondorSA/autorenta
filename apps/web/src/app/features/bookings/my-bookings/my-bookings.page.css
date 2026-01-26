@@ -8,8 +8,7 @@
 .bookings-page {
   background:
     radial-gradient(1200px 480px at 15% -10%, rgba(0, 217, 95, 0.08), transparent 55%),
-    radial-gradient(800px 360px at 85% -20%, rgba(59, 130, 246, 0.08), transparent 55%),
-    #f7f7f5;
+    radial-gradient(800px 360px at 85% -20%, rgba(59, 130, 246, 0.08), transparent 55%), #f7f7f5;
 }
 
 .bookings-title {
@@ -1412,7 +1411,9 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .booking-card-compact {
-  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  transition:
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .booking-card-compact:hover {

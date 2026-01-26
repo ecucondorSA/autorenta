@@ -68,13 +68,13 @@ export interface VideoInspectionResult {
 }
 
 export interface ExtractFramesOptions {
-  intervalMs?: number;      // Default: 2000ms
-  maxFrames?: number;       // Default: 30
+  intervalMs?: number; // Default: 2000ms
+  maxFrames?: number; // Default: 30
   resolution?: {
     width: number;
     height: number;
   };
-  quality?: number;         // 0-1, default: 0.85
+  quality?: number; // 0-1, default: 0.85
 }
 
 export type InspectionStage = 'check_in' | 'check_out' | 'renter_check_in';
@@ -157,7 +157,10 @@ export class VideoInspectionAIService {
       quality = 0.85,
     } = options || {};
 
-    this.logger.info(`Extracting frames from video: ${video.size} bytes, interval: ${intervalMs}ms`, 'VideoInspectionAI');
+    this.logger.info(
+      `Extracting frames from video: ${video.size} bytes, interval: ${intervalMs}ms`,
+      'VideoInspectionAI',
+    );
 
     return new Promise((resolve, reject) => {
       const videoEl = document.createElement('video');
@@ -182,7 +185,10 @@ export class VideoInspectionAIService {
       videoEl.onloadedmetadata = async () => {
         const duration = videoEl.duration * 1000; // Convert to ms
         const totalFrames = Math.min(Math.ceil(duration / intervalMs), maxFrames);
-        this.logger.info(`Video duration: ${duration}ms, extracting ~${totalFrames} frames`, 'VideoInspectionAI');
+        this.logger.info(
+          `Video duration: ${duration}ms, extracting ~${totalFrames} frames`,
+          'VideoInspectionAI',
+        );
 
         try {
           for (let time = 0; time < duration && frames.length < maxFrames; time += intervalMs) {
@@ -203,7 +209,7 @@ export class VideoInspectionAIService {
                   else blobReject(new Error('Failed to create blob from canvas'));
                 },
                 'image/jpeg',
-                quality
+                quality,
               );
             });
 
@@ -244,7 +250,9 @@ export class VideoInspectionAIService {
    */
   private yieldToMain(): Promise<void> {
     // Use scheduler.yield() if available (Chromium 115+)
-    const scheduler = (globalThis as Record<string, unknown>)['scheduler'] as { yield?: () => Promise<void> } | undefined;
+    const scheduler = (globalThis as Record<string, unknown>)['scheduler'] as
+      | { yield?: () => Promise<void> }
+      | undefined;
     if (scheduler?.yield) {
       return scheduler.yield();
     }
@@ -270,9 +278,12 @@ export class VideoInspectionAIService {
   async uploadFrames(
     frames: ExtractedFrame[],
     bookingId: string,
-    stage: InspectionStage
+    stage: InspectionStage,
   ): Promise<UploadedFrame[]> {
-    this.logger.info(`Uploading ${frames.length} frames for booking ${bookingId}`, 'VideoInspectionAI');
+    this.logger.info(
+      `Uploading ${frames.length} frames for booking ${bookingId}`,
+      'VideoInspectionAI',
+    );
 
     const uploadedFrames: UploadedFrame[] = [];
     const timestamp = Date.now();
@@ -340,9 +351,12 @@ export class VideoInspectionAIService {
   analyzeFrames(
     bookingId: string,
     stage: InspectionStage,
-    frames: UploadedFrame[]
+    frames: UploadedFrame[],
   ): Observable<VideoInspectionResult> {
-    this.logger.info(`Analyzing ${frames.length} frames for booking ${bookingId}`, 'VideoInspectionAI');
+    this.logger.info(
+      `Analyzing ${frames.length} frames for booking ${bookingId}`,
+      'VideoInspectionAI',
+    );
 
     return from(
       this.supabaseClient.functions.invoke<VideoInspectionResult>(this.EDGE_FUNCTION_URL, {
@@ -355,7 +369,7 @@ export class VideoInspectionAIService {
             suggested_area: f.suggested_area,
           })),
         },
-      })
+      }),
     ).pipe(
       map((response) => {
         if (response.error) {
@@ -387,7 +401,7 @@ export class VideoInspectionAIService {
           summary: 'Error de análisis',
           error: error instanceof Error ? error.message : 'Error desconocido',
         });
-      })
+      }),
     );
   }
 
@@ -408,7 +422,7 @@ export class VideoInspectionAIService {
     video: Blob,
     bookingId: string,
     stage: InspectionStage,
-    onProgress?: (step: string, progress: number) => void
+    onProgress?: (step: string, progress: number) => void,
   ): Observable<VideoInspectionResult> {
     return from(this.runFullFlow(video, bookingId, stage, onProgress));
   }
@@ -417,7 +431,7 @@ export class VideoInspectionAIService {
     video: Blob,
     bookingId: string,
     stage: InspectionStage,
-    onProgress?: (step: string, progress: number) => void
+    onProgress?: (step: string, progress: number) => void,
   ): Promise<VideoInspectionResult> {
     try {
       // Step 1: Extract frames (0-30%)
@@ -551,7 +565,7 @@ export class VideoInspectionAIService {
    */
   filterDamagesBySeverity(
     damages: InspectionDamage[],
-    severity: InspectionDamage['severity']
+    severity: InspectionDamage['severity'],
   ): InspectionDamage[] {
     return damages.filter((d) => d.severity === severity);
   }

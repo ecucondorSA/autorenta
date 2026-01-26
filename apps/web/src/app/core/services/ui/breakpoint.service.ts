@@ -100,7 +100,9 @@ export class BreakpointService {
       : of({ width: defaultWidth, height: defaultHeight }); // Static value for SSR
 
     // Convertir a signal
-    const size = toSignal(resize$, { initialValue: { width: defaultWidth, height: defaultHeight } });
+    const size = toSignal(resize$, {
+      initialValue: { width: defaultWidth, height: defaultHeight },
+    });
     this.width = computed(() => size().width);
     this.height = computed(() => size().height);
     this.minDimension = computed(() => Math.min(this.width(), this.height()));

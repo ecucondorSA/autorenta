@@ -183,7 +183,7 @@ export class BookingPendingPage implements OnInit, OnDestroy {
   private handlePaymentRejected(bookingId: string): void {
     this.destroy$.next(); // Stop polling
     this.toastService.error('Pago rechazado', 'El pago fue rechazado por el procesador');
-    this.router.navigate(['/bookings', bookingId, 'detail-payment'], {
+    this.router.navigate(['/bookings', bookingId, 'request'], {
       queryParams: { retry: 'true' },
     });
   }
@@ -199,7 +199,7 @@ export class BookingPendingPage implements OnInit, OnDestroy {
   retryPayment(): void {
     const bookingId = this.booking()?.id;
     if (bookingId) {
-      this.router.navigate(['/bookings', bookingId, 'detail-payment'], {
+      this.router.navigate(['/bookings', bookingId, 'request'], {
         queryParams: { retry: 'true' },
       });
     }

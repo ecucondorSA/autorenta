@@ -90,9 +90,13 @@ interface CategoryPreference {
 
             <div class="space-y-4">
               <!-- Push -->
-              <div class="flex items-center justify-between p-4 rounded-lg border border-border-default hover:bg-surface-base transition-colors">
+              <div
+                class="flex items-center justify-between p-4 rounded-lg border border-border-default hover:bg-surface-base transition-colors"
+              >
                 <div class="flex items-center gap-4">
-                  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-xl">
+                  <div
+                    class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-xl"
+                  >
                     🔔
                   </div>
                   <div>
@@ -125,9 +129,13 @@ interface CategoryPreference {
               }
 
               <!-- Email -->
-              <div class="flex items-center justify-between p-4 rounded-lg border border-border-default hover:bg-surface-base transition-colors">
+              <div
+                class="flex items-center justify-between p-4 rounded-lg border border-border-default hover:bg-surface-base transition-colors"
+              >
                 <div class="flex items-center gap-4">
-                  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 text-xl">
+                  <div
+                    class="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 text-xl"
+                  >
                     📧
                   </div>
                   <div>
@@ -151,14 +159,20 @@ interface CategoryPreference {
               </div>
 
               <!-- In-App -->
-              <div class="flex items-center justify-between p-4 rounded-lg border border-border-default hover:bg-surface-base transition-colors">
+              <div
+                class="flex items-center justify-between p-4 rounded-lg border border-border-default hover:bg-surface-base transition-colors"
+              >
                 <div class="flex items-center gap-4">
-                  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 text-xl">
+                  <div
+                    class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 text-xl"
+                  >
                     🏠
                   </div>
                   <div>
                     <h3 class="font-medium text-text-primary">En la app</h3>
-                    <p class="text-sm text-text-secondary">Notificaciones dentro de la aplicacion</p>
+                    <p class="text-sm text-text-secondary">
+                      Notificaciones dentro de la aplicacion
+                    </p>
                   </div>
                 </div>
                 <button
@@ -177,14 +191,20 @@ interface CategoryPreference {
               </div>
 
               <!-- Sound -->
-              <div class="flex items-center justify-between p-4 rounded-lg border border-border-default hover:bg-surface-base transition-colors">
+              <div
+                class="flex items-center justify-between p-4 rounded-lg border border-border-default hover:bg-surface-base transition-colors"
+              >
                 <div class="flex items-center gap-4">
-                  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 text-xl">
+                  <div
+                    class="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 text-xl"
+                  >
                     🔊
                   </div>
                   <div>
                     <h3 class="font-medium text-text-primary">Sonido</h3>
-                    <p class="text-sm text-text-secondary">Reproducir sonido con las notificaciones</p>
+                    <p class="text-sm text-text-secondary">
+                      Reproducir sonido con las notificaciones
+                    </p>
                   </div>
                 </div>
                 <button
@@ -228,7 +248,9 @@ interface CategoryPreference {
                   class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface-raised shadow ring-0 transition duration-200 ease-in-out"
                 ></span>
               </button>
-              <span class="text-text-primary">{{ quietHoursEnabled() ? 'Activado' : 'Desactivado' }}</span>
+              <span class="text-text-primary">{{
+                quietHoursEnabled() ? 'Activado' : 'Desactivado'
+              }}</span>
             </div>
 
             @if (quietHoursEnabled()) {
@@ -310,7 +332,9 @@ interface CategoryPreference {
                   class="flex items-center justify-between p-4 rounded-lg border border-border-default hover:bg-surface-base transition-colors"
                 >
                   <div class="flex items-center gap-4">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-surface-base text-xl">
+                    <div
+                      class="flex h-10 w-10 items-center justify-center rounded-full bg-surface-base text-xl"
+                    >
                       {{ cat.icon }}
                     </div>
                     <div>
@@ -351,11 +375,18 @@ interface CategoryPreference {
               class="inline-flex items-center gap-2 rounded-lg bg-cta-default px-4 py-2 text-cta-text font-medium hover:bg-cta-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               @if (sendingTest()) {
-                <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                <div
+                  class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+                ></div>
                 Enviando...
               } @else {
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                  />
                 </svg>
                 Enviar notificacion de prueba
               }
@@ -379,7 +410,9 @@ interface CategoryPreference {
             >
               @if (saving()) {
                 <span class="inline-flex items-center gap-2">
-                  <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  <div
+                    class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+                  ></div>
                   Guardando...
                 </span>
               } @else {
@@ -537,7 +570,7 @@ export class NotificationPreferencesPage implements OnInit {
             cats.map((cat) => ({
               ...cat,
               enabled: prefs.categories[cat.category] ?? cat.enabled,
-            }))
+            })),
           );
         }
       }
@@ -568,7 +601,7 @@ export class NotificationPreferencesPage implements OnInit {
         if (Notification.permission === 'denied') {
           this.notifications.warning(
             'Notificaciones bloqueadas',
-            'Habilitalas en la configuracion del navegador'
+            'Habilitalas en la configuracion del navegador',
           );
           return;
         }
@@ -615,7 +648,7 @@ export class NotificationPreferencesPage implements OnInit {
 
   toggleCategory(cat: CategoryPreference) {
     this.categoryPreferences.update((cats) =>
-      cats.map((c) => (c.category === cat.category ? { ...c, enabled: !c.enabled } : c))
+      cats.map((c) => (c.category === cat.category ? { ...c, enabled: !c.enabled } : c)),
     );
   }
 
@@ -645,7 +678,7 @@ export class NotificationPreferencesPage implements OnInit {
           acc[cat.category] = cat.enabled;
           return acc;
         },
-        {} as Record<NotificationCategory, boolean>
+        {} as Record<NotificationCategory, boolean>,
       );
 
       // Update via SmartNotificationService

@@ -155,8 +155,8 @@ import {
               <div>
                 <p class="text-sm font-bold text-amber-300 mb-2">Documentos Físicos Obligatorios</p>
                 <p class="text-xs text-neutral-200 mb-3">
-                  Aunque la App verificó tu identidad, legalmente debes mostrar los documentos físicos
-                  al dueño.
+                  Aunque la App verificó tu identidad, legalmente debes mostrar los documentos
+                  físicos al dueño.
                 </p>
                 <div class="grid grid-cols-2 gap-2">
                   <div class="flex items-center gap-2 bg-white/15 rounded-lg px-3 py-2">

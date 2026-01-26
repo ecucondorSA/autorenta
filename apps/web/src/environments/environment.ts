@@ -18,6 +18,9 @@ export const environment = buildEnvironment({
   // IMPORTANTE: Configurar via variable de entorno en Cloudflare Pages
   // NG_APP_GOOGLE_AI_IMAGE_URL - Endpoint completo de Gemini (incluye ?key=... si aplica)
   googleAiImageUrl: undefined,
+  // API Key for Google GenAI SDK (Client-side)
+  // NG_APP_GEMINI_API_KEY - API Key de Google AI Studio
+  geminiApiKey: undefined,
   // Google Geolocation API (fallback when GPS fails)
   // IMPORTANTE: Configurar via variable de entorno en Cloudflare Pages
   // NG_APP_GOOGLE_GEOLOCATION_API_KEY - API Key de Google Cloud Console (Geolocation API)

@@ -155,7 +155,10 @@ export interface EVDealershipContact {
 /**
  * Definiciones de las 8 secciones del protocolo EV
  */
-export const EV_PROTOCOL_SECTION_DEFINITIONS: Omit<EVProtocolSection, 'status' | 'photos_uploaded' | 'risk_level'>[] = [
+export const EV_PROTOCOL_SECTION_DEFINITIONS: Omit<
+  EVProtocolSection,
+  'status' | 'photos_uploaded' | 'risk_level'
+>[] = [
   {
     id: 'safety',
     step_number: 1,
@@ -163,8 +166,19 @@ export const EV_PROTOCOL_SECTION_DEFINITIONS: Omit<EVProtocolSection, 'status' |
     description: 'Verificar que el área es segura antes de continuar',
     icon: 'shield-checkmark',
     checklist: [
-      { id: 'safe_parking', question: '¿El vehículo está estacionado de forma segura?', answer_type: 'yes_no' },
-      { id: 'smoke_smell', question: '¿Hay humo, olor a quemado o chispas?', answer_type: 'yes_no', risk_if_yes: 'critical', guidance: 'Si hay humo o chispas, aléjate inmediatamente 10 metros del vehículo y llama a emergencias.' },
+      {
+        id: 'safe_parking',
+        question: '¿El vehículo está estacionado de forma segura?',
+        answer_type: 'yes_no',
+      },
+      {
+        id: 'smoke_smell',
+        question: '¿Hay humo, olor a quemado o chispas?',
+        answer_type: 'yes_no',
+        risk_if_yes: 'critical',
+        guidance:
+          'Si hay humo o chispas, aléjate inmediatamente 10 metros del vehículo y llama a emergencias.',
+      },
       { id: 'ventilation', question: '¿El área está ventilada?', answer_type: 'yes_no' },
     ],
     photos_required: 1,
@@ -176,9 +190,28 @@ export const EV_PROTOCOL_SECTION_DEFINITIONS: Omit<EVProtocolSection, 'status' |
     description: 'Revisar externamente el pack de batería (ubicado en el piso del vehículo)',
     icon: 'battery-full',
     checklist: [
-      { id: 'deformation', question: '¿Hay deformación visible en la parte inferior del vehículo?', answer_type: 'yes_no', risk_if_yes: 'high', guidance: 'La deformación puede indicar daño al pack de batería. No intentes mover el vehículo.' },
-      { id: 'cracks', question: '¿Hay grietas o daño en la carcasa de la batería?', answer_type: 'yes_no', risk_if_yes: 'high' },
-      { id: 'leaks', question: '¿Hay fugas de líquido debajo del vehículo?', answer_type: 'yes_no', risk_if_yes: 'critical', guidance: 'Las fugas pueden ser refrigerante tóxico o electrolito de batería. No toques el líquido.' },
+      {
+        id: 'deformation',
+        question: '¿Hay deformación visible en la parte inferior del vehículo?',
+        answer_type: 'yes_no',
+        risk_if_yes: 'high',
+        guidance:
+          'La deformación puede indicar daño al pack de batería. No intentes mover el vehículo.',
+      },
+      {
+        id: 'cracks',
+        question: '¿Hay grietas o daño en la carcasa de la batería?',
+        answer_type: 'yes_no',
+        risk_if_yes: 'high',
+      },
+      {
+        id: 'leaks',
+        question: '¿Hay fugas de líquido debajo del vehículo?',
+        answer_type: 'yes_no',
+        risk_if_yes: 'critical',
+        guidance:
+          'Las fugas pueden ser refrigerante tóxico o electrolito de batería. No toques el líquido.',
+      },
     ],
     photos_required: 4,
   },
@@ -189,8 +222,18 @@ export const EV_PROTOCOL_SECTION_DEFINITIONS: Omit<EVProtocolSection, 'status' |
     description: 'Verificar temperaturas anómalas (NO tocar directamente superficies metálicas)',
     icon: 'thermometer',
     checklist: [
-      { id: 'hot_zones', question: '¿Alguna zona del vehículo se siente inusualmente caliente?', answer_type: 'yes_no', risk_if_yes: 'high', guidance: 'Usa el dorso de la mano para sentir calor a distancia. No toques directamente.' },
-      { id: 'ambient_temp', question: 'Temperatura ambiente aproximada (°C)', answer_type: 'number' },
+      {
+        id: 'hot_zones',
+        question: '¿Alguna zona del vehículo se siente inusualmente caliente?',
+        answer_type: 'yes_no',
+        risk_if_yes: 'high',
+        guidance: 'Usa el dorso de la mano para sentir calor a distancia. No toques directamente.',
+      },
+      {
+        id: 'ambient_temp',
+        question: 'Temperatura ambiente aproximada (°C)',
+        answer_type: 'number',
+      },
     ],
     photos_required: 1,
   },
@@ -201,8 +244,18 @@ export const EV_PROTOCOL_SECTION_DEFINITIONS: Omit<EVProtocolSection, 'status' |
     description: 'Verificar alertas y errores en la pantalla del vehículo (si enciende)',
     icon: 'warning',
     checklist: [
-      { id: 'dashboard_alerts', question: '¿Hay alertas o warnings en el tablero?', answer_type: 'yes_no', risk_if_yes: 'medium' },
-      { id: 'error_codes', question: 'Códigos de error mostrados (copiar exactamente)', answer_type: 'text', guidance: 'Fotografía la pantalla si muestra errores.' },
+      {
+        id: 'dashboard_alerts',
+        question: '¿Hay alertas o warnings en el tablero?',
+        answer_type: 'yes_no',
+        risk_if_yes: 'medium',
+      },
+      {
+        id: 'error_codes',
+        question: 'Códigos de error mostrados (copiar exactamente)',
+        answer_type: 'text',
+        guidance: 'Fotografía la pantalla si muestra errores.',
+      },
       { id: 'battery_level', question: 'Nivel de batería mostrado (%)', answer_type: 'number' },
     ],
     photos_required: 2,
@@ -214,8 +267,19 @@ export const EV_PROTOCOL_SECTION_DEFINITIONS: Omit<EVProtocolSection, 'status' |
     description: 'Inspeccionar el conector y puerto de carga',
     icon: 'flash',
     checklist: [
-      { id: 'port_damage', question: '¿Hay daño visible en el puerto de carga?', answer_type: 'yes_no', risk_if_yes: 'medium' },
-      { id: 'burned_contacts', question: '¿Los contactos del puerto están quemados o derretidos?', answer_type: 'yes_no', risk_if_yes: 'high', guidance: 'Contactos quemados indican cortocircuito. No intentes cargar el vehículo.' },
+      {
+        id: 'port_damage',
+        question: '¿Hay daño visible en el puerto de carga?',
+        answer_type: 'yes_no',
+        risk_if_yes: 'medium',
+      },
+      {
+        id: 'burned_contacts',
+        question: '¿Los contactos del puerto están quemados o derretidos?',
+        answer_type: 'yes_no',
+        risk_if_yes: 'high',
+        guidance: 'Contactos quemados indican cortocircuito. No intentes cargar el vehículo.',
+      },
     ],
     photos_required: 2,
   },
@@ -226,8 +290,19 @@ export const EV_PROTOCOL_SECTION_DEFINITIONS: Omit<EVProtocolSection, 'status' |
     description: 'Verificar el sistema de enfriamiento de batería',
     icon: 'snow',
     checklist: [
-      { id: 'coolant_leak', question: '¿Hay fuga de refrigerante (líquido color verde/rosa)?', answer_type: 'yes_no', risk_if_yes: 'high', guidance: 'El refrigerante es tóxico. No lo toques y evita inhalarlo.' },
-      { id: 'hose_damage', question: '¿Hay daño visible en mangueras o radiador?', answer_type: 'yes_no', risk_if_yes: 'medium' },
+      {
+        id: 'coolant_leak',
+        question: '¿Hay fuga de refrigerante (líquido color verde/rosa)?',
+        answer_type: 'yes_no',
+        risk_if_yes: 'high',
+        guidance: 'El refrigerante es tóxico. No lo toques y evita inhalarlo.',
+      },
+      {
+        id: 'hose_damage',
+        question: '¿Hay daño visible en mangueras o radiador?',
+        answer_type: 'yes_no',
+        risk_if_yes: 'medium',
+      },
     ],
     photos_required: 2,
   },
@@ -238,9 +313,23 @@ export const EV_PROTOCOL_SECTION_DEFINITIONS: Omit<EVProtocolSection, 'status' |
     description: 'Solo intentar si las secciones anteriores NO mostraron riesgos críticos',
     icon: 'power',
     checklist: [
-      { id: 'safe_to_start', question: '¿Es seguro intentar encender el vehículo? (basado en secciones previas)', answer_type: 'yes_no', guidance: 'Si alguna sección anterior mostró riesgo ROJO, NO intentes encender.' },
-      { id: 'starts_correctly', question: '¿El vehículo enciende correctamente?', answer_type: 'yes_no' },
-      { id: 'abnormal_sounds', question: '¿Hay sonidos, vibraciones o olores anómalos al encender?', answer_type: 'yes_no', risk_if_yes: 'medium' },
+      {
+        id: 'safe_to_start',
+        question: '¿Es seguro intentar encender el vehículo? (basado en secciones previas)',
+        answer_type: 'yes_no',
+        guidance: 'Si alguna sección anterior mostró riesgo ROJO, NO intentes encender.',
+      },
+      {
+        id: 'starts_correctly',
+        question: '¿El vehículo enciende correctamente?',
+        answer_type: 'yes_no',
+      },
+      {
+        id: 'abnormal_sounds',
+        question: '¿Hay sonidos, vibraciones o olores anómalos al encender?',
+        answer_type: 'yes_no',
+        risk_if_yes: 'medium',
+      },
     ],
     photos_required: 1,
   },
@@ -251,8 +340,16 @@ export const EV_PROTOCOL_SECTION_DEFINITIONS: Omit<EVProtocolSection, 'status' |
     description: 'Documentar el incidente y contactar servicio técnico si es necesario',
     icon: 'document-text',
     checklist: [
-      { id: 'incident_description', question: 'Descripción detallada del incidente', answer_type: 'text' },
-      { id: 'contacted_service', question: '¿Se contactó al servicio técnico oficial de la marca?', answer_type: 'yes_no' },
+      {
+        id: 'incident_description',
+        question: 'Descripción detallada del incidente',
+        answer_type: 'text',
+      },
+      {
+        id: 'contacted_service',
+        question: '¿Se contactó al servicio técnico oficial de la marca?',
+        answer_type: 'yes_no',
+      },
     ],
     photos_required: 0,
   },
@@ -278,8 +375,8 @@ export function getRecommendedAction(overallRisk: OverallRisk): string {
  * Calcula el riesgo general basado en secciones completadas
  */
 export function calculateOverallRisk(sections: EVProtocolSection[]): OverallRisk {
-  const redCount = sections.filter(s => s.risk_level === 'red').length;
-  const yellowCount = sections.filter(s => s.risk_level === 'yellow').length;
+  const redCount = sections.filter((s) => s.risk_level === 'red').length;
+  const yellowCount = sections.filter((s) => s.risk_level === 'yellow').length;
 
   if (redCount > 0) return 'critical';
   if (yellowCount >= 2) return 'danger';

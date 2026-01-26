@@ -12,6 +12,8 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { getCorsHeaders } from '../_shared/cors.ts';
+import { initSentry, captureError } from '../_shared/sentry.ts';
+import { initSentry, captureError } from '../_shared/sentry.ts';
 
 const TIKTOK_PIXEL_ID = 'D4AHBBBC77U2U4VHPCO0';
 const TIKTOK_API_VERSION = 'v1.3';
@@ -173,6 +175,9 @@ async function sendTikTokEvent(
 }
 
 serve(async (req) => {
+  // Initialize Sentry for error tracking
+  const sentry = initSentry('tiktok-events');
+
   // CORS headers - wrap in try-catch for safety
   let corsHeaders: Record<string, string>;
   try {
@@ -210,7 +215,8 @@ serve(async (req) => {
     let eventData: TikTokEventData;
     try {
       eventData = await req.json();
-    } catch {
+    } catch (parseError) {
+      console.error('Failed to parse request body:', parseError);
       return new Response(
         JSON.stringify({ success: false, error: 'Invalid JSON body' }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
@@ -226,6 +232,11 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         }
       );
+    }
+
+    // Initialize user object if not present
+    if (!eventData.user) {
+      eventData.user = {};
     }
 
     if (!eventData.event_time) {
@@ -253,6 +264,11 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('Edge function error:', error);
+    if (sentry) {
+      captureError(error instanceof Error ? error : new Error(String(error)), {
+        context: 'tiktok-events-handler',
+      });
+    }
     return new Response(
       JSON.stringify({
         success: false,

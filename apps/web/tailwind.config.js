@@ -371,7 +371,13 @@ module.exports = {
          Sombras - Elevation System + Legacy
          ───────────────────────────────────────────────────────────── */
       boxShadow: {
+        // Premium Shadows (Airbnb/Apple style)
+        'premium-sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        'premium-md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 12px 24px -4px rgba(0, 0, 0, 0.08)',
+        'premium-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 20px 48px -12px rgba(0, 0, 0, 0.15)',
+
         // Sistema de Shadows - Profesional
+
         'hard': '4px 4px 0px 0px #000000',     // Sombra sólida de alto contraste
         'hard-sm': '2px 2px 0px 0px #000000',  // Para elementos pequeños
         'neon-glow': '0 0 15px rgba(0, 217, 95, 0.5)', // Resplandor verde neón (#00D95F)

@@ -2,6 +2,7 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Component, signal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { environment } from '@environment';
 
 import { IconComponent } from '../icon/icon.component';
 
@@ -76,31 +77,31 @@ export class FooterComponent {
     {
       name: 'Facebook',
       icon: 'facebook',
-      url: 'https://facebook.com/autorentar',
+      url: environment.socialMedia.facebook,
       ariaLabel: 'Síguenos en Facebook',
     },
     {
       name: 'Instagram',
       icon: 'instagram',
-      url: 'https://instagram.com/autorentar',
+      url: environment.socialMedia.instagram,
       ariaLabel: 'Síguenos en Instagram',
     },
     {
       name: 'TikTok',
       icon: 'tiktok',
-      url: 'https://tiktok.com/@autorentar',
+      url: environment.socialMedia.tiktok,
       ariaLabel: 'Síguenos en TikTok',
     },
     {
       name: 'YouTube',
       icon: 'youtube',
-      url: 'https://youtube.com/@autorentar',
+      url: environment.socialMedia.youtube,
       ariaLabel: 'Suscríbete en YouTube',
     },
     {
       name: 'LinkedIn',
       icon: 'linkedin',
-      url: 'https://linkedin.com/company/autorentar',
+      url: environment.socialMedia.linkedin,
       ariaLabel: 'Síguenos en LinkedIn',
     },
   ]);

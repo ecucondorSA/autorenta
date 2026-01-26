@@ -48,6 +48,9 @@ const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 // =============================================================================
 
 serve(async (req: Request) => {
+  // Initialize Sentry for error tracking
+  const sentry = initSentry('verify-document');
+  
   const corsHeaders = getCorsHeaders(req);
 
   // Handle CORS preflight
@@ -64,8 +67,21 @@ serve(async (req: Request) => {
   }
 
   try {
-    // Parse request
-    const payload: VerifyDocumentRequest = await req.json();
+    // Parse request with error handling
+    let payload: VerifyDocumentRequest;
+    try {
+      payload = await req.json();
+    } catch (parseError) {
+      console.error('[verify-document] Failed to parse request body:', parseError);
+      return new Response(
+        JSON.stringify({
+          error: 'INVALID_REQUEST',
+          message: 'El cuerpo de la solicitud no es un JSON válido'
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { image_url, image_base64, document_type, side, country, user_id } = payload;
 
     // Validate required fields
@@ -102,24 +118,57 @@ serve(async (req: Request) => {
 
     console.log(`[verify-document] Processing ${country} ${document_type} ${side} for user ${user_id}`);
 
-    // Step 1: Call Vision API for OCR
+    // Step 1: Call Vision API for OCR with retry logic
     let ocrResult: OcrResult;
-    try {
-      // Prefer base64 if available (more reliable), fallback to URL
-      const imageSource = image_base64
-        ? { base64: image_base64 }
-        : image_url!;
+    const maxRetries = 3;
+    let lastError: Error | unknown = null;
 
-      ocrResult = await callVisionApi(imageSource);
-      console.log(`[verify-document] OCR completed. Text length: ${ocrResult.text.length}, Face detected: ${ocrResult.hasFace}`);
-    } catch (ocrError) {
-      console.error('[verify-document] OCR failed:', ocrError);
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        // Prefer base64 if available (more reliable), fallback to URL
+        const imageSource = image_base64
+          ? { base64: image_base64 }
+          : image_url!;
+
+        console.log(`[verify-document] OCR attempt ${attempt}/${maxRetries} for user ${user_id}`);
+        ocrResult = await callVisionApi(imageSource);
+        console.log(`[verify-document] OCR completed. Text length: ${ocrResult.text.length}, Face detected: ${ocrResult.hasFace}`);
+        lastError = null;
+        break; // Success, exit retry loop
+      } catch (ocrError) {
+        lastError = ocrError;
+        console.error(`[verify-document] OCR attempt ${attempt}/${maxRetries} failed:`, ocrError);
+
+        // Don't retry on certain errors (invalid image, auth errors)
+        if (ocrError instanceof Error) {
+          const errorMsg = ocrError.message.toLowerCase();
+          if (errorMsg.includes('invalid') || errorMsg.includes('auth') || errorMsg.includes('permission')) {
+            console.error('[verify-document] Non-retryable error detected, aborting retries');
+            break;
+          }
+        }
+
+        // Wait before retry (exponential backoff)
+        if (attempt < maxRetries) {
+          const delayMs = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // Max 5s
+          console.log(`[verify-document] Retrying in ${delayMs}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delayMs));
+        }
+      }
+    }
+
+    // If all retries failed
+    if (lastError || !ocrResult!) {
+      const errorMessage = lastError instanceof Error ? lastError.message : 'Unknown error';
+      console.error('[verify-document] OCR failed after all retries:', errorMessage);
+      
       return new Response(
         JSON.stringify({
           success: false,
           error: 'OCR_FAILED',
-          message: 'No se pudo procesar la imagen. Intenta con una foto mas clara.',
-          details: ocrError instanceof Error ? ocrError.message : 'Unknown error'
+          message: 'No se pudo procesar la imagen después de varios intentos. Por favor, intenta con una foto más clara y asegúrate de que el documento esté completo y bien iluminado.',
+          details: errorMessage,
+          retries: maxRetries
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -225,6 +274,14 @@ serve(async (req: Request) => {
 
   } catch (error) {
     console.error('[verify-document] Unexpected error:', error);
+    
+    // Capture error in Sentry
+    if (sentry) {
+      captureError(error instanceof Error ? error : new Error(String(error)), {
+        context: 'verify-document-handler',
+      });
+    }
+    
     return new Response(
       JSON.stringify({
         success: false,

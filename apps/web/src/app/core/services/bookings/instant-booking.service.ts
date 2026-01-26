@@ -295,10 +295,7 @@ export class InstantBookingService {
   /**
    * Obtiene autos con instant booking habilitado
    */
-  async getInstantBookingCars(filters?: {
-    city?: string;
-    minScore?: number;
-  }): Promise<
+  async getInstantBookingCars(filters?: { city?: string; minScore?: number }): Promise<
     Array<{
       id: string;
       title: string;

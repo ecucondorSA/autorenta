@@ -57,7 +57,9 @@ export class ExifValidationService {
   readonly hasExif = computed(() => this.lastResult()?.has_exif ?? false);
   readonly isOriginal = computed(() => this.lastResult()?.validation.is_original ?? false);
   readonly isRecent = computed(() => this.lastResult()?.validation.is_recent ?? false);
-  readonly manipulationScore = computed(() => this.lastResult()?.validation.manipulation_score ?? 0);
+  readonly manipulationScore = computed(
+    () => this.lastResult()?.validation.manipulation_score ?? 0,
+  );
   readonly warnings = computed(() => this.lastResult()?.warnings ?? []);
 
   readonly riskLevel = computed<'low' | 'medium' | 'high'>(() => {
@@ -73,7 +75,7 @@ export class ExifValidationService {
   async validateExif(
     imageUrl: string,
     expectedDate?: string,
-    expectedLocation?: ExpectedLocation
+    expectedLocation?: ExpectedLocation,
   ): Promise<ExifValidationResult> {
     this.isValidating.set(true);
     this.error.set(null);
@@ -87,7 +89,7 @@ export class ExifValidationService {
             expected_date: expectedDate,
             expected_location: expectedLocation,
           },
-        }
+        },
       );
 
       if (error) throw error;
@@ -126,7 +128,7 @@ export class ExifValidationService {
    */
   async validateLocation(
     imageUrl: string,
-    location: ExpectedLocation
+    location: ExpectedLocation,
   ): Promise<{ match: boolean; distance_km?: number }> {
     const result = await this.validateExif(imageUrl, undefined, location);
 
@@ -139,7 +141,7 @@ export class ExifValidationService {
       location.latitude,
       location.longitude,
       result.exif_data.gps_latitude,
-      result.exif_data.gps_longitude
+      result.exif_data.gps_longitude,
     );
 
     const radius = location.radius_km || 50;
@@ -155,7 +157,7 @@ export class ExifValidationService {
    */
   async validateRecency(
     imageUrl: string,
-    maxAgeDays: number = 7
+    maxAgeDays: number = 7,
   ): Promise<{ isRecent: boolean; ageDays?: number }> {
     const expectedDate = new Date().toISOString();
     const result = await this.validateExif(imageUrl, expectedDate);
@@ -209,8 +211,10 @@ export class ExifValidationService {
     const dLon = this.toRad(lon2 - lon1);
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.cos(this.toRad(lat1)) *
+        Math.cos(this.toRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   }

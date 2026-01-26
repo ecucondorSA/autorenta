@@ -21,9 +21,16 @@ vi.mock('@core/services/infrastructure/supabase-client.service', () => ({
 
 describe('BookingExtensionService', () => {
   let service: BookingExtensionService;
-  let mockNotifications: { notifyExtensionRequested: ReturnType<typeof vi.fn>; notifyExtensionRejected: ReturnType<typeof vi.fn> };
+  let mockNotifications: {
+    notifyExtensionRequested: ReturnType<typeof vi.fn>;
+    notifyExtensionRejected: ReturnType<typeof vi.fn>;
+  };
   let mockWalletService: { processRentalPayment: ReturnType<typeof vi.fn> };
-  let mockLogger: { info: ReturnType<typeof vi.fn>; warn: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
+  let mockLogger: {
+    info: ReturnType<typeof vi.fn>;
+    warn: ReturnType<typeof vi.fn>;
+    error: ReturnType<typeof vi.fn>;
+  };
 
   // Extended type for test mocks that includes price_per_day used by the service internally
   type MockBooking = Booking & { price_per_day?: number };
@@ -210,10 +217,7 @@ describe('BookingExtensionService', () => {
         }),
       });
 
-      const result = await service.approveExtensionRequest(
-        'non-existent',
-        createMockBooking(),
-      );
+      const result = await service.approveExtensionRequest('non-existent', createMockBooking());
 
       expect(result.success).toBe(false);
       expect(result.error).toContain('no encontrada');
@@ -416,10 +420,7 @@ describe('BookingExtensionService', () => {
         }),
       });
 
-      await service.extendInsuranceCoverageIfNeeded(
-        'booking-123',
-        new Date().toISOString(),
-      );
+      await service.extendInsuranceCoverageIfNeeded('booking-123', new Date().toISOString());
 
       expect(mockLogger.info).not.toHaveBeenCalled();
     });

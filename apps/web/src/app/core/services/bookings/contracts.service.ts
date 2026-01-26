@@ -37,11 +37,11 @@ export interface BaseClausesAccepted {
  * EV-specific contract clauses (required for EV rentals)
  */
 export interface EVClausesAccepted {
-  gpsTracking: boolean;         // Consentimiento GPS obligatorio
-  geofencing: boolean;          // Aceptar restricciones de zona
-  batteryManagement: boolean;   // Responsabilidad de batería
+  gpsTracking: boolean; // Consentimiento GPS obligatorio
+  geofencing: boolean; // Aceptar restricciones de zona
+  batteryManagement: boolean; // Responsabilidad de batería
   chargingObligations: boolean; // Obligación de carga mínima
-  evDamagePolicy: boolean;      // Política de daños EV específica
+  evDamagePolicy: boolean; // Política de daños EV específica
 }
 
 /**
@@ -75,7 +75,8 @@ export const BASE_CLAUSE_DEFINITIONS: ClauseDefinition[] = [
   {
     id: 'culpaGrave',
     title: 'Culpa Grave',
-    description: 'Acepto que el consumo de alcohol o drogas durante el alquiler constituye culpa grave y resulta en la pérdida total de cobertura del seguro.',
+    description:
+      'Acepto que el consumo de alcohol o drogas durante el alquiler constituye culpa grave y resulta en la pérdida total de cobertura del seguro.',
     legalReference: 'Art. 70 Ley 17.418',
     icon: 'wine',
     category: 'base',
@@ -83,14 +84,16 @@ export const BASE_CLAUSE_DEFINITIONS: ClauseDefinition[] = [
   {
     id: 'indemnidad',
     title: 'Indemnidad',
-    description: 'Acepto indemnizar al propietario por cualquier daño, pérdida o responsabilidad que surja de mi uso del vehículo durante el período de alquiler.',
+    description:
+      'Acepto indemnizar al propietario por cualquier daño, pérdida o responsabilidad que surja de mi uso del vehículo durante el período de alquiler.',
     icon: 'shield-checkmark',
     category: 'base',
   },
   {
     id: 'retencion',
     title: 'Retención Indebida',
-    description: 'Reconozco que la no devolución del vehículo en la fecha acordada puede constituir el delito de retención indebida.',
+    description:
+      'Reconozco que la no devolución del vehículo en la fecha acordada puede constituir el delito de retención indebida.',
     legalReference: 'Art. 173 inc. 2 Código Penal',
     icon: 'lock-closed',
     category: 'base',
@@ -98,7 +101,8 @@ export const BASE_CLAUSE_DEFINITIONS: ClauseDefinition[] = [
   {
     id: 'mora',
     title: 'Mora Automática',
-    description: 'Acepto que el incumplimiento de pagos en las fechas establecidas genera mora automática sin necesidad de intimación.',
+    description:
+      'Acepto que el incumplimiento de pagos en las fechas establecidas genera mora automática sin necesidad de intimación.',
     legalReference: 'Art. 886 Código Civil y Comercial',
     icon: 'timer',
     category: 'base',
@@ -112,35 +116,40 @@ export const EV_CLAUSE_DEFINITIONS: ClauseDefinition[] = [
   {
     id: 'gpsTracking',
     title: 'Tracking GPS',
-    description: 'Acepto que el vehículo está equipado con GPS y que mi ubicación será monitoreada durante el alquiler por razones de seguridad y recuperación.',
+    description:
+      'Acepto que el vehículo está equipado con GPS y que mi ubicación será monitoreada durante el alquiler por razones de seguridad y recuperación.',
     icon: 'location',
     category: 'ev',
   },
   {
     id: 'geofencing',
     title: 'Restricciones de Zona',
-    description: 'Acepto las restricciones geográficas establecidas para el vehículo. Salir de la zona permitida puede resultar en cargos adicionales o terminación del contrato.',
+    description:
+      'Acepto las restricciones geográficas establecidas para el vehículo. Salir de la zona permitida puede resultar en cargos adicionales o terminación del contrato.',
     icon: 'map',
     category: 'ev',
   },
   {
     id: 'batteryManagement',
     title: 'Gestión de Batería',
-    description: 'Me comprometo a seguir las prácticas recomendadas de carga y a no dejar la batería por debajo del 10% de carga. Daños por mal uso de batería son mi responsabilidad.',
+    description:
+      'Me comprometo a seguir las prácticas recomendadas de carga y a no dejar la batería por debajo del 10% de carga. Daños por mal uso de batería son mi responsabilidad.',
     icon: 'battery-charging',
     category: 'ev',
   },
   {
     id: 'chargingObligations',
     title: 'Obligaciones de Carga',
-    description: 'Acepto devolver el vehículo con al menos el mismo nivel de carga con el que lo recibí, o pagar el costo de recarga según tarifa establecida.',
+    description:
+      'Acepto devolver el vehículo con al menos el mismo nivel de carga con el que lo recibí, o pagar el costo de recarga según tarifa establecida.',
     icon: 'flash',
     category: 'ev',
   },
   {
     id: 'evDamagePolicy',
     title: 'Política de Daños EV',
-    description: 'Entiendo que los daños específicos a componentes EV (batería, sistema de carga, BMS) tienen una política de cobertura especial detallada en las condiciones.',
+    description:
+      'Entiendo que los daños específicos a componentes EV (batería, sistema de carga, BMS) tienen una política de cobertura especial detallada en las condiciones.',
     icon: 'construct',
     category: 'ev',
   },

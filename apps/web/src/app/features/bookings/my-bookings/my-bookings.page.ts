@@ -15,9 +15,7 @@ import { BookingRealtimeService } from '@core/services/bookings/booking-realtime
 import { AuthService } from '@core/services/auth/auth.service';
 import { ToastService } from '@core/services/ui/toast.service';
 // UI 2026 Directives
-import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
 import { PressScaleDirective } from '@shared/directives/press-scale.directive';
-import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
 import { Booking } from '../../../core/models';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
@@ -177,9 +175,7 @@ const DEFAULT_STATUS_CONFIG: StatusConfig = {
     TranslateModule,
     IconComponent,
     // UI 2026 Directives
-    HoverLiftDirective,
     PressScaleDirective,
-    StaggerEnterDirective,
   ],
   templateUrl: './my-bookings.page.html',
   styleUrl: './my-bookings.page.css',

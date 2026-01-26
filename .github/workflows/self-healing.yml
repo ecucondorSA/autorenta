@@ -1,0 +1,87 @@
+name: 🚑 Project Lazarus (Self-Healing)
+
+on:
+  workflow_run:
+    workflows: ["CI", "PR Validation"]
+    types:
+      - completed
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  diagnose-and-heal:
+    # Solo correr si el workflow anterior falló y no fue cancelado manualmente
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: '10.22.0'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔍 Diagnose Failure
+        id: diagnose
+        # Aquí simplificamos: intentamos arreglar errores comunes (lint/types)
+        # En una versión más avanzada, descargaríamos los logs del workflow fallido.
+        run: |
+          echo "Attempting to run checks locally to identify failures..."
+          
+          # Intentar Linting primero
+          if ! pnpm lint; then
+            echo "command=pnpm lint" >> $GITHUB_OUTPUT
+            echo "detected=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Intentar Type Checking
+          if ! pnpm --filter autorenta-web exec tsc --noEmit; then
+             echo "command=pnpm --filter autorenta-web exec tsc --noEmit" >> $GITHUB_OUTPUT
+             echo "detected=true" >> $GITHUB_OUTPUT
+             exit 0
+          fi
+          
+          echo "Could not reproduce failure with standard checks."
+          echo "detected=false" >> $GITHUB_OUTPUT
+
+      - name: 🧠 AI Healer Activation
+        if: steps.diagnose.outputs.detected == 'true'
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          echo "🚑 Activating Healer for command: ${{ steps.diagnose.outputs.command }}"
+          npx tsx tools/ai/healer.ts "${{ steps.diagnose.outputs.command }}"
+
+      - name: 🚀 Commit & Push Fix
+        if: steps.diagnose.outputs.detected == 'true'
+        run: |
+          # Verificar si hay cambios
+          if [[ -z $(git status -s) ]]; then
+            echo "No changes applied by Healer."
+            exit 0
+          fi
+
+          git config --global user.name 'Lazarus AI'
+          git config --global user.email 'ai-agent@autorenta.app'
+          
+          git add .
+          git commit -m "fix(ai): automated repair by Project Lazarus 🚑"
+          git push
+          
+          echo "✅ Fix pushed successfully. CI should re-trigger now."

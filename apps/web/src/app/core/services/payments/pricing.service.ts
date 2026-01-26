@@ -498,7 +498,10 @@ export class PricingService {
         error: `No se encontró información de precio para ${baseName} ${params.year}`,
       };
     } catch (error) {
-      console.error(`[PricingService] getFipeValueByBaseModel failed for ${params.brand} ${params.baseModel}:`, error);
+      console.error(
+        `[PricingService] getFipeValueByBaseModel failed for ${params.brand} ${params.baseModel}:`,
+        error,
+      );
       return null;
     }
   }

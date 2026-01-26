@@ -11,16 +11,22 @@ export type Insurer = 'rio_uruguay' | 'sancor' | 'federacion_patronal' | 'other'
 export type DeductibleType = 'percentage' | 'fixed';
 export type PolicyStatus = 'active' | 'expired' | 'cancelled' | 'pending_verification';
 // Base claim types
-export type BaseClaimType = 'collision' | 'theft' | 'fire' | 'vandalism' | 'misappropriation' | 'other';
+export type BaseClaimType =
+  | 'collision'
+  | 'theft'
+  | 'fire'
+  | 'vandalism'
+  | 'misappropriation'
+  | 'other';
 
 // EV-specific claim types
 export type EVClaimType =
-  | 'ev_battery_damage'      // Daño a batería (colisión, desgaste)
-  | 'ev_thermal_event'       // Evento térmico (sobrecalentamiento, thermal runaway)
-  | 'ev_charging_incident'   // Incidente de carga
-  | 'ev_bms_failure'         // Fallo de Battery Management System
-  | 'ev_range_degradation'   // Degradación anómala de autonomía
-  | 'ev_cooling_failure';    // Fallo de sistema de refrigeración
+  | 'ev_battery_damage' // Daño a batería (colisión, desgaste)
+  | 'ev_thermal_event' // Evento térmico (sobrecalentamiento, thermal runaway)
+  | 'ev_charging_incident' // Incidente de carga
+  | 'ev_bms_failure' // Fallo de Battery Management System
+  | 'ev_range_degradation' // Degradación anómala de autonomía
+  | 'ev_cooling_failure'; // Fallo de sistema de refrigeración
 
 // Combined claim type
 export type ClaimType = BaseClaimType | EVClaimType;
@@ -51,16 +57,17 @@ export type EVDamageType =
   | 'hv_cable_damage';
 
 // Combined damage type
-export type DamageType = BaseDamageType | EVDamageType;
+// Combined damage type
+export type VehicleDamageType = BaseDamageType | EVDamageType;
 
 // EV-specific data for claims and damages
 export interface EVSpecificData {
-  battery_soc_percent?: number;          // State of Charge (0-100)
-  battery_temperature_celsius?: number;  // Battery temperature
-  bms_error_codes?: string[];            // BMS error codes
+  battery_soc_percent?: number; // State of Charge (0-100)
+  battery_temperature_celsius?: number; // Battery temperature
+  bms_error_codes?: string[]; // BMS error codes
   charging_status?: 'idle' | 'charging' | 'fast_charging' | 'error';
-  range_km_before?: number;              // Autonomía antes del incidente
-  range_km_after?: number;               // Autonomía después del incidente
+  range_km_before?: number; // Autonomía antes del incidente
+  range_km_after?: number; // Autonomía después del incidente
   charger_type?: 'ac_slow' | 'ac_fast' | 'dc_fast' | 'supercharger';
   charger_brand?: string;
   vehicle_mode?: 'on' | 'off' | 'charging' | 'error';
@@ -224,7 +231,7 @@ export interface InsuranceClaim {
  * Daño Detectado en Inspección
  */
 export interface VehicleDamage {
-  type: DamageType;
+  type: VehicleDamageType;
   location: string; // ej: "puerta delantera izquierda"
   severity: 'minor' | 'moderate' | 'severe' | 'critical';
   photo_url?: string;
@@ -417,7 +424,10 @@ export const CLAIM_TYPE_ICONS: Record<ClaimType, string> = {
 /**
  * Severidad por defecto de tipos de siniestro
  */
-export const CLAIM_TYPE_DEFAULT_SEVERITY: Record<ClaimType, 'minor' | 'moderate' | 'severe' | 'critical'> = {
+export const CLAIM_TYPE_DEFAULT_SEVERITY: Record<
+  ClaimType,
+  'minor' | 'moderate' | 'severe' | 'critical'
+> = {
   collision: 'moderate',
   theft: 'critical',
   fire: 'critical',
@@ -435,7 +445,7 @@ export const CLAIM_TYPE_DEFAULT_SEVERITY: Record<ClaimType, 'minor' | 'moderate'
 /**
  * Helpers para tipos de daño
  */
-export const DAMAGE_TYPE_LABELS: Record<DamageType, string> = {
+export const DAMAGE_TYPE_LABELS: Record<VehicleDamageType, string> = {
   // Base types
   scratch: 'Rayón',
   dent: 'Abolladura',
@@ -455,7 +465,7 @@ export const DAMAGE_TYPE_LABELS: Record<DamageType, string> = {
 /**
  * Indica si un tipo de daño requiere inspección EV especializada
  */
-export const DAMAGE_TYPE_REQUIRES_EV_INSPECTION: Record<DamageType, boolean> = {
+export const DAMAGE_TYPE_REQUIRES_EV_INSPECTION: Record<VehicleDamageType, boolean> = {
   scratch: false,
   dent: false,
   crack: false,
@@ -493,7 +503,7 @@ export function isEVClaimType(type: ClaimType): type is EVClaimType {
 /**
  * Verifica si un tipo de daño es específico de EV
  */
-export function isEVDamageType(type: DamageType): type is EVDamageType {
+export function isEVDamageType(type: VehicleDamageType): type is EVDamageType {
   return EV_DAMAGE_TYPES.includes(type as EVDamageType);
 }
 
@@ -501,14 +511,21 @@ export function isEVDamageType(type: DamageType): type is EVDamageType {
  * Obtiene los tipos de claim aplicables según si es EV o no
  */
 export function getClaimTypesForVehicle(isEV: boolean): ClaimType[] {
-  const baseTypes: BaseClaimType[] = ['collision', 'theft', 'fire', 'vandalism', 'misappropriation', 'other'];
+  const baseTypes: BaseClaimType[] = [
+    'collision',
+    'theft',
+    'fire',
+    'vandalism',
+    'misappropriation',
+    'other',
+  ];
   return isEV ? [...baseTypes, ...EV_CLAIM_TYPES] : baseTypes;
 }
 
 /**
  * Obtiene los tipos de daño aplicables según si es EV o no
  */
-export function getDamageTypesForVehicle(isEV: boolean): DamageType[] {
+export function getDamageTypesForVehicle(isEV: boolean): VehicleDamageType[] {
   const baseTypes: BaseDamageType[] = ['scratch', 'dent', 'crack', 'missing_part', 'other'];
   return isEV ? [...baseTypes, ...EV_DAMAGE_TYPES] : baseTypes;
 }

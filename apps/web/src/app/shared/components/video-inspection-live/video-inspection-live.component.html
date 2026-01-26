@@ -235,7 +235,7 @@
                   @if (geminiLive.odometer(); as odo) {
                     <div class="flex items-center gap-2 text-xs">
                       <app-icon name="speedometer-outline" class="w-4 h-4 text-blue-400"></app-icon>
-                      <span class="text-white font-semibold">{{ odo.value?.toLocaleString() }} km</span>
+                      <span class="text-white font-semibold">{{ odo.value.toLocaleString() }} km</span>
                       <span class="text-blue-400/70 text-[10px]">{{ odo.confidence }}%</span>
                     </div>
                   }
@@ -519,20 +519,20 @@
                         <span class="text-slate-500">Frame #{{ record.frame_number }}</span>
                         <span
                           class="font-mono"
-                          [class]="getQualityScoreClass(record.image_quality?.score || 0)"
+                          [class]="getQualityScoreClass(record.image_quality.score || 0)"
                         >
-                          Calidad: {{ record.image_quality?.score || 0 }}%
+                          Calidad: {{ record.image_quality.score || 0 }}%
                         </span>
                       </div>
 
                       @if (record.what_was_visible) {
-                        @if (record.what_was_visible.clearly_visible?.length) {
+                        @if (record.what_was_visible.clearly_visible.length) {
                           <p class="text-emerald-400/80 mb-1">
                             <span class="text-emerald-500">Visible:</span>
                             {{ record.what_was_visible.clearly_visible.join(', ') }}
                           </p>
                         }
-                        @if (record.what_was_visible.obstructed_or_hidden?.length) {
+                        @if (record.what_was_visible.obstructed_or_hidden.length) {
                           <p class="text-amber-400/80 mb-1">
                             <span class="text-amber-500">Oculto:</span>
                             {{ record.what_was_visible.obstructed_or_hidden.join(', ') }}

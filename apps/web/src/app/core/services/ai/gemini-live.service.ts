@@ -8,7 +8,18 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 // ============================================================================
 
 export interface LiveAnalysisEvent {
-  type: 'area_detected' | 'damage_found' | 'odometer_read' | 'fuel_read' | 'guidance' | 'quality_warning' | 'text' | 'error' | 'connected' | 'disconnected' | 'limit_reached';
+  type:
+    | 'area_detected'
+    | 'damage_found'
+    | 'odometer_read'
+    | 'fuel_read'
+    | 'guidance'
+    | 'quality_warning'
+    | 'text'
+    | 'error'
+    | 'connected'
+    | 'disconnected'
+    | 'limit_reached';
   message: string;
   data?: {
     area?: string;
@@ -112,12 +123,14 @@ interface GeminiForensicResponse {
   fuel_level: number | null;
   fuel_confidence: number;
   forensic_notes: string;
-  guidance: {
-    message: string;
-    what_to_show: string;
-    why: string;
-    tips: string;
-  } | string;
+  guidance:
+    | {
+        message: string;
+        what_to_show: string;
+        why: string;
+        tips: string;
+      }
+    | string;
 }
 
 // Inspection limits
@@ -203,17 +216,19 @@ export class GeminiLiveService {
       trunk: 'Maletero',
     };
     const required: (keyof DetectedAreaState)[] = ['front', 'rear', 'left_side', 'right_side'];
-    return required.filter(key => !areas[key]).map(key => labels[key]);
+    return required.filter((key) => !areas[key]).map((key) => labels[key]);
   });
 
-  readonly damages = signal<Array<{
-    type: string;
-    description: string;
-    severity: string;
-    location: string;
-    confidence: number;
-    timestamp: number;
-  }>>([]);
+  readonly damages = signal<
+    Array<{
+      type: string;
+      description: string;
+      severity: string;
+      location: string;
+      confidence: number;
+      timestamp: number;
+    }>
+  >([]);
 
   readonly odometer = signal<{ value: number; unit: string; confidence: number } | null>(null);
   readonly fuelLevel = signal<{ percentage: number; confidence: number } | null>(null);
@@ -336,7 +351,10 @@ export class GeminiLiveService {
     // Also capture immediately
     this.captureAndAnalyzeFrame();
 
-    this.logger.info(`Frame capture started (every ${FRAME_INTERVAL_MS / 1000}s, max ${MAX_FRAMES} frames or ${MAX_TIME_SECONDS}s)`, 'GeminiLive');
+    this.logger.info(
+      `Frame capture started (every ${FRAME_INTERVAL_MS / 1000}s, max ${MAX_FRAMES} frames or ${MAX_TIME_SECONDS}s)`,
+      'GeminiLive',
+    );
   }
 
   /**
@@ -351,7 +369,10 @@ export class GeminiLiveService {
     this.canvas = null;
     this.canvasCtx = null;
     this.isAnalyzing = false;
-    this.logger.info(`Frame capture stopped. Total frames analyzed: ${this.frameCount}`, 'GeminiLive');
+    this.logger.info(
+      `Frame capture stopped. Total frames analyzed: ${this.frameCount}`,
+      'GeminiLive',
+    );
   }
 
   private async captureAndAnalyzeFrame(): Promise<void> {
@@ -474,7 +495,7 @@ export class GeminiLiveService {
     const confidence = analysis.area_confidence || 0;
     this.logger.info(
       `🤖 Analysis: area=${analysis.area} (${confidence}%), damages=${analysis.damages?.length || 0}, quality=${analysis.image_quality?.score || 'N/A'}%`,
-      'GeminiLive'
+      'GeminiLive',
     );
 
     // Update image quality
@@ -514,7 +535,7 @@ export class GeminiLiveService {
       forensic_notes: analysis.forensic_notes || '',
       damages_detected: analysis.damages?.length || 0,
     };
-    this.forensicLog.update(log => [...log, forensicRecord]);
+    this.forensicLog.update((log) => [...log, forensicRecord]);
 
     // Update detected area ONLY if confidence is high enough
     if (analysis.area && analysis.area !== 'unknown' && confidence >= MIN_CONFIDENCE_FOR_AREA) {
@@ -523,11 +544,11 @@ export class GeminiLiveService {
         // Only update if new confidence is higher
         const currentConfidence = this.areaConfidence()[areaKey];
         if (confidence > currentConfidence) {
-          this.areasDetected.update(areas => ({
+          this.areasDetected.update((areas) => ({
             ...areas,
             [areaKey]: true,
           }));
-          this.areaConfidence.update(conf => ({
+          this.areaConfidence.update((conf) => ({
             ...conf,
             [areaKey]: confidence,
           }));
@@ -556,7 +577,7 @@ export class GeminiLiveService {
             timestamp: Date.now(),
           };
 
-          this.damages.update(damages => [...damages, damageEntry]);
+          this.damages.update((damages) => [...damages, damageEntry]);
 
           this.emitEvent({
             type: 'damage_found',
@@ -703,14 +724,17 @@ export class GeminiLiveService {
     }
 
     // Calculate average image quality
-    const qualityScores = log.map(r => r.image_quality?.score || 0).filter(s => s > 0);
-    const avgQuality = qualityScores.length > 0
-      ? Math.round(qualityScores.reduce((a, b) => a + b, 0) / qualityScores.length)
-      : 0;
+    const qualityScores = log.map((r) => r.image_quality?.score || 0).filter((s) => s > 0);
+    const avgQuality =
+      qualityScores.length > 0
+        ? Math.round(qualityScores.reduce((a, b) => a + b, 0) / qualityScores.length)
+        : 0;
 
     // Add warnings
     if (avgQuality < 60) {
-      warnings.push(`Calidad de imagen promedio baja (${avgQuality}%). Los resultados pueden no ser confiables.`);
+      warnings.push(
+        `Calidad de imagen promedio baja (${avgQuality}%). Los resultados pueden no ser confiables.`,
+      );
     }
 
     if (unverified.length > 0) {
@@ -719,8 +743,12 @@ export class GeminiLiveService {
 
     // Check for obstructed areas in forensic notes
     const obstructedNotes = log
-      .filter(r => r.forensic_notes?.toLowerCase().includes('no pude ver') || r.forensic_notes?.toLowerCase().includes('obstruido'))
-      .map(r => r.forensic_notes);
+      .filter(
+        (r) =>
+          r.forensic_notes?.toLowerCase().includes('no pude ver') ||
+          r.forensic_notes?.toLowerCase().includes('obstruido'),
+      )
+      .map((r) => r.forensic_notes);
     if (obstructedNotes.length > 0) {
       warnings.push('Algunas áreas estuvieron obstruidas durante la inspección.');
     }

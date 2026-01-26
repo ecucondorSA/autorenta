@@ -602,9 +602,14 @@ export class BookingConfirmationPage implements OnInit {
       const cents = Number(booking['total_cents']);
       const currency = String(booking['currency'] || 'USD');
       const fxRate = (booking['fx_snapshot'] ?? booking['fx_rate']) as number | null;
-      return normalizeRecordToUsd({ total_price: cents / 100, currency, fx_snapshot: fxRate }, 'total_price');
+      return normalizeRecordToUsd(
+        { total_price: cents / 100, currency, fx_snapshot: fxRate },
+        'total_price',
+      );
     }
-    return normalizeRecordToUsd(booking, 'total_price') || normalizeRecordToUsd(booking, 'total_amount');
+    return (
+      normalizeRecordToUsd(booking, 'total_price') || normalizeRecordToUsd(booking, 'total_amount')
+    );
   }
 
   /**

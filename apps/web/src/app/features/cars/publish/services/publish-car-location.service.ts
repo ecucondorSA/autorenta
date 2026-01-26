@@ -2,7 +2,7 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Injectable, signal, inject } from '@angular/core';
 import { environment } from '@environment';
 
-export interface GeoLocation {
+export interface PublishCoordinates {
   latitude: number;
   longitude: number;
 }
@@ -28,7 +28,7 @@ export interface Address {
 export class PublishCarLocationService {
   private readonly logger = inject(LoggerService);
   // State
-  readonly manualCoordinates = signal<GeoLocation | null>(null);
+  readonly manualCoordinates = signal<PublishCoordinates | null>(null);
   readonly isLoadingLocation = signal(false);
 
   private readonly MAPBOX_TOKEN = environment.mapboxAccessToken;
@@ -37,7 +37,7 @@ export class PublishCarLocationService {
   /**
    * Use current GPS location
    */
-  async useCurrentLocation(): Promise<GeoLocation | null> {
+  async useCurrentLocation(): Promise<PublishCoordinates | null> {
     this.isLoadingLocation.set(true);
 
     try {
@@ -59,7 +59,7 @@ export class PublishCarLocationService {
       }
 
       const position = await this.getCurrentPosition();
-      const location: GeoLocation = {
+      const location: PublishCoordinates = {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
       };
@@ -86,7 +86,7 @@ export class PublishCarLocationService {
           if (response.ok) {
             const data = await response.json();
             if (data.location?.lat && data.location?.lng) {
-              const location: GeoLocation = {
+              const location: PublishCoordinates = {
                 latitude: data.location.lat,
                 longitude: data.location.lng,
               };
@@ -245,7 +245,7 @@ export class PublishCarLocationService {
   /**
    * Geocode address to coordinates
    */
-  async geocodeAddress(address: Address): Promise<GeoLocation | null> {
+  async geocodeAddress(address: Address): Promise<PublishCoordinates | null> {
     if (!this.MAPBOX_TOKEN) {
       // console.warn('Mapbox token not configured');
       return null;
@@ -270,7 +270,7 @@ export class PublishCarLocationService {
 
       const [longitude, latitude] = data.features[0].center;
 
-      const location: GeoLocation = { latitude, longitude };
+      const location: PublishCoordinates = { latitude, longitude };
       this.manualCoordinates.set(location);
 
       return location;
@@ -300,14 +300,14 @@ export class PublishCarLocationService {
   /**
    * Get manual coordinates
    */
-  getCoordinates(): GeoLocation | null {
+  getCoordinates(): PublishCoordinates | null {
     return this.manualCoordinates();
   }
 
   /**
    * Set manual coordinates
    */
-  setCoordinates(location: GeoLocation): void {
+  setCoordinates(location: PublishCoordinates): void {
     if (!this.validateCoordinates(location.latitude, location.longitude)) {
       throw new Error('Coordenadas inválidas');
     }

@@ -502,24 +502,36 @@ export class AppComponent implements OnInit {
     }
 
     // Listen for notification clicks
-    LocalNotifications.addListener('localNotificationActionPerformed', (action: { actionId: string; inputValue?: string; notification: { id: number; title?: string; body?: string; extra?: unknown } }) => {
-      console.log('[Notification] Action performed:', action);
+    LocalNotifications.addListener(
+      'localNotificationActionPerformed',
+      (action: {
+        actionId: string;
+        inputValue?: string;
+        notification: { id: number; title?: string; body?: string; extra?: unknown };
+      }) => {
+        console.log('[Notification] Action performed:', action);
 
-      const extra = action.notification.extra as { route?: string; bookingId?: string } | undefined;
+        const extra = action.notification.extra as
+          | { route?: string; bookingId?: string }
+          | undefined;
 
-      if (extra?.route) {
-        // Navigate to the specified route
-        console.log('[Notification] Navigating to:', extra.route);
-        this.router.navigate([extra.route], {
-          queryParams: extra.bookingId ? { id: extra.bookingId } : undefined,
-        });
-      }
-    });
+        if (extra?.route) {
+          // Navigate to the specified route
+          console.log('[Notification] Navigating to:', extra.route);
+          this.router.navigate([extra.route], {
+            queryParams: extra.bookingId ? { id: extra.bookingId } : undefined,
+          });
+        }
+      },
+    );
 
     // Listen for notifications received while app is open
-    LocalNotifications.addListener('localNotificationReceived', (notification: { id: number; title?: string; body?: string }) => {
-      console.log('[Notification] Received while app open:', notification);
-    });
+    LocalNotifications.addListener(
+      'localNotificationReceived',
+      (notification: { id: number; title?: string; body?: string }) => {
+        console.log('[Notification] Received while app open:', notification);
+      },
+    );
   }
 
   /**
@@ -535,23 +547,27 @@ export class AppComponent implements OnInit {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (this.pushNotificationService.notificationClicks$ as any)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((action: { action: string; notification?: { data?: Record<string, unknown> } }) => {
-        console.log('[Push] Notification action performed:', action);
+      .subscribe(
+        (action: { action: string; notification?: { data?: Record<string, unknown> } }) => {
+          console.log('[Push] Notification action performed:', action);
 
-        // Extract navigation data from notification
-        const data = action.notification?.data as { cta_link?: string; route?: string; bookingId?: string } | undefined;
-        const route = data?.cta_link || data?.route;
+          // Extract navigation data from notification
+          const data = action.notification?.data as
+            | { cta_link?: string; route?: string; bookingId?: string }
+            | undefined;
+          const route = data?.cta_link || data?.route;
 
-        if (route) {
-          console.log('[Push] Navigating to:', route);
-          // Use setTimeout to ensure app is fully initialized after cold start
-          setTimeout(() => {
-            this.router.navigate([route], {
-              queryParams: data?.bookingId ? { id: data.bookingId } : undefined,
-            });
-          }, 100);
-        }
-      });
+          if (route) {
+            console.log('[Push] Navigating to:', route);
+            // Use setTimeout to ensure app is fully initialized after cold start
+            setTimeout(() => {
+              this.router.navigate([route], {
+                queryParams: data?.bookingId ? { id: data.bookingId } : undefined,
+              });
+            }, 100);
+          }
+        },
+      );
 
     // Subscribe to push messages received while app is open
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

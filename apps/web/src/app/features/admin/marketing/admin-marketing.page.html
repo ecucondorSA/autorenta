@@ -11,7 +11,12 @@
         class="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
       >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
         </svg>
         Ejecutar Scheduler
       </button>
@@ -39,27 +44,33 @@
     <nav class="-mb-px flex gap-4">
       <button
         (click)="setTab('queue')"
-        [class]="activeTab() === 'queue'
-          ? 'border-indigo-500 text-indigo-600'
-          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
+        [class]="
+          activeTab() === 'queue'
+            ? 'border-indigo-500 text-indigo-600'
+            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+        "
         class="border-b-2 px-1 pb-3 text-sm font-medium"
       >
         Cola de Posts
       </button>
       <button
         (click)="setTab('published')"
-        [class]="activeTab() === 'published'
-          ? 'border-indigo-500 text-indigo-600'
-          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
+        [class]="
+          activeTab() === 'published'
+            ? 'border-indigo-500 text-indigo-600'
+            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+        "
         class="border-b-2 px-1 pb-3 text-sm font-medium"
       >
         Publicados
       </button>
       <button
         (click)="setTab('generate')"
-        [class]="activeTab() === 'generate'
-          ? 'border-indigo-500 text-indigo-600'
-          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
+        [class]="
+          activeTab() === 'generate'
+            ? 'border-indigo-500 text-indigo-600'
+            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+        "
         class="border-b-2 px-1 pb-3 text-sm font-medium"
       >
         Generar Nuevo
@@ -70,7 +81,9 @@
   <!-- Loading -->
   @if (isLoading()) {
     <div class="flex justify-center py-12">
-      <div class="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
+      <div
+        class="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"
+      ></div>
     </div>
   }
 
@@ -89,10 +102,16 @@
             <div class="flex-1">
               <!-- Platform & Status -->
               <div class="mb-2 flex items-center gap-2">
-                <span [class]="getPlatformColor(item.platform)" class="rounded-full px-2 py-0.5 text-xs font-medium">
+                <span
+                  [class]="getPlatformColor(item.platform)"
+                  class="rounded-full px-2 py-0.5 text-xs font-medium"
+                >
                   {{ formatPlatform(item.platform) }}
                 </span>
-                <span [class]="getStatusColor(item.status)" class="rounded-full px-2 py-0.5 text-xs font-medium">
+                <span
+                  [class]="getStatusColor(item.status)"
+                  class="rounded-full px-2 py-0.5 text-xs font-medium"
+                >
                   {{ item.status }}
                 </span>
                 <span class="text-xs text-gray-500">
@@ -107,7 +126,9 @@
               @if (item.hashtags?.length) {
                 <div class="mb-2 flex flex-wrap gap-1">
                   @for (tag of item.hashtags; track tag) {
-                    <span class="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">#{{ tag }}</span>
+                    <span class="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600"
+                      >#{{ tag }}</span
+                    >
                   }
                 </div>
               }
@@ -179,7 +200,10 @@
           <div class="flex items-start justify-between gap-4">
             <div class="flex-1">
               <div class="mb-2 flex items-center gap-2">
-                <span [class]="getPlatformColor(post.platform)" class="rounded-full px-2 py-0.5 text-xs font-medium">
+                <span
+                  [class]="getPlatformColor(post.platform)"
+                  class="rounded-full px-2 py-0.5 text-xs font-medium"
+                >
                   {{ formatPlatform(post.platform) }}
                 </span>
                 <span class="text-xs text-gray-500">
@@ -283,10 +307,14 @@
 
           <!-- TikTok Video Notice -->
           @if (generateForm().platform === 'tiktok') {
-            <div class="rounded-lg bg-gradient-to-r from-pink-50 to-purple-50 p-3 border border-pink-200">
+            <div
+              class="rounded-lg bg-gradient-to-r from-pink-50 to-purple-50 p-3 border border-pink-200"
+            >
               <div class="flex items-center gap-2">
                 <svg class="h-5 w-5 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
+                  <path
+                    d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"
+                  />
                 </svg>
                 <span class="text-sm font-medium text-pink-800">
                   TikTok requiere video - Se generará automáticamente con Veo 3.1 (~$3.20/video)
@@ -306,7 +334,9 @@
           >
             @if (isGenerating()) {
               <span class="flex items-center justify-center gap-2">
-                <span class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                <span
+                  class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+                ></span>
                 Generando...
               </span>
             } @else {
@@ -342,10 +372,14 @@
               @if (generatedContent()!.video_status === 'generating') {
                 <div class="mb-4 rounded-lg bg-gradient-to-r from-pink-100 to-purple-100 p-4">
                   <div class="flex items-center gap-3">
-                    <div class="h-6 w-6 animate-spin rounded-full border-2 border-pink-600 border-t-transparent"></div>
+                    <div
+                      class="h-6 w-6 animate-spin rounded-full border-2 border-pink-600 border-t-transparent"
+                    ></div>
                     <div>
                       <p class="font-medium text-pink-800">Generando video con Veo 3.1...</p>
-                      <p class="text-sm text-pink-600">Esto puede tomar 2-3 minutos. El video aparecerá automáticamente.</p>
+                      <p class="text-sm text-pink-600">
+                        Esto puede tomar 2-3 minutos. El video aparecerá automáticamente.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -354,13 +388,25 @@
               @if (generatedContent()!.video_status === 'failed') {
                 <div class="mb-4 rounded-lg bg-red-50 p-4">
                   <div class="flex items-start gap-2">
-                    <svg class="mt-0.5 h-5 w-5 shrink-0 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    <svg
+                      class="mt-0.5 h-5 w-5 shrink-0 text-red-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                     <div>
                       <p class="text-sm font-medium text-red-800">No se pudo generar el video</p>
                       @if (generatedContent()!.video_error) {
-                        <p class="mt-1 text-sm text-red-700">{{ generatedContent()!.video_error }}</p>
+                        <p class="mt-1 text-sm text-red-700">
+                          {{ generatedContent()!.video_error }}
+                        </p>
                       }
                       <p class="mt-2 text-xs text-red-600">
                         <a
@@ -389,13 +435,13 @@
 
               <div class="mb-3 flex flex-wrap gap-1">
                 @for (tag of generatedContent()!.hashtags; track tag) {
-                  <span class="rounded bg-indigo-100 px-1.5 py-0.5 text-xs text-indigo-700">#{{ tag }}</span>
+                  <span class="rounded bg-indigo-100 px-1.5 py-0.5 text-xs text-indigo-700"
+                    >#{{ tag }}</span
+                  >
                 }
               </div>
 
-              <p class="text-sm text-gray-600">
-                CTA: {{ generatedContent()!.call_to_action }}
-              </p>
+              <p class="text-sm text-gray-600">CTA: {{ generatedContent()!.call_to_action }}</p>
             </div>
 
             <button

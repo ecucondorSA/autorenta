@@ -14,7 +14,13 @@ import type {
   PublicKeyCredentialRequestOptionsJSON,
 } from '@simplewebauthn/types';
 
-export type PasskeyState = 'idle' | 'checking' | 'registering' | 'authenticating' | 'success' | 'error';
+export type PasskeyState =
+  | 'idle'
+  | 'checking'
+  | 'registering'
+  | 'authenticating'
+  | 'success'
+  | 'error';
 
 @Injectable({
   providedIn: 'root',
@@ -73,7 +79,11 @@ export class PasskeysService {
       this.state.set('idle');
       return supported;
     } catch (err) {
-      this.logger.error('Passkeys: Support check failed', 'PasskeysService', err instanceof Error ? err : new Error(String(err)));
+      this.logger.error(
+        'Passkeys: Support check failed',
+        'PasskeysService',
+        err instanceof Error ? err : new Error(String(err)),
+      );
       this.state.set('error');
       return false;
     }
@@ -94,9 +104,10 @@ export class PasskeysService {
 
     try {
       // 1. Obtener opciones de registro desde el backend
-      const { data: options, error: optionsError } = await this.supabase.functions.invoke<PublicKeyCredentialCreationOptionsJSON>(
-        'passkeys-registration-options',
-      );
+      const { data: options, error: optionsError } =
+        await this.supabase.functions.invoke<PublicKeyCredentialCreationOptionsJSON>(
+          'passkeys-registration-options',
+        );
 
       if (optionsError || !options) {
         throw new Error(optionsError?.message || 'No se pudieron obtener las opciones de registro');
@@ -110,13 +121,15 @@ export class PasskeysService {
       this.logger.debug('Passkeys: Credential created', 'PasskeysService');
 
       // 3. Verificar y guardar credencial en el backend
-      const { data: verifyResult, error: verifyError } = await this.supabase.functions.invoke<{ success: boolean; error?: string }>(
-        'passkeys-registration-verify',
-        { body: { credential } },
-      );
+      const { data: verifyResult, error: verifyError } = await this.supabase.functions.invoke<{
+        success: boolean;
+        error?: string;
+      }>('passkeys-registration-verify', { body: { credential } });
 
       if (verifyError || !verifyResult?.success) {
-        throw new Error(verifyError?.message || verifyResult?.error || 'No se pudo verificar la credencial');
+        throw new Error(
+          verifyError?.message || verifyResult?.error || 'No se pudo verificar la credencial',
+        );
       }
 
       this.state.set('success');
@@ -126,7 +139,11 @@ export class PasskeysService {
       const errorMessage = this.getErrorMessage(err);
       this.error.set(errorMessage);
       this.state.set('error');
-      this.logger.error('Passkeys: Registration failed', 'PasskeysService', err instanceof Error ? err : new Error(String(err)));
+      this.logger.error(
+        'Passkeys: Registration failed',
+        'PasskeysService',
+        err instanceof Error ? err : new Error(String(err)),
+      );
       return false;
     }
   }
@@ -146,12 +163,15 @@ export class PasskeysService {
 
     try {
       // 1. Obtener opciones de autenticación desde el backend
-      const { data: options, error: optionsError } = await this.supabase.functions.invoke<PublicKeyCredentialRequestOptionsJSON>(
-        'passkeys-authentication-options',
-      );
+      const { data: options, error: optionsError } =
+        await this.supabase.functions.invoke<PublicKeyCredentialRequestOptionsJSON>(
+          'passkeys-authentication-options',
+        );
 
       if (optionsError || !options) {
-        throw new Error(optionsError?.message || 'No se pudieron obtener las opciones de autenticación');
+        throw new Error(
+          optionsError?.message || 'No se pudieron obtener las opciones de autenticación',
+        );
       }
 
       this.logger.debug('Passkeys: Got authentication options', 'PasskeysService');
@@ -169,7 +189,9 @@ export class PasskeysService {
       }>('passkeys-authentication-verify', { body: { credential } });
 
       if (verifyError || !verifyResult?.success) {
-        throw new Error(verifyError?.message || verifyResult?.error || 'No se pudo verificar la autenticación');
+        throw new Error(
+          verifyError?.message || verifyResult?.error || 'No se pudo verificar la autenticación',
+        );
       }
 
       // 4. Establecer sesión en Supabase
@@ -191,7 +213,11 @@ export class PasskeysService {
       const errorMessage = this.getErrorMessage(err);
       this.error.set(errorMessage);
       this.state.set('error');
-      this.logger.error('Passkeys: Authentication failed', 'PasskeysService', err instanceof Error ? err : new Error(String(err)));
+      this.logger.error(
+        'Passkeys: Authentication failed',
+        'PasskeysService',
+        err instanceof Error ? err : new Error(String(err)),
+      );
       return false;
     }
   }
@@ -207,10 +233,11 @@ export class PasskeysService {
 
     try {
       // Obtener opciones para autenticación condicional
-      const { data: options, error: optionsError } = await this.supabase.functions.invoke<PublicKeyCredentialRequestOptionsJSON>(
-        'passkeys-authentication-options',
-        { body: { conditional: true } },
-      );
+      const { data: options, error: optionsError } =
+        await this.supabase.functions.invoke<PublicKeyCredentialRequestOptionsJSON>(
+          'passkeys-authentication-options',
+          { body: { conditional: true } },
+        );
 
       if (optionsError || !options) {
         this.logger.debug('Passkeys: Could not get conditional auth options', 'PasskeysService');
@@ -239,7 +266,8 @@ export class PasskeysService {
 
           this.state.set('success');
           // Redirigir a página principal
-          const returnUrl = new URLSearchParams(window.location.search).get('returnUrl') || '/cars/list';
+          const returnUrl =
+            new URLSearchParams(window.location.search).get('returnUrl') || '/cars/list';
           await this.router.navigateByUrl(returnUrl);
         }
       }

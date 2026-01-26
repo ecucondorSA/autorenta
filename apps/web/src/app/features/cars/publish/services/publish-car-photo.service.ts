@@ -2,9 +2,16 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { environment } from '@environment';
 import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-import { PhotoQualityService, PhotoQualityResult, VehiclePosition } from '@core/services/ai/photo-quality.service';
+import {
+  PhotoQualityService,
+  PhotoQualityResult,
+  VehiclePosition,
+} from '@core/services/ai/photo-quality.service';
 import { PlateDetectionService } from '@core/services/ai/plate-detection.service';
-import { VehicleRecognitionService, VehicleRecognitionResult } from '@core/services/ai/vehicle-recognition.service';
+import {
+  VehicleRecognitionService,
+  VehicleRecognitionResult,
+} from '@core/services/ai/vehicle-recognition.service';
 
 export interface PhotoPreview {
   file: File;
@@ -66,12 +73,12 @@ export class PublishCarPhotoService {
   // Computed: Check if any photo has quality issues
   readonly hasQualityIssues = computed(() => {
     const photos = this.uploadedPhotos();
-    return photos.some(p => p.qualityResult && !p.qualityResult.quality.is_acceptable);
+    return photos.some((p) => p.qualityResult && !p.qualityResult.quality.is_acceptable);
   });
 
   // Computed: Average quality score
   readonly averageQualityScore = computed(() => {
-    const photos = this.uploadedPhotos().filter(p => p.qualityResult);
+    const photos = this.uploadedPhotos().filter((p) => p.qualityResult);
     if (photos.length === 0) return 0;
     const total = photos.reduce((sum, p) => sum + (p.qualityResult?.quality.score ?? 0), 0);
     return Math.round(total / photos.length);
@@ -617,7 +624,10 @@ export class PublishCarPhotoService {
    * Validates quality of a single photo
    * Updates the photo's qualityResult in the photos array
    */
-  async validatePhotoQuality(index: number, position?: VehiclePosition): Promise<PhotoQualityResult | null> {
+  async validatePhotoQuality(
+    index: number,
+    position?: VehiclePosition,
+  ): Promise<PhotoQualityResult | null> {
     const photos = this.uploadedPhotos();
     const photo = photos[index];
     if (!photo) return null;
@@ -628,11 +638,11 @@ export class PublishCarPhotoService {
       const result = await this.photoQuality.validatePhoto(
         photo.preview,
         'vehicle_exterior',
-        position
+        position,
       );
 
       // Update photo with result
-      this.uploadedPhotos.update(list => {
+      this.uploadedPhotos.update((list) => {
         const newList = [...list];
         newList[index] = {
           ...newList[index],
@@ -667,12 +677,14 @@ export class PublishCarPhotoService {
 
       await Promise.all(
         photos.map((_, index) =>
-          this.validatePhotoQuality(index, positions[index % positions.length])
-        )
+          this.validatePhotoQuality(index, positions[index % positions.length]),
+        ),
       );
 
-      const validatedPhotos = this.uploadedPhotos().filter(p => p.qualityResult);
-      const issueCount = validatedPhotos.filter(p => !p.qualityResult?.quality.is_acceptable).length;
+      const validatedPhotos = this.uploadedPhotos().filter((p) => p.qualityResult);
+      const issueCount = validatedPhotos.filter(
+        (p) => !p.qualityResult?.quality.is_acceptable,
+      ).length;
 
       return {
         allValid: issueCount === 0,
@@ -704,7 +716,7 @@ export class PublishCarPhotoService {
         const blurredFile = new File([result.blurredBlob], photo.file.name, { type: 'image/jpeg' });
 
         // Update photo with blurred version
-        this.uploadedPhotos.update(list => {
+        this.uploadedPhotos.update((list) => {
           const newList = [...list];
           newList[index] = {
             ...newList[index],
@@ -718,7 +730,7 @@ export class PublishCarPhotoService {
 
         this.notifications.success(
           'Privacidad',
-          `Se difuminó ${result.platesCount} placa(s) automáticamente`
+          `Se difuminó ${result.platesCount} placa(s) automáticamente`,
         );
       }
 
@@ -750,7 +762,7 @@ export class PublishCarPhotoService {
       if (totalFound > 0) {
         this.notifications.success(
           'Privacidad',
-          `Se difuminaron ${totalFound} placa(s) en total para proteger tu privacidad`
+          `Se difuminaron ${totalFound} placa(s) en total para proteger tu privacidad`,
         );
       }
 
@@ -777,7 +789,7 @@ export class PublishCarPhotoService {
       if (result.success && result.vehicle.confidence >= 70) {
         this.notifications.success(
           'Vehículo detectado',
-          `${result.vehicle.brand} ${result.vehicle.model} (${result.vehicle.confidence}% confianza)`
+          `${result.vehicle.brand} ${result.vehicle.model} (${result.vehicle.confidence}% confianza)`,
         );
       }
 
@@ -812,7 +824,7 @@ export class PublishCarPhotoService {
       if (!result.matches && result.discrepancies.length > 0) {
         this.notifications.warning(
           'Verificación',
-          `Las fotos podrían no coincidir con el vehículo: ${result.discrepancies[0]}`
+          `Las fotos podrían no coincidir con el vehículo: ${result.discrepancies[0]}`,
         );
       }
 
@@ -890,26 +902,28 @@ export class PublishCarPhotoService {
    * This method is called when photos change in the PhotoUploadAIComponent.
    * It syncs the validated photos with this service for later upload.
    */
-  setPhotosFromAI(photos: Array<{
-    file: File;
-    preview: string;
-    position?: VehiclePosition;
-    aiValidation?: {
-      quality?: number;
-      vehicle?: {
-        brand: string;
-        model: string;
-        year?: number;
-        color?: string;
-        confidence: number;
+  setPhotosFromAI(
+    photos: Array<{
+      file: File;
+      preview: string;
+      position?: VehiclePosition;
+      aiValidation?: {
+        quality?: number;
+        vehicle?: {
+          brand: string;
+          model: string;
+          year?: number;
+          color?: string;
+          confidence: number;
+        };
+        plates?: Array<{
+          text: string;
+          confidence: number;
+          blurred: boolean;
+        }>;
       };
-      plates?: Array<{
-        text: string;
-        confidence: number;
-        blurred: boolean;
-      }>;
-    };
-  }>): void {
+    }>,
+  ): void {
     // Convert AI photos to PhotoPreview format
     const photosPreviews: PhotoPreview[] = photos.map((p) => ({
       file: p.file,

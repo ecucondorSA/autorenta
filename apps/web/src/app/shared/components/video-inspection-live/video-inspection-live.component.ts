@@ -52,7 +52,7 @@ interface DamageEntry {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, IconComponent],
-  templateUrl: './video-inspection-live.component.html',
+  templateUrl: 'video-inspection-live.component.html',
 })
 export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
   @Input() bookingId!: string;

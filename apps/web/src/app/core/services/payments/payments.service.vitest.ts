@@ -32,10 +32,7 @@ describe('PaymentsService', () => {
     };
 
     TestBed.configureTestingModule({
-      providers: [
-        PaymentsService,
-        { provide: FxService, useValue: mockFxService },
-      ],
+      providers: [PaymentsService, { provide: FxService, useValue: mockFxService }],
     });
 
     service = TestBed.inject(PaymentsService);
@@ -295,9 +292,9 @@ describe('PaymentsService', () => {
         error: { message: 'RPC failed' },
       });
 
-      await expect(
-        service.createMpPreAuthOrder('intent-1', 5000000, 'Test'),
-      ).rejects.toThrow('RPC failed');
+      await expect(service.createMpPreAuthOrder('intent-1', 5000000, 'Test')).rejects.toThrow(
+        'RPC failed',
+      );
     });
   });
 

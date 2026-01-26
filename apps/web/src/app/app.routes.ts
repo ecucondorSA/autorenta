@@ -11,7 +11,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/marketplace/marketplace-v2.page').then((m) => m.MarketplaceV2Page),
   },
-
   {
     path: 'explore',
     loadComponent: () => import('./features/explore/explore.page').then((m) => m.ExplorePage),
@@ -69,9 +68,9 @@ export const routes: Routes = [
       },
       {
         path: 'list',
-        data: { layout: 'full-bleed', animation: 'CarsListPage', hideFooter: true, hideHeader: true },
+        data: { layout: 'full-bleed' },
         loadComponent: () =>
-          import('./features/cars/list/cars-list.page').then((m) => m.CarsListPage),
+          import('./features/cars/browse/browse-cars.page').then((m) => m.BrowseCarsPage),
       },
       {
         path: 'compare',
@@ -84,7 +83,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page),
       },
-      // Wizard removed - using publish-car-v2 as single publish system
       {
         path: 'my',
         canMatch: [AuthGuard],
@@ -226,7 +224,7 @@ export const routes: Routes = [
           import('./features/admin/disputes/admin-disputes.page').then((m) => m.AdminDisputesPage),
       },
       {
-        path: 'disputes/:id', // Nueva ruta para el detalle de disputas
+        path: 'disputes/:id',
         loadComponent: () =>
           import('./features/disputes/pages/dispute-detail/dispute-detail.page').then(
             (m) => m.DisputeDetailPage,
@@ -308,7 +306,7 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'organizations', // Nueva ruta para organizaciones
+        path: 'organizations',
         loadComponent: () =>
           import('./features/organizations/pages/organization-dashboard.component').then(
             (m) => m.OrganizationDashboardComponent,
@@ -421,9 +419,6 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () => import('./features/wallet/wallet.page').then((m) => m.WalletPage),
-      },
-      {
-        path: '',
         loadChildren: () => import('./features/wallet/wallet.routes').then((m) => m.WALLET_ROUTES),
       },
     ],
@@ -462,6 +457,33 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard/calendar/dashboard-calendar.page').then(
             (m) => m.DashboardCalendarPage,
+          ),
+      },
+      {
+        path: 'security',
+        loadComponent: () =>
+          import('./features/dashboard/pages/security-center/security-dashboard.page').then(
+            (m) => m.SecurityDashboardPage,
+          ),
+      },
+    ],
+  },
+  {
+    path: 'scout',
+    canMatch: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/scout/pages/missions-list/missions-list.page').then(
+            (m) => m.MissionsListPage,
+          ),
+      },
+      {
+        path: 'mission/:id',
+        loadComponent: () =>
+          import('./features/scout/pages/mission-detail/mission-detail.page').then(
+            (m) => m.MissionDetailPage,
           ),
       },
     ],
@@ -554,8 +576,7 @@ export const routes: Routes = [
   },
   {
     path: 'safety',
-    loadComponent: () =>
-      import('./features/static/safety/safety.page').then((m) => m.SafetyPage),
+    loadComponent: () => import('./features/static/safety/safety.page').then((m) => m.SafetyPage),
   },
   {
     path: 'cancellation',
@@ -591,8 +612,7 @@ export const routes: Routes = [
   },
   {
     path: 'about',
-    loadComponent: () =>
-      import('./features/static/about/about.page').then((m) => m.AboutPage),
+    loadComponent: () => import('./features/static/about/about.page').then((m) => m.AboutPage),
   },
   {
     path: 'careers',
@@ -619,18 +639,20 @@ export const routes: Routes = [
     redirectTo: 'terminos',
     pathMatch: 'full',
   },
-  
+
   // ============================================================================
   // SEO LANDING PAGES (Dynamic Routes)
   // ============================================================================
   {
     path: 'alquiler-autos/:city',
-    loadComponent: () => import('./features/seo/landing/seo-landing.page').then(m => m.SeoLandingPage),
+    loadComponent: () =>
+      import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPage),
   },
   {
     path: 'rentar/:brand',
-    loadComponent: () => import('./features/seo/landing/seo-landing.page').then(m => m.SeoLandingPage),
+    loadComponent: () =>
+      import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPage),
   },
-  
-  { path: '**', redirectTo: '/auth/login' },
+
+  { path: '**', redirectTo: '' },
 ];

@@ -1,7 +1,28 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonSelect, IonSelectOption, IonSpinner, IonText, IonToolbar, IonCheckbox } from '@ionic/angular/standalone';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonSpinner,
+  IonText,
+  IonToolbar,
+  IonCheckbox,
+} from '@ionic/angular/standalone';
 import { injectSupabase } from '../../../core/services/infrastructure/supabase-client.service';
 import { ToastService } from '../../../core/services/ui/toast.service';
 import { environment } from '../../../../environments/environment';
@@ -42,15 +63,12 @@ interface CampaignSchedule {
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    IonIcon,
+    IonCheckbox,
     IonText,
-    IonInput,
     IonItem,
     IonLabel,
-    IonSelect,
-    IonSelectOption,
     IonSpinner,
-    IonCheckbox,
+    IonInput,
   ],
   template: `
     <ion-header>
@@ -72,7 +90,10 @@ interface CampaignSchedule {
             <!-- Título -->
             <ion-item>
               <ion-label position="floating">Título</ion-label>
-              <ion-input formControlName="title" placeholder="Gana dinero alquilando tu auto"></ion-input>
+              <ion-input
+                formControlName="title"
+                placeholder="Gana dinero alquilando tu auto"
+              ></ion-input>
             </ion-item>
 
             <!-- Descripción -->
@@ -104,7 +125,11 @@ interface CampaignSchedule {
             <!-- CTA URL -->
             <ion-item>
               <ion-label position="floating">URL del Botón</ion-label>
-              <ion-input formControlName="ctaUrl" placeholder="https://autorentar.app/signup" type="url"></ion-input>
+              <ion-input
+                formControlName="ctaUrl"
+                placeholder="https://autorentar.app/signup"
+                type="url"
+              ></ion-input>
             </ion-item>
 
             <!-- Plataformas -->
@@ -148,7 +173,10 @@ interface CampaignSchedule {
             <p>No hay campañas programadas próximamente</p>
           </div>
 
-          <div *ngFor="let campaign of upcomingCampaigns(); trackBy: trackByCampaignId" class="campaign-item ion-margin-bottom">
+          <div
+            *ngFor="let campaign of upcomingCampaigns(); trackBy: trackByCampaignId"
+            class="campaign-item ion-margin-bottom"
+          >
             <h3>{{ campaign.name }}</h3>
             <p>{{ campaign.title }}</p>
             <div class="campaign-meta">
@@ -159,7 +187,12 @@ interface CampaignSchedule {
             <ion-button fill="outline" size="small" (click)="publishNow(campaign.id)">
               Publicar Ahora
             </ion-button>
-            <ion-button fill="outline" size="small" color="danger" (click)="deleteCampaign(campaign.id)">
+            <ion-button
+              fill="outline"
+              size="small"
+              color="danger"
+              (click)="deleteCampaign(campaign.id)"
+            >
               Cancelar
             </ion-button>
           </div>
@@ -176,7 +209,10 @@ interface CampaignSchedule {
             <p>No hay campañas publicadas recientemente</p>
           </div>
 
-          <div *ngFor="let campaign of recentlyPublished(); trackBy: trackByCampaignId" class="campaign-item ion-margin-bottom">
+          <div
+            *ngFor="let campaign of recentlyPublished(); trackBy: trackByCampaignId"
+            class="campaign-item ion-margin-bottom"
+          >
             <h3>{{ campaign.name }}</h3>
             <p>{{ campaign.title }}</p>
             <div class="campaign-meta">
@@ -210,7 +246,7 @@ interface CampaignSchedule {
               </a>
               <a
                 *ngIf="campaign.post_ids.tiktok"
-                href="{{ 'https://tiktok.com/@autorentar/video/' + campaign.post_ids.tiktok }}"
+                href="{{ 'https://tiktok.com/@auto.rentar/video/' + campaign.post_ids.tiktok }}"
                 target="_blank"
                 class="post-link"
               >
@@ -304,18 +340,18 @@ export class SocialCampaignsPage implements OnInit {
   private async loadCampaigns(): Promise<void> {
     try {
       // Cargar campañas próximas
-      const { data: upcoming } = await this.supabase
+      const { data: upcoming } = (await this.supabase
         .from('upcoming_scheduled_campaigns')
-        .select('*') as { data: CampaignSchedule[] | null };
+        .select('*')) as { data: CampaignSchedule[] | null };
 
       if (upcoming) {
         this.upcomingCampaigns.set(upcoming);
       }
 
       // Cargar campañas recientes
-      const { data: recent } = await this.supabase
+      const { data: recent } = (await this.supabase
         .from('recently_published_campaigns')
-        .select('*') as { data: CampaignSchedule[] | null };
+        .select('*')) as { data: CampaignSchedule[] | null };
 
       if (recent) {
         this.recentlyPublished.set(recent);
@@ -341,19 +377,17 @@ export class SocialCampaignsPage implements OnInit {
         this.campaignForm.get('tiktok')?.value && 'tiktok',
       ].filter(Boolean);
 
-      const { error } = await this.supabase
-        .from('campaign_schedules')
-        .insert({
-          name: this.campaignForm.get('title')?.value,
-          title: this.campaignForm.get('title')?.value,
-          description_content: this.campaignForm.get('description')?.value,
-          image_url: this.campaignForm.get('imageUrl')?.value || null,
-          cta_text: this.campaignForm.get('ctaText')?.value,
-          cta_url: this.campaignForm.get('ctaUrl')?.value,
-          platforms,
-          scheduled_for: this.campaignForm.get('scheduledFor')?.value,
-          status: 'scheduled',
-        });
+      const { error } = await this.supabase.from('campaign_schedules').insert({
+        name: this.campaignForm.get('title')?.value,
+        title: this.campaignForm.get('title')?.value,
+        description_content: this.campaignForm.get('description')?.value,
+        image_url: this.campaignForm.get('imageUrl')?.value || null,
+        cta_text: this.campaignForm.get('ctaText')?.value,
+        cta_url: this.campaignForm.get('ctaUrl')?.value,
+        platforms,
+        scheduled_for: this.campaignForm.get('scheduledFor')?.value,
+        status: 'scheduled',
+      });
 
       if (error) throw error;
 
@@ -362,7 +396,10 @@ export class SocialCampaignsPage implements OnInit {
       await this.loadCampaigns();
     } catch (error) {
       console.error('Error creating campaign:', error);
-      this.toastService.error('Error', error instanceof Error ? error.message : 'Error desconocido');
+      this.toastService.error(
+        'Error',
+        error instanceof Error ? error.message : 'Error desconocido',
+      );
     } finally {
       this.isSubmitting.set(false);
     }
@@ -370,11 +407,11 @@ export class SocialCampaignsPage implements OnInit {
 
   async publishNow(campaignId: string): Promise<void> {
     try {
-      const { data: campaign } = await this.supabase
+      const { data: campaign } = (await this.supabase
         .from('campaign_schedules')
         .select('*')
         .eq('id', campaignId)
-        .single() as { data: CampaignSchedule };
+        .single()) as { data: CampaignSchedule };
 
       if (!campaign) {
         this.toastService.error('Error', 'Campaña no encontrada');
@@ -400,7 +437,7 @@ export class SocialCampaignsPage implements OnInit {
             ctaUrl: campaign.cta_url,
             platforms: campaign.platforms,
           }),
-        }
+        },
       );
 
       if (!response.ok) throw new Error('Error publishing campaign');
@@ -409,7 +446,10 @@ export class SocialCampaignsPage implements OnInit {
       await this.loadCampaigns();
     } catch (error) {
       console.error('Error publishing campaign:', error);
-      this.toastService.error('Error', error instanceof Error ? error.message : 'Error desconocido');
+      this.toastService.error(
+        'Error',
+        error instanceof Error ? error.message : 'Error desconocido',
+      );
     }
   }
 
@@ -426,7 +466,10 @@ export class SocialCampaignsPage implements OnInit {
       await this.loadCampaigns();
     } catch (error) {
       console.error('Error deleting campaign:', error);
-      this.toastService.error('Error', error instanceof Error ? error.message : 'Error desconocido');
+      this.toastService.error(
+        'Error',
+        error instanceof Error ? error.message : 'Error desconocido',
+      );
     }
   }
 }

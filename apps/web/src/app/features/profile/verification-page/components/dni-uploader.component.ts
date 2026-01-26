@@ -1,5 +1,12 @@
-import { Component, inject, signal, computed, ChangeDetectionStrategy, HostListener } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import {
+  Component,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+  HostListener,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 
 import { VerificationService } from '@core/services/verification/verification.service';
@@ -40,21 +47,29 @@ const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB (mobile-friendly)
   selector: 'app-dni-uploader',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <!-- Screen Reader Announcements -->
-    <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcements">{{ getStatusMessage() }}</div>
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcements">
+      {{ getStatusMessage() }}
+    </div>
     <div aria-live="assertive" aria-atomic="true" class="sr-only" id="paste-announcements"></div>
 
     <div class="space-y-6">
       @if (uploadError()) {
-        <div class="rounded-xl border border-error-border bg-error-bg/60 px-4 py-3 text-sm text-error-strong" role="alert" aria-live="polite">
+        <div
+          class="rounded-xl border border-error-border bg-error-bg/60 px-4 py-3 text-sm text-error-strong"
+          role="alert"
+          aria-live="polite"
+        >
           {{ uploadError() }}
         </div>
       }
       <!-- Country Selector (Compact) -->
       <div class="flex items-center justify-between p-1">
-        <label for="country-select" class="text-sm font-medium text-text-secondary">País de emisión</label>
+        <label for="country-select" class="text-sm font-medium text-text-secondary"
+          >País de emisión</label
+        >
         <div class="relative group">
           <select
             id="country-select"
@@ -69,11 +84,24 @@ const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB (mobile-friendly)
               </option>
             }
           </select>
-          <div class="absolute left-0 top-1/2 -translate-y-1/2 text-lg pointer-events-none" aria-hidden="true">
+          <div
+            class="absolute left-0 top-1/2 -translate-y-1/2 text-lg pointer-events-none"
+            aria-hidden="true"
+          >
             {{ getSelectedCountryFlag() }}
           </div>
-          <div class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted group-hover:text-cta-default transition-colors" aria-hidden="true">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          <div
+            class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted group-hover:text-cta-default transition-colors"
+            aria-hidden="true"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
           </div>
         </div>
       </div>
@@ -94,53 +122,110 @@ const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB (mobile-friendly)
         >
           <div class="flex flex-col sm:flex-row sm:items-center p-3 sm:p-4 gap-4">
             <!-- Icon / Preview Thumbnail -->
-            <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative" aria-hidden="true">
+            <div
+              class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative"
+              aria-hidden="true"
+            >
               @if (frontPreview()) {
-                <img [src]="frontPreview()" class="w-full h-full object-cover" alt="Vista previa del frente del documento" />
+                <img
+                  [src]="frontPreview()"
+                  class="w-full h-full object-cover"
+                  alt="Vista previa del frente del documento"
+                />
                 <div class="absolute inset-0 bg-black/10"></div>
                 <div class="absolute inset-0 flex items-center justify-center">
-                   <div class="w-5 h-5 bg-success-500 rounded-full text-white flex items-center justify-center shadow-sm">
-                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                   </div>
-                 </div>
+                  <div
+                    class="w-5 h-5 bg-success-500 rounded-full text-white flex items-center justify-center shadow-sm"
+                  >
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
               } @else {
-                <svg class="w-6 h-6 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
+                <svg
+                  class="w-6 h-6 text-text-muted"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
+                  />
+                </svg>
               }
             </div>
 
             <!-- Text Content -->
             <div class="flex-grow min-w-0">
-              <h4 id="front-label" class="font-semibold text-text-primary text-sm sm:text-base">Frente del documento</h4>
+              <h4 id="front-label" class="font-semibold text-text-primary text-sm sm:text-base">
+                Frente del documento
+              </h4>
               <p id="front-desc" class="text-xs text-text-secondary truncate">
                 @if (frontUploaded()) {
                   Foto cargada correctamente
                 } @else {
-                  Foto clara y legible. Puedes arrastrar y soltar o usar pegar desde el portapapeles.
+                  Foto clara y legible. Puedes arrastrar y soltar o usar pegar desde el
+                  portapapeles.
                 }
               </p>
             </div>
 
             <!-- Actions -->
             <div class="flex-shrink-0">
-              <input #frontInput type="file" accept="image/*" capture="environment" class="hidden" (change)="onFileSelected($event, 'dni_front')" aria-label="Seleccionar archivo de imagen para el frente del documento" />
+              <input
+                #frontInput
+                type="file"
+                accept="image/*"
+                capture="environment"
+                class="hidden"
+                (change)="onFileSelected($event, 'dni_front')"
+                aria-label="Seleccionar archivo de imagen para el frente del documento"
+              />
               @if (uploadingFront()) {
-                <div class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin" role="progressbar" aria-label="Subiendo imagen del frente del documento" [attr.aria-valuenow]="frontProgress()" aria-valuemin="0" aria-valuemax="100"></div>
+                <div
+                  class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin"
+                  role="progressbar"
+                  aria-label="Subiendo imagen del frente del documento"
+                  [attr.aria-valuenow]="frontProgress()"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
               } @else {
                 <button
                   (click)="frontInput.click()"
-                  [attr.aria-label]="frontPreview() ? 'Cambiar imagen del frente del documento' : 'Subir imagen del frente del documento'"
+                  [attr.aria-label]="
+                    frontPreview()
+                      ? 'Cambiar imagen del frente del documento'
+                      : 'Subir imagen del frente del documento'
+                  "
                   class="w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-medium transition-colors"
-                  [class]="frontPreview() ? 'text-text-primary hover:bg-surface-hover' : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'"
+                  [class]="
+                    frontPreview()
+                      ? 'text-text-primary hover:bg-surface-hover'
+                      : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'
+                  "
                 >
                   {{ frontPreview() ? 'Cambiar' : 'Tomar foto' }}
                 </button>
               }
             </div>
           </div>
-          
+
           <!-- Progress Bar (Absolute bottom) -->
           @if (uploadingFront()) {
-            <div class="absolute bottom-0 left-0 h-1 bg-cta-default transition-all duration-300" [style.width.%]="frontProgress()"></div>
+            <div
+              class="absolute bottom-0 left-0 h-1 bg-cta-default transition-all duration-300"
+              [style.width.%]="frontProgress()"
+            ></div>
           }
         </div>
 
@@ -158,68 +243,145 @@ const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB (mobile-friendly)
         >
           <div class="flex flex-col sm:flex-row sm:items-center p-3 sm:p-4 gap-4">
             <!-- Icon / Preview -->
-            <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative">
+            <div
+              class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative"
+            >
               @if (backPreview()) {
                 <img [src]="backPreview()" class="w-full h-full object-cover" />
                 <div class="absolute inset-0 bg-black/10"></div>
                 <div class="absolute inset-0 flex items-center justify-center">
-                   <div class="w-5 h-5 bg-success-500 rounded-full text-white flex items-center justify-center shadow-sm">
-                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                   </div>
+                  <div
+                    class="w-5 h-5 bg-success-500 rounded-full text-white flex items-center justify-center shadow-sm"
+                  >
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
                 </div>
               } @else {
-                <svg class="w-6 h-6 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <svg
+                  class="w-6 h-6 text-text-muted"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
               }
             </div>
 
             <!-- Text Content -->
             <div class="flex-grow min-w-0">
-              <h4 id="back-label" class="font-semibold text-text-primary text-sm sm:text-base">Dorso del documento</h4>
+              <h4 id="back-label" class="font-semibold text-text-primary text-sm sm:text-base">
+                Dorso del documento
+              </h4>
               <p id="back-desc" class="text-xs text-text-secondary truncate">
                 @if (backUploaded()) {
                   Foto cargada correctamente
                 } @else {
-                  Código de barras visible. Puedes arrastrar y soltar o usar pegar desde el portapapeles.
+                  Código de barras visible. Puedes arrastrar y soltar o usar pegar desde el
+                  portapapeles.
                 }
               </p>
             </div>
 
             <!-- Actions -->
             <div class="flex-shrink-0">
-              <input #backInput type="file" accept="image/*" capture="environment" class="hidden" (change)="onFileSelected($event, 'dni_back')" aria-label="Seleccionar archivo de imagen para el dorso del documento" />
+              <input
+                #backInput
+                type="file"
+                accept="image/*"
+                capture="environment"
+                class="hidden"
+                (change)="onFileSelected($event, 'dni_back')"
+                aria-label="Seleccionar archivo de imagen para el dorso del documento"
+              />
               @if (uploadingBack()) {
-                <div class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin" role="progressbar" aria-label="Subiendo imagen del dorso del documento" [attr.aria-valuenow]="backProgress()" aria-valuemin="0" aria-valuemax="100"></div>
+                <div
+                  class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin"
+                  role="progressbar"
+                  aria-label="Subiendo imagen del dorso del documento"
+                  [attr.aria-valuenow]="backProgress()"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
               } @else {
                 <button
                   (click)="backInput.click()"
-                  [attr.aria-label]="backPreview() ? 'Cambiar imagen del dorso del documento' : 'Subir imagen del dorso del documento'"
+                  [attr.aria-label]="
+                    backPreview()
+                      ? 'Cambiar imagen del dorso del documento'
+                      : 'Subir imagen del dorso del documento'
+                  "
                   class="w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-medium transition-colors"
-                  [class]="backPreview() ? 'text-text-primary hover:bg-surface-hover' : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'"
+                  [class]="
+                    backPreview()
+                      ? 'text-text-primary hover:bg-surface-hover'
+                      : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'
+                  "
                 >
                   {{ backPreview() ? 'Cambiar' : 'Tomar foto' }}
                 </button>
               }
             </div>
           </div>
-          
+
           <!-- Progress Bar -->
           @if (uploadingBack()) {
-            <div class="absolute bottom-0 left-0 h-1 bg-cta-default transition-all duration-300" [style.width.%]="backProgress()"></div>
+            <div
+              class="absolute bottom-0 left-0 h-1 bg-cta-default transition-all duration-300"
+              [style.width.%]="backProgress()"
+            ></div>
           }
         </div>
       </div>
 
-       <!-- OCR Results (Minimalist) -->
-       @if (frontOcrResult() || backOcrResult()) {
-         <div class="rounded-2xl bg-surface-secondary/30 border border-border-default overflow-hidden" role="region" aria-live="polite" aria-labelledby="ocr-header">
-           <!-- Header -->
-           <div class="px-4 py-3 border-b border-border-default/50 flex items-center justify-between">
-             <div class="flex items-center gap-2">
-               <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-               <span id="ocr-header" class="text-xs font-semibold text-text-secondary uppercase tracking-wide">Datos Extraídos</span>
-             </div>
+      <!-- OCR Results (Minimalist) -->
+      @if (frontOcrResult() || backOcrResult()) {
+        <div
+          class="rounded-2xl bg-surface-secondary/30 border border-border-default overflow-hidden"
+          role="region"
+          aria-live="polite"
+          aria-labelledby="ocr-header"
+        >
+          <!-- Header -->
+          <div
+            class="px-4 py-3 border-b border-border-default/50 flex items-center justify-between"
+          >
+            <div class="flex items-center gap-2">
+              <svg
+                class="w-4 h-4 text-text-secondary"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              <span
+                id="ocr-header"
+                class="text-xs font-semibold text-text-secondary uppercase tracking-wide"
+                >Datos Extraídos</span
+              >
+            </div>
             @if (isAutoVerified()) {
-              <span class="text-xs font-bold text-success-600 bg-success-50 px-2 py-0.5 rounded">AUTO VERIFICADO</span>
+              <span class="text-xs font-bold text-success-600 bg-success-50 px-2 py-0.5 rounded"
+                >AUTO VERIFICADO</span
+              >
             }
           </div>
 
@@ -227,17 +389,25 @@ const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB (mobile-friendly)
           <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
             @for (field of extractedFields(); track field.key) {
               <div>
-                <span class="text-[10px] text-text-muted uppercase tracking-wider block mb-0.5">{{ field.label }}</span>
+                <span class="text-[10px] text-text-muted uppercase tracking-wider block mb-0.5">{{
+                  field.label
+                }}</span>
                 <div class="flex items-center gap-1.5">
                   <span class="font-medium text-text-primary text-sm">{{ field.value }}</span>
                   @if (field.verified) {
-                    <svg class="w-3 h-3 text-success-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    <svg class="w-3 h-3 text-success-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
                   }
                 </div>
               </div>
             }
           </div>
-          
+
           <!-- Warning Footer -->
           @if (hasWarnings()) {
             <div class="px-4 py-2 bg-warning-50 border-t border-warning-100">
@@ -530,12 +700,12 @@ export class DniUploaderComponent {
   }
 
   getDocumentName(): string {
-    const c = this.countries.find(c => c.code === this.selectedCountry());
+    const c = this.countries.find((c) => c.code === this.selectedCountry());
     return c ? `${c.docName} ${c.name}` : 'Documento';
   }
 
   getSelectedCountryFlag(): string {
-    return this.countries.find(c => c.code === this.selectedCountry())?.flag || '🌍';
+    return this.countries.find((c) => c.code === this.selectedCountry())?.flag || '🌍';
   }
 
   async onFileSelected(event: Event, type: 'dni_front' | 'dni_back'): Promise<void> {

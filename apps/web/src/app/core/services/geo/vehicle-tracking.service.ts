@@ -64,7 +64,7 @@ export interface VehicleLocation {
   accuracy?: number;
   altitude?: number;
   heading?: number;
-  speed?: number;  // m/s
+  speed?: number; // m/s
   timestamp: Date;
 }
 
@@ -141,7 +141,7 @@ export class VehicleTrackingService implements OnDestroy {
     lastUpdate: null,
     batteryLevel: null,
     isBackgroundMode: false,
-    errorMessage: null
+    errorMessage: null,
   });
   private readonly _settings = signal<TrackingSettings | null>(null);
 
@@ -211,7 +211,7 @@ export class VehicleTrackingService implements OnDestroy {
       this.updateStatus({
         isTracking: true,
         bookingId,
-        errorMessage: null
+        errorMessage: null,
       });
 
       return true;
@@ -219,7 +219,7 @@ export class VehicleTrackingService implements OnDestroy {
       this.logger.error('[VehicleTracking] Failed to start tracking:', error);
       this.updateStatus({
         isTracking: false,
-        errorMessage: error instanceof Error ? error.message : 'Failed to start tracking'
+        errorMessage: error instanceof Error ? error.message : 'Failed to start tracking',
       });
       return false;
     }
@@ -254,7 +254,7 @@ export class VehicleTrackingService implements OnDestroy {
       isTracking: false,
       bookingId: null,
       lastUpdate: null,
-      errorMessage: null
+      errorMessage: null,
     });
   }
 
@@ -263,7 +263,8 @@ export class VehicleTrackingService implements OnDestroy {
    */
   async getLatestLocation(bookingId: string): Promise<VehicleLocation | null> {
     try {
-      const { data, error } = await this.supabaseService.getClient()
+      const { data, error } = await this.supabaseService
+        .getClient()
         .rpc('get_vehicle_latest_location', { p_booking_id: bookingId });
 
       const result = data as LatestLocationResponse | null;
@@ -277,7 +278,7 @@ export class VehicleTrackingService implements OnDestroy {
         accuracy: result.accuracy,
         speed: result.speed,
         heading: result.heading,
-        timestamp: new Date(result.recorded_at || Date.now())
+        timestamp: new Date(result.recorded_at || Date.now()),
       };
     } catch (err) {
       this.logger.error('[VehicleTracking] Failed to get latest location:', err);
@@ -291,14 +292,15 @@ export class VehicleTrackingService implements OnDestroy {
   async getLocationHistory(
     bookingId: string,
     limit = 100,
-    offset = 0
+    offset = 0,
   ): Promise<{ locations: VehicleLocation[]; total: number }> {
     try {
-      const { data, error } = await this.supabaseService.getClient()
+      const { data, error } = await this.supabaseService
+        .getClient()
         .rpc('get_vehicle_location_history', {
           p_booking_id: bookingId,
           p_limit: limit,
-          p_offset: offset
+          p_offset: offset,
         });
 
       const result = data as LocationHistoryResponse | null;
@@ -311,7 +313,7 @@ export class VehicleTrackingService implements OnDestroy {
         longitude: loc.longitude,
         speed: loc.speed,
         heading: loc.heading,
-        timestamp: new Date(loc.recorded_at)
+        timestamp: new Date(loc.recorded_at),
       }));
 
       return { locations, total: result.total || 0 };
@@ -326,7 +328,8 @@ export class VehicleTrackingService implements OnDestroy {
    */
   async getUnacknowledgedAlerts(bookingId: string): Promise<TrackingAlert[]> {
     try {
-      const { data, error } = await this.supabaseService.getClient()
+      const { data, error } = await this.supabaseService
+        .getClient()
         .from('geofence_alerts')
         .select('*')
         .eq('booking_id', bookingId)
@@ -335,15 +338,15 @@ export class VehicleTrackingService implements OnDestroy {
 
       if (error || !data) return [];
 
-      return data.map(alert => ({
+      return data.map((alert) => ({
         type: alert.alert_type as TrackingAlert['type'],
         severity: alert.severity as TrackingAlert['severity'],
         message: this.getAlertMessage(alert.alert_type, alert),
         data: {
           distance_km: alert.distance_from_center ? alert.distance_from_center / 1000 : undefined,
-          speed_kmh: alert.speed_at_alert ? alert.speed_at_alert * 3.6 : undefined
+          speed_kmh: alert.speed_at_alert ? alert.speed_at_alert * 3.6 : undefined,
         },
-        timestamp: new Date(alert.created_at)
+        timestamp: new Date(alert.created_at),
       }));
     } catch (error) {
       this.logger.error('[VehicleTracking] Failed to get alerts:', error);
@@ -356,13 +359,14 @@ export class VehicleTrackingService implements OnDestroy {
    */
   async acknowledgeAlert(alertId: string, notes?: string): Promise<boolean> {
     try {
-      const { error } = await this.supabaseService.getClient()
+      const { error } = await this.supabaseService
+        .getClient()
         .from('geofence_alerts')
         .update({
           acknowledged: true,
           acknowledged_at: new Date().toISOString(),
           acknowledged_by: (await this.supabaseService.getClient().auth.getUser()).data.user?.id,
-          resolution_notes: notes
+          resolution_notes: notes,
         })
         .eq('id', alertId);
 
@@ -406,7 +410,7 @@ export class VehicleTrackingService implements OnDestroy {
         navigator.geolocation.getCurrentPosition(
           () => resolve(true),
           () => resolve(false),
-          { timeout: 10000 }
+          { timeout: 10000 },
         );
       });
     } catch (error) {
@@ -417,7 +421,8 @@ export class VehicleTrackingService implements OnDestroy {
 
   private async loadSettings(bookingId: string): Promise<void> {
     try {
-      const { data } = await this.supabaseService.getClient()
+      const { data } = await this.supabaseService
+        .getClient()
         .from('booking_tracking_settings')
         .select('*')
         .eq('booking_id', bookingId)
@@ -433,7 +438,7 @@ export class VehicleTrackingService implements OnDestroy {
           background_tracking_enabled: true,
           geofencing_enabled: true,
           speed_alert_enabled: true,
-          speed_limit_kmh: 120
+          speed_limit_kmh: 120,
         });
       }
     } catch {
@@ -444,7 +449,7 @@ export class VehicleTrackingService implements OnDestroy {
         background_tracking_enabled: true,
         geofencing_enabled: true,
         speed_alert_enabled: true,
-        speed_limit_kmh: 120
+        speed_limit_kmh: 120,
       });
     }
   }
@@ -453,7 +458,7 @@ export class VehicleTrackingService implements OnDestroy {
     const options = {
       enableHighAccuracy: true,
       timeout: 30000,
-      maximumAge: 0
+      maximumAge: 0,
     };
 
     if (this.isNative) {
@@ -467,13 +472,13 @@ export class VehicleTrackingService implements OnDestroy {
           if (position) {
             this.handlePositionUpdate(position);
           }
-        }
+        },
       );
     } else {
       const id = navigator.geolocation.watchPosition(
         (position) => this.handlePositionUpdate(position),
         (error) => this.logger.warn('[VehicleTracking] Position error:', error),
-        options
+        options,
       );
       this.watchId = id.toString();
     }
@@ -488,7 +493,7 @@ export class VehicleTrackingService implements OnDestroy {
       altitude: coords.altitude ?? undefined,
       heading: coords.heading ?? undefined,
       speed: coords.speed ?? undefined,
-      timestamp: new Date(position.timestamp)
+      timestamp: new Date(position.timestamp),
     };
 
     this._currentLocation.set(location);
@@ -504,7 +509,7 @@ export class VehicleTrackingService implements OnDestroy {
     this.updateInterval = interval(intervalSeconds * 1000)
       .pipe(
         takeUntil(this.destroy$),
-        filter(() => this._trackingStatus().isTracking)
+        filter(() => this._trackingStatus().isTracking),
       )
       .subscribe(() => {
         this.sendLocationUpdate(bookingId);
@@ -531,7 +536,7 @@ export class VehicleTrackingService implements OnDestroy {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.session.access_token}`
+            Authorization: `Bearer ${session.session.access_token}`,
           },
           body: JSON.stringify({
             booking_id: bookingId,
@@ -544,9 +549,9 @@ export class VehicleTrackingService implements OnDestroy {
             source: this.isNative ? 'app' : 'app',
             battery_level: this.batteryLevel,
             is_charging: this.isCharging,
-            network_type: this.getNetworkType()
-          })
-        }
+            network_type: this.getNetworkType(),
+          }),
+        },
       );
 
       const result = await response.json();
@@ -561,11 +566,10 @@ export class VehicleTrackingService implements OnDestroy {
         for (const alert of result.alerts) {
           this._alerts$.next({
             ...alert,
-            timestamp: new Date()
+            timestamp: new Date(),
           });
         }
       }
-
     } catch (error) {
       this.logger.error('[VehicleTracking] Failed to send location update:', error);
     }
@@ -597,9 +601,11 @@ export class VehicleTrackingService implements OnDestroy {
   private getNetworkType(): string | undefined {
     if (!this.isBrowser) return undefined;
 
-    const connection = (navigator as Navigator & {
-      connection?: { effectiveType?: string; type?: string };
-    }).connection;
+    const connection = (
+      navigator as Navigator & {
+        connection?: { effectiveType?: string; type?: string };
+      }
+    ).connection;
 
     if (connection) {
       return connection.effectiveType || connection.type;
@@ -608,7 +614,7 @@ export class VehicleTrackingService implements OnDestroy {
   }
 
   private updateStatus(partial: Partial<TrackingStatus>): void {
-    this._trackingStatus.update(current => ({ ...current, ...partial }));
+    this._trackingStatus.update((current) => ({ ...current, ...partial }));
   }
 
   private getAlertMessage(type: string, alert: Record<string, unknown>): string {

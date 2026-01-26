@@ -36,27 +36,28 @@ interface QuickAction {
 @Component({
   standalone: true,
   selector: 'app-active-trip-view',
-  imports: [
-    CommonModule,
-    RouterLink,
-    IconComponent,
-    HoverLiftDirective,
-    PressScaleDirective,
-  ],
+  imports: [CommonModule, RouterLink, IconComponent, HoverLiftDirective, PressScaleDirective],
   template: `
     <div class="min-h-screen bg-surface-primary pb-24">
       <!-- Progress Hero -->
-      <section class="progress-hero bg-gradient-to-br from-primary-500 to-primary-600 px-4 pt-safe pb-8">
+      <section
+        class="progress-hero bg-gradient-to-br from-primary-500 to-primary-600 px-4 pt-safe pb-8"
+      >
         <div class="max-w-2xl mx-auto">
           <!-- Back link -->
-          <a routerLink="/bookings" class="inline-flex items-center gap-1 text-white/80 text-sm mb-4">
+          <a
+            routerLink="/bookings"
+            class="inline-flex items-center gap-1 text-white/80 text-sm mb-4"
+          >
             <app-icon name="chevron-left" class="w-4 h-4" />
             <span>Mis Viajes</span>
           </a>
 
           <!-- Status badge -->
           <div class="flex items-center gap-2 mb-4">
-            <span class="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">
+            <span
+              class="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium"
+            >
               🚗 Viaje en Curso
             </span>
           </div>
@@ -71,7 +72,7 @@ interface QuickAction {
             </div>
             <div class="flex justify-between mt-2 text-sm">
               <span class="text-white/70">{{ startDateLabel() }}</span>
-              <span class="text-white font-medium">{{ progressPercent() | number:'1.0-0' }}%</span>
+              <span class="text-white font-medium">{{ progressPercent() | number: '1.0-0' }}%</span>
               <span class="text-white/70">{{ endDateLabel() }}</span>
             </div>
           </div>
@@ -86,7 +87,7 @@ interface QuickAction {
 
       <main class="px-4 max-w-2xl mx-auto -mt-4 space-y-4">
         <!-- Car info card -->
-        <section class="glass-card-elevated p-4 rounded-2xl" hoverLift>
+        <section class="glass-card-elevated p-4 rounded-2xl" appHoverLift>
           <div class="flex items-center gap-4">
             @if (carImageUrl()) {
               <img
@@ -102,7 +103,7 @@ interface QuickAction {
             <a
               [routerLink]="['/bookings', booking.id, 'active']"
               class="p-2 rounded-full bg-surface-secondary hover:bg-surface-tertiary transition-colors"
-              pressScale
+              appPressScale
             >
               <app-icon name="chevron-right" class="w-5 h-5 text-text-secondary" />
             </a>
@@ -113,7 +114,9 @@ interface QuickAction {
         <section class="glass-card p-4 rounded-xl">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-full bg-surface-secondary flex items-center justify-center">
+              <div
+                class="w-12 h-12 rounded-full bg-surface-secondary flex items-center justify-center"
+              >
                 <span class="text-2xl">👤</span>
               </div>
               <div>
@@ -127,7 +130,7 @@ interface QuickAction {
                 <a
                   [href]="'tel:' + ownerPhone()"
                   class="p-3 rounded-full bg-success-bg text-success-text hover:bg-success-100 transition-colors"
-                  pressScale
+                  appPressScale
                   title="Llamar"
                 >
                   <app-icon name="phone" class="w-5 h-5" />
@@ -135,9 +138,9 @@ interface QuickAction {
               }
               <a
                 [routerLink]="['/messages/chat']"
-                [queryParams]="{bookingId: booking.id, userId: booking.owner_id}"
+                [queryParams]="{ bookingId: booking.id, userId: booking.owner_id }"
                 class="p-3 rounded-full bg-primary-bg text-primary-text hover:bg-primary-100 transition-colors"
-                pressScale
+                appPressScale
                 title="Mensaje"
               >
                 <app-icon name="message-circle" class="w-5 h-5" />
@@ -167,7 +170,7 @@ interface QuickAction {
             <a
               [routerLink]="['/bookings', booking.id, 'check-out']"
               class="mt-3 w-full btn-warning flex items-center justify-center gap-2 py-3 rounded-xl font-medium"
-              pressScale
+              appPressScale
             >
               <app-icon name="log-out" class="w-5 h-5" />
               Iniciar Devolución
@@ -182,7 +185,7 @@ interface QuickAction {
               type="button"
               (click)="action.action()"
               class="flex flex-col items-center gap-2 p-3 glass-card rounded-xl transition-all"
-              pressScale
+              appPressScale
             >
               <div
                 class="w-12 h-12 rounded-full flex items-center justify-center text-xl"
@@ -198,7 +201,7 @@ interface QuickAction {
         <!-- Info Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- Return Location -->
-          <section class="glass-card p-4 rounded-xl" hoverLift>
+          <section class="glass-card p-4 rounded-xl" appHoverLift>
             <h3 class="font-medium text-text-primary flex items-center gap-2 mb-3">
               <app-icon name="map-pin" class="w-5 h-5 text-primary-500" />
               Devolución
@@ -210,7 +213,7 @@ interface QuickAction {
           </section>
 
           <!-- Trip Summary -->
-          <section class="glass-card p-4 rounded-xl" hoverLift>
+          <section class="glass-card p-4 rounded-xl" appHoverLift>
             <h3 class="font-medium text-text-primary flex items-center gap-2 mb-3">
               <app-icon name="calendar" class="w-5 h-5 text-primary-500" />
               Tu Viaje
@@ -231,7 +234,7 @@ interface QuickAction {
           <a
             [routerLink]="['/bookings', booking.id, 'active']"
             class="w-full btn-primary flex items-center justify-center gap-2 py-3 rounded-xl font-medium"
-            pressScale
+            appPressScale
           >
             <app-icon name="navigation" class="w-5 h-5" />
             Panel Completo del Viaje
@@ -240,45 +243,52 @@ interface QuickAction {
       </main>
     </div>
   `,
-  styles: [`
-    .progress-hero {
-      padding-top: max(env(safe-area-inset-top), 1rem);
-    }
+  styles: [
+    `
+      .progress-hero {
+        padding-top: max(env(safe-area-inset-top), 1rem);
+      }
 
-    .pt-safe {
-      padding-top: env(safe-area-inset-top);
-    }
+      .pt-safe {
+        padding-top: env(safe-area-inset-top);
+      }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-      color: white;
-      transition: all 0.2s ease;
-    }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+        color: white;
+        transition: all 0.2s ease;
+      }
 
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(var(--primary-500-rgb), 0.3);
-    }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(var(--primary-500-rgb), 0.3);
+      }
 
-    .btn-warning {
-      background: var(--warning-500);
-      color: white;
-      transition: all 0.2s ease;
-    }
+      .btn-warning {
+        background: var(--warning-500);
+        color: white;
+        transition: all 0.2s ease;
+      }
 
-    .btn-warning:hover {
-      background: var(--warning-600);
-    }
+      .btn-warning:hover {
+        background: var(--warning-600);
+      }
 
-    .animate-pulse-subtle {
-      animation: pulse-subtle 2s infinite;
-    }
+      .animate-pulse-subtle {
+        animation: pulse-subtle 2s infinite;
+      }
 
-    @keyframes pulse-subtle {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
-    }
-  `],
+      @keyframes pulse-subtle {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.85;
+        }
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActiveTripViewComponent implements OnInit, OnDestroy {
@@ -427,7 +437,8 @@ export class ActiveTripViewComponent implements OnInit, OnDestroy {
       label: 'SOS',
       icon: '🚨',
       color: 'bg-error-bg',
-      action: () => this.router.navigate(['/bookings', this.booking.id, 'active'], { fragment: 'emergency' }),
+      action: () =>
+        this.router.navigate(['/bookings', this.booking.id, 'active'], { fragment: 'emergency' }),
     },
   ]);
 
@@ -460,9 +471,7 @@ export class ActiveTripViewComponent implements OnInit, OnDestroy {
 
   private openFuelStations(): void {
     const { car_city, car_province } = this.booking;
-    const location = car_city && car_province
-      ? `${car_city}, ${car_province}`
-      : 'mi ubicación';
+    const location = car_city && car_province ? `${car_city}, ${car_province}` : 'mi ubicación';
     const query = encodeURIComponent(`estaciones de servicio cerca de ${location}`);
     window.open(`https://www.google.com/maps/search/${query}`, '_blank');
   }

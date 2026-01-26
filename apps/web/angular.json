@@ -18,7 +18,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
-            "polyfills": [],
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "serviceWorker": false,
             "assets": [
@@ -72,10 +72,15 @@
               "whatwg-url",
               "@supabase/node-fetch",
               "@supabase/postgrest-js",
-              "localforage"
+              "localforage",
+              "debug",
+              "xmlhttprequest-ssl",
+              "bufferutil",
+              "socket.io-client",
+              "engine.io-client"
             ],
-            "prerender": true,
-            "ssr": true,
+            "prerender": false,
+            "ssr": false,
             "server": "src/main.server.ts"
           },
           "configurations": {

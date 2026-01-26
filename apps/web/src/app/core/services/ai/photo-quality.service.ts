@@ -7,7 +7,15 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
 // ============================================================================
 
 export interface PhotoIssue {
-  type: 'blur' | 'dark' | 'overexposed' | 'cropped' | 'wrong_subject' | 'obstruction' | 'reflection' | 'low_resolution';
+  type:
+    | 'blur'
+    | 'dark'
+    | 'overexposed'
+    | 'cropped'
+    | 'wrong_subject'
+    | 'obstruction'
+    | 'reflection'
+    | 'low_resolution';
   severity: 'low' | 'medium' | 'high';
   description: string;
 }
@@ -30,7 +38,14 @@ export interface PhotoQualityResult {
 }
 
 export type ExpectedSubject = 'vehicle_exterior' | 'vehicle_interior' | 'document' | 'damage';
-export type VehiclePosition = 'front' | 'rear' | 'left' | 'right' | 'interior' | 'dashboard' | 'trunk';
+export type VehiclePosition =
+  | 'front'
+  | 'rear'
+  | 'left'
+  | 'right'
+  | 'interior'
+  | 'dashboard'
+  | 'trunk';
 
 export interface PhotoValidation {
   photoIndex: number;
@@ -123,7 +138,7 @@ export class PhotoQualityService {
   async validatePhoto(
     imageUrl: string,
     subject: ExpectedSubject,
-    position?: VehiclePosition
+    position?: VehiclePosition,
   ): Promise<PhotoQualityResult> {
     this.isValidating.set(true);
     this.lastError.set(null);
@@ -139,7 +154,7 @@ export class PhotoQualityService {
             expected_subject: subject,
             position,
           },
-        }
+        },
       );
 
       if (error) {
@@ -177,14 +192,14 @@ export class PhotoQualityService {
     index: number,
     imageUrl: string,
     subject: ExpectedSubject,
-    position?: VehiclePosition
+    position?: VehiclePosition,
   ): Promise<PhotoQualityResult> {
     this.currentPhotoIndex.set(index);
 
     const result = await this.validatePhoto(imageUrl, subject, position);
 
     // Store result
-    this.results.update(map => {
+    this.results.update((map) => {
       const newMap = new Map(map);
       newMap.set(index, result);
       return newMap;
@@ -199,7 +214,7 @@ export class PhotoQualityService {
    */
   async validateAllPhotos(
     photos: Array<{ url: string; position?: VehiclePosition }>,
-    subject: ExpectedSubject = 'vehicle_exterior'
+    subject: ExpectedSubject = 'vehicle_exterior',
   ): Promise<{
     allValid: boolean;
     results: PhotoValidation[];
@@ -215,7 +230,7 @@ export class PhotoQualityService {
           const result = await this.validatePhoto(photo.url, subject, photo.position);
 
           // Store result
-          this.results.update(map => {
+          this.results.update((map) => {
             const newMap = new Map(map);
             newMap.set(index, result);
             return newMap;
@@ -226,12 +241,12 @@ export class PhotoQualityService {
             url: photo.url,
             result,
           };
-        })
+        }),
       );
 
-      const blocking = validations.filter(v => !v.result.quality.is_acceptable);
+      const blocking = validations.filter((v) => !v.result.quality.is_acceptable);
       const warnings = validations.filter(
-        v => v.result.quality.is_acceptable && v.result.quality.issues.length > 0
+        (v) => v.result.quality.is_acceptable && v.result.quality.issues.length > 0,
       );
 
       return {
@@ -275,7 +290,7 @@ export class PhotoQualityService {
    * Gets high severity issues
    */
   getHighSeverityIssues(issues: PhotoIssue[]): PhotoIssue[] {
-    return issues.filter(i => i.severity === 'high');
+    return issues.filter((i) => i.severity === 'high');
   }
 
   /**
@@ -290,7 +305,7 @@ export class PhotoQualityService {
    * Removes result for a specific photo
    */
   removeResult(index: number): void {
-    this.results.update(map => {
+    this.results.update((map) => {
       const newMap = new Map(map);
       newMap.delete(index);
       return newMap;

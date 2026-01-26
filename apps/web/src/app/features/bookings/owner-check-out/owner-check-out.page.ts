@@ -36,7 +36,13 @@ type InspectionMode = 'photos' | 'video' | 'live';
   selector: 'app-owner-check-out',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule, InspectionUploaderComponent, VideoInspectionAIComponent, VideoInspectionLiveComponent],
+  imports: [
+    CommonModule,
+    IonicModule,
+    InspectionUploaderComponent,
+    VideoInspectionAIComponent,
+    VideoInspectionLiveComponent,
+  ],
   templateUrl: './owner-check-out.page.html',
   styleUrls: ['./owner-check-out.page.css'],
 })

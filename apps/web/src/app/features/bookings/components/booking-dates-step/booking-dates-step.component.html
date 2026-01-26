@@ -13,7 +13,10 @@
           <img
             [src]="car.photos?.[0]?.url || '/assets/placeholder-car.jpg'"
             [alt]="car.brand + ' ' + car.model"
-            class="car-thumbnail" width="400" height="300" />
+            class="car-thumbnail"
+            width="400"
+            height="300"
+          />
           <div class="car-details">
             <h3>{{ car.brand }} {{ car.model }}</h3>
             @if (car.price_per_day && car.price_per_day > 0) {

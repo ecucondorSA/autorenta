@@ -78,7 +78,7 @@ export class RecommendationsService {
           profiles:owner_id (
             id, first_name, avatar_url, rating
           )
-        `
+        `,
         )
         .eq('status', 'active')
         .eq('type', currentCar.type)
@@ -134,7 +134,7 @@ export class RecommendationsService {
           profiles:owner_id (
             id, first_name, avatar_url, rating
           )
-        `
+        `,
         )
         .eq('status', 'active');
 
@@ -182,7 +182,7 @@ export class RecommendationsService {
     lat: number,
     lng: number,
     radiusKm = 50,
-    limit = 10
+    limit = 10,
   ): Promise<RecommendationResult> {
     try {
       this.isLoading.set(true);
@@ -225,7 +225,7 @@ export class RecommendationsService {
           profiles:owner_id (
             id, first_name, avatar_url, rating
           )
-        `
+        `,
         )
         .eq('status', 'active')
         .order('rating', { ascending: false })
@@ -275,7 +275,7 @@ export class RecommendationsService {
           profiles:owner_id (
             id, first_name, avatar_url, rating
           )
-        `
+        `,
         )
         .in('id', carIds)
         .eq('status', 'active');
@@ -386,7 +386,9 @@ export class RecommendationsService {
         const carType = params['type'] as string | undefined;
         const priceMin = params['priceMin'] as number | undefined;
         const priceMax = params['priceMax'] as number | undefined;
-        const location = params['location'] as { lat: number; lng: number; city: string } | undefined;
+        const location = params['location'] as
+          | { lat: number; lng: number; city: string }
+          | undefined;
 
         if (carType) carTypes[carType] = (carTypes[carType] || 0) + 1;
         if (priceMin) prices.push(priceMin);
@@ -397,7 +399,9 @@ export class RecommendationsService {
       // De bookings
       bookings?.forEach((b) => {
         const carData = b.cars as unknown;
-        const carType = Array.isArray(carData) ? (carData[0] as { type?: string })?.type : (carData as { type?: string } | null)?.type;
+        const carType = Array.isArray(carData)
+          ? (carData[0] as { type?: string })?.type
+          : (carData as { type?: string } | null)?.type;
         if (carType) carTypes[carType] = (carTypes[carType] || 0) + 5; // Peso mayor
       });
 
@@ -415,10 +419,15 @@ export class RecommendationsService {
         },
         searchLocations: locations.slice(0, 5),
         viewedCars: views?.map((v) => v.car_id) ?? [],
-        bookedCarTypes: bookings?.map((b) => {
-          const carData = b.cars as unknown;
-          return Array.isArray(carData) ? (carData[0] as { type?: string })?.type : (carData as { type?: string } | null)?.type;
-        }).filter((t): t is string => Boolean(t)) ?? [],
+        bookedCarTypes:
+          bookings
+            ?.map((b) => {
+              const carData = b.cars as unknown;
+              return Array.isArray(carData)
+                ? (carData[0] as { type?: string })?.type
+                : (carData as { type?: string } | null)?.type;
+            })
+            .filter((t): t is string => Boolean(t)) ?? [],
       };
 
       this.userPreferences.set(prefs);

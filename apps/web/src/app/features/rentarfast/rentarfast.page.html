@@ -269,7 +269,8 @@
         (input)="inputText.set($any($event.target).value)"
         (keydown)="onKeyDown($event)"
         [disabled]="isLoading() || isListening()"
-      aria-label="Escribe o usa el microfono..." />
+        aria-label="Escribe o usa el microfono..."
+      />
       <button
         class="send-button"
         (click)="sendMessage()"

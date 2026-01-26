@@ -165,11 +165,9 @@ export class EdgePersonalizationService {
   async trackEvent(type: string, data: Record<string, unknown>): Promise<void> {
     try {
       // Fire and forget
-      this.http
-        .post(`${EDGE_API_BASE}/track`, { type, data })
-        .subscribe({
-          error: () => {}, // Ignorar errores de tracking
-        });
+      this.http.post(`${EDGE_API_BASE}/track`, { type, data }).subscribe({
+        error: () => {}, // Ignorar errores de tracking
+      });
     } catch {
       // Ignorar
     }

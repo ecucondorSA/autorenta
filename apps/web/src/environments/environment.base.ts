@@ -17,10 +17,20 @@ interface TikTokConfig {
   clientId?: string;
 }
 
+
 interface GoogleOneTapConfig {
   clientId?: string;
   autoSelect?: boolean;
   cancelOnTapOutside?: boolean;
+}
+
+interface SocialMediaConfig {
+  facebook: string;
+  instagram: string;
+  twitter?: string;
+  linkedin: string;
+  tiktok: string;
+  youtube: string;
 }
 
 /**
@@ -61,6 +71,7 @@ interface EnvDefaults {
   pdfWorkerUrl?: string;
   geminiTextWorkerUrl?: string;
   googleAiImageUrl?: string;
+  geminiApiKey?: string;
   sentryDsn?: string;
   sentryEnvironment?: string;
   sentryTracesSampleRate?: number;
@@ -70,6 +81,7 @@ interface EnvDefaults {
   googleGeolocationApiKey?: string;
   tiktok?: TikTokConfig;
   googleOneTap?: GoogleOneTapConfig;
+  socialMedia?: SocialMediaConfig;
   // GCP Video Damage Detection
   videoIngestionUrl?: string;
   gcpProjectId?: string;
@@ -166,6 +178,7 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   pdfWorkerUrl: resolve('NG_APP_PDF_WORKER_URL', defaults.pdfWorkerUrl ?? ''),
   geminiTextWorkerUrl: resolve('NG_APP_GEMINI_TEXT_WORKER_URL', defaults.geminiTextWorkerUrl ?? ''),
   googleAiImageUrl: resolve('NG_APP_GOOGLE_AI_IMAGE_URL', defaults.googleAiImageUrl),
+  geminiApiKey: resolve('NG_APP_GEMINI_API_KEY', defaults.geminiApiKey),
   sentryDsn: resolve('NG_APP_SENTRY_DSN', defaults.sentryDsn),
   sentryEnvironment: resolve(
     'NG_APP_SENTRY_ENVIRONMENT',
@@ -189,6 +202,29 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
     clientId: resolve('NG_APP_GOOGLE_ONE_TAP_CLIENT_ID', defaults.googleOneTap?.clientId),
     autoSelect: defaults.googleOneTap?.autoSelect ?? true,
     cancelOnTapOutside: defaults.googleOneTap?.cancelOnTapOutside ?? true,
+  },
+  socialMedia: {
+    facebook: resolve(
+      'NG_APP_SOCIAL_FACEBOOK',
+      defaults.socialMedia?.facebook ?? 'https://www.facebook.com/people/Autorentar/61586558399370/',
+    ),
+    instagram: resolve(
+      'NG_APP_SOCIAL_INSTAGRAM',
+      defaults.socialMedia?.instagram ?? 'https://www.instagram.com/auto.rentar',
+    ),
+    twitter: resolve('NG_APP_SOCIAL_TWITTER', defaults.socialMedia?.twitter ?? 'https://twitter.com/autorentar'),
+    linkedin: resolve(
+      'NG_APP_SOCIAL_LINKEDIN',
+      defaults.socialMedia?.linkedin ?? 'https://linkedin.com/company/autorentar',
+    ),
+    tiktok: resolve(
+      'NG_APP_SOCIAL_TIKTOK',
+      defaults.socialMedia?.tiktok ?? 'https://tiktok.com/@auto.rentar',
+    ),
+    youtube: resolve(
+      'NG_APP_SOCIAL_YOUTUBE',
+      defaults.socialMedia?.youtube ?? 'https://youtube.com/@autorentar',
+    ),
   },
   // GCP Video Damage Detection
   videoIngestionUrl: resolve('NG_APP_VIDEO_INGESTION_URL', defaults.videoIngestionUrl ?? ''),

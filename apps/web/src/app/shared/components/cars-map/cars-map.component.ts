@@ -36,6 +36,7 @@ import {
   type MapLayer,
 } from '../map-layers-control/map-layers-control.component';
 import { MapMarkerComponent } from '../map-marker/map-marker.component';
+import { SoundService } from '@core/services/ui/sound.service';
 
 type MapboxGL = typeof import('mapbox-gl').default;
 type MapboxMap = import('mapbox-gl').Map;
@@ -191,6 +192,7 @@ class QuadTree {
 })
 export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   private readonly logger = inject(LoggerService);
+  private readonly sound = inject(SoundService);
   @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
 
   private resizeObserver: ResizeObserver | null = null;
@@ -277,20 +279,24 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
-   * Fly to a specific location
+   * Fly to a specific location with smooth animation
    */
   flyTo(
     location: { lat: number; lng: number },
     zoom = 15,
-    options?: { bearing?: number; pitch?: number },
+    options?: { bearing?: number; pitch?: number; duration?: number },
   ): void {
     if (this.map) {
       this.map.flyTo({
         center: [location.lng, location.lat],
         zoom,
-        bearing: options?.bearing,
-        pitch: options?.pitch,
+        bearing: options?.bearing ?? 0,
+        pitch: options?.pitch ?? 0,
+        duration: options?.duration ?? 1500, // Smooth 1.5s animation
         essential: true,
+        curve: 1.42, // Optimal curve for smooth animation
+        speed: 1.2, // Slightly faster than default
+        easing: (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, // Ease in-out quad
       });
     }
   }
@@ -343,7 +349,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   ngOnInit(): void {
     if (!this.isBrowser) {
-      this.loading.set(false);
+      console.log('[CarsMap] 🗺️ MAP LOADED', 'Cars:', this.cars.length, 'Token Len:', environment.mapboxAccessToken.length); this.loading.set(false);
       return;
     }
 
@@ -383,8 +389,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    * Returns: 'dawn', 'day', 'dusk', or 'night'
    */
   private getTimeBasedLightPreset(): 'dawn' | 'day' | 'dusk' | 'night' {
-    // Forzar siempre modo día con colores claros
-    return 'day';
+    // Cyberpunk/Radioactive Theme = Always Night
+    return 'night';
   }
 
   /**
@@ -494,8 +500,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       // Initialize map with Mapbox Standard style (v12+ with theme support)
       this.map = new this.mapboxgl.Map({
         container: this.mapContainer.nativeElement,
-        style: 'mapbox://styles/mapbox/standard', // Modern Standard style with theme support
-        center: [-54.0, -28.0], // Centro entre Argentina, Brasil y Uruguay
+        style: 'mapbox://styles/mapbox/dark-v11', // Force Dark Mode for Cyberpunk look
+        center: [-56.164532, -34.901112], // Uruguay defaulth theme support
         zoom: 4, // Zoom amplio para ver los 3 países
         maxBounds: [
           [-75, -56], // Southwest: Sur de Argentina
@@ -530,7 +536,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       // Wait for map to load
       this.map.on('load', () => {
         try {
-          this.loading.set(false);
+          console.log('[CarsMap] 🗺️ MAP LOADED', 'Cars:', this.cars.length, 'Token Len:', environment.mapboxAccessToken.length); this.loading.set(false);
           this.safeResizeMap();
           this.updateMapTheme(); // Apply theme on load
           this.updateMarkersBasedOnCount();
@@ -558,7 +564,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           console.error('[CarsMap] Error during post-load setup:', err);
           const message = err instanceof Error ? err['message'] : String(err);
           this['error'].set(message || 'Error al inicializar el mapa');
-          this.loading.set(false);
+          console.log('[CarsMap] 🗺️ MAP LOADED', 'Cars:', this.cars.length, 'Token Len:', environment.mapboxAccessToken.length); this.loading.set(false);
         }
       });
 
@@ -588,7 +594,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           );
         }
 
-        this.loading.set(false);
+        console.log('[CarsMap] 🗺️ MAP LOADED', 'Cars:', this.cars.length, 'Token Len:', environment.mapboxAccessToken.length); this.loading.set(false);
       });
     } catch (err) {
       console.error('[CarsMap] Initialization error:', err);
@@ -601,7 +607,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       } else {
         this['error'].set(errorMessage || 'Error al inicializar el mapa');
       }
-      this.loading.set(false);
+      console.log('[CarsMap] 🗺️ MAP LOADED', 'Cars:', this.cars.length, 'Token Len:', environment.mapboxAccessToken.length); this.loading.set(false);
     }
   }
 
@@ -722,8 +728,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         filter: ['has', 'point_count'],
         paint: {
           'circle-color': 'rgba(57, 255, 20, 0.6)', // Verde radioactivo neón glow
-          'circle-radius': ['step', ['get', 'point_count'], 34, 5, 42, 15, 50, 30, 58],
-          'circle-blur': 0.9,
+          'circle-radius': ['step', ['get', 'point_count'], 40, 5, 50, 15, 60, 30, 70],
+          'circle-blur': 0.2,
           'circle-translate': [0, 0],
         },
       });
@@ -787,7 +793,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       });
     }
 
-    // Add unclustered points (individual cars)
+    // Add unclustered points (individual cars) - HIDDEN (Opacity 0)
+    // We make them invisible but queryable so we can overlay HTML markers
     if (!this.map.getLayer('cars-unclustered')) {
       this.map.addLayer({
         id: 'cars-unclustered',
@@ -795,23 +802,28 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         source: this.clusterSourceId,
         filter: ['!', ['has', 'point_count']],
         paint: {
-          'circle-color': [
-            'case',
-            ['==', ['get', 'availabilityStatus'], 'available'],
-            colorAvailable,
-            ['==', ['get', 'availabilityStatus'], 'soon_available'],
-            colorSoon,
-            ['==', ['get', 'availabilityStatus'], 'in_use'],
-            colorInUse,
-            colorUnavailable, // unavailable
-          ],
-          'circle-radius': 8,
-          'circle-stroke-width': 2,
-          'circle-stroke-color': '#ffffff',
-          'circle-opacity': ['case', ['==', ['get', 'availabilityStatus'], 'unavailable'], 0.5, 1],
+          'circle-color': '#FF0000',
+          'circle-radius': 20,
+          'circle-stroke-width': 0,
+          'circle-opacity': 1.0,
         },
       });
     }
+
+    // Listen for render changes to update hybrid markers
+    this.map.on('render', () => {
+      if (!this.map || !this.useClustering) return;
+      // Only update if we are not moving (performance) or if needed
+      if (!this.map.isMoving()) {
+        this.updateHybridMarkers();
+      }
+    });
+
+    this.map.on('moveend', () => {
+      if (this.useClustering) {
+        this.updateHybridMarkers();
+      }
+    });
 
     // Handle cluster clicks
     this.map.on('click', this.clusterLayerId, (event: MapLayerMouseEvent) => {
@@ -1396,11 +1408,107 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
+   * Hybrid Clustering: Update HTML markers properties of unclustered Mapbox points
+   * Queries the invisible 'cars-unclustered' layer and places HTML markers on top.
+   */
+  private updateHybridMarkers(): void {
+    if (!this.map) return;
+
+    // 1. Query Mapbox for currently rendered unclustered points
+    const features = this.map.queryRenderedFeatures({ layers: ['cars-unclustered'] });
+
+    // 2. Extract car IDs that should be visible as HTML markers
+    const visibleCarIdsInMapbox = new Set<string>();
+    const featuresMap = new Map<string, MapboxGeoJSONFeature>();
+
+    features.forEach(f => {
+      const carId = f.properties?.['carId'];
+      if (carId) {
+        visibleCarIdsInMapbox.add(carId);
+        featuresMap.set(carId, f);
+      }
+    });
+
+    // 3. Remove markers that are no longer visible (clustered or out of view)
+    const markersToRemove: string[] = [];
+    this.carMarkers.forEach((_, carId) => {
+      if (!visibleCarIdsInMapbox.has(carId)) {
+        markersToRemove.push(carId);
+      }
+    });
+
+    markersToRemove.forEach(carId => {
+      const markerData = this.carMarkers.get(carId);
+      if (markerData) {
+        markerData.marker.remove();
+        this.returnMarkerComponentToPool(markerData.componentRef);
+        this.carMarkers.delete(carId);
+      }
+    });
+
+    // 4. Add markers for new unclustered points
+    // Limit to maxVisibleMarkers to maintain performance (though Mapbox clustering usually limits this naturally)
+    let addedCount = 0;
+    const maxToAdd = this.maxVisibleMarkers; // Safety limit
+
+    for (const carId of visibleCarIdsInMapbox) {
+      if (this.carMarkers.has(carId)) continue; // Already has marker
+      if (addedCount >= maxToAdd) break;
+
+      // Reconstruct car data from feature properties or look it up
+      // Looking up from source is safer for complex objects
+      const fullCarData = this.cars.find(c => c['carId'] === carId);
+
+      if (fullCarData) {
+        const markerData = this.createCarMarker(fullCarData);
+        if (markerData) {
+          this.carMarkers.set(carId, markerData);
+          addedCount++;
+        }
+      } else {
+        // Fallback if lookup fails (shouldn't happen)
+        const feature = featuresMap.get(carId);
+        if (feature) {
+          const geom = feature.geometry as any;
+          const coords = geom.coordinates;
+          // Minimal data from properties
+          const minimalCar: CarMapLocation = {
+            carId: carId,
+            lat: coords[1],
+            lng: coords[0],
+            pricePerDay: feature.properties?.['pricePerDay'],
+            title: feature.properties?.['title'] || '',
+            currency: feature.properties?.['currency'] || 'USD',
+            photoUrl: feature.properties?.['photoUrl'] || '',
+            availabilityStatus: feature.properties?.['availabilityStatus']
+          } as any;
+
+          const markerData = this.createCarMarker(minimalCar);
+          if (markerData) {
+            this.carMarkers.set(carId, markerData);
+            addedCount++;
+          }
+        }
+      }
+    }
+
+    // Update visible set
+    this.visibleCarIds = new Set(this.carMarkers.keys());
+  }
+
+  /*
    * Update virtualized markers when viewport changes
    */
   private updateVirtualizedMarkers(): void {
     if (!this.map) return;
 
+    // Use hybrid method if clustering is on
+    if (this.useClustering) {
+      this.updateHybridMarkers();
+      return;
+    }
+
+    // Old logic for non-clustering mode...
     const newVisibleCars = this.getVisibleCarsInViewport();
     const newVisibleCarIds = new Set(newVisibleCars.map((car) => car['carId']));
 
@@ -2796,15 +2904,35 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         this.removeHighlightFromCar(previousId);
       }
 
-      // Highlight current
+      // Highlight current & Animate Camera
       if (currentId) {
+        this.sound.play('click');
         this.highlightSelectedCar(currentId);
         const car = this.cars.find((c) => c['carId'] === currentId);
         if (car) {
           this.selectedCar.set(car);
+          // CINEMA MODE: Dramatic FlyTo Transition
+          this.logger.debug('[CarsMap] Cinema Mode: Flying to car ' + currentId);
+          this.map.flyTo({
+            center: [car.lng, car.lat],
+            zoom: 16,        // Close up
+            pitch: 60,       // Street View tilt
+            bearing: -20,    // Cinematic angle
+            duration: 1500,  // Slow dramatic pan
+            essential: true, // Animation respecting reduce-motion
+            curve: 1.2,  // Smooth easing
+            padding: { bottom: 200 } // Offset for carousel
+          });
         }
       } else {
         this.selectedCar.set(null);
+        // Reset to standard view if deselected
+        this.map.easeTo({
+          pitch: 0,
+          bearing: 0,
+          zoom: 12,
+          duration: 1200
+        });
       }
     }
     if (changes['userLocation'] && !changes['userLocation'].firstChange && this.map) {

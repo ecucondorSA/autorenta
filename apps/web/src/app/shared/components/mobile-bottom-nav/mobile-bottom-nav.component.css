@@ -445,7 +445,7 @@
     0 6px 20px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.2);
-  background: linear-gradient(135deg, #00D95F 0%, #00C553 50%, #5ba3c9 100%);
+  background: linear-gradient(135deg, #39FF14 0%, #00C553 50%, #5ba3c9 100%);
   animation: none; /* Stop floating on hover */
 }
 

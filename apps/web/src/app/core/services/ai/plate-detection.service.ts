@@ -10,9 +10,9 @@ export interface DetectedPlate {
   text_masked: string;
   confidence: number;
   bounding_box: {
-    x: number;      // Percentage 0-100
-    y: number;      // Percentage 0-100
-    width: number;  // Percentage 0-100
+    x: number; // Percentage 0-100
+    y: number; // Percentage 0-100
+    width: number; // Percentage 0-100
     height: number; // Percentage 0-100
   };
   country?: 'AR' | 'EC' | 'BR' | 'CL' | 'CO' | 'unknown';
@@ -90,7 +90,7 @@ export class PlateDetectionService {
             image_url: imageUrl,
             auto_blur: true,
           },
-        }
+        },
       );
 
       if (error) {
@@ -157,10 +157,7 @@ export class PlateDetectionService {
    * Blurs detected plates in an image using Canvas
    * Returns a new Blob with plates blurred
    */
-  async blurPlatesInImage(
-    imageUrl: string,
-    plates: DetectedPlate[]
-  ): Promise<Blob> {
+  async blurPlatesInImage(imageUrl: string, plates: DetectedPlate[]): Promise<Blob> {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
@@ -215,7 +212,7 @@ export class PlateDetectionService {
             }
           },
           'image/jpeg',
-          0.9
+          0.9,
         );
       };
 
@@ -236,7 +233,10 @@ export class PlateDetectionService {
     for (let y = 0; y < height; y += pixelSize) {
       for (let x = 0; x < width; x += pixelSize) {
         // Get average color for this block
-        let r = 0, g = 0, b = 0, count = 0;
+        let r = 0,
+          g = 0,
+          b = 0,
+          count = 0;
 
         for (let py = 0; py < pixelSize && y + py < height; py++) {
           for (let px = 0; px < pixelSize && x + px < width; px++) {

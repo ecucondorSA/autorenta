@@ -181,7 +181,7 @@ export class PaymentProviderSelectorComponent implements OnInit {
     let amountInProviderCurrency: number;
     let providerCurrency: string;
 
-    if (provider === 'paypal') {
+    if (provider === 'paypal' || provider === 'wallet') {
       amountInProviderCurrency = this.amountUSD();
       providerCurrency = 'USD';
     } else {
@@ -218,6 +218,8 @@ export class PaymentProviderSelectorComponent implements OnInit {
         return 'MercadoPago';
       case 'paypal':
         return 'PayPal';
+      case 'wallet':
+        return 'AutoRenta Wallet';
       default:
         return provider;
     }
@@ -232,6 +234,8 @@ export class PaymentProviderSelectorComponent implements OnInit {
         return 'Tarjetas, efectivo, saldo MP';
       case 'paypal':
         return 'Tarjetas internacionales';
+      case 'wallet':
+        return 'Saldo disponible o créditos';
       default:
         return '';
     }

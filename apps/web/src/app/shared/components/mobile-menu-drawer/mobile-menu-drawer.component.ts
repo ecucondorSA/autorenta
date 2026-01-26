@@ -13,7 +13,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+
 import { AuthService } from '@core/services/auth/auth.service';
 import { UserProfile } from '@core/services/auth/profile.service';
 import { GamificationService } from '@core/services/gamification/gamification.service';
@@ -38,7 +38,7 @@ interface MenuSection {
 @Component({
   selector: 'app-mobile-menu-drawer',
   standalone: true,
-  imports: [RouterModule, CurrencyPipe, DatePipe, DecimalPipe, MenuIconComponent, VerifiedBadgeComponent],
+  imports: [RouterModule, MenuIconComponent, VerifiedBadgeComponent],
   templateUrl: './mobile-menu-drawer.component.html',
   styleUrls: ['./mobile-menu-drawer.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

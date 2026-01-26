@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  computed,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BookingsStore } from '@core/stores/bookings.store';
 import { ProfileStore } from '@core/stores/profile.store';
@@ -41,9 +35,7 @@ import { MyBookingsPage } from '../../../my-bookings/my-bookings.page';
       <!-- Welcome Section -->
       <header class="glass-navbar sticky top-0 z-10 px-4 py-4">
         <div class="max-w-2xl mx-auto">
-          <h1 class="text-2xl font-bold text-text-primary">
-            Hola, {{ userName() }}! 👋
-          </h1>
+          <h1 class="text-2xl font-bold text-text-primary">Hola, {{ userName() }}! 👋</h1>
         </div>
       </header>
 
@@ -51,14 +43,12 @@ import { MyBookingsPage } from '../../../my-bookings/my-bookings.page';
         <!-- Hero CTA Card -->
         <section
           class="glass-card-elevated p-6 rounded-2xl bg-gradient-to-br from-primary-500/10 to-primary-600/5"
-          hoverLift
+          appHoverLift
         >
           <div class="flex items-center gap-4">
             <div class="text-4xl">🚗</div>
             <div class="flex-1">
-              <h2 class="text-lg font-semibold text-text-primary">
-                ¿Listo para tu próximo viaje?
-              </h2>
+              <h2 class="text-lg font-semibold text-text-primary">¿Listo para tu próximo viaje?</h2>
               <p class="text-sm text-text-secondary mt-1">
                 Encontrá el auto perfecto para tu aventura
               </p>
@@ -67,7 +57,7 @@ import { MyBookingsPage } from '../../../my-bookings/my-bookings.page';
           <a
             routerLink="/marketplace"
             class="mt-4 w-full btn-primary flex items-center justify-center gap-2 py-3 rounded-xl font-medium"
-            pressScale
+            appPressScale
           >
             <app-icon name="search" class="w-5 h-5" />
             <span>Buscar Autos</span>
@@ -88,7 +78,7 @@ import { MyBookingsPage } from '../../../my-bookings/my-bookings.page';
             <div class="glass-card p-4 rounded-xl text-center">
               <div class="text-2xl font-bold text-primary-500">
                 @if (averageRating() > 0) {
-                  ⭐ {{ averageRating() | number:'1.1-1' }}
+                  ⭐ {{ averageRating() | number: '1.1-1' }}
                 } @else {
                   --
                 }
@@ -104,7 +94,7 @@ import { MyBookingsPage } from '../../../my-bookings/my-bookings.page';
             type="button"
             (click)="toggleHistory()"
             class="w-full flex items-center justify-between p-4 glass-card rounded-xl"
-            pressScale
+            appPressScale
           >
             <span class="font-medium text-text-primary flex items-center gap-2">
               <app-icon name="history" class="w-5 h-5 text-text-secondary" />
@@ -125,27 +115,35 @@ import { MyBookingsPage } from '../../../my-bookings/my-bookings.page';
       </main>
     </div>
   `,
-  styles: [`
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-      color: white;
-      transition: all 0.2s ease;
-    }
+  styles: [
+    `
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+        color: white;
+        transition: all 0.2s ease;
+      }
 
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(var(--primary-500-rgb), 0.3);
-    }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(var(--primary-500-rgb), 0.3);
+      }
 
-    .animate-fade-in {
-      animation: fadeIn 0.2s ease-out;
-    }
+      .animate-fade-in {
+        animation: fadeIn 0.2s ease-out;
+      }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  `],
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IdleViewComponent {
@@ -156,7 +154,7 @@ export class IdleViewComponent {
   readonly historyExpanded = signal(false);
 
   toggleHistory(): void {
-    this.historyExpanded.update(v => !v);
+    this.historyExpanded.update((v) => !v);
   }
 
   // User name from profile

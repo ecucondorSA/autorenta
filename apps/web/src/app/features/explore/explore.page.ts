@@ -242,8 +242,8 @@ export class ExplorePage implements OnInit, AfterViewInit {
     paymentMethod: string;
     dates?: { start: Date; end: Date };
   }) {
-    // Navigate to booking checkout with car ID and payment method
-    this.router.navigate(['/bookings/checkout'], {
+    // Navigate to booking wizard with car ID and payment method
+    this.router.navigate(['/bookings/wizard'], {
       queryParams: {
         carId: data['carId'],
         paymentMethod: data.paymentMethod,

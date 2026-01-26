@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  OnDestroy,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { BookingsStore } from '@core/stores/bookings.store';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingContextService } from './services/booking-context.service';
@@ -43,7 +37,9 @@ import { IdleViewComponent } from './views/idle/idle-view.component';
     @if (loading()) {
       <div class="min-h-screen flex items-center justify-center bg-surface-primary">
         <div class="flex flex-col items-center gap-4">
-          <div class="w-12 h-12 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+          <div
+            class="w-12 h-12 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"
+          ></div>
           <p class="text-text-secondary">Cargando tus viajes...</p>
         </div>
       </div>
@@ -57,9 +53,7 @@ import { IdleViewComponent } from './views/idle/idle-view.component';
           />
         }
         @case ('active-trip') {
-          <app-active-trip-view
-            [booking]="contextBooking()!"
-          />
+          <app-active-trip-view [booking]="contextBooking()!" />
         }
         @case ('pending-action') {
           <app-pending-action-view
@@ -73,13 +67,15 @@ import { IdleViewComponent } from './views/idle/idle-view.component';
       }
     }
   `,
-  styles: [`
-    :host {
-      display: block;
-      min-height: 100vh;
-      background: var(--surface-primary);
-    }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+        min-height: 100vh;
+        background: var(--surface-primary);
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookingsHubPage implements OnInit, OnDestroy {

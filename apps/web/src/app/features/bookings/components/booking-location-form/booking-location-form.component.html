@@ -22,7 +22,8 @@
         class="w-full px-4 py-2 border border-border-muted rounded-lg focus:ring-2 focus:ring-cta-default"
         (input)="onPickupAddressChange()"
         [disabled]="loading()"
-      aria-label="Ej: Av. Corrientes 1234, Buenos Aires" />
+        aria-label="Ej: Av. Corrientes 1234, Buenos Aires"
+      />
       @if (pickupSuggestions().length > 0) {
         <div class="mt-2 border border-border-default rounded-lg overflow-hidden">
           @for (suggestion of pickupSuggestions(); track suggestion.address) {
@@ -60,7 +61,8 @@
         class="w-full px-4 py-2 border border-border-muted rounded-lg focus:ring-2 focus:ring-cta-default"
         (input)="onDropoffAddressChange()"
         [disabled]="loading()"
-      aria-label="Ej: Av. Rivadavia 5678, Buenos Aires" />
+        aria-label="Ej: Av. Rivadavia 5678, Buenos Aires"
+      />
       @if (dropoffSuggestions().length > 0) {
         <div class="mt-2 border border-border-default rounded-lg overflow-hidden">
           @for (suggestion of dropoffSuggestions(); track suggestion.address) {

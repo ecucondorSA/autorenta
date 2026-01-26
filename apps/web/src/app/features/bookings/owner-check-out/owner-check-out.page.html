@@ -84,35 +84,81 @@
               <button
                 type="button"
                 class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all"
-                [class]="inspectionMode() === 'photos' ? 'border-cta-default bg-cta-default/10' : 'border-border-default bg-surface-base hover:border-border-muted'"
+                [class]="
+                  inspectionMode() === 'photos'
+                    ? 'border-cta-default bg-cta-default/10'
+                    : 'border-border-default bg-surface-base hover:border-border-muted'
+                "
                 (click)="setInspectionMode('photos')"
               >
-                <ion-icon name="camera" class="text-2xl" [class]="inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-secondary'"></ion-icon>
-                <span class="font-medium text-xs" [class]="inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-primary'">Fotos</span>
+                <ion-icon
+                  name="camera"
+                  class="text-2xl"
+                  [class]="
+                    inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-secondary'
+                  "
+                ></ion-icon>
+                <span
+                  class="font-medium text-xs"
+                  [class]="inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-primary'"
+                  >Fotos</span
+                >
               </button>
 
               <!-- Video Batch Mode -->
               <button
                 type="button"
                 class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all relative"
-                [class]="inspectionMode() === 'video' ? 'border-cta-default bg-cta-default/10' : 'border-border-default bg-surface-base hover:border-border-muted'"
+                [class]="
+                  inspectionMode() === 'video'
+                    ? 'border-cta-default bg-cta-default/10'
+                    : 'border-border-default bg-surface-base hover:border-border-muted'
+                "
                 (click)="setInspectionMode('video')"
               >
-                <span class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded-full">IA</span>
-                <ion-icon name="videocam" class="text-2xl" [class]="inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-secondary'"></ion-icon>
-                <span class="font-medium text-xs" [class]="inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-primary'">Video</span>
+                <span
+                  class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded-full"
+                  >IA</span
+                >
+                <ion-icon
+                  name="videocam"
+                  class="text-2xl"
+                  [class]="
+                    inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-secondary'
+                  "
+                ></ion-icon>
+                <span
+                  class="font-medium text-xs"
+                  [class]="inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-primary'"
+                  >Video</span
+                >
               </button>
 
               <!-- Live Mode -->
               <button
                 type="button"
                 class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all relative"
-                [class]="inspectionMode() === 'live' ? 'border-purple-500 bg-purple-500/10' : 'border-border-default bg-surface-base hover:border-border-muted'"
+                [class]="
+                  inspectionMode() === 'live'
+                    ? 'border-purple-500 bg-purple-500/10'
+                    : 'border-border-default bg-surface-base hover:border-border-muted'
+                "
                 (click)="setInspectionMode('live')"
               >
-                <span class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold rounded-full animate-pulse">LIVE</span>
-                <ion-icon name="radio" class="text-2xl" [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-secondary'"></ion-icon>
-                <span class="font-medium text-xs" [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-primary'">En Vivo</span>
+                <span
+                  class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold rounded-full animate-pulse"
+                  >LIVE</span
+                >
+                <ion-icon
+                  name="radio"
+                  class="text-2xl"
+                  [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-secondary'"
+                ></ion-icon>
+                <span
+                  class="font-medium text-xs"
+                  [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-primary'"
+                  >En Vivo</span
+                >
               </button>
             </div>
           </div>
@@ -184,7 +230,8 @@
                     min="1"
                     max="250"
                     class="w-full px-4 py-3 rounded-xl border border-border-default focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 outline-none transition-all"
-                  aria-label="Ej: 50" />
+                    aria-label="Ej: 50"
+                  />
                   <p class="mt-1 text-xs text-text-muted">Maximo: $250 USD</p>
                 </div>
                 <div>

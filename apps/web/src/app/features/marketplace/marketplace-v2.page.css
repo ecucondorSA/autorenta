@@ -7,7 +7,7 @@
    =========================================== */
 :host {
   /* Colors - Brand (Verde Neón - Synced with colors.ts accent.neon) */
-  --color-primary: 0 217 95; /* #00D95F - Verde Neón */
+  --color-primary: 0 217 95; /* #39FF14 - Verde Neón */
   --color-primary-light: 0 197 83; /* #00C553 - Hover */
   --color-primary-dark: 0 176 72; /* #00B048 - Pressed */
 
@@ -667,7 +667,9 @@
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .car-card-premium::before {
@@ -687,7 +689,9 @@
   background: var(--surface-raised);
   border-color: rgba(0, 217, 95, 0.3);
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 16px 48px rgba(0, 217, 95, 0.08);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 16px 48px rgba(0, 217, 95, 0.08);
 }
 
 .car-card-premium:hover::before {
@@ -763,8 +767,15 @@
 }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(0.8); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.8);
+  }
 }
 
 /* Badge con punto indicador - Estilo Rooda */
@@ -790,10 +801,18 @@
   border-radius: 50%;
 }
 
-.badge-status.success::before { background: #00D95F; }
-.badge-status.warning::before { background: #F59E0B; }
-.badge-status.error::before { background: #EF4444; }
-.badge-status.info::before { background: #3B82F6; }
+.badge-status.success::before {
+  background: #39ff14;
+}
+.badge-status.warning::before {
+  background: #f59e0b;
+}
+.badge-status.error::before {
+  background: #ef4444;
+}
+.badge-status.info::before {
+  background: #3b82f6;
+}
 
 .car-spec {
   display: inline-flex;
@@ -2395,7 +2414,7 @@
 .pagination-btn {
   @apply flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm
          bg-white border border-gray-200/80 text-gray-800
-         hover:bg-gray-50 hover:border-[#00D95F] hover:text-[#00D95F]
+         hover:bg-gray-50 hover:border-[#39FF14] hover:text-[#39FF14]
          active:scale-[0.98]
          transition-all duration-200;
   min-height: 44px;
@@ -2427,7 +2446,7 @@
 }
 
 .results-counter strong {
-  @apply text-[#00D95F] font-semibold;
+  @apply text-[#39FF14] font-semibold;
 }
 
 /* ===========================================
