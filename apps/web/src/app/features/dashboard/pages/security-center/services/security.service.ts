@@ -1,94 +1,109 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
-
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
-}
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
+import { Security } from '../../../../../core/models/security.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private apiUrl = environment.apiUrl;
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  constructor(private http: HttpClient) {}
 
-  private realtimeSubscription?: RealtimeChannel;
-
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  getSecurityData(): Observable<Security> {
+    return this.http.get<Security>(`${this.apiUrl}/security`);
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  updateFirewall(data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/security/firewall`, data);
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
+  getFirewallStatus(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/firewall`);
+  }
+
+  updateAntivirus(data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/security/antivirus`, data);
+  }
+
+  getAntivirusStatus(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/antivirus`);
+  }
+
+  updatePassword(data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/security/password`, data);
+  }
+
+  getPasswordStatus(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/password`);
+  }
+
+  updateVPN(data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/security/vpn`, data);
+  }
+
+  getVPNStatus(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/vpn`);
+  }
+
+  updateDataEncryption(data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/security/data-encryption`, data);
+  }
+
+  getDataEncryptionStatus(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/data-encryption`);
+  }
+
+  runDiagnostics(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/security/diagnostics`, {});
+  }
+
+  getDiagnosticsStatus(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/diagnostics`);
+  }
+
+  generateReport(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/security/report`, {});
+  }
+
+  getReportStatus(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/security/report`);
+  }
+
+  // Example error handling (can be applied to other methods)
+  exampleRequest(): Observable<any> {
+    return new Observable((observer) => {
+      fetch(`${this.apiUrl}/some-endpoint`)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          observer.next(data);
+          observer.complete();
+        })
+        .catch((err) => {
+          observer.error(err);
+        });
     });
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  // Example error handling with async/await
+  async exampleAsyncRequest(): Promise<any> {
+    try {
+      const res = await fetch(`${this.apiUrl}/some-endpoint`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+      return await res.json();
+    } catch (err) {
+      // Handle error appropriately
+      console.error(err);
+      throw err; // Re-throw to propagate the error
+    }
   }
 }
