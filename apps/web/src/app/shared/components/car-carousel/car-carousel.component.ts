@@ -1,21 +1,26 @@
 import { Component, Input } from '@angular/core';
-import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
-import { register } from 'swiper/element/bundle';
-register();
+import { Car } from '@core/models/car.model';
+import { SwiperOptions } from 'swiper/types';
 
 @Component({
   selector: 'app-car-carousel',
-  standalone: true,
-  imports: [CarMiniCardComponent],
   templateUrl: './car-carousel.component.html',
-  styleUrl: './car-carousel.component.scss'
+  styleUrls: ['./car-carousel.component.scss']
 })
 export class CarCarouselComponent {
-  @Input() cars: any[] = [];
+  @Input() cars: Car[] = [];
 
-  // Removing the empty lifecycle method
-  // constructor() { }
+  config: SwiperOptions = {
+    slidesPerView: 1.2,
+    spaceBetween: 10,
+    breakpoints: {
+      768: {
+        slidesPerView: 2.2,
+      },
+      1200: {
+        slidesPerView: 3.5,
+      }
+    }
+  };
 
-  // ngOnInit(): void {
-  // }
 }
