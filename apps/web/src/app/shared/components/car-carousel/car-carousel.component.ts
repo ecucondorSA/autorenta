@@ -1,8 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { Car } from '@core/models/car.model';
-import { environment } from 'src/environments/environment';
-import { register } from 'swiper/element/bundle';
-register();
 
 @Component({
   selector: 'app-car-carousel',
@@ -10,22 +6,50 @@ register();
   styleUrls: ['./car-carousel.component.scss']
 })
 export class CarCarouselComponent {
+  @Input() cars: any[] = [];
 
-  @Input() cars: Car[] | null = [];
-  @Input() title: string = '';
-  @Input() skeletonCount: number = 3;
-  @Input() slidePerView: number = 1.1;
-  @Input() showTitle: boolean = true;
-
-  readonly imageBaseUrl = environment.imageBaseUrl;
-
-  swiperParams = {
-    slidesPerView: this.slidesPerView,
-    spaceBetween: 10,
+  // Optional parameters for the carousel
+  slideConfig = {
+    slidesToShow: 3, // Number of slides to show at once
+    slidesToScroll: 1, // Number of slides to scroll
+    dots: true, // Show navigation dots
+    infinite: true, // Enable infinite loop
+    autoplay: true, // Enable autoplay
+    autoplaySpeed: 3000, // Autoplay speed in milliseconds
+    responsive: [
+      {
+        breakpoint: 992,
+        settings: {
+          slidesToShow: 2
+        }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1
+        }
+      }
+    ]
   };
 
   constructor() { }
 
-  // REMOVED EMPTY LIFECYCLE METHOD
+  // No-op lifecycle method needed for some reason.
+  // ngOnInit() {}
 
+  slickInit(e: any) {
+    // console.log('slick initialized');
+  }
+
+  breakpoint(e: any) {
+    // console.log('breakpoint');
+  }
+
+  afterChange(e: any) {
+    // console.log('afterChange');
+  }
+
+  beforeChange(e: any) {
+    // console.log('beforeChange');
+  }
 }
