@@ -1,36 +1,47 @@
-import { Component, Input } from '@angular/core';
-import Swiper from 'swiper/element/bundle';
-import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+// import Swiper JS
+import Swiper from 'swiper';
+
+// import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 @Component({
-  selector: 'ar-car-carousel',
-  standalone: true,
-  imports: [CarMiniCardComponent],
+  selector: 'app-car-carousel',
   templateUrl: './car-carousel.component.html',
-  styleUrl: './car-carousel.component.scss'
+  styleUrls: ['./car-carousel.component.scss']
 })
-export class CarCarouselComponent {
-  @Input() cars: any[] = [];
+export class CarCarouselComponent implements AfterViewInit {
+  @ViewChild('swiperContainer') swiperContainer!: ElementRef;
 
-  swiperEl: any
+  swiper: Swiper | undefined
+  ngAfterViewInit(): void {
+    this.swiper = new Swiper(this.swiperContainer.nativeElement, {
+      slidesPerView: 1.2,
+      spaceBetween: 10,
+      // centeredSlides: true,
+      loop: true,
+      pagination: { // If we need pagination
+        el: '.swiper-pagination',
+        clickable: true,
+      },
 
-  ngAfterViewInit() {
-    this.swiperEl = document.querySelector('swiper-container')
-    const swiperParams = {
-      slidesPerView: 'auto',
-      spaceBetween: 8,
-      injectStyles: [`
-        .swiper-slide {
-          width: auto !important;
-        }
-      `]
-    };
-
-    Object.assign(this.swiperEl, swiperParams);
-
-    this.swiperEl.initialize();
+      // Navigation arrows
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        768: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        1024: {
+          slidesPerView: 3,
+          spaceBetween: 30,
+        },
+      }
+    });
   }
-
-  // Removing the empty lifecycle method
-  // ngOnInit() {}
 }
