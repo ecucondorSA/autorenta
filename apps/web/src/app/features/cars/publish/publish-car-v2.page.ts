@@ -1,183 +1,175 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AlertController, ModalController, ToastController } from '@ionic/angular';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { ActionSheetController } from '@ionic/angular';
-import { Geolocation } from '@capacitor/geolocation';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-
-import { addIcons } from 'ionicons';
-import { cloudUploadOutline, locationOutline, addCircleOutline, closeCircleOutline } from 'ionicons/icons';
-
-import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-generator/ai-photo-generator.component';
-import { HoverLiftDirective } from '../../../shared/directives/hover-lift.directive';
+import { AppState } from '../../../../store/app.state';
+import { PublishCarActions } from '../../../../store/publish-car/publish-car.actions';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { PublishCar } from '../../../../core/interfaces/publish-car.interface';
+import { publishCarSelector } from '../../../../store/publish-car/publish-car.selector';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { CarService } from '../../services/car.service';
 import { VisualSelectorComponent } from './components/visual-selector/visual-selector.component';
-
+import { HoverLiftDirective } from '../../../../shared/directives/hover-lift.directive';
+import { AiPhotoGeneratorComponent } from '../../../../shared/components/ai-photo-generator/ai-photo-generator.component';
 import { BookingDetailPayment } from '@core/models/booking-detail-payment.model';
-import { AppState } from '../../../../core/store/app.state';
-import { selectCurrentUser } from '../../../../core/store/user/user.selector';
-import * as CarActions from '../../../../core/store/car/car.actions';
-import { Car } from '../../../../core/models/car.model';
-import { Booking } from '../../../../core/models/booking.model';
 import { RiskSnapshot } from '../../../../core/models/risk-snapshot.model';
+import { CoreActions } from '../../../../core/store/core.actions';
 
 @Component({
   selector: 'app-publish-car-v2',
   templateUrl: './publish-car-v2.page.html',
   styleUrls: ['./publish-car-v2.page.scss'],
+  providers: [MessageService],
 })
-export class PublishCarV2Page implements OnInit {
+export class PublishCarV2Page implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  @ViewChild(VisualSelectorComponent) visualSelector!: VisualSelectorComponent;
+
+  private destroy$ = new Subject<void>();
   publishCarForm: FormGroup;
-  currentImage: SafeUrl;
-  user$: Observable<any>; // Replace any with the actual type of the user object
+  publishCarData$: Observable<PublishCar | null>;
+  isLoading$: Observable<boolean>;
+  isPublishing$: Observable<boolean>;
+  isAiLoading = false;
+  isMobile = false;
+  images: string[] = [];
+  currentImageIndex = 0;
+  showModal = false;
+  generatedImage = '';
 
   constructor(
     private fb: FormBuilder,
+    private store: Store<AppState>,
     private router: Router,
-    private alertController: AlertController,
-    private toastController: ToastController,
-    private modalController: ModalController,
-    private carService: CarService,
-    private actionSheetController: ActionSheetController,
-    private sanitizer: DomSanitizer,
-    private translate: TranslateService,
-    private store: Store<AppState>
+    private route: ActivatedRoute,
+    private messageService: MessageService,
+    private carService: CarService
   ) {
-    addIcons({
-      cloudUploadOutline,
-      locationOutline,
-      addCircleOutline,
-      closeCircleOutline,
-    });
-  }
-
-  ngOnInit() {
-    this.user$ = this.store.select(selectCurrentUser);
+    this.publishCarData$ = this.store.select(publishCarSelector.selectPublishCar);
+    this.isLoading$ = this.store.select(publishCarSelector.selectIsLoading);
+    this.isPublishing$ = this.store.select(publishCarSelector.selectIsPublishing);
 
     this.publishCarForm = this.fb.group({
-      make: ['', Validators.required],
-      model: ['', Validators.required],
-      year: ['', Validators.required],
-      price: ['', Validators.required],
-      location: ['', Validators.required],
-      description: [''],
+      description: ['', Validators.required],
+      price: [null, [Validators.required, Validators.min(1)]],
+      kilometers: [null, [Validators.required, Validators.min(0)]],
+      year: [null, [Validators.required, Validators.min(1900)]],
+      fuelType: ['', Validators.required],
+      transmission: ['', Validators.required],
+      bodyType: ['', Validators.required],
+      // Add more fields as needed
     });
   }
 
-  async openAiPhotoGenerator() {
-    const modal = await this.modalController.create({
-      component: AiPhotoGeneratorComponent,
-      componentProps: {
-        // any props you want to pass to the component
-      },
-    });
-    return await modal.present();
-  }
+  ngOnInit(): void {
+    this.store.dispatch(PublishCarActions.loadPublishCar());
 
-  async selectImage() {
-    const actionSheet = await this.actionSheetController.create({
-      header: this.translate.instant('APP.PUBLISH_CAR.SELECT_SOURCE'),
-      buttons: [{
-        text: this.translate.instant('APP.PUBLISH_CAR.LOAD_FROM_LIBRARY'),
-        handler: () => {
-          this.takePicture(CameraSource.Photos);
-        }
-      },
-      {
-        text: this.translate.instant('APP.PUBLISH_CAR.USE_CAMERA'),
-        handler: () => {
-          this.takePicture(CameraSource.Camera);
-        }
-      },
-      {
-        text: this.translate.instant('APP.CANCEL'),
-        role: 'cancel'
+    this.publishCarData$.pipe(takeUntil(this.destroy$)).subscribe((data) => {
+      if (data) {
+        this.publishCarForm.patchValue({
+          description: data.description,
+          price: data.price,
+          kilometers: data.kilometers,
+          year: data.year,
+          fuelType: data.fuelType,
+          transmission: data.transmission,
+          bodyType: data.bodyType,
+        });
+        this.images = data.images;
       }
-      ]
-    });
-    await actionSheet.present();
-  }
-
-  async takePicture(source: CameraSource) {
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
-      source: source,
-      correctOrientation: true,
-      resultType: CameraResultType.DataUrl
     });
 
-    this.currentImage = this.sanitizer.bypassSecurityTrustResourceUrl(image && (image.dataUrl));
-  }
-
-  async getLocation() {
-    try {
-      const coordinates = await Geolocation.getCurrentPosition();
-      console.log('Current position:', coordinates);
-    } catch (error) {
-      console.error('Error getting location:', error);
-      const alert = await this.alertController.create({
-        header: this.translate.instant('ERROR'),
-        message: this.translate.instant('APP.PUBLISH_CAR.LOCATION_ERROR'),
-        buttons: [this.translate.instant('OK')],
-      });
-
-      await alert.present();
-    }
-  }
-
-  async presentToast() {
-    const toast = await this.toastController.create({
-      message: this.translate.instant('APP.PUBLISH_CAR.CAR_PUBLISHED'),
-      duration: 2000,
-      color: 'success',
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      if (params['success'] === 'true') {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Car published successfully',
+        });
+      }
     });
-    toast.present();
+
+    this.carService.isMobile.pipe(takeUntil(this.destroy$)).subscribe((isMobile) => {
+      this.isMobile = isMobile;
+    });
   }
 
-  publishCar() {
+  ngAfterViewInit(): void {
+    this.route.fragment.pipe(distinctUntilChanged()).subscribe((fragment) => {
+      if (fragment) {
+        document.querySelector('#' + fragment)?.scrollIntoView();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  onSubmit(): void {
     if (this.publishCarForm.valid) {
-      const car: Car = this.publishCarForm.value;
+      const publishCar: PublishCar = {
+        ...this.publishCarForm.value,
+        images: this.images,
+      };
 
-      this.store.dispatch(CarActions.createCar({ car }));
+      this.store.dispatch(PublishCarActions.publishCar({ publishCar }));
 
-      this.presentToast();
-      this.router.navigate(['/home']);
+      this.isPublishing$.pipe(takeUntil(this.destroy$)).subscribe((isPublishing) => {
+        if (!isPublishing) {
+          this.router.navigate(['/']).then(() => {
+            this.store.dispatch(CoreActions.displayToast({ severity: 'success', summary: 'Success', detail: 'Car published successfully' }));
+          });
+        }
+      });
     } else {
-      this.showAlert();
+      this.publishCarForm.markAllAsTouched();
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please fill all required fields',
+      });
     }
   }
 
-  async showAlert() {
-    const alert = await this.alertController.create({
-      header: this.translate.instant('ERROR'),
-      message: this.translate.instant('APP.PUBLISH_CAR.FORM_ERROR'),
-      buttons: [this.translate.instant('OK')],
-    });
-
-    await alert.present();
+  onImageChange(images: string[]): void {
+    this.images = images;
   }
 
-  async openVisualSelector(field: string) {
-    const modal = await this.modalController.create({
-      component: VisualSelectorComponent,
-      componentProps: {
-        field: field
-      }
-    });
-
-    await modal.present();
-
-    const { data } = await modal.onWillDismiss();
-    if (data) {
-      this.publishCarForm.get(field).setValue(data);
+  scrollToSection(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  }
+
+  generateAiImage(prompt: string): void {
+    this.isAiLoading = true;
+    this.carService
+      .generateImage(prompt)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (image) => {
+          this.isAiLoading = false;
+          this.generatedImage = image.data;
+          this.showModal = true;
+        },
+        error: () => {
+          this.isAiLoading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Error generating image. Please try again.',
+          });
+        },
+      });
+  }
+
+  addImageToList(): void {
+    this.images = [...this.images, this.generatedImage];
+    this.showModal = false;
   }
 }
