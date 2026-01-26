@@ -2,15 +2,25 @@
 
 set -e
 
-# Source utils.sh
+# shellcheck source=./tools/utils.sh
 if [ -f "./tools/utils.sh" ]; then
-  source "./tools/utils.sh"
+  source ./tools/utils.sh
 else
-  echo "Error: utils.sh not found in tools directory."
+  echo "Error: ./tools/utils.sh not found"
   exit 1
 fi
 
-AUTORENTA_DIR=$(pwd)
+ACTION=$1
 
-# Run the install script
-install
+case "${ACTION}" in
+  install)
+    echo "Running install"
+    # Add install logic here if needed
+    ;;
+  *)
+    echo "Unknown action: ${ACTION}"
+    exit 1
+    ;;
+esac
+
+echo "Done"
