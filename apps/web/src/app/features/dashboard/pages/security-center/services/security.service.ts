@@ -1,94 +1,140 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
-
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
-}
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private apiUrl = environment.apiUrl;
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  constructor(private http: HttpClient) {}
 
-  private realtimeSubscription?: RealtimeChannel;
-
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  getSecurityData(): Observable<SecurityData> {
+    return this.http.get<SecurityData>(`${this.apiUrl}/security`);
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  // Example method to update security settings
+  updateSecuritySetting(settingId: string, newValue: any): Observable<any> {
+    const url = `${this.apiUrl}/security/${settingId}`;
+    return this.http.put(url, { value: newValue });
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
-    });
+  // Example method to fetch logs
+  getLogs(): Observable<Log[]> {
+    return this.http.get<Log[]>(`${this.apiUrl}/logs`);
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  // Example method to perform a security scan
+  performSecurityScan(): Observable<ScanResult> {
+    return this.http.post<ScanResult>(`${this.apiUrl}/scan`, {});
   }
+
+  // Example method to get a specific security alert
+  getSecurityAlert(alertId: string): Observable<SecurityAlert> {
+    return this.http.get<SecurityAlert>(`${this.apiUrl}/alerts/${alertId}`);
+  }
+
+  // Example method to acknowledge a security alert
+  acknowledgeSecurityAlert(alertId: string): Observable<any> {
+    const url = `${this.apiUrl}/alerts/${alertId}/acknowledge`;
+    return this.http.post(url, {});
+  }
+
+  // Example method to fetch security reports
+  getSecurityReports(): Observable<SecurityReport[]> {
+    return this.http.get<SecurityReport[]>(`${this.apiUrl}/reports`);
+  }
+
+  // Example method to download a security report
+  downloadSecurityReport(reportId: string): Observable<Blob> {
+    const url = `${this.apiUrl}/reports/${reportId}/download`;
+    return this.http.get(url, { responseType: 'blob' });
+  }
+
+    // Example method to fetch user activity
+    getUserActivity(): Observable<UserActivity[]> {
+      return this.http.get<UserActivity[]>(`${this.apiUrl}/user-activity`);
+    }
+
+  // Example method to get anomaly detection data
+  getAnomalyDetectionData(): Observable<AnomalyDetectionData[]> {
+    return this.http.get<AnomalyDetectionData[]>(`${this.apiUrl}/anomaly-detection`);
+  }
+
+  // Example method to train the anomaly detection model
+  trainAnomalyDetectionModel(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/anomaly-detection/train`, {});
+  }
+
+  // Example method to get threat intelligence data
+  getThreatIntelligenceData(): Observable<ThreatIntelligenceData[]> {
+    return this.http.get<ThreatIntelligenceData[]>(`${this.apiUrl}/threat-intelligence`);
+  }
+
+  // Example method to update threat intelligence feeds
+  updateThreatIntelligenceFeeds(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/threat-intelligence/update-feeds`, {});
+  }
+
+  // Example method to simulate a security attack
+  simulateSecurityAttack(): Observable<AttackSimulationResult> {
+    return this.http.post<AttackSimulationResult>(`${this.apiUrl}/attack-simulation`, {});
+  }
+
+  // Example method to get compliance status
+  getComplianceStatus(): Observable<ComplianceStatus[]> {
+    return this.http.get<ComplianceStatus[]>(`${this.apiUrl}/compliance`);
+  }
+
+  // Example method to generate a compliance report
+  generateComplianceReport(): Observable<ComplianceReport> {
+    return this.http.post<ComplianceReport>(`${this.apiUrl}/compliance/report`, {});
+  }
+}
+
+// Define interfaces for the data structures
+interface SecurityData {
+  /* Define properties */
+}
+
+interface Log {
+  /* Define properties */
+}
+
+interface ScanResult {
+  /* Define properties */
+}
+
+interface SecurityAlert {
+  /* Define properties */
+}
+
+interface SecurityReport {
+  /* Define properties */
+}
+
+interface UserActivity {
+  /* Define properties */
+}
+
+interface AnomalyDetectionData {
+  /* Define properties */
+}
+
+interface ThreatIntelligenceData {
+  /* Define properties */
+}
+
+interface AttackSimulationResult {
+  /* Define properties */
+}
+
+interface ComplianceStatus {
+  /* Define properties */
+}
+
+interface ComplianceReport {
+  /* Define properties */
 }
