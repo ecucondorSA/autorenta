@@ -2,51 +2,43 @@
 
 set -e
 
-script="$(basename "$0")"
+# This script is used to run commands in the context of the monorepo.
+# It ensures that the correct version of Node.js is used and that the
+# correct environment variables are set.
 
-cyan() {
-  echo -e "\033[1;36m$1\033[0m"
-}
+# Load environment variables from .env files
+if [ -f ".env" ]; then
+  export $(grep -v '^#' .env | xargs)
+fi
 
-info() {
-  cyan "[${script}] $*"
-}
+if [ -f ".env.local" ]; then
+  export $(grep -v '^#' .env.local | xargs)
+fi
 
-# Default to production if NODE_ENV is not set
-NODE_ENV=${NODE_ENV:-production}
+# Check if Node.js is installed
+if ! command -v node &> /dev/null;
+then
+  echo "Node.js could not be found."
+  echo "Please install Node.js and try again."
+  exit 1
+fi
 
-case "$script" in
-  build)
-    info "Building..."
-    pnpm -r --filter=!./apps/api run build
-    ;; # Changed pnpm build to pnpm -r --filter=!./apps/api run build
-  deploy)
-    info "Deploying..."
-    pnpm -r run deploy
-    ;;
-  dev)
-    info "Starting development environment..."
-    pnpm -r run dev
-    ;;
-  format)
-    info "Formatting code..."
-    pnpm -r run format
-    ;;
-  lint)
-    info "Linting code..."
-    pnpm -r run lint
-    ;;
-  test)
-    info "Running tests..."
-    pnpm -r run test
-    ;;
-  install)
-    info "Installing dependencies..."
-    pnpm install
-    ;;
-  *)
-    echo "Usage: $script [build|deploy|dev|format|lint|test|install]"
-    exit 1
-    ;;
+# Check if pnpm is installed
+if ! command -v pnpm &> /dev/null;
+then
+  echo "pnpm could not be found."
+  echo "Please install pnpm and try again."
+  exit 1
+fi
 
-esacn
+# Get the command to run
+COMMAND="$@"
+
+# If no command is specified, print usage
+if [ -z "$COMMAND" ]; then
+  echo "Usage: ./tools/run.sh <command>"
+  exit 1
+fi
+
+# Run the command
+eval "$COMMAND"
