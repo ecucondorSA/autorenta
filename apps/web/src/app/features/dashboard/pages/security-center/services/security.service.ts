@@ -1,94 +1,115 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
-
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
-}
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap, catchError, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Security } from '../../../../../../core/models/security.model';
+import { Segment } from '../../../../../../core/models/segment.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private apiUrl = environment.apiUrl;
+  private headers = new HttpHeaders().set(
+    'Content-Type',
+    'application/json; charset=UTF-8'
+  );
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  private securityDataSubject = new BehaviorSubject<Security | null>(null);
+  securityData$ = this.securityDataSubject.asObservable();
 
-  private realtimeSubscription?: RealtimeChannel;
+  constructor(private http: HttpClient) {}
 
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  getSecurityData(): Observable<Security> {
+    return this.http.get<Security>(`${this.apiUrl}/security`, { headers: this.headers }).pipe(
+      tap((data) => {
+        this.securityDataSubject.next(data);
+      }),
+      catchError((error) => {
+        console.error('Error fetching security data:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  updateSegment(segmentId: number, updatedSegment: Segment): Observable<Segment> {
+    const url = `${this.apiUrl}/security/segments/${segmentId}`;
+    return this.http.put<Segment>(url, updatedSegment, { headers: this.headers }).pipe(
+      tap((updatedSegment) => {
+        // Update the segment in the local security data
+        const currentSecurityData = this.securityDataSubject.value;
+        if (currentSecurityData && currentSecurityData.segments) {
+          const segmentIndex = currentSecurityData.segments.findIndex((s) => s.id === segmentId);
+          if (segmentIndex > -1) {
+            currentSecurityData.segments[segmentIndex] = updatedSegment;
+            this.securityDataSubject.next(currentSecurityData);
+          }
+        }
+      }),
+      catchError((error) => {
+        console.error('Error updating segment:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
-    });
+  createSegment(newSegment: Segment): Observable<Segment> {
+    const url = `${this.apiUrl}/security/segments`;
+    return this.http.post<Segment>(url, newSegment, { headers: this.headers }).pipe(
+      tap((createdSegment) => {
+        // Add the new segment to the local security data
+        const currentSecurityData = this.securityDataSubject.value;
+        if (currentSecurityData && currentSecurityData.segments) {
+          currentSecurityData.segments.push(createdSegment);
+          this.securityDataSubject.next(currentSecurityData);
+        }
+      }),
+      catchError((error) => {
+        console.error('Error creating segment:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  deleteSegment(segmentId: number): Observable<any> {
+    const url = `${this.apiUrl}/security/segments/${segmentId}`;
+    return this.http.delete(url, { headers: this.headers }).pipe(
+      tap(() => {
+        // Remove the segment from the local security data
+        const currentSecurityData = this.securityDataSubject.value;
+        if (currentSecurityData && currentSecurityData.segments) {
+          currentSecurityData.segments = currentSecurityData.segments.filter((s) => s.id !== segmentId);
+          this.securityDataSubject.next(currentSecurityData);
+        }
+      }),
+      catchError((error) => {
+        console.error('Error deleting segment:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  runScan(): Observable<any> {
+    const url = `${this.apiUrl}/security/scan`;
+    return this.http.post(url, null, { headers: this.headers }).pipe(
+      tap((_res) => {
+        this.getSecurityData().subscribe();
+      }),
+      catchError((_err) => {
+        return throwError(() => _err);
+      })
+    );
+  }
+
+  stopScan(): Observable<any> {
+    const url = `${this.apiUrl}/security/stop-scan`;
+    return this.http.post(url, null, { headers: this.headers }).pipe(
+      tap((_res) => {
+        this.getSecurityData().subscribe();
+      }),
+      catchError((_err) => {
+        return throwError(() => _err);
+      })
+    );
   }
 }
