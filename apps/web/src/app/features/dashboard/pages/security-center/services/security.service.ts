@@ -1,94 +1,155 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
-
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
-}
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private apiUrl = environment.apiUrl;
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  constructor(private http: HttpClient) {}
 
-  private realtimeSubscription?: RealtimeChannel;
-
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  /**
+   * Retrieves a list of security alerts.
+   * @returns An Observable containing the security alerts.
+   */
+  getSecurityAlerts(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/alerts`);
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  /**
+   * Retrieves a summary of the user's security status.
+   * @returns An Observable containing the security summary.
+   */
+  getSecuritySummary(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/summary`);
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
-    });
+  /**
+   * Simulates a password reset request.
+   * @param userId The ID of the user requesting the password reset.
+   * @returns An Observable containing the result of the password reset request.
+   */
+  requestPasswordReset(userId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security/password-reset`, { userId });
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  /**
+   * Enables two-factor authentication for the user.
+   * @param userId The ID of the user enabling two-factor authentication.
+   * @returns An Observable containing the result of enabling two-factor authentication.
+   */
+  enableTwoFactorAuth(userId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security/two-factor-auth/enable`, { userId });
+  }
+
+  /**
+   * Disables two-factor authentication for the user.
+   * @param userId The ID of the user disabling two-factor authentication.
+   * @returns An Observable containing the result of disabling two-factor authentication.
+   */
+  disableTwoFactorAuth(userId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security/two-factor-auth/disable`, { userId });
+  }
+
+    /**
+   * Retrieves the security score.
+   * @returns An Observable containing the security score.
+   */
+  getSecurityScore(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/security/score`);
+  }
+
+  /**
+   * Retrieves the security tips.
+   * @returns An Observable containing the security tips.
+   */
+  getSecurityTips(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/security/tips`);
+  }
+
+   /**
+   * Performs a security scan.
+   * @returns An Observable containing the results of the security scan.
+   */
+  performSecurityScan(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security/scan`, {});
+  }
+
+  /**
+   * Retrieves the security scan results.
+   * @returns An Observable containing the security scan results.
+   */
+  getSecurityScanResults(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/scan/results`);
+  }
+
+  /**
+   * Dismisses a security alert.
+   * @param alertId The ID of the alert to dismiss.
+   * @returns An Observable containing the result of dismissing the alert.
+   */
+  dismissSecurityAlert(alertId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security/alerts/dismiss`, { alertId });
+  }
+
+  /**
+   * Applies a security fix.
+   * @param fixId The ID of the fix to apply.
+   * @returns An Observable containing the result of applying the fix.
+   */
+  applySecurityFix(fixId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security/fixes/apply`, { fixId });
+  }
+
+   /**
+   * Retrieves a list of available security fixes.
+   * @returns An Observable containing the available security fixes.
+   */
+  getSecurityFixes(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/fixes`);
+  }
+
+  /**
+   * Retrieves the security settings.
+   * @returns An Observable containing the security settings.
+   */
+  getSecuritySettings(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/settings`);
+  }
+
+  /**
+   * Updates the security settings.
+   * @param settings The new security settings.
+   * @returns An Observable containing the result of updating the security settings.
+   */
+  updateSecuritySettings(settings: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security/settings/update`, settings);
+  }
+
+   /**
+   * Generates a security report.
+   * @returns An Observable containing the security report.
+   */
+  generateSecurityReport(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security/report/generate`, {});
+  }
+
+  /**
+   * Retrieves the security report.
+   * @returns An Observable containing the security report.
+   */
+  getSecurityReport(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/report`);
+  }
+
+  /**
+   * Retrieves the security history.
+   * @returns An Observable containing the security history.
+   */
+  getSecurityHistory(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/history`);
   }
 }
