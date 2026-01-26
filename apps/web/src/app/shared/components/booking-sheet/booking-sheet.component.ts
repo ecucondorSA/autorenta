@@ -107,7 +107,7 @@ import { ARPreviewComponent } from '../ar-preview/ar-preview.component';
       <app-ar-preview 
         [carTitle]="car?.title || ''"
         [posterUrl]="car?.photoUrl || '/assets/images/car-placeholder.svg'"
-        (close)="closeARPreview()">
+        (previewClosed)="closeARPreview()">
       </app-ar-preview>
     }
   `,
@@ -145,8 +145,8 @@ export class BookingSheetComponent {
     return this._car;
   }
 
-  @Output() close = new EventEmitter<void>();
-  @Output() confirm = new EventEmitter<void>();
+  @Output() sheetClosed = new EventEmitter<void>();
+  @Output() confirmed = new EventEmitter<void>();
 
   // Keyboard: Escape to dismiss
   @HostListener('document:keydown.escape')
@@ -178,12 +178,12 @@ export class BookingSheetComponent {
 
   dismiss() {
     this.sound.play('swoosh');
-    this.close.emit();
+    this.sheetClosed.emit();
   }
 
   onConfirm() {
     this.sound.play('success');
-    this.confirm.emit();
+    this.confirmed.emit();
   }
 
   // AR Preview

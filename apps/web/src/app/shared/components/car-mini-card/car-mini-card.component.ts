@@ -13,7 +13,7 @@ import { CarMapLocation } from '@core/services/cars/car-locations.service';
       [class.scale-105]="isSelected"
       [class.z-30]="isSelected"
       [style.transform]="cardTransform"
-      (click)="select.emit()"
+      (click)="cardClicked.emit()"
       (mouseenter)="onMouseEnter()"
       (mouseleave)="onMouseLeave()"
       (mousemove)="onMouseMove($event)">
@@ -96,7 +96,7 @@ import { CarMapLocation } from '@core/services/cars/car-locations.service';
 export class CarMiniCardComponent {
   @Input({ required: true }) car!: CarMapLocation;
   @Input() isSelected = false;
-  @Output() select = new EventEmitter<void>();
+  @Output() cardClicked = new EventEmitter<void>();
 
   private el = inject(ElementRef);
 

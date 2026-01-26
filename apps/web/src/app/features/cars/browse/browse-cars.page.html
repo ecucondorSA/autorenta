@@ -6,7 +6,6 @@
 -->
 <div
   class="relative w-full h-[100dvh] overflow-hidden bg-black text-white selection:bg-brand-primary selection:text-black">
-
   <!-- LAYER 0: THE MAP (Base) -->
   <div class="absolute inset-0 z-0">
     <app-cars-map [cars]="mapLocations()" [selectedCarId]="selectedCarId()" (markerClick)="onMarkerClick($any($event))"
@@ -21,19 +20,22 @@
       <div class="flex items-center gap-3">
         <span class="text-brand-primary font-black tracking-tighter text-lg">AutoRentar</span>
         <div class="h-4 w-px bg-white/20"></div>
-        
+
         <!-- Animated Car Count Badge -->
         @if (mapLocations().length > 0) {
-          <div class="flex items-center gap-1.5 bg-brand-primary/10 border border-brand-primary/20 px-2.5 py-1 rounded-full">
-            <div class="w-2 h-2 bg-brand-primary rounded-full animate-pulse"></div>
-            <span class="text-xs font-bold text-brand-primary tabular-nums">{{ mapLocations().length }}</span>
-            <span class="text-[10px] text-white/50 hidden sm:inline">autos</span>
-          </div>
+        <div
+          class="flex items-center gap-1.5 bg-brand-primary/10 border border-brand-primary/20 px-2.5 py-1 rounded-full">
+          <div class="w-2 h-2 bg-brand-primary rounded-full animate-pulse"></div>
+          <span class="text-xs font-bold text-brand-primary tabular-nums">{{
+            mapLocations().length
+            }}</span>
+          <span class="text-[10px] text-white/50 hidden sm:inline">autos</span>
+        </div>
         } @else if (loading()) {
-          <div class="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full">
-            <div class="w-2 h-2 bg-white/30 rounded-full animate-pulse"></div>
-            <span class="text-xs text-white/40">Cargando...</span>
-          </div>
+        <div class="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full">
+          <div class="w-2 h-2 bg-white/30 rounded-full animate-pulse"></div>
+          <span class="text-xs text-white/40">Cargando...</span>
+        </div>
         }
       </div>
 
@@ -61,10 +63,8 @@
 
   <!-- BOOKING SHEET (Lazy Loaded) -->
   @if (store.activeCarMapLocation()) {
-    <app-booking-sheet 
-      [car]="store.activeCarMapLocation()!" 
-      (close)="onMarkerClick(null)"
-      (confirm)="onBookingConfirm()">
-    </app-booking-sheet>
+  <app-booking-sheet [car]="store.activeCarMapLocation()!" (sheetClosed)="onMarkerClick(null)"
+    (confirmed)="onBookingConfirm()">
+  </app-booking-sheet>
   }
 </div>

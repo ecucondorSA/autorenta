@@ -71,6 +71,7 @@ interface EnvDefaults {
   pdfWorkerUrl?: string;
   geminiTextWorkerUrl?: string;
   googleAiImageUrl?: string;
+  geminiApiKey?: string;
   sentryDsn?: string;
   sentryEnvironment?: string;
   sentryTracesSampleRate?: number;
@@ -177,6 +178,7 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   pdfWorkerUrl: resolve('NG_APP_PDF_WORKER_URL', defaults.pdfWorkerUrl ?? ''),
   geminiTextWorkerUrl: resolve('NG_APP_GEMINI_TEXT_WORKER_URL', defaults.geminiTextWorkerUrl ?? ''),
   googleAiImageUrl: resolve('NG_APP_GOOGLE_AI_IMAGE_URL', defaults.googleAiImageUrl),
+  geminiApiKey: resolve('NG_APP_GEMINI_API_KEY', defaults.geminiApiKey),
   sentryDsn: resolve('NG_APP_SENTRY_DSN', defaults.sentryDsn),
   sentryEnvironment: resolve(
     'NG_APP_SENTRY_ENVIRONMENT',
@@ -204,11 +206,11 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   socialMedia: {
     facebook: resolve(
       'NG_APP_SOCIAL_FACEBOOK',
-      defaults.socialMedia?.facebook ?? 'https://www.facebook.com/profile.php?id=61586558399370',
+      defaults.socialMedia?.facebook ?? 'https://www.facebook.com/profile.php?id=61586558399370&ref=pl_edit_xav_ig_profile_page_web#',
     ),
     instagram: resolve(
       'NG_APP_SOCIAL_INSTAGRAM',
-      defaults.socialMedia?.instagram ?? 'https://instagram.com/Auto.Rentar',
+      defaults.socialMedia?.instagram ?? 'https://www.instagram.com/auto.rentar',
     ),
     twitter: resolve('NG_APP_SOCIAL_TWITTER', defaults.socialMedia?.twitter ?? 'https://twitter.com/autorentar'),
     linkedin: resolve(

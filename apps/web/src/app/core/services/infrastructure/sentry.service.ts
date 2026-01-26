@@ -102,7 +102,8 @@ export async function initSentry(): Promise<void> {
     environment: environment.sentryEnvironment,
 
     // Performance Monitoring
-    tracesSampleRate: environment.sentryTracesSampleRate,
+    tracesSampleRate: 1.0, // Tracing must be enabled for agent monitoring to work
+    sendDefaultPii: true, // Add data like inputs and responses to/from LLMs and tools
     tracePropagationTargets: ['localhost', environment.appUrl, environment.supabaseUrl],
 
     // Integrations

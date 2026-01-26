@@ -33,7 +33,7 @@ import { SoundService } from '@core/services/ui/sound.service';
               <app-car-mini-card 
                 [car]="car" 
                 [isSelected]="selectedCarId === car.carId"
-                (select)="onCardClick(car.carId)">
+                (cardClicked)="onCardClick(car.carId)">
               </app-car-mini-card>
             </div>
           }

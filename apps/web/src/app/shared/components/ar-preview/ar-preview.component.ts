@@ -5,12 +5,12 @@ import { CommonModule } from '@angular/common';
 import '@google/model-viewer';
 
 @Component({
-    selector: 'app-ar-preview',
-    standalone: true,
-    imports: [CommonModule],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA], // Allow model-viewer custom element
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
+  selector: 'app-ar-preview',
+  standalone: true,
+  imports: [CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Allow model-viewer custom element
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
     <div class="fixed inset-0 z-[60] bg-black/95 flex flex-col">
       <!-- Header -->
       <header class="flex items-center justify-between p-4 pt-safe-top bg-black/80 backdrop-blur-xl border-b border-white/10">
@@ -22,7 +22,7 @@ import '@google/model-viewer';
           </div>
         </div>
         <button 
-          (click)="close.emit()"
+          (click)="previewClosed.emit()"
           class="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
           <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -97,7 +97,7 @@ import '@google/model-viewer';
       </footer>
     </div>
   `,
-    styles: [`
+  styles: [`
     model-viewer {
       width: 100%;
       height: 100%;
@@ -110,9 +110,9 @@ import '@google/model-viewer';
   `]
 })
 export class ARPreviewComponent {
-    @Input() carTitle = '';
-    @Input() modelUrl = '/assets/3d-models/generic-car.glb'; // Default placeholder
-    @Input() posterUrl = '/assets/images/car-placeholder.svg';
+  @Input() carTitle = '';
+  @Input() modelUrl = '/assets/3d-models/generic-car.glb'; // Default placeholder
+  @Input() posterUrl = '/assets/images/car-placeholder.svg';
 
-    @Output() close = new EventEmitter<void>();
+  @Output() previewClosed = new EventEmitter<void>();
 }
