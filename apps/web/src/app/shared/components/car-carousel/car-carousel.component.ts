@@ -1,21 +1,24 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { register } from 'swiper/element/bundle';
-import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
-
-register();
+import { Component, Input } from '@angular/core';
+import { Car } from '@shared/interfaces/car.interface';
 
 @Component({
   selector: 'app-car-carousel',
-  standalone: true,
-  imports: [CarMiniCardComponent],
   templateUrl: './car-carousel.component.html',
-  styleUrls: ['./car-carousel.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./car-carousel.component.scss']
 })
-export class CarCarouselComponent implements OnInit {
-  @Input() cars: any[] = [];
+export class CarCarouselComponent {
+  @Input() cars: Car[] | null = null;
+  @Input() title: string = '';
+  @Input() slidesPerView: number = 1;
+  @Input() spaceBetween: number = 16;
 
-  ngOnInit(): void {
-    //
+  // Removing the empty ngOnInit method to resolve the linting error
+  // ngOnInit(): void {
+  // }
+
+  public swiperConfig: any = {
+    loop: false,
+    spaceBetween: this.spaceBetween,
+    slidesPerView: this.slidesPerView,
   }
 }
