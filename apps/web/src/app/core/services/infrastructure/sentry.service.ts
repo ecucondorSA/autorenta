@@ -1,5 +1,6 @@
 import { ErrorHandler, Injectable } from '@angular/core';
 import { environment } from '@environment';
+import { getLocalStorage, isBrowser, runAfterHydration } from '@core/utils/platform.utils';
 
 /**
  * Sentry module type for lazy loading
@@ -72,11 +73,59 @@ export class SentryErrorHandler implements ErrorHandler {
     const Sentry = await getSentry();
     if (!Sentry) return;
 
+    // Serialize error properly to avoid [object Object] in Sentry
     if (error instanceof Error) {
       Sentry.captureException(error);
+    } else if (typeof error === 'object' && error !== null) {
+      // Try to extract meaningful information from object errors
+      const serialized = this.serializeError(error);
+      Sentry.captureException(new Error(serialized.message), {
+        extra: serialized.extra,
+      });
     } else {
       Sentry.captureException(new Error(String(error)));
     }
+  }
+
+  /**
+   * Serialize error objects to avoid [object Object] in Sentry
+   */
+  private serializeError(error: unknown): { message: string; extra: Record<string, unknown> } {
+    if (typeof error !== 'object' || error === null) {
+      return { message: String(error), extra: {} };
+    }
+
+    const obj = error as Record<string, unknown>;
+
+    // Try to extract a meaningful message
+    const message =
+      (obj['message'] as string) ||
+      (obj['error'] as string) ||
+      (obj['statusText'] as string) ||
+      (obj['name'] as string) ||
+      'Unknown error';
+
+    // Collect extra context
+    const extra: Record<string, unknown> = {};
+
+    // Common error properties
+    const keys = ['code', 'status', 'statusText', 'url', 'method', 'data', 'response', 'stack'];
+    for (const key of keys) {
+      if (key in obj && obj[key] !== undefined) {
+        extra[key] = obj[key];
+      }
+    }
+
+    // If no extra context, stringify the whole object
+    if (Object.keys(extra).length === 0) {
+      try {
+        extra['serialized'] = JSON.stringify(error);
+      } catch {
+        extra['serialized'] = '[Circular or non-serializable object]';
+      }
+    }
+
+    return { message: `Error: ${message}`, extra };
   }
 }
 
@@ -87,6 +136,11 @@ export class SentryErrorHandler implements ErrorHandler {
  * Configures Sentry with Angular-specific integrations.
  */
 export async function initSentry(): Promise<void> {
+  // Only initialize Sentry in browser
+  if (!isBrowser()) {
+    return;
+  }
+
   if (!environment.sentryDsn) {
     if (environment.production) {
       console.warn('⚠️ Sentry DSN not configured - error tracking disabled');
@@ -94,8 +148,20 @@ export async function initSentry(): Promise<void> {
     return;
   }
 
-  const Sentry = await getSentry();
-  if (!Sentry) return;
+  // Wait for hydration to complete before initializing Sentry
+  // This prevents NG0750 hydration errors
+  runAfterHydration(async () => {
+    const Sentry = await getSentry();
+    if (!Sentry) return;
+
+    await initializeSentry(Sentry);
+  });
+}
+
+/**
+ * Internal function to initialize Sentry with configuration
+ */
+async function initializeSentry(Sentry: SentryModule): Promise<void> {
 
   const options = {
     dsn: environment.sentryDsn,
@@ -149,8 +215,8 @@ export async function initSentry(): Promise<void> {
     // Configure what data to send
     beforeSend(event: any, hint: any) {
       // Don't send errors in development unless explicitly testing
-      const testMode =
-        typeof localStorage !== 'undefined' ? localStorage.getItem('sentry-test-mode') : null;
+      const storage = getLocalStorage();
+      const testMode = storage ? storage.getItem('sentry-test-mode') : null;
       if (!environment.production && !testMode) {
         return null;
       }
