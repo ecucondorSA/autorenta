@@ -21,7 +21,7 @@ export async function callGemini(
     context: string,
     systemPrompt: string,
     apiKey: string,
-    model: 'gemini-2.0-flash' | 'gemini-1.5-pro' = 'gemini-2.0-flash',
+    model: 'gemini-3-flash-preview' | 'gemini-2.0-flash' | 'gemini-1.5-pro' = 'gemini-3-flash-preview',
     temperature: number = 0.2
 ): Promise<string> {
     const hostname = 'generativelanguage.googleapis.com';

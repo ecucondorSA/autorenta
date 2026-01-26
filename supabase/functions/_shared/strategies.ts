@@ -6,20 +6,20 @@
  */
 
 export interface FixStrategy {
-    name: string;
-    model: 'gemini-2.0-flash' | 'gemini-1.5-pro';
-    temperature: number;
-    systemPrompt: string;
-    userPromptTemplate: string;
-    maxAttempts: number;
+  name: string;
+  model: 'gemini-3-flash-preview' | 'gemini-1.5-pro';
+  temperature: number;
+  systemPrompt: string;
+  userPromptTemplate: string;
+  maxAttempts: number;
 }
 
 export const SURGICAL_MINIMAL_STRATEGY: FixStrategy = {
-    name: 'surgical-minimal',
-    model: 'gemini-2.0-flash',
-    temperature: 0.1,
-    maxAttempts: 1,
-    systemPrompt: `You are a SURGICAL code repair agent (Tier 7).
+  name: 'surgical-minimal',
+  model: 'gemini-2.0-flash',
+  temperature: 0.1,
+  maxAttempts: 1,
+  systemPrompt: `You are a SURGICAL code repair agent (Tier 7).
 
 CRITICAL CONSTRAINTS:
 - Make the ABSOLUTE MINIMUM change needed
@@ -54,7 +54,7 @@ RULES:
 2. Return VALID JSON only
 3. NEVER suggest changes to unrelated lines`,
 
-    userPromptTemplate: `CURRENT FILE CONTENT:
+  userPromptTemplate: `CURRENT FILE CONTENT:
 \`\`\`
 {file_content}
 \`\`\`
@@ -68,11 +68,11 @@ Provide a SURGICAL fix using the MINIMUM possible changes.`
 };
 
 export const CONTEXT_AWARE_STRATEGY: FixStrategy = {
-    name: 'context-aware',
-    model: 'gemini-2.0-flash',
-    temperature: 0.3,
-    maxAttempts: 1,
-    systemPrompt: `You are a CONTEXT-AWARE code repair agent (Tier 7).
+  name: 'context-aware',
+  model: 'gemini-2.0-flash',
+  temperature: 0.3,
+  maxAttempts: 1,
+  systemPrompt: `You are a CONTEXT-AWARE code repair agent (Tier 7).
 
 GOAL: Fix the error while understanding the broader file context.
 
@@ -105,7 +105,7 @@ RULES:
 3. Ensure fix doesn't break other parts of the file
 4. Return VALID JSON only`,
 
-    userPromptTemplate: `FILE PATH: {file_path}
+  userPromptTemplate: `FILE PATH: {file_path}
 
 FULL FILE CONTENT:
 \`\`\`
@@ -121,11 +121,11 @@ Analyze the context and provide a targeted fix that addresses the root cause.`
 };
 
 export const CONSERVATIVE_PRO_STRATEGY: FixStrategy = {
-    name: 'conservative-pro',
-    model: 'gemini-1.5-pro',
-    temperature: 0.2,
-    maxAttempts: 1,
-    systemPrompt: `You are a CONSERVATIVE code repair agent using advanced reasoning (Tier 7).
+  name: 'conservative-pro',
+  model: 'gemini-1.5-pro',
+  temperature: 0.2,
+  maxAttempts: 1,
+  systemPrompt: `You are a CONSERVATIVE code repair agent using advanced reasoning (Tier 7).
 
 GOAL: Provide a safe, well-reasoned fix for complex errors.
 
@@ -160,7 +160,7 @@ RULES:
 3. Explain trade-offs clearly
 4. Return VALID JSON only`,
 
-    userPromptTemplate: `FILE PATH: {file_path}
+  userPromptTemplate: `FILE PATH: {file_path}
 
 FULL FILE CONTENT:
 \`\`\`
@@ -176,43 +176,43 @@ Provide a conservative, well-reasoned fix. Consider edge cases and potential sid
 };
 
 export const ALL_STRATEGIES: FixStrategy[] = [
-    SURGICAL_MINIMAL_STRATEGY,
-    CONTEXT_AWARE_STRATEGY,
-    CONSERVATIVE_PRO_STRATEGY
+  SURGICAL_MINIMAL_STRATEGY,
+  CONTEXT_AWARE_STRATEGY,
+  CONSERVATIVE_PRO_STRATEGY
 ];
 
 /**
  * Select the best strategy based on error type
  */
 export function selectStrategyForError(errorType: 'lint' | 'compile' | 'test' | 'runtime'): FixStrategy {
-    switch (errorType) {
-        case 'lint':
-            return SURGICAL_MINIMAL_STRATEGY; // Linting errors are simple, use surgical approach
-        case 'compile':
-            return CONTEXT_AWARE_STRATEGY; // Compilation errors need understanding of context
-        case 'test':
-        case 'runtime':
-            return CONSERVATIVE_PRO_STRATEGY; // Complex errors need deep reasoning
-        default:
-            return SURGICAL_MINIMAL_STRATEGY;
-    }
+  switch (errorType) {
+    case 'lint':
+      return SURGICAL_MINIMAL_STRATEGY; // Linting errors are simple, use surgical approach
+    case 'compile':
+      return CONTEXT_AWARE_STRATEGY; // Compilation errors need understanding of context
+    case 'test':
+    case 'runtime':
+      return CONSERVATIVE_PRO_STRATEGY; // Complex errors need deep reasoning
+    default:
+      return SURGICAL_MINIMAL_STRATEGY;
+  }
 }
 
 /**
  * Classify error type from log content
  */
 export function classifyErrorType(logContent: string): 'lint' | 'compile' | 'test' | 'runtime' {
-    const lowerLog = logContent.toLowerCase();
+  const lowerLog = logContent.toLowerCase();
 
-    if (lowerLog.includes('eslint') || lowerLog.includes('lint')) {
-        return 'lint';
-    }
-    if (lowerLog.includes('typescript') || lowerLog.includes('tsc') || lowerLog.includes('compilation')) {
-        return 'compile';
-    }
-    if (lowerLog.includes('test') || lowerLog.includes('spec')) {
-        return 'test';
-    }
+  if (lowerLog.includes('eslint') || lowerLog.includes('lint')) {
+    return 'lint';
+  }
+  if (lowerLog.includes('typescript') || lowerLog.includes('tsc') || lowerLog.includes('compilation')) {
+    return 'compile';
+  }
+  if (lowerLog.includes('test') || lowerLog.includes('spec')) {
+    return 'test';
+  }
 
-    return 'runtime';
+  return 'runtime';
 }
