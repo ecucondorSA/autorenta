@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Segment } from '../../../../../../core/models/segment.model';
-import { Security } from '../../../../../../core/models/security.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,115 +11,124 @@ export class SecurityService {
 
   constructor(private http: HttpClient) {}
 
-  getSecurities(): Observable<Security[]> {
-    return this.http.get<Security[]>(`${this.apiUrl}/securities`);
+  getHeaders() {
+    const token = localStorage.getItem('authToken');
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }),
+    };
   }
 
-  getSecurity(id: string): Observable<Security> {
-    return this.http.get<Security>(`${this.apiUrl}/securities/${id}`);
+  // Get All Connected Devices
+  getAllConnectedDevices(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/devices`, this.getHeaders());
   }
 
-  createSecurity(security: Security): Observable<Security> {
-    return this.http.post<Security>(`${this.apiUrl}/securities`, security);
+  // Get Connected Device By Id
+  getConnectedDeviceById(deviceId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/devices/${deviceId}`, this.getHeaders());
   }
 
-  updateSecurity(id: string, security: Security): Observable<Security> {
-    return this.http.put<Security>(`${this.apiUrl}/securities/${id}`, security);
+  // Add Connected Device
+  addConnectedDevice(deviceData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security/devices`, deviceData, this.getHeaders());
   }
 
-  deleteSecurity(id: string): Observable<Security> {
-    return this.http.delete<Security>(`${this.apiUrl}/securities/${id}`);
+  // Update Connected Device
+  updateConnectedDevice(deviceId: string, deviceData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/security/devices/${deviceId}`, deviceData, this.getHeaders());
   }
 
-  getSegments(): Observable<Segment[]> {
-    return this.http.get<Segment[]>(`${this.apiUrl}/segments`);
+  // Delete Connected Device
+  deleteConnectedDevice(deviceId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/security/devices/${deviceId}`, this.getHeaders());
   }
 
-  getSegment(id: string): Observable<Segment> {
-    return this.http.get<Segment>(`${this.apiUrl}/segments/${id}`);
+  // Get All Security Logs
+  getAllSecurityLogs(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/logs`, this.getHeaders());
   }
 
-  createSegment(segment: Segment): Observable<Segment> {
-    return this.http.post<Segment>(`${this.apiUrl}/segments`, segment);
+    // Get Security Log by Id
+  getSecurityLogById(logId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/logs/${logId}`, this.getHeaders());
   }
 
-  updateSegment(id: string, segment: Segment): Observable<Segment> {
-    return this.http.put<Segment>(`${this.apiUrl}/segments/${id}`, segment);
+  // Add Security Log
+  addSecurityLog(logData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security/logs`, logData, this.getHeaders());
   }
 
-  deleteSegment(id: string): Observable<Segment> {
-    return this.http.delete<Segment>(`${this.apiUrl}/segments/${id}`);
+  // Update Security Log
+  updateSecurityLog(logId: string, logData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/security/logs/${logId}`, logData, this.getHeaders());
   }
 
-  getSecurityForSegment(segmentId: string): Observable<Security[]> {
-    return this.http.get<Security[]>(`${this.apiUrl}/segments/${segmentId}/securities`);
+  // Delete Security Log
+  deleteSecurityLog(logId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/security/logs/${logId}`, this.getHeaders());
   }
 
-  addSecurityToSegment(segmentId: string, securityId: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/segments/${segmentId}/securities/${securityId}`, {});
+  // Get All Security Threats
+  getAllSecurityThreats(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/threats`, this.getHeaders());
   }
 
-  removeSecurityFromSegment(segmentId: string, securityId: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/segments/${segmentId}/securities/${securityId}`);
+  // Get Security Threat by Id
+  getSecurityThreatById(threatId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/threats/${threatId}`, this.getHeaders());
   }
 
-  generateRandomString(length: number) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
+  // Add Security Threat
+  addSecurityThreat(threatData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security/threats`, threatData, this.getHeaders());
   }
 
-  bulkCreateSecurities(amount: number): Observable<any> {
-    return new Observable((observer) => {
-      for (let i = 0; i < amount; i++) {
-        const security: Security = {
-          id: this.generateRandomString(20),
-          name: this.generateRandomString(10),
-          description: this.generateRandomString(50),
-          segment: null,
-        };
+  // Update Security Threat
+  updateSecurityThreat(threatId: string, threatData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/security/threats/${threatId}`, threatData, this.getHeaders());
+  }
 
-        this.createSecurity(security).subscribe(
-          (res) => {
-            console.log('Security created');
-          },
-          (err) => {
-            console.error('Error creating security');
-          }
-        );
+  // Delete Security Threat
+  deleteSecurityThreat(threatId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/security/threats/${threatId}`, this.getHeaders());
+  }
+
+  // Simulate Security Scan
+  simulateSecurityScan(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/security/scan/simulate`, {}, this.getHeaders()).pipe(
+      (res: any) => {
+        return res;
+      },
+      (err: any) => {
+        return err;
       }
-      observer.next('Completed');
-      observer.complete();
-    });
+    );
   }
 
-  bulkCreateSegments(amount: number): Observable<any> {
-    return new Observable((observer) => {
-      for (let i = 0; i < amount; i++) {
-        const segment: Segment = {
-          id: this.generateRandomString(20),
-          name: this.generateRandomString(10),
-          description: this.generateRandomString(50),
-          securities: [],
-        };
+  // Get Security Scan Results
+  getSecurityScanResults(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/scan/results`, this.getHeaders());
+  }
 
-        this.createSegment(segment).subscribe(
-          (res) => {
-            console.log('Segment created');
-          },
-          (err) => {
-            console.error('Error creating segment');
-          }
-        );
-      }
-      observer.next('Completed');
-      observer.complete();
-    });
+  // Trigger Security Mitigation
+  triggerSecurityMitigation(): Observable<any> {
+    return this.http
+      .post(`${this.apiUrl}/security/mitigation/trigger`, {}, this.getHeaders())
+      .pipe(
+        (res: any) => {
+          return res;
+        },
+        (err: any) => {
+          return err;
+        }
+      );
+  }
+
+  // Get Security Mitigation Status
+  getSecurityMitigationStatus(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/security/mitigation/status`, this.getHeaders());
   }
 }
