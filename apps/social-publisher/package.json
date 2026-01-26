@@ -1,31 +1,22 @@
 {
   "name": "social-publisher",
   "version": "1.0.0",
-  "description": "Publish to multiple social media platforms simultaneously",
-  "type": "module",
-  "main": "src/index.ts",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "dev": "bun --watch src/index.ts",
-    "start": "bun src/index.ts",
-    "build": "bun build src/index.ts --outdir dist --target bun",
-    "test": "bun test",
-    "type-check": "tsc --noEmit"
+    "build": "bunx build src/index.ts --outdir dist --target bun",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "social-media",
-    "publisher",
-    "facebook",
-    "instagram",
-    "linkedin",
-    "tiktok"
-  ],
+  "keywords": [],
   "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "zod": "^3.25.76"
-  },
+  "license": "ISC",
   "devDependencies": {
-    "@types/bun": "latest",
-    "typescript": "^5.9.3"
+    "bun-types": "latest" // add bun types
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "bun": "^1.0.0" // Add bun as a dependency
   }
 }
