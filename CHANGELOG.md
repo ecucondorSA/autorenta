@@ -1,3 +1,9 @@
+## [3.36.1](https://github.com/ecucondorSA/autorenta/compare/v3.36.0...v3.36.1) (2026-01-26)
+
+### 🐛 Bug Fixes
+
+* **ai:** switch to gemini-2.0-flash to avoid quota exhaustion ([4045c1b](https://github.com/ecucondorSA/autorenta/commit/4045c1bdd2f69284a3f32b419d6715577d261920))
+
 ## [3.36.0](https://github.com/ecucondorSA/autorenta/compare/v3.35.0...v3.36.0) (2026-01-26)
 
 ### ✨ Features
