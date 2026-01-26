@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, ViewChild, ChangeDetectionStrategy, effect, inject, HostListener } from '@angular/core';
+import { Component, Input, ElementRef, ViewChild, ChangeDetectionStrategy, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';

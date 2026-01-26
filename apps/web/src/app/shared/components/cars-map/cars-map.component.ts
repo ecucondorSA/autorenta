@@ -713,10 +713,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }
 
     // Resolve colors from CSS variables
-    const colorAvailable = this.getCssVariableValue('--map-marker-available-color', '#9db38b'); // Olive
-    const colorSoon = this.getCssVariableValue('--map-marker-soon-available-color', '#c4a882'); // Beige
-    const colorInUse = this.getCssVariableValue('--map-marker-in-use-color', '#4e4e4e'); // Gray
-    const colorUnavailable = this.getCssVariableValue('--map-marker-unavailable-color', '#b25e5e'); // Rust
+    // Removed unused color variables (colorAvailable, colorSoon, colorInUse, colorUnavailable)
 
     // Add cluster circles layer - Neon radioactive style with shadow effect
     if (!this.map.getLayer(this.clusterLayerId + '-shadow')) {
