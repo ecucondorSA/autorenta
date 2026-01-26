@@ -1,218 +1,131 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest, filter, fromEvent, map, Observable, Subject, takeUntil, tap } from 'rxjs';
-import { Feature, Geometry, Point } from 'geojson';
-import { LngLat, LngLatBounds, Map } from 'maplibre-gl';
-
-import { AppState } from '@store/app.state';
-import { Car } from '@models/car.model';
-import { CarsSelectors } from '@store/cars/cars.selectors';
-import { MapService } from '@core/services/map.service';
-import { getFeatureColor } from '@utils/get-feature-color.util';
-import { SoundService } from '@core/services/ui/sound.service';
-import { EnhancedMapTooltipComponent } from '../enhanced-map-tooltip/enhanced-map-tooltip.component';
+import { Component, AfterViewInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Car } from '@shared/models/car.model';
+import { environment } from 'apps/web/src/environments/environment';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+declare let map: any;
+declare let google: any;
 
 @Component({
   selector: 'app-cars-map',
   templateUrl: './cars-map.component.html',
-  styleUrls: ['./cars-map.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [EnhancedMapTooltipComponent],
+  styleUrls: ['./cars-map.component.scss']
 })
-export class CarsMapComponent implements AfterViewInit, OnChanges, OnDestroy {
-  @Input() selectedCarId: string | null = null;
-  @ViewChild('mapContainer') mapContainer: ElementRef | undefined;
+export class CarsMapComponent implements AfterViewInit {
+  @ViewChild('mapContainer', { static: false }) mapRef: ElementRef | undefined;
+  @Input() cars: Car[] = [];
+  @Output() carClicked = new EventEmitter<string>();
+  map: any;
+  markers: any[] = [];
 
-  readonly cars$: Observable<Car[]> = this.store.select(CarsSelectors.selectAllCars);
-  readonly selectedCar$: Observable<Car | undefined> = this.store.select(CarsSelectors.selectSelectedCar);
+  ngAfterViewInit(): void {
+    this.initMap();
+  }
 
-  private readonly destroy$ = new Subject<void>();
-  private readonly features$ = new BehaviorSubject<Feature<Geometry, { [name: string]: any }>[]>([]);
+  initMap = () => {
+    const coordinates = new google.maps.LatLng(40.7128, -74.0060);
 
-  map: Map | undefined;
-  style = 'https://tiles.stadiamaps.com/styles/alidade_smooth.json';
-  center: LngLat = new LngLat(8.6821275, 49.3194134);
-  zoom = 12;
+    const mapOptions = {
+      center: coordinates,
+      zoom: 12,
+      disableDefaultUI: true,
+      mapTypeId: 'roadmap',
+    };
+    this.map = new google.maps.Map(this.mapRef?.nativeElement, mapOptions);
 
-  constructor(
-    private readonly store: Store<AppState>,
-    private readonly mapService: MapService,
-    private readonly translateService: TranslateService,
-    private readonly soundService: SoundService
-  ) {}
-
-  ngAfterViewInit() {
-    if (!this.mapContainer) {
-      return;
-    }
-
-    this.map = new Map({
-      container: this.mapContainer.nativeElement,
-      style: this.style,
-      center: this.center,
-      zoom: this.zoom,
+    this.cars.forEach(car => {
+      this.addMarker(car);
     });
 
-    this.map.on('load', () => {
-      fromEvent(this.map as Map, 'mousemove')
-        .pipe(
-          takeUntil(this.destroy$),
-          tap(() => {
-            // this.popup.remove();
-          })
-        )
-        .subscribe();
+    this.map.addListener("click", () => {
+      this.closeAllInfoWindows();
+    });
+  }
 
-      this.mapService.addImages(this.map as Map);
+  addMarker = (car: Car) => {
+    const icon = {
+      url: '../../../assets/images/map-marker.png',
+      scaledSize: new google.maps.Size(40, 60),
+      anchor: new google.maps.Point(20, 60)
+    };
 
-      combineLatest([this.cars$, this.selectedCar$])
-        .pipe(
-          takeUntil(this.destroy$),
-          tap(([cars, selectedCar]) => {
-            this.setMapData(cars, selectedCar);
-          })
-        )
-        .subscribe();
+    const marker = new google.maps.Marker({
+      position: new google.maps.LatLng(car.location.coordinates[1], car.location.coordinates[0]),
+      map: this.map,
+      title: car.name,
+      icon: icon
+    });
 
-      this.features$
-        .pipe(
-          filter((features) => !!features.length),
-          takeUntil(this.destroy$),
-          tap((features) => {
-            this.mapService.addSource(this.map as Map, features);
-          })
-        )
-        .subscribe();
+    let infoWindow = new google.maps.InfoWindow({
+      content: this.getInfoWindowData(car)
+    });
 
-      this.features$
-        .pipe(
-          filter((features) => !!features.length),
-          takeUntil(this.destroy$),
-          tap((features) => {
-            this.mapService.addLayer(this.map as Map, features);
-          })
-        )
-        .subscribe();
+    marker.addListener("click", (e: Event) => {
+      this.closeAllInfoWindows();
+      infoWindow.open(this.map, marker);
+      e.stopPropagation();
+    });
 
-      this.map.on('click', (event) => {
-        const features = this.map?.queryRenderedFeatures(event.point, {
-          layers: ['cars'],
-        });
+    this.markers.push(marker);
+  }
 
-        if (!features?.length) {
-          return;
+  getInfoWindowData = (car: Car) => {
+    return `<div id="iw-container">` +
+      `<div class="iw-title">${car.name}</div>` +
+      `<div class="iw-content">` +
+      `<img src="${environment.baseUrl}/${car.images[0].url}" alt="${car.name}" height="115" width="100">` +
+      `<div class="iw-subTitle">${car.make}</div>` +
+      `<p>${car.description.substring(0, 50)}...</p>` +
+      `</div>` +
+      `<div class="iw-bottom-gradient"></div>` +
+      `<a href=\"#\" id=\"car-link\" data-car-id=\"${car.id}\"></a>` +
+      `</div>`;
+  }
+
+  closeAllInfoWindows = () => {
+    this.markers.forEach(marker => {
+      marker.infowindow?.close();
+    });
+  }
+
+  handleCarClick(carId: string) {
+    this.carClicked.emit(carId);
+  }
+
+  ngAfterViewChecked() {
+    const carLinks = document.querySelectorAll('#car-link');
+
+    carLinks.forEach((carLink: any) => {
+      carLink.addEventListener('click', (e: Event) => {
+        e.preventDefault();
+        const carId = carLink.getAttribute('data-car-id');
+        if (carId) {
+          this.handleCarClick(carId);
         }
-
-        const feature = features[0];
-
-        this.map?.flyTo({
-          center: feature.geometry.coordinates as [number, number],
-          zoom: 14,
-          essential: true,
-        });
-
-        // this.popup
-        //   .setLngLat(feature.geometry.coordinates as [number, number])
-        //   .setDOMContent(this.mapService.generatePopupContent(feature, this.translateService))
-        //   .addTo(this.map as Map);
-
-        this.soundService.play('map-marker-click');
-      });
-
-      this.map.on('mouseenter', 'cars', () => {
-        (this.map as Map).getCanvas().style.cursor = 'pointer';
-      });
-
-      this.map.on('mouseleave', 'cars', () => {
-        (this.map as Map).getCanvas().style.cursor = '';
       });
     });
-  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['selectedCarId']?.currentValue) {
-      this.cars$
-        .pipe(
-          takeUntil(this.destroy$),
-          takeUntil(this.destroy$),
-          tap((cars) => {
-            const selectedCar = cars.find((car) => car.id === this.selectedCarId);
+    this.markers.forEach(marker => {
+      const infoWindowElement = marker.infowindow?.content.querySelector('#iw-container');
 
-            if (!selectedCar) {
-              return;
-            }
+      if (infoWindowElement) {
+        google.maps.event.addDomListener(infoWindowElement, 'load', function() {
 
-            this.map?.flyTo({
-              center: [selectedCar.longitude, selectedCar.latitude],
-              zoom: 14,
-              essential: true,
-            });
-          })
-        )
-        .subscribe();
-    }
-  }
+          // Adjusting marker infowindow
+          const iwBackground = this.parentElement.parentElement.parentElement.parentElement.parentElement;
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+          iwBackground.children[0].style.display = 'none';
+          iwBackground.children[2].style.display = 'none';
 
-  private setMapData(cars: Car[], selectedCar: Car | undefined): void {
-    if (!cars.length) {
-      return;
-    }
+          let iwOuter = iwBackground.parentElement;
+          iwOuter.classList.add('iw-outer');
 
-    const features: Feature<Geometry, { [name: string]: any }>[] = cars.map((car) => {
-      const feature: Feature<Geometry, { [name: string]: any }> = {
-        type: 'Feature',
-        properties: {
-          id: car.id,
-          description: `<strong>${car.model}</strong><p>${car.licensePlate}</p>`,
-          icon: 'car',
-          available: car.isAvailable,
-          soon: car.isSoonAvailable,
-          inUse: !car.isAvailable && !car.isSoonAvailable,
-          selected: car.id === selectedCar?.id,
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: [car.longitude, car.latitude],
-        },
-      };
+          let iwWrapper = iwOuter.children[0];
+          iwWrapper.classList.add('iw-wrapper');
 
-      return feature;
-    });
-
-    this.features$.next(features);
-
-    if (this.map) {
-      const bounds = new LngLatBounds();
-
-      cars.forEach((car) => {
-        bounds.extend(new LngLat(car.longitude, car.latitude));
-      });
-
-      try {
-        this.map.fitBounds(bounds, {
-          padding: 100,
-          duration: 0,
+          let iwInner = iwWrapper.children[0];
+          iwInner.classList.add('iw-inner');
         });
-      } catch (error) {
-        console.warn(error);
       }
-    }
+    });
   }
-
-  getFeatureColor(feature: Feature<Point, { [name: string]: any }>): string {
-    return getFeatureColor(feature.properties);
-  }
-
-  // TODO: Remove this once design is implemented
-  colorAvailable = 'green';
-  colorSoon = 'orange';
-  colorInUse = 'red';
-  colorUnavailable = 'grey';
 }
