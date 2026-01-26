@@ -1,196 +1,271 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { corsHeaders, callGemini } from '../_shared/gemini.ts';
-import { GitHubClient } from '../_shared/github.ts';
+import { corsHeaders } from '../_shared/gemini.ts';
+import { callGemini } from '../_shared/gemini.ts';
+import { GitHubClient, type Patch } from '../_shared/github.ts';
+import { parseErrorLog, extractRelevantSnippet } from '../_shared/error-parser.ts';
+import { ALL_STRATEGIES, selectStrategyForError, type FixStrategy } from '../_shared/strategies.ts';
 
 serve(async (req) => {
-    // Handle CORS
     if (req.method === 'OPTIONS') {
         return new Response('ok', { headers: corsHeaders });
     }
 
     try {
         const payload = await req.json();
+        console.log('[Edge Brain Tier 7] Webhook received:', payload.action, payload.workflow_run?.event);
 
-        // We only care about workflow_run completed failure
+        // Only handle completed workflow runs that failed
         if (payload.action !== 'completed' || payload.workflow_run?.conclusion !== 'failure') {
-            return new Response(JSON.stringify({ message: 'Ignored: Not a failed workflow run completion.' }), {
+            return new Response(JSON.stringify({ message: 'Skipping: not a failed workflow run' }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-                status: 200,
             });
         }
 
         const runId = payload.workflow_run.id;
-        const repoName = payload.repository.name;
-        const ownerName = payload.repository.owner.login;
-        const branch = payload.workflow_run.head_branch;
+        const baseBranch = payload.workflow_run.head_branch;
 
-        console.log(`🚑 Analyzing failed run ${runId} on ${ownerName}/${repoName} (${branch})`);
+        console.log(`[Edge Brain] 🚨 Detected failure in run ${runId} on branch ${baseBranch}`);
 
-        // Environment Variables
-        const GITHUB_TOKEN = Deno.env.get('GITHUB_TOKEN') || Deno.env.get('GH_TOKEN');
-        const GOOGLE_API_KEY = Deno.env.get('GEMINI_API_KEY') || Deno.env.get('GOOGLE_API_KEY');
+        // Get GitHub credentials from environment
+        const GITHUB_TOKEN = Deno.env.get('GITHUB_TOKEN');
+        const GITHUB_OWNER = Deno.env.get('GITHUB_OWNER') || 'ecucondorSA';
+        const GITHUB_REPO = Deno.env.get('GITHUB_REPO') || 'autorenta';
+        const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY');
 
         if (!GITHUB_TOKEN || !GOOGLE_API_KEY) {
-            throw new Error('Missing GITHUB_TOKEN or GOOGLE_API_KEY config.');
+            console.error('[Edge Brain] Missing credentials');
+            return new Response(JSON.stringify({ error: 'Missing credentials' }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                status: 500,
+            });
         }
 
-        const github = new GitHubClient(GITHUB_TOKEN, ownerName, repoName);
+        const github = new GitHubClient(GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO);
 
-        // 1. Get Log of failed job
+        // 1. Get logs from failed job
+        console.log('[Edge Brain] 📥 Fetching job logs...');
         const jobsData = await github.listJobs(runId);
         const failedJob = jobsData.jobs?.find((j: any) => j.conclusion === 'failure');
 
         if (!failedJob) {
-            return new Response(JSON.stringify({ message: 'No failed job found in listing.' }), { headers: corsHeaders });
+            console.warn('[Edge Brain] No failed job found in run');
+            return new Response(JSON.stringify({ message: 'No failed job found' }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
         }
 
-        console.log(`Found failed job: ${failedJob.name} (${failedJob.id})`);
         const logs = await github.getJobLog(failedJob.id);
+        const relevantSnippet = extractRelevantSnippet(logs);
 
-        // Truncate logs if too huge for context
-        const snippet = logs.slice(-8000); // Last 8000 chars
+        console.log(`[Edge Brain] 📜 Extracted ${relevantSnippet.length} chars from logs`);
 
-        // 2. Ask Gemini for a Fix (with improved conservative prompt)
-        const systemPrompt = `You are a CI/CD Repair Agent (Tier 6).
-        Analyze the provided GitHub Actions Log snippet.
-        
-        GOAL: Propose a MINIMAL, SURGICAL fix for the error.
-        
-        CRITICAL CONSTRAINTS:
-        - Make the SMALLEST possible change to fix the error
-        - Preserve ALL existing functionality
-        - Do NOT delete or simplify working code
-        - Do NOT refactor unrelated code
-        - If the error is in imports, ONLY fix the imports
-        - If the error is a lint warning, ONLY fix that specific line
-        
-        RESPONSE FORMAT (JSON):
-        {
-          "cause": "Brief explanation of root cause",
-          "fix_plan": "Description of minimal fix",
-          "target_file_path": "path/to/file.ts",
-          "fixed_file_content": "FULL NEW CONTENT OF THE FILE (with minimal changes applied)"
-        }
-        
-        RULES:
-        1. If the error is NOT fixable by code change (e.g. missing env var, server down), set "target_file_path" to null.
-        2. Return VALID JSON only.
-        3. When providing fixed_file_content, make ONLY the changes needed to fix the error.`;
+        // 2. Parse error to extract file path and context
+        const parsedError = parseErrorLog(relevantSnippet);
+        console.log(`[Edge Brain] 🔍 Parsed error:`, {
+            file: parsedError.file_path,
+            line: parsedError.line_number,
+            type: parsedError.error_type
+        });
 
-        const analysisRaw = await callGemini(
-            "Analyze this failure log and provide a MINIMAL, SURGICAL fix.",
-            snippet,
-            systemPrompt,
-            GOOGLE_API_KEY
-        );
-
-        console.log('Gemini Analysis:', analysisRaw);
-
-        // Parse the JSON response/fix
-        const cleanJson = analysisRaw.replace(/```json/g, '').replace(/```/g, '').trim();
-        let fixData;
-        try {
-            fixData = JSON.parse(cleanJson);
-        } catch (e) {
-            console.error('Failed to parse Gemini JSON:', e);
-            return new Response(JSON.stringify({ message: 'Analysis failed to parse' }), { headers: corsHeaders });
+        if (!parsedError.file_path) {
+            console.warn('[Edge Brain] Could not extract file path from logs');
+            return new Response(JSON.stringify({
+                message: 'Could not identify target file',
+                logs_snippet: relevantSnippet.slice(0, 500)
+            }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
         }
 
-        if (fixData.target_file_path) {
-            console.log(`🚑 Attempting auto-fix on ${fixData.target_file_path}`);
+        // 3. Get file content for RAG context
+        console.log(`[Edge Brain] 📄 Fetching file content: ${parsedError.file_path}`);
+        const fileContent = await github.getFileContentDecoded(parsedError.file_path, baseBranch);
 
-            // 3. Create Branch
-            const fixBranch = `fix/ai-auto-repair-${Date.now()}`;
+        if (!fileContent) {
+            console.warn(`[Edge Brain] Could not fetch file content for ${parsedError.file_path}`);
+            return new Response(JSON.stringify({
+                message: 'Could not fetch file content',
+                file: parsedError.file_path
+            }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+        }
+
+        console.log(`[Edge Brain] ✅ Got file content (${fileContent.split('\n').length} lines)`);
+
+        // 4. Multi-Strategy Attempt
+        const strategies = getStrategiesForError(parsedError.error_type);
+        let fixResponse: any = null;
+        let usedStrategy: FixStrategy | null = null;
+
+        for (const strategy of strategies) {
+            console.log(`[Edge Brain] 🎯 Trying strategy: ${strategy.name}`);
+
             try {
-                // Determine base branch from payload (the one that failed)
-                const baseBranch = payload.workflow_run.head_branch;
-                await github.createBranch(baseBranch, fixBranch);
+                const userPrompt = strategy.userPromptTemplate
+                    .replace('{file_content}', fileContent)
+                    .replace('{file_path}', parsedError.file_path)
+                    .replace('{error_log}', relevantSnippet);
 
-                // 4. Get current SHA and content of file to update
-                const currentFile = await github.getContent(fixData.target_file_path, fixBranch);
+                const rawResponse = await callGemini(
+                    userPrompt,
+                    '', // Context is in user prompt now
+                    strategy.systemPrompt,
+                    GOOGLE_API_KEY,
+                    strategy.model,
+                    strategy.temperature
+                );
 
-                if (currentFile) {
-                    // 5. SAFETY VALIDATION: Check if fix is too aggressive
-                    const originalContent = atob(currentFile.content); // Decode base64
-                    const originalLines = originalContent.split('\n').length;
-                    const fixedLines = fixData.fixed_file_content.split('\n').length;
-                    const deletionPercentage = ((originalLines - fixedLines) / originalLines) * 100;
+                console.log(`[Edge Brain] 🤖 ${strategy.name} response:`, rawResponse.slice(0, 200));
 
-                    console.log(`📊 Line count: ${originalLines} → ${fixedLines} (${deletionPercentage.toFixed(1)}% deletion)`);
+                // Parse JSON response
+                const cleanJson = rawResponse.replace(/```json/g, '').replace(/```/g, '').trim();
+                fixResponse = JSON.parse(cleanJson);
 
-                    // Reject if deleting more than 10% of the file
-                    if (deletionPercentage > 10) {
-                        console.error(`❌ REJECTED: Fix would delete ${deletionPercentage.toFixed(1)}% of the file (threshold: 10%)`);
-                        return new Response(JSON.stringify({
-                            message: 'Fix rejected: Too aggressive',
-                            reason: `Would delete ${deletionPercentage.toFixed(1)}% of lines (${originalLines} → ${fixedLines})`,
-                            analysis: fixData
-                        }), { headers: corsHeaders });
-                    }
-
-                    // Additional validation: reject if adding more than 50% new lines (might be hallucination)
-                    const additionPercentage = ((fixedLines - originalLines) / originalLines) * 100;
-                    if (additionPercentage > 50) {
-                        console.error(`❌ REJECTED: Fix would add ${additionPercentage.toFixed(1)}% new lines (threshold: 50%)`);
-                        return new Response(JSON.stringify({
-                            message: 'Fix rejected: Too many additions',
-                            reason: `Would add ${additionPercentage.toFixed(1)}% new lines (${originalLines} → ${fixedLines})`,
-                            analysis: fixData
-                        }), { headers: corsHeaders });
-                    }
-
-                    console.log(`✅ Validation passed: Changes are within safe thresholds`);
-
-                    // 6. Apply Fix
-                    await github.updateFile(
-                        fixData.target_file_path,
-                        fixData.fixed_file_content,
-                        `fix(ci): auto-repair by Tier 6 Brain 🧠`,
-                        currentFile.sha,
-                        fixBranch
-                    );
-
-                    // 7. Create PR
-                    const pr = await github.createPR(
-                        `🚑 Fix: ${fixData.cause}`,
-                        `Auto-generated fix by AutoRenta Tier 6 Brain.\n\n**Analysis**: ${fixData.cause}\n**Plan**: ${fixData.fix_plan}\n\n**Safety Validation**: ✅ Passed\n- Original lines: ${originalLines}\n- Fixed lines: ${fixedLines}\n- Change: ${deletionPercentage > 0 ? '-' : '+'}${Math.abs(deletionPercentage).toFixed(1)}%`,
-                        fixBranch,
-                        baseBranch
-                    );
-
-                    console.log(`✅ PR Created: ${pr.html_url}`);
-
-                    return new Response(JSON.stringify({
-                        message: 'Fix PR Created',
-                        prUrl: pr.html_url,
-                        analysis: fixData,
-                        validation: {
-                            originalLines,
-                            fixedLines,
-                            changePercentage: deletionPercentage
-                        }
-                    }), { headers: corsHeaders });
+                if (fixResponse.patches && fixResponse.patches.length > 0) {
+                    usedStrategy = strategy;
+                    console.log(`[Edge Brain] ✅ Strategy ${strategy.name} provided ${fixResponse.patches.length} patches`);
+                    break;
                 }
-            } catch (err) {
-                console.error('Failed to apply fix:', err);
-                // Fallthrough to return analysis only
+            } catch (e) {
+                console.warn(`[Edge Brain] Strategy ${strategy.name} failed:`, e instanceof Error ? e.message : e);
+                continue;
             }
         }
 
+        if (!fixResponse || !fixResponse.patches || fixResponse.patches.length === 0) {
+            console.warn('[Edge Brain] All strategies failed or returned no patches');
+            return new Response(JSON.stringify({
+                message: 'Could not generate fix',
+                error_analysis: fixResponse?.analysis || 'No analysis available'
+            }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+        }
+
+        // 5. Validate Patch Safety
+        console.log('[Edge Brain] 🛡️ Validating patch safety...');
+        const safetyCheck = github.validatePatchSafety(fileContent, fixResponse.patches);
+
+        if (!safetyCheck.valid) {
+            console.error(`[Edge Brain] ❌ REJECTED: ${safetyCheck.reason}`);
+            return new Response(JSON.stringify({
+                message: 'Fix rejected: Too aggressive',
+                reason: safetyCheck.reason,
+                proposed_patches: fixResponse.patches,
+                strategy_used: usedStrategy?.name
+            }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+        }
+
+        console.log('[Edge Brain] ✅ Patch safety validated');
+
+        // 6. Apply patches
+        console.log('[Edge Brain] 🔧 Applying patches...');
+        const patchedContent = github.applyPatches(fileContent, fixResponse.patches);
+
+        const originalLines = fileContent.split('\n').length;
+        const patchedLines = patchedContent.split('\n').length;
+        const changePercent = ((patchedLines - originalLines) / originalLines * 100).toFixed(1);
+
+        console.log(`[Edge Brain] 📊 Changes: ${originalLines} → ${patchedLines} lines (${changePercent}%)`);
+
+        // 7. Create fix branch and PR
+        const fixBranch = `fix/ai-auto-repair-${Date.now()}`;
+        console.log(`[Edge Brain] 🌿 Creating branch: ${fixBranch}`);
+
+        try {
+            await github.createBranch(baseBranch, fixBranch);
+
+            const currentFile = await github.getContent(parsedError.file_path, fixBranch);
+
+            if (currentFile) {
+                await github.updateFile(
+                    parsedError.file_path,
+                    patchedContent,
+                    `fix(ci): ${fixResponse.analysis || 'auto-repair by Tier 7 Brain'}`,
+                    currentFile.sha,
+                    fixBranch
+                );
+
+                const prBody = `🧠 **Auto-generated fix by Edge Brain Tier 7**
+
+**Strategy Used:** \`${usedStrategy?.name}\` (${usedStrategy?.model})
+
+**Analysis:** ${fixResponse.analysis}
+
+**Changes Applied:**
+${fixResponse.patches.map((p: Patch, i: number) =>
+                    `${i + 1}. \`${parsedError.file_path}:${p.line_number}\` - **${p.operation}**${p.reason ? ` - ${p.reason}` : ''}`
+                ).join('\n')}
+
+**Safety Validation:** ✅ Passed
+- Original lines: ${originalLines}
+- Patched lines: ${patchedLines}
+- Change: ${changePercent}% (threshold: ±10%)
+
+**Confidence:** ${fixResponse.confidence ? `${(fixResponse.confidence * 100).toFixed(0)}%` : 'N/A'}
+`;
+
+                const pr = await github.createPR(
+                    `🚑 Fix (Tier 7): ${fixResponse.analysis || parsedError.error_message.slice(0, 100)}`,
+                    prBody,
+                    fixBranch,
+                    baseBranch
+                );
+
+                console.log(`[Edge Brain] ✅ PR Created: ${pr.html_url}`);
+
+                return new Response(JSON.stringify({
+                    message: 'Surgical fix PR created',
+                    pr_url: pr.html_url,
+                    strategy: usedStrategy?.name,
+                    patches_applied: fixResponse.patches.length,
+                    file: parsedError.file_path,
+                    change_percentage: parseFloat(changePercent)
+                }), {
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                });
+            }
+        } catch (err) {
+            console.error('[Edge Brain] Failed to create PR:', err);
+            return new Response(JSON.stringify({
+                message: 'Failed to create PR',
+                error: err instanceof Error ? err.message : String(err)
+            }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                status: 500,
+            });
+        }
+
         return new Response(JSON.stringify({
-            message: 'Analysis Complete (No Fix Applied)',
-            analysis: cleanJson,
-            jobId: failedJob.id
+            message: 'Processing completed but no PR created',
+            details: 'Unexpected flow state'
         }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 200,
         });
 
     } catch (error) {
-        console.error(error);
-        return new Response(JSON.stringify({ error: error.message }), {
+        console.error('[Edge Brain] Fatal error:', error);
+        return new Response(JSON.stringify({
+            error: error instanceof Error ? error.message : String(error)
+        }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             status: 500,
         });
     }
 });
+
+/**
+ * Get ordered list of strategies to try for a given error type
+ */
+function getStrategiesForError(errorType: 'lint' | 'compile' | 'test' | 'runtime'): FixStrategy[] {
+    const primary = selectStrategyForError(errorType);
+
+    // Return ordered list: primary first, then others as fallback
+    return [
+        primary,
+        ...ALL_STRATEGIES.filter(s => s.name !== primary.name)
+    ];
+}

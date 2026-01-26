@@ -20,11 +20,12 @@ export async function callGemini(
     prompt: string,
     context: string,
     systemPrompt: string,
-    apiKey: string
+    apiKey: string,
+    model: 'gemini-2.0-flash' | 'gemini-1.5-pro' = 'gemini-2.0-flash',
+    temperature: number = 0.2
 ): Promise<string> {
-    const MODEL_NAME = 'gemini-2.0-flash';
     const hostname = 'generativelanguage.googleapis.com';
-    const path = `/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`;
+    const path = `/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
     const data = {
         systemInstruction: {
@@ -41,7 +42,7 @@ export async function callGemini(
             },
         ],
         generationConfig: {
-            temperature: 0.2,
+            temperature,
             maxOutputTokens: 8192,
         },
     };
