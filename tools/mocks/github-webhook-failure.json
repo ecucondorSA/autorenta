@@ -1,0 +1,20 @@
+{
+    "action": "completed",
+    "workflow_run": {
+        "id": 123456789,
+        "name": "CI",
+        "head_branch": "feat/buggy-feature",
+        "head_sha": "deadbeef",
+        "path": ".github/workflows/ci.yml",
+        "conclusion": "failure",
+        "created_at": "2026-01-26T10:00:00Z",
+        "updated_at": "2026-01-26T10:05:00Z"
+    },
+    "repository": {
+        "name": "autorenta",
+        "full_name": "ecucondorSA/autorenta",
+        "owner": {
+            "login": "ecucondorSA"
+        }
+    }
+}
