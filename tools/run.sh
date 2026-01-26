@@ -2,17 +2,15 @@
 
 set -e
 
-source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
+# Source utils.sh
+if [ -f "./tools/utils.sh" ]; then
+  source "./tools/utils.sh"
+else
+  echo "Error: utils.sh not found in tools directory."
+  exit 1
+fi
 
-ACTION=$1
-shift
+AUTORENTA_DIR=$(pwd)
 
-case "${ACTION}" in
-  install)
-    install_dependencies
-    ;;
-  *)
-    echo "Unknown action: ${ACTION}"
-    exit 1
-    ;;
-esac
+# Run the install script
+install
