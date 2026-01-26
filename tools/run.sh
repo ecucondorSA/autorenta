@@ -2,17 +2,37 @@
 
 set -e
 
-source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
+source ./tools/utils.sh
 
-ACTION=$1
-shift
+AUTORENTA_DIR=$(pwd)
 
-case "${ACTION}" in
-  install)
-    install_dependencies
-    ;;
-  *)
-    echo "Unknown action: ${ACTION}"
-    exit 1
-    ;;
-esac
+# Install dependencies
+if [ "$1" = "install" ]; then
+  if [ -z "${AUTORENTA_SKIP_INSTALL}" ]; then
+    echo "Installing dependencies..."
+    npm install
+  else
+    echo "Skipping dependency installation..."
+  fi
+fi
+
+# Run the command
+if [ "$1" = "dev" ]; then
+  npm run dev
+fi
+
+if [ "$1" = "build" ]; then
+  npm run build
+fi
+
+if [ "$1" = "test" ]; then
+  npm run test
+fi
+
+if [ "$1" = "lint" ]; then
+  npm run lint
+fi
+
+if [ "$1" = "format" ]; then
+  npm run format
+fi
