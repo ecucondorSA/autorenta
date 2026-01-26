@@ -1,4 +1,5 @@
-@import 'src/theme/variables';
+// Note: Theme variables are defined as CSS custom properties in global styles
+// and don't need to be imported here
 
 .landing-page {
   --ivory-accent: #f8f5f0;
