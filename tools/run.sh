@@ -2,15 +2,13 @@
 
 set -e
 
-# Add any necessary setup or environment configuration here
+COMMAND="$1"
+shift
 
-if [ "$1" = "build" ]; then
-  echo "Building..."
-  # Execute the Angular build command directly, avoiding recursive prebuild triggering
-  npx ng build
+echo ". ${COMMAND}: Running command: ${COMMAND} $@"
+
+if [ "${COMMAND}" = "install" ]; then
+  pnpm install
 else
-  echo "Running command: $@"
-  "$@"
+  ${COMMAND} $@
 fi
-
-exit 0
