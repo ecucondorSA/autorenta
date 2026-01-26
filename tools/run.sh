@@ -1,25 +1,30 @@
-#!/bin/bash
-
 set -e
 
-COMMAND=$1
-shift
+# Default command if none is provided
+CMD=""
+if [ -n "$1" ]; then
+  CMD="$1"
+fi
 
-echo "Running command: $COMMAND"
+echo "Running command: $CMD"
 
-case "$COMMAND" in
+case "$CMD" in
+  build)
+    echo "Running build steps..."
+    # Add your build commands here
+    pnpm -r build
+    ;;
   install)
     if [ -z "$AUTORENTA_SKIP_INSTALL" ]; then
-      pnpm install "$@"
+      echo "Running install steps..."
+      # Add your install commands here
+      pnpm install
     else
       echo "Skipping install command due to AUTORENTA_SKIP_INSTALL being set."
     fi
     ;;
-  build)
-    pnpm build # Or npm run build, depending on your project's setup
-    ;;
   *)
-    echo "Unknown command: $COMMAND"
+    echo "Unknown command: $CMD"
     exit 1
     ;;
 
