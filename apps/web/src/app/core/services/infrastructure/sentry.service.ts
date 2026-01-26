@@ -282,6 +282,7 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
     ignoreErrors: [
       // Browser extensions
       'ResizeObserver loop limit exceeded',
+      'ResizeObserver loop completed with undelivered notifications',
       'Non-Error promise rejection captured',
       'top.GLOBALS',
       'chrome-extension://',
@@ -291,9 +292,41 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
       'NetworkError',
       'Failed to fetch',
       'Network request failed',
+      'Load failed',
+      'The operation was aborted',
 
       // Angular issues
-      'NG0', // Hydration warnings
+      'NG0', // Hydration warnings (NG0750, etc.)
+      'ExpressionChangedAfterItHasBeenCheckedError',
+
+      // Facebook SDK errors (expected when ad blockers are active)
+      'FB is not defined',
+      'fb is not defined',
+      'Facebook SDK',
+      'facebook login',
+      'FacebookExpectedError',
+      'bloqueador de anuncios',
+      'ad blocker',
+
+      // WebAuthn errors (expected user behavior)
+      'NotAllowedError',
+      'The operation either timed out',
+      'authenticator',
+
+      // User-initiated actions
+      'User cancelled',
+      'User denied',
+      'cancelled by user',
+      'cancelado',
+
+      // Common benign errors
+      'Loading chunk',
+      'ChunkLoadError',
+      'Script error',
+      'style is not done loading',
+
+      // Object serialization (catch-all for [object Object])
+      '[object Object]',
     ],
 
     // Ignore specific URLs

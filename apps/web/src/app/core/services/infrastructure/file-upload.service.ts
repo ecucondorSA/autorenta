@@ -136,13 +136,20 @@ export class FileUploadService {
 
       if (opts.compressImages && this.isImage(file)) {
         try {
+          // For very large images (>5MB), use more aggressive compression
+          const isLargeFile = file.size > 5 * 1024 * 1024;
+          const targetSize = isLargeFile ? Math.min(opts.targetSizeMB, 0.8) : opts.targetSizeMB;
+          const maxDimension = isLargeFile ? Math.min(opts.maxImageDimension, 1600) : opts.maxImageDimension;
+
           const compressed = await this.compressImage(file, {
-            maxSizeMB: opts.targetSizeMB,
-            maxWidthOrHeight: opts.maxImageDimension,
+            maxSizeMB: targetSize,
+            maxWidthOrHeight: maxDimension,
           });
 
           fileToUpload = compressed;
           compressedSize = compressed.size;
+
+          const compressionRatio = ((1 - compressed.size / file.size) * 100).toFixed(0);
 
           this.logger.info(
             'Image compressed',
@@ -150,13 +157,43 @@ export class FileUploadService {
             {
               original: `${(file.size / 1024).toFixed(0)}KB`,
               compressed: `${(compressed.size / 1024).toFixed(0)}KB`,
-              ratio: `${((1 - compressed.size / file.size) * 100).toFixed(0)}%`,
+              ratio: `${compressionRatio}%`,
             }
           );
+
+          // If compression didn't help much and file is still too large, warn user
+          if (compressedSize > 45 * 1024 * 1024) { // 45MB threshold (below 50MB Supabase limit)
+            return {
+              success: false,
+              error: 'La imagen es demasiado grande incluso después de comprimirla. Por favor, usa una imagen más pequeña.',
+              originalSize: file.size,
+              compressedSize,
+            };
+          }
         } catch (compressionError) {
-          // If compression fails, upload original
-          this.logger.warn('Image compression failed, uploading original', 'FileUploadService', compressionError);
+          // If compression fails, check if original is uploadable
+          this.logger.warn('Image compression failed', 'FileUploadService', compressionError);
+
+          // If file is too large to upload without compression, fail gracefully
+          if (file.size > 45 * 1024 * 1024) {
+            return {
+              success: false,
+              error: 'No se pudo comprimir la imagen y es demasiado grande para subir. Intenta con una imagen más pequeña.',
+              originalSize: file.size,
+            };
+          }
+          // Otherwise, try uploading original
         }
+      }
+
+      // For videos, check size limit directly (no compression available)
+      if (this.isVideo(file) && file.size > 45 * 1024 * 1024) {
+        const fileMB = (file.size / (1024 * 1024)).toFixed(1);
+        return {
+          success: false,
+          error: `El video (${fileMB}MB) es demasiado grande. El límite para videos es 45MB. Intenta grabando en menor calidad.`,
+          originalSize: file.size,
+        };
       }
 
       // 4. Generate unique filename
@@ -175,21 +212,69 @@ export class FileUploadService {
         });
 
       if (uploadError) {
-        this.logger.error('File upload failed', 'FileUploadService', uploadError);
+        // Log with details for debugging (won't send raw error to Sentry due to our filters)
+        this.logger.warn('File upload failed', 'FileUploadService', {
+          message: uploadError.message,
+          fileSize: fileToUpload.size,
+          originalSize: file.size,
+          bucket: opts.bucket,
+        });
 
-        // Handle specific Supabase errors
-        if (uploadError.message.includes('exceeded')) {
+        // Handle specific Supabase Storage errors
+        const errorMsg = uploadError.message?.toLowerCase() || '';
+
+        // Size exceeded errors
+        if (errorMsg.includes('exceeded') || errorMsg.includes('too large') ||
+            errorMsg.includes('maximum') || errorMsg.includes('size limit') ||
+            errorMsg.includes('payload too large')) {
+          const currentMB = (fileToUpload.size / (1024 * 1024)).toFixed(1);
           return {
             success: false,
-            error: 'El archivo es demasiado grande. Por favor, reduce el tamaño o calidad.',
+            error: `El archivo (${currentMB}MB) supera el límite permitido. Intenta con un archivo más pequeño o reduce la calidad de la imagen.`,
             originalSize: file.size,
             compressedSize,
           };
         }
 
+        // Bucket not found
+        if (errorMsg.includes('bucket') && (errorMsg.includes('not found') || errorMsg.includes('does not exist'))) {
+          this.logger.error('Storage bucket not configured', 'FileUploadService', { bucket: opts.bucket });
+          return {
+            success: false,
+            error: 'Error de configuración del servidor. Contacta a soporte.',
+          };
+        }
+
+        // Permission errors
+        if (errorMsg.includes('permission') || errorMsg.includes('denied') || errorMsg.includes('unauthorized')) {
+          return {
+            success: false,
+            error: 'No tienes permiso para subir archivos. Por favor inicia sesión nuevamente.',
+          };
+        }
+
+        // Duplicate file
+        if (errorMsg.includes('duplicate') || errorMsg.includes('already exists')) {
+          return {
+            success: false,
+            error: 'Este archivo ya fue subido previamente.',
+          };
+        }
+
+        // Network errors
+        if (errorMsg.includes('network') || errorMsg.includes('timeout') || errorMsg.includes('connection')) {
+          return {
+            success: false,
+            error: 'Error de conexión. Verifica tu internet e intenta nuevamente.',
+          };
+        }
+
+        // Generic fallback with user-friendly message
         return {
           success: false,
-          error: 'Error al subir el archivo. Intenta nuevamente.',
+          error: 'No se pudo subir el archivo. Intenta con un archivo más pequeño o en otro formato.',
+          originalSize: file.size,
+          compressedSize,
         };
       }
 
@@ -249,6 +334,13 @@ export class FileUploadService {
    */
   private isImage(file: File): boolean {
     return file.type.startsWith('image/');
+  }
+
+  /**
+   * Check if file is a video
+   */
+  private isVideo(file: File): boolean {
+    return file.type.startsWith('video/');
   }
 
   /**

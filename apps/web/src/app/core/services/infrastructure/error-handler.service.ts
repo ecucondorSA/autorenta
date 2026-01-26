@@ -88,12 +88,53 @@ export class ErrorHandlerService {
 
   /**
    * ✅ FIX: Ignore known benign UI/runtime errors to reduce Sentry noise
+   * Includes: Facebook SDK errors, ResizeObserver, style loading, ad blockers
    */
   private isBenignRuntimeError(error: unknown): boolean {
+    // Check for explicitly marked expected errors
+    if (error instanceof Error && error.name === 'FacebookExpectedError') {
+      return true;
+    }
+
     const errorMessage = this.extractErrorMessage(error).toLowerCase();
-    return /style is not done loading|resizeobserver loop limit exceeded|fb is not defined|facebook sdk failed|ad blocker/i.test(
-      errorMessage,
-    );
+
+    // Comprehensive list of benign error patterns
+    const benignPatterns = [
+      // Browser/DOM errors
+      'style is not done loading',
+      'resizeobserver loop',
+      'loading chunk',
+      'chunkloaderror',
+
+      // Facebook SDK errors (expected when ad blockers are active)
+      'fb is not defined',
+      'fb not defined',
+      'facebook sdk',
+      'facebook login',
+      'fblogin',
+      'sdk failed',
+      'ad blocker',
+      'bloqueador de anuncios',
+      'facebook no está disponible',
+      'facebook not available',
+
+      // WebAuthn errors (expected user behavior)
+      'webauthn',
+      'notallowederror',
+      'the operation either timed out',
+      'authenticator',
+
+      // Network/timeout (often transient)
+      'network request failed',
+      'failed to fetch',
+      'timeout exceeded',
+
+      // Angular known issues
+      'ng0750',
+      'expressionchanged',
+    ];
+
+    return benignPatterns.some(pattern => errorMessage.includes(pattern));
   }
 
   /**

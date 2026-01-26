@@ -48,12 +48,56 @@ export class FacebookAuthService {
 
   /**
    * Detect expected/benign Facebook errors (ad blockers, user cancellation, SDK blocked)
+   * These errors should NOT be sent to Sentry as they are user-environment issues
    */
   private isExpectedFacebookError(error: unknown): boolean {
     const message = error instanceof Error ? error.message : String(error ?? '');
-    return /ad blocker|bloqueador|sdk|fb is not defined|not available|cancelled|canceled|blocked|timeout/i.test(
-      message.toLowerCase(),
-    );
+    const lowerMessage = message.toLowerCase();
+
+    // Comprehensive list of expected Facebook error patterns
+    const expectedPatterns = [
+      'ad blocker',
+      'bloqueador',
+      'sdk',
+      'fb is not defined',
+      'fb not defined',
+      'not available',
+      'no está disponible',
+      'cancelled',
+      'canceled',
+      'cancelado',
+      'blocked',
+      'bloqueado',
+      'timeout',
+      'network',
+      'failed to load',
+      'not loaded',
+      'no cargado',
+      'popup',
+      'window closed',
+      'user denied',
+      'permission denied',
+      'access denied',
+      'login was cancelled',
+      'login failed',
+      'not initialized',
+      'initialization failed',
+      'config_id',
+      'fblogin',
+      'facebook login',
+    ];
+
+    return expectedPatterns.some(pattern => lowerMessage.includes(pattern));
+  }
+
+  /**
+   * Create a user-friendly error that won't be sent to Sentry
+   * by marking it as an expected error
+   */
+  private createExpectedError(message: string): Error {
+    const error = new Error(message);
+    error.name = 'FacebookExpectedError';
+    return error;
   }
 
   /**
@@ -171,7 +215,7 @@ export class FacebookAuthService {
       if (!this.initialized) {
         const success = await this.initialize();
         if (!success) {
-          throw new Error(
+          throw this.createExpectedError(
             'Facebook Login no está disponible. Puede estar bloqueado por un bloqueador de anuncios o extensión del navegador.',
           );
         }
@@ -179,7 +223,7 @@ export class FacebookAuthService {
 
       // Double-check SDK is available (for web)
       if (isPlatformBrowser(this.platformId) && !this.isFBAvailable()) {
-        throw new Error(
+        throw this.createExpectedError(
           'El SDK de Facebook no está cargado. Por favor, desactiva tu bloqueador de anuncios e intenta de nuevo.',
         );
       }
