@@ -1,94 +1,78 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../../../../environments/environment';
 
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  error?: string;
 }
 
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
+interface SecurityQuestion {
+  id: number;
+  question: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private apiUrl = environment.apiUrl;
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  constructor(private http: HttpClient) {}
 
-  private realtimeSubscription?: RealtimeChannel;
-
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  getSecurityQuestions(): Observable<ApiResponse<SecurityQuestion[]>> {
+    return this.http.get<ApiResponse<SecurityQuestion[]>>(`${this.apiUrl}/security-questions`);
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
+  setUserSecurityQuestions(userId: string, question1Id: number, answer1: string, question2Id: number, answer2: string): Observable<ApiResponse<any>> {
+    const payload = {
+      userId,
+      question1Id,
+      answer1,
+      question2Id,
+      answer2,
+    };
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/user-security-questions`, payload);
   }
 
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
-    });
+  verifySecurityQuestions(userId: string, question1Id: number, answer1: string, question2Id: number, answer2: string): Observable<ApiResponse<boolean>> {
+    const payload = {
+      userId,
+      question1Id,
+      answer1,
+      question2Id,
+      answer2,
+    };
+    return this.http.post<ApiResponse<boolean>>(`${this.apiUrl}/verify-security-questions`, payload);
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  enable2FA(userId: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/enable-2fa`, { userId });
+  }
+
+  disable2FA(userId: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/disable-2fa`, { userId });
+  }
+
+  generateRecoveryCodes(userId: string): Observable<ApiResponse<string[]>> {
+      return this.http.post<ApiResponse<string[]>>(`${this.apiUrl}/generate-recovery-codes`, { userId });
+  }
+
+  verifyRecoveryCode(userId: string, code: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/verify-recovery-code`, { userId, code });
+  }
+
+  invalidateRecoveryCodes(userId: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/invalidate-recovery-codes`, { userId });
+  }
+
+  get2FAStatus(userId: string): Observable<ApiResponse<{ enabled: boolean }>> {
+    return this.http.get<ApiResponse<{ enabled: boolean }>>(`${this.apiUrl}/2fa-status?userId=${userId}`);
+  }
+
+  getAuditLog(userId: string, page: number = 1, pageSize: number = 10): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/audit-log?userId=${userId}&page=${page}&pageSize=${pageSize}`);
   }
 }
