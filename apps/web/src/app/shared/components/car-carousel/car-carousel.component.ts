@@ -1,43 +1,31 @@
-import { Component, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Car } from '@core/models/car.model';
+import { environment } from 'src/environments/environment';
 import { register } from 'swiper/element/bundle';
 register();
-
-import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
 
 @Component({
   selector: 'app-car-carousel',
   templateUrl: './car-carousel.component.html',
-  styleUrls: ['./car-carousel.component.scss'],
-  standalone: true,
-  imports: [CarMiniCardComponent],
+  styleUrls: ['./car-carousel.component.scss']
 })
-export class CarCarouselComponent implements AfterViewInit {
-  @Input() cars: any[] = [];
-  @ViewChild('swiperEl') swiperEl: ElementRef | undefined;
+export class CarCarouselComponent {
 
-  ngAfterViewInit(): void {
-    // Optional: You can configure Swiper parameters here if needed
-    if (this.swiperEl) {
-      Object.assign(this.swiperEl.nativeElement, {
-        slidesPerView: 1.2,
-        spaceBetween: 10,
-        breakpoints: {
-          640: {
-            slidesPerView: 2.2,
-            spaceBetween: 10,
-          },
-          768: {
-            slidesPerView: 3.2,
-            spaceBetween: 20,
-          },
-          1024: {
-            slidesPerView: 4.2,
-            spaceBetween: 30,
-          },
-        },
-      });
+  @Input() cars: Car[] | null = [];
+  @Input() title: string = '';
+  @Input() skeletonCount: number = 3;
+  @Input() slidePerView: number = 1.1;
+  @Input() showTitle: boolean = true;
 
-      this.swiperEl.nativeElement.initialize();
-    }
-  }
+  readonly imageBaseUrl = environment.imageBaseUrl;
+
+  swiperParams = {
+    slidesPerView: this.slidesPerView,
+    spaceBetween: 10,
+  };
+
+  constructor() { }
+
+  // REMOVED EMPTY LIFECYCLE METHOD
+
 }
