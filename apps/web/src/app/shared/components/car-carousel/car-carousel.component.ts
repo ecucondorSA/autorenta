@@ -1,49 +1,26 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
-import { Car } from '@core/models/car.model';
-import { SoundService } from '@core/services/ui/sound.service';
-import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
-import { SwiperOptions } from 'swiper/types';
+import { Component, Input, AfterViewInit } from '@angular/core';
 import { register } from 'swiper/element/bundle';
-
 register();
 
+import { CarMiniCardComponent } from '../car-mini-card/car-mini-card.component';
+
 @Component({
-  selector: 'app-car-carousel',
-  standalone: true,
-  imports: [CarMiniCardComponent],
+  selector: 'ar-car-carousel',
   templateUrl: './car-carousel.component.html',
-  styleUrls: ['./car-carousel.component.scss'],
+  styleUrls: ['./car-carousel.component.less']
 })
-export class CarCarouselComponent implements OnInit, OnDestroy {
-  @Input() cars: Car[] = [];
+export class CarCarouselComponent implements AfterViewInit {
+
+  @Input() cars: any[] = [];
   @Input() title: string = '';
-  @Input() showViewAll: boolean = true;
-  @Input() link: string = '';
+  @Input() subtitle: string = '';
 
-  private destroy$ = new Subject<void>();
-
-  swiperParams: SwiperOptions = {
+  swiperParams = {
     slidesPerView: 'auto',
-    spaceBetween: 10,
+    spaceBetween: 16,
   };
 
-  constructor(private router: Router, private soundService: SoundService) {}
-
-  ngOnInit(): void {}
-
-  viewAll() {
-    this.soundService
-      .pressSound()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.router.navigate([this.link]);
-      });
+  ngAfterViewInit(): void {
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
 }
