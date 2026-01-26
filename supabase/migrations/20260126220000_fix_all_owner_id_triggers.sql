@@ -320,11 +320,11 @@ END;
 $$;
 
 -- ============================================================================
--- 4. ENSURE: owner_id column exists in bookings table with auto-populate
+-- 4. ENSURE: owner_id column and backfill (function/trigger already in 20260126210000)
 -- ============================================================================
 DO $$
 BEGIN
-    -- Add owner_id column if not exists
+    -- Add owner_id column if not exists (idempotent)
     IF NOT EXISTS (
         SELECT 1 FROM information_schema.columns
         WHERE table_schema = 'public'
@@ -338,26 +338,10 @@ BEGIN
     END IF;
 END $$;
 
--- Create trigger to auto-populate owner_id on INSERT
-CREATE OR REPLACE FUNCTION public.populate_booking_owner_id()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.owner_id IS NULL AND NEW.car_id IS NOT NULL THEN
-        SELECT owner_id INTO NEW.owner_id
-        FROM public.cars
-        WHERE id = NEW.car_id;
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+-- NOTE: populate_booking_owner_id function and trigger are already created in
+-- migration 20260126210000_fix_bookings_missing_columns.sql
 
-DROP TRIGGER IF EXISTS trigger_populate_booking_owner_id ON public.bookings;
-CREATE TRIGGER trigger_populate_booking_owner_id
-    BEFORE INSERT ON public.bookings
-    FOR EACH ROW
-    EXECUTE FUNCTION public.populate_booking_owner_id();
-
--- Backfill owner_id for existing records
+-- Backfill owner_id for existing records (idempotent)
 UPDATE public.bookings b
 SET owner_id = c.owner_id
 FROM public.cars c
