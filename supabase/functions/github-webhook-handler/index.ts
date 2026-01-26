@@ -50,15 +50,26 @@ serve(async (req) => {
         // Truncate logs if too huge for context
         const snippet = logs.slice(-8000); // Last 8000 chars
 
-        // 2. Ask Gemini
+        // 2. Ask Gemini for a Fix
         const systemPrompt = `You are a CI/CD Repair Agent (Tier 6).
-    Analyze the provided GitHub Actions Log snippet.
-    1. Identify the root cause of the error.
-    2. Propose a specific fix explanation in Spanish.
-    3. Return a JSON Summary: { "cause": "...", "fix_plan": "...", "is_infrastructure_error": boolean }`;
+        Analyze the provided GitHub Actions Log snippet.
+        
+        GOAL: Correct the error by modifying the code.
+        
+        RESPONSE FORMAT (JSON):
+        {
+          "cause": "Explanation of error",
+          "fix_plan": "Description of fix",
+          "target_file_path": "path/to/file.ts",
+          "fixed_file_content": "FULL NEW CONTENT OF THE FILE"
+        }
+        
+        RULES:
+        1. If the error is NOT fixable by code change (e.g. server down), set "target_file_path" to null.
+        2. Return VALID JSON only.`;
 
         const analysisRaw = await callGemini(
-            "Analyze this failure log.",
+            "Analyze this failure log and provide a fix.",
             snippet,
             systemPrompt,
             GOOGLE_API_KEY
@@ -66,12 +77,65 @@ serve(async (req) => {
 
         console.log('Gemini Analysis:', analysisRaw);
 
-        // Tier 6 MVP: Just logging the analysis for now.
-        // Advanced: Create PR based on "fix_plan" if is_infrastructure_error allows.
+        // Parse the JSON response/fix
+        const cleanJson = analysisRaw.replace(/```json/g, '').replace(/```/g, '').trim();
+        let fixData;
+        try {
+            fixData = JSON.parse(cleanJson);
+        } catch (e) {
+            console.error('Failed to parse Gemini JSON:', e);
+            return new Response(JSON.stringify({ message: 'Analysis failed to parse' }), { headers: corsHeaders });
+        }
+
+        if (fixData.target_file_path) {
+            console.log(`🚑 Attempting auto-fix on ${fixData.target_file_path}`);
+
+            // 3. Create Branch
+            const fixBranch = `fix/ai-auto-repair-${Date.now()}`;
+            try {
+                // Determine base branch from payload (the one that failed)
+                const baseBranch = payload.workflow_run.head_branch;
+                await github.createBranch(baseBranch, fixBranch);
+
+                // 4. Get current SHA of file to update
+                // Note: We need to handle if file doesn't exist (creation) vs update. For now assume update.
+                const currentFile = await github.getContent(fixData.target_file_path, fixBranch);
+
+                if (currentFile) {
+                    // 5. Apply Fix
+                    await github.updateFile(
+                        fixData.target_file_path,
+                        fixData.fixed_file_content,
+                        `fix(ci): auto-repair by Tier 6 Brain 🧠`,
+                        currentFile.sha,
+                        fixBranch
+                    );
+
+                    // 6. Create PR
+                    const pr = await github.createPR(
+                        `🚑 Fix: ${fixData.cause}`,
+                        `Auto-generated fix by AutoRenta Tier 6 Brain.\n\n**Analysis**: ${fixData.cause}\n**Plan**: ${fixData.fix_plan}`,
+                        fixBranch,
+                        baseBranch
+                    );
+
+                    console.log(`✅ PR Created: ${pr.html_url}`);
+
+                    return new Response(JSON.stringify({
+                        message: 'Fix PR Created',
+                        prUrl: pr.html_url,
+                        analysis: fixData
+                    }), { headers: corsHeaders });
+                }
+            } catch (err) {
+                console.error('Failed to apply fix:', err);
+                // Fallthrough to return analysis only
+            }
+        }
 
         return new Response(JSON.stringify({
-            message: 'Analysis Complete',
-            analysis: analysisRaw,
+            message: 'Analysis Complete (No Fix Applied)',
+            analysis: cleanJson,
             jobId: failedJob.id
         }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
