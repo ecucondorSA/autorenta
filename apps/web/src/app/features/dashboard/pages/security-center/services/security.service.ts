@@ -1,94 +1,112 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
-
-export interface SecurityDevice {
-  id: string;
-  device_type: 'AIRTAG' | 'SMARTTAG' | 'GPS_HARDWIRED' | 'OBD_KILLSWITCH';
-  is_active: boolean;
-  battery_level: number;
-  last_ping: string;
-}
-
-export interface SecurityAlert {
-  id: string;
-  alert_type: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  created_at: string;
-  resolved: boolean;
-}
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { environment } from 'apps/web/src/environments/environment';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private readonly apiUrl = environment.apiUrl;
+  private readonly http = inject(HttpClient);
 
-  // State Signals
-  readonly devices = signal<SecurityDevice[]>([]);
-  readonly activeAlerts = signal<SecurityAlert[]>([]);
-  readonly mapCenter = signal<[number, number] | null>(null);
+  private readonly _is2FAEnabled = new BehaviorSubject<boolean>(false);
+  public readonly is2FAEnabled$: Observable<boolean> = this._is2FAEnabled.asObservable();
 
-  private realtimeSubscription?: RealtimeChannel;
-
-  async loadDashboardData(carId: string) {
-    // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
-
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
-
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
-
-    // 3. Suscribirse a cambios en tiempo real
-    this.subscribeToRealtime(carId);
+  constructor() {
+    this.load2FAStatus();
   }
 
-  private subscribeToRealtime(carId: string) {
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload: any) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload: any) => {
-          // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
-        },
-      )
-      .subscribe();
-  }
-
-  // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
+  load2FAStatus(): void {
+    this.get2FAStatus().subscribe((isEnabled) => {
+      this._is2FAEnabled.next(isEnabled);
     });
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
-      body: { claim_id: claimId },
-    });
+  get2FAStatus(): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/auth/2fa/status`).pipe(tap(console.log));
+  }
+
+  enable2FA(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/2fa/enable`, {}).pipe(tap(console.log));
+  }
+
+  disable2FA(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/2fa/disable`, {}).pipe(tap(console.log));
+  }
+
+  generate2FASecret(): Observable<{
+    secret: string;
+    qrCodeUrl: string;
+  }> {
+    return this.http.get<{
+      secret: string;
+      qrCodeUrl: string;
+    }>(`${this.apiUrl}/auth/2fa/generate`).pipe(tap(console.log));
+  }
+
+  verify2FAToken(token: string): Observable<any> {
+    return this.http
+      .post<any>(`${this.apiUrl}/auth/2fa/verify`, { token })
+      .pipe(tap(console.log));
+  }
+
+  getRecoveryCodes(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/auth/recovery-codes`).pipe(tap(console.log));
+  }
+
+  invalidateRecoveryCodes(): Observable<string[]> {
+    return this.http
+      .post<string[]>(`${this.apiUrl}/auth/recovery-codes/invalidate`, {})
+      .pipe(tap(console.log));
+  }
+
+  backupCodes(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/recovery-codes/backup`, {}).pipe(tap(console.log));
+  }
+
+  loginWithRecoveryCode(recoveryCode: string): Observable<any> {
+    return this.http
+      .post<any>(`${this.apiUrl}/auth/recovery-code/login`, { recoveryCode })
+      .pipe(tap(console.log));
+  }
+
+  // Password Management
+  changePassword(changePasswordDto: {
+    currentPasswordPlain: string;
+    newPasswordPlain: string;
+  }): Observable<any> {
+    return this.http
+      .post<any>(`${this.apiUrl}/auth/change-password`, changePasswordDto)
+      .pipe(tap(console.log));
+  }
+
+  resetPassword(email: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/reset-password`, { email }).pipe(tap(console.log));
+  }
+
+  confirmResetPassword(confirmResetPasswordDto: {
+    resetToken: string;
+    newPasswordPlain: string;
+  }): Observable<any> {
+    return this.http
+      .post<any>(`${this.apiUrl}/auth/reset-password/confirm`, confirmResetPasswordDto)
+      .pipe(tap(console.log));
+  }
+
+  // Security Logs
+  getSecurityLogs(page: number, limit: number): Observable<any> {
+    return this.http
+      .get<any>(`${this.apiUrl}/security-logs?page=${page}&limit=${limit}`)
+      .pipe(tap(console.log));
+  }
+
+  // WebAuthn
+  registerWebAuthn(name: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/webauthn/register`, { name }).pipe(tap(console.log));
+  }
+
+  verifyWebAuthn(token: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/webauthn/verify`, { token }).pipe(tap(console.log));
   }
 }
