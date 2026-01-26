@@ -6060,7 +6060,7 @@ BEGIN
   IF NEW.type = 'deposit' AND OLD.status = 'pending' AND NEW.status = 'completed' THEN
 
     -- Get Supabase URL and anon key from secrets (you'll need to set these)
-    edge_function_url := 'https://obxvffplochgeiclibng.supabase.co/functions/v1/send-deposit-confirmation-email';
+    edge_function_url := 'https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/send-deposit-confirmation-email';
 
     -- Call Edge Function asynchronously using pg_net (if available)
     -- If pg_net is not available, this will fail silently
@@ -10903,7 +10903,7 @@ DECLARE
 BEGIN
   -- URL de tu proyecto Supabase + Edge Function
   -- IMPORTANTE: Reemplazar con tu URL real
-  v_function_url := 'https://obxvffplochgeiclibng.supabase.co/functions/v1/sync-binance-rates';
+  v_function_url := 'https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/sync-binance-rates';
 
   -- Service role key desde variables de entorno
   -- NOTA: En producción, la función ya tiene acceso al service role key
@@ -23541,7 +23541,7 @@ DECLARE
   v_service_role_key text;
   v_response_id bigint;
 BEGIN
-  v_function_url := 'https://obxvffplochgeiclibng.supabase.co/functions/v1/sync-binance-rates';
+  v_function_url := 'https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/sync-binance-rates';
 
   -- Token hardcodeado como fallback (expira 2045-03-22)
   v_service_role_key := 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyOTY5NjkwMywiZXhwIjoyMDQ1MjcyOTAzfQ.YNUd5hZcD1Y7rCJyiGDwuHcQTKLK3mFZGdqgXOC7Z3I';

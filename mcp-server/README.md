@@ -27,7 +27,7 @@ Servidor MCP (Model Context Protocol) personalizado para la plataforma AutoRenta
 
 ```env
 # Supabase Configuration
-SUPABASE_URL=https://obxvffplochgeiclibng.supabase.co
+SUPABASE_URL=https://pisqjmoklivzpwufhscx.supabase.co
 SUPABASE_ANON_KEY=your_anon_key_here
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here  # Opcional pero recomendado
 

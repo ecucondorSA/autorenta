@@ -15,7 +15,7 @@ BEGIN
   IF NEW.type = 'deposit' AND OLD.status = 'pending' AND NEW.status = 'completed' THEN
 
     -- Get Supabase URL and anon key from secrets (you'll need to set these)
-    edge_function_url := 'https://obxvffplochgeiclibng.supabase.co/functions/v1/send-deposit-confirmation-email';
+    edge_function_url := 'https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/send-deposit-confirmation-email';
 
     -- Call Edge Function asynchronously using pg_net (if available)
     -- If pg_net is not available, this will fail silently
