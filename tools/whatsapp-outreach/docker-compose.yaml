@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  waha:
+    image: devlikeapro/waha
+    container_name: waha
+    ports:
+      - "3000:3000"
+    environment:
+      - WHATSAPP_API_KEY=autorenta-secret-key-2026
+      - WAHA_DASHBOARD_ENABLED=true
+      - WAHA_DASHBOARD_USERNAME=autorenta
+      - WAHA_DASHBOARD_PASSWORD=AutoRenta2026!
+      # Session persistence - auto-restart on container start
+      - WHATSAPP_RESTART_ALL_SESSIONS=true
+      - WHATSAPP_START_SESSION=default
+      # Webhooks para n8n
+      - WHATSAPP_HOOK_URL=http://n8n:5678/webhook/waha
+      - WHATSAPP_HOOK_EVENTS=message,message.ack,session.status
+      # Keep session alive
+      - WHATSAPP_MARK_ONLINE=true
+    volumes:
+      - waha_sessions:/app/.sessions
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/sessions"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - outreach-network
+
+  n8n:
+    image: n8nio/n8n
+    container_name: n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=autorenta
+      - N8N_BASIC_AUTH_PASSWORD=AutoRenta2026!
+      # Use tunnel URL for external webhooks (Supabase triggers)
+      - WEBHOOK_URL=${N8N_WEBHOOK_URL:-http://localhost:5678}
+      - GENERIC_TIMEZONE=America/Argentina/Buenos_Aires
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./contacts:/home/node/contacts:ro
+    restart: unless-stopped
+    networks:
+      - outreach-network
+    depends_on:
+      - waha
+
+  # Cloudflare Tunnel for exposing n8n to the internet (for Supabase webhooks)
+  # To configure:
+  # 1. Go to https://one.dash.cloudflare.com/ -> Networks -> Tunnels
+  # 2. Create a tunnel named "autorenta-n8n"
+  # 3. Copy the token and add it to .env as CLOUDFLARE_TUNNEL_TOKEN
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    restart: unless-stopped
+    networks:
+      - outreach-network
+    depends_on:
+      - n8n
+    profiles:
+      - tunnel  # Only starts with: docker compose --profile tunnel up
+
+volumes:
+  waha_sessions:
+  n8n_data:
+
+networks:
+  outreach-network:
+    driver: bridge

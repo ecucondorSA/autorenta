@@ -1,0 +1,299 @@
+{
+  "name": "AutoRenta WhatsApp Outreach",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Ejecutar cada hora (9-21hs)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [0, 0],
+      "notes": "Solo envía entre 9am-9pm Argentina"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Verificar horario (9am - 9pm Argentina)\nconst now = new Date();\nconst argentinaHour = new Date(now.toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).getHours();\n\nif (argentinaHour < 9 || argentinaHour >= 21) {\n  return []; // No enviar fuera de horario\n}\n\nreturn [{ json: { proceed: true, hour: argentinaHour } }];"
+      },
+      "id": "check-time",
+      "name": "Verificar Horario",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "filePath": "/home/node/contacts/argentina_owners.csv",
+        "options": {
+          "headerRow": true
+        }
+      },
+      "id": "read-contacts",
+      "name": "Leer Contactos CSV",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "operation": "getAllEntries",
+        "returnAll": true
+      },
+      "id": "get-sent",
+      "name": "Obtener Enviados",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [440, 200],
+      "notes": "Alternativa: usar n8n's internal storage o Supabase"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filtrar contactos no enviados y limitar a 5 por hora\nconst contacts = $('Leer Contactos CSV').all();\nconst sentPhones = new Set($('Obtener Enviados').all().map(i => i.json.phone));\n\nconst pending = contacts\n  .filter(c => !sentPhones.has(c.json.phone))\n  .slice(0, 5); // Máximo 5 por hora = 60 por día\n\nconsole.log(`Pendientes: ${pending.length}`);\nreturn pending;"
+      },
+      "id": "filter-pending",
+      "name": "Filtrar Pendientes (max 5/hora)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 100]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generar mensaje personalizado con variación\nconst contact = $input.item.json;\n\nconst templates = [\n  // Template 1: Directo\n  `Hola ${contact.firstName}!\n\nVi que alquilás tu auto. Te escribo porque estamos lanzando AutoRenta, una app de alquiler P2P con mejor comisión (solo 15% vs 25-30% de otras apps).\n\nEstamos sumando los primeros propietarios en ${contact.isAmba === 'true' ? 'AMBA' : contact.province}. ¿Te interesa que te cuente más?\n\nEduardo - AutoRenta`,\n\n  // Template 2: Pregunta\n  `Hola ${contact.firstName}, cómo estás?\n\nSoy Eduardo de AutoRenta. Te contacto porque sos propietario que alquila su auto.\n\n¿Qué es lo que más te molesta de las apps de alquiler actuales?\n\nEstamos desarrollando algo diferente y tu feedback me ayudaría mucho.`,\n\n  // Template 3: Valor directo\n  `Hola ${contact.firstName}!\n\n3 razones por las que propietarios se están pasando a AutoRenta:\n\n1. Comisión 15% (vs 25-30% de otras)\n2. Cobrás en 24hs (no 7-14 días)  \n3. Vos controlás precios y disponibilidad\n\nEstamos sumando propietarios en ${contact.isAmba === 'true' ? 'AMBA' : contact.province}. ¿Te interesa?\n\nEduardo`\n];\n\n// Seleccionar template basado en hash del teléfono (consistente)\nconst hash = contact.phone.split('').reduce((a, b) => a + b.charCodeAt(0), 0);\nconst template = templates[hash % templates.length];\n\nreturn {\n  json: {\n    ...contact,\n    message: template,\n    chatId: contact.whatsappId\n  }\n};"
+      },
+      "id": "generate-message",
+      "name": "Generar Mensaje",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [880, 100]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://waha:3000/api/sendText",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Api-Key",
+              "value": "autorenta-secret-key-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"session\": \"default\",\n  \"chatId\": \"{{ $json.chatId }}\",\n  \"text\": \"{{ $json.message }}\"\n}"
+      },
+      "id": "send-whatsapp",
+      "name": "Enviar WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1100, 100]
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "={{ $json.phone }}",
+        "value": "={{ JSON.stringify({ sent: new Date().toISOString(), status: 'sent' }) }}",
+        "expire": true,
+        "ttl": 2592000
+      },
+      "id": "mark-sent",
+      "name": "Marcar como Enviado",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [1320, 100],
+      "notes": "TTL 30 días"
+    },
+    {
+      "parameters": {
+        "amount": 45,
+        "unit": "seconds"
+      },
+      "id": "wait",
+      "name": "Esperar 45s",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1100, 300],
+      "notes": "Entre cada mensaje para evitar ban"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "waha",
+        "options": {}
+      },
+      "id": "webhook-responses",
+      "name": "Webhook Respuestas",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [0, 400],
+      "webhookId": "waha-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Procesar respuesta entrante de WAHA\nconst payload = $input.item.json;\n\nif (payload.event !== 'message') return [];\nif (payload.payload.fromMe) return []; // Ignorar mensajes propios\n\nconst message = payload.payload;\nconst from = message.from.replace('@c.us', '');\nconst text = message.body?.toLowerCase() || '';\n\n// Detectar intención\nlet intent = 'unknown';\nif (text.includes('si') || text.includes('interesa') || text.includes('contame')) {\n  intent = 'interested';\n} else if (text.includes('no') || text.includes('gracias') || text.includes('no me interesa')) {\n  intent = 'not_interested';\n} else if (text.includes('comision') || text.includes('cuanto')) {\n  intent = 'question_commission';\n} else if (text.includes('seguro') || text.includes('garantia')) {\n  intent = 'question_insurance';\n} else if (text.includes('como') || text.includes('empezar') || text.includes('registr')) {\n  intent = 'question_howto';\n}\n\nreturn [{\n  json: {\n    from,\n    text: message.body,\n    intent,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "process-response",
+      "name": "Procesar Respuesta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.intent }}",
+              "rightValue": "interested",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "is-interested",
+      "name": "¿Interesado?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [440, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://waha:3000/api/sendText",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Api-Key",
+              "value": "autorenta-secret-key-2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"session\": \"default\",\n  \"chatId\": \"{{ $json.from }}@c.us\",\n  \"text\": \"Genial! Te cuento:\\n\\nAutoRenta es una app de alquiler de autos entre particulares. La diferencia con otras apps:\\n\\n- Comisión 15% (otras cobran 25-30%)\\n- Cobrás en 24hs después de cada alquiler\\n- Vos ponés el precio y controlás disponibilidad\\n- Cobertura incluida contra daños menores\\n\\n¿Querés que te mande el link para registrarte como propietario?\"\n}"
+      },
+      "id": "reply-interested",
+      "name": "Responder Interesado",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "create",
+        "tableId": "outreach_responses",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "phone": "={{ $json.from }}",
+            "message": "={{ $json.text }}",
+            "intent": "={{ $json.intent }}",
+            "created_at": "={{ $json.timestamp }}"
+          }
+        }
+      },
+      "id": "log-to-supabase",
+      "name": "Guardar en Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [880, 400],
+      "notes": "Opcional - para tracking"
+    }
+  ],
+  "connections": {
+    "Ejecutar cada hora (9-21hs)": {
+      "main": [
+        [{ "node": "Verificar Horario", "type": "main", "index": 0 }]
+      ]
+    },
+    "Verificar Horario": {
+      "main": [
+        [
+          { "node": "Leer Contactos CSV", "type": "main", "index": 0 },
+          { "node": "Obtener Enviados", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Leer Contactos CSV": {
+      "main": [
+        [{ "node": "Filtrar Pendientes (max 5/hora)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Obtener Enviados": {
+      "main": [
+        [{ "node": "Filtrar Pendientes (max 5/hora)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Filtrar Pendientes (max 5/hora)": {
+      "main": [
+        [{ "node": "Generar Mensaje", "type": "main", "index": 0 }]
+      ]
+    },
+    "Generar Mensaje": {
+      "main": [
+        [{ "node": "Enviar WhatsApp", "type": "main", "index": 0 }]
+      ]
+    },
+    "Enviar WhatsApp": {
+      "main": [
+        [
+          { "node": "Marcar como Enviado", "type": "main", "index": 0 },
+          { "node": "Esperar 45s", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Esperar 45s": {
+      "main": [
+        [{ "node": "Generar Mensaje", "type": "main", "index": 0 }]
+      ]
+    },
+    "Webhook Respuestas": {
+      "main": [
+        [{ "node": "Procesar Respuesta", "type": "main", "index": 0 }]
+      ]
+    },
+    "Procesar Respuesta": {
+      "main": [
+        [{ "node": "¿Interesado?", "type": "main", "index": 0 }]
+      ]
+    },
+    "¿Interesado?": {
+      "main": [
+        [{ "node": "Responder Interesado", "type": "main", "index": 0 }],
+        [{ "node": "Guardar en Supabase", "type": "main", "index": 0 }]
+      ]
+    },
+    "Responder Interesado": {
+      "main": [
+        [{ "node": "Guardar en Supabase", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "timezone": "America/Argentina/Buenos_Aires"
+  }
+}
