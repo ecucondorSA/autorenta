@@ -8,18 +8,7 @@ export type InteractionSource = 'map' | 'carousel' | 'idle';
 @Injectable()
 export class BrowseStore {
   // State Signals
-  readonly cars = signal<Car[]>([
-    {
-      id: 'test-uuid',
-      brand_text_backup: 'TEST',
-      model_text_backup: 'NEON CAR',
-      location_lat: -34.9011,
-      location_lng: -56.1645,
-      price_per_day: 100,
-      currency: 'USD',
-      status: 'active',
-    } as Car,
-  ]);
+  readonly cars = signal<Car[]>([]);
   readonly loading = signal<boolean>(true);
   readonly viewMode = signal<BrowseViewMode>('map');
 
@@ -56,20 +45,7 @@ export class BrowseStore {
   // Actions
   setCars(cars: Car[]) {
     console.log('[BrowseStore] 🚗 SET CARS:', cars.length);
-    if (cars.length > 0) {
-      console.log('[BrowseStore] Sample Car Coord:', cars[0].location_lat, cars[0].location_lng);
-    }
-    const testCar = {
-      id: 'test-uuid',
-      brand_text_backup: 'TEST',
-      model_text_backup: 'CAR',
-      location_lat: -34.9011,
-      location_lng: -56.1645,
-      price_per_day: 100,
-      currency: 'USD',
-      status: 'active',
-    } as Car;
-    this.cars.set([testCar, ...cars]);
+    this.cars.set(cars);
     this.loading.set(false);
   }
 
