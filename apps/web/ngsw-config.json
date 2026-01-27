@@ -164,6 +164,9 @@
     "!https://www.googletagmanager.com/**",
     "!https://*.google-analytics.com/**",
     "!https://i.pravatar.cc/**",
+    "!https://*.sentry.io/**",
+    "!https://*.ingest.sentry.io/**",
+    "!https://*.ingest.us.sentry.io/**",
     "/auth/**"
   ],
   "navigationRequestStrategy": "freshness"
