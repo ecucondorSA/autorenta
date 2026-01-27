@@ -683,7 +683,12 @@ export class CarsService {
       throw error;
     }
 
-    return (data || []) as CarWithScore[];
+    // Transform RPC response: `images` (string[]) -> `photos` ({url: string}[])
+    return (data || []).map((car: Record<string, unknown>) => ({
+      ...car,
+      photos: ((car['images'] as string[]) || []).map((url: string) => ({ url })),
+      car_photos: ((car['images'] as string[]) || []).map((url: string) => ({ url })),
+    })) as CarWithScore[];
   }
 
   /**
