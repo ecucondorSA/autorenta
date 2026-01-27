@@ -1043,6 +1043,13 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private updateMarkersBasedOnCount(): void {
     if (!this.map) return;
 
+    // Wait for style to be loaded before updating markers
+    // This prevents "Style is not done loading" errors when data arrives before map is ready
+    if (!this.map.isStyleLoaded()) {
+      this.map.once('style.load', () => this.updateMarkersBasedOnCount());
+      return;
+    }
+
     const carCount = this.cars.length;
 
     // Ensure spatial index is built for large datasets

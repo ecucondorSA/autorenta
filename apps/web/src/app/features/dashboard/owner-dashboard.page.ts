@@ -23,12 +23,12 @@ import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
 import { PressScaleDirective } from '@shared/directives/press-scale.directive';
 import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
+import { ReferralBannerComponent } from '@shared/components/referral-banner/referral-banner.component';
 import { MultiCarCalendarComponent } from './components/multi-car-calendar/multi-car-calendar.component';
 import { PayoutsHistoryComponent } from './components/payouts-history/payouts-history.component';
 import { PayoutsWidgetComponent } from './widgets/payouts.component';
 import { StatisticsWidgetComponent } from './widgets/statistics.component';
 import { NetworkParticipationWidgetComponent } from './widgets/network-participation.component';
-import { ReferralBannerComponent } from '@shared/components/referral-banner/referral-banner.component';
 
 @Component({
   standalone: true,
