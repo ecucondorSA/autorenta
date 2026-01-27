@@ -14,7 +14,7 @@ jobs:
   health-check:
     name: Check Service Health
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Check All Endpoints
@@ -93,10 +93,34 @@ jobs:
               }
             ));
 
-            // 4. Key Edge Functions
+            // 4. Key Edge Functions (organized by criticality)
             const edgeFunctions = [
+              // === CRITICAL: Payment Functions ===
+              'mercadopago-webhook',
+              'mercadopago-process-booking-payment',
+              'mercadopago-process-brick-payment',
+              'process-payment-queue',
+              'mp-create-preauth',
+              'mp-capture-preauth',
+              'wallet-transfer',
+
+              // === HIGH: User Flow Functions ===
+              'recognize-vehicle',
+              'verify-document',
+              'verify-face',
+              'send-push-notification',
+              'send-whatsapp-otp',
+              'booking-notify-n8n',
+
+              // === MEDIUM: Analytics & Integrations ===
+              'tiktok-events',
               'dashboard-stats',
               'sync-binance-rates',
+              'calculate-dynamic-price',
+
+              // === LOW: Supporting Functions ===
+              'get-fipe-value',
+              'generate-booking-contract-pdf',
             ];
 
             for (const fn of edgeFunctions) {
