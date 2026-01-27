@@ -124,27 +124,86 @@ Si NO hay vehículo visible:
 }`;
 
 // ============================================================================
+// CONSTANTS
+// ============================================================================
+
+const IMAGE_FETCH_TIMEOUT_MS = 10_000; // 10 seconds for image download
+const GEMINI_TIMEOUT_MS = 25_000; // 25 seconds for Gemini API
+const MAX_IMAGE_SIZE_BYTES = 500_000; // 500KB max for base64 encoding
+
+// ============================================================================
 // IMAGE HELPERS
 // ============================================================================
 
+/**
+ * Converts Uint8Array to base64 string efficiently using chunks
+ * Avoids stack overflow with large arrays
+ */
+function uint8ArrayToBase64(bytes: Uint8Array): string {
+  const CHUNK_SIZE = 8192;
+  let result = '';
+  for (let i = 0; i < bytes.length; i += CHUNK_SIZE) {
+    const chunk = bytes.subarray(i, Math.min(i + CHUNK_SIZE, bytes.length));
+    result += String.fromCharCode(...chunk);
+  }
+  return btoa(result);
+}
+
+/**
+ * Fetch with timeout support
+ */
+async function fetchWithTimeout(
+  url: string,
+  options: RequestInit = {},
+  timeoutMs: number
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    return response;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 async function imageUrlToBase64(url: string): Promise<{ base64: string; mimeType: string } | null> {
   try {
-    const response = await fetch(url);
+    console.log(`[recognize-vehicle] Fetching image from URL (timeout: ${IMAGE_FETCH_TIMEOUT_MS}ms)...`);
+
+    const response = await fetchWithTimeout(url, {}, IMAGE_FETCH_TIMEOUT_MS);
     if (!response.ok) {
-      console.error(`Failed to fetch image: ${response.status}`);
+      console.error(`[recognize-vehicle] Failed to fetch image: ${response.status}`);
       return null;
     }
 
     const contentType = response.headers.get('content-type') || 'image/jpeg';
     const arrayBuffer = await response.arrayBuffer();
-    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+
+    // Check image size
+    if (arrayBuffer.byteLength > MAX_IMAGE_SIZE_BYTES) {
+      console.warn(`[recognize-vehicle] Image size ${arrayBuffer.byteLength} bytes exceeds ${MAX_IMAGE_SIZE_BYTES} bytes limit`);
+    }
+
+    // Use chunked conversion to avoid stack overflow
+    const base64 = uint8ArrayToBase64(new Uint8Array(arrayBuffer));
+
+    console.log(`[recognize-vehicle] Image converted to base64 (${Math.round(arrayBuffer.byteLength / 1024)}KB)`);
 
     return {
       base64,
       mimeType: contentType.split(';')[0],
     };
   } catch (error) {
-    console.error('Error converting image to base64:', error);
+    if (error instanceof Error && error.name === 'AbortError') {
+      console.error('[recognize-vehicle] Image fetch timed out');
+    } else {
+      console.error('[recognize-vehicle] Error converting image to base64:', error);
+    }
     return null;
   }
 }
@@ -245,11 +304,17 @@ async function recognizeVehicle(
     },
   };
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(requestBody),
-  });
+  console.log(`[recognize-vehicle] Calling Gemini API (timeout: ${GEMINI_TIMEOUT_MS}ms)...`);
+
+  const response = await fetchWithTimeout(
+    url,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+    },
+    GEMINI_TIMEOUT_MS
+  );
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -423,25 +488,25 @@ serve(async (req: Request) => {
       console.log(`[recognize-vehicle] Validation: ${response.validation.matches ? 'MATCH' : 'MISMATCH'}`);
     }
 
-    // Optionally log to database
+    // Log to database (fire-and-forget, non-blocking)
     if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
-      try {
-        const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+      const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-        await supabase.from('vehicle_recognition_logs').insert({
-          image_url: image_url || null,
-          recognized_brand: vehicle.brand,
-          recognized_model: vehicle.model,
-          recognized_year_range: `[${vehicle.year_range[0]},${vehicle.year_range[1]}]`,
-          recognized_color: vehicle.color,
-          confidence: vehicle.confidence,
-          validation_result: validate_against ? response.validation : null,
-          created_at: new Date().toISOString(),
-        });
-      } catch (dbError) {
-        // Log but don't fail - table might not exist yet
+      // Don't await - let it run in background
+      supabase.from('vehicle_recognition_logs').insert({
+        image_url: image_url || null,
+        recognized_brand: vehicle.brand,
+        recognized_model: vehicle.model,
+        recognized_year_range: `[${vehicle.year_range[0]},${vehicle.year_range[1]}]`,
+        recognized_color: vehicle.color,
+        confidence: vehicle.confidence,
+        validation_result: validate_against ? response.validation : null,
+        created_at: new Date().toISOString(),
+      }).then(() => {
+        console.log('[recognize-vehicle] Log saved to database');
+      }).catch((dbError) => {
         console.warn('[recognize-vehicle] Could not save to database:', dbError);
-      }
+      });
     }
 
     return new Response(JSON.stringify(response), {
@@ -451,12 +516,28 @@ serve(async (req: Request) => {
   } catch (error) {
     console.error('[recognize-vehicle] Error:', error);
 
+    // Determine error type for better user feedback
+    let errorMessage = 'Error desconocido';
+    let statusCode = 500;
+
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        errorMessage = 'El análisis de la imagen tardó demasiado. Intenta con una imagen más pequeña.';
+        statusCode = 504; // Gateway Timeout
+      } else if (error.message.includes('Gemini API error')) {
+        errorMessage = 'Error en el servicio de análisis de imágenes. Intenta nuevamente.';
+        statusCode = 502; // Bad Gateway
+      } else {
+        errorMessage = error.message;
+      }
+    }
+
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : 'Error desconocido',
+        error: errorMessage,
       }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { status: statusCode, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });
