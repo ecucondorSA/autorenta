@@ -15,6 +15,7 @@
       "SubscriptionStatus"
     ],
     "rpcFunctions": [
+      "apply_referral_code",
       "auto_update_price_per_day",
       "booking_v2_auto_complete_inspection",
       "booking_v2_confirm_completion",
@@ -29,6 +30,7 @@
       "check_user_pending_deposits_limit",
       "cleanup_old_pending_deposits",
       "compute_fee_with_class",
+      "complete_referral_milestone",
       "compute_guarantee_with_class",
       "consume_protection_credit_for_claim",
       "create_mp_preauth_order",
