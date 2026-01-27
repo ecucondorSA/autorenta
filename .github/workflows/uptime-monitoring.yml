@@ -94,6 +94,7 @@ jobs:
             ));
 
             // 4. Key Edge Functions (organized by criticality)
+            // NOTE: Only includes DEPLOYED functions (verified via `supabase functions list`)
             const edgeFunctions = [
               // === CRITICAL: Payment Functions ===
               'mercadopago-webhook',
@@ -102,21 +103,19 @@ jobs:
               'process-payment-queue',
               'mp-create-preauth',
               'mp-capture-preauth',
-              'wallet-transfer',
 
               // === HIGH: User Flow Functions ===
               'recognize-vehicle',
               'verify-document',
               'verify-face',
               'send-push-notification',
-              'send-whatsapp-otp',
               'booking-notify-n8n',
+              'send-otp-via-n8n',
 
               // === MEDIUM: Analytics & Integrations ===
               'tiktok-events',
               'dashboard-stats',
               'sync-binance-rates',
-              'calculate-dynamic-price',
 
               // === LOW: Supporting Functions ===
               'get-fipe-value',
