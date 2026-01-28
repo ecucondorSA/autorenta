@@ -39,22 +39,25 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
           [(ngModel)]="searchQuery"
           (ngModelChange)="onSearch($event)"
           placeholder="Buscar modelo..."
-          class="w-full px-4 py-4 pl-12 bg-surface-raised border border-border-default rounded-xl text-lg focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all"
+          class="w-full px-4 py-4 bg-surface-raised border border-border-default rounded-xl text-lg focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all"
+          [class.pl-12]="!searchQuery"
           [disabled]="isLoading()"
         />
-        <svg
-          class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
+        @if (!searchQuery) {
+          <svg
+            class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted pointer-events-none"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        }
         @if (isLoading()) {
           <div class="absolute right-4 top-1/2 -translate-y-1/2">
             <svg class="animate-spin h-5 w-5 text-cta-default" fill="none" viewBox="0 0 24 24">
@@ -81,14 +84,14 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
             <button
               type="button"
               (click)="selectModel(model)"
-              class="w-full p-4 flex items-center justify-between bg-surface-raised border rounded-xl transition-all"
+              class="w-full p-4 flex items-center justify-between gap-2 bg-surface-raised border rounded-xl transition-all"
               [class.border-cta-default]="selectedModel()?.code === model.code"
               [class.bg-cta-default/5]="selectedModel()?.code === model.code"
               [class.shadow-md]="selectedModel()?.code === model.code"
               [class.border-border-default]="selectedModel()?.code !== model.code"
               [class.hover:border-cta-default/50]="selectedModel()?.code !== model.code"
             >
-              <span class="font-medium text-text-primary text-left">{{ model.name }}</span>
+              <span class="font-medium text-text-primary text-left text-sm sm:text-base break-words line-clamp-2 flex-1 min-w-0">{{ model.name }}</span>
               @if (selectedModel()?.code === model.code) {
                 <svg class="w-5 h-5 text-cta-default flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -121,14 +124,14 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
       <!-- Selected model indicator -->
       @if (selectedModel()) {
         <div class="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
-          <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-800 rounded-full flex items-center justify-center">
+          <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-800 rounded-full flex items-center justify-center flex-shrink-0">
             <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <div class="flex-1">
+          <div class="flex-1 min-w-0">
             <p class="text-sm text-emerald-700 dark:text-emerald-400">Modelo seleccionado</p>
-            <p class="font-semibold text-emerald-900 dark:text-emerald-200">{{ selectedModel()?.name }}</p>
+            <p class="font-semibold text-emerald-900 dark:text-emerald-200 text-sm sm:text-base break-words">{{ selectedModel()?.name }}</p>
           </div>
         </div>
       }
