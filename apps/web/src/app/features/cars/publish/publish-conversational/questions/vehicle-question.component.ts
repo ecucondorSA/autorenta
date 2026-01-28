@@ -30,7 +30,7 @@ import { CarBrandsService } from '@core/services/cars/car-brands.service';
           [(ngModel)]="searchQuery"
           (ngModelChange)="onSearch($event)"
           placeholder="Buscar marca..."
-          class="w-full px-4 py-4 pl-12 bg-surface-raised border border-border-default rounded-xl text-lg focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all"
+          class="w-full px-4 py-4 pl-14 bg-surface-raised border border-border-default rounded-xl text-lg focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all"
           [class.border-cta-default]="isFocused()"
           (focus)="isFocused.set(true)"
           (blur)="onBlur()"
@@ -179,20 +179,27 @@ export class VehicleQuestionComponent implements OnInit {
   readonly brands = signal<FipeBrand[]>([]);
   readonly selectedBrand = signal<FipeBrand | null>(null);
 
-  // Popular brands (hardcoded for quick display)
+  // Popular brands (hardcoded for quick display - must match FIPE API names exactly)
   private readonly POPULAR_BRAND_NAMES = [
-    'Volkswagen',
     'Fiat',
-    'Chevrolet',
     'Ford',
     'Toyota',
     'Honda',
     'Renault',
     'Hyundai',
-    'Jeep',
     'Nissan',
     'Peugeot',
+    'VW - VolksWagen',
+    'GM - Chevrolet',
+    'Kia Motors',
+    'BMW',
+    'Audi',
+    'Mercedes-Benz',
+    'Mazda',
+    'Jeep',
     'Citroën',
+    'Mitsubishi',
+    'Suzuki',
   ];
 
   readonly popularBrands = computed(() => {

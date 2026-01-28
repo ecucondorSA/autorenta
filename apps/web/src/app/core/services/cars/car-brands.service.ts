@@ -12,17 +12,13 @@ export interface CarBrandOption {
 export class CarBrandsService {
   private readonly BRANDS: CarBrandOption[] = [
     { code: 'toyota', name: 'Toyota', logoPath: '/assets/images/car-brands/toyota.svg' },
-    {
-      code: 'volkswagen',
-      name: 'Volkswagen',
-      logoPath: '/assets/images/car-brands/volkswagen.svg',
-    },
+    { code: 'volkswagen', name: 'VW - VolksWagen', logoPath: '/assets/images/car-brands/volkswagen.svg' },
     { code: 'ford', name: 'Ford', logoPath: '/assets/images/car-brands/ford.svg' },
-    { code: 'chevrolet', name: 'Chevrolet', logoPath: '/assets/images/car-brands/chevrolet.svg' },
+    { code: 'chevrolet', name: 'GM - Chevrolet', logoPath: '/assets/images/car-brands/chevrolet.svg' },
     { code: 'honda', name: 'Honda', logoPath: '/assets/images/car-brands/honda.svg' },
     { code: 'nissan', name: 'Nissan', logoPath: '/assets/images/car-brands/nissan.svg' },
     { code: 'hyundai', name: 'Hyundai', logoPath: '/assets/images/car-brands/hyundai.svg' },
-    { code: 'kia', name: 'Kia', logoPath: '/assets/images/car-brands/kia.svg' },
+    { code: 'kia', name: 'Kia Motors', logoPath: '/assets/images/car-brands/kia.svg' },
     { code: 'renault', name: 'Renault', logoPath: '/assets/images/car-brands/renault.svg' },
     { code: 'peugeot', name: 'Peugeot', logoPath: '/assets/images/car-brands/peugeot.svg' },
     { code: 'fiat', name: 'Fiat', logoPath: '/assets/images/car-brands/fiat.svg' },
@@ -30,6 +26,10 @@ export class CarBrandsService {
     { code: 'bmw', name: 'BMW', logoPath: '/assets/images/car-brands/bmw.svg' },
     { code: 'audi', name: 'Audi', logoPath: '/assets/images/car-brands/audi.svg' },
     { code: 'mazda', name: 'Mazda', logoPath: '/assets/images/car-brands/mazda.svg' },
+    { code: 'jeep', name: 'Jeep', logoPath: '/assets/images/car-brands/jeep.svg' },
+    { code: 'citroen', name: 'Citroën', logoPath: '/assets/images/car-brands/citroen.svg' },
+    { code: 'mitsubishi', name: 'Mitsubishi', logoPath: '/assets/images/car-brands/mitsubishi.svg' },
+    { code: 'suzuki', name: 'Suzuki', logoPath: '/assets/images/car-brands/suzuki.svg' },
   ];
 
   private readonly INSURANCE_BRANDS: CarBrandOption[] = [

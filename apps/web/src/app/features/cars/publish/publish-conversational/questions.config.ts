@@ -29,7 +29,7 @@ export const QUESTIONS_CONFIG: QuestionConfig[] = [
     subtitle: 'Esto nos ayuda a calcular el precio sugerido',
     icon: 'calendar',
     type: 'year',
-    validation: { required: true, min: 1980, max: new Date().getFullYear() },
+    validation: { required: true, min: 2014, max: new Date().getFullYear() },
     dependsOn: 'vehicle',
   },
   {
@@ -117,8 +117,9 @@ export const SMART_DEFAULTS = {
  */
 export function getYearOptions(): number[] {
   const currentYear = new Date().getFullYear();
+  const minYear = 2014; // Minimum year allowed for publication
   const years: number[] = [];
-  for (let year = currentYear; year >= 1980; year--) {
+  for (let year = currentYear; year >= minYear; year--) {
     years.push(year);
   }
   return years;

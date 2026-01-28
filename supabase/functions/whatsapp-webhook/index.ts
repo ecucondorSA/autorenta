@@ -235,7 +235,7 @@ LINKS ÚTILES (incluí según el contexto):
 - Publicar auto: https://autorentar.com/cars/publish
 - Ver autos disponibles: https://autorentar.com/cars
 - Cómo funciona: https://autorentar.com/rent-your-car
-- Preguntas frecuentes: https://autorentar.com/faq
+- Preguntas frecuentes: https://autorentar.com/help
 
 Sé conciso (máximo 3-4 oraciones). No uses emojis excesivos.`
 }
