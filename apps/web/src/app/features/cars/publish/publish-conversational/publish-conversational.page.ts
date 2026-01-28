@@ -171,6 +171,7 @@ import { QUESTIONS_CONFIG, formatQuestionTitle } from './questions.config';
                 [brandName]="formService.selectedBrand()?.name ?? ''"
                 [modelName]="formService.selectedModel()?.name ?? ''"
                 [year]="formService.selectedYear() ?? undefined"
+                [initialPhotos]="photos()"
                 (photosChanged)="onPhotosChanged($event)"
                 (vehicleDetected)="onVehicleAutoDetected($event)"
                 (requestAiGeneration)="onRequestAiGeneration()"

@@ -93,15 +93,16 @@ export const QUESTIONS_CONFIG: QuestionConfig[] = [
  */
 export const SMART_DEFAULTS = {
   // Rental rules
-  mileage_limit: 200, // km per day
-  extra_km_price: 0.5, // USD per extra km
+  mileage_limit: 0, // 0 = Unlimited km per day (most popular)
+  extra_km_price: 0, // No extra charge since unlimited
   fuel_policy: 'full_to_full',
   max_anticipation_days: 90,
   allow_second_driver: false,
 
   // Pricing
   deposit_required: true,
-  deposit_amount: 200,
+  deposit_percent: 7, // 7% of car value for pre-auth, 0% for Wallet
+  deposit_amount: 0, // Calculated dynamically as 7% of car value
   auto_approval: false,
   instant_booking_enabled: false,
 

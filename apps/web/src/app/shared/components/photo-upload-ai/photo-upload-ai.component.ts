@@ -250,56 +250,34 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
               [class.blur-sm]="photo.status === 'validating'"
             />
 
-            <!-- Validation Overlay with AI Scan Effect -->
-            @switch (photo.status) {
-              @case ('validating') {
-                <div class="absolute inset-0 ai-scanning-overlay flex flex-col items-center justify-center gap-2">
-                  <div class="ai-scan-line"></div>
-                  <div class="relative z-10 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-                     <span class="text-white text-xs font-mono tracking-wider">ANALYZING {{ photo.progress }}%</span>
-                  </div>
+            <!-- Validation Overlay with AI Scan Effect (only while validating) -->
+            @if (photo.status === 'validating') {
+              <div class="absolute inset-0 ai-scanning-overlay flex flex-col items-center justify-center gap-2">
+                <div class="ai-scan-line"></div>
+                <div class="relative z-10 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+                   <span class="text-white text-xs font-mono tracking-wider">ANALYZING {{ photo.progress }}%</span>
                 </div>
-              }
-              @case ('error') {
-                <div class="absolute inset-0 bg-rose-500/80 flex flex-col items-center justify-center gap-2 p-3 backdrop-blur-sm">
-                  <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span class="text-white text-xs text-center font-medium">{{ photo.error }}</span>
-                </div>
-              }
+              </div>
             }
 
-            <!-- Status Badge -->
+            <!-- Status Badge - Always shows score, never blocks -->
             @if (photo.status !== 'validating') {
               <div class="absolute top-2 left-2">
-                @switch (photo.status) {
-                  @case ('valid') {
-                    <div class="flex items-center gap-1 px-2 py-1 bg-emerald-500 text-white rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider border border-white/20 backdrop-blur-md">
-                      <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {{ photo.quality?.score || 100 }}%
-                    </div>
-                  }
-                  @case ('warning') {
-                    <div class="flex items-center gap-1 px-2 py-1 bg-amber-500 text-white rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider border border-white/20 backdrop-blur-md">
-                      <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                      </svg>
-                      Revisar
-                    </div>
-                  }
-                  @case ('error') {
-                    <div class="flex items-center gap-1 px-2 py-1 bg-rose-500 text-white rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider border border-white/20 backdrop-blur-md">
-                      <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                      Error
-                    </div>
-                  }
+                @if (photo.status === 'valid') {
+                  <div class="flex items-center gap-1 px-2 py-1 bg-emerald-500 text-white rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider border border-white/20 backdrop-blur-md">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {{ photo.quality?.score || 100 }}%
+                  </div>
+                } @else {
+                  <!-- Warning state - show score with amber color but allow to proceed -->
+                  <div class="flex items-center gap-1 px-2 py-1 bg-amber-500 text-white rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider border border-white/20 backdrop-blur-md">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {{ photo.quality?.score || 100 }}%
+                  </div>
                 }
               </div>
             }
@@ -360,12 +338,12 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
               </button>
-              @if (photo.status === 'error' || photo.status === 'warning') {
+              @if (photo.status === 'warning') {
                 <button
                   type="button"
                   (click)="retryValidation(photo)"
                   class="p-3 bg-white text-blue-600 rounded-full hover:bg-blue-50 hover:text-blue-700 hover:scale-110 transition-all shadow-xl"
-                  title="Reintentar"
+                  title="Reintentar validación"
                 >
                   <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -559,6 +537,7 @@ export class PhotoUploadAIComponent {
   readonly enablePlateBlur = input(true);
   readonly enableQualityValidation = input(true);
   readonly requiredPositions = input<PhotoPosition[]>(['front', 'rear', 'interior']);
+  readonly initialPhotos = input<PhotoWithAI[]>([]);
 
   // Outputs
   readonly photosChange = output<PhotoWithAI[]>();
@@ -567,6 +546,7 @@ export class PhotoUploadAIComponent {
 
   // State
   readonly photos = signal<PhotoWithAI[]>([]);
+  private initialized = false;
   readonly isDragging = signal(false);
   readonly detectedVehicle = signal<VehicleAutoDetect | null>(null);
   readonly showAutoDetect = signal(true);
@@ -591,9 +571,21 @@ export class PhotoUploadAIComponent {
   });
 
   constructor() {
-    // Emit changes when photos update
+    // Initialize photos from initialPhotos input
     effect(() => {
-      this.photosChange.emit(this.photos());
+      const initial = this.initialPhotos();
+      if (initial.length > 0 && !this.initialized) {
+        this.initialized = true;
+        this.photos.set([...initial]);
+      }
+    });
+
+    // Emit changes when photos update (skip initial empty emit)
+    effect(() => {
+      const currentPhotos = this.photos();
+      if (this.initialized || currentPhotos.length > 0) {
+        this.photosChange.emit(currentPhotos);
+      }
     });
   }
 
@@ -680,23 +672,25 @@ export class PhotoUploadAIComponent {
 
       await Promise.all(validations);
 
-      // Determine final status
+      // Determine final status - NEVER block user, only show warnings
       const updatedPhoto = this.photos().find(p => p.id === photo.id);
       if (updatedPhoto) {
-        const hasErrors = updatedPhoto.quality && !updatedPhoto.quality.isAcceptable;
         const hasWarnings = updatedPhoto.quality?.issues?.length ?? 0 > 0;
+        const lowQuality = updatedPhoto.quality && updatedPhoto.quality.score < 50;
 
         this.updatePhoto(photo.id, {
-          status: hasErrors ? 'error' : hasWarnings ? 'warning' : 'valid',
+          // Always allow to proceed - use 'warning' for low quality, never 'error'
+          status: (hasWarnings || lowQuality) ? 'warning' : 'valid',
           progress: 100,
         });
       }
     } catch (error) {
       console.error('Validation error:', error);
+      // On error, mark as valid to not block user - AI validation is optional
       this.updatePhoto(photo.id, {
-        status: 'error',
+        status: 'valid',
         progress: 100,
-        error: 'Error al validar la foto',
+        quality: { score: 100, issues: [], isAcceptable: true },
       });
     }
   }

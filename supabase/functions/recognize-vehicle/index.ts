@@ -127,9 +127,10 @@ Si NO hay vehículo visible:
 // CONSTANTS
 // ============================================================================
 
-const IMAGE_FETCH_TIMEOUT_MS = 10_000; // 10 seconds for image download
-const GEMINI_TIMEOUT_MS = 25_000; // 25 seconds for Gemini API
+const IMAGE_FETCH_TIMEOUT_MS = 8_000; // 8 seconds for image download
+const GEMINI_TIMEOUT_MS = 15_000; // 15 seconds for Gemini API (total ~23s, within 26s limit)
 const MAX_IMAGE_SIZE_BYTES = 500_000; // 500KB max for base64 encoding
+const MAX_RETRIES = 2; // Retry on transient failures
 
 // ============================================================================
 // IMAGE HELPERS
@@ -300,91 +301,123 @@ async function recognizeVehicle(
       temperature: 0.2,
       topK: 30,
       topP: 0.9,
-      maxOutputTokens: 1024,
+      maxOutputTokens: 2048,
     },
   };
 
-  console.log(`[recognize-vehicle] Calling Gemini API (timeout: ${GEMINI_TIMEOUT_MS}ms)...`);
+  // Retry logic for transient failures
+  let lastError: Error | null = null;
 
-  const response = await fetchWithTimeout(
-    url,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody),
-    },
-    GEMINI_TIMEOUT_MS
-  );
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      console.log(`[recognize-vehicle] Calling Gemini API (attempt ${attempt}/${MAX_RETRIES}, timeout: ${GEMINI_TIMEOUT_MS}ms)...`);
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('[recognize-vehicle] Gemini error:', errorText);
-    throw new Error(`Gemini API error: ${response.status}`);
-  }
+      const response = await fetchWithTimeout(
+        url,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+        },
+        GEMINI_TIMEOUT_MS
+      );
 
-  const data = await response.json();
-  const textContent = data.candidates?.[0]?.content?.parts
-    ?.filter((p: { text?: string }) => p.text)
-    ?.map((p: { text: string }) => p.text)
-    ?.join('');
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`[recognize-vehicle] Gemini error (attempt ${attempt}):`, errorText);
 
-  if (!textContent) {
-    return {
-      vehicle: {
-        brand: 'Desconocido',
-        model: 'Desconocido',
-        year_range: [2000, 2025],
-        color: 'desconocido',
-        body_type: 'unknown',
-        confidence: 0,
-      },
-      suggestions: [],
-      error: 'No se pudo analizar la imagen',
-    };
-  }
+        // Don't retry on 4xx errors (client errors)
+        if (response.status >= 400 && response.status < 500) {
+          throw new Error(`Gemini API error: ${response.status}`);
+        }
 
-  // Parse JSON from response
-  try {
-    let jsonStr = textContent;
-    const jsonMatch = textContent.match(/```json\s*([\s\S]*?)\s*```/);
-    if (jsonMatch) {
-      jsonStr = jsonMatch[1];
-    } else {
-      const objMatch = textContent.match(/\{[\s\S]*\}/);
-      if (objMatch) {
-        jsonStr = objMatch[0];
+        // Retry on 5xx errors (server errors)
+        lastError = new Error(`Gemini API error: ${response.status}`);
+        if (attempt < MAX_RETRIES) {
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // Exponential backoff
+          continue;
+        }
+        throw lastError;
       }
+
+      // Success - process response
+      const data = await response.json();
+      const textContent = data.candidates?.[0]?.content?.parts
+        ?.filter((p: { text?: string }) => p.text)
+        ?.map((p: { text: string }) => p.text)
+        ?.join('');
+
+      if (!textContent) {
+        return {
+          vehicle: {
+            brand: 'Desconocido',
+            model: 'Desconocido',
+            year_range: [2000, 2025],
+            color: 'desconocido',
+            body_type: 'unknown',
+            confidence: 0,
+          },
+          suggestions: [],
+          error: 'No se pudo analizar la imagen',
+        };
+      }
+
+      // Parse JSON from response
+      try {
+        let jsonStr = textContent;
+        const jsonMatch = textContent.match(/```json\s*([\s\S]*?)\s*```/);
+        if (jsonMatch) {
+          jsonStr = jsonMatch[1];
+        } else {
+          const objMatch = textContent.match(/\{[\s\S]*\}/);
+          if (objMatch) {
+            jsonStr = objMatch[0];
+          }
+        }
+
+        const parsed = JSON.parse(jsonStr);
+
+        return {
+          vehicle: {
+            brand: parsed.brand || 'Desconocido',
+            model: parsed.model || 'Desconocido',
+            year_range: parsed.year_range || [2000, 2025],
+            color: parsed.color || 'desconocido',
+            body_type: parsed.body_type || 'unknown',
+            confidence: parsed.confidence || 0,
+          },
+          suggestions: parsed.alternatives || [],
+        };
+      } catch (parseError) {
+        console.error('[recognize-vehicle] JSON parse error:', parseError);
+        console.error('[recognize-vehicle] Raw text:', textContent);
+        return {
+          vehicle: {
+            brand: 'Desconocido',
+            model: 'Desconocido',
+            year_range: [2000, 2025],
+            color: 'desconocido',
+            body_type: 'unknown',
+            confidence: 0,
+          },
+          suggestions: [],
+          error: 'Error al parsear respuesta',
+        };
+      }
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.warn(`[recognize-vehicle] Timeout on attempt ${attempt}`);
+        lastError = new Error('El análisis tardó demasiado');
+        if (attempt < MAX_RETRIES) {
+          continue;
+        }
+      }
+      throw error;
     }
-
-    const parsed = JSON.parse(jsonStr);
-
-    return {
-      vehicle: {
-        brand: parsed.brand || 'Desconocido',
-        model: parsed.model || 'Desconocido',
-        year_range: parsed.year_range || [2000, 2025],
-        color: parsed.color || 'desconocido',
-        body_type: parsed.body_type || 'unknown',
-        confidence: parsed.confidence || 0,
-      },
-      suggestions: parsed.alternatives || [],
-    };
-  } catch (parseError) {
-    console.error('[recognize-vehicle] JSON parse error:', parseError);
-    console.error('[recognize-vehicle] Raw text:', textContent);
-    return {
-      vehicle: {
-        brand: 'Desconocido',
-        model: 'Desconocido',
-        year_range: [2000, 2025],
-        color: 'desconocido',
-        body_type: 'unknown',
-        confidence: 0,
-      },
-      suggestions: [],
-      error: 'Error al parsear respuesta',
-    };
   }
+
+  // All retries failed
+  throw lastError || new Error('Failed after all retries');
 }
 
 // ============================================================================

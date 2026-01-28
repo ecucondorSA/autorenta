@@ -175,7 +175,7 @@ async function detectPlates(imageUrl: string): Promise<{ plates: DetectedPlate[]
       temperature: 0.1,
       topK: 20,
       topP: 0.9,
-      maxOutputTokens: 1024,
+      maxOutputTokens: 2048,
     },
   };
 

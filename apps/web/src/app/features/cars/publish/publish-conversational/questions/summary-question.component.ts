@@ -122,8 +122,9 @@ export interface SummaryData {
             Configuración automática aplicada
           </p>
           <p class="text-xs text-blue-700 dark:text-blue-400 mt-1">
-            Aplicamos las configuraciones más populares: 200 km/día de límite, política de combustible lleno a lleno,
-            depósito de US$ 200. Podés cambiar esto después en tu panel de propietario.
+            Aplicamos las configuraciones más populares: kilometraje ilimitado, combustible lleno a lleno,
+            depósito 7% del valor del auto (preautorización) o 0% con Wallet AutoRentar.
+            Podés cambiar esto después en tu panel de propietario.
           </p>
         </div>
       </div>

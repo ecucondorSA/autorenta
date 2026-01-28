@@ -262,6 +262,7 @@ export class PriceQuestionComponent implements OnInit, OnChanges {
   private async calculateSuggestedPrice(): Promise<void> {
     const fipeValue = this.fipeValue();
     const year = this.year();
+    const mileage = this.mileage();
 
     if (!fipeValue || !year) {
       // Use a default suggestion based on typical car values
@@ -272,18 +273,52 @@ export class PriceQuestionComponent implements OnInit, OnChanges {
     this.isCalculating.set(true);
 
     try {
-      // Simple calculation: ~2% of FIPE value / 30 days, adjusted for age
+      // ==========================================================================
+      // PRICING FORMULA - AutoRenta LATAM
+      // ==========================================================================
+      // Base: 10% monthly return rate (industry standard from Turo/USA market)
+      //
+      // Adjustments applied:
+      // 1. Age multiplier: -4% per year (max 40% reduction)
+      // 2. Mileage multiplier: Based on wear and reliability
+      // 3. LATAM regional factor: Accounts for:
+      //    - Higher accident rates (LATAM ~16/100k vs USA ~11/100k = 1.45x)
+      //    - Lower purchasing power parity
+      //    - FGO community fund absorbs part of the risk
+      // ==========================================================================
+
       const currentYear = new Date().getFullYear();
       const age = currentYear - year;
-      const ageMultiplier = Math.max(0.7, 1 - age * 0.03); // 3% reduction per year, min 70%
+
+      // 1. Age multiplier: 4% reduction per year, minimum 60%
+      const ageMultiplier = Math.max(0.6, 1 - age * 0.04);
+
+      // 2. Mileage multiplier: Based on vehicle wear
+      // Low mileage = premium pricing, high mileage = discount
+      const mileageMultiplier = this.getMileageMultiplier(mileage);
+
+      // 3. Combined condition factor: Use AVERAGE of age and mileage
+      // This prevents double-penalization for old, high-mileage vehicles
+      // which are common in LATAM and still perfectly rentable
+      const conditionFactor = (ageMultiplier + mileageMultiplier) / 2;
+
+      // 4. LATAM Regional Factor
+      // - USA base price adjusted for local market conditions
+      // - Higher accident rate (1.45x) increases risk/insurance costs
+      // - Lower purchasing power requires competitive pricing
+      // - FGO (15% of each booking) absorbs community risk
+      // Net effect: 90% of USA equivalent price (adjusted from 85%)
+      const latamRegionalFactor = 0.90;
 
       // Convert BRL to USD (approximate rate)
       const usdValue = fipeValue / 5;
 
-      // Calculate daily rate (aim for 2% monthly return)
-      const monthlyReturn = 0.02;
+      // Calculate daily rate (aim for 10% monthly return - industry standard)
+      const monthlyReturn = 0.10;
       const baseDaily = (usdValue * monthlyReturn) / 30;
-      const adjustedDaily = baseDaily * ageMultiplier;
+
+      // Apply condition and regional factors
+      const adjustedDaily = baseDaily * conditionFactor * latamRegionalFactor;
 
       // Round to nearest 5 and clamp
       const suggested = Math.round(adjustedDaily / 5) * 5;
@@ -301,6 +336,35 @@ export class PriceQuestionComponent implements OnInit, OnChanges {
       this.suggestedPrice.set(50);
     } finally {
       this.isCalculating.set(false);
+    }
+  }
+
+  /**
+   * Calculate mileage multiplier based on vehicle odometer
+   * Higher mileage = lower price due to increased wear and maintenance risk
+   *
+   * Ranges based on typical vehicle lifecycle:
+   * - 0-30k km: Practically new, full price
+   * - 30-60k km: Light use, minor discount
+   * - 60-100k km: Moderate use, noticeable discount
+   * - 100-150k km: High mileage, significant discount
+   * - 150k+ km: Very high mileage, maximum discount
+   */
+  private getMileageMultiplier(mileage: number | null): number {
+    if (!mileage || mileage <= 0) {
+      return 1.0; // Default to full price if no mileage provided
+    }
+
+    if (mileage <= 30000) {
+      return 1.0; // 0-30k: Full price
+    } else if (mileage <= 60000) {
+      return 0.92; // 30-60k: 8% discount
+    } else if (mileage <= 100000) {
+      return 0.82; // 60-100k: 18% discount
+    } else if (mileage <= 150000) {
+      return 0.70; // 100-150k: 30% discount
+    } else {
+      return 0.55; // 150k+: 45% discount
     }
   }
 }

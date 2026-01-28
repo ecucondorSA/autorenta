@@ -59,9 +59,9 @@ export class PublishCarFormService {
       availability_start_date: [this.todayISO(), [Validators.required]],
       availability_end_date: [this.nextMonthISO(), [Validators.required]],
 
-      // Reglas de Alquiler (Owner Preferences)
-      mileage_limit: [200, [Validators.min(0)]], // 0 = Ilimitado
-      extra_km_price: [5, [Validators.min(0)]],
+      // Reglas de Alquiler (Owner Preferences) - Config popular: ilimitado
+      mileage_limit: [0, [Validators.min(0)]], // 0 = Ilimitado (más popular)
+      extra_km_price: [0, [Validators.min(0)]], // Sin cargo extra con km ilimitado
       fuel_policy: ['full_to_full', Validators.required],
       allow_second_driver: [true],
       second_driver_cost: [10, [Validators.min(0)]],
@@ -83,7 +83,7 @@ export class PublishCarFormService {
       min_rental_days: [1, [Validators.required, Validators.min(1)]],
       max_rental_days: [30], // Opcional
       deposit_required: [true],
-      deposit_amount: [200, [Validators.min(0)]], // Requerido condicionalmente, se maneja en el componente
+      deposit_amount: [0, [Validators.min(0)]], // 7% del valor del auto (calculado dinámicamente)
       insurance_included: [false],
       auto_approval: [true],
 
@@ -181,9 +181,9 @@ export class PublishCarFormService {
           location_state: lastCar.location_state,
           location_country: lastCar.location_country,
 
-          // Reglas
-          mileage_limit: lastCar.mileage_limit ?? 200,
-          extra_km_price: lastCar.extra_km_price ?? 5,
+          // Reglas (default: ilimitado)
+          mileage_limit: lastCar.mileage_limit ?? 0,
+          extra_km_price: lastCar.extra_km_price ?? 0,
           fuel_policy: lastCar.fuel_policy ?? 'full_to_full',
           allow_second_driver: lastCar.allow_second_driver ?? true,
           second_driver_cost: lastCar.second_driver_cost ?? 10,
@@ -241,9 +241,9 @@ export class PublishCarFormService {
         location_state: car.location_state,
         location_country: car.location_country,
 
-        // Reglas
-        mileage_limit: car.mileage_limit ?? 200,
-        extra_km_price: car.extra_km_price ?? 5,
+        // Reglas (default: ilimitado)
+        mileage_limit: car.mileage_limit ?? 0,
+        extra_km_price: car.extra_km_price ?? 0,
         fuel_policy: car.fuel_policy ?? 'full_to_full',
         allow_second_driver: car.allow_second_driver ?? true,
         second_driver_cost: car.second_driver_cost ?? 10,
@@ -383,9 +383,9 @@ export class PublishCarFormService {
       transmission,
       fuel,
 
-      // Reglas de Alquiler
-      mileage_limit: mileage_limit ?? 200,
-      extra_km_price: extra_km_price ?? 5,
+      // Reglas de Alquiler (default: ilimitado)
+      mileage_limit: mileage_limit ?? 0,
+      extra_km_price: extra_km_price ?? 0,
       fuel_policy: fuel_policy || 'full_to_full',
       allow_second_driver: allow_second_driver ?? true,
       second_driver_cost: second_driver_cost ?? 10,

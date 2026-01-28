@@ -126,9 +126,9 @@ export class ConversationalFormService {
       color: [''],
       description: [''],
 
-      // Rental rules (smart defaults)
-      mileage_limit: [200],
-      extra_km_price: [0.5],
+      // Rental rules (smart defaults - unlimited km is most popular)
+      mileage_limit: [0], // 0 = Unlimited
+      extra_km_price: [0], // No extra since unlimited
       fuel_policy: ['full_to_full'],
       allow_second_driver: [false],
       max_anticipation_days: [90],
@@ -146,7 +146,7 @@ export class ConversationalFormService {
       currency: ['USD'],
       value_usd: [null],
       deposit_required: [true],
-      deposit_amount: [200],
+      deposit_amount: [0], // Calculated as 7% of car value
       auto_approval: [false],
 
       // Location
@@ -296,9 +296,9 @@ export class ConversationalFormService {
       transmission: rawValue.transmission,
       fuel: rawValue.fuel,
 
-      // Rental rules (smart defaults)
-      mileage_limit: rawValue.mileage_limit ?? 200,
-      extra_km_price: rawValue.extra_km_price ?? 0.5,
+      // Rental rules (smart defaults - unlimited km)
+      mileage_limit: rawValue.mileage_limit ?? 0, // 0 = Unlimited
+      extra_km_price: rawValue.extra_km_price ?? 0,
       fuel_policy: rawValue.fuel_policy || 'full_to_full',
       allow_second_driver: rawValue.allow_second_driver ?? false,
       second_driver_cost: 10,
@@ -312,7 +312,8 @@ export class ConversationalFormService {
       min_rental_days: 1,
       max_rental_days: 30,
       deposit_required: rawValue.deposit_required ?? true,
-      deposit_amount: rawValue.deposit_amount ?? 200,
+      // Deposit: 7% of car value for pre-auth, 0% for Wallet
+      deposit_amount: rawValue.deposit_amount || Math.round((this.fipeValue() || 0) * 0.07),
       insurance_included: false,
       auto_approval: rawValue.auto_approval ?? false,
 
@@ -322,6 +323,8 @@ export class ConversationalFormService {
       location_city: location?.city || rawValue.location_city,
       location_state: location?.state || rawValue.location_state,
       location_country: location?.country || rawValue.location_country || 'AR',
+      location_lat: location?.latitude || rawValue.location_lat,
+      location_lng: location?.longitude || rawValue.location_lng,
 
       // Generated
       title: `${brand?.name || ''} ${model?.name || ''} ${year || ''}`.trim(),

@@ -93,7 +93,7 @@ export interface LocationAnswer {
             <input
               type="text"
               [(ngModel)]="city"
-              (ngModelChange)="onAddressChange()"
+              (ngModelChange)="onCityChange($event)"
               placeholder="Buenos Aires"
               class="w-full px-4 py-3 bg-surface-raised border border-border-default rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all"
             />
@@ -105,6 +105,8 @@ export interface LocationAnswer {
               [(ngModel)]="state"
               (ngModelChange)="onAddressChange()"
               placeholder="CABA"
+              [class.bg-emerald-50]="stateAutoFilled()"
+              [class.dark:bg-emerald-900/20]="stateAutoFilled()"
               class="w-full px-4 py-3 bg-surface-raised border border-border-default rounded-xl focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all"
             />
           </div>
@@ -168,6 +170,7 @@ export class LocationQuestionComponent implements OnInit {
   readonly isLoading = signal(false);
   readonly locationState = signal<'idle' | 'acquiring' | 'geocoding'>('idle');
   readonly coordinates = signal<PublishCoordinates | null>(null);
+  readonly stateAutoFilled = signal(false);
 
   ngOnInit(): void {
     const initial = this.initialValue();
@@ -203,7 +206,8 @@ export class LocationQuestionComponent implements OnInit {
           this.city = address.city;
           this.state = address.state;
           this.country = address.country || 'AR';
-          this.emitLocation();
+          // Coordinates already set from GPS, just emit
+          this.emitLocationImmediate();
         }
       }
     } catch (error) {
@@ -214,17 +218,54 @@ export class LocationQuestionComponent implements OnInit {
     }
   }
 
+  private geocodeTimeout: ReturnType<typeof setTimeout> | null = null;
+
   onAddressChange(): void {
     // Clear coordinates when manually editing
     this.coordinates.set(null);
-    this.emitLocation();
+    this.stateAutoFilled.set(false);
+    this.debouncedGeocode();
   }
 
-  hasValidLocation(): boolean {
-    return !!(this.street && this.city && this.state);
+  onCityChange(city: string): void {
+    this.coordinates.set(null);
+
+    // Auto-fill province based on city name
+    const province = this.getProvinceForCity(city);
+    if (province && !this.state) {
+      this.state = province;
+      this.stateAutoFilled.set(true);
+    } else if (!province) {
+      this.stateAutoFilled.set(false);
+    }
+
+    this.debouncedGeocode();
   }
 
-  private emitLocation(): void {
+  /**
+   * Debounce geocoding to avoid too many API calls while typing
+   * Waits 800ms after last keystroke before geocoding
+   */
+  private debouncedGeocode(): void {
+    if (this.geocodeTimeout) {
+      clearTimeout(this.geocodeTimeout);
+    }
+
+    // Emit immediately without coordinates (for UI feedback)
+    this.emitLocationImmediate();
+
+    // Schedule geocoding after debounce
+    if (this.hasValidLocation()) {
+      this.geocodeTimeout = setTimeout(() => {
+        this.geocodeAndEmit();
+      }, 800);
+    }
+  }
+
+  /**
+   * Emit location immediately without waiting for geocoding
+   */
+  private emitLocationImmediate(): void {
     if (!this.hasValidLocation()) return;
 
     const coords = this.coordinates();
@@ -238,5 +279,361 @@ export class LocationQuestionComponent implements OnInit {
     };
 
     this.locationChanged.emit(location);
+  }
+
+  /**
+   * Geocode address and emit with coordinates
+   */
+  private async geocodeAndEmit(): Promise<void> {
+    const coords = await this.geocodeCurrentAddress();
+
+    // Emit again with coordinates
+    const location: LocationAnswer = {
+      street: this.street,
+      streetNumber: this.streetNumber,
+      city: this.city,
+      state: this.state,
+      country: this.country,
+      ...(coords && { latitude: coords.latitude, longitude: coords.longitude }),
+    };
+
+    this.locationChanged.emit(location);
+  }
+
+  /**
+   * Maps common Argentine cities to their provinces
+   * Returns null if city is not recognized
+   */
+  private getProvinceForCity(city: string): string | null {
+    if (!city || city.length < 3) return null;
+
+    const normalizedCity = city.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    // City to Province mapping for Argentina
+    const cityProvinceMap: Record<string, string> = {
+      // CABA
+      'buenos aires': 'Buenos Aires',
+      'caba': 'CABA',
+      'capital federal': 'CABA',
+      'palermo': 'CABA',
+      'recoleta': 'CABA',
+      'belgrano': 'CABA',
+      'caballito': 'CABA',
+      'san telmo': 'CABA',
+      'la boca': 'CABA',
+      'puerto madero': 'CABA',
+      'villa crespo': 'CABA',
+      'almagro': 'CABA',
+      'villa urquiza': 'CABA',
+      'nuñez': 'CABA',
+      'nunez': 'CABA',
+      'colegiales': 'CABA',
+      'villa devoto': 'CABA',
+      'flores': 'CABA',
+      'floresta': 'CABA',
+      'liniers': 'CABA',
+      'mataderos': 'CABA',
+      'pompeya': 'CABA',
+      'barracas': 'CABA',
+      'constitucion': 'CABA',
+      'monserrat': 'CABA',
+      'san nicolas caba': 'CABA',
+      'retiro': 'CABA',
+      'chacarita': 'CABA',
+      'paternal': 'CABA',
+      'agronomia': 'CABA',
+      'villa del parque': 'CABA',
+      'villa pueyrredon': 'CABA',
+      'saavedra': 'CABA',
+      'coghlan': 'CABA',
+      'villa ortuzar': 'CABA',
+      'parque chas': 'CABA',
+
+      // Buenos Aires (GBA y otras)
+      'la plata': 'Buenos Aires',
+      'mar del plata': 'Buenos Aires',
+      'bahia blanca': 'Buenos Aires',
+      'quilmes': 'Buenos Aires',
+      'lanus': 'Buenos Aires',
+      'avellaneda': 'Buenos Aires',
+      'lomas de zamora': 'Buenos Aires',
+      'moron': 'Buenos Aires',
+      'san isidro': 'Buenos Aires',
+      'vicente lopez': 'Buenos Aires',
+      'tigre': 'Buenos Aires',
+      'pilar': 'Buenos Aires',
+      'san miguel': 'Buenos Aires',
+      'jose c paz': 'Buenos Aires',
+      'malvinas argentinas': 'Buenos Aires',
+      'san fernando': 'Buenos Aires',
+      'escobar': 'Buenos Aires',
+      'campana': 'Buenos Aires',
+      'zarate': 'Buenos Aires',
+      'pergamino': 'Buenos Aires',
+      'junin': 'Buenos Aires',
+      'olavarria': 'Buenos Aires',
+      'tandil': 'Buenos Aires',
+      'necochea': 'Buenos Aires',
+      'san nicolas de los arroyos': 'Buenos Aires',
+      'mercedes': 'Buenos Aires',
+      'lujan': 'Buenos Aires',
+      'san antonio de areco': 'Buenos Aires',
+      'chascomus': 'Buenos Aires',
+      'dolores': 'Buenos Aires',
+      'tres arroyos': 'Buenos Aires',
+      'azul': 'Buenos Aires',
+      'chivilcoy': 'Buenos Aires',
+      'bragado': 'Buenos Aires',
+      '9 de julio': 'Buenos Aires',
+      'pehuajo': 'Buenos Aires',
+      'trenque lauquen': 'Buenos Aires',
+      'general pico': 'Buenos Aires',
+      'ituzaingo': 'Buenos Aires',
+      'merlo': 'Buenos Aires',
+      'moreno': 'Buenos Aires',
+      'hurlingham': 'Buenos Aires',
+      'tres de febrero': 'Buenos Aires',
+      'san martin': 'Buenos Aires',
+      'general san martin': 'Buenos Aires',
+      'berazategui': 'Buenos Aires',
+      'florencio varela': 'Buenos Aires',
+      'almirante brown': 'Buenos Aires',
+      'esteban echeverria': 'Buenos Aires',
+      'ezeiza': 'Buenos Aires',
+      'cañuelas': 'Buenos Aires',
+      'presidente peron': 'Buenos Aires',
+      'san vicente': 'Buenos Aires',
+
+      // Córdoba
+      'cordoba': 'Córdoba',
+      'villa carlos paz': 'Córdoba',
+      'rio cuarto': 'Córdoba',
+      'villa maria': 'Córdoba',
+      'san francisco': 'Córdoba',
+      'alta gracia': 'Córdoba',
+      'jesus maria': 'Córdoba',
+      'cosquin': 'Córdoba',
+      'la falda': 'Córdoba',
+      'bell ville': 'Córdoba',
+      'rio tercero': 'Córdoba',
+      'villa allende': 'Córdoba',
+      'mendiolaza': 'Córdoba',
+      'unquillo': 'Córdoba',
+      'rio ceballos': 'Córdoba',
+      'carlos paz': 'Córdoba',
+
+      // Santa Fe
+      'rosario': 'Santa Fe',
+      'santa fe': 'Santa Fe',
+      'rafaela': 'Santa Fe',
+      'reconquista': 'Santa Fe',
+      'venado tuerto': 'Santa Fe',
+      'casilda': 'Santa Fe',
+      'esperanza': 'Santa Fe',
+      'san lorenzo': 'Santa Fe',
+      'santo tome': 'Santa Fe',
+      'sunchales': 'Santa Fe',
+      'funes': 'Santa Fe',
+      'roldan': 'Santa Fe',
+      'cañada de gomez': 'Santa Fe',
+
+      // Mendoza
+      'mendoza': 'Mendoza',
+      'san rafael': 'Mendoza',
+      'godoy cruz': 'Mendoza',
+      'guaymallen': 'Mendoza',
+      'las heras mendoza': 'Mendoza',
+      'maipu': 'Mendoza',
+      'lujan de cuyo': 'Mendoza',
+      'tunuyan': 'Mendoza',
+      'tupungato': 'Mendoza',
+      'san martin mendoza': 'Mendoza',
+      'rivadavia mendoza': 'Mendoza',
+      'junin mendoza': 'Mendoza',
+      'malargue': 'Mendoza',
+
+      // Tucumán
+      'tucuman': 'Tucumán',
+      'san miguel de tucuman': 'Tucumán',
+      'yerba buena': 'Tucumán',
+      'tafi viejo': 'Tucumán',
+      'banda del rio sali': 'Tucumán',
+      'concepcion': 'Tucumán',
+
+      // Salta
+      'salta': 'Salta',
+      'san salvador de jujuy': 'Jujuy',
+      'oran': 'Salta',
+      'tartagal': 'Salta',
+      'cafayate': 'Salta',
+
+      // Jujuy
+      'jujuy': 'Jujuy',
+      'san salvador': 'Jujuy',
+      'palpala': 'Jujuy',
+      'san pedro de jujuy': 'Jujuy',
+      'libertador general san martin': 'Jujuy',
+      'humahuaca': 'Jujuy',
+      'tilcara': 'Jujuy',
+      'purmamarca': 'Jujuy',
+
+      // Neuquén
+      'neuquen': 'Neuquén',
+      'san martin de los andes': 'Neuquén',
+      'villa la angostura': 'Neuquén',
+      'junin de los andes': 'Neuquén',
+      'centenario': 'Neuquén',
+      'plottier': 'Neuquén',
+      'cutral co': 'Neuquén',
+      'zapala': 'Neuquén',
+
+      // Río Negro
+      'bariloche': 'Río Negro',
+      'san carlos de bariloche': 'Río Negro',
+      'general roca': 'Río Negro',
+      'cipolletti': 'Río Negro',
+      'viedma': 'Río Negro',
+      'el bolson': 'Río Negro',
+      'allen': 'Río Negro',
+
+      // Chubut
+      'rawson': 'Chubut',
+      'trelew': 'Chubut',
+      'comodoro rivadavia': 'Chubut',
+      'puerto madryn': 'Chubut',
+      'esquel': 'Chubut',
+
+      // Santa Cruz
+      'rio gallegos': 'Santa Cruz',
+      'el calafate': 'Santa Cruz',
+      'el chalten': 'Santa Cruz',
+      'caleta olivia': 'Santa Cruz',
+      'pico truncado': 'Santa Cruz',
+
+      // Tierra del Fuego
+      'ushuaia': 'Tierra del Fuego',
+      'rio grande': 'Tierra del Fuego',
+      'tolhuin': 'Tierra del Fuego',
+
+      // Entre Ríos
+      'parana': 'Entre Ríos',
+      'concordia': 'Entre Ríos',
+      'gualeguaychu': 'Entre Ríos',
+      'colon': 'Entre Ríos',
+      'concepcion del uruguay': 'Entre Ríos',
+      'gualeguay': 'Entre Ríos',
+      'villaguay': 'Entre Ríos',
+      'federacion': 'Entre Ríos',
+      'victoria': 'Entre Ríos',
+
+      // Corrientes
+      'corrientes': 'Corrientes',
+      'goya': 'Corrientes',
+      'paso de los libres': 'Corrientes',
+      'mercedes corrientes': 'Corrientes',
+      'curuzu cuatia': 'Corrientes',
+
+      // Misiones
+      'posadas': 'Misiones',
+      'puerto iguazu': 'Misiones',
+      'eldorado': 'Misiones',
+      'obera': 'Misiones',
+      'apostoles': 'Misiones',
+      'jardin america': 'Misiones',
+
+      // Chaco
+      'resistencia': 'Chaco',
+      'presidencia roque saenz peña': 'Chaco',
+      'saenz peña': 'Chaco',
+      'villa angela': 'Chaco',
+      'charata': 'Chaco',
+
+      // Formosa
+      'formosa': 'Formosa',
+      'clorinda': 'Formosa',
+
+      // Santiago del Estero
+      'santiago del estero': 'Santiago del Estero',
+      'la banda': 'Santiago del Estero',
+      'termas de rio hondo': 'Santiago del Estero',
+
+      // Catamarca
+      'catamarca': 'Catamarca',
+      'san fernando del valle de catamarca': 'Catamarca',
+
+      // La Rioja
+      'la rioja': 'La Rioja',
+      'chilecito': 'La Rioja',
+
+      // San Juan
+      'san juan': 'San Juan',
+      'rawson san juan': 'San Juan',
+      'rivadavia san juan': 'San Juan',
+      'chimbas': 'San Juan',
+      'pocito': 'San Juan',
+      'santa lucia san juan': 'San Juan',
+
+      // San Luis
+      'san luis': 'San Luis',
+      'villa mercedes san luis': 'San Luis',
+      'merlo san luis': 'San Luis',
+
+      // La Pampa
+      'santa rosa': 'La Pampa',
+      'general pico la pampa': 'La Pampa',
+      'toay': 'La Pampa',
+    };
+
+    // Try exact match first
+    if (cityProvinceMap[normalizedCity]) {
+      return cityProvinceMap[normalizedCity];
+    }
+
+    // Try partial match (city starts with input)
+    for (const [cityName, province] of Object.entries(cityProvinceMap)) {
+      if (cityName.startsWith(normalizedCity) || normalizedCity.startsWith(cityName)) {
+        return province;
+      }
+    }
+
+    return null;
+  }
+
+  hasValidLocation(): boolean {
+    return !!(this.street && this.city && this.state);
+  }
+
+  /**
+   * Geocode the current address to get coordinates
+   * Called automatically when user enters address manually
+   */
+  private async geocodeCurrentAddress(): Promise<PublishCoordinates | null> {
+    if (!this.street || !this.city) return null;
+
+    try {
+      this.isLoading.set(true);
+      this.locationState.set('geocoding');
+
+      const coords = await this.locationService.geocodeAddress({
+        street: this.street,
+        streetNumber: this.streetNumber,
+        city: this.city,
+        state: this.state,
+        country: this.country || 'AR',
+      });
+
+      if (coords) {
+        this.coordinates.set(coords);
+        return coords;
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Geocoding error:', error);
+      return null;
+    } finally {
+      this.isLoading.set(false);
+      this.locationState.set('idle');
+    }
   }
 }

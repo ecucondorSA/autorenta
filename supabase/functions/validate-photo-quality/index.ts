@@ -192,7 +192,7 @@ async function analyzePhotoQuality(
       temperature: 0.1,
       topK: 20,
       topP: 0.9,
-      maxOutputTokens: 1024,
+      maxOutputTokens: 2048,
     },
   };
 
@@ -230,25 +230,27 @@ async function analyzePhotoQuality(
 
     let jsonStr = textContent.trim();
 
-    // Try markdown code block first
-    const jsonMatch = textContent.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    // Try markdown code block first (more robust regex)
+    const jsonMatch = textContent.match(/```(?:json)?\n?([\s\S]*?)\n?```/);
     if (jsonMatch) {
       jsonStr = jsonMatch[1].trim();
       console.log('[validate-photo-quality] Found JSON in code block');
-    } else {
-      // Try to find JSON object directly
-      const objMatch = textContent.match(/\{[\s\S]*\}/);
-      if (objMatch) {
-        jsonStr = objMatch[0];
-        console.log('[validate-photo-quality] Found JSON object in text');
-      }
+    }
+
+    // Always try to find JSON object (more robust approach)
+    const objMatch = jsonStr.match(/\{[\s\S]*\}/);
+    if (objMatch) {
+      jsonStr = objMatch[0];
+      console.log('[validate-photo-quality] Extracted JSON object');
     }
 
     // Clean up common issues
     jsonStr = jsonStr
-      .replace(/,\s*}/g, '}')  // Remove trailing commas
-      .replace(/,\s*]/g, ']')  // Remove trailing commas in arrays
-      .replace(/[\x00-\x1F\x7F]/g, ' '); // Remove control characters
+      .replace(/,\s*}/g, '}')  // Remove trailing commas before }
+      .replace(/,\s*]/g, ']')  // Remove trailing commas before ]
+      .replace(/[\x00-\x1F\x7F]/g, ' ') // Remove control characters
+      .replace(/\n/g, ' ') // Remove newlines that might break JSON
+      .replace(/\s+/g, ' '); // Normalize whitespace
 
     console.log('[validate-photo-quality] Parsing JSON:', jsonStr.substring(0, 200) + '...');
 
