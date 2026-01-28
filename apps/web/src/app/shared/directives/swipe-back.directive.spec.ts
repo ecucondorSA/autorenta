@@ -4,8 +4,8 @@ import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { GestureService } from '@core/services/ui/gesture.service';
 import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
-import { SwipeBackDirective } from './swipe-back.directive';
 import { testProviders } from '@app/testing/test-providers';
+import { SwipeBackDirective } from './swipe-back.directive';
 
 // Mock services
 class MockRouter {

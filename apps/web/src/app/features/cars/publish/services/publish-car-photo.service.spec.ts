@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-import { PublishCarPhotoService, PhotoPreview } from './publish-car-photo.service';
 import { testProviders } from '@app/testing/test-providers';
+import { PublishCarPhotoService, PhotoPreview } from './publish-car-photo.service';
 
 describe('PublishCarPhotoService', () => {
   let service: PublishCarPhotoService;

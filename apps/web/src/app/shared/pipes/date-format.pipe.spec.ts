@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { DateFormatPipe } from './date-format.pipe';
 import { testProviders } from '@app/testing/test-providers';
+import { DateFormatPipe } from './date-format.pipe';
 
 describe('DateFormatPipe', () => {
   let pipe: DateFormatPipe;

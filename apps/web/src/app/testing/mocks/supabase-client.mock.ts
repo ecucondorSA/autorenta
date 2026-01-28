@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 
-declare const jasmine: any;
+declare const jasmine: {
+  createSpy: (name: string) => { and: { returnValue: (val: unknown) => unknown } };
+};
 
 /**
  * Creates a comprehensive mock of the Supabase Client.

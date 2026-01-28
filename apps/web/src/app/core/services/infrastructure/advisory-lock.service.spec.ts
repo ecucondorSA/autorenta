@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { AdvisoryLockService, LOCK_TYPES, LockType } from './advisory-lock.service';
-import { SupabaseClientService } from './supabase-client.service';
-import { LoggerService } from './logger.service';
 import { testProviders } from '@app/testing/test-providers';
+import { AdvisoryLockService, LOCK_TYPES, LockType } from './advisory-lock.service';
+import { LoggerService } from './logger.service';
+import { SupabaseClientService } from './supabase-client.service';
 
 describe('AdvisoryLockService', () => {
   let service: AdvisoryLockService;

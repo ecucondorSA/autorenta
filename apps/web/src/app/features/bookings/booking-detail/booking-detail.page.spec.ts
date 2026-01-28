@@ -14,10 +14,10 @@ import { PaymentsService } from '@core/services/payments/payments.service';
 import { MetaService } from '@core/services/ui/meta.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { AlertController } from '@ionic/angular';
+import { testProviders } from '@app/testing/test-providers';
 import { of } from 'rxjs';
 import type { Booking } from '../../../core/models';
 import { BookingDetailPage } from './booking-detail.page';
-import { testProviders } from '@app/testing/test-providers';
 
 describe('BookingDetailPage - return checklist', () => {
   let component: BookingDetailPage;

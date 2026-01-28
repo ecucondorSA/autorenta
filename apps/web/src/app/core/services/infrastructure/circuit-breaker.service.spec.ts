@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
+import { testProviders } from '@app/testing/test-providers';
 import { CircuitBreakerService, CircuitOpenError, CircuitState } from './circuit-breaker.service';
 import { LoggerService } from './logger.service';
-import { testProviders } from '@app/testing/test-providers';
 
 describe('CircuitBreakerService', () => {
   let service: CircuitBreakerService;

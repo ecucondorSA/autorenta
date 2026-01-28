@@ -7,8 +7,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { IconButtonComponent } from './icon-button.component';
 import { testProviders } from '@app/testing/test-providers';
+import { IconButtonComponent } from './icon-button.component';
 
 describe('IconButtonComponent', () => {
   let component: IconButtonComponent;

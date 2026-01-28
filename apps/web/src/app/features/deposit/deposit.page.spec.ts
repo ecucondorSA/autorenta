@@ -8,8 +8,8 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { WalletService } from '@core/services/payments/wallet.service';
-import { DepositPage } from './deposit.page';
 import { testProviders } from '@app/testing/test-providers';
+import { DepositPage } from './deposit.page';
 
 describe('DepositPage', () => {
   let component: DepositPage;

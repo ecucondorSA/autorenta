@@ -2,8 +2,8 @@ import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
-import { TouchFeedbackDirective } from './touch-feedback.directive';
 import { testProviders } from '@app/testing/test-providers';
+import { TouchFeedbackDirective } from './touch-feedback.directive';
 
 // Mock HapticFeedbackService
 class MockHapticFeedbackService {

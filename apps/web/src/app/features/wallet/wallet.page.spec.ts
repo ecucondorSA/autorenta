@@ -11,8 +11,8 @@ import { ProfileService } from '@core/services/auth/profile.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { MetaService } from '@core/services/ui/meta.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { WalletPage } from './wallet.page';
 import { testProviders } from '@app/testing/test-providers';
+import { WalletPage } from './wallet.page';
 
 describe('WalletPage', () => {
   let component: WalletPage;

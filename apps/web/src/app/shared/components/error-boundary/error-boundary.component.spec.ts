@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { ErrorBoundaryComponent } from './error-boundary.component';
 import { testProviders } from '@app/testing/test-providers';
+import { ErrorBoundaryComponent } from './error-boundary.component';
 
 // Mock LoggerService
 const mockLogger = {
