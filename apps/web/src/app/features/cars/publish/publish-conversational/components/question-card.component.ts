@@ -26,9 +26,9 @@ import {
         <!-- Icon -->
         @if (icon()) {
           <div
-            class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-cta-default/20 to-cta-default/5 flex items-center justify-center shadow-lg shadow-cta-default/10"
+            class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-cta-default/20 to-cta-default/5 flex items-center justify-center shadow-lg shadow-cta-default/10"
           >
-            <span class="text-3xl">{{ getIconEmoji() }}</span>
+            <span class="text-2xl sm:text-3xl">{{ getIconEmoji() }}</span>
           </div>
         }
 

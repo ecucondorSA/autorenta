@@ -32,7 +32,7 @@ import { FormsModule } from '@angular/forms';
             (ngModelChange)="onPriceChange($event)"
             [min]="minPrice"
             [max]="maxPrice"
-            class="w-32 text-center text-5xl font-bold bg-transparent border-none focus:outline-none"
+            class="w-28 sm:w-32 text-center text-4xl sm:text-5xl font-bold bg-transparent border-none focus:outline-none"
           />
           <span class="text-xl font-medium text-text-muted">/día</span>
         </div>
