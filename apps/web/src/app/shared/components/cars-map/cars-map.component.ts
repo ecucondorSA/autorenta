@@ -199,6 +199,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   @Input() cars: CarMapLocation[] = [];
   @Input() selectedCarId: string | null = null;
+  /** Car to highlight on the map (preview from carousel scroll, without full selection) */
+  @Input() highlightedCarId: string | null = null;
   @Input() userLocation: { lat: number; lng: number } | null = null;
   @Input() userAvatarUrl: string | null = null; // URL del avatar del usuario para el marcador de ubicación
   @Input() locationMode: 'searching' | 'booking-confirmed' | 'default' = 'default';
@@ -2457,6 +2459,34 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
+   * Highlight a car marker for preview (scale up, add glow, no camera movement)
+   * Used when user scrolls carousel to preview without selecting
+   */
+  private highlightPreviewCar(carId: string): void {
+    const markerData = this.carMarkers.get(carId);
+    if (!markerData) return;
+
+    // Apply preview highlight style (scale + glow) without changing selection state
+    const markerElement = markerData.marker.getElement();
+    if (markerElement) {
+      markerElement.classList.add('map-marker-preview');
+    }
+  }
+
+  /**
+   * Remove preview highlight from car marker
+   */
+  private removePreviewHighlight(carId: string): void {
+    const markerData = this.carMarkers.get(carId);
+    if (!markerData) return;
+
+    const markerElement = markerData.marker.getElement();
+    if (markerElement) {
+      markerElement.classList.remove('map-marker-preview');
+    }
+  }
+
+  /**
    * Clear all markers and related resources
    */
   private clearMarkers(): void {
@@ -2937,6 +2967,21 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           zoom: 12,
           duration: 1200
         });
+      }
+    }
+    // Handle preview highlight (from carousel scroll)
+    if (changes['highlightedCarId'] && !changes['highlightedCarId'].firstChange && this.map) {
+      const previousId = changes['highlightedCarId'].previousValue;
+      const currentId = changes['highlightedCarId'].currentValue;
+
+      // Remove preview from previous (only if it's not the selected car)
+      if (previousId && previousId !== this.selectedCarId) {
+        this.removePreviewHighlight(previousId);
+      }
+
+      // Add preview to current (only if it's not the selected car - selected has priority)
+      if (currentId && currentId !== this.selectedCarId) {
+        this.highlightPreviewCar(currentId);
       }
     }
     if (changes['userLocation'] && !changes['userLocation'].firstChange && this.map) {
