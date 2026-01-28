@@ -1,12 +1,10 @@
 /**
- * WhatsApp Webhook - AI Bot con Debounce Redis
+ * WhatsApp Webhook - AI Bot con Debounce Supabase
  *
- * Solución de debounce usando timestamp en Redis (patrón de grandes empresas):
- * 1. Cada mensaje guarda su timestamp en Redis
+ * Solución de debounce usando timestamp en Supabase (sin Redis):
+ * 1. Cada mensaje guarda su timestamp atómicamente en DB
  * 2. Después de esperar, verifica si llegó uno más nuevo
  * 3. Solo el último mensaje de una ráfaga responde
- *
- * @see https://community.n8n.io/t/whatsapp-debounce-flow-combine-multiple-rapid-messages-into-one-ai-response-using-redis-n8n/225494
  */
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
@@ -24,53 +22,39 @@ const wahaHeaders = {
   'X-Api-Key': WAHA_API_KEY,
 }
 
-// Upstash Redis REST API
-const UPSTASH_REDIS_URL = Deno.env.get('UPSTASH_REDIS_REST_URL')
-const UPSTASH_REDIS_TOKEN = Deno.env.get('UPSTASH_REDIS_REST_TOKEN')
-
 // Supabase
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-// ============ REDIS HELPERS ============
+// ============ DEBOUNCE CON SUPABASE ============
 
-async function redisSet(key: string, value: string, exSeconds?: number): Promise<void> {
-  if (!UPSTASH_REDIS_URL || !UPSTASH_REDIS_TOKEN) {
-    console.log('[Redis] Not configured, skipping')
-    return
+async function debounceSet(phone: string, timestamp: number): Promise<boolean> {
+  const { data, error } = await supabase.rpc('whatsapp_debounce_set', {
+    p_phone: phone,
+    p_timestamp: timestamp,
+  })
+
+  if (error) {
+    console.error('[Debounce] Error setting:', error)
+    return true // En caso de error, proceder
   }
 
-  const body = exSeconds
-    ? ['SET', key, value, 'EX', exSeconds.toString()]
-    : ['SET', key, value]
-
-  await fetch(`${UPSTASH_REDIS_URL}`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${UPSTASH_REDIS_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
+  return data === true
 }
 
-async function redisGet(key: string): Promise<string | null> {
-  if (!UPSTASH_REDIS_URL || !UPSTASH_REDIS_TOKEN) {
-    return null
-  }
-
-  const res = await fetch(`${UPSTASH_REDIS_URL}`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${UPSTASH_REDIS_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(['GET', key]),
+async function debounceCheck(phone: string, timestamp: number): Promise<boolean> {
+  const { data, error } = await supabase.rpc('whatsapp_debounce_check', {
+    p_phone: phone,
+    p_timestamp: timestamp,
   })
 
-  const data = await res.json()
-  return data.result
+  if (error) {
+    console.error('[Debounce] Error checking:', error)
+    return true // En caso de error, proceder
+  }
+
+  return data === true
 }
 
 // ============ WAHA HELPERS ============
@@ -280,7 +264,6 @@ Deno.serve(async (req) => {
     console.log(`[Message] From ${phone}: "${messageText}"`)
 
     // ========== DEDUPLICACIÓN ==========
-    // Verificar si ya procesamos este mensaje
     const { data: existing } = await supabase
       .from('outreach_messages')
       .select('id')
@@ -296,7 +279,6 @@ Deno.serve(async (req) => {
     let contactId = await getContactId(phone)
 
     if (!contactId) {
-      // Crear contacto si no existe
       const { data: newContact } = await supabase
         .from('outreach_contacts')
         .insert({ phone, status: 'responded', source: 'whatsapp_inbound' })
@@ -319,29 +301,25 @@ Deno.serve(async (req) => {
       whatsapp_message_id: messageId,
     })
 
-    // ========== DEBOUNCE CON REDIS ==========
-    const debounceKey = `whatsapp:debounce:${phone}`
-
-    // Guardar nuestro timestamp en Redis
-    await redisSet(debounceKey, myTimestamp.toString(), 60) // TTL 60 segundos
-
+    // ========== DEBOUNCE CON SUPABASE ==========
+    // Registrar nuestro timestamp (atómico)
+    await debounceSet(phone, myTimestamp)
     console.log(`[Debounce] Set timestamp ${myTimestamp} for ${phone}, waiting ${DEBOUNCE_MS}ms...`)
 
     // Esperar el período de debounce
     await new Promise(resolve => setTimeout(resolve, DEBOUNCE_MS))
 
-    // Verificar si llegó un mensaje más nuevo
-    const lastTimestamp = await redisGet(debounceKey)
+    // Verificar si seguimos siendo el último mensaje
+    const isLatest = await debounceCheck(phone, myTimestamp)
 
-    if (lastTimestamp && parseInt(lastTimestamp) > myTimestamp) {
-      console.log(`[Debounce] Newer message exists (${lastTimestamp} > ${myTimestamp}), skipping response`)
+    if (!isLatest) {
+      console.log(`[Debounce] Newer message exists, skipping response for timestamp ${myTimestamp}`)
       return new Response('OK', { status: 200 })
     }
 
     console.log(`[Debounce] This is the latest message, proceeding with response`)
 
     // ========== OBTENER TODOS LOS MENSAJES DEL BATCH ==========
-    // Obtener mensajes de los últimos 5 segundos para combinarlos
     const batchStart = new Date(myTimestamp - DEBOUNCE_MS - 1000).toISOString()
     const { data: batchMessages } = await supabase
       .from('outreach_messages')
@@ -351,7 +329,6 @@ Deno.serve(async (req) => {
       .gte('created_at', batchStart)
       .order('created_at', { ascending: true })
 
-    // Combinar mensajes del batch
     const combinedMessage = batchMessages
       ?.map(m => m.content)
       .join(' ') || messageText
@@ -359,27 +336,19 @@ Deno.serve(async (req) => {
     console.log(`[Batch] Combined ${batchMessages?.length || 1} messages: "${combinedMessage}"`)
 
     // ========== GENERAR RESPUESTA ==========
-    // Mostrar "escribiendo..."
     await sendTyping(chatId)
 
-    // Obtener contexto de conversación
     const context = await getConversationContext(contactId)
-
-    // Generar respuesta con IA
     const aiResponse = await generateAIResponse(combinedMessage, context)
 
-    // Extraer intención y limpiar respuesta
     const intent = extractIntent(aiResponse)
     let finalResponse = cleanResponse(aiResponse)
-
-    // Agregar links inteligentes
     finalResponse = addSmartLinks(finalResponse, intent)
 
     // Simular tiempo de escritura humano
-    const typingDelay = Math.min(finalResponse.length * 30, 3000) // ~30ms por caracter, max 3s
+    const typingDelay = Math.min(finalResponse.length * 30, 3000)
     await new Promise(resolve => setTimeout(resolve, typingDelay))
 
-    // Enviar respuesta
     await stopTyping(chatId)
     await sendMessage(chatId, finalResponse)
 
@@ -393,7 +362,6 @@ Deno.serve(async (req) => {
     // Actualizar estado del contacto
     const updateData: Record<string, unknown> = {
       last_message_received_at: new Date().toISOString(),
-      messages_received: supabase.rpc('increment_column', { row_id: contactId, col: 'messages_received' }),
     }
 
     if (intent) {
