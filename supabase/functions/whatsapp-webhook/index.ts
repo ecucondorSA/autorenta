@@ -1,22 +1,22 @@
 /**
- * WhatsApp Webhook - AI Bot con Debounce Supabase
+ * WhatsApp Webhook - AI Bot con Registro de Usuarios
  *
- * Solución de debounce usando timestamp en Supabase (sin Redis):
- * 1. Cada mensaje guarda su timestamp atómicamente en DB
- * 2. Después de esperar, verifica si llegó uno más nuevo
- * 3. Solo el último mensaje de una ráfaga responde
+ * Features:
+ * - Debounce con Supabase
+ * - Detección de intención
+ * - Registro de usuarios via chat (email + contraseña)
+ * - Contexto conversacional
  */
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 // Configuración
-const DEBOUNCE_MS = 4000 // 4 segundos de espera para agrupar mensajes
+const DEBOUNCE_MS = 4000
 const GROQ_MODEL = 'llama-3.3-70b-versatile'
 const WAHA_BASE_URL = Deno.env.get('WAHA_BASE_URL') || 'http://localhost:3000'
 const WAHA_SESSION = Deno.env.get('WAHA_SESSION') || 'default'
 const WAHA_API_KEY = Deno.env.get('WAHA_API_KEY') || ''
 
-// Headers comunes para WAHA
 const wahaHeaders = {
   'Content-Type': 'application/json',
   'X-Api-Key': WAHA_API_KEY,
@@ -27,19 +27,17 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL')!
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-// ============ DEBOUNCE CON SUPABASE ============
+// ============ DEBOUNCE ============
 
 async function debounceSet(phone: string, timestamp: number): Promise<boolean> {
   const { data, error } = await supabase.rpc('whatsapp_debounce_set', {
     p_phone: phone,
     p_timestamp: timestamp,
   })
-
   if (error) {
     console.error('[Debounce] Error setting:', error)
-    return true // En caso de error, proceder
+    return true
   }
-
   return data === true
 }
 
@@ -48,13 +46,89 @@ async function debounceCheck(phone: string, timestamp: number): Promise<boolean>
     p_phone: phone,
     p_timestamp: timestamp,
   })
-
   if (error) {
     console.error('[Debounce] Error checking:', error)
-    return true // En caso de error, proceder
+    return true
   }
-
   return data === true
+}
+
+// ============ REGISTRATION STATE ============
+
+interface RegistrationState {
+  phone: string
+  state: 'idle' | 'waiting_email' | 'waiting_password' | 'completed'
+  email?: string
+}
+
+async function getRegistrationState(phone: string): Promise<RegistrationState | null> {
+  const { data } = await supabase
+    .from('whatsapp_registration')
+    .select('*')
+    .eq('phone', phone)
+    .single()
+
+  return data
+}
+
+async function setRegistrationState(phone: string, state: string, email?: string): Promise<void> {
+  await supabase
+    .from('whatsapp_registration')
+    .upsert({
+      phone,
+      state,
+      email: email || null,
+      updated_at: new Date().toISOString(),
+    })
+}
+
+async function clearRegistrationState(phone: string): Promise<void> {
+  await supabase
+    .from('whatsapp_registration')
+    .delete()
+    .eq('phone', phone)
+}
+
+// ============ USER CREATION ============
+
+async function createUserAccount(phone: string, email: string, password: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    // Crear usuario en Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+      email,
+      password,
+      phone: `+${phone}`,
+      email_confirm: true, // Auto-confirmar email ya que verificamos por WhatsApp
+      phone_confirm: true, // El teléfono ya está verificado (es WhatsApp)
+    })
+
+    if (authError) {
+      console.error('[Auth] Error creating user:', authError)
+      if (authError.message.includes('already registered')) {
+        return { success: false, error: 'email_exists' }
+      }
+      return { success: false, error: 'auth_error' }
+    }
+
+    // Actualizar el perfil con el teléfono
+    if (authData.user) {
+      await supabase
+        .from('profiles')
+        .update({
+          phone: `+${phone}`,
+          phone_verified: true,
+          onboarding_completed: false,
+        })
+        .eq('id', authData.user.id)
+    }
+
+    console.log(`[Auth] User created: ${email} (${phone})`)
+    return { success: true }
+
+  } catch (error) {
+    console.error('[Auth] Unexpected error:', error)
+    return { success: false, error: 'unexpected' }
+  }
 }
 
 // ============ WAHA HELPERS ============
@@ -66,7 +140,6 @@ async function sendTyping(chatId: string): Promise<void> {
       headers: wahaHeaders,
       body: JSON.stringify({ session: WAHA_SESSION, chatId }),
     })
-
     await fetch(`${WAHA_BASE_URL}/api/startTyping`, {
       method: 'POST',
       headers: wahaHeaders,
@@ -101,6 +174,30 @@ async function sendMessage(chatId: string, text: string): Promise<void> {
   })
 }
 
+// ============ VALIDATION HELPERS ============
+
+function isValidEmail(text: string): string | null {
+  const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/
+  const match = text.match(emailRegex)
+  return match ? match[0].toLowerCase() : null
+}
+
+function isValidPassword(text: string): boolean {
+  return text.trim().length >= 6
+}
+
+function looksLikeYes(text: string): boolean {
+  const yesWords = ['si', 'sí', 'yes', 'dale', 'ok', 'bueno', 'claro', 'por supuesto', 'quiero', 'acepto', 'va', 'vamos']
+  const lower = text.toLowerCase().trim()
+  return yesWords.some(w => lower.includes(w))
+}
+
+function looksLikeNo(text: string): boolean {
+  const noWords = ['no', 'nop', 'nel', 'nunca', 'negativo', 'despues', 'después', 'luego', 'ahora no']
+  const lower = text.toLowerCase().trim()
+  return noWords.some(w => lower.includes(w))
+}
+
 // ============ AI HELPERS ============
 
 function buildSystemPrompt(): string {
@@ -128,6 +225,7 @@ CUANDO DETECTES INTENCIÓN, incluí al final de tu respuesta (NO visible al usua
 [INTENT:DUDAS] - tiene preguntas generales
 [INTENT:PRECIO] - pregunta sobre precios/ganancias
 [INTENT:NO_INTERESADO] - no le interesa
+[INTENT:REGISTRAR] - quiere crear una cuenta o registrarse
 
 SI EL USUARIO ES GROSERO O IRRESPETUOSO:
 - Respondé con calma: "Lamento que se sienta así. Un asociado de AutoRenta se comunicará con usted personalmente para asistirlo."
@@ -148,7 +246,6 @@ async function getContactId(phone: string): Promise<string | null> {
     .select('id')
     .eq('phone', phone)
     .single()
-
   return data?.id || null
 }
 
@@ -203,8 +300,6 @@ async function generateAIResponse(userMessage: string, context: string): Promise
   return data.choices?.[0]?.message?.content || 'Gracias por su mensaje. Lo atenderemos a la brevedad.'
 }
 
-// ============ HELPERS ============
-
 function extractIntent(response: string): string | null {
   const match = response.match(/\[INTENT:(\w+)\]/)
   return match ? match[1] : null
@@ -227,10 +322,55 @@ function addSmartLinks(response: string, intent: string | null): string {
   return response + (links[intent] || '')
 }
 
+// ============ REGISTRATION FLOW MESSAGES ============
+
+const MESSAGES = {
+  askEmail: `¡Excelente! Para crear su cuenta, necesito su correo electrónico.
+
+Por favor, envíeme su email:`,
+
+  invalidEmail: `No pude reconocer un email válido. Por favor, envíeme su correo electrónico en formato correcto (ejemplo: nombre@email.com):`,
+
+  askPassword: (email: string) => `Perfecto, su email es: ${email}
+
+Ahora elija una contraseña segura (mínimo 6 caracteres):`,
+
+  invalidPassword: `La contraseña debe tener al menos 6 caracteres. Por favor, elija otra:`,
+
+  accountCreated: (email: string) => `✅ ¡Cuenta creada exitosamente!
+
+📧 Email: ${email}
+📱 Teléfono: Verificado via WhatsApp
+
+Ya puede ingresar a la app:
+👉 https://autorenta.app/login
+
+Use su email y la contraseña que eligió para acceder.`,
+
+  emailExists: `Este email ya está registrado en AutoRenta.
+
+¿Ya tiene cuenta? Puede ingresar directamente:
+👉 https://autorenta.app/login
+
+Si olvidó su contraseña:
+👉 https://autorenta.app/auth/reset-password`,
+
+  accountError: `Hubo un problema al crear su cuenta. Por favor, intente nuevamente más tarde o regístrese directamente en:
+👉 https://autorenta.app/register`,
+
+  offerRegistration: `¿Le gustaría crear su cuenta ahora mismo? Solo necesito su email y una contraseña.
+
+Responda "Sí" para comenzar o "No" si prefiere hacerlo después.`,
+
+  registrationDeclined: `Entendido. Cuando esté listo, puede registrarse en:
+👉 https://autorenta.app/register
+
+¿Hay algo más en lo que pueda ayudarlo?`,
+}
+
 // ============ MAIN HANDLER ============
 
 Deno.serve(async (req) => {
-  // CORS
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
@@ -245,7 +385,6 @@ Deno.serve(async (req) => {
     const payload = await req.json()
     console.log('[Webhook] Received:', JSON.stringify(payload).slice(0, 500))
 
-    // Solo procesar mensajes entrantes de texto
     if (payload.event !== 'message' || payload.payload?.fromMe) {
       return new Response('OK', { status: 200 })
     }
@@ -284,7 +423,6 @@ Deno.serve(async (req) => {
         .insert({ phone, status: 'responded', source: 'whatsapp_inbound' })
         .select('id')
         .single()
-
       contactId = newContact?.id
     }
 
@@ -293,7 +431,7 @@ Deno.serve(async (req) => {
       return new Response('Error', { status: 500 })
     }
 
-    // Guardar mensaje entrante inmediatamente
+    // Guardar mensaje entrante
     await supabase.from('outreach_messages').insert({
       contact_id: contactId,
       direction: 'inbound',
@@ -301,25 +439,19 @@ Deno.serve(async (req) => {
       whatsapp_message_id: messageId,
     })
 
-    // ========== DEBOUNCE CON SUPABASE ==========
-    // Registrar nuestro timestamp (atómico)
+    // ========== DEBOUNCE ==========
     await debounceSet(phone, myTimestamp)
     console.log(`[Debounce] Set timestamp ${myTimestamp} for ${phone}, waiting ${DEBOUNCE_MS}ms...`)
 
-    // Esperar el período de debounce
     await new Promise(resolve => setTimeout(resolve, DEBOUNCE_MS))
 
-    // Verificar si seguimos siendo el último mensaje
     const isLatest = await debounceCheck(phone, myTimestamp)
-
     if (!isLatest) {
-      console.log(`[Debounce] Newer message exists, skipping response for timestamp ${myTimestamp}`)
+      console.log(`[Debounce] Newer message exists, skipping`)
       return new Response('OK', { status: 200 })
     }
 
-    console.log(`[Debounce] This is the latest message, proceeding with response`)
-
-    // ========== OBTENER TODOS LOS MENSAJES DEL BATCH ==========
+    // Obtener mensajes del batch
     const batchStart = new Date(myTimestamp - DEBOUNCE_MS - 1000).toISOString()
     const { data: batchMessages } = await supabase
       .from('outreach_messages')
@@ -329,59 +461,137 @@ Deno.serve(async (req) => {
       .gte('created_at', batchStart)
       .order('created_at', { ascending: true })
 
-    const combinedMessage = batchMessages
-      ?.map(m => m.content)
-      .join(' ') || messageText
+    const combinedMessage = batchMessages?.map(m => m.content).join(' ') || messageText
 
-    console.log(`[Batch] Combined ${batchMessages?.length || 1} messages: "${combinedMessage}"`)
-
-    // ========== GENERAR RESPUESTA ==========
     await sendTyping(chatId)
 
-    const context = await getConversationContext(contactId)
-    const aiResponse = await generateAIResponse(combinedMessage, context)
+    // ========== REGISTRATION FLOW ==========
+    const regState = await getRegistrationState(phone)
+    let finalResponse = ''
 
-    const intent = extractIntent(aiResponse)
-    let finalResponse = cleanResponse(aiResponse)
-    finalResponse = addSmartLinks(finalResponse, intent)
+    if (regState?.state === 'waiting_email') {
+      // Usuario debe enviar email
+      const email = isValidEmail(combinedMessage)
 
-    // Simular tiempo de escritura humano
+      if (email) {
+        // Email válido - pedir contraseña
+        await setRegistrationState(phone, 'waiting_password', email)
+        finalResponse = MESSAGES.askPassword(email)
+        console.log(`[Registration] Email received: ${email}`)
+      } else {
+        // Email inválido
+        finalResponse = MESSAGES.invalidEmail
+      }
+
+    } else if (regState?.state === 'waiting_password') {
+      // Usuario debe enviar contraseña
+      if (isValidPassword(combinedMessage)) {
+        const email = regState.email!
+        const password = combinedMessage.trim()
+
+        const result = await createUserAccount(phone, email, password)
+
+        if (result.success) {
+          await clearRegistrationState(phone)
+          finalResponse = MESSAGES.accountCreated(email)
+
+          // Actualizar estado del contacto
+          await supabase
+            .from('outreach_contacts')
+            .update({ status: 'registered', converted_at: new Date().toISOString() })
+            .eq('id', contactId)
+
+          console.log(`[Registration] Account created for ${email}`)
+        } else if (result.error === 'email_exists') {
+          await clearRegistrationState(phone)
+          finalResponse = MESSAGES.emailExists
+        } else {
+          await clearRegistrationState(phone)
+          finalResponse = MESSAGES.accountError
+        }
+      } else {
+        finalResponse = MESSAGES.invalidPassword
+      }
+
+    } else {
+      // Flujo normal - IA
+      const context = await getConversationContext(contactId)
+      const aiResponse = await generateAIResponse(combinedMessage, context)
+      const intent = extractIntent(aiResponse)
+      finalResponse = cleanResponse(aiResponse)
+
+      // Si detectamos intención de registro o interés alto, ofrecer registro
+      if (intent === 'REGISTRAR') {
+        await setRegistrationState(phone, 'waiting_email')
+        finalResponse = finalResponse + '\n\n' + MESSAGES.askEmail
+      } else if ((intent === 'PUBLICAR' || intent === 'ALQUILAR') && !regState) {
+        // Verificar si el usuario ya existe
+        const { data: existingUser } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('phone', `+${phone}`)
+          .single()
+
+        if (!existingUser) {
+          finalResponse = finalResponse + '\n\n' + MESSAGES.offerRegistration
+          // Marcar que ofrecimos registro (para detectar respuesta)
+          await setRegistrationState(phone, 'idle')
+        } else {
+          finalResponse = addSmartLinks(finalResponse, intent)
+        }
+      } else if (regState?.state === 'idle') {
+        // Verificar si responde a la oferta de registro
+        if (looksLikeYes(combinedMessage)) {
+          await setRegistrationState(phone, 'waiting_email')
+          finalResponse = MESSAGES.askEmail
+        } else if (looksLikeNo(combinedMessage)) {
+          await clearRegistrationState(phone)
+          finalResponse = MESSAGES.registrationDeclined
+        } else {
+          // Respuesta no relacionada con registro
+          await clearRegistrationState(phone)
+          finalResponse = addSmartLinks(finalResponse, intent)
+        }
+      } else {
+        finalResponse = addSmartLinks(finalResponse, intent)
+      }
+
+      // Actualizar intención en contacto
+      if (intent) {
+        const updateData: Record<string, unknown> = {
+          last_message_received_at: new Date().toISOString(),
+          detected_intent: intent,
+        }
+
+        if (intent === 'RUDE') {
+          updateData.status = 'needs_attention'
+          updateData.requires_human = true
+        } else if (intent === 'PUBLICAR' || intent === 'ALQUILAR') {
+          updateData.status = 'interested'
+        }
+
+        await supabase
+          .from('outreach_contacts')
+          .update(updateData)
+          .eq('id', contactId)
+      }
+    }
+
+    // Simular typing
     const typingDelay = Math.min(finalResponse.length * 30, 3000)
     await new Promise(resolve => setTimeout(resolve, typingDelay))
 
     await stopTyping(chatId)
     await sendMessage(chatId, finalResponse)
 
-    // Guardar respuesta en DB
+    // Guardar respuesta
     await supabase.from('outreach_messages').insert({
       contact_id: contactId,
       direction: 'outbound',
       content: finalResponse,
     })
 
-    // Actualizar estado del contacto
-    const updateData: Record<string, unknown> = {
-      last_message_received_at: new Date().toISOString(),
-    }
-
-    if (intent) {
-      updateData.detected_intent = intent
-
-      if (intent === 'RUDE') {
-        updateData.status = 'needs_attention'
-        updateData.requires_human = true
-      } else if (intent === 'PUBLICAR' || intent === 'ALQUILAR') {
-        updateData.status = 'interested'
-      }
-    }
-
-    await supabase
-      .from('outreach_contacts')
-      .update(updateData)
-      .eq('id', contactId)
-
-    console.log(`[Done] Responded to ${phone} with intent: ${intent}`)
-
+    console.log(`[Done] Responded to ${phone}`)
     return new Response('OK', { status: 200 })
 
   } catch (error) {
