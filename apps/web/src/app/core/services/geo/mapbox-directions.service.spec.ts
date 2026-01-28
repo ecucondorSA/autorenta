@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { MapboxDirectionsService } from '@core/services/geo/mapbox-directions.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('MapboxDirectionsService', () => {
   let service: MapboxDirectionsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MapboxDirectionsService],
+      providers: [...testProviders, MapboxDirectionsService],
     });
     service = TestBed.inject(MapboxDirectionsService);
   });

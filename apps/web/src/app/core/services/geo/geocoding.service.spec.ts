@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { GeocodingService } from '@core/services/geo/geocoding.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('GeocodingService', () => {
   let service: GeocodingService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [GeocodingService],
+      providers: [...testProviders, GeocodingService],
     });
     service = TestBed.inject(GeocodingService);
   });

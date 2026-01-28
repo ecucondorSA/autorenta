@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { PayPalWalletGatewayService } from '@core/services/payments/paypal-wallet-gateway.service';
+import { testProviders } from '@app/testing/test-providers';
 
 const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({
@@ -55,10 +56,8 @@ describe('PayPalWalletGatewayService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        PayPalWalletGatewayService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },
-      ],
+      providers: [...testProviders, PayPalWalletGatewayService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },],
     });
     service = TestBed.inject(PayPalWalletGatewayService);
   });

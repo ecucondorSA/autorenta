@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { NotificationSoundService } from '@core/services/infrastructure/notification-sound.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('NotificationSoundService', () => {
   let service: NotificationSoundService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [NotificationSoundService],
+      providers: [...testProviders, NotificationSoundService],
     });
     service = TestBed.inject(NotificationSoundService);
   });

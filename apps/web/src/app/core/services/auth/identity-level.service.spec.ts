@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { IdentityLevelService } from '@core/services/verification/identity-level.service';
+import { testProviders } from '@app/testing/test-providers';
 
 const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({
@@ -55,10 +56,8 @@ describe('IdentityLevelService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        IdentityLevelService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },
-      ],
+      providers: [...testProviders, IdentityLevelService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },],
     });
     service = TestBed.inject(IdentityLevelService);
   });

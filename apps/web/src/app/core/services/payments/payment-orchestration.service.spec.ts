@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { PaymentOrchestrationService } from '@core/services/payments/payment-orchestration.service';
+import { testProviders } from '@app/testing/test-providers';
 
 const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({
@@ -55,10 +56,8 @@ describe('PaymentOrchestrationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        PaymentOrchestrationService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },
-      ],
+      providers: [...testProviders, PaymentOrchestrationService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },],
     });
     service = TestBed.inject(PaymentOrchestrationService);
   });

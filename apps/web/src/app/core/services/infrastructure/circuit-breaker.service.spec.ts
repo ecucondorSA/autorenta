@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { CircuitBreakerService, CircuitOpenError, CircuitState } from './circuit-breaker.service';
 import { LoggerService } from './logger.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('CircuitBreakerService', () => {
   let service: CircuitBreakerService;
@@ -10,7 +11,7 @@ describe('CircuitBreakerService', () => {
     mockLogger = jasmine.createSpyObj('LoggerService', ['info', 'warn', 'error', 'debug']);
 
     TestBed.configureTestingModule({
-      providers: [CircuitBreakerService, { provide: LoggerService, useValue: mockLogger }],
+      providers: [...testProviders, CircuitBreakerService, { provide: LoggerService, useValue: mockLogger }],
     });
 
     service = TestBed.inject(CircuitBreakerService);

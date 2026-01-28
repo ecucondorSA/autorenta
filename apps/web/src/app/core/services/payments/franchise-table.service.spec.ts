@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { FranchiseTableService } from '@core/services/payments/franchise-table.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('FranchiseTableService', () => {
   let service: FranchiseTableService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [FranchiseTableService],
+      providers: [...testProviders, FranchiseTableService],
     });
     service = TestBed.inject(FranchiseTableService);
   });

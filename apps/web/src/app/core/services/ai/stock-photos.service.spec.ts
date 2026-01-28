@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { StockPhotosService } from '@core/services/ai/stock-photos.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('StockPhotosService', () => {
   let service: StockPhotosService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [StockPhotosService],
+      providers: [...testProviders, StockPhotosService],
     });
     service = TestBed.inject(StockPhotosService);
   });

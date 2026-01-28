@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { AiPhotoEnhancerService } from '@core/services/ai/ai-photo-enhancer.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('AiPhotoEnhancerService', () => {
   let service: AiPhotoEnhancerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AiPhotoEnhancerService],
+      providers: [...testProviders, AiPhotoEnhancerService],
     });
     service = TestBed.inject(AiPhotoEnhancerService);
   });

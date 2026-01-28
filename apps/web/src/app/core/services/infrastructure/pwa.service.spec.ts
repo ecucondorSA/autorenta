@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { PwaService } from '@core/services/infrastructure/pwa.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('PwaService', () => {
   let service: PwaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PwaService],
+      providers: [...testProviders, PwaService],
     });
     service = TestBed.inject(PwaService);
   });

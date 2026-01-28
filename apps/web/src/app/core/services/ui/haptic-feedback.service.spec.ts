@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('HapticFeedbackService', () => {
   let service: HapticFeedbackService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [HapticFeedbackService],
+      providers: [...testProviders, HapticFeedbackService],
     });
     service = TestBed.inject(HapticFeedbackService);
   });

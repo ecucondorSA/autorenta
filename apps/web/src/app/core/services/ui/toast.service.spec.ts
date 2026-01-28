@@ -1,12 +1,13 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ToastService, Toast } from './toast.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('ToastService', () => {
   let service: ToastService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ToastService],
+      providers: [...testProviders, ToastService],
     });
     service = TestBed.inject(ToastService);
   });

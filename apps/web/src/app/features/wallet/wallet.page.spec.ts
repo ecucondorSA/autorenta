@@ -12,6 +12,7 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
 import { MetaService } from '@core/services/ui/meta.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { WalletPage } from './wallet.page';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('WalletPage', () => {
   let component: WalletPage;
@@ -144,6 +145,7 @@ describe('WalletPage', () => {
     await TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot(), RouterTestingModule],
       providers: [
+        ...testProviders,
         { provide: WalletService, useValue: walletServiceMock },
         { provide: NotificationManagerService, useValue: notificationManagerService },
         { provide: WithdrawalService, useValue: withdrawalServiceMock },

@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { VehicleDocumentsService } from '@core/services/verification/vehicle-documents.service';
+import { testProviders } from '@app/testing/test-providers';
 
 const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({
@@ -55,10 +56,8 @@ describe('VehicleDocumentsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        VehicleDocumentsService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },
-      ],
+      providers: [...testProviders, VehicleDocumentsService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },],
     });
     service = TestBed.inject(VehicleDocumentsService);
   });

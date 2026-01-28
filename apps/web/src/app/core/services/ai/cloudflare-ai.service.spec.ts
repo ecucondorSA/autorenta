@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { CloudflareAiService } from '@core/services/ai/cloudflare-ai.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('CloudflareAiService', () => {
   let service: CloudflareAiService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CloudflareAiService],
+      providers: [...testProviders, CloudflareAiService],
     });
     service = TestBed.inject(CloudflareAiService);
   });

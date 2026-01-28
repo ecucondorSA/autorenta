@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { RBACService } from '@core/services/auth/rbac.service';
+import { testProviders } from '@app/testing/test-providers';
 
 const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({
@@ -55,7 +56,7 @@ describe('RBACService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RBACService, { provide: SupabaseClientService, useValue: mockSupabaseService }],
+      providers: [...testProviders, RBACService, { provide: SupabaseClientService, useValue: mockSupabaseService }],
     });
     service = TestBed.inject(RBACService);
   });

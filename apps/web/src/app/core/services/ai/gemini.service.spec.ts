@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { GeminiService } from '@core/services/ai/gemini.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('GeminiService', () => {
   let service: GeminiService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [GeminiService],
+      providers: [...testProviders, GeminiService],
     });
     service = TestBed.inject(GeminiService);
   });

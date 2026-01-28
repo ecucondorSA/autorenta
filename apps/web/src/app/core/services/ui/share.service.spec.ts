@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { ShareService } from '@core/services/ui/share.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('ShareService', () => {
   let service: ShareService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ShareService],
+      providers: [...testProviders, ShareService],
     });
     service = TestBed.inject(ShareService);
   });

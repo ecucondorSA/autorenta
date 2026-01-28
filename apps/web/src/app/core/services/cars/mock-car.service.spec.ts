@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { MockCarService } from '@core/services/cars/mock-car.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('MockCarService', () => {
   let service: MockCarService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MockCarService],
+      providers: [...testProviders, MockCarService],
     });
     service = TestBed.inject(MockCarService);
   });

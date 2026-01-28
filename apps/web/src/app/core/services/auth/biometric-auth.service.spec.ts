@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { BiometricAuthService } from '@core/services/auth/biometric-auth.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('BiometricAuthService', () => {
   let service: BiometricAuthService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BiometricAuthService],
+      providers: [...testProviders, BiometricAuthService],
     });
     service = TestBed.inject(BiometricAuthService);
   });

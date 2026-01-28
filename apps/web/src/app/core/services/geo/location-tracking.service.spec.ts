@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { LocationTrackingService } from '@core/services/geo/location-tracking.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { testProviders } from '@app/testing/test-providers';
 
 const mockSupabaseClient = {
   from: jasmine.createSpy('from').and.returnValue({
@@ -64,11 +65,9 @@ describe('LocationTrackingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        LocationTrackingService,
+      providers: [...testProviders, LocationTrackingService,
         { provide: SupabaseClientService, useValue: mockSupabaseService },
-        { provide: LoggerService, useValue: mockLoggerService },
-      ],
+        { provide: LoggerService, useValue: mockLoggerService },],
     });
     service = TestBed.inject(LocationTrackingService);
   });

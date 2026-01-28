@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { MetaService } from '@core/services/ui/meta.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('MetaService', () => {
   let service: MetaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MetaService],
+      providers: [...testProviders, MetaService],
     });
     service = TestBed.inject(MetaService);
   });

@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { CarsCompareService } from '@core/services/cars/cars-compare.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('CarsCompareService', () => {
   let service: CarsCompareService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CarsCompareService],
+      providers: [...testProviders, CarsCompareService],
     });
     service = TestBed.inject(CarsCompareService);
   });

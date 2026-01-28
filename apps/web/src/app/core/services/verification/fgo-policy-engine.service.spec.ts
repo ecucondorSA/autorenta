@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { FgoPolicyEngineService } from '@core/services/verification/fgo-policy-engine.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('FgoPolicyEngineService', () => {
   let service: FgoPolicyEngineService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [FgoPolicyEngineService],
+      providers: [...testProviders, FgoPolicyEngineService],
     });
     service = TestBed.inject(FgoPolicyEngineService);
   });

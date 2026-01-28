@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { ThemeService } from '@core/services/ui/theme.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('ThemeService', () => {
   let service: ThemeService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ThemeService],
+      providers: [...testProviders, ThemeService],
     });
     service = TestBed.inject(ThemeService);
   });

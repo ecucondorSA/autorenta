@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { LocaleManagerService } from '@core/services/ui/locale-manager.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('LocaleManagerService', () => {
   let service: LocaleManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LocaleManagerService],
+      providers: [...testProviders, LocaleManagerService],
     });
     service = TestBed.inject(LocaleManagerService);
   });

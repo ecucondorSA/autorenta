@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { AssetPreloaderService } from '@core/services/ui/asset-preloader.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('AssetPreloaderService', () => {
   let service: AssetPreloaderService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AssetPreloaderService],
+      providers: [...testProviders, AssetPreloaderService],
     });
     service = TestBed.inject(AssetPreloaderService);
   });

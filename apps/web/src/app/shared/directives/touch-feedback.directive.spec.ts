@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
 import { TouchFeedbackDirective } from './touch-feedback.directive';
+import { testProviders } from '@app/testing/test-providers';
 
 // Mock HapticFeedbackService
 class MockHapticFeedbackService {
@@ -36,7 +37,7 @@ describe('TouchFeedbackDirective', () => {
 
     await TestBed.configureTestingModule({
       imports: [TestHostComponent],
-      providers: [{ provide: HapticFeedbackService, useValue: hapticService }],
+      providers: [...testProviders, { provide: HapticFeedbackService, useValue: hapticService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestHostComponent);

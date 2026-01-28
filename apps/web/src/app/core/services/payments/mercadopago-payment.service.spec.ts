@@ -5,6 +5,7 @@ import {
   ProcessBookingPaymentResponse,
 } from '@core/services/payments/mercadopago-payment.service';
 import { generateIdempotencyKey } from '@core/models/booking-detail-payment.model';
+import { testProviders } from '@app/testing/test-providers';
 
 const mockSession = {
   access_token: 'test-access-token-123',
@@ -67,10 +68,8 @@ describe('MercadoPagoPaymentService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        MercadoPagoPaymentService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },
-      ],
+      providers: [...testProviders, MercadoPagoPaymentService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },],
     });
     service = TestBed.inject(MercadoPagoPaymentService);
 
@@ -350,10 +349,8 @@ describe('MercadoPagoPaymentService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          MercadoPagoPaymentService,
-          { provide: SupabaseClientService, useValue: noSessionSupabaseService },
-        ],
+        providers: [...testProviders, MercadoPagoPaymentService,
+          { provide: SupabaseClientService, useValue: noSessionSupabaseService },],
       });
 
       const unauthService = TestBed.inject(MercadoPagoPaymentService);

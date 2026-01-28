@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { PLATFORM_ID } from '@angular/core';
 import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
 import { PullToRefreshDirective } from './pull-to-refresh.directive';
+import { testProviders } from '@app/testing/test-providers';
 
 /**
  * Unit Tests for PullToRefreshDirective
@@ -71,6 +72,7 @@ describe('PullToRefreshDirective', () => {
       TestBed.configureTestingModule({
         imports: [TestHostComponent],
         providers: [
+          ...testProviders,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: HapticFeedbackService, useValue: mockHaptic },
         ],
@@ -90,6 +92,7 @@ describe('PullToRefreshDirective', () => {
       TestBed.configureTestingModule({
         imports: [MultipleInstancesComponent],
         providers: [
+          ...testProviders,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: HapticFeedbackService, useValue: mockHaptic },
         ],
@@ -113,6 +116,7 @@ describe('PullToRefreshDirective', () => {
       TestBed.configureTestingModule({
         imports: [TestHostComponent],
         providers: [
+          ...testProviders,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: HapticFeedbackService, useValue: mockHaptic },
         ],
@@ -141,6 +145,7 @@ describe('PullToRefreshDirective', () => {
       TestBed.configureTestingModule({
         imports: [MultipleInstancesComponent],
         providers: [
+          ...testProviders,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: HapticFeedbackService, useValue: mockHaptic },
         ],
@@ -178,6 +183,7 @@ describe('PullToRefreshDirective', () => {
       TestBed.configureTestingModule({
         imports: [TestHostComponent],
         providers: [
+          ...testProviders,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: HapticFeedbackService, useValue: mockHaptic },
         ],
@@ -206,6 +212,7 @@ describe('PullToRefreshDirective', () => {
       TestBed.configureTestingModule({
         imports: [TestHostComponent],
         providers: [
+          ...testProviders,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: HapticFeedbackService, useValue: mockHaptic },
         ],
@@ -229,6 +236,7 @@ describe('PullToRefreshDirective', () => {
       TestBed.configureTestingModule({
         imports: [TestHostComponent],
         providers: [
+          ...testProviders,
           { provide: PLATFORM_ID, useValue: 'server' },
           { provide: HapticFeedbackService, useValue: mockHaptic },
         ],
@@ -250,6 +258,7 @@ describe('PullToRefreshDirective', () => {
       TestBed.configureTestingModule({
         imports: [TestHostComponent],
         providers: [
+          ...testProviders,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: HapticFeedbackService, useValue: mockHaptic },
         ],

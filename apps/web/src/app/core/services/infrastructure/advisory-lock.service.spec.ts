@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AdvisoryLockService, LOCK_TYPES, LockType } from './advisory-lock.service';
 import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('AdvisoryLockService', () => {
   let service: AdvisoryLockService;
@@ -22,11 +23,9 @@ describe('AdvisoryLockService', () => {
     mockLogger = jasmine.createSpyObj('LoggerService', ['info', 'warn', 'error', 'debug']);
 
     TestBed.configureTestingModule({
-      providers: [
-        AdvisoryLockService,
+      providers: [...testProviders, AdvisoryLockService,
         { provide: SupabaseClientService, useValue: mockSupabaseService },
-        { provide: LoggerService, useValue: mockLogger },
-      ],
+        { provide: LoggerService, useValue: mockLogger },],
     });
 
     service = TestBed.inject(AdvisoryLockService);

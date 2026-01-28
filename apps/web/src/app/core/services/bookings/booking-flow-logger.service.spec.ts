@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { BookingFlowLoggerService } from '@core/services/bookings/booking-flow-logger.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('BookingFlowLoggerService', () => {
   let service: BookingFlowLoggerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BookingFlowLoggerService],
+      providers: [...testProviders, BookingFlowLoggerService],
     });
     service = TestBed.inject(BookingFlowLoggerService);
   });

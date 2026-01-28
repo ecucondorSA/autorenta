@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { BreakpointService } from '@core/services/ui/breakpoint.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('BreakpointService', () => {
   let service: BreakpointService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BreakpointService],
+      providers: [...testProviders, BreakpointService],
     });
     service = TestBed.inject(BreakpointService);
   });

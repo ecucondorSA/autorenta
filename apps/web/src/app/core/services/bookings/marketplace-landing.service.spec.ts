@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { MarketplaceLandingService } from '@core/services/bookings/marketplace-landing.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('MarketplaceLandingService', () => {
   let service: MarketplaceLandingService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MarketplaceLandingService],
+      providers: [...testProviders, MarketplaceLandingService],
     });
     service = TestBed.inject(MarketplaceLandingService);
   });

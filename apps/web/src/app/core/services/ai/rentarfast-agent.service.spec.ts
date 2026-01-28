@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { RentarfastAgentService } from '@core/services/ai/rentarfast-agent.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('RentarfastAgentService', () => {
   let service: RentarfastAgentService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RentarfastAgentService],
+      providers: [...testProviders, RentarfastAgentService],
     });
     service = TestBed.inject(RentarfastAgentService);
   });

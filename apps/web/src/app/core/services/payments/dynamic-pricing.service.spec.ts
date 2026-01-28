@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
+import { testProviders } from '@app/testing/test-providers';
 import {
   PriceLock,
   PriceLockErrorCode,
@@ -144,10 +145,8 @@ describe('DynamicPricingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        DynamicPricingService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },
-      ],
+      providers: [...testProviders, DynamicPricingService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },],
     });
     service = TestBed.inject(DynamicPricingService);
   });

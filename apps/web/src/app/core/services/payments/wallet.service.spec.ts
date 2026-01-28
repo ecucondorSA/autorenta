@@ -4,6 +4,7 @@ import { WalletService } from '@core/services/payments/wallet.service';
 import { WalletError, isWalletError } from '@core/errors';
 import { firstValueFrom } from 'rxjs';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { testProviders } from '@app/testing/test-providers';
 
 // Mock LoggerService
 const mockLoggerService = {
@@ -86,11 +87,9 @@ describe('WalletService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        WalletService,
+      providers: [...testProviders, WalletService,
         { provide: SupabaseClientService, useValue: mockSupabaseService },
-        { provide: LoggerService, useValue: mockLoggerService },
-      ],
+        { provide: LoggerService, useValue: mockLoggerService },],
     });
     service = TestBed.inject(WalletService);
   });
@@ -156,11 +155,9 @@ describe('WalletService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          WalletService,
+        providers: [...testProviders, WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService },
-        ],
+          { provide: LoggerService, useValue: mockLoggerService },],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -187,11 +184,9 @@ describe('WalletService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          WalletService,
+        providers: [...testProviders, WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService },
-        ],
+          { provide: LoggerService, useValue: mockLoggerService },],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -232,11 +227,9 @@ describe('WalletService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          WalletService,
+        providers: [...testProviders, WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService },
-        ],
+          { provide: LoggerService, useValue: mockLoggerService },],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -275,11 +268,9 @@ describe('WalletService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          WalletService,
+        providers: [...testProviders, WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService },
-        ],
+          { provide: LoggerService, useValue: mockLoggerService },],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -393,11 +384,9 @@ describe('WalletService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          WalletService,
+        providers: [...testProviders, WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService },
-        ],
+          { provide: LoggerService, useValue: mockLoggerService },],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -435,11 +424,9 @@ describe('WalletService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          WalletService,
+        providers: [...testProviders, WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService },
-        ],
+          { provide: LoggerService, useValue: mockLoggerService },],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -494,11 +481,9 @@ describe('WalletService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          WalletService,
+        providers: [...testProviders, WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService },
-        ],
+          { provide: LoggerService, useValue: mockLoggerService },],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -534,11 +519,9 @@ describe('WalletService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          WalletService,
+        providers: [...testProviders, WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService },
-        ],
+          { provide: LoggerService, useValue: mockLoggerService },],
       });
 
       const freshService = TestBed.inject(WalletService);
@@ -580,11 +563,9 @@ describe('WalletService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          WalletService,
+        providers: [...testProviders, WalletService,
           { provide: SupabaseClientService, useValue: wrapInServiceMock(freshMock) },
-          { provide: LoggerService, useValue: mockLoggerService },
-        ],
+          { provide: LoggerService, useValue: mockLoggerService },],
       });
 
       const freshService = TestBed.inject(WalletService);

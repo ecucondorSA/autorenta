@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { LanguageService } from '@core/services/ui/language.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('LanguageService', () => {
   let service: LanguageService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LanguageService],
+      providers: [...testProviders, LanguageService],
     });
     service = TestBed.inject(LanguageService);
   });

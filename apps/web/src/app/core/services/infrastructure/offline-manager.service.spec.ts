@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { OfflineManagerService } from '@core/services/infrastructure/offline-manager.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('OfflineManagerService', () => {
   let service: OfflineManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [OfflineManagerService],
+      providers: [...testProviders, OfflineManagerService],
     });
     service = TestBed.inject(OfflineManagerService);
   });

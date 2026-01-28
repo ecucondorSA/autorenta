@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('DistanceCalculatorService', () => {
   let service: DistanceCalculatorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DistanceCalculatorService],
+      providers: [...testProviders, DistanceCalculatorService],
     });
     service = TestBed.inject(DistanceCalculatorService);
   });

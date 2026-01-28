@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { GuaranteeCopyBuilderService } from '@core/services/ui/guarantee-copy-builder.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('GuaranteeCopyBuilderService', () => {
   let service: GuaranteeCopyBuilderService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [GuaranteeCopyBuilderService],
+      providers: [...testProviders, GuaranteeCopyBuilderService],
     });
     service = TestBed.inject(GuaranteeCopyBuilderService);
   });

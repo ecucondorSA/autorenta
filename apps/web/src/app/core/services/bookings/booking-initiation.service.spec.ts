@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { BookingInitiationService } from '@core/services/bookings/booking-initiation.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('BookingInitiationService', () => {
   let service: BookingInitiationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BookingInitiationService],
+      providers: [...testProviders, BookingInitiationService],
     });
     service = TestBed.inject(BookingInitiationService);
   });

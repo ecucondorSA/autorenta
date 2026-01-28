@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { ContractTemplateService } from '@core/services/bookings/contract-template.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('ContractTemplateService', () => {
   let service: ContractTemplateService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ContractTemplateService],
+      providers: [...testProviders, ContractTemplateService],
     });
     service = TestBed.inject(ContractTemplateService);
   });

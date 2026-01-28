@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { DebugService } from '@core/services/admin/debug.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('DebugService', () => {
   let service: DebugService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DebugService],
+      providers: [...testProviders, DebugService],
     });
     service = TestBed.inject(DebugService);
   });

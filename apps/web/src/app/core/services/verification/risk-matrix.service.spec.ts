@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { RiskMatrixService } from '@core/services/verification/risk-matrix.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('RiskMatrixService', () => {
   let service: RiskMatrixService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RiskMatrixService],
+      providers: [...testProviders, RiskMatrixService],
     });
     service = TestBed.inject(RiskMatrixService);
   });

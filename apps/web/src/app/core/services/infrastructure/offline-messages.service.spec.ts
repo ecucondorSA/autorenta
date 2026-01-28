@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { OfflineMessagesService } from '@core/services/infrastructure/offline-messages.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('OfflineMessagesService', () => {
   let service: OfflineMessagesService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [OfflineMessagesService],
+      providers: [...testProviders, OfflineMessagesService],
     });
     service = TestBed.inject(OfflineMessagesService);
   });

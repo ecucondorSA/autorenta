@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { PdfGeneratorService } from '@core/services/infrastructure/pdf-generator.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('PdfGeneratorService', () => {
   let service: PdfGeneratorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PdfGeneratorService],
+      providers: [...testProviders, PdfGeneratorService],
     });
     service = TestBed.inject(PdfGeneratorService);
   });

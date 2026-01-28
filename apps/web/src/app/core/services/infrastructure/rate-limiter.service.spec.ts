@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { RateLimiterService } from '@core/services/infrastructure/rate-limiter.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('RateLimiterService', () => {
   let service: RateLimiterService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RateLimiterService],
+      providers: [...testProviders, RateLimiterService],
     });
     service = TestBed.inject(RateLimiterService);
   });

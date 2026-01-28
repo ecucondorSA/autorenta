@@ -9,6 +9,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { DepositPage } from './deposit.page';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('DepositPage', () => {
   let component: DepositPage;
@@ -70,6 +71,7 @@ describe('DepositPage', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, TranslateModule.forRoot(), FormsModule],
       providers: [
+        ...testProviders,
         { provide: WalletService, useValue: walletService },
         { provide: NotificationManagerService, useValue: notificationManagerService },
         { provide: AnalyticsService, useValue: analyticsService },

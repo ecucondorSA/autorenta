@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('NotificationManagerService', () => {
   let service: NotificationManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [NotificationManagerService],
+      providers: [...testProviders, NotificationManagerService],
     });
     service = TestBed.inject(NotificationManagerService);
   });

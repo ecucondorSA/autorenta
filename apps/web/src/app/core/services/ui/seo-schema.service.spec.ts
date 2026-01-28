@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { SeoSchemaService } from '@core/services/ui/seo-schema.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('SeoSchemaService', () => {
   let service: SeoSchemaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SeoSchemaService],
+      providers: [...testProviders, SeoSchemaService],
     });
     service = TestBed.inject(SeoSchemaService);
   });

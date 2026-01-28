@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CircuitBreakerService } from '@core/services/infrastructure/circuit-breaker.service';
 import { PaymentMetricsService, PaymentMetricRecord, AlertType } from './payment-metrics.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('PaymentMetricsService', () => {
   let service: PaymentMetricsService;
@@ -20,11 +21,9 @@ describe('PaymentMetricsService', () => {
     mockCircuitBreaker.isOpen.and.returnValue(false);
 
     TestBed.configureTestingModule({
-      providers: [
-        PaymentMetricsService,
+      providers: [...testProviders, PaymentMetricsService,
         { provide: LoggerService, useValue: mockLogger },
-        { provide: CircuitBreakerService, useValue: mockCircuitBreaker },
-      ],
+        { provide: CircuitBreakerService, useValue: mockCircuitBreaker },],
     });
 
     service = TestBed.inject(PaymentMetricsService);

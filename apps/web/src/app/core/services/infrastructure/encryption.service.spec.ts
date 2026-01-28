@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { EncryptionService } from '@core/services/infrastructure/encryption.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('EncryptionService', () => {
   let service: EncryptionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [EncryptionService],
+      providers: [...testProviders, EncryptionService],
     });
     service = TestBed.inject(EncryptionService);
   });
