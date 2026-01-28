@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-01-26T06:53:25.463Z",
+  "generatedAt": "2026-01-28T19:46:24.199Z",
   "categories": {
     "componentSelectors": [],
     "componentClasses": [],
@@ -29,8 +29,8 @@
       "check_subscription_coverage",
       "check_user_pending_deposits_limit",
       "cleanup_old_pending_deposits",
-      "compute_fee_with_class",
       "complete_referral_milestone",
+      "compute_fee_with_class",
       "compute_guarantee_with_class",
       "consume_protection_credit_for_claim",
       "create_mp_preauth_order",
@@ -58,6 +58,7 @@
       "get_unread_messages_count",
       "get_verification_limits",
       "get_verification_progress",
+      "handle_new_user",
       "has_admin_role",
       "improve_driver_class_annual",
       "initialize_driver_profile",
@@ -95,9 +96,11 @@
       "update_updated_at_column",
       "wallet_charge_subscription",
       "wallet_confirm_deposit_admin",
+      "wallet_deposit_ledger",
       "wallet_get_balance",
       "wallet_lock_funds",
-      "wallet_lock_rental_and_deposit"
+      "wallet_lock_rental_and_deposit",
+      "wallet_transfer"
     ]
   }
 }
