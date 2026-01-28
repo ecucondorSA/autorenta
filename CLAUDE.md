@@ -67,6 +67,7 @@
 | **Console.log en prod** | Usar `LoggerService` con niveles configurables. |
 | **Subscriptions sin unsubscribe** | Memory leaks. Usar `takeUntilDestroyed()` o `async` pipe. |
 | **Hardcoded strings** | Usar constantes o i18n. |
+| **Términos técnicos en UI** | No mostrar "FIPE", "Binance", "API", "RPC", etc. Usar lenguaje amigable: "valor de mercado", "precio sugerido". |
 
 ---
 

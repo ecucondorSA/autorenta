@@ -89,7 +89,7 @@ export interface VehicleScannerConfirmData {
         <div class="scan-scrim"></div>
 
         <!-- Vehicle Alignment Guide (Professional SVG HUD) -->
-        <div class="absolute inset-4 sm:inset-8 lg:inset-12 pointer-events-none flex items-center justify-center">
+        <div class="absolute inset-0 sm:inset-4 lg:inset-8 pointer-events-none flex items-center justify-center">
           <svg class="w-full h-full max-w-3xl mx-auto" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid meet">
             <defs>
               <!-- Glow effect for locked state -->
@@ -545,8 +545,8 @@ export interface VehicleScannerConfirmData {
       --scan-accent: #00d95f;
       --scan-accent-soft: rgba(0, 217, 95, 0.2);
       --scan-glass: rgba(2, 6, 23, 0.72);
-      --scan-footer-space: 96px;
-      --scan-footer-space-mobile: 128px;
+      --scan-footer-space: 72px;
+      --scan-footer-space-mobile: 64px;
       position: fixed !important;
       inset: 0 !important;
       z-index: 999999 !important;
@@ -599,8 +599,8 @@ export interface VehicleScannerConfirmData {
 
     .scan-header {
       top: 0;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.35));
-      border-bottom: 1px solid rgba(0, 217, 95, 0.15);
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent);
+      border-bottom: none;
     }
 
     .scan-footer {
@@ -844,12 +844,13 @@ export interface VehicleScannerConfirmData {
 
     .scan-overlay {
       padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--scan-footer-space));
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
     }
 
     .scan-footer {
-      background: rgba(0, 0, 0, 0.72);
-      border-color: rgba(0, 217, 95, 0.2);
-      backdrop-filter: blur(12px);
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.8), transparent);
+      border-color: transparent;
+      backdrop-filter: blur(8px);
     }
 
     .scan-alerts {
@@ -960,20 +961,34 @@ export interface VehicleScannerConfirmData {
       }
 
       .scan-overlay {
-        padding-left: 14px;
-        padding-right: 14px;
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 56px);
       }
 
       .scan-footer {
-        padding: 12px 16px;
+        padding: 8px 12px;
       }
 
       .scan-alerts {
-        top: calc(env(safe-area-inset-top, 0px) + 88px);
+        top: calc(env(safe-area-inset-top, 0px) + 64px);
       }
 
       .scan-hud-inner {
-        padding: 6px 12px;
+        padding: 4px 10px;
+      }
+
+      .scan-card {
+        padding: 12px !important;
+      }
+
+      /* Hide non-essential elements on mobile to maximize scan area */
+      .scan-grid {
+        display: none;
+      }
+
+      .scan-hud {
+        display: none;
       }
     }
 
@@ -981,6 +996,30 @@ export interface VehicleScannerConfirmData {
     @media (max-height: 600px) {
       .scan-header p { display: none; }
       .scan-data-stream { display: none; }
+    }
+
+    /* Ultra compact mobile mode */
+    @media (max-width: 480px) {
+      .scan-header {
+        padding: 8px 12px;
+      }
+
+      .scan-header h2 {
+        font-size: 14px;
+      }
+
+      .scan-header p {
+        font-size: 10px;
+      }
+
+      .scan-scrim {
+        background: radial-gradient(circle at center, rgba(2, 6, 23, 0) 50%, rgba(2, 6, 23, 0.6) 100%);
+      }
+
+      .scan-status-pill {
+        padding: 4px 8px;
+        font-size: 9px;
+      }
     }
 
     /* --- FRAME CORNERS --- */
@@ -1346,13 +1385,7 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
     unknown: 'Auto',
   };
 
-  async ngOnInit(): Promise<void> {
-    this.attachToBody();
-    this.isSecureContextSignal.set(typeof window !== 'undefined' ? window.isSecureContext : true);
-    await this.checkCameraPermission();
-    await this.startCamera();
-    this.startTipRotation();
-
+  constructor() {
     // Effect for haptic + sound feedback when stable
     effect(() => {
       const stable = this.scanner.isStableEnough();
@@ -1379,6 +1412,14 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
         this.clearAutoConfirm();
       }
     });
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.attachToBody();
+    this.isSecureContextSignal.set(typeof window !== 'undefined' ? window.isSecureContext : true);
+    await this.checkCameraPermission();
+    await this.startCamera();
+    this.startTipRotation();
   }
 
   /**

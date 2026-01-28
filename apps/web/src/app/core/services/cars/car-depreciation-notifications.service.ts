@@ -105,11 +105,11 @@ export class CarDepreciationNotificationsService {
         return 0;
       }
 
-      // Sumar ganancias (85% para el owner según split payment)
+      // Modelo Comodato: 70% del booking va al pool de rewards de comunidad
       const totalEarnings = (bookings || []).reduce((sum, booking) => {
         if (booking.status === 'completed' || booking.status === 'active') {
-          // El owner recibe 85% del total
-          return sum + booking.total_amount * 0.85;
+          // Estimación: ~70% del total contribuye a rewards
+          return sum + booking.total_amount * 0.70;
         }
         return sum;
       }, 0);

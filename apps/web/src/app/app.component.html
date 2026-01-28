@@ -14,11 +14,13 @@
 
 <!-- App Shell - Layout Neutral Premium -->
 <div
-  class="h-dvh overflow-y-auto overflow-x-hidden grid grid-rows-[auto_1fr_auto] bg-surface-base transition-opacity duration-500"
+  class="h-dvh overflow-y-auto overflow-x-hidden grid transition-opacity duration-500"
+  [style.grid-template-rows]="fullBleedLayout() ? '1fr' : 'auto 1fr auto'"
+  [style.background-color]="'var(--surface-base)'"
   id="app-scroller"
 >
   <!-- Header Responsive -->
-  @if (!isHomePage()) {
+  @if (!isHomePage() && !hideHeader()) {
     <header
       id="main-header"
       [class]="
@@ -596,13 +598,13 @@
     </header>
   }
 
-  <!-- Verification Prompt Banner -->
-  @if (isAuthenticatedSig() && !isOnVerificationPage()) {
+  <!-- Verification Prompt Banner (hidden on full-bleed layouts) -->
+  @if (isAuthenticatedSig() && !isOnVerificationPage() && !fullBleedLayout()) {
     <app-verification-prompt-banner></app-verification-prompt-banner>
   }
 
-  <!-- Pending Reviews Banner -->
-  @if (isAuthenticatedSig()) {
+  <!-- Pending Reviews Banner (hidden on full-bleed layouts) -->
+  @if (isAuthenticatedSig() && !fullBleedLayout()) {
     <div class="mx-auto max-w-7xl w-full px-4 pt-4">
       <app-pending-reviews-banner></app-pending-reviews-banner>
     </div>
@@ -611,8 +613,8 @@
   <!-- Main Content Area -->
   <main
     id="main-content"
-    class="app-main w-full pb-[calc(80px+env(safe-area-inset-bottom))] md:pb-0"
-    [style.padding-bottom]="hideMobileNav() ? '0' : null"
+    class="app-main w-full"
+    [style.padding-bottom]="fullBleedLayout() ? '0' : (hideMobileNav() ? '0' : 'calc(80px + env(safe-area-inset-bottom))')"
     [class.container-page]="!fullBleedLayout()"
     [class.mx-auto]="!fullBleedLayout()"
     [class.max-w-none]="fullBleedLayout()"
@@ -620,7 +622,7 @@
     [class.py-section-sm]="!fullBleedLayout()"
     [class.px-0]="fullBleedLayout()"
     [class.py-0]="fullBleedLayout()"
-    [class.full-bleed-safe]="fullBleedLayout()"
+    [class.h-full]="fullBleedLayout()"
   >
     <div [@routeAnimations]="prepareRoute(outlet)">
       <router-outlet #outlet="outlet"></router-outlet>

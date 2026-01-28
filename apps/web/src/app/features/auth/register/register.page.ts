@@ -40,15 +40,12 @@ export class RegisterPage implements OnInit, OnDestroy {
   readonly message = signal<string | null>(null);
   readonly error = signal<string | null>(null);
 
-  // Flexible phone pattern: allows spaces, dashes, parentheses
-  private readonly flexiblePhonePattern = /^[\d\s\-().+]{7,20}$/;
-
-  // Registro mínimo: solo email+password obligatorios, teléfono opcional
+  // Registro ULTRA mínimo: solo email+password obligatorios
+  // Nombre es opcional - se puede derivar del email o pedir después
   readonly form = this.fb.nonNullable.group({
-    fullName: ['', [Validators.required, Validators.minLength(3)]],
+    fullName: [''], // OPCIONAL - no más required
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
-    phone: ['', [Validators.pattern(this.flexiblePhonePattern)]], // OPCIONAL
   });
 
   // Magic Link mode
@@ -66,8 +63,10 @@ export class RegisterPage implements OnInit, OnDestroy {
     this.message.set(null);
 
     try {
-      const { email, password, fullName, phone } = this.form.getRawValue();
-      await this.auth.signUp(email, password, fullName, phone);
+      const { email, password, fullName } = this.form.getRawValue();
+      // Si no hay nombre, usar parte del email como nombre temporal
+      const displayName = fullName || email.split('@')[0];
+      await this.auth.signUp(email, password, displayName);
 
       // Track successful registration
       this.analytics.trackEvent('sign_up', {

@@ -454,7 +454,7 @@ serve(async (req) => {
         );
       }
 
-      // Calcular split 85/15
+      // Calcular split Comodato (15% platform, 70% reward pool, 15% FGO)
       const { data: splitData } = await supabase.rpc('calculate_payment_split', {
         p_total_amount_cents: Math.round(amountARS * 100)
       });
@@ -463,11 +463,13 @@ serve(async (req) => {
         ownerAmount = splitData.owner_amount_cents / 100;
         platformFee = splitData.platform_fee_cents / 100;
 
-        log.info(`💰 Split Payment ENABLED:
+        log.info(`💰 Split Payment ENABLED (Modelo Comodato):
           Mode: ACCOUNT_MONEY only (no cards)
           Total: ${amountARS} ARS
-          Owner (85%): ${ownerAmount} ARS
           Platform (15%): ${platformFee} ARS
+          Reward Pool (70%): va a comunidad de owners
+          FGO (15%): fondo de protección
+          Owner directo: $0 (gana de rewards mensuales)
           Collector ID: ${owner.mercadopago_collector_id}
           Marketplace ID: ${MP_MARKETPLACE_ID}
         `);

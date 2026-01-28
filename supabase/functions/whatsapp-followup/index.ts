@@ -28,7 +28,7 @@ Recuerde que con nuestro modelo Comodato:
 - 15% va a un fondo comunitario que lo protege (sin franquicia)
 - Usted elige cuándo alquilar y a quién
 
-👉 Publique su auto: https://autorentar.com/publicar
+👉 Publique su auto: https://autorentar.com/cars/publish
 
 Quedamos a su disposición.`,
 
@@ -36,7 +36,7 @@ Quedamos a su disposición.`,
 
 Tenemos cientos de autos disponibles en toda Argentina y Brasil, con seguro incluido y sin franquicia.
 
-👉 Ver autos disponibles: https://autorentar.com/autos
+👉 Ver autos disponibles: https://autorentar.com/cars
 
 Estamos para ayudarlo.`,
 
@@ -48,7 +48,7 @@ Con nuestro modelo Comodato, usted gana rewards mensuales basados en:
 - Antigüedad en la comunidad
 - Referidos
 
-👉 Calcule sus ganancias: https://autorentar.com/publicar
+👉 Calcule sus ganancias: https://autorentar.com/cars/publish
 
 Cualquier consulta, aquí estamos.`,
 
@@ -56,7 +56,7 @@ Cualquier consulta, aquí estamos.`,
 
 AutoRenta es la primera plataforma de alquiler de autos entre personas en Argentina y Brasil.
 
-👉 Conozca más: https://autorentar.com/como-funciona
+👉 Conozca más: https://autorentar.com/rent-your-car
 
 Quedamos a su disposición.`,
 }

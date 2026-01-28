@@ -27,7 +27,7 @@ export class BrowseStore {
       lat: car.location_lat || 0,
       lng: car.location_lng || 0,
       pricePerDay: car.price_per_day,
-      title: `${car.brand_text_backup} ${car.model_text_backup}`,
+      title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim() || 'Auto disponible',
       currency: car.currency || 'USD',
       photoUrl:
         car.photos?.[0]?.url || car.car_photos?.[0]?.url || '/assets/images/car-placeholder.svg',

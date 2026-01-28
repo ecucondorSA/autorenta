@@ -442,28 +442,43 @@ export function getBookingFlowProgress(booking: Booking): {
 export function formatOwnerEarnings(totalAmount: number): {
   ownerAmount: number;
   platformFee: number;
+  rewardPoolAmount: number;
+  fgoAmount: number;
   ownerPercentage: number;
   platformPercentage: number;
+  rewardPoolPercentage: number;
+  fgoPercentage: number;
   formatted: {
     owner: string;
     platform: string;
+    rewardPool: string;
+    fgo: string;
     total: string;
   };
 } {
-  const OWNER_SPLIT = 0.85;
-  const PLATFORM_SPLIT = 0.15;
+  // Modelo Comodato: Owner no recibe pago directo, gana rewards de comunidad
+  const PLATFORM_SPLIT = 0.15;      // 15% plataforma
+  const REWARD_POOL_SPLIT = 0.70;   // 70% pool de rewards (comunidad)
+  const FGO_SPLIT = 0.15;           // 15% fondo de protección (sin franquicia)
 
-  const ownerAmount = totalAmount * OWNER_SPLIT;
   const platformFee = totalAmount * PLATFORM_SPLIT;
+  const rewardPoolAmount = totalAmount * REWARD_POOL_SPLIT;
+  const fgoAmount = totalAmount * FGO_SPLIT;
 
   return {
-    ownerAmount: Math.round(ownerAmount * 100) / 100,
+    ownerAmount: 0, // En comodato, owner gana de rewards mensuales, no pago directo
     platformFee: Math.round(platformFee * 100) / 100,
-    ownerPercentage: OWNER_SPLIT * 100,
+    rewardPoolAmount: Math.round(rewardPoolAmount * 100) / 100,
+    fgoAmount: Math.round(fgoAmount * 100) / 100,
+    ownerPercentage: 0,
     platformPercentage: PLATFORM_SPLIT * 100,
+    rewardPoolPercentage: REWARD_POOL_SPLIT * 100,
+    fgoPercentage: FGO_SPLIT * 100,
     formatted: {
-      owner: `$${Math.round(ownerAmount).toLocaleString('es-AR')}`,
+      owner: '$0 (gana por rewards)',
       platform: `$${Math.round(platformFee).toLocaleString('es-AR')}`,
+      rewardPool: `$${Math.round(rewardPoolAmount).toLocaleString('es-AR')}`,
+      fgo: `$${Math.round(fgoAmount).toLocaleString('es-AR')}`,
       total: `$${Math.round(totalAmount).toLocaleString('es-AR')}`,
     },
   };

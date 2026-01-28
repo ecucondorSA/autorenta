@@ -199,6 +199,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   @Input() cars: CarMapLocation[] = [];
   @Input() selectedCarId: string | null = null;
+  /** Car to highlight on the map (preview from carousel scroll, without full selection) */
+  @Input() highlightedCarId: string | null = null;
   @Input() userLocation: { lat: number; lng: number } | null = null;
   @Input() userAvatarUrl: string | null = null; // URL del avatar del usuario para el marcador de ubicación
   @Input() locationMode: 'searching' | 'booking-confirmed' | 'default' = 'default';
@@ -318,7 +320,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private clusterCountLayerId = 'cars-cluster-count';
   // Mapbox optimization: Clustering is efficient for 10K+ cars (Supercluster handles 400K)
   public clusteringThreshold = 1; // Activate clustering at 2+ cars - public for template access
-  private clusterMaxZoom = 12; // Zoom level where clusters stop and individual markers show (synced with source clusterMaxZoom)
+  private clusterMaxZoom = 8; // Zoom level where clusters stop and individual markers show (lower = see markers earlier)
   private isShowingPhotoMarkers = false; // Track if we're showing HTML markers with photos
   private hasInitializedHybridMode = false; // Track first-run of hybrid mode
   private virtualizationThreshold = 1000; // Only virtualize if NOT clustering (10K+ without clustering)
@@ -692,8 +694,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         },
         cluster: true,
         // Airbnb-style clustering: more aggressive at low zoom
-        clusterMaxZoom: 12, // Cluster up to zoom 12 for regional view
-        clusterRadius: 80, // Larger radius for better grouping at country level
+        clusterMaxZoom: 8, // Cluster up to zoom 8 - show individual markers earlier
+        clusterRadius: 50, // Smaller radius - less aggressive clustering
         clusterProperties: {
           sum: ['+', ['get', 'pricePerDay']],
           count: ['+', 1],
@@ -2457,6 +2459,62 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
+   * Highlight a car marker for preview (scale up, add glow, gentle pan)
+   * Used when user scrolls carousel to preview without selecting
+   */
+  private highlightPreviewCar(carId: string): void {
+    // Find the car data to get its coordinates
+    const car = this.cars.find((c) => c['carId'] === carId);
+    if (!car || !this.map) return;
+
+    const currentZoom = this.map.getZoom();
+    const minZoomForMarkers = 12; // Zoom level to clearly see individual markers with photos
+    const needsZoom = currentZoom < minZoomForMarkers;
+    const animationDuration = needsZoom ? 600 : 300;
+
+    // Pan (and zoom if needed) to show the car
+    this.map.easeTo({
+      center: [car.lng, car.lat],
+      zoom: needsZoom ? minZoomForMarkers : currentZoom,
+      duration: animationDuration,
+      essential: true,
+    });
+
+    // After animation completes, ensure markers are rendered and highlight the car
+    setTimeout(() => {
+      // Force hybrid mode check and marker rendering
+      this.handleZoomForHybridMode();
+
+      // If markers still not rendered, force render
+      if (this.isShowingPhotoMarkers && this.carMarkers.size === 0) {
+        this.renderPhotoMarkersInViewport();
+      }
+
+      // Apply preview highlight style
+      const markerData = this.carMarkers.get(carId);
+      if (markerData) {
+        const markerElement = markerData.marker.getElement();
+        if (markerElement) {
+          markerElement.classList.add('map-marker-preview');
+        }
+      }
+    }, animationDuration + 100);
+  }
+
+  /**
+   * Remove preview highlight from car marker
+   */
+  private removePreviewHighlight(carId: string): void {
+    const markerData = this.carMarkers.get(carId);
+    if (!markerData) return;
+
+    const markerElement = markerData.marker.getElement();
+    if (markerElement) {
+      markerElement.classList.remove('map-marker-preview');
+    }
+  }
+
+  /**
    * Clear all markers and related resources
    */
   private clearMarkers(): void {
@@ -2937,6 +2995,21 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           zoom: 12,
           duration: 1200
         });
+      }
+    }
+    // Handle preview highlight (from carousel scroll)
+    if (changes['highlightedCarId'] && !changes['highlightedCarId'].firstChange && this.map) {
+      const previousId = changes['highlightedCarId'].previousValue;
+      const currentId = changes['highlightedCarId'].currentValue;
+
+      // Remove preview from previous (only if it's not the selected car)
+      if (previousId && previousId !== this.selectedCarId) {
+        this.removePreviewHighlight(previousId);
+      }
+
+      // Add preview to current (only if it's not the selected car - selected has priority)
+      if (currentId && currentId !== this.selectedCarId) {
+        this.highlightPreviewCar(currentId);
       }
     }
     if (changes['userLocation'] && !changes['userLocation'].firstChange && this.map) {

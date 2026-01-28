@@ -74,7 +74,7 @@ import { QUESTIONS_CONFIG, formatQuestionTitle } from './questions.config';
   providers: [ConversationalFormService, PublishCarPhotoService, PublishCarLocationService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-gradient-to-b from-surface-primary to-surface-secondary">
+    <div class="min-h-screen bg-gradient-to-b from-surface-primary to-surface-secondary pb-safe">
       <!-- Header -->
       <header class="sticky top-0 z-40 bg-surface-primary/80 backdrop-blur-lg border-b border-border-default">
         <div class="max-w-lg mx-auto px-4 py-4">
@@ -128,7 +128,7 @@ import { QUESTIONS_CONFIG, formatQuestionTitle } from './questions.config';
       </header>
 
       <!-- Main content -->
-      <main class="max-w-lg mx-auto px-4 py-8 sm:py-12">
+      <main class="max-w-lg mx-auto px-4 py-6 sm:py-12">
         <!-- Question card with animation -->
         <app-question-card
           [title]="currentTitle()"

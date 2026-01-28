@@ -1,0 +1,17 @@
+[
+  {
+    "persona_id": "persona-001",
+    "name": "Maximiliano",
+    "apellido": "Torres",
+    "email": "ecucondor+maximiliano-001@gmail.com",
+    "password": "DriveDrive5091#",
+    "birthdate": {
+      "day": 17,
+      "month": 4,
+      "year": 2000
+    },
+    "gender": "male",
+    "created_at": "2026-01-27T07:10:38.829Z",
+    "status": "needs_verification"
+  }
+]

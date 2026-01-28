@@ -2,7 +2,7 @@
   "model": "opus",
   "permissions": {
     "allow": [
-      "Bash(*)",
+      "Bash",
       "Read",
       "Write",
       "Edit",
@@ -11,7 +11,7 @@
       "WebFetch",
       "WebSearch",
       "mcp__*",
-      "Task(*)"
+      "Task"
     ],
     "deny": []
   },

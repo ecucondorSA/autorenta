@@ -60,7 +60,7 @@ export const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        data: { layout: 'full-bleed', animation: 'CarsConversionPage' },
+        data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true, animation: 'CarsConversionPage' },
         loadComponent: () =>
           import('./features/cars/conversion/cars-conversion.page').then(
             (m) => m.CarsConversionPage,
@@ -68,7 +68,7 @@ export const routes: Routes = [
       },
       {
         path: 'list',
-        data: { layout: 'full-bleed' },
+        data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
         loadComponent: () =>
           import('./features/cars/browse/browse-cars.page').then((m) => m.BrowseCarsPage),
       },
@@ -79,6 +79,16 @@ export const routes: Routes = [
       },
       {
         path: 'publish',
+        canMatch: [AuthGuard],
+        data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
+        loadComponent: () =>
+          import('./features/cars/publish/publish-conversational/publish-conversational.page').then(
+            (m) => m.PublishConversationalPage,
+          ),
+      },
+      {
+        path: 'publish/edit/:id',
+        canMatch: [AuthGuard],
         loadComponent: () =>
           import('./features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page),
       },
@@ -114,7 +124,7 @@ export const routes: Routes = [
       },
       {
         path: ':id',
-        data: { animation: 'CarDetailPage' },
+        data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true, animation: 'CarDetailPage' },
         loadComponent: () =>
           import('./features/cars/detail/car-detail.page').then((m) => m.CarDetailPage),
       },
@@ -532,16 +542,16 @@ export const routes: Routes = [
   {
     path: 'messages',
     canMatch: [AuthGuard],
-    data: { layout: 'full-bleed' },
+    data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
     children: [
       {
         path: '',
-        data: { layout: 'full-bleed' },
+        data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
         loadComponent: () => import('./features/messages/inbox.page').then((m) => m.InboxPage),
       },
       {
         path: 'chat',
-        data: { layout: 'full-bleed' },
+        data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
         loadComponent: () =>
           import('./features/messages/messages.page').then((m) => m.MessagesPage),
       },
