@@ -20,6 +20,7 @@ import { VerificationGuard } from '@core/guards/verification.guard';
 export const BOOKINGS_ROUTES: Routes = [
   {
     path: '',
+    data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
     loadComponent: () => import('./bookings-hub/bookings-hub.page').then((m) => m.BookingsHubPage),
   },
   {
@@ -117,6 +118,7 @@ export const BOOKINGS_ROUTES: Routes = [
   {
     path: ':id/active',
     canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
     loadComponent: () =>
       import('./active-rental/active-rental.page').then((m) => m.ActiveRentalPage),
   },
@@ -134,6 +136,7 @@ export const BOOKINGS_ROUTES: Routes = [
   },
   {
     path: ':id',
+    data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
     loadComponent: () =>
       import('./booking-detail/booking-detail.page').then((m) => m.BookingDetailPage),
   },

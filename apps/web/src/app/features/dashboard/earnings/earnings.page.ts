@@ -96,10 +96,11 @@ export class EarningsPage implements OnInit {
     if (annualDepreciation === 0 || userCars.length === 0) return 0;
 
     // Calcular ingreso diario promedio por auto
+    // Modelo Comodato: Owner gana ~70% via rewards de comunidad (no pago directo)
     let totalDailyIncome = 0;
     for (const car of userCars) {
-      // Owner recibe 85% del precio diario (split payment)
-      const dailyIncome = (car.price_per_day || 0) * 0.85;
+      // Estimación de rewards: ~70% del precio va al pool de comunidad
+      const dailyIncome = (car.price_per_day || 0) * 0.70;
       totalDailyIncome += dailyIncome;
     }
 

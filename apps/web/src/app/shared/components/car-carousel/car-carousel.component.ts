@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, ViewChild, ChangeDetectionStrategy, effect, inject, HostListener } from '@angular/core';
+import { Component, Input, ElementRef, ViewChild, ChangeDetectionStrategy, effect, inject, HostListener, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { SoundService } from '@core/services/ui/sound.service';
@@ -24,14 +24,14 @@ import { BrowseStore } from '../../../features/cars/browse/browse.store';
           }
         </div>
       } @else {
-        <div #scrollContainer 
-             class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 hide-scrollbar items-center pr-[50vw]"
+        <div #scrollContainer
+             class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 hide-scrollbar items-center pr-[30vw]"
              (scroll)="onScroll()">
           @for (car of cars; track car.carId) {
             <div [id]="'card-' + car.carId"
-                 class="snap-center shrink-0 min-w-[85vw] sm:min-w-[350px] h-full">
-              <app-car-mini-card 
-                [car]="car" 
+                 class="snap-center shrink-0 min-w-[70vw] sm:min-w-[280px] h-full">
+              <app-car-mini-card
+                [car]="car"
                 [isSelected]="selectedCarId === car.carId"
                 (cardClicked)="onCardClick(car.carId)">
               </app-car-mini-card>
@@ -53,7 +53,13 @@ export class CarCarouselComponent {
   @Input() selectedCarId: string | null = null;
   @Input() loading = false;
 
+  /** Emits the carId of the card currently in the center during scroll (preview, not selection) */
+  @Output() readonly previewChange = new EventEmitter<string | null>();
+
   @ViewChild('scrollContainer') scrollContainer!: ElementRef<HTMLDivElement>;
+
+  /** The car currently being previewed (in center of carousel during scroll) */
+  readonly previewCarId = signal<string | null>(null);
 
   private store = inject(BrowseStore);
   private sound = inject(SoundService);
@@ -158,9 +164,11 @@ export class CarCarouselComponent {
       }
     });
 
-    if (closestCard && closestCard !== this.selectedCarId) {
+    // Only update preview, NOT selection - selection requires explicit click
+    if (closestCard && closestCard !== this.previewCarId()) {
       this.sound.play('tick'); // Haptic Snap Feedback
-      this.store.setActiveCar(closestCard, 'carousel');
+      this.previewCarId.set(closestCard);
+      this.previewChange.emit(closestCard);
     }
   }
 }

@@ -132,6 +132,39 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
           </div>
         </div>
       }
+
+      <!-- Market value display -->
+      @if (selectedModel()) {
+        <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center">
+              @if (isLoadingValue()) {
+                <svg class="animate-spin h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              } @else {
+                <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              }
+            </div>
+            <div class="flex-1">
+              <p class="text-sm text-blue-700 dark:text-blue-400">Valor de mercado estimado</p>
+              @if (isLoadingValue()) {
+                <p class="font-semibold text-blue-900 dark:text-blue-200">Calculando...</p>
+              } @else if (marketValueUsd()) {
+                <p class="font-semibold text-blue-900 dark:text-blue-200 text-lg">~US$ {{ formatMarketValue(marketValueUsd()!) }}</p>
+              } @else {
+                <p class="font-semibold text-blue-900 dark:text-blue-200">No disponible</p>
+              }
+            </div>
+          </div>
+          <p class="text-xs text-blue-600 dark:text-blue-400 mt-2 ml-13">
+            Basado en el mercado de vehículos similares
+          </p>
+        </div>
+      }
     </div>
   `,
   styles: [
@@ -155,8 +188,10 @@ export class ModelQuestionComponent implements OnInit, OnChanges {
   // State
   searchQuery = '';
   readonly isLoading = signal(false);
+  readonly isLoadingValue = signal(false);
   readonly models = signal<FipeModel[]>([]);
   readonly selectedModel = signal<FipeModel | null>(null);
+  readonly marketValueUsd = signal<number | null>(null);
 
   readonly filteredModels = computed(() => {
     const query = this.searchQuery.toLowerCase().trim();
@@ -216,6 +251,9 @@ export class ModelQuestionComponent implements OnInit, OnChanges {
   }
 
   private async loadFipeValue(_modelCode: string): Promise<void> {
+    this.isLoadingValue.set(true);
+    this.marketValueUsd.set(null);
+
     try {
       const result = await this.pricingService.getFipeValueRealtime({
         brand: this.brandName(),
@@ -223,11 +261,22 @@ export class ModelQuestionComponent implements OnInit, OnChanges {
         year: this.year(),
         country: 'AR',
       });
+
+      if (result?.data?.value_usd) {
+        this.marketValueUsd.set(result.data.value_usd);
+      }
+
       if (result?.data?.value_brl) {
         this.fipeValueLoaded.emit(result.data.value_brl);
       }
     } catch (error) {
-      console.error('Failed to load FIPE value:', error);
+      console.error('Failed to load market value:', error);
+    } finally {
+      this.isLoadingValue.set(false);
     }
+  }
+
+  formatMarketValue(value: number): string {
+    return value.toLocaleString('es-AR', { maximumFractionDigits: 0 });
   }
 }

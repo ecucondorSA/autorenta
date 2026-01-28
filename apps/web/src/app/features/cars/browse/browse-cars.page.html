@@ -8,7 +8,7 @@
   class="relative w-full h-[100dvh] overflow-hidden bg-black text-white selection:bg-brand-primary selection:text-black">
   <!-- LAYER 0: THE MAP (Base) -->
   <div class="absolute inset-0 z-0">
-    <app-cars-map [cars]="mapLocations()" [selectedCarId]="selectedCarId()" (markerClick)="onMarkerClick($any($event))"
+    <app-cars-map [cars]="mapLocations()" [selectedCarId]="selectedCarId()" [highlightedCarId]="mapHighlightedCarId()" (markerClick)="onMarkerClick($any($event))"
       class="w-full h-full block" />
   </div>
 
@@ -57,7 +57,7 @@
   <!-- LAYER 20: BOTTOM CAROUSEL (Mobile & Desktop Unified) -->
   <div
     class="absolute bottom-0 inset-x-0 z-20 pb-safe-bottom pt-20 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none">
-    <app-car-carousel [cars]="mapLocations()" [selectedCarId]="selectedCarId()" [loading]="loading()">
+    <app-car-carousel [cars]="mapLocations()" [selectedCarId]="selectedCarId()" [loading]="loading()" (previewChange)="onCarouselPreviewChange($event)">
     </app-car-carousel>
   </div>
 

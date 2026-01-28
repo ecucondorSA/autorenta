@@ -1,0 +1,20 @@
+{
+    "proxies": [
+        {
+            "id": "proxy-example-001",
+            "host": "proxy1.example.com",
+            "port": 8080,
+            "username": "your_username",
+            "password": "your_password",
+            "assigned_to": null,
+            "is_healthy": null,
+            "usage_count": 0,
+            "added_at": "2026-01-27T03:00:00.000Z",
+            "last_check": null,
+            "last_error": null,
+            "ip": null,
+            "latency": null
+        }
+    ],
+    "_comment": "Este es un archivo de ejemplo. Configura tus proxies reales aquí. Recomendación: Bright Data, ProxyMesh, o similar"
+}

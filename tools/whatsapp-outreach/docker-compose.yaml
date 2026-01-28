@@ -11,11 +11,13 @@ services:
       - WAHA_DASHBOARD_ENABLED=true
       - WAHA_DASHBOARD_USERNAME=autorenta
       - WAHA_DASHBOARD_PASSWORD=AutoRenta2026!
+      # NOWEB engine - no browser needed, more stable for incoming messages
+      - WHATSAPP_DEFAULT_ENGINE=NOWEB
       # Session persistence - auto-restart on container start
       - WHATSAPP_RESTART_ALL_SESSIONS=true
       - WHATSAPP_START_SESSION=default
-      # Webhooks para n8n
-      - WHATSAPP_HOOK_URL=http://n8n:5678/webhook/waha
+      # Webhooks para Supabase Edge Function
+      - WHATSAPP_HOOK_URL=https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/whatsapp-webhook
       - WHATSAPP_HOOK_EVENTS=message,message.ack,session.status
       # Keep session alive
       - WHATSAPP_MARK_ONLINE=true

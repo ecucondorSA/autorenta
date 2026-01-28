@@ -167,9 +167,11 @@ Convierte SIEMPRE las fechas naturales a formato YYYY-MM-DD:
 1. Al reservar: preautorización o lock de wallet (rental + USD 250 depósito)
 2. Al completar: rental va al owner, depósito vuelve si no hay daños
 
-### Para PROPIETARIO:
-1. Fondos bloqueados hasta que renter devuelve el auto
-2. Confirmación bilateral libera: 85% al owner, depósito al renter
+### Para PROPIETARIO (Modelo Comodato):
+1. No recibe pago directo del booking
+2. Gana rewards mensuales basados en participación en comunidad
+3. 70% del pago va al pool de rewards, 15% a plataforma, 15% a fondo de protección
+4. Confirmación bilateral libera: depósito al renter si no hay daños
 
 ### Política de Cancelación:
 - +48h antes: 100% reembolso

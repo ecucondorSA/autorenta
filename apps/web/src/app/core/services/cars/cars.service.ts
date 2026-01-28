@@ -683,12 +683,26 @@ export class CarsService {
       throw error;
     }
 
-    // Transform RPC response: `images` (string[]) -> `photos` ({url: string}[])
-    return (data || []).map((car: Record<string, unknown>) => ({
-      ...car,
-      photos: ((car['images'] as string[]) || []).map((url: string) => ({ url })),
-      car_photos: ((car['images'] as string[]) || []).map((url: string) => ({ url })),
-    })) as CarWithScore[];
+    // Transform RPC response:
+    // - `images` (string[]) -> `photos` ({url: string}[])
+    // - `brand` -> `brand_text_backup` (RPC uses different field names)
+    // - `model` -> `model_text_backup`
+    // - `location` (jsonb) -> individual location fields
+    return (data || []).map((car: Record<string, unknown>) => {
+      const location = car['location'] as { city?: string; state?: string; country?: string; lat?: number; lng?: number } | null;
+      return {
+        ...car,
+        brand_text_backup: (car['brand'] as string) || '',
+        model_text_backup: (car['model'] as string) || '',
+        location_city: location?.city || '',
+        location_state: location?.state || '',
+        location_country: location?.country || '',
+        location_lat: location?.lat ?? null,
+        location_lng: location?.lng ?? null,
+        photos: ((car['images'] as string[]) || []).map((url: string) => ({ url })),
+        car_photos: ((car['images'] as string[]) || []).map((url: string) => ({ url })),
+      };
+    }) as CarWithScore[];
   }
 
   /**

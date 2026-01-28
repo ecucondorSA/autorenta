@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, computed } from '@angular/core';
+import { Component, DestroyRef, inject, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -98,6 +98,10 @@ export class BrowseCarsPage {
   readonly loading = this.store.loading;
   readonly selectedCarId = this.store.activeCarId;
   readonly viewMode = this.store.viewMode;
+  /** Car currently being previewed in the carousel (scroll, not click) */
+  readonly carouselPreviewId = signal<string | null>(null);
+  /** The car to highlight on the map: selected car takes priority, then preview */
+  readonly mapHighlightedCarId = computed(() => this.selectedCarId() ?? this.carouselPreviewId());
   private readonly pollIntervalMs = 30000;
   private lastLocation: LocationData | null = null;
   private lastLocationAt = 0;
@@ -111,7 +115,7 @@ export class BrowseCarsPage {
       lat: Number(car.location_lat) || 0,
       lng: Number(car.location_lng) || 0,
       pricePerDay: Number(car.price_per_day) || 0,
-      title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`,
+      title: this.formatCarTitle(car.brand_text_backup, car.model_text_backup, car.year),
       currency: car.currency || 'USD',
       photoUrl:
         car.photos?.[0]?.url || car.car_photos?.[0]?.url || '/assets/images/car-placeholder.svg',
@@ -123,6 +127,14 @@ export class BrowseCarsPage {
       availabilityStatus: 'available',
     }));
   });
+
+  /** Format car title: Brand + Model (1st word only) + Year. Example: "Fiat Toro 2016" */
+  private formatCarTitle(brand?: string, model?: string, year?: number): string {
+    const brandWord = (brand || '').trim().split(' ')[0] || '';
+    const modelWord = (model || '').trim().split(' ')[0] || '';
+    const yearStr = year ? String(year) : '';
+    return [brandWord, modelWord, yearStr].filter(Boolean).join(' ');
+  }
 
   constructor() {
     this.loadCars();
@@ -199,6 +211,18 @@ export class BrowseCarsPage {
     const carId = this.selectedCarId();
     if (carId) {
       void this.router.navigate(['/bookings/request'], { queryParams: { carId } });
+    }
+  }
+
+  /** Handle preview change from carousel scroll (not selection) */
+  onCarouselPreviewChange(carId: string | null) {
+    this.carouselPreviewId.set(carId);
+
+    // If user is scrolling to explore other cars, close the booking sheet
+    // to avoid showing details of a different car than what's visible
+    const currentSelection = this.selectedCarId();
+    if (currentSelection && carId && carId !== currentSelection) {
+      this.store.setActiveCar(null);
     }
   }
 }

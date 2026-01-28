@@ -1,0 +1,275 @@
+{
+    "name": "Marketing Content Monitor",
+    "nodes": [
+        {
+            "parameters": {
+                "url": "https://www.facebook.com/groups/GRUPO_TARGET/feed?rss",
+                "pollTimes": {
+                    "item": [
+                        {
+                            "mode": "everyX",
+                            "value": 30,
+                            "unit": "minutes"
+                        }
+                    ]
+                }
+            },
+            "name": "RSS Feed - Facebook Groups",
+            "type": "n8n-nodes-base.rssFeedRead",
+            "position": [
+                250,
+                300
+            ],
+            "id": "rss-feed"
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "string": [
+                        {
+                            "value1": "={{$json.contentSnippet}}",
+                            "operation": "contains",
+                            "value2": "alquiler"
+                        },
+                        {
+                            "value1": "={{$json.contentSnippet}}",
+                            "operation": "contains",
+                            "value2": "BYD"
+                        },
+                        {
+                            "value1": "={{$json.contentSnippet}}",
+                            "operation": "contains",
+                            "value2": "robo"
+                        },
+                        {
+                            "value1": "={{$json.contentSnippet}}",
+                            "operation": "contains",
+                            "value2": "estafa"
+                        },
+                        {
+                            "value1": "={{$json.contentSnippet}}",
+                            "operation": "contains",
+                            "value2": "garantía"
+                        }
+                    ]
+                },
+                "combineOperation": "any"
+            },
+            "name": "Filter by Keywords",
+            "type": "n8n-nodes-base.if",
+            "position": [
+                450,
+                300
+            ],
+            "id": "filter-keywords"
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "number": [
+                        {
+                            "value1": "={{$json.contentSnippet.length}}",
+                            "operation": "largerEqual",
+                            "value2": 50
+                        }
+                    ]
+                }
+            },
+            "name": "Filter by Content Length",
+            "type": "n8n-nodes-base.if",
+            "position": [
+                650,
+                300
+            ],
+            "id": "filter-length"
+        },
+        {
+            "parameters": {
+                "jsCode": "// Delay aleatorio antes de procesar\nconst delayMinutes = Math.floor(Math.random() * 30) + 15;\nawait new Promise(resolve => setTimeout(resolve, delayMinutes * 60 * 1000));\n\nreturn items;"
+            },
+            "name": "Random Delay",
+            "type": "n8n-nodes-base.code",
+            "position": [
+                850,
+                300
+            ],
+            "id": "random-delay"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "={{$env.SUPABASE_URL}}/functions/v1/marketing-webhook",
+                "authentication": "header",
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Authorization",
+                            "value": "=Bearer {{$env.SUPABASE_ANON_KEY}}"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "post_url",
+                            "value": "={{$json.link}}"
+                        },
+                        {
+                            "name": "post_content",
+                            "value": "={{$json.contentSnippet}}"
+                        },
+                        {
+                            "name": "platform",
+                            "value": "facebook"
+                        },
+                        {
+                            "name": "keywords",
+                            "value": "=[\"alquiler\", \"auto\", \"BYD\"]"
+                        },
+                        {
+                            "name": "metadata",
+                            "value": "={\"title\": \"{{$json.title}}\", \"pubDate\": \"{{$json.pubDate}}\"}"
+                        }
+                    ]
+                }
+            },
+            "name": "Call Marketing Webhook",
+            "type": "n8n-nodes-base.httpRequest",
+            "position": [
+                1050,
+                300
+            ],
+            "id": "webhook-call"
+        },
+        {
+            "parameters": {
+                "operation": "insert",
+                "table": "marketing_monitors",
+                "columns": {
+                    "mappingMode": "defineBelow",
+                    "value": {
+                        "post_url": "={{$json.link}}",
+                        "post_content": "={{$json.contentSnippet}}",
+                        "status": "processed",
+                        "processed_at": "={{new Date().toISOString()}}"
+                    }
+                }
+            },
+            "name": "Log to Supabase",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                1250,
+                300
+            ],
+            "id": "log-supabase",
+            "credentials": {
+                "supabaseApi": {
+                    "id": "1",
+                    "name": "Supabase AutoRenta"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "insert",
+                "table": "marketing_alerts",
+                "columns": {
+                    "mappingMode": "defineBelow",
+                    "value": {
+                        "alert_type": "content_flagged",
+                        "severity": "low",
+                        "message": "=Failed to process post: {{$json.error}}",
+                        "metadata": "={\"post_url\": \"{{$json.link}}\"}"
+                    }
+                }
+            },
+            "name": "Log Error",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                1250,
+                500
+            ],
+            "id": "log-error",
+            "credentials": {
+                "supabaseApi": {
+                    "id": "1",
+                    "name": "Supabase AutoRenta"
+                }
+            }
+        }
+    ],
+    "connections": {
+        "RSS Feed - Facebook Groups": {
+            "main": [
+                [
+                    {
+                        "node": "Filter by Keywords",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Filter by Keywords": {
+            "main": [
+                [
+                    {
+                        "node": "Filter by Content Length",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Filter by Content Length": {
+            "main": [
+                [
+                    {
+                        "node": "Random Delay",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Random Delay": {
+            "main": [
+                [
+                    {
+                        "node": "Call Marketing Webhook",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Call Marketing Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Log to Supabase",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Log Error",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "staticData": null,
+    "tags": [],
+    "pinData": {},
+    "meta": {
+        "instanceId": "autorenta-marketing-automation"
+    }
+}

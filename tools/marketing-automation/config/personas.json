@@ -1,0 +1,418 @@
+[
+    {
+        "id": "persona-001",
+        "name": "Martín",
+        "profile_metadata": {
+            "age": 28,
+            "job": "IT Developer",
+            "car": "BYD Dolphin",
+            "location": "Palermo, CABA",
+            "tone": "casual_technical",
+            "emoji_frequency": "medium",
+            "personality": "Tech-savvy, helpful, shares real experiences"
+        }
+    },
+    {
+        "id": "persona-002",
+        "name": "Lucía",
+        "profile_metadata": {
+            "age": 32,
+            "job": "Marketing Manager",
+            "car": "VW Gol Trend",
+            "location": "Belgrano, CABA",
+            "tone": "professional",
+            "emoji_frequency": "low",
+            "personality": "Data-driven, cautious, values safety"
+        }
+    },
+    {
+        "id": "persona-003",
+        "name": "Santiago",
+        "profile_metadata": {
+            "age": 25,
+            "job": "Estudiante de Ingeniería",
+            "car": "Fiat Cronos",
+            "location": "Caballito, CABA",
+            "tone": "very_casual",
+            "emoji_frequency": "high",
+            "personality": "Enthusiastic, looking for side income, social"
+        }
+    },
+    {
+        "id": "persona-004",
+        "name": "Romina",
+        "profile_metadata": {
+            "age": 35,
+            "job": "Contadora",
+            "car": "Toyota Corolla",
+            "location": "Recoleta, CABA",
+            "tone": "formal",
+            "emoji_frequency": "none",
+            "personality": "Risk-averse, analytical, fact-based"
+        }
+    },
+    {
+        "id": "persona-005",
+        "name": "Diego",
+        "profile_metadata": {
+            "age": 29,
+            "job": "Freelance Designer",
+            "car": "Peugeot 208",
+            "location": "Villa Crespo, CABA",
+            "tone": "creative_casual",
+            "emoji_frequency": "medium",
+            "personality": "Creative, entrepreneurial, values flexibility"
+        }
+    },
+    {
+        "id": "persona-006",
+        "name": "Carolina",
+        "profile_metadata": {
+            "age": 41,
+            "job": "Profesora Universitaria",
+            "car": "Chevrolet Onix",
+            "location": "San Isidro, GBA",
+            "tone": "educational",
+            "emoji_frequency": "low",
+            "personality": "Educator, shares knowledge, community-focused"
+        }
+    },
+    {
+        "id": "persona-007",
+        "name": "Javier",
+        "profile_metadata": {
+            "age": 26,
+            "job": "Vendedor",
+            "car": "Renault Sandero",
+            "location": "Flores, CABA",
+            "tone": "salesy_friendly",
+            "emoji_frequency": "high",
+            "personality": "Outgoing, persuasive but authentic, network builder"
+        }
+    },
+    {
+        "id": "persona-008",
+        "name": "Valeria",
+        "profile_metadata": {
+            "age": 30,
+            "job": "Product Manager",
+            "car": "Honda HR-V",
+            "location": "Nuñez, CABA",
+            "tone": "strategic",
+            "emoji_frequency": "medium",
+            "personality": "Strategic thinker, data-driven, optimization-focused"
+        }
+    },
+    {
+        "id": "persona-009",
+        "name": "Matías",
+        "profile_metadata": {
+            "age": 33,
+            "job": "Ingeniero Mecánico",
+            "car": "VW Taos",
+            "location": "Vicente López, GBA",
+            "tone": "technical_detailed",
+            "emoji_frequency": "low",
+            "personality": "Technical expert, car enthusiast, detail-oriented"
+        }
+    },
+    {
+        "id": "persona-010",
+        "name": "Florencia",
+        "profile_metadata": {
+            "age": 27,
+            "job": "Community Manager",
+            "car": "Fiat Argo",
+            "location": "Almagro, CABA",
+            "tone": "trendy_social",
+            "emoji_frequency": "very_high",
+            "personality": "Social media savvy, trend-aware, engaging"
+        }
+    },
+    {
+        "id": "persona-011",
+        "name": "Ezequiel",
+        "profile_metadata": {
+            "age": 38,
+            "job": "Arquitecto",
+            "car": "Jeep Compass",
+            "location": "Olivos, GBA",
+            "tone": "sophisticated",
+            "emoji_frequency": "none",
+            "personality": "Design-conscious, premium preferences, aesthetic focus"
+        }
+    },
+    {
+        "id": "persona-012",
+        "name": "Micaela",
+        "profile_metadata": {
+            "age": 24,
+            "job": "Asistente Administrativa",
+            "car": "Chevrolet Prisma",
+            "location": "Boedo, CABA",
+            "tone": "friendly_helpful",
+            "emoji_frequency": "medium",
+            "personality": "Helpful, organized, budget-conscious"
+        }
+    },
+    {
+        "id": "persona-013",
+        "name": "Federico",
+        "profile_metadata": {
+            "age": 31,
+            "job": "DevOps Engineer",
+            "car": "BYD Han",
+            "location": "Puerto Madero, CABA",
+            "tone": "tech_enthusiast",
+            "emoji_frequency": "medium",
+            "personality": "Early adopter, tech evangelist, efficiency-focused"
+        }
+    },
+    {
+        "id": "persona-014",
+        "name": "Camila",
+        "profile_metadata": {
+            "age": 29,
+            "job": "Abogada",
+            "car": "Toyota Yaris",
+            "location": "Barrio Norte, CABA",
+            "tone": "precise_legal",
+            "emoji_frequency": "none",
+            "personality": "Legal-minded, contract-focused, security-conscious"
+        }
+    },
+    {
+        "id": "persona-015",
+        "name": "Lucas",
+        "profile_metadata": {
+            "age": 26,
+            "job": "Delivery Driver",
+            "car": "Nissan Versa",
+            "location": "La Paternal, CABA",
+            "tone": "street_smart",
+            "emoji_frequency": "high",
+            "personality": "Practical, cost-conscious, street-smart"
+        }
+    },
+    {
+        "id": "persona-016",
+        "name": "Agustina",
+        "profile_metadata": {
+            "age": 34,
+            "job": "Médica",
+            "car": "Volkswagen Nivus",
+            "location": "Caballito, CABA",
+            "tone": "caring_professional",
+            "emoji_frequency": "low",
+            "personality": "Caring, responsible, time-constrained"
+        }
+    },
+    {
+        "id": "persona-017",
+        "name": "Nicolás",
+        "profile_metadata": {
+            "age": 28,
+            "job": "Chef",
+            "car": "Ford Ka",
+            "location": "San Telmo, CABA",
+            "tone": "creative_passionate",
+            "emoji_frequency": "medium",
+            "personality": "Passionate, creative, night owl"
+        }
+    },
+    {
+        "id": "persona-018",
+        "name": "Sofía",
+        "profile_metadata": {
+            "age": 30,
+            "job": "Psicóloga",
+            "car": "Hyundai Creta",
+            "location": "Colegiales, CABA",
+            "tone": "empathetic",
+            "emoji_frequency": "low",
+            "personality": "Empathetic, listener, understanding"
+        }
+    },
+    {
+        "id": "persona-019",
+        "name": "Pablo",
+        "profile_metadata": {
+            "age": 37,
+            "job": "Contador",
+            "car": "Chevrolet Cruze",
+            "location": "Ramos Mejía, GBA",
+            "tone": "analytical_numbers",
+            "emoji_frequency": "none",
+            "personality": "Numbers-focused, ROI-driven, practical"
+        }
+    },
+    {
+        "id": "persona-020",
+        "name": "Juliana",
+        "profile_metadata": {
+            "age": 25,
+            "job": "Influencer",
+            "car": "Fiat 500",
+            "location": "Palermo Soho, CABA",
+            "tone": "trendy_lifestyle",
+            "emoji_frequency": "very_high",
+            "personality": "Brand-conscious, visual-focused, social"
+        }
+    },
+    {
+        "id": "persona-021",
+        "name": "Rodrigo",
+        "profile_metadata": {
+            "age": 42,
+            "job": "Gerente de Ventas",
+            "car": "Toyota SW4",
+            "location": "La Lucila, GBA",
+            "tone": "executive",
+            "emoji_frequency": "none",
+            "personality": "Leadership-focused, results-driven, strategic"
+        }
+    },
+    {
+        "id": "persona-022",
+        "name": "Martina",
+        "profile_metadata": {
+            "age": 23,
+            "job": "Estudiante de Medicina",
+            "car": "Renault Kwid",
+            "location": "Parque Patricios, CABA",
+            "tone": "student_practical",
+            "emoji_frequency": "high",
+            "personality": "Budget-conscious, ambitious, time-poor"
+        }
+    },
+    {
+        "id": "persona-023",
+        "name": "Sebastián",
+        "profile_metadata": {
+            "age": 35,
+            "job": "Emprendedor",
+            "car": "BYD Yuan Plus",
+            "location": "Saavedra, CABA",
+            "tone": "entrepreneurial",
+            "emoji_frequency": "medium",
+            "personality": "Risk-taker, innovation-focused, networker"
+        }
+    },
+    {
+        "id": "persona-024",
+        "name": "Antonella",
+        "profile_metadata": {
+            "age": 31,
+            "job": "Periodista",
+            "car": "Peugeot 2008",
+            "location": "Villa Devoto, CABA",
+            "tone": "journalistic",
+            "emoji_frequency": "low",
+            "personality": "Investigative, fact-checker, storyteller"
+        }
+    },
+    {
+        "id": "persona-025",
+        "name": "Gastón",
+        "profile_metadata": {
+            "age": 29,
+            "job": "Trader",
+            "car": "Peugeot 408",
+            "location": "Puerto Madero, CABA",
+            "tone": "finance_savvy",
+            "emoji_frequency": "low",
+            "personality": "Finance-savvy, ROI-focused, risk calculator"
+        }
+    },
+    {
+        "id": "persona-026",
+        "name": "Daniela",
+        "profile_metadata": {
+            "age": 28,
+            "job": "Nutricionista",
+            "car": "Citroën C3",
+            "location": "Villa Urquiza, CABA",
+            "tone": "wellness_focused",
+            "emoji_frequency": "medium",
+            "personality": "Health-conscious, balanced, educator"
+        }
+    },
+    {
+        "id": "persona-027",
+        "name": "Maximiliano",
+        "profile_metadata": {
+            "age": 33,
+            "job": "Profesor de Educación Física",
+            "car": "Ford EcoSport",
+            "location": "Belgrano R, CABA",
+            "tone": "energetic_active",
+            "emoji_frequency": "high",
+            "personality": "Active, energetic, outdoor-focused"
+        }
+    },
+    {
+        "id": "persona-028",
+        "name": "Brenda",
+        "profile_metadata": {
+            "age": 26,
+            "job": "UX Designer",
+            "car": "Volkswagen T-Cross",
+            "location": "Coghlan, CABA",
+            "tone": "design_thinking",
+            "emoji_frequency": "medium",
+            "personality": "User-centric, design-focused, problem-solver"
+        }
+    },
+    {
+        "id": "persona-029",
+        "name": "Ignacio",
+        "profile_metadata": {
+            "age": 39,
+            "job": "Piloto Comercial",
+            "car": "Jeep Renegade",
+            "location": "Ezeiza, GBA",
+            "tone": "adventurous",
+            "emoji_frequency": "medium",
+            "personality": "Adventurous, travel-focused, freedom-seeker"
+        }
+    },
+    {
+        "id": "persona-030",
+        "name": "María",
+        "profile_metadata": {
+            "age": 44,
+            "job": "Directora de RRHH",
+            "car": "Volkswagen Tiguan",
+            "location": "Martínez, GBA",
+            "tone": "hr_professional",
+            "emoji_frequency": "none",
+            "personality": "People-focused, culture-builder, structured"
+        }
+    },
+    {
+        "id": "persona-031",
+        "name": "Tomás",
+        "profile_metadata": {
+            "age": 27,
+            "job": "Fotógrafo",
+            "car": "Suzuki Vitara",
+            "location": "Chacarita, CABA",
+            "tone": "artistic_visual",
+            "emoji_frequency": "high",
+            "personality": "Visual thinker, creative, freelancer mindset"
+        }
+    },
+    {
+        "id": "persona-032",
+        "name": "Verónica",
+        "profile_metadata": {
+            "age": 36,
+            "job": "Ingeniera en Sistemas",
+            "car": "Honda CR-V",
+            "location": "San Miguel, GBA",
+            "tone": "systems_thinking",
+            "emoji_frequency": "low",
+            "personality": "Systems thinker, process-oriented, logical"
+        }
+    }
+]

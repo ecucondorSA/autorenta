@@ -1,0 +1,1410 @@
+[
+  {
+    "id": "persona-001",
+    "name": "Maximiliano",
+    "gender": "male",
+    "age": 26,
+    "job": "Desarrollador de Software",
+    "location": "Palermo, CABA",
+    "car": "BYD Dolphin",
+    "personality": "Tech-savvy, helpful, shares real experiences",
+    "tone": "casual",
+    "emoji_frequency": "none",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a young Argentine man, age 26, desarrollador de software, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Dev de software en Palermo",
+    "bio_instagram": "Desarrollador de software 🚀 | Amante de la tech y el fútbol ⚽️ | Palermo, CABA",
+    "interests": [
+      "Desarrollo de software",
+      "Tecnología",
+      "Fútbol",
+      "Música",
+      "Viajes",
+      "Automóviles",
+      "Gaming"
+    ],
+    "groups_to_join": [
+      "Desarrolladores de Software Argentina",
+      "Automovilismo en Argentina",
+      "Fútbol Argentino"
+    ],
+    "conversation_starters": [
+      "¿Alguien probó el nuevo lenguaje de programación de Google?",
+      "¿Cuál es el mejor lugar para comprar autos usados en CABA?",
+      "¿Quién va a ganar el próximo campeonato de fútbol?"
+    ],
+    "pain_points": [
+      "No encuentro un buen lugar para alquilar autos a precios razonables",
+      "Los autos de alquiler suelen tener problemas técnicos",
+      "No hay suficientes opciones de alquiler de autos eléctricos en CABA"
+    ]
+  },
+  {
+    "id": "persona-002",
+    "name": "Lucía",
+    "gender": "female",
+    "age": 29,
+    "job": "Médica",
+    "location": "Belgrano, CABA",
+    "car": "BYD Yuan Plus",
+    "personality": "Data-driven, cautious, values safety",
+    "tone": "professional",
+    "emoji_frequency": "low",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a young Argentine woman, age 29, médica, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Médica en CABA",
+    "bio_instagram": "Médica 🏥 en Belgrano, CABA 🌆 | Amante de la data y la seguridad 📊💡",
+    "interests": [
+      "medicina",
+      "salud",
+      "seguridad vial",
+      "tecnología",
+      "datos",
+      "ciencia",
+      "educación"
+    ],
+    "groups_to_join": [
+      "Médicos Argentinos",
+      "Seguridad Vial Argentina",
+      "Tecnología para la Salud"
+    ],
+    "conversation_starters": [
+      "¿Alguien sabe de algún estudio sobre la seguridad en el tránsito en CABA?",
+      "Me gustaría saber más sobre la aplicación de la inteligencia artificial en la medicina",
+      "¿Qué piensan sobre la nueva ley de tránsito en la ciudad?"
+    ],
+    "pain_points": [
+      "La falta de opciones de alquiler de autos seguros y confiables",
+      "El alto costo del alquiler de vehículos en la ciudad",
+      "La dificultad para encontrar autos con tecnología de seguridad avanzada"
+    ]
+  },
+  {
+    "id": "persona-003",
+    "name": "Sebastián",
+    "gender": "male",
+    "age": 43,
+    "job": "Contador",
+    "location": "Recoleta, CABA",
+    "car": "BYD Han",
+    "personality": "Enthusiastic, looking for side income, social",
+    "tone": "very_casual",
+    "emoji_frequency": "medium",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a mature Argentine man, age 43, contador, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Contador en CABA",
+    "bio_instagram": "Contador por día, aventurero por noche 🚗💼🌆",
+    "interests": [
+      "fútbol",
+      "música en vivo",
+      "viajes",
+      "autos eléctricos",
+      "emprendimientos",
+      "inversiones"
+    ],
+    "groups_to_join": [
+      "Argentinos Dueños de BYD",
+      "Contadores en CABA",
+      "Inversiones y Negocios en Argentina"
+    ],
+    "conversation_starters": [
+      "¿Alguien probó el nuevo café en Recoleta?",
+      "¿Qué opinan sobre la última actualización del BYD Han?",
+      "¿Conocen algún buen lugar para ver un partido de fútbol en la ciudad?"
+    ],
+    "pain_points": [
+      "No consigo alquilar un auto eléctrico a precio razonable",
+      "Me preocupa la seguridad al alquilar un auto para fines de semana",
+      "No quiero perder tiempo en trámites burocráticos al alquilar un auto"
+    ]
+  },
+  {
+    "id": "persona-004",
+    "name": "Camila",
+    "gender": "female",
+    "age": 26,
+    "job": "Contadora",
+    "location": "Caballito, CABA",
+    "car": "Toyota Corolla",
+    "personality": "Risk-averse, analytical, fact-based",
+    "tone": "technical",
+    "emoji_frequency": "high",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a young Argentine woman, age 26, contadora, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Contadora en CABA",
+    "bio_instagram": "Contadora 📊 en Caballito 📍, amante de los números y la organización 📈",
+    "interests": [
+      "fútbol",
+      "música clásica",
+      "lectura",
+      "cine",
+      "cocina",
+      "viajes",
+      "finanzas personales"
+    ],
+    "groups_to_join": [
+      "Amigos de Caballito",
+      "Contadores Argentinos",
+      "Fútbol Argentino"
+    ],
+    "conversation_starters": [
+      "¿Qué les parece el último partido de la selección?",
+      "¿Alguien conoce algún buen restaurante en el barrio?",
+      "¿Qué libro están leyendo ahora?"
+    ],
+    "pain_points": [
+      "No poder encontrar autos disponibles para alquilar en fin de semana",
+      "Demasiados trámites para alquilar un auto",
+      "Precios muy altos para alquilar un auto por un día"
+    ]
+  },
+  {
+    "id": "persona-005",
+    "name": "Matías",
+    "gender": "male",
+    "age": 30,
+    "job": "Médico",
+    "location": "Villa Crespo, CABA",
+    "car": "Toyota Yaris",
+    "personality": "Creative, entrepreneurial, values flexibility",
+    "tone": "friendly",
+    "emoji_frequency": "very_high",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine man, age 30, médico, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Médico y aventurero",
+    "bio_instagram": "Médico en Villa Crespo 🏥💉, amante de la libertad 🚗🌟 y la creatividad 🎨",
+    "interests": [
+      "música en vivo",
+      "viajes",
+      "emprendimientos",
+      "deportes",
+      " arte callejero",
+      "fútbol"
+    ],
+    "groups_to_join": [
+      "Médicos Argentinos",
+      "Emprendedores de Buenos Aires",
+      "Amantes del Fútbol"
+    ],
+    "conversation_starters": [
+      "¿Alguien conoce algún lugar para ver música en vivo en el barrio?",
+      "¿Cuál es el mejor equipo de fútbol argentino?",
+      "¿Alguien tiene experiencia con alquiler de autos en la ciudad?"
+    ],
+    "pain_points": [
+      "No tener flexibilidad en el alquiler de autos",
+      "Precios altos para alquilar un auto por un día",
+      "No poder elegir el auto que quiero"
+    ]
+  },
+  {
+    "id": "persona-006",
+    "name": "Sofía",
+    "gender": "female",
+    "age": 37,
+    "job": "Profesora",
+    "location": "Nuñez, CABA",
+    "car": "Toyota Etios",
+    "personality": "Educator, shares knowledge, community-focused",
+    "tone": "enthusiastic",
+    "emoji_frequency": "none",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine woman, age 37, profesora, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Profesora apasionada",
+    "bio_instagram": "Profesora en Nuñez 📚💡 Compartiendo conocimiento y amor por la educación 🌟",
+    "interests": [
+      "educación",
+      "lectura",
+      "música en vivo",
+      "fútbol",
+      "viajes",
+      "gastronomía"
+    ],
+    "groups_to_join": [
+      "Educación en Argentina",
+      "Profesores de Buenos Aires",
+      "Amantes de la lectura"
+    ],
+    "conversation_starters": [
+      "¿Qué libro están leyendo ahora?",
+      "¿Alguien fue al partido de River anoche?",
+      "¿Conocen algún buen lugar para comer en Nuñez?"
+    ],
+    "pain_points": [
+      "Costos altos de alquiler de autos",
+      "Falta de opciones de vehículos seguros y confiables",
+      "Dificultad para encontrar alquileres de autos a largo plazo"
+    ]
+  },
+  {
+    "id": "persona-007",
+    "name": "Javier",
+    "gender": "male",
+    "age": 27,
+    "job": "Profesor Universitario",
+    "location": "San Isidro, GBA",
+    "car": "VW Gol Trend",
+    "personality": "Outgoing, persuasive but authentic, network builder",
+    "tone": "calm",
+    "emoji_frequency": "low",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a young Argentine man, age 27, profesor universitario, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Profesor Universitario",
+    "bio_instagram": "Profesor, amante del fútbol 🏟️ y la buena onda 🌟. San Isidro, GBA 🏠",
+    "interests": [
+      "Fútbol",
+      "Música en vivo",
+      "Cine argentino",
+      "Viajes por Argentina",
+      "Futbol 5",
+      "Asado con amigos"
+    ],
+    "groups_to_join": [
+      "Amigos de San Isidro",
+      "Hinchas de Independiente",
+      "Profesores Universitarios de Argentina"
+    ],
+    "conversation_starters": [
+      "¿Quién cree que va a ganar el próximo partido de Independiente?",
+      "¿Alguien conoce algún buen lugar para ver cine en el GBA?",
+      "¿Qué onda con el nuevo restaurant de asados en San Isidro?"
+    ],
+    "pain_points": [
+      "No tengo tiempo para buscar un auto alquiler confiable",
+      "Me preocupa el costo del alquiler de autos para viajes cortos",
+      "Necesito un auto confiable para viajes con mi familia"
+    ]
+  },
+  {
+    "id": "persona-008",
+    "name": "Antonella",
+    "gender": "female",
+    "age": 32,
+    "job": "UX Designer",
+    "location": "Vicente López, GBA",
+    "car": "VW Polo",
+    "personality": "Strategic thinker, data-driven, optimization-focused",
+    "tone": "energetic",
+    "emoji_frequency": "medium",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine woman, age 32, ux designer, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Diseñadora UX",
+    "bio_instagram": "Diseñadora UX 📈💻 | Amante del café ☕️ y los perros 🐶 | Vicente López, GBA 📍",
+    "interests": [
+      "Diseño de UX",
+      "Tecnología",
+      "Café",
+      "Perros",
+      "Música indie",
+      "Fútbol",
+      "Viajes"
+    ],
+    "groups_to_join": [
+      "Diseñadores UX de Argentina",
+      "Tecnología y innovación en Argentina",
+      "Amantes de los perros"
+    ],
+    "conversation_starters": [
+      "¿Alguien probó el nuevo café en Vicente López?",
+      "¿Qué herramientas de diseño están usando actualmente?",
+      "¿Quién va al partido de fútbol este fin de semana?"
+    ],
+    "pain_points": [
+      "No encontrar autos disponibles para alquilar en fines de semana",
+      "Los precios de alquiler de autos son muy altos",
+      "La falta de transparencia en los contratos de alquiler de autos"
+    ]
+  },
+  {
+    "id": "persona-009",
+    "name": "Pablo",
+    "gender": "male",
+    "age": 41,
+    "job": "Diseñador Gráfico",
+    "location": "Olivos, GBA",
+    "car": "VW Taos",
+    "personality": "Technical expert, car enthusiast, detail-oriented",
+    "tone": "empathetic",
+    "emoji_frequency": "high",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a mature Argentine man, age 41, diseñador gráfico, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Diseñador Gráfico",
+    "bio_instagram": "Diseño gráfico 📈 | Autos 🚗 | Detalles que importan 👀",
+    "interests": [
+      "Diseño gráfico",
+      "Autos",
+      "Tecnología",
+      "Fútbol",
+      "Música",
+      "Viajes"
+    ],
+    "groups_to_join": [
+      "Diseñadores Gráficos Argentina",
+      "Clúster de Autos VW",
+      "Tecnología y Diseño"
+    ],
+    "conversation_starters": [
+      "¿Qué tal la nueva versión de Adobe Creative Cloud?",
+      "¿Alguien probó el nuevo VW ID.4?",
+      "¿Cuál es el diseño gráfico que más te gustó este año?"
+    ],
+    "pain_points": [
+      "No encuentro autos de alquiler con las especificaciones técnicas que necesito",
+      "Los precios de alquiler de autos son demasiado altos",
+      "No tengo garantía de que el auto esté en buen estado"
+    ]
+  },
+  {
+    "id": "persona-010",
+    "name": "Verónica",
+    "gender": "female",
+    "age": 22,
+    "job": "Nutricionista",
+    "location": "Martínez, GBA",
+    "car": "VW T-Cross",
+    "personality": "Social media savvy, trend-aware, engaging",
+    "tone": "analytical",
+    "emoji_frequency": "very_high",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a young Argentine woman, age 22, nutricionista, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Nutricionista en Martínez",
+    "bio_instagram": "Nutri @ Martinez 🥗🏋️‍♀️ | Amante de la comida saludable y el T-Cross 🚗",
+    "interests": [
+      "alimentación saludable",
+      "fitness",
+      "música electrónica",
+      "viajes",
+      "gastronomía",
+      "moda sostenible",
+      "series de Netflix"
+    ],
+    "groups_to_join": [
+      "Nutrición y bienestar",
+      "Amantes del T-Cross",
+      "Mujeres empoderadas"
+    ],
+    "conversation_starters": [
+      "¿Alguien tiene recomendaciones de restaurantes saludables en el GBA?",
+      "¿Qué serie están viendo ahora?",
+      "¿Alguien ha viajado a Bariloche últimamente?"
+    ],
+    "pain_points": [
+      "No encontrar autos disponibles para alquilar los fines de semana",
+      "Los precios de alquiler de autos son muy altos",
+      "La falta de opciones de autos ecológicos para alquilar"
+    ]
+  },
+  {
+    "id": "persona-011",
+    "name": "Rodrigo",
+    "gender": "male",
+    "age": 30,
+    "job": "Vendedor",
+    "location": "San Telmo, CABA",
+    "car": "Fiat Cronos",
+    "personality": "Design-conscious, premium preferences, aesthetic focus",
+    "tone": "casual",
+    "emoji_frequency": "none",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine man, age 30, vendedor, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Vendedor en San Telmo",
+    "bio_instagram": "Vida en San Telmo 🏙️🚗 Fiat Cronos 🚗 Estilo y diseño 🎨",
+    "interests": [
+      "Diseño gráfico",
+      "Arquitectura",
+      "Moda",
+      "Restaurantes de Buenos Aires",
+      "Viajes",
+      "Música electrónica"
+    ],
+    "groups_to_join": [
+      "Amantes del Diseño",
+      "San Telmo Vive",
+      "Fiat Cronos Argentina"
+    ],
+    "conversation_starters": [
+      "¿Alguien conoce un buen restaurante nuevo en el barrio?",
+      "¿Quién más va al Festival de Música Electrónica este año?",
+      "¿Alguien tiene alguna recomendación para un viaje dentro del país?"
+    ],
+    "pain_points": [
+      "No puedo encontrar un alquiler de auto que se adapte a mis necesidades de diseño y estilo",
+      "Me preocupa el estado de los autos alquilados y si están a la altura de mis expectativas",
+      "No quiero perder tiempo esperando a que me entreguen el auto alquilado"
+    ]
+  },
+  {
+    "id": "persona-012",
+    "name": "Brenda",
+    "gender": "female",
+    "age": 36,
+    "job": "Ingeniera",
+    "location": "Almagro, CABA",
+    "car": "Fiat Argo",
+    "personality": "Helpful, organized, budget-conscious",
+    "tone": "professional",
+    "emoji_frequency": "low",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine woman, age 36, ingeniera, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Ingeniera en Almagro",
+    "bio_instagram": "Ingeniera, amante del orden y la buena onda 🌟🏙️💻",
+    "interests": [
+      "tecnología",
+      "viajes",
+      "cocina",
+      "música nacional",
+      "deportes",
+      "fiestas de cumpleaños"
+    ],
+    "groups_to_join": [
+      "Amigos de Almagro",
+      "Ingenieras Argentinas",
+      "Dueños de Fiat Argo"
+    ],
+    "conversation_starters": [
+      "¿Alguien conoce algún buen restaurante cerca de acá?",
+      "¿Qué les parece el nuevo parque que inauguraron en Caballito?",
+      "¿Alguien necesita ayuda con algún proyecto de ingeniería?"
+    ],
+    "pain_points": [
+      "no encontrar autos disponibles para alquilar los fines de semana",
+      "gastar demasiado en combustible",
+      "tener que lidiar con trámites burocráticos para alquilar un auto"
+    ]
+  },
+  {
+    "id": "persona-013",
+    "name": "Nicolás",
+    "gender": "male",
+    "age": 25,
+    "job": "Fotógrafo",
+    "location": "Colegiales, CABA",
+    "car": "Chevrolet Onix",
+    "personality": "Early adopter, tech evangelist, efficiency-focused",
+    "tone": "very_casual",
+    "emoji_frequency": "medium",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a young Argentine man, age 25, fotógrafo, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Fotógrafo en CABA",
+    "bio_instagram": "Fotógrafo | Colegiales, CABA 📸👍",
+    "interests": [
+      "fotografía",
+      "tecnología",
+      "autos",
+      "viajes",
+      "emprendimiento",
+      "innovación",
+      "disrupción"
+    ],
+    "groups_to_join": [
+      "Fotógrafos Argentinos",
+      "Tech Argentina",
+      "Autopasionados"
+    ],
+    "conversation_starters": [
+      "¿Qué cámara utilizan ustedes para capturar los mejores momentos?",
+      "¿Alguien conoce algún lugar interesante para fotografiar en CABA?",
+      "¿Qué aplicaciones de edición de fotos son las más populares ahora?"
+    ],
+    "pain_points": [
+      "La falta de opciones de alquiler de autos con cámaras de seguridad para transportar equipo",
+      "Los altos costos de alquiler de autos en la ciudad",
+      "La dificultad para encontrar autos con conectividad USB para cargar dispositivos"
+    ]
+  },
+  {
+    "id": "persona-014",
+    "name": "Micaela",
+    "gender": "female",
+    "age": 34,
+    "job": "Marketing Manager",
+    "location": "Villa Urquiza, CABA",
+    "car": "Chevrolet Cruze",
+    "personality": "Legal-minded, contract-focused, security-conscious",
+    "tone": "technical",
+    "emoji_frequency": "high",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine woman, age 34, marketing manager, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Micaela, marketing y autos",
+    "bio_instagram": "Marketing Manager 💼, dueña de un Cruze 🚗 y amante de la seguridad 🔒 en Villa Urquiza, CABA 🏙️",
+    "interests": [
+      "autos",
+      "marketing digital",
+      "seguridad",
+      "derecho",
+      "viajes",
+      "gastronomía",
+      "música"
+    ],
+    "groups_to_join": [
+      "Amantes del Chevrolet Cruze",
+      "Marketing en Argentina",
+      "Seguridad en el tránsito"
+    ],
+    "conversation_starters": [
+      "¿Alguien tiene recomendaciones para un seguro de auto en Buenos Aires?",
+      "Me encantaría saber sobre nuevas tendencias en marketing digital",
+      "¿Qué lugares recomiendan para viajar en auto por Argentina?"
+    ],
+    "pain_points": [
+      "La falta de claridad en los contratos de alquiler de autos",
+      "La inseguridad en el estacionamiento en la ciudad",
+      "Los costos altos de mantenimiento de los vehículos"
+    ]
+  },
+  {
+    "id": "persona-015",
+    "name": "Diego",
+    "gender": "male",
+    "age": 43,
+    "job": "Mecánico",
+    "location": "Flores, CABA",
+    "car": "Renault Sandero",
+    "personality": "Practical, cost-conscious, street-smart",
+    "tone": "friendly",
+    "emoji_frequency": "very_high",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a mature Argentine man, age 43, mecánico, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Mecánico de Flores",
+    "bio_instagram": "Mecánico 🚗, dueño de un Sandero 🚗, vivo en Flores, CABA 🏙️",
+    "interests": [
+      "fútbol",
+      "música nacional",
+      "autos",
+      "viajes baratos",
+      "comida callejera",
+      "tecnología"
+    ],
+    "groups_to_join": [
+      "Fútbol Argentino",
+      "Dueños de Renault Sandero",
+      "Viajes económicos en Argentina"
+    ],
+    "conversation_starters": [
+      "¿Alguien sabe dónde puedo encontrar repuestos para mi Sandero?",
+      "¿Cuál es el mejor lugar para ver un partido en vivo en la ciudad?",
+      "¿Alguien tiene alguna recomendación para un viaje barato a la costa?"
+    ],
+    "pain_points": [
+      "No quiero gastar demasiado en alquiler de autos",
+      "Me preocupa la seguridad de los vehículos alquilados",
+      "Busco opciones de alquiler de autos confiables y económicas"
+    ]
+  },
+  {
+    "id": "persona-016",
+    "name": "Juliana",
+    "gender": "female",
+    "age": 23,
+    "job": "Directora de RRHH",
+    "location": "Boedo, CABA",
+    "car": "Renault Kwid",
+    "personality": "Caring, responsible, time-constrained",
+    "tone": "enthusiastic",
+    "emoji_frequency": "none",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a young Argentine woman, age 23, directora de rrhh, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "RRHH en CABA",
+    "bio_instagram": "Directora de RRHH 📈 | Boedo, CABA 🏙️ | Amante de la vida al aire libre 🌳",
+    "interests": [
+      "Senderismo",
+      "Música en vivo",
+      "Comida vegana",
+      "Viajes",
+      "Desarrollo personal",
+      "Fútbol"
+    ],
+    "groups_to_join": [
+      "Amantes del Fútbol Argentino",
+      "Veganos en Buenos Aires",
+      "Senderismo en Argentina"
+    ],
+    "conversation_starters": [
+      "¿Alguien sabe de algún nuevo sendero para caminar cerca de la ciudad?",
+      "¿Cuál es el mejor restaurante vegano en Boedo?",
+      "¿Quién ganará el próximo partido de fútbol?"
+    ],
+    "pain_points": [
+      "No tener tiempo para buscar un auto de alquiler confiable",
+      "Preocupación por el costo de alquilar un auto para fines de semana",
+      "Dificultad para encontrar un auto de alquiler que se adapte a mis necesidades laborales"
+    ]
+  },
+  {
+    "id": "persona-017",
+    "name": "Nicolás",
+    "gender": "male",
+    "age": 32,
+    "job": "Desarrollador de Software",
+    "location": "Palermo, CABA",
+    "car": "Peugeot 208",
+    "personality": "Passionate, creative, night owl",
+    "tone": "calm",
+    "emoji_frequency": "low",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine man, age 32, desarrollador de software, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Desarrollador de software",
+    "bio_instagram": "Dev de software 🚀 | Palermo 📍 | Amante de la noche 🌃",
+    "interests": [
+      "Tecnología",
+      "Música electrónica",
+      "Fútbol",
+      "Cervezas artesanales",
+      "Viajes",
+      "Gaming"
+    ],
+    "groups_to_join": [
+      "Desarrolladores de software en Argentina",
+      "Amantes de la tecnología en CABA",
+      "Fútbol argentino"
+    ],
+    "conversation_starters": [
+      "¿Quién está emocionado con la nueva temporada de fútbol?",
+      "¿Alguien probó ese nuevo juego de PS5?",
+      "¿Qué cervecería artesanal es la mejor en Palermo?"
+    ],
+    "pain_points": [
+      "No encuentro un auto alquiler económico para un fin de semana",
+      "Me cuesta encontrar un lugar para estacionar mi Peugeot 208 en Palermo",
+      "Los alquileres de autos son muy caros en Buenos Aires"
+    ]
+  },
+  {
+    "id": "persona-018",
+    "name": "Juliana",
+    "gender": "female",
+    "age": 45,
+    "job": "Médica",
+    "location": "Belgrano, CABA",
+    "car": "Peugeot 2008",
+    "personality": "Empathetic, listener, understanding",
+    "tone": "energetic",
+    "emoji_frequency": "medium",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a mature Argentine woman, age 45, médica, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Médica | Belgrano, CABA 🚗",
+    "bio_instagram": "Médica en Belgrano ✨",
+    "interests": [
+      "autos",
+      "tecnología",
+      "viajes"
+    ],
+    "groups_to_join": [
+      "Compra Venta Autos CABA",
+      "Autos Usados Argentina"
+    ],
+    "conversation_starters": [
+      "Alguien tiene experiencia con...?"
+    ],
+    "pain_points": [
+      "Miedo a prestar el auto",
+      "Falta de garantías"
+    ]
+  },
+  {
+    "id": "persona-019",
+    "name": "Matías",
+    "gender": "male",
+    "age": 27,
+    "job": "Contador",
+    "location": "Recoleta, CABA",
+    "car": "Ford Ka",
+    "personality": "Numbers-focused, ROI-driven, practical",
+    "tone": "empathetic",
+    "emoji_frequency": "high",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a young Argentine man, age 27, contador, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Contador en CABA",
+    "bio_instagram": "Contador 🔢 | Ama el fútbol ⚽️ y la buena comida 🍴 | Recoleta, CABA 📍",
+    "interests": [
+      "fútbol",
+      "gastronomía",
+      "finanzas personales",
+      "autos",
+      "deportes"
+    ],
+    "groups_to_join": [
+      "Clubes de fútbol de Buenos Aires",
+      "Comida y vinos argentinos",
+      "Finanzas personales para jóvenes"
+    ],
+    "conversation_starters": [
+      "¿Quién cree que ganará el próximo partido de River?",
+      "¿Alguien probó ese nuevo restaurante en Palermo?",
+      "¿Cuál es el mejor consejo para ahorrar dinero como joven profesional?"
+    ],
+    "pain_points": [
+      "No poder encontrar un auto económico para alquilar los fines de semana",
+      "Los precios de los alquileres de autos en Buenos Aires son demasiado altos",
+      "La falta de opciones de alquiler de autos confiables y seguras"
+    ]
+  },
+  {
+    "id": "persona-020",
+    "name": "Camila",
+    "gender": "female",
+    "age": 33,
+    "job": "Contadora",
+    "location": "Caballito, CABA",
+    "car": "Ford EcoSport",
+    "personality": "Brand-conscious, visual-focused, social",
+    "tone": "analytical",
+    "emoji_frequency": "very_high",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine woman, age 33, contadora, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Contadora de día, amante de la vida",
+    "bio_instagram": "Caballito 📍 | Contadora por pasión ✨ | Amante de la moda y el buen vivir 🛍️🍴",
+    "interests": [
+      "moda",
+      "música",
+      "viajes",
+      "gastronomía",
+      "diseño",
+      "fútbol",
+      "cine"
+    ],
+    "groups_to_join": [
+      "Amigos de Caballito",
+      "Contadores de Argentina",
+      "Amantes del Fútbol"
+    ],
+    "conversation_starters": [
+      "¿Alguien conoce algún buen restó en Caballito?",
+      "¿Qué les parece el último partido de Boca?",
+      "¿Alguien tiene recomendaciones para un viaje a Mendoza?"
+    ],
+    "pain_points": [
+      "No saber si el alquiler de autos es seguro",
+      "La falta de opciones de alquiler de autos en buen estado",
+      "Los precios altos del alquiler de autos en Buenos Aires"
+    ]
+  },
+  {
+    "id": "persona-021",
+    "name": "Diego",
+    "gender": "male",
+    "age": 40,
+    "job": "Médico",
+    "location": "Villa Crespo, CABA",
+    "car": "Honda HR-V",
+    "personality": "Leadership-focused, results-driven, strategic",
+    "tone": "casual",
+    "emoji_frequency": "none",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a mature Argentine man, age 40, médico, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Médico en CABA",
+    "bio_instagram": "Médico en Villa Crespo 🏥👨‍⚕️ Amante del fútbol y la buena onda 🎉",
+    "interests": [
+      "fútbol",
+      "música",
+      "política",
+      "viajes",
+      "autos",
+      "gastronomía"
+    ],
+    "groups_to_join": [
+      "Médicos Argentinos",
+      "Amantes del Fútbol",
+      "Dueños de Honda"
+    ],
+    "conversation_starters": [
+      "¿Quién ganará el próximo clásico?",
+      "¿Alguna recomendación para un fin de semana en la ciudad?",
+      "¿Cuál es el mejor restaurante de pizza en CABA?"
+    ],
+    "pain_points": [
+      "No poder encontrar un auto alquilado con GPS",
+      "Tener que pagar precios exorbitantes por alquilar un auto por un día",
+      "No tener garantía de que el auto esté en buen estado"
+    ]
+  },
+  {
+    "id": "persona-022",
+    "name": "Verónica",
+    "gender": "female",
+    "age": 23,
+    "job": "Profesora",
+    "location": "Nuñez, CABA",
+    "car": "Honda Civic",
+    "personality": "Budget-conscious, ambitious, time-poor",
+    "tone": "professional",
+    "emoji_frequency": "low",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a young Argentine woman, age 23, profesora, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Profesora en CABA",
+    "bio_instagram": "Profesora en Nuñez 📚💃",
+    "interests": [
+      "viajes baratos",
+      "cine argentino",
+      "fútbol",
+      "música nacional",
+      "libros de historia",
+      "gimnasio",
+      "comidas saludables"
+    ],
+    "groups_to_join": [
+      "Viajes Baratos Argentina",
+      "Cine Argentino",
+      "Hinchas de River"
+    ],
+    "conversation_starters": [
+      "¿Alguien conoce algún lugar barato para viajar en Semana Santa?",
+      "¿Vieron el último partido de River?",
+      "¿Qué libro de historia les gustó leer últimamente?"
+    ],
+    "pain_points": [
+      "Alquileres de autos demasiado caros",
+      "No encontrar autos disponibles para fechas específicas",
+      "Problemas con la calidad de los vehículos alquilados"
+    ]
+  },
+  {
+    "id": "persona-023",
+    "name": "Ignacio",
+    "gender": "male",
+    "age": 35,
+    "job": "Profesor Universitario",
+    "location": "San Isidro, GBA",
+    "car": "Jeep Compass",
+    "personality": "Risk-taker, innovation-focused, networker",
+    "tone": "very_casual",
+    "emoji_frequency": "medium",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine man, age 35, profesor universitario, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Profesor y aventurero",
+    "bio_instagram": "Profesor universitario 📚💡, amante de la aventura 🏞️ y el off-road 🚗 en mi Jeep Compass",
+    "interests": [
+      "educación innovadora",
+      "viajes aventura",
+      "off-road",
+      "tecnología",
+      "emprendedorismo",
+      "redes sociales",
+      "deportes extremos"
+    ],
+    "groups_to_join": [
+      "Educación en Argentina",
+      "Aventuras en 4x4",
+      "Innovación y Tecnología"
+    ],
+    "conversation_starters": [
+      "¿Alguien probó el nuevo sendero en la Sierra de la Ventana?",
+      "¿Cuál es el mejor consejo para innovar en la educación?",
+      "¿Quién tiene experiencia con el alquiler de autos para viajes largos?"
+    ],
+    "pain_points": [
+      "La búsqueda de autos confiables para viajes largos",
+      "La falta de opciones de alquiler de autos con características off-road",
+      "Los precios altos del alquiler de autos durante la temporada alta"
+    ]
+  },
+  {
+    "id": "persona-024",
+    "name": "María",
+    "gender": "female",
+    "age": 39,
+    "job": "UX Designer",
+    "location": "Vicente López, GBA",
+    "car": "Jeep Renegade",
+    "personality": "Investigative, fact-checker, storyteller",
+    "tone": "technical",
+    "emoji_frequency": "high",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine woman, age 39, ux designer, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Diseñadora UX",
+    "bio_instagram": "Diseñadora UX 🚗💻 | Amante de los buenos cafés y la aventura 🌟",
+    "interests": [
+      "diseño de interfaces",
+      "tecnología",
+      "viajes",
+      "fútbol",
+      "música",
+      "cocina",
+      "fotografía"
+    ],
+    "groups_to_join": [
+      "Diseñadores UX de Argentina",
+      "Amantes de los Jeep",
+      "Tecnología y diseño en Buenos Aires"
+    ],
+    "conversation_starters": [
+      "¿Alguien conoce algún buen lugar para tomar un café en Vicente López?",
+      "¿Qué piensan sobre el último diseño de interfaces de Apple?",
+      "¿Alguien ha viajado recientemente a algún lugar emocionante?"
+    ],
+    "pain_points": [
+      "No puedo encontrar un alquiler de auto que se adapte a mis necesidades de diseño y tecnología",
+      "Me preocupa la seguridad al alquilar un auto en la ciudad",
+      "Nunca sé si estoy pagando un precio justo por el alquiler de un auto"
+    ]
+  },
+  {
+    "id": "persona-025",
+    "name": "Santiago",
+    "gender": "male",
+    "age": 23,
+    "job": "Diseñador Gráfico",
+    "location": "Olivos, GBA",
+    "car": "Nissan Versa",
+    "personality": "Finance-savvy, ROI-focused, risk calculator",
+    "tone": "friendly",
+    "emoji_frequency": "very_high",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a young Argentine man, age 23, diseñador gráfico, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Diseñador Gráfico",
+    "bio_instagram": "Diseñador 🎨 | Amante del fútbol ⚽️ y la velocidad 🚗 | Olivos, GBA",
+    "interests": [
+      "Diseño gráfico",
+      "Fútbol",
+      "Autos",
+      "Inversión",
+      "Economía",
+      "Tecnología",
+      "Viajes"
+    ],
+    "groups_to_join": [
+      "Diseñadores Gráficos Argentinos",
+      "Amantes del Fútbol Argentino",
+      "Dueños de Nissan"
+    ],
+    "conversation_starters": [
+      "¿Quién cree que ganará el próximo partido de River?",
+      "¿Alguien conoce algún curso de diseño gráfico en línea?",
+      "¿Cuál es el mejor lugar para alquilar un auto en Buenos Aires?"
+    ],
+    "pain_points": [
+      "Costos altos de alquiler de autos",
+      "Falta de opciones de alquiler a largo plazo",
+      "Dificultad para encontrar autos confiables y bien mantenidos"
+    ]
+  },
+  {
+    "id": "persona-026",
+    "name": "Florencia",
+    "gender": "female",
+    "age": 31,
+    "job": "Nutricionista",
+    "location": "Martínez, GBA",
+    "car": "Nissan Kicks",
+    "personality": "Health-conscious, balanced, educator",
+    "tone": "enthusiastic",
+    "emoji_frequency": "none",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine woman, age 31, nutricionista, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Nutricionista con pasión por la salud",
+    "bio_instagram": "Nutricionista 🥗 | Promoviendo hábitos saludables en Martínez 🏠 | Conduciendo mi Nissan Kicks 🚗",
+    "interests": [
+      "alimentación saludable",
+      "fitness",
+      "meditación",
+      "viajes",
+      "cocina vegetariana",
+      "educación en salud"
+    ],
+    "groups_to_join": [
+      "Nutrición y Salud",
+      "Fitness en el GBA",
+      "Salud y Bienestar"
+    ],
+    "conversation_starters": [
+      "¿Cuál es su ritual matutino para empezar el día con energía?",
+      "¿Alguna recomendación de recetas saludables para cocinar en casa?",
+      "¿Qué actividades al aire libre recomiendan para mantenerse activo en el verano?"
+    ],
+    "pain_points": [
+      "No tener flexibilidad en los planes de alquiler de autos para viajes cortos",
+      "La falta de opciones de autos ecológicos en las empresas de alquiler",
+      "Los costos adicionales por kilometraje en los alquileres de autos"
+    ]
+  },
+  {
+    "id": "persona-027",
+    "name": "Martín",
+    "gender": "male",
+    "age": 38,
+    "job": "Vendedor",
+    "location": "San Telmo, CABA",
+    "car": "Hyundai Creta",
+    "personality": "Active, energetic, outdoor-focused",
+    "tone": "calm",
+    "emoji_frequency": "low",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine man, age 38, vendedor, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Vendedor y amante del aire libre",
+    "bio_instagram": "San Telmo, aventuras y Hyundai Creta 🚗🏞️",
+    "interests": [
+      "fútbol",
+      "ciclismo",
+      "música en vivo",
+      "asados",
+      "viajes",
+      " aventuras al aire libre"
+    ],
+    "groups_to_join": [
+      "Amigos de San Telmo",
+      "Ciclismo en Buenos Aires",
+      "Hyundai Creta Argentina"
+    ],
+    "conversation_starters": [
+      "¿Alguien conoce algún buen lugar para hacer ciclismo cerca de la ciudad?",
+      "¿Quién va al partido de River este fin de semana?",
+      "¿Alguien tiene recomendaciones para un viaje a Mendoza?"
+    ],
+    "pain_points": [
+      "No encontrar autos disponibles para alquilar en temporada alta",
+      "Demasiados trámites para alquilar un auto por un día",
+      "Preocupación por el estado del vehículo alquilado"
+    ]
+  },
+  {
+    "id": "persona-028",
+    "name": "Carolina",
+    "gender": "female",
+    "age": 23,
+    "job": "Ingeniera",
+    "location": "Almagro, CABA",
+    "car": "Citroën C3",
+    "personality": "User-centric, design-focused, problem-solver",
+    "tone": "energetic",
+    "emoji_frequency": "medium",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a young Argentine woman, age 23, ingeniera, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Ingeniera en Almagro",
+    "bio_instagram": "Ingeniera con pasión por el diseño 📈💻 | Almagro, CABA 📍",
+    "interests": [
+      "Diseño de productos",
+      "Tecnología",
+      "Innovación",
+      "Arquitectura",
+      "Deportes extremos",
+      "Música en vivo",
+      "Viajes"
+    ],
+    "groups_to_join": [
+      "Ingenieros en Argentina",
+      "Diseño y Tecnología",
+      "Almagro Vive"
+    ],
+    "conversation_starters": [
+      "¿Alguien conoce algún buen curso de diseño de productos en la zona?",
+      "¿Qué les parece la nueva obra de arte en el barrio?",
+      "¿Alguien tiene recomendaciones para un fin de semana en la ciudad?"
+    ],
+    "pain_points": [
+      "No tengo tiempo para buscar autos de alquiler confiables",
+      "Me preocupa el costo del alquiler de autos en Buenos Aires",
+      "No quiero perder tiempo en trámites burocráticos para alquilar un auto"
+    ]
+  },
+  {
+    "id": "persona-029",
+    "name": "Nicolás",
+    "gender": "male",
+    "age": 30,
+    "job": "Fotógrafo",
+    "location": "Colegiales, CABA",
+    "car": "Suzuki Vitara",
+    "personality": "Adventurous, travel-focused, freedom-seeker",
+    "tone": "empathetic",
+    "emoji_frequency": "high",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine man, age 30, fotógrafo, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Fotógrafo viajero",
+    "bio_instagram": "Fotógrafo 📸 | Amante de la aventura 🏞️ | Siempre en movimiento 🚗",
+    "interests": [
+      "Fotografía",
+      "Viajes",
+      "Aventuras",
+      "Música en vivo",
+      "Cine independiente",
+      "Deportes extremos",
+      "Gastronomía"
+    ],
+    "groups_to_join": [
+      "Fotógrafos Argentinos",
+      "Viajeros por el Mundo",
+      "Aventuras en 4x4",
+      "Talleres de Fotografía en CABA"
+    ],
+    "conversation_starters": [
+      "¿Alguien conoce lugares imprescindibles para fotografiar en Patagonia?",
+      "¿Qué cámara llevan para capturar mejores momentos en viajes?",
+      "¿Se conocen rutas off-road cerca de Buenos Aires?"
+    ],
+    "pain_points": [
+      "Costos altos de alquiler de autos para viajes largos",
+      "Falta de opciones de vehículos 4x4 para terrenos difíciles",
+      "Dificultad para encontrar alquileres de autos con équipos de fotografía"
+    ]
+  },
+  {
+    "id": "persona-030",
+    "name": "Micaela",
+    "gender": "female",
+    "age": 43,
+    "job": "Marketing Manager",
+    "location": "Villa Urquiza, CABA",
+    "car": "Honda CR-V",
+    "personality": "People-focused, culture-builder, structured",
+    "tone": "analytical",
+    "emoji_frequency": "very_high",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a mature Argentine woman, age 43, marketing manager, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Micaela, marketing y amor por BA",
+    "bio_instagram": "Micaela 🌟 Marketing Manager en CABA 📍 Villa Urquiza 🚗 Honda CR-V ✨",
+    "interests": [
+      "fútbol",
+      "música en vivo",
+      "restaurante de comida criolla",
+      "viajes por Argentina",
+      "series de Netflix",
+      "caminatas en el delta"
+    ],
+    "groups_to_join": [
+      "Amigos de Villa Urquiza",
+      "Marketing en Argentina",
+      "Dueños de Honda CR-V"
+    ],
+    "conversation_starters": [
+      "¿Alguien probó el nuevo restó en Villa Urquiza?",
+      "¿Qué series están viendo?",
+      "¿Alguien conoce algún lugar divertido para ir con amigos este fin de semana?"
+    ],
+    "pain_points": [
+      "Demoras en la entrega de autos alquilados",
+      "Precios altos para alquilar un auto por un fin de semana",
+      "Falta de opciones de alquiler de autos cerca de mi barrio"
+    ]
+  },
+  {
+    "id": "persona-031",
+    "name": "Martín",
+    "gender": "male",
+    "age": 24,
+    "job": "Mecánico",
+    "location": "Flores, CABA",
+    "car": "VW Nivus",
+    "personality": "Visual thinker, creative, freelancer mindset",
+    "tone": "casual",
+    "emoji_frequency": "none",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a young Argentine man, age 24, mecánico, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Mecánico | Flores, CABA 🚗",
+    "bio_instagram": "Mecánico en Flores ✨",
+    "interests": [
+      "autos",
+      "tecnología",
+      "viajes"
+    ],
+    "groups_to_join": [
+      "Compra Venta Autos CABA",
+      "Autos Usados Argentina"
+    ],
+    "conversation_starters": [
+      "Alguien tiene experiencia con...?"
+    ],
+    "pain_points": [
+      "Miedo a prestar el auto",
+      "Falta de garantías"
+    ]
+  },
+  {
+    "id": "persona-032",
+    "name": "Carolina",
+    "gender": "female",
+    "age": 35,
+    "job": "Directora de RRHH",
+    "location": "Boedo, CABA",
+    "car": "Fiat 500",
+    "personality": "Systems thinker, process-oriented, logical",
+    "tone": "professional",
+    "emoji_frequency": "low",
+    "photo_prompt": {
+      "positive": "Professional portrait photo of a adult Argentine woman, age 35, directora de rrhh, natural lighting, friendly expression, casual professional attire, urban Buenos Aires background, high quality, 8k, realistic, natural skin texture",
+      "negative": "cartoon, anime, illustration, painting, drawing, artificial, plastic, fake, oversaturated, overexposed, underexposed, blurry, low quality, watermark, text, logo",
+      "style": "photorealistic portrait",
+      "guidance_scale": 7.5,
+      "steps": 30
+    },
+    "bio_facebook": "Caro, RRHH",
+    "bio_instagram": "Directora de RRHH 📈 | Amante del orden y la lógica 🤓 | Boedo, CABA 📍",
+    "interests": [
+      "libros de no ficción",
+      "viajes en auto",
+      "caminatas en la ciudad",
+      "tecnología",
+      "gestión de equipos",
+      "fútbol"
+    ],
+    "groups_to_join": [
+      "Amigos de Boedo",
+      "Directores de RRHH en Argentina",
+      "Dueños de Fiat 500"
+    ],
+    "conversation_starters": [
+      "¿Alguien conoce algún buen lugar para desayunar en Boedo?",
+      "¿Cómo manejan el estrés en el trabajo?",
+      "¿Qué les parece si organizamos una salida en auto para el fin de semana?"
+    ],
+    "pain_points": [
+      "No poder encontrar autos disponibles en las fechas que necesito",
+      "Los precios de alquiler de autos son demasiado altos",
+      "La falta de transparencia en los contratos de alquiler de autos"
+    ]
+  }
+]

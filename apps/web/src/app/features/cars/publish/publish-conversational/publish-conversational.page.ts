@@ -168,9 +168,9 @@ import { QUESTIONS_CONFIG, formatQuestionTitle } from './questions.config';
             }
             @case ('photos') {
               <app-photos-question
-                [brandName]="formService.selectedBrand()?.name"
-                [modelName]="formService.selectedModel()?.name"
-                [year]="formService.selectedYear()"
+                [brandName]="formService.selectedBrand()?.name ?? ''"
+                [modelName]="formService.selectedModel()?.name ?? ''"
+                [year]="formService.selectedYear() ?? undefined"
                 (photosChanged)="onPhotosChanged($event)"
                 (vehicleDetected)="onVehicleAutoDetected($event)"
                 (requestAiGeneration)="onRequestAiGeneration()"
@@ -178,16 +178,16 @@ import { QUESTIONS_CONFIG, formatQuestionTitle } from './questions.config';
             }
             @case ('mileage') {
               <app-mileage-question
-                [initialValue]="formService.getAnswer('mileage')?.value"
+                [initialValue]="getMileageValue()"
                 (mileageChanged)="onMileageChanged($event)"
               />
             }
             @case ('price') {
               <app-price-question
                 [fipeValue]="formService.fipeValue()"
-                [mileage]="formService.getAnswer('mileage')?.value"
+                [mileage]="getMileageValue()"
                 [year]="formService.selectedYear()"
-                [initialValue]="formService.getAnswer('price')?.value"
+                [initialValue]="getPriceValue()"
                 (priceChanged)="onPriceChanged($event)"
                 (dynamicPricingChanged)="onDynamicPricingChanged($event)"
               />
@@ -322,8 +322,8 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
       brand: this.formService.selectedBrand()?.name || '',
       model: this.formService.selectedModel()?.name || '',
       year: this.formService.selectedYear() || 0,
-      mileage: (this.formService.getAnswer('mileage')?.value as number) || 0,
-      price: (this.formService.getAnswer('price')?.value as number) || 0,
+      mileage: this.getMileageValue() || 0,
+      price: this.getPriceValue() || 0,
       location: {
         city: this.formService.locationAddress()?.city || '',
         state: this.formService.locationAddress()?.state || '',
@@ -332,6 +332,17 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
       isDynamicPricing: this.isDynamicPricing(),
     };
   });
+
+  // Typed getters for answer values
+  getMileageValue(): number | null {
+    const answer = this.formService.getAnswer('mileage');
+    return typeof answer?.value === 'number' ? answer.value : null;
+  }
+
+  getPriceValue(): number | null {
+    const answer = this.formService.getAnswer('price');
+    return typeof answer?.value === 'number' ? answer.value : null;
+  }
 
   ngOnInit(): void {
     this.publishForm = this.formService.initForm();
@@ -425,7 +436,16 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
       position: toVehiclePosition(p.position),
       aiValidation: {
         quality: p.quality?.score,
-        vehicle: p.vehicle,
+        vehicle:
+          p.vehicle?.brand && p.vehicle?.model
+            ? {
+                brand: p.vehicle.brand,
+                model: p.vehicle.model,
+                year: p.vehicle.year,
+                color: p.vehicle.color,
+                confidence: p.vehicle.confidence,
+              }
+            : undefined,
         plates: p.plates?.detected
           ? [{ text: '', confidence: 100, blurred: true }]
           : undefined,
