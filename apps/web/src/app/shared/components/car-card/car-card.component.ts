@@ -264,8 +264,9 @@ export class CarCardComponent implements OnInit, OnDestroy {
    */
   readonly hasInstantBooking = computed(() => {
     const car = this._car();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (car as any)?.instant_booking_enabled === true;
+    if (!car) return false;
+    // Check for instant_booking_enabled which may come from extended car data
+    return 'instant_booking_enabled' in car && car.instant_booking_enabled === true;
   });
 
   readonly topFeatures = computed(() => {

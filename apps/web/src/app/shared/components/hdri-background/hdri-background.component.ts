@@ -94,8 +94,12 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
    @Input() autoRotate = true;
    @Input() rotateSpeed = 0.000005; // Extremely slow, barely perceptible rotation
+   @Input() rotateSpeedMobile = 0.000001; // Even slower on mobile to reduce motion sickness
    @Input() enableInteraction = true;
    @Input() initialRotationY = 1.24; // Start showing the city in night mode
+
+   // Detect mobile for slower rotation
+   private isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   @Output() hdriLoaded = new EventEmitter<void>();
 
@@ -130,6 +134,10 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
   // Performance: Time-based animation (no FPS throttling - let rAF handle it)
   private lastFrameTime = 0;
+
+  // Mobile auto-rotate: Use setInterval instead of rAF to avoid browser throttling
+  private mobileAutoRotateInterval: ReturnType<typeof setInterval> | null = null;
+  private readonly MOBILE_AUTO_ROTATE_INTERVAL = 33; // ~30fps fixed interval
 
   // Performance: Visibility Detection (pause when not in viewport)
   private isVisible = true;
@@ -555,8 +563,38 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
    * @see https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices
    * @see https://web.dev/speed-rendering/
    */
+  /**
+   * Mobile auto-rotate using setInterval instead of rAF
+   * This avoids browser throttling that causes stuttering on mobile
+   * @see https://motion.dev/magazine/when-browsers-throttle-requestanimationframe
+   */
+  private startMobileAutoRotate(): void {
+    if (!this.isMobile || !this.autoRotate || this.mobileAutoRotateInterval) return;
+
+    this.mobileAutoRotateInterval = setInterval(() => {
+      if (this.isDestroyed || this.isDragging || !this.isVisible) return;
+
+      // Fixed increment per interval (33ms * speed)
+      const increment = this.rotateSpeedMobile * this.MOBILE_AUTO_ROTATE_INTERVAL;
+      this.targetRotationY += increment;
+      this.rotationY += increment; // Direct update for smoothness
+    }, this.MOBILE_AUTO_ROTATE_INTERVAL);
+  }
+
+  private stopMobileAutoRotate(): void {
+    if (this.mobileAutoRotateInterval) {
+      clearInterval(this.mobileAutoRotateInterval);
+      this.mobileAutoRotateInterval = null;
+    }
+  }
+
   private startRenderLoop(): void {
     if (this.isDestroyed) return;
+
+    // Start mobile-specific auto-rotate interval
+    if (this.isMobile && this.autoRotate) {
+      this.startMobileAutoRotate();
+    }
 
     const render = (currentTime: number): void => {
       if (this.isDestroyed) return;
@@ -584,8 +622,8 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       const clampedDelta = Math.min(deltaTime, 100);
 
       // 4. Update target rotation if auto-rotating (pure time-based, not frame-based)
-      if (this.autoRotate && !this.isDragging) {
-        // rotateSpeed is radians per millisecond
+      // On mobile: auto-rotate is handled by setInterval (see startMobileAutoRotate)
+      if (this.autoRotate && !this.isDragging && !this.isMobile) {
         this.targetRotationY += this.rotateSpeed * clampedDelta;
       }
 
@@ -784,6 +822,9 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       cancelAnimationFrame(this.animationId);
       this.animationId = null;
     }
+
+    // Stop mobile auto-rotate interval
+    this.stopMobileAutoRotate();
 
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();

@@ -9,7 +9,7 @@ import {
   PushNotificationSchema,
   Token,
 } from '@capacitor/push-notifications';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { AuthService } from '@core/services/auth/auth.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
@@ -56,7 +56,7 @@ export class PushNotificationService {
   /**
    * Observable de clicks en notificaciones
    */
-  get notificationClicks$() {
+  get notificationClicks$(): Observable<ActionPerformed | { action: string; notification?: NotificationOptions }> {
     if (this.isNative) {
       return this.nativeNotificationClicks$.asObservable();
     }
@@ -66,7 +66,7 @@ export class PushNotificationService {
   /**
    * Observable de mensajes recibidos
    */
-  get messages$() {
+  get messages$(): Observable<PushNotificationSchema | object> {
     if (this.isNative) {
       return this.nativeMessages$.asObservable();
     }

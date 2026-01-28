@@ -244,9 +244,7 @@ export class OwnerCheckOutPage implements OnInit {
       // 2. Marcar como devuelto (in_progress → returned)
       // NOTA: Solo el RENTER puede marcar como devuelto (RPC booking_v2_return_vehicle)
       // Si returned_at ya tiene valor, saltamos este paso
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const bookingAny = booking as any;
-      if (!bookingAny.returned_at) {
+      if (!booking.returned_at) {
         this.logger.warn(
           '[OwnerCheckOut] Booking no tiene returned_at. El renter debe marcar como devuelto primero.',
           'OwnerCheckOutPage',

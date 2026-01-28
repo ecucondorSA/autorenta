@@ -1,5 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
-import { inject, PLATFORM_ID, afterNextRender } from '@angular/core';
+import { afterNextRender } from '@angular/core';
 
 /**
  * Platform Utilities
@@ -32,8 +31,7 @@ import { inject, PLATFORM_ID, afterNextRender } from '@angular/core';
  * ```
  */
 export function isBrowser(): boolean {
-  const platformId = inject(PLATFORM_ID);
-  return isPlatformBrowser(platformId);
+  return typeof window !== 'undefined' && typeof document !== 'undefined';
 }
 
 /**

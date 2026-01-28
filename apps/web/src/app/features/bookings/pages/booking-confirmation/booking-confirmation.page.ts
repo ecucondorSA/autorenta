@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentProvider } from '@core/interfaces/payment-gateway.interface';
+import { Booking } from '@core/models';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { PdfWorkerService, ReceiptPdfData } from '@core/services/infrastructure/pdf-worker.service';
 import { normalizeRecordToUsd } from '@core/utils/currency.utils';
@@ -21,6 +22,16 @@ interface PaymentDetails {
   captureId?: string;
   preferenceId?: string;
   paymentId?: string;
+}
+
+/** Query params for payment confirmation */
+interface PaymentQueryParams {
+  provider?: string;
+  orderId?: string;
+  captureId?: string;
+  preference_id?: string;
+  payment_id?: string;
+  status?: string;
 }
 
 /**
@@ -64,8 +75,7 @@ export class BookingConfirmationPage implements OnInit {
   /**
    * Detalles del booking
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  booking = signal<any>(null);
+  booking = signal<Booking | null>(null);
 
   /**
    * Estado de la confirmación
@@ -205,18 +215,13 @@ export class BookingConfirmationPage implements OnInit {
    * Extrae detalles del pago de los query params
    */
   private extractPaymentDetails(queryParams: unknown): void {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const provider = (queryParams as any)['provider'] as PaymentProvider;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const orderId = (queryParams as any)['orderId'];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const captureId = (queryParams as any)['captureId'];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const preferenceId = (queryParams as any)['preference_id'];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const paymentId = (queryParams as any)['payment_id'];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mpStatus = (queryParams as any)['status'];
+    const params = queryParams as PaymentQueryParams;
+    const provider = params.provider as PaymentProvider | undefined;
+    const orderId = params.orderId;
+    const captureId = params.captureId;
+    const preferenceId = params.preference_id;
+    const paymentId = params.payment_id;
+    const mpStatus = params.status;
 
     if (!provider) {
       this.status.set('error');
@@ -350,17 +355,15 @@ export class BookingConfirmationPage implements OnInit {
 
     this.downloadingReceipt.set(true);
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const b = booking as any;
-      const amountUsd = this.normalizeBookingAmountToUsd(b);
+      const amountUsd = this.normalizeBookingAmountToUsd(booking);
       const receiptData: ReceiptPdfData = {
-        receipt_number: `RCP-${b.id?.slice(0, 8).toUpperCase() || 'N/A'}`,
-        booking_id: b.id,
+        receipt_number: `RCP-${booking.id?.slice(0, 8).toUpperCase() || 'N/A'}`,
+        booking_id: booking.id,
         payment_id: payment.paymentId || payment.orderId,
         payment_date: this.confirmedAt().toISOString(),
         payer: {
-          full_name: b.renter_name || 'Cliente',
-          email: b.renter_email || '',
+          full_name: booking.renter_name || 'Cliente',
+          email: (booking as Record<string, unknown>)['renter_email'] as string || '',
           gov_id_number: '',
         },
         amount_cents: Math.round(amountUsd * 100),
@@ -370,7 +373,7 @@ export class BookingConfirmationPage implements OnInit {
         provider_reference: payment.paymentId || payment.orderId || payment.captureId,
         line_items: [
           {
-            description: `Reserva - ${b.car_brand || b.car?.brand || ''} ${b.car_model || b.car?.model || ''} (${b.days_count || 1} días)`,
+            description: `Reserva - ${booking.car_brand || booking.car?.brand || ''} ${booking.car_model || booking.car?.model || ''} (${booking.days_count || 1} días)`,
             amount_cents: Math.round(amountUsd * 100),
           },
         ],
@@ -389,11 +392,9 @@ export class BookingConfirmationPage implements OnInit {
   /**
    * Genera HTML del recibo de pago
    */
-  private generateReceiptHTML(booking: unknown, _payment: PaymentDetails): string {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const b = booking as any;
+  private generateReceiptHTML(booking: Booking, _payment: PaymentDetails): string {
     const confirmDate = this.formatDate(this.confirmedAt());
-    const totalAmount = this.formatCurrency(this.normalizeBookingAmountToUsd(b), 'USD');
+    const totalAmount = this.formatCurrency(this.normalizeBookingAmountToUsd(booking), 'USD');
 
     return `
 <!DOCTYPE html>
@@ -401,7 +402,7 @@ export class BookingConfirmationPage implements OnInit {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recibo de Pago - ${b.id}</title>
+  <title>Recibo de Pago - ${booking.id}</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -515,19 +516,19 @@ export class BookingConfirmationPage implements OnInit {
       <h2 class="section-title">Información de la Reserva</h2>
       <div class="detail-row">
         <span class="detail-label">ID de Reserva:</span>
-        <span class="detail-value">${b.id}</span>
+        <span class="detail-value">${booking.id}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Vehículo:</span>
-        <span class="detail-value">${b.car?.brand || ''} ${b.car?.model || ''}</span>
+        <span class="detail-value">${booking.car?.brand || ''} ${booking.car?.model || ''}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Desde:</span>
-        <span class="detail-value">${this.formatDate(b.start_date)}</span>
+        <span class="detail-value">${this.formatDate(booking.start_at)}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Hasta:</span>
-        <span class="detail-value">${this.formatDate(b.end_date)}</span>
+        <span class="detail-value">${this.formatDate(booking.end_at)}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Estado:</span>

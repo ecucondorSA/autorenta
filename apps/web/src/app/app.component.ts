@@ -544,15 +544,15 @@ export class AppComponent implements OnInit {
     }
 
     // Subscribe to push notification clicks
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.pushNotificationService.notificationClicks$ as any)
+    this.pushNotificationService.notificationClicks$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(
-        (action: { action: string; notification?: { data?: Record<string, unknown> } }) => {
-          console.log('[Push] Notification action performed:', action);
+        (action) => {
+          const notificationAction = action as { action: string; notification?: { data?: Record<string, unknown> } };
+          console.log('[Push] Notification action performed:', notificationAction);
 
           // Extract navigation data from notification
-          const data = action.notification?.data as
+          const data = notificationAction.notification?.data as
             | { cta_link?: string; route?: string; bookingId?: string }
             | undefined;
           const route = data?.cta_link || data?.route;
@@ -570,10 +570,9 @@ export class AppComponent implements OnInit {
       );
 
     // Subscribe to push messages received while app is open
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.pushNotificationService.messages$ as any)
+    this.pushNotificationService.messages$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((message: unknown) => {
+      .subscribe((message) => {
         console.log('[Push] Message received while app open:', message);
         // Optionally show an in-app notification or toast
       });

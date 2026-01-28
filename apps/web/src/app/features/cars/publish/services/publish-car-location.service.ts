@@ -106,10 +106,9 @@ export class PublishCarLocationService {
       let msg = 'No pudimos obtener tu ubicación.';
 
       // Handle GeolocationPositionError
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if ((error as any).code !== undefined) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        switch ((error as any).code) {
+      const geoError = error as GeolocationPositionError | Error;
+      if ('code' in geoError && typeof geoError.code === 'number') {
+        switch (geoError.code) {
           case 1: // PERMISSION_DENIED
             msg = 'Permiso denegado. Habilita la ubicación en tu navegador para continuar.';
             break;
@@ -284,10 +283,12 @@ export class PublishCarLocationService {
    * Find value in Mapbox context array
    */
   private findContextValue(context: unknown[], type: string): string | null {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const item = context.find((ctx: any) => ctx.id?.startsWith(type));
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return item ? (item as any).text : null;
+    interface MapboxContext { id?: string; text?: string }
+    const item = context.find((ctx) => {
+      const mapboxCtx = ctx as MapboxContext;
+      return mapboxCtx.id?.startsWith(type);
+    });
+    return item ? (item as MapboxContext).text ?? null : null;
   }
 
   /**

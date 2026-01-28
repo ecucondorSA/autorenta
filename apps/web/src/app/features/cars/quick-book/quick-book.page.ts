@@ -146,8 +146,8 @@ export class QuickBookPage {
     const car = this.car();
     if (!car) return '/assets/placeholder-car.jpg';
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const photos = car.photos || (car as any).car_photos;
+    // Check for photos array (may come as 'photos' or 'car_photos' from different queries)
+    const photos = car.photos || ('car_photos' in car ? (car.car_photos as typeof car.photos) : undefined);
     if (photos && photos.length > 0 && photos[0].url) {
       return photos[0].url;
     }
