@@ -232,10 +232,10 @@ SI EL USUARIO ES GROSERO O IRRESPETUOSO:
 - Agregá [INTENT:RUDE] al final
 
 LINKS ÚTILES (incluí según el contexto):
-- Publicar auto: https://autorenta.app/publicar
-- Ver autos disponibles: https://autorenta.app/autos
-- Cómo funciona: https://autorenta.app/como-funciona
-- Preguntas frecuentes: https://autorenta.app/faq
+- Publicar auto: https://autorentar.com/publicar
+- Ver autos disponibles: https://autorentar.com/autos
+- Cómo funciona: https://autorentar.com/como-funciona
+- Preguntas frecuentes: https://autorentar.com/faq
 
 Sé conciso (máximo 3-4 oraciones). No uses emojis excesivos.`
 }
@@ -313,10 +313,10 @@ function addSmartLinks(response: string, intent: string | null): string {
   if (!intent) return response
 
   const links: Record<string, string> = {
-    PUBLICAR: '\n\n👉 Publicá tu auto: https://autorenta.app/publicar',
-    ALQUILAR: '\n\n👉 Ver autos disponibles: https://autorenta.app/autos',
-    PRECIO: '\n\n👉 Calculá tus ganancias: https://autorenta.app/publicar',
-    DUDAS: '\n\n👉 Más info: https://autorenta.app/como-funciona',
+    PUBLICAR: '\n\n👉 Publicá tu auto: https://autorentar.com/publicar',
+    ALQUILAR: '\n\n👉 Ver autos disponibles: https://autorentar.com/autos',
+    PRECIO: '\n\n👉 Calculá tus ganancias: https://autorentar.com/publicar',
+    DUDAS: '\n\n👉 Más info: https://autorentar.com/como-funciona',
   }
 
   return response + (links[intent] || '')
@@ -343,27 +343,27 @@ Ahora elija una contraseña segura (mínimo 6 caracteres):`,
 📱 Teléfono: Verificado via WhatsApp
 
 Ya puede ingresar a la app:
-👉 https://autorenta.app/login
+👉 https://autorentar.com/auth/login
 
 Use su email y la contraseña que eligió para acceder.`,
 
   emailExists: `Este email ya está registrado en AutoRenta.
 
 ¿Ya tiene cuenta? Puede ingresar directamente:
-👉 https://autorenta.app/login
+👉 https://autorentar.com/auth/login
 
 Si olvidó su contraseña:
-👉 https://autorenta.app/auth/reset-password`,
+👉 https://autorentar.com/auth/reset-password`,
 
   accountError: `Hubo un problema al crear su cuenta. Por favor, intente nuevamente más tarde o regístrese directamente en:
-👉 https://autorenta.app/register`,
+👉 https://autorentar.com/auth/register`,
 
   offerRegistration: `¿Le gustaría crear su cuenta ahora mismo? Solo necesito su email y una contraseña.
 
 Responda "Sí" para comenzar o "No" si prefiere hacerlo después.`,
 
   registrationDeclined: `Entendido. Cuando esté listo, puede registrarse en:
-👉 https://autorenta.app/register
+👉 https://autorentar.com/auth/register
 
 ¿Hay algo más en lo que pueda ayudarlo?`,
 }
