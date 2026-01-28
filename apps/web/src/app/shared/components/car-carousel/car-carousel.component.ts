@@ -30,8 +30,8 @@ import { BrowseStore } from '../../../features/cars/browse/browse.store';
           @for (car of cars; track car.carId) {
             <div [id]="'card-' + car.carId"
                  class="snap-center shrink-0 min-w-[70vw] sm:min-w-[280px] h-full">
-              <app-car-mini-card
-                [car]="car"
+              <app-car-mini-card 
+                [car]="car" 
                 [isSelected]="selectedCarId === car.carId"
                 (cardClicked)="onCardClick(car.carId)">
               </app-car-mini-card>

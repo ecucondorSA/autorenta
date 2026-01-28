@@ -62,8 +62,19 @@ serve(async (req) => {
       if (error instanceof RateLimitError) {
         return error.toResponse();
       }
-      // Don't block on rate limiter errors - fail open for availability
-      console.error('[RateLimit] Error enforcing rate limit:', error);
+      // SECURITY FIX (2026-01-28): Fail-closed for rate limiter errors
+      log.error('[RateLimit] Error enforcing rate limit - failing closed:', error);
+      return new Response(
+        JSON.stringify({
+          error: 'Service temporarily unavailable',
+          code: 'RATE_LIMITER_ERROR',
+          retry: true,
+        }),
+        {
+          status: 503,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' },
+        }
+      );
     }
     // Verificar variables de entorno - PRODUCTION TOKEN (usando módulo compartido)
     const MP_ACCESS_TOKEN = getMercadoPagoAccessToken('mercadopago-create-preference');
