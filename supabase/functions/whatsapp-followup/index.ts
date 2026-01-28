@@ -8,6 +8,12 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const WAHA_BASE_URL = Deno.env.get('WAHA_BASE_URL') || 'http://localhost:3000'
 const WAHA_SESSION = Deno.env.get('WAHA_SESSION') || 'default'
+const WAHA_API_KEY = Deno.env.get('WAHA_API_KEY') || ''
+
+const wahaHeaders = {
+  'Content-Type': 'application/json',
+  'X-Api-Key': WAHA_API_KEY,
+}
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
@@ -59,7 +65,7 @@ async function sendMessage(chatId: string, text: string): Promise<boolean> {
   try {
     const res = await fetch(`${WAHA_BASE_URL}/api/sendText`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: wahaHeaders,
       body: JSON.stringify({
         session: WAHA_SESSION,
         chatId,

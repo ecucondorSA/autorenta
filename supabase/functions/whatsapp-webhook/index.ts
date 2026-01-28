@@ -16,6 +16,13 @@ const DEBOUNCE_MS = 4000 // 4 segundos de espera para agrupar mensajes
 const GROQ_MODEL = 'llama-3.3-70b-versatile'
 const WAHA_BASE_URL = Deno.env.get('WAHA_BASE_URL') || 'http://localhost:3000'
 const WAHA_SESSION = Deno.env.get('WAHA_SESSION') || 'default'
+const WAHA_API_KEY = Deno.env.get('WAHA_API_KEY') || ''
+
+// Headers comunes para WAHA
+const wahaHeaders = {
+  'Content-Type': 'application/json',
+  'X-Api-Key': WAHA_API_KEY,
+}
 
 // Upstash Redis REST API
 const UPSTASH_REDIS_URL = Deno.env.get('UPSTASH_REDIS_REST_URL')
@@ -72,13 +79,13 @@ async function sendTyping(chatId: string): Promise<void> {
   try {
     await fetch(`${WAHA_BASE_URL}/api/sendSeen`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: wahaHeaders,
       body: JSON.stringify({ session: WAHA_SESSION, chatId }),
     })
 
     await fetch(`${WAHA_BASE_URL}/api/startTyping`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: wahaHeaders,
       body: JSON.stringify({ session: WAHA_SESSION, chatId }),
     })
   } catch (e) {
@@ -90,7 +97,7 @@ async function stopTyping(chatId: string): Promise<void> {
   try {
     await fetch(`${WAHA_BASE_URL}/api/stopTyping`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: wahaHeaders,
       body: JSON.stringify({ session: WAHA_SESSION, chatId }),
     })
   } catch (e) {
@@ -101,7 +108,7 @@ async function stopTyping(chatId: string): Promise<void> {
 async function sendMessage(chatId: string, text: string): Promise<void> {
   await fetch(`${WAHA_BASE_URL}/api/sendText`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: wahaHeaders,
     body: JSON.stringify({
       session: WAHA_SESSION,
       chatId,
