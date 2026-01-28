@@ -212,3 +212,6 @@ mcp_config.*.json
 # Pitch decks (don't belong in repo)
 *.pptx
 deck-assets/
+
+# Android signing keys - NEVER commit
+apps/web/android/keystore/
