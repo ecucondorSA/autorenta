@@ -17,6 +17,7 @@ import { AlertController } from '@ionic/angular';
 import { of } from 'rxjs';
 import type { Booking } from '../../../core/models';
 import { BookingDetailPage } from './booking-detail.page';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('BookingDetailPage - return checklist', () => {
   let component: BookingDetailPage;
@@ -67,6 +68,7 @@ describe('BookingDetailPage - return checklist', () => {
     await TestBed.configureTestingModule({
       imports: [BookingDetailPage],
       providers: [
+        ...testProviders,
         { provide: BookingsService, useValue: bookingsService },
         { provide: LoggerService, useValue: loggerService },
         {

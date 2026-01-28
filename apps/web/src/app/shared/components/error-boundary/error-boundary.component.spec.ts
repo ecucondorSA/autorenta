@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { ErrorBoundaryComponent } from './error-boundary.component';
+import { testProviders } from '@app/testing/test-providers';
 
 // Mock LoggerService
 const mockLogger = {
@@ -35,7 +36,7 @@ describe('ErrorBoundaryComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TestHostComponent],
-      providers: [{ provide: LoggerService, useValue: mockLogger }],
+      providers: [...testProviders, { provide: LoggerService, useValue: mockLogger }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestHostComponent);

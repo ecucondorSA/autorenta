@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { PublishCarPhotoService, PhotoPreview } from './publish-car-photo.service';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('PublishCarPhotoService', () => {
   let service: PublishCarPhotoService;
@@ -13,11 +14,9 @@ describe('PublishCarPhotoService', () => {
     notificationsSpy = jasmine.createSpyObj('NotificationManagerService', ['warning']);
 
     TestBed.configureTestingModule({
-      providers: [
-        PublishCarPhotoService,
+      providers: [...testProviders, PublishCarPhotoService,
         { provide: CarsService, useValue: carsServiceSpy },
-        { provide: NotificationManagerService, useValue: notificationsSpy },
-      ],
+        { provide: NotificationManagerService, useValue: notificationsSpy },],
     });
 
     service = TestBed.inject(PublishCarPhotoService);

@@ -8,6 +8,7 @@ import { DebugElement } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IconButtonComponent } from './icon-button.component';
+import { testProviders } from '@app/testing/test-providers';
 
 describe('IconButtonComponent', () => {
   let component: IconButtonComponent;
@@ -15,8 +16,7 @@ describe('IconButtonComponent', () => {
   let buttonElement: DebugElement;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [IconButtonComponent, BrowserAnimationsModule]
+    await TestBed.configureTestingModule({ providers: [...testProviders], imports: [IconButtonComponent, BrowserAnimationsModule]
     }).compileComponents();
 
     fixture = TestBed.createComponent(IconButtonComponent);

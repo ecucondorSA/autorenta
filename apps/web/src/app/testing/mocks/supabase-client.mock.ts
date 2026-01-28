@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+declare const jasmine: any;
+
 /**
  * Creates a comprehensive mock of the Supabase Client.
  * Handles chained calls like .from().select().order().
