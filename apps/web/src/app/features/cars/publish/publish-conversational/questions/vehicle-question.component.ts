@@ -36,42 +36,40 @@ import {
 
     <div class="space-y-6">
       <!-- Search input with camera button -->
-      <div class="flex gap-2">
+      <div class="flex gap-3">
         <div class="relative flex-1">
+          <!-- Search icon (always visible, inside input) -->
+          <svg
+            class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted pointer-events-none z-10"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
           <input
             type="text"
             [(ngModel)]="searchQuery"
             (ngModelChange)="onSearch($event)"
             placeholder="Buscar marca..."
-            class="w-full px-4 py-4 bg-surface-raised border border-border-default rounded-xl text-lg focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all"
-            [class.pl-12]="!searchQuery"
+            class="w-full pl-12 pr-12 py-4 bg-surface-raised border-2 border-border-default rounded-2xl text-lg focus:ring-0 focus:border-cta-default transition-all placeholder:text-text-muted"
             [class.border-cta-default]="isFocused()"
             (focus)="isFocused.set(true)"
             (blur)="onBlur()"
           />
-          @if (!searchQuery) {
-            <svg
-              class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted pointer-events-none"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          }
           @if (searchQuery && !isLoading()) {
             <button
               type="button"
               (click)="clearSearch()"
-              class="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary"
+              class="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-surface-secondary hover:bg-surface-hover text-text-muted hover:text-text-primary transition-all"
             >
-              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           }
@@ -89,12 +87,12 @@ import {
         <button
           type="button"
           (click)="openScanner()"
-          class="flex-shrink-0 w-14 h-14 bg-cta-default/10 hover:bg-cta-default/20 border border-cta-default/30 rounded-xl flex items-center justify-center transition-all active:scale-95"
+          class="flex-shrink-0 w-14 h-14 bg-cta-default/10 hover:bg-cta-default/20 border-2 border-cta-default/30 hover:border-cta-default rounded-2xl flex items-center justify-center transition-all active:scale-95 hover:shadow-lg"
           title="Escanear auto con cámara"
         >
-          <svg class="w-6 h-6 text-cta-default" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+          <svg class="w-6 h-6 text-cta-default" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
         </button>
       </div>
@@ -142,27 +140,28 @@ import {
       <!-- Popular brands grid -->
       @if (!showResults()) {
         <div class="space-y-4">
-          <p class="text-sm font-medium text-text-muted uppercase tracking-wider">Marcas populares</p>
-          <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
-            @for (brand of popularBrands(); track brand.code) {
+          <p class="text-xs font-semibold text-text-muted uppercase tracking-widest">Marcas populares</p>
+          <div class="grid grid-cols-3 gap-3">
+            @for (brand of popularBrands(); track brand.code; let i = $index) {
               <button
                 type="button"
                 (click)="selectBrand(brand)"
-                class="flex flex-col items-center gap-2 p-4 bg-surface-raised border border-border-default rounded-xl hover:border-cta-default hover:shadow-md transition-all group"
+                class="flex flex-col items-center justify-center gap-2.5 p-4 bg-surface-base border-2 border-border-default rounded-2xl hover:border-cta-default hover:shadow-premium-md active:scale-[0.98] transition-all duration-200 group min-h-[100px]"
+                [style.animation-delay.ms]="i * 50"
               >
                 @if (getBrandLogo(brand.name); as logo) {
                   <img
                     [src]="logo"
                     [alt]="brand.name"
-                    class="w-10 h-10 object-contain group-hover:scale-110 transition-transform"
+                    class="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-200"
                     loading="lazy"
                   />
                 } @else {
-                  <div class="w-10 h-10 bg-surface-secondary rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <span class="text-lg font-bold text-text-muted">{{ brand.name.charAt(0) }}</span>
+                  <div class="w-12 h-12 bg-surface-secondary rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:bg-cta-default/10 transition-all duration-200">
+                    <span class="text-xl font-bold text-text-muted group-hover:text-cta-default">{{ brand.name.charAt(0) }}</span>
                   </div>
                 }
-                <span class="text-xs font-medium text-text-secondary group-hover:text-cta-default transition-colors">
+                <span class="text-xs font-semibold text-text-secondary group-hover:text-cta-default transition-colors text-center leading-tight line-clamp-1">
                   {{ brand.name }}
                 </span>
               </button>
