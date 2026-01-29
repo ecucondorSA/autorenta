@@ -374,18 +374,33 @@ export class AppComponent implements OnInit {
   }
 
   private syncLayoutFromRoute(route: ActivatedRoute): void {
+    // Collect all route data from root to deepest child
+    const allRouteData: Record<string, unknown>[] = [];
     let current: ActivatedRoute | null = route;
 
-    while (current?.firstChild) {
+    while (current) {
+      if (current.snapshot.data) {
+        allRouteData.push(current.snapshot.data);
+      }
       current = current.firstChild;
     }
 
-    const layout = current?.snapshot.data?.['layout'];
+    // Helper to find first truthy value in route chain
+    const findInChain = (key: string): unknown => {
+      for (const data of allRouteData) {
+        if (data[key] !== undefined) {
+          return data[key];
+        }
+      }
+      return undefined;
+    };
+
+    const layout = findInChain('layout');
     this.fullBleedLayout.set(layout === 'full-bleed');
 
-    this.hideFooter.set(Boolean(current?.snapshot.data?.['hideFooter']));
-    this.hideMobileNav.set(Boolean(current?.snapshot.data?.['hideMobileNav']));
-    this.hideHeader.set(Boolean(current?.snapshot.data?.['hideHeader']));
+    this.hideFooter.set(Boolean(findInChain('hideFooter')));
+    this.hideMobileNav.set(Boolean(findInChain('hideMobileNav')));
+    this.hideHeader.set(Boolean(findInChain('hideHeader')));
     this.mobileBottomNavPortal.setHidden(this.hideMobileNav());
 
     // Detectar si estamos en el homepage para header transparente

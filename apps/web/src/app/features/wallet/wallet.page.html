@@ -49,25 +49,7 @@
     }
 
     <!-- ============================================ -->
-    <!-- SECCIÓN 1: HERO - TU ESTADO EN EL CLUB -->
-    <!-- ============================================ -->
-    <section class="rounded-2xl sm:rounded-3xl overflow-hidden">
-      <app-club-membership-card
-        (join)="handleJoinClub($event)"
-        (viewPlans)="handleViewClubPlans()"
-        (viewHistory)="handleViewClubHistory()"
-        (renew)="handleRenewClub()"
-        (recharge)="handleRechargeClub()"
-      ></app-club-membership-card>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- SECCIÓN 1B: PLANES DEL CLUB -->
-    <!-- ============================================ -->
-    <app-club-plans-preview></app-club-plans-preview>
-
-    <!-- ============================================ -->
-    <!-- SECCIÓN 2: SALDO CASH (SECUNDARIA) -->
+    <!-- SECCIÓN 1: SALDO CASH (PRINCIPAL) -->
     <!-- ============================================ -->
     <section
       appStaggerEnter
@@ -229,6 +211,24 @@
         </div>
       }
     </section>
+
+    <!-- ============================================ -->
+    <!-- SECCIÓN 2: TU ESTADO EN EL CLUB -->
+    <!-- ============================================ -->
+    <section class="rounded-2xl sm:rounded-3xl overflow-hidden">
+      <app-club-membership-card
+        (join)="handleJoinClub($event)"
+        (viewPlans)="handleViewClubPlans()"
+        (viewHistory)="handleViewClubHistory()"
+        (renew)="handleRenewClub()"
+        (recharge)="handleRechargeClub()"
+      ></app-club-membership-card>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECCIÓN 2B: PLANES DEL CLUB -->
+    <!-- ============================================ -->
+    <app-club-plans-preview></app-club-plans-preview>
 
     <!-- ============================================ -->
     <!-- SECCIÓN 3: HISTORIAL UNIFICADO -->
