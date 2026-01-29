@@ -78,7 +78,7 @@ import { ARPreviewComponent } from '../ar-preview/ar-preview.component';
              </div>
              <div class="bg-white/5 rounded-xl p-3 text-center border border-white/5">
                 <div class="text-white/50 text-xs uppercase font-bold tracking-wider">Asientos</div>
-                <div class="text-white font-bold mt-1">4 Pasajeros</div>
+                <div class="text-white font-bold mt-1 whitespace-nowrap">4 plazas</div>
              </div>
              <div class="bg-white/5 rounded-xl p-3 text-center border border-white/5">
                 <div class="text-white/50 text-xs uppercase font-bold tracking-wider">0-100</div>

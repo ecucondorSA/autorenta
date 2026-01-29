@@ -130,12 +130,12 @@ export class MobileMenuDrawerComponent implements OnDestroy {
         { label: 'Mi Perfil', route: '/profile', icon: 'user' },
         { label: 'Wallet', route: '/wallet', icon: 'wallet' },
         {
-          label: 'Verificacion',
+          label: 'Verificación',
           route: '/profile/verification',
           icon: 'check-circle',
           badge: 'IMPORTANTE',
         },
-        { label: 'Configuracion', route: '/profile/preferences', icon: 'settings' },
+        { label: 'Configuración', route: '/profile/preferences', icon: 'settings' },
       ],
     },
     {
