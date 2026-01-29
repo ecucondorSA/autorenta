@@ -101,11 +101,11 @@ import {
 
       <!-- Recognition result message -->
       @if (recognitionMessage()) {
-        <div class="flex items-center gap-2 p-3 bg-blue-100 dark:bg-blue-900 border border-blue-300 dark:border-blue-700 rounded-lg text-sm">
-          <svg class="w-5 h-5 text-blue-700 dark:text-blue-200 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-sm">
+          <svg class="w-5 h-5 text-blue-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span class="text-blue-800 dark:text-blue-100">{{ recognitionMessage() }}</span>
+          <span class="text-blue-700 dark:text-blue-300">{{ recognitionMessage() }}</span>
         </div>
       }
 
@@ -174,20 +174,20 @@ import {
 
       <!-- Selected brand indicator -->
       @if (selectedBrand()) {
-        <div class="flex items-center gap-3 p-4 bg-emerald-100 dark:bg-emerald-900 border border-emerald-300 dark:border-emerald-700 rounded-xl">
-          <div class="w-10 h-10 bg-emerald-200 dark:bg-emerald-800 rounded-full flex items-center justify-center">
-            <svg class="w-5 h-5 text-emerald-700 dark:text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
+          <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-800 rounded-full flex items-center justify-center">
+            <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
           <div class="flex-1">
-            <p class="text-sm text-emerald-800 dark:text-emerald-100">Marca seleccionada</p>
-            <p class="font-semibold text-emerald-900 dark:text-white">{{ selectedBrand()?.name }}</p>
+            <p class="text-sm text-emerald-700 dark:text-emerald-400">Marca seleccionada</p>
+            <p class="font-semibold text-emerald-900 dark:text-emerald-200">{{ selectedBrand()?.name }}</p>
           </div>
           <button
             type="button"
             (click)="clearSelection()"
-            class="text-emerald-700 dark:text-emerald-200 hover:text-emerald-900 dark:hover:text-white transition-colors"
+            class="text-emerald-600 hover:text-emerald-800 transition-colors"
           >
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -260,23 +260,55 @@ export class VehicleQuestionComponent implements OnInit {
       .slice(0, 10);
   });
 
+  // Fallback brands for when FIPE API is unreachable
+  private readonly FALLBACK_BRANDS = [
+    { code: '21', name: 'Fiat' },
+    { code: '22', name: 'Ford' },
+    { code: '56', name: 'Toyota' },
+    { code: '25', name: 'Honda' },
+    { code: '48', name: 'Renault' },
+    { code: '26', name: 'Hyundai' },
+    { code: '43', name: 'Nissan' },
+    { code: '44', name: 'Peugeot' },
+    { code: '59', name: 'VW - VolksWagen' },
+    { code: '23', name: 'GM - Chevrolet' },
+    { code: '31', name: 'Kia Motors' },
+    { code: '7', name: 'BMW' },
+    { code: '6', name: 'Audi' },
+    { code: '39', name: 'Mercedes-Benz' },
+    { code: '38', name: 'Mazda' },
+    { code: '29', name: 'Jeep' },
+    { code: '13', name: 'Citroën' },
+    { code: '41', name: 'Mitsubishi' },
+    { code: '55', name: 'Suzuki' },
+  ];
+
   async ngOnInit(): Promise<void> {
     this.isLoading.set(true);
     try {
       const brands = await this.pricingService.getFipeBrands();
-      this.brands.set(brands);
+
+      // Use API brands if available, otherwise fallback
+      if (brands && brands.length > 0) {
+        this.brands.set(brands);
+      } else {
+        console.warn('[VehicleQuestion] FIPE API returned empty, using fallback brands');
+        this.brands.set(this.FALLBACK_BRANDS);
+      }
 
       // Restore initial value if provided
       const initial = this.initialValue();
+      const allBrands = this.brands();
       if (initial) {
-        const brand = brands.find((b) => b.code === initial.code);
+        const brand = allBrands.find((b) => b.code === initial.code);
         if (brand) {
           this.selectedBrand.set(brand);
           this.searchQuery = brand.name;
         }
       }
     } catch (error) {
-      console.error('Failed to load brands:', error);
+      console.error('[VehicleQuestion] Failed to load brands, using fallback:', error);
+      this.brands.set(this.FALLBACK_BRANDS);
     } finally {
       this.isLoading.set(false);
     }
