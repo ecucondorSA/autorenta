@@ -12,6 +12,7 @@ import {
 
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { AuthService } from '@core/services/auth/auth.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { Booking, CreateReviewParams, Review } from '../../../core/models';
 import { ReviewFormComponent } from '../../../shared/components/review-form/review-form.component';
@@ -102,6 +103,7 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
   private readonly reviewsService = inject(ReviewsService);
   private readonly authService = inject(AuthService);
   private readonly supabase = injectSupabase();
+  private readonly logger = inject(LoggerService).createChildLogger('ReviewManagement');
 
   private dataLoaded = false;
 
@@ -145,7 +147,7 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
     // Wait for auth to be ready (max 3 seconds)
     const currentUser = await this.waitForAuth(3000);
     if (!currentUser) {
-      console.warn('[ReviewManagement] Auth not ready after timeout');
+      this.logger.warn('Auth not ready after timeout');
       return;
     }
 
@@ -236,12 +238,12 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
     try {
       const currentUser = this.authService.session$()?.user;
       if (!currentUser) {
-        console.warn('[ReviewManagement] No current user found');
+        this.logger.warn('No current user found');
         return;
       }
 
       if (!this.booking?.car_id) {
-        console.warn('[ReviewManagement] No car_id in booking');
+        this.logger.warn('No car_id in booking');
         return;
       }
 
@@ -252,12 +254,12 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
         .single();
 
       if (carError) {
-        console.error('[ReviewManagement] Car query error:', carError);
+        this.logger.error('Car query error', carError);
         return;
       }
 
       if (!car) {
-        console.error('[ReviewManagement] Car not found');
+        this.logger.error('Car not found');
         return;
       }
 
@@ -265,7 +267,7 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
       const isOwner = car.owner_id === currentUser.id;
 
       // Debug: Log role detection for troubleshooting category display
-      console.log('[ReviewManagement] Role detection:', {
+      this.logger.debug('Role detection', {
         currentUserId: currentUser.id,
         renterId: this.booking.renter_id,
         ownerId: car.owner_id,
@@ -275,7 +277,7 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
       });
 
       if (!isRenter && !isOwner) {
-        console.warn('[ReviewManagement] User is neither renter nor owner');
+        this.logger.warn('User is neither renter nor owner');
         return;
       }
 
@@ -302,12 +304,12 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
           .single();
 
         if (renterError) {
-          console.error('[ReviewManagement] Renter profile query error:', renterError);
+          this.logger.error('Renter profile query error', renterError);
           return;
         }
 
         if (!renter) {
-          console.error('[ReviewManagement] Renter profile not found');
+          this.logger.error('Renter profile not found');
           return;
         }
 
@@ -324,7 +326,7 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
         reviewType,
       });
     } catch (err) {
-      console.error('[ReviewManagement] Error in loadReviewData:', err);
+      this.logger.error('Error in loadReviewData', err);
     }
   }
 }

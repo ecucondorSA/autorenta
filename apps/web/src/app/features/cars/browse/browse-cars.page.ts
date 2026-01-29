@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { interval } from 'rxjs';
 import { CarsService } from '@core/services/cars/cars.service';
 import { LocationService, type LocationData } from '@core/services/geo/location.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Car } from '@core/models';
 import { CarCardComponent } from '@shared/components/car-card/car-card.component';
 import { CarsMapComponent } from '@shared/components/cars-map/cars-map.component';
@@ -90,6 +91,7 @@ import { BrowseStore } from './browse.store';
 export class BrowseCarsPage {
   private carsService = inject(CarsService);
   private locationService = inject(LocationService);
+  private readonly logger = inject(LoggerService).createChildLogger('BrowseCarsPage');
   private router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   readonly store = inject(BrowseStore);
@@ -109,7 +111,7 @@ export class BrowseCarsPage {
 
   readonly mapLocations = computed<CarMapLocation[]>(() => {
     const list = this.store.cars();
-    console.log('[BrowsePage] Transforming cars for map:', list.length);
+    this.logger.debug('Transforming cars for map', { count: list.length });
     return list.map((car) => ({
       carId: car.id,
       lat: Number(car.location_lat) || 0,
@@ -153,7 +155,7 @@ export class BrowseCarsPage {
     }
     try {
       const location = await this.resolveLocation();
-      console.log('[BrowsePage] User Location:', location);
+      this.logger.debug('User location', location ?? {});
 
       const searchFrom = new Date().toISOString();
       const searchTo = new Date(Date.now() + 86400000).toISOString();
@@ -163,10 +165,10 @@ export class BrowseCarsPage {
         lng: location?.lng,
       });
 
-      console.log('[BrowsePage] RPC Results:', results.length);
+      this.logger.debug('RPC results', { count: results.length });
       this.store.setCars(results as unknown as Car[]);
     } catch (e) {
-      console.error('[BrowsePage] Error loading cars:', e);
+      this.logger.error('Error loading cars', e);
       this.store.setLoading(false);
     } finally {
       this.isFetching = false;
@@ -199,7 +201,7 @@ export class BrowseCarsPage {
         : (carId as { detail?: { carId?: string }; carId?: string })?.detail?.carId ??
           (carId as { detail?: { carId?: string }; carId?: string })?.carId ??
           String(carId);
-    console.log('[BrowsePage] Marker Click:', id);
+    this.logger.debug('Marker click', { id });
     this.store.setActiveCar(id, 'map');
     const element = document.getElementById('car-' + id);
     if (element) {

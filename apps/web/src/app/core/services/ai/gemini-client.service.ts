@@ -1,12 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '@environment';
 import { GoogleGenAI } from '@google/genai';
 import * as Sentry from '@sentry/angular';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeminiClientService {
+  private readonly logger = inject(LoggerService).createChildLogger('GeminiClientService');
   private client: GoogleGenAI | null = null;
 
   constructor() {
@@ -15,7 +17,7 @@ export class GeminiClientService {
 
   private initClient() {
     if (!environment.geminiApiKey) {
-      console.warn('⚠️ Gemini API Key not configured - GenAI client disabled');
+      this.logger.warn('Gemini API Key not configured - GenAI client disabled');
       return;
     }
 
@@ -25,9 +27,9 @@ export class GeminiClientService {
       // Manual instrumentation (automated one not available in current Sentry version)
       this.client = genAI;
 
-      console.log('✅ Google GenAI Client initialized');
+      this.logger.info('Google GenAI Client initialized');
     } catch (error) {
-      console.error('Failed to initialize Google GenAI Client:', error);
+      this.logger.error('Failed to initialize Google GenAI Client', error);
     }
   }
 

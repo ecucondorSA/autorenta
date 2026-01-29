@@ -350,7 +350,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   ngOnInit(): void {
     if (!this.isBrowser) {
-      console.log('[CarsMap] 🗺️ MAP LOADED', 'Cars:', this.cars.length, 'Token Len:', environment.mapboxAccessToken.length); this.loading.set(false);
+      this.markMapLoaded();
       return;
     }
 
@@ -372,6 +372,14 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     this.isDarkMode.set(isDark);
     this.updateMarkerStyles();
     this.updateMapTheme();
+  }
+
+  private markMapLoaded(): void {
+    this.logger.debug('Map loaded', {
+      cars: this.cars.length,
+      mapboxConfigured: Boolean(environment.mapboxAccessToken),
+    });
+    this.loading.set(false);
   }
 
   /**
@@ -537,7 +545,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       // Wait for map to load
       this.map.on('load', () => {
         try {
-          console.log('[CarsMap] 🗺️ MAP LOADED', 'Cars:', this.cars.length, 'Token Len:', environment.mapboxAccessToken.length); this.loading.set(false);
+          this.markMapLoaded();
           this.safeResizeMap();
           this.updateMapTheme(); // Apply theme on load
           this.updateMarkersBasedOnCount();
@@ -565,7 +573,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           console.error('[CarsMap] Error during post-load setup:', err);
           const message = err instanceof Error ? err['message'] : String(err);
           this['error'].set(message || 'Error al inicializar el mapa');
-          console.log('[CarsMap] 🗺️ MAP LOADED', 'Cars:', this.cars.length, 'Token Len:', environment.mapboxAccessToken.length); this.loading.set(false);
+          this.markMapLoaded();
         }
       });
 
@@ -595,7 +603,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           );
         }
 
-        console.log('[CarsMap] 🗺️ MAP LOADED', 'Cars:', this.cars.length, 'Token Len:', environment.mapboxAccessToken.length); this.loading.set(false);
+        this.markMapLoaded();
       });
     } catch (err) {
       console.error('[CarsMap] Initialization error:', err);
@@ -608,7 +616,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       } else {
         this['error'].set(errorMessage || 'Error al inicializar el mapa');
       }
-      console.log('[CarsMap] 🗺️ MAP LOADED', 'Cars:', this.cars.length, 'Token Len:', environment.mapboxAccessToken.length); this.loading.set(false);
+      this.markMapLoaded();
     }
   }
 

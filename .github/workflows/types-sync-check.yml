@@ -41,6 +41,14 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Check required secrets
+        uses: ./.github/actions/check-required-secrets
+        with:
+          secrets: SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_ID
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+
       - name: Generate fresh types from DB
         id: generate
         run: |

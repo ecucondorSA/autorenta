@@ -1,5 +1,6 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface SecurityDevice {
@@ -23,6 +24,7 @@ export interface SecurityAlert {
 })
 export class SecurityService {
   private supabase = injectSupabase();
+  private readonly logger = inject(LoggerService).createChildLogger('SecurityService');
 
   // State Signals
   readonly devices = signal<SecurityDevice[]>([]);
@@ -71,7 +73,7 @@ export class SecurityService {
         { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
         (payload) => {
           // Alerta crítica: Scout encontró el auto
-          console.log('BOUNTY CLAIMED!', payload.new);
+          this.logger.warn('Bounty claimed', payload.new);
         },
       )
       .subscribe();

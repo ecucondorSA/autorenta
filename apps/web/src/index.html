@@ -130,6 +130,16 @@
   <!-- Runtime environment configuration (loaded before Angular) -->
   <!-- __ENV_CONFIG__ -->
   <script>
+    var debugEnabled = false;
+    try {
+      debugEnabled =
+        new URLSearchParams(window.location.search).get('debug') === '1' ||
+        localStorage.getItem('autorentar_debug') === 'true';
+    } catch (e) {
+      debugEnabled = false;
+    }
+    window.__AR_DEBUG_ENABLED__ = debugEnabled;
+
     if (!window.__env) {
       (function () {
         // Detect if running in Capacitor
@@ -140,31 +150,41 @@
           var xhr = new XMLHttpRequest();
           // Use simple path without cache-busting query for better Capacitor compatibility
           var envPath = isCapacitor ? '/env.json' : '/env.json?v=' + Date.now();
-          console.log('[ENV] 🔄 Loading environment from:', envPath);
+          if (debugEnabled) {
+            console.log('[ENV] Loading environment from:', envPath);
+          }
           xhr.open('GET', envPath, false); // Synchronous
 
           xhr.send();
-          console.log('[ENV] 📡 XHR status:', xhr.status);
+          if (debugEnabled) {
+            console.log('[ENV] XHR status:', xhr.status);
+          }
           if (xhr.status === 200 && xhr.responseText) {
-            console.log('[ENV] 📄 Response (first 100 chars):', xhr.responseText.substring(0, 100));
             window.__env = JSON.parse(xhr.responseText);
             if (window.__env) {
-              console.log('[ENV] ✅ Successfully loaded window.__env with', Object.keys(window.__env).length, 'variables');
-              console.log('[ENV] 🔑 Mapbox token loaded:', window.__env.NG_APP_MAPBOX_ACCESS_TOKEN ? 'YES (' + window.__env.NG_APP_MAPBOX_ACCESS_TOKEN.substring(0, 15) + '...)' : 'NO');
+              if (debugEnabled) {
+                console.log(
+                  '[ENV] Loaded window.__env with',
+                  Object.keys(window.__env).length,
+                  'variables',
+                );
+              }
             } else {
-              console.error('[ENV] ❌ eval() ran but window.__env is still undefined');
+              console.error('[ENV] window.__env is still undefined');
             }
           } else {
-            console.warn('[ENV] ⚠️ env.json returned status:', xhr.status);
+            console.warn('[ENV] env.json returned status:', xhr.status);
           }
         } catch (e) {
-          console.error('[ENV] ❌ Failed to load env.json:', e.message || e);
+          console.error('[ENV] Failed to load env.json:', e.message || e);
           // Initialize empty env to prevent app from breaking
           window.__env = window.__env || {};
         }
       })();
     } else {
-      console.log('[ENV] ℹ️ window.__env already exists (preloaded)');
+      if (debugEnabled) {
+        console.log('[ENV] window.__env already exists (preloaded)');
+      }
     }
   </script>
 
@@ -247,7 +267,9 @@
           environment: 'development',
         },
       };
-      console.log('[AR] Debug API stub initialized');
+      if (window.__AR_DEBUG_ENABLED__) {
+        console.log('[AR] Debug API stub initialized');
+      }
     }
   </script>
 
@@ -293,7 +315,9 @@
   <!-- Network status monitoring -->
   <script>
     window.addEventListener('online', () => {
-      console.log('🌐 Online');
+      if (window.__AR_DEBUG_ENABLED__) {
+        console.log('Online');
+      }
       window.dispatchEvent(
         new CustomEvent('network-status-change', {
           detail: { online: true },
@@ -302,7 +326,9 @@
     });
 
     window.addEventListener('offline', () => {
-      console.log('📴 Offline');
+      if (window.__AR_DEBUG_ENABLED__) {
+        console.log('Offline');
+      }
       window.dispatchEvent(
         new CustomEvent('network-status-change', {
           detail: { online: false },

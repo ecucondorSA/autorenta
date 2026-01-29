@@ -61,6 +61,15 @@ jobs:
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps chromium
 
+      - name: Check required secrets
+        uses: ./.github/actions/check-required-secrets
+        with:
+          secrets: SUPABASE_URL, SUPABASE_ANON_KEY, MERCADOPAGO_TEST_ACCESS_TOKEN
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          MERCADOPAGO_TEST_ACCESS_TOKEN: ${{ secrets.MERCADOPAGO_TEST_ACCESS_TOKEN }}
+
       - name: Build application
         run: pnpm build
         env:
@@ -151,6 +160,14 @@ jobs:
 
       - name: Install Playwright
         run: pnpm exec playwright install --with-deps chromium
+
+      - name: Check required secrets
+        uses: ./.github/actions/check-required-secrets
+        with:
+          secrets: SUPABASE_URL, SUPABASE_ANON_KEY
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
       - name: Build application
         run: pnpm build

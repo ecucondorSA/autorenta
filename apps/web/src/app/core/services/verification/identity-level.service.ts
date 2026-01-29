@@ -1,6 +1,7 @@
-import { computed, Injectable, OnDestroy, signal } from '@angular/core';
+import { computed, inject, Injectable, OnDestroy, signal } from '@angular/core';
 import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * User Identity Level Data
@@ -111,6 +112,7 @@ export interface LevelAccessCheck {
 })
 export class IdentityLevelService implements OnDestroy {
   private readonly supabase: SupabaseClient = injectSupabase();
+  private readonly logger = inject(LoggerService).createChildLogger('IdentityLevelService');
 
   // Reactive state
   readonly identityLevel = signal<UserIdentityLevel | null>(null);
@@ -345,19 +347,19 @@ export class IdentityLevelService implements OnDestroy {
           },
           async () => {
             // Refresh progress when changes detected
-            console.log('[IdentityLevelService] Realtime update detected, refreshing...');
+            this.logger.debug('Realtime update detected, refreshing...');
             await this.getVerificationProgress();
           },
         )
         .subscribe((status) => {
           if (status === 'CHANNEL_ERROR') {
-            console.error('[IdentityLevelService] Realtime channel error');
+            this.logger.error('Realtime channel error');
           } else if (status === 'SUBSCRIBED') {
-            console.log('[IdentityLevelService] Realtime subscription active');
+            this.logger.debug('Realtime subscription active');
           }
         });
     } catch (err) {
-      console.error('[IdentityLevelService] Failed to subscribe to realtime:', err);
+      this.logger.error('Failed to subscribe to realtime', err);
     }
   }
 

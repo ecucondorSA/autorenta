@@ -75,13 +75,19 @@ const envVars = {
 };
 
 // Use compact JSON to avoid line breaks in long tokens
-const envJsContent = JSON.stringify(envVars);
+const envJsonContent = JSON.stringify(envVars);
+const envJsContent = `// Auto-generated environment configuration\n` +
+  `// DO NOT EDIT MANUALLY\n` +
+  `window.__env = ${envJsonContent};\n`;
 
+const jsonOutputPath = path.join(__dirname, '../../public/env.json');
+const jsOutputPath = path.join(__dirname, '../../public/env.js');
 
-const outputPath = path.join(__dirname, '../../public/env.json');
-fs.writeFileSync(outputPath, envJsContent);
+fs.writeFileSync(jsonOutputPath, envJsonContent);
+fs.writeFileSync(jsOutputPath, envJsContent);
 
 console.log('✅ Generated public/env.json with environment configuration');
+console.log('✅ Generated public/env.js with environment configuration');
 console.log('Environment variables:');
 Object.entries(envVars).forEach(([key, value]) => {
   const maskedValue = key.includes('KEY') || key.includes('TOKEN')

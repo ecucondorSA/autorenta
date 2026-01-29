@@ -87,19 +87,22 @@ jobs:
               .filter(Boolean);
             const lines = reasons.length
               ? reasons.map((reason) => `- ${reason}`)
-              : ["- quality_signals_detected"]; 
-            const body = `## ⚠️ PR marcado como baja calidad
-
-Esta PR coincide con señales típicas de PRs auto-generados o incompletos. Por favor:
-
-- Resume el cambio en un título corto (<= 120 caracteres)
-- Completa la sección de requisitos mínimos del template
-- Agrega una descripción concreta del problema y la solución
-
-**Señales detectadas:**
-${lines.join("\n")}
-
-Si esto fue un falso positivo, responde a este comentario con el contexto y se revisará.`;
+              : ['- quality_signals_detected'];
+            const bodyLines = [
+              '## ⚠️ PR marcado como baja calidad',
+              '',
+              'Esta PR coincide con señales típicas de PRs auto-generados o incompletos. Por favor:',
+              '',
+              '- Resume el cambio en un título corto (<= 120 caracteres)',
+              '- Completa la sección de requisitos mínimos del template',
+              '- Agrega una descripción concreta del problema y la solución',
+              '',
+              '**Señales detectadas:**',
+              ...lines,
+              '',
+              'Si esto fue un falso positivo, responde a este comentario con el contexto y se revisará.',
+            ];
+            const body = bodyLines.join('\n');
 
             const { owner, repo } = context.repo;
             const issue_number = context.payload.pull_request.number;
@@ -417,7 +420,6 @@ Si esto fue un falso positivo, responde a este comentario con el contexto y se r
               repo: context.repo.repo,
               body: body
             });
-
 
 
 

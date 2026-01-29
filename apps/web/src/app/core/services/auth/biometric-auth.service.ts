@@ -1,6 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { BiometryType, NativeBiometric } from '@capgo/capacitor-native-biometric';
 import { Capacitor } from '@capacitor/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 const CREDENTIAL_SERVER = 'app.autorentar.biometric';
 
@@ -13,6 +14,7 @@ export interface BiometricAvailability {
 
 @Injectable({ providedIn: 'root' })
 export class BiometricAuthService {
+  private readonly logger = inject(LoggerService).createChildLogger('BiometricAuthService');
   /** Signal que indica si la biometría está disponible y configurada */
   readonly isReady = signal(false);
   /** Signal con el tipo de biometría disponible */
@@ -36,7 +38,7 @@ export class BiometricAuthService {
    * Verifica disponibilidad completa: biometría + credenciales guardadas
    */
   async checkAvailability(): Promise<BiometricAvailability> {
-    console.log('[Biometric] checkAvailability - isNative:', Capacitor.isNativePlatform());
+    this.logger.debug('checkAvailability isNative', { isNative: Capacitor.isNativePlatform() });
 
     // Solo funciona en dispositivos nativos
     if (!Capacitor.isNativePlatform()) {
@@ -45,12 +47,12 @@ export class BiometricAuthService {
 
     try {
       const biometricResult = await NativeBiometric.isAvailable();
-      console.log('[Biometric] isAvailable:', JSON.stringify(biometricResult));
+      this.logger.debug('isAvailable', biometricResult);
 
       const credentialsResult = await NativeBiometric.isCredentialsSaved({
         server: CREDENTIAL_SERVER,
       }).catch((err: unknown) => {
-        console.log('[Biometric] isCredentialsSaved error:', err);
+        this.logger.warn('isCredentialsSaved error', err);
         return { isSaved: false };
       });
 
@@ -64,14 +66,11 @@ export class BiometricAuthService {
       this.hasStoredCredentials.set(hasCredentials);
       this.isReady.set(biometricResult.isAvailable && hasCredentials);
 
-      console.log(
-        '[Biometric] READY:',
-        this.isReady(),
-        'available:',
-        biometricResult.isAvailable,
-        'hasCreds:',
+      this.logger.debug('Ready state', {
+        isReady: this.isReady(),
+        available: biometricResult.isAvailable,
         hasCredentials,
-      );
+      });
 
       return {
         available: biometricResult.isAvailable,
@@ -80,7 +79,7 @@ export class BiometricAuthService {
         hasCredentials,
       };
     } catch (err: unknown) {
-      console.error('[Biometric] checkAvailability error:', err);
+      this.logger.error('checkAvailability error', err);
       this.isReady.set(false);
       this.hasStoredCredentials.set(false);
       return { available: false, type: BiometryType.NONE, typeName: 'none', hasCredentials: false };
@@ -91,14 +90,14 @@ export class BiometricAuthService {
    * Guarda credenciales después de un login exitoso
    */
   async saveCredentials(email: string, password: string): Promise<boolean> {
-    console.log('[Biometric] saveCredentials called for:', email);
+    this.logger.debug('saveCredentials called', { email });
     if (!Capacitor.isNativePlatform()) {
-      console.log('[Biometric] Not native, skipping save');
+      this.logger.debug('Not native, skipping save');
       return false;
     }
 
     try {
-      console.log('[Biometric] Calling setCredentials...');
+      this.logger.debug('Calling setCredentials');
       await NativeBiometric.setCredentials({
         server: CREDENTIAL_SERVER,
         username: email,
@@ -106,10 +105,10 @@ export class BiometricAuthService {
       });
       this.hasStoredCredentials.set(true);
       this.isReady.set(true);
-      console.log('[Biometric] Credentials SAVED successfully!');
+      this.logger.info('Credentials saved successfully');
       return true;
     } catch (error) {
-      console.error('[Biometric] Failed to save credentials:', error);
+      this.logger.error('Failed to save credentials', error);
       return false;
     }
   }

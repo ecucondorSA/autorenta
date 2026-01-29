@@ -1,0 +1,100 @@
+name: CI Health Report
+
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate CI health report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const workflows = [
+              { id: 'ci.yml', name: 'CI' },
+              { id: 'pr-validation.yml', name: 'PR Validation' },
+              { id: 'e2e-tests.yml', name: 'E2E Tests' },
+              { id: 'patchright-e2e.yml', name: 'Patchright E2E Tests' },
+              { id: 'contracts.yml', name: 'Validate Contracts' },
+              { id: 'sql-tests.yml', name: 'SQL Tests' },
+              { id: 'types-sync-check.yml', name: 'Types Sync Check' },
+              { id: 'semantic-release.yml', name: 'Semantic Release' },
+              { id: 'production-readiness.yml', name: 'Production Readiness' },
+            ];
+
+            const rows = [];
+            for (const wf of workflows) {
+              try {
+                const runs = await github.rest.actions.listWorkflowRuns({
+                  owner,
+                  repo,
+                  workflow_id: wf.id,
+                  per_page: 1,
+                });
+                const run = runs.data.workflow_runs[0];
+                if (!run) {
+                  rows.push([wf.name, 'no runs', '-', '-', '-', '-']);
+                  continue;
+                }
+                rows.push([
+                  wf.name,
+                  run.status,
+                  run.conclusion || '-',
+                  run.event,
+                  new Date(run.updated_at).toISOString(),
+                  run.html_url,
+                ]);
+              } catch (error) {
+                rows.push([wf.name, 'error', 'error', '-', '-', '-']);
+              }
+            }
+
+            const header = '| Workflow | Status | Conclusion | Event | Updated (UTC) | Run |';
+            const divider = '|---|---|---|---|---|---|';
+            const lines = rows.map((r) => `| ${r[0]} | ${r[1]} | ${r[2]} | ${r[3]} | ${r[4]} | ${r[5]} |`);
+            const table = [header, divider, ...lines].join('\n');
+
+            const body = [
+              '## CI Health Report',
+              '',
+              `Updated: ${new Date().toISOString()}`,
+              '',
+              table,
+            ].join('\n');
+
+            await core.summary
+              .addHeading('CI Health Report')
+              .addRaw(body)
+              .write();
+
+            const issues = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              per_page: 100,
+            });
+            const existing = issues.data.find((i) => i.title === 'CI Health Report');
+            if (existing) {
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: existing.number,
+                body,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner,
+                repo,
+                title: 'CI Health Report',
+                body,
+              });
+            }

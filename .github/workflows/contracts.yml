@@ -50,6 +50,8 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - name: Install Supabase CLI
+        run: pnpm add -g supabase
       - name: Check for DB type drift
         run: pnpm run types:db:check
 
@@ -75,8 +77,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y postgresql-client
       - name: Apply migrations
         run: |
-          psql "postgres://postgres:postgres@localhost:5432/autorent" -f supabase/migrations/20251016_create_core_tables.sql
-          # agrega aquí el resto de migraciones si las hay
+          for f in supabase/migrations/*.sql; do
+            echo "Applying $f"
+            psql "postgres://postgres:postgres@localhost:5432/autorent" -f "$f"
+          done
       # Si tu imagen tiene pgtap, habilítalo. Si no, cambia a imagen con pgtap.
       # - run: psql "postgres://postgres:postgres@localhost:5432/autorent" -c "CREATE EXTENSION pgtap;"
       - name: Run pgTAP tests
@@ -96,8 +100,16 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps
+      - name: Check required secrets
+        uses: ./.github/actions/check-required-secrets
+        with:
+          secrets: STAGING_SUPABASE_URL, STAGING_SUPABASE_ANON_KEY
+        env:
+          STAGING_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          STAGING_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
       - name: Run Playwright tests (E2E only)
-        run: pnpm exec playwright test tests/e2e/renter.flow.spec.ts tests/e2e/renter.visual.spec.ts tests/e2e/chat.offline-queue.spec.ts
+        working-directory: apps/web/e2e
+        run: pnpm exec playwright test specs/critical.spec.ts --config=playwright.config.ts
         env:
           SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}

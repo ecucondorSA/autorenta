@@ -1,4 +1,5 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 export interface UserLevel {
   id: number;
@@ -62,6 +63,7 @@ export interface QuickAction {
 
 @Injectable({ providedIn: 'root' })
 export class GamificationService {
+  private readonly logger = inject(LoggerService).createChildLogger('GamificationService');
   // Definición de niveles
   private readonly levels: UserLevel[] = [
     {
@@ -289,7 +291,7 @@ export class GamificationService {
   // Methods to add XP (for future use)
   addXP(amount: number, reason: string): void {
     this._currentXP.update((xp) => xp + amount);
-    console.log(`+${amount} XP: ${reason}`);
+    this.logger.info('XP added', { amount, reason });
   }
 
   unlockBadge(badgeId: string): void {

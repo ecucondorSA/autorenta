@@ -18,6 +18,8 @@ functions/workers/*/.wrangler
 .env
 .env.*
 .supabase
+apps/web/public/env.json
+apps/web/public/env.js
 
 # Supabase temp files (anywhere in the project)
 **/.temp/

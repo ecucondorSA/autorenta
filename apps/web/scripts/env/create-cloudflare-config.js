@@ -104,8 +104,12 @@ if (fs.existsSync(publicHeadersPath)) {
 /manifest.webmanifest
   Cache-Control: public, max-age=0, must-revalidate
 
-# CRITICAL: env.js must NEVER be cached - contains runtime configuration
+# CRITICAL: env.json/env.js must NEVER be cached - contains runtime configuration
 # This ensures all users always get fresh environment variables
+/env.json
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
 /env.js
   Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
   Pragma: no-cache

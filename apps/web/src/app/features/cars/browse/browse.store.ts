@@ -1,12 +1,14 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { Car } from '@core/models';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 export type BrowseViewMode = 'map' | 'list';
 export type InteractionSource = 'map' | 'carousel' | 'idle';
 
 @Injectable()
 export class BrowseStore {
+  private readonly logger = inject(LoggerService).createChildLogger('BrowseStore');
   // State Signals
   readonly cars = signal<Car[]>([]);
   readonly loading = signal<boolean>(true);
@@ -44,7 +46,7 @@ export class BrowseStore {
 
   // Actions
   setCars(cars: Car[]) {
-    console.log('[BrowseStore] 🚗 SET CARS:', cars.length);
+    this.logger.debug('Set cars', { count: cars.length });
     this.cars.set(cars);
     this.loading.set(false);
   }

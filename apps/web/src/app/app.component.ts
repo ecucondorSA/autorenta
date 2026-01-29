@@ -38,6 +38,7 @@ import { ProfileService, UserProfile } from '@core/services/auth/profile.service
 import { PushNotificationService } from '@core/services/infrastructure/push-notification.service';
 import { PwaService } from '@core/services/infrastructure/pwa.service';
 import { NotificationsService } from '@core/services/infrastructure/user-notifications.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { routeAnimations } from '@core/animations/route-animations'; // Importar animaciones
 import { GuidedTourService } from './core/guided-tour';
 import { FooterComponent } from './shared/components/footer/footer.component';
@@ -187,6 +188,7 @@ export class AppComponent implements OnInit {
   private readonly assetPreloader = inject(AssetPreloaderService);
   private readonly mapboxPreloader = inject(MapboxPreloaderService);
   private readonly debugService = inject(DebugService); // Initialize early for e2e tests
+  private readonly logger = inject(LoggerService).createChildLogger('AppComponent');
   private readonly bookingApprovalService = inject(BookingApprovalService);
 
   readonly userEmail = this.authService.userEmail;
@@ -309,7 +311,7 @@ export class AppComponent implements OnInit {
         void StatusBar.setBackgroundColor({ color: '#00000000' }); // Transparent
         void StatusBar.setStyle({ style: Style.Dark }); // Dark icons on light background
       } catch (e) {
-        console.warn('StatusBar not available', e);
+        this.logger.warn('StatusBar not available', e);
       }
     }
 
@@ -524,7 +526,7 @@ export class AppComponent implements OnInit {
         inputValue?: string;
         notification: { id: number; title?: string; body?: string; extra?: unknown };
       }) => {
-        console.log('[Notification] Action performed:', action);
+        this.logger.debug('[Notification] Action performed', action);
 
         const extra = action.notification.extra as
           | { route?: string; bookingId?: string }
@@ -532,7 +534,7 @@ export class AppComponent implements OnInit {
 
         if (extra?.route) {
           // Navigate to the specified route
-          console.log('[Notification] Navigating to:', extra.route);
+          this.logger.debug('[Notification] Navigating to', { route: extra.route });
           this.router.navigate([extra.route], {
             queryParams: extra.bookingId ? { id: extra.bookingId } : undefined,
           });
@@ -544,7 +546,7 @@ export class AppComponent implements OnInit {
     LocalNotifications.addListener(
       'localNotificationReceived',
       (notification: { id: number; title?: string; body?: string }) => {
-        console.log('[Notification] Received while app open:', notification);
+        this.logger.debug('[Notification] Received while app open', notification);
       },
     );
   }
@@ -564,7 +566,7 @@ export class AppComponent implements OnInit {
       .subscribe(
         (action) => {
           const notificationAction = action as { action: string; notification?: { data?: Record<string, unknown> } };
-          console.log('[Push] Notification action performed:', notificationAction);
+          this.logger.debug('[Push] Notification action performed', notificationAction);
 
           // Extract navigation data from notification
           const data = notificationAction.notification?.data as
@@ -573,7 +575,7 @@ export class AppComponent implements OnInit {
           const route = data?.cta_link || data?.route;
 
           if (route) {
-            console.log('[Push] Navigating to:', route);
+            this.logger.debug('[Push] Navigating to', { route });
             // Use setTimeout to ensure app is fully initialized after cold start
             setTimeout(() => {
               this.router.navigate([route], {
@@ -588,7 +590,7 @@ export class AppComponent implements OnInit {
     this.pushNotificationService.messages$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((message) => {
-        console.log('[Push] Message received while app open:', message);
+        this.logger.debug('[Push] Message received while app open', message);
         // Optionally show an in-app notification or toast
       });
   }

@@ -1,0 +1,29 @@
+name: Check required secrets
+description: Fail fast when required secrets are missing or empty.
+inputs:
+  secrets:
+    description: Comma-separated list of required secret names.
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        set -euo pipefail
+        missing=0
+        IFS=',' read -ra KEYS <<< "${{ inputs.secrets }}"
+        for raw in "${KEYS[@]}"; do
+          key=$(echo "$raw" | xargs)
+          if [ -z "$key" ]; then
+            continue
+          fi
+          val=${!key-}
+          if [ -z "$val" ]; then
+            echo "::error::Missing required secret: $key"
+            missing=1
+          fi
+        done
+        if [ "$missing" -ne 0 ]; then
+          echo "One or more required secrets are missing."
+          exit 1
+        fi

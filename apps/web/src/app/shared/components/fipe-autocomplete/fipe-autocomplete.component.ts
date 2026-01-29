@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 
 import { CarBrandsService } from '@core/services/cars/car-brands.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 export interface FipeAutocompleteOption {
   code: string;
@@ -150,6 +151,7 @@ export interface FipeAutocompleteOption {
 })
 export class FipeAutocompleteComponent implements OnChanges {
   private readonly carBrandsService = inject(CarBrandsService);
+  private readonly logger = inject(LoggerService).createChildLogger('FipeAutocomplete');
 
   @Input() placeholder = 'Escribe para buscar...';
 
@@ -157,7 +159,7 @@ export class FipeAutocompleteComponent implements OnChanges {
   // ✅ FIX: Use signal for options to ensure computed updates when input changes
   private readonly _options = signal<FipeAutocompleteOption[]>([]);
   @Input() set options(value: FipeAutocompleteOption[]) {
-    console.log('[FipeAutocomplete] Options received:', value?.length);
+    this.logger.debug('Options received', { count: value?.length ?? 0 });
     this._options.set(value);
   }
 
@@ -181,7 +183,10 @@ export class FipeAutocompleteComponent implements OnChanges {
     const query = this.searchQuery().trim().toLowerCase();
     const currentOptions = this._options();
 
-    console.log('[FipeAutocomplete] Computing filter. Query:', query, 'Options:', currentOptions?.length);
+    this.logger.debug('Computing filter', {
+      query,
+      optionsCount: currentOptions?.length ?? 0,
+    });
 
     if (query.length < this.minChars) {
       return [];

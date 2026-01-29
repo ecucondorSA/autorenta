@@ -4,11 +4,13 @@ import {
   Output,
   EventEmitter,
   OnInit,
+  inject,
   ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import type { CreateReviewParams, ReviewType } from '../../../core/models';
 
 interface RatingCategory {
@@ -27,6 +29,8 @@ interface RatingCategory {
   styleUrls: ['./review-form.component.css'],
 })
 export class ReviewFormComponent implements OnInit {
+  private readonly fb = inject(FormBuilder);
+  private readonly logger = inject(LoggerService).createChildLogger('ReviewForm');
   @Input() bookingId!: string;
   @Input() revieweeId!: string;
   @Input() carId!: string;
@@ -118,8 +122,6 @@ export class ReviewFormComponent implements OnInit {
   // Categorías activas según el tipo de review
   ratingCategories: RatingCategory[] = [];
 
-  constructor(private fb: FormBuilder) {}
-
   ngOnInit(): void {
     // Seleccionar categorías según el tipo de review
     this.ratingCategories =
@@ -128,7 +130,7 @@ export class ReviewFormComponent implements OnInit {
         : this.ownerToRenterCategories;
 
     // Debug: Log which categories are loaded
-    console.log('[ReviewForm] Categories loaded:', {
+    this.logger.debug('Categories loaded', {
       reviewType: this.reviewType,
       categoriesCount: this.ratingCategories.length,
       categoryKeys: this.ratingCategories.map((c) => c.key),

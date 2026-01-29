@@ -27,8 +27,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-   playwright-tests:
-name: Playwright E2E Tests
+  playwright-tests:
+    name: Playwright E2E Tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -67,9 +67,19 @@ name: Playwright E2E Tests
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-       - name: Install Playwright browser
+      - name: Install Playwright browser
         working-directory: apps/web/e2e
-         run: npx playwright install chromium
+        run: npx playwright install chromium
+
+      - name: Check required secrets
+        uses: ./.github/actions/check-required-secrets
+        with:
+          secrets: NG_APP_SUPABASE_URL, NG_APP_SUPABASE_ANON_KEY, NG_APP_MERCADOPAGO_PUBLIC_KEY, NG_APP_MAPBOX_ACCESS_TOKEN
+        env:
+          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
+          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
+          NG_APP_MERCADOPAGO_PUBLIC_KEY: ${{ secrets.NG_APP_MERCADOPAGO_PUBLIC_KEY }}
+          NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN }}
 
       - name: Build Angular application
         run: pnpm run build:web
@@ -96,7 +106,7 @@ name: Playwright E2E Tests
       - name: Run Login Tests
         if: ${{ github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == 'login' || github.event.inputs.test_suite == '' }}
         working-directory: apps/web/e2e
-         run: npx playwright test specs/auth/login.spec.ts --config=playwright.config.ts
+        run: npx playwright test specs/auth/login.spec.ts --config=playwright.config.ts
         env:
           TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
         continue-on-error: true
@@ -104,7 +114,7 @@ name: Playwright E2E Tests
       - name: Run Marketplace Tests
         if: ${{ github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == 'marketplace' || github.event.inputs.test_suite == '' }}
         working-directory: apps/web/e2e
-         run: npx playwright test specs/booking/browse-cars.spec.ts --config=playwright.config.ts
+        run: npx playwright test specs/booking/browse-cars.spec.ts --config=playwright.config.ts
         env:
           TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
         continue-on-error: true
@@ -112,7 +122,7 @@ name: Playwright E2E Tests
       - name: Run Payment Tests
         if: ${{ github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == 'payment' || github.event.inputs.test_suite == '' }}
         working-directory: apps/web/e2e
-         run: npx playwright test specs/booking/payment.spec.ts --config=playwright.config.ts
+        run: npx playwright test specs/booking/payment.spec.ts --config=playwright.config.ts
         env:
           TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
         continue-on-error: true
@@ -121,7 +131,7 @@ name: Playwright E2E Tests
         uses: actions/upload-artifact@v4
         if: always()
         with:
-           name: playwright-e2e-reports
+          name: playwright-e2e-reports
           path: |
             apps/web/e2e/reports/*.json
             apps/web/e2e/reports/*.png
@@ -137,7 +147,7 @@ name: Playwright E2E Tests
       - name: Generate Test Summary
         if: always()
         run: |
-           echo "## Playwright E2E Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "## Playwright E2E Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           # Parse results from JSON files

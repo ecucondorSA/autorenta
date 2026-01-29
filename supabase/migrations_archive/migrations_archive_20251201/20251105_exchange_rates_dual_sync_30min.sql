@@ -34,8 +34,13 @@ DECLARE
 BEGIN
   v_function_url := 'https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/sync-binance-rates';
 
-  -- Token hardcodeado como fallback (expira 2045-03-22)
-  v_service_role_key := 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHZmZnBsb2NoZ2VpY2xpYm5nIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyOTY5NjkwMywiZXhwIjoyMDQ1MjcyOTAzfQ.YNUd5hZcD1Y7rCJyiGDwuHcQTKLK3mFZGdqgXOC7Z3I';
+  -- Token via settings/vault (NO hardcodear secretos)
+  v_service_role_key := current_setting('app.settings.service_role_key', true);
+
+  IF v_service_role_key IS NULL OR v_service_role_key = '' THEN
+    RAISE WARNING 'service_role_key no configurada; abortando sync via Edge Function';
+    RETURN;
+  END IF;
 
   SELECT INTO v_response_id
     net.http_post(

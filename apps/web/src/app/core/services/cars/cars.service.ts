@@ -660,10 +660,14 @@ export class CarsService {
   ): Promise<CarWithScore[]> {
     const { lat, lng, limit = 12, offset = 0 } = options;
 
-    console.log(
-      '[CarsService] RPC Params:',
-      JSON.stringify({ p_start_date: startDate, p_end_date: endDate, p_lat: lat, p_lng: lng }),
-    );
+    this.logger.debug('getAvailableCarsWithDistance RPC params', {
+      p_start_date: startDate,
+      p_end_date: endDate,
+      p_lat: lat,
+      p_lng: lng,
+      p_limit: limit,
+      p_offset: offset,
+    });
     const { data, error } = await this.supabase.rpc('get_available_cars', {
       p_start_date: startDate,
       p_end_date: endDate,
@@ -679,7 +683,7 @@ export class CarsService {
     });
 
     if (error) {
-      console.error('Error calling get_available_cars RPC:', JSON.stringify(error));
+      this.logger.error('Error calling get_available_cars RPC', error);
       throw error;
     }
 

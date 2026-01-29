@@ -358,7 +358,4 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
   // Por ahora, solo inicializamos la parte web debido a conflictos de tipos con Sentry Capacitor
   Sentry.init(options);
 
-  if (!environment.production) {
-    console.log('✅ Sentry initialized (Web only)');
-  }
 }
