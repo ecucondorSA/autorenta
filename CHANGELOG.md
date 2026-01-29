@@ -1,3 +1,7 @@
+## <small>3.37.1 (2026-01-29)</small>
+
+* fix: use 'electrico' instead of 'electric' for fuel_type comparison ([2075d7b](https://github.com/ecucondorSA/autorenta/commit/2075d7b))
+
 ## 3.37.0 (2026-01-29)
 
 * fix: add missing npm dependencies for build errors ([8a2274c](https://github.com/ecucondorSA/autorenta/commit/8a2274c))
