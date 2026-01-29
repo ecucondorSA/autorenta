@@ -737,17 +737,17 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         source: this.clusterSourceId,
         filter: ['has', 'point_count'],
         paint: {
-          // Colores radioactivos neón: verde y amarillo
+          // Colores de marca: verde neón con variaciones por tamaño
           'circle-color': [
             'step',
             ['get', 'point_count'],
-            '#39FF14', // Verde radioactivo neón para clusters pequeños (2-4)
+            '#00D95F', // Verde neón de marca para clusters pequeños (2-4)
             5,
-            '#00FF41', // Verde radioactivo intenso para medianos (5-14)
+            '#00BF54', // Verde neón hover para medianos (5-14)
             15,
-            '#DFFF00', // Amarillo radioactivo neón para grandes (15-29)
+            '#00A648', // Verde neón active para grandes (15-29)
             30,
-            '#FFFF00', // Amarillo radioactivo puro para enormes (30+)
+            '#10B981', // Verde success para enormes (30+)
           ],
           'circle-radius': ['step', ['get', 'point_count'], 28, 5, 35, 15, 42, 30, 50],
           'circle-stroke-width': 4,

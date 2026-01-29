@@ -1,0 +1,715 @@
+{
+  "name": "AutoRenta - Payment Failures Handler",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "payment-event",
+        "options": {}
+      },
+      "id": "webhook-payment-event",
+      "name": "Webhook - Payment Event",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.status }}",
+              "operation": "contains",
+              "value2": "rejected"
+            }
+          ]
+        }
+      },
+      "id": "if-payment-failed",
+      "name": "If Payment Failed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/rpc/track_payment_failure",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "p_payment_id",
+              "value": "={{ $json.payment_id }}"
+            },
+            {
+              "name": "p_booking_id",
+              "value": "={{ $json.booking_id }}"
+            },
+            {
+              "name": "p_failure_reason",
+              "value": "={{ $json.status_detail }}"
+            }
+          ]
+        }
+      },
+      "id": "track-failure",
+      "name": "Track Payment Failure",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/functions/v1/notify-multi-channel",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ $json.renter_id }}"
+            },
+            {
+              "name": "channels",
+              "value": "=['push']"
+            },
+            {
+              "name": "template_code",
+              "value": "payment_failed"
+            },
+            {
+              "name": "variables",
+              "value": "={{ JSON.stringify({ car_name: $json.car_name || 'tu vehículo', amount: $json.transaction_amount }) }}"
+            }
+          ]
+        }
+      },
+      "id": "notify-push-immediate",
+      "name": "Send Push - Immediate",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 350],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "minutes"
+      },
+      "id": "wait-30min",
+      "name": "Wait 30 Minutes",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/payment_failure_tracking",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "payment_id",
+                "value": "=eq.{{ $json.payment_id }}"
+              },
+              {
+                "name": "select",
+                "value": "id,status,retry_count"
+              }
+            ]
+          }
+        }
+      },
+      "id": "check-status",
+      "name": "Check Payment Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1050, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json[0]?.status }}",
+              "operation": "notEqual",
+              "value2": "resolved"
+            }
+          ]
+        }
+      },
+      "id": "if-still-failed",
+      "name": "If Still Failed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/functions/v1/notify-multi-channel",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ $node['Webhook - Payment Event'].json.renter_id }}"
+            },
+            {
+              "name": "channels",
+              "value": "=['push', 'email']"
+            },
+            {
+              "name": "template_code",
+              "value": "payment_failed"
+            },
+            {
+              "name": "variables",
+              "value": "={{ JSON.stringify({ car_name: $node['Webhook - Payment Event'].json.car_name || 'tu vehículo', amount: $node['Webhook - Payment Event'].json.transaction_amount }) }}"
+            }
+          ]
+        }
+      },
+      "id": "notify-push-email",
+      "name": "Send Push + Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1450, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "hours"
+      },
+      "id": "wait-2h",
+      "name": "Wait 2 Hours",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/payment_failure_tracking",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "payment_id",
+                "value": "=eq.{{ $node['Webhook - Payment Event'].json.payment_id }}"
+              },
+              {
+                "name": "select",
+                "value": "id,status,retry_count"
+              }
+            ]
+          }
+        }
+      },
+      "id": "check-status-2",
+      "name": "Check Status Again",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1850, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json[0]?.status }}",
+              "operation": "notEqual",
+              "value2": "resolved"
+            }
+          ]
+        }
+      },
+      "id": "if-still-failed-2",
+      "name": "If Still Failed 2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [2050, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/functions/v1/notify-multi-channel",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ $node['Webhook - Payment Event'].json.renter_id }}"
+            },
+            {
+              "name": "channels",
+              "value": "=['email', 'whatsapp']"
+            },
+            {
+              "name": "template_code",
+              "value": "payment_failed"
+            },
+            {
+              "name": "variables",
+              "value": "={{ JSON.stringify({ car_name: $node['Webhook - Payment Event'].json.car_name || 'tu vehículo', amount: $node['Webhook - Payment Event'].json.transaction_amount }) }}"
+            }
+          ]
+        }
+      },
+      "id": "notify-email-whatsapp",
+      "name": "Send Email + WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [2250, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 24,
+        "unit": "hours"
+      },
+      "id": "wait-24h",
+      "name": "Wait 24 Hours",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [2450, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/payment_failure_tracking",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "payment_id",
+                "value": "=eq.{{ $node['Webhook - Payment Event'].json.payment_id }}"
+              },
+              {
+                "name": "select",
+                "value": "id,status,booking_id"
+              }
+            ]
+          }
+        }
+      },
+      "id": "check-status-final",
+      "name": "Check Status Final",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [2650, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json[0]?.status }}",
+              "operation": "notEqual",
+              "value2": "resolved"
+            }
+          ]
+        }
+      },
+      "id": "if-still-failed-final",
+      "name": "If Still Failed Final",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [2850, 300]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/bookings",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "id",
+                "value": "=eq.{{ $json[0]?.booking_id }}"
+              }
+            ]
+          }
+        },
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "cancelled"
+            },
+            {
+              "name": "cancellation_reason",
+              "value": "payment_failed_timeout"
+            }
+          ]
+        }
+      },
+      "id": "cancel-booking",
+      "name": "Cancel Booking",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [3050, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/payment_failure_tracking",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "payment_id",
+                "value": "=eq.{{ $node['Webhook - Payment Event'].json.payment_id }}"
+              }
+            ]
+          }
+        },
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "abandoned"
+            }
+          ]
+        }
+      },
+      "id": "mark-abandoned",
+      "name": "Mark as Abandoned",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [3050, 350],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/functions/v1/notify-multi-channel",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ $node['Webhook - Payment Event'].json.renter_id }}"
+            },
+            {
+              "name": "channels",
+              "value": "=['push', 'email']"
+            },
+            {
+              "name": "template_code",
+              "value": "booking_cancelled"
+            },
+            {
+              "name": "variables",
+              "value": "={{ JSON.stringify({ car_name: $node['Webhook - Payment Event'].json.car_name || 'tu vehículo', reason: 'pago no completado' }) }}"
+            }
+          ]
+        }
+      },
+      "id": "notify-cancellation",
+      "name": "Notify Cancellation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [3250, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - Payment Event": {
+      "main": [
+        [
+          {
+            "node": "If Payment Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Payment Failed": {
+      "main": [
+        [
+          {
+            "node": "Track Payment Failure",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Push - Immediate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Push - Immediate": {
+      "main": [
+        [
+          {
+            "node": "Wait 30 Minutes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 30 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Check Payment Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Payment Status": {
+      "main": [
+        [
+          {
+            "node": "If Still Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Still Failed": {
+      "main": [
+        [
+          {
+            "node": "Send Push + Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Push + Email": {
+      "main": [
+        [
+          {
+            "node": "Wait 2 Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 2 Hours": {
+      "main": [
+        [
+          {
+            "node": "Check Status Again",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status Again": {
+      "main": [
+        [
+          {
+            "node": "If Still Failed 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Still Failed 2": {
+      "main": [
+        [
+          {
+            "node": "Send Email + WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email + WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Wait 24 Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 24 Hours": {
+      "main": [
+        [
+          {
+            "node": "Check Status Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status Final": {
+      "main": [
+        [
+          {
+            "node": "If Still Failed Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Still Failed Final": {
+      "main": [
+        [
+          {
+            "node": "Cancel Booking",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mark as Abandoned",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cancel Booking": {
+      "main": [
+        [
+          {
+            "node": "Notify Cancellation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "payments",
+      "createdAt": "2026-01-29T00:00:00.000Z"
+    },
+    {
+      "name": "retry-logic",
+      "createdAt": "2026-01-29T00:00:00.000Z"
+    }
+  ],
+  "triggerCount": 0,
+  "versionId": "1.0.0",
+  "_documentation": {
+    "description": "Workflow para manejar pagos fallidos con escalamiento progresivo",
+    "flow": [
+      "1. Recibe webhook de pago fallido",
+      "2. Registra fallo en payment_failure_tracking",
+      "3. Envía push notification inmediata",
+      "4. Espera 30 minutos, verifica si resuelto",
+      "5. Si no: push + email",
+      "6. Espera 2 horas, verifica si resuelto",
+      "7. Si no: email + whatsapp",
+      "8. Espera 24 horas, verifica si resuelto",
+      "9. Si no: cancela booking automáticamente"
+    ],
+    "setup_instructions": [
+      "1. Importar este workflow en n8n",
+      "2. Configurar credencial 'Supabase Service Key'",
+      "3. Configurar variable SUPABASE_URL",
+      "4. Asegurar que la migración payment_webhook_n8n_trigger esté aplicada",
+      "5. Activar el workflow"
+    ],
+    "escalation_timeline": {
+      "immediate": "Push notification",
+      "30_minutes": "Push + Email",
+      "2_hours": "Email + WhatsApp",
+      "24_hours": "Cancel booking"
+    }
+  }
+}

@@ -1,3 +1,10 @@
+/**
+ * Car Card Component Styles
+ *
+ * Uses CSS custom properties from brand-colors.css
+ * No !important declarations - uses specificity cascade
+ */
+
 :host {
   display: block;
   width: 100%;
@@ -5,53 +12,107 @@
   contain: layout style;
 }
 
+/* Premium Card Base */
 .card-premium {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid var(--border-muted);
+  transition: all var(--duration-normal, 300ms) var(--easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+  border: 1px solid var(--border-muted, #F3F4F6);
 }
 
 .card-premium:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(57, 255, 20, 0.2);
-  border-color: #39FF14; 
+  box-shadow: 0 8px 24px var(--neon-primary-glow-subtle, rgba(0, 217, 95, 0.2));
+  border-color: var(--neon-primary, #00D95F);
 }
 
-/* Radioactive Selected State */
+/* Selected State - Neon Glow */
 .card-premium.selected {
-  border-color: #39FF14;
+  border-color: var(--neon-primary, #00D95F);
   border-width: 2px;
   transform: scale(1.02) translateY(-2px);
-  box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+  box-shadow: 0 0 20px var(--neon-primary-glow, rgba(0, 217, 95, 0.4));
   z-index: 10;
   position: relative;
 }
 
-/* Neon Green Buttons */
-.btn-primary, .bg-cta-default {
-  background-color: #39FF14 !important;
-  color: #000000 !important;
-  font-weight: 900 !important;
+/* Primary Button - Neon Green */
+:host .btn-primary,
+:host .bg-cta-default {
+  background-color: var(--neon-primary, #00D95F);
+  color: var(--cta-text, #000000);
+  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1px;
-  box-shadow: 0 4px 14px rgba(57, 255, 20, 0.4) !important;
-  transition: all 0.3s ease;
+  box-shadow: var(--shadow-neon-md, 0 4px 14px rgba(0, 217, 95, 0.4));
+  transition: all var(--duration-normal, 300ms) var(--easing-standard);
 }
 
-.btn-primary:hover, .bg-cta-default:hover {
-  background-color: #00FF41 !important;
-  box-shadow: 0 6px 20px rgba(57, 255, 20, 0.6) !important;
+:host .btn-primary:hover,
+:host .bg-cta-default:hover {
+  background-color: var(--neon-primary-hover, #00BF54);
+  box-shadow: var(--shadow-neon-lg, 0 6px 20px rgba(0, 217, 95, 0.6));
   transform: scale(1.05);
 }
 
-/* Radioactive Price Badge */
-.price-badge {
-  background: #39FF14 !important;
-  color: #000000 !important;
-  font-weight: 900;
-  box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+:host .btn-primary:active,
+:host .bg-cta-default:active {
+  background-color: var(--neon-primary-active, #00A648);
+  transform: scale(1.02);
 }
 
-/* Neon Glow Utilities */
-.text-neon-green { color: #39FF14 !important; }
-.bg-neon-green { background-color: #39FF14 !important; }
-.shadow-radioactive { box-shadow: 0 0 15px rgba(57, 255, 20, 0.6) !important; }
+/* Price Badge - Neon Style */
+:host .price-badge {
+  background: var(--neon-primary, #00D95F);
+  color: var(--cta-text, #000000);
+  font-weight: 900;
+  box-shadow: 0 0 10px var(--neon-primary-glow-intense, rgba(0, 217, 95, 0.5));
+}
+
+/* Neon Utility Classes */
+:host .text-neon-green {
+  color: var(--neon-primary, #00D95F);
+}
+
+:host .bg-neon-green {
+  background-color: var(--neon-primary, #00D95F);
+}
+
+:host .shadow-radioactive {
+  box-shadow: var(--shadow-neon-glow, 0 0 15px rgba(0, 217, 95, 0.6));
+}
+
+/* Focus States for Accessibility */
+:host .btn-primary:focus-visible,
+:host .bg-cta-default:focus-visible {
+  outline: 2px solid var(--neon-primary, #00D95F);
+  outline-offset: 2px;
+}
+
+/* Hover Card Effect */
+@media (hover: hover) {
+  .card-premium:hover .price-badge {
+    transform: scale(1.05);
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+  .card-premium:active {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--neon-primary-glow-subtle, rgba(0, 217, 95, 0.2));
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .card-premium,
+  :host .btn-primary,
+  :host .bg-cta-default,
+  :host .price-badge {
+    transition: none;
+  }
+
+  .card-premium:hover,
+  .card-premium.selected {
+    transform: none;
+  }
+}
