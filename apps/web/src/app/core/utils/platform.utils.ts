@@ -1,4 +1,15 @@
-import { afterNextRender } from '@angular/core';
+import { afterNextRender, Injector, runInInjectionContext } from '@angular/core';
+
+// Track if we have an injector available for afterNextRender
+let _appInjector: Injector | null = null;
+
+/**
+ * Set the application injector for use with runAfterHydration
+ * This should be called once during app bootstrap
+ */
+export function setAppInjector(injector: Injector): void {
+  _appInjector = injector;
+}
 
 /**
  * Platform Utilities
@@ -140,8 +151,36 @@ export function getSessionStorage(): Storage | null {
  * ```
  */
 export function runAfterHydration(callback: () => void): void {
-  if (isBrowser()) {
-    afterNextRender(callback);
+  if (!isBrowser()) {
+    return;
+  }
+
+  // If we have an app injector, use it for afterNextRender
+  if (_appInjector) {
+    try {
+      runInInjectionContext(_appInjector, () => {
+        afterNextRender(callback);
+      });
+      return;
+    } catch {
+      // Fall through to fallback if injector is no longer valid
+    }
+  }
+
+  // Fallback: Use requestAnimationFrame + setTimeout for non-DI contexts
+  // This is equivalent to "after next render" but without injection context
+  if (document.readyState === 'complete') {
+    // Document already loaded, run on next frame
+    requestAnimationFrame(() => {
+      setTimeout(callback, 0);
+    });
+  } else {
+    // Wait for load event
+    window.addEventListener('load', () => {
+      requestAnimationFrame(() => {
+        setTimeout(callback, 0);
+      });
+    }, { once: true });
   }
 }
 
