@@ -1,3 +1,8 @@
+## <small>3.37.4 (2026-01-29)</small>
+
+* chore: fix import order ([febc38b](https://github.com/ecucondorSA/autorenta/commit/febc38b))
+* fix: disable tiktok and facebook temporarily ([bf24ede](https://github.com/ecucondorSA/autorenta/commit/bf24ede))
+
 ## <small>3.37.3 (2026-01-29)</small>
 
 * fix: bump service worker version to force cache invalidation ([378aac0](https://github.com/ecucondorSA/autorenta/commit/378aac0))
