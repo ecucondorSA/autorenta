@@ -13,6 +13,7 @@ export const routes: Routes = [
   },
   {
     path: 'explore',
+    data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: () => import('./features/explore/explore.page').then((m) => m.ExplorePage),
   },
   {
@@ -43,6 +44,7 @@ export const routes: Routes = [
   {
     path: 'referrals',
     canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: () => import('./features/referrals/referrals.page').then((m) => m.ReferralsPage),
   },
   {
@@ -52,6 +54,7 @@ export const routes: Routes = [
   },
   {
     path: 'favorites',
+    data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: () => import('./features/favorites/favorites.page').then((m) => m.FavoritesPage),
   },
   {
@@ -133,12 +136,14 @@ export const routes: Routes = [
   {
     path: 'bookings',
     canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
     loadChildren: () =>
       import('./features/bookings/bookings.routes').then((m) => m.BOOKINGS_ROUTES),
   },
   {
     path: 'reviews',
     canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
     children: [
       {
         path: 'pending',
@@ -336,19 +341,23 @@ export const routes: Routes = [
   {
     path: 'profile',
     canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
     children: [
       {
         path: '',
         loadComponent: () =>
           import('./features/profile/profile-expanded.page').then((m) => m.ProfileExpandedPage),
+        data: { layout: 'full-bleed', hideHeader: true },
       },
       {
         path: 'driver-profile',
+        data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: () =>
           import('./features/driver-profile/driver-profile.page').then((m) => m.DriverProfilePage),
       },
       {
         path: 'mercadopago-connect',
+        data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: () =>
           import('./features/profile/mercadopago-connect.component').then(
             (m) => m.MercadoPagoConnectComponent,
@@ -356,6 +365,7 @@ export const routes: Routes = [
       },
       {
         path: 'notifications-settings',
+        data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: () =>
           import('./features/profile/notifications-settings/notifications-settings.page').then(
             (m) => m.NotificationsSettingsPage,
@@ -363,6 +373,7 @@ export const routes: Routes = [
       },
       {
         path: 'driving-stats',
+        data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: () =>
           import('./features/profile/driving-stats/driving-stats.page').then(
             (m) => m.DrivingStatsPage,
@@ -370,11 +381,13 @@ export const routes: Routes = [
       },
       {
         path: 'location-settings',
+        data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: () =>
           import('./features/profile/location-settings.page').then((m) => m.LocationSettingsPage),
       },
       {
         path: 'personal',
+        data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: () =>
           import('./features/profile/personal/profile-personal.page').then(
             (m) => m.ProfilePersonalPage,
@@ -382,6 +395,7 @@ export const routes: Routes = [
       },
       {
         path: 'contact',
+        data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: () =>
           import('./features/profile/contact/profile-contact.page').then(
             (m) => m.ProfileContactPage,
@@ -389,6 +403,7 @@ export const routes: Routes = [
       },
       {
         path: 'preferences',
+        data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: () =>
           import('./features/profile/preferences/profile-preferences.page').then(
             (m) => m.ProfilePreferencesPage,
@@ -396,6 +411,7 @@ export const routes: Routes = [
       },
       {
         path: 'security',
+        data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: () =>
           import('./features/profile/security/profile-security.page').then(
             (m) => m.ProfileSecurityPage,
@@ -403,6 +419,7 @@ export const routes: Routes = [
       },
       {
         path: 'verification',
+        data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: () =>
           import('./features/profile/verification-page/profile-verification.page').then(
             (m) => m.ProfileVerificationPage,
@@ -413,6 +430,7 @@ export const routes: Routes = [
   {
     path: 'protections',
     canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: () =>
       import('./features/protections/protections.page').then((m) => m.ProtectionsPage),
   },
@@ -429,6 +447,7 @@ export const routes: Routes = [
   {
     path: 'wallet',
     canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
     children: [
       {
         path: '',
@@ -440,6 +459,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     canMatch: [AuthGuard, onboardingGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
     children: [
       {
         path: '',
@@ -485,6 +505,7 @@ export const routes: Routes = [
   {
     path: 'scout',
     canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
     children: [
       {
         path: '',
@@ -505,16 +526,19 @@ export const routes: Routes = [
   {
     path: 'calendar-demo',
     canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: () => import('./features/calendar/calendar.page').then((m) => m.CalendarPage),
   },
   {
     path: 'payouts',
     canMatch: [AuthGuard, kycGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: () => import('./features/payouts/payouts.page').then((m) => m.PayoutsPage),
   },
   {
     path: 'support',
     canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: () => import('./features/support/support.page').then((m) => m.SupportPage),
   },
   {
@@ -560,6 +584,7 @@ export const routes: Routes = [
   {
     path: 'notifications',
     canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
     children: [
       {
         path: '',

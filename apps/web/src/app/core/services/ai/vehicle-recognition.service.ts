@@ -146,8 +146,10 @@ export class VehicleRecognitionService {
       );
 
       if (error) {
-        this.logger.error('Edge function error', 'VehicleRecognition', error);
-        throw new Error(error.message || 'Error al reconocer vehículo');
+        // ✅ FIX: Extract error message properly to avoid [object Object]
+        const errorMessage = this.extractErrorMessage(error);
+        this.logger.error('Edge function error', 'VehicleRecognition', { error, message: errorMessage });
+        throw new Error(errorMessage);
       }
 
       if (!data) {
@@ -202,7 +204,7 @@ export class VehicleRecognitionService {
       );
 
       if (error) {
-        throw new Error(error.message || 'Error al reconocer vehículo');
+        throw new Error(this.extractErrorMessage(error));
       }
 
       if (!data) {
@@ -264,7 +266,7 @@ export class VehicleRecognitionService {
       );
 
       if (error) {
-        throw new Error(error.message || 'Error al validar vehículo');
+        throw new Error(this.extractErrorMessage(error));
       }
 
       if (!data) {
@@ -401,5 +403,41 @@ export class VehicleRecognitionService {
     if (!term) return COMMON_BRANDS.slice(0, 10);
 
     return COMMON_BRANDS.filter((brand) => brand.toLowerCase().includes(term));
+  }
+
+  /**
+   * ✅ FIX: Extract error message properly to avoid [object Object]
+   * @private
+   */
+  private extractErrorMessage(error: unknown): string {
+    if (typeof error === 'string') return error;
+    if (error instanceof Error) return error.message;
+
+    if (error && typeof error === 'object') {
+      const obj = error as Record<string, unknown>;
+
+      // Try common message properties
+      if (typeof obj['message'] === 'string' && obj['message']) {
+        return obj['message'];
+      }
+      if (typeof obj['error'] === 'string' && obj['error']) {
+        return obj['error'];
+      }
+      if (typeof (obj['context'] as Record<string, unknown>)?.['message'] === 'string') {
+        return (obj['context'] as Record<string, unknown>)['message'] as string;
+      }
+
+      // Try to stringify
+      try {
+        const serialized = JSON.stringify(error);
+        if (serialized && serialized !== '{}') {
+          return serialized.length > 100 ? serialized.substring(0, 100) + '...' : serialized;
+        }
+      } catch {
+        // Fallthrough
+      }
+    }
+
+    return 'Error al reconocer vehículo';
   }
 }

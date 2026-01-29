@@ -1,5 +1,6 @@
 <!--
-🎨 Mobile Bottom Navigation - 4 items + FAB central Rentarfast
+🎨 Mobile Bottom Navigation - Patrón Airbnb
+5 tabs: Explorar, Favoritos, Reservas, Mensajes, Perfil
 -->
 
 <nav
@@ -9,8 +10,7 @@
   aria-label="Navegación principal móvil"
 >
   <div class="nav-container">
-    <!-- Primeros 2 items (Alquilar, Publicar) -->
-    @for (item of navItems.slice(0, 2); track item.id) {
+    @for (item of navItems; track item.id) {
       <a
         [routerLink]="item.route"
         (click)="navigateWithHaptic($event, item)"
@@ -22,11 +22,17 @@
         <div class="nav-item__icon-wrapper">
           <app-nav-icon
             [name]="item.icon"
-            [size]="28"
+            [size]="26"
             [active]="isActive(item.route)"
             class="nav-item__icon"
             [class.nav-item__icon--active]="isActive(item.route)"
           />
+          <!-- Badge para notificaciones (mensajes) -->
+          @if (item.badgeSignal && item.badgeSignal() > 0) {
+            <span class="nav-item__badge" aria-label="{{ item.badgeSignal() }} sin leer">
+              {{ item.badgeSignal() > 99 ? '99+' : item.badgeSignal() }}
+            </span>
+          }
         </div>
         <span class="nav-item__label" [class.nav-item__label--active]="isActive(item.route)">
           {{ item.label }}
@@ -36,66 +42,7 @@
         }
       </a>
     }
-
-    <!-- Espacio central para el FAB -->
-    <div class="nav-fab-spacer" aria-hidden="true"></div>
-
-    <!-- Últimos 2 items (Reservas, Menu) -->
-    @for (item of navItems.slice(2, 4); track item.id) {
-      <a
-        [routerLink]="item.isMenuTrigger ? null : item.route"
-        (click)="navigateWithHaptic($event, item)"
-        class="nav-item"
-        [class.nav-item--active]="!item.isMenuTrigger && isActive(item.route)"
-        [attr.aria-label]="item.label"
-        [attr.aria-current]="!item.isMenuTrigger && isActive(item.route) ? 'page' : null"
-      >
-        <div class="nav-item__icon-wrapper">
-          <app-nav-icon
-            [name]="item.icon"
-            [size]="28"
-            [active]="!item.isMenuTrigger && isActive(item.route)"
-            class="nav-item__icon"
-            [class.nav-item__icon--active]="!item.isMenuTrigger && isActive(item.route)"
-          />
-        </div>
-        <span
-          class="nav-item__label"
-          [class.nav-item__label--active]="!item.isMenuTrigger && isActive(item.route)"
-        >
-          {{ item.label }}
-        </span>
-        @if (!item.isMenuTrigger && isActive(item.route)) {
-          <div class="nav-item__indicator" aria-hidden="true"></div>
-        }
-      </a>
-    }
   </div>
-
-  <!-- Rentarfast FAB Button (Central) -->
-  <button
-    class="rentarfast-fab"
-    (click)="openRentarfast($event)"
-    aria-label="Abrir asistente de voz Rentarfast"
-    type="button"
-  >
-    <div class="rentarfast-fab__glow"></div>
-    <div class="rentarfast-fab__icon">
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-        <line x1="12" x2="12" y1="19" y2="22" />
-      </svg>
-    </div>
-    <span class="rentarfast-fab__pulse"></span>
-  </button>
 
   <!-- Shadow/Blur overlay superior -->
   <div class="nav-shadow" aria-hidden="true"></div>

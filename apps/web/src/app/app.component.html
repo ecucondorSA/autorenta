@@ -605,9 +605,7 @@
 
   <!-- Pending Reviews Banner (hidden on full-bleed layouts) -->
   @if (isAuthenticatedSig() && !fullBleedLayout()) {
-    <div class="mx-auto max-w-7xl w-full px-4 pt-4">
-      <app-pending-reviews-banner></app-pending-reviews-banner>
-    </div>
+    <app-pending-reviews-banner class="block mx-auto max-w-7xl w-full px-4"></app-pending-reviews-banner>
   }
 
   <!-- Main Content Area -->
@@ -618,8 +616,6 @@
     [class.container-page]="!fullBleedLayout()"
     [class.mx-auto]="!fullBleedLayout()"
     [class.max-w-none]="fullBleedLayout()"
-    [class.px-container]="!fullBleedLayout()"
-    [class.py-section-sm]="!fullBleedLayout()"
     [class.px-0]="fullBleedLayout()"
     [class.py-0]="fullBleedLayout()"
     [class.h-full]="fullBleedLayout()"

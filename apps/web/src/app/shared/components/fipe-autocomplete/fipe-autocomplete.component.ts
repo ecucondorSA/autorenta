@@ -152,7 +152,15 @@ export class FipeAutocompleteComponent implements OnChanges {
   private readonly carBrandsService = inject(CarBrandsService);
 
   @Input() placeholder = 'Escribe para buscar...';
-  @Input() options: FipeAutocompleteOption[] = [];
+
+
+  // ✅ FIX: Use signal for options to ensure computed updates when input changes
+  private readonly _options = signal<FipeAutocompleteOption[]>([]);
+  @Input() set options(value: FipeAutocompleteOption[]) {
+    console.log('[FipeAutocomplete] Options received:', value?.length);
+    this._options.set(value);
+  }
+
   @Input() disabled = false;
   @Input() isLoading = false;
   @Input() minChars = 2;
@@ -171,13 +179,16 @@ export class FipeAutocompleteComponent implements OnChanges {
 
   filteredOptions = computed(() => {
     const query = this.searchQuery().trim().toLowerCase();
+    const currentOptions = this._options();
+
+    console.log('[FipeAutocomplete] Computing filter. Query:', query, 'Options:', currentOptions?.length);
 
     if (query.length < this.minChars) {
       return [];
     }
 
     // Filter options that contain the search query
-    return this.options
+    return currentOptions
       .filter((option: FipeAutocompleteOption) => option.name.toLowerCase().includes(query))
       .slice(0, 50); // Limit to 50 results for performance
   });

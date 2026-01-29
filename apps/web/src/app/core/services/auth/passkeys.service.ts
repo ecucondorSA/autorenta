@@ -139,11 +139,21 @@ export class PasskeysService {
       const errorMessage = this.getErrorMessage(err);
       this.error.set(errorMessage);
       this.state.set('error');
-      this.logger.error(
-        'Passkeys: Registration failed',
-        'PasskeysService',
-        err instanceof Error ? err : new Error(String(err)),
-      );
+
+      // ✅ FIX: Use warn for expected WebAuthn errors (user cancelled, timeout, etc.)
+      const isExpectedError =
+        err instanceof Error &&
+        ['NotAllowedError', 'AbortError', 'InvalidStateError'].includes(err.name);
+
+      if (isExpectedError) {
+        this.logger.warn('Passkeys: Registration cancelled or expected error', 'PasskeysService');
+      } else {
+        this.logger.error(
+          'Passkeys: Registration failed',
+          'PasskeysService',
+          err instanceof Error ? err : new Error(String(err)),
+        );
+      }
       return false;
     }
   }
@@ -213,11 +223,21 @@ export class PasskeysService {
       const errorMessage = this.getErrorMessage(err);
       this.error.set(errorMessage);
       this.state.set('error');
-      this.logger.error(
-        'Passkeys: Authentication failed',
-        'PasskeysService',
-        err instanceof Error ? err : new Error(String(err)),
-      );
+
+      // ✅ FIX: Use warn for expected WebAuthn errors (user cancelled, timeout, etc.)
+      const isExpectedError =
+        err instanceof Error &&
+        ['NotAllowedError', 'AbortError', 'InvalidStateError'].includes(err.name);
+
+      if (isExpectedError) {
+        this.logger.warn('Passkeys: Authentication cancelled or expected error', 'PasskeysService');
+      } else {
+        this.logger.error(
+          'Passkeys: Authentication failed',
+          'PasskeysService',
+          err instanceof Error ? err : new Error(String(err)),
+        );
+      }
       return false;
     }
   }

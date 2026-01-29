@@ -299,8 +299,11 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
       'The operation was aborted',
 
       // Angular issues
-      'NG0', // Hydration warnings (NG0750, etc.)
+      'NG0', // All Angular error codes (NG0203, NG0750, etc.)
+      'NG0203', // inject() called outside injection context
+      'NG0750', // Hydration mismatch
       'ExpressionChangedAfterItHasBeenCheckedError',
+      'Cannot add initializers', // Decorator timing issue
 
       // Facebook SDK errors (expected when ad blockers are active)
       'FB is not defined',

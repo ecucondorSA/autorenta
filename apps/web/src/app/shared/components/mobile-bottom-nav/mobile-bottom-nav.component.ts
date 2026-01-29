@@ -46,7 +46,6 @@ export class MobileBottomNavComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   @Output() menuOpen = new EventEmitter<void>();
-  @Output() rentarfastOpen = new EventEmitter<void>();
 
   readonly currentRoute = signal<string>('');
   readonly isHidden = signal(false);
@@ -56,11 +55,24 @@ export class MobileBottomNavComponent implements OnInit {
   private readonly scrollThreshold = 50;
   private readonly scrollDelta = 10;
 
+  /**
+   * Navegación final AutoRenta - 5 tabs principales:
+   * [Explorar] [Publicar] [Reservas] [Mensajes] [Perfil]
+   *
+   * Prioridades:
+   * 1. Explorar: Buscar autos disponibles (core renter)
+   * 2. Publicar: Agregar vehículos al marketplace (core owner - genera supply)
+   * 3. Reservas: Gestionar alquileres activos (core business)
+   * 4. Mensajes: Comunicación renter↔owner (crítico)
+   * 5. Perfil: Hub de cuenta (wallet, verificación, config, favoritos)
+   *
+   * Rentarfast: Integrado como micrófono en barra de búsqueda de Explorar
+   */
   readonly navItems: NavItem[] = [
     {
-      id: 'rent',
-      label: 'Alquilar',
-      icon: 'nav-car',
+      id: 'explore',
+      label: 'Explorar',
+      icon: 'nav-search',
       route: '/cars',
     },
     {
@@ -69,7 +81,6 @@ export class MobileBottomNavComponent implements OnInit {
       icon: 'nav-plus',
       route: '/cars/publish',
     },
-    // FAB Rentarfast va aquí (espacio central)
     {
       id: 'bookings',
       label: 'Reservas',
@@ -77,11 +88,17 @@ export class MobileBottomNavComponent implements OnInit {
       route: '/bookings',
     },
     {
-      id: 'menu',
-      label: 'Menu',
-      icon: 'nav-menu',
-      route: '',
-      isMenuTrigger: true,
+      id: 'messages',
+      label: 'Mensajes',
+      icon: 'nav-chat',
+      route: '/messages',
+      badgeSignal: () => this.unreadMessagesService.totalUnreadCount(),
+    },
+    {
+      id: 'profile',
+      label: 'Perfil',
+      icon: 'nav-user',
+      route: '/profile',
     },
   ];
 
@@ -243,23 +260,4 @@ export class MobileBottomNavComponent implements OnInit {
     return item.route;
   }
 
-  /**
-   * Navega a la pagina de Rentarfast (asistente de voz)
-   */
-  async openRentarfast(event: Event): Promise<void> {
-    event.preventDefault();
-    event.stopPropagation();
-
-    // Haptic feedback
-    try {
-      if ('vibrate' in navigator) {
-        navigator.vibrate(15);
-      }
-    } catch {
-      // Silently fail
-    }
-
-    // Navegar a la pagina de Rentarfast
-    await this.router.navigate(['/rentarfast']);
-  }
 }

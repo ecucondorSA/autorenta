@@ -41,20 +41,19 @@ interface CarWithOwner {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FavoriteButtonComponent],
   template: `
-    <div class="favorites-page">
-      <!-- Header -->
-      <div class="header">
-        <button (click)="goBack()" class="back-button">
-          <span class="icon">←</span>
-          Volver
-        </button>
-        <h1>Mis Favoritos</h1>
-        <p class="subtitle">
-          {{ favoriteCount() }} auto{{ favoriteCount() !== 1 ? 's' : '' }} guardado{{
-            favoriteCount() !== 1 ? 's' : ''
-          }}
-        </p>
-      </div>
+    <div class="favorites-page pt-[env(safe-area-inset-top)]">
+      <!-- Compact Header -->
+      <header class="compact-header">
+        <div class="header-content">
+          <button (click)="goBack()" class="back-button" aria-label="Volver">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <h1 class="header-title">Mis Favoritos</h1>
+          <span class="header-count">{{ favoriteCount() }}</span>
+        </div>
+      </header>
 
       <!-- Loading State -->
       @if (isLoading()) {
@@ -143,48 +142,60 @@ interface CarWithOwner {
     `
       .favorites-page {
         min-height: 100vh;
-        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-        padding: 2rem 1rem;
+        background: var(--surface-base, #f3f4f6);
+        padding-bottom: 5rem;
       }
 
-      .header {
+      .compact-header {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
         max-width: 1200px;
-        margin: 0 auto 2rem;
-        text-align: center;
+        margin: 0 auto;
       }
 
       .back-button {
-        display: inline-flex;
+        display: flex;
         align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: transparent;
+        border: none;
+        border-radius: 50%;
         cursor: pointer;
-        font-weight: 500;
-        margin-bottom: 1rem;
-        transition: all 0.2s;
+        transition: background 0.2s;
 
         &:hover {
-          background: #f9fafb;
-        }
-
-        .icon {
-          font-size: 1.25rem;
+          background: rgba(0, 0, 0, 0.05);
         }
       }
 
-      h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #111827;
-        margin-bottom: 0.5rem;
-      }
-
-      .subtitle {
+      .header-title {
+        flex: 1;
         font-size: 1.125rem;
-        color: #6b7280;
+        font-weight: 600;
+        color: #111827;
+        margin: 0;
+      }
+
+      .header-count {
+        padding: 0.25rem 0.75rem;
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border-radius: 9999px;
       }
 
       .loading-container {

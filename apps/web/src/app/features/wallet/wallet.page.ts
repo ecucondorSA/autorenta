@@ -8,7 +8,7 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 // UI 2026 Directives
@@ -62,6 +62,7 @@ import { ClubPlansPreviewComponent } from './components/club-plans-preview.compo
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
+    RouterLink,
     TransactionHistoryComponent,
     BankAccountFormComponent,
     BankAccountsListComponent,

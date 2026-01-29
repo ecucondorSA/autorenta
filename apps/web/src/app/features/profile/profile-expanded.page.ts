@@ -18,12 +18,6 @@ import { VerificationStateService } from '@core/services/verification/verificati
 import { VerificationService } from '@core/services/verification/verification.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { DocumentUploadModalComponent } from '../../shared/components/document-upload-modal/document-upload-modal.component';
-import { BonusMalusCardComponent } from '../../shared/components/bonus-malus-card/bonus-malus-card.component';
-import { RenterLevelProgressComponent } from '../../shared/components/renter-level-progress/renter-level-progress.component';
-import { AiReputationCardComponent } from '../../shared/components/ai-reputation-card/ai-reputation-card.component';
-import { AiCarRecommendationComponent } from '../../shared/components/ai-car-recommendation/ai-car-recommendation.component';
-import { BookingHistoryListComponent } from '../../shared/components/booking-history-list/booking-history-list.component';
-import { ReferralBannerComponent } from '../../shared/components/referral-banner/referral-banner.component';
 import { VerifiedBadgeComponent } from '../../shared/components/verified-badge/verified-badge.component';
 import { KycStatus } from '../../core/models';
 
@@ -45,12 +39,6 @@ import { KycStatus } from '../../core/models';
     CommonModule,
     RouterLink,
     DocumentUploadModalComponent,
-    BonusMalusCardComponent,
-    RenterLevelProgressComponent,
-    AiReputationCardComponent,
-    AiCarRecommendationComponent,
-    BookingHistoryListComponent,
-    ReferralBannerComponent,
     VerifiedBadgeComponent,
   ],
   templateUrl: './profile-expanded.page.html',
@@ -85,6 +73,7 @@ export class ProfileExpandedPage implements OnInit {
 
   // Verification status from VerificationStateService
   readonly verificationProgress = this.verificationStateService.verificationProgress;
+  readonly verificationProgressPercent = this.verificationStateService.progressPercentage;
 
   // User documents from VerificationService
   readonly userDocuments = this.verificationService.documents;
@@ -329,5 +318,13 @@ export class ProfileExpandedPage implements OnInit {
   onDocumentUploaded(): void {
     // Reload documents to update status
     void this.verificationService.loadDocuments();
+  }
+
+  /**
+   * Sign out and redirect to home
+   */
+  async signOut(): Promise<void> {
+    await this.authService.signOut();
+    void this.router.navigate(['/']);
   }
 }

@@ -735,4 +735,194 @@
     </g>
   </symbol>
 
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       NAV-SEARCH: Explorar
+       Magnifying glass inspired by Airbnb exploration icon
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <symbol id="nav-search" viewBox="0 0 24 24">
+    <title>Explorar</title>
+    <circle
+      cx="11"
+      cy="11"
+      r="7"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+    />
+    <line
+      x1="16.5"
+      y1="16.5"
+      x2="21"
+      y2="21"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+  </symbol>
+
+  <symbol id="nav-search-active" viewBox="0 0 24 24">
+    <title>Explorar</title>
+    <circle
+      cx="11"
+      cy="11"
+      r="7"
+      fill="url(#blueGradient)"
+      filter="url(#softGlow)"
+    />
+    <circle
+      cx="11"
+      cy="11"
+      r="5"
+      fill="none"
+      stroke="#DBEAFE"
+      stroke-width="0.5"
+      opacity="0.5"
+    />
+    <line
+      x1="16.5"
+      y1="16.5"
+      x2="21"
+      y2="21"
+      stroke="url(#blueGradient)"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      filter="url(#softGlow)"
+    />
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       NAV-HEART: Favoritos
+       Heart icon inspired by Airbnb wishlists
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <symbol id="nav-heart" viewBox="0 0 24 24">
+    <title>Favoritos</title>
+    <path
+      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+         C2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+         C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5
+         c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linejoin="round"
+    />
+  </symbol>
+
+  <symbol id="nav-heart-active" viewBox="0 0 24 24">
+    <title>Favoritos</title>
+    <path
+      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+         C2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+         C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5
+         c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+      fill="url(#blueGradient)"
+      filter="url(#softGlow)"
+    />
+    <path
+      d="M9 9c0.5-1 1.5-1.5 2.5-1"
+      stroke="#DBEAFE"
+      stroke-width="1"
+      stroke-linecap="round"
+      opacity="0.6"
+    />
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       NAV-CHAT: Mensajes
+       Modern chat bubble similar to nav-message but renamed for clarity
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <symbol id="nav-chat" viewBox="0 0 24 24">
+    <title>Mensajes</title>
+    <path
+      d="M21 11.5
+         C21 16.2 16.97 20 12 20
+         C10.4 20 8.9 19.6 7.6 18.9
+         L3 21
+         L4.6 16.2
+         C3.6 14.8 3 13.2 3 11.5
+         C3 6.8 7.03 3 12 3
+         C16.97 3 21 6.8 21 11.5
+         Z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <circle cx="8.5" cy="11.5" r="1" fill="currentColor" opacity="0.7"/>
+    <circle cx="12" cy="11.5" r="1" fill="currentColor" opacity="0.85"/>
+    <circle cx="15.5" cy="11.5" r="1" fill="currentColor"/>
+  </symbol>
+
+  <symbol id="nav-chat-active" viewBox="0 0 24 24">
+    <title>Mensajes</title>
+    <path
+      d="M21 11.5
+         C21 16.2 16.97 20 12 20
+         C10.4 20 8.9 19.6 7.6 18.9
+         L3 21
+         L4.6 16.2
+         C3.6 14.8 3 13.2 3 11.5
+         C3 6.8 7.03 3 12 3
+         C16.97 3 21 6.8 21 11.5
+         Z"
+      fill="url(#blueGradient)"
+      filter="url(#softGlow)"
+    />
+    <circle cx="8.5" cy="11.5" r="1" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="12" cy="11.5" r="1" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="15.5" cy="11.5" r="1" fill="#FFFFFF"/>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       NAV-USER: Perfil
+       User silhouette inspired by Airbnb profile icon
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <symbol id="nav-user" viewBox="0 0 24 24">
+    <title>Perfil</title>
+    <!-- Head -->
+    <circle
+      cx="12"
+      cy="8"
+      r="4"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+    />
+    <!-- Body -->
+    <path
+      d="M4 21v-2c0-2.21 3.58-4 8-4s8 1.79 8 4v2"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+    />
+  </symbol>
+
+  <symbol id="nav-user-active" viewBox="0 0 24 24">
+    <title>Perfil</title>
+    <!-- Head filled -->
+    <circle
+      cx="12"
+      cy="8"
+      r="4"
+      fill="url(#blueGradient)"
+      filter="url(#softGlow)"
+    />
+    <!-- Highlight on head -->
+    <circle
+      cx="10.5"
+      cy="6.5"
+      r="1"
+      fill="#DBEAFE"
+      opacity="0.5"
+    />
+    <!-- Body filled -->
+    <path
+      d="M4 21v-2c0-2.21 3.58-4 8-4s8 1.79 8 4v2"
+      fill="url(#blueGradient)"
+      filter="url(#softGlow)"
+    />
+  </symbol>
+
 </svg>

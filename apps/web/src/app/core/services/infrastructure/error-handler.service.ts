@@ -131,7 +131,9 @@ export class ErrorHandlerService {
 
       // Angular known issues
       'ng0750',
+      'ng0203', // inject() called outside injection context
       'expressionchanged',
+      'cannot add initializers', // Decorator timing issue
     ];
 
     return benignPatterns.some(pattern => errorMessage.includes(pattern));
@@ -139,14 +141,65 @@ export class ErrorHandlerService {
 
   /**
    * Extract error message from various error types
+   * ✅ FIX: Improved to handle more error formats and avoid [object Object]
    */
   private extractErrorMessage(error: unknown): string {
+    // String errors
     if (typeof error === 'string') return error;
+
+    // Standard Error objects
     if (error instanceof Error) return error.message;
-    if (error && typeof error === 'object' && 'message' in error) {
-      return String(error.message);
+
+    // Object errors
+    if (error && typeof error === 'object') {
+      const obj = error as Record<string, unknown>;
+
+      // Try common message properties in order of preference
+      if (typeof obj['message'] === 'string' && obj['message']) {
+        return obj['message'];
+      }
+      if (typeof obj['error'] === 'string' && obj['error']) {
+        return obj['error'];
+      }
+      if (typeof obj['error_description'] === 'string' && obj['error_description']) {
+        return obj['error_description'];
+      }
+      if (typeof obj['statusText'] === 'string' && obj['statusText']) {
+        return obj['statusText'];
+      }
+      if (typeof obj['name'] === 'string' && obj['name']) {
+        return obj['name'];
+      }
+
+      // Nested error object (common in HTTP responses)
+      if (obj['error'] && typeof obj['error'] === 'object') {
+        const nestedError = obj['error'] as Record<string, unknown>;
+        if (typeof nestedError['message'] === 'string') {
+          return nestedError['message'];
+        }
+      }
+
+      // Try to stringify the object if nothing else works
+      try {
+        const serialized = JSON.stringify(error);
+        // Only use if it's not just "{}" or "[object Object]"
+        if (serialized && serialized !== '{}' && !serialized.includes('[object Object]')) {
+          return serialized.length > 200 ? serialized.substring(0, 200) + '...' : serialized;
+        }
+      } catch {
+        // JSON.stringify failed, fall through to default
+      }
     }
-    return '';
+
+    // Fallback for primitives
+    if (error !== null && error !== undefined) {
+      const str = String(error);
+      if (str !== '[object Object]') {
+        return str;
+      }
+    }
+
+    return 'Error desconocido';
   }
 
   /**
