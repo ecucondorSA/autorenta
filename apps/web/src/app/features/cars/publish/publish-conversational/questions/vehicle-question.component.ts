@@ -40,7 +40,8 @@ import {
         <div class="relative flex-1">
           <!-- Search icon (always visible, inside input) -->
           <svg
-            class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted pointer-events-none z-10"
+            class="absolute top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted pointer-events-none z-10"
+            style="left: 12px;"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -57,7 +58,8 @@ import {
             [(ngModel)]="searchQuery"
             (ngModelChange)="onSearch($event)"
             placeholder="Buscar marca..."
-            class="w-full pl-12 pr-12 py-4 bg-surface-raised border-2 border-border-default rounded-2xl text-lg focus:ring-0 focus:border-cta-default transition-all placeholder:text-text-muted"
+            class="w-full pr-12 py-4 bg-surface-raised border-2 border-border-default rounded-2xl text-lg focus:ring-0 focus:border-cta-default transition-all placeholder:text-text-muted"
+            style="padding-left: 52px !important;"
             [class.border-cta-default]="isFocused()"
             (focus)="isFocused.set(true)"
             (blur)="onBlur()"
