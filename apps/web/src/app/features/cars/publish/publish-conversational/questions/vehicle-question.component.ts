@@ -11,9 +11,10 @@ import {
 import { FormsModule } from '@angular/forms';
 import { PricingService, FipeBrand } from '@core/services/payments/pricing.service';
 import { CarBrandsService } from '@core/services/cars/car-brands.service';
-import { VehicleRecognitionService } from '@core/services/ai/vehicle-recognition.service';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { Capacitor } from '@capacitor/core';
+import {
+  VehicleScannerLiveComponent,
+  VehicleScannerConfirmData,
+} from '@shared/components/vehicle-scanner-live/vehicle-scanner-live.component';
 
 /**
  * Vehicle brand selection question
@@ -22,9 +23,17 @@ import { Capacitor } from '@capacitor/core';
 @Component({
   selector: 'app-vehicle-question',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, VehicleScannerLiveComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    <!-- Live Scanner (fullscreen overlay) -->
+    @if (showScanner()) {
+      <app-vehicle-scanner-live
+        (vehicleConfirmed)="onVehicleConfirmed($event)"
+        (cancelled)="closeScanner()"
+      />
+    }
+
     <div class="space-y-6">
       <!-- Search input with camera button -->
       <div class="flex gap-2">
@@ -55,7 +64,7 @@ import { Capacitor } from '@capacitor/core';
               />
             </svg>
           }
-          @if (searchQuery && !isLoading() && !isRecognizing()) {
+          @if (searchQuery && !isLoading()) {
             <button
               type="button"
               (click)="clearSearch()"
@@ -66,7 +75,7 @@ import { Capacitor } from '@capacitor/core';
               </svg>
             </button>
           }
-          @if (isLoading() || isRecognizing()) {
+          @if (isLoading()) {
             <div class="absolute right-4 top-1/2 -translate-y-1/2">
               <svg class="animate-spin h-5 w-5 text-cta-default" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -76,25 +85,17 @@ import { Capacitor } from '@capacitor/core';
           }
         </div>
 
-        <!-- Camera button for AI recognition -->
+        <!-- Camera button for AI recognition (opens live scanner) -->
         <button
           type="button"
-          (click)="openCameraForRecognition()"
-          [disabled]="isRecognizing()"
-          class="flex-shrink-0 w-14 h-14 bg-cta-default/10 hover:bg-cta-default/20 border border-cta-default/30 rounded-xl flex items-center justify-center transition-all active:scale-95 disabled:opacity-50"
+          (click)="openScanner()"
+          class="flex-shrink-0 w-14 h-14 bg-cta-default/10 hover:bg-cta-default/20 border border-cta-default/30 rounded-xl flex items-center justify-center transition-all active:scale-95"
           title="Escanear auto con cámara"
         >
-          @if (isRecognizing()) {
-            <svg class="animate-spin h-6 w-6 text-cta-default" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-          } @else {
-            <svg class="w-6 h-6 text-cta-default" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          }
+          <svg class="w-6 h-6 text-cta-default" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
         </button>
       </div>
 
@@ -206,7 +207,6 @@ import { Capacitor } from '@capacitor/core';
 export class VehicleQuestionComponent implements OnInit {
   private readonly pricingService = inject(PricingService);
   private readonly carBrandsService = inject(CarBrandsService);
-  private readonly vehicleRecognition = inject(VehicleRecognitionService);
 
   readonly initialValue = input<{ code: string; name: string } | null>(null);
   readonly brandSelected = output<{ code: string; name: string }>();
@@ -215,7 +215,7 @@ export class VehicleQuestionComponent implements OnInit {
   searchQuery = '';
   readonly isFocused = signal(false);
   readonly isLoading = signal(false);
-  readonly isRecognizing = signal(false);
+  readonly showScanner = signal(false);
   readonly recognitionMessage = signal<string | null>(null);
   readonly showResults = signal(false);
   readonly brands = signal<FipeBrand[]>([]);
@@ -318,109 +318,51 @@ export class VehicleQuestionComponent implements OnInit {
   }
 
   /**
-   * Opens camera to take a photo and recognize the vehicle brand
+   * Opens the fullscreen live scanner
    */
-  async openCameraForRecognition(): Promise<void> {
-    this.isRecognizing.set(true);
-    this.recognitionMessage.set(null);
-
-    try {
-      // Check if we're on a native platform
-      const isNative = Capacitor.isNativePlatform();
-
-      let base64Data: string;
-
-      if (isNative) {
-        // Use Capacitor Camera on native
-        const photo = await Camera.getPhoto({
-          quality: 80,
-          allowEditing: false,
-          resultType: CameraResultType.Base64,
-          source: CameraSource.Camera,
-          width: 1024,
-          height: 768,
-        });
-
-        if (!photo.base64String) {
-          throw new Error('No se pudo capturar la imagen');
-        }
-        base64Data = photo.base64String;
-      } else {
-        // Use file input on web
-        base64Data = await this.captureFromWebInput();
-      }
-
-      // Recognize vehicle
-      this.recognitionMessage.set('Analizando imagen...');
-      const result = await this.vehicleRecognition.recognizeFromBase64(base64Data);
-
-      if (result.success && result.vehicle.brand !== 'Desconocido') {
-        // Find matching brand in our list
-        const recognizedBrandName = result.vehicle.brand;
-        const matchingBrand = this.brands().find(
-          (b) =>
-            b.name.toLowerCase().includes(recognizedBrandName.toLowerCase()) ||
-            recognizedBrandName.toLowerCase().includes(b.name.toLowerCase()),
-        );
-
-        if (matchingBrand) {
-          this.selectBrand(matchingBrand);
-          this.recognitionMessage.set(
-            `✓ Detectado: ${result.vehicle.brand} (${result.vehicle.confidence}% confianza)`,
-          );
-        } else {
-          // Set search query to help user find brand
-          this.searchQuery = recognizedBrandName;
-          this.showResults.set(true);
-          this.recognitionMessage.set(
-            `Detectado: ${result.vehicle.brand}. Seleccioná la marca correcta.`,
-          );
-        }
-      } else {
-        this.recognitionMessage.set('No se pudo identificar la marca. Intentá con otra foto.');
-      }
-    } catch (error) {
-      console.error('Camera recognition error:', error);
-      this.recognitionMessage.set('Error al capturar imagen. Intentá de nuevo.');
-    } finally {
-      this.isRecognizing.set(false);
-
-      // Clear message after 5 seconds
-      setTimeout(() => {
-        this.recognitionMessage.set(null);
-      }, 5000);
-    }
+  openScanner(): void {
+    this.showScanner.set(true);
   }
 
   /**
-   * Capture image from web file input (fallback for non-native)
+   * Closes the scanner
    */
-  private captureFromWebInput(): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.capture = 'environment'; // Use rear camera on mobile browsers
+  closeScanner(): void {
+    this.showScanner.set(false);
+  }
 
-      input.onchange = () => {
-        const file = input.files?.[0];
-        if (!file) {
-          reject(new Error('No se seleccionó ninguna imagen'));
-          return;
-        }
+  /**
+   * Handles vehicle confirmed from live scanner
+   */
+  onVehicleConfirmed(data: VehicleScannerConfirmData): void {
+    this.showScanner.set(false);
 
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = reader.result as string;
-          // Remove data URL prefix to get pure base64
-          const base64 = result.split(',')[1];
-          resolve(base64);
-        };
-        reader.onerror = () => reject(new Error('Error al leer la imagen'));
-        reader.readAsDataURL(file);
-      };
+    const recognizedBrandName = data.detection.brand;
 
-      input.click();
-    });
+    // Find matching brand in our FIPE list
+    const matchingBrand = this.brands().find(
+      (b) =>
+        b.name.toLowerCase().includes(recognizedBrandName.toLowerCase()) ||
+        recognizedBrandName.toLowerCase().includes(b.name.toLowerCase()),
+    );
+
+    if (matchingBrand) {
+      this.selectBrand(matchingBrand);
+      this.recognitionMessage.set(
+        `✓ ${data.detection.brand} ${data.detection.model} (${data.detection.confidence}% confianza)`,
+      );
+    } else {
+      // Set search query to help user find brand
+      this.searchQuery = recognizedBrandName;
+      this.showResults.set(true);
+      this.recognitionMessage.set(
+        `Detectado: ${data.detection.brand}. Seleccioná la marca correcta.`,
+      );
+    }
+
+    // Clear message after 5 seconds
+    setTimeout(() => {
+      this.recognitionMessage.set(null);
+    }, 5000);
   }
 }
