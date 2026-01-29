@@ -333,6 +333,59 @@ serve(async (req) => {
 
     console.log('Withdrawal completed successfully:', result);
 
+    // ========================================
+    // NOTIFY N8N OF SUCCESSFUL TRANSFER
+    // ========================================
+    try {
+      const n8nWebhookUrl = Deno.env.get('N8N_TRANSFER_WEBHOOK_URL') || 'http://host.docker.internal:5678/webhook/transfer-completed';
+
+      // Get owner profile for notification
+      const { data: ownerProfile } = await supabase
+        .from('profiles')
+        .select('id, email, full_name, phone, notification_preferences')
+        .eq('id', request.user_id)
+        .single();
+
+      const n8nPayload = {
+        event_type: 'transfer_completed',
+        timestamp: new Date().toISOString(),
+        transfer: {
+          id: result.wallet_transaction_id,
+          provider_id: mpData.id || mpData.transaction_id,
+          amount: request.net_amount,
+          fee_amount: request.fee_amount,
+          gross_amount: request.amount,
+          currency: request.currency || 'ARS',
+          status: 'completed',
+        },
+        owner: ownerProfile ? {
+          id: ownerProfile.id,
+          email: ownerProfile.email,
+          full_name: ownerProfile.full_name,
+          phone: ownerProfile.phone,
+          notification_preferences: ownerProfile.notification_preferences,
+        } : null,
+        bank_account: {
+          type: account.account_type,
+          last_digits: account.account_number.slice(-4),
+          holder_name: account.account_holder_name,
+        },
+        template_code: 'transfer_completed',
+        channels: ['push', 'email'],
+      };
+
+      await fetch(n8nWebhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(n8nPayload),
+      });
+
+      console.log('[Money Out] n8n notified of successful transfer');
+    } catch (n8nError) {
+      // Log but don't fail the request - transfer was already successful
+      console.warn('[Money Out] Failed to notify n8n:', n8nError);
+    }
+
     // Retornar éxito
     return new Response(
       JSON.stringify({
