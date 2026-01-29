@@ -2,6 +2,12 @@
 /* ALL @import RULES MUST COME FIRST */
 /* ============================================ */
 
+/* 🎨 Brand Colors - Single Source of Truth for Brand Colors */
+@import './styles/brand-colors.css';
+
+/* ♿ Accessibility - WCAG 2.2 Compliant Utilities */
+@import './styles/accessibility.css';
+
 /* 🔠 Font System - Simplified (Satoshi + JetBrains Mono only)
    See fonts.css for full documentation */
 @import './styles/fonts.css';
