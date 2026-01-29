@@ -4,6 +4,7 @@ import type {
   KycStatus,
   PaymentProvider,
   PaymentStatus,
+  UserRole,
 } from '../types/database.types';
 import type { Car } from './car.model';
 import type { BookingDepositStatus } from './wallet.model';
@@ -19,13 +20,11 @@ export type {
   PaymentProvider,
   PaymentStatus,
   Transmission,
+  UserRole,
 } from '../types/database.types';
 
 // Admin types
 export type { AdminAuditLog } from '../types/admin.types';
-
-// Define types that are NOT in database.types
-export type UserRole = 'renter' | 'owner' | 'both' | 'admin' | 'superadmin';
 
 // Re-export Supabase types for use throughout the app
 export type {

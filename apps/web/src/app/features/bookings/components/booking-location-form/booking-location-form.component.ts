@@ -43,7 +43,7 @@ export interface BookingLocationData {
  * Calculates distance and delivery fees in real-time
  */
 // Simple location data for single location selection
-export interface LocationData {
+interface LocationData {
   address: string;
   lat: number;
   lng: number;

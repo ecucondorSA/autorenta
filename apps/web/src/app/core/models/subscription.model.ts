@@ -17,7 +17,7 @@
  * - Fórmula alternativa: Valor del auto * 10%
  */
 
-import { Database } from '@core/types/database.types';
+import type { Database, SubscriptionTier } from '@core/types/database.types';
 
 // ============================================================================
 // Database Types (from Supabase)
@@ -33,7 +33,7 @@ export type SubscriptionUsageLogInsert =
   Database['public']['Tables']['subscription_usage_logs']['Insert'];
 
 export type SubscriptionStatus = Database['public']['Enums']['subscription_status'];
-export type SubscriptionTier = Database['public']['Enums']['subscription_tier'];
+export type { SubscriptionTier } from '@core/types/database.types';
 
 // ============================================================================
 // Application Types
