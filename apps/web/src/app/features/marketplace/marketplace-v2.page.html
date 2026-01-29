@@ -157,7 +157,7 @@
           role="region" aria-label="Autos disponibles - Scroll horizontal">
           @for (car of visibleCars(); track trackByCarId(i, car); let i = $index) {
           <a [routerLink]="['/cars/detail', car.id]" (click)="onCarSelected(car.id)"
-            class="relative flex-shrink-0 w-[85vw] snap-center bg-surface-raised rounded-3xl overflow-visible shadow-lg border border-border-default flex flex-col"
+            class="relative flex-shrink-0 w-[85vw] h-full snap-center bg-surface-raised rounded-3xl overflow-visible shadow-lg border border-border-default flex flex-col"
             [attr.aria-label]="
                 'Ver detalles de ' + car.brand_text_backup + ' ' + car.model_text_backup
               ">
@@ -488,8 +488,8 @@
   <!-- This closes max-w-7xl -->
 </section>
 
-<!-- PARTNERS SECTION - Infinite Marquee -->
-<section class="py-12 md:py-20 border-b border-border-default/30 bg-surface-base overflow-hidden relative">
+<!-- PARTNERS SECTION - Infinite Marquee (Hidden on mobile for cleaner UX) -->
+<section class="hidden md:block py-12 md:py-20 border-b border-border-default/30 bg-surface-base overflow-hidden relative">
   <!-- Gradient Fade Masks -->
   <div
     class="absolute top-0 bottom-0 left-0 w-24 md:w-32 z-10 bg-gradient-to-r from-surface-base to-transparent pointer-events-none">
