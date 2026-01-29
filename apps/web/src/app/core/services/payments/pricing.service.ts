@@ -388,6 +388,62 @@ export class PricingService {
   }
 
   /**
+   * Get FIPE models filtered by year availability
+   * Only returns models that were available in the specified year
+   * @param brandCode FIPE brand code
+   * @param year Year to filter by (e.g., 2016)
+   */
+  async getFipeModelsByYear(brandCode: string, year: number): Promise<FipeModel[]> {
+    try {
+      const allModels = await this.getFipeModels(brandCode);
+      if (allModels.length === 0) return [];
+
+      // Check year availability for each model in parallel batches
+      const BATCH_SIZE = 10;
+      const availableModels: FipeModel[] = [];
+
+      for (let i = 0; i < allModels.length; i += BATCH_SIZE) {
+        const batch = allModels.slice(i, i + BATCH_SIZE);
+        const results = await Promise.all(
+          batch.map(async (model) => {
+            const hasYear = await this.checkModelYearAvailability(brandCode, model.code, year);
+            return hasYear ? model : null;
+          }),
+        );
+        availableModels.push(...results.filter((m): m is FipeModel => m !== null));
+      }
+
+      return availableModels;
+    } catch (error) {
+      console.error(`[PricingService] getFipeModelsByYear failed:`, error);
+      return [];
+    }
+  }
+
+  /**
+   * Check if a specific year is available for a model
+   */
+  private async checkModelYearAvailability(
+    brandCode: string,
+    modelCode: string,
+    year: number,
+  ): Promise<boolean> {
+    try {
+      const response = await fetch(
+        `https://parallelum.com.br/fipe/api/v2/cars/brands/${brandCode}/models/${modelCode}/years`,
+      );
+
+      if (!response.ok) return false;
+
+      const years: Array<{ code: string; name: string }> = await response.json();
+      // Year codes are like "2016-1" (gasoline) or "2016-3" (flex)
+      return years.some((y) => y.code.startsWith(`${year}-`) || y.name.includes(String(year)));
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Extract base model name from full model name
    * e.g., "Gol 1.0 Flex 12V 5p" -> "Gol"
    * e.g., "Corolla XEi 2.0" -> "Corolla"

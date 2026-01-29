@@ -234,12 +234,14 @@ export class ModelQuestionComponent implements OnInit, OnChanges {
 
   private async loadModels(): Promise<void> {
     const brandCode = this.brandCode();
+    const year = this.year();
 
-    if (!brandCode) return;
+    if (!brandCode || !year) return;
 
     this.isLoading.set(true);
     try {
-      const models = await this.pricingService.getFipeModels(brandCode);
+      // Filter models by year availability
+      const models = await this.pricingService.getFipeModelsByYear(brandCode, year);
       this.models.set(models);
 
       // Restore initial value if provided
@@ -248,7 +250,7 @@ export class ModelQuestionComponent implements OnInit, OnChanges {
         const model = models.find((m) => m.code === initial.code);
         if (model) {
           this.selectedModel.set(model);
-          this.searchQuery = model.name;
+          // Don't set searchQuery - keep it empty to show all models
         }
       }
     } catch (error) {
