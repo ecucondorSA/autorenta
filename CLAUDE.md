@@ -938,4 +938,111 @@ Sentry.init({
 
 ---
 
-**© 2026 AutoRenta | Claude Agent Configuration v3.2**
+## 33. CI/CD & Database Types (CRÍTICO)
+
+### Protocolo para Regenerar Tipos de Base de Datos
+
+**NUNCA** regenerar `database.types.ts` sin verificación previa:
+
+```bash
+# 1. Generar a archivo temporal
+supabase gen types typescript --project-id PROJECT_ID > /tmp/fresh-types.ts
+
+# 2. Comparar diferencias ANTES de copiar
+diff apps/web/src/app/core/types/database.types.ts /tmp/fresh-types.ts
+
+# 3. Verificar enums críticos (pueden romper el build)
+grep -E "FuelType|BookingStatus|UserRole" /tmp/fresh-types.ts
+
+# 4. Build local ANTES de push
+pnpm build
+
+# 5. Solo entonces copiar y commitear
+cp /tmp/fresh-types.ts apps/web/src/app/core/types/database.types.ts
+```
+
+### Enums con Idioma Mixto (DB Español ↔ UI Inglés)
+
+| Enum DB (Español) | Uso en UI (Inglés) | Mapeo Requerido |
+|-------------------|-------------------|-----------------|
+| `electrico` | `electric` | Sí - filter ID |
+| `nafta` | `gasoline` | Sí - display |
+| `gasoil` | `diesel` | No - igual |
+| `locador` | `owner` | Sí - roles |
+| `locatario` | `renter` | Sí - roles |
+
+**Regla:** Siempre comparar contra el valor del ENUM de DB, no el display de UI.
+
+```typescript
+// ❌ INCORRECTO - 'electric' no existe en FuelType enum
+cars.filter(c => c.fuel_type === 'electric')
+
+// ✅ CORRECTO - usar valor real del enum
+cars.filter(c => c.fuel_type === 'electrico')
+```
+
+### Workflows Resilientes
+
+**Principio:** Un workflow debe fallar solo por errores reales, no por configuración faltante.
+
+```yaml
+# ✅ CORRECTO - Skip graceful si falta configuración
+- name: Check prerequisites
+  id: check
+  run: |
+    if [ -z "$SECRET" ]; then
+      echo "skip=true" >> $GITHUB_OUTPUT
+      echo "⚠️ SECRET not configured, skipping"
+    fi
+
+- name: Run task
+  if: steps.check.outputs.skip != 'true'
+  run: actual-command
+
+# ❌ INCORRECTO - Usar continue-on-error para ocultar problemas
+- name: Run task
+  continue-on-error: true  # Oculta errores reales
+  run: actual-command
+```
+
+### Pre-Push Checklist para CI
+
+Antes de hacer push a `main`, SIEMPRE ejecutar:
+
+```bash
+# 1. Lint
+pnpm lint
+
+# 2. Build (detecta errores de tipos)
+pnpm build
+
+# 3. Si modificaste database.types.ts
+grep -E "FuelType|BookingStatus" apps/web/src/app/core/types/database.types.ts
+# Verificar que los valores coinciden con el código
+
+# 4. Si modificaste workflows
+# Revisar que no haya secrets hardcodeados
+grep -r "sk_live\|APP_USR" .github/workflows/
+```
+
+### Secrets Requeridos por Workflow
+
+| Workflow | Secrets Necesarios |
+|----------|-------------------|
+| `ci.yml` | Ninguno (build local) |
+| `e2e-tests.yml` | `SUPABASE_URL`, `SUPABASE_ANON_KEY` |
+| `types-sync-check.yml` | `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID` |
+| `sql-tests.yml` | `DATABASE_URL` |
+| `contracts.yml` | `STAGING_SUPABASE_URL`, `STAGING_SUPABASE_ANON_KEY` |
+
+### Lecciones Aprendidas (2026-01-29)
+
+1. **Regenerar tipos puede romper builds** - El schema de DB puede tener valores diferentes a lo que espera el código
+2. **Probar localmente ANTES de push** - Un ciclo CI de 3-5 min por error es ineficiente
+3. **Skip graceful > continue-on-error** - Lo segundo oculta problemas reales
+4. **Commits atómicos** - Un fix por commit, no 8 commits iterativos
+5. **Project Lazarus puede interferir** - Commits automatizados pueden causar conflictos
+
+---
+
+**© 2026 AutoRenta | Claude Agent Configuration v3.3**
