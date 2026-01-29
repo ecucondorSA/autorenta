@@ -34,29 +34,39 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
 
       <!-- Search input -->
       <div class="relative">
+        <svg
+          class="absolute top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted pointer-events-none z-10"
+          style="left: 12px;"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
         <input
           type="text"
           [(ngModel)]="searchQuery"
           (ngModelChange)="onSearch($event)"
           placeholder="Buscar modelo..."
-          class="w-full px-4 py-4 bg-surface-raised border border-border-default rounded-xl text-lg focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all"
-          [class.pl-12]="!searchQuery"
+          class="w-full pr-12 py-4 bg-surface-raised border-2 border-border-default rounded-2xl text-lg focus:ring-0 focus:border-cta-default transition-all placeholder:text-text-muted"
+          style="padding-left: 52px !important;"
           [disabled]="isLoading()"
         />
-        @if (!searchQuery) {
-          <svg
-            class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted pointer-events-none"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        @if (searchQuery && !isLoading()) {
+          <button
+            type="button"
+            (click)="clearSearch()"
+            class="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-surface-secondary hover:bg-surface-hover text-text-muted hover:text-text-primary transition-all"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         }
         @if (isLoading()) {
           <div class="absolute right-4 top-1/2 -translate-y-1/2">
@@ -123,47 +133,56 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
 
       <!-- Selected model indicator -->
       @if (selectedModel()) {
-        <div class="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
-          <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-800 rounded-full flex items-center justify-center flex-shrink-0">
-            <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="flex items-center gap-3 p-4 bg-emerald-100 dark:bg-emerald-900 border border-emerald-300 dark:border-emerald-700 rounded-xl">
+          <div class="w-10 h-10 bg-emerald-200 dark:bg-emerald-800 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-emerald-700 dark:text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-sm text-emerald-700 dark:text-emerald-400">Modelo seleccionado</p>
-            <p class="font-semibold text-emerald-900 dark:text-emerald-200 text-sm sm:text-base break-words">{{ selectedModel()?.name }}</p>
+            <p class="text-sm text-emerald-800 dark:text-emerald-100">Modelo seleccionado</p>
+            <p class="font-semibold text-emerald-900 dark:text-white text-sm sm:text-base break-words">{{ selectedModel()?.name }}</p>
           </div>
+          <button
+            type="button"
+            (click)="clearSelection()"
+            class="text-emerald-700 dark:text-emerald-200 hover:text-emerald-900 dark:hover:text-white transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       }
 
       <!-- Market value display -->
       @if (selectedModel()) {
-        <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+        <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 border border-blue-200 dark:border-blue-700 rounded-xl">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center">
               @if (isLoadingValue()) {
-                <svg class="animate-spin h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
+                <svg class="animate-spin h-5 w-5 text-blue-600 dark:text-blue-300" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
               } @else {
-                <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-5 h-5 text-blue-600 dark:text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               }
             </div>
             <div class="flex-1">
-              <p class="text-sm text-blue-700 dark:text-blue-400">Valor de mercado estimado</p>
+              <p class="text-sm text-blue-800 dark:text-blue-100">Valor de mercado estimado</p>
               @if (isLoadingValue()) {
-                <p class="font-semibold text-blue-900 dark:text-blue-200">Calculando...</p>
+                <p class="font-semibold text-blue-900 dark:text-white">Calculando...</p>
               } @else if (marketValueUsd()) {
-                <p class="font-semibold text-blue-900 dark:text-blue-200 text-lg">~US$ {{ formatMarketValue(marketValueUsd()!) }}</p>
+                <p class="font-semibold text-blue-900 dark:text-white text-lg">~US$ {{ formatMarketValue(marketValueUsd()!) }}</p>
               } @else {
-                <p class="font-semibold text-blue-900 dark:text-blue-200">No disponible</p>
+                <p class="font-semibold text-blue-900 dark:text-white">No disponible</p>
               }
             </div>
           </div>
-          <p class="text-xs text-blue-600 dark:text-blue-400 mt-2 ml-13">
+          <p class="text-xs text-blue-700 dark:text-blue-200 mt-2 ml-13">
             Basado en el mercado de vehículos similares
           </p>
         </div>
@@ -244,9 +263,18 @@ export class ModelQuestionComponent implements OnInit, OnChanges {
     this.searchQuery = query;
   }
 
+  clearSearch(): void {
+    this.searchQuery = '';
+  }
+
+  clearSelection(): void {
+    this.selectedModel.set(null);
+    this.marketValueUsd.set(null);
+  }
+
   async selectModel(model: FipeModel): Promise<void> {
     this.selectedModel.set(model);
-    this.searchQuery = model.name;
+    this.searchQuery = '';  // Clear search to show all models
     this.modelSelected.emit({ code: model.code, name: model.name });
 
     // Load FIPE value

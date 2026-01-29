@@ -802,7 +802,38 @@ Requerido por European Accessibility Act (EAA) desde Junio 2025.
 - Navegación completa por teclado
 - Labels en todos los inputs
 
-**Herramientas:** axe DevTools (Chrome), Lighthouse Accessibility
+**Valores CSS Garantizados (WCAG AA):**
+
+```css
+/* === TEXTO === */
+color: #fff;                        /* ✅ Blanco puro - 21:1 en negro */
+color: #000;                        /* ✅ Negro puro - 21:1 en blanco */
+color: rgba(255,255,255,0.87);      /* ✅ Material Design high-emphasis */
+
+/* === FONDOS OSCUROS SOBRE VIDEO/IMÁGENES === */
+background: rgba(0,0,0,0.7);        /* ✅ Mínimo garantizado */
+background: rgba(0,0,0,0.85);       /* ✅ Recomendado (~12:1 con blanco) */
+background: rgba(0,0,0,0.9);        /* ✅ Máximo contraste */
+
+/* === BORDES/LÍNEAS VISIBLES === */
+border: 3px solid #fff;             /* ✅ Con drop-shadow para fondos variables */
+filter: drop-shadow(0 0 4px rgba(0,0,0,0.8));  /* ✅ Garantiza visibilidad */
+
+/* === COLORES SEGUROS PARA ESTADOS === */
+--color-success: #00d95f;           /* ✅ Verde accesible */
+--color-error: #ef4444;             /* ✅ Rojo accesible */
+--color-warning: #fbbf24;           /* ✅ Amarillo con texto negro */
+```
+
+**NUNCA usar (contraste insuficiente):**
+```css
+color: rgba(255,255,255,0.5);       /* ❌ 7:1 - falla en texto pequeño */
+color: rgba(255,255,255,0.6);       /* ❌ Límite, evitar */
+background: rgba(0,0,0,0.5);        /* ❌ Insuficiente sobre imágenes */
+border: 1px solid rgba(x,x,x,0.3);  /* ❌ Invisible en muchos fondos */
+```
+
+**Herramientas:** axe DevTools (Chrome), Lighthouse Accessibility, [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
 
 ### 🟡 Media Prioridad
 
