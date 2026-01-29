@@ -17,8 +17,8 @@ import { GoogleOneTapService } from '@core/services/auth/google-one-tap.service'
 import { PasskeysService } from '@core/services/auth/passkeys.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { HdriBackgroundComponent } from '../../../shared/components/hdri-background/hdri-background.component';
 import { environment } from '@environment';
+import { HdriBackgroundComponent } from '../../../shared/components/hdri-background/hdri-background.component';
 
 @Component({
   standalone: true,
