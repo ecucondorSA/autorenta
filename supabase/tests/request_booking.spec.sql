@@ -18,13 +18,13 @@ VALUES
 ('00000000-0000-0000-0000-000000000002'::uuid, 'authenticated', 'authenticated', 'renter@test.local', now())
 ON CONFLICT (id) DO NOTHING;
 
--- Create corresponding profiles
-INSERT INTO public.profiles (id, email, role, created_at)
-VALUES ('00000000-0000-0000-0000-000000000001', 'owner@test.local', 'locador', now())
+-- Create corresponding profiles (profiles table uses full_name, not email)
+INSERT INTO public.profiles (id, full_name, role, created_at)
+VALUES ('00000000-0000-0000-0000-000000000001', 'Test Owner', 'locador', now())
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO public.profiles (id, email, role, created_at)
-VALUES ('00000000-0000-0000-0000-000000000002', 'renter@test.local', 'locatario', now())
+INSERT INTO public.profiles (id, full_name, role, created_at)
+VALUES ('00000000-0000-0000-0000-000000000002', 'Test Renter', 'locatario', now())
 ON CONFLICT (id) DO NOTHING;
 
 -- Create a test car with required non-null columns
