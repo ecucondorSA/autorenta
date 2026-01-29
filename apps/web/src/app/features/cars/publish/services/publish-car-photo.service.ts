@@ -63,9 +63,11 @@ export class PublishCarPhotoService {
   readonly uploadedPhotos = signal<PhotoPreview[]>([]);
   readonly isProcessingPhotos = signal(false);
   readonly isGeneratingAIPhotos = signal(false);
+  readonly aiGenerationCountdown = signal(0); // Countdown timer for AI generation
   readonly isValidatingQuality = signal(false);
   readonly isDetectingPlates = signal(false);
   readonly isRecognizingVehicle = signal(false);
+  private countdownInterval: ReturnType<typeof setInterval> | null = null;
 
   // AI Results
   readonly recognitionResult = signal<VehicleRecognitionResult | null>(null);
@@ -186,6 +188,7 @@ export class PublishCarPhotoService {
     }
 
     this.isGeneratingAIPhotos.set(true);
+    this.startCountdown(30); // Start 30 second countdown
 
     try {
       // Generación de imágenes se hace vía Worker (server-side) para no exponer keys en el navegador.
@@ -275,8 +278,36 @@ export class PublishCarPhotoService {
       console.error('Error general durante la generación de fotos:', error);
       alert('Ocurrió un error inesperado al generar fotos. Intenta nuevamente.');
     } finally {
+      this.stopCountdown();
       this.isGeneratingAIPhotos.set(false);
     }
+  }
+
+  /**
+   * Start countdown timer
+   */
+  private startCountdown(seconds: number): void {
+    this.stopCountdown(); // Clear any existing countdown
+    this.aiGenerationCountdown.set(seconds);
+    this.countdownInterval = setInterval(() => {
+      const current = this.aiGenerationCountdown();
+      if (current > 0) {
+        this.aiGenerationCountdown.set(current - 1);
+      } else {
+        this.stopCountdown();
+      }
+    }, 1000);
+  }
+
+  /**
+   * Stop countdown timer
+   */
+  private stopCountdown(): void {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+      this.countdownInterval = null;
+    }
+    this.aiGenerationCountdown.set(0);
   }
 
   // Helper function to convert base64 to File object

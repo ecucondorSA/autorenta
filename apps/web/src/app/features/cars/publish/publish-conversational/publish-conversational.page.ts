@@ -172,6 +172,8 @@ import { QUESTIONS_CONFIG, formatQuestionTitle } from './questions.config';
                 [modelName]="formService.selectedModel()?.name ?? ''"
                 [year]="formService.selectedYear() ?? undefined"
                 [initialPhotos]="photos()"
+                [isGeneratingAI]="photoService.isGeneratingAIPhotos()"
+                [generationCountdown]="photoService.aiGenerationCountdown()"
                 (photosChanged)="onPhotosChanged($event)"
                 (vehicleDetected)="onVehicleAutoDetected($event)"
                 (requestAiGeneration)="onRequestAiGeneration()"
@@ -244,7 +246,7 @@ import { QUESTIONS_CONFIG, formatQuestionTitle } from './questions.config';
 })
 export class PublishConversationalPage implements OnInit, OnDestroy {
   readonly formService = inject(ConversationalFormService);
-  private readonly photoService = inject(PublishCarPhotoService);
+  readonly photoService = inject(PublishCarPhotoService);
   private readonly locationService = inject(PublishCarLocationService);
   private readonly carsService = inject(CarsService);
   private readonly notifications = inject(NotificationManagerService);

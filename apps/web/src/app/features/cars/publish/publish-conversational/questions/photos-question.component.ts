@@ -35,6 +35,8 @@ import { PhotoUploadAIComponent, PhotoWithAI, VehicleAutoDetect } from '@shared/
         [enableQualityValidation]="true"
         [requiredPositions]="['front', 'rear', 'interior']"
         [initialPhotos]="initialPhotos()"
+        [isGeneratingAI]="isGeneratingAI()"
+        [generationCountdown]="generationCountdown()"
         (photosChange)="onPhotosChange($event)"
         (vehicleDetected)="onVehicleDetected($event)"
         (requestAiGeneration)="onRequestAiGeneration()"
@@ -94,6 +96,8 @@ export class PhotosQuestionComponent {
   readonly modelName = input<string>();
   readonly year = input<number>();
   readonly initialPhotos = input<PhotoWithAI[]>([]);
+  readonly isGeneratingAI = input(false);
+  readonly generationCountdown = input(0);
 
   readonly photosChanged = output<PhotoWithAI[]>();
   readonly vehicleDetected = output<VehicleAutoDetect>();
