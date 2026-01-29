@@ -136,12 +136,15 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
           <button
             type="button"
             (click)="requestAiGeneration.emit()"
-            class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-lg text-xs font-bold shadow-lg hover:shadow-violet-500/30 hover:scale-105 transition-all"
+            class="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-lg text-xs font-bold shadow-lg hover:shadow-violet-500/30 hover:scale-105 transition-all"
           >
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
-            GENERAR FOTOS
+            <span class="hidden sm:inline">GENERAR</span>
+            <svg class="w-3.5 h-3.5 sm:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
           </button>
 
           <!-- AI Quality Score Badge -->
@@ -224,8 +227,8 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
               <span class="text-sm font-semibold text-text-primary">
                 {{ isDragging() ? 'Soltá aquí' : 'Subir fotos' }}
               </span>
-              <p class="text-xs text-text-muted mt-0.5">
-                Arrastrá o tocá para seleccionar
+              <p class="text-xs text-text-muted mt-0.5 leading-tight">
+                Tocá para agregar
               </p>
             </div>
           </div>
@@ -260,7 +263,7 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
               </div>
             }
 
-            <!-- Status Badge - Always shows score, never blocks -->
+            <!-- Status Badge - Shows clear status, never blocks -->
             @if (photo.status !== 'validating') {
               <div class="absolute top-2 left-2">
                 @if (photo.status === 'valid') {
@@ -268,15 +271,15 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
                     <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                     </svg>
-                    {{ photo.quality?.score || 100 }}%
+                    OK
                   </div>
                 } @else {
-                  <!-- Warning state - show score with amber color but allow to proceed -->
+                  <!-- Warning state - show warning icon but allow to proceed -->
                   <div class="flex items-center gap-1 px-2 py-1 bg-amber-500 text-white rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider border border-white/20 backdrop-blur-md">
                     <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    {{ photo.quality?.score || 100 }}%
+                    Revisar
                   </div>
                 }
               </div>
@@ -297,8 +300,8 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
 
             <!-- Cover Badge -->
             @if (i === 0) {
-              <div class="absolute bottom-2 left-2 px-2 py-1 badge-glass-dark rounded-md shadow-lg">
-                <span class="text-[10px] font-bold uppercase tracking-wider">Portada</span>
+              <div class="absolute bottom-2 left-2 px-2.5 py-1 bg-slate-900 rounded-md shadow-lg border border-white/20">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-white">Portada</span>
               </div>
             }
 
