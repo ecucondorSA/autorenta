@@ -30,14 +30,14 @@
     </div>
   </header>
 
-  <!-- Filter Pills -->
+  <!-- Filter Pills - Mobile optimized touch targets -->
   <div class="container-page px-4 sm:px-6 mb-6">
-    <div class="flex flex-wrap sm:flex-nowrap gap-2 sm:overflow-x-auto pb-2 scrollbar-hide">
+    <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
       @for (filter of statusFilters; track filter) {
         <button
           (click)="setStatusFilter(filter)"
           appPressScale
-          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors border"
+          class="inline-flex items-center gap-1.5 px-4 py-2.5 sm:px-3 sm:py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors border flex-shrink-0 min-h-[44px] sm:min-h-0 active:scale-95"
           [class]="
             statusFilter() === filter
               ? 'bg-cta-default text-cta-text border-cta-default shadow-sm'
@@ -46,7 +46,7 @@
         >
           <span>{{ getFilterLabel(filter) }}</span>
           <span
-            class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold"
+            class="inline-flex items-center justify-center min-w-[22px] h-[22px] sm:min-w-[20px] sm:h-5 px-1.5 rounded-full text-xs font-bold"
             [class]="
               statusFilter() === filter
                 ? 'bg-white/20 text-cta-text'
