@@ -204,9 +204,15 @@ export class PublishCarPhotoService {
           ? (globalThis.crypto as Crypto).randomUUID()
           : `${Date.now()}-${Math.random().toString(16).slice(2)}`);
 
-      // Generar hasta 3 imágenes: 3/4 frontal, lateral, interior (estilo marketplace)
-      const angles: Array<'3/4-front' | 'side' | 'interior'> = ['3/4-front', 'side', 'interior'];
-      for (const [index, angle] of angles.entries()) {
+      // Generar hasta 3 imágenes: frente, trasera, interior (estilo marketplace)
+      // Map angles to positions for proper slot placement
+      const angleConfig: Array<{ angle: '3/4-front' | 'side' | 'interior'; position: VehiclePosition }> = [
+        { angle: '3/4-front', position: 'front' },
+        { angle: 'side', position: 'rear' },
+        { angle: 'interior', position: 'interior' },
+      ];
+
+      for (const [index, config] of angleConfig.entries()) {
         if (remainingSlots <= 0) break;
 
         try {
@@ -220,7 +226,7 @@ export class PublishCarPhotoService {
               color: options.color,
               body_type: options.body_type,
               trim_level: options.trim_level,
-              angle,
+              angle: config.angle,
               // Marketplace-style photos (avoid studio/showroom look)
               style: 'marketplace_latam_border_town',
               set_id: setId,
@@ -244,7 +250,8 @@ export class PublishCarPhotoService {
             `ai-${brand}-${model}-${Date.now()}-${index}.png`,
           );
           const workerPreview = await this.createPreview(workerFile);
-          generatedPhotos.push({ file: workerFile, preview: workerPreview });
+          // Assign position so photo appears in correct slot
+          generatedPhotos.push({ file: workerFile, preview: workerPreview, position: config.position });
           remainingSlots--;
         } catch (error) {
           console.error(`Error generando foto ${index + 1} con worker:`, error);
