@@ -210,6 +210,8 @@ mcp_config.*.json
 # IDE specific
 .cursor/
 .agent/
+.codex/
+CODEX.md
 
 # Pitch decks (don't belong in repo)
 *.pptx

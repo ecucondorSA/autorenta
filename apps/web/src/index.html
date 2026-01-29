@@ -261,6 +261,65 @@
     }
   </script>
 
+  <!-- Emergency SW cache recovery - fixes stale chunk MIME errors -->
+  <script>
+    (function() {
+      var mimeErrorCount = 0;
+      var hasTriedRecovery = sessionStorage.getItem('ar_sw_recovery_attempted');
+
+      window.addEventListener('error', function(e) {
+        // Detect module loading failures (MIME type errors from stale SW cache)
+        if (e.message && (
+          e.message.includes('Failed to load module script') ||
+          e.message.includes('MIME type') ||
+          e.message.includes('text/html')
+        )) {
+          mimeErrorCount++;
+          console.warn('[SW Recovery] Detected stale cache error #' + mimeErrorCount);
+
+          // After 3 errors and if we haven't tried recovery yet, clear everything
+          if (mimeErrorCount >= 3 && !hasTriedRecovery) {
+            sessionStorage.setItem('ar_sw_recovery_attempted', 'true');
+            console.warn('[SW Recovery] Clearing Service Worker caches...');
+
+            // Unregister all service workers
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                registrations.forEach(function(registration) {
+                  registration.unregister();
+                  console.log('[SW Recovery] Unregistered SW:', registration.scope);
+                });
+              });
+            }
+
+            // Clear all caches
+            if ('caches' in window) {
+              caches.keys().then(function(names) {
+                names.forEach(function(name) {
+                  caches.delete(name);
+                  console.log('[SW Recovery] Deleted cache:', name);
+                });
+              });
+            }
+
+            // Reload after a short delay to let cleanup complete
+            setTimeout(function() {
+              console.log('[SW Recovery] Reloading page...');
+              window.location.reload(true);
+            }, 1000);
+          }
+        }
+      }, true);
+
+      // Clear recovery flag after successful load
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          sessionStorage.removeItem('ar_sw_recovery_attempted');
+        }, 5000);
+      });
+    })();
+  </script>
+
   <app-root></app-root>
   <noscript>Please enable JavaScript to continue using this application.</noscript>
 
