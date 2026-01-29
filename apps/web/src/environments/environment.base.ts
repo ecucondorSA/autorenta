@@ -79,6 +79,8 @@ interface EnvDefaults {
   googleCalendarApiKey?: string;
   googleCalendarClientId?: string;
   googleGeolocationApiKey?: string;
+  enableTikTok?: boolean;
+  enableFacebook?: boolean;
   tiktok?: TikTokConfig;
   googleOneTap?: GoogleOneTapConfig;
   socialMedia?: SocialMediaConfig;
@@ -195,6 +197,8 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
     'NG_APP_GOOGLE_GEOLOCATION_API_KEY',
     defaults.googleGeolocationApiKey,
   ),
+  enableTikTok: defaults.enableTikTok ?? false,
+  enableFacebook: defaults.enableFacebook ?? false,
   tiktok: {
     clientId: resolve('NG_APP_TIKTOK_CLIENT_ID', defaults.tiktok?.clientId),
   },

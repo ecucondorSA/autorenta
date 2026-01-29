@@ -39,11 +39,7 @@ jobs:
         continue-on-error: true
       
       - name: Check for vulnerable dependencies
-        run: |
-          if pnpm audit --audit-level=high | grep -q "vulnerabilities"; then
-            echo "::error::High or critical vulnerabilities found!"
-            exit 1
-          fi
+        run: pnpm audit --audit-level=high
 
   secret-scan:
     name: 🔐 Secret Detection

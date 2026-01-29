@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { FacebookLogin, FacebookLoginResponse } from '@capacitor-community/facebook-login';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { environment } from '@environment';
 
 declare global {
   interface Window {
@@ -30,6 +31,7 @@ export class FacebookAuthService {
   private readonly platformId = inject(PLATFORM_ID);
   private initialized = false;
   private sdkReady = false;
+  private readonly isEnabled = environment.enableFacebook;
   private readonly FB_APP_ID = '4435998730015502';
   // Facebook Login for Business config_id (created in Meta Developer Console)
   // This replaces the traditional scope/permissions approach
@@ -161,6 +163,11 @@ export class FacebookAuthService {
    */
   async initialize(): Promise<boolean> {
     if (this.initialized) return true;
+    if (!this.isEnabled) {
+      this.logger.info('Facebook Login is disabled by configuration', 'FacebookAuthService');
+      this.initialized = false;
+      return false;
+    }
 
     try {
       // Wait for FB SDK to be ready on web
@@ -200,7 +207,7 @@ export class FacebookAuthService {
    * Check if Facebook Login is available and ready
    */
   isAvailable(): boolean {
-    return this.initialized && this.sdkReady;
+    return this.isEnabled && this.initialized && this.sdkReady;
   }
 
   /**
@@ -211,6 +218,9 @@ export class FacebookAuthService {
    */
   async login(): Promise<void> {
     try {
+      if (!this.isEnabled) {
+        throw this.createExpectedError('Facebook Login está desactivado temporalmente');
+      }
       // Ensure initialized before login
       if (!this.initialized) {
         const success = await this.initialize();

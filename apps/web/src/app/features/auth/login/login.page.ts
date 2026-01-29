@@ -18,6 +18,7 @@ import { PasskeysService } from '@core/services/auth/passkeys.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { HdriBackgroundComponent } from '../../../shared/components/hdri-background/hdri-background.component';
+import { environment } from '@environment';
 
 @Component({
   standalone: true,
@@ -57,6 +58,8 @@ export class LoginPage implements OnInit, OnDestroy {
   readonly oneTapAvailable = this.googleOneTap.isAvailable;
   readonly passkeysSupported = this.passkeys.isSupported;
   readonly passkeysState = this.passkeys.state;
+  readonly tiktokEnabled = environment.enableTikTok;
+  readonly facebookEnabled = environment.enableFacebook;
 
   // Biometría nativa (huella/Face ID)
   readonly biometricReady = this.biometric.isReady;
@@ -219,6 +222,10 @@ export class LoginPage implements OnInit, OnDestroy {
 
   async signInWithTikTok(): Promise<void> {
     if (this.loading()) return;
+    if (!this.tiktokEnabled) {
+      this.error.set('TikTok está desactivado temporalmente.');
+      return;
+    }
 
     this.loading.set(true);
     this.error.set(null);
@@ -253,6 +260,10 @@ export class LoginPage implements OnInit, OnDestroy {
 
   async signInWithFacebook(): Promise<void> {
     if (this.loading()) return;
+    if (!this.facebookEnabled) {
+      this.error.set('Facebook está desactivado temporalmente.');
+      return;
+    }
 
     this.loading.set(true);
     this.error.set(null);

@@ -37,7 +37,7 @@ export class TikTokEventsService {
   private readonly authService = inject(AuthService);
 
   private readonly edgeFunctionUrl = `${environment.supabaseUrl}/functions/v1/tiktok-events`;
-  private readonly isEnabled = environment.production; // ✅ ENABLED in production
+  private readonly isEnabled = environment.production && environment.enableTikTok;
 
   /**
    * Track ViewContent event
@@ -249,7 +249,7 @@ export class TikTokEventsService {
    */
   private async sendEvent(event: string, properties: Record<string, unknown>): Promise<void> {
     if (!this.isEnabled) {
-      this.logger.debug('[TikTok Events] Disabled in development');
+      this.logger.debug('[TikTok Events] Disabled by configuration');
       return;
     }
 

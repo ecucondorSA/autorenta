@@ -17,6 +17,7 @@ import { getCorsHeaders } from '../_shared/cors.ts';
 
 const TIKTOK_TOKEN_URL = 'https://open.tiktokapis.com/v2/oauth/token/';
 const TIKTOK_USER_INFO_URL = 'https://open.tiktokapis.com/v2/user/info/';
+const TIKTOK_OAUTH_ENABLED = Deno.env.get('TIKTOK_OAUTH_ENABLED') === 'true';
 
 interface TikTokTokenResponse {
   access_token: string;
@@ -41,6 +42,13 @@ serve(async (req) => {
 
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
+  }
+
+  if (!TIKTOK_OAUTH_ENABLED) {
+    return new Response(
+      JSON.stringify({ success: false, error: 'TikTok OAuth disabled' }),
+      { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+    );
   }
 
   try {

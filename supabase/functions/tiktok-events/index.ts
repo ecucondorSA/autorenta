@@ -20,6 +20,7 @@ const TIKTOK_API_TIMEOUT_MS = 15_000;
 const TIKTOK_PIXEL_ID = 'D4AHBBBC77U2U4VHPCO0';
 const TIKTOK_API_VERSION = 'v1.3';
 const TIKTOK_API_BASE_URL = 'https://business-api.tiktok.com';
+const TIKTOK_EVENTS_ENABLED = Deno.env.get('TIKTOK_EVENTS_ENABLED') === 'true';
 
 // Event types supported
 type TikTokEventType =
@@ -219,7 +220,7 @@ serve(async (req) => {
     corsHeaders = {
       ...getCorsHeaders(req),
       'Access-Control-Allow-Headers':
-        'authorization, x-client-info, apikey, content-type, x-forwarded-for, x-real-ip',
+        'authorization, x-client-info, apikey, content-type, x-forwarded-for, x-real-ip, baggage, sentry-trace, traceparent',
     };
   } catch {
     // Fallback to production domain instead of wildcard for security
@@ -233,6 +234,13 @@ serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
+  }
+
+  if (!TIKTOK_EVENTS_ENABLED) {
+    return new Response(
+      JSON.stringify({ success: true, disabled: true, message: 'TikTok Events disabled' }),
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+    );
   }
 
   try {

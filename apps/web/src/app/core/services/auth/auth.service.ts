@@ -327,6 +327,9 @@ export class AuthService implements OnDestroy {
     if (!this.isBrowser) {
       throw new Error('OAuth solo disponible en browser');
     }
+    if (!environment.enableTikTok) {
+      throw new Error('TikTok login está desactivado temporalmente');
+    }
     const TIKTOK_CLIENT_ID = environment.tiktok?.clientId;
     if (!TIKTOK_CLIENT_ID) {
       throw new Error('TikTok Client ID no configurado');
@@ -358,6 +361,9 @@ export class AuthService implements OnDestroy {
   async handleTikTokCallback(code: string): Promise<{ data: Session | null; error: Error | null }> {
     if (!this.isBrowser) {
       return { data: null, error: new Error('OAuth callback solo disponible en browser') };
+    }
+    if (!environment.enableTikTok) {
+      return { data: null, error: new Error('TikTok login está desactivado temporalmente') };
     }
     try {
       // Validar state para seguridad (CSRF protection)

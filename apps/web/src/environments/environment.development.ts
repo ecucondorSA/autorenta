@@ -35,6 +35,8 @@ export const environment = buildEnvironment({
   docVerifierUrl: '', // NG_APP_DOC_VERIFIER_URL (se construye desde supabaseUrl)
   pdfWorkerUrl: '', // NG_APP_PDF_WORKER_URL
   googleGeolocationApiKey: '', // NG_APP_GOOGLE_GEOLOCATION_API_KEY
+  enableTikTok: false,
+  enableFacebook: false,
   // Logging: debug level shows all logs in development
   logLevel: 'debug' as const,
 });

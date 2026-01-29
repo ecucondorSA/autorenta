@@ -138,6 +138,9 @@ export class AuthCallbackPage implements OnInit {
       let sessionResult: { error: Error | null } | null = null;
 
       if (tiktokCode) {
+        if (!environment.enableTikTok) {
+          throw new Error('TikTok login está desactivado temporalmente');
+        }
         // Procesar callback de TikTok
         this.logger.debug('🎵 Detectado callback de TikTok');
         sessionResult = await this.auth.handleTikTokCallback(tiktokCode);

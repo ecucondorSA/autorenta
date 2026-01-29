@@ -73,38 +73,44 @@ export class FooterComponent {
     },
   ]);
 
-  socialLinks = signal([
-    {
-      name: 'Facebook',
-      icon: 'facebook',
-      url: environment.socialMedia.facebook,
-      ariaLabel: 'Síguenos en Facebook',
-    },
-    {
-      name: 'Instagram',
-      icon: 'instagram',
-      url: environment.socialMedia.instagram,
-      ariaLabel: 'Síguenos en Instagram',
-    },
-    {
-      name: 'TikTok',
-      icon: 'tiktok',
-      url: environment.socialMedia.tiktok,
-      ariaLabel: 'Síguenos en TikTok',
-    },
-    {
-      name: 'YouTube',
-      icon: 'youtube',
-      url: environment.socialMedia.youtube,
-      ariaLabel: 'Suscríbete en YouTube',
-    },
-    {
-      name: 'LinkedIn',
-      icon: 'linkedin',
-      url: environment.socialMedia.linkedin,
-      ariaLabel: 'Síguenos en LinkedIn',
-    },
-  ]);
+  socialLinks = signal(
+    [
+      {
+        name: 'Facebook',
+        icon: 'facebook',
+        url: environment.socialMedia.facebook,
+        ariaLabel: 'Síguenos en Facebook',
+      },
+      {
+        name: 'Instagram',
+        icon: 'instagram',
+        url: environment.socialMedia.instagram,
+        ariaLabel: 'Síguenos en Instagram',
+      },
+      {
+        name: 'TikTok',
+        icon: 'tiktok',
+        url: environment.socialMedia.tiktok,
+        ariaLabel: 'Síguenos en TikTok',
+      },
+      {
+        name: 'YouTube',
+        icon: 'youtube',
+        url: environment.socialMedia.youtube,
+        ariaLabel: 'Suscríbete en YouTube',
+      },
+      {
+        name: 'LinkedIn',
+        icon: 'linkedin',
+        url: environment.socialMedia.linkedin,
+        ariaLabel: 'Síguenos en LinkedIn',
+      },
+    ].filter((link) => {
+      if (link.name === 'Facebook') return environment.enableFacebook;
+      if (link.name === 'TikTok') return environment.enableTikTok;
+      return true;
+    }),
+  );
 
   // App store links
   appStoreUrl = 'https://apps.apple.com/app/autorentar';

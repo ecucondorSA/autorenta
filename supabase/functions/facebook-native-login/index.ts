@@ -3,12 +3,20 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 
 const FACEBOOK_GRAPH_URL = 'https://graph.facebook.com/me';
+const FACEBOOK_LOGIN_ENABLED = Deno.env.get('FACEBOOK_LOGIN_ENABLED') === 'true';
 
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
 
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
+  }
+
+  if (!FACEBOOK_LOGIN_ENABLED) {
+    return new Response(JSON.stringify({ success: false, error: 'Facebook Login disabled' }), {
+      status: 503,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 
   try {
