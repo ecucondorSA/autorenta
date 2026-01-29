@@ -141,7 +141,8 @@ export class MarketplaceLandingService {
     }
 
     if (quickFilters.has('electric')) {
-      cars = cars.filter((c) => c.fuel_type === 'electric' || c.fuel === 'electric');
+      // Database uses Spanish 'electrico', UI uses 'electric' as filter ID
+      cars = cars.filter((c) => c.fuel_type === 'electrico' || c.fuel === 'electrico');
     }
 
     if (quickFilters.has('no-card')) {
