@@ -319,9 +319,18 @@ serve(async (req: Request) => {
   };
 
   if (verbose) {
+    // Use Deno's memory API (not Chrome's performance.memory)
+    let memoryMb = 0;
+    try {
+      const memInfo = Deno.memoryUsage();
+      memoryMb = Math.round(memInfo.heapUsed / 1024 / 1024);
+    } catch {
+      // memoryUsage may not be available in all Deno environments
+    }
+
     response.metrics = {
       uptime_seconds: Math.floor((Date.now() - startTime) / 1000),
-      memory_usage_mb: Math.round((performance as any)?.memory?.usedJSHeapSize / 1024 / 1024) || 0,
+      memory_usage_mb: memoryMb,
     };
   }
 

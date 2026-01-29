@@ -24,6 +24,17 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 
+// Rate limiting constants
+const MP_API_DELAY_MS = 200; // Delay entre llamadas a MercadoPago API para evitar rate limits
+const MAX_BOOKINGS_PER_CHECK = 20; // Limitar bookings por check para evitar timeouts
+
+/**
+ * Delay helper to avoid MercadoPago API rate limits
+ */
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 interface ReconciliationResult {
   check: string;
   status: 'ok' | 'issues_found' | 'error';
@@ -178,14 +189,14 @@ async function checkPendingBookingsWithApprovedPayments(
   try {
     const cutoffDate = new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000).toISOString();
 
-    // Obtener bookings pendientes
+    // Obtener bookings pendientes (limited to avoid rate limits)
     const { data: pendingBookings, error } = await supabase
       .from('bookings')
       .select('id, created_at, user_id')
       .eq('status', 'pending_payment')
       .gte('created_at', cutoffDate)
       .order('created_at', { ascending: false })
-      .limit(50);
+      .limit(MAX_BOOKINGS_PER_CHECK);
 
     if (error) throw error;
 
@@ -199,11 +210,14 @@ async function checkPendingBookingsWithApprovedPayments(
       };
     }
 
-    // Para cada booking, verificar en MercadoPago
+    // Para cada booking, verificar en MercadoPago (con rate limiting)
     for (const booking of pendingBookings) {
       if (!mpToken) continue;
 
       try {
+        // Rate limiting: delay between API calls
+        await delay(MP_API_DELAY_MS);
+
         // Buscar pagos con external_reference = booking.id
         const response = await fetch(
           `https://api.mercadopago.com/v1/payments/search?external_reference=${booking.id}&status=approved`,
@@ -291,14 +305,14 @@ async function checkUnconfirmedPayments(
   try {
     const cutoffDate = new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000).toISOString();
 
-    // Obtener pagos completados recientes
+    // Obtener pagos completados recientes (limited to avoid rate limits)
     const { data: payments, error } = await supabase
       .from('payments')
       .select('id, booking_id, amount, provider_payment_id, status')
       .eq('status', 'completed')
       .eq('provider', 'mercadopago')
       .gte('created_at', cutoffDate)
-      .limit(100);
+      .limit(MAX_BOOKINGS_PER_CHECK);
 
     if (error) throw error;
 
@@ -314,6 +328,9 @@ async function checkUnconfirmedPayments(
 
     for (const payment of payments) {
       try {
+        // Rate limiting: delay between API calls
+        await delay(MP_API_DELAY_MS);
+
         const response = await fetch(
           `https://api.mercadopago.com/v1/payments/${payment.provider_payment_id}`,
           {
@@ -472,18 +489,39 @@ async function checkWalletIntegrity(supabase: any): Promise<ReconciliationResult
 
     for (const wallet of wallets) {
       // Calcular balance esperado desde transacciones
+      // Note: wallet_transactions uses user_id, not wallet_id
       const { data: transactions } = await supabase
         .from('wallet_transactions')
         .select('amount, type')
-        .eq('wallet_id', wallet.id)
+        .eq('user_id', wallet.user_id)
         .eq('status', 'completed');
 
       if (transactions) {
+        // Transaction types that ADD to balance
+        const creditTypes = [
+          'deposit',
+          'refund',
+          'bonus',
+          'unlock',
+          'security_deposit_release',
+        ];
+
+        // Transaction types that SUBTRACT from balance
+        const debitTypes = [
+          'charge',
+          'withdrawal',
+          'rental_payment_transfer',
+          'security_deposit_charge',
+        ];
+
+        // Note: 'lock' types affect available_balance, not total balance
+        // 'rental_payment_lock', 'security_deposit_lock' are locks, not debits
+
         const calculatedBalance = transactions.reduce((sum: number, tx: any) => {
-          if (tx.type === 'credit' || tx.type === 'deposit') {
-            return sum + tx.amount;
-          } else if (tx.type === 'debit' || tx.type === 'withdrawal') {
-            return sum - tx.amount;
+          if (creditTypes.includes(tx.type)) {
+            return sum + Number(tx.amount);
+          } else if (debitTypes.includes(tx.type)) {
+            return sum - Number(tx.amount);
           }
           return sum;
         }, 0);

@@ -522,7 +522,193 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ============================================
--- 6. CLEANUP JOBS
+-- 6. AUDIT TRIGGERS FOR PAYMENTS
+-- ============================================
+
+CREATE OR REPLACE FUNCTION public.audit_payment_changes()
+RETURNS TRIGGER AS $$
+DECLARE
+  v_changed_fields TEXT[];
+  v_old_values JSONB;
+  v_new_values JSONB;
+BEGIN
+  v_changed_fields := ARRAY[]::TEXT[];
+
+  IF TG_OP = 'UPDATE' THEN
+    IF OLD.status IS DISTINCT FROM NEW.status THEN
+      v_changed_fields := array_append(v_changed_fields, 'status');
+    END IF;
+    IF OLD.amount IS DISTINCT FROM NEW.amount THEN
+      v_changed_fields := array_append(v_changed_fields, 'amount');
+    END IF;
+    IF OLD.paid_at IS DISTINCT FROM NEW.paid_at THEN
+      v_changed_fields := array_append(v_changed_fields, 'paid_at');
+    END IF;
+
+    v_old_values := jsonb_build_object(
+      'status', OLD.status,
+      'amount', OLD.amount,
+      'paid_at', OLD.paid_at,
+      'provider_payment_id', OLD.provider_payment_id
+    );
+    v_new_values := jsonb_build_object(
+      'status', NEW.status,
+      'amount', NEW.amount,
+      'paid_at', NEW.paid_at,
+      'provider_payment_id', NEW.provider_payment_id
+    );
+
+    IF array_length(v_changed_fields, 1) > 0 THEN
+      PERFORM public.create_audit_log(
+        'payment',
+        NEW.id,
+        'update',
+        NULL,
+        'system',
+        v_old_values,
+        v_new_values,
+        v_changed_fields,
+        'trigger',
+        jsonb_build_object('trigger', 'audit_payment_changes', 'booking_id', NEW.booking_id)
+      );
+    END IF;
+  ELSIF TG_OP = 'INSERT' THEN
+    PERFORM public.create_audit_log(
+      'payment',
+      NEW.id,
+      'create',
+      NULL,
+      'system',
+      NULL,
+      jsonb_build_object(
+        'status', NEW.status,
+        'amount', NEW.amount,
+        'booking_id', NEW.booking_id,
+        'provider', NEW.provider,
+        'provider_payment_id', NEW.provider_payment_id
+      ),
+      NULL,
+      'trigger',
+      jsonb_build_object('trigger', 'audit_payment_changes')
+    );
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Create trigger on payments
+DROP TRIGGER IF EXISTS trigger_audit_payment ON public.payments;
+CREATE TRIGGER trigger_audit_payment
+  AFTER INSERT OR UPDATE ON public.payments
+  FOR EACH ROW
+  EXECUTE FUNCTION public.audit_payment_changes();
+
+-- ============================================
+-- 7. AUDIT TRIGGERS FOR WALLET TRANSACTIONS
+-- ============================================
+
+CREATE OR REPLACE FUNCTION public.audit_wallet_transaction_changes()
+RETURNS TRIGGER AS $$
+DECLARE
+  v_changed_fields TEXT[];
+  v_old_values JSONB;
+  v_new_values JSONB;
+BEGIN
+  v_changed_fields := ARRAY[]::TEXT[];
+
+  IF TG_OP = 'UPDATE' THEN
+    IF OLD.status IS DISTINCT FROM NEW.status THEN
+      v_changed_fields := array_append(v_changed_fields, 'status');
+    END IF;
+    IF OLD.completed_at IS DISTINCT FROM NEW.completed_at THEN
+      v_changed_fields := array_append(v_changed_fields, 'completed_at');
+    END IF;
+
+    v_old_values := jsonb_build_object(
+      'status', OLD.status,
+      'amount', OLD.amount,
+      'type', OLD.type,
+      'completed_at', OLD.completed_at
+    );
+    v_new_values := jsonb_build_object(
+      'status', NEW.status,
+      'amount', NEW.amount,
+      'type', NEW.type,
+      'completed_at', NEW.completed_at
+    );
+
+    IF array_length(v_changed_fields, 1) > 0 THEN
+      PERFORM public.create_audit_log(
+        'wallet_transaction',
+        NEW.id,
+        'update',
+        NEW.user_id,
+        'system',
+        v_old_values,
+        v_new_values,
+        v_changed_fields,
+        'trigger',
+        jsonb_build_object('trigger', 'audit_wallet_transaction_changes')
+      );
+    END IF;
+  ELSIF TG_OP = 'INSERT' THEN
+    PERFORM public.create_audit_log(
+      'wallet_transaction',
+      NEW.id,
+      'create',
+      NEW.user_id,
+      'user',
+      NULL,
+      jsonb_build_object(
+        'status', NEW.status,
+        'amount', NEW.amount,
+        'type', NEW.type,
+        'user_id', NEW.user_id,
+        'reference_type', NEW.reference_type,
+        'reference_id', NEW.reference_id
+      ),
+      NULL,
+      'trigger',
+      jsonb_build_object('trigger', 'audit_wallet_transaction_changes')
+    );
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Create trigger on wallet_transactions
+DROP TRIGGER IF EXISTS trigger_audit_wallet_transaction ON public.wallet_transactions;
+CREATE TRIGGER trigger_audit_wallet_transaction
+  AFTER INSERT OR UPDATE ON public.wallet_transactions
+  FOR EACH ROW
+  EXECUTE FUNCTION public.audit_wallet_transaction_changes();
+
+-- ============================================
+-- 8. RLS POLICIES FOR SYSTEM_HEALTH
+-- ============================================
+
+ALTER TABLE public.system_health ENABLE ROW LEVEL SECURITY;
+
+-- Service role has full access
+CREATE POLICY "Service role full access on system_health"
+  ON public.system_health FOR ALL
+  USING (auth.jwt() ->> 'role' = 'service_role');
+
+-- Admins can read health data
+CREATE POLICY "Admins can read system_health"
+  ON public.system_health FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE profiles.id = auth.uid()
+      AND profiles.is_admin = true
+    )
+  );
+
+-- ============================================
+-- 9. CLEANUP JOBS
 -- ============================================
 
 -- Clean up expired idempotency keys (run daily)
@@ -540,7 +726,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ============================================
--- 7. GRANTS
+-- 10. GRANTS
 -- ============================================
 
 GRANT EXECUTE ON FUNCTION public.create_audit_log TO service_role;
@@ -554,7 +740,7 @@ GRANT EXECUTE ON FUNCTION public.get_system_health TO service_role;
 GRANT EXECUTE ON FUNCTION public.cleanup_expired_idempotency_keys TO service_role;
 
 -- ============================================
--- COMMENTS
+-- 11. COMMENTS
 -- ============================================
 
 COMMENT ON TABLE public.audit_log IS 'Audit trail for all financial operations. Immutable log of changes.';

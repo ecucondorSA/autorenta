@@ -1,10 +1,15 @@
 /**
  * Tests for mercadopago-webhook Edge Function
  *
- * Run with: deno test --allow-env --allow-net supabase/functions/mercadopago-webhook/index.test.ts
+ * These tests verify the webhook helper functions from the shared module.
+ * The actual webhook handler (index.ts) is FROZEN and uses its own copies,
+ * but these functions are semantically equivalent.
  *
- * These tests verify the security and correctness of the webhook handler
- * WITHOUT modifying the frozen production code.
+ * Run with:
+ *   deno test --allow-env --allow-net supabase/functions/mercadopago-webhook/index.test.ts
+ *
+ * Or from project root:
+ *   cd supabase/functions && deno test --allow-env --allow-net
  */
 
 import {
@@ -13,17 +18,31 @@ import {
   assertStringIncludes,
 } from 'https://deno.land/std@0.168.0/testing/asserts.ts';
 
+// Import REAL functions from shared module
+import {
+  ipToNumber,
+  isMercadoPagoIP,
+  timingSafeEqualHex,
+  parseSignatureHeader,
+  buildHMACManifest,
+  calculateHMAC,
+  validateWebhookSignature,
+  validateAmount,
+  cleanToken,
+  shouldCreditWallet,
+  isPreauthorization,
+  isTerminalStatus,
+  parseSubscriptionReference,
+  MERCADOPAGO_IP_RANGES,
+  type MPWebhookPayload,
+  type MPPayment,
+} from '../_shared/webhook-helpers.ts';
+
 // ========================================
-// UNIT TESTS: Helper Functions
+// IP VALIDATION TESTS
 // ========================================
 
 Deno.test('ipToNumber converts IPv4 correctly', () => {
-  // Inline implementation for testing (mirrors production code)
-  function ipToNumber(ip: string): number {
-    const parts = ip.split('.').map(Number);
-    return parts[0] * 256 ** 3 + parts[1] * 256 ** 2 + parts[2] * 256 + parts[3];
-  }
-
   assertEquals(ipToNumber('0.0.0.0'), 0);
   assertEquals(ipToNumber('0.0.0.1'), 1);
   assertEquals(ipToNumber('0.0.1.0'), 256);
@@ -34,26 +53,23 @@ Deno.test('ipToNumber converts IPv4 correctly', () => {
   assertEquals(ipToNumber('209.225.49.0'), 3521736960);
 });
 
+Deno.test('MERCADOPAGO_IP_RANGES are defined correctly', () => {
+  assertEquals(MERCADOPAGO_IP_RANGES.length, 3);
+
+  // First range: 209.225.49.0/24
+  assertEquals(MERCADOPAGO_IP_RANGES[0].start, ipToNumber('209.225.49.0'));
+  assertEquals(MERCADOPAGO_IP_RANGES[0].end, ipToNumber('209.225.49.255'));
+
+  // Second range: 216.33.197.0/24
+  assertEquals(MERCADOPAGO_IP_RANGES[1].start, ipToNumber('216.33.197.0'));
+  assertEquals(MERCADOPAGO_IP_RANGES[1].end, ipToNumber('216.33.197.255'));
+
+  // Third range: 216.33.196.0/24
+  assertEquals(MERCADOPAGO_IP_RANGES[2].start, ipToNumber('216.33.196.0'));
+  assertEquals(MERCADOPAGO_IP_RANGES[2].end, ipToNumber('216.33.196.255'));
+});
+
 Deno.test('isMercadoPagoIP validates IP ranges correctly', () => {
-  // Inline implementation for testing
-  function ipToNumber(ip: string): number {
-    const parts = ip.split('.').map(Number);
-    return parts[0] * 256 ** 3 + parts[1] * 256 ** 2 + parts[2] * 256 + parts[3];
-  }
-
-  const MERCADOPAGO_IP_RANGES = [
-    { start: ipToNumber('209.225.49.0'), end: ipToNumber('209.225.49.255') },
-    { start: ipToNumber('216.33.197.0'), end: ipToNumber('216.33.197.255') },
-    { start: ipToNumber('216.33.196.0'), end: ipToNumber('216.33.196.255') },
-  ];
-
-  function isMercadoPagoIP(clientIP: string): boolean {
-    if (!clientIP) return true;
-    const ip = clientIP.split(',')[0].trim();
-    const ipNum = ipToNumber(ip);
-    return MERCADOPAGO_IP_RANGES.some((range) => ipNum >= range.start && ipNum <= range.end);
-  }
-
   // Valid MercadoPago IPs
   assertEquals(isMercadoPagoIP('209.225.49.0'), true);
   assertEquals(isMercadoPagoIP('209.225.49.128'), true);
@@ -70,34 +86,16 @@ Deno.test('isMercadoPagoIP validates IP ranges correctly', () => {
   // Empty IP (should return true to let HMAC validate)
   assertEquals(isMercadoPagoIP(''), true);
 
-  // IP from proxy header (comma-separated)
+  // IP from proxy header (comma-separated) - takes first IP
   assertEquals(isMercadoPagoIP('209.225.49.100, 10.0.0.1'), true);
   assertEquals(isMercadoPagoIP('192.168.1.1, 209.225.49.100'), false);
 });
 
+// ========================================
+// HMAC VALIDATION TESTS
+// ========================================
+
 Deno.test('timingSafeEqualHex compares hex strings securely', () => {
-  // Inline implementation for testing
-  function timingSafeEqualHex(a: string, b: string): boolean {
-    if (!a || !b) return false;
-    if (a.length % 2 !== 0 || b.length % 2 !== 0) return false;
-    if (a.length !== b.length) return false;
-
-    const len = a.length / 2;
-    const aBuf = new Uint8Array(len);
-    const bBuf = new Uint8Array(len);
-
-    for (let i = 0; i < len; i++) {
-      aBuf[i] = parseInt(a.substr(i * 2, 2), 16) || 0;
-      bBuf[i] = parseInt(b.substr(i * 2, 2), 16) || 0;
-    }
-
-    let result = 0;
-    for (let i = 0; i < len; i++) {
-      result |= aBuf[i] ^ bBuf[i];
-    }
-    return result === 0;
-  }
-
   // Matching hex strings
   assertEquals(timingSafeEqualHex('abcd1234', 'abcd1234'), true);
   assertEquals(timingSafeEqualHex('00ff00ff', '00ff00ff'), true);
@@ -116,63 +114,228 @@ Deno.test('timingSafeEqualHex compares hex strings securely', () => {
   // Odd length (invalid hex)
   assertEquals(timingSafeEqualHex('abc', 'abc'), false);
 
-  // Case insensitive (both should be lowercase in production)
-  assertEquals(timingSafeEqualHex('abcd', 'ABCD'.toLowerCase()), true);
+  // Case sensitivity (should work with lowercase)
+  assertEquals(timingSafeEqualHex('abcd', 'abcd'), true);
 });
 
-// ========================================
-// INTEGRATION TESTS: HMAC Validation
-// ========================================
+Deno.test('parseSignatureHeader parses x-signature correctly', () => {
+  // Valid signature
+  const validSig = 'ts=1704900000,v1=abc123def456789';
+  const parsed = parseSignatureHeader(validSig);
+  assertEquals(parsed.ts, '1704900000');
+  assertEquals(parsed.v1, 'abc123def456789');
 
-Deno.test('HMAC signature validation follows MercadoPago format', async () => {
-  // Test HMAC calculation matches MercadoPago's expected format
-  const testSecret = 'TEST_ACCESS_TOKEN_12345';
+  // Signature with spaces
+  const spacedSig = 'ts = 1704900000 , v1 = abc123';
+  const parsedSpaced = parseSignatureHeader(spacedSig);
+  assertEquals(parsedSpaced.ts, '1704900000');
+  assertEquals(parsedSpaced.v1, 'abc123');
+
+  // Missing v1
+  const missingV1 = 'ts=1704900000';
+  const parsedMissing = parseSignatureHeader(missingV1);
+  assertEquals(parsedMissing.ts, '1704900000');
+  assertEquals(parsedMissing.v1, undefined);
+
+  // Empty string
+  const empty = parseSignatureHeader('');
+  assertEquals(empty.ts, undefined);
+  assertEquals(empty.v1, undefined);
+});
+
+Deno.test('buildHMACManifest creates correct format', () => {
+  const manifest = buildHMACManifest('12345678', 'request-id-abc', '1704900000');
+  assertEquals(manifest, 'id:12345678;request-id:request-id-abc;ts:1704900000;');
+});
+
+Deno.test('calculateHMAC produces valid SHA-256 hash', async () => {
+  const message = 'id:123;request-id:abc;ts:1704900000;';
+  const secret = 'TEST_SECRET_KEY';
+
+  const hash = await calculateHMAC(message, secret);
+
+  // Verify hash is 64 chars (SHA-256 hex)
+  assertEquals(hash.length, 64);
+  assertExists(hash.match(/^[a-f0-9]+$/));
+
+  // Same input should produce same output
+  const hash2 = await calculateHMAC(message, secret);
+  assertEquals(hash, hash2);
+
+  // Different input should produce different output
+  const hash3 = await calculateHMAC(message + 'x', secret);
+  assertEquals(hash3.length, 64);
+  assertEquals(hash === hash3, false);
+});
+
+Deno.test('validateWebhookSignature validates correctly', async () => {
+  const accessToken = 'TEST_ACCESS_TOKEN_12345';
   const paymentId = '12345678';
   const requestId = 'request-id-abc123';
   const timestamp = '1704900000';
 
-  // Format: id:{payment_id};request-id:{request_id};ts:{timestamp};
-  const manifest = `id:${paymentId};request-id:${requestId};ts:${timestamp};`;
+  // Calculate expected signature
+  const manifest = buildHMACManifest(paymentId, requestId, timestamp);
+  const expectedHash = await calculateHMAC(manifest, accessToken);
 
-  const encoder = new TextEncoder();
-  const keyData = encoder.encode(testSecret);
-
-  const cryptoKey = await crypto.subtle.importKey(
-    'raw',
-    keyData,
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign']
+  // Valid signature
+  const validSignature = `ts=${timestamp},v1=${expectedHash}`;
+  const validResult = await validateWebhookSignature(
+    validSignature,
+    requestId,
+    paymentId,
+    accessToken
   );
+  assertEquals(validResult.valid, true);
+  assertEquals(validResult.error, undefined);
 
-  const signature = await crypto.subtle.sign('HMAC', cryptoKey, encoder.encode(manifest));
+  // Invalid signature
+  const invalidSignature = `ts=${timestamp},v1=wronghash1234567890123456789012345678901234567890123456789012`;
+  const invalidResult = await validateWebhookSignature(
+    invalidSignature,
+    requestId,
+    paymentId,
+    accessToken
+  );
+  assertEquals(invalidResult.valid, false);
+  assertStringIncludes(invalidResult.error!, 'HMAC mismatch');
 
-  const hashArray = Array.from(new Uint8Array(signature));
-  const calculatedHash = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-
-  // Verify hash is 64 chars (SHA-256 hex)
-  assertEquals(calculatedHash.length, 64);
-  assertExists(calculatedHash.match(/^[a-f0-9]+$/));
+  // Missing ts
+  const missingTs = `v1=${expectedHash}`;
+  const missingTsResult = await validateWebhookSignature(
+    missingTs,
+    requestId,
+    paymentId,
+    accessToken
+  );
+  assertEquals(missingTsResult.valid, false);
+  assertStringIncludes(missingTsResult.error!, 'Missing ts');
 });
 
 // ========================================
-// REQUEST VALIDATION TESTS
+// AMOUNT VALIDATION TESTS
 // ========================================
 
-Deno.test('Webhook payload structure validation', () => {
-  interface MPWebhookPayload {
-    id: number;
-    live_mode: boolean;
-    type: string;
-    date_created: string;
-    user_id: number;
-    api_version: string;
-    action: string;
-    data: { id: string };
-  }
+Deno.test('validateAmount validates with tolerance', () => {
+  // Exact match
+  const exact = validateAmount(10000, 100.0);
+  assertEquals(exact.valid, true);
+  assertEquals(exact.receivedCents, 10000);
+  assertEquals(exact.diffCents, 0);
 
-  // Valid payload
-  const validPayload: MPWebhookPayload = {
+  // Within tolerance (rounding)
+  const roundUp = validateAmount(10000, 100.005);
+  assertEquals(roundUp.valid, true);
+  assertEquals(roundUp.receivedCents, 10001);
+  assertEquals(roundUp.diffCents, 1);
+
+  const roundDown = validateAmount(10000, 99.995);
+  assertEquals(roundDown.valid, true);
+  assertEquals(roundDown.receivedCents, 10000); // rounds to 10000
+  assertEquals(roundDown.diffCents, 0);
+
+  // Outside tolerance
+  const tooHigh = validateAmount(10000, 100.02);
+  assertEquals(tooHigh.valid, false);
+  assertEquals(tooHigh.receivedCents, 10002);
+  assertEquals(tooHigh.diffCents, 2);
+
+  const tooLow = validateAmount(10000, 99.98);
+  assertEquals(tooLow.valid, false);
+  assertEquals(tooLow.receivedCents, 9998);
+  assertEquals(tooLow.diffCents, 2);
+
+  // Way off
+  const wayOff = validateAmount(10000, 50.0);
+  assertEquals(wayOff.valid, false);
+  assertEquals(wayOff.receivedCents, 5000);
+  assertEquals(wayOff.diffCents, 5000);
+
+  // Custom tolerance
+  const customTolerance = validateAmount(10000, 100.05, 10);
+  assertEquals(customTolerance.valid, true);
+  assertEquals(customTolerance.diffCents, 5);
+});
+
+// ========================================
+// TOKEN UTILITIES TESTS
+// ========================================
+
+Deno.test('cleanToken removes whitespace correctly', () => {
+  assertEquals(cleanToken('  TOKEN123  '), 'TOKEN123');
+  assertEquals(cleanToken('TOKEN\n123'), 'TOKEN123');
+  assertEquals(cleanToken('TOKEN\r\n123\t'), 'TOKEN123');
+  assertEquals(cleanToken('  TO KEN 12 3  '), 'TOKEN123');
+  assertEquals(cleanToken('TOKEN123'), 'TOKEN123');
+});
+
+// ========================================
+// PAYMENT STATUS TESTS
+// ========================================
+
+Deno.test('shouldCreditWallet only returns true for approved', () => {
+  assertEquals(shouldCreditWallet('approved'), true);
+  assertEquals(shouldCreditWallet('pending'), false);
+  assertEquals(shouldCreditWallet('in_process'), false);
+  assertEquals(shouldCreditWallet('rejected'), false);
+  assertEquals(shouldCreditWallet('cancelled'), false);
+  assertEquals(shouldCreditWallet('refunded'), false);
+  assertEquals(shouldCreditWallet('charged_back'), false);
+  assertEquals(shouldCreditWallet('authorized'), false);
+});
+
+Deno.test('isPreauthorization identifies authorized status', () => {
+  assertEquals(isPreauthorization('authorized'), true);
+  assertEquals(isPreauthorization('approved'), false);
+  assertEquals(isPreauthorization('pending'), false);
+});
+
+Deno.test('isTerminalStatus identifies final statuses', () => {
+  assertEquals(isTerminalStatus('approved'), true);
+  assertEquals(isTerminalStatus('rejected'), true);
+  assertEquals(isTerminalStatus('cancelled'), true);
+  assertEquals(isTerminalStatus('refunded'), true);
+  assertEquals(isTerminalStatus('charged_back'), true);
+
+  assertEquals(isTerminalStatus('pending'), false);
+  assertEquals(isTerminalStatus('in_process'), false);
+  assertEquals(isTerminalStatus('authorized'), false);
+});
+
+// ========================================
+// EXTERNAL REFERENCE PARSING TESTS
+// ========================================
+
+Deno.test('parseSubscriptionReference parses correctly', () => {
+  // Valid subscription reference
+  const valid = parseSubscriptionReference('subscription_user123_club_standard_1704900000');
+  assertEquals(valid.isSubscription, true);
+  assertEquals(valid.userId, 'user123');
+  assertEquals(valid.tier, 'club');
+  // timestamp includes everything after tier (may have underscores)
+  assertExists(valid.timestamp);
+
+  // Not a subscription
+  const notSub = parseSubscriptionReference('booking_123');
+  assertEquals(notSub.isSubscription, false);
+  assertEquals(notSub.userId, undefined);
+
+  // Malformed subscription (missing parts)
+  const malformed = parseSubscriptionReference('subscription_');
+  assertEquals(malformed.isSubscription, true);
+  assertEquals(malformed.userId, undefined);
+
+  // UUID as booking reference
+  const uuid = parseSubscriptionReference('550e8400-e29b-41d4-a716-446655440000');
+  assertEquals(uuid.isSubscription, false);
+});
+
+// ========================================
+// TYPE TESTS
+// ========================================
+
+Deno.test('MPWebhookPayload type structure', () => {
+  const payload: MPWebhookPayload = {
     id: 12345,
     live_mode: true,
     type: 'payment',
@@ -183,278 +346,47 @@ Deno.test('Webhook payload structure validation', () => {
     data: { id: '111222333' },
   };
 
-  assertEquals(validPayload.type, 'payment');
-  assertExists(validPayload.data.id);
-
-  // Validate structure
-  assertEquals(typeof validPayload.id, 'number');
-  assertEquals(typeof validPayload.live_mode, 'boolean');
-  assertEquals(typeof validPayload.type, 'string');
-  assertEquals(typeof validPayload.data.id, 'string');
+  assertEquals(payload.type, 'payment');
+  assertEquals(typeof payload.id, 'number');
+  assertEquals(typeof payload.live_mode, 'boolean');
+  assertExists(payload.data.id);
 });
 
-Deno.test('x-signature header parsing', () => {
-  // Parse x-signature header like production code
-  function parseSignature(xSignature: string): Record<string, string> {
-    const signatureParts: Record<string, string> = {};
-
-    xSignature.split(',').forEach((part: string) => {
-      const [key, value] = (part || '').split('=');
-      if (key && value) {
-        signatureParts[key.trim()] = value.trim();
-      }
-    });
-
-    return signatureParts;
-  }
-
-  // Valid signature
-  const validSig = 'ts=1704900000,v1=abc123def456789';
-  const parsed = parseSignature(validSig);
-  assertEquals(parsed['ts'], '1704900000');
-  assertEquals(parsed['v1'], 'abc123def456789');
-
-  // Signature with spaces
-  const spacedSig = 'ts = 1704900000 , v1 = abc123';
-  const parsedSpaced = parseSignature(spacedSig);
-  assertEquals(parsedSpaced['ts'], '1704900000');
-  assertEquals(parsedSpaced['v1'], 'abc123');
-
-  // Missing v1
-  const missingV1 = 'ts=1704900000';
-  const parsedMissing = parseSignature(missingV1);
-  assertEquals(parsedMissing['ts'], '1704900000');
-  assertEquals(parsedMissing['v1'], undefined);
-});
-
-// ========================================
-// RESPONSE CODE TESTS
-// ========================================
-
-Deno.test('HTTP status codes for different scenarios', () => {
-  // Document expected status codes
-  const expectedCodes = {
-    success: 200,
-    methodNotAllowed: 405,
-    unauthorized: 401,
-    forbidden: 403,
-    notFound: 404,
-    rateLimited: 429,
-    serverError: 500,
-    serviceUnavailable: 503,
-    badGateway: 502,
-  };
-
-  assertEquals(expectedCodes.success, 200);
-  assertEquals(expectedCodes.methodNotAllowed, 405);
-  assertEquals(expectedCodes.unauthorized, 401);
-  assertEquals(expectedCodes.forbidden, 403);
-  assertEquals(expectedCodes.rateLimited, 429);
-  assertEquals(expectedCodes.serverError, 500);
-  assertEquals(expectedCodes.serviceUnavailable, 503);
-});
-
-// ========================================
-// PAYMENT STATUS HANDLING TESTS
-// ========================================
-
-Deno.test('Payment status handling logic', () => {
-  const validStatuses = ['approved', 'pending', 'in_process', 'rejected', 'cancelled', 'refunded', 'charged_back', 'authorized'];
-
-  // Only approved should trigger wallet credit
-  const shouldCreditWallet = (status: string) => status === 'approved';
-
-  assertEquals(shouldCreditWallet('approved'), true);
-  assertEquals(shouldCreditWallet('pending'), false);
-  assertEquals(shouldCreditWallet('rejected'), false);
-  assertEquals(shouldCreditWallet('authorized'), false);
-
-  // Preauth statuses
-  const isPreauth = (status: string) => status === 'authorized';
-  assertEquals(isPreauth('authorized'), true);
-  assertEquals(isPreauth('approved'), false);
-});
-
-Deno.test('External reference parsing for subscriptions', () => {
-  // Parse subscription external_reference
-  function parseSubscriptionRef(ref: string): { userId: string; tier: string } | null {
-    if (!ref.startsWith('subscription_')) return null;
-
-    const parts = ref.split('_');
-    if (parts.length < 4) return null;
-
-    return {
-      userId: parts[1],
-      tier: parts[2],
-    };
-  }
-
-  // Valid subscription reference
-  const validRef = 'subscription_user123_club_standard_1704900000';
-  const parsed = parseSubscriptionRef(validRef);
-  assertExists(parsed);
-  assertEquals(parsed!.userId, 'user123');
-  assertEquals(parsed!.tier, 'club');
-
-  // Invalid references
-  assertEquals(parseSubscriptionRef('booking_123'), null);
-  assertEquals(parseSubscriptionRef('subscription_'), null);
-});
-
-// ========================================
-// AMOUNT VALIDATION TESTS
-// ========================================
-
-Deno.test('Amount validation with tolerance', () => {
-  function validateAmount(
-    expectedCents: number,
-    receivedAmount: number
-  ): { valid: boolean; diffCents: number } {
-    const receivedCents = Math.round(receivedAmount * 100);
-    const diffCents = Math.abs(expectedCents - receivedCents);
-    return {
-      valid: diffCents <= 1, // 1 cent tolerance
-      diffCents,
-    };
-  }
-
-  // Exact match
-  assertEquals(validateAmount(10000, 100.0).valid, true);
-  assertEquals(validateAmount(10000, 100.0).diffCents, 0);
-
-  // Within tolerance (rounding)
-  assertEquals(validateAmount(10000, 100.005).valid, true);
-  assertEquals(validateAmount(10000, 99.995).valid, true);
-
-  // Outside tolerance
-  assertEquals(validateAmount(10000, 100.02).valid, false);
-  assertEquals(validateAmount(10000, 99.98).valid, false);
-  assertEquals(validateAmount(10000, 50.0).valid, false);
-});
-
-// ========================================
-// IDEMPOTENCY TESTS
-// ========================================
-
-Deno.test('Duplicate webhook detection logic', () => {
-  // Simulate deduplication check
-  const processedWebhooks = new Set<string>();
-
-  function isDuplicate(eventId: string): boolean {
-    if (processedWebhooks.has(eventId)) {
-      return true;
-    }
-    processedWebhooks.add(eventId);
-    return false;
-  }
-
-  // First request - not duplicate
-  assertEquals(isDuplicate('event-123'), false);
-
-  // Same event again - duplicate
-  assertEquals(isDuplicate('event-123'), true);
-
-  // Different event - not duplicate
-  assertEquals(isDuplicate('event-456'), false);
-});
-
-// ========================================
-// ERROR RESPONSE FORMAT TESTS
-// ========================================
-
-Deno.test('Error response format validation', () => {
-  interface ErrorResponse {
-    error: string;
-    code?: string;
-    retry?: boolean;
-    details?: unknown;
-  }
-
-  // Validate error response structure
-  const hmacError: ErrorResponse = {
-    error: 'Invalid webhook signature',
-    code: 'INVALID_HMAC',
-  };
-
-  assertExists(hmacError.error);
-  assertEquals(hmacError.code, 'INVALID_HMAC');
-
-  // Retryable error
-  const retryError: ErrorResponse = {
-    error: 'Failed to fetch payment data',
-    retry: true,
-  };
-
-  assertEquals(retryError.retry, true);
-});
-
-// ========================================
-// SECURITY TESTS
-// ========================================
-
-Deno.test('Sensitive data not exposed in logs', () => {
-  // Simulate safe logging
-  function safeLogPayment(payment: any): object {
-    return {
-      id: payment.id,
-      status: payment.status,
-      amount: payment.transaction_amount,
-      // DO NOT include: card details, payer email, full metadata
-    };
-  }
-
-  const fullPayment = {
-    id: 12345,
+Deno.test('MPPayment type structure', () => {
+  const payment: MPPayment = {
+    id: '12345',
     status: 'approved',
     transaction_amount: 100.0,
-    card: { number: '1234567890123456', last_four_digits: '3456' },
-    payer: { email: 'user@example.com', phone: '+1234567890' },
+    currency_id: 'ARS',
+    external_reference: 'booking-uuid-here',
   };
 
-  const safeLog = safeLogPayment(fullPayment);
-
-  // Should include safe fields
-  assertEquals(safeLog.id, 12345);
-  assertEquals(safeLog.status, 'approved');
-
-  // Should NOT include sensitive fields
-  assertEquals((safeLog as any).card, undefined);
-  assertEquals((safeLog as any).payer, undefined);
-});
-
-Deno.test('Token cleaning removes whitespace', () => {
-  function cleanToken(rawToken: string): string {
-    return rawToken.trim().replace(/[\r\n\t\s]/g, '');
-  }
-
-  assertEquals(cleanToken('  TOKEN123  '), 'TOKEN123');
-  assertEquals(cleanToken('TOKEN\n123'), 'TOKEN123');
-  assertEquals(cleanToken('TOKEN\r\n123\t'), 'TOKEN123');
-  assertEquals(cleanToken('  TO KEN 12 3  '), 'TOKEN123');
+  assertEquals(payment.status, 'approved');
+  assertEquals(payment.transaction_amount, 100.0);
+  assertEquals(payment.currency_id, 'ARS');
 });
 
 // ========================================
-// CORS HEADERS TEST
+// EDGE CASES
 // ========================================
 
-Deno.test('CORS headers presence', () => {
-  // Verify required CORS headers
-  const requiredHeaders = [
-    'Access-Control-Allow-Origin',
-    'Access-Control-Allow-Methods',
-    'Access-Control-Allow-Headers',
-  ];
-
-  // Mock CORS headers function output
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-signature, x-request-id',
-  };
-
-  for (const header of requiredHeaders) {
-    assertExists(corsHeaders[header as keyof typeof corsHeaders]);
-  }
+Deno.test('handles edge case IPs correctly', () => {
+  // Boundary IPs
+  assertEquals(isMercadoPagoIP('209.225.49.0'), true); // Start of range
+  assertEquals(isMercadoPagoIP('209.225.49.255'), true); // End of range
+  assertEquals(isMercadoPagoIP('209.225.48.255'), false); // One before start
+  assertEquals(isMercadoPagoIP('209.225.50.0'), false); // One after end
 });
 
-console.log('All tests for mercadopago-webhook completed!');
+Deno.test('handles malformed input gracefully', () => {
+  // IP edge cases
+  assertEquals(isMercadoPagoIP('not.an.ip.address'), false);
+  assertEquals(isMercadoPagoIP('999.999.999.999'), false);
+
+  // Signature edge cases
+  const emptyParts = parseSignatureHeader(',,,');
+  assertEquals(emptyParts.ts, undefined);
+  assertEquals(emptyParts.v1, undefined);
+});
+
+console.log('✅ All mercadopago-webhook tests completed!');
