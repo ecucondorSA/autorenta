@@ -69,12 +69,25 @@ jobs:
 
       - name: Install Playwright browser
         working-directory: apps/web/e2e
-        run: npx playwright install chromium
+        run: pnpm exec playwright install chromium
 
       - name: Check required secrets
-        uses: ./.github/actions/check-required-secrets
-        with:
-          secrets: NG_APP_SUPABASE_URL, NG_APP_SUPABASE_ANON_KEY, NG_APP_MERCADOPAGO_PUBLIC_KEY, NG_APP_MAPBOX_ACCESS_TOKEN
+        id: check-secrets
+        run: |
+          missing=0
+          for key in NG_APP_SUPABASE_URL NG_APP_SUPABASE_ANON_KEY NG_APP_MERCADOPAGO_PUBLIC_KEY NG_APP_MAPBOX_ACCESS_TOKEN; do
+            if [ -z "${!key:-}" ]; then
+              echo "Missing required secret: $key"
+              missing=1
+            fi
+          done
+
+          if [ "$missing" -ne 0 ]; then
+            echo "has_secrets=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Patchright E2E skipped due to missing secrets." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "has_secrets=true" >> $GITHUB_OUTPUT
+          fi
         env:
           NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
           NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
@@ -82,6 +95,7 @@ jobs:
           NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN }}
 
       - name: Build Angular application
+        if: steps.check-secrets.outputs.has_secrets == 'true'
         run: pnpm run build:web
         env:
           NODE_ENV: production
@@ -91,45 +105,59 @@ jobs:
           NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN }}
 
       - name: Start application server
+        if: steps.check-secrets.outputs.has_secrets == 'true'
         run: |
           cd apps/web/dist/web/browser
-          npx http-server -p 4200 --silent &
+          pnpm dlx http-server -p 4200 --silent &
           echo $! > /tmp/server.pid
           sleep 3
 
       - name: Wait for server to be ready
+        if: steps.check-secrets.outputs.has_secrets == 'true'
         run: |
           echo "Waiting for server..."
           timeout 60 bash -c 'until curl -sf http://localhost:4200 > /dev/null; do sleep 2; done'
           echo "Server is ready!"
 
       - name: Run Login Tests
-        if: ${{ github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == 'login' || github.event.inputs.test_suite == '' }}
+        if: >-
+          steps.check-secrets.outputs.has_secrets == 'true' &&
+          (github.event.inputs.test_suite == 'all' ||
+          github.event.inputs.test_suite == 'login' ||
+          github.event.inputs.test_suite == '')
         working-directory: apps/web/e2e
-        run: npx playwright test specs/auth/login.spec.ts --config=playwright.config.ts
+        run: pnpm exec playwright test specs/auth/login.spec.ts --config=playwright.config.ts
         env:
           TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
         continue-on-error: true
 
       - name: Run Marketplace Tests
-        if: ${{ github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == 'marketplace' || github.event.inputs.test_suite == '' }}
+        if: >-
+          steps.check-secrets.outputs.has_secrets == 'true' &&
+          (github.event.inputs.test_suite == 'all' ||
+          github.event.inputs.test_suite == 'marketplace' ||
+          github.event.inputs.test_suite == '')
         working-directory: apps/web/e2e
-        run: npx playwright test specs/booking/browse-cars.spec.ts --config=playwright.config.ts
+        run: pnpm exec playwright test specs/booking/browse-cars.spec.ts --config=playwright.config.ts
         env:
           TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
         continue-on-error: true
 
       - name: Run Payment Tests
-        if: ${{ github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == 'payment' || github.event.inputs.test_suite == '' }}
+        if: >-
+          steps.check-secrets.outputs.has_secrets == 'true' &&
+          (github.event.inputs.test_suite == 'all' ||
+          github.event.inputs.test_suite == 'payment' ||
+          github.event.inputs.test_suite == '')
         working-directory: apps/web/e2e
-        run: npx playwright test specs/booking/payment.spec.ts --config=playwright.config.ts
+        run: pnpm exec playwright test specs/booking/payment.spec.ts --config=playwright.config.ts
         env:
           TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
         continue-on-error: true
 
       - name: Upload Test Reports
         uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && steps.check-secrets.outputs.has_secrets == 'true'
         with:
           name: playwright-e2e-reports
           path: |
@@ -138,14 +166,14 @@ jobs:
           retention-days: 7
 
       - name: Stop server
-        if: always()
+        if: always() && steps.check-secrets.outputs.has_secrets == 'true'
         run: |
           if [ -f /tmp/server.pid ]; then
             kill $(cat /tmp/server.pid) || true
           fi
 
       - name: Generate Test Summary
-        if: always()
+        if: always() && steps.check-secrets.outputs.has_secrets == 'true'
         run: |
           echo "## Playwright E2E Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -167,6 +195,7 @@ jobs:
           done
 
       - name: Check for failures
+        if: steps.check-secrets.outputs.has_secrets == 'true'
         run: |
           failed=0
           for report in apps/web/e2e/reports/*-report.json; do
