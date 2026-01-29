@@ -54,84 +54,103 @@
       <!-- LEFT COLUMN (CONTEXT & HISTORY) - Span 8 -->
       <!-- ============================================================================================== -->
       <div class="lg:col-span-8 space-y-6">
-        <!-- 1. HERO CARD: Minimalista con jerarquía clara -->
+        <!-- 1. HERO CARD: Zen Design - Imagen prominente con overlay -->
         <section
           appHoverLift
-          [liftAmount]="6"
-          class="glass-card-elevated rounded-2xl overflow-hidden"
+          [liftAmount]="4"
+          class="group relative rounded-3xl overflow-hidden bg-surface-base shadow-premium-md hover:shadow-premium-lg transition-all duration-300"
           appStaggerEnter
           [staggerIndex]="0"
         >
-          <div class="flex flex-col sm:flex-row">
-            <!-- Image Section (40%) -->
-            <div class="relative sm:w-2/5 h-56 sm:h-auto bg-surface-secondary">
-              @if (booking()?.car_image) {
-                <img
-                  [src]="booking()!.car_image"
-                  [alt]="booking()?.car_title"
-                  class="w-full h-full object-cover"
-                  width="400"
-                  height="20"
-                />
-              } @else {
-                <div class="w-full h-full flex items-center justify-center text-text-muted">
-                  <ion-icon name="car-sport-outline" class="text-6xl"></ion-icon>
-                </div>
-              }
+          <!-- Hero Image Container -->
+          <div class="relative aspect-[16/9] sm:aspect-[21/9] overflow-hidden">
+            @if (booking()?.car_image) {
+              <img
+                [src]="booking()!.car_image"
+                [alt]="booking()?.car_title"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="eager"
+              />
+              <!-- Gradient Overlay -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            } @else {
+              <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface-secondary to-surface-hover">
+                <ion-icon name="car-sport-outline" class="text-7xl text-text-muted/50"></ion-icon>
+              </div>
+            }
+
+            <!-- Status Badge (Floating) -->
+            <div class="absolute top-4 left-4 z-10">
+              <app-booking-status
+                [booking]="booking()!"
+                [deliveryCountdown]="deliveryTimeRemaining()"
+                [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
+                [hasRenterCheckIn]="hasRenterCheckIn()"
+                [isOwner]="isOwner()"
+              />
             </div>
 
-            <!-- Info Section (60%) -->
-            <div class="flex-1 p-6 sm:p-8 flex flex-col justify-between">
-              <!-- Status Badge Prominente -->
-              <div class="mb-4">
-                <app-booking-status
-                  [booking]="booking()!"
-                  [deliveryCountdown]="deliveryTimeRemaining()"
-                  [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
-                  [hasRenterCheckIn]="hasRenterCheckIn()"
-                  [isOwner]="isOwner()"
-                >
-                </app-booking-status>
+            <!-- Countdown Badge (if applicable) -->
+            @if (deliveryTimeRemaining()) {
+              <div class="absolute top-4 right-4 z-10">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-sm text-xs font-semibold text-amber-700 shadow-sm">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                  {{ deliveryTimeRemaining() }}
+                </div>
               </div>
+            }
 
-              <!-- Título del Vehículo -->
-              <div class="mb-6">
-                <h1 class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight mb-1">
+            <!-- Vehicle Info Overlay (Bottom) -->
+            @if (booking()?.car_image) {
+              <div class="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight drop-shadow-lg">
                   {{ booking()?.car_brand }} {{ booking()?.car_model }}
                 </h1>
-                <p class="text-text-secondary text-sm">
+                <p class="text-white/80 text-sm mt-1 drop-shadow-md">
                   {{ booking()?.car_year }} · {{ booking()!.days_count }}
-                  {{ booking()!.days_count === 1 ? 'día' : 'días' }} con {{ carOwnerName() }}
+                  {{ booking()!.days_count === 1 ? 'día' : 'días' }}
                 </p>
               </div>
+            }
+          </div>
 
-              <!-- Precio Hero + Fechas -->
-              <div class="flex items-end justify-between gap-4 pt-4 border-t border-neutral-100">
-                <!-- Precio Grande -->
-                <div>
-                  <p class="text-3xl sm:text-4xl font-bold text-text-primary tracking-tight">
-                    {{
-                      booking()!.total_amount | currency: booking()!.currency : 'symbol' : '1.0-0'
-                    }}
-                  </p>
-                  <p class="text-xs text-text-muted mt-1">Total de la reserva</p>
+          <!-- Info Bar (Below Image) -->
+          <div class="px-5 sm:px-6 py-4 bg-surface-base">
+            @if (!booking()?.car_image) {
+              <!-- Vehicle title when no image -->
+              <div class="mb-4">
+                <h1 class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">
+                  {{ booking()?.car_brand }} {{ booking()?.car_model }}
+                </h1>
+                <p class="text-text-secondary text-sm mt-1">
+                  {{ booking()?.car_year }} · {{ booking()!.days_count }}
+                  {{ booking()!.days_count === 1 ? 'día' : 'días' }}
+                </p>
+              </div>
+            }
+
+            <!-- Compact Info Row -->
+            <div class="flex items-center justify-between gap-4">
+              <!-- Price -->
+              <div class="flex items-baseline gap-2">
+                <span class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">
+                  {{ booking()!.total_amount | currency: booking()!.currency : 'symbol' : '1.0-0' }}
+                </span>
+                <span class="text-xs text-text-muted">total</span>
+              </div>
+
+              <!-- Dates + Host -->
+              <div class="flex items-center gap-3 text-sm">
+                <div class="flex items-center gap-1.5 text-text-secondary">
+                  <ion-icon name="calendar-outline" class="text-base text-text-muted"></ion-icon>
+                  <span class="font-medium">
+                    {{ booking()!.start_at | date: 'd MMM' }} - {{ booking()!.end_at | date: 'd MMM' }}
+                  </span>
                 </div>
-
-                <!-- Fechas Compactas -->
-                <div class="text-right">
-                  <p class="text-sm font-medium text-neutral-700">
-                    {{ booking()!.start_at | date: 'd MMM' }}
-                    <span class="text-text-muted mx-1">→</span>
-                    {{ booking()!.end_at | date: 'd MMM' }}
-                  </p>
-                  @if (deliveryTimeRemaining()) {
-                    <p
-                      class="text-xs text-amber-600 font-medium mt-1 flex items-center justify-end gap-1"
-                    >
-                      <ion-icon name="time-outline" class="text-sm"></ion-icon>
-                      {{ deliveryTimeRemaining() }}
-                    </p>
-                  }
+                <span class="w-px h-4 bg-border-default"></span>
+                <div class="flex items-center gap-1.5 text-text-secondary">
+                  <ion-icon name="person-outline" class="text-base text-text-muted"></ion-icon>
+                  <span class="font-medium truncate max-w-[100px]">{{ carOwnerName() }}</span>
                 </div>
               </div>
             </div>
